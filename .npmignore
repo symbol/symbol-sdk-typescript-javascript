@@ -8,3 +8,4 @@ coverage/
 .idea/
 dist/test
 dist/e2e
+licenses/

@@ -27,7 +27,7 @@ import {MosaicService} from '../../src/service/MosaicService';
 import {MosaicView} from '../../src/service/MosaicView';
 import * as conf from '../conf/conf.spec';
 
-describe('MosaicService', () => {
+describe.skip('MosaicService', () => {
     it('mosaicsView', () => {
         const mosaicId = new MosaicId([3646934825, 3576016193]);
         const mosaicService = new MosaicService(
