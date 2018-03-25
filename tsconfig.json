@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2016",
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "preserveConstEnums": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "stripInternal": true,
+    "outDir": "dist",
+    "allowJs": false,
+    "lib": [
+      "es2016",
+      "dom"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "noStrictGenericChecks": true
+  },
+  "files": [
+    "index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "include": [
+    "test/**/*.spec.ts",
+    "src/**/*.ts",
+    "e2e/**/*.ts"
+  ]
+}
