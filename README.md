@@ -1,5 +1,10 @@
 # nem2-sdk for TypeScript and JavaScript
 
+[![npm version](https://badge.fury.io/js/nem2-sdk.svg)](https://badge.fury.io/js/nem2-sdk)
+[![Build Status](https://api.travis-ci.org/nemtech/nem2-sdk-typescript-javascript.svg?branch=master)](https://travis-ci.org/nemtech/nem2-sdk-typescript-javascript)
+[![Coverage Status](https://coveralls.io/repos/github/nemtech/nem2-sdk-typescript-javascript/badge.svg?branch=travis-ci)](https://coveralls.io/github/nemtech/nem2-sdk-typescript-javascript?branch=travis-ci)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 The official nem2-sdk for TypeScript and JavaScript, available for browsers, mobile applications and NodeJS, to work 
 with the NEM2 (a.k.a Catapult)
 
