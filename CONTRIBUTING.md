@@ -50,12 +50,18 @@ the feature you would like to see, why you need it, and how it should work.
 
 ## Contributing code and documentation changes
 
-If you have a bugfix or new feature that you would like to contribute to Elasticsearch, please find or open an issue 
+If you have a bugfix or new feature that you would like to contribute to nem2-sdk-typescript-javascript, please find or open an issue 
 about it first. Talk about what you would like to do. It may be that somebody is already working on it, or that there 
 are particular issues that you should know about before implementing the change.
 
 We enjoy working with contributors to get their code accepted. There are many approaches to fixing a problem and it is 
 important to find the best approach before writing too much code.
+
+### Contributing License Notice
+
+When you contribute code, you affirm that the contribution is your original work and that you license the work to the project under the project's open source license.
+
+Whether or not you state this explicitly, by submitting any copyrighted material via pull request, email, or other means you agree to license the material under the project's open source license and warrant that you have the legal authority to do so.
 
 ### Fork and clone the repository
 
@@ -78,8 +84,7 @@ Once your changes and tests are ready to submit for review:
     
 Then sit back and wait. There will probably be discussion about the pull request and, if any changes are needed, we would love to work with you to get your pull request merged into nem2-sdk-typescript-javascript.
 
-*CONTRIBUTING.md is based on [CONTRIBUTING-template.md](https://github.com/nayafia/contributing-template/blob/master/CONTRIBUTING-template.md)* 
-and [elasticsearch/CONTRIGUTING](https://github.com/elastic/elasticsearch/blob/master/CONTRIBUTING.md)
+*CONTRIBUTING.md is based on [CONTRIBUTING-template.md](https://github.com/nayafia/contributing-template/blob/master/CONTRIBUTING-template.md)* , [elasticsearch/CONTRIBUTING](https://github.com/elastic/elasticsearch/blob/master/CONTRIBUTING.md) and [spark/CONTRIBUTING](https://github.com/apache/spark/blob/master/CONTRIBUTING.md)
 
 [pull-request]: https://help.github.com/articles/about-pull-requests/
 [github-issues]: https://github.com/nemtech/nem2-sdk-typescript-javascript/issues
