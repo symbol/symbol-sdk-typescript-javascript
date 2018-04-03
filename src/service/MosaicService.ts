@@ -16,6 +16,7 @@
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/toArray';
 import {Observable} from 'rxjs/Observable';
@@ -71,16 +72,15 @@ export class MosaicService {
     mosaicsAmountView(mosaics: Mosaic[]): Observable<MosaicAmountView[]> {
         return Observable.of(mosaics)
             .flatMap((_) => _)
-            .flatMap((mosaic) => this.mosaicsView([mosaic.id]).map((mosaicViews) => {
+            .flatMap((mosaic) => this.mosaicsView([mosaic.id])
+                .filter((_) => _.length !== 0)
+                .map((mosaicViews) => {
                 return new MosaicAmountView(mosaicViews[0].mosaicInfo,
                     mosaicViews[0].namespaceName,
                     mosaicViews[0].mosaicName,
                     mosaic.amount);
             }))
-            .toArray()
-            .catch(() => {
-                return Observable.of([]);
-            });
+            .toArray();
     }
 
     /**
