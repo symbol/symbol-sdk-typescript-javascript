@@ -23,7 +23,7 @@ import {NetworkType} from '../blockchain/NetworkType';
 export class Address {
     /**
      * Create from private key
-     * @param publicKey - The account private key.
+     * @param publicKey - The account public key.
      * @param networkType - The NEM network type.
      * @returns {Address}
      */
