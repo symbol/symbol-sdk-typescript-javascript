@@ -83,9 +83,14 @@ export abstract class Transaction {
      * @returns {SignedTransaction}
      */
     public signWith(account: Account): SignedTransaction {
-        const transferTransaction = this.buildTransaction();
-        const signedTransactionRaw = transferTransaction.signTransaction(account);
-        return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, account.publicKey, this.type, this.networkType);
+        const transaction = this.buildTransaction();
+        const signedTransactionRaw = transaction.signTransaction(account);
+        return new SignedTransaction(
+            signedTransactionRaw.payload,
+            signedTransactionRaw.hash,
+            account.publicKey,
+            this.type,
+            this.networkType);
     }
 
     /**
