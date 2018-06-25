@@ -16,6 +16,7 @@
 
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/share';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import * as WebSocket from 'ws';
@@ -197,7 +198,9 @@ export class Listener {
      */
     public newBlock(): Observable<BlockInfo> {
         this.subscribeTo('block');
-        return this.messageSubject.asObservable()
+        return this.messageSubject
+            .asObservable()
+            .share()
             .filter((_) => _.channelName === ListenerChannelName.block)
             .filter((_) => _.message instanceof BlockInfo)
             .map((_) => _.message as BlockInfo);
