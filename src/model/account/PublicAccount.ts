@@ -57,43 +57,39 @@ export class PublicAccount {
     /**
      * Verify a signature.
      *
-     * @param {string} publicKey - The public key to use for verification.
+     * @param {PublicAccount} publicAccount - The public account to use for verification.
      * @param {string} data - The data to verify.
      * @param {string} signature - The signature to verify.
      *
      * @return {boolean}  - True if the signature is valid, false otherwise.
      */
-    static verifySignature(publicKey: string, data: string, signature: string): boolean {
-        if (!publicKey || !data || !signature) {
-            throw new Error('Missing argument !');
-        }
-
-        if (publicKey.length !== 64 && publicKey.length !== 66) {
-            throw new Error('Not a valid public key');
+    static verifySignature(publicAccount: PublicAccount, data: string, signature: string): boolean {
+        if (!publicAccount || !data || !signature) {
+            throw new Error('Missing argument');
         }
 
         if (convert.isHexString(signature)) {
-            throw new Error('Signature must be hexadecimal only !');
+            throw new Error('Signature must be hexadecimal only');
         }
 
         if (signature.length !== 128) {
-            throw new Error('Signature length is incorrect !');
+            throw new Error('Signature length is incorrect');
         }
 
         // Convert signature key to Uint8Array
-        const _signature = convert.hexToUint8(signature);
+        const convertedSignature = convert.hexToUint8(signature);
 
-        let _data;
+        let convertedData;
 
         // Convert data to hex if data is not hex
         if (!convert.isHexString(data)) {
-            _data = convert.utf8ToHex(data);
+            convertedData = convert.utf8ToHex(data);
         }
 
         // Convert to Uint8Array
-        _data = convert.hexToUint8(_data);
+        convertedData = convert.hexToUint8(convertedData);
 
-        return KeyPair.verify(publicKey, _data, _signature);
+        return KeyPair.verify(publicAccount.publicKey, convertedData, convertedSignature);
     }
 
     /**
