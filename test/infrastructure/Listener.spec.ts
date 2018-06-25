@@ -23,4 +23,12 @@ describe('Listener', () => {
         expect('ws://localhost:3000/ws').to.be.equal(listener.url);
         listener.close();
     });
+
+    describe('isOpen', () => {
+        it('should return false when listener is created and not opened', () => {
+            const listener = new Listener('ws://localhost:3000');
+            expect(listener.isOpen()).to.be.false;
+            listener.close();
+        });
+    });
 });
