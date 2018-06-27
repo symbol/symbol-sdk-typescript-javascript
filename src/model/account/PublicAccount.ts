@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyPair, convert } from 'nem2-library';
+import { convert, KeyPair } from 'nem2-library';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Address } from './Address';
 
@@ -89,7 +89,7 @@ export class PublicAccount {
         // Convert to Uint8Array
         convertedData = convert.hexToUint8(convertedData);
 
-        return KeyPair.verify(publicAccount.publicKey, convertedData, convertedSignature);
+        return KeyPair.verify(convert.hexToUint8(publicAccount.publicKey), convertedData, convertedSignature);
     }
 
     /**
