@@ -68,12 +68,12 @@ export class PublicAccount {
             throw new Error('Missing argument');
         }
 
-        if (convert.isHexString(signature)) {
-            throw new Error('Signature must be hexadecimal only');
-        }
-
         if (signature.length !== 128) {
             throw new Error('Signature length is incorrect');
+        }
+
+        if (!convert.isHexString(signature)) {
+            throw new Error('Signature must be hexadecimal only');
         }
 
         // Convert signature key to Uint8Array

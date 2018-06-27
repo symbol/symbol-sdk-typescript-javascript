@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import { expect } from 'chai';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 
 describe('PublicAccount', () => {
     const publicKey = 'b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf';
@@ -25,5 +25,85 @@ describe('PublicAccount', () => {
         const publicAccount = PublicAccount.createFromPublicKey(publicKey, NetworkType.MIJIN_TEST);
         expect(publicAccount.publicKey).to.be.equal(publicKey);
         expect(publicAccount.address.plain()).to.be.equal('SARNASAS2BIAB6LMFA3FPMGBPGIJGK6IJETM3ZSP');
+    });
+});
+
+describe('Signature verification', () => {
+    it('Can verify a signature', () => {
+        // Arrange:'
+        const signerPublicAccount = PublicAccount.createFromPublicKey('22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
+            NetworkType.MIJIN_TEST);
+        const data = 'I am so so so awesome as always';
+        const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA508'; // tslint:disable-line
+
+        // Act & Assert:
+        expect(PublicAccount.verifySignature(signerPublicAccount, data, signature)).equal(true);
+    });
+
+    it('Throw error if signature has invalid length', () => {
+        // Arrange:
+        const signerPublicAccount = PublicAccount.createFromPublicKey('22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
+            NetworkType.MIJIN_TEST);
+        const data = 'I am so so so awesome as always';
+        const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C5486'; // tslint:disable-line
+
+        // Act & Assert:
+        expect(() => { PublicAccount.verifySignature(signerPublicAccount, data, signature); }).to.throw('Signature length is incorrect');
+    });
+
+    it('Throw error if signature is not strictly hexadecimal', () => {
+        // Arrange:
+        const signerPublicAccount = PublicAccount.createFromPublicKey('22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
+            NetworkType.MIJIN_TEST);
+        const data = 'I am so so so awesome as always';
+        const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F35a1wwwww';// tslint:disable-line
+
+        // Act & Assert:
+        expect(() => { PublicAccount.verifySignature(signerPublicAccount, data, signature); })
+            .to.throw('Signature must be hexadecimal only');
+    });
+
+    it('Return false if wrong public key provided', () => {
+        // Arrange:
+        const signerPublicAccount = PublicAccount.createFromPublicKey('12816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB509',
+            NetworkType.MIJIN_TEST);
+        const data = 'I am so so so awesome as always';
+        const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA508';// tslint:disable-line
+
+        // Act & Assert:
+        expect(PublicAccount.verifySignature(signerPublicAccount, data, signature)).equal(false);
+    });
+
+    it('Return false if data is not corresponding to signature provided', () => {
+        // Arrange:
+        const signerPublicAccount = PublicAccount.createFromPublicKey('22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
+            NetworkType.MIJIN_TEST);
+        const data = 'I am awesome as always';
+        const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA508';// tslint:disable-line
+
+        // Act & Assert:
+        expect(PublicAccount.verifySignature(signerPublicAccount, data, signature)).equal(false);
+    });
+
+    it('Return false if signature is not corresponding to data provided', () => {
+        // Arrange:
+        const signerPublicAccount = PublicAccount.createFromPublicKey('22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
+            NetworkType.MIJIN_TEST);
+        const data = 'I am so so so awesome as always';
+        const signature = 'A01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA509';// tslint:disable-line
+
+        // Act & Assert:
+        expect(PublicAccount.verifySignature(signerPublicAccount, data, signature)).equal(false);
+    });
+
+    it('Throw error if signature verification is missing a parameter', () => {
+        // Arrange:
+        const signerPublicAccount = PublicAccount.createFromPublicKey('22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
+            NetworkType.MIJIN_TEST);
+        const data = '';
+        const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA508';// tslint:disable-line
+
+        // Act & Assert:
+        expect(() => { PublicAccount.verifySignature(signerPublicAccount, data, signature); }).to.throw('Missing argument');
     });
 });
