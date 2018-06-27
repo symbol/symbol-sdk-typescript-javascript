@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import {NetworkType} from '../blockchain/NetworkType';
-import {Address} from './Address';
+import { KeyPair, convert } from 'nem2-library';
+import { NetworkType } from '../blockchain/NetworkType';
+import { Address } from './Address';
 
 /**
  * The public account structure contains account's address and public key.
@@ -54,6 +55,44 @@ export class PublicAccount {
     }
 
     /**
+     * Verify a signature.
+     *
+     * @param {PublicAccount} publicAccount - The public account to use for verification.
+     * @param {string} data - The data to verify.
+     * @param {string} signature - The signature to verify.
+     *
+     * @return {boolean}  - True if the signature is valid, false otherwise.
+     */
+    static verifySignature(publicAccount: PublicAccount, data: string, signature: string): boolean {
+        if (!publicAccount || !data || !signature) {
+            throw new Error('Missing argument');
+        }
+
+        if (signature.length !== 128) {
+            throw new Error('Signature length is incorrect');
+        }
+
+        if (!convert.isHexString(signature)) {
+            throw new Error('Signature must be hexadecimal only');
+        }
+
+        // Convert signature key to Uint8Array
+        const convertedSignature = convert.hexToUint8(signature);
+
+        let convertedData;
+
+        // Convert data to hex if data is not hex
+        if (!convert.isHexString(data)) {
+            convertedData = convert.utf8ToHex(data);
+        }
+
+        // Convert to Uint8Array
+        convertedData = convert.hexToUint8(convertedData);
+
+        return KeyPair.verify(publicAccount.publicKey, convertedData, convertedSignature);
+    }
+
+    /**
      * Compares public accounts for equality.
      * @param publicAccount
      * @returns {boolean}
@@ -61,4 +100,5 @@ export class PublicAccount {
     equals(publicAccount: PublicAccount) {
         return this.publicKey === publicAccount.publicKey && this.address.plain() === publicAccount.address.plain();
     }
+
 }
