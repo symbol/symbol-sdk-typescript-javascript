@@ -96,15 +96,4 @@ describe('Signature verification', () => {
         // Act & Assert:
         expect(signerPublicAccount.verifySignature(data, signature)).equal(false);
     });
-
-    it('Throw error if signature verification is missing a parameter', () => {
-        // Arrange:
-        const signerPublicAccount = PublicAccount.createFromPublicKey('22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
-            NetworkType.MIJIN_TEST);
-        const data = '';
-        const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA508';// tslint:disable-line
-
-        // Act & Assert:
-        expect(() => { signerPublicAccount.verifySignature(data, signature); }).to.throw('Missing argument');
-    });
 });

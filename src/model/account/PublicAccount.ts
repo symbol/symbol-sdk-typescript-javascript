@@ -18,6 +18,8 @@ import { convert, KeyPair } from 'nem2-library';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Address } from './Address';
 
+const Hash512 = 64;
+
 /**
  * The public account structure contains account's address and public key.
  */
@@ -63,11 +65,11 @@ export class PublicAccount {
      * @return {boolean}  - True if the signature is valid, false otherwise.
      */
     public verifySignature(data: string, signature: string): boolean {
-        if (!data || !signature) {
+        if (!signature) {
             throw new Error('Missing argument');
         }
 
-        if (signature.length !== 128) {
+        if (signature.length / 2 !== Hash512) {
             throw new Error('Signature length is incorrect');
         }
 

@@ -54,6 +54,6 @@ describe('Account', () => {
         const publicAccount = account.publicAccount;
         const signed = account.signData('catapult rocks!');
         expect(publicAccount.verifySignature('catapult rocks!', signed))
-            .to.be.equal(true);
+            .to.be.true;
     });
 });
