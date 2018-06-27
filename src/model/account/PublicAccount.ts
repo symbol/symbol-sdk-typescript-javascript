@@ -57,14 +57,13 @@ export class PublicAccount {
     /**
      * Verify a signature.
      *
-     * @param {PublicAccount} publicAccount - The public account to use for verification.
      * @param {string} data - The data to verify.
      * @param {string} signature - The signature to verify.
      *
      * @return {boolean}  - True if the signature is valid, false otherwise.
      */
-    static verifySignature(publicAccount: PublicAccount, data: string, signature: string): boolean {
-        if (!publicAccount || !data || !signature) {
+    public verifySignature(data: string, signature: string): boolean {
+        if (!data || !signature) {
             throw new Error('Missing argument');
         }
 
@@ -89,7 +88,7 @@ export class PublicAccount {
         // Convert to Uint8Array
         convertedData = convert.hexToUint8(convertedData);
 
-        return KeyPair.verify(convert.hexToUint8(publicAccount.publicKey), convertedData, convertedSignature);
+        return KeyPair.verify(convert.hexToUint8(this.publicKey), convertedData, convertedSignature);
     }
 
     /**

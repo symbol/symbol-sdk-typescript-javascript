@@ -31,13 +31,14 @@ describe('PublicAccount', () => {
 describe('Signature verification', () => {
     it('Can verify a signature', () => {
         // Arrange:'
-        const signerPublicAccount = PublicAccount.createFromPublicKey('22816F825B4CACEA334723D51297D8582332D8B875A5829908AAE85831ABB508',
+        const signerPublicAccount = PublicAccount.createFromPublicKey(
+            '1464953393CE96A08ABA6184601FD08864E910696B060FF7064474726E666CA8',
             NetworkType.MIJIN_TEST);
         const data = 'I am so so so awesome as always';
-        const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA508'; // tslint:disable-line
+        const signature = '2092660F5BD4AE832B2E290F34A76B41506EE473B02FD7FD468B32C80C945CF60A0D60D005FA9B2DB3AD3212F8028C1449D3DCF81C9FAB3EB4975A7409D8D802'; // tslint:disable-line
 
         // Act & Assert:
-        expect(PublicAccount.verifySignature(signerPublicAccount, data, signature)).equal(true);
+        expect(signerPublicAccount.verifySignature(data, signature)).equal(true);
     });
 
     it('Throw error if signature has invalid length', () => {
@@ -48,7 +49,7 @@ describe('Signature verification', () => {
         const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C5486'; // tslint:disable-line
 
         // Act & Assert:
-        expect(() => { PublicAccount.verifySignature(signerPublicAccount, data, signature); }).to.throw('Signature length is incorrect');
+        expect(() => { signerPublicAccount.verifySignature(data, signature); }).to.throw('Signature length is incorrect');
     });
 
     it('Throw error if signature is not strictly hexadecimal', () => {
@@ -59,7 +60,7 @@ describe('Signature verification', () => {
         const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F35a1wwwww';// tslint:disable-line
 
         // Act & Assert:
-        expect(() => { PublicAccount.verifySignature(signerPublicAccount, data, signature); })
+        expect(() => { signerPublicAccount.verifySignature(data, signature); })
             .to.throw('Signature must be hexadecimal only');
     });
 
@@ -71,7 +72,7 @@ describe('Signature verification', () => {
         const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA508';// tslint:disable-line
 
         // Act & Assert:
-        expect(PublicAccount.verifySignature(signerPublicAccount, data, signature)).equal(false);
+        expect(signerPublicAccount.verifySignature(data, signature)).equal(false);
     });
 
     it('Return false if data is not corresponding to signature provided', () => {
@@ -82,7 +83,7 @@ describe('Signature verification', () => {
         const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA508';// tslint:disable-line
 
         // Act & Assert:
-        expect(PublicAccount.verifySignature(signerPublicAccount, data, signature)).equal(false);
+        expect(signerPublicAccount.verifySignature(data, signature)).equal(false);
     });
 
     it('Return false if signature is not corresponding to data provided', () => {
@@ -93,7 +94,7 @@ describe('Signature verification', () => {
         const signature = 'A01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA509';// tslint:disable-line
 
         // Act & Assert:
-        expect(PublicAccount.verifySignature(signerPublicAccount, data, signature)).equal(false);
+        expect(signerPublicAccount.verifySignature(data, signature)).equal(false);
     });
 
     it('Throw error if signature verification is missing a parameter', () => {
@@ -104,6 +105,6 @@ describe('Signature verification', () => {
         const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA508';// tslint:disable-line
 
         // Act & Assert:
-        expect(() => { PublicAccount.verifySignature(signerPublicAccount, data, signature); }).to.throw('Missing argument');
+        expect(() => { signerPublicAccount.verifySignature(data, signature); }).to.throw('Missing argument');
     });
 });
