@@ -38,7 +38,7 @@ describe('Signature verification', () => {
         const signature = '2092660F5BD4AE832B2E290F34A76B41506EE473B02FD7FD468B32C80C945CF60A0D60D005FA9B2DB3AD3212F8028C1449D3DCF81C9FAB3EB4975A7409D8D802'; // tslint:disable-line
 
         // Act & Assert:
-        expect(signerPublicAccount.verifySignature(data, signature)).equal(true);
+        expect(signerPublicAccount.verifySignature(data, signature)).to.be.true;
     });
 
     it('Throw error if signature has invalid length', () => {
@@ -72,7 +72,7 @@ describe('Signature verification', () => {
         const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA508';// tslint:disable-line
 
         // Act & Assert:
-        expect(signerPublicAccount.verifySignature(data, signature)).equal(false);
+        expect(signerPublicAccount.verifySignature(data, signature)).to.be.false;
     });
 
     it('Return false if data is not corresponding to signature provided', () => {
@@ -83,7 +83,7 @@ describe('Signature verification', () => {
         const signature = 'B01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA508';// tslint:disable-line
 
         // Act & Assert:
-        expect(signerPublicAccount.verifySignature(data, signature)).equal(false);
+        expect(signerPublicAccount.verifySignature(data, signature)).to.be.false;
     });
 
     it('Return false if signature is not corresponding to data provided', () => {
@@ -94,6 +94,6 @@ describe('Signature verification', () => {
         const signature = 'A01DCA6484026C2ECDF3C822E64DEAAFC15EBCCE337EEE209C28513CB5351CDED8863A8E7B855CD471B55C91FAE611C548625C9A5916A555A24F72F3526FA509';// tslint:disable-line
 
         // Act & Assert:
-        expect(signerPublicAccount.verifySignature(data, signature)).equal(false);
+        expect(signerPublicAccount.verifySignature(data, signature)).to.be.false;
     });
 });
