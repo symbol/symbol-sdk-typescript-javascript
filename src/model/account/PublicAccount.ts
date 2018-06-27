@@ -80,15 +80,8 @@ export class PublicAccount {
         // Convert signature key to Uint8Array
         const convertedSignature = convert.hexToUint8(signature);
 
-        let convertedData;
-
-        // Convert data to hex if data is not hex
-        if (!convert.isHexString(data)) {
-            convertedData = convert.utf8ToHex(data);
-        }
-
         // Convert to Uint8Array
-        convertedData = convert.hexToUint8(convertedData);
+        const convertedData = convert.hexToUint8(convert.isHexString(data) ? data : convert.utf8ToHex(data));
 
         return KeyPair.verify(convert.hexToUint8(this.publicKey), convertedData, convertedSignature);
     }
