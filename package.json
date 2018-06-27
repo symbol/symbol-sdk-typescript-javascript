@@ -1,6 +1,6 @@
 {
   "name": "nem2-sdk",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "description": "Reactive Nem2 sdk for typescript and javascript",
   "scripts": {
     "pretest": "npm run build",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "js-joda": "^1.6.2",
-    "nem2-library": "0.9.4",
+    "nem2-library": "0.9.5",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",
     "rxjs": "^5.5.2",
