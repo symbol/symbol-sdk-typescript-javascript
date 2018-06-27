@@ -131,4 +131,15 @@ export class Account {
     public signCosignatureTransaction(cosignatureTransaction: CosignatureTransaction): CosignatureSignedTransaction {
         return cosignatureTransaction.signWith(this);
     }
+
+    /**
+     * Sign raw data
+     * @param data - Data to be signed
+     * @return {string} - Signed data result
+     */
+    public signData(data: string): string {
+        return convert.uint8ToHex(KeyPair.sign(this.keyPair,
+                            convert.hexToUint8(convert.utf8ToHex(data)),
+                        ));
+    }
 }

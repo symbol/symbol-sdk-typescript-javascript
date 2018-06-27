@@ -17,6 +17,7 @@
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import { PublicAccount } from '../../../src/model/model';
 
 describe('Account', () => {
     const accountInformation = {
@@ -45,4 +46,14 @@ describe('Account', () => {
         expect(account.address).to.not.be.equal(undefined);
     });
 
+    it('signData', () => {
+        const account = Account.createFromPrivateKey(
+            'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
+            NetworkType.MIJIN_TEST,
+        );
+        const publicAccount = account.publicAccount;
+        const signed = account.signData('catapult rocks!');
+        expect(publicAccount.verifySignature('catapult rocks!', signed))
+            .to.be.equal(true);
+    });
 });
