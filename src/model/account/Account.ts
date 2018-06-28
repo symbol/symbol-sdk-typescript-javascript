@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import {address as AddressLibrary, convert, KeyPair, nacl_catapult} from 'nem2-library';
-import {NetworkType} from '../blockchain/NetworkType';
-import {AggregateTransaction} from '../transaction/AggregateTransaction';
-import {CosignatureSignedTransaction} from '../transaction/CosignatureSignedTransaction';
-import {CosignatureTransaction} from '../transaction/CosignatureTransaction';
-import {SignedTransaction} from '../transaction/SignedTransaction';
-import {Transaction} from '../transaction/Transaction';
-import {Address} from './Address';
-import {PublicAccount} from './PublicAccount';
+import { address as AddressLibrary, convert, KeyPair, nacl_catapult } from 'nem2-library';
+import { NetworkType } from '../blockchain/NetworkType';
+import { AggregateTransaction } from '../transaction/AggregateTransaction';
+import { CosignatureSignedTransaction } from '../transaction/CosignatureSignedTransaction';
+import { CosignatureTransaction } from '../transaction/CosignatureTransaction';
+import { SignedTransaction } from '../transaction/SignedTransaction';
+import { Transaction } from '../transaction/Transaction';
+import { Address } from './Address';
+import { PublicAccount } from './PublicAccount';
 
 interface IKeyPair {
     privateKey: Uint8Array;
@@ -137,9 +137,13 @@ export class Account {
      * @param data - Data to be signed
      * @return {string} - Signed data result
      */
-    public signData(data: string): string {
-        return convert.uint8ToHex(KeyPair.sign(this.keyPair,
-                            convert.hexToUint8(convert.utf8ToHex(data)),
-                        ));
+    public signData(data: string | Uint8Array): string {
+        if (typeof data === "string") {
+            return convert.uint8ToHex(KeyPair.sign(this.keyPair,
+                convert.hexToUint8(convert.utf8ToHex(data)),
+            ));
+        } else {
+            return convert.uint8ToHex(KeyPair.sign(this.keyPair,data));
+        }
     }
 }
