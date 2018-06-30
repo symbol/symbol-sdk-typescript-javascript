@@ -1,6 +1,6 @@
 {
   "name": "nem2-sdk",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "Reactive Nem2 sdk for typescript and javascript",
   "scripts": {
     "pretest": "npm run build",
@@ -51,17 +51,18 @@
   },
   "dependencies": {
     "js-joda": "^1.6.2",
-    "nem2-library": "0.9.5",
+    "nem2-library": "^0.9.5",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",
-    "rxjs": "^5.5.2",
+    "rxjs": "^6.2.1",
+    "rxjs-compat": "^6.2.1",
     "utf8": "^2.1.2",
     "ws": "^5.2.0"
   },
   "peerDependencies": {
     "js-joda": "^1.6.2",
     "utf8": "^2.1.2",
-    "rxjs": "^5.5.2"
+    "rxjs": "^6.2.1"
   },
   "nyc": {
     "exclude": [
