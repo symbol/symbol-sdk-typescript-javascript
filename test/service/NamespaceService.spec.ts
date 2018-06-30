@@ -15,8 +15,7 @@
  */
 
 import {expect} from 'chai';
-import 'rxjs/add/observable/of';
-import {Observable} from 'rxjs/Observable';
+import {Observable, of as observableOf} from 'rxjs';
 import {deepEqual, instance, mock, when} from 'ts-mockito';
 import {NamespaceHttp} from '../../src/infrastructure/NamespaceHttp';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
@@ -39,16 +38,16 @@ describe('NamespaceService', () => {
         // e43f43d2c5a8f299 rootNamespace.id.toHex()
         // f7ce33276a3288c1 subnamespace.id.toHex()
         when(mockedNamespaceHttp.getNamespace(rootNamespace.id))
-            .thenReturn(Observable.of(rootNamespace));
+            .thenReturn(observableOf(rootNamespace));
         when(mockedNamespaceHttp.getNamespace(subnamespace.id))
-            .thenReturn(Observable.of(subnamespace));
+            .thenReturn(observableOf(subnamespace));
 
         when(mockedNamespaceHttp.getNamespacesName(deepEqual([rootNamespace.id])))
-            .thenReturn(Observable.of([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'nem2tests')]));
+            .thenReturn(observableOf([new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'nem2tests')]));
         when(mockedNamespaceHttp.getNamespacesName(deepEqual([subnamespace.id])))
-            .thenReturn(Observable.of([new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2')]));
+            .thenReturn(observableOf([new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2')]));
         when(mockedNamespaceHttp.getNamespacesName(deepEqual([rootNamespace.id, subnamespace.id])))
-            .thenReturn(Observable.of([
+            .thenReturn(observableOf([
                 new NamespaceName(new NamespaceId([3316183705, 3829351378]), 'nem2tests'),
                 new NamespaceName(new NamespaceId([1781696705, 4157485863]), 'level2'),
             ]));

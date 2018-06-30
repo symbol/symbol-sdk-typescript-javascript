@@ -15,8 +15,8 @@
  */
 
 import {ApiClient} from 'nem2-library';
-import 'rxjs/add/observable/of';
-import {Observable} from 'rxjs/Observable';
+import {Observable, of as observableOf} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {NetworkType} from '../model/blockchain/NetworkType';
 import {NetworkHttp} from './NetworkHttp';
 
@@ -50,12 +50,12 @@ export abstract class Http {
     getNetworkTypeObservable(): Observable<NetworkType> {
         let networkTypeResolve;
         if (this.networkType == null) {
-            networkTypeResolve = this.networkHttp.getNetworkType().map((networkType) => {
+            networkTypeResolve = this.networkHttp.getNetworkType().pipe(map((networkType) => {
                 this.networkType = networkType;
                 return networkType;
-            });
+            }));
         } else {
-            networkTypeResolve = Observable.of(this.networkType);
+            networkTypeResolve = observableOf(this.networkType);
         }
         return networkTypeResolve;
     }

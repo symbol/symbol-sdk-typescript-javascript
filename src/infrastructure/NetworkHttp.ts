@@ -15,9 +15,8 @@
  */
 
 import {NetworkRoutesApi} from 'nem2-library';
-import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/operator/map';
-import {Observable} from 'rxjs/Observable';
+import {from as observableFrom, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {NetworkType} from '../model/blockchain/NetworkType';
 import {Http} from './Http';
 import {NetworkRepository} from './NetworkRepository';
@@ -50,12 +49,12 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @return network type enum.
      */
     public getNetworkType(): Observable<NetworkType> {
-        return Observable.fromPromise(this.networkRoutesApi.getNetworkType()).map((networkTypeDTO) => {
+        return observableFrom(this.networkRoutesApi.getNetworkType()).pipe(map((networkTypeDTO) => {
             if (networkTypeDTO.name === 'mijinTest') {
                 return NetworkType.MIJIN_TEST;
             } else {
                 throw new Error('network ' + networkTypeDTO.name + ' is not supported yet by the sdk');
             }
-        });
+        }));
     }
 }
