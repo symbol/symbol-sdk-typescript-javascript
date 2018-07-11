@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import {VerifiableTransaction} from 'nem2-library';
-import {Account} from '../account/Account';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {UInt64} from '../UInt64';
-import {AggregateTransactionInfo} from './AggregateTransactionInfo';
-import {Deadline} from './Deadline';
-import {InnerTransaction} from './InnerTransaction';
-import {SignedTransaction} from './SignedTransaction';
-import {TransactionInfo} from './TransactionInfo';
+import { VerifiableTransaction } from 'nem2-library';
+import { Account } from '../account/Account';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { UInt64 } from '../UInt64';
+import { AggregateTransactionInfo } from './AggregateTransactionInfo';
+import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
+import { SignedTransaction } from './SignedTransaction';
+import { TransactionInfo } from './TransactionInfo';
 
 /**
  * An abstract transaction class that serves as the base class of all NEM transactions.
@@ -56,7 +56,7 @@ export abstract class Transaction {
                 /**
                  * The deadline to include the transaction.
                  */
-                public readonly deadline: Deadline,
+                public deadline: Deadline,
                 /**
                  * The fee for the transaction. The higher the fee, the higher the priority of the transaction.
                  * Transactions with high priority get included in a block before transactions with lower priority.
