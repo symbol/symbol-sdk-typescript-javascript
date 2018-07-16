@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import {HashLockTransaction, VerifiableTransaction} from 'nem2-library';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {Mosaic} from '../mosaic/Mosaic';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
-import {SignedTransaction} from './SignedTransaction';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
+import { HashLockTransaction, VerifiableTransaction } from 'nem2-library';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { Mosaic } from '../mosaic/Mosaic';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { SignedTransaction } from './SignedTransaction';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 /**
  * Lock funds transaction is used before sending an Aggregate bonded transaction, as a deposit to announce the transaction.
@@ -112,6 +112,30 @@ export class LockFundsTransaction extends Transaction {
             .addDuration(this.duration.toDTO())
             .addHash(this.hash)
             .build();
+    }
+
+    /**
+     * @description re-aplly a given value to the transaction in an immutable way
+     * @param {Deadline} deadline
+     * @returns {Transaction}
+     * @memberof Transaction
+     */
+    public reaplygiven(deadline: Deadline, signedTransaction: SignedTransaction): LockFundsTransaction {
+
+        if (this.isUnannounced) {
+            return new LockFundsTransaction(
+            this.networkType,
+            this.type,
+            deadline,
+            this.fee,
+            this.mosaic,
+            this.duration,
+            signedTransaction,
+            this.signature,
+            this.signer);
+        } else {
+            throw new Error('Should not modify an announced transaction');
+        }
     }
 
 }
