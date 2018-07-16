@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction} from 'nem2-library';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
-import {HashType, HashTypeLengthValidator} from './HashType';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
+import { SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { HashType, HashTypeLengthValidator } from './HashType';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 export class SecretProofTransaction extends Transaction {
 
@@ -94,5 +94,29 @@ export class SecretProofTransaction extends Transaction {
             .addSecret(this.secret)
             .addProof(this.proof)
             .build();
+    }
+
+    /**
+     * @description re-aplly a given value to the transaction in an immutable way
+     * @param {Deadline} deadline
+     * @returns {Transaction}
+     * @memberof Transaction
+     */
+    public reaplygiven(newDeadline: Deadline): SecretProofTransaction {
+
+        if (this.isUnannounced) {
+            return new SecretProofTransaction(
+            this.networkType,
+            this.version,
+            newDeadline,
+            this.fee,
+            this.hashType,
+            this.secret,
+            this.proof,
+            this.signature,
+            this.signer);
+        } else {
+            throw new Error('Should not modify an announced transaction');
+        }
     }
 }
