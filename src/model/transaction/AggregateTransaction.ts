@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import {AggregateTransaction as AggregateTransactionLibrary} from 'nem2-library';
-import {Account} from '../account/Account';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {UInt64} from '../UInt64';
-import {AggregateTransactionCosignature} from './AggregateTransactionCosignature';
-import {Deadline} from './Deadline';
-import {InnerTransaction} from './InnerTransaction';
-import {SignedTransaction} from './SignedTransaction';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
+import { AggregateTransaction as AggregateTransactionLibrary } from 'nem2-library';
+import { Account } from '../account/Account';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { UInt64 } from '../UInt64';
+import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';
+import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
+import { SignedTransaction } from './SignedTransaction';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.
@@ -143,6 +143,30 @@ export class AggregateTransaction extends Transaction {
     public signedByAccount(publicAccount: PublicAccount): boolean {
         return this.cosignatures.find((cosignature) => cosignature.signer.equals(publicAccount)) !== undefined
             || (this.signer !== undefined && this.signer.equals(publicAccount));
+    }
+
+    /**
+     * @description re-aplly a given value to the transaction in an immutable way
+     * @param {Deadline} deadline
+     * @returns {Transaction}
+     * @memberof Transaction
+     */
+    public reaplygiven(newDeadline: Deadline): AggregateTransaction {
+
+        if (this.isUnannounced) {
+            return new AggregateTransaction(
+            this.networkType,
+            this.type,
+            this.version,
+            newDeadline,
+            this.fee,
+            this.innerTransactions,
+            this.cosignatures,
+            this.signature,
+            this.signer);
+        } else {
+            throw new Error('Should not modify an announced transaction');
+        }
     }
 
 }
