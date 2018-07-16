@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import {MosaicSupplyChangeTransaction as MosaicSupplyChangeTransactionLibrary, VerifiableTransaction} from 'nem2-library';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {MosaicId} from '../mosaic/MosaicId';
-import {MosaicSupplyType} from '../mosaic/MosaicSupplyType';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
+import { MosaicSupplyChangeTransaction as MosaicSupplyChangeTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { MosaicId } from '../mosaic/MosaicId';
+import { MosaicSupplyType } from '../mosaic/MosaicSupplyType';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -102,5 +102,29 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             .addDirection(this.direction)
             .addDelta(this.delta.toDTO())
             .build();
+    }
+
+    /**
+     * @description re-aplly a given value to the transaction in an immutable way
+     * @param {Deadline} deadline
+     * @returns {Transaction}
+     * @memberof Transaction
+     */
+    public reaplygiven(newDeadline: Deadline): MosaicSupplyChangeTransaction {
+
+        if (this.isUnannounced) {
+            return new MosaicSupplyChangeTransaction(
+                this.networkType,
+                this.version,
+                newDeadline,
+                this.fee,
+                this.mosaicId,
+                this.direction,
+                this.delta,
+                this.signature,
+                this.signer);
+        } else {
+            throw new Error('Should not modify an announced transaction');
+        }
     }
 }
