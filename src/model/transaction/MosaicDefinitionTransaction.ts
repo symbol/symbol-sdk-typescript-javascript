@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-import {
-    MosaicCreationTransaction as MosaicDefinitionTransactionLibrary,
-    mosaicId as mosaicIdLibrary,
-    VerifiableTransaction,
-} from 'nem2-library';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {MosaicId} from '../mosaic/MosaicId';
-import {MosaicProperties} from '../mosaic/MosaicProperties';
-import {NamespaceId} from '../namespace/NamespaceId';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
+import { MosaicCreationTransaction as MosaicDefinitionTransactionLibrary, mosaicId as mosaicIdLibrary, VerifiableTransaction } from 'nem2-library';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { MosaicId } from '../mosaic/MosaicId';
+import { MosaicProperties } from '../mosaic/MosaicProperties';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 /**
  * Before a mosaic can be created or transferred, a corresponding definition of the mosaic has to be created and published to the network.
@@ -128,5 +124,30 @@ export class MosaicDefinitionTransaction extends Transaction {
         }
 
         return mosaicDefinitionTransaction.build();
+    }
+
+    /**
+     * @description re-aplly a given value to the transaction in an immutable way
+     * @param {Deadline} deadline
+     * @returns {Transaction}
+     * @memberof Transaction
+     */
+    public reaplygiven(newDeadline: Deadline): MosaicDefinitionTransaction {
+
+        if (this.isUnannounced) {
+            return new MosaicDefinitionTransaction(
+                this.networkType,
+                this.version,
+                newDeadline,
+                this.fee,
+                this.parentId,
+                this.mosaicId,
+                this.mosaicName,
+                this.mosaicProperties,
+                this.signature,
+                this.signer);
+        } else {
+            throw new Error('Should not modify an announced transaction');
+        }
     }
 }
