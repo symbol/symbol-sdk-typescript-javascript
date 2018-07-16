@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SecretLockTransaction as SecretLockTransactionLibrary, VerifiableTransaction} from 'nem2-library';
-import {Address} from '../account/Address';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {Mosaic} from '../mosaic/Mosaic';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
-import {HashType, HashTypeLengthValidator} from './HashType';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
+import { SecretLockTransaction as SecretLockTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { Address } from '../account/Address';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { Mosaic } from '../mosaic/Mosaic';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { HashType, HashTypeLengthValidator } from './HashType';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 export class SecretLockTransaction extends Transaction {
 
@@ -124,5 +124,31 @@ export class SecretLockTransaction extends Transaction {
             .addSecret(this.secret)
             .addRecipient(this.recipient.plain())
             .build();
+    }
+
+    /**
+     * @description re-aplly a given value to the transaction in an immutable way
+     * @param {Deadline} deadline
+     * @returns {Transaction}
+     * @memberof Transaction
+     */
+    public reaplygiven(newDeadline: Deadline): SecretLockTransaction {
+
+        if (this.isUnannounced) {
+            return new SecretLockTransaction(
+            this.networkType,
+            this.version,
+            newDeadline,
+            this.fee,
+            this.mosaic,
+            this.duration,
+            this.hashType,
+            this.secret,
+            this.recipient,
+            this.signature,
+            this.signer);
+        } else {
+            throw new Error('Should not modify an announced transaction');
+        }
     }
 }
