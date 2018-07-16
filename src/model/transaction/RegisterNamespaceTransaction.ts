@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-import {
-    NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary,
-    subnamespaceNamespaceId,
-    subnamespaceParentId,
-    VerifiableTransaction,
-} from 'nem2-library';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {NamespaceId} from '../namespace/NamespaceId';
-import {NamespaceType} from '../namespace/NamespaceType';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
+import { NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary, subnamespaceNamespaceId, subnamespaceParentId, VerifiableTransaction } from 'nem2-library';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { NamespaceId } from '../namespace/NamespaceId';
+import { NamespaceType } from '../namespace/NamespaceType';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 /**
  * Accounts can rent a namespace for an amount of blocks and after a this renew the contract.
@@ -154,5 +149,31 @@ export class RegisterNamespaceTransaction extends Transaction {
         }
 
         return registerNamespacetransaction.build();
+    }
+
+    /**
+     * @description re-aplly a given value to the transaction in an immutable way
+     * @param {Deadline} deadline
+     * @returns {Transaction}
+     * @memberof Transaction
+     */
+    public reaplygiven(newDeadline: Deadline): RegisterNamespaceTransaction {
+
+        if (this.isUnannounced) {
+            return new RegisterNamespaceTransaction(
+                this.networkType,
+                this.version,
+                newDeadline,
+                this.fee,
+                this.namespaceType,
+                this.namespaceName,
+                this.namespaceId,
+                this.duration,
+                this.parentId,
+                this.signature,
+                this.signer);
+        } else {
+            throw new Error('Should not modify an announced transaction');
+        }
     }
 }
