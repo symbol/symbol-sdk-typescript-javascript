@@ -56,7 +56,7 @@ export abstract class Transaction {
                 /**
                  * The deadline to include the transaction.
                  */
-                public deadline: Deadline,
+                public readonly deadline: Deadline,
                 /**
                  * The fee for the transaction. The higher the fee, the higher the priority of the transaction.
                  * Transactions with high priority get included in a block before transactions with lower priority.
@@ -156,4 +156,12 @@ export abstract class Transaction {
         const versionDTO = this.networkType.toString(16) + '0' + this.version.toString(16);
         return parseInt(versionDTO, 16);
     }
+
+    /**
+     * @description re-aplly a given value to the transaction in an immutable way
+     * @param {Deadline} deadline
+     * @returns {Transaction}
+     * @memberof Transaction
+     */
+    public abstract reaplygiven(deadline: Deadline, signedTransaction?: SignedTransaction): Transaction;
 }
