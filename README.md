@@ -14,6 +14,7 @@ with the NEM2 (a.k.a Catapult)
 
 - NodeJS 8.9.X
 - NodeJS 9.X.X
+- NodeJS 10.X.X
 
 ## Documentation and Getting Started
 

@@ -55,13 +55,13 @@ describe('NamespaceService', () => {
         namespaceService = new NamespaceService(namespaceHttp);
     });
 
-    it('should return the NamespaceInfo + name', () => {
+    it('should return the NamespaceInfo + name for a root namespace', () => {
         return namespaceService.namespace(rootNamespace.id).toPromise().then((namespace) => {
             expect(namespace.name).to.be.equal('nem2tests');
         });
     });
 
-    it('should return the NamespaceInfo + name', () => {
+    it('should return the NamespaceInfo + name for a subnamespace', () => {
         return namespaceService.namespace(subnamespace.id).toPromise().then((namespace) => {
             expect(namespace.name).to.be.equal('nem2tests.level2');
         });
