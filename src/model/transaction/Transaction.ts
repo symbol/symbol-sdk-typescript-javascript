@@ -163,11 +163,10 @@ export abstract class Transaction {
      * @returns {Transaction}
      * @memberof Transaction
      */
-    public reapplygiven(deadline: Deadline): Transaction {
+    public replyGiven(deadline: Deadline = Deadline.create()): Transaction {
         if (this.isUnannounced()) {
             return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {deadline});
-        } else {
-            throw new Error('an Announced transaction can\'t be modified');
         }
+        throw new Error('an Announced transaction can\'t be modified');
     }
 }

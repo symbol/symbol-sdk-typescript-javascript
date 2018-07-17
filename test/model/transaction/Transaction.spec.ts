@@ -99,7 +99,7 @@ describe('Transaction', () => {
         });
     });
 
-    describe('reapplygiven', () => {
+    describe('replyGiven', () => {
         it('should throw an error if the transaction is announced', () => {
             const transaction = new FakeTransaction(TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
@@ -111,7 +111,7 @@ describe('Transaction', () => {
                 new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
             );
             expect(() => {
-                transaction.reapplygiven(Deadline.create());
+                transaction.replyGiven(Deadline.create());
             }).to.throws('an Announced transaction can\'t be modified');
         });
         it('should return a new transaction', () => {
@@ -124,7 +124,7 @@ describe('Transaction', () => {
                 undefined,
             );
 
-            const newTransaction = transaction.reapplygiven(Deadline.create());
+            const newTransaction = transaction.replyGiven(Deadline.create());
             expect(newTransaction).to.not.equal(transaction);
         });
         it('should overide deadline properly', () => {
@@ -137,9 +137,11 @@ describe('Transaction', () => {
                 undefined,
             );
 
-            const newTransaction = transaction.reapplygiven(Deadline.create(3));
+            const newDeadline = Deadline.create(3);
+            const newTransaction = transaction.replyGiven(newDeadline);
             const equal = newTransaction.deadline.value.equals(transaction.deadline.value);
             const after = newTransaction.deadline.value.isAfter(transaction.deadline.value);
+            expect(newTransaction.deadline).to.be.equal(newDeadline);
             expect(equal).to.be.equal(false);
             expect(after).to.be.equal(true);
         });

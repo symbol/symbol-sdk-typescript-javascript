@@ -5,7 +5,6 @@
   "scripts": {
     "pretest": "npm run build",
     "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
-    "tran": "mocha --ui bdd --recursive ./dist/test/model/transaction/Transaction.spec --timeout 90000",
     "test:e2e": "mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
     "test:all": "mocha --ui bdd --recursive ./dist/ --timeout 90000",
     "build": "rm -rf dist/ && tsc",
