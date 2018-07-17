@@ -106,27 +106,4 @@ export class ModifyMultisigAccountTransaction extends Transaction {
             .build();
     }
 
-    /**
-     * @description re-aplly a given value to the transaction in an immutable way
-     * @param {Deadline} deadline
-     * @returns {Transaction}
-     * @memberof Transaction
-     */
-    public reaplygiven(newDeadline: Deadline): ModifyMultisigAccountTransaction {
-
-        if (this.isUnannounced) {
-            return new ModifyMultisigAccountTransaction(
-                this.networkType,
-                this.version,
-                newDeadline,
-                this.fee,
-                this.minApprovalDelta,
-                this.minRemovalDelta,
-                this.modifications,
-                this.signature,
-                this.signer);
-        } else {
-            throw new Error('Should not modify an announced transaction');
-        }
-    }
 }

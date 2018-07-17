@@ -98,6 +98,52 @@ describe('Transaction', () => {
             expect(transaction.hasMissingSignatures()).to.be.equal(true);
         });
     });
+
+    describe('reapplygiven', () => {
+        it('should throw an error if the transaction is announced', () => {
+            const transaction = new FakeTransaction(TransactionType.TRANSFER,
+                NetworkType.MIJIN_TEST,
+                1,
+                Deadline.create(),
+                UInt64.fromUint(0),
+                undefined,
+                undefined,
+                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+            );
+            expect(() => {
+                transaction.reapplygiven(Deadline.create());
+            }).to.throws('an Announced transaction can\'t be modified');
+        });
+        it('should return a new transaction', () => {
+            const transaction = new FakeTransaction(TransactionType.TRANSFER,
+                NetworkType.MIJIN_TEST,
+                1,
+                Deadline.create(),
+                UInt64.fromUint(0),
+                undefined,
+                undefined,
+            );
+
+            const newTransaction = transaction.reapplygiven(Deadline.create());
+            expect(newTransaction).to.not.equal(transaction);
+        });
+        it('should overide deadline properly', () => {
+            const transaction = new FakeTransaction(TransactionType.TRANSFER,
+                NetworkType.MIJIN_TEST,
+                1,
+                Deadline.create(),
+                UInt64.fromUint(0),
+                undefined,
+                undefined,
+            );
+
+            const newTransaction = transaction.reapplygiven(Deadline.create(3));
+            const equal = newTransaction.deadline.value.equals(transaction.deadline.value);
+            const after = newTransaction.deadline.value.isAfter(transaction.deadline.value);
+            expect(equal).to.be.equal(false);
+            expect(after).to.be.equal(true);
+        });
+    });
 });
 
 class FakeTransaction extends Transaction {
@@ -106,10 +152,6 @@ class FakeTransaction extends Transaction {
     }
 
     protected buildTransaction(): VerifiableTransaction {
-        throw new Error('Method not implemented.');
-    }
-
-    public reaplygiven(newdeadline: Deadline): Transaction {
         throw new Error('Method not implemented.');
     }
 }

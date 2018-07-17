@@ -145,28 +145,4 @@ export class AggregateTransaction extends Transaction {
             || (this.signer !== undefined && this.signer.equals(publicAccount));
     }
 
-    /**
-     * @description re-aplly a given value to the transaction in an immutable way
-     * @param {Deadline} deadline
-     * @returns {Transaction}
-     * @memberof Transaction
-     */
-    public reaplygiven(newDeadline: Deadline): AggregateTransaction {
-
-        if (this.isUnannounced) {
-            return new AggregateTransaction(
-            this.networkType,
-            this.type,
-            this.version,
-            newDeadline,
-            this.fee,
-            this.innerTransactions,
-            this.cosignatures,
-            this.signature,
-            this.signer);
-        } else {
-            throw new Error('Should not modify an announced transaction');
-        }
-    }
-
 }

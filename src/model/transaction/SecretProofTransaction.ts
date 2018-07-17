@@ -96,27 +96,4 @@ export class SecretProofTransaction extends Transaction {
             .build();
     }
 
-    /**
-     * @description re-aplly a given value to the transaction in an immutable way
-     * @param {Deadline} deadline
-     * @returns {Transaction}
-     * @memberof Transaction
-     */
-    public reaplygiven(newDeadline: Deadline): SecretProofTransaction {
-
-        if (this.isUnannounced) {
-            return new SecretProofTransaction(
-            this.networkType,
-            this.version,
-            newDeadline,
-            this.fee,
-            this.hashType,
-            this.secret,
-            this.proof,
-            this.signature,
-            this.signer);
-        } else {
-            throw new Error('Should not modify an announced transaction');
-        }
-    }
 }

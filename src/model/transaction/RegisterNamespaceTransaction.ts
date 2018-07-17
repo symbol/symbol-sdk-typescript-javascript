@@ -151,29 +151,4 @@ export class RegisterNamespaceTransaction extends Transaction {
         return registerNamespacetransaction.build();
     }
 
-    /**
-     * @description re-aplly a given value to the transaction in an immutable way
-     * @param {Deadline} deadline
-     * @returns {Transaction}
-     * @memberof Transaction
-     */
-    public reaplygiven(newDeadline: Deadline): RegisterNamespaceTransaction {
-
-        if (this.isUnannounced) {
-            return new RegisterNamespaceTransaction(
-                this.networkType,
-                this.version,
-                newDeadline,
-                this.fee,
-                this.namespaceType,
-                this.namespaceName,
-                this.namespaceId,
-                this.duration,
-                this.parentId,
-                this.signature,
-                this.signer);
-        } else {
-            throw new Error('Should not modify an announced transaction');
-        }
-    }
 }

@@ -104,27 +104,4 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             .build();
     }
 
-    /**
-     * @description re-aplly a given value to the transaction in an immutable way
-     * @param {Deadline} deadline
-     * @returns {Transaction}
-     * @memberof Transaction
-     */
-    public reaplygiven(newDeadline: Deadline): MosaicSupplyChangeTransaction {
-
-        if (this.isUnannounced) {
-            return new MosaicSupplyChangeTransaction(
-                this.networkType,
-                this.version,
-                newDeadline,
-                this.fee,
-                this.mosaicId,
-                this.direction,
-                this.delta,
-                this.signature,
-                this.signer);
-        } else {
-            throw new Error('Should not modify an announced transaction');
-        }
-    }
 }

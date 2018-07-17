@@ -114,28 +114,4 @@ export class LockFundsTransaction extends Transaction {
             .build();
     }
 
-    /**
-     * @description re-aplly a given value to the transaction in an immutable way
-     * @param {Deadline} deadline
-     * @returns {Transaction}
-     * @memberof Transaction
-     */
-    public reaplygiven(deadline: Deadline, signedTransaction: SignedTransaction): LockFundsTransaction {
-
-        if (this.isUnannounced) {
-            return new LockFundsTransaction(
-            this.networkType,
-            this.type,
-            deadline,
-            this.fee,
-            this.mosaic,
-            this.duration,
-            signedTransaction,
-            this.signature,
-            this.signer);
-        } else {
-            throw new Error('Should not modify an announced transaction');
-        }
-    }
-
 }

@@ -126,28 +126,4 @@ export class MosaicDefinitionTransaction extends Transaction {
         return mosaicDefinitionTransaction.build();
     }
 
-    /**
-     * @description re-aplly a given value to the transaction in an immutable way
-     * @param {Deadline} deadline
-     * @returns {Transaction}
-     * @memberof Transaction
-     */
-    public reaplygiven(newDeadline: Deadline): MosaicDefinitionTransaction {
-
-        if (this.isUnannounced) {
-            return new MosaicDefinitionTransaction(
-                this.networkType,
-                this.version,
-                newDeadline,
-                this.fee,
-                this.parentId,
-                this.mosaicId,
-                this.mosaicName,
-                this.mosaicProperties,
-                this.signature,
-                this.signer);
-        } else {
-            throw new Error('Should not modify an announced transaction');
-        }
-    }
 }

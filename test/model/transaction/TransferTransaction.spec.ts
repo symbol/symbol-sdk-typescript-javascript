@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Account} from '../../../src/model/account/Account';
-import {Address} from '../../../src/model/account/Address';
-import {XEM} from '../../../src/model/mosaic/XEM';
-import {Deadline} from '../../../src/model/transaction/Deadline';
-import {PlainMessage} from '../../../src/model/transaction/PlainMessage';
-import {TransferTransaction} from '../../../src/model/transaction/TransferTransaction';
-import {TestingAccount} from '../../conf/conf.spec';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import { expect } from 'chai';
+import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { XEM } from '../../../src/model/mosaic/XEM';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
+import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('TransferTransaction', () => {
     let account: Account;
