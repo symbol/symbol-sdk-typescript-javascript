@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Account} from '../../../src/model/account/Account';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import { PublicAccount } from '../../../src/model/model';
+import { expect } from 'chai';
+import { convert } from 'nem2-library';
+import { Account } from '../../../src/model/account/Account';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 
 describe('Account', () => {
     const accountInformation = {
@@ -66,6 +66,20 @@ describe('Account', () => {
             const publicAccount = account.publicAccount;
             const signed = account.signData('0xAA');
             expect(publicAccount.verifySignature('0xAA', signed))
+                .to.be.true;
+        });
+    });
+
+    describe('signBinary', () => {
+        it('utf-8', () => {
+            const account = Account.createFromPrivateKey(
+                'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
+                NetworkType.MIJIN_TEST,
+            );
+            const publicAccount = account.publicAccount;
+            const binData = convert.hexToUint8(convert.utf8ToHex('catapult rocks!'));
+            const signed = account.signBinary(binData);
+            expect(publicAccount.verifySignature('catapult rocks!', signed))
                 .to.be.true;
         });
     });

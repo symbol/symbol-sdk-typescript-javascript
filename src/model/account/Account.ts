@@ -133,17 +133,22 @@ export class Account {
     }
 
     /**
-     * Sign raw data
+     * Sign raw string data
      * @param data - Data to be signed
      * @return {string} - Signed data result
      */
-    public signData(data: string | Uint8Array): string {
-        if (typeof data === "string") {
-            return convert.uint8ToHex(KeyPair.sign(this.keyPair,
-                convert.hexToUint8(convert.utf8ToHex(data)),
-            ));
-        } else {
-            return convert.uint8ToHex(KeyPair.sign(this.keyPair,data));
-        }
+    public signData(data: string): string {
+        return convert.uint8ToHex(KeyPair.sign(this.keyPair,
+            convert.hexToUint8(convert.utf8ToHex(data)),
+        ));
+    }
+
+    /**
+     * Sign raw binary data
+     * @param data - Data to be signed
+     * @return {string} - Signed data result
+     */
+    public signBinary(data: Uint8Array): string {
+        return convert.uint8ToHex(KeyPair.sign(this.keyPair, data));
     }
 }
