@@ -31,18 +31,4 @@ describe('Listener', () => {
             listener.close();
         });
     });
-
-    describe('onerror', () => {
-        it('should reject because of wrong server url', async () => {
-            const listener = new Listener('https://notcorrecturl:0000');
-            await listener.open()
-                .then((result) => {
-                    throw new Error('This should not be called when expecting error');
-                })
-                .catch((error) => {
-                    expect(error.toString()).to.be.equal("Error: getaddrinfo ENOTFOUND notcorrecturl notcorrecturl:0000");
-                })
-        });
-    });
-
 });
