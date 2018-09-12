@@ -107,6 +107,7 @@ export class Listener {
                 this.webSocket.onerror = (err) => {
                     console.log('WebSocket Error ');
                     console.log(err);
+                    reject(err);
                 };
                 this.webSocket.onmessage = (msg) => {
                     const message = JSON.parse(msg.data as string);
