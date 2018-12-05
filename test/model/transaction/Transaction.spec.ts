@@ -99,7 +99,7 @@ describe('Transaction', () => {
         });
     });
 
-    describe('replyGiven', () => {
+    describe('reapplyGiven', () => {
         it('should throw an error if the transaction is announced', () => {
             const transaction = new FakeTransaction(TransactionType.TRANSFER,
                 NetworkType.MIJIN_TEST,
