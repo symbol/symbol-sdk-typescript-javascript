@@ -59,6 +59,13 @@ describe('Uint64', () => {
         expect(uint64.higher).to.be.equal(11);
     });
 
+    it('should fromUint throw when trying to create UInt64 object fromUint with -1', () => {
+      const uint = -1;
+      expect(() => {
+          UInt64.fromUint(uint);
+      }).to.throw(Error, 'number cannot be converted to uint \'-1\'');
+    });
+
     it('should compact UInt64 number', () => {
         const uint64Compact = new UInt64([3866227606, 11]).compact();
         expect(uint64Compact).to.be.equal(51110867862);

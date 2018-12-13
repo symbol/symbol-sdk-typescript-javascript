@@ -37,6 +37,10 @@ export class UInt64 {
      * @returns {UInt64}
      */
     public static fromUint(value: number): UInt64 {
+        const uintArray = [(value & 0xFFFFFFFF) >>> 0, (value / 0x100000000) >>> 0];
+        if (0x00200000 <= uintArray[1] || 0 > value || 0 !== (value % 1))
+            throw Error(`number cannot be converted to uint '${value}'`);
+
         return new UInt64(uint64.fromUint(value));
     }
 
