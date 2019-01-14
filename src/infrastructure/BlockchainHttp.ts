@@ -154,9 +154,9 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
         return observableFrom(
             this.blockchainRoutesApi.getDiagnosticStorage()).pipe(map((blockchainStorageInfoDTO) => {
             return new BlockchainStorageInfo(
+                blockchainStorageInfoDTO.numAccounts,
                 blockchainStorageInfoDTO.numBlocks,
                 blockchainStorageInfoDTO.numTransactions,
-                blockchainStorageInfoDTO.numAccounts,
             );
         }));
     }
