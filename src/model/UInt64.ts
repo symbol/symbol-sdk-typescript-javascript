@@ -37,6 +37,9 @@ export class UInt64 {
      * @returns {UInt64}
      */
     public static fromUint(value: number): UInt64 {
+        if (value < 0) {
+            throw new Error('Unit value cannot be negative');
+        }
         return new UInt64(uint64.fromUint(value));
     }
 
