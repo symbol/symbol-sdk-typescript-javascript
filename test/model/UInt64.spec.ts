@@ -67,7 +67,7 @@ describe('Uint64', () => {
     it('should fromUnit throw exception with negative unit value', () => {
         expect(() => {
             UInt64.fromUint(-1);
-        }).to.throw(Error, 'Unit value cannot be negative');
+        }).to.throw(Error, 'Unsigned integer cannot be negative');
     });
 
     describe('equal', () => {
