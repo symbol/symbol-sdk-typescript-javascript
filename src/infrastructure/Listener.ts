@@ -189,7 +189,7 @@ export class Listener {
             share(),
             filter((_) => _.channelName === ListenerChannelName.block),
             filter((_) => _.message instanceof BlockInfo),
-            map((_) => _.message as BlockInfo),);
+            map((_) => _.message as BlockInfo));
     }
 
     /**
@@ -206,7 +206,7 @@ export class Listener {
             filter((_) => _.channelName === ListenerChannelName.confirmedAdded),
             filter((_) => _.message instanceof Transaction),
             map((_) => _.message as Transaction),
-            filter((_) => this.transactionFromAddress(_, address)),);
+            filter((_) => this.transactionFromAddress(_, address)));
     }
 
     /**
@@ -223,7 +223,7 @@ export class Listener {
             filter((_) => _.channelName === ListenerChannelName.unconfirmedAdded),
             filter((_) => _.message instanceof Transaction),
             map((_) => _.message as Transaction),
-            filter((_) => this.transactionFromAddress(_, address)),);
+            filter((_) => this.transactionFromAddress(_, address)));
     }
 
     /**
@@ -239,7 +239,7 @@ export class Listener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.unconfirmedRemoved),
             filter((_) => typeof _.message === 'string'),
-            map((_) => _.message as string),);
+            map((_) => _.message as string));
     }
 
     /**
@@ -256,7 +256,7 @@ export class Listener {
             filter((_) => _.channelName === ListenerChannelName.aggregateBondedAdded),
             filter((_) => _.message instanceof AggregateTransaction),
             map((_) => _.message as AggregateTransaction),
-            filter((_) => this.transactionFromAddress(_, address)),);
+            filter((_) => this.transactionFromAddress(_, address)));
     }
 
     /**
@@ -272,7 +272,7 @@ export class Listener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.aggregateBondedRemoved),
             filter((_) => typeof _.message === 'string'),
-            map((_) => _.message as string),);
+            map((_) => _.message as string));
     }
 
     /**
@@ -288,7 +288,7 @@ export class Listener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.status),
             filter((_) => _.message instanceof TransactionStatusError),
-            map((_) => _.message as TransactionStatusError),);
+            map((_) => _.message as TransactionStatusError));
     }
 
     /**
@@ -304,7 +304,7 @@ export class Listener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.cosignature),
             filter((_) => _.message instanceof CosignatureSignedTransaction),
-            map((_) => _.message as CosignatureSignedTransaction),);
+            map((_) => _.message as CosignatureSignedTransaction));
     }
 
     /**
@@ -318,6 +318,18 @@ export class Listener {
             subscribe: channel,
         };
         this.webSocket.send(JSON.stringify(subscriptionMessage));
+    }
+
+    /**
+     * @internal
+     * @param channel - Channel to unsubscribe
+     */
+    private unsubscribeTo(channel: string) {
+        const unsubscribeMessage = {
+            uid: this.uid,
+            unsubscribe: channel,
+        };
+        this.webSocket.send(JSON.stringify(unsubscribeMessage));
     }
 
     /**
