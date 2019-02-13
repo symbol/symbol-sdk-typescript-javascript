@@ -73,7 +73,7 @@ describe('Uint64', () => {
         expect(uint64Compact).to.be.equal(51110867862);
     });
 
-    it('should fromUnit throw exception with negative unit value', () => {
+    it('should fromUnit throw exception with negative uint value', () => {
         expect(() => {
             UInt64.fromUint(-1);
         }).to.throw(Error, 'Unsigned integer cannot be negative');
