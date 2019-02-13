@@ -22,6 +22,7 @@ import {PublicAccount} from '../model/account/PublicAccount';
 import {CosignatureSignedTransaction} from '../model/transaction/CosignatureSignedTransaction';
 import {Deadline} from '../model/transaction/Deadline';
 import {SignedTransaction} from '../model/transaction/SignedTransaction';
+import { SyncAnnounce } from '../model/transaction/SyncAnnounce';
 import {Transaction} from '../model/transaction/Transaction';
 import {TransactionAnnounceResponse} from '../model/transaction/TransactionAnnounceResponse';
 import {TransactionStatus} from '../model/transaction/TransactionStatus';
@@ -93,7 +94,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     transactionStatusDTO.status,
                     transactionStatusDTO.hash,
                     Deadline.createFromDTO(transactionStatusDTO.deadline),
-                    new UInt64(transactionStatusDTO.height));
+                    transactionStatusDTO.height ? new UInt64(transactionStatusDTO.height) : UInt64.fromUint(0));
             }));
     }
 
@@ -115,7 +116,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
                         transactionStatusDTO.status,
                         transactionStatusDTO.hash,
                         Deadline.createFromDTO(transactionStatusDTO.deadline),
-                        new UInt64(transactionStatusDTO.height));
+                        transactionStatusDTO.height ? new UInt64(transactionStatusDTO.height) : UInt64.fromUint(0));
                 });
             }));
     }
@@ -182,27 +183,11 @@ export class TransactionHttp extends Http implements TransactionRepository {
             } else {
                 return CreateTransactionFromDTO(response);
             }
-        }),catchError((err) => {
+        }), catchError((err) => {
             if (err.statusCode === 405) {
                 return observableThrowError('non sync server');
             }
             return observableThrowError(err);
-        }),);
-    }
-}
-
-class SyncAnnounce {
-    constructor(/**
-                 * Transaction serialized data
-                 */
-                public readonly payload: string,
-                /**
-                 * Transaction hash
-                 */
-                public readonly hash: string,
-                /**
-                 * Transaction address
-                 */
-                public readonly address: string) {
+        }));
     }
 }
