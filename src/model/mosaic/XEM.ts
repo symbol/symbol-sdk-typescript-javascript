@@ -49,15 +49,13 @@ export class XEM extends Mosaic {
 
     /**
      * mosaicId
+     * 
+     * UInt64 XEM mosaic ID: [3294802500, 2243684972]
+     * Hexadecimal XEM mosaic ID: 85bbea6cc462b244
+     *
      * @type {Id}
      */
-    public static MOSAIC_ID = new MosaicId('nem:xem');
-
-    /**
-     * namespaceId
-     * @type {Id}
-     */
-    public static NAMESPACE_ID = new NamespaceId('nem');
+    public static MOSAIC_ID = new MosaicId([3294802500, 2243684972]);
 
     /**
      * constructor

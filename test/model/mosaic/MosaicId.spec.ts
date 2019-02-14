@@ -20,15 +20,22 @@ import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 
 describe('MosaicId', () => {
 
+    /**
+     * Deprecated initialization with MosaicName.
+         * To be re-introduced after AliasTransaction implementation.
+     *
+     * @deprecated
     it('should be created from full name', () => {
         const id = new MosaicId('nem:xem');
-        deepEqual(id.id, new Id([3646934825, 3576016193]));
+        deepEqual(id.id, new Id([3294802500, 2243684972]));
         expect(id.fullName).to.be.equal('nem:xem');
     });
+     *
+     */
 
     it('should be created from id', () => {
-        const id = new MosaicId([3646934825, 3576016193]);
-        deepEqual(id.id, new Id([3646934825, 3576016193]));
+        const id = new MosaicId([3294802500, 2243684972]);
+        deepEqual(id.id, new Id([3294802500, 2243684972]));
         expect(id.fullName).to.be.equal(undefined);
     });
 });
