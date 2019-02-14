@@ -16,9 +16,8 @@
 
 import {PublicAccount} from '../account/PublicAccount';
 import {UInt64} from '../UInt64';
-import {MosaicProperties} from './MosaicProperties';
-import {NamespaceId} from '../namespace/NamespaceId';
 import {MosaicId} from './MosaicId';
+import {MosaicProperties} from './MosaicProperties';
 
 /**
  * The mosaic info structure describes a mosaic.
@@ -29,8 +28,7 @@ export class MosaicInfo {
      * @param active
      * @param index
      * @param metaId
-     * @param namespaceId
-     * @param mosaicId
+     * @param nonce
      * @param supply
      * @param height
      * @param owner
@@ -50,13 +48,13 @@ export class MosaicInfo {
                  */
                 public readonly metaId: string,
                 /**
-                 * The namespace id.
-                 */
-                public readonly namespaceId: NamespaceId,
-                /**
-                 * The mosaic id.
+                 * The mosaic nonce.
                  */
                 public readonly mosaicId: MosaicId,
+                /**
+                 * The mosaic nonce.
+                 */
+                public readonly nonce: UInt64,
                 /**
                  * The mosaic supply.
                  */
@@ -118,4 +116,5 @@ export class MosaicInfo {
     public isLevyMutable(): boolean {
         return this.properties.levyMutable;
     }
+
 }

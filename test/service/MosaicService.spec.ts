@@ -21,6 +21,7 @@ import {NamespaceHttp} from '../../src/infrastructure/NamespaceHttp';
 import {Address} from '../../src/model/account/Address';
 import {Mosaic} from '../../src/model/mosaic/Mosaic';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
+import {MosaicInfo} from '../../src/model/mosaic/MosaicInfo';
 import {UInt64} from '../../src/model/UInt64';
 import {MosaicAmountView} from '../../src/service/MosaicAmountView';
 import {MosaicService} from '../../src/service/MosaicService';
@@ -29,13 +30,12 @@ import * as conf from '../conf/conf.spec';
 
 describe('MosaicService', () => {
     it('mosaicsView', () => {
-        const mosaicId = new MosaicId([3646934825, 3576016193]);
+        const mosaicId = new MosaicId([3294802500, 2243684972]);
         const mosaicService = new MosaicService(
             new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL), new NamespaceHttp(conf.NIS2_URL));
         return mosaicService.mosaicsView([mosaicId]).subscribe((mosaicsView: MosaicView[]) => {
             const mosaicView = mosaicsView[0];
-            expect(mosaicView.mosaicName).to.be.equal('xem');
-            expect(mosaicView.namespaceName).to.be.equal('nem');
+            expect(mosaicView.mosaicInfo).to.be.an.instanceof(MosaicInfo);
         });
     });
 
@@ -54,8 +54,7 @@ describe('MosaicService', () => {
         return mosaicService.mosaicsAmountViewFromAddress(Address.createFromRawAddress('SARNASAS2BIAB6LMFA3FPMGBPGIJGK6IJETM3ZSP'))
             .subscribe((mosaicsAmountView: MosaicAmountView[]) => {
                 const mosaicAmountView = mosaicsAmountView[0];
-                expect(mosaicAmountView.mosaicName).to.be.equal('xem');
-                expect(mosaicAmountView.namespaceName).to.be.equal('nem');
+                expect(mosaicAmountView.mosaicInfo).to.be.an.instanceof(MosaicInfo);
             });
     });
 
@@ -74,8 +73,7 @@ describe('MosaicService', () => {
             new AccountHttp(conf.NIS2_URL), new MosaicHttp(conf.NIS2_URL), new NamespaceHttp(conf.NIS2_URL));
         return mosaicService.mosaicsAmountView([mosaic]).subscribe((mosaicsAmountView: MosaicAmountView[]) => {
             const mosaicAmountView = mosaicsAmountView[0];
-            expect(mosaicAmountView.mosaicName).to.be.equal('xem');
-            expect(mosaicAmountView.namespaceName).to.be.equal('nem');
+            expect(mosaicAmountView.mosaicInfo).to.be.an.instanceof(MosaicInfo);
             expect(mosaicAmountView.amount.compact()).to.be.equal(1000);
         });
     });

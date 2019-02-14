@@ -15,7 +15,7 @@
  */
 
 import { Observable, of as observableOf } from 'rxjs';
-import { filter, map, mergeMap, take, toArray, first } from 'rxjs/operators';
+import { filter, first, map, mergeMap, take, toArray } from 'rxjs/operators';
 import { AccountHttp } from '../infrastructure/AccountHttp';
 import { MosaicHttp } from '../infrastructure/MosaicHttp';
 import { NamespaceHttp } from '../infrastructure/NamespaceHttp';
@@ -50,16 +50,11 @@ export class MosaicService {
      */
     mosaicsView(mosaicIds: MosaicId[]): Observable<MosaicView[]> {
         return observableOf(mosaicIds).pipe(
-            mergeMap((_) => this.mosaicHttp.getMosaics(mosaicIds)),
-            mergeMap((_) => _),
-            mergeMap((mosaicInfo: MosaicInfo) => this.mosaicHttp.getMosaicsName([mosaicInfo.mosaicId]).pipe(map((mosaicsName) => {
-                return { mosaicInfo, mosaicName: mosaicsName[0].name };
-            }))),
-            mergeMap((_) => this.namespaceHttp.getNamespacesName([_.mosaicInfo.namespaceId]).pipe(
-                map((namespacesName) => {
-                    return new MosaicView(_.mosaicInfo, namespacesName[0].name, _.mosaicName);
-                }))),
-            toArray());
+            mergeMap((_) => this.mosaicHttp.getMosaics(mosaicIds).pipe(
+                map((mosaicInfo: MosaicInfo) => {
+                    return new MosaicView(mosaicInfo);
+                }),
+                toArray())));
     }
 
     /**
@@ -73,10 +68,7 @@ export class MosaicService {
             mergeMap((mosaic: Mosaic) => this.mosaicsView([mosaic.id]).pipe(
                 filter((_) => _.length !== 0),
                 map<MosaicView[], MosaicAmountView>((mosaicViews) => {
-                    return new MosaicAmountView(mosaicViews[0].mosaicInfo,
-                        mosaicViews[0].namespaceName,
-                        mosaicViews[0].mosaicName,
-                        mosaic.amount);
+                    return new MosaicAmountView(mosaicViews[0].mosaicInfo, mosaic.amount);
                 }),
             toArray())));
     }
