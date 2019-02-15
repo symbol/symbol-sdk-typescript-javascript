@@ -50,6 +50,8 @@
     "typescript-require": "^0.2.9-1"
   },
   "dependencies": {
+    "@types/crypto-js": "^3.1.43",
+    "crypto-js": "^3.1.9-1",
     "js-joda": "^1.6.2",
     "nem2-library": "^0.9.5",
     "request": "^2.83.0",
