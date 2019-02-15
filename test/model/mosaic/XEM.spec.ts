@@ -26,7 +26,7 @@ describe('XEM', () => {
 
         const xem = XEM.createRelative(1000);
 
-        deepEqual(xem.id.id.toHex(), '85bbea6cc462b244');
+        deepEqual(xem.id.id.toHex(), '0dc67fbe1cad29e3');
         expect(xem.amount.compact()).to.be.equal(1000 * 1000000);
     });
 
@@ -37,6 +37,6 @@ describe('XEM', () => {
     });
 
     it('should have valid statics', () => {
-        deepEqual(XEM.MOSAIC_ID.id, new MosaicId([3294802500, 2243684972]).id);
+        deepEqual(XEM.MOSAIC_ID.id, new MosaicId([481110499, 231112638]).id);
     });
 });
