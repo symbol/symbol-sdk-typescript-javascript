@@ -53,7 +53,7 @@ export class LockFundsTransaction extends Transaction {
                          networkType: NetworkType): LockFundsTransaction {
         return new LockFundsTransaction(
             networkType,
-            3,
+            1,
             deadline,
             UInt64.fromUint(0),
             mosaic,
