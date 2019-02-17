@@ -42,17 +42,16 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @returns {MosaicDefinitionTransaction}
      */
     public static create(deadline: Deadline,
-                         mosaicName: string,
-                         namespaceName: string,
+                         mosaicNonce: UInt64,
+                         mosaicId: UInt64,
                          mosaicProperties: MosaicProperties,
                          networkType: NetworkType): MosaicDefinitionTransaction {
         return new MosaicDefinitionTransaction(networkType,
             2,
             deadline,
             new UInt64([0, 0]),
-            new NamespaceId(namespaceName),
-            new MosaicId(mosaicIdLibrary(namespaceName, mosaicName)),
-            mosaicName,
+            mosaicNonce,
+            new MosaicId(mosaicId.toDTO()),
             mosaicProperties,
         );
     }
@@ -62,9 +61,8 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param fee
-     * @param parentId
+     * @param mosaicNonce
      * @param mosaicId
-     * @param mosaicName
      * @param mosaicProperties
      * @param signature
      * @param signer
@@ -75,17 +73,13 @@ export class MosaicDefinitionTransaction extends Transaction {
                 deadline: Deadline,
                 fee: UInt64,
                 /**
-                 * The namespace id.
+                 * The mosaic nonce.
                  */
-                public readonly parentId: NamespaceId,
+                public readonly mosaicNonce: UInt64,
                 /**
                  * The mosaic id.
                  */
                 public readonly mosaicId: MosaicId,
-                /**
-                 * The name of the mosaic.
-                 */
-                public readonly mosaicName: string,
                 /**
                  * The mosaic properties.
                  */
@@ -107,9 +101,8 @@ export class MosaicDefinitionTransaction extends Transaction {
             .addVersion(this.versionToDTO())
             .addDivisibility(this.mosaicProperties.divisibility)
             .addDuration(this.mosaicProperties.duration.toDTO())
-            .addParentId(this.parentId.id.toDTO())
-            .addMosaicId(this.mosaicId.id.toDTO())
-            .addMosaicName(this.mosaicName);
+            .addNonce(this.mosaicNonce.toDTO())
+            .addMosaicId(this.mosaicId.id.toDTO());
 
         if (this.mosaicProperties.supplyMutable === true) {
             mosaicDefinitionTransaction = mosaicDefinitionTransaction.addSupplyMutable();

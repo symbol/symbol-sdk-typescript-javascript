@@ -48,7 +48,7 @@ export class MosaicInfo {
                  */
                 public readonly metaId: string,
                 /**
-                 * The mosaic nonce.
+                 * The mosaic id.
                  */
                 public readonly mosaicId: MosaicId,
                 /**

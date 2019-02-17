@@ -98,8 +98,8 @@ describe('AggregateTransaction', () => {
     it('should createComplete an AggregateTransaction object with MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            'test-mosaic-name',
-            'test-parent-name',
+            UInt64.fromUint(1), // nonce
+            UInt64.fromUint(1), // ID
             MosaicProperties.create({
                 supplyMutable: true,
                 transferable: true,
@@ -119,12 +119,12 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('D1000000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('5500000055000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('C2000000');
+        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('4600000046000000');
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('02904D41967D149BA9BC5A5B4CCCD78612DDF5CA10010703746573742D6D6F736169632D6E616D6502E803000000000000');
+        )).to.be.equal('02904D4101000000000000000100000000000000000107030002E803000000000000');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicSupplyChangeTransaction', () => {

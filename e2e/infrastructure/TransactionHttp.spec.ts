@@ -151,8 +151,8 @@ describe('TransactionHttp', () => {
             it('standalone', (done) => {
                 const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                     Deadline.create(),
-                    'test-mosaic-name-' + Math.floor(Math.random() * 10000),
-                    namespaceName,
+                    UInt64.fromUint(1),
+                    UInt64.fromUint(1),
                     MosaicProperties.create({
                         supplyMutable: true,
                         transferable: true,
@@ -170,8 +170,8 @@ describe('TransactionHttp', () => {
             it('aggregate', (done) => {
                 const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                     Deadline.create(),
-                    'test-mosaic-name-' + Math.floor(Math.random() * 10000),
-                    namespaceName,
+                    UInt64.fromUint(1),
+                    UInt64.fromUint(1),
                     MosaicProperties.create({
                         supplyMutable: true,
                         transferable: true,
