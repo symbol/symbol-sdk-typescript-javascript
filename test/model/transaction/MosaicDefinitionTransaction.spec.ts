@@ -22,6 +22,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicDefinitionTransaction} from '../../../src/model/transaction/MosaicDefinitionTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {convert, mosaicId, uint64 as uint64_t} from 'nem2-library';
 
 describe('MosaicDefinitionTransaction', () => {
     let account: Account;
@@ -58,15 +59,17 @@ describe('MosaicDefinitionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('01000000000000000100000000000000000107030002E803000000000000');
+        )).to.be.equal('010000000000000001070302E8030000');
 
     });
 
     it('should createComplete an MosaicDefinitionTransaction object and sign it with flags 0', () => {
+
+        const nonce = [0xE6, 0xDE, 0x84, 0xB8];
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            UInt64.fromUint(1),
-            UInt64.fromUint(1),
+            UInt64.fromUint(0xE6DE84B8),
+            UInt64.fromUint(mosaicId(nonce, convert.hexToUint8(account.publicKey))),
             MosaicProperties.create({
                 supplyMutable: false,
                 transferable: false,
@@ -77,7 +80,7 @@ describe('MosaicDefinitionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicDefinitionTransaction.mosaicNonce.compact()).to.be.equal(1);
+        expect(mosaicDefinitionTransaction.mosaicNonce.compact()).to.be.equal(0xE6DE84B8);
         expect(mosaicDefinitionTransaction.mosaicProperties.duration.lower).to.be.equal(1000);
         expect(mosaicDefinitionTransaction.mosaicProperties.duration.higher).to.be.equal(0);
         expect(mosaicDefinitionTransaction.mosaicProperties.divisibility).to.be.equal(3);
@@ -90,7 +93,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('01000000000000000100000000000000000100030002E803000000000000');
+        )).to.be.equal('000000000000000001000302E8030000');
 
     });
 });

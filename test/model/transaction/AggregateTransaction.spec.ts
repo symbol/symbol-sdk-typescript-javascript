@@ -92,7 +92,7 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('02904E4100E803000000000000CFCBE72D994BE61B13726F6F742D746573742D6E616D657370616365');
+        )).to.be.equal('02904E4100E803000000000000CFCBE72D994BE69B13726F6F742D746573742D6E616D657370616365');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicDefinitionTransaction', () => {
@@ -119,12 +119,12 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('C2000000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('4600000046000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('B4000000');
+        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('3800000038000000');
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('02904D4101000000000000000100000000000000000107030002E803000000000000');
+        )).to.be.equal('02904D41010000000000000001070302E8030000');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicSupplyChangeTransaction', () => {

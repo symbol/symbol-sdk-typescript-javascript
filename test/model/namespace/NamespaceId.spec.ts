@@ -28,7 +28,7 @@ describe('NamespaceId', () => {
 
     it('should be created from subnamespace name ', () => {
         const id = new NamespaceId('nem.subnem');
-        deepEqual(id.id, new Id([373240754, 1680408751]));
+        deepEqual(id.id, new Id([373240754, 3827892399]));
         expect(id.fullName).to.be.equal('nem.subnem');
     });
 
