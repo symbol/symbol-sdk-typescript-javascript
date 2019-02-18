@@ -124,7 +124,7 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('02904D41010000000000000001070302E8030000');
+        )).to.be.equal('03904D41010000000000000001070302E8030000');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicSupplyChangeTransaction', () => {

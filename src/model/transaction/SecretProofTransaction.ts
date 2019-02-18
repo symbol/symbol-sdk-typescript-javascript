@@ -43,7 +43,7 @@ export class SecretProofTransaction extends Transaction {
                          networkType: NetworkType): SecretProofTransaction {
         return new SecretProofTransaction(
             networkType,
-            3,
+            1,
             deadline,
             UInt64.fromUint(0),
             hashType,

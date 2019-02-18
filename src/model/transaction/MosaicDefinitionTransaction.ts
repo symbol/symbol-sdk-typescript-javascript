@@ -47,7 +47,7 @@ export class MosaicDefinitionTransaction extends Transaction {
                          mosaicProperties: MosaicProperties,
                          networkType: NetworkType): MosaicDefinitionTransaction {
         return new MosaicDefinitionTransaction(networkType,
-            2,
+            3,
             deadline,
             new UInt64([0, 0]),
             mosaicNonce,

@@ -49,7 +49,7 @@ export class SecretLockTransaction extends Transaction {
                          networkType: NetworkType): SecretLockTransaction {
         return new SecretLockTransaction(
             networkType,
-            3,
+            1,
             deadline,
             UInt64.fromUint(0),
             mosaic,
