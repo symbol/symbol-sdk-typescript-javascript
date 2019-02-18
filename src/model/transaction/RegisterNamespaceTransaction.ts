@@ -24,6 +24,7 @@ import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 /**
  * Accounts can rent a namespace for an amount of blocks and after a this renew the contract.
@@ -44,7 +45,7 @@ export class RegisterNamespaceTransaction extends Transaction {
                                       duration: UInt64,
                                       networkType: NetworkType): RegisterNamespaceTransaction {
         return new RegisterNamespaceTransaction(networkType,
-            2,
+            TransactionVersion.REGISTER_NAMESPACE,
             deadline,
             new UInt64([0, 0]),
             NamespaceType.RootNamespace,

@@ -24,6 +24,7 @@ import { SignedTransaction } from './SignedTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 /**
  * Lock funds transaction is used before sending an Aggregate bonded transaction, as a deposit to announce the transaction.
@@ -53,7 +54,7 @@ export class LockFundsTransaction extends Transaction {
                          networkType: NetworkType): LockFundsTransaction {
         return new LockFundsTransaction(
             networkType,
-            1,
+            TransactionVersion.LOCK,
             deadline,
             UInt64.fromUint(0),
             mosaic,

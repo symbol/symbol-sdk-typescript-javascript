@@ -25,6 +25,7 @@ import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 /**
  * Before a mosaic can be created or transferred, a corresponding definition of the mosaic has to be created and published to the network.
@@ -47,7 +48,7 @@ export class MosaicDefinitionTransaction extends Transaction {
                          mosaicProperties: MosaicProperties,
                          networkType: NetworkType): MosaicDefinitionTransaction {
         return new MosaicDefinitionTransaction(networkType,
-            3,
+            TransactionVersion.MOSAIC_DEFINITION,
             deadline,
             new UInt64([0, 0]),
             mosaicNonce,

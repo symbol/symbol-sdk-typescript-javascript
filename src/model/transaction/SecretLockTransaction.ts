@@ -24,6 +24,7 @@ import { HashType, HashTypeLengthValidator } from './HashType';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 export class SecretLockTransaction extends Transaction {
 
@@ -49,7 +50,7 @@ export class SecretLockTransaction extends Transaction {
                          networkType: NetworkType): SecretLockTransaction {
         return new SecretLockTransaction(
             networkType,
-            1,
+            TransactionVersion.SECRET_LOCK,
             deadline,
             UInt64.fromUint(0),
             mosaic,
