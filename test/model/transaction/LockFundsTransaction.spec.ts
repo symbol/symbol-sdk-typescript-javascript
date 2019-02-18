@@ -18,7 +18,7 @@ import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {XEM} from '../../../src/model/mosaic/XEM';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
-import {LockFundsTransaction} from '../../../src/model/transaction/LockFundsTransaction';
+import {HashLockTransaction} from '../../../src/model/transaction/LockFundsTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
@@ -32,7 +32,7 @@ describe('LockFundsTransaction', () => {
             [],
         );
         const signedTransaction = account.sign(aggregateTransaction);
-        const transaction = LockFundsTransaction.create(Deadline.create(),
+        const transaction = HashLockTransaction.create(Deadline.create(),
             XEM.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -51,7 +51,7 @@ describe('LockFundsTransaction', () => {
         );
         const signedTransaction = account.sign(aggregateTransaction);
         expect(() => {
-            LockFundsTransaction.create(Deadline.create(),
+            HashLockTransaction.create(Deadline.create(),
                 XEM.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
