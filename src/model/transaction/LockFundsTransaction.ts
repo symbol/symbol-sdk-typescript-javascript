@@ -32,7 +32,7 @@ import { TransactionVersion } from './TransactionVersion';
  *
  * @since 1.0
  */
-class LockFundsTransaction extends Transaction {
+export class LockFundsTransaction extends Transaction {
 
     /**
      * Aggregate bonded hash.
@@ -116,5 +116,3 @@ class LockFundsTransaction extends Transaction {
     }
 
 }
-
-export { LockFundsTransaction as HashLockTransaction };

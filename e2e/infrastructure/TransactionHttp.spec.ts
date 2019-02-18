@@ -34,7 +34,7 @@ import {CosignatureSignedTransaction} from '../../src/model/transaction/Cosignat
 import {CosignatureTransaction} from '../../src/model/transaction/CosignatureTransaction';
 import {Deadline} from '../../src/model/transaction/Deadline';
 import {HashType} from '../../src/model/transaction/HashType';
-import {HashLockTransaction} from '../../src/model/transaction/LockFundsTransaction';
+import {LockFundsTransaction} from '../../src/model/transaction/LockFundsTransaction';
 import {ModifyMultisigAccountTransaction} from '../../src/model/transaction/ModifyMultisigAccountTransaction';
 import {MosaicDefinitionTransaction} from '../../src/model/transaction/MosaicDefinitionTransaction';
 import {MosaicSupplyChangeTransaction} from '../../src/model/transaction/MosaicSupplyChangeTransaction';
