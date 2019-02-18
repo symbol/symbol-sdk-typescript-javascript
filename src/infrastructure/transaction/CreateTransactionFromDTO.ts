@@ -25,7 +25,7 @@ import {AggregateTransaction} from '../../model/transaction/AggregateTransaction
 import {AggregateTransactionCosignature} from '../../model/transaction/AggregateTransactionCosignature';
 import {AggregateTransactionInfo} from '../../model/transaction/AggregateTransactionInfo';
 import {Deadline} from '../../model/transaction/Deadline';
-import {HashLockTransaction} from '../../model/transaction/LockFundsTransaction';
+import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
 import {ModifyMultisigAccountTransaction} from '../../model/transaction/ModifyMultisigAccountTransaction';
 import {MosaicDefinitionTransaction} from '../../model/transaction/MosaicDefinitionTransaction';
 import {MosaicSupplyChangeTransaction} from '../../model/transaction/MosaicSupplyChangeTransaction';
@@ -187,7 +187,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
         );
     } else if (transactionDTO.type === TransactionType.LOCK) {
         const networkType = extractNetworkType(transactionDTO.version);
-        return new HashLockTransaction(
+        return new LockFundsTransaction(
             networkType,
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
