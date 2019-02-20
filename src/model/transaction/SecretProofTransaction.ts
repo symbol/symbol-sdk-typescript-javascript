@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction} from 'nem2-library';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
-import {HashType, HashTypeLengthValidator} from './HashType';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
+import { SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { HashType, HashTypeLengthValidator } from './HashType';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 export class SecretProofTransaction extends Transaction {
 
@@ -95,4 +95,5 @@ export class SecretProofTransaction extends Transaction {
             .addProof(this.proof)
             .build();
     }
+
 }

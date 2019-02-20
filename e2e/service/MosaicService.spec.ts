@@ -1,10 +1,10 @@
-import 'rxjs/add/operator/toPromise';
-import {AccountHttp} from '../../src/infrastructure/AccountHttp';
-import {MosaicHttp} from '../../src/infrastructure/MosaicHttp';
-import {NamespaceHttp} from '../../src/infrastructure/NamespaceHttp';
-import {Address} from '../../src/model/account/Address';
-import {MosaicService} from '../../src/service/MosaicService';
-import {APIUrl} from '../conf/conf.spec';
+import { map, mergeMap, toArray } from 'rxjs/operators';
+import { AccountHttp } from '../../src/infrastructure/AccountHttp';
+import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
+import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
+import { Address } from '../../src/model/account/Address';
+import { MosaicService } from '../../src/service/MosaicService';
+import { APIUrl } from '../conf/conf.spec';
 
 describe('MosaicService', () => {
 
@@ -17,10 +17,10 @@ describe('MosaicService', () => {
 
         const address = Address.createFromRawAddress('SCO2JY-N6OJSM-CJPPVS-Z3OX7P-TWPQEJ-GZTI6W-GLKK');
 
-        return mosaicService.mosaicsAmountViewFromAddress(address)
-            .flatMap((_) => _)
-            .map((mosaic) => console.log('You have', mosaic.relativeAmount(), mosaic.fullName()))
-            .toArray()
-            .toPromise();
+        return mosaicService.mosaicsAmountViewFromAddress(address).pipe(
+            mergeMap((_) => _),
+            map((mosaic) => console.log('You have', mosaic.relativeAmount(), mosaic.fullName())),
+            toArray(),
+        ).toPromise();
     });
 });

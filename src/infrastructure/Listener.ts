@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/share';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {Observable, Subject} from 'rxjs';
+import {filter, map, share} from 'rxjs/operators';
 import * as WebSocket from 'ws';
 import {Address} from '../model/account/Address';
 import {PublicAccount} from '../model/account/PublicAccount';
@@ -199,11 +196,11 @@ export class Listener {
     public newBlock(): Observable<BlockInfo> {
         this.subscribeTo('block');
         return this.messageSubject
-            .asObservable()
-            .share()
-            .filter((_) => _.channelName === ListenerChannelName.block)
-            .filter((_) => _.message instanceof BlockInfo)
-            .map((_) => _.message as BlockInfo);
+            .asObservable().pipe(
+            share(),
+            filter((_) => _.channelName === ListenerChannelName.block),
+            filter((_) => _.message instanceof BlockInfo),
+            map((_) => _.message as BlockInfo),);
     }
 
     /**
@@ -216,11 +213,11 @@ export class Listener {
      */
     public confirmed(address: Address): Observable<Transaction> {
         this.subscribeTo(`confirmedAdded/${address.plain()}`);
-        return this.messageSubject.asObservable()
-            .filter((_) => _.channelName === ListenerChannelName.confirmedAdded)
-            .filter((_) => _.message instanceof Transaction)
-            .map((_) => _.message as Transaction)
-            .filter((_) => this.transactionFromAddress(_, address));
+        return this.messageSubject.asObservable().pipe(
+            filter((_) => _.channelName === ListenerChannelName.confirmedAdded),
+            filter((_) => _.message instanceof Transaction),
+            map((_) => _.message as Transaction),
+            filter((_) => this.transactionFromAddress(_, address)),);
     }
 
     /**
@@ -233,11 +230,11 @@ export class Listener {
      */
     public unconfirmedAdded(address: Address): Observable<Transaction> {
         this.subscribeTo(`unconfirmedAdded/${address.plain()}`);
-        return this.messageSubject.asObservable()
-            .filter((_) => _.channelName === ListenerChannelName.unconfirmedAdded)
-            .filter((_) => _.message instanceof Transaction)
-            .map((_) => _.message as Transaction)
-            .filter((_) => this.transactionFromAddress(_, address));
+        return this.messageSubject.asObservable().pipe(
+            filter((_) => _.channelName === ListenerChannelName.unconfirmedAdded),
+            filter((_) => _.message instanceof Transaction),
+            map((_) => _.message as Transaction),
+            filter((_) => this.transactionFromAddress(_, address)),);
     }
 
     /**
@@ -250,10 +247,10 @@ export class Listener {
      */
     public unconfirmedRemoved(address: Address): Observable<string> {
         this.subscribeTo(`unconfirmedRemoved/${address.plain()}`);
-        return this.messageSubject.asObservable()
-            .filter((_) => _.channelName === ListenerChannelName.unconfirmedRemoved)
-            .filter((_) => typeof _.message === 'string')
-            .map((_) => _.message as string);
+        return this.messageSubject.asObservable().pipe(
+            filter((_) => _.channelName === ListenerChannelName.unconfirmedRemoved),
+            filter((_) => typeof _.message === 'string'),
+            map((_) => _.message as string),);
     }
 
     /**
@@ -266,11 +263,11 @@ export class Listener {
      */
     public aggregateBondedAdded(address: Address): Observable<AggregateTransaction> {
         this.subscribeTo(`partialAdded/${address.plain()}`);
-        return this.messageSubject.asObservable()
-            .filter((_) => _.channelName === ListenerChannelName.aggregateBondedAdded)
-            .filter((_) => _.message instanceof AggregateTransaction)
-            .map((_) => _.message as AggregateTransaction)
-            .filter((_) => this.transactionFromAddress(_, address));
+        return this.messageSubject.asObservable().pipe(
+            filter((_) => _.channelName === ListenerChannelName.aggregateBondedAdded),
+            filter((_) => _.message instanceof AggregateTransaction),
+            map((_) => _.message as AggregateTransaction),
+            filter((_) => this.transactionFromAddress(_, address)),);
     }
 
     /**
@@ -283,10 +280,10 @@ export class Listener {
      */
     public aggregateBondedRemoved(address: Address): Observable<string> {
         this.subscribeTo(`partialRemoved/${address.plain()}`);
-        return this.messageSubject.asObservable()
-            .filter((_) => _.channelName === ListenerChannelName.aggregateBondedRemoved)
-            .filter((_) => typeof _.message === 'string')
-            .map((_) => _.message as string);
+        return this.messageSubject.asObservable().pipe(
+            filter((_) => _.channelName === ListenerChannelName.aggregateBondedRemoved),
+            filter((_) => typeof _.message === 'string'),
+            map((_) => _.message as string),);
     }
 
     /**
@@ -299,10 +296,10 @@ export class Listener {
      */
     public status(address: Address): Observable<TransactionStatusError> {
         this.subscribeTo(`status/${address.plain()}`);
-        return this.messageSubject.asObservable()
-            .filter((_) => _.channelName === ListenerChannelName.status)
-            .filter((_) => _.message instanceof TransactionStatusError)
-            .map((_) => _.message as TransactionStatusError);
+        return this.messageSubject.asObservable().pipe(
+            filter((_) => _.channelName === ListenerChannelName.status),
+            filter((_) => _.message instanceof TransactionStatusError),
+            map((_) => _.message as TransactionStatusError),);
     }
 
     /**
@@ -315,10 +312,10 @@ export class Listener {
      */
     public cosignatureAdded(address: Address): Observable<CosignatureSignedTransaction> {
         this.subscribeTo(`cosignature/${address.plain()}`);
-        return this.messageSubject.asObservable()
-            .filter((_) => _.channelName === ListenerChannelName.cosignature)
-            .filter((_) => _.message instanceof CosignatureSignedTransaction)
-            .map((_) => _.message as CosignatureSignedTransaction);
+        return this.messageSubject.asObservable().pipe(
+            filter((_) => _.channelName === ListenerChannelName.cosignature),
+            filter((_) => _.message instanceof CosignatureSignedTransaction),
+            map((_) => _.message as CosignatureSignedTransaction),);
     }
 
     /**

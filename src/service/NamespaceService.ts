@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/toArray';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
+import {map, mergeMap} from 'rxjs/operators';
 import {NamespaceHttp} from '../infrastructure/NamespaceHttp';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {NamespaceInfo} from '../model/namespace/NamespaceInfo';
@@ -43,13 +40,13 @@ export class NamespaceService {
      * @returns {Observable<Namespace>}
      */
     namespace(id: NamespaceId): Observable<Namespace> {
-        return this.namespaceHttp.getNamespace(id)
-            .flatMap((namespaceInfo: NamespaceInfo) => this.namespaceHttp
-                .getNamespacesName(namespaceInfo.levels)
-                .map((names) => Object.assign(
+        return this.namespaceHttp.getNamespace(id).pipe(
+            mergeMap((namespaceInfo: NamespaceInfo) => this.namespaceHttp
+                .getNamespacesName(namespaceInfo.levels).pipe(
+                map((names) => Object.assign(
                     {__proto__: Object.getPrototypeOf(namespaceInfo)},
                     namespaceInfo,
-                    {name: this.extractFullNamespace(namespaceInfo, names)})));
+                    {name: this.extractFullNamespace(namespaceInfo, names)})))));
     }
 
     private extractFullNamespace(namespace: NamespaceInfo, namespaceNames: NamespaceName[]): string {

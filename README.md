@@ -14,6 +14,11 @@ with the NEM2 (a.k.a Catapult)
 
 - NodeJS 8.9.X
 - NodeJS 9.X.X
+- NodeJS 10.X.X
+
+## Installation
+
+```npm install nem2-sdk rxjs```
 
 ## Documentation and Getting Started
 
