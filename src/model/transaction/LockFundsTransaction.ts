@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import {HashLockTransaction, VerifiableTransaction} from 'nem2-library';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {Mosaic} from '../mosaic/Mosaic';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
-import {SignedTransaction} from './SignedTransaction';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
+import { HashLockTransaction, VerifiableTransaction } from 'nem2-library';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { Mosaic } from '../mosaic/Mosaic';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { SignedTransaction } from './SignedTransaction';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 /**
  * Lock funds transaction is used before sending an Aggregate bonded transaction, as a deposit to announce the transaction.

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import {MultisigModificationTransaction as ModifyMultisigAccountTransactionLibrary, VerifiableTransaction} from 'nem2-library';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
-import {MultisigCosignatoryModification} from './MultisigCosignatoryModification';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
+import { MultisigModificationTransaction as ModifyMultisigAccountTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { MultisigCosignatoryModification } from './MultisigCosignatoryModification';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 /**
  * Modify multisig account transactions are part of the NEM's multisig account system.
@@ -105,4 +105,5 @@ export class ModifyMultisigAccountTransaction extends Transaction {
             .addModifications(this.modifications.map((modification) => modification.toDTO()))
             .build();
     }
+
 }

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import {VerifiableTransaction} from 'nem2-library';
-import {Account} from '../account/Account';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {UInt64} from '../UInt64';
-import {AggregateTransactionInfo} from './AggregateTransactionInfo';
-import {Deadline} from './Deadline';
-import {InnerTransaction} from './InnerTransaction';
-import {SignedTransaction} from './SignedTransaction';
-import {TransactionInfo} from './TransactionInfo';
+import { VerifiableTransaction } from 'nem2-library';
+import { Account } from '../account/Account';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { UInt64 } from '../UInt64';
+import { AggregateTransactionInfo } from './AggregateTransactionInfo';
+import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
+import { SignedTransaction } from './SignedTransaction';
+import { TransactionInfo } from './TransactionInfo';
 
 /**
  * An abstract transaction class that serves as the base class of all NEM transactions.
@@ -155,5 +155,18 @@ export abstract class Transaction {
     public versionToDTO(): number {
         const versionDTO = this.networkType.toString(16) + '0' + this.version.toString(16);
         return parseInt(versionDTO, 16);
+    }
+
+    /**
+     * @description re-aplly a given value to the transaction in an immutable way
+     * @param {Deadline} deadline
+     * @returns {Transaction}
+     * @memberof Transaction
+     */
+    public replyGiven(deadline: Deadline = Deadline.create()): Transaction {
+        if (this.isUnannounced()) {
+            return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {deadline});
+        }
+        throw new Error('an Announced transaction can\'t be modified');
     }
 }

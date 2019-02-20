@@ -15,9 +15,8 @@
  */
 
 import {BlockchainRoutesApi} from 'nem2-library';
-import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/operator/map';
-import {Observable} from 'rxjs/Observable';
+import {from as observableFrom, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
@@ -56,7 +55,7 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      * @returns Observable<BlockInfo>
      */
     public getBlockByHeight(height: number): Observable<BlockInfo> {
-        return Observable.fromPromise(this.blockchainRoutesApi.getBlockByHeight(height)).map((blockDTO) => {
+        return observableFrom(this.blockchainRoutesApi.getBlockByHeight(height)).pipe(map((blockDTO) => {
             const networkType = parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16);
             return new BlockInfo(
                 blockDTO.meta.hash,
@@ -74,7 +73,7 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
                 blockDTO.block.previousBlockHash,
                 blockDTO.block.blockTransactionsHash,
             );
-        });
+        }));
     }
 
     /**
@@ -85,12 +84,12 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      */
     public getBlockTransactions(height: number,
                                 queryParams?: QueryParams): Observable<Transaction[]> {
-        return Observable.fromPromise(
-            this.blockchainRoutesApi.getBlockTransactions(height, queryParams != null ? queryParams : {})).map((transactionsDTO) => {
+        return observableFrom(
+            this.blockchainRoutesApi.getBlockTransactions(height, queryParams != null ? queryParams : {})).pipe(map((transactionsDTO) => {
             return transactionsDTO.map((transactionDTO) => {
                 return CreateTransactionFromDTO(transactionDTO);
             });
-        });
+        }));
     }
 
     /**
@@ -100,8 +99,8 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      * @returns Observable<BlockInfo[]>
      */
     public getBlocksByHeightWithLimit(height: number, limit: number = 1): Observable<BlockInfo[]> {
-        return Observable.fromPromise(
-            this.blockchainRoutesApi.getBlocksByHeightWithLimit(height, limit)).map((blocksDTO) => {
+        return observableFrom(
+            this.blockchainRoutesApi.getBlocksByHeightWithLimit(height, limit)).pipe(map((blocksDTO) => {
             return blocksDTO.map((blockDTO) => {
                 const networkType = parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16);
                 return new BlockInfo(
@@ -121,7 +120,7 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
                     blockDTO.block.blockTransactionsHash,
                 );
             });
-        });
+        }));
     }
 
     /**
@@ -129,9 +128,9 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      * @returns Observable<UInt64>
      */
     public getBlockchainHeight(): Observable<UInt64> {
-        return Observable.fromPromise(this.blockchainRoutesApi.getBlockchainHeight()).map((heightDTO) => {
+        return observableFrom(this.blockchainRoutesApi.getBlockchainHeight()).pipe(map((heightDTO) => {
             return new UInt64(heightDTO.height);
-        });
+        }));
     }
 
     /**
@@ -139,12 +138,12 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      * @returns Observable<BlockchainScore>
      */
     public getBlockchainScore(): Observable<BlockchainScore> {
-        return Observable.fromPromise(this.blockchainRoutesApi.getBlockchainScore()).map((blockchainScoreDTO) => {
+        return observableFrom(this.blockchainRoutesApi.getBlockchainScore()).pipe(map((blockchainScoreDTO) => {
             return new BlockchainScore(
                 new UInt64(blockchainScoreDTO.scoreLow),
                 new UInt64(blockchainScoreDTO.scoreHigh),
             );
-        });
+        }));
     }
 
     /**
@@ -152,13 +151,13 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      * @returns Observable<BlockchainStorageInfo>
      */
     public getDiagnosticStorage(): Observable<BlockchainStorageInfo> {
-        return Observable.fromPromise(
-            this.blockchainRoutesApi.getDiagnosticStorage()).map((blockchainStorageInfoDTO) => {
+        return observableFrom(
+            this.blockchainRoutesApi.getDiagnosticStorage()).pipe(map((blockchainStorageInfoDTO) => {
             return new BlockchainStorageInfo(
                 blockchainStorageInfoDTO.numBlocks,
                 blockchainStorageInfoDTO.numTransactions,
                 blockchainStorageInfoDTO.numAccounts,
             );
-        });
+        }));
     }
 }

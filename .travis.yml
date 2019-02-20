@@ -8,4 +8,17 @@ cache:
     - "node_modules"
 before_script:
   - npm run build
-script: npm run test:coveralls
+script: 
+  - npm run test:coveralls
+before_deploy:
+  - npm install --global typedoc
+  - typedoc --out ts-docs src
+deploy:
+  provider: pages
+  skip_cleanup: true
+  keep-history: true
+  local_dir: ts-docs
+  github_token: $GITHUB_TOKEN
+  on:
+    branch: master
+  

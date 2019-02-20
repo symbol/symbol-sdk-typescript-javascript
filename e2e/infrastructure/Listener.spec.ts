@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {AccountHttp} from '../../src/infrastructure/AccountHttp';
-import {Listener} from '../../src/infrastructure/Listener';
-import {Address} from '../../src/model/account/Address';
+import { AccountHttp } from '../../src/infrastructure/AccountHttp';
+import { Listener } from '../../src/infrastructure/Listener';
+import { Address } from '../../src/model/account/Address';
 import * as conf from '../conf/conf.spec';
 import {
     APIUrl, Cosignatory2Account, Cosignatory3Account, CosignatoryAccount, MultisigAccount,
     TestingAccount,
 } from '../conf/conf.spec';
-import {TransactionUtils} from './TransactionUtils';
+import { TransactionUtils } from './TransactionUtils';
 
 describe('Listener', () => {
     let account;
@@ -40,34 +40,42 @@ describe('Listener', () => {
     });
 
     it('newBlock', (done) => {
-        listener.newBlock().subscribe((res) => {
-            done();
-        });
+        listener.newBlock()
+            .toPromise()
+            .then((res) => {
+                done();
+            });
 
         TransactionUtils.createAndAnnounce();
     });
 
     it('confirmedTransactionsGiven address signer', (done) => {
-        listener.confirmed(account.address).subscribe((res) => {
-            done();
-        });
+        listener.confirmed(account.address)
+            .toPromise()
+            .then((res) => {
+                done();
+            });
 
         TransactionUtils.createAndAnnounce();
     });
 
     it('confirmedTransactionsGiven address recipient', (done) => {
         const recipientAddress = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        listener.confirmed(recipientAddress).subscribe((res) => {
-            done();
-        });
+        listener.confirmed(recipientAddress)
+            .toPromise()
+            .then((res) => {
+                done();
+            });
 
         TransactionUtils.createAndAnnounce();
     });
 
     it('unconfirmedTransactionsAdded', (done) => {
-        listener.unconfirmedAdded(account.address).subscribe((res) => {
-            done();
-        });
+        listener.unconfirmedAdded(account.address)
+            .toPromise()
+            .then((res) => {
+                done();
+            });
 
         setTimeout(() => {
             TransactionUtils.createAndAnnounce();
@@ -75,9 +83,11 @@ describe('Listener', () => {
     });
 
     it('unconfirmedTransactionsRemoved', (done) => {
-        listener.unconfirmedRemoved(account.address).subscribe((res) => {
-            done();
-        });
+        listener.unconfirmedRemoved(account.address)
+            .toPromise()
+            .then((res) => {
+                done();
+            });
 
         setTimeout(() => {
             TransactionUtils.createAndAnnounce();
@@ -85,9 +95,11 @@ describe('Listener', () => {
     });
 
     it('aggregateBondedTransactionsAdded', (done) => {
-        listener.aggregateBondedAdded(multisigAccount.address).subscribe((res) => {
-            done();
-        });
+        listener.aggregateBondedAdded(multisigAccount.address)
+            .toPromise()
+            .then((res) => {
+                done();
+            });
 
         setTimeout(() => {
             TransactionUtils.createAggregateBoundedTransactionAndAnnounce();
@@ -95,9 +107,11 @@ describe('Listener', () => {
     });
 
     it('aggregateBondedTransactionsRemoved', (done) => {
-        listener.aggregateBondedRemoved(multisigAccount.address).subscribe((res) => {
-            done();
-        });
+        listener.aggregateBondedRemoved(multisigAccount.address)
+            .toPromise()
+            .then((res) => {
+                done();
+            });
 
         setTimeout(() => {
             TransactionUtils.createAggregateBoundedTransactionAndAnnounce();
@@ -112,9 +126,11 @@ describe('Listener', () => {
     });
 
     it('cosignatureAdded', (done) => {
-        listener.cosignatureAdded(multisigAccount.address).subscribe((res) => {
-            done();
-        });
+        listener.cosignatureAdded(multisigAccount.address)
+            .toPromise()
+            .then((res) => {
+                done();
+            });
 
         setTimeout(() => {
             TransactionUtils.createAggregateBoundedTransactionAndAnnounce();
@@ -128,9 +144,11 @@ describe('Listener', () => {
     });
 
     it('transactionStatusGiven', (done) => {
-        listener.status(account.address).subscribe((res) => {
-            done();
-        });
+        listener.status(account.address)
+            .toPromise()
+            .then((res) => {
+                done();
+            });
 
         setTimeout(() => {
             TransactionUtils.createAndAnnounceWithInsufficientBalance();

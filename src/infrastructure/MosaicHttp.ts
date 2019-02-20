@@ -15,9 +15,8 @@
  */
 
 import {MosaicRoutesApi} from 'nem2-library';
-import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/operator/map';
-import {Observable} from 'rxjs/Observable';
+import {from as observableFrom, Observable} from 'rxjs';
+import {map, mergeMap} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import {MosaicInfo} from '../model/mosaic/MosaicInfo';
@@ -59,9 +58,9 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @returns Observable<MosaicInfo>
      */
     public getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> {
-        return this.getNetworkTypeObservable()
-            .flatMap((networkType) => Observable.fromPromise(
-                this.mosaicRoutesApi.getMosaic(mosaicId.toHex())).map((mosaicInfoDTO) => {
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.mosaicRoutesApi.getMosaic(mosaicId.toHex())).pipe(map((mosaicInfoDTO) => {
                 return new MosaicInfo(
                     mosaicInfoDTO.meta.active,
                     mosaicInfoDTO.meta.index,
@@ -78,7 +77,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
                     ),
                     mosaicInfoDTO.mosaic.levy,
                 );
-            }));
+            }))));
     }
 
     /**
@@ -90,9 +89,9 @@ export class MosaicHttp extends Http implements MosaicRepository {
         const mosaicIdsBody = {
             mosaicIds: mosaicIds.map((id) => id.toHex()),
         };
-        return this.getNetworkTypeObservable()
-            .flatMap((networkType) => Observable.fromPromise(
-                this.mosaicRoutesApi.getMosaics(mosaicIdsBody)).map((mosaicInfosDTO) => {
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.mosaicRoutesApi.getMosaics(mosaicIdsBody)).pipe(map((mosaicInfosDTO) => {
                 return mosaicInfosDTO.map((mosaicInfoDTO) => {
                     return new MosaicInfo(
                         mosaicInfoDTO.meta.active,
@@ -111,7 +110,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         mosaicInfoDTO.mosaic.levy,
                     );
                 });
-            }));
+            }))));
     }
 
     /**
@@ -122,10 +121,10 @@ export class MosaicHttp extends Http implements MosaicRepository {
      */
     public getMosaicsFromNamespace(namespaceId: NamespaceId,
                                    queryParams?: QueryParams): Observable<MosaicInfo[]> {
-        return this.getNetworkTypeObservable()
-            .flatMap((networkType) => Observable.fromPromise(
-                this.mosaicRoutesApi.getMosaicsFromNamespace(namespaceId.toHex(), queryParams != null ? queryParams : {}))
-                .map((mosaicsDefinitionDTO) => {
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.mosaicRoutesApi.getMosaicsFromNamespace(namespaceId.toHex(), queryParams != null ? queryParams : {})).pipe(
+                map((mosaicsDefinitionDTO) => {
                     return mosaicsDefinitionDTO.map((mosaicInfoDTO) => {
                         return new MosaicInfo(
                             mosaicInfoDTO.meta.active,
@@ -144,7 +143,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
                             mosaicInfoDTO.mosaic.levy,
                         );
                     });
-                }));
+                }))));
     }
 
     /**
@@ -156,7 +155,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
         const mosaicIdsBody = {
             mosaicIds: mosaicIds.map((id) => id.toHex()),
         };
-        return Observable.fromPromise(this.mosaicRoutesApi.getMosaicsName(mosaicIdsBody)).map((mosaicInfosDTO) => {
+        return observableFrom(this.mosaicRoutesApi.getMosaicsName(mosaicIdsBody)).pipe(map((mosaicInfosDTO) => {
             return mosaicInfosDTO.map((mosaicInfoDTO) => {
                 return new MosaicName(
                     new MosaicId(mosaicInfoDTO.mosaicId),
@@ -164,6 +163,6 @@ export class MosaicHttp extends Http implements MosaicRepository {
                     mosaicInfoDTO.name,
                 );
             });
-        });
+        }));
     }
 }

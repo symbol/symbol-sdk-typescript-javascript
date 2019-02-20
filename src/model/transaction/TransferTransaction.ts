@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import {TransferTransaction as TransferTransactionLibrary, VerifiableTransaction,} from 'nem2-library';
-import {Address} from '../account/Address';
-import {PublicAccount} from '../account/PublicAccount';
-import {NetworkType} from '../blockchain/NetworkType';
-import {Mosaic} from '../mosaic/Mosaic';
-import {UInt64} from '../UInt64';
-import {Deadline} from './Deadline';
-import {Message} from './Message';
-import {Transaction} from './Transaction';
-import {TransactionInfo} from './TransactionInfo';
-import {TransactionType} from './TransactionType';
+import { TransferTransaction as TransferTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { Address } from '../account/Address';
+import { PublicAccount } from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
+import { Mosaic } from '../mosaic/Mosaic';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { Message } from './Message';
+import { Transaction } from './Transaction';
+import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.
@@ -101,4 +101,5 @@ export class TransferTransaction extends Transaction {
             .addMessage(this.message)
             .build();
     }
+
 }

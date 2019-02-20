@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {AccountInfo} from '../model/account/AccountInfo';
 import {Address} from '../model/account/Address';
 import {MultisigAccountGraphInfo} from '../model/account/MultisigAccountGraphInfo';

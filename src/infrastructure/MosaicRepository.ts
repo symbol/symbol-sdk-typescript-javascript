@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import {MosaicInfo} from '../model/mosaic/MosaicInfo';
 import {MosaicName} from '../model/mosaic/MosaicName';

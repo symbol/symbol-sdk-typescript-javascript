@@ -64,7 +64,7 @@ export class TransactionUtils {
             NetworkType.MIJIN_TEST,
         );
 
-        const aggregateTransaction = AggregateTransaction.createComplete(
+        const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(2, ChronoUnit.MINUTES),
             [transferTransaction.toAggregate(MultisigAccount.publicAccount)],
             NetworkType.MIJIN_TEST,

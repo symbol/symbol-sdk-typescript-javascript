@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {CosignatureSignedTransaction} from '../model/transaction/CosignatureSignedTransaction';
 import {SignedTransaction} from '../model/transaction/SignedTransaction';
 import {Transaction} from '../model/transaction/Transaction';
