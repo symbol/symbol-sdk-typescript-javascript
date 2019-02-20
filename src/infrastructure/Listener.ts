@@ -104,6 +104,7 @@ export class Listener {
                 this.webSocket.onerror = (err) => {
                     console.log('WebSocket Error ');
                     console.log(err);
+                    reject(err);
                 };
                 this.webSocket.onmessage = (msg) => {
                     const message = JSON.parse(msg.data as string);
@@ -155,6 +156,17 @@ export class Listener {
         });
     }
 
+  /**
+     * returns a boolean that repressents the open state
+     * @returns a boolean
+     */
+    public isOpen(): boolean {
+        if(this.webSocket){
+            return this.webSocket.readyState === WebSocket.OPEN;
+        }
+        return false;
+    }
+    
     /**
      * Close web socket connection.
      * @returns void
