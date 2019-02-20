@@ -158,12 +158,12 @@ export abstract class Transaction {
     }
 
     /**
-     * @description re-aplly a given value to the transaction in an immutable way
+     * @description reapply a given value to the transaction in an immutable way
      * @param {Deadline} deadline
      * @returns {Transaction}
      * @memberof Transaction
      */
-    public replyGiven(deadline: Deadline = Deadline.create()): Transaction {
+    public reapplyGiven(deadline: Deadline = Deadline.create()): Transaction {
         if (this.isUnannounced()) {
             return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {deadline});
         }
