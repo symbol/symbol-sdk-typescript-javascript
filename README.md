@@ -16,6 +16,10 @@ with the NEM2 (a.k.a Catapult)
 - NodeJS 9.X.X
 - NodeJS 10.X.X
 
+## Installation
+
+```npm install nem2-sdk rxjs```
+
 ## Documentation and Getting Started
 
 Get started and learn more about nem2-sdk-typescript-javascript, check the [official documentation][docs].
