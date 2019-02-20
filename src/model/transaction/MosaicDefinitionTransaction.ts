@@ -18,6 +18,7 @@ import { MosaicCreationTransaction as MosaicDefinitionTransactionLibrary, mosaic
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
+import { MosaicNonce } from '../mosaic/MosaicNonce';
 import { MosaicProperties } from '../mosaic/MosaicProperties';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
@@ -36,14 +37,14 @@ export class MosaicDefinitionTransaction extends Transaction {
     /**
      * Create a mosaic creation transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param mosaicName - The mosaic name ex: xem.
-     * @param namespaceName - The namespace where mosaic will be included ex: nem.
+     * @param nonce - The mosaic nonce ex: [0xE6, 0xDE, 0x84, 0xB8].
+     * @param mosaicId - The mosaic id ex: [481110499, 231112638].
      * @param mosaicProperties - The mosaic properties.
      * @param networkType - The network type.
      * @returns {MosaicDefinitionTransaction}
      */
     public static create(deadline: Deadline,
-                         mosaicNonce: UInt64,
+                         nonce: Uint8Array,
                          mosaicId: UInt64,
                          mosaicProperties: MosaicProperties,
                          networkType: NetworkType): MosaicDefinitionTransaction {
@@ -51,7 +52,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             TransactionVersion.MOSAIC_DEFINITION,
             deadline,
             new UInt64([0, 0]),
-            mosaicNonce,
+            new MosaicNonce(nonce),
             new MosaicId(mosaicId.toDTO()),
             mosaicProperties,
         );
@@ -76,7 +77,7 @@ export class MosaicDefinitionTransaction extends Transaction {
                 /**
                  * The mosaic nonce.
                  */
-                public readonly mosaicNonce: UInt64,
+                public readonly nonce: MosaicNonce,
                 /**
                  * The mosaic id.
                  */
@@ -102,7 +103,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             .addVersion(this.versionToDTO())
             .addDivisibility(this.mosaicProperties.divisibility)
             .addDuration(this.mosaicProperties.duration.toDTO())
-            .addNonce(this.mosaicNonce.toDTO())
+            .addNonce(this.nonce.toDTO())
             .addMosaicId(this.mosaicId.id.toDTO());
 
         if (this.mosaicProperties.supplyMutable === true) {

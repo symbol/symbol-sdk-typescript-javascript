@@ -74,7 +74,7 @@ export class RegisterNamespaceTransaction extends Transaction {
             parentId = parentNamespace;
         }
         return new RegisterNamespaceTransaction(networkType,
-            2,
+            TransactionVersion.REGISTER_NAMESPACE,
             deadline,
             new UInt64([0, 0]),
             NamespaceType.SubNamespace,

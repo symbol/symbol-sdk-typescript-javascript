@@ -413,7 +413,7 @@ describe('CreateTransactionFromDTO', () => {
                         3248159581,
                         740240531,
                     ],
-                    mosaicNonce: [
+                    nonce: [
                         1,
                         0,
                     ],
@@ -501,7 +501,7 @@ describe('CreateTransactionFromDTO', () => {
                                     3248159581,
                                     740240531,
                                 ],
-                                mosaicNonce: [
+                                nonce: [
                                     1,
                                     0,
                                 ],

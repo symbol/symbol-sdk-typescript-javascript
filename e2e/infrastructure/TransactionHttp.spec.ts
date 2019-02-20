@@ -151,7 +151,7 @@ describe('TransactionHttp', () => {
             it('standalone', (done) => {
                 const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                     Deadline.create(),
-                    UInt64.fromUint(1),
+                    new Uint8Array([0xE6, 0xDE, 0x84, 0xB8]),
                     UInt64.fromUint(1),
                     MosaicProperties.create({
                         supplyMutable: true,
@@ -170,7 +170,7 @@ describe('TransactionHttp', () => {
             it('aggregate', (done) => {
                 const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                     Deadline.create(),
-                    UInt64.fromUint(1),
+                    new Uint8Array([0xE6, 0xDE, 0x84, 0xB8]),
                     UInt64.fromUint(1),
                     MosaicProperties.create({
                         supplyMutable: true,

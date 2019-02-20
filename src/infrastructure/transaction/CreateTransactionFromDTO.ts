@@ -144,7 +144,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.fee),
-            new UInt64(transactionDTO.mosaicNonce),
+            transactionDTO.nonce,
             new MosaicId(transactionDTO.mosaicId),
             new MosaicProperties(
                 new UInt64(transactionDTO.properties[0].value),
