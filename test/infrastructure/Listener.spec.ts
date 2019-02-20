@@ -23,4 +23,25 @@ describe('Listener', () => {
         expect('ws://localhost:3000/ws').to.be.equal(listener.url);
         listener.close();
     });
+
+    describe('isOpen', () => {
+        it('should return false when listener is created and not opened', () => {
+            const listener = new Listener('ws://localhost:3000');
+            expect(listener.isOpen()).to.be.false;
+            listener.close();
+        });
+    });
+
+    describe('onerror', () => {
+        it('should reject because of wrong server url', async () => {
+            const listener = new Listener('https://notcorrecturl:0000');
+            await listener.open()
+                .then((result) => {
+                    throw new Error('This should not be called when expecting error');
+                })
+                .catch((error) => {
+                    expect(error.toString()).to.be.equal("Error: getaddrinfo ENOTFOUND notcorrecturl notcorrecturl:0000");
+                })
+        });
+    });
 });
