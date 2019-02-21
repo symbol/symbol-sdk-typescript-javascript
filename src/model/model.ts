@@ -50,6 +50,7 @@ export * from './namespace/NamespaceType';
 export * from './namespace/AliasActionType';
 
 // Transaction
+export * from './transaction/AddressAliasTransaction';
 export * from './transaction/AggregateTransaction';
 export * from './transaction/AggregateTransactionCosignature';
 export * from './transaction/AggregateTransactionInfo';

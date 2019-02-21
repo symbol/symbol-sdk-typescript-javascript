@@ -22,6 +22,7 @@ import { MosaicId } from '../mosaic/MosaicId';
 import { AliasActionType } from '../namespace/AliasActionType';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
+import { AddressAliasTransaction } from './AddressAliasTransaction';
 import { Deadline } from './Deadline';
 import { MosaicAliasTransaction } from './MosaicAliasTransaction';
 import { Transaction } from './Transaction';
@@ -32,7 +33,24 @@ import { TransactionVersion } from './TransactionVersion';
 export abstract class AliasTransaction extends Transaction {
 
     /**
-     * Create a mosaic supply change transaction object
+     * Create an address alias transaction object
+     * @param deadline - The deadline to include the transaction.
+     * @param aliasAction - The namespace id.
+     * @param namespaceId - The namespace id.
+     * @param address - The address.
+     * @param networkType - The network type.
+     * @returns {AddressAliasTransaction}
+     */
+    public static createForAddress(deadline: Deadline,
+                                   aliasAction: AliasActionType,
+                                   namespaceId: NamespaceId,
+                                   address: Address,
+                                   networkType: NetworkType): AliasTransaction {
+        return AddressAliasTransaction.create(deadline, aliasAction, namespaceId, address, networkType);
+    }
+
+    /**
+     * Create a mosaic alias transaction object
      * @param deadline - The deadline to include the transaction.
      * @param aliasAction - The namespace id.
      * @param namespaceId - The namespace id.

@@ -21,6 +21,7 @@ import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicId} from '../../model/mosaic/MosaicId';
 import {MosaicProperties} from '../../model/mosaic/MosaicProperties';
 import {NamespaceId} from '../../model/namespace/NamespaceId';
+import {AddressAliasTransaction} from '../../model/transaction/AddressAliasTransaction';
 import {AggregateTransaction} from '../../model/transaction/AggregateTransaction';
 import {AggregateTransactionCosignature} from '../../model/transaction/AggregateTransactionCosignature';
 import {AggregateTransactionInfo} from '../../model/transaction/AggregateTransactionInfo';
@@ -236,6 +237,19 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.actionType,
             transactionDTO.namespaceId,
             transactionDTO.mosaicId,
+            transactionDTO.signature,
+            PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.ADDRESS_ALIAS) {
+        return new AddressAliasTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.fee),
+            transactionDTO.actionType,
+            transactionDTO.namespaceId,
+            transactionDTO.address,
             transactionDTO.signature,
             PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
             transactionInfo,
