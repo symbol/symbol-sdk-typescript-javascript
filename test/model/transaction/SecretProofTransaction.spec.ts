@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 import {expect} from 'chai';
-import {sha3_512} from 'js-sha3';
+import * as CryptoJS from 'crypto-js';
+import {keccak_256, sha3_256} from 'js-sha3';
 import {convert} from 'nem2-library';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {Deadline} from '../../../src/model/transaction/Deadline';
@@ -23,29 +24,105 @@ import {SecretProofTransaction} from '../../../src/model/transaction/SecretProof
 
 describe('SecretProofTransaction', () => {
 
-    it('should be created', () => {
-        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7680ADA57DCEC8EEE91C' +
-            '4E3BF3BFA9AF6FFDE90CD1D249D1C6121D7B759A001B1';
+    it('should be created with HashType: Op_Sha3_256 secret', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
-            HashType.SHA3_512,
-            sha3_512.create().update(convert.hexToUint8(proof)).hex(),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             proof,
             NetworkType.MIJIN_TEST,
         );
         expect(secretProofTransaction.hashType).to.be.equal(0);
-        expect(secretProofTransaction.secret).to.be.equal('d23859866f93f2698a5b48586543c608d85a57c74e9ce92d86a0b25065d8' +
-            '155c16754d840026b8c536f2bcb963a7d867f034ec241b87162ac33daf7b707cb5f7');
+        expect(secretProofTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e' );
         expect(secretProofTransaction.proof).to.be.equal(proof);
     });
 
     it('should throw exception when the input is not related to HashType', () => {
         expect(() => {
-            const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7680ADA57DCEC8EEE91C' +
-                '4E3BF3BFA9AF6FFDE90CD1D249D1C6121D7B759A001B1';
+            const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             const secretProofTransaction = SecretProofTransaction.create(
                 Deadline.create(),
-                HashType.SHA3_512,
+                HashType.Op_Sha3_256,
+                'non valid hash',
+                proof,
+                NetworkType.MIJIN_TEST,
+            );
+        }).to.throw(Error);
+    });
+    it('should be created with HashType: Op_Keccak_256 secret', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Keccak_256,
+            keccak_256.create().update(convert.hexToUint8(proof)).hex(),
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+        expect(secretProofTransaction.hashType).to.be.equal(1);
+        expect(secretProofTransaction.secret).to.be.equal('241c1d54c18c8422def03aa16b4b243a8ba491374295a1a6965545e6ac1af314' );
+        expect(secretProofTransaction.proof).to.be.equal(proof);
+    });
+
+    it('should throw exception when the input is not related to HashType', () => {
+        expect(() => {
+            const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+            const secretProofTransaction = SecretProofTransaction.create(
+                Deadline.create(),
+                HashType.Op_Keccak_256,
+                'non valid hash',
+                proof,
+                NetworkType.MIJIN_TEST,
+            );
+        }).to.throw(Error);
+    });
+    it('should be created with HashType: Op_Hash_160 secret', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9';
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Hash_160,
+            CryptoJS.RIPEMD160(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+        expect(secretProofTransaction.hashType).to.be.equal(2);
+        expect(secretProofTransaction.secret).to.be.equal('3fc43d717d824302e3821de8129ea2f7786912e5' );
+        expect(secretProofTransaction.proof).to.be.equal(proof);
+    });
+
+    it('should throw exception when the input is not related to HashType', () => {
+        expect(() => {
+            const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+            const secretProofTransaction = SecretProofTransaction.create(
+                Deadline.create(),
+                HashType.Op_Hash_160,
+                'non valid hash',
+                proof,
+                NetworkType.MIJIN_TEST,
+            );
+        }).to.throw(Error);
+    });
+
+    it('should be created with HashType: Op_Hash_256 secret', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Hash_256,
+            CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+        expect(secretProofTransaction.hashType).to.be.equal(3);
+        expect(secretProofTransaction.secret).to.be.equal('c346f5ecf5bcfa54ab14fad815c8239bdeb051df8835d212dba2af59f688a00e' );
+        expect(secretProofTransaction.proof).to.be.equal(proof);
+    });
+
+    it('should throw exception when the input is not related to HashType', () => {
+        expect(() => {
+            const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+            const secretProofTransaction = SecretProofTransaction.create(
+                Deadline.create(),
+                HashType.Op_Hash_256,
                 'non valid hash',
                 proof,
                 NetworkType.MIJIN_TEST,

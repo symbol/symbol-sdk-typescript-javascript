@@ -64,6 +64,12 @@ describe('Uint64', () => {
         expect(uint64Compact).to.be.equal(51110867862);
     });
 
+    it('should fromUnit throw exception with negative unit value', () => {
+        expect(() => {
+            UInt64.fromUint(-1);
+        }).to.throw(Error, 'Unsigned integer cannot be negative');
+    });
+
     describe('equal', () => {
         it('should return true if the inside values are the same', () => {
             const value = new UInt64([12, 12]);

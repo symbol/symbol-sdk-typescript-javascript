@@ -16,17 +16,32 @@
 
 /**
  * Hash type. Supported types are:
- * 0: SHA3_512.
+ * 0: Op_Sha3_256 (default).
+ * 1: Op_Keccak_256 (ETH compatibility).
+ * 2: Op_Hash_160 (first with SHA-256 and then with RIPEMD-160 (BTC compatibility))
+ * 3: Op_Hash_256: input is hashed twice with SHA-256 (BTC compatibility)
  */
 import {convert} from 'nem2-library';
 
 export enum HashType {
-    SHA3_512 = 0,
+    Op_Sha3_256 = 0,
+    Op_Keccak_256 = 1,
+    Op_Hash_160 = 2,
+    Op_Hash_256 = 3,
 }
 
 export function HashTypeLengthValidator(hashType: HashType, input: string): boolean {
-    if (hashType === HashType.SHA3_512 && convert.isHexString(input)) {
-        return input.length === 128;
+    if (convert.isHexString(input)) {
+        switch (hashType) {
+            case HashType.Op_Sha3_256:
+            case HashType.Op_Hash_256:
+            case HashType.Op_Keccak_256:
+                return input.length === 64;
+            case HashType.Op_Hash_160:
+                return input.length === 40;
+            default:
+                break;
+        }
     }
     return false;
 }

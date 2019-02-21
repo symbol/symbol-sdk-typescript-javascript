@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 import {expect} from 'chai';
+import * as CryptoJS from 'crypto-js';
 import {ChronoUnit} from 'js-joda';
-import {sha3_512} from 'js-sha3';
+import {keccak_256, sha3_256} from 'js-sha3';
 import {convert, nacl_catapult} from 'nem2-library';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import {Listener} from '../../src/infrastructure/Listener';
@@ -346,49 +347,210 @@ describe('TransactionHttp', () => {
         });
 
         describe('SecretLockTransaction', () => {
-            it('standalone', (done) => {
-                const secretLockTransaction = SecretLockTransaction.create(
-                    Deadline.create(),
-                    XEM.createAbsolute(10),
-                    UInt64.fromUint(100),
-                    HashType.SHA3_512,
-                    sha3_512.create().update(nacl_catapult.randomBytes(20)).hex(),
-                    Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
-                    NetworkType.MIJIN_TEST,
-                );
-                validateTransactionAnnounceCorrectly(account.address, done);
-                transactionHttp.announce(secretLockTransaction.signWith(account));
-            });
+            describe('HashType: Op_Sha3_256', () => {
+                it('standalone', (done) => {
+                    const secretLockTransaction = SecretLockTransaction.create(
+                        Deadline.create(),
+                        XEM.createAbsolute(10),
+                        UInt64.fromUint(100),
+                        HashType.Op_Sha3_256,
+                        sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                        Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
+                        NetworkType.MIJIN_TEST,
+                    );
+                    validateTransactionAnnounceCorrectly(account.address, done);
+                    transactionHttp.announce(secretLockTransaction.signWith(account));
+                });
 
-            it('aggregate', (done) => {
-                const secretLockTransaction = SecretLockTransaction.create(
-                    Deadline.create(),
-                    XEM.createAbsolute(10),
-                    UInt64.fromUint(100),
-                    HashType.SHA3_512,
-                    sha3_512.create().update(nacl_catapult.randomBytes(20)).hex(),
-                    Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
-                    NetworkType.MIJIN_TEST,
-                );
-                const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                    [secretLockTransaction.toAggregate(account.publicAccount)],
-                    NetworkType.MIJIN_TEST,
-                    []);
-                validateTransactionAnnounceCorrectly(account.address, done);
-                transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+                it('aggregate', (done) => {
+                    const secretLockTransaction = SecretLockTransaction.create(
+                        Deadline.create(),
+                        XEM.createAbsolute(10),
+                        UInt64.fromUint(100),
+                        HashType.Op_Sha3_256,
+                        sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                        Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
+                        NetworkType.MIJIN_TEST,
+                    );
+                    const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        [secretLockTransaction.toAggregate(account.publicAccount)],
+                        NetworkType.MIJIN_TEST,
+                        []);
+                    validateTransactionAnnounceCorrectly(account.address, done);
+                    transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+                });
+            });
+            describe('HashType: Keccak_256', () => {
+                it('standalone', (done) => {
+                    const secretLockTransaction = SecretLockTransaction.create(
+                        Deadline.create(),
+                        XEM.createAbsolute(10),
+                        UInt64.fromUint(100),
+                        HashType.Op_Keccak_256,
+                        sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                        Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
+                        NetworkType.MIJIN_TEST,
+                    );
+                    validateTransactionAnnounceCorrectly(account.address, done);
+                    transactionHttp.announce(secretLockTransaction.signWith(account));
+                });
+
+                it('aggregate', (done) => {
+                    const secretLockTransaction = SecretLockTransaction.create(
+                        Deadline.create(),
+                        XEM.createAbsolute(10),
+                        UInt64.fromUint(100),
+                        HashType.Op_Keccak_256,
+                        sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                        Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
+                        NetworkType.MIJIN_TEST,
+                    );
+                    const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        [secretLockTransaction.toAggregate(account.publicAccount)],
+                        NetworkType.MIJIN_TEST,
+                        []);
+                    validateTransactionAnnounceCorrectly(account.address, done);
+                    transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+                });
+            });
+            describe('HashType: Op_Hash_160', () => {
+                it('standalone', (done) => {
+                    const secretLockTransaction = SecretLockTransaction.create(
+                        Deadline.create(),
+                        XEM.createAbsolute(10),
+                        UInt64.fromUint(100),
+                        HashType.Op_Hash_160,
+                        sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                        Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
+                        NetworkType.MIJIN_TEST,
+                    );
+                    validateTransactionAnnounceCorrectly(account.address, done);
+                    transactionHttp.announce(secretLockTransaction.signWith(account));
+                });
+
+                it('aggregate', (done) => {
+                    const secretLockTransaction = SecretLockTransaction.create(
+                        Deadline.create(),
+                        XEM.createAbsolute(10),
+                        UInt64.fromUint(100),
+                        HashType.Op_Hash_160,
+                        sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                        Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
+                        NetworkType.MIJIN_TEST,
+                    );
+                    const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        [secretLockTransaction.toAggregate(account.publicAccount)],
+                        NetworkType.MIJIN_TEST,
+                        []);
+                    validateTransactionAnnounceCorrectly(account.address, done);
+                    transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+                });
+            });
+            describe('HashType: Op_Hash_256', () => {
+                it('standalone', (done) => {
+                    const secretLockTransaction = SecretLockTransaction.create(
+                        Deadline.create(),
+                        XEM.createAbsolute(10),
+                        UInt64.fromUint(100),
+                        HashType.Op_Hash_256,
+                        sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                        Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
+                        NetworkType.MIJIN_TEST,
+                    );
+                    validateTransactionAnnounceCorrectly(account.address, done);
+                    transactionHttp.announce(secretLockTransaction.signWith(account));
+                });
+
+                it('aggregate', (done) => {
+                    const secretLockTransaction = SecretLockTransaction.create(
+                        Deadline.create(),
+                        XEM.createAbsolute(10),
+                        UInt64.fromUint(100),
+                        HashType.Op_Hash_256,
+                        sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                        Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
+                        NetworkType.MIJIN_TEST,
+                    );
+                    const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        [secretLockTransaction.toAggregate(account.publicAccount)],
+                        NetworkType.MIJIN_TEST,
+                        []);
+                    validateTransactionAnnounceCorrectly(account.address, done);
+                    transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+                });
             });
         });
         describe('SecretProofTransaction', () => {
+            describe('HashType: Op_Sha3_256', () => {
+                it('standalone', (done) => {
+                    const secretSeed = nacl_catapult.randomBytes(20);
+                    const secret = sha3_256.create().update(secretSeed).hex();
+                    const proof = convert.uint8ToHex(secretSeed);
+                    const secretLockTransaction = SecretLockTransaction.create(
+                        Deadline.create(),
+                        XEM.createAbsolute(10),
+                        UInt64.fromUint(100),
+                        HashType.Op_Sha3_256,
+                        secret,
+                        account2.address,
+                        NetworkType.MIJIN_TEST,
+                    );
+                    validateTransactionAnnounceCorrectly(account.address, () => {
+                        const secretProofTransaction = SecretProofTransaction.create(
+                            Deadline.create(),
+                            HashType.Op_Sha3_256,
+                            secret,
+                            proof,
+                            NetworkType.MIJIN_TEST,
+                        );
+                        validateTransactionAnnounceCorrectly(account2.address, done);
+                        transactionHttp.announce(secretProofTransaction.signWith(account2));
+                    });
+                    transactionHttp.announce(secretLockTransaction.signWith(account));
+                });
+
+                it('aggregate', (done) => {
+                    const secretSeed = nacl_catapult.randomBytes(20);
+                    const secret = sha3_256.create().update(secretSeed).hex();
+                    const proof = convert.uint8ToHex(secretSeed);
+                    const secretLockTransaction = SecretLockTransaction.create(
+                        Deadline.create(),
+                        XEM.createAbsolute(10),
+                        UInt64.fromUint(100),
+                        HashType.Op_Sha3_256,
+                        secret,
+                        account2.address,
+                        NetworkType.MIJIN_TEST,
+                    );
+                    validateTransactionAnnounceCorrectly(account.address, () => {
+                        const secretProofTransaction = SecretProofTransaction.create(
+                            Deadline.create(),
+                            HashType.Op_Sha3_256,
+                            secret,
+                            proof,
+                            NetworkType.MIJIN_TEST,
+                        );
+                        const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                            [secretProofTransaction.toAggregate(account2.publicAccount)],
+                            NetworkType.MIJIN_TEST,
+                            []);
+                        validateTransactionAnnounceCorrectly(account2.address, done);
+                        transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+                    });
+                    transactionHttp.announce(secretLockTransaction.signWith(account));
+                });
+            });
+        });
+        describe('HashType: Op_Keccak_256', () => {
             it('standalone', (done) => {
                 const secretSeed = nacl_catapult.randomBytes(20);
-                const secret = sha3_512.create().update(secretSeed).hex();
+                const secret = keccak_256.create().update(secretSeed).hex();
                 const proof = convert.uint8ToHex(secretSeed);
-
                 const secretLockTransaction = SecretLockTransaction.create(
                     Deadline.create(),
                     XEM.createAbsolute(10),
                     UInt64.fromUint(100),
-                    HashType.SHA3_512,
+                    HashType.Op_Keccak_256,
                     secret,
                     account2.address,
                     NetworkType.MIJIN_TEST,
@@ -396,27 +558,26 @@ describe('TransactionHttp', () => {
                 validateTransactionAnnounceCorrectly(account.address, () => {
                     const secretProofTransaction = SecretProofTransaction.create(
                         Deadline.create(),
-                        HashType.SHA3_512,
+                        HashType.Op_Keccak_256,
                         secret,
                         proof,
                         NetworkType.MIJIN_TEST,
                     );
                     validateTransactionAnnounceCorrectly(account2.address, done);
                     transactionHttp.announce(secretProofTransaction.signWith(account2));
-
                 });
                 transactionHttp.announce(secretLockTransaction.signWith(account));
             });
 
             it('aggregate', (done) => {
                 const secretSeed = nacl_catapult.randomBytes(20);
-                const secret = sha3_512.create().update(secretSeed).hex();
+                const secret = keccak_256.create().update(secretSeed).hex();
                 const proof = convert.uint8ToHex(secretSeed);
                 const secretLockTransaction = SecretLockTransaction.create(
                     Deadline.create(),
                     XEM.createAbsolute(10),
                     UInt64.fromUint(100),
-                    HashType.SHA3_512,
+                    HashType.Op_Keccak_256,
                     secret,
                     account2.address,
                     NetworkType.MIJIN_TEST,
@@ -424,7 +585,7 @@ describe('TransactionHttp', () => {
                 validateTransactionAnnounceCorrectly(account.address, () => {
                     const secretProofTransaction = SecretProofTransaction.create(
                         Deadline.create(),
-                        HashType.SHA3_512,
+                        HashType.Op_Keccak_256,
                         secret,
                         proof,
                         NetworkType.MIJIN_TEST,
@@ -435,7 +596,124 @@ describe('TransactionHttp', () => {
                         []);
                     validateTransactionAnnounceCorrectly(account2.address, done);
                     transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+                });
+                transactionHttp.announce(secretLockTransaction.signWith(account));
+            });
+        });
+        describe('HashType: Op_Hash_160', () => {
+            it('standalone', (done) => {
+                const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
+                const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
+                const proof = convert.uint8ToHex(secretSeed);
+                const secretLockTransaction = SecretLockTransaction.create(
+                    Deadline.create(),
+                    XEM.createAbsolute(10),
+                    UInt64.fromUint(100),
+                    HashType.Op_Hash_160,
+                    secret,
+                    account2.address,
+                    NetworkType.MIJIN_TEST,
+                );
+                validateTransactionAnnounceCorrectly(account.address, () => {
+                    const secretProofTransaction = SecretProofTransaction.create(
+                        Deadline.create(),
+                        HashType.Op_Hash_160,
+                        secret,
+                        proof,
+                        NetworkType.MIJIN_TEST,
+                    );
+                    validateTransactionAnnounceCorrectly(account2.address, done);
+                    transactionHttp.announce(secretProofTransaction.signWith(account2));
+                });
+                transactionHttp.announce(secretLockTransaction.signWith(account));
+            });
 
+            it('aggregate', (done) => {
+                const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
+                const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
+                const proof = convert.uint8ToHex(secretSeed);
+                const secretLockTransaction = SecretLockTransaction.create(
+                    Deadline.create(),
+                    XEM.createAbsolute(10),
+                    UInt64.fromUint(100),
+                    HashType.Op_Hash_160,
+                    secret,
+                    account2.address,
+                    NetworkType.MIJIN_TEST,
+                );
+                validateTransactionAnnounceCorrectly(account.address, () => {
+                    const secretProofTransaction = SecretProofTransaction.create(
+                        Deadline.create(),
+                        HashType.Op_Hash_160,
+                        secret,
+                        proof,
+                        NetworkType.MIJIN_TEST,
+                    );
+                    const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        [secretProofTransaction.toAggregate(account2.publicAccount)],
+                        NetworkType.MIJIN_TEST,
+                        []);
+                    validateTransactionAnnounceCorrectly(account2.address, done);
+                    transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+                });
+                transactionHttp.announce(secretLockTransaction.signWith(account));
+            });
+        });
+        describe('HashType: Op_Hash_256', () => {
+            it('standalone', (done) => {
+                const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
+                const secret = CryptoJS.SHA256(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
+                const proof = convert.uint8ToHex(secretSeed);
+                const secretLockTransaction = SecretLockTransaction.create(
+                    Deadline.create(),
+                    XEM.createAbsolute(10),
+                    UInt64.fromUint(100),
+                    HashType.Op_Hash_256,
+                    secret,
+                    account2.address,
+                    NetworkType.MIJIN_TEST,
+                );
+                validateTransactionAnnounceCorrectly(account.address, () => {
+                    const secretProofTransaction = SecretProofTransaction.create(
+                        Deadline.create(),
+                        HashType.Op_Hash_256,
+                        secret,
+                        proof,
+                        NetworkType.MIJIN_TEST,
+                    );
+                    validateTransactionAnnounceCorrectly(account2.address, done);
+                    transactionHttp.announce(secretProofTransaction.signWith(account2));
+                });
+                transactionHttp.announce(secretLockTransaction.signWith(account));
+            });
+
+            it('aggregate', (done) => {
+                const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
+                const secret = CryptoJS.SHA256(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
+                const proof = convert.uint8ToHex(secretSeed);
+                const secretLockTransaction = SecretLockTransaction.create(
+                    Deadline.create(),
+                    XEM.createAbsolute(10),
+                    UInt64.fromUint(100),
+                    HashType.Op_Hash_256,
+                    secret,
+                    account2.address,
+                    NetworkType.MIJIN_TEST,
+                );
+                validateTransactionAnnounceCorrectly(account.address, () => {
+                    const secretProofTransaction = SecretProofTransaction.create(
+                        Deadline.create(),
+                        HashType.Op_Hash_256,
+                        secret,
+                        proof,
+                        NetworkType.MIJIN_TEST,
+                    );
+                    const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        [secretProofTransaction.toAggregate(account2.publicAccount)],
+                        NetworkType.MIJIN_TEST,
+                        []);
+                    validateTransactionAnnounceCorrectly(account2.address, done);
+                    transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
                 });
                 transactionHttp.announce(secretLockTransaction.signWith(account));
             });

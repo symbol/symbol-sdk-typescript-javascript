@@ -60,7 +60,7 @@ export class MosaicProperties {
                  * The duration in blocks a mosaic will be available.
                  * After the duration finishes mosaic is inactive and can be renewed.
                  */
-                public readonly duration: UInt64,) {
+                public readonly duration: UInt64) {
         let binaryFlags = '00' + (flags.lower >>> 0).toString(2);
         binaryFlags = binaryFlags.substr(binaryFlags.length - 3, 3);
         this.supplyMutable = binaryFlags[2] === '1';

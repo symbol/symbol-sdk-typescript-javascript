@@ -41,7 +41,6 @@ export class Mosaic {
 
     }
 
-
     /**
      * @internal
      * @returns {{amount: number[], id: number[]}}
