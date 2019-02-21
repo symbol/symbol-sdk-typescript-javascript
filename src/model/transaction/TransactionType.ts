@@ -32,6 +32,18 @@ export class TransactionType {
     public static readonly REGISTER_NAMESPACE = 0x414E;
 
     /**
+     * Address alias transaction type
+     * @type {number}
+     */
+    public static readonly ADDRESS_ALIAS = 0x424E;
+
+    /**
+     * Mosaic alias transaction type
+     * @type {number}
+     */
+    public static readonly MOSAIC_ALIAS = 0x434E;
+
+    /**
      * Mosaic definition transaction type.
      * @type {number}
      */

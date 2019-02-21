@@ -47,6 +47,7 @@ export * from './namespace/NamespaceId';
 export * from './namespace/NamespaceInfo';
 export * from './namespace/NamespaceName';
 export * from './namespace/NamespaceType';
+export * from './namespace/AliasActionType';
 
 // Transaction
 export * from './transaction/AggregateTransaction';
@@ -60,6 +61,7 @@ export * from './transaction/InnerTransaction';
 export * from './transaction/LockFundsTransaction';
 export * from './transaction/Message';
 export * from './transaction/ModifyMultisigAccountTransaction';
+export * from './transaction/MosaicAliasTransaction';
 export * from './transaction/MosaicDefinitionTransaction';
 export * from './transaction/MosaicSupplyChangeTransaction';
 export * from './transaction/MultisigCosignatoryModification';

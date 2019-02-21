@@ -85,4 +85,16 @@ export class TransactionVersion {
      * @type {number}
      */
     public static readonly SECRET_PROOF = 1;
+
+    /**
+     * Address Alias transaction version
+     * @type {number}
+     */
+    public static readonly ADDRESS_ALIAS = 1;
+
+    /**
+     * Mosaic Alias transaction version
+     * @type {number}
+     */
+    public static readonly MOSAIC_ALIAS = 1;
 }

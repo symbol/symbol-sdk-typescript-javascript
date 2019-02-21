@@ -27,6 +27,7 @@ import {AggregateTransactionInfo} from '../../model/transaction/AggregateTransac
 import {Deadline} from '../../model/transaction/Deadline';
 import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
 import {ModifyMultisigAccountTransaction} from '../../model/transaction/ModifyMultisigAccountTransaction';
+import {MosaicAliasTransaction} from '../../model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../model/transaction/MosaicDefinitionTransaction';
 import {MosaicSupplyChangeTransaction} from '../../model/transaction/MosaicSupplyChangeTransaction';
 import {MultisigCosignatoryModification} from '../../model/transaction/MultisigCosignatoryModification';
@@ -222,6 +223,19 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.hashAlgorithm,
             transactionDTO.secret,
             transactionDTO.proof,
+            transactionDTO.signature,
+            PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.MOSAIC_ALIAS) {
+        return new MosaicAliasTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.fee),
+            transactionDTO.actionType,
+            transactionDTO.namespaceId,
+            transactionDTO.mosaicId,
             transactionDTO.signature,
             PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
             transactionInfo,
