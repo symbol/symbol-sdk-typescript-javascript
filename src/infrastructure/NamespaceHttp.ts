@@ -165,6 +165,44 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
         }));
     }
 
+    /**
+     * Gets the MosaicId from a MosaicAlias
+     * @param alias - String containing the address alias
+     * @returns Observable<MosaicId | null>
+     */
+    public getLinkedMosaicId(alias: string): Observable<MosaicId | null> {
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.namespaceRoutesApi.getNamespace(alias)).pipe(
+                map((namespaceInfoDTO) => {
+
+                    if (namespaceInfoDTO.namespace.alias.type === AliasType.Mosaic) {
+                        return new MosaicId(namespaceInfoDTO.namespace.alias.mosaicId);
+                    }
+
+                    return null;
+                }))));
+    }
+
+    /**
+     * Gets the Address from a AddressAlias
+     * @param alias - String containing the address alias
+     * @returns Observable<Address>
+     */
+    public getLinkedAddress(alias: string): Observable<Address | null> {
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.namespaceRoutesApi.getNamespace(alias)).pipe(
+                map((namespaceInfoDTO) => {
+
+                    if (namespaceInfoDTO.namespace.alias.type === AliasType.Address) {
+                        return Address.createFromRawAddress(namespaceInfoDTO.namespace.alias.address);
+                    }
+
+                    return null;
+                }))));
+    }
+
     private extractLevels(namespace: any): NamespaceId[] {
         const result: NamespaceId[] = [];
         if (namespace.level0) {
