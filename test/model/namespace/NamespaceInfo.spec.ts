@@ -41,6 +41,7 @@ describe('NamespaceInfo', () => {
                 parentId: new NamespaceId([0, 0]),
                 startHeight: new UInt64([1, 0]),
                 type: 0,
+                alias: {type: 0},
             },
         };
         subNamespaceDTO = {
@@ -73,6 +74,7 @@ describe('NamespaceInfo', () => {
                     50795,
                     0,
                 ],
+                alias: {type: 0},
             },
         };
     });
@@ -88,6 +90,7 @@ describe('NamespaceInfo', () => {
         expect(namespaceInfo.owner.publicKey).to.be.equal(rootNamespaceDTO.namespace.owner);
         deepEqual(namespaceInfo.startHeight, rootNamespaceDTO.namespace.startHeight);
         deepEqual(namespaceInfo.endHeight, rootNamespaceDTO.namespace.endHeight);
+        deepEqual(namespaceInfo.alias, rootNamespaceDTO.namespace.alias);
     });
 
     it('should return the NamespaceId in string format', () => {
@@ -156,6 +159,7 @@ describe('NamespaceInfo', () => {
             PublicAccount.createFromPublicKey(dto.namespace.owner, NetworkType.MIJIN_TEST),
             dto.namespace.startHeight,
             dto.namespace.endHeight,
+            dto.namespace.alias,
         );
     }
 
@@ -171,6 +175,7 @@ describe('NamespaceInfo', () => {
             PublicAccount.createFromPublicKey(dto.namespace.owner, NetworkType.MIJIN_TEST),
             dto.namespace.startHeight,
             dto.namespace.endHeight,
+            dto.namespace.alias,
         );
     }
 

@@ -43,6 +43,10 @@ export * from './mosaic/XEM';
 
 // Namespace
 export * from '../service/Namespace';
+export * from './namespace/AliasType';
+export * from './namespace/Alias';
+export * from './namespace/AddressAlias';
+export * from './namespace/MosaicAlias';
 export * from './namespace/NamespaceId';
 export * from './namespace/NamespaceInfo';
 export * from './namespace/NamespaceName';
