@@ -51,8 +51,6 @@ describe('AddressAliasTransaction', () => {
 
         const signedTransaction = addressAliasTransaction.signWith(account);
 
-        console.log(signedTransaction.payload);
-
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,

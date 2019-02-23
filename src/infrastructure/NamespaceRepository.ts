@@ -64,15 +64,15 @@ export interface NamespaceRepository {
 
     /**
      * Gets the MosaicId from a MosaicAlias
-     * @param alias - String containing the address alias
+     * @param namespaceId - the namespaceId of the namespace
      * @returns Observable<MosaicId | null>
      */
-    getLinkedMosaicId(alias: string): Observable<MosaicId | null>;
+    getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId | null>;
 
     /**
      * Gets the Address from a AddressAlias
-     * @param alias - String containing the address alias
+     * @param namespaceId - the namespaceId of the namespace
      * @returnsObservable<Address | null>
      */
-    getLinkedAddress(alias: string): Observable<Address | null>;
+    getLinkedAddress(namespaceId: NamespaceId): Observable<Address | null>;
 }

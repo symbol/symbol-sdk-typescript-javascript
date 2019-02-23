@@ -18,6 +18,7 @@ import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 import {NamespaceInfo} from '../../../src/model/namespace/NamespaceInfo';
 import {UInt64} from '../../../src/model/UInt64';
@@ -41,7 +42,7 @@ describe('NamespaceInfo', () => {
                 parentId: new NamespaceId([0, 0]),
                 startHeight: new UInt64([1, 0]),
                 type: 0,
-                alias: {type: 0},
+                alias: {type: 1, mosaicId: new MosaicId([481110499, 231112638])},
             },
         };
         subNamespaceDTO = {
@@ -90,7 +91,8 @@ describe('NamespaceInfo', () => {
         expect(namespaceInfo.owner.publicKey).to.be.equal(rootNamespaceDTO.namespace.owner);
         deepEqual(namespaceInfo.startHeight, rootNamespaceDTO.namespace.startHeight);
         deepEqual(namespaceInfo.endHeight, rootNamespaceDTO.namespace.endHeight);
-        deepEqual(namespaceInfo.alias, rootNamespaceDTO.namespace.alias);
+        expect(namespaceInfo.alias.type).to.be.equal(rootNamespaceDTO.namespace.alias.type);
+        expect(namespaceInfo.alias.mosaicId).to.be.equal(rootNamespaceDTO.namespace.alias.mosaicId);
     });
 
     it('should return the NamespaceId in string format', () => {
@@ -144,6 +146,16 @@ describe('NamespaceInfo', () => {
     it('should return the id from a subdomain namespace', () => {
         const namespaceInfo = createSubnamespaceFromDTO(subNamespaceDTO);
         expect(namespaceInfo.id).to.be.equal(subNamespaceDTO.namespace.level1);
+    });
+
+    it('hasAlias() should return false when the Namespace alias has type 1', () => {
+        const namespaceInfo = createRootFromDTO(rootNamespaceDTO);
+        expect(namespaceInfo.hasAlias()).to.be.equal(true);
+    });
+
+    it('hasAlias() should return false when the Namespace alias has type 0', () => {
+        const namespaceInfo = createSubnamespaceFromDTO(subNamespaceDTO);
+        expect(namespaceInfo.hasAlias()).to.be.equal(false);
     });
 
     // region functions

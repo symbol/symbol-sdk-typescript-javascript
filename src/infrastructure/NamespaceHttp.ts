@@ -167,13 +167,13 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
 
     /**
      * Gets the MosaicId from a MosaicAlias
-     * @param alias - String containing the address alias
+     * @param namespaceId - the namespaceId of the namespace
      * @returns Observable<MosaicId | null>
      */
-    public getLinkedMosaicId(alias: string): Observable<MosaicId | null> {
+    public getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId | null> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
-                this.namespaceRoutesApi.getNamespace(alias)).pipe(
+                this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
                 map((namespaceInfoDTO) => {
 
                     if (namespaceInfoDTO.namespace.alias.type === AliasType.Mosaic) {
@@ -186,13 +186,13 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
 
     /**
      * Gets the Address from a AddressAlias
-     * @param alias - String containing the address alias
+     * @param namespaceId - the namespaceId of the namespace
      * @returns Observable<Address>
      */
-    public getLinkedAddress(alias: string): Observable<Address | null> {
+    public getLinkedAddress(namespaceId: NamespaceId): Observable<Address | null> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
-                this.namespaceRoutesApi.getNamespace(alias)).pipe(
+                this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
                 map((namespaceInfoDTO) => {
 
                     if (namespaceInfoDTO.namespace.alias.type === AliasType.Address) {

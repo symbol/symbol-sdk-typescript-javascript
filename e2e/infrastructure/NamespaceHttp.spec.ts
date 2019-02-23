@@ -69,4 +69,24 @@ describe('NamespaceHttp', () => {
                 });
         });
     });
+
+    describe('getLinkedMosaicId', () => {
+        it('should return mosaicId given namespaceId', (done) => {
+            namespaceHttp.getLinkedMosaicId(namespaceId)
+                .subscribe((mosaicId) => {
+                    expect(mosaicId).to.be.null;
+                    done();
+                });
+        });
+    });
+
+    describe('getLinkedAddress', () => {
+        it('should return address given namespaceId', (done) => {
+            namespaceHttp.getLinkedAddress(namespaceId)
+                .subscribe((address) => {
+                    expect(address).to.be.null;
+                    done();
+                });
+        });
+    });
 });
