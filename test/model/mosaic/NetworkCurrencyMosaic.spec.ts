@@ -18,6 +18,7 @@ import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {NetworkCurrencyMosaic} from '../../../src/model/mosaic/NetworkCurrencyMosaic';
+import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 
 describe('NetworkCurrencyMosaic', () => {
 
@@ -36,6 +37,7 @@ describe('NetworkCurrencyMosaic', () => {
     });
 
     it('should have valid statics', () => {
+        deepEqual(NetworkCurrencyMosaic.NAMESPACE_ID.id, new NamespaceId([3294802500, 2243684972]).id);
         deepEqual(NetworkCurrencyMosaic.MOSAIC_ID.id, new MosaicId([481110499, 231112638]).id);
         expect(NetworkCurrencyMosaic.DIVISIBILITY).to.be.equal(6);
         expect(NetworkCurrencyMosaic.TRANSFERABLE).to.be.equal(true);

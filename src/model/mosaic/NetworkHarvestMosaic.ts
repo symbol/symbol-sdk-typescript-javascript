@@ -35,9 +35,16 @@ export class NetworkHarvestMosaic extends Mosaic {
     public static OWNER_PUBLIC_KEY = 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF';
 
     /**
+     * namespaceId of `harvest` namespace.
+     *
+     * @type {Id}
+     */
+    public static NAMESPACE_ID = new NamespaceId('cat.harvest');
+
+    /**
      * Per-Network harvestMosaicId
      *
-     * @note Mark the little-endianness on nonce field.
+     * @note Little-endianness on nonce field in `mosaicId(nonce, publicKey)`.
      * @type {Id}
      */
     public static MOSAIC_ID = new MosaicId(mosaicId([

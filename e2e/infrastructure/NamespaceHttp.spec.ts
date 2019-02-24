@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {NamespaceHttp} from '../../src/infrastructure/NamespaceHttp';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import {NamespaceId} from '../../src/model/namespace/NamespaceId';
 import {APIUrl} from '../conf/conf.spec';
 
 describe('NamespaceHttp', () => {
-    const namespaceId = new NamespaceId([929036875, 2226345261]);
+    const namespaceId = NetworkCurrencyMosaic.NAMESPACE_ID;
     const publicAccount = PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
         NetworkType.MIJIN_TEST);
     const namespaceHttp = new NamespaceHttp(APIUrl);
@@ -71,10 +73,11 @@ describe('NamespaceHttp', () => {
     });
 
     describe('getLinkedMosaicId', () => {
-        it('should return mosaicId given namespaceId', (done) => {
+        it('should return mosaicId given currency namespaceId', (done) => {
             namespaceHttp.getLinkedMosaicId(namespaceId)
                 .subscribe((mosaicId) => {
-                    expect(mosaicId).to.be.null;
+                    expect(mosaicId).to.not.be.null;
+                    deepEqual(mosaicId, NetworkCurrencyMosaic.MOSAIC_ID);
                     done();
                 });
         });

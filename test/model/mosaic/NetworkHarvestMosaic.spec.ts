@@ -18,6 +18,7 @@ import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {NetworkHarvestMosaic} from '../../../src/model/mosaic/NetworkHarvestMosaic';
+import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 
 describe('NetworkHarvestMosaic', () => {
 
@@ -36,6 +37,7 @@ describe('NetworkHarvestMosaic', () => {
     });
 
     it('should have valid statics', () => {
+        deepEqual(NetworkHarvestMosaic.NAMESPACE_ID.id, new NamespaceId([3084986652, 2484246962]).id);
         deepEqual(NetworkHarvestMosaic.MOSAIC_ID.id, new MosaicId([519256100, 642862634]).id);
         expect(NetworkHarvestMosaic.DIVISIBILITY).to.be.equal(3);
         expect(NetworkHarvestMosaic.TRANSFERABLE).to.be.equal(true);
