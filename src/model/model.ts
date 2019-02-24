@@ -39,7 +39,8 @@ export * from './mosaic/MosaicSupplyType';
 export * from './mosaic/MosaicProperties';
 export * from '../service/MosaicView';
 export * from '../service/MosaicAmountView';
-export * from './mosaic/XEM';
+export * from './mosaic/NetworkCurrencyMosaic';
+export * from './mosaic/NetworkHarvestMosaic';
 
 // Namespace
 export * from '../service/Namespace';
