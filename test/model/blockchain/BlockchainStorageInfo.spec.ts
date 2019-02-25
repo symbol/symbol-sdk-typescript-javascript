@@ -21,15 +21,15 @@ describe('BlockchainStorageInfo', () => {
 
     it('should createComplete an BlockchainStorageInfo object', () => {
         const blockchainStorageInfoDTO = {
-            numAccounts: 10,
             numBlocks: 1,
             numTransactions: 100,
+            numAccounts: 10,
         };
 
         const blockchainScore = new BlockchainStorageInfo(
-            blockchainStorageInfoDTO.numAccounts,
             blockchainStorageInfoDTO.numBlocks,
             blockchainStorageInfoDTO.numTransactions,
+            blockchainStorageInfoDTO.numAccounts,
         );
 
         expect(blockchainScore.numAccounts).to.be.equal(blockchainStorageInfoDTO.numAccounts);

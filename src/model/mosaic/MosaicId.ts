@@ -42,13 +42,21 @@ export class MosaicId {
     constructor(id: string | number[]) {
         if (id instanceof Array) {
             this.id = new Id(id);
-        } else if (typeof id === 'string') {
+        }
+        /**
+         * Deprecated initialization with MosaicName.
+         * To be re-introduced after AliasTransaction implementation.
+         *
+         * @deprecated
+        else if (typeof id === 'string') {
             this.fullName = id;
             const limiterPosition = id.indexOf(':');
             const namespaceName = id.substr(0, limiterPosition);
             const mosaicName = id.substr(limiterPosition + 1);
             this.id = new Id(MosaicIdentifierGenerator(namespaceName, mosaicName));
         }
+         *
+         */
     }
 
     /**

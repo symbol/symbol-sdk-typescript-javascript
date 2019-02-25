@@ -53,29 +53,4 @@ describe('MosaicHttp', () => {
                 });
         });
     });
-
-    describe('getMosaicsFromNamespace', () => {
-        it('should return mosaics given namespaceId', (done) => {
-            mosaicHttp.getMosaicsFromNamespace(namespaceId)
-                .subscribe((mosaicInfos) => {
-                    expect(mosaicInfos[0].height.lower).to.be.equal(1);
-                    expect(mosaicInfos[0].height.higher).to.be.equal(0);
-                    expect(mosaicInfos[0].divisibility).to.be.equal(6);
-                    expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(false);
-                    expect(mosaicInfos[0].isTransferable()).to.be.equal(true);
-                    expect(mosaicInfos[0].isLevyMutable()).to.be.equal(false);
-                    done();
-                });
-        });
-    });
-
-    describe('getMosaicsName', () => {
-        it('should return mosaics name given array of mosaicIds', (done) => {
-            mosaicHttp.getMosaicsName([mosaicId])
-                .subscribe((mosaicNames) => {
-                    expect(mosaicNames[0].name).to.be.equal('xem');
-                    done();
-                });
-        });
-    });
 });

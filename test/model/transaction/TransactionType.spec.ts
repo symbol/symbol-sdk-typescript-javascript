@@ -19,15 +19,15 @@ import {TransactionType} from '../../../src/model/transaction/TransactionType';
 describe('TransactionType', () => {
     it('Should match the specification', () => {
         expect(TransactionType.TRANSFER).to.be.equal(0x4154);
-        expect(TransactionType.REGISTER_NAMESPACE).to.be.equal(0x414e);
-        expect(TransactionType.MOSAIC_DEFINITION).to.be.equal(0x414d);
-        expect(TransactionType.MOSAIC_SUPPLY_CHANGE).to.be.equal(0x424d);
+        expect(TransactionType.REGISTER_NAMESPACE).to.be.equal(0x414E);
+        expect(TransactionType.MOSAIC_DEFINITION).to.be.equal(0x414D);
+        expect(TransactionType.MOSAIC_SUPPLY_CHANGE).to.be.equal(0x424D);
         expect(TransactionType.MODIFY_MULTISIG_ACCOUNT).to.be.equal(0x4155);
         expect(TransactionType.AGGREGATE_COMPLETE).to.be.equal(0x4141);
         expect(TransactionType.AGGREGATE_BONDED).to.be.equal(0x4241);
         expect(TransactionType.AGGREGATE_BONDED).to.be.equal(0x4241);
-        expect(TransactionType.LOCK).to.be.equal(0x414C);
-        expect(TransactionType.SECRET_LOCK).to.be.equal(0x424C);
-        expect(TransactionType.SECRET_PROOF).to.be.equal(0x434C);
+        expect(TransactionType.LOCK).to.be.equal(0x4148);
+        expect(TransactionType.SECRET_LOCK).to.be.equal(0x4152);
+        expect(TransactionType.SECRET_PROOF).to.be.equal(0x4252);
     });
 });
