@@ -18,7 +18,7 @@ import { expect } from 'chai';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
-import { XEM } from '../../../src/model/mosaic/XEM';
+import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
@@ -57,7 +57,7 @@ describe('TransferTransaction', () => {
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [
-                XEM.createRelative(100),
+                NetworkCurrencyMosaic.createRelative(100),
             ],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,

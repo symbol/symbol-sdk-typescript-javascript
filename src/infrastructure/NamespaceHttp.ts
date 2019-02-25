@@ -18,6 +18,12 @@ import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {Address} from '../model/account/Address';
 import {PublicAccount} from '../model/account/PublicAccount';
+import {MosaicId} from '../model/mosaic/MosaicId';
+import {AddressAlias} from '../model/namespace/AddressAlias';
+import {Alias} from '../model/namespace/Alias';
+import {AliasType} from '../model/namespace/AliasType';
+import {EmptyAlias} from '../model/namespace/EmptyAlias';
+import {MosaicAlias} from '../model/namespace/MosaicAlias';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {NamespaceInfo} from '../model/namespace/NamespaceInfo';
 import {NamespaceName} from '../model/namespace/NamespaceName';
@@ -70,6 +76,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                     PublicAccount.createFromPublicKey(namespaceInfoDTO.namespace.owner, networkType),
                     new UInt64(namespaceInfoDTO.namespace.startHeight),
                     new UInt64(namespaceInfoDTO.namespace.endHeight),
+                    this.extractAlias(namespaceInfoDTO.namespace),
                 );
             }))));
     }
@@ -98,6 +105,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                             PublicAccount.createFromPublicKey(namespaceInfoDTO.namespace.owner, networkType),
                             new UInt64(namespaceInfoDTO.namespace.startHeight),
                             new UInt64(namespaceInfoDTO.namespace.endHeight),
+                            this.extractAlias(namespaceInfoDTO.namespace),
                         );
                     });
                 }))));
@@ -130,6 +138,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                             PublicAccount.createFromPublicKey(namespaceInfoDTO.namespace.owner, networkType),
                             new UInt64(namespaceInfoDTO.namespace.startHeight),
                             new UInt64(namespaceInfoDTO.namespace.endHeight),
+                            this.extractAlias(namespaceInfoDTO.namespace),
                         );
                     });
                 }))));
@@ -156,6 +165,52 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
         }));
     }
 
+    /**
+     * Gets the MosaicId from a MosaicAlias
+     * @param namespaceId - the namespaceId of the namespace
+     * @returns Observable<MosaicId | null>
+     */
+    public getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId | null> {
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
+                map((namespaceInfoDTO) => {
+
+                    if (namespaceInfoDTO.namespace === undefined) {
+                        throw namespaceInfoDTO;
+                    }
+
+                    if (namespaceInfoDTO.namespace.alias.type === AliasType.Mosaic) {
+                        return new MosaicId(namespaceInfoDTO.namespace.alias.mosaicId);
+                    }
+
+                    return null;
+                }))));
+    }
+
+    /**
+     * Gets the Address from a AddressAlias
+     * @param namespaceId - the namespaceId of the namespace
+     * @returns Observable<Address>
+     */
+    public getLinkedAddress(namespaceId: NamespaceId): Observable<Address | null> {
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
+                map((namespaceInfoDTO) => {
+
+                    if (namespaceInfoDTO.namespace === undefined) {
+                        throw namespaceInfoDTO;
+                    }
+
+                    if (namespaceInfoDTO.namespace.alias.type === AliasType.Address) {
+                        return Address.createFromRawAddress(namespaceInfoDTO.namespace.alias.address);
+                    }
+
+                    return null;
+                }))));
+    }
+
     private extractLevels(namespace: any): NamespaceId[] {
         const result: NamespaceId[] = [];
         if (namespace.level0) {
@@ -168,5 +223,22 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
             result.push(new NamespaceId(namespace.level2));
         }
         return result;
+    }
+
+    /**
+     * Extract the alias from a namespace
+     *
+     * @internal
+     * @access private
+     * @param namespace
+     */
+    private extractAlias(namespace: any): Alias {
+        if (namespace.alias && namespace.alias.type === AliasType.Mosaic) {
+            return new MosaicAlias(namespace.alias.type, namespace.alias.mosaicId);
+        } else if (namespace.alias && namespace.alias.type === AliasType.Address) {
+            return new AddressAlias(namespace.alias.type, namespace.alias.address);
+        }
+
+        return new EmptyAlias();
     }
 }

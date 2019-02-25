@@ -18,7 +18,7 @@ import {TransactionHttp} from '../../src/infrastructure/TransactionHttp';
 import {Account} from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
-import {XEM} from '../../src/model/mosaic/XEM';
+import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../src/model/transaction/AggregateTransaction';
 import {CosignatureTransaction} from '../../src/model/transaction/CosignatureTransaction';
 import {Deadline} from '../../src/model/transaction/Deadline';
@@ -47,7 +47,7 @@ export class TransactionUtils {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-            [XEM.createRelative(100000000000)],
+            [NetworkCurrencyMosaic.createRelative(100000000000)],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
@@ -59,7 +59,7 @@ export class TransactionUtils {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-            [XEM.createRelative(100000000000)],
+            [NetworkCurrencyMosaic.createRelative(100000000000)],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
