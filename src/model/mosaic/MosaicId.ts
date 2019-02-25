@@ -13,8 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {mosaicId as MosaicIdentifierGenerator} from 'nem2-library';
+import {
+    convert,
+    mosaicId as MosaicIdentifierGenerator,
+    nacl_catapult,
+    uint64 as uint64_t,
+} from 'nem2-library';
+
+import {PublicAccount} from '../account/PublicAccount';
 import {Id} from '../Id';
+import {MosaicNonce} from '../mosaic/MosaicNonce';
 
 /**
  * The mosaic id structure describes mosaic id
@@ -32,6 +40,31 @@ export class MosaicId {
      * Mosaic full name
      */
     public readonly fullName?: string;
+
+    /**
+     * Create a random MosaicId for given `owner` PublicAccount.
+     * 
+     * @param   owner   {PublicAccount}
+     * @return  {MosaicId}
+     */
+    public static createRandom(owner: PublicAccount): MosaicId {
+        const bytes = nacl_catapult.randomBytes(4);
+        const nonce = new Uint8Array(bytes);
+        const mosaicId = MosaicIdentifierGenerator(nonce, convert.hexToUint8(owner.publicKey));
+        return new MosaicId(mosaicId);
+    }
+
+    /**
+     * Create a MosaicId for given `nonce` MosaicNonce and `owner` PublicAccount.
+     *
+     * @param   nonce   {MosaicNonce}
+     * @param   owner   {Account}
+     * @return  {MosaicId}
+     */
+    public static createFromNonce(nonce: MosaicNonce, owner: PublicAccount): MosaicId {
+        const mosaicId = MosaicIdentifierGenerator(nonce.nonce, convert.hexToUint8(owner.publicKey));
+        return new MosaicId(mosaicId);
+    }
 
     /**
      * Create MosaicId from mosaic and namespace string id (ex: nem:xem or domain.subdom.subdome:token)
