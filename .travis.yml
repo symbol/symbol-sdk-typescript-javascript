@@ -16,9 +16,8 @@ before_deploy:
 deploy:
   provider: pages
   skip_cleanup: true
-  keep-history: true
   local_dir: ts-docs
   github_token: $GITHUB_TOKEN
   on:
     branch: master
-  
+
