@@ -59,6 +59,7 @@ export * from './transaction/AddressAliasTransaction';
 export * from './transaction/AggregateTransaction';
 export * from './transaction/AggregateTransactionCosignature';
 export * from './transaction/AggregateTransactionInfo';
+export * from './transaction/AliasTransaction';
 export * from './transaction/CosignatureSignedTransaction';
 export * from './transaction/CosignatureTransaction';
 export * from './transaction/Deadline';
