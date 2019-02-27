@@ -182,12 +182,12 @@ export class TransactionHttp extends Http implements TransactionRepository {
             } else {
                 return CreateTransactionFromDTO(response);
             }
-        }),catchError((err) => {
+        }), catchError((err) => {
             if (err.statusCode === 405) {
                 return observableThrowError('non sync server');
             }
             return observableThrowError(err);
-        }),);
+        }));
     }
 }
 
