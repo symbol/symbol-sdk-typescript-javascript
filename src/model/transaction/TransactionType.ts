@@ -89,4 +89,22 @@ export class TransactionType {
      * @type {number}
      */
     public static readonly SECRET_PROOF = 0x4252;
+
+    /**
+     * Secret Proof transaction type
+     * @type {number}
+     */
+    public static readonly MODIFY_ACCOUNT_PROPERTY_ADDRESS = 0x4150;
+
+    /**
+     * Secret Proof transaction type
+     * @type {number}
+     */
+    public static readonly MODIFY_ACCOUNT_PROPERTY_MOSAIC = 0x4250;
+
+    /**
+     * Secret Proof transaction type
+     * @type {number}
+     */
+    public static readonly MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE = 0x4350;
 }
