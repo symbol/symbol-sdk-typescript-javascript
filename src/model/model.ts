@@ -35,6 +35,7 @@ export * from './blockchain/NetworkType';
 export * from './mosaic/Mosaic';
 export * from './mosaic/MosaicInfo';
 export * from './mosaic/MosaicId';
+export * from './mosaic/MosaicNonce';
 export * from './mosaic/MosaicSupplyType';
 export * from './mosaic/MosaicProperties';
 export * from '../service/MosaicView';
