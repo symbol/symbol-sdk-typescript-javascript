@@ -42,19 +42,6 @@ export class MosaicId {
     public readonly fullName?: string;
 
     /**
-     * Create a random MosaicId for given `owner` PublicAccount.
-     * 
-     * @param   owner   {PublicAccount}
-     * @return  {MosaicId}
-     */
-    public static createRandom(owner: PublicAccount): MosaicId {
-        const bytes = nacl_catapult.randomBytes(4);
-        const nonce = new Uint8Array(bytes);
-        const mosaicId = MosaicIdentifierGenerator(nonce, convert.hexToUint8(owner.publicKey));
-        return new MosaicId(mosaicId);
-    }
-
-    /**
      * Create a MosaicId for given `nonce` MosaicNonce and `owner` PublicAccount.
      *
      * @param   nonce   {MosaicNonce}
@@ -76,20 +63,6 @@ export class MosaicId {
         if (id instanceof Array) {
             this.id = new Id(id);
         }
-        /**
-         * Deprecated initialization with MosaicName.
-         * To be re-introduced after AliasTransaction implementation.
-         *
-         * @deprecated
-        else if (typeof id === 'string') {
-            this.fullName = id;
-            const limiterPosition = id.indexOf(':');
-            const namespaceName = id.substr(0, limiterPosition);
-            const mosaicName = id.substr(limiterPosition + 1);
-            this.id = new Id(MosaicIdentifierGenerator(namespaceName, mosaicName));
-        }
-         *
-         */
     }
 
     /**

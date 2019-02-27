@@ -24,42 +24,10 @@ import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
 describe('MosaicId', () => {
     const publicKey = 'b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf';
 
-    /**
-     * Deprecated initialization with MosaicName.
-         * To be re-introduced after AliasTransaction implementation.
-     *
-     * @deprecated
-    it('should be created from full name', () => {
-        const id = new MosaicId('nem:xem');
-        deepEqual(id.id, new Id([3294802500, 2243684972]));
-        expect(id.fullName).to.be.equal('nem:xem');
-    });
-     *
-     */
-
     it('should be created from id', () => {
         const id = new MosaicId([3294802500, 2243684972]);
         deepEqual(id.id, new Id([3294802500, 2243684972]));
         expect(id.fullName).to.be.equal(undefined);
-    });
-
-    it('should create random id given owner', () => {
-        const owner = PublicAccount.createFromPublicKey(publicKey, NetworkType.MIJIN_TEST);
-        const id = MosaicId.createRandom(owner);
-        expect(id.id.lower).to.not.be.null;
-        expect(id.id.higher).to.not.be.null;
-    });
-
-    it('should create random id twice not the same given owner', () => {
-        const owner = PublicAccount.createFromPublicKey(publicKey, NetworkType.MIJIN_TEST);
-        const id1 = MosaicId.createRandom(owner);
-        const id2 = MosaicId.createRandom(owner);
-
-        expect(id1.id.lower).to.not.be.null;
-        expect(id1.id.higher).to.not.be.null;
-        expect(id2.id.lower).to.not.be.null;
-        expect(id2.id.higher).to.not.be.null;
-        expect(id1.id.compact()).to.not.equal(id2.id.compact());
     });
 
     it('should create id given nonce and owner', () => {

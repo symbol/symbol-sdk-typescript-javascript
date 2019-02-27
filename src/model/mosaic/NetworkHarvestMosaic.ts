@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import {mosaicId, convert} from 'nem2-library';
+import {convert, mosaicId as MosaicIdGenerator} from 'nem2-library';
+import {PublicAccount} from '../account/PublicAccount';
 import {NamespaceId} from '../namespace/NamespaceId';
 import {UInt64} from '../UInt64';
 import {Mosaic} from './Mosaic';
@@ -22,35 +23,20 @@ import {MosaicId} from './MosaicId';
 
 /**
  * NetworkHarvestMosaic mosaic
- * 
+ *
  * This represents the per-network harvest mosaic. This mosaicId is aliased
- * with namespace name `harvest`.
- * 
+ * with namespace name `cat.harvest`.
+ *
  * @since 0.10.2
  */
 export class NetworkHarvestMosaic extends Mosaic {
-    /**
-     * Per-Network default mosaic owner public key
-     */
-    public static OWNER_PUBLIC_KEY = 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF';
 
     /**
-     * namespaceId of `harvest` namespace.
+     * namespaceId of `currency` namespace.
      *
      * @type {Id}
      */
     public static NAMESPACE_ID = new NamespaceId('cat.harvest');
-
-    /**
-     * Per-Network harvestMosaicId
-     *
-     * @note Little-endianness on nonce field in `mosaicId(nonce, publicKey)`.
-     * @type {Id}
-     */
-    public static MOSAIC_ID = new MosaicId(mosaicId([
-        0x1, 0x0,
-        0x0, 0x0,
-    ], convert.hexToUint8(NetworkHarvestMosaic.OWNER_PUBLIC_KEY)));
 
     /**
      * Divisiblity
@@ -84,10 +70,11 @@ export class NetworkHarvestMosaic extends Mosaic {
 
     /**
      * constructor
+     * @param owner
      * @param amount
      */
     private constructor(amount: UInt64) {
-        super(NetworkHarvestMosaic.MOSAIC_ID, amount);
+        super(NetworkHarvestMosaic.NAMESPACE_ID, amount);
     }
 
     /**

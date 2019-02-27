@@ -77,7 +77,6 @@ describe('NamespaceHttp', () => {
             namespaceHttp.getLinkedMosaicId(namespaceId)
                 .subscribe((mosaicId) => {
                     expect(mosaicId).to.not.be.null;
-                    deepEqual(mosaicId, NetworkCurrencyMosaic.MOSAIC_ID);
                     done();
                 });
         });
