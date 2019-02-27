@@ -37,11 +37,6 @@ export class MosaicId {
     public readonly id: Id;
 
     /**
-     * Mosaic full name
-     */
-    public readonly fullName?: string;
-
-    /**
      * Create a MosaicId for given `nonce` MosaicNonce and `owner` PublicAccount.
      *
      * @param   nonce   {MosaicNonce}
@@ -54,14 +49,21 @@ export class MosaicId {
     }
 
     /**
-     * Create MosaicId from mosaic and namespace string id (ex: nem:xem or domain.subdom.subdome:token)
-     * or id in form of array number (ex: [3646934825, 3576016193])
+     * Create MosaicId from mosaic id in form of array of number (ex: [3646934825, 3576016193])
+     * or the hexadecimal notation thereof in form of a string.
      *
      * @param id
      */
     constructor(id: string | number[]) {
         if (id instanceof Array) {
             this.id = new Id(id);
+        } else if (typeof id === 'string') {
+            if (! /^[0-9A-Fa-f]{16}$/i.test(id)) {
+                throw new Error('Invalid size for MosaicId hexadecimal notation');
+            }
+
+            // hexadecimal formatted MosaicId
+            this.id = new Id(uint64_t.fromHex(id));
         }
     }
 

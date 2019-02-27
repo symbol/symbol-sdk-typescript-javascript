@@ -27,7 +27,11 @@ describe('MosaicId', () => {
     it('should be created from id', () => {
         const id = new MosaicId([3294802500, 2243684972]);
         deepEqual(id.id, new Id([3294802500, 2243684972]));
-        expect(id.fullName).to.be.equal(undefined);
+    });
+
+    it('should be created from id', () => {
+        const id = new MosaicId('85BBEA6CC462B244');
+        deepEqual(id.id, new Id([3294802500, 2243684972]));
     });
 
     it('should create id given nonce and owner', () => {
