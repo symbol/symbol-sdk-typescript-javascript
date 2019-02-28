@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { MosaicCreationTransaction as MosaicDefinitionTransactionLibrary, mosaicId as mosaicIdLibrary, VerifiableTransaction } from 'nem2-library';
+import { 
+    MosaicCreationTransaction as MosaicDefinitionTransactionLibrary,
+    mosaicId as mosaicIdLibrary,
+    VerifiableTransaction,
+} from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -37,23 +41,23 @@ export class MosaicDefinitionTransaction extends Transaction {
     /**
      * Create a mosaic creation transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param nonce - The mosaic nonce ex: [0xE6, 0xDE, 0x84, 0xB8].
-     * @param mosaicId - The mosaic id ex: [481110499, 231112638].
+     * @param nonce - The mosaic nonce ex: MosaicNonce.createRandom().
+     * @param mosaicId - The mosaic id ex: new MosaicId([481110499, 231112638]).
      * @param mosaicProperties - The mosaic properties.
      * @param networkType - The network type.
      * @returns {MosaicDefinitionTransaction}
      */
     public static create(deadline: Deadline,
-                         nonce: Uint8Array,
-                         mosaicId: UInt64,
+                         nonce: MosaicNonce,
+                         mosaicId: MosaicId,
                          mosaicProperties: MosaicProperties,
                          networkType: NetworkType): MosaicDefinitionTransaction {
         return new MosaicDefinitionTransaction(networkType,
             TransactionVersion.MOSAIC_DEFINITION,
             deadline,
             new UInt64([0, 0]),
-            new MosaicNonce(nonce),
-            new MosaicId(mosaicId.toDTO()),
+            nonce,
+            mosaicId,
             mosaicProperties,
         );
     }

@@ -17,6 +17,8 @@
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {MosaicId} from '../../../src/model/mosaic/MosaicId';
+import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
 import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicDefinitionTransaction} from '../../../src/model/transaction/MosaicDefinitionTransaction';
@@ -34,8 +36,8 @@ describe('MosaicDefinitionTransaction', () => {
     it('should createComplete an MosaicDefinitionTransaction object and sign it with flags 7', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new Uint8Array([0xE6, 0xDE, 0x84, 0xB8]),
-            UInt64.fromUint(1),
+            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicProperties.create({
                 supplyMutable: true,
                 transferable: true,
@@ -64,11 +66,10 @@ describe('MosaicDefinitionTransaction', () => {
 
     it('should createComplete an MosaicDefinitionTransaction object and sign it with flags 0', () => {
 
-        const nonce = [0xE6, 0xDE, 0x84, 0xB8];
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new Uint8Array(nonce),
-            UInt64.fromUint(mosaicId(nonce, convert.hexToUint8(account.publicKey))),
+            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicProperties.create({
                 supplyMutable: false,
                 transferable: false,
@@ -91,7 +92,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('E6DE84B8000000000000000001000302E803000000000000');
+        )).to.be.equal('E6DE84B8010000000000000001000302E803000000000000');
 
     });
 });
