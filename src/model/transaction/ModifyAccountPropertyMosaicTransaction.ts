@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AccountPropertiesAddressTransaction as AccountPropertiesAddressTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { AccountPropertiesMosaicTransaction as AccountPropertiesMosaicTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { PropertyType } from '../account/PropertyType';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -25,10 +25,10 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 
-export class ModifyAccountPropertyAddressTransaction extends Transaction {
+export class ModifyAccountPropertyMosaicTransaction extends Transaction {
 
     /**
-     * Create a modify account property address transaction object
+     * Create a modify account property mosaic transaction object
      * @param deadline - The deadline to include the transaction.
      * @param propertyType - The account property type.
      * @param modifications - The array of modifications.
@@ -37,9 +37,9 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
      */
     public static create(deadline: Deadline,
                          propertyType: PropertyType,
-                         modifications: Array<AccountPropertyModification<string>>,
-                         networkType: NetworkType): ModifyAccountPropertyAddressTransaction {
-        return new ModifyAccountPropertyAddressTransaction(networkType,
+                         modifications: Array<AccountPropertyModification<number[]>>,
+                         networkType: NetworkType): ModifyAccountPropertyMosaicTransaction {
+        return new ModifyAccountPropertyMosaicTransaction(networkType,
             3,
             deadline,
             new UInt64([0, 0]),
@@ -64,11 +64,11 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
                 deadline: Deadline,
                 fee: UInt64,
                 public readonly propertyType: PropertyType,
-                public readonly modifications: Array<AccountPropertyModification<string>>,
+                public readonly modifications: Array<AccountPropertyModification<number[]>>,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC, networkType, version, deadline, fee, signature, signer, transactionInfo);
     }
 
     /**
@@ -76,7 +76,7 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new AccountPropertiesAddressTransactionLibrary.Builder()
+        return new AccountPropertiesMosaicTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
             .addFee(this.fee.toDTO())
             .addVersion(this.versionToDTO())

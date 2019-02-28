@@ -24,6 +24,11 @@ export * from './account/Address';
 export * from './account/MultisigAccountGraphInfo';
 export * from './account/MultisigAccountInfo';
 export * from './account/PublicAccount';
+export * from './account/AccountProperties';
+export * from './account/AccountPropertiesInfo';
+export * from './account/AccountProperty';
+export * from './account/PropertyModificationType';
+export * from './account/PropertyType';
 
 // Blockchain
 export * from './blockchain/BlockchainScore';
@@ -56,6 +61,11 @@ export * from './namespace/NamespaceType';
 export * from './namespace/AliasActionType';
 
 // Transaction
+export * from './transaction/AccountPropertyTransaction';
+export * from './transaction/ModifyAccountPropertyAddressTransaction';
+export * from './transaction/ModifyAccountPropertyEntityTypeTransaction';
+export * from './transaction/ModifyAccountPropertyMosaicTransaction';
+export * from './transaction/AccountPropertyModification';
 export * from './transaction/AddressAliasTransaction';
 export * from './transaction/AggregateTransaction';
 export * from './transaction/AggregateTransactionCosignature';
