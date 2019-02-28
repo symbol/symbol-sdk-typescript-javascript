@@ -26,7 +26,7 @@ describe('NetworkHarvestMosaic', () => {
 
         const currency = NetworkHarvestMosaic.createRelative(1000);
 
-        deepEqual(currency.id.id.toHex(), '26514e2a1ef33824');
+        deepEqual(currency.id.id.toHex(), '941299b2b7e1291c');
         expect(currency.amount.compact()).to.be.equal(1000 * 1000);
     });
 
@@ -38,7 +38,6 @@ describe('NetworkHarvestMosaic', () => {
 
     it('should have valid statics', () => {
         deepEqual(NetworkHarvestMosaic.NAMESPACE_ID.id, new NamespaceId([3084986652, 2484246962]).id);
-        deepEqual(NetworkHarvestMosaic.MOSAIC_ID.id, new MosaicId([519256100, 642862634]).id);
         expect(NetworkHarvestMosaic.DIVISIBILITY).to.be.equal(3);
         expect(NetworkHarvestMosaic.TRANSFERABLE).to.be.equal(true);
         expect(NetworkHarvestMosaic.SUPPLY_MUTABLE).to.be.equal(true);

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import * as CryptoJS from 'crypto-js';
 import {keccak_256, sha3_256} from 'js-sha3';
@@ -39,7 +40,7 @@ describe('SecretLockTransaction', () => {
             recipient,
             NetworkType.MIJIN_TEST,
         );
-        expect(secretLockTransaction.mosaic.id).to.be.equal(NetworkCurrencyMosaic.MOSAIC_ID);
+        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
         expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
         expect(secretLockTransaction.hashType).to.be.equal(0);
@@ -74,7 +75,7 @@ describe('SecretLockTransaction', () => {
             recipient,
             NetworkType.MIJIN_TEST,
         );
-        expect(secretLockTransaction.mosaic.id).to.be.equal(NetworkCurrencyMosaic.MOSAIC_ID);
+        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
         expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
         expect(secretLockTransaction.hashType).to.be.equal(1);
@@ -108,7 +109,7 @@ describe('SecretLockTransaction', () => {
             recipient,
             NetworkType.MIJIN_TEST,
         );
-        expect(secretLockTransaction.mosaic.id).to.be.equal(NetworkCurrencyMosaic.MOSAIC_ID);
+        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
         expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
         expect(secretLockTransaction.hashType).to.be.equal(2);
@@ -142,7 +143,7 @@ describe('SecretLockTransaction', () => {
             recipient,
             NetworkType.MIJIN_TEST,
         );
-        expect(secretLockTransaction.mosaic.id).to.be.equal(NetworkCurrencyMosaic.MOSAIC_ID);
+        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
         expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
         expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
         expect(secretLockTransaction.hashType).to.be.equal(3);

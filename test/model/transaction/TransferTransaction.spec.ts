@@ -74,6 +74,6 @@ describe('TransferTransaction', () => {
             signedTransaction.payload.length,
         )).to.be.equal(
             '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000100746573742D6D657373616765' +
-            'E329AD1CBE7FC60D00E1F50500000000');
+            '44B262C46CEABB8500E1F50500000000');
     });
 });

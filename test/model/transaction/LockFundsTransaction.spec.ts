@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {NetworkCurrencyMosaic} from '../../../src/model/mosaic/NetworkCurrencyMosaic';
@@ -37,7 +38,7 @@ describe('LockFundsTransaction', () => {
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST);
-        expect(transaction.mosaic.id).to.be.equal(NetworkCurrencyMosaic.MOSAIC_ID);
+        deepEqual(transaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
     });

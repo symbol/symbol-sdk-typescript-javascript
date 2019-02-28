@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import {mosaicId, convert} from 'nem2-library';
+import {convert, mosaicId as MosaicIdGenerator} from 'nem2-library';
+import {PublicAccount} from '../account/PublicAccount';
 import {NamespaceId} from '../namespace/NamespaceId';
 import {UInt64} from '../UInt64';
 import {Mosaic} from './Mosaic';
@@ -24,15 +25,11 @@ import {MosaicId} from './MosaicId';
  * NetworkCurrencyMosaic mosaic
  * 
  * This represents the per-network currency mosaic. This mosaicId is aliased
- * with namespace name `currency`.
+ * with namespace name `cat.currency`.
  * 
  * @since 0.10.2
  */
 export class NetworkCurrencyMosaic extends Mosaic {
-    /**
-     * Per-Network default mosaic owner public key
-     */
-    public static OWNER_PUBLIC_KEY = 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF';
 
     /**
      * namespaceId of `currency` namespace.
@@ -40,17 +37,6 @@ export class NetworkCurrencyMosaic extends Mosaic {
      * @type {Id}
      */
     public static NAMESPACE_ID = new NamespaceId('cat.currency');
-
-    /**
-     * Per-Network currencyMosaicId
-     *
-     * @note Little-endianness on nonce field in `mosaicId(nonce, publicKey)`.
-     * @type {Id}
-     */
-    public static MOSAIC_ID = new MosaicId(mosaicId([
-        0x0, 0x0,
-        0x0, 0x0,
-    ], convert.hexToUint8(NetworkCurrencyMosaic.OWNER_PUBLIC_KEY)));
 
     /**
      * Divisiblity
@@ -84,10 +70,11 @@ export class NetworkCurrencyMosaic extends Mosaic {
 
     /**
      * constructor
+     * @param owner
      * @param amount
      */
     private constructor(amount: UInt64) {
-        super(NetworkCurrencyMosaic.MOSAIC_ID, amount);
+        super(NetworkCurrencyMosaic.NAMESPACE_ID, amount);
     }
 
     /**

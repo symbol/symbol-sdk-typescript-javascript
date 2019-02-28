@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {
+    convert,
+    nacl_catapult,
+} from 'nem2-library';
 
 /**
  * The mosaic nonce structure
@@ -22,13 +26,39 @@
 export class MosaicNonce {
 
     /**
-     * Mosaic id
+     * Mosaic nonce
      */
     public readonly nonce: Uint8Array;
 
     /**
-     * Create MosaicId from mosaic and namespace string id (ex: nem:xem or domain.subdom.subdome:token)
-     * or id in form of array number (ex: [3646934825, 3576016193])
+     * Create a random MosaicNonce
+     *
+     * @return  {MosaicNonce}
+     */
+    public static createRandom(): MosaicNonce {
+        const bytes = nacl_catapult.randomBytes(4);
+        const nonce = new Uint8Array(bytes);
+        return new MosaicNonce(nonce);
+    }
+
+    /**
+     * Create a MosaicNonce from hexadecimal notation.
+     *
+     * @param   hex     {string}
+     * @return  {MosaicNonce}
+     */
+    public static createFromHex(hex: string): MosaicNonce {
+        const uint8 = convert.hexToUint8(hex);
+
+        if (uint8.length !== 4) {
+            throw new Error('Expected 4 bytes for Nonce and got ' + hex.length + ' instead.');
+        }
+
+        return new MosaicNonce(uint8);
+    }
+
+    /**
+     * Create MosaicNonce from Uint8Array
      *
      * @param id
      */
@@ -42,7 +72,7 @@ export class MosaicNonce {
 
     /**
      * @internal
-     * @returns {[number,number]}
+     * @returns {[number,number,number,number]}
      */
     public toDTO(): Uint8Array {
         return this.nonce;
