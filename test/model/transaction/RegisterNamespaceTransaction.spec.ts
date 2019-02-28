@@ -45,7 +45,7 @@ describe('RegisterNamespaceTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('00E803000000000000CFCBE72D994BE61B13726F6F742D746573742D6E616D657370616365');
+        )).to.be.equal('00E803000000000000CFCBE72D994BE69B13726F6F742D746573742D6E616D657370616365');
 
     });
 
@@ -62,7 +62,7 @@ describe('RegisterNamespaceTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('014DF55E7F6D8FB77F70BB66539D9C260613726F6F742D746573742D6E616D657370616365');
+        )).to.be.equal('014DF55E7F6D8FB7FF924207DF2CA1BBF313726F6F742D746573742D6E616D657370616365');
 
     });
 });

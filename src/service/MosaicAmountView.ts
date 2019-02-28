@@ -33,14 +33,6 @@ export class MosaicAmountView {
                  */
                 public readonly mosaicInfo: MosaicInfo,
                 /**
-                 * The parent namespace name
-                 */
-                public readonly namespaceName: string,
-                /**
-                 * The mosaic name
-                 */
-                public readonly mosaicName: string,
-                /**
                  * The amount of absolute mosaics we have
                  */
                 public readonly amount: UInt64) {
@@ -63,6 +55,6 @@ export class MosaicAmountView {
      * @returns {string}
      */
     public fullName(): string {
-        return this.namespaceName + ':' + this.mosaicName;
+        return this.mosaicInfo.mosaicId.toHex();
     }
 }

@@ -30,23 +30,7 @@ export class MosaicView {
     constructor(/**
                  * The mosaic information
                  */
-                public readonly mosaicInfo: MosaicInfo,
-                /**
-                 * The parent namespace name
-                 */
-                public readonly namespaceName: string,
-                /**
-                 * The mosaic name
-                 */
-                public readonly mosaicName: string) {
+                public readonly mosaicInfo: MosaicInfo) {
 
-    }
-
-    /**
-     * Namespace and mosaic description
-     * @returns {string}
-     */
-    public fullName(): string {
-        return this.namespaceName + ':' + this.mosaicName;
     }
 }

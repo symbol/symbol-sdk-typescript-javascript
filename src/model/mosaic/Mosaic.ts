@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import {NamespaceId} from '../namespace/NamespaceId';
 import {UInt64} from '../UInt64';
 import {MosaicId} from './MosaicId';
 
@@ -32,7 +33,7 @@ export class Mosaic {
                 /**
                  * The mosaic id
                  */
-                public readonly id: MosaicId,
+                public readonly id: MosaicId|NamespaceId,
                 /**
                  * The mosaic amount. The quantity is always given in smallest units for the mosaic
                  * i.e. if it has a divisibility of 3 the quantity is given in millis.
@@ -40,7 +41,6 @@ export class Mosaic {
                 public readonly amount: UInt64) {
 
     }
-
 
     /**
      * @internal

@@ -25,6 +25,7 @@ import { Message } from './Message';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.
@@ -45,7 +46,7 @@ export class TransferTransaction extends Transaction {
                          message: Message,
                          networkType: NetworkType): TransferTransaction {
         return new TransferTransaction(networkType,
-            3,
+            TransactionVersion.TRANSFER,
             deadline,
             new UInt64([0, 0]),
             recipient,

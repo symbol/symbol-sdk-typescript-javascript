@@ -29,19 +29,31 @@ export class TransactionType {
      * Register namespace transaction type.
      * @type {number}
      */
-    public static readonly REGISTER_NAMESPACE = 0x414e;
+    public static readonly REGISTER_NAMESPACE = 0x414E;
+
+    /**
+     * Address alias transaction type
+     * @type {number}
+     */
+    public static readonly ADDRESS_ALIAS = 0x424E;
+
+    /**
+     * Mosaic alias transaction type
+     * @type {number}
+     */
+    public static readonly MOSAIC_ALIAS = 0x434E;
 
     /**
      * Mosaic definition transaction type.
      * @type {number}
      */
-    public static readonly MOSAIC_DEFINITION = 0x414d;
+    public static readonly MOSAIC_DEFINITION = 0x414D;
 
     /**
      * Mosaic supply change transaction.
      * @type {number}
      */
-    public static readonly MOSAIC_SUPPLY_CHANGE = 0x424d;
+    public static readonly MOSAIC_SUPPLY_CHANGE = 0x424D;
 
     /**
      * Modify multisig account transaction type.
@@ -64,17 +76,17 @@ export class TransactionType {
      * Lock transaction type
      * @type {number}
      */
-    public static readonly LOCK = 0x414C;
+    public static readonly LOCK = 0x4148;
 
     /**
      * Secret Lock Transaction type
      * @type {number}
      */
-    public static readonly SECRET_LOCK = 0x424C;
+    public static readonly SECRET_LOCK = 0x4152;
 
     /**
      * Secret Proof transaction type
      * @type {number}
      */
-    public static readonly SECRET_PROOF = 0x434C;
+    public static readonly SECRET_PROOF = 0x4252;
 }

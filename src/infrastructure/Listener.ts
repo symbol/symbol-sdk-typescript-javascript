@@ -156,17 +156,17 @@ export class Listener {
         });
     }
 
-  /**
+    /**
      * returns a boolean that repressents the open state
      * @returns a boolean
      */
     public isOpen(): boolean {
-        if(this.webSocket){
+        if (this.webSocket) {
             return this.webSocket.readyState === WebSocket.OPEN;
         }
         return false;
     }
-    
+
     /**
      * Close web socket connection.
      * @returns void
