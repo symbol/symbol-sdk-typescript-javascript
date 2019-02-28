@@ -17,6 +17,10 @@
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
+import { AccountPropertyModification,
+    ModifyAccountPropertyAddressTransaction,
+    ModifyAccountPropertyEntityTypeTransaction,
+    ModifyAccountPropertyMosaicTransaction } from '../../model/model';
 import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicId} from '../../model/mosaic/MosaicId';
 import {MosaicProperties} from '../../model/mosaic/MosaicProperties';
@@ -250,6 +254,51 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.actionType,
             transactionDTO.namespaceId,
             transactionDTO.address,
+            transactionDTO.signature,
+            PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS) {
+        return new ModifyAccountPropertyAddressTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.fee),
+            transactionDTO.propertyType,
+            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
+                modificationDTO.modificationType,
+                modificationDTO.value,
+            )) : [],
+            transactionDTO.signature,
+            PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE) {
+        return new ModifyAccountPropertyEntityTypeTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.fee),
+            transactionDTO.propertyType,
+            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
+                modificationDTO.modificationType,
+                modificationDTO.value,
+            )) : [],
+            transactionDTO.signature,
+            PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC) {
+        return new ModifyAccountPropertyMosaicTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.fee),
+            transactionDTO.propertyType,
+            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
+                modificationDTO.modificationType,
+                modificationDTO.value,
+            )) : [],
             transactionDTO.signature,
             PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
             transactionInfo,

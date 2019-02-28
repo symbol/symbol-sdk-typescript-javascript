@@ -16,7 +16,7 @@
 
 import { PropertyModificationType } from '../account/PropertyModificationType';
 
-export class AccountPropertyModification {
+export class AccountPropertyModification<T> {
 
     /**
      * Constructor
@@ -31,7 +31,7 @@ export class AccountPropertyModification {
                 /**
                  * Cosignatory public account.
                  */
-                public readonly value: any) {
+                public readonly value: T) {
 
     }
 
@@ -39,11 +39,9 @@ export class AccountPropertyModification {
      * @internal
      */
     toDTO() {
-        // TODO: Check type matches value format
-
         return {
             value: this.value,
-            type: this.modificationType,
+            modificationType: this.modificationType,
         };
     }
 }

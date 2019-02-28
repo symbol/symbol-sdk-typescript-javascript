@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { AccountProperty } from './AccountProperty';
+import { Address } from './Address';
 /**
  * Account properties structure describes property information for an account.
  */
@@ -28,7 +29,7 @@ export class AccountProperties {
                 /**
                  * Account Address
                  */
-                public readonly address: string,
+                public readonly address: Address,
                 /**
                  * Properties.
                  */
