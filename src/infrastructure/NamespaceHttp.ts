@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamespaceRoutesApi} from 'nem2-library';
+import {address as AddressLibrary, convert, NamespaceRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {Address} from '../model/account/Address';
@@ -170,21 +170,23 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @param namespaceId - the namespaceId of the namespace
      * @returns Observable<MosaicId | null>
      */
-    public getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId | null> {
+    public getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
                 map((namespaceInfoDTO) => {
 
                     if (namespaceInfoDTO.namespace === undefined) {
+                        // forward catapult-rest error
                         throw namespaceInfoDTO;
                     }
 
-                    if (namespaceInfoDTO.namespace.alias.type === AliasType.Mosaic) {
-                        return new MosaicId(namespaceInfoDTO.namespace.alias.mosaicId);
+                    if (namespaceInfoDTO.namespace.alias.type === AliasType.None
+                        || namespaceInfoDTO.namespace.alias.type !== AliasType.Mosaic) {
+                        throw new Error('No mosaicId is linked to namespace \'' + namespaceInfoDTO.namespace.name + '\'');
                     }
 
-                    return null;
+                    return new MosaicId(namespaceInfoDTO.namespace.alias.mosaicId);
                 }))));
     }
 
@@ -193,21 +195,25 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @param namespaceId - the namespaceId of the namespace
      * @returns Observable<Address>
      */
-    public getLinkedAddress(namespaceId: NamespaceId): Observable<Address | null> {
+    public getLinkedAddress(namespaceId: NamespaceId): Observable<Address> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
                 map((namespaceInfoDTO) => {
 
                     if (namespaceInfoDTO.namespace === undefined) {
+                        // forward catapult-rest error
                         throw namespaceInfoDTO;
                     }
 
-                    if (namespaceInfoDTO.namespace.alias.type === AliasType.Address) {
-                        return Address.createFromRawAddress(namespaceInfoDTO.namespace.alias.address);
+                    if (namespaceInfoDTO.namespace.alias.type === AliasType.None
+                        || namespaceInfoDTO.namespace.alias.type !== AliasType.Address) {
+                        throw new Error('No address is linked to namespace \'' + namespaceInfoDTO.namespace.name + '\'');
                     }
 
-                    return null;
+                    const addressDecoded = namespaceInfoDTO.namespace.alias.address;
+                    const address = AddressLibrary.addressToString(convert.hexToUint8(addressDecoded));
+                    return Address.createFromRawAddress(address);
                 }))));
     }
 
