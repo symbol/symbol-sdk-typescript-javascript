@@ -26,6 +26,7 @@ import {Address} from '../../src/model/account/Address';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
+import {MosaicNonce} from '../../src/model/mosaic/MosaicNonce';
 import {MosaicProperties} from '../../src/model/mosaic/MosaicProperties';
 import {MosaicSupplyType} from '../../src/model/mosaic/MosaicSupplyType';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
@@ -151,8 +152,8 @@ describe('TransactionHttp', () => {
             it('standalone', (done) => {
                 const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                     Deadline.create(),
-                    new Uint8Array([0xE6, 0xDE, 0x84, 0xB8]),
-                    UInt64.fromUint(1),
+                    new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+                    new MosaicId(UInt64.fromUint(1).toDTO()), // ID
                     MosaicProperties.create({
                         supplyMutable: true,
                         transferable: true,
@@ -170,8 +171,8 @@ describe('TransactionHttp', () => {
             it('aggregate', (done) => {
                 const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                     Deadline.create(),
-                    new Uint8Array([0xE6, 0xDE, 0x84, 0xB8]),
-                    UInt64.fromUint(1),
+                    new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+                    new MosaicId(UInt64.fromUint(1).toDTO()), // ID
                     MosaicProperties.create({
                         supplyMutable: true,
                         transferable: true,
