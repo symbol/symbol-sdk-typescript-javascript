@@ -22,6 +22,7 @@ import {Address} from '../../../src/model/account/Address';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
+import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
 import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
 import {MosaicSupplyType} from '../../../src/model/mosaic/MosaicSupplyType';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
@@ -98,8 +99,8 @@ describe('AggregateTransaction', () => {
     it('should createComplete an AggregateTransaction object with MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            new Uint8Array([0xE6, 0xDE, 0x84, 0xB8]), // nonce
-            UInt64.fromUint(1), // ID
+            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicProperties.create({
                 supplyMutable: true,
                 transferable: true,
