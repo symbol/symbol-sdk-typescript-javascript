@@ -62,6 +62,23 @@ describe('AccountHttp', () => {
         });
     });
 
+    describe('getAccountProperty', () => {
+        it('should call getAccountProperty successfully', (done) => {
+            accountHttp.getAccountProperty(publicAccount).subscribe((accountProperty) => {
+                expect(accountProperty.accountProperties[0]!.address).to.be.equal(accountAddress);
+                done();
+            });
+        });
+    });
+
+    describe('getAccountProperties', () => {
+        it('should call getAccountProperties successfully', (done) => {
+            accountHttp.getAccountProperties([accountAddress]).subscribe((accountProperties) => {
+                expect(accountProperties[0]!.accountProperties[0]!.address).to.be.equal(accountAddress);
+                done();
+            });
+        });
+    });
     describe('getMultisigAccountGraphInfo', () => {
         it('should call getMultisigAccountGraphInfo successfully', (done) => {
             accountHttp.getMultisigAccountGraphInfo(multisigPublicAccount.address).subscribe((multisigAccountGraphInfo) => {
