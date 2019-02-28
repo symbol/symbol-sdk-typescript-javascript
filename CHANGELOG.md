@@ -6,6 +6,8 @@
 - Added exposed UInt64.fromHex and UInt64.toHex
 - Added MosaicId.createFromNonce
 - Added MosaicNonce, MosaicNonce.createRandom
+- Fixed AliasDTO.mosaicId to be UInt64
+- Added nem2-library@v0.9.8 version update (cow compatibility)
 
 # v0.10.2
 
