@@ -19,10 +19,10 @@
  *
  * Transaction format versions are defined in catapult-server in
  * each transaction's plugin source code.
- * 
+ *
  * In [catapult-server](https://github.com/nemtech/catapult-server), the `DEFINE_TRANSACTION_CONSTANTS` macro
  * is used to define the `TYPE` and `VERSION` of the transaction format.
- * 
+ *
  * @see https://github.com/nemtech/catapult-server/blob/master/plugins/txes/transfer/src/model/TransferTransaction.h#L37
  */
 export class TransactionVersion {
@@ -97,4 +97,10 @@ export class TransactionVersion {
      * @type {number}
      */
     public static readonly MOSAIC_ALIAS = 1;
+
+    /**
+     * Account Property transaction version
+     * @type {number}
+     */
+    public static readonly ACCOUNT_PROPERTY = 1;
 }

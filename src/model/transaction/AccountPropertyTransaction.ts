@@ -70,10 +70,10 @@ export class AccountPropertyTransaction {
      * @param networkType - The network type.
      * @returns {ModifyAccountPropertyEntityTypeTransaction}
      */
-    public static createEntityTypeProertyModificationransaction(deadline: Deadline,
-                                                                propertyType: PropertyType,
-                                                                modifications: Array<AccountPropertyModification<number>>,
-                                                                networkType: NetworkType): ModifyAccountPropertyEntityTypeTransaction {
+    public static createEntityTypePropertyModificationTransaction(deadline: Deadline,
+                                                                  propertyType: PropertyType,
+                                                                  modifications: Array<AccountPropertyModification<number>>,
+                                                                  networkType: NetworkType): ModifyAccountPropertyEntityTypeTransaction {
         if (![PropertyType.AllowTransaction, PropertyType.BlockTransaction].includes(propertyType)) {
             throw new Error ('Property type is not allowed.');
         }

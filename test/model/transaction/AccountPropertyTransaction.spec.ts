@@ -163,7 +163,7 @@ describe('AccountPropertyTransaction', () => {
             PropertyModificationType.Add,
             entityType,
         );
-        const entityTypePropertyTransaction = AccountPropertyTransaction.createEntityTypeProertyModificationransaction(
+        const entityTypePropertyTransaction = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
             Deadline.create(),
             PropertyType.AllowTransaction,
             [entityTypePropertyFilter],
@@ -175,7 +175,7 @@ describe('AccountPropertyTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('0301004E420000');
+        )).to.be.equal('0401004E42');
 
     });
 
@@ -188,7 +188,7 @@ describe('AccountPropertyTransaction', () => {
         );
 
         expect(() => {
-            AccountPropertyTransaction.createEntityTypeProertyModificationransaction(
+            AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
                 Deadline.create(),
                 PropertyType.Sentinel,
                 [entityTypePropertyFilter],
