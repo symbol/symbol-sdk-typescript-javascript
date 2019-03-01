@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,30 @@
  * limitations under the License.
  */
 
+import {convert, mosaicId as MosaicIdGenerator} from 'nem2-library';
+import {PublicAccount} from '../account/PublicAccount';
 import {NamespaceId} from '../namespace/NamespaceId';
 import {UInt64} from '../UInt64';
 import {Mosaic} from './Mosaic';
 import {MosaicId} from './MosaicId';
 
 /**
- * XEM mosaic
+ * NetworkCurrencyMosaic mosaic
+ * 
+ * This represents the per-network currency mosaic. This mosaicId is aliased
+ * with namespace name `cat.currency`.
+ * 
+ * @since 0.10.2
  */
-export class XEM extends Mosaic {
+export class NetworkCurrencyMosaic extends Mosaic {
+
+    /**
+     * namespaceId of `currency` namespace.
+     *
+     * @type {Id}
+     */
+    public static NAMESPACE_ID = new NamespaceId('cat.currency');
+
     /**
      * Divisiblity
      * @type {number}
@@ -33,7 +48,7 @@ export class XEM extends Mosaic {
      * Initial supply
      * @type {number}
      */
-    public static INITIAL_SUPPLY = 8999999999;
+    public static INITIAL_SUPPLY = 8999999998;
 
     /**
      * Is tranferable
@@ -42,54 +57,50 @@ export class XEM extends Mosaic {
     public static TRANSFERABLE = true;
 
     /**
-     * Is mutable
+     * Is Supply mutable
      * @type {boolean}
      */
     public static SUPPLY_MUTABLE = false;
 
     /**
-     * mosaicId
-     * @type {Id}
+     * Is Levy mutable
+     * @type {boolean}
      */
-    public static MOSAIC_ID = new MosaicId('nem:xem');
-
-    /**
-     * namespaceId
-     * @type {Id}
-     */
-    public static NAMESPACE_ID = new NamespaceId('nem');
+    public static LEVY_MUTABLE = false;
 
     /**
      * constructor
+     * @param owner
      * @param amount
      */
     private constructor(amount: UInt64) {
-        super(XEM.MOSAIC_ID, amount);
+        super(NetworkCurrencyMosaic.NAMESPACE_ID, amount);
     }
 
     /**
-     * Create xem with using xem as unit.
+     * Create NetworkCurrencyMosaic with using NetworkCurrencyMosaic as unit.
      *
      * @param amount
-     * @returns {XEM}
+     * @returns {NetworkCurrencyMosaic}
      */
     public static createRelative(amount: UInt64 | number) {
         if (typeof amount === 'number') {
-            return new XEM(UInt64.fromUint(amount * Math.pow(10, XEM.DIVISIBILITY)));
+            return new NetworkCurrencyMosaic(UInt64.fromUint(amount * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY)));
         }
-        return new XEM(UInt64.fromUint((amount as UInt64).compact() * Math.pow(10, XEM.DIVISIBILITY)));
+        return new NetworkCurrencyMosaic(UInt64.fromUint((amount as UInt64).compact() * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY)));
     }
 
     /**
-     * Create xem with using micro xem as unit, 1 XEM = 1000000 micro XEM.
+     * Create NetworkCurrencyMosaic with using micro NetworkCurrencyMosaic as unit,
+     * 1 NetworkCurrencyMosaic = 1000000 micro NetworkCurrencyMosaic.
      *
      * @param amount
-     * @returns {XEM}
+     * @returns {NetworkCurrencyMosaic}
      */
     public static createAbsolute(amount: UInt64 | number) {
         if (typeof amount === 'number') {
-            return new XEM(UInt64.fromUint(amount));
+            return new NetworkCurrencyMosaic(UInt64.fromUint(amount));
         }
-        return new XEM(amount as UInt64);
+        return new NetworkCurrencyMosaic(amount as UInt64);
     }
 }

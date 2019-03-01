@@ -18,7 +18,7 @@ import { expect } from 'chai';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
-import { XEM } from '../../../src/model/mosaic/XEM';
+import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
@@ -57,7 +57,7 @@ describe('TransferTransaction', () => {
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [
-                XEM.createRelative(100),
+                NetworkCurrencyMosaic.createRelative(100),
             ],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
@@ -72,7 +72,8 @@ describe('TransferTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000100746573742D6D657373616765' +
-            '29CF5FD941AD25D500E1F50500000000');
+        )).to.be.equal(
+            '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000100746573742D6D657373616765' +
+            '44B262C46CEABB8500E1F50500000000');
     });
 });

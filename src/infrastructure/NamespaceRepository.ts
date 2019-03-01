@@ -17,6 +17,7 @@
 import {Observable} from 'rxjs';
 import {Address} from '../model/account/Address';
 import {PublicAccount} from '../model/account/PublicAccount';
+import {MosaicId} from '../model/mosaic/MosaicId';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {NamespaceInfo} from '../model/namespace/NamespaceInfo';
 import {NamespaceName} from '../model/namespace/NamespaceName';
@@ -60,4 +61,18 @@ export interface NamespaceRepository {
      * @returns Observable<NamespaceName[]>
      */
     getNamespacesName(namespaceIds: NamespaceId[]): Observable<NamespaceName[]>;
+
+    /**
+     * Gets the MosaicId from a MosaicAlias
+     * @param namespaceId - the namespaceId of the namespace
+     * @returns Observable<MosaicId | null>
+     */
+    getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId | null>;
+
+    /**
+     * Gets the Address from a AddressAlias
+     * @param namespaceId - the namespaceId of the namespace
+     * @returnsObservable<Address | null>
+     */
+    getLinkedAddress(namespaceId: NamespaceId): Observable<Address | null>;
 }

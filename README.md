@@ -8,6 +8,14 @@
 The official nem2-sdk for TypeScript and JavaScript, available for browsers, mobile applications and NodeJS, to work 
 with the NEM2 (a.k.a Catapult)
 
+## Important Notes
+
+Due to a network upgrade with [catapult-server@cow](https://github.com/nemtech/catapult-server/releases/tag/v0.3.0.1) version, **transactions from Alpaca&Bison are not compatible anymore**.
+
+The upgrade to this SDK's [version v0.10.2](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.10.2) is mandatory for **cow compatibility**.
+
+Other versions like [version v0.10.1-beta](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.10.1-beta) can be used for **bison** network version.
+
 ## Requirements
 
 ### NodeJS
@@ -43,9 +51,17 @@ Please, use the following available resources to get help:
 - [nem2-cli documentation][docs]
 - If you found a bug, [open a new issue][issues]
 
+## Changelog
+
+Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
+
+- [0.10.3](CHANGELOG.md#v0103) - **Cow compatible** - TBD
+- [0.10.2](CHANGELOG.md#v0102) - **Cow compatible** - 2019-02-25
+- [0.10.1-beta](CHANGELOG.md#v0101-beta) - **Alpaca compatible**
+
 ## License
 
-Copyright (c) 2018 NEM
+Copyright (c) 2018-2019 NEM
 Licensed under the [Apache License 2.0](LICENSE)
 
 [self]: https://github.com/nemtech/nem2-sdk-typescript-javascript

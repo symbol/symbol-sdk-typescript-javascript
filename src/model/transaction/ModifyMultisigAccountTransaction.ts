@@ -23,6 +23,7 @@ import { MultisigCosignatoryModification } from './MultisigCosignatoryModificati
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 /**
  * Modify multisig account transactions are part of the NEM's multisig account system.
@@ -47,7 +48,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
                          modifications: MultisigCosignatoryModification[],
                          networkType: NetworkType): ModifyMultisigAccountTransaction {
         return new ModifyMultisigAccountTransaction(networkType,
-            3,
+            TransactionVersion.MODIFY_MULTISIG_ACCOUNT,
             deadline,
             new UInt64([0, 0]),
             minApprovalDelta,

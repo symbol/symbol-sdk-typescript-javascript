@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import {XEM} from '../../../src/model/mosaic/XEM';
+import {NetworkCurrencyMosaic} from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {LockFundsTransaction} from '../../../src/model/transaction/LockFundsTransaction';
@@ -33,11 +34,11 @@ describe('LockFundsTransaction', () => {
         );
         const signedTransaction = account.sign(aggregateTransaction);
         const transaction = LockFundsTransaction.create(Deadline.create(),
-            XEM.createRelative(10),
+            NetworkCurrencyMosaic.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST);
-        expect(transaction.mosaic.id).to.be.equal(XEM.MOSAIC_ID);
+        deepEqual(transaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
     });
@@ -52,7 +53,7 @@ describe('LockFundsTransaction', () => {
         const signedTransaction = account.sign(aggregateTransaction);
         expect(() => {
             LockFundsTransaction.create(Deadline.create(),
-                XEM.createRelative(10),
+                NetworkCurrencyMosaic.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,
                 NetworkType.MIJIN_TEST);

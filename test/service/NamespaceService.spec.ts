@@ -20,6 +20,7 @@ import {deepEqual, instance, mock, when} from 'ts-mockito';
 import {NamespaceHttp} from '../../src/infrastructure/NamespaceHttp';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import {EmptyAlias} from '../../src/model/namespace/EmptyAlias';
 import {NamespaceId} from '../../src/model/namespace/NamespaceId';
 import {NamespaceInfo} from '../../src/model/namespace/NamespaceInfo';
 import {NamespaceName} from '../../src/model/namespace/NamespaceName';
@@ -80,7 +81,8 @@ describe('NamespaceService', () => {
             new NamespaceId([0, 0]),
             PublicAccount.createFromPublicKey('1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755', NetworkType.MIJIN_TEST),
             new UInt64([795, 0]),
-            new UInt64([50795, 0]));
+            new UInt64([50795, 0]),
+            new EmptyAlias());
     }
 
     function givenSubnamespace(): NamespaceInfo {
@@ -93,6 +95,7 @@ describe('NamespaceService', () => {
             new NamespaceId([3316183705, 3829351378]),
             PublicAccount.createFromPublicKey('1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755', NetworkType.MIJIN_TEST),
             new UInt64([795, 0]),
-            new UInt64([50795, 0]));
+            new UInt64([50795, 0]),
+            new EmptyAlias());
     }
 });

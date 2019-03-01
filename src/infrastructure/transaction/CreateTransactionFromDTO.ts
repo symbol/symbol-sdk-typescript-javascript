@@ -21,12 +21,14 @@ import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicId} from '../../model/mosaic/MosaicId';
 import {MosaicProperties} from '../../model/mosaic/MosaicProperties';
 import {NamespaceId} from '../../model/namespace/NamespaceId';
+import {AddressAliasTransaction} from '../../model/transaction/AddressAliasTransaction';
 import {AggregateTransaction} from '../../model/transaction/AggregateTransaction';
 import {AggregateTransactionCosignature} from '../../model/transaction/AggregateTransactionCosignature';
 import {AggregateTransactionInfo} from '../../model/transaction/AggregateTransactionInfo';
 import {Deadline} from '../../model/transaction/Deadline';
 import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
 import {ModifyMultisigAccountTransaction} from '../../model/transaction/ModifyMultisigAccountTransaction';
+import {MosaicAliasTransaction} from '../../model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../model/transaction/MosaicDefinitionTransaction';
 import {MosaicSupplyChangeTransaction} from '../../model/transaction/MosaicSupplyChangeTransaction';
 import {MultisigCosignatoryModification} from '../../model/transaction/MultisigCosignatoryModification';
@@ -144,9 +146,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.fee),
-            new NamespaceId(transactionDTO.parentId),
+            transactionDTO.nonce,
             new MosaicId(transactionDTO.mosaicId),
-            transactionDTO.name,
             new MosaicProperties(
                 new UInt64(transactionDTO.properties[0].value),
                 (new UInt64(transactionDTO.properties[1].value)).compact(),
@@ -223,6 +224,32 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.hashAlgorithm,
             transactionDTO.secret,
             transactionDTO.proof,
+            transactionDTO.signature,
+            PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.MOSAIC_ALIAS) {
+        return new MosaicAliasTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.fee),
+            transactionDTO.actionType,
+            transactionDTO.namespaceId,
+            transactionDTO.mosaicId,
+            transactionDTO.signature,
+            PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.ADDRESS_ALIAS) {
+        return new AddressAliasTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.fee),
+            transactionDTO.actionType,
+            transactionDTO.namespaceId,
+            transactionDTO.address,
             transactionDTO.signature,
             PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
             transactionInfo,
