@@ -25,6 +25,7 @@ import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 export class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
 
@@ -41,7 +42,7 @@ export class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
                          modifications: Array<AccountPropertyModification<number>>,
                          networkType: NetworkType): ModifyAccountPropertyEntityTypeTransaction {
         return new ModifyAccountPropertyEntityTypeTransaction(networkType,
-            3,
+            TransactionVersion.ACCOUNT_PROPERTY,
             deadline,
             new UInt64([0, 0]),
             propertyType,
