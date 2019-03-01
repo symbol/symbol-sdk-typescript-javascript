@@ -24,6 +24,7 @@ import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 export class ModifyAccountPropertyAddressTransaction extends Transaction {
 
@@ -40,7 +41,7 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
                          modifications: Array<AccountPropertyModification<string>>,
                          networkType: NetworkType): ModifyAccountPropertyAddressTransaction {
         return new ModifyAccountPropertyAddressTransaction(networkType,
-            3,
+            TransactionVersion.ACCOUNT_PROPERTY,
             deadline,
             new UInt64([0, 0]),
             propertyType,
