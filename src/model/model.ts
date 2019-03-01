@@ -80,6 +80,7 @@ export * from './transaction/RegisterNamespaceTransaction';
 export * from './transaction/SecretLockTransaction';
 export * from './transaction/SecretProofTransaction';
 export * from './transaction/SignedTransaction';
+export * from './transaction/SyncAnnounce';
 export * from './transaction/Transaction';
 export * from './transaction/TransactionAnnounceResponse';
 export * from './transaction/TransactionInfo';
