@@ -35,24 +35,32 @@ export * from './blockchain/NetworkType';
 export * from './mosaic/Mosaic';
 export * from './mosaic/MosaicInfo';
 export * from './mosaic/MosaicId';
-export * from './mosaic/MosaicName';
+export * from './mosaic/MosaicNonce';
 export * from './mosaic/MosaicSupplyType';
 export * from './mosaic/MosaicProperties';
 export * from '../service/MosaicView';
 export * from '../service/MosaicAmountView';
-export * from './mosaic/XEM';
+export * from './mosaic/NetworkCurrencyMosaic';
+export * from './mosaic/NetworkHarvestMosaic';
 
 // Namespace
 export * from '../service/Namespace';
+export * from './namespace/AliasType';
+export * from './namespace/Alias';
+export * from './namespace/AddressAlias';
+export * from './namespace/MosaicAlias';
 export * from './namespace/NamespaceId';
 export * from './namespace/NamespaceInfo';
 export * from './namespace/NamespaceName';
 export * from './namespace/NamespaceType';
+export * from './namespace/AliasActionType';
 
 // Transaction
+export * from './transaction/AddressAliasTransaction';
 export * from './transaction/AggregateTransaction';
 export * from './transaction/AggregateTransactionCosignature';
 export * from './transaction/AggregateTransactionInfo';
+export * from './transaction/AliasTransaction';
 export * from './transaction/CosignatureSignedTransaction';
 export * from './transaction/CosignatureTransaction';
 export * from './transaction/Deadline';
@@ -61,6 +69,7 @@ export * from './transaction/InnerTransaction';
 export * from './transaction/LockFundsTransaction';
 export * from './transaction/Message';
 export * from './transaction/ModifyMultisigAccountTransaction';
+export * from './transaction/MosaicAliasTransaction';
 export * from './transaction/MosaicDefinitionTransaction';
 export * from './transaction/MosaicSupplyChangeTransaction';
 export * from './transaction/MultisigCosignatoryModification';

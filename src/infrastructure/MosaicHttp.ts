@@ -20,7 +20,6 @@ import {map, mergeMap} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import {MosaicInfo} from '../model/mosaic/MosaicInfo';
-import {MosaicName} from '../model/mosaic/MosaicName';
 import {MosaicProperties} from '../model/mosaic/MosaicProperties';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {UInt64} from '../model/UInt64';
@@ -65,8 +64,8 @@ export class MosaicHttp extends Http implements MosaicRepository {
                     mosaicInfoDTO.meta.active,
                     mosaicInfoDTO.meta.index,
                     mosaicInfoDTO.meta.id,
-                    new NamespaceId(mosaicInfoDTO.mosaic.namespaceId),
                     new MosaicId(mosaicInfoDTO.mosaic.mosaicId),
+                    new UInt64(mosaicInfoDTO.mosaic.nonce),
                     new UInt64(mosaicInfoDTO.mosaic.supply),
                     new UInt64(mosaicInfoDTO.mosaic.height),
                     PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
@@ -97,8 +96,8 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         mosaicInfoDTO.meta.active,
                         mosaicInfoDTO.meta.index,
                         mosaicInfoDTO.meta.id,
-                        new NamespaceId(mosaicInfoDTO.mosaic.namespaceId),
                         new MosaicId(mosaicInfoDTO.mosaic.mosaicId),
+                        new UInt64(mosaicInfoDTO.mosaic.nonce),
                         new UInt64(mosaicInfoDTO.mosaic.supply),
                         new UInt64(mosaicInfoDTO.mosaic.height),
                         PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
@@ -111,58 +110,5 @@ export class MosaicHttp extends Http implements MosaicRepository {
                     );
                 });
             }))));
-    }
-
-    /**
-     * Gets array of MosaicInfo from mosaics created with provided namespace
-     * @param namespaceId - Namespace id
-     * @param queryParams - (Optional) Query params
-     * @returns Observable<MosaicInfo[]>
-     */
-    public getMosaicsFromNamespace(namespaceId: NamespaceId,
-                                   queryParams?: QueryParams): Observable<MosaicInfo[]> {
-        return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.mosaicRoutesApi.getMosaicsFromNamespace(namespaceId.toHex(), queryParams != null ? queryParams : {})).pipe(
-                map((mosaicsDefinitionDTO) => {
-                    return mosaicsDefinitionDTO.map((mosaicInfoDTO) => {
-                        return new MosaicInfo(
-                            mosaicInfoDTO.meta.active,
-                            mosaicInfoDTO.meta.index,
-                            mosaicInfoDTO.meta.id,
-                            new NamespaceId(mosaicInfoDTO.mosaic.namespaceId),
-                            new MosaicId(mosaicInfoDTO.mosaic.mosaicId),
-                            new UInt64(mosaicInfoDTO.mosaic.supply),
-                            new UInt64(mosaicInfoDTO.mosaic.height),
-                            PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
-                            new MosaicProperties(
-                                new UInt64(mosaicInfoDTO.mosaic.properties[0]),
-                                (new UInt64(mosaicInfoDTO.mosaic.properties[1])).compact(),
-                                new UInt64(mosaicInfoDTO.mosaic.properties[2]),
-                            ),
-                            mosaicInfoDTO.mosaic.levy,
-                        );
-                    });
-                }))));
-    }
-
-    /**
-     * Gets array of MosaicName for different mosaicIds
-     * @param mosaicIds - Array of mosaic ids
-     * @returns Observable<MosaicName[]>
-     */
-    public getMosaicsName(mosaicIds: MosaicId[]): Observable<MosaicName[]> {
-        const mosaicIdsBody = {
-            mosaicIds: mosaicIds.map((id) => id.toHex()),
-        };
-        return observableFrom(this.mosaicRoutesApi.getMosaicsName(mosaicIdsBody)).pipe(map((mosaicInfosDTO) => {
-            return mosaicInfosDTO.map((mosaicInfoDTO) => {
-                return new MosaicName(
-                    new MosaicId(mosaicInfoDTO.mosaicId),
-                    new NamespaceId(mosaicInfoDTO.parentId),
-                    mosaicInfoDTO.name,
-                );
-            });
-        }));
     }
 }

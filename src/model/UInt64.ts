@@ -44,6 +44,16 @@ export class UInt64 {
     }
 
     /**
+     * Parses a hex string into a UInt64.
+     * @param {string} input A hex encoded string.
+     * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
+     */
+    public static fromHex(input: string): UInt64 {
+        const dto = uint64.fromHex(input);
+        return new UInt64(dto);
+    }
+
+    /**
      * Constructor
      * @param uintArray
      */
@@ -56,11 +66,22 @@ export class UInt64 {
     }
 
     /**
+     * Get DTO representation with format: `[lower, higher]`
+     *
      * @internal
      * @returns {[number,number]}
      */
     public toDTO(): number[] {
         return [this.lower, this.higher];
+    }
+
+    /**
+     * Get hexadecimal representation
+     *
+     * @return {string}
+     */
+    public toHex(): string {
+        return uint64.toHex(this.toDTO());
     }
 
     /**

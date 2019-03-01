@@ -16,6 +16,7 @@
 
 import {PublicAccount} from '../account/PublicAccount';
 import {UInt64} from '../UInt64';
+import {Alias} from './Alias';
 import {NamespaceId} from './NamespaceId';
 
 /**
@@ -74,7 +75,11 @@ export class NamespaceInfo {
                 /**
                  * The height at which the ownership ends.
                  */
-                public readonly endHeight: UInt64) {
+                public readonly endHeight: UInt64,
+                /**
+                 * The alias linked to a namespace.
+                 */
+                public readonly alias: Alias) {
 
     }
 
@@ -100,6 +105,14 @@ export class NamespaceInfo {
      */
     public isSubnamespace(): boolean {
         return this.type === 1;
+    }
+
+    /**
+     * Has alias
+     * @returns {boolean}
+     */
+    public hasAlias(): boolean {
+        return this.alias.type !== 0;
     }
 
     /**

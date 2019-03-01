@@ -35,7 +35,7 @@ describe('MosaicInfo', () => {
             height: new UInt64([1, 0]),
             levy: {},
             mosaicId: new MosaicId([3646934825, 3576016193]),
-            namespaceId: new NamespaceId([929036875, 2226345261]),
+            nonce: new UInt64([1, 0]),
             owner: PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 NetworkType.MIJIN_TEST),
             properties: [
@@ -65,8 +65,8 @@ describe('MosaicInfo', () => {
             mosaicInfoDTO.meta.active,
             mosaicInfoDTO.meta.index,
             mosaicInfoDTO.meta.id,
-            mosaicInfoDTO.mosaic.namespaceId,
             mosaicInfoDTO.mosaic.mosaicId,
+            mosaicInfoDTO.mosaic.nonce,
             mosaicInfoDTO.mosaic.supply,
             mosaicInfoDTO.mosaic.height,
             mosaicInfoDTO.mosaic.owner,
@@ -81,8 +81,8 @@ describe('MosaicInfo', () => {
         expect(mosaicInfo.active).to.be.equal(mosaicInfoDTO.meta.active);
         expect(mosaicInfo.index).to.be.equal(mosaicInfoDTO.meta.index);
         expect(mosaicInfo.metaId).to.be.equal(mosaicInfoDTO.meta.id);
-        deepEqual(mosaicInfo.namespaceId, mosaicInfoDTO.mosaic.namespaceId);
         deepEqual(mosaicInfo.mosaicId, mosaicInfoDTO.mosaic.mosaicId);
+        deepEqual(mosaicInfo.nonce, mosaicInfoDTO.mosaic.nonce);
         deepEqual(mosaicInfo.supply, mosaicInfoDTO.mosaic.supply);
         deepEqual(mosaicInfo.height, mosaicInfoDTO.mosaic.height);
         expect(mosaicInfo.owner).to.be.equal(mosaicInfoDTO.mosaic.owner);
@@ -98,8 +98,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.meta.active,
                 mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
-                mosaicInfoDTO.mosaic.namespaceId,
                 mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
@@ -121,8 +121,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.meta.active,
                 mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
-                mosaicInfoDTO.mosaic.namespaceId,
                 mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
@@ -145,8 +145,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.meta.active,
                 mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
-                mosaicInfoDTO.mosaic.namespaceId,
                 mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
@@ -167,8 +167,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.meta.active,
                 mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
-                mosaicInfoDTO.mosaic.namespaceId,
                 mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
@@ -191,8 +191,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.meta.active,
                 mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
-                mosaicInfoDTO.mosaic.namespaceId,
                 mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
@@ -213,8 +213,8 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.meta.active,
                 mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
-                mosaicInfoDTO.mosaic.namespaceId,
                 mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,

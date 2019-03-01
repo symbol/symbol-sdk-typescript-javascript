@@ -413,10 +413,9 @@ describe('CreateTransactionFromDTO', () => {
                         3248159581,
                         740240531,
                     ],
-                    name: 'ie7rfaqxiorum1jor',
-                    parentId: [
-                        3316183705,
-                        3829351378,
+                    nonce: [
+                        1,
+                        0,
                     ],
                     properties: [
                         {
@@ -502,10 +501,9 @@ describe('CreateTransactionFromDTO', () => {
                                     3248159581,
                                     740240531,
                                 ],
-                                name: 'ie7rfaqxiorum1jor',
-                                parentId: [
-                                    3316183705,
-                                    3829351378,
+                                nonce: [
+                                    1,
+                                    0,
                                 ],
                                 properties: [
                                     {

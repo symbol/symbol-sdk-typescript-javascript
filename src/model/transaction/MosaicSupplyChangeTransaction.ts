@@ -24,6 +24,7 @@ import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -46,7 +47,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
                          delta: UInt64,
                          networkType: NetworkType): MosaicSupplyChangeTransaction {
         return new MosaicSupplyChangeTransaction(networkType,
-            2,
+            TransactionVersion.MOSAIC_SUPPLY_CHANGE,
             deadline,
             new UInt64([0, 0]),
             mosaicId,

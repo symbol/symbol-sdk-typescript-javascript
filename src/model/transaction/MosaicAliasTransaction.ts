@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,44 +14,47 @@
  * limitations under the License.
  */
 
-import { TransferTransaction as TransferTransactionLibrary, VerifiableTransaction } from 'nem2-library';
-import { Address } from '../account/Address';
+import { MosaicAliasTransaction as MosaicAliasTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
-import { Mosaic } from '../mosaic/Mosaic';
+import { MosaicId } from '../mosaic/MosaicId';
+import { AliasActionType } from '../namespace/AliasActionType';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
-import { Message } from './Message';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
 /**
- * Transfer transactions contain data about transfers of mosaics and message to another account.
+ * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
+ * i.e. increase or decrease the supply.
  */
-export class TransferTransaction extends Transaction {
+export class MosaicAliasTransaction extends Transaction {
+
     /**
-     * Create a transfer transaction object
+     * Create a mosaic supply change transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param recipient - The recipient of the transaction.
-     * @param mosaics - The array of mosaics.
-     * @param message - The transaction message.
+     * @param actionType - The namespace id.
+     * @param namespaceId - The namespace id.
+     * @param mosaicId - The mosaic id.
      * @param networkType - The network type.
-     * @returns {TransferTransaction}
+     * @returns {MosaicAliasTransaction}
      */
     public static create(deadline: Deadline,
-                         recipient: Address,
-                         mosaics: Mosaic[],
-                         message: Message,
-                         networkType: NetworkType): TransferTransaction {
-        return new TransferTransaction(networkType,
-            TransactionVersion.TRANSFER,
+                         actionType: AliasActionType,
+                         namespaceId: NamespaceId,
+                         mosaicId: MosaicId,
+                         networkType: NetworkType): MosaicAliasTransaction {
+        return new MosaicAliasTransaction(networkType,
+            TransactionVersion.MOSAIC_ALIAS,
             deadline,
             new UInt64([0, 0]),
-            recipient,
-            mosaics,
-            message);
+            actionType,
+            namespaceId,
+            mosaicId,
+        );
     }
 
     /**
@@ -59,9 +62,9 @@ export class TransferTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param fee
-     * @param recipient
-     * @param mosaics
-     * @param message
+     * @param actionType
+     * @param namespaceId
+     * @param mosaicId
      * @param signature
      * @param signer
      * @param transactionInfo
@@ -71,21 +74,21 @@ export class TransferTransaction extends Transaction {
                 deadline: Deadline,
                 fee: UInt64,
                 /**
-                 * The address of the recipient.
+                 * The alias action type.
                  */
-                public readonly recipient: Address,
+                public readonly actionType: AliasActionType,
                 /**
-                 * The array of Mosaic objects.
+                 * The namespace id that will be an alias.
                  */
-                public readonly mosaics: Mosaic[],
+                public readonly namespaceId: NamespaceId,
                 /**
-                 * The transaction message of 2048 characters.
+                 * The mosaic id.
                  */
-                public readonly message: Message,
+                public readonly mosaicId: MosaicId,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.TRANSFER, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.MOSAIC_ALIAS, networkType, version, deadline, fee, signature, signer, transactionInfo);
     }
 
     /**
@@ -93,13 +96,13 @@ export class TransferTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new TransferTransactionLibrary.Builder()
+        return new MosaicAliasTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
             .addFee(this.fee.toDTO())
             .addVersion(this.versionToDTO())
-            .addRecipient(this.recipient.plain())
-            .addMosaics(this.mosaics.map((mosaic) => mosaic.toDTO()))
-            .addMessage(this.message)
+            .addActionType(this.actionType)
+            .addNamespaceId(this.namespaceId.id.toDTO())
+            .addMosaicId(this.mosaicId.id.toDTO())
             .build();
     }
 

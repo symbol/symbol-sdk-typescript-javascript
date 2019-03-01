@@ -17,6 +17,15 @@
 import {expect} from 'chai';
 import {UInt64} from '../../src/model/UInt64';
 
+const hexTestCases = [
+    { str: '0000000000000000', value: [0, 0], description: '0' },
+    { str: '000000000000A1B2', value: [0xA1B2, 0], description: '(0, 8)' },
+    { str: '0000000012345678', value: [0x12345678, 0], description: '8' },
+    { str: '0000ABCD12345678', value: [0x12345678, 0xABCD], description: '(8, 16)' },
+    { str: '1234567890ABCDEF', value: [0x90ABCDEF, 0x12345678], description: '16' },
+    { str: 'FFFFFFFFFFFFFFFF', value: [0xFFFFFFFF, 0xFFFFFFFF], description: '16 (max value)' }
+];
+
 describe('Uint64', () => {
 
     it('should createComplete Uint64 object [0,0]', () => {
@@ -81,6 +90,36 @@ describe('Uint64', () => {
             const value = new UInt64([12, 23]);
             const other = new UInt64([23, 12]);
             expect(value.equals(other)).to.be.equal(false);
+        });
+    });
+
+    describe('fromHex', () => {
+        it('should create from hexadecimal notation', () => {
+            hexTestCases.forEach((testCase) => {
+                it(`can parse hex string with ${testCase.description} significant digits`, () => {
+                    // Act:
+                    const value = UInt64.fromHex(testCase.str);
+
+                    // Assert:
+                    expect(value).to.deep.equal(testCase.value);
+                });
+            });
+
+            it('cannot parse hex string with invalid characters into uint64', () => {
+                // Assert:
+                expect(() => { UInt64.fromHex('0000000012345G78'); }).to.throw('unrecognized hex char'); // contains 'G'
+            });
+
+            it('cannot parse hex string with invalid size into uint64', () => {
+                // Arrange:
+                const errorMessage = 'hex string has unexpected size';
+
+                // Assert:
+                expect(() => { UInt64.fromHex(''); }).to.throw(errorMessage); // empty string
+                expect(() => { UInt64.fromHex('1'); }).to.throw(errorMessage); // odd number of chars
+                expect(() => { UInt64.fromHex('ABCDEF12'); }).to.throw(errorMessage); // too short
+                expect(() => { UInt64.fromHex('1234567890ABCDEF12'); }).to.throw(errorMessage); // too long
+            });
         });
     });
 });

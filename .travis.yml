@@ -13,12 +13,12 @@ script:
 before_deploy:
   - npm install --global typedoc
   - typedoc --out ts-docs src
+  - touch ./ts-docs/.nojekyll
 deploy:
   provider: pages
   skip_cleanup: true
-  keep-history: true
   local_dir: ts-docs
   github_token: $GITHUB_TOKEN
   on:
     branch: master
-  
+

@@ -26,6 +26,7 @@ import { SignedTransaction } from './SignedTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
+import { TransactionVersion } from './TransactionVersion';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.
@@ -77,7 +78,7 @@ export class AggregateTransaction extends Transaction {
                                  cosignatures: AggregateTransactionCosignature[]): AggregateTransaction {
         return new AggregateTransaction(networkType,
             TransactionType.AGGREGATE_COMPLETE,
-            2,
+            TransactionVersion.AGGREGATE_COMPLETE,
             deadline,
             new UInt64([0, 0]),
             innerTransactions,
@@ -99,7 +100,7 @@ export class AggregateTransaction extends Transaction {
                                cosignatures: AggregateTransactionCosignature[] = []): AggregateTransaction {
         return new AggregateTransaction(networkType,
             TransactionType.AGGREGATE_BONDED,
-            2,
+            TransactionVersion.AGGREGATE_BONDED,
             deadline,
             new UInt64([0, 0]),
             innerTransactions,

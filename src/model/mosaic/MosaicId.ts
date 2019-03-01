@@ -13,8 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {mosaicId as MosaicIdentifierGenerator} from 'nem2-library';
+import {
+    convert,
+    mosaicId as MosaicIdentifierGenerator,
+    nacl_catapult,
+    uint64 as uint64_t,
+} from 'nem2-library';
+
+import {PublicAccount} from '../account/PublicAccount';
 import {Id} from '../Id';
+import {MosaicNonce} from '../mosaic/MosaicNonce';
 
 /**
  * The mosaic id structure describes mosaic id
@@ -29,13 +37,20 @@ export class MosaicId {
     public readonly id: Id;
 
     /**
-     * Mosaic full name
+     * Create a MosaicId for given `nonce` MosaicNonce and `owner` PublicAccount.
+     *
+     * @param   nonce   {MosaicNonce}
+     * @param   owner   {Account}
+     * @return  {MosaicId}
      */
-    public readonly fullName?: string;
+    public static createFromNonce(nonce: MosaicNonce, owner: PublicAccount): MosaicId {
+        const mosaicId = MosaicIdentifierGenerator(nonce.nonce, convert.hexToUint8(owner.publicKey));
+        return new MosaicId(mosaicId);
+    }
 
     /**
-     * Create MosaicId from mosaic and namespace string id (ex: nem:xem or domain.subdom.subdome:token)
-     * or id in form of array number (ex: [3646934825, 3576016193])
+     * Create MosaicId from mosaic id in form of array of number (ex: [3646934825, 3576016193])
+     * or the hexadecimal notation thereof in form of a string.
      *
      * @param id
      */
@@ -43,11 +58,12 @@ export class MosaicId {
         if (id instanceof Array) {
             this.id = new Id(id);
         } else if (typeof id === 'string') {
-            this.fullName = id;
-            const limiterPosition = id.indexOf(':');
-            const namespaceName = id.substr(0, limiterPosition);
-            const mosaicName = id.substr(limiterPosition + 1);
-            this.id = new Id(MosaicIdentifierGenerator(namespaceName, mosaicName));
+            if (! /^[0-9A-Fa-f]{16}$/i.test(id)) {
+                throw new Error('Invalid size for MosaicId hexadecimal notation');
+            }
+
+            // hexadecimal formatted MosaicId
+            this.id = new Id(uint64_t.fromHex(id));
         }
     }
 

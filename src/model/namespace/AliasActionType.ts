@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,12 @@
  * limitations under the License.
  */
 
-import {MosaicInfo} from '../model/mosaic/MosaicInfo';
-
 /**
- * Class representing mosaic view information
+ * The alias action type. Supported actions are:
+ * 0: Link an alias.
+ * 1: Unlink an alias.
  */
-export class MosaicView {
-
-    /**
-     * @internal
-     * @param mosaicInfo
-     * @param namespaceName
-     * @param mosaicName
-     */
-    constructor(/**
-                 * The mosaic information
-                 */
-                public readonly mosaicInfo: MosaicInfo) {
-
-    }
+export enum AliasActionType {
+    Link = 0,
+    Unlink = 1,
 }
