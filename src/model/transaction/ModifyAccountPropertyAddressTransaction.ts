@@ -41,7 +41,7 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
                          modifications: Array<AccountPropertyModification<string>>,
                          networkType: NetworkType): ModifyAccountPropertyAddressTransaction {
         return new ModifyAccountPropertyAddressTransaction(networkType,
-            TransactionVersion.ACCOUNT_PROPERTY,
+            TransactionVersion.ACCOUNT_PROPERTY_ADDRESS_TRANSACTION,
             deadline,
             new UInt64([0, 0]),
             propertyType,

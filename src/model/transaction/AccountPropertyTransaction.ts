@@ -23,7 +23,7 @@ import { AccountPropertyModification,
          PropertyModificationType, PropertyType } from '../model';
 import { MosaicId } from '../mosaic/MosaicId';
 import { Deadline } from './Deadline';
-import { TransactionTypeEnum } from './TransactionTypeEnum';
+import { TransactionType } from './TransactionType';
 
 export class AccountPropertyTransaction {
     /**
@@ -34,10 +34,10 @@ export class AccountPropertyTransaction {
      * @param networkType - The network type.
      * @returns {ModifyAccountPropertyAddressTransaction}
      */
-    public static createAddressProertyModificationTransaction(deadline: Deadline,
-                                                              propertyType: PropertyType,
-                                                              modifications: Array<AccountPropertyModification<string>>,
-                                                              networkType: NetworkType): ModifyAccountPropertyAddressTransaction {
+    public static createAddressPropertyModificationTransaction(deadline: Deadline,
+                                                               propertyType: PropertyType,
+                                                               modifications: Array<AccountPropertyModification<string>>,
+                                                               networkType: NetworkType): ModifyAccountPropertyAddressTransaction {
         if (![PropertyType.AllowAddress, PropertyType.BlockAddress].includes(propertyType)) {
             throw new Error ('Property type is not allowed.');
         }
@@ -110,9 +110,6 @@ export class AccountPropertyTransaction {
      */
     public static createEntityTypeFilter(modificationType: PropertyModificationType,
                                          entityType: number): AccountPropertyModification<number> {
-        if (!(entityType in TransactionTypeEnum)) {
-            throw new Error('Not a transaction type');
-        }
         return new AccountPropertyModification<number>(modificationType, entityType);
     }
 }

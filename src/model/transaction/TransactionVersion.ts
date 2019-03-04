@@ -99,8 +99,20 @@ export class TransactionVersion {
     public static readonly MOSAIC_ALIAS = 1;
 
     /**
-     * Account Property transaction version
+     * Account Property address transaction version
      * @type {number}
      */
-    public static readonly ACCOUNT_PROPERTY = 1;
+    public static readonly ACCOUNT_PROPERTY_ADDRESS_TRANSACTION = 1;
+
+    /**
+     * Account Property mosaic transaction version
+     * @type {number}
+     */
+    public static readonly ACCOUNT_PROPERTY_MOSAIC_TRANSACTION = 1;
+
+    /**
+     * Account Property entity type transaction version
+     * @type {number}
+     */
+    public static readonly ACCOUNT_PROPERTY_ENTITY_TYPE_TRANSACTION = 1;
 }

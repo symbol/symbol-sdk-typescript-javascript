@@ -29,7 +29,7 @@ export class AccountPropertyModification<T> {
                  */
                 public readonly modificationType: PropertyModificationType,
                 /**
-                 * Cosignatory public account.
+                 * Modification value (Address, Mosaic or Transaction Type).
                  */
                 public readonly value: T) {
 
