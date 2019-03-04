@@ -165,7 +165,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param address - User address
      * @returns Observable<MultisigAccountGraphInfo>
      */
-    public getMultisigAccountGraphInfo(address: Address): Observable<MultisigAccountGraphInfo> {
+    public getMultisigAccountGraphInfo(address: Address): Observable<MultisigAccountGraphInfo > {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.accountRoutesApi.getAccountMultisigGraph(address.plain())).pipe(map((multisigAccountGraphInfosDTO) => {
@@ -195,7 +195,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<Transaction[]>
      */
     public transactions(publicAccount: PublicAccount,
-                        queryParams?: QueryParams): Observable<Transaction[]> {
+                        queryParams?: QueryParams): Observable<Transaction[] > {
         return observableFrom(
             this.accountRoutesApi.transactions(publicAccount.publicKey, queryParams != null ? queryParams : {})).pipe(
             map((transactionsDTO) => {
