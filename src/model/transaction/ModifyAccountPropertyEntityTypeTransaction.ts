@@ -42,7 +42,7 @@ export class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
                          modifications: Array<AccountPropertyModification<number>>,
                          networkType: NetworkType): ModifyAccountPropertyEntityTypeTransaction {
         return new ModifyAccountPropertyEntityTypeTransaction(networkType,
-            TransactionVersion.ACCOUNT_PROPERTY,
+            TransactionVersion.ACCOUNT_PROPERTY_ENTITY_TYPE_TRANSACTION,
             deadline,
             new UInt64([0, 0]),
             propertyType,

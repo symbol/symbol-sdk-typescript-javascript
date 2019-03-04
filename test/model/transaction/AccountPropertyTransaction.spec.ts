@@ -18,11 +18,10 @@ import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import { PropertyModificationType, PropertyType } from '../../../src/model/model';
+import { PropertyModificationType, PropertyType, TransactionType } from '../../../src/model/model';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {AccountPropertyTransaction} from '../../../src/model/transaction/AccountPropertyTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
-import { TransactionTypeEnum } from '../../../src/model/transaction/TransactionTypeEnum';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('AccountPropertyTransaction', () => {
@@ -53,23 +52,13 @@ describe('AccountPropertyTransaction', () => {
     });
 
     it('should create entity type property filter', () => {
-        const entityType = TransactionTypeEnum.ADDRESS_ALIAS;
+        const entityType = TransactionType.ADDRESS_ALIAS;
         const entityTypePropertyFilter = AccountPropertyTransaction.createEntityTypeFilter(
             PropertyModificationType.Add,
             entityType,
         );
         expect(entityTypePropertyFilter.modificationType).to.be.equal(PropertyModificationType.Add);
         expect(entityTypePropertyFilter.value).to.be.equal(entityType);
-    });
-
-    it('should throw exception when entity type property filter passed in wrong type', () => {
-        const entityType = -99;
-        expect(() => {
-            const filter = AccountPropertyTransaction.createEntityTypeFilter(
-                 PropertyModificationType.Add,
-                 entityType,
-             );
-         }).to.throw(Error, 'Not a transaction type');
     });
 
     it('should create address property transaction', () => {
@@ -79,7 +68,7 @@ describe('AccountPropertyTransaction', () => {
             PropertyModificationType.Add,
             address,
         );
-        const addressPropertyTransaction = AccountPropertyTransaction.createAddressProertyModificationTransaction(
+        const addressPropertyTransaction = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
             Deadline.create(),
             PropertyType.AllowAddress,
             [addressPropertyFilter],
@@ -104,7 +93,7 @@ describe('AccountPropertyTransaction', () => {
         );
 
         expect(() => {
-            AccountPropertyTransaction.createAddressProertyModificationTransaction(
+            AccountPropertyTransaction.createAddressPropertyModificationTransaction(
                 Deadline.create(),
                 PropertyType.Sentinel,
                 [addressPropertyFilter],
@@ -158,7 +147,7 @@ describe('AccountPropertyTransaction', () => {
 
     it('should create entity type property transaction', () => {
 
-        const entityType = TransactionTypeEnum.ADDRESS_ALIAS;
+        const entityType = TransactionType.ADDRESS_ALIAS;
         const entityTypePropertyFilter = AccountPropertyTransaction.createEntityTypeFilter(
             PropertyModificationType.Add,
             entityType,
@@ -176,25 +165,6 @@ describe('AccountPropertyTransaction', () => {
             240,
             signedTransaction.payload.length,
         )).to.be.equal('0401004E42');
-
-    });
-
-    it('should throw exception when create entity type property transaction with wrong type', () => {
-
-        const entityType = TransactionTypeEnum.ADDRESS_ALIAS;
-        const entityTypePropertyFilter = AccountPropertyTransaction.createEntityTypeFilter(
-            PropertyModificationType.Add,
-            entityType,
-        );
-
-        expect(() => {
-            AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
-                Deadline.create(),
-                PropertyType.Sentinel,
-                [entityTypePropertyFilter],
-                NetworkType.MIJIN_TEST,
-            );
-         }).to.throw(Error, 'Property type is not allowed.');
 
     });
 });

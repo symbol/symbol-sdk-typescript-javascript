@@ -165,7 +165,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param address - User address
      * @returns Observable<MultisigAccountGraphInfo>
      */
-    public getMultisigAccountGraphInfo(address: Address): Observable<MultisigAccountGraphInfo > {
+    public getMultisigAccountGraphInfo(address: Address): Observable<MultisigAccountGraphInfo> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.accountRoutesApi.getAccountMultisigGraph(address.plain())).pipe(map((multisigAccountGraphInfosDTO) => {
@@ -195,7 +195,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<Transaction[]>
      */
     public transactions(publicAccount: PublicAccount,
-                        queryParams?: QueryParams): Observable<Transaction[] > {
+                        queryParams?: QueryParams): Observable<Transaction[]> {
         return observableFrom(
             this.accountRoutesApi.transactions(publicAccount.publicKey, queryParams != null ? queryParams : {})).pipe(
             map((transactionsDTO) => {
@@ -212,7 +212,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public incomingTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable < Transaction[] > {
+    public incomingTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <Transaction[]>  {
         return observableFrom(
             this.accountRoutesApi.incomingTransactions(publicAccount.publicKey, queryParams != null ? queryParams : {})).pipe(
             map((transactionsDTO) => {
@@ -229,7 +229,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public outgoingTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable < Transaction[] > {
+    public outgoingTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <Transaction[]> {
         return observableFrom(
             this.accountRoutesApi.outgoingTransactions(publicAccount.publicKey, queryParams != null ? queryParams : {})).pipe(
             map((transactionsDTO) => {
@@ -247,7 +247,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public unconfirmedTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable < Transaction[] > {
+    public unconfirmedTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <Transaction[]>  {
         return observableFrom(
             this.accountRoutesApi.unconfirmedTransactions(publicAccount.publicKey, queryParams != null ? queryParams : {})).pipe(
             map((transactionsDTO) => {
@@ -264,7 +264,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<AggregateTransaction[]>
      */
-    public aggregateBondedTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable < AggregateTransaction[] > {
+    public aggregateBondedTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <AggregateTransaction[]> {
         return observableFrom(
             this.accountRoutesApi.partialTransactions(publicAccount.publicKey, queryParams != null ? queryParams : {})).pipe(
             map((transactionsDTO) => {
