@@ -41,7 +41,7 @@ export class ModifyAccountPropertyMosaicTransaction extends Transaction {
                          modifications: Array<AccountPropertyModification<number[]>>,
                          networkType: NetworkType): ModifyAccountPropertyMosaicTransaction {
         return new ModifyAccountPropertyMosaicTransaction(networkType,
-            TransactionVersion.ACCOUNT_PROPERTY_MOSAIC_TRANSACTION,
+            TransactionVersion.MODIFY_ACCOUNT_PROPERTY_MOSAIC,
             deadline,
             new UInt64([0, 0]),
             propertyType,
