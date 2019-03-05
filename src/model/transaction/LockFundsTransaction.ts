@@ -42,12 +42,14 @@ export class LockFundsTransaction extends Transaction {
     /**
      * Create a Lock funds transaction object
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param mosaic - The locked mosaic.
      * @param duration - The funds lock duration.
      * @param signedTransaction - The signed transaction for which funds are locked.
      * @param networkType - The network type.
      */
     public static create(deadline: Deadline,
+                         maxFee: UInt64,
                          mosaic: Mosaic,
                          duration: UInt64,
                          signedTransaction: SignedTransaction,
@@ -56,7 +58,7 @@ export class LockFundsTransaction extends Transaction {
             networkType,
             TransactionVersion.LOCK,
             deadline,
-            UInt64.fromUint(0),
+            maxFee,
             mosaic,
             duration,
             signedTransaction,
@@ -67,7 +69,7 @@ export class LockFundsTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param mosaic
      * @param duration
      * @param signedTransaction
@@ -78,7 +80,7 @@ export class LockFundsTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The locked mosaic.
                  */
@@ -91,7 +93,7 @@ export class LockFundsTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.LOCK, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.LOCK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         this.hash = signedTransaction.hash;
         if (signedTransaction.type !== TransactionType.AGGREGATE_BONDED) {
             throw new Error('Signed transaction must be Aggregate Bonded Transaction');
@@ -106,7 +108,7 @@ export class LockFundsTransaction extends Transaction {
         return new HashLockTransaction.Builder()
             .addDeadline(this.deadline.toDTO())
             .addType(this.type)
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addMosaicId(this.mosaic.id.id.toDTO())
             .addMosaicAmount(this.mosaic.amount.toDTO())

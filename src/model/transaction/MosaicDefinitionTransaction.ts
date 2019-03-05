@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { 
+import {
     MosaicCreationTransaction as MosaicDefinitionTransactionLibrary,
     mosaicId as mosaicIdLibrary,
     VerifiableTransaction,
@@ -24,7 +24,6 @@ import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicNonce } from '../mosaic/MosaicNonce';
 import { MosaicProperties } from '../mosaic/MosaicProperties';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
@@ -41,6 +40,7 @@ export class MosaicDefinitionTransaction extends Transaction {
     /**
      * Create a mosaic creation transaction object
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param nonce - The mosaic nonce ex: MosaicNonce.createRandom().
      * @param mosaicId - The mosaic id ex: new MosaicId([481110499, 231112638]).
      * @param mosaicProperties - The mosaic properties.
@@ -48,6 +48,7 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @returns {MosaicDefinitionTransaction}
      */
     public static create(deadline: Deadline,
+                         maxFee: UInt64,
                          nonce: MosaicNonce,
                          mosaicId: MosaicId,
                          mosaicProperties: MosaicProperties,
@@ -55,7 +56,7 @@ export class MosaicDefinitionTransaction extends Transaction {
         return new MosaicDefinitionTransaction(networkType,
             TransactionVersion.MOSAIC_DEFINITION,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             nonce,
             mosaicId,
             mosaicProperties,
@@ -66,7 +67,7 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param mosaicNonce
      * @param mosaicId
      * @param mosaicProperties
@@ -77,7 +78,7 @@ export class MosaicDefinitionTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The mosaic nonce.
                  */
@@ -93,7 +94,7 @@ export class MosaicDefinitionTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MOSAIC_DEFINITION, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.MOSAIC_DEFINITION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -103,7 +104,7 @@ export class MosaicDefinitionTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         let mosaicDefinitionTransaction = new MosaicDefinitionTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addDivisibility(this.mosaicProperties.divisibility)
             .addDuration(this.mosaicProperties.duration.toDTO())

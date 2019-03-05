@@ -36,6 +36,7 @@ export class AddressAliasTransaction extends Transaction {
     /**
      * Create a mosaic supply change transaction object
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param actionType - The namespace id.
      * @param namespaceId - The namespace id.
      * @param mosaicId - The mosaic id.
@@ -43,6 +44,7 @@ export class AddressAliasTransaction extends Transaction {
      * @returns {AddressAliasTransaction}
      */
     public static create(deadline: Deadline,
+                         maxFee: UInt64,
                          actionType: AliasActionType,
                          namespaceId: NamespaceId,
                          address: Address,
@@ -50,7 +52,7 @@ export class AddressAliasTransaction extends Transaction {
         return new AddressAliasTransaction(networkType,
             TransactionVersion.ADDRESS_ALIAS,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             actionType,
             namespaceId,
             address,
@@ -61,7 +63,7 @@ export class AddressAliasTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param actionType
      * @param namespaceId
      * @param address
@@ -72,7 +74,7 @@ export class AddressAliasTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The alias action type.
                  */
@@ -98,7 +100,7 @@ export class AddressAliasTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         return new AddressAliasTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addActionType(this.actionType)
             .addNamespaceId(this.namespaceId.id.toDTO())

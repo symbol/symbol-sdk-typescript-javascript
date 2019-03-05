@@ -35,6 +35,7 @@ export abstract class AliasTransaction extends Transaction {
     /**
      * Create an address alias transaction object
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param aliasAction - The namespace id.
      * @param namespaceId - The namespace id.
      * @param address - The address.
@@ -42,16 +43,18 @@ export abstract class AliasTransaction extends Transaction {
      * @returns {AddressAliasTransaction}
      */
     public static createForAddress(deadline: Deadline,
+                                   maxFee: UInt64,
                                    aliasAction: AliasActionType,
                                    namespaceId: NamespaceId,
                                    address: Address,
                                    networkType: NetworkType): AliasTransaction {
-        return AddressAliasTransaction.create(deadline, aliasAction, namespaceId, address, networkType);
+        return AddressAliasTransaction.create(deadline, maxFee, aliasAction, namespaceId, address, networkType);
     }
 
     /**
      * Create a mosaic alias transaction object
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param aliasAction - The namespace id.
      * @param namespaceId - The namespace id.
      * @param mosaicId - The mosaic id.
@@ -59,11 +62,12 @@ export abstract class AliasTransaction extends Transaction {
      * @returns {MosaicAliasTransaction}
      */
     public static createForMosaic(deadline: Deadline,
+                                  maxFee: UInt64,
                                   aliasAction: AliasActionType,
                                   namespaceId: NamespaceId,
                                   mosaicId: MosaicId,
                                   networkType: NetworkType): AliasTransaction {
-        return MosaicAliasTransaction.create(deadline, aliasAction, namespaceId, mosaicId, networkType);
+        return MosaicAliasTransaction.create(deadline, maxFee, aliasAction, namespaceId, mosaicId, networkType);
     }
 
 }

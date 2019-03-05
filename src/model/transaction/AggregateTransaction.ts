@@ -38,7 +38,7 @@ export class AggregateTransaction extends Transaction {
      * @param type
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param innerTransactions
      * @param cosignatures
      * @param signature
@@ -49,7 +49,7 @@ export class AggregateTransaction extends Transaction {
                 type: number,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The array of innerTransactions included in the aggregate transaction.
                  */
@@ -61,18 +61,20 @@ export class AggregateTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(type, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(type, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
      * Create an aggregate complete transaction object
      * @param deadline - The deadline to include the transaction.
+     * @param {maxFee} maxFee
      * @param innerTransactions - The array of inner innerTransactions.
      * @param networkType - The network type.
      * @param cosignatures
      * @returns {AggregateTransaction}
      */
     public static createComplete(deadline: Deadline,
+                                 maxFee: UInt64,
                                  innerTransactions: InnerTransaction[],
                                  networkType: NetworkType,
                                  cosignatures: AggregateTransactionCosignature[]): AggregateTransaction {
@@ -80,7 +82,7 @@ export class AggregateTransaction extends Transaction {
             TransactionType.AGGREGATE_COMPLETE,
             TransactionVersion.AGGREGATE_COMPLETE,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             innerTransactions,
             cosignatures,
         );
@@ -89,12 +91,14 @@ export class AggregateTransaction extends Transaction {
     /**
      * Create an aggregate bonded transaction object
      * @param {Deadline} deadline
+     * @param {maxFee} maxFee
      * @param {InnerTransaction[]} innerTransactions
      * @param {NetworkType} networkType
      * @param {AggregateTransactionCosignature[]} cosignatures
      * @return {AggregateTransaction}
      */
     public static createBonded(deadline: Deadline,
+                               maxFee: UInt64,
                                innerTransactions: InnerTransaction[],
                                networkType: NetworkType,
                                cosignatures: AggregateTransactionCosignature[] = []): AggregateTransaction {
@@ -102,7 +106,7 @@ export class AggregateTransaction extends Transaction {
             TransactionType.AGGREGATE_BONDED,
             TransactionVersion.AGGREGATE_BONDED,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             innerTransactions,
             cosignatures,
         );
@@ -116,7 +120,7 @@ export class AggregateTransaction extends Transaction {
         return new AggregateTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
             .addType(this.type)
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addTransactions(this.innerTransactions.map((transaction) => {
                 return transaction.aggregateTransaction();

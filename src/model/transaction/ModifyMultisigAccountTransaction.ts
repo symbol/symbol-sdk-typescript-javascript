@@ -36,6 +36,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
     /**
      * Create a modify multisig account transaction object
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param minApprovalDelta - The min approval relative change.
      * @param minRemovalDelta - The min removal relative change.
      * @param modifications - The array of modifications.
@@ -43,6 +44,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
      * @returns {ModifyMultisigAccountTransaction}
      */
     public static create(deadline: Deadline,
+                         maxFee: UInt64,
                          minApprovalDelta: number,
                          minRemovalDelta: number,
                          modifications: MultisigCosignatoryModification[],
@@ -50,7 +52,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
         return new ModifyMultisigAccountTransaction(networkType,
             TransactionVersion.MODIFY_MULTISIG_ACCOUNT,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             minApprovalDelta,
             minRemovalDelta,
             modifications);
@@ -60,7 +62,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param minApprovalDelta
      * @param minRemovalDelta
      * @param modifications
@@ -71,7 +73,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The number of signatures needed to approve a transaction.
                  * If we are modifying and existing multi-signature account this indicates the relative change of the minimum cosignatories.
@@ -89,7 +91,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_MULTISIG_ACCOUNT, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.MODIFY_MULTISIG_ACCOUNT, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -99,7 +101,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         return new ModifyMultisigAccountTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addMinApprovalDelta(this.minApprovalDelta)
             .addMinRemovalDelta(this.minRemovalDelta)

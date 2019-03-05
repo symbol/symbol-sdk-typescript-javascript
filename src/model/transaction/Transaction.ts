@@ -37,7 +37,7 @@ export abstract class Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param signature
      * @param signer
      * @param transactionInfo
@@ -59,10 +59,10 @@ export abstract class Transaction {
                  */
                 public readonly deadline: Deadline,
                 /**
-                 * The fee for the transaction. The higher the fee, the higher the priority of the transaction.
-                 * Transactions with high priority get included in a block before transactions with lower priority.
+                 * A sender of a transaction must specify during the transaction definition a max_fee,
+                 * meaning the maximum fee the account allows to spend for this transaction.
                  */
-                public readonly fee: UInt64,
+                public readonly maxFee: UInt64,
                 /**
                  * The transaction signature (missing if part of an aggregate transaction).
                  */
