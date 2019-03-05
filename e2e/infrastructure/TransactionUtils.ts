@@ -28,6 +28,7 @@ import { MultisigCosignatoryModification } from '../../src/model/transaction/Mul
 import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
 import {PlainMessage} from '../../src/model/transaction/PlainMessage';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
+import {UInt64} from '../../src/model/UInt64';
 import {CosignatoryAccount, MultisigAccount, NIS2_URL, TestingAccount} from '../../test/conf/conf.spec';
 
 export class TransactionUtils {
@@ -37,6 +38,7 @@ export class TransactionUtils {
         const account = TestingAccount;
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             recipient,
             [],
             PlainMessage.create('test-message'),
@@ -50,6 +52,7 @@ export class TransactionUtils {
         const account = TestingAccount;
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [NetworkCurrencyMosaic.createRelative(100000000000)],
             PlainMessage.create('test-message'),
@@ -62,6 +65,7 @@ export class TransactionUtils {
     public static createAggregateBoundedTransactionAndAnnounce(transactionHttp: TransactionHttp = new TransactionHttp(NIS2_URL)) {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [NetworkCurrencyMosaic.createRelative(100000000000)],
             PlainMessage.create('test-message'),
@@ -70,6 +74,7 @@ export class TransactionUtils {
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(2, ChronoUnit.MINUTES),
+            new UInt64([0, 0]),
             [transferTransaction.toAggregate(MultisigAccount.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],

@@ -35,6 +35,7 @@ describe('MosaicSupplyChangeTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             mosaicId,
             MosaicSupplyType.Increase,
             UInt64.fromUint(10),

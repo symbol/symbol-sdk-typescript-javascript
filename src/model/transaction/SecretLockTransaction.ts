@@ -32,6 +32,7 @@ export class SecretLockTransaction extends Transaction {
      * Create a secret lock transaction object.
      *
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param mosaic - The locked mosaic.
      * @param duration - The funds lock duration.
      * @param hashType - The hash algorithm secret is generated with.
@@ -42,6 +43,7 @@ export class SecretLockTransaction extends Transaction {
      * @return a SecretLockTransaction instance
      */
     public static create(deadline: Deadline,
+                         maxFee: UInt64,
                          mosaic: Mosaic,
                          duration: UInt64,
                          hashType: HashType,
@@ -52,7 +54,7 @@ export class SecretLockTransaction extends Transaction {
             networkType,
             TransactionVersion.SECRET_LOCK,
             deadline,
-            UInt64.fromUint(0),
+            maxFee,
             mosaic,
             duration,
             hashType,
@@ -65,7 +67,7 @@ export class SecretLockTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param mosaic
      * @param duration
      * @param hashType
@@ -78,7 +80,7 @@ export class SecretLockTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The locked mosaic.
                  */
@@ -102,7 +104,7 @@ export class SecretLockTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.SECRET_LOCK, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.SECRET_LOCK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         if (!HashTypeLengthValidator(hashType, this.secret)) {
             throw new Error('HashType and Secret have incompatible length or not hexadecimal string');
         }
@@ -116,7 +118,7 @@ export class SecretLockTransaction extends Transaction {
         return new SecretLockTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
             .addType(this.type)
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addMosaicId(this.mosaic.id.id.toDTO())
             .addMosaicAmount(this.mosaic.amount.toDTO())

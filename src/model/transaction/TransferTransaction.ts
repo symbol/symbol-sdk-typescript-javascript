@@ -35,6 +35,7 @@ export class TransferTransaction extends Transaction {
     /**
      * Create a transfer transaction object
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param recipient - The recipient of the transaction.
      * @param mosaics - The array of mosaics.
      * @param message - The transaction message.
@@ -42,6 +43,7 @@ export class TransferTransaction extends Transaction {
      * @returns {TransferTransaction}
      */
     public static create(deadline: Deadline,
+                         maxFee: UInt64,
                          recipient: Address | NamespaceId,
                          mosaics: Mosaic[],
                          message: Message,
@@ -49,7 +51,7 @@ export class TransferTransaction extends Transaction {
         return new TransferTransaction(networkType,
             TransactionVersion.TRANSFER,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             recipient,
             mosaics,
             message);
@@ -59,7 +61,7 @@ export class TransferTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param recipient
      * @param mosaics
      * @param message
@@ -70,7 +72,7 @@ export class TransferTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The address of the recipient.
                  */
@@ -86,7 +88,7 @@ export class TransferTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.TRANSFER, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.TRANSFER, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -112,7 +114,7 @@ export class TransferTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         return new TransferTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addRecipient(this.recipientToString())
             .addMosaics(this.mosaics.map((mosaic) => mosaic.toDTO()))

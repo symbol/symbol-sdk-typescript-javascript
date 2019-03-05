@@ -28,12 +28,14 @@ describe('LockFundsTransaction', () => {
     it('creation with an aggregate bonded tx', () => {
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
+            new UInt64([0, 0]),
             [],
             NetworkType.MIJIN_TEST,
             [],
         );
         const signedTransaction = account.sign(aggregateTransaction);
         const transaction = LockFundsTransaction.create(Deadline.create(),
+            new UInt64([0, 0]),
             NetworkCurrencyMosaic.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -46,6 +48,7 @@ describe('LockFundsTransaction', () => {
     it('should throw exception if it is not a aggregate bonded tx', () => {
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
+            new UInt64([0, 0]),
             [],
             NetworkType.MIJIN_TEST,
             [],
@@ -53,6 +56,7 @@ describe('LockFundsTransaction', () => {
         const signedTransaction = account.sign(aggregateTransaction);
         expect(() => {
             LockFundsTransaction.create(Deadline.create(),
+                new UInt64([0, 0]),
                 NetworkCurrencyMosaic.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,

@@ -30,6 +30,7 @@ export class SecretProofTransaction extends Transaction {
      * Create a secret proof transaction object.
      *
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param hashType - The hash algorithm secret is generated with.
      * @param secret - The seed proof hashed.
      * @param proof - The seed proof.
@@ -38,6 +39,7 @@ export class SecretProofTransaction extends Transaction {
      * @return a SecretProofTransaction instance
      */
     public static create(deadline: Deadline,
+                         maxFee: UInt64,
                          hashType: HashType,
                          secret: string,
                          proof: string,
@@ -46,7 +48,7 @@ export class SecretProofTransaction extends Transaction {
             networkType,
             TransactionVersion.SECRET_PROOF,
             deadline,
-            UInt64.fromUint(0),
+            maxFee,
             hashType,
             secret,
             proof,
@@ -57,7 +59,7 @@ export class SecretProofTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param hashType
      * @param secret
      * @param proof
@@ -68,14 +70,14 @@ export class SecretProofTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 public readonly hashType: HashType,
                 public readonly secret: string,
                 public readonly proof: string,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.SECRET_PROOF, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.SECRET_PROOF, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         if (!HashTypeLengthValidator(hashType, this.secret)) {
             throw new Error('HashType and Secret have incompatible length or not hexadecimal string');
         }
@@ -89,7 +91,7 @@ export class SecretProofTransaction extends Transaction {
         return new SecretProofTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
             .addType(this.type)
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addHashAlgorithm(this.hashType)
             .addSecret(this.secret)

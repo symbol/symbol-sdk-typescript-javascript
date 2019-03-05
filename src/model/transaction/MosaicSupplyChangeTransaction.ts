@@ -35,6 +35,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
     /**
      * Create a mosaic supply change transaction object
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param mosaicId - The mosaic id.
      * @param direction - The supply type.
      * @param delta - The supply change in units for the mosaic.
@@ -42,6 +43,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @returns {MosaicSupplyChangeTransaction}
      */
     public static create(deadline: Deadline,
+                         maxFee: UInt64,
                          mosaicId: MosaicId,
                          direction: MosaicSupplyType,
                          delta: UInt64,
@@ -49,7 +51,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         return new MosaicSupplyChangeTransaction(networkType,
             TransactionVersion.MOSAIC_SUPPLY_CHANGE,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             mosaicId,
             direction,
             delta,
@@ -60,7 +62,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param mosaicId
      * @param direction
      * @param delta
@@ -71,7 +73,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The mosaic id.
                  */
@@ -87,7 +89,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MOSAIC_SUPPLY_CHANGE, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.MOSAIC_SUPPLY_CHANGE, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -97,7 +99,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         return new MosaicSupplyChangeTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addMosaicId(this.mosaicId.id.toDTO())
             .addDirection(this.direction)

@@ -36,6 +36,7 @@ describe('MosaicDefinitionTransaction', () => {
     it('should createComplete an MosaicDefinitionTransaction object and sign it with flags 7', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicProperties.create({
@@ -68,6 +69,7 @@ describe('MosaicDefinitionTransaction', () => {
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicProperties.create({

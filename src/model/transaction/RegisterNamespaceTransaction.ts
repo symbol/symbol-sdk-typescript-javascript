@@ -35,19 +35,21 @@ export class RegisterNamespaceTransaction extends Transaction {
     /**
      * Create a root namespace object
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param namespaceName - The namespace name.
      * @param duration - The duration of the namespace.
      * @param networkType - The network type.
      * @returns {RegisterNamespaceTransaction}
      */
     public static createRootNamespace(deadline: Deadline,
+                                      maxFee: UInt64,
                                       namespaceName: string,
                                       duration: UInt64,
                                       networkType: NetworkType): RegisterNamespaceTransaction {
         return new RegisterNamespaceTransaction(networkType,
             TransactionVersion.REGISTER_NAMESPACE,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             NamespaceType.RootNamespace,
             namespaceName,
             new NamespaceId(namespaceName),
@@ -58,12 +60,14 @@ export class RegisterNamespaceTransaction extends Transaction {
     /**
      * Create a sub namespace object
      * @param deadline - The deadline to include the transaction.
+     * @param maxFee - Max fee defined by the sender
      * @param namespaceName - The namespace name.
      * @param parentNamespace - The parent namespace name.
      * @param networkType - The network type.
      * @returns {RegisterNamespaceTransaction}
      */
     public static createSubNamespace(deadline: Deadline,
+                                     maxFee: UInt64,
                                      namespaceName: string,
                                      parentNamespace: string | NamespaceId,
                                      networkType: NetworkType): RegisterNamespaceTransaction {
@@ -76,7 +80,7 @@ export class RegisterNamespaceTransaction extends Transaction {
         return new RegisterNamespaceTransaction(networkType,
             TransactionVersion.REGISTER_NAMESPACE,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             NamespaceType.SubNamespace,
             namespaceName,
             new NamespaceId(subnamespaceNamespaceId(parentNamespace, namespaceName)),
@@ -89,7 +93,7 @@ export class RegisterNamespaceTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param namespaceType
      * @param namespaceName
      * @param namespaceId
@@ -102,7 +106,7 @@ export class RegisterNamespaceTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The namespace type could be namespace or sub namespace
                  */
@@ -127,7 +131,7 @@ export class RegisterNamespaceTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.REGISTER_NAMESPACE, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.REGISTER_NAMESPACE, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -137,7 +141,7 @@ export class RegisterNamespaceTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         let registerNamespacetransaction = new RegisterNamespaceTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addNamespaceType(this.namespaceType)
             .addNamespaceId(this.namespaceId.id.toDTO())

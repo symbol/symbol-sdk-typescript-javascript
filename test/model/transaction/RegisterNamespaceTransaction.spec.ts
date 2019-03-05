@@ -32,6 +32,7 @@ describe('RegisterNamespaceTransaction', () => {
     it('should createComplete an root RegisterNamespaceTransaction object and sign it', () => {
         const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
             Deadline.create(),
+            new UInt64([0, 0]),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
@@ -52,6 +53,7 @@ describe('RegisterNamespaceTransaction', () => {
     it('should createComplete an sub RegisterNamespaceTransaction object and sign it', () => {
         const registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(
             Deadline.create(),
+            new UInt64([0, 0]),
             'root-test-namespace',
             'parent-test-namespace',
             NetworkType.MIJIN_TEST,

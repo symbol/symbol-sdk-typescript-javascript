@@ -22,6 +22,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {ModifyMultisigAccountTransaction} from '../../../src/model/transaction/ModifyMultisigAccountTransaction';
 import {MultisigCosignatoryModification} from '../../../src/model/transaction/MultisigCosignatoryModification';
 import {MultisigCosignatoryModificationType} from '../../../src/model/transaction/MultisigCosignatoryModificationType';
+import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('ModifyMultisigAccountTransaction', () => {
@@ -34,6 +35,7 @@ describe('ModifyMultisigAccountTransaction', () => {
     it('should createComplete an ModifyMultisigAccountTransaction object and sign it', () => {
         const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             2,
             1,
             [new MultisigCosignatoryModification(

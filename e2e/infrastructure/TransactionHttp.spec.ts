@@ -97,6 +97,7 @@ describe('TransactionHttp', () => {
         describe('TransferTransaction', () => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
+                new UInt64([0, 0]),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
                 [NetworkCurrencyMosaic.createRelative(10)],
                 PlainMessage.create('test-message'),
@@ -109,6 +110,7 @@ describe('TransactionHttp', () => {
             });
             it('aggregate', (done) => {
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    new UInt64([0, 0]),
                     [transferTransaction.toAggregate(account.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     [],
@@ -124,6 +126,7 @@ describe('TransactionHttp', () => {
                 namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
                 const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     namespaceName,
                     UInt64.fromUint(1000),
                     NetworkType.MIJIN_TEST,
@@ -135,11 +138,13 @@ describe('TransactionHttp', () => {
             it('aggregate', (done) => {
                 const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     'root-test-namespace-' + Math.floor(Math.random() * 10000),
                     UInt64.fromUint(1000),
                     NetworkType.MIJIN_TEST,
                 );
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    new UInt64([0, 0]),
                     [registerNamespaceTransaction.toAggregate(account.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
@@ -152,6 +157,7 @@ describe('TransactionHttp', () => {
             it('standalone', (done) => {
                 const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
                     new MosaicId(UInt64.fromUint(1).toDTO()), // ID
                     MosaicProperties.create({
@@ -171,6 +177,7 @@ describe('TransactionHttp', () => {
             it('aggregate', (done) => {
                 const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
                     new MosaicId(UInt64.fromUint(1).toDTO()), // ID
                     MosaicProperties.create({
@@ -183,6 +190,7 @@ describe('TransactionHttp', () => {
                     NetworkType.MIJIN_TEST,
                 );
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    new UInt64([0, 0]),
                     [mosaicDefinitionTransaction.toAggregate(account.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
@@ -195,6 +203,7 @@ describe('TransactionHttp', () => {
             it('standalone', (done) => {
                 const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     mosaicId,
                     MosaicSupplyType.Increase,
                     UInt64.fromUint(10),
@@ -207,12 +216,14 @@ describe('TransactionHttp', () => {
             it('aggregate', (done) => {
                 const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     mosaicId,
                     MosaicSupplyType.Increase,
                     UInt64.fromUint(10),
                     NetworkType.MIJIN_TEST,
                 );
                 const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    new UInt64([0, 0]),
                     [mosaicSupplyChangeTransaction.toAggregate(account.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
@@ -225,6 +236,7 @@ describe('TransactionHttp', () => {
         it('should sign a ModifyMultisigAccountTransaction with cosignatories', (done) => {
             const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
                 Deadline.create(),
+                new UInt64([0, 0]),
                 0,
                 0,
                 [new MultisigCosignatoryModification(
@@ -235,6 +247,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(20, ChronoUnit.MINUTES),
+                new UInt64([0, 0]),
                 [modifyMultisigAccountTransaction.toAggregate(MultisigAccount.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 []);
@@ -245,6 +258,7 @@ describe('TransactionHttp', () => {
             );
 
             const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+                new UInt64([0, 0]),
                 NetworkCurrencyMosaic.createRelative(10),
                 UInt64.fromUint(10000),
                 signedTransaction,
@@ -265,6 +279,7 @@ describe('TransactionHttp', () => {
         it('CosignatureTransaction', (done) => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
+                new UInt64([0, 0]),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
                 [NetworkCurrencyMosaic.createRelative(1)],
                 PlainMessage.create('test-message'),
@@ -272,6 +287,7 @@ describe('TransactionHttp', () => {
             );
             const aggregateTransaction = AggregateTransaction.createBonded(
                 Deadline.create(2, ChronoUnit.MINUTES),
+                new UInt64([0, 0]),
                 [transferTransaction.toAggregate(MultisigAccount.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 []);
@@ -280,6 +296,7 @@ describe('TransactionHttp', () => {
             );
 
             const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+                new UInt64([0, 0]),
                 NetworkCurrencyMosaic.createRelative(10),
                 UInt64.fromUint(10000),
                 signedTransaction,
@@ -310,6 +327,7 @@ describe('TransactionHttp', () => {
             it('standalone', (done) => {
                 const aggregateTransaction = AggregateTransaction.createBonded(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     [],
                     NetworkType.MIJIN_TEST,
                     [],
@@ -317,6 +335,7 @@ describe('TransactionHttp', () => {
                 const signedTransaction = account.sign(aggregateTransaction);
 
                 const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+                    new UInt64([0, 0]),
                     NetworkCurrencyMosaic.createRelative(10),
                     UInt64.fromUint(10000),
                     signedTransaction,
@@ -328,17 +347,20 @@ describe('TransactionHttp', () => {
             it('aggregate', (done) => {
                 const aggregateTransaction = AggregateTransaction.createBonded(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     [],
                     NetworkType.MIJIN_TEST,
                     [],
                 );
                 const signedTransaction = account.sign(aggregateTransaction);
                 const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+                    new UInt64([0, 0]),
                     NetworkCurrencyMosaic.createRelative(10),
                     UInt64.fromUint(10),
                     signedTransaction,
                     NetworkType.MIJIN_TEST);
                 const aggregateLockFundsTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    new UInt64([0, 0]),
                     [lockFundsTransaction.toAggregate(account.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
@@ -352,6 +374,7 @@ describe('TransactionHttp', () => {
                 it('standalone', (done) => {
                     const secretLockTransaction = SecretLockTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         NetworkCurrencyMosaic.createAbsolute(10),
                         UInt64.fromUint(100),
                         HashType.Op_Sha3_256,
@@ -366,6 +389,7 @@ describe('TransactionHttp', () => {
                 it('aggregate', (done) => {
                     const secretLockTransaction = SecretLockTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         NetworkCurrencyMosaic.createAbsolute(10),
                         UInt64.fromUint(100),
                         HashType.Op_Sha3_256,
@@ -374,6 +398,7 @@ describe('TransactionHttp', () => {
                         NetworkType.MIJIN_TEST,
                     );
                     const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        new UInt64([0, 0]),
                         [secretLockTransaction.toAggregate(account.publicAccount)],
                         NetworkType.MIJIN_TEST,
                         []);
@@ -385,6 +410,7 @@ describe('TransactionHttp', () => {
                 it('standalone', (done) => {
                     const secretLockTransaction = SecretLockTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         NetworkCurrencyMosaic.createAbsolute(10),
                         UInt64.fromUint(100),
                         HashType.Op_Keccak_256,
@@ -399,6 +425,7 @@ describe('TransactionHttp', () => {
                 it('aggregate', (done) => {
                     const secretLockTransaction = SecretLockTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         NetworkCurrencyMosaic.createAbsolute(10),
                         UInt64.fromUint(100),
                         HashType.Op_Keccak_256,
@@ -407,6 +434,7 @@ describe('TransactionHttp', () => {
                         NetworkType.MIJIN_TEST,
                     );
                     const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        new UInt64([0, 0]),
                         [secretLockTransaction.toAggregate(account.publicAccount)],
                         NetworkType.MIJIN_TEST,
                         []);
@@ -418,6 +446,7 @@ describe('TransactionHttp', () => {
                 it('standalone', (done) => {
                     const secretLockTransaction = SecretLockTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         NetworkCurrencyMosaic.createAbsolute(10),
                         UInt64.fromUint(100),
                         HashType.Op_Hash_160,
@@ -432,6 +461,7 @@ describe('TransactionHttp', () => {
                 it('aggregate', (done) => {
                     const secretLockTransaction = SecretLockTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         NetworkCurrencyMosaic.createAbsolute(10),
                         UInt64.fromUint(100),
                         HashType.Op_Hash_160,
@@ -440,6 +470,7 @@ describe('TransactionHttp', () => {
                         NetworkType.MIJIN_TEST,
                     );
                     const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        new UInt64([0, 0]),
                         [secretLockTransaction.toAggregate(account.publicAccount)],
                         NetworkType.MIJIN_TEST,
                         []);
@@ -451,6 +482,7 @@ describe('TransactionHttp', () => {
                 it('standalone', (done) => {
                     const secretLockTransaction = SecretLockTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         NetworkCurrencyMosaic.createAbsolute(10),
                         UInt64.fromUint(100),
                         HashType.Op_Hash_256,
@@ -465,6 +497,7 @@ describe('TransactionHttp', () => {
                 it('aggregate', (done) => {
                     const secretLockTransaction = SecretLockTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         NetworkCurrencyMosaic.createAbsolute(10),
                         UInt64.fromUint(100),
                         HashType.Op_Hash_256,
@@ -473,6 +506,7 @@ describe('TransactionHttp', () => {
                         NetworkType.MIJIN_TEST,
                     );
                     const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        new UInt64([0, 0]),
                         [secretLockTransaction.toAggregate(account.publicAccount)],
                         NetworkType.MIJIN_TEST,
                         []);
@@ -489,6 +523,7 @@ describe('TransactionHttp', () => {
                     const proof = convert.uint8ToHex(secretSeed);
                     const secretLockTransaction = SecretLockTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         NetworkCurrencyMosaic.createAbsolute(10),
                         UInt64.fromUint(100),
                         HashType.Op_Sha3_256,
@@ -499,6 +534,7 @@ describe('TransactionHttp', () => {
                     validateTransactionAnnounceCorrectly(account.address, () => {
                         const secretProofTransaction = SecretProofTransaction.create(
                             Deadline.create(),
+                            new UInt64([0, 0]),
                             HashType.Op_Sha3_256,
                             secret,
                             proof,
@@ -516,6 +552,7 @@ describe('TransactionHttp', () => {
                     const proof = convert.uint8ToHex(secretSeed);
                     const secretLockTransaction = SecretLockTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         NetworkCurrencyMosaic.createAbsolute(10),
                         UInt64.fromUint(100),
                         HashType.Op_Sha3_256,
@@ -526,12 +563,14 @@ describe('TransactionHttp', () => {
                     validateTransactionAnnounceCorrectly(account.address, () => {
                         const secretProofTransaction = SecretProofTransaction.create(
                             Deadline.create(),
+                            new UInt64([0, 0]),
                             HashType.Op_Sha3_256,
                             secret,
                             proof,
                             NetworkType.MIJIN_TEST,
                         );
                         const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                            new UInt64([0, 0]),
                             [secretProofTransaction.toAggregate(account2.publicAccount)],
                             NetworkType.MIJIN_TEST,
                             []);
@@ -549,6 +588,7 @@ describe('TransactionHttp', () => {
                 const proof = convert.uint8ToHex(secretSeed);
                 const secretLockTransaction = SecretLockTransaction.create(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     NetworkCurrencyMosaic.createAbsolute(10),
                     UInt64.fromUint(100),
                     HashType.Op_Keccak_256,
@@ -559,6 +599,7 @@ describe('TransactionHttp', () => {
                 validateTransactionAnnounceCorrectly(account.address, () => {
                     const secretProofTransaction = SecretProofTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         HashType.Op_Keccak_256,
                         secret,
                         proof,
@@ -576,6 +617,7 @@ describe('TransactionHttp', () => {
                 const proof = convert.uint8ToHex(secretSeed);
                 const secretLockTransaction = SecretLockTransaction.create(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     NetworkCurrencyMosaic.createAbsolute(10),
                     UInt64.fromUint(100),
                     HashType.Op_Keccak_256,
@@ -586,12 +628,14 @@ describe('TransactionHttp', () => {
                 validateTransactionAnnounceCorrectly(account.address, () => {
                     const secretProofTransaction = SecretProofTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         HashType.Op_Keccak_256,
                         secret,
                         proof,
                         NetworkType.MIJIN_TEST,
                     );
                     const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        new UInt64([0, 0]),
                         [secretProofTransaction.toAggregate(account2.publicAccount)],
                         NetworkType.MIJIN_TEST,
                         []);
@@ -608,6 +652,7 @@ describe('TransactionHttp', () => {
                 const proof = convert.uint8ToHex(secretSeed);
                 const secretLockTransaction = SecretLockTransaction.create(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     NetworkCurrencyMosaic.createAbsolute(10),
                     UInt64.fromUint(100),
                     HashType.Op_Hash_160,
@@ -618,6 +663,7 @@ describe('TransactionHttp', () => {
                 validateTransactionAnnounceCorrectly(account.address, () => {
                     const secretProofTransaction = SecretProofTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         HashType.Op_Hash_160,
                         secret,
                         proof,
@@ -635,6 +681,7 @@ describe('TransactionHttp', () => {
                 const proof = convert.uint8ToHex(secretSeed);
                 const secretLockTransaction = SecretLockTransaction.create(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     NetworkCurrencyMosaic.createAbsolute(10),
                     UInt64.fromUint(100),
                     HashType.Op_Hash_160,
@@ -645,12 +692,14 @@ describe('TransactionHttp', () => {
                 validateTransactionAnnounceCorrectly(account.address, () => {
                     const secretProofTransaction = SecretProofTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         HashType.Op_Hash_160,
                         secret,
                         proof,
                         NetworkType.MIJIN_TEST,
                     );
                     const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        new UInt64([0, 0]),
                         [secretProofTransaction.toAggregate(account2.publicAccount)],
                         NetworkType.MIJIN_TEST,
                         []);
@@ -667,6 +716,7 @@ describe('TransactionHttp', () => {
                 const proof = convert.uint8ToHex(secretSeed);
                 const secretLockTransaction = SecretLockTransaction.create(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     NetworkCurrencyMosaic.createAbsolute(10),
                     UInt64.fromUint(100),
                     HashType.Op_Hash_256,
@@ -677,6 +727,7 @@ describe('TransactionHttp', () => {
                 validateTransactionAnnounceCorrectly(account.address, () => {
                     const secretProofTransaction = SecretProofTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         HashType.Op_Hash_256,
                         secret,
                         proof,
@@ -694,6 +745,7 @@ describe('TransactionHttp', () => {
                 const proof = convert.uint8ToHex(secretSeed);
                 const secretLockTransaction = SecretLockTransaction.create(
                     Deadline.create(),
+                    new UInt64([0, 0]),
                     NetworkCurrencyMosaic.createAbsolute(10),
                     UInt64.fromUint(100),
                     HashType.Op_Hash_256,
@@ -704,12 +756,14 @@ describe('TransactionHttp', () => {
                 validateTransactionAnnounceCorrectly(account.address, () => {
                     const secretProofTransaction = SecretProofTransaction.create(
                         Deadline.create(),
+                        new UInt64([0, 0]),
                         HashType.Op_Hash_256,
                         secret,
                         proof,
                         NetworkType.MIJIN_TEST,
                     );
                     const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        new UInt64([0, 0]),
                         [secretProofTransaction.toAggregate(account2.publicAccount)],
                         NetworkType.MIJIN_TEST,
                         []);
@@ -828,6 +882,7 @@ describe('TransactionHttp', () => {
 
             const tx = TransferTransaction.create(
                 Deadline.create(),
+                new UInt64([0, 0]),
                 Address.createFromRawAddress('SAGY2PTFX4T2XYKYXTJXYCTQRP3FESQH5MEQI2RQ'),
                 [],
                 PlainMessage.create('Hi'),
@@ -835,6 +890,7 @@ describe('TransactionHttp', () => {
             );
             const aggTx = AggregateTransaction.createComplete(
                 Deadline.create(),
+                new UInt64([0, 0]),
                 [
                     tx.toAggregate(signerAccount.publicAccount),
                 ],
@@ -857,6 +913,7 @@ describe('TransactionHttp', () => {
 
             const tx = TransferTransaction.create(
                 Deadline.create(),
+                new UInt64([0, 0]),
                 Address.createFromRawAddress('SAGY2PTFX4T2XYKYXTJXYCTQRP3FESQH5MEQI2RQ'),
                 [NetworkCurrencyMosaic.createRelative(10)],
                 EmptyMessage,

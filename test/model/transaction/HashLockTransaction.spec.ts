@@ -27,12 +27,14 @@ describe('HashLockTransaction', () => {
     it('creation with an aggregate bonded tx', () => {
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
+            new UInt64([0, 0]),
             [],
             NetworkType.MIJIN_TEST,
             [],
         );
         const signedTransaction = account.sign(aggregateTransaction);
         const transaction = HashLockTransaction.create(Deadline.create(),
+            new UInt64([0, 0]),
             NetworkCurrencyMosaic.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
@@ -45,6 +47,7 @@ describe('HashLockTransaction', () => {
     it('should throw exception if it is not a aggregate bonded tx', () => {
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
+            new UInt64([0, 0]),
             [],
             NetworkType.MIJIN_TEST,
             [],
@@ -52,6 +55,7 @@ describe('HashLockTransaction', () => {
         const signedTransaction = account.sign(aggregateTransaction);
         expect(() => {
             HashLockTransaction.create(Deadline.create(),
+                new UInt64([0, 0]),
                 NetworkCurrencyMosaic.createRelative(10),
                 UInt64.fromUint(10),
                 signedTransaction,

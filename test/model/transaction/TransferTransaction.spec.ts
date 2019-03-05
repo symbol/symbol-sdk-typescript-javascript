@@ -23,6 +23,7 @@ import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
+import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('TransferTransaction', () => {
@@ -35,6 +36,7 @@ describe('TransferTransaction', () => {
     it('should createComplete an TransferTransaction object and sign it without mosaics', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PlainMessage.create('test-message'),
@@ -57,6 +59,7 @@ describe('TransferTransaction', () => {
     it('should createComplete an TransferTransaction object and sign it with mosaics', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [
                 NetworkCurrencyMosaic.createRelative(100),

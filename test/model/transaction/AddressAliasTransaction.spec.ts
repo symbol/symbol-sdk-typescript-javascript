@@ -38,6 +38,7 @@ describe('AddressAliasTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             AliasActionType.Link,
             namespaceId,
             address,

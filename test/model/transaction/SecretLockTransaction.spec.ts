@@ -33,6 +33,7 @@ describe('SecretLockTransaction', () => {
         const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             NetworkCurrencyMosaic.createAbsolute(10),
             UInt64.fromUint(100),
             HashType.Op_Sha3_256,
@@ -53,6 +54,7 @@ describe('SecretLockTransaction', () => {
             const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
+                new UInt64([0, 0]),
                 NetworkCurrencyMosaic.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Sha3_256,
@@ -68,6 +70,7 @@ describe('SecretLockTransaction', () => {
         const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             NetworkCurrencyMosaic.createAbsolute(10),
             UInt64.fromUint(100),
             HashType.Op_Keccak_256,
@@ -88,6 +91,7 @@ describe('SecretLockTransaction', () => {
             const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
+                new UInt64([0, 0]),
                 NetworkCurrencyMosaic.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Keccak_256,
@@ -102,6 +106,7 @@ describe('SecretLockTransaction', () => {
         const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             NetworkCurrencyMosaic.createAbsolute(10),
             UInt64.fromUint(100),
             HashType.Op_Hash_160,
@@ -122,6 +127,7 @@ describe('SecretLockTransaction', () => {
             const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
+                new UInt64([0, 0]),
                 NetworkCurrencyMosaic.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_160,
@@ -136,6 +142,7 @@ describe('SecretLockTransaction', () => {
         const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             NetworkCurrencyMosaic.createAbsolute(10),
             UInt64.fromUint(100),
             HashType.Op_Hash_256,
@@ -156,6 +163,7 @@ describe('SecretLockTransaction', () => {
             const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
+                new UInt64([0, 0]),
                 NetworkCurrencyMosaic.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_256,

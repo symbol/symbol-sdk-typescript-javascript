@@ -48,6 +48,7 @@ describe('AggregateTransaction', () => {
     it('should createComplete an AggregateTransaction object with TransferTransaction', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
+            new UInt64([0, 0]),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PlainMessage.create('test-message'),
@@ -56,6 +57,7 @@ describe('AggregateTransaction', () => {
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
+            new UInt64([0, 0]),
             [transferTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             []);
@@ -73,6 +75,7 @@ describe('AggregateTransaction', () => {
     it('should createComplete an AggregateTransaction object with RegisterNamespaceTransaction', () => {
         const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
             Deadline.create(),
+            new UInt64([0, 0]),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
@@ -80,6 +83,7 @@ describe('AggregateTransaction', () => {
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
+            new UInt64([0, 0]),
             [registerNamespaceTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -99,6 +103,7 @@ describe('AggregateTransaction', () => {
     it('should createComplete an AggregateTransaction object with MosaicDefinitionTransaction', () => {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicProperties.create({
@@ -113,6 +118,7 @@ describe('AggregateTransaction', () => {
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
+            new UInt64([0, 0]),
             [mosaicDefinitionTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -132,6 +138,7 @@ describe('AggregateTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             mosaicId,
             MosaicSupplyType.Increase,
             UInt64.fromUint(10),
@@ -140,6 +147,7 @@ describe('AggregateTransaction', () => {
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
+            new UInt64([0, 0]),
             [mosaicSupplyChangeTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -158,6 +166,7 @@ describe('AggregateTransaction', () => {
     it('should createComplete an AggregateTransaction object with ModifyMultisigAccountTransaction', () => {
         const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             2,
             1,
             [new MultisigCosignatoryModification(
@@ -174,6 +183,7 @@ describe('AggregateTransaction', () => {
         );
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
+            new UInt64([0, 0]),
             [modifyMultisigAccountTransaction.toAggregate(account.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -193,12 +203,14 @@ describe('AggregateTransaction', () => {
     it('should createComplete an AggregateTransaction object with different cosignatories', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
         const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+            new UInt64([0, 0]),
             [transferTransaction.toAggregate(MultisigAccount.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
@@ -242,7 +254,7 @@ describe('AggregateTransaction', () => {
                     3266625578,
                     11,
                 ],
-                fee: [
+                maxFee: [
                     0,
                     0,
                 ],
@@ -298,6 +310,7 @@ describe('AggregateTransaction', () => {
     it('should have type 0x4141 when it\'s complete', () => {
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
+            new UInt64([0, 0]),
             [],
             NetworkType.MIJIN_TEST,
             [],
@@ -309,6 +322,7 @@ describe('AggregateTransaction', () => {
     it('should have type 0x4241 when it\'s bonded', () => {
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
+            new UInt64([0, 0]),
             [],
             NetworkType.MIJIN_TEST,
         );

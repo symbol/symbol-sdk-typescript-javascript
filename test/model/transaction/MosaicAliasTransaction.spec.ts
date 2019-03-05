@@ -37,6 +37,7 @@ describe('MosaicAliasTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
+            new UInt64([0, 0]),
             AliasActionType.Link,
             namespaceId,
             mosaicId,
