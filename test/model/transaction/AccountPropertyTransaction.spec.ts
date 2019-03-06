@@ -110,7 +110,7 @@ describe('AccountPropertyTransaction', () => {
             PropertyModificationType.Add,
             mosaicId,
         );
-        const mosaicPropertyTransaction = AccountPropertyTransaction.createMosaicProertyModificationTransaction(
+        const mosaicPropertyTransaction = AccountPropertyTransaction.createMosaicPropertyModificationTransaction(
             Deadline.create(),
             PropertyType.AllowMosaic,
             [mosaicPropertyFilter],
@@ -135,7 +135,7 @@ describe('AccountPropertyTransaction', () => {
         );
 
         expect(() => {
-            AccountPropertyTransaction.createMosaicProertyModificationTransaction(
+            AccountPropertyTransaction.createMosaicPropertyModificationTransaction(
                 Deadline.create(),
                 PropertyType.Sentinel,
                 [mosaicPropertyFilter],

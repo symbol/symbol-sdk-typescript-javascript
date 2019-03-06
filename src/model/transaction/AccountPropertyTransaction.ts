@@ -52,10 +52,10 @@ export class AccountPropertyTransaction {
      * @param networkType - The network type.
      * @returns {ModifyAccountPropertyMosaicTransaction}
      */
-    public static createMosaicProertyModificationTransaction(deadline: Deadline,
-                                                             propertyType: PropertyType,
-                                                             modifications: Array<AccountPropertyModification<number[]>>,
-                                                             networkType: NetworkType): ModifyAccountPropertyMosaicTransaction {
+    public static createMosaicPropertyModificationTransaction(deadline: Deadline,
+                                                              propertyType: PropertyType,
+                                                              modifications: Array<AccountPropertyModification<number[]>>,
+                                                              networkType: NetworkType): ModifyAccountPropertyMosaicTransaction {
         if (![PropertyType.AllowMosaic, PropertyType.BlockMosaic].includes(propertyType)) {
             throw new Error ('Property type is not allowed.');
         }
