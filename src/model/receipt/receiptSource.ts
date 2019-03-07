@@ -14,31 +14,24 @@
  * limitations under the License.
  */
 
-import { ReceiptType } from './receiptType';
-
 /**
- * An abstract transaction class that serves as the base class of all receipts.
+ * The receipt source object.
  */
-export abstract class Receipt {
+export class ReceiptSource {
 
     /**
      * @constructor
-     * @param size
-     * @param version
-     * @param type
+     * @param primaryId
+     * @param secondaryId
      */
     constructor(
                 /**
-                 * The receipt size.
+                 * The transaction primary source (e.g. index within block).
                  */
-                public readonly size: number,
+                public readonly primaryId: number,
                 /**
-                 * The receipt version.
+                 * The transaction secondary source (e.g. index within aggregate).
                  */
-                public readonly version: number,
-                /**
-                 * The receipt type.
-                 */
-                public readonly type: ReceiptType) {
+                public readonly secondaryId: number) {
     }
 }

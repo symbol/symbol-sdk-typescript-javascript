@@ -14,37 +14,29 @@
  * limitations under the License.
  */
 
+import { UInt64 } from '../UInt64';
 import { Receipt } from './receipt';
-import { ReceiptSource } from './receiptSource';
 import { ReceiptType } from './receiptType';
-import { ResolutionEntry } from './resolutionEntry';
 
 /**
- * When a transaction includes an alias, a so called resolution statement reflects the resolved value for that block:
- * - Address Resolution: An account alias was used in the block.
- * - Mosaic Resolution: A mosaic alias was used in the block.
+ * Artifact Expiry: An artifact (e.g. namespace, mosaic) expired.
  */
-export class ResolutionStatement extends Receipt {
+export class ArtifactExpiryReceipt extends Receipt {
 
     /**
-     * Receipt - resolution statement object
+     * Artifact expiry receipt
      * @param size
      * @param version
      * @param type
-     * @param unresolved
-     * @param m_entries
+     * @param artifactId
      */
     constructor(size: number,
                 version: number,
                 type: ReceiptType,
                 /**
-                 * An unresolved address or unresolved mosaicId.
+                 * The id of the artifact (eg. namespace, mosaic).
                  */
-                public readonly unresolved: string | number[],
-                /**
-                 * The array of resolution entries.
-                 */
-                public readonly m_entries: ResolutionEntry[]) {
+                public readonly  artifactId: UInt64) {
         super(size, version, type);
     }
 }
