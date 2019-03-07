@@ -17,20 +17,22 @@
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
-import { AccountPropertyModification,
-    ModifyAccountPropertyAddressTransaction,
-    ModifyAccountPropertyEntityTypeTransaction,
-    ModifyAccountPropertyMosaicTransaction } from '../../model/model';
 import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicId} from '../../model/mosaic/MosaicId';
 import {MosaicProperties} from '../../model/mosaic/MosaicProperties';
 import {NamespaceId} from '../../model/namespace/NamespaceId';
+import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import {AccountPropertyModification} from '../../model/transaction/AccountPropertyModification';
 import {AddressAliasTransaction} from '../../model/transaction/AddressAliasTransaction';
 import {AggregateTransaction} from '../../model/transaction/AggregateTransaction';
 import {AggregateTransactionCosignature} from '../../model/transaction/AggregateTransactionCosignature';
 import {AggregateTransactionInfo} from '../../model/transaction/AggregateTransactionInfo';
 import {Deadline} from '../../model/transaction/Deadline';
+import { LinkAction } from '../../model/transaction/LinkAction';
 import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
+import {ModifyAccountPropertyAddressTransaction} from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
+import {ModifyAccountPropertyEntityTypeTransaction} from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
+import {ModifyAccountPropertyMosaicTransaction} from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
 import {ModifyMultisigAccountTransaction} from '../../model/transaction/ModifyMultisigAccountTransaction';
 import {MosaicAliasTransaction} from '../../model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../model/transaction/MosaicDefinitionTransaction';
@@ -299,6 +301,18 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 modificationDTO.modificationType,
                 modificationDTO.value,
             )) : [],
+            transactionDTO.signature,
+            PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.LINK_ACCOUNT) {
+        return new AccountLinkTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.fee || [0, 0]),
+            transactionDTO.remoteAccountKey,
+            transactionDTO.linkAction,
             transactionDTO.signature,
             PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
             transactionInfo,
