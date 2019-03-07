@@ -15,16 +15,21 @@
  */
 
 import {expect} from 'chai';
-import {ChronoUnit} from 'js-joda';
+import {ChronoUnit, Instant, LocalDateTime, ZoneId} from 'js-joda';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 
 describe('Deadline', () => {
     it('should createComplete timestamp today', () => {
         const deadline = Deadline.create();
-        const date = new Date();
-        expect(deadline.value.dayOfMonth()).to.be.equal(date.getDate());
-        expect(deadline.value.monthValue()).to.be.equal(date.getMonth() + 1);
-        expect(deadline.value.year()).to.be.equal(date.getFullYear());
+
+        // avoid SYSTEM and UTC differences
+        const networkTimeStamp = (new Date()).getTime();
+        const timestampLocal = LocalDateTime.ofInstant(Instant.ofEpochMilli(networkTimeStamp), ZoneId.SYSTEM);
+        const reproducedDate = timestampLocal.plus(2, ChronoUnit.HOURS);
+
+        expect(deadline.value.dayOfMonth()).to.be.equal(reproducedDate.dayOfMonth());
+        expect(deadline.value.monthValue()).to.be.equal(reproducedDate.monthValue());
+        expect(deadline.value.year()).to.be.equal(reproducedDate.year());
     });
 
     it('should throw error deadline smaller than timeStamp', () => {
