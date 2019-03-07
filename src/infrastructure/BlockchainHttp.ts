@@ -27,8 +27,8 @@ import {UInt64} from '../model/UInt64';
 import {BlockchainRepository} from './BlockchainRepository';
 import {Http} from './Http';
 import {QueryParams} from './QueryParams';
-import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
 import { CreateReceiptFromDTO } from './receipt/CreateReceiptFromDTO';
+import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
 
 /**
  * Blockchain http repository.
@@ -179,7 +179,7 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      */
     public getReceipts(height: number, queryParams?: QueryParams): Observable<Receipt[]> {
         return observableFrom(
-        this.blockchainRoutesApi.getBlockReceipts(height, queryParams != null ? queryParams : {})).pipe(
+        this.blockchainRoutesApi.getReceipts(height, queryParams != null ? queryParams : {})).pipe(
         map((receiptsDTO) => {
             return receiptsDTO.map((receiptDTO) => {
                 return CreateReceiptFromDTO(receiptDTO);
