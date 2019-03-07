@@ -263,7 +263,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            new UInt64(transactionDTO.fee),
+            new UInt64(transactionDTO.fee || [0, 0]),
             transactionDTO.propertyType,
             transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
                 modificationDTO.modificationType,
@@ -278,7 +278,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            new UInt64(transactionDTO.fee),
+            new UInt64(transactionDTO.fee || [0, 0]),
             transactionDTO.propertyType,
             transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
                 modificationDTO.modificationType,
@@ -293,7 +293,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            new UInt64(transactionDTO.fee),
+            new UInt64(transactionDTO.fee || [0, 0]),
             transactionDTO.propertyType,
             transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
                 modificationDTO.modificationType,
