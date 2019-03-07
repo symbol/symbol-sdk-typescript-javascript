@@ -14,37 +14,46 @@
  * limitations under the License.
  */
 
+import { PublicAccount } from '../account/PublicAccount';
+import { MosaicId } from '../mosaic/MosaicId';
+import { UInt64 } from '../UInt64';
 import { Receipt } from './receipt';
-import { ReceiptSource } from './receiptSource';
 import { ReceiptType } from './receiptType';
-import { ResolutionEntry } from './resolutionEntry';
 
 /**
- * When a transaction includes an alias, a so called resolution statement reflects the resolved value for that block:
- * - Address Resolution: An account alias was used in the block.
- * - Mosaic Resolution: A mosaic alias was used in the block.
+ * Balance Transfer: A mosaic transfer was triggered.
  */
-export class ResolutionStatement extends Receipt {
+export class BalanceTransferReceipt extends Receipt {
 
     /**
-     * Receipt - resolution statement object
+     * Balance transfer expiry receipt
      * @param size
      * @param version
      * @param type
-     * @param unresolved
-     * @param m_entries
+     * @param sender
+     * @param recipient
+     * @param mosaicId
+     * @param amount
      */
     constructor(size: number,
                 version: number,
                 type: ReceiptType,
                 /**
-                 * An unresolved address or unresolved mosaicId.
+                 * The public key of the sender.
                  */
-                public readonly unresolved: string | number[],
+                public readonly sender: PublicAccount,
                 /**
-                 * The array of resolution entries.
+                 * The public key of the recipient.
                  */
-                public readonly m_entries: ResolutionEntry[]) {
+                public readonly recipient: PublicAccount,
+                /**
+                 * The mosaic id.
+                 */
+                public readonly mosaicId: MosaicId,
+                /**
+                 * The amount of mosaic.
+                 */
+                public readonly amount: UInt64) {
         super(size, version, type);
     }
 }
