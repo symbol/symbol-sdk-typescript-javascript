@@ -23,26 +23,21 @@ export abstract class Receipt {
 
     /**
      * @constructor
-     * @param type
-     * @param networkType
+     * @param size
      * @param version
-     * @param deadline
-     * @param fee
-     * @param signature
-     * @param signer
-     * @param transactionInfo
+     * @param type
      */
     constructor(
                 /**
-                 * Size.
+                 * The receipt size.
                  */
                 public readonly size: number,
                 /**
-                 * Version.
+                 * The receipt version.
                  */
                 public readonly version: number,
                 /**
-                 * Type.
+                 * The receipt type.
                  */
                 public readonly type: ReceiptType) {
     }
