@@ -14,37 +14,41 @@
  * limitations under the License.
  */
 
+import { PublicAccount } from '../account/PublicAccount';
+import { MosaicId } from '../mosaic/MosaicId';
+import { UInt64 } from '../UInt64';
 import { Receipt } from './receipt';
-import { ReceiptSource } from './receiptSource';
 import { ReceiptType } from './receiptType';
-import { ResolutionEntry } from './resolutionEntry';
 
 /**
- * When a transaction includes an alias, a so called resolution statement reflects the resolved value for that block:
- * - Address Resolution: An account alias was used in the block.
- * - Mosaic Resolution: A mosaic alias was used in the block.
+ * Balance Change: A mosaic credit or debit was triggered.
  */
-export class ResolutionStatement extends Receipt {
+export class BalanceChangeReceipt extends Receipt {
 
     /**
-     * Receipt - resolution statement object
+     * Balance change expiry receipt
      * @param size
      * @param version
      * @param type
-     * @param unresolved
-     * @param m_entries
+     * @param account
+     * @param mosaicId
+     * @param amount
      */
     constructor(size: number,
                 version: number,
                 type: ReceiptType,
                 /**
-                 * An unresolved address or unresolved mosaicId.
+                 * The target account public key.
                  */
-                public readonly unresolved: string | number[],
+                public readonly account: PublicAccount,
                 /**
-                 * The array of resolution entries.
+                 * The mosaic id.
                  */
-                public readonly m_entries: ResolutionEntry[]) {
+                public readonly mosaicId: MosaicId,
+                /**
+                 * The amount of mosaic.
+                 */
+                public readonly amount: UInt64) {
         super(size, version, type);
     }
 }
