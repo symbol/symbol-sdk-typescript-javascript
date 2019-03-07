@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2018 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-import { Address } from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
-import { NamespaceId } from '../../model/model';
 import {MosaicId} from '../../model/mosaic/MosaicId';
-import { ArtifactExpiryReceipt } from '../../model/receipt/ArtifactExpiryReceipt';
-import { BalanceChangeReceipt } from '../../model/receipt/BalanceChangeReceipt';
-import { BalanceTransferReceipt } from '../../model/receipt/BalanceTransferReceipt';
-import { Receipt } from '../../model/receipt/Receipt';
-import { ReceiptSource } from '../../model/receipt/ReceiptSource';
-import { ReceiptType } from '../../model/receipt/ReceiptType';
-import { ResolutionEntry } from '../../model/receipt/ResolutionEntry';
-import { ResolutionStatement } from '../../model/receipt/ResolutionStatement';
-import { TransactionStatement } from '../../model/receipt/TransactionStatement';
+import { ArtifactExpiryReceipt } from '../../model/receipt/artifactExpiryReceipt';
+import { BalanceChangeReceipt } from '../../model/receipt/balanceChangeReceipt';
+import { BalanceTransferReceipt } from '../../model/receipt/balanceTransferReceipt';
+import { Receipt } from '../../model/receipt/receipt';
+import { ReceiptSource } from '../../model/receipt/receiptSource';
+import { ReceiptType } from '../../model/receipt/receiptType';
+import { ResolutionEntry } from '../../model/receipt/resolutionEntry';
+import { ResolutionStatement } from '../../model/receipt/resolutionStatement';
+import { TransactionStatement } from '../../model/receipt/transactionStatement';
 import {UInt64} from '../../model/UInt64';
 
 /**
@@ -130,7 +128,7 @@ const createBalanceTransferReceipt = (receiptDTO): Receipt => {
         extractReceiptVersion(receiptDTO.version),
         receiptDTO.type,
         PublicAccount.createFromPublicKey(receiptDTO.sender, extractNetworkType(receiptDTO.version)),
-        Address.createFromRawAddress(receiptDTO.recipient),
+        PublicAccount.createFromPublicKey(receiptDTO.receipt, extractNetworkType(receiptDTO.version)),
         new MosaicId(receiptDTO.mosaicId),
         new UInt64(receiptDTO.amount),
     );
@@ -143,12 +141,11 @@ const createBalanceTransferReceipt = (receiptDTO): Receipt => {
  * @constructor
  */
 const createArtifactExpiryReceipt = (receiptDTO): Receipt => {
-    const type = extractReceiptVersion(receiptDTO.version);
     return new ArtifactExpiryReceipt(
         receiptDTO.size,
-        type,
+        extractReceiptVersion(receiptDTO.version),
         receiptDTO.type,
-        extractArtifactId(type, receiptDTO.artifactId),
+        new UInt64(receiptDTO.artifactId),
     );
 };
 
@@ -168,15 +165,4 @@ const extractNetworkType = (version: number): NetworkType => {
 
 const extractReceiptVersion = (version: number): number => {
     return parseInt(version.toString(16).substr(2, 2), 16);
-};
-
-const extractArtifactId = (receiptType: ReceiptType, id: number[]): MosaicId | NamespaceId => {
-    switch (receiptType) {
-        case ReceiptType.Mosaic_Expired:
-            return new MosaicId(id);
-        case ReceiptType.Namespace_Expired:
-            return new NamespaceId(id);
-        default:
-            throw new Error('Receipt type is not supported.');
-    }
 };
