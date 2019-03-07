@@ -14,31 +14,26 @@
  * limitations under the License.
  */
 
-import { ReceiptType } from './receiptType';
+ import { ReceiptSource } from './receiptSource';
 
 /**
- * An abstract transaction class that serves as the base class of all receipts.
+ * The receipt source object.
  */
-export abstract class Receipt {
+ export class ResolutionEntry {
 
     /**
      * @constructor
-     * @param size
-     * @param version
-     * @param type
+     * @param primaryId
+     * @param source
      */
     constructor(
                 /**
-                 * The receipt size.
+                 * A resolved address or resolved mosaicId.
                  */
-                public readonly size: number,
+                public readonly resolvedValue: string | number[],
                 /**
-                 * The receipt version.
+                 * The receipt source.
                  */
-                public readonly version: number,
-                /**
-                 * The receipt type.
-                 */
-                public readonly type: ReceiptType) {
+                public readonly source: ReceiptSource) {
     }
 }
