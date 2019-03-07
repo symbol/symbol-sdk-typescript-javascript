@@ -21,6 +21,7 @@ import {PublicAccount} from '../model/account/PublicAccount';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
+import { Receipt } from '../model/receipt/receipt';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
 import {BlockchainRepository} from './BlockchainRepository';
@@ -166,6 +167,22 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
                 blockchainStorageInfoDTO.numTransactions,
                 blockchainStorageInfoDTO.numAccounts,
             );
+        }));
+    }
+
+    /**
+     * Gets an array receipts for a block height.
+     * @param height - Block height from which will be the first block in the array
+     * @param queryParams - (Optional) Query params
+     * @returns Observable<Receipt[]>
+     */
+    public getReceipts(height: number, queryParams?: QueryParams): Observable<Receipt[]> {
+        return observableFrom(
+        this.blockchainRoutesApi.getReceipts(height, queryParams != null ? queryParams : {})).pipe(
+        map((receiptsDTO) => {
+            return receiptsDTO.map((receiptDTO) => {
+                return CreateReceiptFromDTO(receiptDTO);
+            });
         }));
     }
 }
