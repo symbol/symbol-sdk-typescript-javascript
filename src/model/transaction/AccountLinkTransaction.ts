@@ -15,14 +15,11 @@
  */
 
 import { AccountLinkTransaction as AccountLinkTransactionLibrary, VerifiableTransaction } from 'nem2-library';
-import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
-import { Mosaic } from '../mosaic/Mosaic';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { LinkAction } from './LinkAction';
-import { Message } from './Message';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
