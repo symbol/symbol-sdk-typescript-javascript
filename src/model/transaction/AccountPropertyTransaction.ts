@@ -81,7 +81,7 @@ export class AccountPropertyTransaction {
     }
 
     /**
-     * Create an entity type modification transaction object
+     * Create an address filter for account property modification
      * @param modificationType - modification type. 0: Add, 1: Remove
      * @param address - modification value (Address)
      * @returns {AccountPropertyModification}
@@ -92,7 +92,7 @@ export class AccountPropertyTransaction {
     }
 
     /**
-     * Create an entity type modification transaction object
+     * Create an mosaic filter for account property modification
      * @param modificationType - modification type. 0: Add, 1: Remove
      * @param mosaicId - modification value (Mosaic)
      * @returns {AccountPropertyModification}
@@ -103,7 +103,7 @@ export class AccountPropertyTransaction {
     }
 
     /**
-     * Create an entity type modification transaction object
+     * Create an entity type filter for account property modification
      * @param modificationType - modification type. 0: Add, 1: Remove
      * @param entityType - modification value (Transaction Type)
      * @returns {AccountPropertyModification}
