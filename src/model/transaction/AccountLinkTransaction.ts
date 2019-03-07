@@ -38,7 +38,7 @@ export class AccountLinkTransaction extends Transaction {
      * @returns {AccountLinkTransaction}
      */
     public static create(deadline: Deadline,
-                         remoteAccountKey: PublicAccount,
+                         remoteAccountKey: string,
                          linkAction: LinkAction,
                          networkType: NetworkType): AccountLinkTransaction {
         return new AccountLinkTransaction(networkType,
@@ -67,7 +67,7 @@ export class AccountLinkTransaction extends Transaction {
                 /**
                  * The public key of the remote account.
                  */
-                public readonly remoteAccountKey: PublicAccount,
+                public readonly remoteAccountKey: string,
                 /**
                  * The account link action.
                  */
@@ -87,7 +87,7 @@ export class AccountLinkTransaction extends Transaction {
             .addDeadline(this.deadline.toDTO())
             .addFee(this.fee.toDTO())
             .addVersion(this.versionToDTO())
-            .addRemoteAccountKey(this.remoteAccountKey.publicKey)
+            .addRemoteAccountKey(this.remoteAccountKey)
             .addLinkAction(this.linkAction)
             .build();
     }
