@@ -61,6 +61,7 @@ export * from './namespace/NamespaceType';
 export * from './namespace/AliasActionType';
 
 // Transaction
+export * from './transaction/AccountLinkTransaction';
 export * from './transaction/AccountPropertyTransaction';
 export * from './transaction/ModifyAccountPropertyAddressTransaction';
 export * from './transaction/ModifyAccountPropertyEntityTypeTransaction';
