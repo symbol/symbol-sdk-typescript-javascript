@@ -21,13 +21,18 @@ import { ArtifactExpiryReceipt } from '../../model/receipt/artifactExpiryReceipt
 import { BalanceChangeReceipt } from '../../model/receipt/balanceChangeReceipt';
 import { BalanceTransferReceipt } from '../../model/receipt/balanceTransferReceipt';
 import { Receipt } from '../../model/receipt/receipt';
+import { ReceiptSource } from '../../model/receipt/receiptSource';
 import { ReceiptType } from '../../model/receipt/receiptType';
+import { ResolutionEntry } from '../../model/receipt/resolutionEntry';
+import { ResolutionStatement } from '../../model/receipt/resolutionStatement';
+import { TransactionStatement } from '../../model/receipt/transactionStatement';
 import {UInt64} from '../../model/UInt64';
 
 /**
  * @internal
  * @param receiptDTO
  * @returns {Receipt}
+ * @constructor
  */
 export const CreateReceiptFromDTO = (receiptDTO): Receipt => {
     switch (receiptDTO.type) {
@@ -46,9 +51,52 @@ export const CreateReceiptFromDTO = (receiptDTO): Receipt => {
         case ReceiptType.Mosaic_Expired:
         case ReceiptType.Namespace_Expired:
             return  createArtifactExpiryReceipt(receiptDTO);
+        case ReceiptType.Transaction_Group:
+            return createTransactionStatement(receiptDTO);
+        case ReceiptType.Address_Alias_Resolution:
+        case ReceiptType.Mosaic_Alias_Resolution:
+            return createResolutionStatement(receiptDTO);
+
         default:
-            throw new Error('Unimplemented receipt with type ' + receiptDTO.type);
+            throw new Error(`Receipt type: ${receiptDTO.type} not recognized.`);
     }
+};
+
+/**
+ * @internal
+ * @param receiptDTO
+ * @returns {ResolutionStatement}
+ * @constructor
+ */
+const createResolutionStatement = (receiptDTO): ResolutionStatement => {
+    return new ResolutionStatement(
+        receiptDTO.size,
+        extractReceiptVersion(receiptDTO.version),
+        receiptDTO.type,
+        typeof receiptDTO.unresolved === 'string' ? receiptDTO.unresolved : new UInt64(receiptDTO.unresolved),
+        receiptDTO.m_entries.map((entry) => {
+            return new ResolutionEntry(entry.resolvedValue,
+                new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
+        }),
+    );
+};
+
+/**
+ * @internal
+ * @param receiptDTO
+ * @returns {TransactionStatement}
+ * @constructor
+ */
+const createTransactionStatement = (receiptDTO): TransactionStatement => {
+    return new TransactionStatement(
+        receiptDTO.size,
+        extractReceiptVersion(receiptDTO.version),
+        receiptDTO.type,
+        new ReceiptSource(receiptDTO.m_source.primaryId, receiptDTO.m_source.secondaryId),
+        receiptDTO.receipts.map((receipt) => {
+            return CreateReceiptFromDTO(receipt);
+        }),
+    );
 };
 
 /**
