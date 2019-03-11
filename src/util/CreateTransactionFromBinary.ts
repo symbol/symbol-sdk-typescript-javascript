@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2019 NEM
  *
@@ -15,36 +16,25 @@
  */
 
 import { convert } from 'nem2-library';
-import { CreateTransactionFromDTO } from '../../infrastructure/transaction/CreateTransactionFromDTO';
-import { PublicAccount } from '../../model/account/PublicAccount';
-import { NetworkType } from '../../model/blockchain/NetworkType';
-import { AccountPropertyModification } from '../../model/transaction/AccountPropertyModification';
-import { Deadline } from '../../model/transaction/Deadline';
-import { ModifyAccountPropertyAddressTransaction } from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
-import { ModifyAccountPropertyEntityTypeTransaction } from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
-import { ModifyAccountPropertyMosaicTransaction } from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
-import { Transaction } from '../../model/transaction/Transaction';
-import { TransactionInfo } from '../../model/transaction/TransactionInfo';
-import { TransactionType } from '../../model/transaction/TransactionType';
-import { UInt64 } from '../../model/UInt64';
+import { PublicAccount } from '../model/account/PublicAccount';
+import { NetworkType } from '../model/blockchain/NetworkType';
+import { AccountPropertyModification } from '../model/transaction/AccountPropertyModification';
+import { Deadline } from '../model/transaction/Deadline';
+import { ModifyAccountPropertyAddressTransaction } from '../model/transaction/ModifyAccountPropertyAddressTransaction';
+import { ModifyAccountPropertyEntityTypeTransaction } from '../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
+import { ModifyAccountPropertyMosaicTransaction } from '../model/transaction/ModifyAccountPropertyMosaicTransaction';
+import { Transaction } from '../model/transaction/Transaction';
+import { TransactionInfo } from '../model/transaction/TransactionInfo';
+import { TransactionType } from '../model/transaction/TransactionType';
+import { UInt64 } from '../model/UInt64';
 
-export const createFromJson = (dataJson: object): Transaction => {
-    return CreateTransactionFromDTO(dataJson);
-};
-
-export const createFromBinary = (dataString: string): Transaction => {
-    throw new Error();
-};
-
-export const serialize = (): string => {
-    throw new Error();
-};
-
-export const serializeJson = (): object => {
-    throw new Error();
-};
-
-const readTransactionHexadecimal = (bytes: string): any => {
+/**
+ * @internal
+ * @param transactionBinary
+ * @returns {Transaction}
+ * @constructor
+ */
+export const CreateTransactionFromBinary = (transactionBinary): Transaction => {
     // Transaction byte size data
     const sizeLength        = 8;
     const signatureLength   = 128;
@@ -64,30 +54,28 @@ const readTransactionHexadecimal = (bytes: string): any => {
     const transactionOffset = deadlineOffset + deadlineLength;
 
     // Transaction byte data
-    const networkType = extractNetwork(bytes.substring(versionOffset, typeOffset));
-    const sizeBytes         = bytes.substring(0, sizeLength);
-    const signatureBytes    = bytes.substring(signatureOffset, publicKeyOffset);
-    const signer            = PublicAccount.createFromPublicKey(bytes.substring(publicKeyOffset, versionOffset), networkType);
-    const version           = extractTransactionVersionFromHex(bytes.substring(versionOffset, typeOffset));
-    const type              = extractTransactionTypeFromHex(bytes.substring(typeOffset, feeOffset));
-    const fee               = UInt64.fromHex(bytes.substring(feeOffset, deadlineOffset));
-    const deadline          = UInt64.fromHex(bytes.substring(deadlineOffset, transactionOffset)).toDTO();
-    const transactionBytes  = bytes.substring(transactionOffset);
-    const transactionData   = this.readTransactionBytes(type, transactionBytes);
+    const networkType = extractNetwork(transactionBinary.substring(versionOffset, typeOffset));
+    const signatureBytes = reverse(transactionBinary.substring(signatureOffset, publicKeyOffset));
+    const signer = PublicAccount.createFromPublicKey(reverse(transactionBinary.substring(publicKeyOffset, versionOffset)), networkType);
+    const version = extractTransactionVersionFromHex(transactionBinary.substring(versionOffset, typeOffset));
+    const type = extractTransactionTypeFromHex(transactionBinary.substring(typeOffset, feeOffset));
+    const fee = UInt64.fromHex(reverse(transactionBinary.substring(feeOffset, deadlineOffset)));
+    const deadline = UInt64.fromHex(reverse(transactionBinary.substring(deadlineOffset, transactionOffset))).toDTO();
+    const transactionData = transactionBinary.substring(transactionOffset);
 
-    return createTransaction(type, transactionData, networkType, version, deadline, fee, signatureBytes, signer);
+    return CreateTransaction(type, transactionData, networkType, version, deadline, fee, signatureBytes, signer);
 };
 
-const createTransaction = (type: number, transactionData: string, networkType: NetworkType,
+const CreateTransaction = (type: number, transactionData: string, networkType: NetworkType,
                            version: number, deadline: number[], fee: UInt64, signature?: string,
-                           signer?: PublicAccount, transactionInfo?: TransactionInfo): Transaction | undefined => {
+                           signer?: PublicAccount, transactionInfo?: TransactionInfo): Transaction => {
     switch (type) {
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
             const propertyTypeLength = 2;
 
-            const modificationCountOffset     = propertyTypeLength;
+            const modificationCountOffset = propertyTypeLength;
             const modificationArrayOffset = modificationCountOffset + propertyTypeLength;
 
             // read bytes
@@ -97,7 +85,7 @@ const createTransaction = (type: number, transactionData: string, networkType: N
 
             switch (type) {
                 case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
-                    return new ModifyAccountPropertyAddressTransaction(
+                    const t =  new ModifyAccountPropertyAddressTransaction(
                         networkType,
                         version,
                         Deadline.createFromDTO(deadline),
@@ -105,12 +93,13 @@ const createTransaction = (type: number, transactionData: string, networkType: N
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
                         modificationArray ? modificationArray.map((modification) => new AccountPropertyModification(
                             parseInt(convert.uint8ToHex(convert.hexToUint8(modification.substring(0, 2)).reverse()), 16),
-                            modification.substring(2, modification.length),
+                            reverse(modification.substring(2, modification.length)),
                         )) : [],
                         signature,
                         signer,
                         transactionInfo,
                     );
+                    return t;
                 case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
                     return new ModifyAccountPropertyMosaicTransaction(
                         networkType,
@@ -135,22 +124,20 @@ const createTransaction = (type: number, transactionData: string, networkType: N
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
                         modificationArray ? modificationArray.map((modification) => new AccountPropertyModification(
                             parseInt(convert.uint8ToHex(convert.hexToUint8(modification.substring(0, 2)).reverse()), 16),
-                            parseInt(convert.uint8ToHex(convert.hexToUint8(modification.substring(2, modification.length)).reverse()), 16),
+                            parseInt(convert.uint8ToHex(convert.hexToUint8(
+                                modification.substring(2, modification.length)).reverse()), 16),
                         )) : [],
                         signature,
                         signer,
                         transactionInfo,
                     );
-                default:
-                    break;
             }
-            break;
+            throw new Error ('Account property transaction type not recognised.');
         case TransactionType.MOSAIC_ALIAS:
-
+            throw new Error ('Transaction type not implemented yet.');
         default:
             throw new Error ('Transaction type not implemented yet.');
         }
-
 };
 
 const extractTransactionTypeFromHex = (hexValue: string): number => {
@@ -173,4 +160,8 @@ const extractNetwork = (versionHex: string): NetworkType => {
         return NetworkType.MIJIN_TEST;
     }
     throw new Error('Unimplemented network type');
+};
+
+const reverse = (hex: string): string => {
+    return convert.uint8ToHex(convert.hexToUint8(hex).reverse());
 };
