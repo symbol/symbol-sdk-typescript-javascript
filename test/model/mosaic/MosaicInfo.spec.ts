@@ -27,32 +27,22 @@ import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 describe('MosaicInfo', () => {
     const mosaicInfoDTO = {
         meta: {
-            active: true,
             id: '59FDA0733F17CF0001772CBC',
-            index: 0,
         },
         mosaic: {
-            height: new UInt64([1, 0]),
-            levy: {},
             mosaicId: new MosaicId([3646934825, 3576016193]),
-            nonce: new UInt64([1, 0]),
-            owner: PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                NetworkType.MIJIN_TEST),
-            properties: [
-                new UInt64([
-                    6,
-                    0,
-                ]),
-                new UInt64([
-                    3,
-                    0,
-                ]),
-                new UInt64([
-                    1000,
-                    0,
-                ]),
-            ],
             supply: new UInt64([3403414400, 2095475]),
+            height: new UInt64([1, 0]),
+            owner: PublicAccount.createFromPublicKey(
+                'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                NetworkType.MIJIN_TEST),
+            revision: 1,
+            properties: [
+                new UInt64([6, 0]), // divisibility
+                new UInt64([3, 0]), // flags
+                new UInt64([1000, 0]), // duration
+            ],
+            levy: {},
         },
     };
 
@@ -62,14 +52,12 @@ describe('MosaicInfo', () => {
 
     it('should createComplete an MosaicInfo object', () => {
         const mosaicInfo = new MosaicInfo(
-            mosaicInfoDTO.meta.active,
-            mosaicInfoDTO.meta.index,
             mosaicInfoDTO.meta.id,
             mosaicInfoDTO.mosaic.mosaicId,
-            mosaicInfoDTO.mosaic.nonce,
             mosaicInfoDTO.mosaic.supply,
             mosaicInfoDTO.mosaic.height,
             mosaicInfoDTO.mosaic.owner,
+            mosaicInfoDTO.mosaic.revision,
             new MosaicProperties(
                 mosaicInfoDTO.mosaic.properties[0],
                 mosaicInfoDTO.mosaic.properties[1].compact(),
@@ -78,14 +66,12 @@ describe('MosaicInfo', () => {
             mosaicInfoDTO.mosaic.levy,
         );
 
-        expect(mosaicInfo.active).to.be.equal(mosaicInfoDTO.meta.active);
-        expect(mosaicInfo.index).to.be.equal(mosaicInfoDTO.meta.index);
         expect(mosaicInfo.metaId).to.be.equal(mosaicInfoDTO.meta.id);
         deepEqual(mosaicInfo.mosaicId, mosaicInfoDTO.mosaic.mosaicId);
-        deepEqual(mosaicInfo.nonce, mosaicInfoDTO.mosaic.nonce);
         deepEqual(mosaicInfo.supply, mosaicInfoDTO.mosaic.supply);
         deepEqual(mosaicInfo.height, mosaicInfoDTO.mosaic.height);
         expect(mosaicInfo.owner).to.be.equal(mosaicInfoDTO.mosaic.owner);
+        deepEqual(mosaicInfo.revision, mosaicInfoDTO.mosaic.revision);
 
         expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.properties[1].lower);
         deepEqual(mosaicInfo.duration, mosaicInfoDTO.mosaic.properties[2]);
@@ -95,14 +81,12 @@ describe('MosaicInfo', () => {
     describe('isSupplyMutable', () => {
         it('should return true when it\'s mutable', () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.meta.active,
-                mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
                 mosaicInfoDTO.mosaic.mosaicId,
-                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.revision,
                 MosaicProperties.create({
                     supplyMutable: true,
                     transferable: false,
@@ -118,14 +102,12 @@ describe('MosaicInfo', () => {
 
         it('should return false when it\'s immutable', () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.meta.active,
-                mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
                 mosaicInfoDTO.mosaic.mosaicId,
-                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.revision,
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: false,
@@ -142,14 +124,12 @@ describe('MosaicInfo', () => {
     describe('isTransferable', () => {
         it('should return true when it\'s transferable', () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.meta.active,
-                mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
                 mosaicInfoDTO.mosaic.mosaicId,
-                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.revision,
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: true,
@@ -164,14 +144,12 @@ describe('MosaicInfo', () => {
 
         it('should return false when it\'s not transferable', () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.meta.active,
-                mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
                 mosaicInfoDTO.mosaic.mosaicId,
-                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.revision,
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: false,
@@ -188,14 +166,12 @@ describe('MosaicInfo', () => {
     describe('isLevyMutable', () => {
         it('should return true when it\'s mutable', () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.meta.active,
-                mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
                 mosaicInfoDTO.mosaic.mosaicId,
-                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.revision,
                 MosaicProperties.create({
                     supplyMutable: true,
                     transferable: false,
@@ -210,14 +186,12 @@ describe('MosaicInfo', () => {
 
         it('should return false when it\'s immutable', () => {
             const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.meta.active,
-                mosaicInfoDTO.meta.index,
                 mosaicInfoDTO.meta.id,
                 mosaicInfoDTO.mosaic.mosaicId,
-                mosaicInfoDTO.mosaic.nonce,
                 mosaicInfoDTO.mosaic.supply,
                 mosaicInfoDTO.mosaic.height,
                 mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.revision,
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: false,
