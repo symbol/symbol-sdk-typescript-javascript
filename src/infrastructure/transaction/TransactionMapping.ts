@@ -1,17 +1,3 @@
-import { convert } from 'nem2-library';
-import { CreateTransactionFromDTO } from '../../infrastructure/transaction/CreateTransactionFromDTO';
-import { PublicAccount } from '../../model/account/PublicAccount';
-import { NetworkType } from '../../model/blockchain/NetworkType';
-import { AccountPropertyModification } from '../../model/transaction/AccountPropertyModification';
-import { Deadline } from '../../model/transaction/Deadline';
-import { ModifyAccountPropertyAddressTransaction } from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
-import { ModifyAccountPropertyEntityTypeTransaction } from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
-import { ModifyAccountPropertyMosaicTransaction } from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
-import { Transaction } from '../../model/transaction/Transaction';
-import { TransactionInfo } from '../../model/transaction/TransactionInfo';
-import { TransactionType } from '../../model/transaction/TransactionType';
-import { UInt64 } from '../../model/UInt64';
-
 /*
  * Copyright 2019 NEM
  *
@@ -27,6 +13,20 @@ import { UInt64 } from '../../model/UInt64';
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { convert } from 'nem2-library';
+import { CreateTransactionFromDTO } from '../../infrastructure/transaction/CreateTransactionFromDTO';
+import { PublicAccount } from '../../model/account/PublicAccount';
+import { NetworkType } from '../../model/blockchain/NetworkType';
+import { AccountPropertyModification } from '../../model/transaction/AccountPropertyModification';
+import { Deadline } from '../../model/transaction/Deadline';
+import { ModifyAccountPropertyAddressTransaction } from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
+import { ModifyAccountPropertyEntityTypeTransaction } from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
+import { ModifyAccountPropertyMosaicTransaction } from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
+import { Transaction } from '../../model/transaction/Transaction';
+import { TransactionInfo } from '../../model/transaction/TransactionInfo';
+import { TransactionType } from '../../model/transaction/TransactionType';
+import { UInt64 } from '../../model/UInt64';
 
 export const createFromJson = (dataJson: object): Transaction => {
     return CreateTransactionFromDTO(dataJson);
