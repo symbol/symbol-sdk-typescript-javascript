@@ -19,6 +19,7 @@ import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
@@ -42,7 +43,8 @@ describe('TransferTransaction', () => {
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
         expect(transferTransaction.mosaics.length).to.be.equal(0);
-        expect(transferTransaction.recipient.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect(transferTransaction.recipient).to.be.instanceof(Address);
+        expect((transferTransaction.recipient as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
 
         const signedTransaction = transferTransaction.signWith(account);
 
@@ -65,7 +67,8 @@ describe('TransferTransaction', () => {
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
         expect(transferTransaction.mosaics.length).to.be.equal(1);
-        expect(transferTransaction.recipient.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect(transferTransaction.recipient).to.be.instanceof(Address);
+        expect((transferTransaction.recipient as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
 
         const signedTransaction = transferTransaction.signWith(account);
 
@@ -74,6 +77,33 @@ describe('TransferTransaction', () => {
             signedTransaction.payload.length,
         )).to.be.equal(
             '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000100746573742D6D657373616765' +
+            '44B262C46CEABB8500E1F50500000000');
+    });
+
+    it('should createComplete an TransferTransaction object with NamespaceId recipient', () => {
+        const addressAlias = new NamespaceId('nem.owner');
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            addressAlias,
+            [
+                NetworkCurrencyMosaic.createRelative(100),
+            ],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(transferTransaction.message.payload).to.be.equal('test-message');
+        expect(transferTransaction.mosaics.length).to.be.equal(1);
+        expect(transferTransaction.recipient).to.be.instanceof(NamespaceId);
+        expect(transferTransaction.recipient).to.be.equal(addressAlias);
+        expect((transferTransaction.recipient as NamespaceId).toHex()).to.be.equal(addressAlias.toHex());
+
+        const signedTransaction = transferTransaction.signWith(account);
+
+        expect(signedTransaction.payload.substring(
+            240,
+            signedTransaction.payload.length,
+        )).to.be.equal('9151776168D24257D8000000000000000000000000000000000D000100746573742D6D657373616765' +
             '44B262C46CEABB8500E1F50500000000');
     });
 });
