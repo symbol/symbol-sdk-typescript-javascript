@@ -68,7 +68,7 @@ export class MosaicService {
             mergeMap((mosaic: Mosaic) => this.mosaicsView([mosaic.id]).pipe(
                 filter((_) => _.length !== 0),
                 map<MosaicView[], MosaicAmountView>((mosaicViews) => {
-                    return new MosaicAmountView(mosaicViews[0].mosaicInfo, mosaic.amount);
+                    return new MosaicAmountView(mosaicViews[0].mosaicInfo[0], mosaic.amount);
                 }),
             toArray())));
     }
