@@ -14,35 +14,42 @@
  * limitations under the License.
  */
 
-import { convert } from 'nem2-library';
 import { CreateTransactionFromDTO } from '../infrastructure/transaction/CreateTransactionFromDTO';
-import { PublicAccount } from '../model/account/PublicAccount';
-import { NetworkType } from '../model/blockchain/NetworkType';
-import { AccountPropertyModification } from '../model/transaction/AccountPropertyModification';
-import { Deadline } from '../model/transaction/Deadline';
-import { ModifyAccountPropertyAddressTransaction } from '../model/transaction/ModifyAccountPropertyAddressTransaction';
-import { ModifyAccountPropertyEntityTypeTransaction } from '../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
-import { ModifyAccountPropertyMosaicTransaction } from '../model/transaction/ModifyAccountPropertyMosaicTransaction';
 import { Transaction } from '../model/transaction/Transaction';
-import { TransactionInfo } from '../model/transaction/TransactionInfo';
-import { TransactionType } from '../model/transaction/TransactionType';
-import { UInt64 } from '../model/UInt64';
 import { CreateTransactionFromBinary } from './CreateTransactionFromBinary';
 
 export class TransactionMapping {
 
+    /**
+     * Create transaction class from Json.
+     * @param {object} dataJson The transaction json object.
+     * @returns {module: model/transaction/transaction} The transaction class.
+     */
     public static createFromJson(dataJson: object): Transaction {
         return CreateTransactionFromDTO(dataJson);
     }
 
-    public static createFromBinary(dataBytes: string): Transaction  | undefined {
+    /**
+     * Create transaction class from binary.
+     * @param {string} dataBytes The transaction json object.
+     * @returns {module: model/transaction/transaction} The transaction class.
+     */
+    public static createFromBinary(dataBytes: string): Transaction {
         return CreateTransactionFromBinary(dataBytes);
     }
 
+    /**
+     * Serialize a transaction.
+     * @returns {string} Serialized transaction in binary.
+     */
     public static serialize(): string {
         throw new Error();
     }
 
+    /**
+     * Create transaction class from Json.
+     * @returns {object} Serialized transaction in json object.
+     */
     public static serializeJson(): object {
         throw new Error();
     }
