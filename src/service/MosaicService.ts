@@ -35,11 +35,9 @@ export class MosaicService {
      * Constructor
      * @param accountHttp
      * @param mosaicHttp
-     * @param namespaceHttp
      */
     constructor(private readonly accountHttp: AccountHttp,
-                private readonly mosaicHttp: MosaicHttp,
-                private readonly namespaceHttp: NamespaceHttp) {
+                private readonly mosaicHttp: MosaicHttp) {
 
     }
 
