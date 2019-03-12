@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import {deepEqual} from 'assert';
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
 import { convert } from 'nem2-library';
@@ -49,6 +50,8 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionMapping } from '../../src/util/util';
 import { TestingAccount } from '../conf/conf.spec';
+import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
+import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 
 describe('TransactionMapping', () => {
     let account: Account;
@@ -306,6 +309,72 @@ describe('TransactionMapping', () => {
             .to.be.equal(MultisigCosignatoryModificationType.Add);
         expect(transaction.modifications[0].cosignatoryPublicAccount.publicKey)
             .to.be.equal('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24');
-        expect(transaction.modifications[1].type);
+    });
+
+    it('should create AggregatedTransaction - Complete', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            []);
+
+        const signedTransaction = aggregateTransaction.signWith(account);
+
+        const transaction = TransactionMapping.createFromBinary(signedTransaction.payload) as AggregateTransaction;
+
+        expect(transaction.innerTransactions[0].type).to.be.equal(TransactionType.TRANSFER);
+    });
+
+    it('should create AggregatedTransaction - Bonded', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createBonded(
+            Deadline.create(),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            []);
+
+        const signedTransaction = aggregateTransaction.signWith(account);
+
+        const transaction = TransactionMapping.createFromBinary(signedTransaction.payload) as AggregateTransaction;
+
+        expect(transaction.innerTransactions[0].type).to.be.equal(TransactionType.TRANSFER);
+    });
+
+    it('should create LockFundTransaction', () => {
+        const aggregateTransaction = AggregateTransaction.createBonded(
+            Deadline.create(),
+            [],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+        const signedTransaction = account.sign(aggregateTransaction);
+        const lockTransaction = LockFundsTransaction.create(Deadline.create(),
+            NetworkCurrencyMosaic.createRelative(10),
+            UInt64.fromUint(10),
+            signedTransaction,
+            NetworkType.MIJIN_TEST);
+
+        const signedLockFundTransaction = lockTransaction.signWith(account);
+
+        const transaction = TransactionMapping.createFromBinary(signedLockFundTransaction.payload) as LockFundsTransaction;
+
+        deepEqual(transaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
+        expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
+        expect(transaction.hash).to.be.equal(signedTransaction.hash);
     });
 });
