@@ -26,7 +26,6 @@ import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
-import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 
 /**
  * An abstract transaction class that serves as the base class of all NEM transactions.
