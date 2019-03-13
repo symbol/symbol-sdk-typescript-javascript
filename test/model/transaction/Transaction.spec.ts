@@ -180,7 +180,7 @@ describe('Transaction', () => {
             }).to.throw(Error, 'Inner transaction cannot be an aggregated transaction.');
         });
     });
-    
+
     describe('Transaction serialize', () => {
         it('Should return serialized payload', () => {
             const transaction = TransferTransaction.create(
