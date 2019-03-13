@@ -15,49 +15,49 @@
  */
 
 import { convert } from 'nem2-library';
-import { Address } from '../model/account/Address';
-import { PublicAccount } from '../model/account/PublicAccount';
-import { NetworkType } from '../model/blockchain/NetworkType';
-import { Mosaic } from '../model/mosaic/Mosaic';
-import { MosaicId } from '../model/mosaic/MosaicId';
-import { MosaicNonce } from '../model/mosaic/MosaicNonce';
-import { MosaicProperties } from '../model/mosaic/MosaicProperties';
-import { NamespaceId } from '../model/namespace/NamespaceId';
-import { AccountPropertyModification } from '../model/transaction/AccountPropertyModification';
-import { AddressAliasTransaction } from '../model/transaction/AddressAliasTransaction';
-import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
-import { AggregateTransactionCosignature } from '../model/transaction/AggregateTransactionCosignature';
-import { Deadline } from '../model/transaction/Deadline';
-import { HashLockTransaction } from '../model/transaction/HashLockTransaction';
-import { HashType } from '../model/transaction/HashType';
-import { Message } from '../model/transaction/Message';
-import { ModifyAccountPropertyAddressTransaction } from '../model/transaction/ModifyAccountPropertyAddressTransaction';
-import { ModifyAccountPropertyEntityTypeTransaction } from '../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
-import { ModifyAccountPropertyMosaicTransaction } from '../model/transaction/ModifyAccountPropertyMosaicTransaction';
-import { ModifyMultisigAccountTransaction } from '../model/transaction/ModifyMultisigAccountTransaction';
-import { MosaicAliasTransaction } from '../model/transaction/MosaicAliasTransaction';
-import { MosaicDefinitionTransaction } from '../model/transaction/MosaicDefinitionTransaction';
-import { MosaicSupplyChangeTransaction } from '../model/transaction/MosaicSupplyChangeTransaction';
-import { MultisigCosignatoryModification } from '../model/transaction/MultisigCosignatoryModification';
-import { PlainMessage } from '../model/transaction/PlainMessage';
-import { RegisterNamespaceTransaction } from '../model/transaction/RegisterNamespaceTransaction';
-import { SecretLockTransaction } from '../model/transaction/SecretLockTransaction';
-import { SecretProofTransaction } from '../model/transaction/SecretProofTransaction';
-import { Transaction } from '../model/transaction/Transaction';
-import { TransactionInfo } from '../model/transaction/TransactionInfo';
-import { TransactionType } from '../model/transaction/TransactionType';
-import { TransferTransaction } from '../model/transaction/TransferTransaction';
-import { UInt64 } from '../model/UInt64';
-import { LockFundsTransaction } from '../model/transaction/LockFundsTransaction';
-import { SignedTransaction } from '../model/transaction/SignedTransaction';
+import {decode} from 'utf8';
+import { Address } from '../../model/account/Address';
+import { PublicAccount } from '../../model/account/PublicAccount';
+import { NetworkType } from '../../model/blockchain/NetworkType';
+import { NamespaceType } from '../../model/model';
+import { Mosaic } from '../../model/mosaic/Mosaic';
+import { MosaicId } from '../../model/mosaic/MosaicId';
+import { MosaicNonce } from '../../model/mosaic/MosaicNonce';
+import { MosaicProperties } from '../../model/mosaic/MosaicProperties';
+import { NamespaceId } from '../../model/namespace/NamespaceId';
+import { AccountPropertyModification } from '../../model/transaction/AccountPropertyModification';
+import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
+import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
+import { AggregateTransactionCosignature } from '../../model/transaction/AggregateTransactionCosignature';
+import { Deadline } from '../../model/transaction/Deadline';
+import { HashType } from '../../model/transaction/HashType';
+import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
+import { Message } from '../../model/transaction/Message';
+import { ModifyAccountPropertyAddressTransaction } from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
+import { ModifyAccountPropertyEntityTypeTransaction } from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
+import { ModifyAccountPropertyMosaicTransaction } from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
+import { ModifyMultisigAccountTransaction } from '../../model/transaction/ModifyMultisigAccountTransaction';
+import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
+import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
+import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSupplyChangeTransaction';
+import { MultisigCosignatoryModification } from '../../model/transaction/MultisigCosignatoryModification';
+import { PlainMessage } from '../../model/transaction/PlainMessage';
+import { RegisterNamespaceTransaction } from '../../model/transaction/RegisterNamespaceTransaction';
+import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
+import { SecretProofTransaction } from '../../model/transaction/SecretProofTransaction';
+import { SignedTransaction } from '../../model/transaction/SignedTransaction';
+import { Transaction } from '../../model/transaction/Transaction';
+import { TransactionType } from '../../model/transaction/TransactionType';
+import { TransferTransaction } from '../../model/transaction/TransferTransaction';
+import { UInt64 } from '../../model/UInt64';
 
 /**
  * @internal
- * @param transactionBinary
+ * @param transactionBinary - The transaction binary data
  * @returns {Transaction}
  * @constructor
  */
-export const CreateTransactionFromBinary = (transactionBinary: string): Transaction => {
+export const CreateTransactionFromPayload = (transactionBinary: string): Transaction => {
     // Transaction byte size data
     const sizeLength        = 8;
     const signatureLength   = 128;
@@ -87,14 +87,10 @@ export const CreateTransactionFromBinary = (transactionBinary: string): Transact
 
 /**
  * @internal
- * @param type
- * @param transactionData
- * @param networkType
- * @param version
- * @param deadline
- * @param signature
- * @param signer
- * @param transactionInfo
+ * @param type - Transaction type
+ * @param transactionData - Details per specific transaction type
+ * @param networkType - Network type
+ * @param deadline - Deadline
  * @returns {Transaction}
  */
 const CreateTransaction = (type: number, transactionData: string, networkType: NetworkType, deadline: number[]): Transaction => {
@@ -148,11 +144,9 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
             }
             throw new Error ('Account property transaction type not recognised.');
         case TransactionType.ADDRESS_ALIAS:
-            const addressAliasActionLength = 2;
-
             // read bytes
-            const addressAliasAction = transactionData.substring(0, addressAliasActionLength);
-            const addressAliasNamespaceId = transactionData.substring(addressAliasActionLength, 18);
+            const addressAliasAction = transactionData.substring(0, 2);
+            const addressAliasNamespaceId = transactionData.substring(2, 18);
             const addressAliasAddress = transactionData.substring(18);
 
             return AddressAliasTransaction.create(
@@ -177,29 +171,26 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                 new MosaicId(UInt64.fromHex(reverse(mosaicAliasMosaicId)).toDTO()),
                 networkType,
             );
-        // case TransactionType.REGISTER_NAMESPACE:
-        //     const registerNameSpaceTypeLength = 2;
+        case TransactionType.REGISTER_NAMESPACE:
+            // read bytes
+            const namespaceType = parseInt(convert.uint8ToHex(convert.hexToUint8(transactionData.substring(0, 2)).reverse()), 16);
+            const nameSpaceDurationParentId = transactionData.substring(2, 18);
+            const nameSpaceId = transactionData.substring(18, 34);
+            const nameSize = transactionData.substring(34, 36);
+            const nameSpaceName = transactionData.substring(36);
 
-        //     // read bytes
-        //     const namespaceType = transactionData.substring(0, registerNameSpaceTypeLength);
-        //     const duration = transactionData.substring(registerNameSpaceTypeLength, 18);
-        //     const ParentId = transactionData.substring(18, 34);
-        //     const NameSpaceId = transactionData.substring(34, 50);
-        //     const NameSize = transactionData.substring(50, 52);
-        //     const name = transactionData.substring(52);
-
-        //     return new RegisterNamespaceTransaction(
-        //         networkType,
-        //         version,
-        //         Deadline.createFromDTO(deadline),
-        //         fee,
-        //         parseInt(convert.uint8ToHex(convert.hexToUint8(namespaceType).reverse()), 16),
-        //         new NamespaceId(UInt64.fromHex(reverse(mosaicAliasNamespaceId)).toDTO()),
-        //         new MosaicId(UInt64.fromHex(reverse(mosaicAliasMosaicId)).toDTO()),
-        //         signature,
-        //         signer,
-        //         transactionInfo,
-        //     );
+            return namespaceType === NamespaceType.RootNamespace ?
+                RegisterNamespaceTransaction.createRootNamespace(
+                    Deadline.createFromDTO(deadline),
+                    decodeHex(nameSpaceName),
+                    UInt64.fromHex(reverse(nameSpaceDurationParentId)),
+                    networkType,
+            ) : RegisterNamespaceTransaction.createSubNamespace(
+                    Deadline.createFromDTO(deadline),
+                    decodeHex(nameSpaceName),
+                    new NamespaceId(UInt64.fromHex(reverse(nameSpaceDurationParentId)).toDTO()),
+                    networkType,
+            );
         case TransactionType.MOSAIC_DEFINITION:
             const mosaicDefMosaicNonceLength = 8;
             const mosaicDefMosaicIdLength    = 16;
@@ -408,7 +399,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
 
 /**
  * @internal
- * @param hexValue
+ * @param hexValue - Transaction type in hex
  * @returns {number}
  */
 const extractTransactionTypeFromHex = (hexValue: string): number => {
@@ -417,7 +408,7 @@ const extractTransactionTypeFromHex = (hexValue: string): number => {
 
 /**
  * @internal
- * @param versionHex
+ * @param versionHex - Transaction version in hex
  * @returns {NetworkType}
  */
 const extractNetwork = (versionHex: string): NetworkType => {
@@ -445,7 +436,7 @@ const reverse = (hex: string): string => {
 
 /**
  * @internal
- * @param innerTransactionBinary
+ * @param innerTransactionBinary - Inner transaction binary data
  * @returns {Array}
  */
 const parseInnerTransactionFromBinary = (innerTransactionBinary: string): string[] => {
@@ -459,4 +450,21 @@ const parseInnerTransactionFromBinary = (innerTransactionBinary: string): string
         innerBinary = innerTransactionBinary.substring(8 + payloadSize);
     }
     return embeddedTransaction;
+};
+
+/**
+ * @internal
+ * @param hex - Hex input
+ * @returns {string}
+ */
+const decodeHex = (hex: string): string => {
+    let str = '';
+    for (let i = 0; i < hex.length; i += 2) {
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
+    try {
+        return decode(str);
+    } catch (e) {
+        return str;
+    }
 };
