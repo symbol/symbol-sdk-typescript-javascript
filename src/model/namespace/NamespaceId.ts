@@ -79,4 +79,14 @@ export class NamespaceId {
         }
         return false;
     }
+
+    /**
+     * Create DTO object
+     */
+    public toDTO() {
+        return {
+            id: this.id.toDTO(),
+            fullName: this.fullName ? this.fullName : '',
+        };
+    }
 }

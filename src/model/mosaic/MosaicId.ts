@@ -86,4 +86,13 @@ export class MosaicId {
         }
         return false;
     }
+
+    /**
+     * Create DTO object.
+     */
+    toDTO() {
+        return {
+            id: this.id.toDTO(),
+        };
+    }
 }
