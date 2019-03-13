@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2018 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -378,5 +378,38 @@ describe('TransactionMapping', () => {
         deepEqual(transaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
+    });
+
+    it('should create RegisterNamespaceTransaction - Root', () => {
+        const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            UInt64.fromUint(1000),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTransaction = registerNamespaceTransaction.signWith(account);
+
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as RegisterNamespaceTransaction;
+
+        expect(transaction.namespaceType).to.be.equal(NamespaceType.RootNamespace);
+        expect(transaction.namespaceName).to.be.equal('root-test-namespace');
+
+    });
+
+    it('should create RegisterNamespaceTransaction - Sub', () => {
+        const registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            'parent-test-namespace',
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTransaction = registerNamespaceTransaction.signWith(account);
+
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as RegisterNamespaceTransaction;
+
+        expect(transaction.namespaceType).to.be.equal(NamespaceType.SubNamespace);
+        expect(transaction.namespaceName).to.be.equal('root-test-namespace');
     });
 });
