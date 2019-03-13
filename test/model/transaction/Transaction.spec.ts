@@ -19,6 +19,7 @@ import { VerifiableTransaction } from 'nem2-library';
 import { Account } from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
+import { Address } from '../../../src/model/account/Address';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { SignedTransaction } from '../../../src/model/transaction/SignedTransaction';
