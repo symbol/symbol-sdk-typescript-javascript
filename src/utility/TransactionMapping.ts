@@ -37,4 +37,20 @@ export class TransactionMapping {
     public static createFromPayload(dataBytes: string): Transaction {
         return CreateTransactionFromPayload(dataBytes);
     }
+
+    /**
+     * Serialize a transaction.
+     * @returns {string} Serialized transaction in binary.
+     */
+    public static serialize(): string {
+        throw new Error();
+    }
+
+    /**
+     * Create transaction class from Json.
+     * @returns {object} Serialized transaction in json object.
+     */
+    public static serializeJson(): object {
+        throw new Error();
+    }
 }
