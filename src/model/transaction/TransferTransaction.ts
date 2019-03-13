@@ -94,7 +94,7 @@ export class TransferTransaction extends Transaction {
      * @internal
      * @returns {string}
      */
-    protected recipientToString(): string {
+    public recipientToString(): string {
         if (this.recipient instanceof NamespaceId) {
             // namespaceId available, return hexadecimal notation
             return (this.recipient as NamespaceId).toHex();

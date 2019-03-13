@@ -106,4 +106,48 @@ describe('TransferTransaction', () => {
         )).to.be.equal('9151776168D24257D8000000000000000000000000000000000D000100746573742D6D657373616765' +
             '44B262C46CEABB8500E1F50500000000');
     });
+
+    it('should format TransferTransaction payload with 25 bytes binary address', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [
+                NetworkCurrencyMosaic.createRelative(100),
+            ],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        // test recipientToString with Address recipient
+        expect(transferTransaction.recipientToString()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+
+        const signedTransaction = transferTransaction.signWith(account);
+
+        expect(signedTransaction.payload.substring(
+            240,
+            290,
+        )).to.be.equal('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+    });
+
+    it('should format TransferTransaction payload with 8 bytes binary namespaceId', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            new NamespaceId('nem.owner'),
+            [
+                NetworkCurrencyMosaic.createRelative(100),
+            ],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        // test recipientToString with NamespaceId recipient
+        expect(transferTransaction.recipientToString()).to.be.equal('d85742d268617751');
+
+        const signedTransaction = transferTransaction.signWith(account);
+
+        expect(signedTransaction.payload.substring(
+            240,
+            290,
+        )).to.be.equal('9151776168D24257D800000000000000000000000000000000');
+    });
 });
