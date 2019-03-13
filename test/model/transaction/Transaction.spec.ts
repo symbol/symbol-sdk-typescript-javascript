@@ -180,6 +180,24 @@ describe('Transaction', () => {
             }).to.throw(Error, 'Inner transaction cannot be an aggregated transaction.');
         });
     });
+    
+    describe('Transaction serialize', () => {
+        it('Should return serialized payload', () => {
+            const transaction = TransferTransaction.create(
+                Deadline.create(),
+                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+                [],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            const serialized = transaction.serialize();
+
+            expect(serialized.substring(
+                240,
+                serialized.length,
+            )).to.be.equal('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
+        });
+    });
 });
 
 class FakeTransaction extends Transaction {
