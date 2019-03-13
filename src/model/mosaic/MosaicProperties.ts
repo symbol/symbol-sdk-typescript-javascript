@@ -83,4 +83,17 @@ export class MosaicProperties {
         const flags = (params.supplyMutable ? 1 : 0) + (params.transferable ? 2 : 0) + (params.levyMutable ? 4 : 0);
         return new MosaicProperties(UInt64.fromUint(flags), params.divisibility, params.duration);
     }
+
+    /**
+     * Create DTO object
+     */
+    toDTO() {
+        return {
+            supplyMutable: this.supplyMutable,
+            transferable: this.transferable,
+            levyMutable: this.levyMutable,
+            divisibility: this.divisibility,
+            duration: this.duration.toDTO(),
+        };
+    }
 }

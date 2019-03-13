@@ -16,13 +16,16 @@
 
 import { expect } from 'chai';
 import { VerifiableTransaction } from 'nem2-library';
+import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
-import { Account } from '../../../src/model/model';
 import { Deadline } from '../../../src/model/transaction/Deadline';
+import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { SignedTransaction } from '../../../src/model/transaction/SignedTransaction';
 import { Transaction } from '../../../src/model/transaction/Transaction';
 import { TransactionInfo } from '../../../src/model/transaction/TransactionInfo';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
+import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 
 describe('Transaction', () => {

@@ -24,6 +24,7 @@ import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
 import { TransactionInfo } from './TransactionInfo';
+import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 
 /**
  * An abstract transaction class that serves as the base class of all NEM transactions.
@@ -168,5 +169,27 @@ export abstract class Transaction {
             return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {deadline});
         }
         throw new Error('an Announced transaction can\'t be modified');
+    }
+
+    /**
+     * Create JSON object
+     */
+    public toJSON() {
+        const commonTransactionObject = {
+            type: this.type,
+            networkType: this.networkType,
+            version: this.version,
+            fee: this.fee.toDTO(),
+            deadline: this.deadline.toDTO(),
+            signature: this.signature ? this.signature : '',
+        };
+
+        if (this.signer) {
+            Object.assign(commonTransactionObject, {signer: this.signer.toDTO()});
+        }
+
+        const childClassObject = SerializeTransactionToJSON(this);
+
+        return Object.assign(commonTransactionObject, childClassObject);
     }
 }
