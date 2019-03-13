@@ -48,7 +48,7 @@ export class AddressAliasTransaction extends Transaction {
                          address: Address,
                          networkType: NetworkType): AddressAliasTransaction {
         return new AddressAliasTransaction(networkType,
-            TransactionVersion.MOSAIC_ALIAS,
+            TransactionVersion.ADDRESS_ALIAS,
             deadline,
             new UInt64([0, 0]),
             actionType,
@@ -88,7 +88,7 @@ export class AddressAliasTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MOSAIC_ALIAS, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.ADDRESS_ALIAS, networkType, version, deadline, fee, signature, signer, transactionInfo);
     }
 
     /**

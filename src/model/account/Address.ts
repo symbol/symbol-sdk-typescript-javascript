@@ -113,4 +113,14 @@ export class Address {
     public equals(address: Address): boolean {
         return this.plain() === address.plain() && this.networkType === address.networkType;
     }
+
+    /**
+     * Create DTO object
+     */
+    public toDTO() {
+        return {
+            address: this.address,
+            networkType: this.networkType,
+        };
+    }
 }
