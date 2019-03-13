@@ -171,26 +171,6 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                 new MosaicId(UInt64.fromHex(reverse(mosaicAliasMosaicId)).toDTO()),
                 networkType,
             );
-        case TransactionType.REGISTER_NAMESPACE:
-            // read bytes
-            const namespaceType = parseInt(convert.uint8ToHex(convert.hexToUint8(transactionData.substring(0, 2)).reverse()), 16);
-            const nameSpaceDurationParentId = transactionData.substring(2, 18);
-            const nameSpaceId = transactionData.substring(18, 34);
-            const nameSize = transactionData.substring(34, 36);
-            const nameSpaceName = transactionData.substring(36);
-
-            return namespaceType === NamespaceType.RootNamespace ?
-                RegisterNamespaceTransaction.createRootNamespace(
-                    Deadline.createFromDTO(deadline),
-                    decodeHex(nameSpaceName),
-                    UInt64.fromHex(reverse(nameSpaceDurationParentId)),
-                    networkType,
-            ) : RegisterNamespaceTransaction.createSubNamespace(
-                    Deadline.createFromDTO(deadline),
-                    decodeHex(nameSpaceName),
-                    new NamespaceId(UInt64.fromHex(reverse(nameSpaceDurationParentId)).toDTO()),
-                    networkType,
-            );
         case TransactionType.MOSAIC_DEFINITION:
             const mosaicDefMosaicNonceLength = 8;
             const mosaicDefMosaicIdLength    = 16;
