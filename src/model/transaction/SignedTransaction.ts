@@ -53,4 +53,17 @@ export class SignedTransaction {
             throw new Error('hash must be 64 characters long');
         }
     }
+
+    /**
+     * Create DTO object
+     */
+    toDTO() {
+        return {
+            payload: this.payload,
+            hash: this.hash,
+            signer: this.signer,
+            type: this.type,
+            networkType: this.networkType,
+        };
+    }
 }
