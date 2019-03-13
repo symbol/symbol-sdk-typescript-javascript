@@ -15,8 +15,8 @@
  */
 
 import { CreateTransactionFromDTO } from '../infrastructure/transaction/CreateTransactionFromDTO';
+import { CreateTransactionFromPayload } from '../infrastructure/transaction/CreateTransactionFromPayload';
 import { Transaction } from '../model/transaction/Transaction';
-import { CreateTransactionFromBinary } from './CreateTransactionFromBinary';
 
 export class TransactionMapping {
 
@@ -25,17 +25,17 @@ export class TransactionMapping {
      * @param {object} dataJson The transaction json object.
      * @returns {module: model/transaction/transaction} The transaction class.
      */
-    public static createFromJson(dataJson: object): Transaction {
+    public static createFromDTO(dataJson: object): Transaction {
         return CreateTransactionFromDTO(dataJson);
     }
 
     /**
-     * Create transaction class from binary.
+     * Create transaction class from payload binary.
      * @param {string} dataBytes The transaction json object.
      * @returns {module: model/transaction/transaction} The transaction class.
      */
-    public static createFromBinary(dataBytes: string): Transaction {
-        return CreateTransactionFromBinary(dataBytes);
+    public static createFromPayload(dataBytes: string): Transaction {
+        return CreateTransactionFromPayload(dataBytes);
     }
 
     /**
