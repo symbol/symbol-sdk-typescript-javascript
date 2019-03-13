@@ -15,6 +15,7 @@
  */
 
 import { VerifiableTransaction } from 'nem2-library';
+import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -24,7 +25,6 @@ import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
 import { TransactionInfo } from './TransactionInfo';
-import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 
 /**
  * An abstract transaction class that serves as the base class of all NEM transactions.
@@ -172,7 +172,19 @@ export abstract class Transaction {
     }
 
     /**
-     * Create JSON object
+     * @description Serialize a transaction object
+     * @returns {string}
+     * @memberof Transaction
+     */
+    public serialize() {
+        const transaction = this.buildTransaction();
+        return transaction.serializeUnsignedTransaction();
+    }
+
+    /**
+     * @description Create JSON object
+     * @returns {Object}
+     * @memberof Transaction
      */
     public toJSON() {
         const commonTransactionObject = {
