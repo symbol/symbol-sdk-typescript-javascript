@@ -19,12 +19,12 @@ import {decode} from 'utf8';
 import { Address } from '../../model/account/Address';
 import { PublicAccount } from '../../model/account/PublicAccount';
 import { NetworkType } from '../../model/blockchain/NetworkType';
-import { NamespaceType } from '../../model/model';
 import { Mosaic } from '../../model/mosaic/Mosaic';
 import { MosaicId } from '../../model/mosaic/MosaicId';
 import { MosaicNonce } from '../../model/mosaic/MosaicNonce';
 import { MosaicProperties } from '../../model/mosaic/MosaicProperties';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
+import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
 import { AccountPropertyModification } from '../../model/transaction/AccountPropertyModification';
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
@@ -143,6 +143,17 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                     );
             }
             throw new Error ('Account property transaction type not recognised.');
+        case TransactionType.LINK_ACCOUNT:
+            // read bytes
+            const remoteAccountKey = transactionData.substring(0, 64);
+            const linkAction = transactionData.substring(64, 66);
+
+            return AccountLinkTransaction.create(
+                Deadline.createFromDTO(deadline),
+                remoteAccountKey,
+                parseInt(convert.uint8ToHex(convert.hexToUint8(linkAction).reverse()), 16),
+                networkType,
+            );
         case TransactionType.ADDRESS_ALIAS:
             // read bytes
             const addressAliasAction = transactionData.substring(0, 2);
@@ -364,7 +375,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                         networkType,
                         deadline,
                         );
-                    return transaction.toAggregate(PublicAccount.createFromPublicKey(innerTransaction.substring(0, 64), networkType))
+                    return transaction.toAggregate(PublicAccount.createFromPublicKey(innerTransaction.substring(0, 64), networkType));
                 }),
                 networkType,
                 bondedConsignatureArray ? bondedConsignatureArray.map((cosignature) => new AggregateTransactionCosignature(

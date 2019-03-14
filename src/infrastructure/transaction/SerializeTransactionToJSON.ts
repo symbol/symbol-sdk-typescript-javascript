@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
@@ -39,6 +40,11 @@ import { TransferTransaction } from '../../model/transaction/TransferTransaction
  */
 export const SerializeTransactionToJSON = (transaction: Transaction): any => {
     switch (transaction.type) {
+        case TransactionType.LINK_ACCOUNT:
+            return {
+                remoteAccountKey: (transaction as AccountLinkTransaction).remoteAccountKey,
+                linkAction: (transaction as AccountLinkTransaction).linkAction,
+            };
         case TransactionType.ADDRESS_ALIAS:
             return {
                 actionType: (transaction as AddressAliasTransaction).actionType,
@@ -149,6 +155,8 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 }),
                 message: (transaction as TransferTransaction).message.toDTO(),
             };
+        default:
+            throw new Error ('Transaction type not implemented yet.');
     }
 
 };

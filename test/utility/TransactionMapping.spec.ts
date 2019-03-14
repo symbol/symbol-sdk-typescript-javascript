@@ -54,6 +54,8 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionMapping } from '../../src/utility/TransactionMapping';
 import { TestingAccount } from '../conf/conf.spec';
+import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
+import { LinkAction } from '../../src/model/transaction/LinkAction';
 
 describe('TransactionMapping', () => {
     let account: Account;
@@ -237,7 +239,7 @@ describe('TransactionMapping', () => {
 
         expect(transaction.message.payload).to.be.equal('test-message');
         expect(transaction.mosaics.length).to.be.equal(1);
-        expect(transaction.recipient.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect(transaction.recipientToString()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
 
     });
 
@@ -378,5 +380,20 @@ describe('TransactionMapping', () => {
         deepEqual(transaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
+    });
+
+    it('should create an AccountLinkTransaction object with link action', () => {
+        const accountLinkTransaction = AccountLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTransaction = accountLinkTransaction.signWith(account);
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountLinkTransaction;
+
+        expect(transaction.linkAction).to.be.equal(0);
+        expect(transaction.remoteAccountKey).to.be.equal(account.publicKey);
     });
 });

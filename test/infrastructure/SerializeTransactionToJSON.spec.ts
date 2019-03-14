@@ -54,12 +54,28 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionMapping } from '../../src/utility/TransactionMapping';
 import { TestingAccount } from '../conf/conf.spec';
+import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
+import { LinkAction } from '../../src/model/transaction/LinkAction';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;
 
     before(() => {
         account = TestingAccount;
+    });
+
+    it('should create AccountLinkTransaction', () => {
+        const accountLinkTransaction = AccountLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const json = accountLinkTransaction.toJSON();
+
+        expect(json.remoteAccountKey).to.be.equal(account.publicKey);
+        expect(json.linkAction).to.be.equal(LinkAction.Link);
     });
 
     it('should create AccountPropertyAddressTransaction', () => {
