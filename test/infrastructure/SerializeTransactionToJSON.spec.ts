@@ -32,11 +32,13 @@ import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMos
 import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NamespaceType } from '../../src/model/namespace/NamespaceType';
+import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
 import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { HashType } from '../../src/model/transaction/HashType';
+import { LinkAction } from '../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 import { ModifyAccountPropertyAddressTransaction } from '../../src/model/transaction/ModifyAccountPropertyAddressTransaction';
 import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
@@ -54,8 +56,6 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { UInt64 } from '../../src/model/UInt64';
 import { TransactionMapping } from '../../src/utility/TransactionMapping';
 import { TestingAccount } from '../conf/conf.spec';
-import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
-import { LinkAction } from '../../src/model/transaction/LinkAction';
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;
