@@ -24,6 +24,7 @@ import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
 import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 /**
  * An abstract transaction class that serves as the base class of all NEM transactions.
@@ -112,6 +113,9 @@ export abstract class Transaction {
      * @returns InnerTransaction
      */
     public toAggregate(signer: PublicAccount): InnerTransaction {
+        if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
+            throw new Error('Inner transaction cannot be an aggregated transaction.');
+        }
         return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {signer});
     }
 
