@@ -20,6 +20,7 @@ import * as WebSocket from 'ws';
 import {Address} from '../model/account/Address';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
+import {NamespaceId} from '../model/namespace/NamespaceId';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {AggregateTransactionCosignature} from '../model/transaction/AggregateTransactionCosignature';
 import {CosignatureSignedTransaction} from '../model/transaction/CosignatureSignedTransaction';
@@ -375,8 +376,16 @@ export class Listener {
      * @param address
      * @returns {boolean}
      */
-    private transactionHasSignerOrReceptor(transaction: Transaction, address: Address): boolean {
-        return transaction.signer!.address.equals(address) ||
-            (transaction instanceof TransferTransaction && transaction.recipient.equals(address));
+    private transactionHasSignerOrReceptor(transaction: Transaction, address: Address | NamespaceId): boolean {
+
+        if (address instanceof NamespaceId) {
+            return transaction instanceof TransferTransaction
+                && (transaction.recipient as NamespaceId).equals(address);
+        }
+
+        return transaction.signer!.address.equals(address) || (
+               transaction instanceof TransferTransaction
+            && (transaction.recipient as Address).equals(address)
+        );
     }
 }
