@@ -19,7 +19,6 @@ import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {AccountInfo} from '../model/account/AccountInfo';
 import { AccountPropertiesInfo } from '../model/account/AccountPropertiesInfo';
-import { AccountProperty } from '../model/account/AccountProperty';
 import {Address} from '../model/account/Address';
 import {MultisigAccountGraphInfo} from '../model/account/MultisigAccountGraphInfo';
 import {MultisigAccountInfo} from '../model/account/MultisigAccountInfo';
