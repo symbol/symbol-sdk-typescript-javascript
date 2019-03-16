@@ -16,6 +16,7 @@
 
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
+import {Recipient} from '../../model/account/Recipient';
 import {NetworkType} from '../../model/blockchain/NetworkType';
 import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicId} from '../../model/mosaic/MosaicId';
@@ -116,12 +117,13 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
  */
 const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Transaction => {
     if (transactionDTO.type === TransactionType.TRANSFER) {
+        const recipient = Recipient.createFromEncoded(transactionDTO.recipient);
         return new TransferTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.fee || [0, 0]),
-            Address.createFromEncoded(transactionDTO.recipient),
+            recipient.value,
             transactionDTO.mosaics === undefined ? [] :
                 transactionDTO.mosaics
                     .map((mosaicDTO) => new Mosaic(new MosaicId(mosaicDTO.id), new UInt64(mosaicDTO.amount))),

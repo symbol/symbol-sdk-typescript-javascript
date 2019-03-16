@@ -17,6 +17,7 @@
 import { TransferTransaction as TransferTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
+import { Recipient } from '../account/Recipient';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { NamespaceId } from '../namespace/NamespaceId';
@@ -42,7 +43,7 @@ export class TransferTransaction extends Transaction {
      * @returns {TransferTransaction}
      */
     public static create(deadline: Deadline,
-                         recipient: Address | NamespaceId,
+                         recipient: Recipient | Address | NamespaceId,
                          mosaics: Mosaic[],
                          message: Message,
                          networkType: NetworkType): TransferTransaction {
@@ -74,7 +75,7 @@ export class TransferTransaction extends Transaction {
                 /**
                  * The address of the recipient.
                  */
-                public readonly recipient: Address | NamespaceId,
+                public readonly recipient: Recipient | Address | NamespaceId,
                 /**
                  * The array of Mosaic objects.
                  */
@@ -95,13 +96,20 @@ export class TransferTransaction extends Transaction {
      * @returns {string}
      */
     public recipientToString(): string {
-        if (this.recipient instanceof NamespaceId) {
-            // namespaceId available, return hexadecimal notation
-            return (this.recipient as NamespaceId).toHex();
+
+        // handle `Recipient` wrapper class
+        let recipient = this.recipient;
+        if (recipient instanceof Recipient) {
+            recipient = (this.recipient as Recipient).value;
         }
 
-        // address available
-        return (this.recipient as Address).plain();
+        if (recipient instanceof NamespaceId) {
+            // namespaceId recipient, return hexadecimal notation
+            return (recipient as NamespaceId).toHex();
+        }
+
+        // address recipient
+        return (recipient as Address).plain();
     }
 
     /**
