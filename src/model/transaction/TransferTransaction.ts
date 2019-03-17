@@ -17,7 +17,6 @@
 import { TransferTransaction as TransferTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
-import { Recipient } from '../account/Recipient';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { NamespaceId } from '../namespace/NamespaceId';
@@ -43,7 +42,7 @@ export class TransferTransaction extends Transaction {
      * @returns {TransferTransaction}
      */
     public static create(deadline: Deadline,
-                         recipient: Recipient | Address | NamespaceId,
+                         recipient: Address | NamespaceId,
                          mosaics: Mosaic[],
                          message: Message,
                          networkType: NetworkType): TransferTransaction {
@@ -75,7 +74,7 @@ export class TransferTransaction extends Transaction {
                 /**
                  * The address of the recipient.
                  */
-                public readonly recipient: Recipient | Address | NamespaceId,
+                public readonly recipient: Address | NamespaceId,
                 /**
                  * The array of Mosaic objects.
                  */
@@ -97,19 +96,13 @@ export class TransferTransaction extends Transaction {
      */
     public recipientToString(): string {
 
-        // handle `Recipient` wrapper class
-        let recipient = this.recipient;
-        if (recipient instanceof Recipient) {
-            recipient = (this.recipient as Recipient).value;
-        }
-
-        if (recipient instanceof NamespaceId) {
+        if (this.recipient instanceof NamespaceId) {
             // namespaceId recipient, return hexadecimal notation
-            return (recipient as NamespaceId).toHex();
+            return (this.recipient as NamespaceId).toHex();
         }
 
         // address recipient
-        return (recipient as Address).plain();
+        return (this.recipient as Address).plain();
     }
 
     /**

@@ -17,7 +17,6 @@
 import { expect } from 'chai';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
-import { Recipient } from '../../../src/model/account/Recipient';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
@@ -98,63 +97,6 @@ describe('TransferTransaction', () => {
         expect(transferTransaction.recipient).to.be.instanceof(NamespaceId);
         expect(transferTransaction.recipient).to.be.equal(addressAlias);
         expect((transferTransaction.recipient as NamespaceId).toHex()).to.be.equal(addressAlias.toHex());
-
-        const signedTransaction = transferTransaction.signWith(account);
-
-        expect(signedTransaction.payload.substring(
-            240,
-            signedTransaction.payload.length,
-        )).to.be.equal('9151776168D24257D8000000000000000000000000000000000D000100746573742D6D657373616765' +
-            '44B262C46CEABB8500E1F50500000000');
-    });
-
-    it('should createComplete an TransferTransaction object with Recipient given address recipient', () => {
-        const addressRecipient = new Recipient(Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'));
-        const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
-            addressRecipient,
-            [
-                NetworkCurrencyMosaic.createRelative(100),
-            ],
-            PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
-        );
-
-        expect(transferTransaction.message.payload).to.be.equal('test-message');
-        expect(transferTransaction.mosaics.length).to.be.equal(1);
-        expect(transferTransaction.recipient).to.be.instanceof(Recipient);
-
-        const address = ((transferTransaction.recipient as Recipient).value as Address);
-        expect(address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-
-        const signedTransaction = transferTransaction.signWith(account);
-
-        expect(signedTransaction.payload.substring(
-            240,
-            signedTransaction.payload.length,
-        )).to.be.equal('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000100746573742D6D657373616765' +
-            '44B262C46CEABB8500E1F50500000000');
-    });
-
-    it('should createComplete an TransferTransaction object with Recipient given namespaceId recipient', () => {
-        const namespaceId = new NamespaceId('nem.owner');
-        const namespaceRecipient = new Recipient(namespaceId);
-        const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
-            namespaceRecipient,
-            [
-                NetworkCurrencyMosaic.createRelative(100),
-            ],
-            PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
-        );
-
-        expect(transferTransaction.message.payload).to.be.equal('test-message');
-        expect(transferTransaction.mosaics.length).to.be.equal(1);
-        expect(transferTransaction.recipient).to.be.instanceof(Recipient);
-
-        const actualNamespaceId = ((transferTransaction.recipient as Recipient).value as NamespaceId);
-        expect(actualNamespaceId.toHex()).to.be.equal(namespaceId.toHex());
 
         const signedTransaction = transferTransaction.signWith(account);
 

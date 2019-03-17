@@ -16,7 +16,6 @@
 
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
-import {Recipient} from '../../model/account/Recipient';
 import {NetworkType} from '../../model/blockchain/NetworkType';
 import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicId} from '../../model/mosaic/MosaicId';
@@ -117,13 +116,12 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
  */
 const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Transaction => {
     if (transactionDTO.type === TransactionType.TRANSFER) {
-        const recipient = Recipient.createFromEncoded(transactionDTO.recipient);
         return new TransferTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.fee || [0, 0]),
-            recipient.value,
+            extractRecipient(transactionDTO.recipient),
             transactionDTO.mosaics === undefined ? [] :
                 transactionDTO.mosaics
                     .map((mosaicDTO) => new Mosaic(new MosaicId(mosaicDTO.id), new UInt64(mosaicDTO.amount))),
@@ -340,4 +338,20 @@ const extractNetworkType = (version: number): NetworkType => {
 
 const extractTransactionVersion = (version: number): number => {
     return parseInt(version.toString(16).substr(2, 2), 16);
+};
+
+const extractRecipient = (recipient: string): Address | NamespaceId => {
+        // If bit 0 of byte 0 is not set (like in 0x90), then it is a regular address.
+        // Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
+        const fstByteBit0 = recipient.substr(1, 1);
+
+        if (parseInt(fstByteBit0, 2) === 1) {
+            // namespaceId encoded hexadecimal notation provided
+            // only 8 bytes are relevant to resolve the NamespaceId
+            const relevantPart = recipient.substr(2, 16);
+            return NamespaceId.createFromEncoded(relevantPart);
+        }
+
+        // read address from encoded hexadecimal notation
+        return Address.createFromEncoded(recipient);
 };
