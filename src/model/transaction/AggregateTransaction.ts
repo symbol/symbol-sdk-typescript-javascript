@@ -147,4 +147,17 @@ export class AggregateTransaction extends Transaction {
             || (this.signer !== undefined && this.signer.equals(publicAccount));
     }
 
+    /**
+     * Check if an aggregate complete transaction has all cosignatories
+     * @returns {boolean}
+     */
+    public isComplete(): boolean {
+        let isCompleted = false;
+        this.innerTransactions.forEach((innerTransaction) => {
+            if (!isCompleted) {
+                isCompleted = this.cosignatures.find((cosignature) => cosignature.signer.equals(innerTransaction.signer)) !== undefined;
+            }
+        });
+        return isCompleted;
+    }
 }
