@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import {convert} from 'nem2-library';
+import {uint64 as UInt64Library} from 'nem2-library';
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
+import {Id} from '../../model/Id';
 import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicId} from '../../model/mosaic/MosaicId';
 import {MosaicProperties} from '../../model/mosaic/MosaicProperties';
@@ -122,9 +124,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.fee || [0, 0]),
             extractRecipient(transactionDTO.recipient),
-            transactionDTO.mosaics === undefined ? [] :
-                transactionDTO.mosaics
-                    .map((mosaicDTO) => new Mosaic(new MosaicId(mosaicDTO.id), new UInt64(mosaicDTO.amount))),
+            extractMosaics(transactionDTO.mosaics),
             transactionDTO.message !== undefined ?
                 PlainMessage.createFromDTO(transactionDTO.message.payload) : EmptyMessage,
             transactionDTO.signature,
@@ -354,4 +354,27 @@ const extractRecipient = (recipient: string): Address | NamespaceId => {
 
         // read address from encoded hexadecimal notation
         return Address.createFromEncoded(recipient);
+};
+
+const extractMosaics = (mosaics: any): Mosaic[] => {
+
+    if (mosaics === undefined) {
+        return [];
+    }
+
+    return mosaics.map((mosaicDTO) => {
+
+        // convert ID to UInt8 bytes array and get first byte (most significant byte)
+        const uint64 = new Id(mosaicDTO.id);
+        const bytes = convert.hexToUint8(UInt64Library.toHex(uint64.toDTO()));
+        const byte0 = bytes[0];
+
+        // if most significant bit of byte 0 is set, then we have a namespaceId
+        if ((byte0 & 128) === 128) {
+            return new Mosaic(new NamespaceId(mosaicDTO.id), new UInt64(mosaicDTO.amount));
+        }
+
+        // most significant bit of byte 0 is not set => mosaicId
+        return new Mosaic(new MosaicId(mosaicDTO.id), new UInt64(mosaicDTO.amount));
+    });
 };
