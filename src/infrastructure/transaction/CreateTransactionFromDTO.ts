@@ -340,22 +340,40 @@ const extractTransactionVersion = (version: number): number => {
     return parseInt(version.toString(16).substr(2, 2), 16);
 };
 
+/**
+ * Extract recipient value from encoded hexadecimal notation.
+ *
+ * If bit 0 of byte 0 is not set (e.g. 0x90), then it is a regular address.
+ * Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
+ *
+ * @param recipient {string} Encoded hexadecimal recipient notation
+ * @return {Address | NamespaceId}
+ */
 const extractRecipient = (recipient: string): Address | NamespaceId => {
-        // If bit 0 of byte 0 is not set (like in 0x90), then it is a regular address.
-        // Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
-        const fstByteBit0 = recipient.substr(1, 1);
+    // If bit 0 of byte 0 is not set (like in 0x90), then it is a regular address.
+    // Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
+    const bit0 = convert.hexToUint8(recipient.substr(1, 2))[0];
 
-        if (parseInt(fstByteBit0, 2) === 1) {
-            // namespaceId encoded hexadecimal notation provided
-            // only 8 bytes are relevant to resolve the NamespaceId
-            const relevantPart = recipient.substr(2, 16);
-            return NamespaceId.createFromEncoded(relevantPart);
-        }
+    if ((bit0 & 16) === 16) {
+        // namespaceId encoded hexadecimal notation provided
+        // only 8 bytes are relevant to resolve the NamespaceId
+        const relevantPart = recipient.substr(2, 16);
+        return NamespaceId.createFromEncoded(relevantPart);
+    }
 
-        // read address from encoded hexadecimal notation
-        return Address.createFromEncoded(recipient);
+    // read address from encoded hexadecimal notation
+    return Address.createFromEncoded(recipient);
 };
 
+/**
+ * Extract mosaics from encoded UInt64 notation.
+ *
+ * If most significant bit of byte 0 is set, then it is a namespaceId.
+ * If most significant bit of byte 0 is not set, then it is a mosaicId.
+ *
+ * @param mosaics {Array | undefined} The DTO array of mosaics (with UInt64 Id notation)
+ * @return {Mosaic[]}
+ */
 const extractMosaics = (mosaics: any): Mosaic[] => {
 
     if (mosaics === undefined) {
