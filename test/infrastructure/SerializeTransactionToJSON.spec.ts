@@ -18,6 +18,7 @@ import {deepEqual} from 'assert';
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
 import { convert } from 'nem2-library';
+import { TransactionMapping } from '../../src/core/utils/TransactionMapping';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';
@@ -54,7 +55,6 @@ import { SecretProofTransaction } from '../../src/model/transaction/SecretProofT
 import { TransactionType } from '../../src/model/transaction/TransactionType' ;
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
-import { TransactionMapping } from '../../src/utility/TransactionMapping';
 import { TestingAccount } from '../conf/conf.spec';
 
 describe('SerializeTransactionToJSON', () => {

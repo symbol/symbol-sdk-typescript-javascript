@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { CreateTransactionFromDTO } from '../infrastructure/transaction/CreateTransactionFromDTO';
-import { CreateTransactionFromPayload } from '../infrastructure/transaction/CreateTransactionFromPayload';
-import { Transaction } from '../model/transaction/Transaction';
+import { CreateTransactionFromDTO } from '../../infrastructure/transaction/CreateTransactionFromDTO';
+import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
+import { Transaction } from '../../model/transaction/Transaction';
 
 export class TransactionMapping {
 
