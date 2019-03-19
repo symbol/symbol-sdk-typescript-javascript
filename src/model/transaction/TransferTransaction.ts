@@ -95,12 +95,13 @@ export class TransferTransaction extends Transaction {
      * @returns {string}
      */
     public recipientToString(): string {
+
         if (this.recipient instanceof NamespaceId) {
-            // namespaceId available, return hexadecimal notation
+            // namespaceId recipient, return hexadecimal notation
             return (this.recipient as NamespaceId).toHex();
         }
 
-        // address available
+        // address recipient
         return (this.recipient as Address).plain();
     }
 
