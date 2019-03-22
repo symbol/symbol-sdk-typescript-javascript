@@ -315,4 +315,28 @@ describe('AggregateTransaction', () => {
 
         expect(aggregateTransaction.type).to.be.equal(0x4241);
     });
+
+    it('should throw exception when adding an aggregated transaction as inner transaction', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(1, ChronoUnit.HOURS),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            []);
+
+        expect(() => {
+            AggregateTransaction.createComplete(
+                Deadline.create(),
+                [aggregateTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+        }).to.throw(Error, 'Inner transaction cannot be an aggregated transaction.');
+    });
 });

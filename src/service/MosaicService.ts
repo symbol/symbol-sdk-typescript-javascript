@@ -35,11 +35,9 @@ export class MosaicService {
      * Constructor
      * @param accountHttp
      * @param mosaicHttp
-     * @param namespaceHttp
      */
     constructor(private readonly accountHttp: AccountHttp,
-                private readonly mosaicHttp: MosaicHttp,
-                private readonly namespaceHttp: NamespaceHttp) {
+                private readonly mosaicHttp: MosaicHttp) {
 
     }
 
@@ -51,6 +49,7 @@ export class MosaicService {
     mosaicsView(mosaicIds: MosaicId[]): Observable<MosaicView[]> {
         return observableOf(mosaicIds).pipe(
             mergeMap((_) => this.mosaicHttp.getMosaics(mosaicIds).pipe(
+                mergeMap((_) => _),
                 map((mosaicInfo: MosaicInfo) => {
                     return new MosaicView(mosaicInfo);
                 }),

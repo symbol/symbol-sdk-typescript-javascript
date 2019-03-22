@@ -13,24 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import {convert} from 'nem2-library';
+import {uint64 as UInt64Library} from 'nem2-library';
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
-import { AccountPropertyModification,
-    ModifyAccountPropertyAddressTransaction,
-    ModifyAccountPropertyEntityTypeTransaction,
-    ModifyAccountPropertyMosaicTransaction } from '../../model/model';
+import {Id} from '../../model/Id';
 import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicId} from '../../model/mosaic/MosaicId';
 import {MosaicProperties} from '../../model/mosaic/MosaicProperties';
 import {NamespaceId} from '../../model/namespace/NamespaceId';
+import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import {AccountPropertyModification} from '../../model/transaction/AccountPropertyModification';
 import {AddressAliasTransaction} from '../../model/transaction/AddressAliasTransaction';
 import {AggregateTransaction} from '../../model/transaction/AggregateTransaction';
 import {AggregateTransactionCosignature} from '../../model/transaction/AggregateTransactionCosignature';
 import {AggregateTransactionInfo} from '../../model/transaction/AggregateTransactionInfo';
 import {Deadline} from '../../model/transaction/Deadline';
+import { LinkAction } from '../../model/transaction/LinkAction';
 import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
+import {ModifyAccountPropertyAddressTransaction} from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
+import {ModifyAccountPropertyEntityTypeTransaction} from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
+import {ModifyAccountPropertyMosaicTransaction} from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
 import {ModifyMultisigAccountTransaction} from '../../model/transaction/ModifyMultisigAccountTransaction';
 import {MosaicAliasTransaction} from '../../model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../model/transaction/MosaicDefinitionTransaction';
@@ -119,10 +123,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.fee || [0, 0]),
-            Address.createFromEncoded(transactionDTO.recipient),
-            transactionDTO.mosaics === undefined ? [] :
-                transactionDTO.mosaics
-                    .map((mosaicDTO) => new Mosaic(new MosaicId(mosaicDTO.id), new UInt64(mosaicDTO.amount))),
+            extractRecipient(transactionDTO.recipient),
+            extractMosaics(transactionDTO.mosaics),
             transactionDTO.message !== undefined ?
                 PlainMessage.createFromDTO(transactionDTO.message.payload) : EmptyMessage,
             transactionDTO.signature,
@@ -303,6 +305,18 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
             transactionInfo,
         );
+    } else if (transactionDTO.type === TransactionType.LINK_ACCOUNT) {
+        return new AccountLinkTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.fee || [0, 0]),
+            transactionDTO.remoteAccountKey,
+            transactionDTO.linkAction,
+            transactionDTO.signature,
+            PublicAccount.createFromPublicKey(transactionDTO.signer, extractNetworkType(transactionDTO.version)),
+            transactionInfo,
+        );
     }
 
     throw new Error('Unimplemented transaction with type ' + transactionDTO.type);
@@ -324,4 +338,61 @@ const extractNetworkType = (version: number): NetworkType => {
 
 const extractTransactionVersion = (version: number): number => {
     return parseInt(version.toString(16).substr(2, 2), 16);
+};
+
+/**
+ * Extract recipient value from encoded hexadecimal notation.
+ *
+ * If bit 0 of byte 0 is not set (e.g. 0x90), then it is a regular address.
+ * Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
+ *
+ * @param recipient {string} Encoded hexadecimal recipient notation
+ * @return {Address | NamespaceId}
+ */
+const extractRecipient = (recipient: string): Address | NamespaceId => {
+    // If bit 0 of byte 0 is not set (like in 0x90), then it is a regular address.
+    // Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
+    const bit0 = convert.hexToUint8(recipient.substr(1, 2))[0];
+
+    if ((bit0 & 16) === 16) {
+        // namespaceId encoded hexadecimal notation provided
+        // only 8 bytes are relevant to resolve the NamespaceId
+        const relevantPart = recipient.substr(2, 16);
+        return NamespaceId.createFromEncoded(relevantPart);
+    }
+
+    // read address from encoded hexadecimal notation
+    return Address.createFromEncoded(recipient);
+};
+
+/**
+ * Extract mosaics from encoded UInt64 notation.
+ *
+ * If most significant bit of byte 0 is set, then it is a namespaceId.
+ * If most significant bit of byte 0 is not set, then it is a mosaicId.
+ *
+ * @param mosaics {Array | undefined} The DTO array of mosaics (with UInt64 Id notation)
+ * @return {Mosaic[]}
+ */
+const extractMosaics = (mosaics: any): Mosaic[] => {
+
+    if (mosaics === undefined) {
+        return [];
+    }
+
+    return mosaics.map((mosaicDTO) => {
+
+        // convert ID to UInt8 bytes array and get first byte (most significant byte)
+        const uint64 = new Id(mosaicDTO.id);
+        const bytes = convert.hexToUint8(UInt64Library.toHex(uint64.toDTO()));
+        const byte0 = bytes[0];
+
+        // if most significant bit of byte 0 is set, then we have a namespaceId
+        if ((byte0 & 128) === 128) {
+            return new Mosaic(new NamespaceId(mosaicDTO.id), new UInt64(mosaicDTO.amount));
+        }
+
+        // most significant bit of byte 0 is not set => mosaicId
+        return new Mosaic(new MosaicId(mosaicDTO.id), new UInt64(mosaicDTO.amount));
+    });
 };
