@@ -81,6 +81,22 @@ export class AccountLinkTransaction extends Transaction {
     }
 
     /**
+     * @override Transaction.size()
+     * @description get the byte size of a AccountLinkTransaction
+     * @returns {number}
+     * @memberof AccountLinkTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const bytePublicKey = 32;
+        const byteLinkAction = 1;
+
+        return byteSize + bytePublicKey + byteLinkAction;
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */

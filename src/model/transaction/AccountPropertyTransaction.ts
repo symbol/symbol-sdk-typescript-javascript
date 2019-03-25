@@ -51,7 +51,7 @@ export class AccountPropertyTransaction {
             propertyType,
             modifications,
             networkType,
-            maxFee
+            maxFee,
         );
     }
 
@@ -79,7 +79,7 @@ export class AccountPropertyTransaction {
             propertyType,
             modifications,
             networkType,
-            maxFee
+            maxFee,
         );
     }
 
@@ -107,7 +107,7 @@ export class AccountPropertyTransaction {
             propertyType,
             modifications,
             networkType,
-            maxFee
+            maxFee,
         );
     }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { convert, SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -81,6 +81,26 @@ export class SecretProofTransaction extends Transaction {
         if (!HashTypeLengthValidator(hashType, this.secret)) {
             throw new Error('HashType and Secret have incompatible length or not hexadecimal string');
         }
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a SecretProofTransaction
+     * @returns {number}
+     * @memberof SecretProofTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // hash algorithm and proof size static byte size
+        const byteAlgorithm = 1;
+        const byteProofSize = 2;
+
+        // convert secret and proof to uint8
+        const byteSecret = convert.hexToUint8(this.secret).length;
+        const byteProof = convert.hexToUint8(this.proof).length;
+
+        return byteSize + byteAlgorithm + byteSecret + byteProofSize + byteProof;
     }
 
     /**

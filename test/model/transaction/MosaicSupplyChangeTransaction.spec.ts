@@ -84,4 +84,18 @@ describe('MosaicSupplyChangeTransaction', () => {
         )).to.be.equal('4CCCD78612DDF5CA010A00000000000000');
 
     });
+
+    describe('size', () => {
+        it('should return 137 for MosaicSupplyChange transaction byte size', () => {
+            const mosaicId = new MosaicId([2262289484, 3405110546]);
+            const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+                Deadline.create(),
+                mosaicId,
+                MosaicSupplyType.Increase,
+                UInt64.fromUint(10),
+                NetworkType.MIJIN_TEST,
+            );
+            expect(mosaicSupplyChangeTransaction.size).to.be.equal(137);
+        });
+    });
 });

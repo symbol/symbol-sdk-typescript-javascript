@@ -99,4 +99,23 @@ describe('LockFundsTransaction', () => {
                 NetworkType.MIJIN_TEST);
         }).to.throw(Error);
     });
+
+    describe('size', () => {
+        it('should return 176 for LockFundsTransaction transaction byte size', () => {
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(),
+                [],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = account.sign(aggregateTransaction);
+            const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+                NetworkCurrencyMosaic.createRelative(10),
+                UInt64.fromUint(10),
+                signedTransaction,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(lockFundsTransaction.size).to.be.equal(176);
+        });
+    });
 });

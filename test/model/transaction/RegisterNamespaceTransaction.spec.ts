@@ -90,4 +90,16 @@ describe('RegisterNamespaceTransaction', () => {
         )).to.be.equal('014DF55E7F6D8FB7FF924207DF2CA1BBF313726F6F742D746573742D6E616D657370616365');
 
     });
+
+    describe('size', () => {
+        it('should return 176 for RegisterNamespaceTransaction with name of 19 bytes', () => {
+            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+                Deadline.create(),
+                'root-test-namespace',
+                UInt64.fromUint(1000),
+                NetworkType.MIJIN_TEST,
+            );
+            expect(registerNamespaceTransaction.size).to.be.equal(157);
+        });
+    });
 });

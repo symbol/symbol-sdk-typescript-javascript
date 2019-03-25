@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SecretLockTransaction as SecretLockTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { convert, SecretLockTransaction as SecretLockTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -108,6 +108,28 @@ export class SecretLockTransaction extends Transaction {
         if (!HashTypeLengthValidator(hashType, this.secret)) {
             throw new Error('HashType and Secret have incompatible length or not hexadecimal string');
         }
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a SecretLockTransaction
+     * @returns {number}
+     * @memberof SecretLockTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteMosaicId = 8;
+        const byteAmount = 8;
+        const byteDuration = 8;
+        const byteAlgorithm = 1;
+        const byteRecipient = 25;
+
+        // convert secret to uint8
+        const byteSecret = convert.hexToUint8(this.secret).length;
+
+        return byteSize + byteMosaicId + byteAmount + byteDuration + byteAlgorithm + byteRecipient + byteSecret;
     }
 
     /**

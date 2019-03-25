@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary, subnamespaceNamespaceId, subnamespaceParentId, VerifiableTransaction } from 'nem2-library';
+import { convert, NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary, subnamespaceNamespaceId, subnamespaceParentId, VerifiableTransaction } from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
@@ -132,6 +132,27 @@ export class RegisterNamespaceTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.REGISTER_NAMESPACE, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a RegisterNamespaceTransaction
+     * @returns {number}
+     * @memberof RegisterNamespaceTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteType = 1;
+        const byteDurationParentId = 8;
+        const byteNamespaceId = 8;
+        const byteNameSize = 1;
+
+        // convert name to uint8
+        const byteName = convert.utf8ToHex(this.namespaceName).length / 2;
+
+        return byteSize + byteType + byteDurationParentId + byteNamespaceId + byteNameSize + byteName;
     }
 
     /**

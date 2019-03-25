@@ -88,4 +88,19 @@ describe('AddressAliasTransaction', () => {
         )).to.be.equal('002AD8FC018D9A49E19050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
 
     });
+
+    describe('size', () => {
+        it('should return 154 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
+            const namespaceId = new NamespaceId([33347626, 3779697293]);
+            const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+            const addressAliasTransaction = AddressAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Link,
+                namespaceId,
+                address,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(addressAliasTransaction.size).to.be.equal(154);
+        });
+    });
 });

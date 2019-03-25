@@ -95,6 +95,28 @@ export class ModifyMultisigAccountTransaction extends Transaction {
     }
 
     /**
+     * @override Transaction.size()
+     * @description get the byte size of a ModifyMultisigAccountTransaction
+     * @returns {number}
+     * @memberof ModifyMultisigAccountTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteRemovalDelta = 1;
+        const byteApprovalDelta = 1;
+        const byteNumModifications = 1;
+
+        // each modification contains :
+        // - 1 byte for modificationType
+        // - 32 bytes for cosignatoryPublicKey
+        const byteModifications = 33 * this.modifications.length
+
+        return byteSize + byteRemovalDelta + byteApprovalDelta + byteNumModifications + byteModifications;
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */

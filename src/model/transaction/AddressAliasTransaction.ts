@@ -94,6 +94,23 @@ export class AddressAliasTransaction extends Transaction {
     }
 
     /**
+     * @override Transaction.size()
+     * @description get the byte size of a AddressAliasTransaction
+     * @returns {number}
+     * @memberof AddressAliasTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteActionType = 1;
+        const byteNamespaceId = 8;
+        const byteAddress = 25;
+
+        return byteSize + byteActionType + byteNamespaceId + byteAddress;
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */

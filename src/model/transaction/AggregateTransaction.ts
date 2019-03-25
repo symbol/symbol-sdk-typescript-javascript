@@ -151,4 +151,24 @@ export class AggregateTransaction extends Transaction {
             || (this.signer !== undefined && this.signer.equals(publicAccount));
     }
 
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a AggregateTransaction
+     * @returns {number}
+     * @memberof AggregateTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteTransactionsSize = 4;
+
+        // calculate each inner transaction's size
+        let byteTransactions = 0;
+        this.innerTransactions.map((transaction) => {
+            byteTransactions += transaction.size;
+        });
+
+        return byteSize + byteTransactionsSize + byteTransactions;
+    }
 }

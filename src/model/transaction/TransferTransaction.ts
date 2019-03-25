@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TransferTransaction as TransferTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { convert, TransferTransaction as TransferTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -105,6 +105,28 @@ export class TransferTransaction extends Transaction {
 
         // address recipient
         return (this.recipient as Address).plain();
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a TransferTransaction
+     * @returns {number}
+     * @memberof TransferTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // recipient and number of mosaics are static byte size
+        const byteRecipient = 25;
+        const byteNumMosaics = 2;
+
+        // read message payload size
+        const bytePayload = convert.hexToUint8(convert.utf8ToHex(this.message.payload)).length;
+
+        // mosaicId / namespaceId are written on 8 bytes
+        const byteMosaics = 8 * this.mosaics.length;
+
+        return byteSize + byteRecipient + byteNumMosaics + bytePayload + byteMosaics;
     }
 
     /**

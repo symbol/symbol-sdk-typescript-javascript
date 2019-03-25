@@ -75,6 +75,27 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
     }
 
     /**
+     * @override Transaction.size()
+     * @description get the byte size of a ModifyAccountPropertyAddressTransaction
+     * @returns {number}
+     * @memberof ModifyAccountPropertyAddressTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const bytePropertyType = 1;
+        const byteModificationCount = 1;
+
+        // each modification contains :
+        // - 1 byte for modificationType
+        // - 25 bytes for the modification value (address)
+        const byteModifications = 26 * this.modifications.length;
+
+        return byteSize + bytePropertyType + byteModificationCount + byteModifications;
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */

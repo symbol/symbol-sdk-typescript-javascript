@@ -76,6 +76,27 @@ export class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
     }
 
     /**
+     * @override Transaction.size()
+     * @description get the byte size of a ModifyAccountPropertyEntityTypeTransaction
+     * @returns {number}
+     * @memberof ModifyAccountPropertyEntityTypeTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const bytePropertyType = 1;
+        const byteModificationCount = 1;
+
+        // each modification contains :
+        // - 1 byte for modificationType
+        // - 2 bytes for the modification value (transaction type)
+        const byteModifications = 3 * this.modifications.length;
+
+        return byteSize + bytePropertyType + byteModificationCount + byteModifications;
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */

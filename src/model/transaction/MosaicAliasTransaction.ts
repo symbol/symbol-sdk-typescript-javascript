@@ -94,6 +94,23 @@ export class MosaicAliasTransaction extends Transaction {
     }
 
     /**
+     * @override Transaction.size()
+     * @description get the byte size of a MosaicAliasTransaction
+     * @returns {number}
+     * @memberof MosaicAliasTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteType = 1;
+        const byteNamespaceId = 8;
+        const byteMosaicId = 8;
+
+        return byteSize + byteType + byteNamespaceId + byteMosaicId;
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */

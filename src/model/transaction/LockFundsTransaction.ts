@@ -102,6 +102,24 @@ export class LockFundsTransaction extends Transaction {
     }
 
     /**
+     * @override Transaction.size()
+     * @description get the byte size of a LockFundsTransaction
+     * @returns {number}
+     * @memberof LockFundsTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteMosaicId = 8;
+        const byteAmount = 8;
+        const byteDuration = 8;
+        const byteHash = 32;
+
+        return byteSize + byteMosaicId + byteAmount + byteDuration + byteHash;
+    }
+
+    /**
      * @internal
      * @return {VerifiableTransaction}
      */

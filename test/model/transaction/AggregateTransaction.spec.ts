@@ -25,6 +25,7 @@ import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
 import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
 import {MosaicSupplyType} from '../../../src/model/mosaic/MosaicSupplyType';
+import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {ModifyMultisigAccountTransaction} from '../../../src/model/transaction/ModifyMultisigAccountTransaction';
@@ -379,5 +380,26 @@ describe('AggregateTransaction', () => {
                 NetworkType.MIJIN_TEST,
                 []);
         }).to.throw(Error, 'Inner transaction cannot be an aggregated transaction.');
+    });
+
+    describe('size', () => {
+        it('should return 282 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
+            const transaction = TransferTransaction.create(
+                Deadline.create(),
+                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+                [
+                    NetworkCurrencyMosaic.createRelative(100),
+                ],
+                PlainMessage.create('NEM'),
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(),
+                [transaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            expect(aggregateTransaction.size).to.be.equal(120 + 4 + 158);
+        });
     });
 });

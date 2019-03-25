@@ -159,4 +159,18 @@ describe('SecretProofTransaction', () => {
             );
         }).to.throw(Error);
     });
+
+    describe('size', () => {
+        it('should return 167 for SecretProofTransaction with proof and secret both 32 bytes', () => {
+            const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+            const secretProofTransaction = SecretProofTransaction.create(
+                Deadline.create(),
+                HashType.Op_Hash_256,
+                CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
+                proof,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(secretProofTransaction.size).to.be.equal(187);
+        });
+    });
 });

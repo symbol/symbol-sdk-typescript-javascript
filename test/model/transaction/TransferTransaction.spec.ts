@@ -178,4 +178,19 @@ describe('TransferTransaction', () => {
             290,
         )).to.be.equal('9151776168D24257D800000000000000000000000000000000');
     });
+
+    describe('size', () => {
+        it('should return 158 for TransferTransaction with 1 mosaic and message NEM', () => {
+            const transaction = TransferTransaction.create(
+                Deadline.create(),
+                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+                [
+                    NetworkCurrencyMosaic.createRelative(100),
+                ],
+                PlainMessage.create('NEM'),
+                NetworkType.MIJIN_TEST,
+            );
+            expect(transaction.size).to.be.equal(158);
+        });
+    });
 });

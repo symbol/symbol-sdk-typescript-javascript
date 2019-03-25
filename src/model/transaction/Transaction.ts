@@ -173,4 +173,21 @@ export abstract class Transaction {
         }
         throw new Error('an Announced transaction can\'t be modified');
     }
+
+    /**
+     * @description get the byte size of a transaction
+     * @returns {number}
+     * @memberof Transaction
+     */
+    public get size(): number {
+        const byteSize = 4 // size
+                        + 64 // signature
+                        + 32 // signer
+                        + 2 // version
+                        + 2 // type
+                        + 8 // maxFee
+                        + 8; // deadline
+
+        return byteSize;
+    }
 }

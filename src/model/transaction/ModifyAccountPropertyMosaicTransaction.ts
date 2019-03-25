@@ -75,6 +75,27 @@ export class ModifyAccountPropertyMosaicTransaction extends Transaction {
     }
 
     /**
+     * @override Transaction.size()
+     * @description get the byte size of a ModifyAccountPropertyMosaicTransaction
+     * @returns {number}
+     * @memberof ModifyAccountPropertyMosaicTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const bytePropertyType = 1;
+        const byteModificationCount = 1;
+
+        // each modification contains :
+        // - 1 byte for modificationType
+        // - 8 bytes for the modification value (mosaicId)
+        const byteModifications = 9 * this.modifications.length;
+
+        return byteSize + bytePropertyType + byteModificationCount + byteModifications;
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */

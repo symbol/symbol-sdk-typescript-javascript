@@ -119,4 +119,21 @@ describe('ModifyMultisigAccountTransaction', () => {
             '6EC2400B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
 
     });
+
+    describe('size', () => {
+        it('should return 156 for ModifyMultisigAccountTransaction transaction byte size with 1 modification', () => {
+            const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                1,
+                1,
+                [new MultisigCosignatoryModification(
+                    MultisigCosignatoryModificationType.Add,
+                    PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+                        NetworkType.MIJIN_TEST),
+                )],
+                NetworkType.MIJIN_TEST,
+            );
+            expect(modifyMultisigAccountTransaction.size).to.be.equal(156);
+        });
+    });
 });

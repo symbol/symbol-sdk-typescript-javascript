@@ -98,6 +98,27 @@ export class MosaicDefinitionTransaction extends Transaction {
     }
 
     /**
+     * @override Transaction.size()
+     * @description get the byte size of a MosaicDefinitionTransaction
+     * @returns {number}
+     * @memberof MosaicDefinitionTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteNonce = 4;
+        const byteMosaicId = 8;
+        const byteNumProps = 1;
+        const byteFlags = 1;
+        const byteDivisibility = 1;
+        const byteDurationSize = 1;
+        const byteDuration = 8;
+
+        return byteSize + byteNonce + byteMosaicId + byteNumProps + byteFlags + byteDivisibility + byteDurationSize + byteDuration;
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */

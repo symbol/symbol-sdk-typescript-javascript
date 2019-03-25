@@ -93,6 +93,23 @@ export class MosaicSupplyChangeTransaction extends Transaction {
     }
 
     /**
+     * @override Transaction.size()
+     * @description get the byte size of a MosaicSupplyChangeTransaction
+     * @returns {number}
+     * @memberof MosaicSupplyChangeTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteMosaicId = 8;
+        const byteDirection = 1;
+        const byteDelta = 8;
+
+        return byteSize + byteMosaicId + byteDirection + byteDelta;
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */
