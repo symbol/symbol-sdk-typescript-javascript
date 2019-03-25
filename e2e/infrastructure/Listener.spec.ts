@@ -154,4 +154,16 @@ describe('Listener', () => {
             TransactionUtils.createAndAnnounceWithInsufficientBalance();
         }, 1000);
     });
+
+    it('multisigAccountAdded', (done) => {
+        listener.multisigAccountAdded(account.address)
+            .toPromise()
+            .then((res) => {
+                done();
+            });
+
+        setTimeout(() => {
+            TransactionUtils.createModifyMultisigAccountTransaction(account);
+        }, 1000);
+    });
 });
