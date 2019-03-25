@@ -25,11 +25,39 @@ import {UInt64} from '../../../src/model/UInt64';
 
 describe('SecretProofTransaction', () => {
 
+    it('should default maxFee field be set to 0', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(secretProofTransaction.maxFee.higher).to.be.equal(0);
+        expect(secretProofTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            proof,
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(secretProofTransaction.maxFee.higher).to.be.equal(0);
+        expect(secretProofTransaction.maxFee.lower).to.be.equal(1);
+    });
+
     it('should be created with HashType: Op_Sha3_256 secret', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
-            new UInt64([0, 0]),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
             proof,
@@ -45,7 +73,6 @@ describe('SecretProofTransaction', () => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             const secretProofTransaction = SecretProofTransaction.create(
                 Deadline.create(),
-                new UInt64([0, 0]),
                 HashType.Op_Sha3_256,
                 'non valid hash',
                 proof,
@@ -57,7 +84,6 @@ describe('SecretProofTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
-            new UInt64([0, 0]),
             HashType.Op_Keccak_256,
             keccak_256.create().update(convert.hexToUint8(proof)).hex(),
             proof,
@@ -73,7 +99,6 @@ describe('SecretProofTransaction', () => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             const secretProofTransaction = SecretProofTransaction.create(
                 Deadline.create(),
-                new UInt64([0, 0]),
                 HashType.Op_Keccak_256,
                 'non valid hash',
                 proof,
@@ -85,7 +110,6 @@ describe('SecretProofTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9';
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
-            new UInt64([0, 0]),
             HashType.Op_Hash_160,
             CryptoJS.RIPEMD160(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             proof,
@@ -101,7 +125,6 @@ describe('SecretProofTransaction', () => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             const secretProofTransaction = SecretProofTransaction.create(
                 Deadline.create(),
-                new UInt64([0, 0]),
                 HashType.Op_Hash_160,
                 'non valid hash',
                 proof,
@@ -114,7 +137,6 @@ describe('SecretProofTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
-            new UInt64([0, 0]),
             HashType.Op_Hash_256,
             CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
             proof,
@@ -130,7 +152,6 @@ describe('SecretProofTransaction', () => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             const secretProofTransaction = SecretProofTransaction.create(
                 Deadline.create(),
-                new UInt64([0, 0]),
                 HashType.Op_Hash_256,
                 'non valid hash',
                 proof,

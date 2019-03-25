@@ -31,11 +31,39 @@ describe('MosaicSupplyChangeTransaction', () => {
         account = TestingAccount;
     });
 
+    it('should default maxFee field be set to 0', () => {
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+            Deadline.create(),
+            mosaicId,
+            MosaicSupplyType.Increase,
+            UInt64.fromUint(10),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(mosaicSupplyChangeTransaction.maxFee.higher).to.be.equal(0);
+        expect(mosaicSupplyChangeTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+            Deadline.create(),
+            mosaicId,
+            MosaicSupplyType.Increase,
+            UInt64.fromUint(10),
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(mosaicSupplyChangeTransaction.maxFee.higher).to.be.equal(0);
+        expect(mosaicSupplyChangeTransaction.maxFee.lower).to.be.equal(1);
+    });
+
     it('should createComplete an MosaicSupplyChangeTransaction object and sign it', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
-            new UInt64([0, 0]),
             mosaicId,
             MosaicSupplyType.Increase,
             UInt64.fromUint(10),

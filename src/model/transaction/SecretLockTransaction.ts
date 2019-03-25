@@ -32,24 +32,24 @@ export class SecretLockTransaction extends Transaction {
      * Create a secret lock transaction object.
      *
      * @param deadline - The deadline to include the transaction.
-     * @param maxFee - Max fee defined by the sender
      * @param mosaic - The locked mosaic.
      * @param duration - The funds lock duration.
      * @param hashType - The hash algorithm secret is generated with.
      * @param secret - The proof hashed.
      * @param recipient - The recipient of the funds.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      *
      * @return a SecretLockTransaction instance
      */
     public static create(deadline: Deadline,
-                         maxFee: UInt64,
                          mosaic: Mosaic,
                          duration: UInt64,
                          hashType: HashType,
                          secret: string,
                          recipient: Address,
-                         networkType: NetworkType): SecretLockTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): SecretLockTransaction {
         return new SecretLockTransaction(
             networkType,
             TransactionVersion.SECRET_LOCK,

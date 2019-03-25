@@ -36,19 +36,19 @@ export class MosaicAliasTransaction extends Transaction {
     /**
      * Create a mosaic supply change transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param maxFee - Max fee defined by the sender
      * @param actionType - The namespace id.
      * @param namespaceId - The namespace id.
      * @param mosaicId - The mosaic id.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicAliasTransaction}
      */
     public static create(deadline: Deadline,
-                         maxFee: UInt64,
                          actionType: AliasActionType,
                          namespaceId: NamespaceId,
                          mosaicId: MosaicId,
-                         networkType: NetworkType): MosaicAliasTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): MosaicAliasTransaction {
         return new MosaicAliasTransaction(networkType,
             TransactionVersion.MOSAIC_ALIAS,
             deadline,

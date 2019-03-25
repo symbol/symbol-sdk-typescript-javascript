@@ -30,20 +30,20 @@ export class SecretProofTransaction extends Transaction {
      * Create a secret proof transaction object.
      *
      * @param deadline - The deadline to include the transaction.
-     * @param maxFee - Max fee defined by the sender
      * @param hashType - The hash algorithm secret is generated with.
      * @param secret - The seed proof hashed.
      * @param proof - The seed proof.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      *
      * @return a SecretProofTransaction instance
      */
     public static create(deadline: Deadline,
-                         maxFee: UInt64,
                          hashType: HashType,
                          secret: string,
                          proof: string,
-                         networkType: NetworkType): SecretProofTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): SecretProofTransaction {
         return new SecretProofTransaction(
             networkType,
             TransactionVersion.SECRET_PROOF,

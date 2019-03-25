@@ -40,19 +40,19 @@ export class MosaicDefinitionTransaction extends Transaction {
     /**
      * Create a mosaic creation transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param maxFee - Max fee defined by the sender
      * @param nonce - The mosaic nonce ex: MosaicNonce.createRandom().
      * @param mosaicId - The mosaic id ex: new MosaicId([481110499, 231112638]).
      * @param mosaicProperties - The mosaic properties.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicDefinitionTransaction}
      */
     public static create(deadline: Deadline,
-                         maxFee: UInt64,
                          nonce: MosaicNonce,
                          mosaicId: MosaicId,
                          mosaicProperties: MosaicProperties,
-                         networkType: NetworkType): MosaicDefinitionTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): MosaicDefinitionTransaction {
         return new MosaicDefinitionTransaction(networkType,
             TransactionVersion.MOSAIC_DEFINITION,
             deadline,

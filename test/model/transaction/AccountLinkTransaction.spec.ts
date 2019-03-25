@@ -20,6 +20,7 @@ import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { AccountLinkTransaction } from '../../../src/model/transaction/AccountLinkTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
+import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('AccountLinkTransaction', () => {
@@ -27,6 +28,31 @@ describe('AccountLinkTransaction', () => {
 
     before(() => {
         account = TestingAccount;
+    });
+
+    it('should default maxFee field be set to 0', () => {
+        const accountLinkTransaction = AccountLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(accountLinkTransaction.maxFee.higher).to.be.equal(0);
+        expect(accountLinkTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const accountLinkTransaction = AccountLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(accountLinkTransaction.maxFee.higher).to.be.equal(0);
+        expect(accountLinkTransaction.maxFee.lower).to.be.equal(1);
     });
 
     it('should create an AccountLinkTransaction object with link action', () => {

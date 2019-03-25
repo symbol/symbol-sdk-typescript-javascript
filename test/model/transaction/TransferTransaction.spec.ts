@@ -33,10 +33,36 @@ describe('TransferTransaction', () => {
         account = TestingAccount;
     });
 
+    it('should default maxFee field be set to 0', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(transferTransaction.maxFee.higher).to.be.equal(0);
+        expect(transferTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(transferTransaction.maxFee.higher).to.be.equal(0);
+        expect(transferTransaction.maxFee.lower).to.be.equal(1);
+    });
+
     it('should createComplete an TransferTransaction object and sign it without mosaics', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            new UInt64([0, 0]),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
             PlainMessage.create('test-message'),
@@ -59,7 +85,6 @@ describe('TransferTransaction', () => {
     it('should createComplete an TransferTransaction object and sign it with mosaics', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            new UInt64([0, 0]),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [
                 NetworkCurrencyMosaic.createRelative(100),

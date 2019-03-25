@@ -35,19 +35,19 @@ export class TransferTransaction extends Transaction {
     /**
      * Create a transfer transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param maxFee - Max fee defined by the sender
      * @param recipient - The recipient of the transaction.
      * @param mosaics - The array of mosaics.
      * @param message - The transaction message.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {TransferTransaction}
      */
     public static create(deadline: Deadline,
-                         maxFee: UInt64,
                          recipient: Address | NamespaceId,
                          mosaics: Mosaic[],
                          message: Message,
-                         networkType: NetworkType): TransferTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): TransferTransaction {
         return new TransferTransaction(networkType,
             TransactionVersion.TRANSFER,
             deadline,

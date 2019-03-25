@@ -67,17 +67,17 @@ export class AggregateTransaction extends Transaction {
     /**
      * Create an aggregate complete transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param {maxFee} maxFee
      * @param innerTransactions - The array of inner innerTransactions.
      * @param networkType - The network type.
      * @param cosignatures
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AggregateTransaction}
      */
     public static createComplete(deadline: Deadline,
-                                 maxFee: UInt64,
                                  innerTransactions: InnerTransaction[],
                                  networkType: NetworkType,
-                                 cosignatures: AggregateTransactionCosignature[]): AggregateTransaction {
+                                 cosignatures: AggregateTransactionCosignature[],
+                                 maxFee: UInt64 = new UInt64([0, 0])): AggregateTransaction {
         return new AggregateTransaction(networkType,
             TransactionType.AGGREGATE_COMPLETE,
             TransactionVersion.AGGREGATE_COMPLETE,
@@ -91,17 +91,17 @@ export class AggregateTransaction extends Transaction {
     /**
      * Create an aggregate bonded transaction object
      * @param {Deadline} deadline
-     * @param {maxFee} maxFee
      * @param {InnerTransaction[]} innerTransactions
      * @param {NetworkType} networkType
      * @param {AggregateTransactionCosignature[]} cosignatures
+     * @param {UInt64} maxFee - (Optional) Max fee defined by the sender
      * @return {AggregateTransaction}
      */
     public static createBonded(deadline: Deadline,
-                               maxFee: UInt64,
                                innerTransactions: InnerTransaction[],
                                networkType: NetworkType,
-                               cosignatures: AggregateTransactionCosignature[] = []): AggregateTransaction {
+                               cosignatures: AggregateTransactionCosignature[] = [],
+                               maxFee: UInt64 = new UInt64([0, 0])): AggregateTransaction {
         return new AggregateTransaction(networkType,
             TransactionType.AGGREGATE_BONDED,
             TransactionVersion.AGGREGATE_BONDED,

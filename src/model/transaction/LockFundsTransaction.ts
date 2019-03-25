@@ -42,18 +42,19 @@ export class LockFundsTransaction extends Transaction {
     /**
      * Create a Lock funds transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param maxFee - Max fee defined by the sender
      * @param mosaic - The locked mosaic.
      * @param duration - The funds lock duration.
      * @param signedTransaction - The signed transaction for which funds are locked.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
+     * @returns {LockFundsTransaction}
      */
     public static create(deadline: Deadline,
-                         maxFee: UInt64,
                          mosaic: Mosaic,
                          duration: UInt64,
                          signedTransaction: SignedTransaction,
-                         networkType: NetworkType): LockFundsTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): LockFundsTransaction {
         return new LockFundsTransaction(
             networkType,
             TransactionVersion.LOCK,

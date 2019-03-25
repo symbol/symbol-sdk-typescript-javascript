@@ -36,19 +36,19 @@ export class ModifyMultisigAccountTransaction extends Transaction {
     /**
      * Create a modify multisig account transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param maxFee - Max fee defined by the sender
      * @param minApprovalDelta - The min approval relative change.
      * @param minRemovalDelta - The min removal relative change.
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {ModifyMultisigAccountTransaction}
      */
     public static create(deadline: Deadline,
-                         maxFee: UInt64,
                          minApprovalDelta: number,
                          minRemovalDelta: number,
                          modifications: MultisigCosignatoryModification[],
-                         networkType: NetworkType): ModifyMultisigAccountTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): ModifyMultisigAccountTransaction {
         return new ModifyMultisigAccountTransaction(networkType,
             TransactionVersion.MODIFY_MULTISIG_ACCOUNT,
             deadline,

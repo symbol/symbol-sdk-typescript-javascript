@@ -35,19 +35,19 @@ export class MosaicSupplyChangeTransaction extends Transaction {
     /**
      * Create a mosaic supply change transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param maxFee - Max fee defined by the sender
      * @param mosaicId - The mosaic id.
      * @param direction - The supply type.
      * @param delta - The supply change in units for the mosaic.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicSupplyChangeTransaction}
      */
     public static create(deadline: Deadline,
-                         maxFee: UInt64,
                          mosaicId: MosaicId,
                          direction: MosaicSupplyType,
                          delta: UInt64,
-                         networkType: NetworkType): MosaicSupplyChangeTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): MosaicSupplyChangeTransaction {
         return new MosaicSupplyChangeTransaction(networkType,
             TransactionVersion.MOSAIC_SUPPLY_CHANGE,
             deadline,

@@ -29,10 +29,34 @@ describe('RegisterNamespaceTransaction', () => {
         account = TestingAccount;
     });
 
+    it('should default maxFee field be set to 0', () => {
+        const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            UInt64.fromUint(1000),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(registerNamespaceTransaction.maxFee.higher).to.be.equal(0);
+        expect(registerNamespaceTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            UInt64.fromUint(1000),
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(registerNamespaceTransaction.maxFee.higher).to.be.equal(0);
+        expect(registerNamespaceTransaction.maxFee.lower).to.be.equal(1);
+    });
+
     it('should createComplete an root RegisterNamespaceTransaction object and sign it', () => {
         const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
             Deadline.create(),
-            new UInt64([0, 0]),
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
@@ -53,7 +77,6 @@ describe('RegisterNamespaceTransaction', () => {
     it('should createComplete an sub RegisterNamespaceTransaction object and sign it', () => {
         const registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(
             Deadline.create(),
-            new UInt64([0, 0]),
             'root-test-namespace',
             'parent-test-namespace',
             NetworkType.MIJIN_TEST,

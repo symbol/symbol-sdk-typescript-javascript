@@ -30,7 +30,6 @@ describe('TransactionHttp', () => {
     it('should return an error when a non aggregate transaction bonded is announced via announceAggregateBonded method', () => {
         const tx = TransferTransaction.create(
             Deadline.create(),
-            new UInt64([0, 0]),
             Address.createFromRawAddress('SAGY2PTFX4T2XYKYXTJXYCTQRP3FESQH5MEQI2RQ'),
             [],
             PlainMessage.create('Hi'),
@@ -38,7 +37,6 @@ describe('TransactionHttp', () => {
         );
         const aggTx = AggregateTransaction.createComplete(
             Deadline.create(),
-            new UInt64([0, 0]),
             [
                 tx.toAggregate(account.publicAccount),
             ],

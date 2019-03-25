@@ -35,16 +35,18 @@ export class AccountLinkTransaction extends Transaction {
      * @param deadline - The deadline to include the transaction.
      * @param remoteAccountKey - The public key of the remote account.
      * @param linkAction - The account link action.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AccountLinkTransaction}
      */
     public static create(deadline: Deadline,
                          remoteAccountKey: string,
                          linkAction: LinkAction,
-                         networkType: NetworkType): AccountLinkTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): AccountLinkTransaction {
         return new AccountLinkTransaction(networkType,
             TransactionVersion.LINK_ACCOUNT,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             remoteAccountKey,
             linkAction);
     }
@@ -53,7 +55,7 @@ export class AccountLinkTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param remoteAccountKey
      * @param linkAction
      * @param signature
@@ -63,7 +65,7 @@ export class AccountLinkTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The public key of the remote account.
                  */
@@ -75,7 +77,7 @@ export class AccountLinkTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.LINK_ACCOUNT, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.LINK_ACCOUNT, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -85,7 +87,7 @@ export class AccountLinkTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         return new AccountLinkTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addRemoteAccountKey(this.remoteAccountKey)
             .addLinkAction(this.linkAction)

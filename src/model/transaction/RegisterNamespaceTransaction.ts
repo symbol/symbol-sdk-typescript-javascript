@@ -35,17 +35,17 @@ export class RegisterNamespaceTransaction extends Transaction {
     /**
      * Create a root namespace object
      * @param deadline - The deadline to include the transaction.
-     * @param maxFee - Max fee defined by the sender
      * @param namespaceName - The namespace name.
      * @param duration - The duration of the namespace.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {RegisterNamespaceTransaction}
      */
     public static createRootNamespace(deadline: Deadline,
-                                      maxFee: UInt64,
                                       namespaceName: string,
                                       duration: UInt64,
-                                      networkType: NetworkType): RegisterNamespaceTransaction {
+                                      networkType: NetworkType,
+                                      maxFee: UInt64 = new UInt64([0, 0])): RegisterNamespaceTransaction {
         return new RegisterNamespaceTransaction(networkType,
             TransactionVersion.REGISTER_NAMESPACE,
             deadline,
@@ -60,17 +60,17 @@ export class RegisterNamespaceTransaction extends Transaction {
     /**
      * Create a sub namespace object
      * @param deadline - The deadline to include the transaction.
-     * @param maxFee - Max fee defined by the sender
      * @param namespaceName - The namespace name.
      * @param parentNamespace - The parent namespace name.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {RegisterNamespaceTransaction}
      */
     public static createSubNamespace(deadline: Deadline,
-                                     maxFee: UInt64,
                                      namespaceName: string,
                                      parentNamespace: string | NamespaceId,
-                                     networkType: NetworkType): RegisterNamespaceTransaction {
+                                     networkType: NetworkType,
+                                     maxFee: UInt64 = new UInt64([0, 0])): RegisterNamespaceTransaction {
         let parentId: NamespaceId;
         if (typeof parentNamespace === 'string') {
             parentId = new NamespaceId(subnamespaceParentId(parentNamespace, namespaceName));
