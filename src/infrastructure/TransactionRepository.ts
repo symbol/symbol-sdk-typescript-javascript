@@ -57,6 +57,13 @@ export interface TransactionRepository {
     getTransactionsStatuses(transactionHashes: string[]): Observable<TransactionStatus[]>;
 
     /**
+     * Gets a transaction's effective paid fee
+     * @param transactionId - Transaction id or hash.
+     * @returns Observable<number>
+     */
+    getTransactionEffectiveFee(transactionId: string): Observable<number>;
+
+    /**
      * Send a signed transaction
      * @param signedTransaction - Signed transaction
      * @returns Observable<TransactionAnnounceResponse>

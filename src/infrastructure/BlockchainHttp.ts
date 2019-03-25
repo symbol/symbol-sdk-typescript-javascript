@@ -70,8 +70,12 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
                 new UInt64(blockDTO.block.height),
                 new UInt64(blockDTO.block.timestamp),
                 new UInt64(blockDTO.block.difficulty),
+                blockDTO.block.feeMultiplier,
                 blockDTO.block.previousBlockHash,
                 blockDTO.block.blockTransactionsHash,
+                blockDTO.block.blockReceiptsHash,
+                blockDTO.block.stateHash,
+                PublicAccount.createFromPublicKey(blockDTO.block.beneficiaryPublicKey, networkType),
             );
         }));
     }
@@ -116,8 +120,12 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
                     new UInt64(blockDTO.block.height),
                     new UInt64(blockDTO.block.timestamp),
                     new UInt64(blockDTO.block.difficulty),
+                    blockDTO.block.feeMultiplier,
                     blockDTO.block.previousBlockHash,
                     blockDTO.block.blockTransactionsHash,
+                    blockDTO.block.blockReceiptsHash,
+                    blockDTO.block.stateHash,
+                    PublicAccount.createFromPublicKey(blockDTO.block.beneficiaryPublicKey, networkType),
                 );
             });
         }));

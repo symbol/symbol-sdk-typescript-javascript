@@ -135,8 +135,12 @@ export class Listener {
                                 new UInt64(message.block.height),
                                 new UInt64(message.block.timestamp),
                                 new UInt64(message.block.difficulty),
+                                message.block.feeMultiplier,
                                 message.block.previousBlockHash,
                                 message.block.blockTransactionsHash,
+                                message.block.blockReceiptsHash,
+                                message.block.stateHash,
+                                PublicAccount.createFromPublicKey(message.block.beneficiaryPublicKey, networkType),
                             ),
                         });
                     } else if (message.status) {
