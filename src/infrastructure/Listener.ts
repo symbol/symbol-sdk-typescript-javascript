@@ -26,6 +26,9 @@ import {AggregateTransactionCosignature} from '../model/transaction/AggregateTra
 import {CosignatureSignedTransaction} from '../model/transaction/CosignatureSignedTransaction';
 import {Deadline} from '../model/transaction/Deadline';
 import {InnerTransaction} from '../model/transaction/InnerTransaction';
+import {ModifyMultisigAccountTransaction} from '../model/transaction/ModifyMultisigAccountTransaction';
+import {MultisigCosignatoryModification} from '../model/transaction/MultisigCosignatoryModification';
+import {MultisigCosignatoryModificationType} from '../model/transaction/MultisigCosignatoryModificationType';
 import {Transaction} from '../model/transaction/Transaction';
 import {TransactionStatusError} from '../model/transaction/TransactionStatusError';
 import {TransferTransaction} from '../model/transaction/TransferTransaction';
@@ -40,6 +43,7 @@ enum ListenerChannelName {
     aggregateBondedAdded = 'partialAdded',
     aggregateBondedRemoved = 'partialRemoved',
     cosignature = 'cosignature',
+    modifyMultisigAccount = 'modifyMultisigAccount',
     status = 'status',
 }
 
@@ -289,6 +293,24 @@ export class Listener {
     }
 
     /**
+     * Return an observable of {@link ModifyMultisigAccountTransaction} for specific address which has been added to multi signatories.
+     * Each time an modify multi signatures transaction is announced,
+     * it emits a new {@link ModifyMultisigAccountTransaction} in the event stream.
+     *
+     * @param address address we listen when a transaction with missing signatures state
+     * @return an observable stream of ModifyMultisigAccountTransaction with missing signatures state
+     */
+    public multisigAccountAdded(address: Address): Observable<ModifyMultisigAccountTransaction> {
+        this.subscribeTo(`modifyMultisigAccount/${address.plain()}`);
+        return this.messageSubject.asObservable().pipe(
+            filter((_) => _.channelName === ListenerChannelName.modifyMultisigAccount),
+            filter((_) => _.message instanceof ModifyMultisigAccountTransaction),
+            map((_) => _.message as ModifyMultisigAccountTransaction),
+            filter((_) => this.accountAddedToMultiSig(_, address)),
+        );
+    }
+
+    /**
      * Returns an observable stream of {@link TransactionStatusError} for specific address.
      * Each time a transaction contains an error,
      * it emits a new message with the transaction status error in the event stream.
@@ -387,5 +409,24 @@ export class Listener {
                transaction instanceof TransferTransaction
             && (transaction.recipient as Address).equals(address)
         );
+    }
+
+    /**
+     * @internal
+     * Filters if an account has been added to multi signatories
+     * @param transaction - Transaction object
+     * @param address - Address
+     * @returns boolean
+     */
+    // tslint:disable-next-line:adjacent-overload-signatures
+    private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
+        if (transaction instanceof ModifyMultisigAccountTransaction) {
+            transaction.modifications.map((_: MultisigCosignatoryModification) => {
+                if (_.type === MultisigCosignatoryModificationType.Add && _.cosignatoryPublicAccount.address.equals(address)) {
+                    return true;
+                }
+            });
+        }
+        return false;
     }
 }
