@@ -177,9 +177,9 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      * @param queryParams - (Optional) Query params
      * @returns Observable<Receipt[]>
      */
-    public getReceipts(height: number, queryParams?: QueryParams): Observable<Receipt[]> {
+    public getReceipts(height: number): Observable<Receipt[]> {
         return observableFrom(
-        this.blockchainRoutesApi.getBlockReceipts(height, queryParams != null ? queryParams : {})).pipe(
+        this.blockchainRoutesApi.getBlockReceipts(height)).pipe(
         map((receiptsDTO) => {
             return receiptsDTO.map((receiptDTO) => {
                 return CreateReceiptFromDTO(receiptDTO);
