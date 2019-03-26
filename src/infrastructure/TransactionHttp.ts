@@ -25,6 +25,7 @@ import {SignedTransaction} from '../model/transaction/SignedTransaction';
 import { SyncAnnounce } from '../model/transaction/SyncAnnounce';
 import {Transaction} from '../model/transaction/Transaction';
 import {TransactionAnnounceResponse} from '../model/transaction/TransactionAnnounceResponse';
+import {TransactionInfo} from '../model/transaction/TransactionInfo';
 import {TransactionStatus} from '../model/transaction/TransactionStatus';
 import {TransactionType} from '../model/transaction/TransactionType';
 import {UInt64} from '../model/UInt64';
@@ -205,15 +206,21 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public getTransactionEffectiveFee(transactionId: string): Observable<number> {
         return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(
-            mergeMap((transactionDTO) => observableFrom(
-                this.blockchainRoutesApi.getBlockByHeight(transactionDTO.meta.height)).pipe(
+            mergeMap((transactionDTO) => {
+                // parse transaction to take advantage of `size` getter overload
+                const transaction = CreateTransactionFromDTO(transactionDTO);
+                const uintHeight = (transaction.transactionInfo as TransactionInfo).height;
+
+                // now read block details
+                return observableFrom(this.blockchainRoutesApi.getBlockByHeight(uintHeight.compact())).pipe(
                 map((blockDTO) => {
-                    // parse transaction for call to `size` overload
-                    const transaction = CreateTransactionFromDTO(transactionDTO);
 
                     // @see https://nemtech.github.io/concepts/transaction.html#fees
                     // effective_fee = feeMultiplier x transaction::size
                     return blockDTO.block.feeMultiplier * transaction.size;
-                }))));
+                }));
+            }), catchError((err) => {
+                return observableThrowError(err);
+            }));
     }
 }
