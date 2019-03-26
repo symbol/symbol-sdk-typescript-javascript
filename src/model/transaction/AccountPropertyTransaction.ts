@@ -19,7 +19,7 @@ import { PropertyModificationType } from '../account/PropertyModificationType';
 import { PropertyType } from '../account/PropertyType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
-import { UInt64 } from '../Uint64';
+import { UInt64 } from '../UInt64';
 import { AccountPropertyModification } from './AccountPropertyModification';
 import { Deadline } from './Deadline';
 import { ModifyAccountPropertyAddressTransaction } from './ModifyAccountPropertyAddressTransaction';
