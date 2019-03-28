@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
+import { Address } from '../account/Address';
+import { PropertyModificationType } from '../account/PropertyModificationType';
+import { PropertyType } from '../account/PropertyType';
 import { NetworkType } from '../blockchain/NetworkType';
-import { AccountPropertyModification,
-         Address,
-         ModifyAccountPropertyAddressTransaction,
-         ModifyAccountPropertyEntityTypeTransaction,
-         ModifyAccountPropertyMosaicTransaction,
-         PropertyModificationType, PropertyType } from '../model';
 import { MosaicId } from '../mosaic/MosaicId';
+import { AccountPropertyModification } from './AccountPropertyModification';
 import { Deadline } from './Deadline';
-import { TransactionType } from './TransactionType';
+import { ModifyAccountPropertyAddressTransaction } from './ModifyAccountPropertyAddressTransaction';
+import { ModifyAccountPropertyEntityTypeTransaction } from './ModifyAccountPropertyEntityTypeTransaction';
+import { ModifyAccountPropertyMosaicTransaction } from './ModifyAccountPropertyMosaicTransaction';
 
 export class AccountPropertyTransaction {
     /**

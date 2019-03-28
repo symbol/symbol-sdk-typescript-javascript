@@ -36,14 +36,6 @@ export class MosaicInfo {
      * @param levy
      */
     constructor(/**
-                 * Mosaic is active.
-                 */
-                public readonly active: boolean,
-                /**
-                 * The mosaic index.
-                 */
-                public readonly index: number,
-                /**
                  * The meta data id.
                  */
                 public readonly metaId: string,
@@ -51,10 +43,6 @@ export class MosaicInfo {
                  * The mosaic id.
                  */
                 public readonly mosaicId: MosaicId,
-                /**
-                 * The mosaic nonce.
-                 */
-                public readonly nonce: UInt64,
                 /**
                  * The mosaic supply.
                  */
@@ -67,6 +55,10 @@ export class MosaicInfo {
                  * The public key of the mosaic creator.
                  */
                 public readonly owner: PublicAccount,
+                /**
+                 * The mosaic revision
+                 */
+                public readonly revision: number,
                 /**
                  * The mosaic properties.
                  */

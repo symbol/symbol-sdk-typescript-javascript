@@ -1,6 +1,6 @@
 # CHANGELOG
 
-# v0.10.3
+# v0.11
 
 - Fixed NetworkCurrencyMosaic, NetworkHarvestMosaic
 - Added exposed UInt64.fromHex and UInt64.toHex
@@ -8,13 +8,13 @@
 - Added MosaicNonce, MosaicNonce.createRandom
 - Fixed AliasDTO.mosaicId to be UInt64
 - Added nem2-library@v0.9.8 version update (cow compatibility)
-
-# v0.10.2
-
 - Added cow network update *base* compatibility
 - Added AliasTransaction, AddressAliasTransaction, MosaicAliasTransaction
 - Changed MosaicDefinition to hold MosaicNonce
 - Changed SecretLock transaction to work with Sha3_256 instead of Sha3_512
+- Added delegated harvesting
+- Fixed #38: error message for aggregate as inner tx
+- Added TransferTransaction.recipient NamespaceId argument type
 
 # v0.10.1-beta
 
