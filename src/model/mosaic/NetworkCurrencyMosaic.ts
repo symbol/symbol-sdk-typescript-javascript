@@ -20,13 +20,14 @@ import {NamespaceId} from '../namespace/NamespaceId';
 import {UInt64} from '../UInt64';
 import {Mosaic} from './Mosaic';
 import {MosaicId} from './MosaicId';
+import {NetworkMosaicType} from './NetworkMosaicType';
 
 /**
  * NetworkCurrencyMosaic mosaic
- * 
+ *
  * This represents the per-network currency mosaic. This mosaicId is aliased
  * with namespace name `cat.currency`.
- * 
+ *
  * @since 0.10.2
  */
 export class NetworkCurrencyMosaic extends Mosaic {
@@ -36,7 +37,7 @@ export class NetworkCurrencyMosaic extends Mosaic {
      *
      * @type {Id}
      */
-    public static NAMESPACE_ID = new NamespaceId('cat.currency');
+    public static NAMESPACE_ID = new NamespaceId(NetworkMosaicType.CURRENCY);
 
     /**
      * Divisiblity

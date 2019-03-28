@@ -20,6 +20,7 @@ import {NamespaceId} from '../namespace/NamespaceId';
 import {UInt64} from '../UInt64';
 import {Mosaic} from './Mosaic';
 import {MosaicId} from './MosaicId';
+import {NetworkMosaicType} from './NetworkMosaicType';
 
 /**
  * NetworkHarvestMosaic mosaic
@@ -36,7 +37,7 @@ export class NetworkHarvestMosaic extends Mosaic {
      *
      * @type {Id}
      */
-    public static NAMESPACE_ID = new NamespaceId('cat.harvest');
+    public static NAMESPACE_ID = new NamespaceId(NetworkMosaicType.HARVEST);
 
     /**
      * Divisiblity
