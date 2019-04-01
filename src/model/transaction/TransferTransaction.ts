@@ -19,6 +19,7 @@ import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { Message } from './Message';
@@ -41,7 +42,7 @@ export class TransferTransaction extends Transaction {
      * @returns {TransferTransaction}
      */
     public static create(deadline: Deadline,
-                         recipient: Address,
+                         recipient: Address | NamespaceId,
                          mosaics: Mosaic[],
                          message: Message,
                          networkType: NetworkType): TransferTransaction {
@@ -73,7 +74,7 @@ export class TransferTransaction extends Transaction {
                 /**
                  * The address of the recipient.
                  */
-                public readonly recipient: Address,
+                public readonly recipient: Address | NamespaceId,
                 /**
                  * The array of Mosaic objects.
                  */
@@ -89,6 +90,22 @@ export class TransferTransaction extends Transaction {
     }
 
     /**
+     * Return the string notation for the set recipient
+     * @internal
+     * @returns {string}
+     */
+    public recipientToString(): string {
+
+        if (this.recipient instanceof NamespaceId) {
+            // namespaceId recipient, return hexadecimal notation
+            return (this.recipient as NamespaceId).toHex();
+        }
+
+        // address recipient
+        return (this.recipient as Address).plain();
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */
@@ -97,7 +114,7 @@ export class TransferTransaction extends Transaction {
             .addDeadline(this.deadline.toDTO())
             .addFee(this.fee.toDTO())
             .addVersion(this.versionToDTO())
-            .addRecipient(this.recipient.plain())
+            .addRecipient(this.recipientToString())
             .addMosaics(this.mosaics.map((mosaic) => mosaic.toDTO()))
             .addMessage(this.message)
             .build();

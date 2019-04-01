@@ -14,47 +14,39 @@
  * limitations under the License.
  */
 
-import { AddressAliasTransaction as AddressAliasTransactionLibrary, VerifiableTransaction } from 'nem2-library';
-import { Address } from '../account/Address';
+import { AccountLinkTransaction as AccountLinkTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
-import { AliasActionType } from '../namespace/AliasActionType';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { LinkAction } from './LinkAction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
 /**
- * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
- * i.e. increase or decrease the supply.
+ * Announce an AccountLinkTransaction to delegate the account importance to a proxy account.
+ * By doing so, you can enable delegated harvesting
  */
-export class AddressAliasTransaction extends Transaction {
-
+export class AccountLinkTransaction extends Transaction {
     /**
-     * Create a mosaic supply change transaction object
+     * Create a link account transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param actionType - The namespace id.
-     * @param namespaceId - The namespace id.
-     * @param mosaicId - The mosaic id.
-     * @param networkType - The network type.
-     * @returns {AddressAliasTransaction}
+     * @param remoteAccountKey - The public key of the remote account.
+     * @param linkAction - The account link action.
+     * @returns {AccountLinkTransaction}
      */
     public static create(deadline: Deadline,
-                         actionType: AliasActionType,
-                         namespaceId: NamespaceId,
-                         address: Address,
-                         networkType: NetworkType): AddressAliasTransaction {
-        return new AddressAliasTransaction(networkType,
-            TransactionVersion.ADDRESS_ALIAS,
+                         remoteAccountKey: string,
+                         linkAction: LinkAction,
+                         networkType: NetworkType): AccountLinkTransaction {
+        return new AccountLinkTransaction(networkType,
+            TransactionVersion.LINK_ACCOUNT,
             deadline,
             new UInt64([0, 0]),
-            actionType,
-            namespaceId,
-            address,
-        );
+            remoteAccountKey,
+            linkAction);
     }
 
     /**
@@ -62,9 +54,8 @@ export class AddressAliasTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param fee
-     * @param actionType
-     * @param namespaceId
-     * @param address
+     * @param remoteAccountKey
+     * @param linkAction
      * @param signature
      * @param signer
      * @param transactionInfo
@@ -74,21 +65,17 @@ export class AddressAliasTransaction extends Transaction {
                 deadline: Deadline,
                 fee: UInt64,
                 /**
-                 * The alias action type.
+                 * The public key of the remote account.
                  */
-                public readonly actionType: AliasActionType,
+                public readonly remoteAccountKey: string,
                 /**
-                 * The namespace id that will be an alias.
+                 * The account link action.
                  */
-                public readonly namespaceId: NamespaceId,
-                /**
-                 * The mosaic id.
-                 */
-                public readonly address: Address,
+                public readonly linkAction: LinkAction,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.ADDRESS_ALIAS, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.LINK_ACCOUNT, networkType, version, deadline, fee, signature, signer, transactionInfo);
     }
 
     /**
@@ -96,13 +83,12 @@ export class AddressAliasTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new AddressAliasTransactionLibrary.Builder()
+        return new AccountLinkTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
             .addFee(this.fee.toDTO())
             .addVersion(this.versionToDTO())
-            .addActionType(this.actionType)
-            .addNamespaceId(this.namespaceId.id.toDTO())
-            .addAddress(this.address.plain())
+            .addRemoteAccountKey(this.remoteAccountKey)
+            .addLinkAction(this.linkAction)
             .build();
     }
 
