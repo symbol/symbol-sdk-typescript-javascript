@@ -26,6 +26,9 @@ import { MultisigAccountInfo } from '../../src/model/account/MultisigAccountInfo
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
+import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
+import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
+import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { AggregatedTransactionService } from '../../src/service/AggregatedTransactionService';
@@ -172,6 +175,30 @@ describe('AggregatedTransactionService', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account2]);
+        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+            expect(isComplete).to.be.true;
+        });
+    });
+
+    it('should use minRemoval for multisig account validation if inner transaction is modify multisig remove', () => {
+        const modifyMultisigTransaction = ModifyMultisigAccountTransaction.create(
+            Deadline.create(1, ChronoUnit.HOURS),
+            1,
+            1,
+            [new MultisigCosignatoryModification(
+                MultisigCosignatoryModificationType.Remove,
+                account1.publicAccount,
+            )],
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [modifyMultisigTransaction.toAggregate(multisig2.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            []);
+
+        const signedTransaction = aggregateTransaction.signWith(account2);
         aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
