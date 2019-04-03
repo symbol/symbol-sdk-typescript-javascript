@@ -20,7 +20,11 @@ import { TransactionMapping } from '../core/utils/TransactionMapping';
 import { AccountHttp } from '../infrastructure/AccountHttp';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
+import { InnerTransaction } from '../model/transaction/InnerTransaction';
+import { ModifyMultisigAccountTransaction } from '../model/transaction/ModifyMultisigAccountTransaction';
+import { MultisigCosignatoryModificationType } from '../model/transaction/MultisigCosignatoryModificationType';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
+import { TransactionType } from '../model/transaction/TransactionType';
 
 /**
  * Aggregated Transaction service
@@ -58,7 +62,7 @@ export class AggregatedTransactionService {
                     mergeMap((_) => _.minApproval !== 0 && _.minRemoval !== 0 ?
                         this.accountHttp.getMultisigAccountGraphInfo(_.account.address)
                         .pipe(
-                            map((graphInfo) => this.validateCosignatories(graphInfo, signers)),
+                            map((graphInfo) => this.validateCosignatories(graphInfo, signers, innerTransaction)),
                         ) : observableOf(true),
                         ),
                     ),
@@ -70,9 +74,12 @@ export class AggregatedTransactionService {
      * Validate cosignatories against multisig Account(s)
      * @param graphInfo - multisig account graph info
      * @param cosignatories - array of cosignatories extracted from aggregated transaction
+     * @param innerTransaction - the inner transaction of the aggregated transaction
      * @returns {boolean}
      */
-    private validateCosignatories(graphInfo: MultisigAccountGraphInfo, cosignatories: string[]): boolean {
+    private validateCosignatories(graphInfo: MultisigAccountGraphInfo,
+                                  cosignatories: string[],
+                                  innerTransaction: InnerTransaction): boolean {
         /**
          *  Validate cosignatories from bottom level to top
          */
@@ -80,11 +87,24 @@ export class AggregatedTransactionService {
         const cosignatoriesReceived = cosignatories;
         let validationResult = true;
 
+        let isMultisigRemoval = false;
+
+        /**
+         * Check inner transaction. If remove cosigner from multisig account,
+         * use minRemoval instead of minApproval for cosignatories validation.
+         */
+        if (innerTransaction.type === TransactionType.MODIFY_MULTISIG_ACCOUNT) {
+            if ((innerTransaction as ModifyMultisigAccountTransaction).modifications
+                    .find((modification) => modification.type === MultisigCosignatoryModificationType.Remove) !== undefined) {
+                        isMultisigRemoval = true;
+            }
+        }
+
         sortedKeys.forEach((key) => {
             const multisigInfo = graphInfo.multisigAccounts.get(key);
             if (multisigInfo && validationResult) {
                 multisigInfo.forEach((multisig) => {
-                    if (multisig.minApproval >= 1) {
+                    if (multisig.minApproval >= 1 && multisig.minRemoval) { // To make sure it is multisig account
                         const matchedCosignatories = this.compareArrays(cosignatoriesReceived,
                                         multisig.cosignatories.map((cosig) => cosig.publicKey));
 
@@ -93,7 +113,8 @@ export class AggregatedTransactionService {
                          * into the received signatories array for next level validation.
                          * Otherwise return validation failed.
                          */
-                        if (matchedCosignatories.length >= multisig.minApproval) {
+                        if ((matchedCosignatories.length >= multisig.minApproval && !isMultisigRemoval) ||
+                            (matchedCosignatories.length >= multisig.minRemoval && isMultisigRemoval)) {
                             if (cosignatoriesReceived.indexOf(multisig.account.publicKey) === -1) {
                                 cosignatoriesReceived.push(multisig.account.publicKey);
                               }
