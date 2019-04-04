@@ -376,7 +376,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                 }),
                 networkType,
                 consignatureArray ? consignatureArray.map((cosignature) => new AggregateTransactionCosignature(
-                    cosignature.substring(0, 64),
+                    cosignature.substring(64, 192),
                     PublicAccount.createFromPublicKey(cosignature.substring(0, 64), networkType),
                 )) : [],
             );
@@ -400,7 +400,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                 }),
                 networkType,
                 bondedConsignatureArray ? bondedConsignatureArray.map((cosignature) => new AggregateTransactionCosignature(
-                    cosignature.substring(0, 64),
+                    cosignature.substring(64, 192),
                     PublicAccount.createFromPublicKey(cosignature.substring(0, 64), networkType),
                 )) : [],
             );
