@@ -456,8 +456,8 @@ const parseInnerTransactionFromBinary = (innerTransactionBinary: string): string
     let innerBinary = innerTransactionBinary;
 
     while (innerBinary.length) {
-        const payloadSize = parseInt(convert.uint8ToHex(convert.hexToUint8(innerTransactionBinary.substring(0, 8)).reverse()), 16) * 2;
-        const innerTransaction = innerTransactionBinary.substring(8, payloadSize);
+        const payloadSize = parseInt(convert.uint8ToHex(convert.hexToUint8(innerBinary.substring(0, 8)).reverse()), 16) * 2;
+        const innerTransaction = innerBinary.substring(8, payloadSize);
         embeddedTransaction.push(innerTransaction);
         innerBinary = innerBinary.substring(payloadSize);
     }
