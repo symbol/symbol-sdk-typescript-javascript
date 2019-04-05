@@ -118,16 +118,6 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
  */
 const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Transaction => {
     if (transactionDTO.type === TransactionType.TRANSFER) {
-        /**
-         * Check if message is encoded (from DTO) or is raw (from JSON)
-         */
-        let message = EmptyMessage;
-        if (transactionDTO.message !== undefined && convert.isHexString(transactionDTO.message.payload)) {
-            message = PlainMessage.createFromDTO(transactionDTO.message.payload);
-        } else {
-            message = PlainMessage.create(transactionDTO.message.payload);
-        }
-
         return new TransferTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
@@ -135,7 +125,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             new UInt64(transactionDTO.fee || [0, 0]),
             extractRecipient(transactionDTO.recipient),
             extractMosaics(transactionDTO.mosaics),
-            message,
+            extractMessage(transactionDTO.message.payload),
             transactionDTO.signature,
             transactionDTO.signer ? PublicAccount.createFromPublicKey(transactionDTO.signer,
                     extractNetworkType(transactionDTO.version)) : undefined,
@@ -390,9 +380,9 @@ const extractRecipient = (recipient: any): Address | NamespaceId => {
     } else if (typeof recipient === 'object') { // Is JSON object
         if (recipient.hasOwnProperty('address')) {
             return Address.createFromRawAddress(recipient.address);
+        } else if (recipient.hasOwnProperty('id')) {
+            return new NamespaceId(recipient.id);
         }
-
-        return new NamespaceId(recipient.id);
     }
     throw new Error(`Recipient: ${recipient} type is not recognised`);
 };
@@ -427,4 +417,21 @@ const extractMosaics = (mosaics: any): Mosaic[] => {
         // most significant bit of byte 0 is not set => mosaicId
         return new Mosaic(new MosaicId(mosaicDTO.id), new UInt64(mosaicDTO.amount));
     });
+};
+
+/**
+ * Extract message from either JSON payload (unencoded) or DTO (encoded)
+ *
+ * @param message - message payload
+ * @return {PlainMessage}
+ */
+const extractMessage = (message: any): PlainMessage => {
+    let plainMessage = EmptyMessage;
+    if (message !== undefined && convert.isHexString(message)) {
+        plainMessage = PlainMessage.createFromDTO(message);
+    } else {
+        plainMessage = PlainMessage.create(message);
+    }
+
+    return plainMessage;
 };
