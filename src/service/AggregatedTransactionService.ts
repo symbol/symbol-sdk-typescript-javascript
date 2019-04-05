@@ -15,7 +15,7 @@
  */
 
 import {from as observableFrom , Observable, of as observableOf} from 'rxjs';
-import { map, mergeMap} from 'rxjs/operators';
+import { flatMap, map, mergeMap, toArray} from 'rxjs/operators';
 import { TransactionMapping } from '../core/utils/TransactionMapping';
 import { AccountHttp } from '../infrastructure/AccountHttp';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
@@ -52,7 +52,6 @@ export class AggregatedTransactionService {
         if (signedTransaction.signer) {
             signers.push(signedTransaction.signer);
         }
-
         return observableFrom(aggregateTransaction.innerTransactions).pipe(
             mergeMap((innerTransaction) => this.accountHttp.getMultisigAccountInfo(innerTransaction.signer.address)
                 .pipe(
@@ -63,11 +62,16 @@ export class AggregatedTransactionService {
                         this.accountHttp.getMultisigAccountGraphInfo(_.account.address)
                         .pipe(
                             map((graphInfo) => this.validateCosignatories(graphInfo, signers, innerTransaction)),
-                        ) : observableOf(true),
+                        ) : observableOf(signers.find((s) => s === _.account.publicKey ) !== undefined),
                         ),
                     ),
                 ),
-            );
+            toArray(),
+        ).pipe(
+            flatMap((results) => {
+                return observableOf(results.every((isComplete) => isComplete));
+            }),
+        );
     }
 
     /**
