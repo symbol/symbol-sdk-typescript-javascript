@@ -106,7 +106,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.MOSAIC_DEFINITION:
             return {
-                nonce: (transaction as MosaicDefinitionTransaction).nonce.toDTO(),
+                nonce: (transaction as MosaicDefinitionTransaction).nonce,
                 mosaicId: (transaction as MosaicDefinitionTransaction).mosaicId.toDTO(),
                 mosaicProperties: (transaction as MosaicDefinitionTransaction).mosaicProperties.toDTO(),
             };
