@@ -17,6 +17,7 @@
 import {crypto} from 'nem2-library';
 import {PublicAccount} from '../account/PublicAccount';
 import {Message} from './Message';
+import {MessageType} from './MessageType';
 import {PlainMessage} from './PlainMessage';
 
 /**
@@ -28,7 +29,7 @@ export class EncryptedMessage extends Message {
 
     constructor(payload: string,
                 recipientPublicAccount?: PublicAccount){
-        super(1,payload);
+        super(MessageType.EncryptedMessage,payload);
         this.recipientPublicAccount = recipientPublicAccount;
     }
 
