@@ -78,6 +78,33 @@ describe('MosaicInfo', () => {
 
     });
 
+    it('should createComplete an MosaicInfo object without duration', () => {
+        const mosaicInfo = new MosaicInfo(
+            mosaicInfoDTO.meta.id,
+            mosaicInfoDTO.mosaic.mosaicId,
+            mosaicInfoDTO.mosaic.supply,
+            mosaicInfoDTO.mosaic.height,
+            mosaicInfoDTO.mosaic.owner,
+            mosaicInfoDTO.mosaic.revision,
+            new MosaicProperties(
+                mosaicInfoDTO.mosaic.properties[0],
+                mosaicInfoDTO.mosaic.properties[1].compact(),
+            ),
+            mosaicInfoDTO.mosaic.levy,
+        );
+
+        expect(mosaicInfo.metaId).to.be.equal(mosaicInfoDTO.meta.id);
+        deepEqual(mosaicInfo.mosaicId, mosaicInfoDTO.mosaic.mosaicId);
+        deepEqual(mosaicInfo.supply, mosaicInfoDTO.mosaic.supply);
+        deepEqual(mosaicInfo.height, mosaicInfoDTO.mosaic.height);
+        expect(mosaicInfo.owner).to.be.equal(mosaicInfoDTO.mosaic.owner);
+        deepEqual(mosaicInfo.revision, mosaicInfoDTO.mosaic.revision);
+
+        expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.properties[1].lower);
+        deepEqual(mosaicInfo.duration, undefined);
+
+    });
+
     describe('isSupplyMutable', () => {
         it('should return true when it\'s mutable', () => {
             const mosaicInfo = new MosaicInfo(
