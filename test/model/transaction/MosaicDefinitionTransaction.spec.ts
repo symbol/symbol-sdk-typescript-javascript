@@ -87,8 +87,8 @@ describe('MosaicDefinitionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicDefinitionTransaction.mosaicProperties.duration.lower).to.be.equal(1000);
-        expect(mosaicDefinitionTransaction.mosaicProperties.duration.higher).to.be.equal(0);
+        expect(mosaicDefinitionTransaction.mosaicProperties.duration!.lower).to.be.equal(1000);
+        expect(mosaicDefinitionTransaction.mosaicProperties.duration!.higher).to.be.equal(0);
         expect(mosaicDefinitionTransaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(mosaicDefinitionTransaction.mosaicProperties.supplyMutable).to.be.equal(true);
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(true);
@@ -119,8 +119,8 @@ describe('MosaicDefinitionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicDefinitionTransaction.mosaicProperties.duration.lower).to.be.equal(1000);
-        expect(mosaicDefinitionTransaction.mosaicProperties.duration.higher).to.be.equal(0);
+        expect(mosaicDefinitionTransaction.mosaicProperties.duration!.lower).to.be.equal(1000);
+        expect(mosaicDefinitionTransaction.mosaicProperties.duration!.higher).to.be.equal(0);
         expect(mosaicDefinitionTransaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(mosaicDefinitionTransaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(false);
