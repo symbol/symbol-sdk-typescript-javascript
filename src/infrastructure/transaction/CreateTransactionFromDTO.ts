@@ -428,7 +428,7 @@ const extractMosaics = (mosaics: any): Mosaic[] => {
 const extractMessage = (message: any): PlainMessage => {
     let plainMessage = EmptyMessage;
     if (message !== undefined && convert.isHexString(message)) {
-        plainMessage = PlainMessage.createFromDTO(message);
+        plainMessage = PlainMessage.createFromPayload(message);
     } else {
         plainMessage = PlainMessage.create(message);
     }

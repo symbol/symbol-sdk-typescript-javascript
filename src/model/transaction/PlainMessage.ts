@@ -31,7 +31,7 @@ export class PlainMessage extends Message {
     /**
      * @internal
      */
-    public static createFromDTO(payload: string): PlainMessage {
+    public static createFromPayload(payload: string): PlainMessage {
         return new PlainMessage(this.decodeHex(payload));
     }
 
