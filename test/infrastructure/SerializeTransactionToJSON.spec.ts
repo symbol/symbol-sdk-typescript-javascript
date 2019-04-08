@@ -221,6 +221,30 @@ describe('SerializeTransactionToJSON', () => {
 
     });
 
+    it('should create MosaicDefinitionTransaction without duration', () => {
+        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            MosaicProperties.create({
+                supplyMutable: false,
+                transferable: false,
+                levyMutable: false,
+                divisibility: 3,
+            }),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const json = mosaicDefinitionTransaction.toJSON();
+
+        expect(json.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
+        expect(json.mosaicProperties.supplyMutable).to.be.equal(false);
+        expect(json.mosaicProperties.transferable).to.be.equal(false);
+        expect(json.mosaicProperties.levyMutable).to.be.equal(false);
+        expect(json.mosaicProperties.divisibility).to.be.equal(3);
+
+    });
+
     it('should create MosaicSupplyChangeTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
