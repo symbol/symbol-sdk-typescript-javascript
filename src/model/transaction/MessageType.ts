@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 
 /**
- * The supply type. Supported supply types are:
- * 0: Increase in supply.
- * 1: Decrease in supply.
+ * The Message type. Supported supply types are:
+ * 0: PlainMessage
+ * 1: EncryptedMessage.
  */
 export enum MessageType {
     PlainMessage = 0,
