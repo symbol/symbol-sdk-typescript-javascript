@@ -128,7 +128,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addDivisibility(this.mosaicProperties.divisibility)
-            .addDuration(this.mosaicProperties.duration.toDTO())
+            .addDuration(this.mosaicProperties.duration ? this.mosaicProperties.duration.toDTO() : [])
             .addNonce(this.nonce.toDTO())
             .addMosaicId(this.mosaicId.id.toDTO());
 
