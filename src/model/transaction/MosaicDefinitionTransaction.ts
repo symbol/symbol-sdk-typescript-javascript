@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { 
+import {
     MosaicCreationTransaction as MosaicDefinitionTransactionLibrary,
     mosaicId as mosaicIdLibrary,
     VerifiableTransaction,
@@ -106,7 +106,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             .addFee(this.fee.toDTO())
             .addVersion(this.versionToDTO())
             .addDivisibility(this.mosaicProperties.divisibility)
-            .addDuration(this.mosaicProperties.duration.toDTO())
+            .addDuration(this.mosaicProperties.duration ? this.mosaicProperties.duration.toDTO() : [])
             .addNonce(this.nonce.toDTO())
             .addMosaicId(this.mosaicId.id.toDTO());
 
