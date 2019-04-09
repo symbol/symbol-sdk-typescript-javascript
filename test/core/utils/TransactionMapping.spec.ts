@@ -192,7 +192,7 @@ describe('TransactionMapping', () => {
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
         expect(transaction.mosaicProperties.duration!.lower).to.be.equal(1000);
-        expect(transaction.mosaicProperties.duration! .higher).to.be.equal(0);
+        expect(transaction.mosaicProperties.duration!.higher).to.be.equal(0);
         expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(transaction.mosaicProperties.transferable).to.be.equal(false);
