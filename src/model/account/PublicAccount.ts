@@ -95,4 +95,13 @@ export class PublicAccount {
         return this.publicKey === publicAccount.publicKey && this.address.plain() === publicAccount.address.plain();
     }
 
+    /**
+     * Create DTO object
+     */
+    toDTO() {
+        return {
+            publicKey: this.publicKey,
+            address: this.address.toDTO(),
+        };
+    }
 }

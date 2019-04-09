@@ -107,4 +107,10 @@ export class TransactionType {
      * @type {number}
      */
     public static readonly MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE = 0x4350;
+
+    /**
+     * Link account transaction type
+     * @type {number}
+     */
+    public static readonly LINK_ACCOUNT = 0x414C;
 }

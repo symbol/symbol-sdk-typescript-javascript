@@ -37,4 +37,21 @@ describe('NamespaceId', () => {
         deepEqual(id.id, new Id([3646934825, 3576016193]));
         expect(id.fullName).to.be.equal(undefined);
     });
+
+    const vectors = [
+        {encoded: '4bfa5f372d55b384', uint: [929036875, 2226345261]},  // new NamespaceId('nem')
+        {encoded: '08a12f89ee5a49f8', uint: [2301600008, 4165556974]}, // new NamespaceId('nem.owner.test1')
+        {encoded: '1f810565e8f4aeab', uint: [1694859551, 2880369896]}, // new NamespaceId('nem.owner.test2')
+        {encoded: '552d1c0a2bc9b8ae', uint: [169618773, 2931345707]},  // new NamespaceId('nem.owner.test3')
+        {encoded: 'bfca1440d49ae090', uint: [1075104447, 2430638804]}, // new NamespaceId('nem.owner.test4')
+        {encoded: 'ccf10b96814211ab', uint: [2517365196, 2870035073]}, // new NamespaceId('nem.owner.test5')
+    ];
+
+    it('should be created from encoded vectors', () => {
+        vectors.map(({encoded, uint}) => {
+            const fromHex = NamespaceId.createFromEncoded(encoded.toUpperCase());
+            const fromId = new NamespaceId(uint);
+            deepEqual(fromId.id, fromHex.id);
+        });
+    });
 });

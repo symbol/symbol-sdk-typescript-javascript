@@ -15,6 +15,7 @@
  */
 
 import { VerifiableTransaction } from 'nem2-library';
+import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -24,6 +25,7 @@ import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
 import { TransactionInfo } from './TransactionInfo';
+import { TransactionType } from './TransactionType';
 
 /**
  * An abstract transaction class that serves as the base class of all NEM transactions.
@@ -112,6 +114,9 @@ export abstract class Transaction {
      * @returns InnerTransaction
      */
     public toAggregate(signer: PublicAccount): InnerTransaction {
+        if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
+            throw new Error('Inner transaction cannot be an aggregated transaction.');
+        }
         return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {signer});
     }
 
@@ -168,5 +173,39 @@ export abstract class Transaction {
             return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {deadline});
         }
         throw new Error('an Announced transaction can\'t be modified');
+    }
+
+    /**
+     * @description Serialize a transaction object
+     * @returns {string}
+     * @memberof Transaction
+     */
+    public serialize() {
+        const transaction = this.buildTransaction();
+        return transaction.serializeUnsignedTransaction();
+    }
+
+    /**
+     * @description Create JSON object
+     * @returns {Object}
+     * @memberof Transaction
+     */
+    public toJSON() {
+        const commonTransactionObject = {
+            type: this.type,
+            networkType: this.networkType,
+            version: this.version,
+            fee: this.fee.toDTO(),
+            deadline: this.deadline.toDTO(),
+            signature: this.signature ? this.signature : '',
+        };
+
+        if (this.signer) {
+            Object.assign(commonTransactionObject, {signer: this.signer.toDTO()});
+        }
+
+        const childClassObject = SerializeTransactionToJSON(this);
+
+        return Object.assign(commonTransactionObject, childClassObject);
     }
 }

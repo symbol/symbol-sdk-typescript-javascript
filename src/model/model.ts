@@ -61,6 +61,7 @@ export * from './namespace/NamespaceType';
 export * from './namespace/AliasActionType';
 
 // Transaction
+export * from './transaction/AccountLinkTransaction';
 export * from './transaction/AccountPropertyTransaction';
 export * from './transaction/ModifyAccountPropertyAddressTransaction';
 export * from './transaction/ModifyAccountPropertyEntityTypeTransaction';
@@ -77,6 +78,7 @@ export * from './transaction/Deadline';
 export * from './transaction/HashLockTransaction';
 export * from './transaction/HashType';
 export * from './transaction/InnerTransaction';
+export * from './transaction/LinkAction';
 export * from './transaction/LockFundsTransaction';
 export * from './transaction/Message';
 export * from './transaction/ModifyMultisigAccountTransaction';
