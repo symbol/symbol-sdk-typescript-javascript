@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {namespaceId as NamespaceIdGenerator} from 'nem2-library';
+import {convert, namespaceId as NamespaceIdGenerator} from 'nem2-library';
 import {Id} from '../Id';
 
 /**
@@ -49,6 +49,18 @@ export class NamespaceId {
     }
 
     /**
+     * Create a NamespaceId object from its encoded hexadecimal notation.
+     * @param encoded
+     * @returns {NamespaceId}
+     */
+    public static createFromEncoded(encoded: string): NamespaceId {
+        const uint = convert.hexToUint8(encoded).reverse();
+        const hex  = convert.uint8ToHex(uint);
+        const namespace = new NamespaceId(Id.fromHex(hex).toDTO());
+        return namespace;
+    }
+
+    /**
      * Get string value of id
      * @returns {string}
      */
@@ -66,5 +78,15 @@ export class NamespaceId {
             return this.id.equals(id.id);
         }
         return false;
+    }
+
+    /**
+     * Create DTO object
+     */
+    public toDTO() {
+        return {
+            id: this.id.toDTO(),
+            fullName: this.fullName ? this.fullName : '',
+        };
     }
 }

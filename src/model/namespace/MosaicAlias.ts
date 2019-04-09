@@ -51,4 +51,12 @@ export class MosaicAlias implements Alias {
         }
         return false;
     }
+
+    /**
+     * Get string value of mosaicId
+     * @returns {string}
+     */
+    public toHex(): string {
+        return this.mosaicId.toHex();
+    }
 }

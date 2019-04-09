@@ -46,7 +46,7 @@ export class SecretProofTransaction extends Transaction {
             networkType,
             TransactionVersion.SECRET_PROOF,
             deadline,
-            UInt64.fromUint(0),
+            new UInt64([0, 0]),
             hashType,
             secret,
             proof,

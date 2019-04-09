@@ -56,7 +56,7 @@ export class LockFundsTransaction extends Transaction {
             networkType,
             TransactionVersion.LOCK,
             deadline,
-            UInt64.fromUint(0),
+            new UInt64([0, 0]),
             mosaic,
             duration,
             signedTransaction,

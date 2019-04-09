@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary, subnamespaceNamespaceId, subnamespaceParentId, VerifiableTransaction } from 'nem2-library';
+import { NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary, subnamespaceNamespaceId, subnamespaceParentId, VerifiableTransaction, namespaceId } from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
@@ -79,7 +79,9 @@ export class RegisterNamespaceTransaction extends Transaction {
             new UInt64([0, 0]),
             NamespaceType.SubNamespace,
             namespaceName,
-            new NamespaceId(subnamespaceNamespaceId(parentNamespace, namespaceName)),
+            typeof parentNamespace === 'string' ?
+                new NamespaceId(subnamespaceNamespaceId(parentNamespace, namespaceName)) :
+                new NamespaceId(namespaceId(namespaceName)),
             undefined,
             parentId,
         );

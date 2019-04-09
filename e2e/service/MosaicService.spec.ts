@@ -1,7 +1,6 @@
 import { map, mergeMap, toArray } from 'rxjs/operators';
 import { AccountHttp } from '../../src/infrastructure/AccountHttp';
 import { MosaicHttp } from '../../src/infrastructure/MosaicHttp';
-import { NamespaceHttp } from '../../src/infrastructure/NamespaceHttp';
 import { Address } from '../../src/model/account/Address';
 import { MosaicService } from '../../src/service/MosaicService';
 import { APIUrl } from '../conf/conf.spec';
@@ -12,7 +11,6 @@ describe('MosaicService', () => {
         const mosaicService = new MosaicService(
             new AccountHttp(APIUrl),
             new MosaicHttp(APIUrl),
-            new NamespaceHttp(APIUrl),
         );
 
         const address = Address.createFromRawAddress('SCO2JY-N6OJSM-CJPPVS-Z3OX7P-TWPQEJ-GZTI6W-GLKK');

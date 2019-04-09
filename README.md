@@ -10,9 +10,9 @@ with the NEM2 (a.k.a Catapult)
 
 ## Important Notes
 
-Due to a network upgrade with [catapult-server@cow](https://github.com/nemtech/catapult-server/releases/tag/v0.3.0.1) version, **transactions from Alpaca&Bison are not compatible anymore**.
+Due to a network upgrade with [catapult-server@cow](https://github.com/nemtech/catapult-server/releases/tag/v0.3.0.2) version, **transactions from Alpaca&Bison are not compatible anymore**.
 
-The upgrade to this SDK's [version v0.10.2](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.10.2) is mandatory for **cow compatibility**.
+The upgrade to this SDK's [version v0.11](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.11) is mandatory for **cow compatibility**.
 
 Other versions like [version v0.10.1-beta](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.10.1-beta) can be used for **bison** network version.
 
@@ -55,9 +55,8 @@ Please, use the following available resources to get help:
 
 Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
 
-- [0.10.3](CHANGELOG.md#v0103) - **Cow compatible** - TBD
-- [0.10.2](CHANGELOG.md#v0102) - **Cow compatible** - 2019-02-25
-- [0.10.1-beta](CHANGELOG.md#v0101-beta) - **Alpaca compatible**
+- [0.11](CHANGELOG.md#v011) - **Cow compatible** - 14.03.2019
+- [0.10.1-beta](CHANGELOG.md#v0101-beta) - **Alpaca compatible** 07.2018
 
 ## License
 

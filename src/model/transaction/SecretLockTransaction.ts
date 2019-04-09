@@ -52,7 +52,7 @@ export class SecretLockTransaction extends Transaction {
             networkType,
             TransactionVersion.SECRET_LOCK,
             deadline,
-            UInt64.fromUint(0),
+            new UInt64([0, 0]),
             mosaic,
             duration,
             hashType,

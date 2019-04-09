@@ -23,6 +23,7 @@ import {PublicAccount} from '../model/account/PublicAccount';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {Transaction} from '../model/transaction/Transaction';
 import {QueryParams} from './QueryParams';
+import {AccountPropertiesInfo} from "../model/account/AccountPropertiesInfo";
 
 /**
  * Account interface repository.
@@ -44,6 +45,20 @@ export interface AccountRepository {
      * @returns Observable<AccountInfo[]>
      */
     getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]>;
+
+    /**
+     * Gets Account property.
+     * @param publicAccount public account
+     * @returns Observable<AccountProperty>
+     */
+    getAccountProperty(publicAccount: PublicAccount): Observable<AccountPropertiesInfo>;
+
+    /**
+     * Gets Account properties.
+     * @param address list of addresses
+     * @returns Observable<AccountProperty[]>
+     */
+    getAccountProperties(addresses: Address[]): Observable<AccountPropertiesInfo[]>;
 
     /**
      * Gets a MultisigAccountInfo for an account.
