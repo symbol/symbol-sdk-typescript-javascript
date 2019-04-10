@@ -29,7 +29,7 @@ import { TransactionType } from '../model/transaction/TransactionType';
 /**
  * Aggregated Transaction service
  */
-export class AggregatedTransactionService {
+export class AggregateTransactionService {
 
     /**
      * Constructor

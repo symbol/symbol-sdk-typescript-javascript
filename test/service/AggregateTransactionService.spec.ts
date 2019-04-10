@@ -31,13 +31,13 @@ import { MultisigCosignatoryModification } from '../../src/model/transaction/Mul
 import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { AggregatedTransactionService } from '../../src/service/AggregatedTransactionService';
+import { AggregateTransactionService } from '../../src/service/AggregateTransactionService';
 
 /**
  * For multi level multisig scenario visit: https://github.com/nemtech/nem2-docs/issues/10
  */
-describe('AggregatedTransactionService', () => {
-    let aggregatedTransactionService: AggregatedTransactionService;
+describe('AggregateTransactionService', () => {
+    let aggregateTransactionService: AggregateTransactionService;
 
     /**
      *  Multisig2 Account:	SBROWP-7YMG2M-K45RO6-Q7ZPK7-G7GXWQ-JK5VNQ-OSUX
@@ -95,7 +95,7 @@ describe('AggregatedTransactionService', () => {
             .thenReturn(observableOf(givenAccount3Info()));
 
         const accountHttp = instance(mockedAccountHttp);
-        aggregatedTransactionService = new AggregatedTransactionService(accountHttp);
+        aggregateTransactionService = new AggregateTransactionService(accountHttp);
     });
 
     it('should return isComplete: true for aggregated complete transaction - 2 levels Multisig', () => {
@@ -122,7 +122,7 @@ describe('AggregatedTransactionService', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account2]);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
     });
@@ -151,7 +151,7 @@ describe('AggregatedTransactionService', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, []);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
@@ -180,7 +180,7 @@ describe('AggregatedTransactionService', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4]);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
@@ -218,7 +218,7 @@ describe('AggregatedTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4]);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
@@ -256,7 +256,7 @@ describe('AggregatedTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4, account2]);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
     });
@@ -285,7 +285,7 @@ describe('AggregatedTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
         const signedTransaction = aggregateTransaction.signWith(account2);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
     });
@@ -312,7 +312,7 @@ describe('AggregatedTransactionService', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signWith(account1);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
@@ -340,7 +340,7 @@ describe('AggregatedTransactionService', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signWith(account4);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
     });
@@ -383,7 +383,7 @@ describe('AggregatedTransactionService', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4]);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
     });
@@ -425,7 +425,7 @@ describe('AggregatedTransactionService', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, []);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
@@ -451,7 +451,7 @@ describe('AggregatedTransactionService', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [account3]);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
     });
@@ -477,7 +477,7 @@ describe('AggregatedTransactionService', () => {
             []);
 
         const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, []);
-        aggregatedTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
+        aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });
     });
