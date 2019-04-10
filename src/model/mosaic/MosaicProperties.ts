@@ -88,12 +88,12 @@ export class MosaicProperties {
      * Create DTO object
      */
     toDTO() {
-        return {
-            supplyMutable: this.supplyMutable,
-            transferable: this.transferable,
-            levyMutable: this.levyMutable,
-            divisibility: this.divisibility,
-            duration: this.duration.toDTO(),
-        };
+        return [
+            {id: 0, value: UInt64.fromUint((this.supplyMutable ? 1 : 0) +
+                                           (this.transferable ? 2 : 0) +
+                                           (this.levyMutable ? 4 : 0)).toDTO()},
+            {id: 1, value: UInt64.fromUint(this.divisibility).toDTO()},
+            {id: 2, value: this.duration.toDTO()},
+        ];
     }
 }

@@ -212,17 +212,16 @@ export abstract class Transaction {
             type: this.type,
             networkType: this.networkType,
             version: this.version,
-            fee: this.maxFee.toDTO(),
+            maxFee: this.maxFee.toDTO(),
             deadline: this.deadline.toDTO(),
             signature: this.signature ? this.signature : '',
         };
 
         if (this.signer) {
-            Object.assign(commonTransactionObject, {signer: this.signer.toDTO()});
+            Object.assign(commonTransactionObject, {signer: this.signer.publicKey});
         }
 
         const childClassObject = SerializeTransactionToJSON(this);
-
-        return Object.assign(commonTransactionObject, childClassObject);
+        return {transaction: Object.assign(commonTransactionObject, childClassObject)};
     }
 }

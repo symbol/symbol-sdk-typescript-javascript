@@ -47,15 +47,15 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.ADDRESS_ALIAS:
             return {
-                actionType: (transaction as AddressAliasTransaction).actionType,
+                aliasAction: (transaction as AddressAliasTransaction).actionType,
                 namespaceId: (transaction as AddressAliasTransaction).namespaceId.toDTO(),
                 address: (transaction as AddressAliasTransaction).address.toDTO(),
             };
         case TransactionType.AGGREGATE_BONDED:
         case TransactionType.AGGREGATE_COMPLETE:
             return {
-                innerTransactions: (transaction as AggregateTransaction).innerTransactions.map((innerTransaction) => {
-                    return SerializeTransactionToJSON(innerTransaction);
+                transactions: (transaction as AggregateTransaction).innerTransactions.map((innerTransaction) => {
+                    return innerTransaction.toJSON();
                 }),
                 cosignatures: (transaction as AggregateTransaction).cosignatures.map((cosignature) => {
                     return cosignature.toDTO();
@@ -63,9 +63,10 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.LOCK:
             return {
-                mosaic: (transaction as LockFundsTransaction).mosaic.toDTO(),
+                mosaicId: (transaction as LockFundsTransaction).mosaic.id.id,
+                amount: (transaction as LockFundsTransaction).mosaic.amount.toDTO(),
                 duration: (transaction as LockFundsTransaction).duration.toDTO(),
-                signedTransaction: (transaction as LockFundsTransaction).hash,
+                hash: (transaction as LockFundsTransaction).hash,
             };
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
             return {
@@ -100,15 +101,15 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.MOSAIC_ALIAS:
             return {
-                actionType: (transaction as MosaicAliasTransaction).actionType,
+                aliasAction: (transaction as MosaicAliasTransaction).actionType,
                 namespaceId: (transaction as MosaicAliasTransaction).namespaceId.toDTO(),
                 mosaicId: (transaction as MosaicAliasTransaction).mosaicId.toDTO(),
             };
         case TransactionType.MOSAIC_DEFINITION:
             return {
-                nonce: (transaction as MosaicDefinitionTransaction).nonce.toDTO(),
+                nonce: (transaction as MosaicDefinitionTransaction).nonce,
                 mosaicId: (transaction as MosaicDefinitionTransaction).mosaicId.toDTO(),
-                mosaicProperties: (transaction as MosaicDefinitionTransaction).mosaicProperties.toDTO(),
+                properties: (transaction as MosaicDefinitionTransaction).mosaicProperties.toDTO(),
             };
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
             return {
@@ -135,15 +136,16 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             return jsonObject;
         case TransactionType.SECRET_LOCK:
             return {
-                mosaic: (transaction as SecretLockTransaction).mosaic.toDTO(),
+                mosaicId: (transaction as SecretLockTransaction).mosaic.id.id,
+                amount: (transaction as SecretLockTransaction).mosaic.amount.toDTO(),
                 duration: (transaction as SecretLockTransaction).duration.toDTO(),
-                hashType: (transaction as SecretLockTransaction).hashType,
+                hashAlgorithm: (transaction as SecretLockTransaction).hashType,
                 secret: (transaction as SecretLockTransaction).secret,
                 recipient: (transaction as SecretLockTransaction).recipient.toDTO(),
             };
         case TransactionType.SECRET_PROOF:
             return {
-                hashType: (transaction as SecretProofTransaction).hashType,
+                hashAlgorithm: (transaction as SecretProofTransaction).hashType,
                 secret: (transaction as SecretProofTransaction).secret,
                 proof: (transaction as SecretProofTransaction).proof,
             };
