@@ -28,8 +28,8 @@ export class EncryptedMessage extends Message {
     public readonly recipientPublicAccount?: PublicAccount;
 
     constructor(payload: string,
-                recipientPublicAccount?: PublicAccount){
-        super(MessageType.EncryptedMessage,payload);
+                recipientPublicAccount?: PublicAccount) {
+        super(MessageType.EncryptedMessage, payload);
         this.recipientPublicAccount = recipientPublicAccount;
     }
 
