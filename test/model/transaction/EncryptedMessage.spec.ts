@@ -16,9 +16,6 @@
 
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
-
-import {PublicAccount} from '../../../src/model/account/PublicAccount';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {EncryptedMessage} from '../../../src/model/transaction/EncryptedMessage';
 import { TestingAccount } from '../../conf/conf.spec';
 
