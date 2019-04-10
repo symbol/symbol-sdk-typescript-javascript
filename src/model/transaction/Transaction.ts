@@ -211,7 +211,7 @@ export abstract class Transaction {
         const commonTransactionObject = {
             type: this.type,
             networkType: this.networkType,
-            version: this.version,
+            version: this.versionToDTO(),
             maxFee: this.maxFee.toDTO(),
             deadline: this.deadline.toDTO(),
             signature: this.signature ? this.signature : '',
