@@ -16,4 +16,4 @@
 
 export * from './NamespaceService';
 export * from './MosaicService';
-export * from './AggregatedTransactionService';
+export * from './AggregateTransactionService';
