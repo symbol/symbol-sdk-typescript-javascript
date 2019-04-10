@@ -69,4 +69,20 @@ describe('MosaicProperties', () => {
         expect(mosaicProperties.transferable).to.be.equal(false);
         expect(mosaicProperties.levyMutable).to.be.equal(false);
     });
+
+    it('should createComplete an MosaicProperties object without duration', () => {
+        const mosaicProperties = MosaicProperties.create({
+            supplyMutable: false,
+            transferable: false,
+            levyMutable: false,
+            divisibility: 10,
+        });
+
+        expect(mosaicProperties.divisibility).to.be.equal(10);
+        deepEqual(mosaicProperties.duration, undefined);
+
+        expect(mosaicProperties.supplyMutable).to.be.equal(false);
+        expect(mosaicProperties.transferable).to.be.equal(false);
+        expect(mosaicProperties.levyMutable).to.be.equal(false);
+    });
 });

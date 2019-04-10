@@ -24,7 +24,6 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicDefinitionTransaction} from '../../../src/model/transaction/MosaicDefinitionTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
-import {convert, mosaicId, uint64 as uint64_t} from 'nem2-library';
 
 describe('MosaicDefinitionTransaction', () => {
     let account: Account;
@@ -87,8 +86,8 @@ describe('MosaicDefinitionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicDefinitionTransaction.mosaicProperties.duration.lower).to.be.equal(1000);
-        expect(mosaicDefinitionTransaction.mosaicProperties.duration.higher).to.be.equal(0);
+        expect(mosaicDefinitionTransaction.mosaicProperties.duration!.lower).to.be.equal(1000);
+        expect(mosaicDefinitionTransaction.mosaicProperties.duration!.higher).to.be.equal(0);
         expect(mosaicDefinitionTransaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(mosaicDefinitionTransaction.mosaicProperties.supplyMutable).to.be.equal(true);
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(true);
@@ -119,8 +118,8 @@ describe('MosaicDefinitionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicDefinitionTransaction.mosaicProperties.duration.lower).to.be.equal(1000);
-        expect(mosaicDefinitionTransaction.mosaicProperties.duration.higher).to.be.equal(0);
+        expect(mosaicDefinitionTransaction.mosaicProperties.duration!.lower).to.be.equal(1000);
+        expect(mosaicDefinitionTransaction.mosaicProperties.duration!.higher).to.be.equal(0);
         expect(mosaicDefinitionTransaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(mosaicDefinitionTransaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(false);
@@ -134,7 +133,6 @@ describe('MosaicDefinitionTransaction', () => {
         )).to.be.equal('E6DE84B8010000000000000001000302E803000000000000');
 
     });
-
 
     describe('size', () => {
         it('should return 144 for MosaicDefinition transaction byte size', () => {
@@ -153,5 +151,34 @@ describe('MosaicDefinitionTransaction', () => {
             );
             expect(mosaicDefinitionTransaction.size).to.be.equal(144);
         });
+    });
+
+    it('should createComplete an MosaicDefinitionTransaction object and sign it without duration', () => {
+
+        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            MosaicProperties.create({
+                supplyMutable: false,
+                transferable: false,
+                levyMutable: false,
+                divisibility: 3,
+            }),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(mosaicDefinitionTransaction.mosaicProperties.divisibility).to.be.equal(3);
+        expect(mosaicDefinitionTransaction.mosaicProperties.supplyMutable).to.be.equal(false);
+        expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(false);
+        expect(mosaicDefinitionTransaction.mosaicProperties.levyMutable).to.be.equal(false);
+
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+
+        expect(signedTransaction.payload.substring(
+            240,
+            signedTransaction.payload.length,
+        )).to.be.equal('E6DE84B80100000000000000000003');
+
     });
 });

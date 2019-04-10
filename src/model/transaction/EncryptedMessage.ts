@@ -28,8 +28,8 @@ export class EncryptedMessage extends Message {
     public readonly recipientPublicAccount?: PublicAccount;
 
     constructor(payload: string,
-                recipientPublicAccount?: PublicAccount){
-        super(MessageType.EncryptedMessage,payload);
+                recipientPublicAccount?: PublicAccount) {
+        super(MessageType.EncryptedMessage, payload);
         this.recipientPublicAccount = recipientPublicAccount;
     }
 
@@ -40,7 +40,9 @@ export class EncryptedMessage extends Message {
      * @param privateKey
      */
     public static create(message: string, recipientPublicAccount: PublicAccount, privateKey) {
-        return new EncryptedMessage(crypto.encode(privateKey, recipientPublicAccount.publicKey, message), recipientPublicAccount);
+        return new EncryptedMessage(
+            crypto.encode(privateKey, recipientPublicAccount.publicKey, message).toUpperCase(),
+            recipientPublicAccount);
     }
 
     /**

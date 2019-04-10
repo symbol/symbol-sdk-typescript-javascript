@@ -59,8 +59,9 @@ export class MosaicProperties {
                 /**
                  * The duration in blocks a mosaic will be available.
                  * After the duration finishes mosaic is inactive and can be renewed.
+                 * Duration is optional when defining the mosaic
                  */
-                public readonly duration: UInt64) {
+                public readonly duration?: UInt64) {
         let binaryFlags = '00' + (flags.lower >>> 0).toString(2);
         binaryFlags = binaryFlags.substr(binaryFlags.length - 3, 3);
         this.supplyMutable = binaryFlags[2] === '1';
@@ -78,7 +79,7 @@ export class MosaicProperties {
         transferable: boolean,
         levyMutable: boolean,
         divisibility: number,
-        duration: UInt64,
+        duration?: UInt64,
     }) {
         const flags = (params.supplyMutable ? 1 : 0) + (params.transferable ? 2 : 0) + (params.levyMutable ? 4 : 0);
         return new MosaicProperties(UInt64.fromUint(flags), params.divisibility, params.duration);
@@ -88,12 +89,17 @@ export class MosaicProperties {
      * Create DTO object
      */
     toDTO() {
-        return [
+        const dto = [
             {id: 0, value: UInt64.fromUint((this.supplyMutable ? 1 : 0) +
-                                           (this.transferable ? 2 : 0) +
-                                           (this.levyMutable ? 4 : 0)).toDTO()},
+                                        (this.transferable ? 2 : 0) +
+                                        (this.levyMutable ? 4 : 0)).toDTO()},
             {id: 1, value: UInt64.fromUint(this.divisibility).toDTO()},
-            {id: 2, value: this.duration.toDTO()},
         ];
+
+        if (this.duration !== undefined) {
+            dto.push({id: 2, value: this.duration.toDTO()});
+        }
+
+        return dto;
     }
 }
