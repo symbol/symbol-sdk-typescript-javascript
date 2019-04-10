@@ -20,6 +20,7 @@ import * as WebSocket from 'ws';
 import {Address} from '../model/account/Address';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
+import {NetworkType} from '../model/blockchain/NetworkType';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {AggregateTransactionCosignature} from '../model/transaction/AggregateTransactionCosignature';
@@ -33,7 +34,7 @@ import {Transaction} from '../model/transaction/Transaction';
 import {TransactionStatusError} from '../model/transaction/TransactionStatusError';
 import {TransferTransaction} from '../model/transaction/TransferTransaction';
 import {UInt64} from '../model/UInt64';
-import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
+import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
 
 enum ListenerChannelName {
     block = 'block',
@@ -140,7 +141,7 @@ export class Listener {
                                 message.block.blockTransactionsHash,
                                 message.block.blockReceiptsHash,
                                 message.block.stateHash,
-                                PublicAccount.createFromPublicKey(message.block.beneficiaryPublicKey, networkType),
+                                extractBeneficiary(message, networkType), // passing `message` as `blockDTO`
                             ),
                         });
                     } else if (message.status) {

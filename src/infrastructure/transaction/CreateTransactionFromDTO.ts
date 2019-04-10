@@ -322,7 +322,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
     throw new Error('Unimplemented transaction with type ' + transactionDTO.type);
 };
 
-const extractNetworkType = (version: number): NetworkType => {
+export const extractNetworkType = (version: number): NetworkType => {
     const networkType = parseInt(version.toString(16).substr(0, 2), 16);
     if (networkType === NetworkType.MAIN_NET) {
         return NetworkType.MAIN_NET;
@@ -336,7 +336,7 @@ const extractNetworkType = (version: number): NetworkType => {
     throw new Error('Unimplemented network type');
 };
 
-const extractTransactionVersion = (version: number): number => {
+export const extractTransactionVersion = (version: number): number => {
     return parseInt(version.toString(16).substr(2, 2), 16);
 };
 
@@ -349,7 +349,7 @@ const extractTransactionVersion = (version: number): number => {
  * @param recipient {string} Encoded hexadecimal recipient notation
  * @return {Address | NamespaceId}
  */
-const extractRecipient = (recipient: string): Address | NamespaceId => {
+export const extractRecipient = (recipient: string): Address | NamespaceId => {
     // If bit 0 of byte 0 is not set (like in 0x90), then it is a regular address.
     // Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
     const bit0 = convert.hexToUint8(recipient.substr(1, 2))[0];
@@ -374,7 +374,7 @@ const extractRecipient = (recipient: string): Address | NamespaceId => {
  * @param mosaics {Array | undefined} The DTO array of mosaics (with UInt64 Id notation)
  * @return {Mosaic[]}
  */
-const extractMosaics = (mosaics: any): Mosaic[] => {
+export const extractMosaics = (mosaics: any): Mosaic[] => {
 
     if (mosaics === undefined) {
         return [];
@@ -395,4 +395,45 @@ const extractMosaics = (mosaics: any): Mosaic[] => {
         // most significant bit of byte 0 is not set => mosaicId
         return new Mosaic(new MosaicId(mosaicDTO.id), new UInt64(mosaicDTO.amount));
     });
+};
+
+/**
+ * Extract beneficiary public key from DTO.
+ *
+ * @todo Upgrade of catapult-rest WITH catapult-service-bootstrap versioning.
+ *
+ * With `cow` upgrade (nemtech/catapult-server@0.3.0.2), `catapult-rest` block DTO
+ * was updated and latest catapult-service-bootstrap uses the wrong block DTO.
+ * This will be fixed with next catapult-server upgrade to `dragon`.
+ *
+ * :warning It is currently not possible to read the block's beneficiary public key
+ * except when working with a local instance of `catapult-rest`.
+ *
+ * @param beneficiary {string | undefined} The beneficiary public key if set
+ * @return {Mosaic[]}
+ */
+export const extractBeneficiary = (
+    blockDTO: any,
+    networkType: NetworkType
+): PublicAccount | undefined => {
+
+    let dtoPublicAccount: PublicAccount | undefined;
+    let dtoFieldValue: string | undefined;
+    if (blockDTO.beneficiaryPublicKey) {
+        dtoFieldValue = blockDTO.beneficiaryPublicKey;
+    } else if (blockDTO.beneficiary) {
+        dtoFieldValue = blockDTO.beneficiary;
+    }
+
+    if (! dtoFieldValue) {
+        return undefined;
+    }
+
+    try {
+        // @FIX with latest catapult-service-bootstrap version, catapult-rest still returns
+        //      a `string` formatted copy of the public *when it is set at all*.
+        dtoPublicAccount = PublicAccount.createFromPublicKey(dtoFieldValue, networkType);
+    } catch (e) { dtoPublicAccount =  undefined; }
+
+    return dtoPublicAccount;
 };

@@ -87,7 +87,7 @@ describe('BlockInfo', () => {
         expect(blockInfo.blockTransactionsHash).to.be.equal(blockDTO.block.blockTransactionsHash);
         expect(blockInfo.blockReceiptsHash).to.be.equal(blockDTO.block.blockReceiptsHash);
         expect(blockInfo.stateHash).to.be.equal(blockDTO.block.stateHash);
-        expect(blockInfo.beneficiaryPublicKey.publicKey).to.be.equal(blockDTO.block.beneficiaryPublicKey);
+        expect((blockInfo.beneficiaryPublicKey as PublicAccount).publicKey).to.be.equal(blockDTO.block.beneficiaryPublicKey);
 
     });
 });

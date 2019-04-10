@@ -117,7 +117,7 @@ export class BlockInfo {
                 /**
                  * The beneficiary public key.
                  */
-                public readonly beneficiaryPublicKey: PublicAccount,) {
+                public readonly beneficiaryPublicKey?: PublicAccount | undefined) {
 
     }
 }
