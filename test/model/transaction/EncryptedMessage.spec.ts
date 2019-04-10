@@ -20,39 +20,32 @@ import {Account} from '../../../src/model/account/Account';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {EncryptedMessage} from '../../../src/model/transaction/EncryptedMessage';
-
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('EncryptedMessage', () => {
 
-    const accountInformation = {
-        address: 'SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2',
-        privateKey: '26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930'.toUpperCase(),
-        publicKey: 'c2f93346e27ce6ad1a9f8f5e3066f8326593a406bdf357acb041e2f9ab402efe'.toUpperCase(),
-    };
-    let recipientPublicAccount:PublicAccount;
+    let account: Account;
 
     before(() => {
-        recipientPublicAccount = PublicAccount.createFromPublicKey(accountInformation.publicKey,NetworkType.MIJIN_TEST);
+        account = TestingAccount;
     });
 
-    it("should create a encrypted message from a DTO", () => {
-        const encryptedMessage = EncryptedMessage.createFromDTO("test transaction");
-        expect(encryptedMessage.payload).to.be.equal("test transaction");
+    it('should create a encrypted message from a DTO', () => {
+        const encryptedMessage = EncryptedMessage.createFromDTO('test transaction');
+        expect(encryptedMessage.payload).to.be.equal('test transaction');
     });
 
-    it("should return encrypted message dto", () => {
-        const account = Account.createFromPrivateKey(accountInformation.privateKey,NetworkType.MIJIN_TEST);
-        const publicAccount = PublicAccount.createFromPublicKey(account.publicKey,NetworkType.MIJIN_TEST);
-        const encryptedMessage = account.encryptMessage("test transaction", publicAccount);
-        const plainMessage = account.decryptMessage(encryptedMessage, publicAccount);
-        expect(plainMessage.payload).to.be.equal("test transaction");
+    it('should return encrypted message dto', () => {;
+        const encryptedMessage = account.encryptMessage('test transaction', account.publicAccount);
+        const plainMessage = account.decryptMessage(encryptedMessage, account.publicAccount);
+        expect(plainMessage.payload).to.be.equal('test transaction');
     });
 
-    it("should create an encrypted message from a DTO and decrypt it", () => {
-        const account = Account.createFromPrivateKey(accountInformation.privateKey,NetworkType.MIJIN_TEST);
-        const publicAccount = PublicAccount.createFromPublicKey("0414fe7647ec008e533aac98a4bf1c5fbf1d236c75b81fdadf1f5d1042fdd2ff",NetworkType.MIJIN_TEST);
-        const encryptMessage = EncryptedMessage.createFromDTO("02bb332c0fdd445455117882b2bec5e49f5713860d6b34650d0f769159d021a27518ea03539af8913231b9f80f600daae9291bb100a6d32e36b52a6c457fea287ca9942a32368618fe1fd0c185dbf834");
-        const plainMessage = account.decryptMessage(encryptMessage, publicAccount);
-        expect(plainMessage.payload).to.be.equal("test transaction");
+    it('should create an encrypted message from a DTO and decrypt it', () => {
+        const encryptMessage = EncryptedMessage
+            .createFromDTO('1E4DCC2C381A0346F72346F758B5D6C1CF236B96E2E68B9B40FB7EEF7FB035F6401A1993E6F5F0B1379' +
+                           '7A6593358F06C90dee57f68880931f7062ecf9ec0c0837bb583732474442db72d71255250b021');
+        const plainMessage = account.decryptMessage(encryptMessage, account.publicAccount);
+        expect(plainMessage.payload).to.be.equal('test transaction');
     });
 });
