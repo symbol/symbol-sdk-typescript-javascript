@@ -1,32 +1,54 @@
-# CHANGELOG
+# Changelog
+All notable changes to this project will be documented in this file.
 
-# v0.11
+The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-- Fixed NetworkCurrencyMosaic, NetworkHarvestMosaic
-- Added exposed UInt64.fromHex and UInt64.toHex
-- Added MosaicId.createFromNonce
-- Added MosaicNonce, MosaicNonce.createRandom
-- Fixed AliasDTO.mosaicId to be UInt64
-- Added nem2-library@v0.9.8 version update (cow compatibility)
-- Added cow network update *base* compatibility
-- Added AliasTransaction, AddressAliasTransaction, MosaicAliasTransaction
-- Changed MosaicDefinition to hold MosaicNonce
-- Changed SecretLock transaction to work with Sha3_256 instead of Sha3_512
-- Added delegated harvesting
-- Fixed #38: error message for aggregate as inner tx
-- Added TransferTransaction.recipient NamespaceId argument type
+## [0.11.2] - 1-Apr-2019
+- Todo.
 
-# v0.10.1-beta
+## [0.11.1] - 18-Mar-2019
+- Todo.
+## [0.11] - 14-Mar-2019
 
-- added replyGiven in Transaction model
-- several linter fixes
+## Added
+- UInt64.fromHex and UInt64.toHex functions have been exposed.
+- Error message when a developer tries to add an aggregate as an inner transaction.
+- AccountLink Transaction to enable delegated harvesting.
+- Support for AliasTransaction.
+- TransferTransactions can be sent to an alias instead of an address.
 
-# v0.10.0-beta
+## Changed
+- Mosaics were splited from namespaces. MosaicDefinition does not have a related namespaceId, but instead a MosaicNonce.
+- SecretLockTransaction to work with Sha3_256 instead of Sha3_512
+- Network and nem2-library (0.9.8) required update to be compatible with catpault-server 0.3.
+- XEM class splited into NetworkCurrencyMosaic and NetworkHarvestMosaic.
 
-- update rxjs to v6
-- use observableFrom
+## [0.10.1-beta] - 27-Jun-2018
 
-# v0.9.5
+## Added
+- Transaction deadline has been exposed to the public.
 
-- data signatures
-- nodejs version 10 updates
+## Changed
+- Compatibility with rxjs v6.
+
+## Fixed
+- Several linter errors.
+
+## [0.9.5] - 27-Jun-2018
+
+## Added
+- An account can sign strings with its private key, and verify the signature later.
+
+## Changed
+- Compatibility with Node.js 10.
+
+## [0.9.0] - 30-Mar-2018
+### Added
+- Initial code release.
+
+[0.11.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.1...v0.11.2
+[0.11.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.0...v0.11.1
+[0.11]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.10.1-beta...v0.11.0
+[0.10.1-beta]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.9.5...v0.10.1-beta
+[0.9.5]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.9.0...v0.9.5
+[0.9.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.9.0
