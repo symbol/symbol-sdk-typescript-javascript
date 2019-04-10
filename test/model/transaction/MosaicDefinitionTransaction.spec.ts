@@ -134,7 +134,6 @@ describe('MosaicDefinitionTransaction', () => {
 
     });
 
-
     describe('size', () => {
         it('should return 144 for MosaicDefinition transaction byte size', () => {
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
