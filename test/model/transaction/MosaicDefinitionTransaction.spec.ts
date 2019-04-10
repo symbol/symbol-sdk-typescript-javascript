@@ -134,7 +134,6 @@ describe('MosaicDefinitionTransaction', () => {
 
     });
 
-
     describe('size', () => {
         it('should return 144 for MosaicDefinition transaction byte size', () => {
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
@@ -153,7 +152,7 @@ describe('MosaicDefinitionTransaction', () => {
             expect(mosaicDefinitionTransaction.size).to.be.equal(144);
         });
     });
-    
+
     it('should createComplete an MosaicDefinitionTransaction object and sign it without duration', () => {
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
