@@ -40,7 +40,9 @@ export class EncryptedMessage extends Message {
      * @param privateKey
      */
     public static create(message: string, recipientPublicAccount: PublicAccount, privateKey) {
-        return new EncryptedMessage(crypto.encode(privateKey, recipientPublicAccount.publicKey, message), recipientPublicAccount);
+        return new EncryptedMessage(
+            crypto.encode(privateKey, recipientPublicAccount.publicKey, message).toUpperCase(),
+            recipientPublicAccount);
     }
 
     /**

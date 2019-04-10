@@ -43,8 +43,8 @@ describe('EncryptedMessage', () => {
 
     it('should create an encrypted message from a DTO and decrypt it', () => {
         const encryptMessage = EncryptedMessage
-            .createFromDTO('1E4DCC2C381A0346F72346F758B5D6C1CF236B96E2E68B9B40FB7EEF7FB035F6401A1993E6F5F0B1379' +
-                           '7A6593358F06C90dee57f68880931f7062ecf9ec0c0837bb583732474442db72d71255250b021');
+            .createFromDTO('7245170507448c53d808524221b5d157e19b06f574120a044e48f54dd8e0a4dedbf50ded7ae71' +
+                           'b90b59949bb6acde81d987ee6648aae9f093b94ac7cc3e8dba0bed8fa04ba286df6b32d2d6d21cbdc4e');
         const plainMessage = account.decryptMessage(encryptMessage, account.publicAccount);
         expect(plainMessage.payload).to.be.equal('test transaction');
     });
