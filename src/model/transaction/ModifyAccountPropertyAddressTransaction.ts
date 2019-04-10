@@ -34,16 +34,18 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
      * @param propertyType - The account property type.
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {ModifyAccountPropertyAddressTransaction}
      */
     public static create(deadline: Deadline,
                          propertyType: PropertyType,
                          modifications: Array<AccountPropertyModification<string>>,
-                         networkType: NetworkType): ModifyAccountPropertyAddressTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): ModifyAccountPropertyAddressTransaction {
         return new ModifyAccountPropertyAddressTransaction(networkType,
             TransactionVersion.MODIFY_ACCOUNT_PROPERTY_ADDRESS,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             propertyType,
             modifications);
     }
@@ -52,7 +54,7 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param minApprovalDelta
      * @param minRemovalDelta
      * @param modifications
@@ -63,13 +65,34 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 public readonly propertyType: PropertyType,
                 public readonly modifications: Array<AccountPropertyModification<string>>,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a ModifyAccountPropertyAddressTransaction
+     * @returns {number}
+     * @memberof ModifyAccountPropertyAddressTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const bytePropertyType = 1;
+        const byteModificationCount = 1;
+
+        // each modification contains :
+        // - 1 byte for modificationType
+        // - 25 bytes for the modification value (address)
+        const byteModifications = 26 * this.modifications.length;
+
+        return byteSize + bytePropertyType + byteModificationCount + byteModifications;
     }
 
     /**
@@ -79,7 +102,7 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         return new AccountPropertiesAddressTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addPropertyType(this.propertyType)
             .addModifications(this.modifications.map((modification) => modification.toDTO()))

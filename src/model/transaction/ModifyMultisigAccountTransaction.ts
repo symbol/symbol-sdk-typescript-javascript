@@ -40,17 +40,19 @@ export class ModifyMultisigAccountTransaction extends Transaction {
      * @param minRemovalDelta - The min removal relative change.
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {ModifyMultisigAccountTransaction}
      */
     public static create(deadline: Deadline,
                          minApprovalDelta: number,
                          minRemovalDelta: number,
                          modifications: MultisigCosignatoryModification[],
-                         networkType: NetworkType): ModifyMultisigAccountTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): ModifyMultisigAccountTransaction {
         return new ModifyMultisigAccountTransaction(networkType,
             TransactionVersion.MODIFY_MULTISIG_ACCOUNT,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             minApprovalDelta,
             minRemovalDelta,
             modifications);
@@ -60,7 +62,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param minApprovalDelta
      * @param minRemovalDelta
      * @param modifications
@@ -71,7 +73,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The number of signatures needed to approve a transaction.
                  * If we are modifying and existing multi-signature account this indicates the relative change of the minimum cosignatories.
@@ -89,7 +91,29 @@ export class ModifyMultisigAccountTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_MULTISIG_ACCOUNT, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.MODIFY_MULTISIG_ACCOUNT, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a ModifyMultisigAccountTransaction
+     * @returns {number}
+     * @memberof ModifyMultisigAccountTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteRemovalDelta = 1;
+        const byteApprovalDelta = 1;
+        const byteNumModifications = 1;
+
+        // each modification contains :
+        // - 1 byte for modificationType
+        // - 32 bytes for cosignatoryPublicKey
+        const byteModifications = 33 * this.modifications.length
+
+        return byteSize + byteRemovalDelta + byteApprovalDelta + byteNumModifications + byteModifications;
     }
 
     /**
@@ -99,7 +123,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         return new ModifyMultisigAccountTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addMinApprovalDelta(this.minApprovalDelta)
             .addMinRemovalDelta(this.minRemovalDelta)

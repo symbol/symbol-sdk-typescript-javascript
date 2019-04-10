@@ -21,8 +21,38 @@ import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashType} from '../../../src/model/transaction/HashType';
 import {SecretProofTransaction} from '../../../src/model/transaction/SecretProofTransaction';
+import {UInt64} from '../../../src/model/UInt64';
 
 describe('SecretProofTransaction', () => {
+
+    it('should default maxFee field be set to 0', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(secretProofTransaction.maxFee.higher).to.be.equal(0);
+        expect(secretProofTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            proof,
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(secretProofTransaction.maxFee.higher).to.be.equal(0);
+        expect(secretProofTransaction.maxFee.lower).to.be.equal(1);
+    });
 
     it('should be created with HashType: Op_Sha3_256 secret', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
@@ -128,5 +158,19 @@ describe('SecretProofTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw(Error);
+    });
+
+    describe('size', () => {
+        it('should return 167 for SecretProofTransaction with proof and secret both 32 bytes', () => {
+            const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+            const secretProofTransaction = SecretProofTransaction.create(
+                Deadline.create(),
+                HashType.Op_Hash_256,
+                CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
+                proof,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(secretProofTransaction.size).to.be.equal(187);
+        });
     });
 });

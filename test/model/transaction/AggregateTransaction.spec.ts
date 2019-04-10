@@ -25,6 +25,7 @@ import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
 import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
 import {MosaicSupplyType} from '../../../src/model/mosaic/MosaicSupplyType';
+import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {ModifyMultisigAccountTransaction} from '../../../src/model/transaction/ModifyMultisigAccountTransaction';
@@ -43,6 +44,47 @@ describe('AggregateTransaction', () => {
 
     before(() => {
         account = TestingAccount;
+    });
+
+    it('should default maxFee field be set to 0', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(1, ChronoUnit.HOURS),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+
+        expect(aggregateTransaction.maxFee.higher).to.be.equal(0);
+        expect(aggregateTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(1, ChronoUnit.HOURS),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            [],
+            new UInt64([1, 0])
+        );
+
+        expect(aggregateTransaction.maxFee.higher).to.be.equal(0);
+        expect(aggregateTransaction.maxFee.lower).to.be.equal(1);
     });
 
     it('should createComplete an AggregateTransaction object with TransferTransaction', () => {
@@ -242,7 +284,7 @@ describe('AggregateTransaction', () => {
                     3266625578,
                     11,
                 ],
-                fee: [
+                maxFee: [
                     0,
                     0,
                 ],
@@ -338,5 +380,26 @@ describe('AggregateTransaction', () => {
                 NetworkType.MIJIN_TEST,
                 []);
         }).to.throw(Error, 'Inner transaction cannot be an aggregated transaction.');
+    });
+
+    describe('size', () => {
+        it('should return 282 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
+            const transaction = TransferTransaction.create(
+                Deadline.create(),
+                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+                [
+                    NetworkCurrencyMosaic.createRelative(100),
+                ],
+                PlainMessage.create('NEM'),
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(),
+                [transaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            expect(aggregateTransaction.size).to.be.equal(120 + 4 + 158);
+        });
     });
 });
