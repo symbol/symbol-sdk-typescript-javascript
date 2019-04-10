@@ -89,7 +89,7 @@ export class AggregateTransactionService {
          */
         const sortedKeys = Array.from(graphInfo.multisigAccounts.keys()).sort((a, b) => b - a);
         const cosignatoriesReceived = cosignatories;
-        let validationResult = true;
+        let validationResult = false;
 
         let isMultisigRemoval = false;
 
@@ -106,7 +106,7 @@ export class AggregateTransactionService {
 
         sortedKeys.forEach((key) => {
             const multisigInfo = graphInfo.multisigAccounts.get(key);
-            if (multisigInfo && validationResult) {
+            if (multisigInfo && !validationResult) {
                 multisigInfo.forEach((multisig) => {
                     if (multisig.minApproval >= 1 && multisig.minRemoval) { // To make sure it is multisig account
                         const matchedCosignatories = this.compareArrays(cosignatoriesReceived,
@@ -122,6 +122,7 @@ export class AggregateTransactionService {
                             if (cosignatoriesReceived.indexOf(multisig.account.publicKey) === -1) {
                                 cosignatoriesReceived.push(multisig.account.publicKey);
                               }
+                            validationResult = true;
                         } else {
                             validationResult = false;
                         }
