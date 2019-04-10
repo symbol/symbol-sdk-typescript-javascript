@@ -32,6 +32,37 @@ describe('MosaicAliasTransaction', () => {
         account = TestingAccount;
     });
 
+    it('should default maxFee field be set to 0', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicAliasTransaction = MosaicAliasTransaction.create(
+            Deadline.create(),
+            AliasActionType.Link,
+            namespaceId,
+            mosaicId,
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(mosaicAliasTransaction.maxFee.higher).to.be.equal(0);
+        expect(mosaicAliasTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicAliasTransaction = MosaicAliasTransaction.create(
+            Deadline.create(),
+            AliasActionType.Link,
+            namespaceId,
+            mosaicId,
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(mosaicAliasTransaction.maxFee.higher).to.be.equal(0);
+        expect(mosaicAliasTransaction.maxFee.lower).to.be.equal(1);
+    });
+
     it('should createComplete an MosaicAliasTransaction object and sign it', () => {
         const namespaceId = new NamespaceId([33347626, 3779697293]);
         const mosaicId = new MosaicId([2262289484, 3405110546]);
@@ -56,5 +87,20 @@ describe('MosaicAliasTransaction', () => {
             signedTransaction.payload.length,
         )).to.be.equal('002AD8FC018D9A49E14CCCD78612DDF5CA');
 
+    });
+
+    describe('size', () => {
+        it('should return 137 for MosaicAliasTransaction transaction byte size', () => {
+            const namespaceId = new NamespaceId([33347626, 3779697293]);
+            const mosaicId = new MosaicId([2262289484, 3405110546]);
+            const mosaicAliasTransaction = MosaicAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Link,
+                namespaceId,
+                mosaicId,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(mosaicAliasTransaction.size).to.be.equal(137);
+        });
     });
 });

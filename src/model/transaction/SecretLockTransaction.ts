@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SecretLockTransaction as SecretLockTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { convert, SecretLockTransaction as SecretLockTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -38,6 +38,7 @@ export class SecretLockTransaction extends Transaction {
      * @param secret - The proof hashed.
      * @param recipient - The recipient of the funds.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      *
      * @return a SecretLockTransaction instance
      */
@@ -47,12 +48,13 @@ export class SecretLockTransaction extends Transaction {
                          hashType: HashType,
                          secret: string,
                          recipient: Address,
-                         networkType: NetworkType): SecretLockTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): SecretLockTransaction {
         return new SecretLockTransaction(
             networkType,
             TransactionVersion.SECRET_LOCK,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             mosaic,
             duration,
             hashType,
@@ -65,7 +67,7 @@ export class SecretLockTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param mosaic
      * @param duration
      * @param hashType
@@ -78,7 +80,7 @@ export class SecretLockTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The locked mosaic.
                  */
@@ -102,10 +104,32 @@ export class SecretLockTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.SECRET_LOCK, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.SECRET_LOCK, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         if (!HashTypeLengthValidator(hashType, this.secret)) {
             throw new Error('HashType and Secret have incompatible length or not hexadecimal string');
         }
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a SecretLockTransaction
+     * @returns {number}
+     * @memberof SecretLockTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteMosaicId = 8;
+        const byteAmount = 8;
+        const byteDuration = 8;
+        const byteAlgorithm = 1;
+        const byteRecipient = 25;
+
+        // convert secret to uint8
+        const byteSecret = convert.hexToUint8(this.secret).length;
+
+        return byteSize + byteMosaicId + byteAmount + byteDuration + byteAlgorithm + byteRecipient + byteSecret;
     }
 
     /**
@@ -116,7 +140,7 @@ export class SecretLockTransaction extends Transaction {
         return new SecretLockTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
             .addType(this.type)
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addMosaicId(this.mosaic.id.id.toDTO())
             .addMosaicAmount(this.mosaic.amount.toDTO())

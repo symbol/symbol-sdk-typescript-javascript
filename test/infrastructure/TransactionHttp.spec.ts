@@ -22,6 +22,7 @@ import {AggregateTransaction} from '../../src/model/transaction/AggregateTransac
 import {Deadline} from '../../src/model/transaction/Deadline';
 import {PlainMessage} from '../../src/model/transaction/PlainMessage';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
+import {UInt64} from '../../src/model/UInt64';
 import {NIS2_URL, TestingAccount} from '../conf/conf.spec';
 
 describe('TransactionHttp', () => {

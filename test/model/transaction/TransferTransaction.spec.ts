@@ -23,6 +23,7 @@ import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
+import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
 describe('TransferTransaction', () => {
@@ -30,6 +31,33 @@ describe('TransferTransaction', () => {
 
     before(() => {
         account = TestingAccount;
+    });
+
+    it('should default maxFee field be set to 0', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(transferTransaction.maxFee.higher).to.be.equal(0);
+        expect(transferTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(transferTransaction.maxFee.higher).to.be.equal(0);
+        expect(transferTransaction.maxFee.lower).to.be.equal(1);
     });
 
     it('should createComplete an TransferTransaction object and sign it without mosaics', () => {
@@ -149,5 +177,20 @@ describe('TransferTransaction', () => {
             240,
             290,
         )).to.be.equal('9151776168D24257D800000000000000000000000000000000');
+    });
+
+    describe('size', () => {
+        it('should return 158 for TransferTransaction with 1 mosaic and message NEM', () => {
+            const transaction = TransferTransaction.create(
+                Deadline.create(),
+                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+                [
+                    NetworkCurrencyMosaic.createRelative(100),
+                ],
+                PlainMessage.create('NEM'),
+                NetworkType.MIJIN_TEST,
+            );
+            expect(transaction.size).to.be.equal(158);
+        });
     });
 });

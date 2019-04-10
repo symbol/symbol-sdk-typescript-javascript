@@ -26,7 +26,7 @@ import {UInt64} from '../model/UInt64';
 import {BlockchainRepository} from './BlockchainRepository';
 import {Http} from './Http';
 import {QueryParams} from './QueryParams';
-import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
+import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
 
 /**
  * Blockchain http repository.
@@ -70,8 +70,12 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
                 new UInt64(blockDTO.block.height),
                 new UInt64(blockDTO.block.timestamp),
                 new UInt64(blockDTO.block.difficulty),
+                blockDTO.block.feeMultiplier,
                 blockDTO.block.previousBlockHash,
                 blockDTO.block.blockTransactionsHash,
+                blockDTO.block.blockReceiptsHash,
+                blockDTO.block.stateHash,
+                extractBeneficiary(blockDTO, networkType),
             );
         }));
     }
@@ -116,8 +120,12 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
                     new UInt64(blockDTO.block.height),
                     new UInt64(blockDTO.block.timestamp),
                     new UInt64(blockDTO.block.difficulty),
+                    blockDTO.block.feeMultiplier,
                     blockDTO.block.previousBlockHash,
                     blockDTO.block.blockTransactionsHash,
+                    blockDTO.block.blockReceiptsHash,
+                    blockDTO.block.stateHash,
+                    extractBeneficiary(blockDTO, networkType),
                 );
             });
         }));

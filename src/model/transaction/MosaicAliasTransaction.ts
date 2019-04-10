@@ -40,17 +40,19 @@ export class MosaicAliasTransaction extends Transaction {
      * @param namespaceId - The namespace id.
      * @param mosaicId - The mosaic id.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicAliasTransaction}
      */
     public static create(deadline: Deadline,
                          actionType: AliasActionType,
                          namespaceId: NamespaceId,
                          mosaicId: MosaicId,
-                         networkType: NetworkType): MosaicAliasTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): MosaicAliasTransaction {
         return new MosaicAliasTransaction(networkType,
             TransactionVersion.MOSAIC_ALIAS,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             actionType,
             namespaceId,
             mosaicId,
@@ -61,7 +63,7 @@ export class MosaicAliasTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param actionType
      * @param namespaceId
      * @param mosaicId
@@ -72,7 +74,7 @@ export class MosaicAliasTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The alias action type.
                  */
@@ -88,7 +90,24 @@ export class MosaicAliasTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MOSAIC_ALIAS, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.MOSAIC_ALIAS, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a MosaicAliasTransaction
+     * @returns {number}
+     * @memberof MosaicAliasTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteType = 1;
+        const byteNamespaceId = 8;
+        const byteMosaicId = 8;
+
+        return byteSize + byteType + byteNamespaceId + byteMosaicId;
     }
 
     /**
@@ -98,7 +117,7 @@ export class MosaicAliasTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         return new MosaicAliasTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addActionType(this.actionType)
             .addNamespaceId(this.namespaceId.id.toDTO())

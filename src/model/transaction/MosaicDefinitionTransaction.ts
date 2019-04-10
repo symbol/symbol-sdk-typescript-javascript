@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { 
+import {
     MosaicCreationTransaction as MosaicDefinitionTransactionLibrary,
     mosaicId as mosaicIdLibrary,
     VerifiableTransaction,
@@ -24,7 +24,6 @@ import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicNonce } from '../mosaic/MosaicNonce';
 import { MosaicProperties } from '../mosaic/MosaicProperties';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
@@ -45,17 +44,19 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @param mosaicId - The mosaic id ex: new MosaicId([481110499, 231112638]).
      * @param mosaicProperties - The mosaic properties.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicDefinitionTransaction}
      */
     public static create(deadline: Deadline,
                          nonce: MosaicNonce,
                          mosaicId: MosaicId,
                          mosaicProperties: MosaicProperties,
-                         networkType: NetworkType): MosaicDefinitionTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): MosaicDefinitionTransaction {
         return new MosaicDefinitionTransaction(networkType,
             TransactionVersion.MOSAIC_DEFINITION,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             nonce,
             mosaicId,
             mosaicProperties,
@@ -66,7 +67,7 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param mosaicNonce
      * @param mosaicId
      * @param mosaicProperties
@@ -77,7 +78,7 @@ export class MosaicDefinitionTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The mosaic nonce.
                  */
@@ -93,7 +94,28 @@ export class MosaicDefinitionTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MOSAIC_DEFINITION, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.MOSAIC_DEFINITION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a MosaicDefinitionTransaction
+     * @returns {number}
+     * @memberof MosaicDefinitionTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteNonce = 4;
+        const byteMosaicId = 8;
+        const byteNumProps = 1;
+        const byteFlags = 1;
+        const byteDivisibility = 1;
+        const byteDurationSize = 1;
+        const byteDuration = 8;
+
+        return byteSize + byteNonce + byteMosaicId + byteNumProps + byteFlags + byteDivisibility + byteDurationSize + byteDuration;
     }
 
     /**
@@ -103,7 +125,7 @@ export class MosaicDefinitionTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         let mosaicDefinitionTransaction = new MosaicDefinitionTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addDivisibility(this.mosaicProperties.divisibility)
             .addDuration(this.mosaicProperties.duration.toDTO())

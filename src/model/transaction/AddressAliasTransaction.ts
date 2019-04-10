@@ -40,17 +40,19 @@ export class AddressAliasTransaction extends Transaction {
      * @param namespaceId - The namespace id.
      * @param mosaicId - The mosaic id.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AddressAliasTransaction}
      */
     public static create(deadline: Deadline,
                          actionType: AliasActionType,
                          namespaceId: NamespaceId,
                          address: Address,
-                         networkType: NetworkType): AddressAliasTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): AddressAliasTransaction {
         return new AddressAliasTransaction(networkType,
             TransactionVersion.ADDRESS_ALIAS,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             actionType,
             namespaceId,
             address,
@@ -61,7 +63,7 @@ export class AddressAliasTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param actionType
      * @param namespaceId
      * @param address
@@ -72,7 +74,7 @@ export class AddressAliasTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The alias action type.
                  */
@@ -88,7 +90,24 @@ export class AddressAliasTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.ADDRESS_ALIAS, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.ADDRESS_ALIAS, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a AddressAliasTransaction
+     * @returns {number}
+     * @memberof AddressAliasTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteActionType = 1;
+        const byteNamespaceId = 8;
+        const byteAddress = 25;
+
+        return byteSize + byteActionType + byteNamespaceId + byteAddress;
     }
 
     /**
@@ -98,7 +117,7 @@ export class AddressAliasTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         return new AddressAliasTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addActionType(this.actionType)
             .addNamespaceId(this.namespaceId.id.toDTO())
