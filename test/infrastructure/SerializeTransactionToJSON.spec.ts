@@ -74,8 +74,8 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = accountLinkTransaction.toJSON();
 
-        expect(json.remoteAccountKey).to.be.equal(account.publicKey);
-        expect(json.linkAction).to.be.equal(LinkAction.Link);
+        expect(json.transaction.remoteAccountKey).to.be.equal(account.publicKey);
+        expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
     it('should create AccountPropertyAddressTransaction', () => {
@@ -93,9 +93,9 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = addressPropertyTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS);
-        expect(json.propertyType).to.be.equal(PropertyType.AllowAddress);
-        expect(json.modifications.length).to.be.equal(1);
+        expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS);
+        expect(json.transaction.propertyType).to.be.equal(PropertyType.AllowAddress);
+        expect(json.transaction.modifications.length).to.be.equal(1);
     });
 
     it('should create AccountPropertyMosaicTransaction', () => {
@@ -113,9 +113,9 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = mosaicPropertyTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC);
-        expect(json.propertyType).to.be.equal(PropertyType.AllowMosaic);
-        expect(json.modifications.length).to.be.equal(1);
+        expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC);
+        expect(json.transaction.propertyType).to.be.equal(PropertyType.AllowMosaic);
+        expect(json.transaction.modifications.length).to.be.equal(1);
     });
 
     it('should create AccountPropertyMosaicTransaction', () => {
@@ -133,9 +133,9 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = entityTypePropertyTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE);
-        expect(json.propertyType).to.be.equal(PropertyType.AllowTransaction);
-        expect(json.modifications.length).to.be.equal(1);
+        expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE);
+        expect(json.transaction.propertyType).to.be.equal(PropertyType.AllowTransaction);
+        expect(json.transaction.modifications.length).to.be.equal(1);
     });
 
     it('should create AddressAliasTransaction', () => {
@@ -151,8 +151,8 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = addressAliasTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.ADDRESS_ALIAS);
-        expect(json.actionType).to.be.equal(AliasActionType.Link);
+        expect(json.transaction.type).to.be.equal(TransactionType.ADDRESS_ALIAS);
+        expect(json.transaction.aliasAction).to.be.equal(AliasActionType.Link);
     });
 
     it('should create MosaicAliasTransaction', () => {
@@ -167,8 +167,8 @@ describe('SerializeTransactionToJSON', () => {
         );
         const json = mosaicAliasTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.MOSAIC_ALIAS);
-        expect(json.actionType).to.be.equal(AliasActionType.Link);
+        expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_ALIAS);
+        expect(json.transaction.aliasAction).to.be.equal(AliasActionType.Link);
 
     });
 
@@ -189,11 +189,11 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = mosaicDefinitionTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
-        expect(json.mosaicProperties.supplyMutable).to.be.equal(false);
-        expect(json.mosaicProperties.transferable).to.be.equal(false);
-        expect(json.mosaicProperties.levyMutable).to.be.equal(false);
-        expect(json.mosaicProperties.divisibility).to.be.equal(3);
+        expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
+        expect(json.transaction.properties.length).to.be.equal(3);
+        expect(new UInt64(json.transaction.properties[1].value).compact()).to.be.equal(UInt64.fromUint(3).compact());
+        expect(new UInt64(json.transaction.properties[2].value).compact()).to.be.equal(UInt64.fromUint(1000).compact());
+        expect(new UInt64(json.transaction.properties[2].value).lower).to.be.equal(UInt64.fromUint(1000).lower);
 
     });
 
@@ -209,8 +209,8 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = mosaicSupplyChangeTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_CHANGE);
-        expect(json.direction).to.be.equal(MosaicSupplyType.Increase);
+        expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_CHANGE);
+        expect(json.transaction.direction).to.be.equal(MosaicSupplyType.Increase);
 
     });
 
@@ -227,9 +227,9 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = transferTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.TRANSFER);
-        expect(json.message.payload).to.be.equal('test-message');
-        expect(json.message.type).to.be.equal(0);
+        expect(json.transaction.type).to.be.equal(TransactionType.TRANSFER);
+        expect(json.transaction.message.payload).to.be.equal('test-message');
+        expect(json.transaction.message.type).to.be.equal(0);
 
     });
 
@@ -248,8 +248,8 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = secretLockTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.SECRET_LOCK);
-        expect(json.hashType).to.be.equal(HashType.Op_Sha3_256);
+        expect(json.transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
+        expect(json.transaction.hashAlgorithm).to.be.equal(HashType.Op_Sha3_256);
 
     });
 
@@ -265,10 +265,10 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = secretProofTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.SECRET_PROOF);
-        expect(json.hashType).to.be.equal(HashType.Op_Sha3_256);
-        expect(json.secret).to.be.equal(sha3_256.create().update(convert.hexToUint8(proof)).hex());
-        expect(json.proof).to.be.equal(proof);
+        expect(json.transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
+        expect(json.transaction.hashAlgorithm).to.be.equal(HashType.Op_Sha3_256);
+        expect(json.transaction.secret).to.be.equal(sha3_256.create().update(convert.hexToUint8(proof)).hex());
+        expect(json.transaction.proof).to.be.equal(proof);
 
     });
 
@@ -287,9 +287,9 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = modifyMultisigAccountTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.MODIFY_MULTISIG_ACCOUNT);
-        expect(json.minApprovalDelta).to.be.equal(2);
-        expect(json.minRemovalDelta).to.be.equal(1);
+        expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_MULTISIG_ACCOUNT);
+        expect(json.transaction.minApprovalDelta).to.be.equal(2);
+        expect(json.transaction.minRemovalDelta).to.be.equal(1);
     });
 
     it('should create AggregatedTransaction - Complete', () => {
@@ -309,8 +309,8 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = aggregateTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
-        expect(json.innerTransactions.length).to.be.equal(1);
+        expect(json.transaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
+        expect(json.transaction.transactions.length).to.be.equal(1);
     });
 
     it('should create AggregatedTransaction - Bonded', () => {
@@ -330,8 +330,8 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = aggregateTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
-        expect(json.innerTransactions.length).to.be.equal(1);
+        expect(json.transaction.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
+        expect(json.transaction.transactions.length).to.be.equal(1);
     });
 
     it('should create LockFundTransaction', () => {
@@ -350,8 +350,8 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = lockTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.LOCK);
-        expect(json.signedTransaction).to.be.equal(signedTransaction.hash);
+        expect(json.transaction.type).to.be.equal(TransactionType.LOCK);
+        expect(json.transaction.hash).to.be.equal(signedTransaction.hash);
     });
 
     it('should create RegisterNamespaceTransaction - Root', () => {
@@ -364,7 +364,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = registerNamespaceTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.REGISTER_NAMESPACE);
+        expect(json.transaction.type).to.be.equal(TransactionType.REGISTER_NAMESPACE);
 
     });
 
@@ -378,6 +378,6 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = registerNamespaceTransaction.toJSON();
 
-        expect(json.type).to.be.equal(TransactionType.REGISTER_NAMESPACE);
+        expect(json.transaction.type).to.be.equal(TransactionType.REGISTER_NAMESPACE);
     });
 });

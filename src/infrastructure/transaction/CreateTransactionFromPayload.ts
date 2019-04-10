@@ -279,7 +279,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                     new MosaicId(UInt64.fromHex(reverse(mosaic.substring(0, 16))).toDTO()),
                     UInt64.fromHex(reverse(mosaic.substring(16))),
                 )) : [],
-                PlainMessage.createFromDTO(transferMessage),
+                PlainMessage.createFromPayload(transferMessage),
                 networkType,
             );
         case TransactionType.SECRET_LOCK:

@@ -36,8 +36,12 @@ export class BlockInfo {
      * @param height
      * @param timestamp
      * @param difficulty
+     * @param feeMultiplier
      * @param previousBlockHash
      * @param blockTransactionsHash
+     * @param blockReceiptsHash
+     * @param blockStateHash
+     * @param beneficiaryPublicKey
      */
     constructor(/**
                  * The block hash.
@@ -91,13 +95,29 @@ export class BlockInfo {
                  */
                 public readonly difficulty: UInt64,
                 /**
+                 * The feeMultiplier defined by the harvester.
+                 */
+                public readonly feeMultiplier: number,
+                /**
                  * The last block hash.
                  */
                 public readonly previousBlockHash: string,
                 /**
                  * The block transaction hash.
                  */
-                public readonly blockTransactionsHash: string,) {
+                public readonly blockTransactionsHash: string,
+                /**
+                 * The block receipt hash.
+                 */
+                public readonly blockReceiptsHash: string,
+                /**
+                 * The state hash.
+                 */
+                public readonly stateHash: string,
+                /**
+                 * The beneficiary public key.
+                 */
+                public readonly beneficiaryPublicKey?: PublicAccount | undefined) {
 
     }
 }

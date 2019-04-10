@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { convert, SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -34,6 +34,7 @@ export class SecretProofTransaction extends Transaction {
      * @param secret - The seed proof hashed.
      * @param proof - The seed proof.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      *
      * @return a SecretProofTransaction instance
      */
@@ -41,12 +42,13 @@ export class SecretProofTransaction extends Transaction {
                          hashType: HashType,
                          secret: string,
                          proof: string,
-                         networkType: NetworkType): SecretProofTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): SecretProofTransaction {
         return new SecretProofTransaction(
             networkType,
             TransactionVersion.SECRET_PROOF,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             hashType,
             secret,
             proof,
@@ -57,7 +59,7 @@ export class SecretProofTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param hashType
      * @param secret
      * @param proof
@@ -68,17 +70,37 @@ export class SecretProofTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 public readonly hashType: HashType,
                 public readonly secret: string,
                 public readonly proof: string,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.SECRET_PROOF, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.SECRET_PROOF, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
         if (!HashTypeLengthValidator(hashType, this.secret)) {
             throw new Error('HashType and Secret have incompatible length or not hexadecimal string');
         }
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a SecretProofTransaction
+     * @returns {number}
+     * @memberof SecretProofTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // hash algorithm and proof size static byte size
+        const byteAlgorithm = 1;
+        const byteProofSize = 2;
+
+        // convert secret and proof to uint8
+        const byteSecret = convert.hexToUint8(this.secret).length;
+        const byteProof = convert.hexToUint8(this.proof).length;
+
+        return byteSize + byteAlgorithm + byteSecret + byteProofSize + byteProof;
     }
 
     /**
@@ -89,7 +111,7 @@ export class SecretProofTransaction extends Transaction {
         return new SecretProofTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
             .addType(this.type)
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addHashAlgorithm(this.hashType)
             .addSecret(this.secret)

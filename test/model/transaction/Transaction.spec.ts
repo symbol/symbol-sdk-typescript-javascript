@@ -198,6 +198,21 @@ describe('Transaction', () => {
             )).to.be.equal('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
         });
     });
+  
+    describe('size', () => {
+        it('should return 120 for base transaction size', () => {
+            const transaction = new FakeTransaction(TransactionType.TRANSFER,
+                NetworkType.MIJIN_TEST,
+                1,
+                Deadline.create(),
+                UInt64.fromUint(0),
+                undefined,
+                undefined,
+                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+            );
+            expect(transaction.size).to.be.equal(120);
+        });
+    });
 });
 
 class FakeTransaction extends Transaction {

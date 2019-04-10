@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TransferTransaction as TransferTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { convert, TransferTransaction as TransferTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -39,17 +39,19 @@ export class TransferTransaction extends Transaction {
      * @param mosaics - The array of mosaics.
      * @param message - The transaction message.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {TransferTransaction}
      */
     public static create(deadline: Deadline,
                          recipient: Address | NamespaceId,
                          mosaics: Mosaic[],
                          message: Message,
-                         networkType: NetworkType): TransferTransaction {
+                         networkType: NetworkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): TransferTransaction {
         return new TransferTransaction(networkType,
             TransactionVersion.TRANSFER,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             recipient,
             mosaics,
             message);
@@ -59,7 +61,7 @@ export class TransferTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param recipient
      * @param mosaics
      * @param message
@@ -70,7 +72,7 @@ export class TransferTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The address of the recipient.
                  */
@@ -86,7 +88,7 @@ export class TransferTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.TRANSFER, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.TRANSFER, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -106,13 +108,35 @@ export class TransferTransaction extends Transaction {
     }
 
     /**
+     * @override Transaction.size()
+     * @description get the byte size of a TransferTransaction
+     * @returns {number}
+     * @memberof TransferTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // recipient and number of mosaics are static byte size
+        const byteRecipient = 25;
+        const byteNumMosaics = 2;
+
+        // read message payload size
+        const bytePayload = convert.hexToUint8(convert.utf8ToHex(this.message.payload)).length;
+
+        // mosaicId / namespaceId are written on 8 bytes
+        const byteMosaics = 8 * this.mosaics.length;
+
+        return byteSize + byteRecipient + byteNumMosaics + bytePayload + byteMosaics;
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
         return new TransferTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addRecipient(this.recipientToString())
             .addMosaics(this.mosaics.map((mosaic) => mosaic.toDTO()))

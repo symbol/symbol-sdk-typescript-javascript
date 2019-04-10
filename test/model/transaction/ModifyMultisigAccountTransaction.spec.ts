@@ -22,6 +22,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {ModifyMultisigAccountTransaction} from '../../../src/model/transaction/ModifyMultisigAccountTransaction';
 import {MultisigCosignatoryModification} from '../../../src/model/transaction/MultisigCosignatoryModification';
 import {MultisigCosignatoryModificationType} from '../../../src/model/transaction/MultisigCosignatoryModificationType';
+import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('ModifyMultisigAccountTransaction', () => {
@@ -29,6 +30,51 @@ describe('ModifyMultisigAccountTransaction', () => {
 
     before(() => {
         account = TestingAccount;
+    });
+
+    it('should default maxFee field be set to 0', () => {
+        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+            Deadline.create(),
+            2,
+            1,
+            [new MultisigCosignatoryModification(
+                MultisigCosignatoryModificationType.Add,
+                PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+                    NetworkType.MIJIN_TEST),
+            ),
+                new MultisigCosignatoryModification(
+                    MultisigCosignatoryModificationType.Add,
+                    PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
+                        NetworkType.MIJIN_TEST),
+                )],
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(modifyMultisigAccountTransaction.maxFee.higher).to.be.equal(0);
+        expect(modifyMultisigAccountTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+            Deadline.create(),
+            2,
+            1,
+            [new MultisigCosignatoryModification(
+                MultisigCosignatoryModificationType.Add,
+                PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+                    NetworkType.MIJIN_TEST),
+            ),
+                new MultisigCosignatoryModification(
+                    MultisigCosignatoryModificationType.Add,
+                    PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
+                        NetworkType.MIJIN_TEST),
+                )],
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(modifyMultisigAccountTransaction.maxFee.higher).to.be.equal(0);
+        expect(modifyMultisigAccountTransaction.maxFee.lower).to.be.equal(1);
     });
 
     it('should createComplete an ModifyMultisigAccountTransaction object and sign it', () => {
@@ -72,5 +118,22 @@ describe('ModifyMultisigAccountTransaction', () => {
         )).to.be.equal('01020200B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC' +
             '6EC2400B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
 
+    });
+
+    describe('size', () => {
+        it('should return 156 for ModifyMultisigAccountTransaction transaction byte size with 1 modification', () => {
+            const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                1,
+                1,
+                [new MultisigCosignatoryModification(
+                    MultisigCosignatoryModificationType.Add,
+                    PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+                        NetworkType.MIJIN_TEST),
+                )],
+                NetworkType.MIJIN_TEST,
+            );
+            expect(modifyMultisigAccountTransaction.size).to.be.equal(156);
+        });
     });
 });

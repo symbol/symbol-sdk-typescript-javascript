@@ -28,6 +28,41 @@ import {UInt64} from '../../../src/model/UInt64';
 
 describe('SecretLockTransaction', () => {
 
+    it('should default maxFee field be set to 0', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
+        const secretLockTransaction = SecretLockTransaction.create(
+            Deadline.create(),
+            NetworkCurrencyMosaic.createAbsolute(10),
+            UInt64.fromUint(100),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            recipient,
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(secretLockTransaction.maxFee.higher).to.be.equal(0);
+        expect(secretLockTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
+        const secretLockTransaction = SecretLockTransaction.create(
+            Deadline.create(),
+            NetworkCurrencyMosaic.createAbsolute(10),
+            UInt64.fromUint(100),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            recipient,
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(secretLockTransaction.maxFee.higher).to.be.equal(0);
+        expect(secretLockTransaction.maxFee.lower).to.be.equal(1);
+    });
+
     it('should be created with HashType: Op_Sha3_256 secret', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
@@ -164,5 +199,22 @@ describe('SecretLockTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw(Error);
+    });
+
+    describe('size', () => {
+        it('should return 202 for SecretLockTransaction with proof of 32 bytes', () => {
+            const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+            const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Hash_256,
+                CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
+                recipient,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(secretLockTransaction.size).to.be.equal(202);
+        });
     });
 });
