@@ -30,6 +30,31 @@ describe('RegisterNamespaceTransaction', () => {
         account = TestingAccount;
     });
 
+    it('should default maxFee field be set to 0', () => {
+        const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            UInt64.fromUint(1000),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(registerNamespaceTransaction.maxFee.higher).to.be.equal(0);
+        expect(registerNamespaceTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            UInt64.fromUint(1000),
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(registerNamespaceTransaction.maxFee.higher).to.be.equal(0);
+        expect(registerNamespaceTransaction.maxFee.lower).to.be.equal(1);
+    });
+
     it('should createComplete an root RegisterNamespaceTransaction object and sign it', () => {
         const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
             Deadline.create(),
@@ -66,7 +91,7 @@ describe('RegisterNamespaceTransaction', () => {
         )).to.be.equal('014DF55E7F6D8FB7FF924207DF2CA1BBF313726F6F742D746573742D6E616D657370616365');
 
     });
-
+    
     it('should createComplete an sub RegisterNamespaceTransaction object and sign it - ParentId', () => {
         const registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(
             Deadline.create(),
@@ -81,6 +106,17 @@ describe('RegisterNamespaceTransaction', () => {
             240,
             signedTransaction.payload.length,
         )).to.be.equal('014BFA5F372D55B384CFCBE72D994BE69B13726F6F742D746573742D6E616D657370616365');
-
+    });
+  
+    describe('size', () => {
+        it('should return 176 for RegisterNamespaceTransaction with name of 19 bytes', () => {
+            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+                Deadline.create(),
+                'root-test-namespace',
+                UInt64.fromUint(1000),
+                NetworkType.MIJIN_TEST,
+            );
+            expect(registerNamespaceTransaction.size).to.be.equal(157);
+        });
     });
 });

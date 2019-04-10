@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary, subnamespaceNamespaceId, subnamespaceParentId, VerifiableTransaction, namespaceId } from 'nem2-library';
+import { convert, NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary, subnamespaceNamespaceId, subnamespaceParentId, namespaceId, VerifiableTransaction } from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
@@ -38,16 +38,18 @@ export class RegisterNamespaceTransaction extends Transaction {
      * @param namespaceName - The namespace name.
      * @param duration - The duration of the namespace.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {RegisterNamespaceTransaction}
      */
     public static createRootNamespace(deadline: Deadline,
                                       namespaceName: string,
                                       duration: UInt64,
-                                      networkType: NetworkType): RegisterNamespaceTransaction {
+                                      networkType: NetworkType,
+                                      maxFee: UInt64 = new UInt64([0, 0])): RegisterNamespaceTransaction {
         return new RegisterNamespaceTransaction(networkType,
             TransactionVersion.REGISTER_NAMESPACE,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             NamespaceType.RootNamespace,
             namespaceName,
             new NamespaceId(namespaceName),
@@ -61,12 +63,14 @@ export class RegisterNamespaceTransaction extends Transaction {
      * @param namespaceName - The namespace name.
      * @param parentNamespace - The parent namespace name.
      * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {RegisterNamespaceTransaction}
      */
     public static createSubNamespace(deadline: Deadline,
                                      namespaceName: string,
                                      parentNamespace: string | NamespaceId,
-                                     networkType: NetworkType): RegisterNamespaceTransaction {
+                                     networkType: NetworkType,
+                                     maxFee: UInt64 = new UInt64([0, 0])): RegisterNamespaceTransaction {
         let parentId: NamespaceId;
         if (typeof parentNamespace === 'string') {
             parentId = new NamespaceId(subnamespaceParentId(parentNamespace, namespaceName));
@@ -76,7 +80,7 @@ export class RegisterNamespaceTransaction extends Transaction {
         return new RegisterNamespaceTransaction(networkType,
             TransactionVersion.REGISTER_NAMESPACE,
             deadline,
-            new UInt64([0, 0]),
+            maxFee,
             NamespaceType.SubNamespace,
             namespaceName,
             typeof parentNamespace === 'string' ?
@@ -91,7 +95,7 @@ export class RegisterNamespaceTransaction extends Transaction {
      * @param networkType
      * @param version
      * @param deadline
-     * @param fee
+     * @param maxFee
      * @param namespaceType
      * @param namespaceName
      * @param namespaceId
@@ -104,7 +108,7 @@ export class RegisterNamespaceTransaction extends Transaction {
     constructor(networkType: NetworkType,
                 version: number,
                 deadline: Deadline,
-                fee: UInt64,
+                maxFee: UInt64,
                 /**
                  * The namespace type could be namespace or sub namespace
                  */
@@ -129,7 +133,28 @@ export class RegisterNamespaceTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.REGISTER_NAMESPACE, networkType, version, deadline, fee, signature, signer, transactionInfo);
+        super(TransactionType.REGISTER_NAMESPACE, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * @override Transaction.size()
+     * @description get the byte size of a RegisterNamespaceTransaction
+     * @returns {number}
+     * @memberof RegisterNamespaceTransaction
+     */
+    public get size(): number {
+        const byteSize = super.size;
+
+        // set static byte size fields
+        const byteType = 1;
+        const byteDurationParentId = 8;
+        const byteNamespaceId = 8;
+        const byteNameSize = 1;
+
+        // convert name to uint8
+        const byteName = convert.utf8ToHex(this.namespaceName).length / 2;
+
+        return byteSize + byteType + byteDurationParentId + byteNamespaceId + byteNameSize + byteName;
     }
 
     /**
@@ -139,7 +164,7 @@ export class RegisterNamespaceTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         let registerNamespacetransaction = new RegisterNamespaceTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
-            .addFee(this.fee.toDTO())
+            .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
             .addNamespaceType(this.namespaceType)
             .addNamespaceId(this.namespaceId.id.toDTO())

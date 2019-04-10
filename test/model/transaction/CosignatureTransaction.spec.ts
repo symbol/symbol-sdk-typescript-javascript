@@ -53,7 +53,7 @@ describe('CosignatureTransaction', () => {
                     3266625578,
                     11,
                 ],
-                fee: [
+                maxFee: [
                     0,
                     0,
                 ],

@@ -25,6 +25,46 @@ import {TestingAccount} from '../../conf/conf.spec';
 
 describe('LockFundsTransaction', () => {
     const account = TestingAccount;
+
+    it('should default maxFee field be set to 0', () => {
+        const aggregateTransaction = AggregateTransaction.createBonded(
+            Deadline.create(),
+            [],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+        const signedTransaction = account.sign(aggregateTransaction);
+        const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+            NetworkCurrencyMosaic.createRelative(10),
+            UInt64.fromUint(10),
+            signedTransaction,
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(lockFundsTransaction.maxFee.higher).to.be.equal(0);
+        expect(lockFundsTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const aggregateTransaction = AggregateTransaction.createBonded(
+            Deadline.create(),
+            [],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+        const signedTransaction = account.sign(aggregateTransaction);
+        const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+            NetworkCurrencyMosaic.createRelative(10),
+            UInt64.fromUint(10),
+            signedTransaction,
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(lockFundsTransaction.maxFee.higher).to.be.equal(0);
+        expect(lockFundsTransaction.maxFee.lower).to.be.equal(1);
+    });
+
     it('creation with an aggregate bonded tx', () => {
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
@@ -58,5 +98,24 @@ describe('LockFundsTransaction', () => {
                 signedTransaction,
                 NetworkType.MIJIN_TEST);
         }).to.throw(Error);
+    });
+
+    describe('size', () => {
+        it('should return 176 for LockFundsTransaction transaction byte size', () => {
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(),
+                [],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = account.sign(aggregateTransaction);
+            const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+                NetworkCurrencyMosaic.createRelative(10),
+                UInt64.fromUint(10),
+                signedTransaction,
+                NetworkType.MIJIN_TEST,
+            );
+            expect(lockFundsTransaction.size).to.be.equal(176);
+        });
     });
 });
