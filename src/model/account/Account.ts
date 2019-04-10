@@ -19,6 +19,8 @@ import {NetworkType} from '../blockchain/NetworkType';
 import {AggregateTransaction} from '../transaction/AggregateTransaction';
 import {CosignatureSignedTransaction} from '../transaction/CosignatureSignedTransaction';
 import {CosignatureTransaction} from '../transaction/CosignatureTransaction';
+import {EncryptedMessage} from '../transaction/EncryptedMessage';
+import {PlainMessage} from '../transaction/PlainMessage';
 import {SignedTransaction} from '../transaction/SignedTransaction';
 import {Transaction} from '../transaction/Transaction';
 import {Address} from './Address';
@@ -79,7 +81,25 @@ export class Account {
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), networkType);
         return new Account(address, keyPair);
     }
+    /**
+     * Create a new encrypted Message
+     * @param message
+     * @param recipientPublicAccount
+     * @returns {EncryptedMessage}
+     */
+    public encryptMessage(message: string, recipientPublicAccount: PublicAccount): EncryptedMessage {
+        return EncryptedMessage.create(message, recipientPublicAccount, this.privateKey);
+    }
 
+    /**
+     * Decrypts an encrypted message
+     * @param encryptedMessage
+     * @param recipientPublicAccount
+     * @returns {PlainMessage}
+     */
+    public decryptMessage(encryptedMessage: EncryptedMessage, recipientPublicAccount: PublicAccount): PlainMessage {
+        return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, recipientPublicAccount);
+    }
     /**
      * Account public key.
      * @return {string}
