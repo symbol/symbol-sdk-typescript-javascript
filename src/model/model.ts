@@ -75,6 +75,7 @@ export * from './transaction/AliasTransaction';
 export * from './transaction/CosignatureSignedTransaction';
 export * from './transaction/CosignatureTransaction';
 export * from './transaction/Deadline';
+export * from './transaction/EncryptedMessage';
 export * from './transaction/HashLockTransaction';
 export * from './transaction/HashType';
 export * from './transaction/InnerTransaction';
