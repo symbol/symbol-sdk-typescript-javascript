@@ -158,9 +158,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             new MosaicProperties(
                 new UInt64(transactionDTO.properties[0].value),
                 (new UInt64(transactionDTO.properties[1].value)).compact(),
-                transactionDTO.properties.length === 3 
-                    ? new UInt64(transactionDTO.properties[2].value) 
-                    : UInt64_1.UInt64.fromUint(0),
+                transactionDTO.properties.length === 3 &&  transactionDTO.properties[2].value ?
+                    new UInt64(transactionDTO.properties[2].value) : undefined,
             ),
             transactionDTO.signature,
             transactionDTO.signer ? PublicAccount.createFromPublicKey(transactionDTO.signer,
