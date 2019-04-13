@@ -36,7 +36,7 @@ export class MosaicAliasTransaction extends Transaction {
     /**
      * Create a mosaic supply change transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param actionType - The namespace id.
+     * @param actionType - The alias action type.
      * @param namespaceId - The namespace id.
      * @param mosaicId - The mosaic id.
      * @param networkType - The network type.
