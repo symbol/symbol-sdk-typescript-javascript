@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 
+ /**
+  * @since 0.11.3
+  */
+export enum Order {
+    ASC = 'id',
+    DESC = '-id',
+}
+
+
 /**
  * The query params structure describes pagination params for requests.
  *
@@ -45,9 +54,4 @@ export class QueryParams {
         this.pageSize = (pageSize >= 10 && pageSize <= 100) ? pageSize : 10;
         this.id = id;
     }
-}
-
-export enum Order {
-    ASC,
-    DESC,
 }
