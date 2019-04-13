@@ -34,8 +34,20 @@ export class QueryParams {
                 /**
                  * Id after which we want objects to be returned
                  */
-                public readonly id?: string) {
+                public readonly id?: string,
+                /**
+                 * Order of transactions.
+                 * DESC. Newer to older.
+                 * ASC. Older to newer.
+                 */
+                public readonly order: Order = Order.DESC,
+                ) {
         this.pageSize = (pageSize >= 10 && pageSize <= 100) ? pageSize : 10;
         this.id = id;
     }
+}
+
+export enum Order {
+    ASC,
+    DESC,
 }
