@@ -71,6 +71,53 @@ describe('CreateTransactionFromDTO', () => {
             ValidateTransaction.validateStandaloneTx(transferTransaction, transferTransactionDTO);
         });
 
+        it('standalone without message', () => {
+            const transferTransactionDTO = {
+                meta: {
+                    hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
+                    height: [
+                        1,
+                        0,
+                    ],
+                    id: '59FDA0733F17CF0001772CA7',
+                    index: 19,
+                    merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
+                },
+                transaction: {
+                    deadline: [
+                        10000,
+                        0,
+                    ],
+                    fee: [
+                        0,
+                        0,
+                    ],
+                    mosaics: [
+                        {
+                            amount: [
+                                3863990592,
+                                95248,
+                            ],
+                            id: [
+                                3646934825,
+                                3576016193,
+                            ],
+                        },
+                    ],
+                    recipient: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
+                    signature: '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E0' +
+                    '2F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
+                    signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                    type: 16724,
+                    version: 36867,
+                },
+            };
+
+            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO);
+
+            ValidateTransaction.validateStandaloneTx(transferTransaction, transferTransactionDTO);
+        });
+
         it('aggregate', () => {
             const aggregateTransferTransactionDTO = {
                 meta: {
