@@ -34,11 +34,11 @@ import { TransactionVersion } from './TransactionVersion';
 export class AddressAliasTransaction extends Transaction {
 
     /**
-     * Create a mosaic supply change transaction object
+     * Create a address alias transaction object
      * @param deadline - The deadline to include the transaction.
      * @param actionType - The alias action type.
      * @param namespaceId - The namespace id.
-     * @param mosaicId - The mosaic id.
+     * @param address - The address.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AddressAliasTransaction}
