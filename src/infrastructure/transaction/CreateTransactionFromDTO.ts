@@ -125,7 +125,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromUint(transactionDTO.maxFee || 0),
             extractRecipient(transactionDTO.recipient),
             extractMosaics(transactionDTO.mosaics),
-            extractMessage(transactionDTO.message.payload),
+            extractMessage(transactionDTO.message !== undefined ? transactionDTO.message.payload : undefined),
             transactionDTO.signature,
             transactionDTO.signer ? PublicAccount.createFromPublicKey(transactionDTO.signer,
                     extractNetworkType(transactionDTO.version)) : undefined,
