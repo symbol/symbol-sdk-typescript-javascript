@@ -27,16 +27,12 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
-/**
- * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
- * i.e. increase or decrease the supply.
- */
 export class MosaicAliasTransaction extends Transaction {
 
     /**
-     * Create a mosaic supply change transaction object
+     * Create a mosaic alias transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param actionType - The namespace id.
+     * @param actionType - The alias action type.
      * @param namespaceId - The namespace id.
      * @param mosaicId - The mosaic id.
      * @param networkType - The network type.
