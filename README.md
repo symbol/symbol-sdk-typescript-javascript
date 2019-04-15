@@ -55,8 +55,11 @@ Please, use the following available resources to get help:
 
 Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
 
-- [0.11](CHANGELOG.md#v011) - **Cow compatible** - 14.03.2019
+- [0.11.3](CHANGELOG.md#0113-10-Apr-2019) - **Cow compatible** - 10.04.2019
+- [0.11.2](CHANGELOG.md#0112-1-Apr-2019) - **Cow compatible** - 01.04.2019
+- [0.11](CHANGELOG.md#011-14-Mar-2019) - **Cow compatible** - 14.03.2019
 - [0.10.1-beta](CHANGELOG.md#v0101-beta) - **Alpaca compatible** 07.2018
+- [0.9.5](CHANGELOG.md#095-27-Jun-2018) - **Alpaca compatible** 07.2018
 
 ## License
 
