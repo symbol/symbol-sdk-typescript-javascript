@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { Address } from '../account/Address';
+import { MosaicId } from '../mosaic/MosaicId';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 import { ResolutionEntry } from './ResolutionEntry';
@@ -39,7 +41,7 @@ export class ResolutionStatement extends Receipt {
                 /**
                  * An unresolved address or unresolved mosaicId.
                  */
-                public readonly unresolved: string | number[],
+                public readonly unresolved: Address | MosaicId,
                 /**
                  * The array of resolution entries.
                  */

@@ -37,5 +37,17 @@ export class ReceiptVersion {
      * @type {number}
      */
     public static readonly ARTIFACT_EXPIRY = 0x1;
+    /**
+     * Transaction statement version
+     * @type {number}
+     */
+    public static readonly TRANSACTION_STATEMENT = 0x1;
+
+    /**
+     * Resolution statement version
+     * @type {number}
+     */
+    public static readonly RESOLUTION_STATEMENT = 0x1;
+
 
 }
