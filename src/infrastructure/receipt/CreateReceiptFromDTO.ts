@@ -17,15 +17,15 @@
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
 import {MosaicId} from '../../model/mosaic/MosaicId';
-import { ArtifactExpiryReceipt } from '../../model/receipt/artifactExpiryReceipt';
-import { BalanceChangeReceipt } from '../../model/receipt/balanceChangeReceipt';
-import { BalanceTransferReceipt } from '../../model/receipt/balanceTransferReceipt';
-import { Receipt } from '../../model/receipt/receipt';
-import { ReceiptSource } from '../../model/receipt/receiptSource';
-import { ReceiptType } from '../../model/receipt/receiptType';
-import { ResolutionEntry } from '../../model/receipt/resolutionEntry';
-import { ResolutionStatement } from '../../model/receipt/resolutionStatement';
-import { TransactionStatement } from '../../model/receipt/transactionStatement';
+import { ArtifactExpiryReceipt } from '../../model/receipt/ArtifactExpiryReceipt';
+import { BalanceChangeReceipt } from '../../model/receipt/BalanceChangeReceipt';
+import { BalanceTransferReceipt } from '../../model/receipt/BalanceTransferReceipt';
+import { Receipt } from '../../model/receipt/Receipt';
+import { ReceiptSource } from '../../model/receipt/ReceiptSource';
+import { ReceiptType } from '../../model/receipt/ReceiptType';
+import { ResolutionEntry } from '../../model/receipt/ResolutionEntry';
+import { ResolutionStatement } from '../../model/receipt/ResolutionStatement';
+import { TransactionStatement } from '../../model/receipt/TransactionStatement';
 import {UInt64} from '../../model/UInt64';
 
 /**
