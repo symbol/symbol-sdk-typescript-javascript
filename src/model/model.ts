@@ -61,16 +61,16 @@ export * from './namespace/NamespaceType';
 export * from './namespace/AliasActionType';
 
 // Receipt
-export * from './receipt/artifactExpiryReceipt';
-export * from './receipt/balanceChangeReceipt';
-export * from './receipt/balanceTransferReceipt';
-export * from './receipt/receipt';
-export * from './receipt/receiptSource';
-export * from './receipt/receiptType';
-export * from './receipt/receiptVersion';
-export * from './receipt/resolutionEntry';
-export * from './receipt/resolutionStatement';
-export * from './receipt/transactionStatement';
+export * from './receipt/ArtifactExpiryReceipt';
+export * from './receipt/BalanceChangeReceipt';
+export * from './receipt/BalanceTransferReceipt';
+export * from './receipt/Receipt';
+export * from './receipt/ReceiptSource';
+export * from './receipt/ReceiptType';
+export * from './receipt/ReceiptVersion';
+export * from './receipt/ResolutionEntry';
+export * from './receipt/ResolutionStatement';
+export * from './receipt/TransactionStatement';
 
 // Transaction
 export * from './transaction/AccountLinkTransaction';

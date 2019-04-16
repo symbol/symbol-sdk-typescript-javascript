@@ -15,8 +15,8 @@
  */
 
 import { UInt64 } from '../UInt64';
-import { Receipt } from './receipt';
-import { ReceiptType } from './receiptType';
+import { Receipt } from './Receipt';
+import { ReceiptType } from './ReceiptType';
 
 /**
  * Artifact Expiry: An artifact (e.g. namespace, mosaic) expired.
@@ -25,10 +25,10 @@ export class ArtifactExpiryReceipt extends Receipt {
 
     /**
      * Artifact expiry receipt
-     * @param size
-     * @param version
-     * @param type
-     * @param artifactId
+     * @param size - the receipt size
+     * @param version - The receipt version
+     * @param type - The receipt type
+     * @param artifactId -The id of the artifact (eg. namespace, mosaic).
      */
     constructor(size: number,
                 version: number,

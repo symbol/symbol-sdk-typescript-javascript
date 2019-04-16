@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- import { ReceiptSource } from './receiptSource';
+ import { ReceiptSource } from './ReceiptSource';
 
 /**
  * The receipt source object.
@@ -23,8 +23,8 @@
 
     /**
      * @constructor
-     * @param primaryId
-     * @param source
+     * @param primaryId - A resolved address or resolved mosaicId.
+     * @param source - The receipt source.
      */
     constructor(
                 /**

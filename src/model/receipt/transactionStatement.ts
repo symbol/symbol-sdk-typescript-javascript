@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Receipt } from './receipt';
-import { ReceiptSource } from './receiptSource';
-import { ReceiptType } from './receiptType';
+import { Receipt } from './Receipt';
+import { ReceiptSource } from './ReceiptSource';
+import { ReceiptType } from './ReceiptType';
 
 /**
  * A transaction statement is a collection of receipts linked with a transaction in a particular block.
@@ -28,11 +28,11 @@ export class TransactionStatement extends Receipt {
 
     /**
      * Receipt - transaction statement object
-     * @param size
-     * @param version
-     * @param type
-     * @param m_source
-     * @param receipts
+     * @param size - The statement size
+     * @param version - The statement version
+     * @param type - The statement type
+     * @param m_source - The receipt source.
+     * @param receipts - The array of receipt headers.
      */
     constructor(size: number,
                 version: number,

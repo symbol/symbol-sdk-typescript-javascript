@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ReceiptType } from './receiptType';
+import { ReceiptType } from './ReceiptType';
 
 /**
  * An abstract transaction class that serves as the base class of all receipts.
