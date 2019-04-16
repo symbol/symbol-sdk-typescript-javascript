@@ -17,8 +17,8 @@
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
-import { Receipt } from './receipt';
-import { ReceiptType } from './receiptType';
+import { Receipt } from './Receipt';
+import { ReceiptType } from './ReceiptType';
 
 /**
  * Balance Change: A mosaic credit or debit was triggered.
@@ -27,18 +27,18 @@ export class BalanceChangeReceipt extends Receipt {
 
     /**
      * Balance change expiry receipt
-     * @param size
-     * @param version
-     * @param type
-     * @param account
-     * @param mosaicId
-     * @param amount
+     * @param size - the receipt size
+     * @param version - The receipt version
+     * @param type - The receipt type
+     * @param account - The target account public Account.
+     * @param mosaicId - The mosaic id.
+     * @param amount - The amount of mosaic.
      */
     constructor(size: number,
                 version: number,
                 type: ReceiptType,
                 /**
-                 * The target account public key.
+                 * The target account public Account.
                  */
                 public readonly account: PublicAccount,
                 /**

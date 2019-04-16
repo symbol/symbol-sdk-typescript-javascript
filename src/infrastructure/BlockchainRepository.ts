@@ -18,7 +18,7 @@ import {Observable} from 'rxjs';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
-import { Receipt } from '../model/receipt/receipt';
+import { Receipt } from '../model/receipt/Receipt';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
 import {QueryParams} from './QueryParams';
