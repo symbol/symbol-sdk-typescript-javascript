@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
- import { ReceiptSource } from './ReceiptSource';
+  import { AddressAlias } from '../namespace/AddressAlias';
+  import { MosaicAlias } from '../namespace/MosaicAlias';
+  import { ReceiptSource } from './ReceiptSource';
 
 /**
  * The receipt source object.
  */
- export class ResolutionEntry {
+  export class ResolutionEntry {
 
     /**
      * @constructor
-     * @param primaryId - A resolved address or resolved mosaicId.
+     * @param resolvedValue - A resolved address or resolved mosaicId (alias).
      * @param source - The receipt source.
      */
     constructor(
                 /**
-                 * A resolved address or resolved mosaicId.
+                 * A resolved address or resolved mosaicId (alias).
                  */
-                public readonly resolvedValue: string | number[],
+                public readonly resolvedValue: AddressAlias | MosaicAlias,
                 /**
                  * The receipt source.
                  */
