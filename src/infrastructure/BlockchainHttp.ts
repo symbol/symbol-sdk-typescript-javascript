@@ -21,14 +21,14 @@ import {PublicAccount} from '../model/account/PublicAccount';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
-import { Receipt } from '../model/receipt/receipt';
+import { Receipt } from '../model/receipt/Receipt';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
 import {BlockchainRepository} from './BlockchainRepository';
 import {Http} from './Http';
 import {QueryParams} from './QueryParams';
 import { CreateReceiptFromDTO } from './receipt/CreateReceiptFromDTO';
-import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
+import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
 
 /**
  * Blockchain http repository.
