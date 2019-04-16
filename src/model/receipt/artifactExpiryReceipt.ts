@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { UInt64 } from '../UInt64';
+import { MosaicId } from '../mosaic/MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
 
@@ -33,10 +34,7 @@ export class ArtifactExpiryReceipt extends Receipt {
     constructor(size: number,
                 version: number,
                 type: ReceiptType,
-                /**
-                 * The id of the artifact (eg. namespace, mosaic).
-                 */
-                public readonly  artifactId: UInt64) {
+                public readonly  artifactId: MosaicId | NamespaceId) {
         super(size, version, type);
     }
 }
