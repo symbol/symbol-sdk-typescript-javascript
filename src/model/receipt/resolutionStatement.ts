@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { Receipt } from './receipt';
-import { ReceiptSource } from './receiptSource';
-import { ReceiptType } from './receiptType';
-import { ResolutionEntry } from './resolutionEntry';
+import { Receipt } from './Receipt';
+import { ReceiptType } from './ReceiptType';
+import { ResolutionEntry } from './ResolutionEntry';
 
 /**
  * When a transaction includes an alias, a so called resolution statement reflects the resolved value for that block:
@@ -28,11 +27,11 @@ export class ResolutionStatement extends Receipt {
 
     /**
      * Receipt - resolution statement object
-     * @param size
-     * @param version
-     * @param type
-     * @param unresolved
-     * @param m_entries
+     * @param size - The statement size
+     * @param version - The statement version
+     * @param type - The statement type
+     * @param unresolved - An unresolved address or unresolved mosaicId.
+     * @param m_entries - The array of resolution entries.
      */
     constructor(size: number,
                 version: number,

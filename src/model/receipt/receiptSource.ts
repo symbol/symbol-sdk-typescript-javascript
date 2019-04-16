@@ -21,8 +21,8 @@ export class ReceiptSource {
 
     /**
      * @constructor
-     * @param primaryId
-     * @param secondaryId
+     * @param primaryId - The transaction primary source (e.g. index within block).
+     * @param secondaryId - The transaction secondary source (e.g. index within aggregate).
      */
     constructor(
                 /**

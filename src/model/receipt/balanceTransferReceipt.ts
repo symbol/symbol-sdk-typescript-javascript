@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
-import { Receipt } from './receipt';
-import { ReceiptType } from './receiptType';
+import { Receipt } from './Receipt';
+import { ReceiptType } from './ReceiptType';
 
 /**
  * Balance Transfer: A mosaic transfer was triggered.
@@ -27,25 +29,25 @@ export class BalanceTransferReceipt extends Receipt {
 
     /**
      * Balance transfer expiry receipt
-     * @param size
-     * @param version
-     * @param type
-     * @param sender
-     * @param recipient
-     * @param mosaicId
-     * @param amount
+     * @param size - the receipt size
+     * @param version - The receipt version
+     * @param type - The receipt type
+     * @param sender - The public account of the sender.
+     * @param recipient - The mosaic recipient address.
+     * @param mosaicId - The mosaic id.
+     * @param amount - The amount of mosaic.
      */
     constructor(size: number,
                 version: number,
                 type: ReceiptType,
                 /**
-                 * The public key of the sender.
+                 * The public account of the sender.
                  */
                 public readonly sender: PublicAccount,
                 /**
-                 * The public key of the recipient.
+                 * The mosaic recipient address.
                  */
-                public readonly recipient: PublicAccount,
+                public readonly recipient: Address | NamespaceId,
                 /**
                  * The mosaic id.
                  */
