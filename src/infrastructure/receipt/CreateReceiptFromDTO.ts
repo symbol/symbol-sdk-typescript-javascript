@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+import { Address } from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
+import { NamespaceId } from '../../model/model';
 import {MosaicId} from '../../model/mosaic/MosaicId';
 import { ArtifactExpiryReceipt } from '../../model/receipt/ArtifactExpiryReceipt';
 import { BalanceChangeReceipt } from '../../model/receipt/BalanceChangeReceipt';
@@ -128,7 +130,7 @@ const createBalanceTransferReceipt = (receiptDTO): Receipt => {
         extractReceiptVersion(receiptDTO.version),
         receiptDTO.type,
         PublicAccount.createFromPublicKey(receiptDTO.sender, extractNetworkType(receiptDTO.version)),
-        PublicAccount.createFromPublicKey(receiptDTO.receipt, extractNetworkType(receiptDTO.version)),
+        Address.createFromRawAddress(receiptDTO.recipient),
         new MosaicId(receiptDTO.mosaicId),
         new UInt64(receiptDTO.amount),
     );
@@ -145,7 +147,7 @@ const createArtifactExpiryReceipt = (receiptDTO): Receipt => {
         receiptDTO.size,
         extractReceiptVersion(receiptDTO.version),
         receiptDTO.type,
-        new UInt64(receiptDTO.artifactId),
+        this.extractArtifactId(receiptDTO.artifactId),
     );
 };
 
@@ -165,4 +167,15 @@ const extractNetworkType = (version: number): NetworkType => {
 
 const extractReceiptVersion = (version: number): number => {
     return parseInt(version.toString(16).substr(2, 2), 16);
+};
+
+const extractArtifactId = (receiptType: ReceiptType, id: number[]): MosaicId | NamespaceId => {
+    switch (receiptType) {
+        case ReceiptType.Mosaic_Expired:
+            return new MosaicId(id);
+        case ReceiptType.Namespace_Expired:
+            return new NamespaceId(id);
+        default:
+            throw new Error('Receipt type is not supported.');
+    }
 };
