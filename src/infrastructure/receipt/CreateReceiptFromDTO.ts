@@ -143,11 +143,12 @@ const createBalanceTransferReceipt = (receiptDTO): Receipt => {
  * @constructor
  */
 const createArtifactExpiryReceipt = (receiptDTO): Receipt => {
+    const type = extractReceiptVersion(receiptDTO.version);
     return new ArtifactExpiryReceipt(
         receiptDTO.size,
-        extractReceiptVersion(receiptDTO.version),
+        type,
         receiptDTO.type,
-        this.extractArtifactId(receiptDTO.artifactId),
+        extractArtifactId(type, receiptDTO.artifactId),
     );
 };
 
