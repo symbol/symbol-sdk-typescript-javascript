@@ -50,6 +50,13 @@ describe('Address', () => {
         expect(address.networkType).to.be.equal(NetworkType.TEST_NET);
     });
 
+    it('createComplete an address given publicKey using Keccak', () => {
+        const address = Address.createFromPublicKey(publicKey, NetworkType.MIJIN_TEST, true);
+        expect(address.plain()).not.to.be.equal('SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2');
+        expect(address.plain()).to.be.equal('SB3AIJASMUZQK2X5LXISBMCCC6SC5PAURPSFZPCG');
+        expect(address.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+    });
+
     it('createComplete an address given SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2', () => {
         const address = Address.createFromRawAddress('SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2');
         expect(address.networkType).to.be.equal(NetworkType.MIJIN_TEST);
