@@ -27,10 +27,10 @@ export class Address {
      * @param networkType - The NEM network type.
      * @returns {Address}
      */
-    public static createFromPublicKey(publicKey: string, networkType: NetworkType): Address {
+    public static createFromPublicKey(publicKey: string, networkType: NetworkType, isKeccak: boolean = false): Address {
         const publicKeyUint8 = convert.hexToUint8(publicKey);
         const address = AddressLibrary
-            .addressToString(AddressLibrary.publicKeyToAddress(publicKeyUint8, networkType));
+            .addressToString(AddressLibrary.publicKeyToAddress(publicKeyUint8, networkType, isKeccak));
         return new Address(address, networkType);
     }
 
