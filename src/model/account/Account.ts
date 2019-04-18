@@ -59,10 +59,10 @@ export class Account {
      * @param networkType - Network type
      * @return {Account}
      */
-    public static createFromPrivateKey(privateKey: string, networkType: NetworkType): Account {
+    public static createFromPrivateKey(privateKey: string, networkType: NetworkType, isKeccak: boolean = false): Account {
         const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
         const address = AddressLibrary.addressToString(
-            AddressLibrary.publicKeyToAddress(keyPair.publicKey, networkType));
+            AddressLibrary.publicKeyToAddress(keyPair.publicKey, networkType, isKeccak));
         return new Account(
             Address.createFromRawAddress(address),
             keyPair,
