@@ -33,6 +33,15 @@ describe('Account', () => {
         expect(account.address.plain()).to.be.equal(accountInformation.address);
     });
 
+    it('should be created via private key - Keccak256', () => {
+        const account = Account.createFromPrivateKey(accountInformation.privateKey, NetworkType.MIJIN_TEST, true);
+        expect(account.publicKey).to.be.equal(accountInformation.publicKey);
+        expect(account.privateKey).to.be.equal(accountInformation.privateKey);
+        expect(account.address.plain()).not.to.be.equal(accountInformation.address);
+        expect(account.address.plain()).to.be.equal('SB3AIJASMUZQK2X5LXISBMCCC6SC5PAURPSFZPCG');
+    });
+
+
     it('should throw exception when the private key is not valid', () => {
         expect(() => {
             Account.createFromPrivateKey('', NetworkType.MIJIN_TEST);
