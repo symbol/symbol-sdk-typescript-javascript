@@ -17,6 +17,7 @@
 import {expect} from 'chai';
 import {convert} from 'nem2-library';
 import {Account} from '../../../src/model/account/Account';
+import { HashAlgorithm } from '../../../src/model/account/HashAlgorithmEnum';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import { HashType } from '../../../src/model/transaction/HashType';
 
