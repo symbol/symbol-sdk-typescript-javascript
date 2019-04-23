@@ -16,6 +16,7 @@
 
 import { Convert as convert, RawAddress as AddressLibrary} from '../../core/format';
 import {NetworkType} from '../blockchain/NetworkType';
+import { HashAlgorithm } from './HashAlgorithmEnum';
 
 /**
  * The address structure describes an address with its network
@@ -27,10 +28,12 @@ export class Address {
      * @param networkType - The NEM network type.
      * @returns {Address}
      */
-    public static createFromPublicKey(publicKey: string, networkType: NetworkType, isKeccak: boolean = false): Address {
+    public static createFromPublicKey(publicKey: string,
+                                      networkType: NetworkType,
+                                      hashAlgorithm: HashAlgorithm = HashAlgorithm.SHA3_256): Address {
         const publicKeyUint8 = convert.hexToUint8(publicKey);
         const address = AddressLibrary
-            .addressToString(AddressLibrary.publicKeyToAddress(publicKeyUint8, networkType, isKeccak));
+            .addressToString(AddressLibrary.publicKeyToAddress(publicKeyUint8, networkType, hashAlgorithm));
         return new Address(address, networkType);
     }
 
