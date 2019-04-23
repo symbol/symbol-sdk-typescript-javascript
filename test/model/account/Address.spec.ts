@@ -16,6 +16,7 @@
 
 import {expect} from 'chai';
 import {Address} from '../../../src/model/account/Address';
+import { HashAlgorithm } from '../../../src/model/account/HashAlgorithmEnum';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 
 describe('Address', () => {
@@ -51,7 +52,7 @@ describe('Address', () => {
     });
 
     it('createComplete an address given publicKey using Keccak', () => {
-        const address = Address.createFromPublicKey(publicKey, NetworkType.MIJIN_TEST, true);
+        const address = Address.createFromPublicKey(publicKey, NetworkType.MIJIN_TEST, HashAlgorithm.KECCAK_256);
         expect(address.plain()).not.to.be.equal('SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2');
         expect(address.plain()).to.be.equal('SB3AIJASMUZQK2X5LXISBMCCC6SC5PAURPSFZPCG');
         expect(address.networkType).to.be.equal(NetworkType.MIJIN_TEST);
