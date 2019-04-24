@@ -26,7 +26,6 @@ import {PlainMessage} from '../transaction/PlainMessage';
 import {SignedTransaction} from '../transaction/SignedTransaction';
 import {Transaction} from '../transaction/Transaction';
 import {Address} from './Address';
-import { HashAlgorithm } from './HashAlgorithmEnum';
 import {PublicAccount} from './PublicAccount';
 
 interface IKeyPair {
