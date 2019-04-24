@@ -16,8 +16,8 @@
 
 import {expect} from 'chai';
 import {Address} from '../../../src/model/account/Address';
-import { HashAlgorithm } from '../../../src/model/account/HashAlgorithmEnum';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import { HashType } from '../../../src/model/transaction/HashType';
 
 describe('Address', () => {
     const publicKey = 'c2f93346e27ce6ad1a9f8f5e3066f8326593a406bdf357acb041e2f9ab402efe'.toUpperCase();
@@ -52,7 +52,7 @@ describe('Address', () => {
     });
 
     it('createComplete an address given publicKey using Keccak', () => {
-        const address = Address.createFromPublicKey(publicKey, NetworkType.MIJIN_TEST, HashAlgorithm.KECCAK_256);
+        const address = Address.createFromPublicKey(publicKey, NetworkType.MIJIN_TEST, HashType.Op_Keccak_256);
         expect(address.plain()).not.to.be.equal('SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2');
         expect(address.plain()).to.be.equal('SB3AIJASMUZQK2X5LXISBMCCC6SC5PAURPSFZPCG');
         expect(address.networkType).to.be.equal(NetworkType.MIJIN_TEST);
