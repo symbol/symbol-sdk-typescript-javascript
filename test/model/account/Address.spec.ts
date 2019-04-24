@@ -16,7 +16,6 @@
 
 import {expect} from 'chai';
 import {Address} from '../../../src/model/account/Address';
-import { HashAlgorithm } from '../../../src/model/account/HashAlgorithmEnum';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import { HashType } from '../../../src/model/transaction/HashType';
 
