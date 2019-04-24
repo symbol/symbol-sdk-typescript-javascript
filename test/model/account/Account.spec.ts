@@ -17,9 +17,8 @@
 import {expect} from 'chai';
 import {convert} from 'nem2-library';
 import {Account} from '../../../src/model/account/Account';
-import { HashAlgorithm } from '../../../src/model/account/HashAlgorithmEnum';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import { PublicAccount } from '../../../src/model/model';
+import { HashType } from '../../../src/model/transaction/HashType';
 
 describe('Account', () => {
     const accountInformation = {
@@ -36,7 +35,7 @@ describe('Account', () => {
     });
 
     it('should be created via private key - Keccak256', () => {
-        const account = Account.createFromPrivateKey(accountInformation.privateKey, NetworkType.MIJIN_TEST, HashAlgorithm.KECCAK_256);
+        const account = Account.createFromPrivateKey(accountInformation.privateKey, NetworkType.MIJIN_TEST, HashType.Op_Keccak_256);
         expect(account.publicKey).to.be.equal(accountInformation.publicKey);
         expect(account.privateKey).to.be.equal(accountInformation.privateKey);
         expect(account.address.plain()).not.to.be.equal(accountInformation.address);

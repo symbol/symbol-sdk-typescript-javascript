@@ -21,11 +21,11 @@ import {AggregateTransaction} from '../transaction/AggregateTransaction';
 import {CosignatureSignedTransaction} from '../transaction/CosignatureSignedTransaction';
 import {CosignatureTransaction} from '../transaction/CosignatureTransaction';
 import {EncryptedMessage} from '../transaction/EncryptedMessage';
+import { HashType } from '../transaction/HashType';
 import {PlainMessage} from '../transaction/PlainMessage';
 import {SignedTransaction} from '../transaction/SignedTransaction';
 import {Transaction} from '../transaction/Transaction';
 import {Address} from './Address';
-import { HashAlgorithm } from './HashAlgorithmEnum';
 import {PublicAccount} from './PublicAccount';
 
 interface IKeyPair {
@@ -58,15 +58,15 @@ export class Account {
      * Create an Account from a given private key
      * @param privateKey - Private key from an account
      * @param networkType - Network type
-     * @param hashAlgorithm - Hash algorithm - (default: SHA3_256, NIS1: KECCAK_256)
+     * @param hashType - The hash type
      * @return {Account}
      */
     public static createFromPrivateKey(privateKey: string,
                                        networkType: NetworkType,
-                                       hashAlgorithm: HashAlgorithm = HashAlgorithm.SHA3_256): Account {
+                                       hashType: HashType = HashType.Op_Sha3_256): Account {
         const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
         const address = AddressLibrary.addressToString(
-            AddressLibrary.publicKeyToAddress(keyPair.publicKey, networkType, hashAlgorithm));
+            AddressLibrary.publicKeyToAddress(keyPair.publicKey, networkType, hashType));
         return new Account(
             Address.createFromRawAddress(address),
             keyPair,
