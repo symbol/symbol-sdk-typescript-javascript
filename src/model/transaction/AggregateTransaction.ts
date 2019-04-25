@@ -20,6 +20,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';
+import { CosignatureSignedTransaction } from './CosignatureSignedTransaction';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
@@ -137,6 +138,23 @@ export class AggregateTransaction extends Transaction {
     public signTransactionWithCosignatories(initiatorAccount: Account, cosignatories: Account[]) {
         const aggregateTransaction = this.buildTransaction();
         const signedTransactionRaw = aggregateTransaction.signTransactionWithCosigners(initiatorAccount, cosignatories);
+        return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
+                                     this.type, this.networkType);
+    }
+
+    /**
+     * @internal
+     * Sign transaction with cosignatories collected from cosigned transactions and creating a new SignedTransaction
+     * For off chain Aggregated Complete Transaction co-signing.
+     * @param initiatorAccount - Initiator account
+     * @param {CosignatureSignedTransaction[]} cosignatureSignedTransaction - Array of cosigned transaction
+     * @return {SignedTransaction}
+     */
+    public signTransactionWithCosignedTransactions(initiatorAccount: Account,
+                                                   cosignatureSignedTransaction: CosignatureSignedTransaction[]) {
+        const aggregateTransaction = this.buildTransaction();
+        const signedTransactionRaw = aggregateTransaction.signTransactionWithCosignedTransactions(initiatorAccount,
+                                                                                                  cosignatureSignedTransaction);
         return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
                                      this.type, this.networkType);
     }
