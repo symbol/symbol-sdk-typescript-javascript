@@ -15,10 +15,15 @@
  */
 
 import {expect} from 'chai';
+import { VerifiableTransaction } from 'nem2-library';
 import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import {Account} from '../../../src/model/account/Account';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
 import {CosignatureTransaction} from '../../../src/model/transaction/CosignatureTransaction';
+import { Deadline } from '../../../src/model/transaction/Deadline';
+import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
+import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('CosignatureTransaction', () => {
@@ -111,5 +116,21 @@ describe('CosignatureTransaction', () => {
         expect(cosignatureSignedTransaction.signature).to.be.equal('BF3BC39F2292C028CB0FFA438A9F567A7C4D7' +
             '93D2F8522C8DEAC74BEFBCB61AF6414ADF27B2176D6A24FEF612AA6DB2F562176A11C46BA6D5E05430042CB5705');
         expect(cosignatureSignedTransaction.signer).to.be.equal(account.publicKey);
+    });
+
+    it('should sign a transaction with transaction hash', () => {
+        const txPayload = TransferTransaction.create(Deadline.create(),
+                                              account.address,
+                                              [],
+                                              PlainMessage.create('a to b'),
+                                              NetworkType.MIJIN_TEST).serialize();
+
+        const txHash = VerifiableTransaction.createTransactionHash(txPayload);
+
+        const signedTx = CosignatureTransaction.signTransactionHashWith(account, txHash);
+
+        expect(signedTx.parentHash).to.be.equal(txHash);
+        expect(signedTx.signer).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE');
+        expect(signedTx.signer).to.be.equal(account.publicKey);
     });
 });
