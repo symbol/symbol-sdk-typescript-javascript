@@ -22,6 +22,7 @@ import {MosaicId} from '../../model/mosaic/MosaicId';
 import { ArtifactExpiryReceipt } from '../../model/receipt/ArtifactExpiryReceipt';
 import { BalanceChangeReceipt } from '../../model/receipt/BalanceChangeReceipt';
 import { BalanceTransferReceipt } from '../../model/receipt/BalanceTransferReceipt';
+import { InflationReceipt } from '../../model/receipt/InflationReceipt';
 import { Receipt } from '../../model/receipt/Receipt';
 import { ReceiptSource } from '../../model/receipt/ReceiptSource';
 import { ReceiptType } from '../../model/receipt/ReceiptType';
@@ -58,7 +59,8 @@ export const CreateReceiptFromDTO = (receiptDTO): Receipt => {
         case ReceiptType.Address_Alias_Resolution:
         case ReceiptType.Mosaic_Alias_Resolution:
             return createResolutionStatement(receiptDTO);
-
+        case ReceiptType.Inflation:
+            return createInflationReceipt(receiptDTO);
         default:
             throw new Error(`Receipt type: ${receiptDTO.type} not recognized.`);
     }
@@ -143,12 +145,27 @@ const createBalanceTransferReceipt = (receiptDTO): Receipt => {
  * @constructor
  */
 const createArtifactExpiryReceipt = (receiptDTO): Receipt => {
-    const type = extractReceiptVersion(receiptDTO.version);
     return new ArtifactExpiryReceipt(
         receiptDTO.size,
-        type,
+        extractReceiptVersion(receiptDTO.version),
         receiptDTO.type,
-        extractArtifactId(type, receiptDTO.artifactId),
+        extractArtifactId(receiptDTO.type, receiptDTO.artifactId),
+    );
+};
+
+/**
+ * @internal
+ * @param receiptDTO
+ * @returns {InflationReceipt}
+ * @constructor
+ */
+const createInflationReceipt = (receiptDTO): Receipt => {
+    return new InflationReceipt(
+        receiptDTO.size,
+        extractReceiptVersion(receiptDTO.version),
+        receiptDTO.type,
+        new MosaicId(receiptDTO.mosaicId),
+        new UInt64(receiptDTO.amount),
     );
 };
 

@@ -49,5 +49,9 @@ export class ReceiptVersion {
      */
     public static readonly RESOLUTION_STATEMENT = 0x1;
 
-
+    /**
+     * Resolution statement version
+     * @type {number}
+     */
+    public static readonly INFLATION_RECEIPT = 0x1;
 }

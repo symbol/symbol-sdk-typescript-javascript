@@ -28,6 +28,7 @@ import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { ArtifactExpiryReceipt } from '../../../src/model/receipt/ArtifactExpiryReceipt';
 import { BalanceChangeReceipt } from '../../../src/model/receipt/BalanceChangeReceipt';
 import { BalanceTransferReceipt } from '../../../src/model/receipt/BalanceTransferReceipt';
+import { InflationReceipt } from '../../../src/model/receipt/InflationReceipt';
 import { ReceiptSource } from '../../../src/model/receipt/ReceiptSource';
 import { ReceiptType } from '../../../src/model/receipt/ReceiptType';
 import { ReceiptVersion } from '../../../src/model/receipt/ReceiptVersion';
@@ -285,4 +286,26 @@ describe('Receipt', () => {
         deepEqual((statement.m_entries[0].resolvedValue as AddressAlias).address.plain(), addressAlias);
     });
 
+    it('should createComplete a inflation receipt', () => {
+        const receiptDTO = {
+            size: 1,
+            version: 1,
+            type: 20803,
+            mosaicId: [3646934825, 3576016193],
+            amount: 1000,
+        };
+
+        const receipt = new InflationReceipt(
+            receiptDTO.size,
+            receiptDTO.version,
+            receiptDTO.type,
+            new MosaicId(receiptDTO.mosaicId),
+            UInt64.fromUint(receiptDTO.amount),
+        );
+
+        deepEqual(receipt.amount.compact(), receiptDTO.amount);
+        deepEqual(receipt.mosaicId.toDTO().id, receiptDTO.mosaicId);
+        deepEqual(receipt.type, ReceiptType.Inflation);
+        deepEqual(receipt.version, ReceiptVersion.INFLATION_RECEIPT);
+    });
 });

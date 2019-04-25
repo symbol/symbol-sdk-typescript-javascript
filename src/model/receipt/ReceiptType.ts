@@ -85,4 +85,8 @@ export enum ReceiptType {
      */
     LockSecret_Expired = 0x5223,
 
+    /**
+     * The account receiving the locked mosaic, the mosaicId and the amount. It is recorded when a secretlock expires
+     */
+    Inflation = 0x5143,
 }
