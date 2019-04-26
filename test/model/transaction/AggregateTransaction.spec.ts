@@ -411,7 +411,7 @@ describe('AggregateTransaction', () => {
                                                   PlainMessage.create('c to a'),
                                                   NetworkType.MIJIN_TEST);
 
-        // 01. Alice creates the aggregated tx and serialize it, and generate the hash. Then send to Bob & Carol
+        // 01. Alice creates the aggregated tx and serialize it, Then payload send to Bob & Carol
         const aggregateTransactionPayload = AggregateTransaction.createComplete(
             Deadline.create(),
             [
@@ -422,13 +422,11 @@ describe('AggregateTransaction', () => {
             [],
         ).serialize();
 
-        const txHash = VerifiableTransaction.createTransactionHash(aggregateTransactionPayload);
-
         // 02.1 Bob cosigns the tx and sends it back to Alice
-        const signedTxBob = CosignatureTransaction.signTransactionHashWith(accountBob, txHash);
+        const signedTxBob = CosignatureTransaction.signTransactionPayload(accountBob, aggregateTransactionPayload);
 
         // 02.2 Carol cosigns the tx and sends it back to Alice
-        const signedTxCarol = CosignatureTransaction.signTransactionHashWith(accountCarol, txHash);
+        const signedTxCarol = CosignatureTransaction.signTransactionPayload(accountCarol, aggregateTransactionPayload);
 
         // 03. Alice collects the cosignatures, recreate, sign, and announces the transaction
 
