@@ -47,16 +47,17 @@ export class CosignatureTransaction {
     }
 
     /**
-     * Co-sign transaction with transaction hash (off chain)
+     * Co-sign transaction with transaction payload (off chain)
      * Creating a new CosignatureSignedTransaction
      * @param account - The signing account
-     * @param transactionHash - off transaction hash (aggregated transaction is unannounced)
+     * @param payload - off transaction payload (aggregated transaction is unannounced)
      * @returns {CosignatureSignedTransaction}
      */
-    public static signTransactionHashWith(account: Account, transactionHash: string): CosignatureSignedTransaction {
+    public static signTransactionPayload(account: Account, payload: string): CosignatureSignedTransaction {
         /**
          * For aggregated complete transaction, cosignatories are gathered off chain announced.
          */
+        const transactionHash = VerifiableTransaction.createTransactionHash(payload);
         const aggregateSignatureTransaction = new CosignaturetransactionLibrary(transactionHash);
         const signedTransactionRaw = aggregateSignatureTransaction.signCosignatoriesTransaction(account);
         return new CosignatureSignedTransaction(signedTransactionRaw.parentHash,

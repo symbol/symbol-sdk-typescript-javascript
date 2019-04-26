@@ -118,18 +118,15 @@ describe('CosignatureTransaction', () => {
         expect(cosignatureSignedTransaction.signer).to.be.equal(account.publicKey);
     });
 
-    it('should sign a transaction with transaction hash', () => {
+    it('should sign a transaction with transaction payload', () => {
         const txPayload = TransferTransaction.create(Deadline.create(),
                                               account.address,
                                               [],
                                               PlainMessage.create('a to b'),
                                               NetworkType.MIJIN_TEST).serialize();
 
-        const txHash = VerifiableTransaction.createTransactionHash(txPayload);
+        const signedTx = CosignatureTransaction.signTransactionPayload(account, txPayload);
 
-        const signedTx = CosignatureTransaction.signTransactionHashWith(account, txHash);
-
-        expect(signedTx.parentHash).to.be.equal(txHash);
         expect(signedTx.signer).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE');
         expect(signedTx.signer).to.be.equal(account.publicKey);
     });
