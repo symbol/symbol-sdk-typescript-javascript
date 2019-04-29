@@ -150,11 +150,11 @@ export class AggregateTransaction extends Transaction {
      * @param {CosignatureSignedTransaction[]} cosignatureSignedTransaction - Array of cosigned transaction
      * @return {SignedTransaction}
      */
-    public signTransactionWithCosignedTransactions(initiatorAccount: Account,
-                                                   cosignatureSignedTransaction: CosignatureSignedTransaction[]) {
+    public signTransactionGivenSignatures(initiatorAccount: Account,
+                                          cosignatureSignedTransaction: CosignatureSignedTransaction[]) {
         const aggregateTransaction = this.buildTransaction();
-        const signedTransactionRaw = aggregateTransaction.signTransactionWithCosignedTransactions(initiatorAccount,
-                                                                                                  cosignatureSignedTransaction);
+        const signedTransactionRaw = aggregateTransaction.signTransactionGivenSignatures(initiatorAccount,
+                                                                                         cosignatureSignedTransaction);
         return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
                                      this.type, this.networkType);
     }

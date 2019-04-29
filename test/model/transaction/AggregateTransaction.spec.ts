@@ -438,7 +438,7 @@ describe('AggregateTransaction', () => {
 
         const recreatedTx = TransactionMapping.createFromPayload(aggregateTransactionPayload) as AggregateTransaction;
 
-        const signedTransaction = recreatedTx.signTransactionWithCosignedTransactions(accountAlice, cosignatureSignedTransactions);
+        const signedTransaction = recreatedTx.signTransactionGivenSignatures(accountAlice, cosignatureSignedTransactions);
 
         expect(signedTransaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(signedTransaction.signer).to.be.equal(accountAlice.publicKey);
