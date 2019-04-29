@@ -874,4 +874,15 @@ describe('TransactionHttp', () => {
                 });
         });
     });
+
+    describe('getTransactionEffectiveFee', () => {
+        it('should return effective paid fee given transactionHash', (done) => {
+            transactionHttp.getTransactionEffectiveFee(transactionHash)
+                .subscribe((effectiveFee) => {
+                    expect(effectiveFee).to.not.be.undefined;
+                    expect(effectiveFee).to.be.equal(0);
+                    done();
+                });
+        });
+    });
 });

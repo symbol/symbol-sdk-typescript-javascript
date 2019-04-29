@@ -12,7 +12,7 @@ with the NEM2 (a.k.a Catapult)
 
 Due to a network upgrade with [catapult-server@cow](https://github.com/nemtech/catapult-server/releases/tag/v0.3.0.2) version, **transactions from Alpaca&Bison are not compatible anymore**.
 
-The upgrade to this SDK's [version v0.11](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.11) is mandatory for **cow compatibility**.
+The upgrade to this SDK's [version v0.11.5](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.11.5) is mandatory for **cow compatibility**.
 
 Other versions like [version v0.10.1-beta](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.10.1-beta) can be used for **bison** network version.
 
@@ -55,8 +55,13 @@ Please, use the following available resources to get help:
 
 Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
 
-- [0.11](CHANGELOG.md#v011) - **Cow compatible** - 14.03.2019
+- [0.11.5](CHANGELOG.md#0115-18-Apr-2019) - **Cow compatible** - 18.04.2019
+- [0.11.4](CHANGELOG.md#0114-17-Apr-2019) - **Cow compatible** - 17.04.2019
+- [0.11.3](CHANGELOG.md#0113-10-Apr-2019) - **Cow compatible** - 10.04.2019
+- [0.11.2](CHANGELOG.md#0112-1-Apr-2019) - **Cow compatible** - 01.04.2019
+- [0.11](CHANGELOG.md#011-14-Mar-2019) - **Cow compatible** - 14.03.2019
 - [0.10.1-beta](CHANGELOG.md#v0101-beta) - **Alpaca compatible** 07.2018
+- [0.9.5](CHANGELOG.md#095-27-Jun-2018) - **Alpaca compatible** 07.2018
 
 ## License
 

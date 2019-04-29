@@ -15,6 +15,7 @@
  */
 
 import {Message} from './Message';
+import {MessageType} from './MessageType';
 
 /**
  * The plain message model defines a plain string. When sending it to the network we transform the payload to hex-string.
@@ -31,7 +32,7 @@ export class PlainMessage extends Message {
     /**
      * @internal
      */
-    public static createFromDTO(payload: string): PlainMessage {
+    public static createFromPayload(payload: string): PlainMessage {
         return new PlainMessage(this.decodeHex(payload));
     }
 
@@ -40,7 +41,7 @@ export class PlainMessage extends Message {
      * @param payload
      */
     constructor(payload: string) {
-        super(0, payload);
+        super(MessageType.PlainMessage, payload);
     }
 
 }

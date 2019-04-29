@@ -42,6 +42,7 @@ import { HashType } from '../../../src/model/transaction/HashType';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../../src/model/transaction/LockFundsTransaction';
 import { ModifyAccountPropertyAddressTransaction } from '../../../src/model/transaction/ModifyAccountPropertyAddressTransaction';
+import { ModifyAccountPropertyMosaicTransaction } from '../../../src/model/transaction/ModifyAccountPropertyMosaicTransaction';
 import { ModifyMultisigAccountTransaction } from '../../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAliasTransaction } from '../../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../../src/model/transaction/MosaicDefinitionTransaction';
@@ -57,7 +58,7 @@ import { TransferTransaction } from '../../../src/model/transaction/TransferTran
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
 
-describe('TransactionMapping', () => {
+describe('TransactionMapping - createFromPayload', () => {
     let account: Account;
 
     before(() => {
@@ -191,8 +192,108 @@ describe('TransactionMapping', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
-        expect(transaction.mosaicProperties.duration.lower).to.be.equal(1000);
-        expect(transaction.mosaicProperties.duration.higher).to.be.equal(0);
+        expect(transaction.mosaicProperties.duration!.lower).to.be.equal(1000);
+        expect(transaction.mosaicProperties.duration!.higher).to.be.equal(0);
+        expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
+        expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
+        expect(transaction.mosaicProperties.transferable).to.be.equal(false);
+        expect(transaction.mosaicProperties.levyMutable).to.be.equal(false);
+
+    });
+
+    it('should create MosaicDefinitionTransaction - without duration', () => {
+        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            MosaicProperties.create({
+                supplyMutable: false,
+                transferable: false,
+                levyMutable: false,
+                divisibility: 3,
+            }),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
+
+        expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
+        expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
+        expect(transaction.mosaicProperties.transferable).to.be.equal(false);
+        expect(transaction.mosaicProperties.levyMutable).to.be.equal(false);
+
+    });
+
+    it('should create MosaicDefinitionTransaction - without duration', () => {
+        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            MosaicProperties.create({
+                supplyMutable: false,
+                transferable: false,
+                levyMutable: false,
+                divisibility: 3,
+            }),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
+
+        expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
+        expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
+        expect(transaction.mosaicProperties.transferable).to.be.equal(false);
+        expect(transaction.mosaicProperties.levyMutable).to.be.equal(false);
+
+    });
+
+    it('should create MosaicDefinitionTransaction - without duration', () => {
+        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            MosaicProperties.create({
+                supplyMutable: false,
+                transferable: false,
+                levyMutable: false,
+                divisibility: 3,
+            }),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
+
+        expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
+        expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
+        expect(transaction.mosaicProperties.transferable).to.be.equal(false);
+        expect(transaction.mosaicProperties.levyMutable).to.be.equal(false);
+
+    });
+
+    it('should create MosaicDefinitionTransaction - without duration', () => {
+        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            MosaicProperties.create({
+                supplyMutable: false,
+                transferable: false,
+                levyMutable: false,
+                divisibility: 3,
+            }),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
+
         expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(transaction.mosaicProperties.transferable).to.be.equal(false);
@@ -428,5 +529,359 @@ describe('TransactionMapping', () => {
 
         expect(transaction.namespaceType).to.be.equal(NamespaceType.SubNamespace);
         expect(transaction.namespaceName).to.be.equal('root-test-namespace');
+    });
+});
+
+describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () => {
+    let account: Account;
+
+    before(() => {
+        account = TestingAccount;
+    });
+
+    it('should create TransferTransaction - Address', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [
+                NetworkCurrencyMosaic.createRelative(100),
+            ],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
+
+        expect((transaction.recipient as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect(transaction.message.payload).to.be.equal('test-message');
+    });
+
+    it('should create TransferTransaction - NamespaceId', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            new NamespaceId([33347626, 3779697293]),
+            [
+                NetworkCurrencyMosaic.createRelative(100),
+            ],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
+        expect((transaction.recipient as NamespaceId).id.toHex().toUpperCase()).to.be.equal(new UInt64([33347626, 3779697293]).toHex());
+        expect(transaction.message.payload).to.be.equal('test-message');
+    });
+
+    it('should create AccountLinkTransaction', () => {
+        const accountLinkTransaction = AccountLinkTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            LinkAction.Link,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction = TransactionMapping.createFromDTO(accountLinkTransaction.toJSON()) as AccountLinkTransaction;
+
+        expect(transaction.remoteAccountKey).to.be.equal(account.publicKey);
+        expect(transaction.linkAction).to.be.equal(LinkAction.Link);
+    });
+
+    it('should create AccountPropertyAddressTransaction', () => {
+        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const addressPropertyFilter = AccountPropertyTransaction.createAddressFilter(
+            PropertyModificationType.Add,
+            address,
+        );
+        const addressPropertyTransaction = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+            Deadline.create(),
+            PropertyType.AllowAddress,
+            [addressPropertyFilter],
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(addressPropertyTransaction.toJSON()) as ModifyAccountPropertyAddressTransaction;
+
+        expect(transaction.modifications[0].value).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect(transaction.propertyType).to.be.equal(PropertyType.AllowAddress);
+        expect(transaction.modifications[0].modificationType).to.be.equal(PropertyModificationType.Add);
+    });
+
+    it('should create AccountPropertyMosaicTransaction', () => {
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicPropertyFilter = AccountPropertyTransaction.createMosaicFilter(
+            PropertyModificationType.Add,
+            mosaicId,
+        );
+        const mosaicPropertyTransaction = AccountPropertyTransaction.createMosaicPropertyModificationTransaction(
+            Deadline.create(),
+            PropertyType.AllowMosaic,
+            [mosaicPropertyFilter],
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(mosaicPropertyTransaction.toJSON()) as ModifyAccountPropertyMosaicTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC);
+        expect(transaction.propertyType).to.be.equal(PropertyType.AllowMosaic);
+        expect(transaction.modifications.length).to.be.equal(1);
+    });
+
+    it('should create AccountPropertyMosaicTransaction', () => {
+        const entityType = TransactionType.ADDRESS_ALIAS;
+        const entityTypePropertyFilter = AccountPropertyTransaction.createEntityTypeFilter(
+            PropertyModificationType.Add,
+            entityType,
+        );
+        const entityTypePropertyTransaction = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
+            Deadline.create(),
+            PropertyType.AllowTransaction,
+            [entityTypePropertyFilter],
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(entityTypePropertyTransaction.toJSON()) as ModifyAccountPropertyMosaicTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE);
+        expect(transaction.propertyType).to.be.equal(PropertyType.AllowTransaction);
+        expect(transaction.modifications.length).to.be.equal(1);
+    });
+
+    it('should create AddressAliasTransaction', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const addressAliasTransaction = AddressAliasTransaction.create(
+            Deadline.create(),
+            AliasActionType.Link,
+            namespaceId,
+            address,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(addressAliasTransaction.toJSON()) as AddressAliasTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.ADDRESS_ALIAS);
+        expect(transaction.actionType).to.be.equal(AliasActionType.Link);
+    });
+
+    it('should create MosaicAliasTransaction', () => {
+        const namespaceId = new NamespaceId([33347626, 3779697293]);
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicAliasTransaction = MosaicAliasTransaction.create(
+            Deadline.create(),
+            AliasActionType.Link,
+            namespaceId,
+            mosaicId,
+            NetworkType.MIJIN_TEST,
+        );
+        const transaction =
+            TransactionMapping.createFromDTO(mosaicAliasTransaction.toJSON()) as MosaicAliasTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ALIAS);
+        expect(transaction.actionType).to.be.equal(AliasActionType.Link);
+
+    });
+
+    it('should create MosaicDefinitionTransaction', () => {
+        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
+            new MosaicId(UInt64.fromUint(1).toDTO()), // ID
+            MosaicProperties.create({
+                supplyMutable: false,
+                transferable: false,
+                levyMutable: false,
+                divisibility: 3,
+                duration: UInt64.fromUint(1000),
+            }),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(mosaicDefinitionTransaction.toJSON()) as MosaicDefinitionTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
+        expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
+        expect(transaction.mosaicProperties.transferable).to.be.equal(false);
+        expect(transaction.mosaicProperties.levyMutable).to.be.equal(false);
+        expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
+
+    });
+
+    it('should create MosaicSupplyChangeTransaction', () => {
+        const mosaicId = new MosaicId([2262289484, 3405110546]);
+        const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+            Deadline.create(),
+            mosaicId,
+            MosaicSupplyType.Increase,
+            UInt64.fromUint(10),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(mosaicSupplyChangeTransaction.toJSON()) as MosaicSupplyChangeTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_CHANGE);
+        expect(transaction.direction).to.be.equal(MosaicSupplyType.Increase);
+
+    });
+
+    it('should create SecretLockTransaction', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
+        const secretLockTransaction = SecretLockTransaction.create(
+            Deadline.create(),
+            NetworkCurrencyMosaic.createAbsolute(10),
+            UInt64.fromUint(100),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            recipient,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
+        expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
+
+    });
+
+    it('should create SecretProofTransaction', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(secretProofTransaction.toJSON()) as SecretProofTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
+        expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
+        expect(transaction.secret).to.be.equal(sha3_256.create().update(convert.hexToUint8(proof)).hex());
+        expect(transaction.proof).to.be.equal(proof);
+
+    });
+
+    it('should create ModifyMultiSigTransaction', () => {
+        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+            Deadline.create(),
+            2,
+            1,
+            [new MultisigCosignatoryModification(
+                MultisigCosignatoryModificationType.Add,
+                PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
+                    NetworkType.MIJIN_TEST),
+            )],
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(modifyMultisigAccountTransaction.toJSON()) as ModifyMultisigAccountTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.MODIFY_MULTISIG_ACCOUNT);
+        expect(transaction.minApprovalDelta).to.be.equal(2);
+        expect(transaction.minRemovalDelta).to.be.equal(1);
+    });
+
+    it('should create AggregatedTransaction - Complete', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            []);
+
+        const transaction =
+            TransactionMapping.createFromDTO(aggregateTransaction.toJSON()) as AggregateTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
+        expect(transaction.innerTransactions.length).to.be.equal(1);
+    });
+
+    it('should create AggregatedTransaction - Bonded', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createBonded(
+            Deadline.create(),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            []);
+
+        const transaction =
+            TransactionMapping.createFromDTO(aggregateTransaction.toJSON()) as AggregateTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
+        expect(transaction.innerTransactions.length).to.be.equal(1);
+    });
+
+    it('should create LockFundTransaction', () => {
+        const aggregateTransaction = AggregateTransaction.createBonded(
+            Deadline.create(),
+            [],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+        const signedTransaction = account.sign(aggregateTransaction);
+        const lockTransaction = LockFundsTransaction.create(Deadline.create(),
+            NetworkCurrencyMosaic.createRelative(10),
+            UInt64.fromUint(10),
+            signedTransaction,
+            NetworkType.MIJIN_TEST);
+
+        const transaction =
+            TransactionMapping.createFromDTO(lockTransaction.toJSON()) as LockFundsTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.LOCK);
+        expect(transaction.hash).to.be.equal(signedTransaction.hash);
+    });
+
+    it('should create RegisterNamespaceTransaction - Root', () => {
+        const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            UInt64.fromUint(1000),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(registerNamespaceTransaction.toJSON()) as RegisterNamespaceTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.REGISTER_NAMESPACE);
+
+    });
+
+    it('should create RegisterNamespaceTransaction - Sub', () => {
+        const registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(
+            Deadline.create(),
+            'root-test-namespace',
+            'parent-test-namespace',
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(registerNamespaceTransaction.toJSON()) as RegisterNamespaceTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.REGISTER_NAMESPACE);
     });
 });

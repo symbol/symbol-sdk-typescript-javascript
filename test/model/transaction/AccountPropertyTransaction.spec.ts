@@ -22,6 +22,7 @@ import { PropertyModificationType, PropertyType, TransactionType } from '../../.
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {AccountPropertyTransaction} from '../../../src/model/transaction/AccountPropertyTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
+import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('AccountPropertyTransaction', () => {
@@ -59,6 +60,90 @@ describe('AccountPropertyTransaction', () => {
         );
         expect(entityTypePropertyFilter.modificationType).to.be.equal(PropertyModificationType.Add);
         expect(entityTypePropertyFilter.value).to.be.equal(entityType);
+    });
+
+    describe('size', () => {
+        it('should return 148 for ModifyAccountPropertyAddressTransaction transaction byte size with 1 modification', () => {
+            const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+            const addressPropertyFilter = AccountPropertyTransaction.createAddressFilter(
+                PropertyModificationType.Add,
+                address,
+            );
+            const addressPropertyTransaction = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+                Deadline.create(),
+                PropertyType.AllowAddress,
+                [addressPropertyFilter],
+                NetworkType.MIJIN_TEST,
+            );
+
+            expect(addressPropertyTransaction.size).to.be.equal(148);
+        });
+
+        it('should return 131 for ModifyAccountPropertyMosaicTransaction transaction byte size with 1 modification', () => {
+            const mosaicId = new MosaicId([2262289484, 3405110546]);
+            const mosaicPropertyFilter = AccountPropertyTransaction.createMosaicFilter(
+                PropertyModificationType.Add,
+                mosaicId,
+            );
+            const mosaicPropertyTransaction = AccountPropertyTransaction.createMosaicPropertyModificationTransaction(
+                Deadline.create(),
+                PropertyType.AllowMosaic,
+                [mosaicPropertyFilter],
+                NetworkType.MIJIN_TEST,
+            );
+            expect(mosaicPropertyTransaction.size).to.be.equal(131);
+        });
+
+        it('should return 125 for ModifyAccountPropertyEntityTypeTransaction transaction byte size with 1 modification', () => {
+            const entityType = TransactionType.ADDRESS_ALIAS;
+            const entityTypePropertyFilter = AccountPropertyTransaction.createEntityTypeFilter(
+                PropertyModificationType.Add,
+                entityType,
+            );
+            const entityTypePropertyTransaction = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
+                Deadline.create(),
+                PropertyType.AllowTransaction,
+                [entityTypePropertyFilter],
+                NetworkType.MIJIN_TEST,
+            );
+            expect(entityTypePropertyTransaction.size).to.be.equal(125);
+        });
+    });
+
+
+    it('should default maxFee field be set to 0', () => {
+        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const addressPropertyFilter = AccountPropertyTransaction.createAddressFilter(
+            PropertyModificationType.Add,
+            address,
+        );
+        const addressPropertyTransaction = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+            Deadline.create(),
+            PropertyType.AllowAddress,
+            [addressPropertyFilter],
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(addressPropertyTransaction.maxFee.higher).to.be.equal(0);
+        expect(addressPropertyTransaction.maxFee.lower).to.be.equal(0);
+    });
+
+    it('should filled maxFee override transaction maxFee', () => {
+        const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        const addressPropertyFilter = AccountPropertyTransaction.createAddressFilter(
+            PropertyModificationType.Add,
+            address,
+        );
+        const addressPropertyTransaction = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+            Deadline.create(),
+            PropertyType.AllowAddress,
+            [addressPropertyFilter],
+            NetworkType.MIJIN_TEST,
+            new UInt64([1, 0])
+        );
+
+        expect(addressPropertyTransaction.maxFee.higher).to.be.equal(0);
+        expect(addressPropertyTransaction.maxFee.lower).to.be.equal(1);
     });
 
     it('should create address property transaction', () => {

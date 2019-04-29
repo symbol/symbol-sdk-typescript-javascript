@@ -28,6 +28,7 @@ import { MultisigCosignatoryModification } from '../../src/model/transaction/Mul
 import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
 import {PlainMessage} from '../../src/model/transaction/PlainMessage';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
+import {UInt64} from '../../src/model/UInt64';
 import {CosignatoryAccount, MultisigAccount, NIS2_URL, TestingAccount} from '../../test/conf/conf.spec';
 
 export class TransactionUtils {

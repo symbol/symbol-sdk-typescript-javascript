@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {TransactionRoutesApi} from 'nem2-library';
+import {BlockchainRoutesApi, TransactionRoutesApi} from 'nem2-library';
 import * as requestPromise from 'request-promise-native';
 import {from as observableFrom, Observable, throwError as observableThrowError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, mergeMap} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {CosignatureSignedTransaction} from '../model/transaction/CosignatureSignedTransaction';
 import {Deadline} from '../model/transaction/Deadline';
@@ -25,6 +25,7 @@ import {SignedTransaction} from '../model/transaction/SignedTransaction';
 import { SyncAnnounce } from '../model/transaction/SyncAnnounce';
 import {Transaction} from '../model/transaction/Transaction';
 import {TransactionAnnounceResponse} from '../model/transaction/TransactionAnnounceResponse';
+import {TransactionInfo} from '../model/transaction/TransactionInfo';
 import {TransactionStatus} from '../model/transaction/TransactionStatus';
 import {TransactionType} from '../model/transaction/TransactionType';
 import {UInt64} from '../model/UInt64';
@@ -45,12 +46,19 @@ export class TransactionHttp extends Http implements TransactionRepository {
     private transactionRoutesApi: TransactionRoutesApi;
 
     /**
+     * @internal
+     * Nem2 Library blockchain routes api
+     */
+    private blockchainRoutesApi: BlockchainRoutesApi;
+
+    /**
      * Constructor
      * @param url
      */
     constructor(private readonly url: string) {
         super(url);
         this.transactionRoutesApi = new TransactionRoutesApi(this.apiClient);
+        this.blockchainRoutesApi = new BlockchainRoutesApi(this.apiClient);
     }
 
     /**
@@ -189,5 +197,30 @@ export class TransactionHttp extends Http implements TransactionRepository {
             }
             return observableThrowError(err);
         }));
+    }
+
+    /**
+     * Gets a transaction's effective paid fee
+     * @param transactionId - Transaction id or hash.
+     * @returns Observable<number>
+     */
+    public getTransactionEffectiveFee(transactionId: string): Observable<number> {
+        return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(
+            mergeMap((transactionDTO) => {
+                // parse transaction to take advantage of `size` getter overload
+                const transaction = CreateTransactionFromDTO(transactionDTO);
+                const uintHeight = (transaction.transactionInfo as TransactionInfo).height;
+
+                // now read block details
+                return observableFrom(this.blockchainRoutesApi.getBlockByHeight(uintHeight.compact())).pipe(
+                map((blockDTO) => {
+
+                    // @see https://nemtech.github.io/concepts/transaction.html#fees
+                    // effective_fee = feeMultiplier x transaction::size
+                    return blockDTO.block.feeMultiplier * transaction.size;
+                }));
+            }), catchError((err) => {
+                return observableThrowError(err);
+            }));
     }
 }

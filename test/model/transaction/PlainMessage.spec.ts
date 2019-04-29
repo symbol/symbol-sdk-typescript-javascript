@@ -31,7 +31,7 @@ describe('PlainMessage', () => {
 
     it('should createComplete message from payload with static method', () => {
         const payload = '746573742D6D657373616765';
-        const message = PlainMessage.createFromDTO(payload);
+        const message = PlainMessage.createFromPayload(payload);
         expect(message.payload).to.be.equal('test-message');
     });
 
