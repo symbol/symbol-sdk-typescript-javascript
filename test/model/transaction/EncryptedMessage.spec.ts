@@ -17,14 +17,16 @@
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {EncryptedMessage} from '../../../src/model/transaction/EncryptedMessage';
-import { TestingAccount } from '../../conf/conf.spec';
+import { MultisigAccount, TestingAccount } from '../../conf/conf.spec';
 
 describe('EncryptedMessage', () => {
 
     let account: Account;
+    let recipient: Account;
 
     before(() => {
         account = TestingAccount;
+        recipient = MultisigAccount;
     });
 
     it('should create a encrypted message from a DTO', () => {
@@ -32,17 +34,17 @@ describe('EncryptedMessage', () => {
         expect(encryptedMessage.payload).to.be.equal('test transaction');
     });
 
-    it('should return encrypted message dto', () => {;
-        const encryptedMessage = account.encryptMessage('test transaction', account.publicAccount);
-        const plainMessage = account.decryptMessage(encryptedMessage, account.publicAccount);
+    it('should return encrypted message dto', () => {
+        const encryptedMessage = account.encryptMessage('test transaction', recipient.publicAccount);
+        const plainMessage = recipient.decryptMessage(encryptedMessage, account.publicAccount);
         expect(plainMessage.payload).to.be.equal('test transaction');
     });
 
     it('should create an encrypted message from a DTO and decrypt it', () => {
         const encryptMessage = EncryptedMessage
-            .createFromDTO('7245170507448c53d808524221b5d157e19b06f574120a044e48f54dd8e0a4dedbf50ded7ae71' +
-                           'b90b59949bb6acde81d987ee6648aae9f093b94ac7cc3e8dba0bed8fa04ba286df6b32d2d6d21cbdc4e');
-        const plainMessage = account.decryptMessage(encryptMessage, account.publicAccount);
+            .createFromDTO('A3216D046C7147C8E848EF3F594725EA6F4EA2745829CA1021182E2FFA019C30D3E369F6AD236658A4' +
+                           '0BF5C6C2855DAC5C5B22255DBC231374CEA2124E44FA0629913747E31D87964320237B58B3C377');
+        const plainMessage = recipient.decryptMessage(encryptMessage, account.publicAccount);
         expect(plainMessage.payload).to.be.equal('test transaction');
     });
 });
