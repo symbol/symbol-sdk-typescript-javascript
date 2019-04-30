@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
+import { Address } from '../account/Address';
 import { PropertyModificationType } from '../account/PropertyModificationType';
+import { MosaicId } from '../mosaic/MosaicId';
+import { TransactionType } from './TransactionType';
 
 export class AccountPropertyModification<T> {
 
@@ -33,6 +36,38 @@ export class AccountPropertyModification<T> {
                  */
                 public readonly value: T) {
 
+    }
+
+    /**
+     * Create an address filter for account property modification
+     * @param modificationType - modification type. 0: Add, 1: Remove
+     * @param address - modification value (Address)
+     * @returns {AccountPropertyModification}
+     */
+    public static createForAddress(modificationType: PropertyModificationType,
+                                   address: Address): AccountPropertyModification<string> {
+        return new AccountPropertyModification<string>(modificationType, address.plain());
+    }
+    /**
+     * Create an mosaic filter for account property modification
+     * @param modificationType - modification type. 0: Add, 1: Remove
+     * @param mosaicId - modification value (Mosaic)
+     * @returns {AccountPropertyModification}
+     */
+    public static createForMosaic(modificationType: PropertyModificationType,
+                                  mosaicId: MosaicId): AccountPropertyModification<number[]> {
+    return new AccountPropertyModification<number[]>(modificationType, mosaicId.id.toDTO());
+    }
+
+    /**
+     * Create an entity type filter for account property modification
+     * @param modificationType - modification type. 0: Add, 1: Remove
+     * @param entityType - modification value (Transaction Type)
+     * @returns {AccountPropertyModification}
+     */
+    public static createForEntityType(modificationType: PropertyModificationType,
+                                      entityType: number): AccountPropertyModification<TransactionType> {
+    return new AccountPropertyModification<TransactionType>(modificationType, entityType);
     }
 
     /**
