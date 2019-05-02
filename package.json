@@ -53,7 +53,7 @@
     "@types/crypto-js": "^3.1.43",
     "crypto-js": "^3.1.9-1",
     "js-joda": "^1.6.2",
-    "nem2-library": "^0.9.14",
+    "nem2-library": "0.9.15",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",
     "rxjs": "^6.2.1",
