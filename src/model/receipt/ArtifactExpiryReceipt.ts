@@ -26,15 +26,15 @@ export class ArtifactExpiryReceipt extends Receipt {
 
     /**
      * Artifact expiry receipt
-     * @param size - the receipt size
+     * @param artifactId -The id of the artifact (eg. namespace, mosaic).
      * @param version - The receipt version
      * @param type - The receipt type
-     * @param artifactId -The id of the artifact (eg. namespace, mosaic).
+     * @param size - the receipt size
      */
-    constructor(size: number,
+    constructor(public readonly  artifactId: MosaicId | NamespaceId,
                 version: number,
                 type: ReceiptType,
-                public readonly  artifactId: MosaicId | NamespaceId) {
-        super(size, version, type);
+                size?: number) {
+        super(version, type, size);
     }
 }

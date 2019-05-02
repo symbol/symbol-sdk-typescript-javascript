@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
-import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
@@ -29,15 +26,13 @@ export class InflationReceipt extends Receipt {
 
     /**
      * Balance transfer expiry receipt
-     * @param size - the receipt size
-     * @param version - The receipt version
-     * @param type - The receipt type
      * @param mosaicId - The mosaic id.
      * @param amount - The amount of mosaic.
+     * @param version - The receipt version
+     * @param type - The receipt type
+     * @param size - the receipt size
      */
-    constructor(size: number,
-                version: number,
-                type: ReceiptType,
+    constructor(
                 /**
                  * The mosaic id.
                  */
@@ -45,7 +40,10 @@ export class InflationReceipt extends Receipt {
                 /**
                  * The amount of mosaic.
                  */
-                public readonly amount: UInt64) {
-        super(size, version, type);
+                public readonly amount: UInt64,
+                version: number,
+                type: ReceiptType,
+                size?: number) {
+        super(version, type, size);
     }
 }

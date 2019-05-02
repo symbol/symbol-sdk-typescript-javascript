@@ -25,14 +25,14 @@
 
     /**
      * @constructor
-     * @param resolvedValue - A resolved address or resolved mosaicId (alias).
+     * @param resolved - A resolved address or resolved mosaicId (alias).
      * @param source - The receipt source.
      */
     constructor(
                 /**
                  * A resolved address or resolved mosaicId (alias).
                  */
-                public readonly resolvedValue: AddressAlias | MosaicAlias,
+                public readonly resolved: AddressAlias | MosaicAlias,
                 /**
                  * The receipt source.
                  */

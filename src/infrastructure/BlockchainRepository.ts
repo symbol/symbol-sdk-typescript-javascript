@@ -76,5 +76,5 @@ export interface BlockchainRepository {
      * Gets list of receipts for a block height
      * @returns Observable<Receipt[]>
      */
-    getReceipts(height: number): Observable<Receipt[]>;
+   // getReceipts(height: number): Observable<Receipt[]>;
 }

@@ -28,8 +28,23 @@ import { ReceiptSource } from '../../model/receipt/ReceiptSource';
 import { ReceiptType } from '../../model/receipt/ReceiptType';
 import { ResolutionEntry } from '../../model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../model/receipt/ResolutionStatement';
+import { Statement } from '../../model/receipt/Statement';
 import { TransactionStatement } from '../../model/receipt/TransactionStatement';
 import {UInt64} from '../../model/UInt64';
+
+/**
+ * @internal
+ * @param receiptDTO
+ * @returns {Statement}
+ * @constructor
+ */
+export const CreateStatementFromDTO = (receiptDTO): Statement => {
+    return new Statement(
+        receiptDTO.transactionStatements.map((statement) => createTransactionStatement(statement)),
+        receiptDTO.addressResolutionStatements.map((statement) => createResolutionStatement(statement)),
+        receiptDTO.mosaicResolutionStatements.map((statement) => createResolutionStatement(statement)),
+    );
+};
 
 /**
  * @internal
@@ -54,11 +69,6 @@ export const CreateReceiptFromDTO = (receiptDTO): Receipt => {
         case ReceiptType.Mosaic_Expired:
         case ReceiptType.Namespace_Expired:
             return  createArtifactExpiryReceipt(receiptDTO);
-        case ReceiptType.Transaction_Group:
-            return createTransactionStatement(receiptDTO);
-        case ReceiptType.Address_Alias_Resolution:
-        case ReceiptType.Mosaic_Alias_Resolution:
-            return createResolutionStatement(receiptDTO);
         case ReceiptType.Inflation:
             return createInflationReceipt(receiptDTO);
         default:
@@ -68,17 +78,15 @@ export const CreateReceiptFromDTO = (receiptDTO): Receipt => {
 
 /**
  * @internal
- * @param receiptDTO
+ * @param statementDTO
  * @returns {ResolutionStatement}
  * @constructor
  */
-const createResolutionStatement = (receiptDTO): ResolutionStatement => {
+const createResolutionStatement = (statementDTO): ResolutionStatement => {
     return new ResolutionStatement(
-        receiptDTO.size,
-        extractReceiptVersion(receiptDTO.version),
-        receiptDTO.type,
-        typeof receiptDTO.unresolved === 'string' ? receiptDTO.unresolved : new UInt64(receiptDTO.unresolved),
-        receiptDTO.m_entries.map((entry) => {
+        statementDTO.height,
+        typeof statementDTO.unresolved === 'string' ? statementDTO.unresolved : new UInt64(statementDTO.unresolved),
+        statementDTO.resolutionEntries.map((entry) => {
             return new ResolutionEntry(entry.resolvedValue,
                 new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
         }),
@@ -87,17 +95,15 @@ const createResolutionStatement = (receiptDTO): ResolutionStatement => {
 
 /**
  * @internal
- * @param receiptDTO
+ * @param statementDTO
  * @returns {TransactionStatement}
  * @constructor
  */
-const createTransactionStatement = (receiptDTO): TransactionStatement => {
+const createTransactionStatement = (statementDTO): TransactionStatement => {
     return new TransactionStatement(
-        receiptDTO.size,
-        extractReceiptVersion(receiptDTO.version),
-        receiptDTO.type,
-        new ReceiptSource(receiptDTO.m_source.primaryId, receiptDTO.m_source.secondaryId),
-        receiptDTO.receipts.map((receipt) => {
+        statementDTO.height,
+        new ReceiptSource(statementDTO.source.primaryId, statementDTO.source.secondaryId),
+        statementDTO.receipts.map((receipt) => {
             return CreateReceiptFromDTO(receipt);
         }),
     );
@@ -111,12 +117,11 @@ const createTransactionStatement = (receiptDTO): TransactionStatement => {
  */
 const createBalanceChangeReceipt = (receiptDTO): Receipt => {
     return new BalanceChangeReceipt(
-        receiptDTO.size,
-        extractReceiptVersion(receiptDTO.version),
-        receiptDTO.type,
-        PublicAccount.createFromPublicKey(receiptDTO.account, extractNetworkType(receiptDTO.version)),
+        receiptDTO.account,
         new MosaicId(receiptDTO.mosaicId),
         new UInt64(receiptDTO.amount),
+        extractReceiptVersion(receiptDTO.version),
+        receiptDTO.type,
     );
 };
 
@@ -128,13 +133,12 @@ const createBalanceChangeReceipt = (receiptDTO): Receipt => {
  */
 const createBalanceTransferReceipt = (receiptDTO): Receipt => {
     return new BalanceTransferReceipt(
-        receiptDTO.size,
-        extractReceiptVersion(receiptDTO.version),
-        receiptDTO.type,
-        PublicAccount.createFromPublicKey(receiptDTO.sender, extractNetworkType(receiptDTO.version)),
+        receiptDTO.sender,
         Address.createFromRawAddress(receiptDTO.recipient),
         new MosaicId(receiptDTO.mosaicId),
         new UInt64(receiptDTO.amount),
+        extractReceiptVersion(receiptDTO.version),
+        receiptDTO.type,
     );
 };
 
@@ -146,10 +150,9 @@ const createBalanceTransferReceipt = (receiptDTO): Receipt => {
  */
 const createArtifactExpiryReceipt = (receiptDTO): Receipt => {
     return new ArtifactExpiryReceipt(
-        receiptDTO.size,
+        extractArtifactId(receiptDTO.type, receiptDTO.artifactId),
         extractReceiptVersion(receiptDTO.version),
         receiptDTO.type,
-        extractArtifactId(receiptDTO.type, receiptDTO.artifactId),
     );
 };
 
@@ -161,26 +164,11 @@ const createArtifactExpiryReceipt = (receiptDTO): Receipt => {
  */
 const createInflationReceipt = (receiptDTO): Receipt => {
     return new InflationReceipt(
-        receiptDTO.size,
-        extractReceiptVersion(receiptDTO.version),
-        receiptDTO.type,
         new MosaicId(receiptDTO.mosaicId),
         new UInt64(receiptDTO.amount),
+        extractReceiptVersion(receiptDTO.version),
+        receiptDTO.type,
     );
-};
-
-const extractNetworkType = (version: number): NetworkType => {
-    const networkType = parseInt(version.toString(16).substr(0, 2), 16);
-    if (networkType === NetworkType.MAIN_NET) {
-        return NetworkType.MAIN_NET;
-    } else if (networkType === NetworkType.TEST_NET) {
-        return NetworkType.TEST_NET;
-    } else if (networkType === NetworkType.MIJIN) {
-        return NetworkType.MIJIN;
-    } else if (networkType === NetworkType.MIJIN_TEST) {
-        return NetworkType.MIJIN_TEST;
-    }
-    throw new Error('Unimplemented network type');
 };
 
 const extractReceiptVersion = (version: number): number => {

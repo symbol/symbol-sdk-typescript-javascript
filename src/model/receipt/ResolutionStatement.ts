@@ -25,19 +25,19 @@ import { ResolutionEntry } from './ResolutionEntry';
  * - Address Resolution: An account alias was used in the block.
  * - Mosaic Resolution: A mosaic alias was used in the block.
  */
-export class ResolutionStatement extends Receipt {
+export class ResolutionStatement {
 
     /**
      * Receipt - resolution statement object
-     * @param size - The statement size
-     * @param version - The statement version
-     * @param type - The statement type
+     * @param height - The block height
      * @param unresolved - An unresolved address or unresolved mosaicId.
-     * @param m_entries - The array of resolution entries.
+     * @param resolutionEntries - The array of resolution entries.
      */
-    constructor(size: number,
-                version: number,
-                type: ReceiptType,
+    constructor(
+                /**
+                 * The block height.
+                 */
+                public readonly height: number[],
                 /**
                  * An unresolved address or unresolved mosaicId.
                  */
@@ -45,7 +45,6 @@ export class ResolutionStatement extends Receipt {
                 /**
                  * The array of resolution entries.
                  */
-                public readonly m_entries: ResolutionEntry[]) {
-        super(size, version, type);
+                public readonly resolutionEntries: ResolutionEntry[]) {
     }
 }
