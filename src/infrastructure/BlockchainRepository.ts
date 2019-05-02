@@ -18,7 +18,7 @@ import {Observable} from 'rxjs';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
-import { Receipt } from '../model/receipt/Receipt';
+import { Statement } from '../model/receipt/Statement';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
 import {QueryParams} from './QueryParams';
@@ -74,7 +74,7 @@ export interface BlockchainRepository {
 
     /**
      * Gets list of receipts for a block height
-     * @returns Observable<Receipt[]>
+     * @returns Observable<Statement>
      */
-   // getReceipts(height: number): Observable<Receipt[]>;
+    getReceipts(height: number): Observable<Statement>;
 }

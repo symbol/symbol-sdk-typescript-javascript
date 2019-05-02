@@ -16,6 +16,7 @@
 
 import { deepEqual } from 'assert';
 import { MultisigAccount, TestingAccount } from '../../../e2e/conf/conf.spec';
+import { CreateReceiptFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import {Account} from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
@@ -36,8 +37,6 @@ import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
 import { UInt64 } from '../../../src/model/UInt64';
-import { CreateReceiptFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
-import { address } from 'nem2-library';
 
 describe('Receipt', () => {
     let account: Account;
@@ -133,7 +132,7 @@ describe('Receipt', () => {
                     resolved: '08a12f89ee5a49f8',
                   },
                 ],
-            }
+            },
         ];
     });
 
@@ -293,7 +292,7 @@ describe('Receipt', () => {
             }),
         );
         deepEqual((statement.unresolved as MosaicId).toDTO().id, statementDto.unresolved);
-        deepEqual((statement.resolutionEntries[0].resolved as MosaicAlias).mosaicId.toDTO(), [2301600008, 4165556974]);
+        deepEqual((statement.resolutionEntries[0].resolved as MosaicAlias).mosaicId.toHex(), '08a12f89ee5a49f8');
     });
 
     it('should createComplete resolution statement - address', () => {
