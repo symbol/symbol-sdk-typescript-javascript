@@ -35,9 +35,9 @@ export class EncryptedMessage extends Message {
 
     /**
      *
-     * @param message
-     * @param recipientPublicAccount
-     * @param privateKey
+     * @param message - Plain message to be encrypted
+     * @param recipientPublicAccount - Recipient public account
+     * @param privateKey - Sender private key
      */
     public static create(message: string, recipientPublicAccount: PublicAccount, privateKey) {
         return new EncryptedMessage(
@@ -49,17 +49,17 @@ export class EncryptedMessage extends Message {
      *
      * @param payload
      */
-    public static createFromDTO(payload: string): EncryptedMessage {
-        return new EncryptedMessage(payload);
+    public static createFromPayload(payload: string): EncryptedMessage {
+        return new EncryptedMessage(this.decodeHex(payload));
     }
 
     /**
      *
-     * @param encryptMessage
-     * @param privateKey
-     * @param recipientPublicAccount
+     * @param encryptMessage - Encrypted message to be decrypted
+     * @param privateKey - Recipient private key
+     * @param recipientPublicAccount - Sender public account
      */
     public static decrypt(encryptMessage: EncryptedMessage, privateKey, recipientPublicAccount: PublicAccount): PlainMessage {
-        return new PlainMessage(Message.decodeHex(crypto.decode(privateKey, recipientPublicAccount.publicKey, encryptMessage.payload)));
+        return new PlainMessage(this.decodeHex(crypto.decode(privateKey, recipientPublicAccount.publicKey, encryptMessage.payload)));
     }
 }
