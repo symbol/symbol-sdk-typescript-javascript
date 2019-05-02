@@ -29,16 +29,16 @@ export abstract class Receipt {
      */
     constructor(
                 /**
-                 * The receipt size.
-                 */
-                public readonly size: number,
-                /**
                  * The receipt version.
                  */
                 public readonly version: number,
                 /**
                  * The receipt type.
                  */
-                public readonly type: ReceiptType) {
+                public readonly type: ReceiptType,
+                /**
+                 * The receipt size.
+                 */
+                public readonly size?: number) {
     }
 }

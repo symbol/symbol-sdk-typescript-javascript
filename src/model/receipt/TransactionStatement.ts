@@ -16,7 +16,6 @@
 
 import { Receipt } from './Receipt';
 import { ReceiptSource } from './ReceiptSource';
-import { ReceiptType } from './ReceiptType';
 
 /**
  * A transaction statement is a collection of receipts linked with a transaction in a particular block.
@@ -24,27 +23,26 @@ import { ReceiptType } from './ReceiptType';
  * - Balance Change: A mosaic credit or debit was triggered.
  * - Artifact Expiry: An artifact (e.g. namespace, mosaic) expired.
  */
-export class TransactionStatement extends Receipt {
+export class TransactionStatement {
 
     /**
      * Receipt - transaction statement object
-     * @param size - The statement size
-     * @param version - The statement version
-     * @param type - The statement type
-     * @param m_source - The receipt source.
+     * @param height - The block height
+     * @param source - The receipt source
      * @param receipts - The array of receipt headers.
      */
-    constructor(size: number,
-                version: number,
-                type: ReceiptType,
+    constructor(
+                /**
+                 * The block height.
+                 */
+                public readonly height: number[],
                 /**
                  * The receipt source.
                  */
-                public readonly m_source: ReceiptSource,
+                public readonly source: ReceiptSource,
                 /**
                  * The array of receipt headers.
                  */
                 public readonly receipts: Receipt[]) {
-        super(size, version, type);
     }
 }

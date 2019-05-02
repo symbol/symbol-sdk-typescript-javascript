@@ -29,21 +29,19 @@ export class BalanceTransferReceipt extends Receipt {
 
     /**
      * Balance transfer expiry receipt
-     * @param size - the receipt size
-     * @param version - The receipt version
-     * @param type - The receipt type
-     * @param sender - The public account of the sender.
+     * @param sender - The public key of the sender.
      * @param recipient - The mosaic recipient address.
      * @param mosaicId - The mosaic id.
      * @param amount - The amount of mosaic.
+     * @param version - The receipt version
+     * @param type - The receipt type
+     * @param size - the receipt size
      */
-    constructor(size: number,
-                version: number,
-                type: ReceiptType,
+    constructor(
                 /**
-                 * The public account of the sender.
+                 * The public key of the sender.
                  */
-                public readonly sender: PublicAccount,
+                public readonly sender: string,
                 /**
                  * The mosaic recipient address.
                  */
@@ -55,7 +53,10 @@ export class BalanceTransferReceipt extends Receipt {
                 /**
                  * The amount of mosaic.
                  */
-                public readonly amount: UInt64) {
-        super(size, version, type);
+                public readonly amount: UInt64,
+                version: number,
+                type: ReceiptType,
+                size?: number) {
+        super(version, type, size);
     }
 }

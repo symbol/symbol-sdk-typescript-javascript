@@ -27,20 +27,18 @@ export class BalanceChangeReceipt extends Receipt {
 
     /**
      * Balance change expiry receipt
-     * @param size - the receipt size
-     * @param version - The receipt version
-     * @param type - The receipt type
-     * @param account - The target account public Account.
+     * @param account - The target account public key.
      * @param mosaicId - The mosaic id.
      * @param amount - The amount of mosaic.
+     * @param version - The receipt version
+     * @param type - The receipt type
+     * @param size - the receipt size
      */
-    constructor(size: number,
-                version: number,
-                type: ReceiptType,
+    constructor(
                 /**
-                 * The target account public Account.
+                 * The target account public key.
                  */
-                public readonly account: PublicAccount,
+                public readonly account: string,
                 /**
                  * The mosaic id.
                  */
@@ -48,7 +46,10 @@ export class BalanceChangeReceipt extends Receipt {
                 /**
                  * The amount of mosaic.
                  */
-                public readonly amount: UInt64) {
-        super(size, version, type);
+                public readonly amount: UInt64,
+                version: number,
+                type: ReceiptType,
+                size?: number) {
+        super(version, type, size);
     }
 }
