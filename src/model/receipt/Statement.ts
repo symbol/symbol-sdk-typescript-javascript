@@ -33,7 +33,7 @@ export class Statement {
                 /**
                  * The address resolution statements.
                  */
-                public readonly addressResolutionStatements: ResolutionStatement,
+                public readonly addressResolutionStatements: ResolutionStatement[],
                 /**
                  * The mosaic resolution statements.
                  */

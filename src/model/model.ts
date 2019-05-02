@@ -71,6 +71,9 @@ export * from './receipt/ReceiptVersion';
 export * from './receipt/ResolutionEntry';
 export * from './receipt/ResolutionStatement';
 export * from './receipt/TransactionStatement';
+export * from './receipt/ResolutionType';
+export * from './receipt/InflationReceipt';
+export * from './receipt/Statement';
 
 // Transaction
 export * from './transaction/AccountLinkTransaction';

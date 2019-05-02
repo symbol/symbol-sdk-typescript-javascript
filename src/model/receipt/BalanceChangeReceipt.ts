@@ -27,7 +27,7 @@ export class BalanceChangeReceipt extends Receipt {
 
     /**
      * Balance change expiry receipt
-     * @param account - The target account public key.
+     * @param account - The target account public account.
      * @param mosaicId - The mosaic id.
      * @param amount - The amount of mosaic.
      * @param version - The receipt version
@@ -36,9 +36,9 @@ export class BalanceChangeReceipt extends Receipt {
      */
     constructor(
                 /**
-                 * The target account public key.
+                 * The target account public account.
                  */
-                public readonly account: string,
+                public readonly account: PublicAccount,
                 /**
                  * The mosaic id.
                  */

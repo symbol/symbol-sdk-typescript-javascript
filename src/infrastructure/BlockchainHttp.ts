@@ -16,7 +16,7 @@
 
 import {BlockchainRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, mergeMap} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
@@ -178,10 +178,14 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      * @returns Observable<Statement>
      */
     public getReceipts(height: number): Observable<Statement> {
-        return observableFrom(
-        this.blockchainRoutesApi.getBlockReceipts(height)).pipe(
-        map((receiptDTO) => {
-            return CreateStatementFromDTO(receiptDTO);
-        }));
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.blockchainRoutesApi.getBlockReceipts(height)).pipe(
+                    map((receiptDTO) => {
+                        return CreateStatementFromDTO(receiptDTO, networkType);
+                    }),
+                ),
+            ),
+        );
     }
 }
