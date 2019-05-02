@@ -44,6 +44,7 @@ describe('Receipt', () => {
     let transactionStatementsDTO;
     let addressResolutionStatementsDTO;
     let mosaicResolutionStatementsDTO;
+    const netWorkType = NetworkType.MIJIN_TEST;
 
     before(() => {
         account = TestingAccount;
@@ -76,7 +77,7 @@ describe('Receipt', () => {
                       primaryId: 4,
                       secondaryId: 0,
                     },
-                    resolved: account.address.plain(),
+                    resolved: '917E7E29A01014C2F300000000000000000000000000000000',
                   },
                 ],
             },
@@ -89,7 +90,7 @@ describe('Receipt', () => {
                       primaryId: 2,
                       secondaryId: 0,
                     },
-                    resolved: account.address.plain(),
+                    resolved: '9103B60AAF2762688300000000000000000000000000000000',
                   },
                 ],
             },
@@ -141,13 +142,13 @@ describe('Receipt', () => {
             version: 1,
             type: 4685,
             sender: account.publicKey,
-            recipient: account.address.plain(),
+            recipient: '9103B60AAF2762688300000000000000000000000000000000',
             mosaicId: [481110499, 231112638],
             amount: [1000, 0],
           };
         const receipt = new BalanceTransferReceipt(
-            receiptDTO.sender,
-            Address.createFromRawAddress(receiptDTO.recipient),
+            PublicAccount.createFromPublicKey(receiptDTO.sender, netWorkType),
+            Address.createFromEncoded(receiptDTO.recipient),
             new MosaicId(receiptDTO.mosaicId),
             new UInt64(receiptDTO.amount),
             receiptDTO.version,
@@ -158,6 +159,7 @@ describe('Receipt', () => {
         deepEqual(receipt.mosaicId.toDTO().id, receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Levy);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
+        deepEqual(receipt.recipient, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
     });
 
     it('should createComplete a balance transfer receipt - Mosaic Rental Fee', () => {
@@ -165,14 +167,14 @@ describe('Receipt', () => {
             version: 1,
             type: 4941,
             sender: account.publicKey,
-            recipient: account.address.plain(),
+            recipient: '9103B60AAF2762688300000000000000000000000000000000',
             mosaicId: [3646934825, 3576016193],
             amount: [1000, 0],
         };
 
         const receipt = new BalanceTransferReceipt(
-            receiptDTO.sender,
-            Address.createFromRawAddress(receiptDTO.recipient),
+            PublicAccount.createFromPublicKey(receiptDTO.sender, netWorkType),
+            Address.createFromEncoded(receiptDTO.recipient),
             new MosaicId(receiptDTO.mosaicId),
             new UInt64(receiptDTO.amount),
             receiptDTO.version,
@@ -180,6 +182,7 @@ describe('Receipt', () => {
         );
 
         deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
+        deepEqual(receipt.recipient, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
         deepEqual(receipt.mosaicId.toDTO().id, receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Rental_Fee);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
@@ -195,14 +198,14 @@ describe('Receipt', () => {
         };
 
         const receipt = new BalanceChangeReceipt(
-            receiptDTO.account,
+            PublicAccount.createFromPublicKey(receiptDTO.account, netWorkType),
             new MosaicId(receiptDTO.mosaicId),
             new UInt64(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(receipt.account, receiptDTO.account);
+        deepEqual(receipt.account.publicKey, receiptDTO.account);
         deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
         deepEqual(receipt.mosaicId.toDTO().id, receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Harvest_Fee);
@@ -219,14 +222,14 @@ describe('Receipt', () => {
         };
 
         const receipt = new BalanceChangeReceipt(
-            receiptDTO.account,
+            PublicAccount.createFromPublicKey(receiptDTO.account, netWorkType),
             new MosaicId(receiptDTO.mosaicId),
             new UInt64(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(receipt.account, receiptDTO.account);
+        deepEqual(receipt.account.publicKey, receiptDTO.account);
         deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
         deepEqual(receipt.mosaicId.toDTO().id, receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.LockHash_Created);
@@ -274,11 +277,11 @@ describe('Receipt', () => {
             statementDto.height,
             new ReceiptSource( statementDto.source.primaryId, statementDto.source.secondaryId),
             statementDto.receipts.map((receipt) =>
-            CreateReceiptFromDTO(receipt)),
+            CreateReceiptFromDTO(receipt, netWorkType)),
         );
         deepEqual(statement.source.primaryId, statementDto.source.primaryId);
         deepEqual(statement.source.secondaryId, statementDto.source.secondaryId);
-        deepEqual((statement.receipts[0] as BalanceChangeReceipt).account, account.publicKey);
+        deepEqual((statement.receipts[0] as BalanceChangeReceipt).account.publicKey, account.publicKey);
     });
 
     it('should createComplete resolution statement - mosaic', () => {
@@ -301,12 +304,14 @@ describe('Receipt', () => {
             statementDto.height,
             Address.createFromEncoded(statementDto.unresolved),
             statementDto.resolutionEntries.map((resolved) => {
-                return new ResolutionEntry(new AddressAlias(AliasType.Address, Address.createFromRawAddress(resolved.resolved)),
+                return new ResolutionEntry(new AddressAlias(AliasType.Address, Address.createFromEncoded(resolved.resolved)),
                 new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
             }),
         );
-        deepEqual((statement.unresolved as Address).plain(), 'SEB3MCVPE5RGRAYAAAAAAAAAAAAAAAAAAAAAAAAA');
-        deepEqual((statement.resolutionEntries[0].resolved as AddressAlias).address.plain(), 'SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2');
+        deepEqual((statement.unresolved as Address).plain(),
+            Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000').plain());
+        deepEqual((statement.resolutionEntries[0].resolved as AddressAlias).address.plain(),
+            Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain());
     });
 
     it('should createComplete a inflation receipt', () => {
