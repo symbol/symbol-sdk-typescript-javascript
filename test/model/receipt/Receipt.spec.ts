@@ -111,7 +111,7 @@ describe('Receipt', () => {
                       primaryId: 1,
                       secondaryId: 0,
                     },
-                    resolved: '827745196376775489',
+                    resolved: '08a12f89ee5a49f8',
                   },
                 ],
             },
@@ -130,7 +130,7 @@ describe('Receipt', () => {
                       primaryId: 5,
                       secondaryId: 0,
                     },
-                    resolved: '7366496418368012414',
+                    resolved: '08a12f89ee5a49f8',
                   },
                 ],
             }
@@ -271,7 +271,6 @@ describe('Receipt', () => {
 
     it('should createComplete a transaction statement', () => {
         const statementDto = transactionStatementsDTO[0];
-        console.log(statementDto);
         const statement = new TransactionStatement(
             statementDto.height,
             new ReceiptSource( statementDto.source.primaryId, statementDto.source.secondaryId),
@@ -294,7 +293,7 @@ describe('Receipt', () => {
             }),
         );
         deepEqual((statement.unresolved as MosaicId).toDTO().id, statementDto.unresolved);
-        deepEqual((statement.resolutionEntries[0].resolved as MosaicAlias).mosaicId.toDTO().id, '827745196376775489');
+        deepEqual((statement.resolutionEntries[0].resolved as MosaicAlias).mosaicId.toDTO(), [2301600008, 4165556974]);
     });
 
     it('should createComplete resolution statement - address', () => {
@@ -307,8 +306,8 @@ describe('Receipt', () => {
                 new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
             }),
         );
-        deepEqual((statement.unresolved as Address).plain(), '9103B60AAF2762688300000000000000000000000000000000');
-        deepEqual((statement.resolutionEntries[0].resolved as AddressAlias).address.plain(), '');
+        deepEqual((statement.unresolved as Address).plain(), 'SEB3MCVPE5RGRAYAAAAAAAAAAAAAAAAAAAAAAAAA');
+        deepEqual((statement.resolutionEntries[0].resolved as AddressAlias).address.plain(), 'SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2');
     });
 
     it('should createComplete a inflation receipt', () => {
