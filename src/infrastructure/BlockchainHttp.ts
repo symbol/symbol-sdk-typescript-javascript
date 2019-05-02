@@ -21,15 +21,14 @@ import {PublicAccount} from '../model/account/PublicAccount';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
-import { Receipt } from '../model/receipt/Receipt';
+import { Statement } from '../model/receipt/Statement';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
 import {BlockchainRepository} from './BlockchainRepository';
 import {Http} from './Http';
 import {QueryParams} from './QueryParams';
-import { CreateReceiptFromDTO } from './receipt/CreateReceiptFromDTO';
+import { CreateStatementFromDTO } from './receipt/CreateReceiptFromDTO';
 import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
-import { Statement } from '../model/receipt/Statement';
 
 /**
  * Blockchain http repository.
@@ -176,15 +175,13 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      * Gets an array receipts for a block height.
      * @param height - Block height from which will be the first block in the array
      * @param queryParams - (Optional) Query params
-     * @returns Observable<Receipt[]>
+     * @returns Observable<Statement>
      */
-    // public getReceipts(height: number): Observable<Statement> {
-    //     return observableFrom(
-    //     this.blockchainRoutesApi.getBlockReceipts(height)).pipe(
-    //     map((receiptsDTO) => {
-    //         return receiptsDTO.map((receiptDTO) => {
-    //             return CreateReceiptFromDTO(receiptDTO);
-    //         });
-    //     }));
-    // }
+    public getReceipts(height: number): Observable<Statement> {
+        return observableFrom(
+        this.blockchainRoutesApi.getBlockReceipts(height)).pipe(
+        map((receiptDTO) => {
+            return CreateStatementFromDTO(receiptDTO);
+        }));
+    }
 }
