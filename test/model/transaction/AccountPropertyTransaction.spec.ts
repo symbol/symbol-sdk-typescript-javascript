@@ -17,11 +17,14 @@
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
+import { PropertyModificationType } from '../../../src/model/account/PropertyModificationType';
+import { PropertyType } from '../../../src/model/account/PropertyType';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import { PropertyModificationType, PropertyType, TransactionType } from '../../../src/model/model';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
+import { AccountPropertyModification } from '../../../src/model/transaction/AccountPropertyModification';
 import {AccountPropertyTransaction} from '../../../src/model/transaction/AccountPropertyTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
+import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
@@ -33,7 +36,7 @@ describe('AccountPropertyTransaction', () => {
     });
     it('should create address property filter', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressPropertyFilter = AccountPropertyTransaction.createAddressFilter(
+        const addressPropertyFilter = AccountPropertyModification.createForAddress(
             PropertyModificationType.Add,
             address,
         );
@@ -43,7 +46,7 @@ describe('AccountPropertyTransaction', () => {
 
     it('should create mosaic property filter', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const mosaicPropertyFilter = AccountPropertyTransaction.createMosaicFilter(
+        const mosaicPropertyFilter = AccountPropertyModification.createForMosaic(
             PropertyModificationType.Add,
             mosaicId,
         );
@@ -54,7 +57,7 @@ describe('AccountPropertyTransaction', () => {
 
     it('should create entity type property filter', () => {
         const entityType = TransactionType.ADDRESS_ALIAS;
-        const entityTypePropertyFilter = AccountPropertyTransaction.createEntityTypeFilter(
+        const entityTypePropertyFilter = AccountPropertyModification.createForEntityType(
             PropertyModificationType.Add,
             entityType,
         );
@@ -65,7 +68,7 @@ describe('AccountPropertyTransaction', () => {
     describe('size', () => {
         it('should return 148 for ModifyAccountPropertyAddressTransaction transaction byte size with 1 modification', () => {
             const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-            const addressPropertyFilter = AccountPropertyTransaction.createAddressFilter(
+            const addressPropertyFilter = AccountPropertyModification.createForAddress(
                 PropertyModificationType.Add,
                 address,
             );
@@ -81,7 +84,7 @@ describe('AccountPropertyTransaction', () => {
 
         it('should return 131 for ModifyAccountPropertyMosaicTransaction transaction byte size with 1 modification', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
-            const mosaicPropertyFilter = AccountPropertyTransaction.createMosaicFilter(
+            const mosaicPropertyFilter = AccountPropertyModification.createForMosaic(
                 PropertyModificationType.Add,
                 mosaicId,
             );
@@ -96,7 +99,7 @@ describe('AccountPropertyTransaction', () => {
 
         it('should return 125 for ModifyAccountPropertyEntityTypeTransaction transaction byte size with 1 modification', () => {
             const entityType = TransactionType.ADDRESS_ALIAS;
-            const entityTypePropertyFilter = AccountPropertyTransaction.createEntityTypeFilter(
+            const entityTypePropertyFilter = AccountPropertyModification.createForEntityType(
                 PropertyModificationType.Add,
                 entityType,
             );
@@ -110,10 +113,9 @@ describe('AccountPropertyTransaction', () => {
         });
     });
 
-
     it('should default maxFee field be set to 0', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressPropertyFilter = AccountPropertyTransaction.createAddressFilter(
+        const addressPropertyFilter = AccountPropertyModification.createForAddress(
             PropertyModificationType.Add,
             address,
         );
@@ -130,7 +132,7 @@ describe('AccountPropertyTransaction', () => {
 
     it('should filled maxFee override transaction maxFee', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressPropertyFilter = AccountPropertyTransaction.createAddressFilter(
+        const addressPropertyFilter = AccountPropertyModification.createForAddress(
             PropertyModificationType.Add,
             address,
         );
@@ -139,7 +141,7 @@ describe('AccountPropertyTransaction', () => {
             PropertyType.AllowAddress,
             [addressPropertyFilter],
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(addressPropertyTransaction.maxFee.higher).to.be.equal(0);
@@ -149,7 +151,7 @@ describe('AccountPropertyTransaction', () => {
     it('should create address property transaction', () => {
 
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressPropertyFilter = AccountPropertyTransaction.createAddressFilter(
+        const addressPropertyFilter = AccountPropertyModification.createForAddress(
             PropertyModificationType.Add,
             address,
         );
@@ -172,7 +174,7 @@ describe('AccountPropertyTransaction', () => {
     it('should throw exception when create address property transaction with wrong type', () => {
 
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressPropertyFilter = AccountPropertyTransaction.createAddressFilter(
+        const addressPropertyFilter = AccountPropertyModification.createForAddress(
             PropertyModificationType.Add,
             address,
         );
@@ -191,7 +193,7 @@ describe('AccountPropertyTransaction', () => {
     it('should create mosaic property transaction', () => {
 
         const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const mosaicPropertyFilter = AccountPropertyTransaction.createMosaicFilter(
+        const mosaicPropertyFilter = AccountPropertyModification.createForMosaic(
             PropertyModificationType.Add,
             mosaicId,
         );
@@ -214,7 +216,7 @@ describe('AccountPropertyTransaction', () => {
     it('should throw exception when create mosaic property transaction with wrong type', () => {
 
         const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const mosaicPropertyFilter = AccountPropertyTransaction.createMosaicFilter(
+        const mosaicPropertyFilter = AccountPropertyModification.createForMosaic(
             PropertyModificationType.Add,
             mosaicId,
         );
@@ -233,7 +235,7 @@ describe('AccountPropertyTransaction', () => {
     it('should create entity type property transaction', () => {
 
         const entityType = TransactionType.ADDRESS_ALIAS;
-        const entityTypePropertyFilter = AccountPropertyTransaction.createEntityTypeFilter(
+        const entityTypePropertyFilter = AccountPropertyModification.createForEntityType(
             PropertyModificationType.Add,
             entityType,
         );
