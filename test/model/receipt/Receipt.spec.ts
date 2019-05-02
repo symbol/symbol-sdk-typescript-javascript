@@ -58,7 +58,7 @@ describe('Receipt', () => {
                 receipts: [
                     {
                         version: 1,
-                        type: 17185,
+                        type: 8515,
                         account: account.publicKey,
                         mosaicId: [3646934825, 3576016193],
                         amount: [1000, 0],
@@ -139,7 +139,7 @@ describe('Receipt', () => {
     it('should createComplete a balance transfer receipt', () => {
         const receiptDTO = {
             version: 1,
-            type: 19730,
+            type: 4685,
             sender: account.publicKey,
             recipient: account.address.plain(),
             mosaicId: [481110499, 231112638],
@@ -163,7 +163,7 @@ describe('Receipt', () => {
     it('should createComplete a balance transfer receipt - Mosaic Rental Fee', () => {
         const receiptDTO = {
             version: 1,
-            type: 17377,
+            type: 4941,
             sender: account.publicKey,
             recipient: account.address.plain(),
             mosaicId: [3646934825, 3576016193],
@@ -188,7 +188,7 @@ describe('Receipt', () => {
     it('should createComplete a balance change receipt - Harvest Fee', () => {
         const receiptDTO = {
             version: 1,
-            type: 17185,
+            type: 8515,
             account: account.publicKey,
             mosaicId: [3646934825, 3576016193],
             amount: [1000, 0],
@@ -212,7 +212,7 @@ describe('Receipt', () => {
     it('should createComplete a balance change receipt - LockHash', () => {
         const receiptDTO = {
             version: 1,
-            type: 18481,
+            type: 12616,
             account: account.publicKey,
             mosaicId: [3646934825, 3576016193],
             amount: [1000, 0],
@@ -236,7 +236,7 @@ describe('Receipt', () => {
     it('should createComplete an artifact expiry receipt - address', () => {
         const receiptDTO = {
             version: 1,
-            type: 20033,
+            type: 16718,
             artifactId: [3646934825, 3576016193],
         };
 
@@ -254,7 +254,7 @@ describe('Receipt', () => {
     it('should createComplete an artifact expiry receipt - mosaic', () => {
         const receiptDTO = {
             version: 1,
-            type: 19777,
+            type: 16717,
             artifactId: [3646934825, 3576016193],
         };
 
