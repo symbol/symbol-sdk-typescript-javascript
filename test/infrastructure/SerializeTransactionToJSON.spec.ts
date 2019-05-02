@@ -34,6 +34,7 @@ import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { NamespaceType } from '../../src/model/namespace/NamespaceType';
 import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
+import { AccountPropertyModification } from '../../src/model/transaction/AccountPropertyModification';
 import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
@@ -80,7 +81,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AccountPropertyAddressTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressPropertyFilter = AccountPropertyTransaction.createAddressFilter(
+        const addressPropertyFilter = AccountPropertyModification.createForAddress(
             PropertyModificationType.Add,
             address,
         );
@@ -100,7 +101,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AccountPropertyMosaicTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const mosaicPropertyFilter = AccountPropertyTransaction.createMosaicFilter(
+        const mosaicPropertyFilter = AccountPropertyModification.createForMosaic(
             PropertyModificationType.Add,
             mosaicId,
         );
@@ -120,7 +121,7 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AccountPropertyMosaicTransaction', () => {
         const entityType = TransactionType.ADDRESS_ALIAS;
-        const entityTypePropertyFilter = AccountPropertyTransaction.createEntityTypeFilter(
+        const entityTypePropertyFilter = AccountPropertyModification.createForEntityType(
             PropertyModificationType.Add,
             entityType,
         );

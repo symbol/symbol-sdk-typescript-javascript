@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-import { Address } from '../account/Address';
-import { PropertyModificationType } from '../account/PropertyModificationType';
 import { PropertyType } from '../account/PropertyType';
 import { NetworkType } from '../blockchain/NetworkType';
-import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
 import { AccountPropertyModification } from './AccountPropertyModification';
 import { Deadline } from './Deadline';
 import { ModifyAccountPropertyAddressTransaction } from './ModifyAccountPropertyAddressTransaction';
 import { ModifyAccountPropertyEntityTypeTransaction } from './ModifyAccountPropertyEntityTypeTransaction';
 import { ModifyAccountPropertyMosaicTransaction } from './ModifyAccountPropertyMosaicTransaction';
+import { TransactionType } from './TransactionType';
 
 export class AccountPropertyTransaction {
     /**
@@ -95,7 +93,7 @@ export class AccountPropertyTransaction {
     public static createEntityTypePropertyModificationTransaction(
         deadline: Deadline,
         propertyType: PropertyType,
-        modifications: Array<AccountPropertyModification<number>>,
+        modifications: Array<AccountPropertyModification<TransactionType>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0])
     ): ModifyAccountPropertyEntityTypeTransaction {
@@ -109,38 +107,5 @@ export class AccountPropertyTransaction {
             networkType,
             maxFee,
         );
-    }
-
-    /**
-     * Create an address filter for account property modification
-     * @param modificationType - modification type. 0: Add, 1: Remove
-     * @param address - modification value (Address)
-     * @returns {AccountPropertyModification}
-     */
-    public static createAddressFilter(modificationType: PropertyModificationType,
-                                      address: Address): AccountPropertyModification<string> {
-        return new AccountPropertyModification<string>(modificationType, address.plain());
-    }
-
-    /**
-     * Create an mosaic filter for account property modification
-     * @param modificationType - modification type. 0: Add, 1: Remove
-     * @param mosaicId - modification value (Mosaic)
-     * @returns {AccountPropertyModification}
-     */
-    public static createMosaicFilter(modificationType: PropertyModificationType,
-                                     mosaicId: MosaicId): AccountPropertyModification<number[]> {
-        return new AccountPropertyModification<number[]>(modificationType, mosaicId.id.toDTO());
-    }
-
-    /**
-     * Create an entity type filter for account property modification
-     * @param modificationType - modification type. 0: Add, 1: Remove
-     * @param entityType - modification value (Transaction Type)
-     * @returns {AccountPropertyModification}
-     */
-    public static createEntityTypeFilter(modificationType: PropertyModificationType,
-                                         entityType: number): AccountPropertyModification<number> {
-        return new AccountPropertyModification<number>(modificationType, entityType);
     }
 }
