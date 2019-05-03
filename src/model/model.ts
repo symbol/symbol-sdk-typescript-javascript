@@ -122,16 +122,3 @@ export * from './wallet/EncryptedPrivateKey';
 export * from './wallet/Password';
 export * from './wallet/SimpleWallet';
 export * from './wallet/Wallet';
-
-// Receipt
-export * from './receipt/ArtifactExpiryReceipt';
-export * from './receipt/BalanceChangeReceipt';
-export * from './receipt/BalanceTransferReceipt';
-export * from './receipt/InflationReceipt';
-export * from './receipt/Receipt';
-export * from './receipt/ReceiptSource';
-export * from './receipt/ReceiptType';
-export * from './receipt/ReceiptVersion';
-export * from './receipt/ResolutionEntry';
-export * from './receipt/ResolutionStatement';
-export * from './receipt/TransactionStatement';
