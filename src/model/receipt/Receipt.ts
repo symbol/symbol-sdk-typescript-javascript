@@ -15,6 +15,7 @@
  */
 
 import { ReceiptType } from './ReceiptType';
+import { ReceiptVersion } from './ReceiptVersion';
 
 /**
  * An abstract transaction class that serves as the base class of all receipts.
@@ -31,7 +32,7 @@ export abstract class Receipt {
                 /**
                  * The receipt version.
                  */
-                public readonly version: number,
+                public readonly version: ReceiptVersion,
                 /**
                  * The receipt type.
                  */

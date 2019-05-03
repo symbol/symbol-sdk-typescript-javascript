@@ -18,6 +18,7 @@ import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
+import { ReceiptVersion } from './ReceiptVersion';
 
 /**
  * Artifact Expiry: An artifact (e.g. namespace, mosaic) expired.
@@ -32,7 +33,7 @@ export class ArtifactExpiryReceipt extends Receipt {
      * @param size - the receipt size
      */
     constructor(public readonly  artifactId: MosaicId | NamespaceId,
-                version: number,
+                version: ReceiptVersion,
                 type: ReceiptType,
                 size?: number) {
         super(version, type, size);

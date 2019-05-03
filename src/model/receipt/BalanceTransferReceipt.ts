@@ -21,6 +21,7 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
+import { ReceiptVersion } from './ReceiptVersion';
 
 /**
  * Balance Transfer: A mosaic transfer was triggered.
@@ -54,7 +55,7 @@ export class BalanceTransferReceipt extends Receipt {
                  * The amount of mosaic.
                  */
                 public readonly amount: UInt64,
-                version: number,
+                version: ReceiptVersion,
                 type: ReceiptType,
                 size?: number) {
         super(version, type, size);

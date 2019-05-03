@@ -19,6 +19,7 @@ import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptType } from './ReceiptType';
+import { ReceiptVersion } from './ReceiptVersion';
 
 /**
  * Balance Change: A mosaic credit or debit was triggered.
@@ -47,7 +48,7 @@ export class BalanceChangeReceipt extends Receipt {
                  * The amount of mosaic.
                  */
                 public readonly amount: UInt64,
-                version: number,
+                version: ReceiptVersion,
                 type: ReceiptType,
                 size?: number) {
         super(version, type, size);
