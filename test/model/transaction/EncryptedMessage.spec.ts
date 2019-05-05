@@ -16,33 +16,48 @@
 
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
+import { NetworkType } from '../../../src/model/model';
 import {EncryptedMessage} from '../../../src/model/transaction/EncryptedMessage';
-import { TestingAccount } from '../../conf/conf.spec';
 
 describe('EncryptedMessage', () => {
 
-    let account: Account;
+    let sender: Account;
+    let recipient: Account;
 
     before(() => {
-        account = TestingAccount;
+        // Catapult-server-bootstrap generated account
+        sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108',
+                                              NetworkType.MIJIN_TEST);
+        recipient = Account.createFromPrivateKey('B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
+                                              NetworkType.MIJIN_TEST);
     });
 
     it('should create a encrypted message from a DTO', () => {
-        const encryptedMessage = EncryptedMessage.createFromDTO('test transaction');
-        expect(encryptedMessage.payload).to.be.equal('test transaction');
+        const encryptedMessage = EncryptedMessage.createFromPayload('test transaction');
+        expect(encryptedMessage.payload).not.to.be.equal('test transaction'); // As DTO returns Hexed payload
     });
 
-    it('should return encrypted message dto', () => {;
-        const encryptedMessage = account.encryptMessage('test transaction', account.publicAccount);
-        const plainMessage = account.decryptMessage(encryptedMessage, account.publicAccount);
+    it('should return encrypted message dto', () => {
+        const encryptedMessage = sender.encryptMessage('test transaction', recipient.publicAccount);
+        const plainMessage = recipient.decryptMessage(encryptedMessage, sender.publicAccount);
         expect(plainMessage.payload).to.be.equal('test transaction');
+    });
+
+    it('should decrypt message from raw encrypted message payload', () => {
+        const payload = 'AE044953E4FF05BC3C14AA10B367E8563D8929680C0D75DBC180F9A7B927D335E66C3BA94266408B366F88B1E503EB' +
+                               '4A3730D9B2F16F1FC16E335262A701CC786E6739A38880A6788530A9E8E4D13C7F';
+        const plainMessage = recipient.decryptMessage(new EncryptedMessage(payload), sender.publicAccount);
+        expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
 
     it('should create an encrypted message from a DTO and decrypt it', () => {
+        // message payload generated from catapult-server
         const encryptMessage = EncryptedMessage
-            .createFromDTO('7245170507448c53d808524221b5d157e19b06f574120a044e48f54dd8e0a4dedbf50ded7ae71' +
-                           'b90b59949bb6acde81d987ee6648aae9f093b94ac7cc3e8dba0bed8fa04ba286df6b32d2d6d21cbdc4e');
-        const plainMessage = account.decryptMessage(encryptMessage, account.publicAccount);
-        expect(plainMessage.payload).to.be.equal('test transaction');
+            .createFromPayload('4132343743314236463730363143314331453730434334373744323831464132343731364343443635313334354' +
+                           '33433383842364546413532364139354144463043354431424545463939373044314337384537413837353435363938424' +
+                           '63336413939413631373630313936324238324246453435454241353037303236424144313032394141364636383242343' +
+                           '339334142453843383931343143413938');
+        const plainMessage = recipient.decryptMessage(encryptMessage, sender.publicAccount);
+        expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
 });

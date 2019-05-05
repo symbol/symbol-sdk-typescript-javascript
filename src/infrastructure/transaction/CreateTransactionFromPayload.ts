@@ -31,9 +31,11 @@ import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTra
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { AggregateTransactionCosignature } from '../../model/transaction/AggregateTransactionCosignature';
 import { Deadline } from '../../model/transaction/Deadline';
+import { EncryptedMessage } from '../../model/transaction/EncryptedMessage';
 import { HashType } from '../../model/transaction/HashType';
 import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
 import { Message } from '../../model/transaction/Message';
+import { MessageType } from '../../model/transaction/MessageType';
 import { ModifyAccountPropertyAddressTransaction } from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
 import { ModifyAccountPropertyEntityTypeTransaction } from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
 import { ModifyAccountPropertyMosaicTransaction } from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
@@ -267,7 +269,8 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
             const transferMessageSize = parseInt(convert.uint8ToHex(convert.hexToUint8(transactionData.substring(50, 54)).reverse()), 16);
 
             const transferMessageAndMosaicSubString = transactionData.substring(56);
-            const transferMessageType = transferMessageAndMosaicSubString.substring(0, 2);
+            const transferMessageType = parseInt(convert.uint8ToHex(convert.hexToUint8(
+                                                                        transferMessageAndMosaicSubString.substring(0, 2)).reverse()), 16);
             const transferMessage = transferMessageAndMosaicSubString.substring(2, (transferMessageSize - 1) * 2 + 2);
             const transferMosaic = transferMessageAndMosaicSubString.substring(transferMessageSize * 2);
             const transferMosaicArray = transferMosaic.match(/.{1,32}/g);
@@ -279,7 +282,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                     new MosaicId(UInt64.fromHex(reverse(mosaic.substring(0, 16))).toDTO()),
                     UInt64.fromHex(reverse(mosaic.substring(16))),
                 )) : [],
-                PlainMessage.createFromPayload(transferMessage),
+                extractMessage(transferMessageType, transferMessage),
                 networkType,
             );
         case TransactionType.SECRET_LOCK:
@@ -478,5 +481,22 @@ const decodeHex = (hex: string): string => {
         return decode(str);
     } catch (e) {
         return str;
+    }
+};
+
+
+/**
+ * @internal
+ * @param messageType - Message Type
+ * @param payload - Message Payload
+ * @returns {Message}
+ */
+const extractMessage = (messageType: MessageType, payload: string): Message => {
+    if (messageType === MessageType.PlainMessage) {
+        return PlainMessage.createFromPayload(payload);
+    } else if (messageType === MessageType.EncryptedMessage) {
+        return EncryptedMessage.createFromPayload(payload);
+    } else {
+        throw new Error('Invalid message type');
     }
 };

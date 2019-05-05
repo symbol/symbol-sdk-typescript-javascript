@@ -30,7 +30,9 @@ import {AggregateTransaction} from '../../model/transaction/AggregateTransaction
 import {AggregateTransactionCosignature} from '../../model/transaction/AggregateTransactionCosignature';
 import {AggregateTransactionInfo} from '../../model/transaction/AggregateTransactionInfo';
 import {Deadline} from '../../model/transaction/Deadline';
+import { EncryptedMessage } from '../../model/transaction/EncryptedMessage';
 import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
+import { MessageType } from '../../model/transaction/MessageType';
 import {ModifyAccountPropertyAddressTransaction} from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
 import {ModifyAccountPropertyEntityTypeTransaction} from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
 import {ModifyAccountPropertyMosaicTransaction} from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
@@ -126,7 +128,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             new UInt64(transactionDTO.maxFee || [0, 0]),
             extractRecipient(transactionDTO.recipient),
             extractMosaics(transactionDTO.mosaics),
-            extractMessage(transactionDTO.message !== undefined ? transactionDTO.message.payload : undefined),
+            extractMessage(transactionDTO.message !== undefined ? transactionDTO.message : undefined),
             transactionDTO.signature,
             transactionDTO.signer ? PublicAccount.createFromPublicKey(transactionDTO.signer,
                     extractNetworkType(transactionDTO.version)) : undefined,
@@ -426,15 +428,15 @@ export const extractMosaics = (mosaics: any): Mosaic[] => {
  * @param message - message payload
  * @return {PlainMessage}
  */
-const extractMessage = (message: any): PlainMessage => {
-    let plainMessage = EmptyMessage;
-    if (message !== undefined && convert.isHexString(message)) {
-        plainMessage = PlainMessage.createFromPayload(message);
-    } else {
-        plainMessage = PlainMessage.create(message);
+const extractMessage = (message: any): PlainMessage | EncryptedMessage => {
+    let msgObj = EmptyMessage;
+    if (message.type === MessageType.PlainMessage) {
+        msgObj = convert.isHexString(message) ? PlainMessage.createFromPayload(message.payload) :
+                                                PlainMessage.create(message.payload);
+    } else if (message.type === MessageType.EncryptedMessage) {
+        msgObj = EncryptedMessage.createFromPayload(message.payload);
     }
-
-    return plainMessage;
+    return msgObj;
 };
 
 /**
@@ -454,7 +456,7 @@ const extractMessage = (message: any): PlainMessage => {
  */
 export const extractBeneficiary = (
     blockDTO: any,
-    networkType: NetworkType
+    networkType: NetworkType,
 ): PublicAccount | undefined => {
 
     let dtoPublicAccount: PublicAccount | undefined;

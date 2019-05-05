@@ -40,7 +40,7 @@ export class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
      */
     public static create(deadline: Deadline,
                          propertyType: PropertyType,
-                         modifications: Array<AccountPropertyModification<number>>,
+                         modifications: Array<AccountPropertyModification<TransactionType>>,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): ModifyAccountPropertyEntityTypeTransaction {
         return new ModifyAccountPropertyEntityTypeTransaction(networkType,
@@ -68,7 +68,7 @@ export class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
                 deadline: Deadline,
                 maxFee: UInt64,
                 public readonly propertyType: PropertyType,
-                public readonly modifications: Array<AccountPropertyModification<number>>,
+                public readonly modifications: Array<AccountPropertyModification<TransactionType>>,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
