@@ -25,7 +25,6 @@ import { PropertyModificationType } from '../../../src/model/account/PropertyMod
 import { PropertyType } from '../../../src/model/account/PropertyType';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
-import { EncryptedMessage } from '../../../src/model/model';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
 import { MosaicProperties } from '../../../src/model/mosaic/MosaicProperties';
@@ -43,7 +42,6 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { HashType } from '../../../src/model/transaction/HashType';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../../src/model/transaction/LockFundsTransaction';
-import { MessageType } from '../../../src/model/transaction/MessageType';
 import { ModifyAccountPropertyAddressTransaction } from '../../../src/model/transaction/ModifyAccountPropertyAddressTransaction';
 import { ModifyAccountPropertyMosaicTransaction } from '../../../src/model/transaction/ModifyAccountPropertyMosaicTransaction';
 import { ModifyMultisigAccountTransaction } from '../../../src/model/transaction/ModifyMultisigAccountTransaction';
@@ -573,23 +571,6 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
         expect((transaction.recipient as NamespaceId).id.toHex().toUpperCase()).to.be.equal(new UInt64([33347626, 3779697293]).toHex());
         expect(transaction.message.payload).to.be.equal('test-message');
-    });
-
-    it('should create TransferTransaction - Encrypted Message', () => {
-        const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-            [
-                NetworkCurrencyMosaic.createRelative(100),
-            ],
-            new EncryptedMessage('12324556'),
-            NetworkType.MIJIN_TEST,
-        );
-
-        const transaction = TransactionMapping.createFromDTO(transferTransaction.toJSON()) as TransferTransaction;
-
-        expect((transaction.recipient as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        expect(transaction.message.type).to.be.equal(MessageType.EncryptedMessage);
     });
 
     it('should create AccountLinkTransaction', () => {
