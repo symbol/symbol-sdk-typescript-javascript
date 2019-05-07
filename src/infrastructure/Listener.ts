@@ -16,7 +16,7 @@
 
 import {Observable, Subject} from 'rxjs';
 import {filter, map, share} from 'rxjs/operators';
-import * as WebSocket from 'ws';
+import 'ws';
 import {Address} from '../model/account/Address';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
@@ -193,7 +193,7 @@ export class Listener {
      */
     public terminate(): void {
         if (this.webSocket) {
-            this.webSocket.terminate();
+            this.webSocket.close();
         }
     }
 
