@@ -32,7 +32,7 @@ export class AccountPropertiesInfo {
                 /**
                  * Properties.
                  */
-                public readonly accountProperties: AccountProperties[]) {
+                public readonly accountProperties: AccountProperties) {
 
     }
 }

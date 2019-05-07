@@ -21,17 +21,32 @@ import {Address} from '../../src/model/account/Address';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 
-import {APIUrl} from '../conf/conf.spec';
-
 describe('AccountHttp', () => {
-    const accountAddress = Address.createFromRawAddress('SDRDGFTDLLCB67D4HPGIMIHPNSRYRJRT7DOBGWZY');
-    const accountPublicKey = '1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755';
-    const publicAccount = PublicAccount.createFromPublicKey('846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
-        NetworkType.MIJIN_TEST);
-    const multisigPublicAccount = PublicAccount.createFromPublicKey('B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
-        NetworkType.MIJIN_TEST);
+    let accountAddress: Address;
+    let accountPublicKey: string;
+    let publicAccount: PublicAccount;
+    let multisigPublicAccount: PublicAccount;
+    let accountHttp: AccountHttp;
 
-    const accountHttp = new AccountHttp(APIUrl);
+    before((done) => {
+        const path = require('path');
+        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
+            if (err) {
+                throw err;
+            }
+            const json = JSON.parse(data);
+            console.log(json);
+
+            accountAddress = Address.createFromRawAddress(json.testAccount.address);
+            // accountAddress = Address.createFromRawAddress('SBAGR4-IBHFHZ-YURYBL-F4XAJT-3CECON-3N2IGJ-Q3X2');
+            accountPublicKey = json.testAccount.publicKey;
+            publicAccount = PublicAccount.createFromPublicKey(json.testAccount.publicKey, NetworkType.MIJIN_TEST);
+            multisigPublicAccount = PublicAccount.createFromPublicKey(json.multisigAccount.publicKey, NetworkType.MIJIN_TEST);
+
+            accountHttp = new AccountHttp(json.apiUrl);
+            done();
+        });
+    });
 
     describe('getAccountInfo', () => {
         it('should return account data given a NEM Address', (done) => {

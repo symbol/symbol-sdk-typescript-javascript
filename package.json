@@ -6,7 +6,7 @@
     "pretest": "npm run build",
     "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
     "e2econfigcopy": "copyfiles --flat ./e2e/conf/*.conf ./dist/e2e/conf/",
-    "test:e2e": "mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
+    "test:e2e": "npm run build && mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
     "test:all": "mocha --ui bdd --recursive ./dist/ --timeout 90000",
     "build": "rm -rf dist/ && tsc && npm run e2econfigcopy ",
     "test:cov": "nyc --reporter=lcov --reporter=text-lcov npm t && nyc report --reporter=text-lcov",

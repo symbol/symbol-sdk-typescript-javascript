@@ -33,6 +33,8 @@ import {Http} from './Http';
 import {NetworkHttp} from './NetworkHttp';
 import {QueryParams} from './QueryParams';
 import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
+import { AccountProperties } from '../model/account/AccountProperties';
+import { AccountProperty } from '../model/account/AccountProperty';
 
 /**
  * Account http repository.
@@ -87,11 +89,12 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public getAccountProperty(publicAccount: PublicAccount): Observable<AccountPropertiesInfo> {
         return observableFrom(this.accountRoutesApi.getAccountProperties(publicAccount.publicKey)).pipe(map((accountProperties) => {
-                return new AccountPropertiesInfo(
-                    accountProperties.meta,
-                    accountProperties.accountProperties,
-                );
-            }));
+            return new AccountPropertiesInfo(
+                accountProperties.meta,
+                new AccountProperties(Address.createFromEncoded(accountProperties.accountProperties.address),
+                                      accountProperties.accountProperties.properties.map((prop) =>
+                                            new AccountProperty(prop.propertyType, prop.values))));
+        }));
     }
 
     /**
@@ -106,7 +109,9 @@ export class AccountHttp extends Http implements AccountRepository {
             return accountProperties.map((property) => {
                 return new AccountPropertiesInfo(
                     property.meta,
-                    property.accountProperties,
+                    new AccountProperties(Address.createFromEncoded(property.accountProperties.address),
+                                          property.accountProperties.properties.map((prop) =>
+                                            new AccountProperty(prop.propertyType, prop.values))),
                 );
             });
         }));
@@ -119,7 +124,7 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
         const accountIdsBody = {
-            accountIds: addresses.map((address) => address.plain()),
+            addresses: addresses.map((address) => address.plain()),
         };
         return observableFrom(
             this.accountRoutesApi.getAccountsInfo(accountIdsBody)).pipe(map((accountsInfoMetaDataDTO) => {
