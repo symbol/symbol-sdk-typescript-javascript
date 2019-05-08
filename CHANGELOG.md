@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.5] - 18-Apr-2019
+
+- Fixed #125, maxFee DTO value errors with in-aggregate MosaicSupplyChange and HashLock transactions  
+
+## [0.11.4] - 17-Apr-2019
+
+- Fixed #117, Typo in AddressAliasTransaction and MosaicAliasTransaction comments
+- Fixed several typos in documentation
+- Fixed CreateTransactionFromDTO to allow `message` to be undefined
+- Added transaction/EncryptedMessage
+- Added QueryParams.order order parameter
+
 ## [0.11.3] - 10-Apr-2019
 
 - Added `Transaction.maxFee` optional property in `create()` methods. (fixes #53)

@@ -30,7 +30,9 @@ import {AggregateTransaction} from '../../model/transaction/AggregateTransaction
 import {AggregateTransactionCosignature} from '../../model/transaction/AggregateTransactionCosignature';
 import {AggregateTransactionInfo} from '../../model/transaction/AggregateTransactionInfo';
 import {Deadline} from '../../model/transaction/Deadline';
+import { EncryptedMessage } from '../../model/transaction/EncryptedMessage';
 import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
+import { MessageType } from '../../model/transaction/MessageType';
 import {ModifyAccountPropertyAddressTransaction} from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
 import {ModifyAccountPropertyEntityTypeTransaction} from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
 import {ModifyAccountPropertyMosaicTransaction} from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
@@ -117,15 +119,16 @@ export const CreateTransactionFromDTO = (transactionDTO): Transaction => {
  * @constructor
  */
 const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Transaction => {
+
     if (transactionDTO.type === TransactionType.TRANSFER) {
         return new TransferTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             extractRecipient(transactionDTO.recipient),
             extractMosaics(transactionDTO.mosaics),
-            extractMessage(transactionDTO.message.payload),
+            extractMessage(transactionDTO.message !== undefined ? transactionDTO.message : undefined),
             transactionDTO.signature,
             transactionDTO.signer ? PublicAccount.createFromPublicKey(transactionDTO.signer,
                     extractNetworkType(transactionDTO.version)) : undefined,
@@ -136,7 +139,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             transactionDTO.namespaceType,
             transactionDTO.name,
             new NamespaceId(transactionDTO.namespaceId),
@@ -152,13 +155,14 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             transactionDTO.nonce,
             new MosaicId(transactionDTO.mosaicId),
             new MosaicProperties(
                 new UInt64(transactionDTO.properties[0].value),
                 (new UInt64(transactionDTO.properties[1].value)).compact(),
-                new UInt64(transactionDTO.properties.length === 3 ? transactionDTO.properties[2].value : undefined),
+                transactionDTO.properties.length === 3 &&  transactionDTO.properties[2].value ?
+                    new UInt64(transactionDTO.properties[2].value) : undefined,
             ),
             transactionDTO.signature,
             transactionDTO.signer ? PublicAccount.createFromPublicKey(transactionDTO.signer,
@@ -170,7 +174,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             new MosaicId(transactionDTO.mosaicId),
             transactionDTO.direction,
             new UInt64(transactionDTO.delta),
@@ -184,7 +188,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             transactionDTO.minApprovalDelta,
             transactionDTO.minRemovalDelta,
             transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new MultisigCosignatoryModification(
@@ -202,7 +206,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             networkType,
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             new Mosaic(new MosaicId(transactionDTO.mosaicId), new UInt64(transactionDTO.amount)),
             new UInt64(transactionDTO.duration),
             new SignedTransaction('', transactionDTO.hash, '', TransactionType.AGGREGATE_BONDED, networkType),
@@ -216,7 +220,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             new Mosaic(new MosaicId(transactionDTO.mosaicId), new UInt64(transactionDTO.amount)),
             new UInt64(transactionDTO.duration),
             transactionDTO.hashAlgorithm,
@@ -233,7 +237,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             transactionDTO.hashAlgorithm,
             transactionDTO.secret,
             transactionDTO.proof,
@@ -247,7 +251,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             transactionDTO.aliasAction,
             new NamespaceId(transactionDTO.namespaceId),
             new MosaicId(transactionDTO.mosaicId),
@@ -261,7 +265,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             transactionDTO.aliasAction,
             new NamespaceId(transactionDTO.namespaceId),
             extractRecipient(transactionDTO.address) as Address,
@@ -275,7 +279,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             transactionDTO.propertyType,
             transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
                 modificationDTO.modificationType,
@@ -291,7 +295,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             transactionDTO.propertyType,
             transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
                 modificationDTO.modificationType,
@@ -307,7 +311,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             transactionDTO.propertyType,
             transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
                 modificationDTO.modificationType,
@@ -323,7 +327,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
-            UInt64.fromUint(transactionDTO.maxFee || 0),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
             transactionDTO.remoteAccountKey,
             transactionDTO.linkAction,
             transactionDTO.signature,
@@ -424,15 +428,15 @@ export const extractMosaics = (mosaics: any): Mosaic[] => {
  * @param message - message payload
  * @return {PlainMessage}
  */
-const extractMessage = (message: any): PlainMessage => {
-    let plainMessage = EmptyMessage;
-    if (message !== undefined && convert.isHexString(message)) {
-        plainMessage = PlainMessage.createFromPayload(message);
-    } else {
-        plainMessage = PlainMessage.create(message);
+const extractMessage = (message: any): PlainMessage | EncryptedMessage => {
+    let msgObj = EmptyMessage;
+    if (message.type === MessageType.PlainMessage) {
+        msgObj = convert.isHexString(message) ? PlainMessage.createFromPayload(message.payload) :
+                                                PlainMessage.create(message.payload);
+    } else if (message.type === MessageType.EncryptedMessage) {
+        msgObj = EncryptedMessage.createFromPayload(message.payload);
     }
-
-    return plainMessage;
+    return msgObj;
 };
 
 /**
@@ -452,7 +456,7 @@ const extractMessage = (message: any): PlainMessage => {
  */
 export const extractBeneficiary = (
     blockDTO: any,
-    networkType: NetworkType
+    networkType: NetworkType,
 ): PublicAccount | undefined => {
 
     let dtoPublicAccount: PublicAccount | undefined;
