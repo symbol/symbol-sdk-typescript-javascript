@@ -51,7 +51,7 @@ export interface AccountRepository {
      * @param publicAccount public account
      * @returns Observable<AccountProperty>
      */
-    getAccountProperty(publicAccount: PublicAccount): Observable<AccountPropertiesInfo>;
+    getAccountProperty(address: Address): Observable<AccountPropertiesInfo>;
 
     /**
      * Gets Account properties.

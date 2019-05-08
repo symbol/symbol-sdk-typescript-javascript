@@ -17,6 +17,7 @@
 import {AccountRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import {AccountInfo} from '../model/account/AccountInfo';
 import { AccountPropertiesInfo } from '../model/account/AccountPropertiesInfo';
 import {Address} from '../model/account/Address';
@@ -33,8 +34,6 @@ import {Http} from './Http';
 import {NetworkHttp} from './NetworkHttp';
 import {QueryParams} from './QueryParams';
 import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
-import { AccountProperties } from '../model/account/AccountProperties';
-import { AccountProperty } from '../model/account/AccountProperty';
 
 /**
  * Account http repository.
@@ -87,13 +86,9 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param publicAccount public account
      * @returns Observable<AccountProperty>
      */
-    public getAccountProperty(publicAccount: PublicAccount): Observable<AccountPropertiesInfo> {
-        return observableFrom(this.accountRoutesApi.getAccountProperties(publicAccount.publicKey)).pipe(map((accountProperties) => {
-            return new AccountPropertiesInfo(
-                accountProperties.meta,
-                new AccountProperties(Address.createFromEncoded(accountProperties.accountProperties.address),
-                                      accountProperties.accountProperties.properties.map((prop) =>
-                                            new AccountProperty(prop.propertyType, prop.values))));
+    public getAccountProperty(address: Address): Observable<AccountPropertiesInfo> {
+        return observableFrom(this.accountRoutesApi.getAccountProperty(address.plain())).pipe(map((accountProperties) => {
+            return DtoMapping.extractAccountPropertyFromDto(accountProperties);
         }));
     }
 
@@ -105,14 +100,9 @@ export class AccountHttp extends Http implements AccountRepository {
     public getAccountProperties(addresses: Address[]): Observable<AccountPropertiesInfo[]> {
         const accountIds = addresses.map((address) => address.plain());
         return observableFrom(
-            this.accountRoutesApi.getAccountPropertiesFromAccounts(accountIds)).pipe(map((accountProperties) => {
+            this.accountRoutesApi.getAccountProperties(accountIds)).pipe(map((accountProperties) => {
             return accountProperties.map((property) => {
-                return new AccountPropertiesInfo(
-                    property.meta,
-                    new AccountProperties(Address.createFromEncoded(property.accountProperties.address),
-                                          property.accountProperties.properties.map((prop) =>
-                                            new AccountProperty(prop.propertyType, prop.values))),
-                );
+                return DtoMapping.extractAccountPropertyFromDto(property);
             });
         }));
     }
