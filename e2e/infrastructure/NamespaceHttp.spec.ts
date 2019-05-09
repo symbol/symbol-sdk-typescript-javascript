@@ -14,19 +14,29 @@
  * limitations under the License.
  */
 import {deepEqual} from 'assert';
-import {expect} from 'chai';
+import {expect, assert} from 'chai';
 import {NamespaceHttp} from '../../src/infrastructure/NamespaceHttp';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
+import { Listener } from '../../src/infrastructure/infrastructure';
+import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
+import { Deadline } from '../../src/model/transaction/Deadline';
+import { AliasActionType } from '../../src/model/namespace/AliasActionType';
+import { Account } from '../../src/model/account/Account';
+import { RegisterNamespaceTransaction } from '../../src/model/transaction/RegisterNamespaceTransaction';
+import { UInt64 } from '../../src/model/UInt64';
 
 describe('NamespaceHttp', () => {
     const defaultNamespaceId = NetworkCurrencyMosaic.NAMESPACE_ID;
     let namespaceId: NamespaceId;
     let namespaceHttp: NamespaceHttp;
-    let publicAccount: PublicAccount;
+    let account: Account;
     let namespaceLinkedAddress: string;
+    let config;
+    let transactionHttp: TransactionHttp;
     before((done) => {
         const path = require('path');
         require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
@@ -34,11 +44,74 @@ describe('NamespaceHttp', () => {
                 throw err;
             }
             const json = JSON.parse(data);
-            publicAccount = PublicAccount.createFromPublicKey(json.testAccount.publicKey, NetworkType.MIJIN_TEST);
+            config = json;
+            account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
             namespaceId = new NamespaceId(json.namespace.id);
             namespaceLinkedAddress = json.namespace.linkedAddress;
             namespaceHttp = new NamespaceHttp(json.apiUrl);
+            transactionHttp = new TransactionHttp(json.apiUrl);
             done();
+        });
+    });
+    describe('RegisterNamespaceTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
+            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+                Deadline.create(),
+                namespaceName,
+                UInt64.fromUint(1000),
+                NetworkType.MIJIN_TEST,
+            );
+            namespaceId = new NamespaceId(namespaceName);
+            const signedTransaction = registerNamespaceTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AddressAliasTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const addressAliasTransaction = AddressAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Link,
+                namespaceId,
+                account.address,
+                NetworkType.MIJIN_TEST
+            );
+            const signedTransaction = addressAliasTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
         });
     });
 
@@ -55,9 +128,9 @@ describe('NamespaceHttp', () => {
 
     describe('getNamespacesFromAccount', () => {
         it('should return namespace data given publicKeyNemesis', (done) => {
-            namespaceHttp.getNamespacesFromAccount(publicAccount.address)
+            namespaceHttp.getNamespacesFromAccount(account.address)
                 .subscribe((namespaces) => {
-                    deepEqual(namespaces[0].owner, publicAccount);
+                    deepEqual(namespaces[0].owner, account.publicAccount);
                     done();
                 });
         });
@@ -65,9 +138,9 @@ describe('NamespaceHttp', () => {
 
     describe('getNamespacesFromAccounts', () => {
         it('should return namespaces data given publicKeyNemesis', (done) => {
-            namespaceHttp.getNamespacesFromAccounts([publicAccount.address])
+            namespaceHttp.getNamespacesFromAccounts([account.address])
                 .subscribe((namespaces) => {
-                    deepEqual(namespaces[0].owner, publicAccount);
+                    deepEqual(namespaces[0].owner, account.publicAccount);
                     done();
                 });
         });

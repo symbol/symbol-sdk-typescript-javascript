@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
+import {assert, expect} from 'chai';
 import * as CryptoJS from 'crypto-js';
 import {ChronoUnit} from 'js-joda';
 import {keccak_256, sha3_256} from 'js-sha3';
 import {convert, nacl_catapult} from 'nem2-library';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
+import { NamespaceHttp } from '../../src/infrastructure/infrastructure';
 import {Listener} from '../../src/infrastructure/Listener';
 import {TransactionHttp} from '../../src/infrastructure/TransactionHttp';
 import {Account} from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
 import {MosaicNonce} from '../../src/model/mosaic/MosaicNonce';
 import {MosaicProperties} from '../../src/model/mosaic/MosaicProperties';
 import {MosaicSupplyType} from '../../src/model/mosaic/MosaicSupplyType';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import {AggregateTransaction} from '../../src/model/transaction/AggregateTransaction';
 import {CosignatureSignedTransaction} from '../../src/model/transaction/CosignatureSignedTransaction';
 import {CosignatureTransaction} from '../../src/model/transaction/CosignatureTransaction';
@@ -50,6 +53,15 @@ import {Transaction} from '../../src/model/transaction/Transaction';
 import {TransactionType} from '../../src/model/transaction/TransactionType';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../src/model/UInt64';
+import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
+import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';
+import { AccountPropertyModification } from '../../src/model/transaction/AccountPropertyModification';
+import { PropertyType } from '../../src/model/account/PropertyType';
+import { LinkAction } from '../../src/model/transaction/LinkAction';
+import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
+import { AliasActionType } from '../../src/model/namespace/AliasActionType';
+import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
+import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 
 describe('TransactionHttp', () => {
     let transactionHash;
@@ -57,13 +69,23 @@ describe('TransactionHttp', () => {
 
     let account: Account;
     let account2: Account;
+    let account3: Account;
     let testAccountNoBalance: Account;
+    let testRemoteAccount: Account;
     let transactionHttp: TransactionHttp;
     let multisigAccount: Account;
     let cosignAccount1: Account;
+    let cosignAccount2: Account;
+    let cosignAccount3: Account;
     let mosaicId: MosaicId;
+    let namespaceId: NamespaceId;
+    let defaultMosaicId: MosaicId;
     let accountHttp: AccountHttp;
+    let namespaceHttp: NamespaceHttp;
     let config;
+    const secureRandom = require('secure-random');
+    const sha256 = require('js-sha256');
+    const ripemd160 = require('ripemd160');
 
     before((done) => {
         const path = require('path');
@@ -75,306 +97,784 @@ describe('TransactionHttp', () => {
             config = json;
             account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
             account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, NetworkType.MIJIN_TEST);
+            account3 = Account.createFromPrivateKey(json.testAccount3.privateKey, NetworkType.MIJIN_TEST);
             testAccountNoBalance = Account.createFromPrivateKey(json.testAccountNoBalance.privateKey, NetworkType.MIJIN_TEST);
+            testRemoteAccount = Account.createFromPrivateKey(json.testRemoteAccount.privateKey, NetworkType.MIJIN_TEST);
             multisigAccount = Account.createFromPrivateKey(json.multisigAccount.privateKey, NetworkType.MIJIN_TEST);
             cosignAccount1 = Account.createFromPrivateKey(json.cosignatoryAccount.privateKey, NetworkType.MIJIN_TEST);
-            mosaicId = new MosaicId(json.testMosaicId);
+            cosignAccount2 = Account.createFromPrivateKey(json.cosignatory2Account.privateKey, NetworkType.MIJIN_TEST);
+            cosignAccount3 = Account.createFromPrivateKey(json.cosignatory3Account.privateKey, NetworkType.MIJIN_TEST);
             transactionHash = json.testTransaction.transactionHash;
             transactionId = json.testTransaction.transactionId;
+            defaultMosaicId = json.defaultMosaicId;
+            namespaceId = new NamespaceId(json.namespace.id);
             accountHttp = new AccountHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
+            namespaceHttp = new NamespaceHttp(json.apiUrl);
             done();
         });
     });
+    describe('Get network currency mosaic id', () => {
+        it('get mosaicId', (done) => {
+            namespaceHttp.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkCurrencyMosaicId) => {
+                defaultMosaicId = networkCurrencyMosaicId;
+                done();
+            });
+        });
+    });
+    describe('MosaicDefinitionTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const nonce = MosaicNonce.createRandom();
+            mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+                Deadline.create(),
+                nonce,
+                mosaicId,
+                MosaicProperties.create({
+                    supplyMutable: true,
+                    transferable: true,
+                    levyMutable: true,
+                    divisibility: 3,
+                }),
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('MosaicDefinitionTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const nonce = MosaicNonce.createRandom();
+            const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+                Deadline.create(),
+                nonce,
+                MosaicId.createFromNonce(nonce, account.publicAccount),
+                MosaicProperties.create({
+                    supplyMutable: true,
+                    transferable: true,
+                    levyMutable: true,
+                    divisibility: 3,
+                }),
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [mosaicDefinitionTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            const signedTransaction = aggregateTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('TransferTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
 
-    // describe('TransferTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
+        it('standalone', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                account2.address,
+                [NetworkCurrencyMosaic.createAbsolute(1)],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = transferTransaction.signWith(account);
 
-    //     it('standalone', (done) => {
-    //         const transferTransaction = TransferTransaction.create(
-    //             Deadline.create(),
-    //             account2.address,
-    //             [NetworkCurrencyMosaic.createAbsolute(1)],
-    //             PlainMessage.create('test-message'),
-    //             NetworkType.MIJIN_TEST,
-    //         );
-    //         const signedTransaction = transferTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('TransferTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                account2.address,
+                [NetworkCurrencyMosaic.createAbsolute(1)],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [transferTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AccountPropertyTransaction - Address', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
 
-    //         listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-    //             done();
-    //         });
-    //         transactionHttp.announce(signedTransaction);
-    //     });
-    // });
-    // describe('TransferTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
-    //     it('aggregate', (done) => {
-    //         const transferTransaction = TransferTransaction.create(
-    //             Deadline.create(),
-    //             account2.address,
-    //             [NetworkCurrencyMosaic.createAbsolute(1)],
-    //             PlainMessage.create('test-message'),
-    //             NetworkType.MIJIN_TEST,
-    //         );
-    //         const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //             [transferTransaction.toAggregate(account.publicAccount)],
-    //             NetworkType.MIJIN_TEST,
-    //             [],
-    //         );
-    //         const signedTransaction = aggregateTransaction.signWith(account);
-    //         listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-    //             done();
-    //         });
-    //         transactionHttp.announce(signedTransaction);
-    //     });
-    // });
+        it('standalone', (done) => {
+            const addressPropertyFilter = AccountPropertyModification.createForAddress(
+                PropertyModificationType.Add,
+                account3.address,
+            );
+            const addressModification = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+                Deadline.create(),
+                PropertyType.BlockAddress,
+                [addressPropertyFilter],
+                NetworkType.MIJIN_TEST
+            );
+            const signedTransaction = addressModification.signWith(account);
 
-    // describe('RegisterNamespaceTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
-    //     it('standalone', (done) => {
-    //         namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
-    //         const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
-    //             Deadline.create(),
-    //             namespaceName,
-    //             UInt64.fromUint(1000),
-    //             NetworkType.MIJIN_TEST,
-    //         );
-    //         const signedTransaction = registerNamespaceTransaction.signWith(account);
-    //         listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-    //             done();
-    //         });
-    //         transactionHttp.announce(signedTransaction);
-    //     });
-    // });
-    // describe('RegisterNamespaceTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
-    //     it('aggregate', (done) => {
-    //         const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
-    //             Deadline.create(),
-    //             'root-test-namespace-' + Math.floor(Math.random() * 10000),
-    //             UInt64.fromUint(1000),
-    //             NetworkType.MIJIN_TEST,
-    //         );
-    //         const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //             [registerNamespaceTransaction.toAggregate(account.publicAccount)],
-    //             NetworkType.MIJIN_TEST,
-    //             []);
-    //         const signedTransaction = aggregateTransaction.signWith(account);
-    //         listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-    //             done();
-    //         });
-    //         transactionHttp.announce(signedTransaction);
-    //     });
-    // });
-    // describe('MosaicDefinitionTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
-    //     it('standalone', (done) => {
-    //         const nonce = MosaicNonce.createRandom();
-    //         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-    //             Deadline.create(),
-    //             nonce,
-    //             MosaicId.createFromNonce(nonce, account.publicAccount),
-    //             MosaicProperties.create({
-    //                 supplyMutable: true,
-    //                 transferable: true,
-    //                 levyMutable: true,
-    //                 divisibility: 3,
-    //             }),
-    //             NetworkType.MIJIN_TEST,
-    //         );
-    //         const signedTransaction = mosaicDefinitionTransaction.signWith(account);
-    //         listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-    //             done();
-    //         });
-    //         transactionHttp.announce(signedTransaction);
-    //     });
-    // });
-    // describe('MosaicDefinitionTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
-    //     it('aggregate', (done) => {
-    //         const nonce = MosaicNonce.createRandom();
-    //         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-    //             Deadline.create(),
-    //             nonce,
-    //             MosaicId.createFromNonce(nonce, account.publicAccount),
-    //             MosaicProperties.create({
-    //                 supplyMutable: true,
-    //                 transferable: true,
-    //                 levyMutable: true,
-    //                 divisibility: 3,
-    //             }),
-    //             NetworkType.MIJIN_TEST,
-    //         );
-    //         const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //             [mosaicDefinitionTransaction.toAggregate(account.publicAccount)],
-    //             NetworkType.MIJIN_TEST,
-    //             []);
-    //         const signedTransaction = aggregateTransaction.signWith(account);
-    //         listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-    //             done();
-    //         });
-    //         transactionHttp.announce(signedTransaction);
-    //     });
-    // });
-    // describe('MosaicSupplyChangeTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
-    //     it('standalone', (done) => {
-    //         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-    //             Deadline.create(),
-    //             mosaicId,
-    //             MosaicSupplyType.Increase,
-    //             UInt64.fromUint(10),
-    //             NetworkType.MIJIN_TEST,
-    //         );
-    //         const signedTransaction = mosaicSupplyChangeTransaction.signWith(account);
-    //         listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-    //             done();
-    //         });
-    //         transactionHttp.announce(signedTransaction);
-    //     });
-    // });
-    // describe('MosaicSupplyChangeTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
-    //     it('aggregate', (done) => {
-    //         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
-    //             Deadline.create(),
-    //             mosaicId,
-    //             MosaicSupplyType.Increase,
-    //             UInt64.fromUint(10),
-    //             NetworkType.MIJIN_TEST,
-    //         );
-    //         const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //             [mosaicSupplyChangeTransaction.toAggregate(account.publicAccount)],
-    //             NetworkType.MIJIN_TEST,
-    //             []);
-    //         const signedTransaction = aggregateTransaction.signWith(account);
-    //         listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-    //             done();
-    //         });
-    //         transactionHttp.announce(signedTransaction);
-    //     });
-    // });
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AccountPropertyTransaction - Address', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const addressPropertyFilter = AccountPropertyModification.createForAddress(
+                PropertyModificationType.Remove,
+                account3.address,
+            );
+            const addressModification = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+                Deadline.create(),
+                PropertyType.BlockAddress,
+                [addressPropertyFilter],
+                NetworkType.MIJIN_TEST
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [addressModification.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AccountPropertyTransaction - Mosaic', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
 
-    // describe('LockFundsTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
-    //     it('standalone', (done) => {
-    //         const aggregateTransaction = AggregateTransaction.createBonded(
-    //             Deadline.create(),
-    //             [],
-    //             NetworkType.MIJIN_TEST,
-    //             [],
-    //         );
-    //         const signedTransaction = account.sign(aggregateTransaction);
+        it('standalone', (done) => {
+            const mosaicPropertyFilter = AccountPropertyModification.createForMosaic(
+                PropertyModificationType.Add,
+                mosaicId,
+            );
+            const addressModification = AccountPropertyTransaction.createMosaicPropertyModificationTransaction(
+                Deadline.create(),
+                PropertyType.BlockMosaic,
+                [mosaicPropertyFilter],
+                NetworkType.MIJIN_TEST
+            );
+            const signedTransaction = addressModification.signWith(account);
 
-    //         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-    //             NetworkCurrencyMosaic.createRelative(10),
-    //             UInt64.fromUint(10000),
-    //             signedTransaction,
-    //             NetworkType.MIJIN_TEST);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AccountPropertyTransaction - Mosaic', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const mosaicPropertyFilter = AccountPropertyModification.createForMosaic(
+                PropertyModificationType.Remove,
+                mosaicId,
+            );
+            const addressModification = AccountPropertyTransaction.createMosaicPropertyModificationTransaction(
+                Deadline.create(),
+                PropertyType.BlockMosaic,
+                [mosaicPropertyFilter],
+                NetworkType.MIJIN_TEST
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [addressModification.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AccountPropertyTransaction - EntityType', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
 
-    //         listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-    //             done();
-    //         });
-    //         transactionHttp.announce(lockFundsTransaction.signWith(account));
-    //     });
-    // });
-    // describe('LockFundsTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
-    //     it('aggregate', (done) => {
-    //         const aggregateTransaction = AggregateTransaction.createBonded(
-    //             Deadline.create(),
-    //             [],
-    //             NetworkType.MIJIN_TEST,
-    //             [],
-    //         );
-    //         const signedTransaction = account.sign(aggregateTransaction);
-    //         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-    //             NetworkCurrencyMosaic.createRelative(10),
-    //             UInt64.fromUint(10),
-    //             signedTransaction,
-    //             NetworkType.MIJIN_TEST);
-    //         const aggregateLockFundsTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //             [lockFundsTransaction.toAggregate(account.publicAccount)],
-    //             NetworkType.MIJIN_TEST,
-    //             []);
-    //         listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-    //             done();
-    //         });
-    //         transactionHttp.announce(aggregateLockFundsTransaction.signWith(account));
-    //     });
-    // });
+        it('standalone', (done) => {
+            const entityTypePropertyFilter = AccountPropertyModification.createForEntityType(
+                PropertyModificationType.Add,
+                TransactionType.LINK_ACCOUNT,
+            );
+            const addressModification = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
+                Deadline.create(),
+                PropertyType.BlockTransaction,
+                [entityTypePropertyFilter],
+                NetworkType.MIJIN_TEST
+            );
+            const signedTransaction = addressModification.signWith(account3);
 
-    describe('aggregate complete tx', () => {
+            listener.confirmed(account3.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account3.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AccountPropertyTransaction - EntityType', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const entityTypePropertyFilter = AccountPropertyModification.createForEntityType(
+                PropertyModificationType.Remove,
+                TransactionType.LINK_ACCOUNT,
+            );
+            const addressModification = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
+                Deadline.create(),
+                PropertyType.BlockTransaction,
+                [entityTypePropertyFilter],
+                NetworkType.MIJIN_TEST
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [addressModification.toAggregate(account3.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account3);
+            listener.confirmed(account3.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account3.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AccountLinkTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const accountLinkTransaction = AccountLinkTransaction.create(
+                Deadline.create(),
+                testRemoteAccount.publicKey,
+                LinkAction.Unlink,
+                NetworkType.MIJIN_TEST
+            );
+            const signedTransaction = accountLinkTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AccountLinkTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const accountLinkTransaction = AccountLinkTransaction.create(
+                Deadline.create(),
+                testRemoteAccount.publicKey,
+                LinkAction.Unlink,
+                NetworkType.MIJIN_TEST
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [accountLinkTransaction.toAggregate(testRemoteAccount.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('RegisterNamespaceTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
+            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+                Deadline.create(),
+                namespaceName,
+                UInt64.fromUint(1000),
+                NetworkType.MIJIN_TEST,
+            );
+            namespaceId = new NamespaceId(namespaceName);
+            const signedTransaction = registerNamespaceTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('RegisterNamespaceTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+                Deadline.create(),
+                'root-test-namespace-' + Math.floor(Math.random() * 10000),
+                UInt64.fromUint(1000),
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [registerNamespaceTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            const signedTransaction = aggregateTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AddressAliasTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const addressAliasTransaction = AddressAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Link,
+                namespaceId,
+                account.address,
+                NetworkType.MIJIN_TEST
+            );
+            const signedTransaction = addressAliasTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AddressAliasTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const addressAliasTransaction = AddressAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Unlink,
+                namespaceId,
+                account.address,
+                NetworkType.MIJIN_TEST
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [addressAliasTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('MosaicAliasTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const mosaicAliasTransaction = MosaicAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Link,
+                namespaceId,
+                mosaicId,
+                NetworkType.MIJIN_TEST
+            );
+            const signedTransaction = mosaicAliasTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('MosaicAliasTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const mosaicAliasTransaction = MosaicAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Unlink,
+                namespaceId,
+                mosaicId,
+                NetworkType.MIJIN_TEST
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [mosaicAliasTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('MosaicSupplyChangeTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+                Deadline.create(),
+                mosaicId,
+                MosaicSupplyType.Increase,
+                UInt64.fromUint(10),
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = mosaicSupplyChangeTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account3.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('MosaicSupplyChangeTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+                Deadline.create(),
+                mosaicId,
+                MosaicSupplyType.Increase,
+                UInt64.fromUint(10),
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [mosaicSupplyChangeTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            const signedTransaction = aggregateTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account3.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('LockFundsTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(),
+                [],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = account.sign(aggregateTransaction);
+            const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+                new Mosaic(defaultMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                UInt64.fromUint(10000),
+                signedTransaction,
+                NetworkType.MIJIN_TEST);
+
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(lockFundsTransaction.signWith(account));
+        });
+    });
+    describe('LockFundsTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(),
+                [],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = account.sign(aggregateTransaction);
+            const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+                new Mosaic(defaultMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                UInt64.fromUint(10),
+                signedTransaction,
+                NetworkType.MIJIN_TEST);
+            const aggregateLockFundsTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [lockFundsTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(aggregateLockFundsTransaction.signWith(account));
+        });
+    });
+
+    describe('Aggregate Complete Transaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
         it('should announce aggregated complete transaction', (done) => {
             const signerAccount = account;
 
@@ -394,499 +894,700 @@ describe('TransactionHttp', () => {
                 [],
             );
             const signedTx = signerAccount.sign(aggTx);
-            transactionHttp.announce(signedTx)
-                .subscribe((transactionAnnounceResponse) => {
-                    expect(transactionAnnounceResponse.message)
-                        .to.be.equal('packet 9 was pushed to the network via /transaction');
-                    done();
-                });
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTx);
         });
     });
 
-    describe('announceSync', () => {
-        it('should return insufficient balance error', (done) => {
-            const aggregateTransaction = AggregateTransaction.createBonded(
-                            Deadline.create(),
-                            [],
-                            NetworkType.MIJIN_TEST,
-                            [],
-                        );
-            const signedTransaction = account.sign(aggregateTransaction);
-
-            const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-                NetworkCurrencyMosaic.createAbsolute(0),
-                UInt64.fromUint(10000),
-                signedTransaction,
-                NetworkType.MIJIN_TEST);
-
-            transactionHttp
-                .announceSync(lockFundsTransaction.signWith(account))
-                .subscribe((shouldNotBeCalled) => {
-                    throw new Error('should not be called');
-                }, (err) => {
-                    expect(err.status).to.be.equal('Failure_LockHash_Invalid_Mosaic_Amount');
-                    done();
-                });
+    describe('ModifyMultisigAccountTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('ModifyMultisigAccountTransaction', (done) => {
+            const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                1,
+                1,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount1.publicAccount),
+                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount2.publicAccount),
+                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount3.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = multisigAccount.sign(modifyMultisigAccountTransaction);
+            listener.confirmed(multisigAccount.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(multisigAccount.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
         });
     });
 
-    // it('ModifyMultisigAccountTransaction with cosignatories', (done) => {
-    //     const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
-    //         Deadline.create(),
-    //         0,
-    //         0,
-    //         [new MultisigCosignatoryModification(
-    //             MultisigCosignatoryModificationType.Add,
-    //             PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
-    //                 NetworkType.MIJIN_TEST),
-    //         )],
-    //         NetworkType.MIJIN_TEST,
-    //     );
-    //     const aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(20, ChronoUnit.MINUTES),
-    //         [modifyMultisigAccountTransaction.toAggregate(MultisigAccount.publicAccount)],
-    //         NetworkType.MIJIN_TEST,
-    //         []);
+    describe('SecretLockTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Sha3_256,
+                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+    describe('HashType: Op_Sha3_256', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
 
-    //     const signedTransaction = CosignatoryAccount.signTransactionWithCosignatories(
-    //         aggregateTransaction,
-    //         [Cosignatory2Account],
-    //     );
-
-    //     const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-    //         NetworkCurrencyMosaic.createRelative(10),
-    //         UInt64.fromUint(10000),
-    //         signedTransaction,
-    //         NetworkType.MIJIN_TEST);
-
-    //     setTimeout(() => {
-    //         transactionHttp.announce(lockFundsTransaction.signWith(CosignatoryAccount));
-    //     }, 1000);
-
-    //     validateTransactionAnnounceCorrectly(CosignatoryAccount.address, () => {
-    //         validatePartialTransactionAnnounceCorrectly(CosignatoryAccount.address, done);
-    //         setTimeout(() => {
-    //             transactionHttp.announceAggregateBonded(signedTransaction);
-    //         }, 1000);
-    //     });
-    // });
-
-    //     it('CosignatureTransaction', (done) => {
-    //         const transferTransaction = TransferTransaction.create(
-    //             Deadline.create(),
-    //             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-    //             [NetworkCurrencyMosaic.createRelative(1)],
-    //             PlainMessage.create('test-message'),
-    //             NetworkType.MIJIN_TEST,
-    //         );
-    //         const aggregateTransaction = AggregateTransaction.createBonded(
-    //             Deadline.create(2, ChronoUnit.MINUTES),
-    //             [transferTransaction.toAggregate(MultisigAccount.publicAccount)],
-    //             NetworkType.MIJIN_TEST,
-    //             []);
-    //         const signedTransaction = aggregateTransaction.signWith(
-    //             CosignatoryAccount,
-    //         );
-
-    //         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-    //             NetworkCurrencyMosaic.createRelative(10),
-    //             UInt64.fromUint(10000),
-    //             signedTransaction,
-    //             NetworkType.MIJIN_TEST);
-
-    //         setTimeout(() => {
-    //             transactionHttp.announce(lockFundsTransaction.signWith(CosignatoryAccount));
-    //         }, 1000);
-
-    //         validateTransactionAnnounceCorrectly(CosignatoryAccount.address, () => {
-    //             setTimeout(() => {
-    //                 transactionHttp.announceAggregateBonded(signedTransaction);
-    //             }, 1000);
-
-    //             validateCosignaturePartialTransactionAnnounceCorrectly(CosignatoryAccount.address, Cosignatory2Account.publicKey, done);
-    //             validatePartialTransactionAnnounceCorrectly(CosignatoryAccount.address, () => {
-    //                 accountHttp.aggregateBondedTransactions(CosignatoryAccount.publicAccount).subscribe((transactions) => {
-    //                     const partialTransaction = transactions[0];
-    //                     const cosignatureTransaction = CosignatureTransaction.create(partialTransaction);
-    //                     const cosignatureSignedTransaction = Cosignatory2Account.signCosignatureTransaction(cosignatureTransaction);
-    //                     transactionHttp.announceAggregateBondedCosignature(cosignatureSignedTransaction);
-    //                 });
-    //             });
-    //         });
-    //     });
-
-    //     describe('SecretLockTransaction', () => {
-    //         describe('HashType: Op_Sha3_256', () => {
-    //             it('standalone', (done) => {
-    //                 const secretLockTransaction = SecretLockTransaction.create(
-    //                     Deadline.create(),
-    //                     NetworkCurrencyMosaic.createAbsolute(10),
-    //                     UInt64.fromUint(100),
-    //                     HashType.Op_Sha3_256,
-    //                     sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
-    //                     Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 validateTransactionAnnounceCorrectly(account.address, done);
-    //                 transactionHttp.announce(secretLockTransaction.signWith(account));
-    //             });
-
-    //             it('aggregate', (done) => {
-    //                 const secretLockTransaction = SecretLockTransaction.create(
-    //                     Deadline.create(),
-    //                     NetworkCurrencyMosaic.createAbsolute(10),
-    //                     UInt64.fromUint(100),
-    //                     HashType.Op_Sha3_256,
-    //                     sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
-    //                     Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //                     [secretLockTransaction.toAggregate(account.publicAccount)],
-    //                     NetworkType.MIJIN_TEST,
-    //                     []);
-    //                 validateTransactionAnnounceCorrectly(account.address, done);
-    //                 transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
-    //             });
-    //         });
-    //         describe('HashType: Keccak_256', () => {
-    //             it('standalone', (done) => {
-    //                 const secretLockTransaction = SecretLockTransaction.create(
-    //                     Deadline.create(),
-    //                     NetworkCurrencyMosaic.createAbsolute(10),
-    //                     UInt64.fromUint(100),
-    //                     HashType.Op_Keccak_256,
-    //                     sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
-    //                     Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 validateTransactionAnnounceCorrectly(account.address, done);
-    //                 transactionHttp.announce(secretLockTransaction.signWith(account));
-    //             });
-
-    //             it('aggregate', (done) => {
-    //                 const secretLockTransaction = SecretLockTransaction.create(
-    //                     Deadline.create(),
-    //                     NetworkCurrencyMosaic.createAbsolute(10),
-    //                     UInt64.fromUint(100),
-    //                     HashType.Op_Keccak_256,
-    //                     sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
-    //                     Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //                     [secretLockTransaction.toAggregate(account.publicAccount)],
-    //                     NetworkType.MIJIN_TEST,
-    //                     []);
-    //                 validateTransactionAnnounceCorrectly(account.address, done);
-    //                 transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
-    //             });
-    //         });
-    //         describe('HashType: Op_Hash_160', () => {
-    //             it('standalone', (done) => {
-    //                 const secretLockTransaction = SecretLockTransaction.create(
-    //                     Deadline.create(),
-    //                     NetworkCurrencyMosaic.createAbsolute(10),
-    //                     UInt64.fromUint(100),
-    //                     HashType.Op_Hash_160,
-    //                     sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
-    //                     Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 validateTransactionAnnounceCorrectly(account.address, done);
-    //                 transactionHttp.announce(secretLockTransaction.signWith(account));
-    //             });
-
-    //             it('aggregate', (done) => {
-    //                 const secretLockTransaction = SecretLockTransaction.create(
-    //                     Deadline.create(),
-    //                     NetworkCurrencyMosaic.createAbsolute(10),
-    //                     UInt64.fromUint(100),
-    //                     HashType.Op_Hash_160,
-    //                     sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
-    //                     Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //                     [secretLockTransaction.toAggregate(account.publicAccount)],
-    //                     NetworkType.MIJIN_TEST,
-    //                     []);
-    //                 validateTransactionAnnounceCorrectly(account.address, done);
-    //                 transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
-    //             });
-    //         });
-    //         describe('HashType: Op_Hash_256', () => {
-    //             it('standalone', (done) => {
-    //                 const secretLockTransaction = SecretLockTransaction.create(
-    //                     Deadline.create(),
-    //                     NetworkCurrencyMosaic.createAbsolute(10),
-    //                     UInt64.fromUint(100),
-    //                     HashType.Op_Hash_256,
-    //                     sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
-    //                     Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 validateTransactionAnnounceCorrectly(account.address, done);
-    //                 transactionHttp.announce(secretLockTransaction.signWith(account));
-    //             });
-
-    //             it('aggregate', (done) => {
-    //                 const secretLockTransaction = SecretLockTransaction.create(
-    //                     Deadline.create(),
-    //                     NetworkCurrencyMosaic.createAbsolute(10),
-    //                     UInt64.fromUint(100),
-    //                     HashType.Op_Hash_256,
-    //                     sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
-    //                     Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL'),
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //                     [secretLockTransaction.toAggregate(account.publicAccount)],
-    //                     NetworkType.MIJIN_TEST,
-    //                     []);
-    //                 validateTransactionAnnounceCorrectly(account.address, done);
-    //                 transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
-    //             });
-    //         });
-    //     });
-    //     describe('SecretProofTransaction', () => {
-    //         describe('HashType: Op_Sha3_256', () => {
-    //             it('standalone', (done) => {
-    //                 const secretSeed = nacl_catapult.randomBytes(20);
-    //                 const secret = sha3_256.create().update(secretSeed).hex();
-    //                 const proof = convert.uint8ToHex(secretSeed);
-    //                 const secretLockTransaction = SecretLockTransaction.create(
-    //                     Deadline.create(),
-    //                     NetworkCurrencyMosaic.createAbsolute(10),
-    //                     UInt64.fromUint(100),
-    //                     HashType.Op_Sha3_256,
-    //                     secret,
-    //                     account2.address,
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 validateTransactionAnnounceCorrectly(account.address, () => {
-    //                     const secretProofTransaction = SecretProofTransaction.create(
-    //                         Deadline.create(),
-    //                         HashType.Op_Sha3_256,
-    //                         secret,
-    //                         proof,
-    //                         NetworkType.MIJIN_TEST,
-    //                     );
-    //                     validateTransactionAnnounceCorrectly(account2.address, done);
-    //                     transactionHttp.announce(secretProofTransaction.signWith(account2));
-    //                 });
-    //                 transactionHttp.announce(secretLockTransaction.signWith(account));
-    //             });
-
-    //             it('aggregate', (done) => {
-    //                 const secretSeed = nacl_catapult.randomBytes(20);
-    //                 const secret = sha3_256.create().update(secretSeed).hex();
-    //                 const proof = convert.uint8ToHex(secretSeed);
-    //                 const secretLockTransaction = SecretLockTransaction.create(
-    //                     Deadline.create(),
-    //                     NetworkCurrencyMosaic.createAbsolute(10),
-    //                     UInt64.fromUint(100),
-    //                     HashType.Op_Sha3_256,
-    //                     secret,
-    //                     account2.address,
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 validateTransactionAnnounceCorrectly(account.address, () => {
-    //                     const secretProofTransaction = SecretProofTransaction.create(
-    //                         Deadline.create(),
-    //                         HashType.Op_Sha3_256,
-    //                         secret,
-    //                         proof,
-    //                         NetworkType.MIJIN_TEST,
-    //                     );
-    //                     const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //                         [secretProofTransaction.toAggregate(account2.publicAccount)],
-    //                         NetworkType.MIJIN_TEST,
-    //                         []);
-    //                     validateTransactionAnnounceCorrectly(account2.address, done);
-    //                     transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
-    //                 });
-    //                 transactionHttp.announce(secretLockTransaction.signWith(account));
-    //             });
-    //         });
-    //     });
-    //     describe('HashType: Op_Keccak_256', () => {
-    //         it('standalone', (done) => {
-    //             const secretSeed = nacl_catapult.randomBytes(20);
-    //             const secret = keccak_256.create().update(secretSeed).hex();
-    //             const proof = convert.uint8ToHex(secretSeed);
-    //             const secretLockTransaction = SecretLockTransaction.create(
-    //                 Deadline.create(),
-    //                 NetworkCurrencyMosaic.createAbsolute(10),
-    //                 UInt64.fromUint(100),
-    //                 HashType.Op_Keccak_256,
-    //                 secret,
-    //                 account2.address,
-    //                 NetworkType.MIJIN_TEST,
-    //             );
-    //             validateTransactionAnnounceCorrectly(account.address, () => {
-    //                 const secretProofTransaction = SecretProofTransaction.create(
-    //                     Deadline.create(),
-    //                     HashType.Op_Keccak_256,
-    //                     secret,
-    //                     proof,
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 validateTransactionAnnounceCorrectly(account2.address, done);
-    //                 transactionHttp.announce(secretProofTransaction.signWith(account2));
-    //             });
-    //             transactionHttp.announce(secretLockTransaction.signWith(account));
-    //         });
-
-    //         it('aggregate', (done) => {
-    //             const secretSeed = nacl_catapult.randomBytes(20);
-    //             const secret = keccak_256.create().update(secretSeed).hex();
-    //             const proof = convert.uint8ToHex(secretSeed);
-    //             const secretLockTransaction = SecretLockTransaction.create(
-    //                 Deadline.create(),
-    //                 NetworkCurrencyMosaic.createAbsolute(10),
-    //                 UInt64.fromUint(100),
-    //                 HashType.Op_Keccak_256,
-    //                 secret,
-    //                 account2.address,
-    //                 NetworkType.MIJIN_TEST,
-    //             );
-    //             validateTransactionAnnounceCorrectly(account.address, () => {
-    //                 const secretProofTransaction = SecretProofTransaction.create(
-    //                     Deadline.create(),
-    //                     HashType.Op_Keccak_256,
-    //                     secret,
-    //                     proof,
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //                     [secretProofTransaction.toAggregate(account2.publicAccount)],
-    //                     NetworkType.MIJIN_TEST,
-    //                     []);
-    //                 validateTransactionAnnounceCorrectly(account2.address, done);
-    //                 transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
-    //             });
-    //             transactionHttp.announce(secretLockTransaction.signWith(account));
-    //         });
-    //     });
-    //     describe('HashType: Op_Hash_160', () => {
-    //         it('standalone', (done) => {
-    //             const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
-    //             const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
-    //             const proof = convert.uint8ToHex(secretSeed);
-    //             const secretLockTransaction = SecretLockTransaction.create(
-    //                 Deadline.create(),
-    //                 NetworkCurrencyMosaic.createAbsolute(10),
-    //                 UInt64.fromUint(100),
-    //                 HashType.Op_Hash_160,
-    //                 secret,
-    //                 account2.address,
-    //                 NetworkType.MIJIN_TEST,
-    //             );
-    //             validateTransactionAnnounceCorrectly(account.address, () => {
-    //                 const secretProofTransaction = SecretProofTransaction.create(
-    //                     Deadline.create(),
-    //                     HashType.Op_Hash_160,
-    //                     secret,
-    //                     proof,
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 validateTransactionAnnounceCorrectly(account2.address, done);
-    //                 transactionHttp.announce(secretProofTransaction.signWith(account2));
-    //             });
-    //             transactionHttp.announce(secretLockTransaction.signWith(account));
-    //         });
-
-    //         it('aggregate', (done) => {
-    //             const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
-    //             const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
-    //             const proof = convert.uint8ToHex(secretSeed);
-    //             const secretLockTransaction = SecretLockTransaction.create(
-    //                 Deadline.create(),
-    //                 NetworkCurrencyMosaic.createAbsolute(10),
-    //                 UInt64.fromUint(100),
-    //                 HashType.Op_Hash_160,
-    //                 secret,
-    //                 account2.address,
-    //                 NetworkType.MIJIN_TEST,
-    //             );
-    //             validateTransactionAnnounceCorrectly(account.address, () => {
-    //                 const secretProofTransaction = SecretProofTransaction.create(
-    //                     Deadline.create(),
-    //                     HashType.Op_Hash_160,
-    //                     secret,
-    //                     proof,
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //                     [secretProofTransaction.toAggregate(account2.publicAccount)],
-    //                     NetworkType.MIJIN_TEST,
-    //                     []);
-    //                 validateTransactionAnnounceCorrectly(account2.address, done);
-    //                 transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
-    //             });
-    //             transactionHttp.announce(secretLockTransaction.signWith(account));
-    //         });
-    //     });
-    //     describe('HashType: Op_Hash_256', () => {
-    //         it('standalone', (done) => {
-    //             const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
-    //             const secret = CryptoJS.SHA256(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
-    //             const proof = convert.uint8ToHex(secretSeed);
-    //             const secretLockTransaction = SecretLockTransaction.create(
-    //                 Deadline.create(),
-    //                 NetworkCurrencyMosaic.createAbsolute(10),
-    //                 UInt64.fromUint(100),
-    //                 HashType.Op_Hash_256,
-    //                 secret,
-    //                 account2.address,
-    //                 NetworkType.MIJIN_TEST,
-    //             );
-    //             validateTransactionAnnounceCorrectly(account.address, () => {
-    //                 const secretProofTransaction = SecretProofTransaction.create(
-    //                     Deadline.create(),
-    //                     HashType.Op_Hash_256,
-    //                     secret,
-    //                     proof,
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 validateTransactionAnnounceCorrectly(account2.address, done);
-    //                 transactionHttp.announce(secretProofTransaction.signWith(account2));
-    //             });
-    //             transactionHttp.announce(secretLockTransaction.signWith(account));
-    //         });
-
-    //         it('aggregate', (done) => {
-    //             const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
-    //             const secret = CryptoJS.SHA256(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
-    //             const proof = convert.uint8ToHex(secretSeed);
-    //             const secretLockTransaction = SecretLockTransaction.create(
-    //                 Deadline.create(),
-    //                 NetworkCurrencyMosaic.createAbsolute(10),
-    //                 UInt64.fromUint(100),
-    //                 HashType.Op_Hash_256,
-    //                 secret,
-    //                 account2.address,
-    //                 NetworkType.MIJIN_TEST,
-    //             );
-    //             validateTransactionAnnounceCorrectly(account.address, () => {
-    //                 const secretProofTransaction = SecretProofTransaction.create(
-    //                     Deadline.create(),
-    //                     HashType.Op_Hash_256,
-    //                     secret,
-    //                     proof,
-    //                     NetworkType.MIJIN_TEST,
-    //                 );
-    //                 const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
-    //                     [secretProofTransaction.toAggregate(account2.publicAccount)],
-    //                     NetworkType.MIJIN_TEST,
-    //                     []);
-    //                 validateTransactionAnnounceCorrectly(account2.address, done);
-    //                 transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
-    //             });
-    //             transactionHttp.announce(secretLockTransaction.signWith(account));
-    //         });
-    //     });
-    // });
+        it('aggregate', (done) => {
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Sha3_256,
+                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [secretLockTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+        });
+    });
+    describe('HashType: Keccak_256', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Keccak_256,
+                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+    describe('HashType: Keccak_256', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Keccak_256,
+                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [secretLockTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+        });
+    });
+    describe('HashType: Op_Hash_160', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
+            const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Hash_160,
+                secret,
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+    describe('HashType: Op_Hash_160', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
+            const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Hash_160,
+                secret,
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [secretLockTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+        });
+    });
+    describe('HashType: Op_Hash_256', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Hash_256,
+                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+    describe('HashType: Op_Hash_256', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Hash_256,
+                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateSecretLockTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [secretLockTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+        });
+    });
+    describe('SecretProofTransaction - HashType: Op_Sha3_256', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const secretSeed = nacl_catapult.randomBytes(20);
+            const secret = sha3_256.create().update(secretSeed).hex();
+            const proof = convert.uint8ToHex(secretSeed);
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Sha3_256,
+                secret,
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                const secretProofTransaction = SecretProofTransaction.create(
+                    Deadline.create(),
+                    HashType.Op_Sha3_256,
+                    secret,
+                    proof,
+                    NetworkType.MIJIN_TEST,
+                );
+                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                    done();
+                });
+                transactionHttp.announce(secretProofTransaction.signWith(account2));
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+    describe('SecretProofTransaction - HashType: Op_Sha3_256', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const secretSeed = nacl_catapult.randomBytes(20);
+            const secret = sha3_256.create().update(secretSeed).hex();
+            const proof = convert.uint8ToHex(secretSeed);
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Sha3_256,
+                secret,
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                    done();
+                });
+                const secretProofTransaction = SecretProofTransaction.create(
+                    Deadline.create(),
+                    HashType.Op_Sha3_256,
+                    secret,
+                    proof,
+                    NetworkType.MIJIN_TEST,
+                );
+                const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    [secretProofTransaction.toAggregate(account2.publicAccount)],
+                    NetworkType.MIJIN_TEST,
+                    []);
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+    describe('SecretProofTransaction - HashType: Op_Keccak_256', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const secretSeed = nacl_catapult.randomBytes(20);
+            const secret = keccak_256.create().update(secretSeed).hex();
+            const proof = convert.uint8ToHex(secretSeed);
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Keccak_256,
+                secret,
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                    done();
+                });
+                const secretProofTransaction = SecretProofTransaction.create(
+                    Deadline.create(),
+                    HashType.Op_Keccak_256,
+                    secret,
+                    proof,
+                    NetworkType.MIJIN_TEST,
+                );
+                transactionHttp.announce(secretProofTransaction.signWith(account2));
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+    describe('SecretProofTransaction - HashType: Op_Keccak_256', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const secretSeed = nacl_catapult.randomBytes(20);
+            const secret = keccak_256.create().update(secretSeed).hex();
+            const proof = convert.uint8ToHex(secretSeed);
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Keccak_256,
+                secret,
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                    done();
+                });
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                const secretProofTransaction = SecretProofTransaction.create(
+                    Deadline.create(),
+                    HashType.Op_Keccak_256,
+                    secret,
+                    proof,
+                    NetworkType.MIJIN_TEST,
+                );
+                const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    [secretProofTransaction.toAggregate(account2.publicAccount)],
+                    NetworkType.MIJIN_TEST,
+                    []);
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+    describe('SecretProofTransaction - HashType: Op_Hash_160', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const randomBytes = secureRandom.randomBuffer(32);
+            const secretSeed = randomBytes.toString('hex');
+            const hash = sha256(Buffer.from(secretSeed, 'hex'));
+            const secret = new ripemd160().update(Buffer.from(hash, 'hex')).digest('hex');
+            const proof = secretSeed;
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Hash_160,
+                secret,
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                    done();
+                });
+                listener.status(account2.address).subscribe((error) => {
+                    console.log('Error:', error);
+                    assert(false);
+                    done();
+                });
+                const secretProofTransaction = SecretProofTransaction.create(
+                    Deadline.create(),
+                    HashType.Op_Hash_160,
+                    secret,
+                    proof,
+                    NetworkType.MIJIN_TEST,
+                );
+                transactionHttp.announce(secretProofTransaction.signWith(account2));
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+    describe('SecretProofTransaction - HashType: Op_Hash_160', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const randomBytes = secureRandom.randomBuffer(32);
+            const secretSeed = randomBytes.toString('hex');
+            const hash = sha256(Buffer.from(secretSeed, 'hex'));
+            const secret = new ripemd160().update(Buffer.from(hash, 'hex')).digest('hex');
+            const proof = secretSeed;
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Hash_160,
+                secret,
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                    done();
+                });
+                listener.status(account2.address).subscribe((error) => {
+                    console.log('Error:', error);
+                    assert(false);
+                    done();
+                });
+                const secretProofTransaction = SecretProofTransaction.create(
+                    Deadline.create(),
+                    HashType.Op_Hash_160,
+                    secret,
+                    proof,
+                    NetworkType.MIJIN_TEST,
+                );
+                const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    [secretProofTransaction.toAggregate(account2.publicAccount)],
+                    NetworkType.MIJIN_TEST,
+                    []);
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+    describe('SecretProofTransaction - HashType: Op_Hash_256', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const randomBytes = secureRandom.randomBuffer(32);
+            const secretSeed = randomBytes.toString('hex');
+            const hash = sha256(Buffer.from(secretSeed, 'hex'));
+            const secret = sha256(Buffer.from(hash, 'hex'));
+            const proof = secretSeed;
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Hash_256,
+                secret,
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                    done();
+                });
+                listener.status(account2.address).subscribe((error) => {
+                    console.log('Error:', error);
+                    assert(false);
+                    done();
+                });
+                const secretProofTransaction = SecretProofTransaction.create(
+                    Deadline.create(),
+                    HashType.Op_Hash_256,
+                    secret,
+                    proof,
+                    NetworkType.MIJIN_TEST,
+                );
+                transactionHttp.announce(secretProofTransaction.signWith(account2));
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+    describe('SecretProofTransaction - HashType: Op_Hash_256', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const randomBytes = secureRandom.randomBuffer(32);
+            const secretSeed = randomBytes.toString('hex');
+            const hash = sha256(Buffer.from(secretSeed, 'hex'));
+            const secret = sha256(Buffer.from(hash, 'hex'));
+            const proof = secretSeed;
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                NetworkCurrencyMosaic.createAbsolute(10),
+                UInt64.fromUint(100),
+                HashType.Op_Hash_256,
+                secret,
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                    done();
+                });
+                listener.status(account2.address).subscribe((error) => {
+                    console.log('Error:', error);
+                    assert(false);
+                    done();
+                });
+                const secretProofTransaction = SecretProofTransaction.create(
+                    Deadline.create(),
+                    HashType.Op_Hash_256,
+                    secret,
+                    proof,
+                    NetworkType.MIJIN_TEST,
+                );
+                const aggregateSecretProofTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                    [secretProofTransaction.toAggregate(account2.publicAccount)],
+                    NetworkType.MIJIN_TEST,
+                    []);
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
 
     describe('getTransaction', () => {
         it('should return transaction info given transactionHash', (done) => {
@@ -1019,4 +1720,99 @@ describe('TransactionHttp', () => {
                 });
         });
     });
+    // describe('announceSync', () => {
+    //     it('should return insufficient balance error', (done) => {
+    //         const aggregateTransaction = AggregateTransaction.createBonded(
+    //                         Deadline.create(),
+    //                         [],
+    //                         NetworkType.MIJIN_TEST,
+    //                         [],
+    //                     );
+    //         const signedTransaction = account.sign(aggregateTransaction);
+
+    //         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+    //             NetworkCurrencyMosaic.createAbsolute(0),
+    //             UInt64.fromUint(10000),
+    //             signedTransaction,
+    //             NetworkType.MIJIN_TEST);
+
+    //         transactionHttp
+    //             .announceSync(lockFundsTransaction.signWith(account))
+    //             .subscribe((shouldNotBeCalled) => {
+    //                 throw new Error('should not be called');
+    //             }, (err) => {
+    //                 console.log(err);
+    //                 expect(err.status).to.be.equal('Failure_LockHash_Invalid_Mosaic_Amount');
+    //                 done();
+    //             });
+    //     });
+    // });
+// describe('CosignatureTransaction', () => {
+    //     let listener: Listener;
+    //     before (() => {
+    //         listener = new Listener(config.apiUrl);
+    //         return listener.open();
+    //     });
+    //     after(() => {
+    //         return listener.close();
+    //     });
+    //     it('CosignatureTransaction', (done) => {
+    //         const transferTransaction = TransferTransaction.create(
+    //             Deadline.create(),
+    //             account2.address,
+    //             [NetworkCurrencyMosaic.createAbsolute(1)],
+    //             PlainMessage.create('test-message'),
+    //             NetworkType.MIJIN_TEST,
+    //         );
+    //         const aggregateTransaction = AggregateTransaction.createBonded(
+    //             Deadline.create(2, ChronoUnit.MINUTES),
+    //             [transferTransaction.toAggregate(multisigAccount.publicAccount)],
+    //             NetworkType.MIJIN_TEST,
+    //             []);
+    //         const signedTransaction = aggregateTransaction.signWith(
+    //             cosignAccount1,
+    //         );
+
+    //         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+    //             new Mosaic(defaultMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+    //             UInt64.fromUint(10000),
+    //             signedTransaction,
+    //             NetworkType.MIJIN_TEST);
+
+    //         setTimeout(() => {
+    //             transactionHttp.announce(lockFundsTransaction.signWith(cosignAccount1));
+    //         }, 1000);
+
+    //         listener.confirmed(cosignAccount1.address).subscribe((transaction: Transaction) => {
+    //             listener.cosignatureAdded(cosignAccount1.address).subscribe((signature) => {
+    //                 done();
+    //             });
+    //             listener.aggregateBondedAdded(cosignAccount1.address).subscribe((transaction: Transaction) => {
+    //                 accountHttp.aggregateBondedTransactions(cosignAccount1.publicAccount).subscribe((transactions) => {
+    //                     const partialTransaction = transactions[0];
+    //                     const cosignatureTransaction = CosignatureTransaction.create(partialTransaction);
+    //                     const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);
+    //                     transactionHttp.announceAggregateBondedCosignature(cosignatureSignedTransaction);
+    //                 });
+    //             });
+    //             transactionHttp.announceAggregateBonded(signedTransaction);
+    //             done();
+    //         });
+            // // validateTransactionAnnounceCorrectly(CosignatoryAccount.address, () => {
+            // //     setTimeout(() => {
+            // //         transactionHttp.announceAggregateBonded(signedTransaction);
+            // //     }, 1000);
+
+            // //     validateCosignaturePartialTransactionAnnounceCorrectly(CosignatoryAccount.address, Cosignatory2Account.publicKey, done);
+            // //     validatePartialTransactionAnnounceCorrectly(CosignatoryAccount.address, () => {
+            // //         accountHttp.aggregateBondedTransactions(CosignatoryAccount.publicAccount).subscribe((transactions) => {
+            // //             const partialTransaction = transactions[0];
+            // //             const cosignatureTransaction = CosignatureTransaction.create(partialTransaction);
+            // //             const cosignatureSignedTransaction = Cosignatory2Account.signCosignatureTransaction(cosignatureTransaction);
+            // //             transactionHttp.announceAggregateBondedCosignature(cosignatureSignedTransaction);
+            // //         });
+            // //     });
+            // // });
+    //     });
+    // });
 });

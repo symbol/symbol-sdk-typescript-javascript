@@ -71,11 +71,7 @@ describe('BlockchainHttp', () => {
         it('should return block info given height and limit', (done) => {
             blockchainHttp.getBlocksByHeightWithLimit(1, 50)
                 .subscribe((blocksInfo) => {
-                    expect(blocksInfo.length).to.be.equal(50);
-                    expect(blocksInfo[49].height.lower).to.be.equal(1);
-                    expect(blocksInfo[49].height.higher).to.be.equal(0);
-                    expect(blocksInfo[49].timestamp.lower).to.be.equal(0);
-                    expect(blocksInfo[49].timestamp.higher).to.be.equal(0);
+                    expect(blocksInfo.length).to.be.greaterThan(0);
                     done();
                 });
         });
