@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 import {deepEqual} from 'assert';
-import {expect, assert} from 'chai';
+import {assert, expect} from 'chai';
+import { Listener } from '../../src/infrastructure/infrastructure';
 import {NamespaceHttp} from '../../src/infrastructure/NamespaceHttp';
-import {PublicAccount} from '../../src/model/account/PublicAccount';
+import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
+import { Account } from '../../src/model/account/Account';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
-import { Listener } from '../../src/infrastructure/infrastructure';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { AliasActionType } from '../../src/model/namespace/AliasActionType';
-import { Account } from '../../src/model/account/Account';
 import { RegisterNamespaceTransaction } from '../../src/model/transaction/RegisterNamespaceTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 
@@ -34,7 +33,6 @@ describe('NamespaceHttp', () => {
     let namespaceId: NamespaceId;
     let namespaceHttp: NamespaceHttp;
     let account: Account;
-    let namespaceLinkedAddress: string;
     let config;
     let transactionHttp: TransactionHttp;
     before((done) => {
@@ -46,8 +44,6 @@ describe('NamespaceHttp', () => {
             const json = JSON.parse(data);
             config = json;
             account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
-            namespaceId = new NamespaceId(json.namespace.id);
-            namespaceLinkedAddress = json.namespace.linkedAddress;
             namespaceHttp = new NamespaceHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
             done();
@@ -99,7 +95,7 @@ describe('NamespaceHttp', () => {
                 AliasActionType.Link,
                 namespaceId,
                 account.address,
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const signedTransaction = addressAliasTransaction.signWith(account);
 
@@ -171,7 +167,7 @@ describe('NamespaceHttp', () => {
         it('should return address given namespaceId', (done) => {
             namespaceHttp.getLinkedAddress(namespaceId)
                 .subscribe((address) => {
-                    expect(address.plain()).to.be.equal(namespaceLinkedAddress);
+                    expect(address.plain()).to.be.equal(account.address.plain());
                     done();
                 });
         });

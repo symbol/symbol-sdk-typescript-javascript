@@ -24,6 +24,8 @@ import {Listener} from '../../src/infrastructure/Listener';
 import {TransactionHttp} from '../../src/infrastructure/TransactionHttp';
 import {Account} from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
+import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';
+import { PropertyType } from '../../src/model/account/PropertyType';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
@@ -32,14 +34,21 @@ import {MosaicNonce} from '../../src/model/mosaic/MosaicNonce';
 import {MosaicProperties} from '../../src/model/mosaic/MosaicProperties';
 import {MosaicSupplyType} from '../../src/model/mosaic/MosaicSupplyType';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
+import { AccountPropertyModification } from '../../src/model/transaction/AccountPropertyModification';
+import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
+import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import {AggregateTransaction} from '../../src/model/transaction/AggregateTransaction';
 import {CosignatureSignedTransaction} from '../../src/model/transaction/CosignatureSignedTransaction';
 import {CosignatureTransaction} from '../../src/model/transaction/CosignatureTransaction';
 import {Deadline} from '../../src/model/transaction/Deadline';
 import {HashType} from '../../src/model/transaction/HashType';
+import { LinkAction } from '../../src/model/transaction/LinkAction';
 import {LockFundsTransaction} from '../../src/model/transaction/LockFundsTransaction';
 import {ModifyMultisigAccountTransaction} from '../../src/model/transaction/ModifyMultisigAccountTransaction';
+import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../src/model/transaction/MosaicDefinitionTransaction';
 import {MosaicSupplyChangeTransaction} from '../../src/model/transaction/MosaicSupplyChangeTransaction';
 import {MultisigCosignatoryModification} from '../../src/model/transaction/MultisigCosignatoryModification';
@@ -53,15 +62,6 @@ import {Transaction} from '../../src/model/transaction/Transaction';
 import {TransactionType} from '../../src/model/transaction/TransactionType';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../src/model/UInt64';
-import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
-import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';
-import { AccountPropertyModification } from '../../src/model/transaction/AccountPropertyModification';
-import { PropertyType } from '../../src/model/account/PropertyType';
-import { LinkAction } from '../../src/model/transaction/LinkAction';
-import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
-import { AliasActionType } from '../../src/model/namespace/AliasActionType';
-import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
-import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 
 describe('TransactionHttp', () => {
     let transactionHash;
@@ -71,7 +71,7 @@ describe('TransactionHttp', () => {
     let account2: Account;
     let account3: Account;
     let testAccountNoBalance: Account;
-    let testRemoteAccount: Account;
+    let harvestingAccount: Account;
     let transactionHttp: TransactionHttp;
     let multisigAccount: Account;
     let cosignAccount1: Account;
@@ -79,7 +79,7 @@ describe('TransactionHttp', () => {
     let cosignAccount3: Account;
     let mosaicId: MosaicId;
     let namespaceId: NamespaceId;
-    let defaultMosaicId: MosaicId;
+    let networkCurrencyMosaicId: MosaicId;
     let accountHttp: AccountHttp;
     let namespaceHttp: NamespaceHttp;
     let config;
@@ -99,15 +99,11 @@ describe('TransactionHttp', () => {
             account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, NetworkType.MIJIN_TEST);
             account3 = Account.createFromPrivateKey(json.testAccount3.privateKey, NetworkType.MIJIN_TEST);
             testAccountNoBalance = Account.createFromPrivateKey(json.testAccountNoBalance.privateKey, NetworkType.MIJIN_TEST);
-            testRemoteAccount = Account.createFromPrivateKey(json.testRemoteAccount.privateKey, NetworkType.MIJIN_TEST);
+            harvestingAccount = Account.createFromPrivateKey(json.harvestingAccount.privateKey, NetworkType.MIJIN_TEST);
             multisigAccount = Account.createFromPrivateKey(json.multisigAccount.privateKey, NetworkType.MIJIN_TEST);
             cosignAccount1 = Account.createFromPrivateKey(json.cosignatoryAccount.privateKey, NetworkType.MIJIN_TEST);
             cosignAccount2 = Account.createFromPrivateKey(json.cosignatory2Account.privateKey, NetworkType.MIJIN_TEST);
             cosignAccount3 = Account.createFromPrivateKey(json.cosignatory3Account.privateKey, NetworkType.MIJIN_TEST);
-            transactionHash = json.testTransaction.transactionHash;
-            transactionId = json.testTransaction.transactionId;
-            defaultMosaicId = json.defaultMosaicId;
-            namespaceId = new NamespaceId(json.namespace.id);
             accountHttp = new AccountHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
             namespaceHttp = new NamespaceHttp(json.apiUrl);
@@ -116,8 +112,8 @@ describe('TransactionHttp', () => {
     });
     describe('Get network currency mosaic id', () => {
         it('get mosaicId', (done) => {
-            namespaceHttp.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkCurrencyMosaicId) => {
-                defaultMosaicId = networkCurrencyMosaicId;
+            namespaceHttp.getLinkedMosaicId(new NamespaceId('cat.currency')).subscribe((networkMosaicId) => {
+                networkCurrencyMosaicId = networkMosaicId;
                 done();
             });
         });
@@ -281,7 +277,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 PropertyType.BlockAddress,
                 [addressPropertyFilter],
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const signedTransaction = addressModification.signWith(account);
 
@@ -314,7 +310,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 PropertyType.BlockAddress,
                 [addressPropertyFilter],
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [addressModification.toAggregate(account.publicAccount)],
@@ -352,7 +348,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 PropertyType.BlockMosaic,
                 [mosaicPropertyFilter],
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const signedTransaction = addressModification.signWith(account);
 
@@ -385,7 +381,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 PropertyType.BlockMosaic,
                 [mosaicPropertyFilter],
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [addressModification.toAggregate(account.publicAccount)],
@@ -423,7 +419,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 PropertyType.BlockTransaction,
                 [entityTypePropertyFilter],
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const signedTransaction = addressModification.signWith(account3);
 
@@ -456,7 +452,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 PropertyType.BlockTransaction,
                 [entityTypePropertyFilter],
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [addressModification.toAggregate(account3.publicAccount)],
@@ -488,9 +484,9 @@ describe('TransactionHttp', () => {
         it('standalone', (done) => {
             const accountLinkTransaction = AccountLinkTransaction.create(
                 Deadline.create(),
-                testRemoteAccount.publicKey,
+                harvestingAccount.publicKey,
                 LinkAction.Unlink,
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const signedTransaction = accountLinkTransaction.signWith(account);
 
@@ -517,12 +513,12 @@ describe('TransactionHttp', () => {
         it('aggregate', (done) => {
             const accountLinkTransaction = AccountLinkTransaction.create(
                 Deadline.create(),
-                testRemoteAccount.publicKey,
+                harvestingAccount.publicKey,
                 LinkAction.Unlink,
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                [accountLinkTransaction.toAggregate(testRemoteAccount.publicAccount)],
+                [accountLinkTransaction.toAggregate(harvestingAccount.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 [],
             );
@@ -616,7 +612,7 @@ describe('TransactionHttp', () => {
                 AliasActionType.Link,
                 namespaceId,
                 account.address,
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const signedTransaction = addressAliasTransaction.signWith(account);
 
@@ -646,7 +642,7 @@ describe('TransactionHttp', () => {
                 AliasActionType.Unlink,
                 namespaceId,
                 account.address,
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [addressAliasTransaction.toAggregate(account.publicAccount)],
@@ -681,7 +677,7 @@ describe('TransactionHttp', () => {
                 AliasActionType.Link,
                 namespaceId,
                 mosaicId,
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account);
 
@@ -711,7 +707,7 @@ describe('TransactionHttp', () => {
                 AliasActionType.Unlink,
                 namespaceId,
                 mosaicId,
-                NetworkType.MIJIN_TEST
+                NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
                 [mosaicAliasTransaction.toAggregate(account.publicAccount)],
@@ -812,7 +808,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = account.sign(aggregateTransaction);
             const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-                new Mosaic(defaultMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
                 UInt64.fromUint(10000),
                 signedTransaction,
                 NetworkType.MIJIN_TEST);
@@ -846,7 +842,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = account.sign(aggregateTransaction);
             const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-                new Mosaic(defaultMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
                 UInt64.fromUint(10),
                 signedTransaction,
                 NetworkType.MIJIN_TEST);
@@ -903,39 +899,6 @@ describe('TransactionHttp', () => {
                 done();
             });
             transactionHttp.announce(signedTx);
-        });
-    });
-
-    describe('ModifyMultisigAccountTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('ModifyMultisigAccountTransaction', (done) => {
-            const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
-                Deadline.create(),
-                1,
-                1,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount1.publicAccount),
-                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount2.publicAccount),
-                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount3.publicAccount),
-                ],
-                NetworkType.MIJIN_TEST,
-            );
-            const signedTransaction = multisigAccount.sign(modifyMultisigAccountTransaction);
-            listener.confirmed(multisigAccount.address).subscribe((transaction: Transaction) => {
-                done();
-            });
-            listener.status(multisigAccount.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
         });
     });
 
@@ -1589,6 +1552,17 @@ describe('TransactionHttp', () => {
         });
     });
 
+    describe('transactions', () => {
+        it('should call transactions successfully', (done) => {
+            accountHttp.transactions(account.publicAccount).subscribe((transactions) => {
+                const transaction = transactions[0];
+                transactionId = transaction.transactionInfo!.id;
+                transactionHash = transaction.transactionInfo!.hash;
+                done();
+            });
+        });
+    });
+
     describe('getTransaction', () => {
         it('should return transaction info given transactionHash', (done) => {
             transactionHttp.getTransaction(transactionHash)
@@ -1747,7 +1721,9 @@ describe('TransactionHttp', () => {
     //             });
     //     });
     // });
-// describe('CosignatureTransaction', () => {
+
+    // Already created / tested in account http
+    // describe('ModifyMultisigAccountTransaction', () => {
     //     let listener: Listener;
     //     before (() => {
     //         listener = new Listener(config.apiUrl);
@@ -1756,63 +1732,27 @@ describe('TransactionHttp', () => {
     //     after(() => {
     //         return listener.close();
     //     });
-    //     it('CosignatureTransaction', (done) => {
-    //         const transferTransaction = TransferTransaction.create(
+    //     it('Add cosigners', (done) => {
+    //         const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
     //             Deadline.create(),
-    //             account2.address,
-    //             [NetworkCurrencyMosaic.createAbsolute(1)],
-    //             PlainMessage.create('test-message'),
+    //             2,
+    //             1,
+    //             [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount1.publicAccount),
+    //                 new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount2.publicAccount),
+    //                 new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount3.publicAccount),
+    //             ],
     //             NetworkType.MIJIN_TEST,
     //         );
-    //         const aggregateTransaction = AggregateTransaction.createBonded(
-    //             Deadline.create(2, ChronoUnit.MINUTES),
-    //             [transferTransaction.toAggregate(multisigAccount.publicAccount)],
-    //             NetworkType.MIJIN_TEST,
-    //             []);
-    //         const signedTransaction = aggregateTransaction.signWith(
-    //             cosignAccount1,
-    //         );
-
-    //         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-    //             new Mosaic(defaultMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
-    //             UInt64.fromUint(10000),
-    //             signedTransaction,
-    //             NetworkType.MIJIN_TEST);
-
-    //         setTimeout(() => {
-    //             transactionHttp.announce(lockFundsTransaction.signWith(cosignAccount1));
-    //         }, 1000);
-
-    //         listener.confirmed(cosignAccount1.address).subscribe((transaction: Transaction) => {
-    //             listener.cosignatureAdded(cosignAccount1.address).subscribe((signature) => {
-    //                 done();
-    //             });
-    //             listener.aggregateBondedAdded(cosignAccount1.address).subscribe((transaction: Transaction) => {
-    //                 accountHttp.aggregateBondedTransactions(cosignAccount1.publicAccount).subscribe((transactions) => {
-    //                     const partialTransaction = transactions[0];
-    //                     const cosignatureTransaction = CosignatureTransaction.create(partialTransaction);
-    //                     const cosignatureSignedTransaction = cosignAccount2.signCosignatureTransaction(cosignatureTransaction);
-    //                     transactionHttp.announceAggregateBondedCosignature(cosignatureSignedTransaction);
-    //                 });
-    //             });
-    //             transactionHttp.announceAggregateBonded(signedTransaction);
+    //         const signedTransaction = multisigAccount.sign(modifyMultisigAccountTransaction);
+    //         listener.confirmed(multisigAccount.address).subscribe((transaction: Transaction) => {
     //             done();
     //         });
-            // // validateTransactionAnnounceCorrectly(CosignatoryAccount.address, () => {
-            // //     setTimeout(() => {
-            // //         transactionHttp.announceAggregateBonded(signedTransaction);
-            // //     }, 1000);
-
-            // //     validateCosignaturePartialTransactionAnnounceCorrectly(CosignatoryAccount.address, Cosignatory2Account.publicKey, done);
-            // //     validatePartialTransactionAnnounceCorrectly(CosignatoryAccount.address, () => {
-            // //         accountHttp.aggregateBondedTransactions(CosignatoryAccount.publicAccount).subscribe((transactions) => {
-            // //             const partialTransaction = transactions[0];
-            // //             const cosignatureTransaction = CosignatureTransaction.create(partialTransaction);
-            // //             const cosignatureSignedTransaction = Cosignatory2Account.signCosignatureTransaction(cosignatureTransaction);
-            // //             transactionHttp.announceAggregateBondedCosignature(cosignatureSignedTransaction);
-            // //         });
-            // //     });
-            // // });
+    //         listener.status(multisigAccount.address).subscribe((error) => {
+    //             console.log('Error:', error);
+    //             assert(false);
+    //             done();
+    //         });
+    //         transactionHttp.announce(signedTransaction);
     //     });
     // });
 });

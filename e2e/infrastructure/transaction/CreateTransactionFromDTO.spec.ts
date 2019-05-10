@@ -16,9 +16,9 @@
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
-import ValidateTransaction from './ValidateTransaction';
-import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { Address } from '../../../src/model/account/Address';
+import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
+import ValidateTransaction from './ValidateTransaction';
 
 describe('CreateTransactionFromDTO', () => {
     describe('TransferTransaction', () => {
@@ -28,7 +28,7 @@ describe('CreateTransactionFromDTO', () => {
                 meta: {
                     height: [
                         78,
-                        0
+                        0,
                     ],
                     hash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
                     merkleComponentHash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
@@ -67,7 +67,7 @@ describe('CreateTransactionFromDTO', () => {
                 meta: {
                     height: [
                         78,
-                        0
+                        0,
                     ],
                     hash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
                     merkleComponentHash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',

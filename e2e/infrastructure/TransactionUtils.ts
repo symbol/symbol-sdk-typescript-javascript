@@ -19,23 +19,47 @@ import {Account} from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../src/model/transaction/AggregateTransaction';
 import {CosignatureTransaction} from '../../src/model/transaction/CosignatureTransaction';
 import {Deadline} from '../../src/model/transaction/Deadline';
+import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
 import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
 import {PlainMessage} from '../../src/model/transaction/PlainMessage';
+import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../src/model/UInt64';
-import {CosignatoryAccount, MultisigAccount, NIS2_URL, TestingAccount} from '../../test/conf/conf.spec';
 
 export class TransactionUtils {
 
-    public static createAndAnnounce(recipient: Address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-                                    transactionHttp: TransactionHttp = new TransactionHttp(NIS2_URL)) {
-        const account = TestingAccount;
+    public static createAndAnnounce(signer: Account,
+                                    recipient: Address,
+                                    transactionHttp: TransactionHttp,
+                                    mosaic: Mosaic[] = []) {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            recipient,
+            mosaic,
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+        const signedTransaction = signer.sign(transferTransaction);
+        transactionHttp.announce(signedTransaction);
+    }
+
+    public static announceAggregateBoundedTransaction(signedTransaction: SignedTransaction,
+                                                      transactionHttp: TransactionHttp) {
+        transactionHttp.announceAggregateBonded(signedTransaction);
+    }
+
+    public static createSignedAggregatedBondTransaction(aggregatedTo: Account,
+                                                        signer: Account,
+                                                        recipient: Address) {
+
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
             recipient,
@@ -43,53 +67,41 @@ export class TransactionUtils {
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
-        const signedTransaction = account.sign(transferTransaction);
-        transactionHttp.announce(signedTransaction);
-    }
-
-    public static createAndAnnounceWithInsufficientBalance(transactionHttp: TransactionHttp = new TransactionHttp(NIS2_URL)) {
-        const account = TestingAccount;
-        const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-            [NetworkCurrencyMosaic.createRelative(100000000000)],
-            PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
-        );
-        const signedTransaction = account.sign(transferTransaction);
-        transactionHttp.announce(signedTransaction);
-    }
-
-    public static createAggregateBoundedTransactionAndAnnounce(transactionHttp: TransactionHttp = new TransactionHttp(NIS2_URL)) {
-        const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
-            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
-            [NetworkCurrencyMosaic.createRelative(100000000000)],
-            PlainMessage.create('test-message'),
-            NetworkType.MIJIN_TEST,
-        );
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(2, ChronoUnit.MINUTES),
-            [transferTransaction.toAggregate(MultisigAccount.publicAccount)],
+            [transferTransaction.toAggregate(aggregatedTo.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
         );
+        return signer.sign(aggregateTransaction);
+    }
 
-        const signedTransaction = CosignatoryAccount.sign(aggregateTransaction);
-        transactionHttp.announceAggregateBonded(signedTransaction);
+    public static createHashLockTransactionAndAnnounce(signedAggregatedTransaction: SignedTransaction,
+                                                       signer: Account,
+                                                       mosaicId: MosaicId,
+                                                       transactionHttp: TransactionHttp) {
+        const lockFundsTransaction = LockFundsTransaction.create(
+            Deadline.create(),
+            new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+            UInt64.fromUint(1000),
+            signedAggregatedTransaction,
+            NetworkType.MIJIN_TEST,
+        );
+        const signedLockFundsTransaction = signer.sign(lockFundsTransaction);
+        transactionHttp.announce(signedLockFundsTransaction);
     }
 
     public static cosignTransaction(transaction: AggregateTransaction,
                                     account: Account,
-                                    transactionHttp: TransactionHttp = new TransactionHttp(NIS2_URL)) {
+                                    transactionHttp: TransactionHttp) {
         const cosignatureTransaction = CosignatureTransaction.create(transaction);
         const cosignatureSignedTransaction = account.signCosignatureTransaction(cosignatureTransaction);
         transactionHttp.announceAggregateBondedCosignature(cosignatureSignedTransaction);
     }
 
     public static createModifyMultisigAccountTransaction( account: Account,
-                                                          transactionHttp: TransactionHttp = new TransactionHttp(NIS2_URL)) {
+                                                          transactionHttp: TransactionHttp) {
         const modifyMultisig = ModifyMultisigAccountTransaction.create(
             Deadline.create(),
             2,

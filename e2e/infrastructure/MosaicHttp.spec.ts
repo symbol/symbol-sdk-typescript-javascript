@@ -27,7 +27,6 @@ import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicD
 
 describe('MosaicHttp', () => {
     let mosaicId: MosaicId;
-    let namespaceId: NamespaceId;
     let mosaicHttp: MosaicHttp;
     let account: Account;
     let config;
