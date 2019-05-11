@@ -46,7 +46,6 @@ describe('AccountHttp', () => {
     let accountAddress: Address;
     let accountPublicKey: string;
     let publicAccount: PublicAccount;
-    let multisigPublicAccount: PublicAccount;
     let accountHttp: AccountHttp;
     let transactionHttp: TransactionHttp;
     let config;
@@ -69,7 +68,6 @@ describe('AccountHttp', () => {
             accountAddress = Address.createFromRawAddress(json.testAccount.address);
             accountPublicKey = json.testAccount.publicKey;
             publicAccount = PublicAccount.createFromPublicKey(json.testAccount.publicKey, NetworkType.MIJIN_TEST);
-            multisigPublicAccount = PublicAccount.createFromPublicKey(json.multisigAccount.publicKey, NetworkType.MIJIN_TEST);
 
             accountHttp = new AccountHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
@@ -181,7 +179,7 @@ describe('AccountHttp', () => {
                     deepEqual(accountProperties[0]!.accountProperties.address, accountAddress);
                     done();
                 });
-            });
+            }, 1000);
         });
     });
     describe('AccountPropertyTransaction - Address', () => {
@@ -252,22 +250,22 @@ describe('AccountHttp', () => {
     describe('getMultisigAccountGraphInfo', () => {
         it('should call getMultisigAccountGraphInfo successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getMultisigAccountGraphInfo(multisigPublicAccount.address).subscribe((multisigAccountGraphInfo) => {
+                accountHttp.getMultisigAccountGraphInfo(multisigAccount.address).subscribe((multisigAccountGraphInfo) => {
                     expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].
-                        account.publicKey).to.be.equal(multisigPublicAccount.publicKey);
+                        account.publicKey).to.be.equal(multisigAccount.publicKey);
                     done();
                 });
-            });
+            }, 1000);
         });
     });
     describe('getMultisigAccountInfo', () => {
         it('should call getMultisigAccountInfo successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getMultisigAccountInfo(multisigPublicAccount.address).subscribe((multisigAccountInfo) => {
-                    expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigPublicAccount.publicKey);
+                accountHttp.getMultisigAccountInfo(multisigAccount.address).subscribe((multisigAccountInfo) => {
+                    expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigAccount.publicKey);
                     done();
                 });
-            });
+            }, 1000);
         });
     });
     describe('incomingTransactions', () => {
@@ -280,9 +278,6 @@ describe('AccountHttp', () => {
     });
 
     describe('outgoingTransactions', () => {
-        let nextId: string;
-        let lastId: string;
-
         it('should call outgoingTransactions successfully', (done) => {
             accountHttp.outgoingTransactions(publicAccount).subscribe((transactions) => {
                 expect(transactions.length).to.be.greaterThan(0);
