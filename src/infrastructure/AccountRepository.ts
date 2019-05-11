@@ -51,14 +51,14 @@ export interface AccountRepository {
      * @param publicAccount public account
      * @returns Observable<AccountProperty>
      */
-    getAccountProperty(address: Address): Observable<AccountPropertiesInfo>;
+    getAccountProperties(address: Address): Observable<AccountPropertiesInfo>;
 
     /**
      * Gets Account properties.
      * @param address list of addresses
      * @returns Observable<AccountProperty[]>
      */
-    getAccountProperties(addresses: Address[]): Observable<AccountPropertiesInfo[]>;
+    getAccountPropertiesFromAccounts(addresses: Address[]): Observable<AccountPropertiesInfo[]>;
 
     /**
      * Gets a MultisigAccountInfo for an account.

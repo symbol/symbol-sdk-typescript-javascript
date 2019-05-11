@@ -86,8 +86,8 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param publicAccount public account
      * @returns Observable<AccountProperty>
      */
-    public getAccountProperty(address: Address): Observable<AccountPropertiesInfo> {
-        return observableFrom(this.accountRoutesApi.getAccountProperty(address.plain())).pipe(map((accountProperties) => {
+    public getAccountProperties(address: Address): Observable<AccountPropertiesInfo> {
+        return observableFrom(this.accountRoutesApi.getAccountProperties(address.plain())).pipe(map((accountProperties) => {
             return DtoMapping.extractAccountPropertyFromDto(accountProperties);
         }));
     }
@@ -97,10 +97,10 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param address list of addresses
      * @returns Observable<AccountProperty[]>
      */
-    public getAccountProperties(addresses: Address[]): Observable<AccountPropertiesInfo[]> {
+    public getAccountPropertiesFromAccounts(addresses: Address[]): Observable<AccountPropertiesInfo[]> {
         const accountIds = addresses.map((address) => address.plain());
         return observableFrom(
-            this.accountRoutesApi.getAccountProperties(accountIds)).pipe(map((accountProperties) => {
+            this.accountRoutesApi.getAccountPropertiesFromAccounts(accountIds)).pipe(map((accountProperties) => {
             return accountProperties.map((property) => {
                 return DtoMapping.extractAccountPropertyFromDto(property);
             });

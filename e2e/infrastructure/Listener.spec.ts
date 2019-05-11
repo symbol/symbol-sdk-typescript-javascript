@@ -284,36 +284,6 @@ describe('Listener', () => {
             TransactionUtils.createAndAnnounce(account, account2.address, transactionHttp, mosaics);
         });
     });
-    // describe('ModifyMultisigAccountTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
-    //     it('Multisig Account Added', (done) => {
-    //         const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
-    //             Deadline.create(),
-    //             1,
-    //             1,
-    //             [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount1.publicAccount),
-    //             ],
-    //             NetworkType.MIJIN_TEST,
-    //         );
-    //         const signedTransaction = multisigAccount.sign(modifyMultisigAccountTransaction);
-    //         listener.multisigAccountAdded(cosignAccount1.address).subscribe((res) => {
-    //             done();
-    //         });
-    //         listener.status(multisigAccount.address).subscribe((error) => {
-    //             console.log('Error:', error);
-    //             assert(false);
-    //             done();
-    //         });
-    //         transactionHttp.announce(signedTransaction);
-    //     });
-    // });
 
     describe('New Block', () => {
         let listener: Listener;

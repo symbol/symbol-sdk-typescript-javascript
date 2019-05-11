@@ -166,7 +166,7 @@ describe('AccountHttp', () => {
     describe('getAccountProperty', () => {
         it('should call getAccountProperty successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getAccountProperty(accountAddress).subscribe((accountProperty) => {
+                accountHttp.getAccountProperties(accountAddress).subscribe((accountProperty) => {
                     deepEqual(accountProperty.accountProperties.address, accountAddress);
                     done();
                 });
@@ -177,7 +177,7 @@ describe('AccountHttp', () => {
     describe('getAccountProperties', () => {
         it('should call getAccountProperties successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getAccountProperties([accountAddress]).subscribe((accountProperties) => {
+                accountHttp.getAccountPropertiesFromAccounts([accountAddress]).subscribe((accountProperties) => {
                     deepEqual(accountProperties[0]!.accountProperties.address, accountAddress);
                     done();
                 });
