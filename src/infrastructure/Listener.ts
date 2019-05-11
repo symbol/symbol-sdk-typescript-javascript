@@ -298,24 +298,6 @@ export class Listener {
     }
 
     /**
-     * Return an observable of {@link ModifyMultisigAccountTransaction} for specific address which has been added to multi signatories.
-     * Each time an modify multi signatures transaction is announced,
-     * it emits a new {@link ModifyMultisigAccountTransaction} in the event stream.
-     *
-     * @param address address we listen when a transaction with missing signatures state
-     * @return an observable stream of ModifyMultisigAccountTransaction with missing signatures state
-     */
-    public multisigAccountAdded(address: Address): Observable<ModifyMultisigAccountTransaction> {
-        this.subscribeTo(`modifyMultisigAccount/${address.plain()}`);
-        return this.messageSubject.asObservable().pipe(
-            filter((_) => _.channelName === ListenerChannelName.modifyMultisigAccount),
-            filter((_) => _.message instanceof ModifyMultisigAccountTransaction),
-            map((_) => _.message as ModifyMultisigAccountTransaction),
-            filter((_) => this.accountAddedToMultiSig(_, address)),
-        );
-    }
-
-    /**
      * Returns an observable stream of {@link TransactionStatusError} for specific address.
      * Each time a transaction contains an error,
      * it emits a new message with the transaction status error in the event stream.
