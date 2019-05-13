@@ -16,21 +16,22 @@
 
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
-import { AccountProperty, PropertyModificationType, PropertyType } from '../../../src/model/model';
-
+import { AccountProperty } from '../../../src/model/account/AccountProperty';
+import { Address } from '../../../src/model/account/Address';
+import { PropertyType } from '../../../src/model/account/PropertyType';
 describe('AccountProperty', () => {
 
     it('should createComplete an AccountProperty object', () => {
         const accountPropertyDTO = {
             propertyType: PropertyType.AllowAddress,
-            values: [{modificationType: PropertyModificationType.Add,
-                value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
-               }],
+            values: ['906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB'],
         };
 
         const accountProperty = new AccountProperty(
             accountPropertyDTO.propertyType,
-            accountPropertyDTO.values,
+            accountPropertyDTO.values.map((value) => {
+                return Address.createFromEncoded(value);
+            }),
         );
 
         expect(accountProperty.propertyType).to.be.equal(accountPropertyDTO.propertyType);
