@@ -7,7 +7,7 @@
     "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
     "test:e2e": "mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
     "test:all": "mocha --ui bdd --recursive ./dist/ --timeout 90000",
-    "build": "rm -rf dist/  && tsc",
+    "build": "rm -rf dist/ && babel src/**/*.js -d ./dist/ --source-maps --copy-files && tsc",
     "test:cov": "nyc --reporter=lcov --reporter=text-lcov npm t && nyc report --reporter=text-lcov",
     "test:coveralls": "npm run test:cov | coveralls"
   },
@@ -47,7 +47,11 @@
     "ts-node": "^5.0.1",
     "tslint": "^5.8.0",
     "typescript": "^2.5.3",
-    "typescript-require": "^0.2.9-1"
+    "typescript-require": "^0.2.9-1",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "6.24.1"
   },
   "dependencies": {
     "@types/crypto-js": "^3.1.43",
