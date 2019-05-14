@@ -15,7 +15,6 @@
  */
 
 import {PublicAccount} from '../account/PublicAccount';
-
 /**
  * Model representing cosignature of an aggregate transaction.
  */
