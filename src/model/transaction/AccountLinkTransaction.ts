@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { AccountLinkTransaction as AccountLinkTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
+import {AccountLinkTransaction as AccountLinkTransactionLibrary } from './builders/AccountLinkTransaction';
+import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { LinkAction } from './LinkAction';
 import { Transaction } from './Transaction';

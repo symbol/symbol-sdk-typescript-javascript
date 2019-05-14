@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import {crypto} from 'nem2-library';
 import {PublicAccount} from '../account/PublicAccount';
 import {Message} from './Message';
 import {MessageType} from './MessageType';
 import {PlainMessage} from './PlainMessage';
+import { crypto } from '../../core/crypto/crypto';
 
 /**
  * Encrypted Message model

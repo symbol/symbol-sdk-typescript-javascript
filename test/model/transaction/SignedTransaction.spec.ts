@@ -15,9 +15,9 @@
  */
 import {expect} from 'chai';
 
+import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {SignedTransaction} from '../../../src/model/transaction/SignedTransaction';
 import {TransactionType} from '../../../src/model/transaction/TransactionType';
-import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 
 describe('SignedTransaction', () => {
     const hash = '8498B38D89C1DC8A448EA5824938FF828926CD9F7747B1844B59B4B6807E878B';

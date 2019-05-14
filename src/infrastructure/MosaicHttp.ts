@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {MosaicRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
@@ -23,6 +22,7 @@ import {MosaicInfo} from '../model/mosaic/MosaicInfo';
 import {MosaicProperties} from '../model/mosaic/MosaicProperties';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {UInt64} from '../model/UInt64';
+import { MosaicRoutesApi } from './api/MosaicRoutesApi';
 import {Http} from './Http';
 import {MosaicRepository} from './MosaicRepository';
 import {NetworkHttp} from './NetworkHttp';

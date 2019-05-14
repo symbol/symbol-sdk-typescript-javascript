@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { AccountPropertiesEntityTypeTransaction as AccountPropertiesEntityTypeTransactionLibrary,
-    VerifiableTransaction } from 'nem2-library';
 import { PropertyType } from '../account/PropertyType';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountPropertyModification } from './AccountPropertyModification';
+import {AccountPropertiesEntityTypeTransaction
+        as AccountPropertiesEntityTypeTransactionLibrary  } from './builders/AccountPropertiesEntityTypeTransaction';
+import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
@@ -72,7 +73,8 @@ export class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE,
+            networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**

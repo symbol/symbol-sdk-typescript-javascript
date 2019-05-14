@@ -20,9 +20,8 @@ import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicInfo} from '../../../src/model/mosaic/MosaicInfo';
 import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
-import {MosaicView} from '../../../src/service/MosaicView';
-import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 import {UInt64} from '../../../src/model/UInt64';
+import {MosaicView} from '../../../src/service/MosaicView';
 
 describe('MosaicView', () => {
 

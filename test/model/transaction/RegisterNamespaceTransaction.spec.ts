@@ -17,11 +17,11 @@
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {RegisterNamespaceTransaction} from '../../../src/model/transaction/RegisterNamespaceTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 
 describe('RegisterNamespaceTransaction', () => {
     let account: Account;
@@ -107,7 +107,7 @@ describe('RegisterNamespaceTransaction', () => {
             signedTransaction.payload.length,
         )).to.be.equal('014BFA5F372D55B384CFCBE72D994BE69B13726F6F742D746573742D6E616D657370616365');
     });
-  
+
     describe('size', () => {
         it('should return 176 for RegisterNamespaceTransaction with name of 19 bytes', () => {
             const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(

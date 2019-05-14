@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {crypto} from 'nem2-library';
 import {Password} from './Password';
+import { crypto } from '../../core/crypto/crypto';
 
 /**
  * EncryptedPrivateKey model

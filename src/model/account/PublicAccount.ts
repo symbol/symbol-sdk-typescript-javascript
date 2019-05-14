@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { convert, KeyPair } from 'nem2-library';
+import { KeyPair } from '../../core/crypto/KeyPair';
+import { convert } from '../../core/format/convert';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Address } from './Address';
 

@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { convert, SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import {convert} from '../../core/format/convert';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
+import {SecretProofTransaction
+        as SecretProofTransactionLibrary,
+} from './builders/SecretProofTransaction';
+import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
 import { Transaction } from './Transaction';

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {BlockchainRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
@@ -23,6 +22,7 @@ import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
+import { BlockchainRoutesApi } from './api/BlockchainRoutesApi';
 import {BlockchainRepository} from './BlockchainRepository';
 import {Http} from './Http';
 import {QueryParams} from './QueryParams';

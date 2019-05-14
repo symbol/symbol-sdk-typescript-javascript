@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import {
-    MosaicCreationTransaction as MosaicDefinitionTransactionLibrary,
-    mosaicId as mosaicIdLibrary,
-    VerifiableTransaction,
-} from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicNonce } from '../mosaic/MosaicNonce';
 import { MosaicProperties } from '../mosaic/MosaicProperties';
 import { UInt64 } from '../UInt64';
+import {MosaicCreationTransaction
+        as MosaicDefinitionTransactionLibrary,
+} from './builders/MosaicCreationTransaction';
+import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';

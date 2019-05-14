@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-import { convert, NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary, subnamespaceNamespaceId, subnamespaceParentId, namespaceId, VerifiableTransaction } from 'nem2-library';
+import {convert} from '../../core/format/convert';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NamespaceType } from '../namespace/NamespaceType';
 import { UInt64 } from '../UInt64';
+import {NamespaceCreationTransaction
+        as RegisterNamespaceTransactionLibrary,
+} from './builders/NamespaceCreationTransaction';
+import {namespaceId, subnamespaceNamespaceId, subnamespaceParentId} from './builders/NamespaceMosaicId';
+import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
@@ -121,6 +126,7 @@ export class RegisterNamespaceTransaction extends Transaction {
                  * The id of the namespace derived from namespaceName.
                  * When creating a sub namespace the namespaceId is derived from namespaceName and parentName.
                  */
+                // tslint:disable-next-line:no-shadowed-variable
                 public readonly namespaceId: NamespaceId,
                 /**
                  * The number of blocks a namespace is active

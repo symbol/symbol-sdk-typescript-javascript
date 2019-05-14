@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {convert, namespaceId as NamespaceIdGenerator} from 'nem2-library';
+
+import {convert} from '../../core/format/convert';
 import {Id} from '../Id';
+import { namespaceId as NamespaceIdGenerator } from '../transaction/builders/NamespaceMosaicId';
 
 /**
  * The namespace id structure describes namespace id

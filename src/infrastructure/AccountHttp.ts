@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {AccountRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {AccountInfo} from '../model/account/AccountInfo';
@@ -29,6 +28,7 @@ import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
 import {AccountRepository} from './AccountRepository';
+import { AccountRoutesApi } from './api/AccountRoutesApi';
 import {Http} from './Http';
 import {NetworkHttp} from './NetworkHttp';
 import {QueryParams} from './QueryParams';

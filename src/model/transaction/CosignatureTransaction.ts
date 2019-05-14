@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {CosignatureTransaction as CosignaturetransactionLibrary} from 'nem2-library';
 import {Account} from '../account/Account';
 import {AggregateTransaction} from './AggregateTransaction';
+import {CosignatureTransaction as CosignaturetransactionLibrary } from './builders/CosignatureTransaction';
 import {CosignatureSignedTransaction} from './CosignatureSignedTransaction';
 
 /**

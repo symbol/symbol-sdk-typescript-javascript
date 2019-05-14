@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-import { AccountPropertiesMosaicTransaction as AccountPropertiesMosaicTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { PropertyType } from '../account/PropertyType';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountPropertyModification } from './AccountPropertyModification';
+import {AccountPropertiesMosaicTransaction
+        as AccountPropertiesMosaicTransactionLibrary,
+        } from './builders/AccountPropertiesMosaicTransaction';
+import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';

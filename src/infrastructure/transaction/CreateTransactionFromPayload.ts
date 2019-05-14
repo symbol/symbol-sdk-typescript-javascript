@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { convert } from 'nem2-library';
 import {decode} from 'utf8';
+import { convert } from '../../core/format/convert';
 import { Address } from '../../model/account/Address';
 import { PublicAccount } from '../../model/account/PublicAccount';
 import { NetworkType } from '../../model/blockchain/NetworkType';
@@ -483,7 +483,6 @@ const decodeHex = (hex: string): string => {
         return str;
     }
 };
-
 
 /**
  * @internal

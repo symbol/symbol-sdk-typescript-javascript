@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-import { MultisigModificationTransaction as ModifyMultisigAccountTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
+import {MultisigModificationTransaction
+        as ModifyMultisigAccountTransactionLibrary,
+} from './builders/MultisigModificationTransaction';
+import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { MultisigCosignatoryModification } from './MultisigCosignatoryModification';
 import { Transaction } from './Transaction';
@@ -111,7 +114,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
         // each modification contains :
         // - 1 byte for modificationType
         // - 32 bytes for cosignatoryPublicKey
-        const byteModifications = 33 * this.modifications.length
+        const byteModifications = 33 * this.modifications.length;
 
         return byteSize + byteRemovalDelta + byteApprovalDelta + byteNumModifications + byteModifications;
     }

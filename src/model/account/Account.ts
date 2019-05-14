@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import {address as AddressLibrary, convert, KeyPair, nacl_catapult} from 'nem2-library';
+import { KeyPair } from '../../core/crypto/KeyPair';
+import { nacl_catapult } from '../../core/crypto/nacl_catapult';
+import { address as AddressLibrary } from '../../core/format/address';
+import { convert } from '../../core/format/convert';
 import {NetworkType} from '../blockchain/NetworkType';
 import {AggregateTransaction} from '../transaction/AggregateTransaction';
 import {CosignatureSignedTransaction} from '../transaction/CosignatureSignedTransaction';

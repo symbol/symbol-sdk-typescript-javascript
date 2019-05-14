@@ -15,11 +15,11 @@
  */
 
 import { expect } from 'chai';
-import { VerifiableTransaction } from 'nem2-library';
 import { Account } from '../../../src/model/account/Account';
+import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
-import { Address } from '../../../src/model/account/Address';
+import { VerifiableTransaction } from '../../../src/model/transaction/builders/VerifiableTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { SignedTransaction } from '../../../src/model/transaction/SignedTransaction';
@@ -198,7 +198,6 @@ describe('Transaction', () => {
             )).to.be.equal('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
         });
     });
-  
     describe('size', () => {
         it('should return 120 for base transaction size', () => {
             const transaction = new FakeTransaction(TransactionType.TRANSFER,

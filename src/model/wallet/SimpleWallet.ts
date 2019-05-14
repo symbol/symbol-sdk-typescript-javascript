@@ -15,7 +15,10 @@
  */
 
 import {LocalDateTime} from 'js-joda';
-import {convert, crypto, KeyPair, nacl_catapult} from 'nem2-library';
+import { crypto } from '../../core/crypto/crypto';
+import { KeyPair } from '../../core/crypto/KeyPair';
+import { nacl_catapult } from '../../core/crypto/nacl_catapult';
+import { convert } from '../../core/format/convert';
 import {Account} from '../account/Account';
 import {Address} from '../account/Address';
 import {NetworkType} from '../blockchain/NetworkType';

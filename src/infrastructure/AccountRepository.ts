@@ -16,6 +16,7 @@
 
 import {Observable} from 'rxjs';
 import {AccountInfo} from '../model/account/AccountInfo';
+import {AccountPropertiesInfo} from '../model/account/AccountPropertiesInfo';
 import {Address} from '../model/account/Address';
 import {MultisigAccountGraphInfo} from '../model/account/MultisigAccountGraphInfo';
 import {MultisigAccountInfo} from '../model/account/MultisigAccountInfo';
@@ -23,7 +24,6 @@ import {PublicAccount} from '../model/account/PublicAccount';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {Transaction} from '../model/transaction/Transaction';
 import {QueryParams} from './QueryParams';
-import {AccountPropertiesInfo} from "../model/account/AccountPropertiesInfo";
 
 /**
  * Account interface repository.

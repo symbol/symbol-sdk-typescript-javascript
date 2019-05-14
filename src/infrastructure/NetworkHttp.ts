@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {NetworkRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NetworkType} from '../model/blockchain/NetworkType';
+import { NetworkRoutesApi } from './api/NetworkRoutesApi';
 import {Http} from './Http';
 import {NetworkRepository} from './NetworkRepository';
 

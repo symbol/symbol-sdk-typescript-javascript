@@ -16,13 +16,13 @@
 
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
-import {MosaicInfo} from '../../../src/model/mosaic/MosaicInfo';
-import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
-import {UInt64} from '../../../src/model/UInt64';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
+import {MosaicInfo} from '../../../src/model/mosaic/MosaicInfo';
+import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
+import {UInt64} from '../../../src/model/UInt64';
 
 describe('MosaicInfo', () => {
     const mosaicInfoDTO = {

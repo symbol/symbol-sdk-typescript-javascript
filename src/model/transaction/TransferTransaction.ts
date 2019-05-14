@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-import { convert, TransferTransaction as TransferTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import {convert} from '../../core/format/convert';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
+import {TransferTransaction
+        as TransferTransactionLibrary,
+} from './builders/TransferTransaction';
+import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Message } from './Message';
 import { Transaction } from './Transaction';

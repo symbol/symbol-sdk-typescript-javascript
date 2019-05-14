@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { HashLockTransaction, VerifiableTransaction } from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { UInt64 } from '../UInt64';
+import {HashLockTransaction  } from './builders/HashLockTransaction';
+import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { SignedTransaction } from './SignedTransaction';
 import { Transaction } from './Transaction';

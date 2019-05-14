@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import { AccountPropertiesAddressTransaction as AccountPropertiesAddressTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { PropertyType } from '../account/PropertyType';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountPropertyModification } from './AccountPropertyModification';
+import {AccountPropertiesAddressTransaction as AccountPropertiesAddressTransactionLibrary,
+        } from './builders/AccountPropertiesAddressTransaction';
+import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
