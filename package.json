@@ -7,7 +7,7 @@
     "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
     "test:e2e": "mocha --ui bdd --recursive ./dist/e2e --timeout 90000",
     "test:all": "mocha --ui bdd --recursive ./dist/ --timeout 90000",
-    "build": "rm -rf dist/ && tsc",
+    "build": "rm -rf dist/  && tsc",
     "test:cov": "nyc --reporter=lcov --reporter=text-lcov npm t && nyc report --reporter=text-lcov",
     "test:coveralls": "npm run test:cov | coveralls"
   },

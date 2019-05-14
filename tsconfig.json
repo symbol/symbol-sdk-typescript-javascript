@@ -30,6 +30,6 @@
   "include": [
     "test/**/*.spec.ts",
     "src/**/*.ts",
-    "e2e/**/*.ts"
+    "src/**/*.js"
   ]
 }
