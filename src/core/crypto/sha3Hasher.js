@@ -16,8 +16,8 @@
 
 /** @module crypto/sha3Hasher */
 import { sha3_256, sha3_512 } from 'js-sha3';
-import array from '../coders/array';
-import convert from '../coders/convert';
+import array from '../format/array';
+import convert from '../format/convert';
 
 function getHasher(length = 64) {
 	return { 32: sha3_256, 64: sha3_512 }[length];

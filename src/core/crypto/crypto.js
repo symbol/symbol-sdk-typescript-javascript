@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import convert from '../coders/convert';
 import nacl from './nacl_catapult';
 import CryptoJS from 'crypto-js';
 import { createKeyPairFromPrivateKeyString, deriveSharedKey } from './keyPair';
+import convert from "../format/convert";
 
 /**
  * Encrypt a private key for mobile apps (AES_PBKF2)
