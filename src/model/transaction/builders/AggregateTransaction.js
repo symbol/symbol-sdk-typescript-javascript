@@ -26,7 +26,7 @@ const { flatbuffers } = require('flatbuffers');
 
 const { AggregateTransactionBuffer } = AggregateTransactionBufferPackage.Buffers;
 
-class AggregateTransaction extends VerifiableTransaction {
+export default class AggregateTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -137,4 +137,4 @@ class AggregateTransaction extends VerifiableTransaction {
 		return signedTransaction;
 	}
 }
-module.exports.AggregateTransaction=AggregateTransaction;
+

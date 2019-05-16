@@ -25,7 +25,7 @@ const { flatbuffers } = require('flatbuffers');
 
 const { AccountLinkTransactionBuffer } = AccountLinkTransactionBufferPackage.Buffers;
 
-class AccountLinkTransaction extends VerifiableTransaction {
+export default class AccountLinkTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -100,5 +100,3 @@ class AccountLinkTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-
-module.exports.AccountLinkTransaction = AccountLinkTransaction;

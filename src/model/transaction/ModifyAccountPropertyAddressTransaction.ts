@@ -19,8 +19,6 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountPropertyModification } from './AccountPropertyModification';
-import {AccountPropertiesAddressTransaction as AccountPropertiesAddressTransactionLibrary,
-        } from './builders/AccountPropertiesAddressTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
@@ -28,6 +26,7 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
+const AccountPropertiesAddressTransaction = require('./builders/AccountPropertiesAddressTransaction').default;
 export class ModifyAccountPropertyAddressTransaction extends Transaction {
 
     /**
@@ -102,7 +101,7 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new AccountPropertiesAddressTransactionLibrary.Builder()
+        return new AccountPropertiesAddressTransaction.Builder()
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())

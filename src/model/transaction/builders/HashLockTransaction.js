@@ -26,7 +26,7 @@ const { flatbuffers } = require('flatbuffers');
 
 const { HashLockTransactionBuffer } = HashLockTransactionBufferPackage.default.Buffers;
 
-class HashLockTransaction extends VerifiableTransaction {
+export default class HashLockTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -114,4 +114,4 @@ class HashLockTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-module.exports.HashLockTransaction=HashLockTransaction;
+

@@ -20,15 +20,14 @@ import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicNonce } from '../mosaic/MosaicNonce';
 import { MosaicProperties } from '../mosaic/MosaicProperties';
 import { UInt64 } from '../UInt64';
-import {MosaicCreationTransaction
-        as MosaicDefinitionTransactionLibrary,
-} from './builders/MosaicCreationTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+
+const MosaicDefinitionTransactionLibrary = require('./builders/MosaicCreationTransaction').default;
 
 /**
  * Before a mosaic can be created or transferred, a corresponding definition of the mosaic has to be created and published to the network.

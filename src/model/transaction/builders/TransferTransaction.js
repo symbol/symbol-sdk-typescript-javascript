@@ -28,7 +28,7 @@ const address = require('../../../core/format/address').address;
 
 const { TransferTransactionBuffer, MessageBuffer, MosaicBuffer } = TransferTransactionBufferPackage.default.Buffers;
 
-class TransferTransaction extends VerifiableTransaction {
+export default class TransferTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -143,4 +143,4 @@ class TransferTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-export default TransferTransaction;
+

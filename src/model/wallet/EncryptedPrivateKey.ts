@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {Password} from './Password';
 import { crypto } from '../../core/crypto/crypto';
+import {Password} from './Password';
 
 /**
  * EncryptedPrivateKey model
@@ -47,7 +47,7 @@ export class EncryptedPrivateKey {
         const common = {
             password: password.value,
             privateKey: '',
-        }
+        };
         const wallet = {
             encrypted: this.encryptedKey,
             iv: this.iv,

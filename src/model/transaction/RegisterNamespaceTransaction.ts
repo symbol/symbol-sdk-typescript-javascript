@@ -20,9 +20,6 @@ import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { NamespaceType } from '../namespace/NamespaceType';
 import { UInt64 } from '../UInt64';
-import {NamespaceCreationTransaction
-        as RegisterNamespaceTransactionLibrary,
-} from './builders/NamespaceCreationTransaction';
 import {namespaceId, subnamespaceNamespaceId, subnamespaceParentId} from './builders/NamespaceMosaicId';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
@@ -30,6 +27,8 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+
+const RegisterNamespaceTransactionLibrary = require('./builders/NamespaceCreationTransaction').default;
 
 /**
  * Accounts can rent a namespace for an amount of blocks and after a this renew the contract.

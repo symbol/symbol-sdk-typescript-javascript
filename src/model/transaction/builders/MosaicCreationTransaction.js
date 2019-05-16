@@ -26,7 +26,7 @@ const { flatbuffers } = require('flatbuffers');
 
 const { MosaicCreationTransactionBuffer } = MosaicCreationTransactionBufferPackage.Buffers;
 
-class MosaicCreationTransaction extends VerifiableTransaction {
+export default class MosaicCreationTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -149,4 +149,4 @@ class MosaicCreationTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-module.exports.MosaicCreationTransaction=MosaicCreationTransaction;
+

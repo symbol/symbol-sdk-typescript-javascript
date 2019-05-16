@@ -21,19 +21,12 @@ export declare class AccountLinkTransaction extends VerifiableTransaction {
 
 export declare module AccountLinkTransaction {
     class Builder {
-
         addFee(fee): Builder;
-
         addVersion(version): Builder;
-
         addType(type): Builder;
-
         addDeadline(deadline): Builder;
-
         addRemoteAccountKey(remoteAccountKey): Builder;
-
         addLinkAction(linkAction): Builder;
-
         build(): AccountLinkTransaction;
 
     }

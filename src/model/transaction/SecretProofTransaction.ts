@@ -17,9 +17,6 @@ import {convert} from '../../core/format/convert';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
-import {SecretProofTransaction
-        as SecretProofTransactionLibrary,
-} from './builders/SecretProofTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
@@ -27,6 +24,8 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+
+const SecretProofTransactionLibrary = require('./builders/SecretProofTransaction').default;
 
 export class SecretProofTransaction extends Transaction {
 

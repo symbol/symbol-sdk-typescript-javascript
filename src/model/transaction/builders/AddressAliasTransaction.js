@@ -25,7 +25,7 @@ const addressEncoder = require('../../../core/format/address').address;
 /**
  * @module transactions/AddressAliasTransaction
  */
-class AddressAliasTransaction extends VerifiableTransaction {
+export default class AddressAliasTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -112,4 +112,4 @@ class AddressAliasTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-module.exports.AddressAliasTransaction=AddressAliasTransaction;
+

@@ -25,7 +25,7 @@ const { flatbuffers } = require('flatbuffers');
 /**
  * @module transactions/MosaicSupplyChangeTransaction
  */
-class MosaicSupplyChangeTransaction extends VerifiableTransaction {
+export default class MosaicSupplyChangeTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -111,4 +111,4 @@ class MosaicSupplyChangeTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-module.exports.MosaicSupplyChangeTransaction=MosaicSupplyChangeTransaction;
+

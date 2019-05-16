@@ -29,7 +29,7 @@ const {
 /**
  * @module transactions/MultisigModificationTransaction
  */
-class MultisigModificationTransaction extends VerifiableTransaction {
+export default class MultisigModificationTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -126,4 +126,4 @@ class MultisigModificationTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-module.exports.MultisigModificationTransaction=MultisigModificationTransaction;
+

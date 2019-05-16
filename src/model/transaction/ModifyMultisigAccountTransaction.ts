@@ -17,9 +17,6 @@
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
-import {MultisigModificationTransaction
-        as ModifyMultisigAccountTransactionLibrary,
-} from './builders/MultisigModificationTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { MultisigCosignatoryModification } from './MultisigCosignatoryModification';
@@ -27,6 +24,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+const ModifyMultisigAccountTransactionLibrary = require('./builders/MultisigModificationTransaction').default;
 
 /**
  * Modify multisig account transactions are part of the NEM's multisig account system.

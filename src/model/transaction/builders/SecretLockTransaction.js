@@ -27,7 +27,7 @@ const { flatbuffers } = require('flatbuffers');
 
 const { SecretLockTransactionBuffer } = SecretLockTransactionBufferPackage.default.Buffers;
 
-class SecretLockTransaction extends VerifiableTransaction {
+export default class SecretLockTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -128,4 +128,4 @@ class SecretLockTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-module.exports.SecretLockTransaction=SecretLockTransaction;
+

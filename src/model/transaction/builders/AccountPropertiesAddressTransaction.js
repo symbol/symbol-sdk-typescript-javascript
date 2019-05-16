@@ -29,7 +29,7 @@ const {
 const address = require('../../../core/format/address').address;
 const { flatbuffers } = require('flatbuffers');
 
-class AccountPropertiesAddressTransaction extends VerifiableTransaction {
+export default class AccountPropertiesAddressTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -120,4 +120,3 @@ class AccountPropertiesAddressTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-module.exports.AccountPropertiesAddressTransaction=AccountPropertiesAddressTransaction;

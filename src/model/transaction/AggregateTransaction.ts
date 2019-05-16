@@ -19,7 +19,6 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';
-import {AggregateTransaction as AggregateTransactionLibrary } from './builders/AggregateTransaction';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
@@ -27,6 +26,8 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+
+const AggregateTransactionLibrary = require('./builders/AggregateTransaction').default;
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.
@@ -116,7 +117,7 @@ export class AggregateTransaction extends Transaction {
      * @internal
      * @returns {AggregateTransaction}
      */
-    public buildTransaction(): AggregateTransactionLibrary {
+    public buildTransaction() {
         return new AggregateTransactionLibrary.Builder()
             .addDeadline(this.deadline.toDTO())
             .addType(this.type)

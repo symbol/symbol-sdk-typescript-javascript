@@ -21,9 +21,6 @@ import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
-import {TransferTransaction
-        as TransferTransactionLibrary,
-} from './builders/TransferTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Message } from './Message';
@@ -31,6 +28,8 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+
+const TransferTransactionLibrary = require('./builders/TransferTransaction').default;
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.

@@ -19,15 +19,14 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountPropertyModification } from './AccountPropertyModification';
-import {AccountPropertiesMosaicTransaction
-        as AccountPropertiesMosaicTransactionLibrary,
-        } from './builders/AccountPropertiesMosaicTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+
+const AccountPropertiesMosaicTransactionLibrary = require('./builders/AccountPropertiesMosaicTransaction').default;
 
 export class ModifyAccountPropertyMosaicTransaction extends Transaction {
 

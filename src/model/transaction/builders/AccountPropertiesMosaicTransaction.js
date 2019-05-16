@@ -28,7 +28,7 @@ const {
 
 const { flatbuffers } = require('flatbuffers');
 
-class AccountPropertiesMosaicTransaction extends VerifiableTransaction {
+export default class AccountPropertiesMosaicTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -120,4 +120,3 @@ class AccountPropertiesMosaicTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-module.exports.AccountPropertiesMosaicTransaction=AccountPropertiesMosaicTransaction;

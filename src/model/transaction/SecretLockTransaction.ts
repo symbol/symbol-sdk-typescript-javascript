@@ -20,9 +20,6 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { UInt64 } from '../UInt64';
-import {SecretLockTransaction
-        as SecretLockTransactionLibrary,
-} from './builders/SecretLockTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
@@ -30,6 +27,8 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+
+const SecretLockTransactionLibrary = require('./builders/SecretLockTransaction').default;
 
 export class SecretLockTransaction extends Transaction {
 

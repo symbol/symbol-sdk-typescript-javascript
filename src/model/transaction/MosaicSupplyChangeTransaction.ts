@@ -19,15 +19,14 @@ import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicSupplyType } from '../mosaic/MosaicSupplyType';
 import { UInt64 } from '../UInt64';
-import {MosaicSupplyChangeTransaction
-        as MosaicSupplyChangeTransactionLibrary,
-} from './builders/MosaicSupplyChangeTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+
+const MosaicSupplyChangeTransactionLibrary = require('./builders/MosaicSupplyChangeTransaction').default;
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,

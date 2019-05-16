@@ -26,7 +26,7 @@ const { NamespaceCreationTransactionBuffer } = NamespaceCreationTransactionBuffe
 
 const { flatbuffers } = require('flatbuffers');
 
-class NamespaceCreationTransaction extends VerifiableTransaction {
+export default class NamespaceCreationTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -128,4 +128,4 @@ class NamespaceCreationTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-module.exports.NamespaceCreationTransaction=NamespaceCreationTransaction;
+

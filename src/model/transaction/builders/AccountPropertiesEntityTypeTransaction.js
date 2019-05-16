@@ -28,7 +28,7 @@ const {
 
 const { flatbuffers } = require('flatbuffers');
 
-class AccountPropertiesEntityTypeTransaction extends VerifiableTransaction {
+export default class AccountPropertiesEntityTypeTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -118,4 +118,4 @@ class AccountPropertiesEntityTypeTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
-module.exports.AccountPropertiesEntityTypeTransaction=AccountPropertiesEntityTypeTransaction;
+

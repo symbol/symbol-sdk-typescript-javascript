@@ -16,9 +16,8 @@
 
 import {Account} from '../account/Account';
 import {AggregateTransaction} from './AggregateTransaction';
-import {CosignatureTransaction as CosignaturetransactionLibrary } from './builders/CosignatureTransaction';
 import {CosignatureSignedTransaction} from './CosignatureSignedTransaction';
-
+const CosignaturetransactionLibrary = require('./builders/CosignatureTransaction').default;
 /**
  * Cosignature transaction is used to sign an aggregate transactions with missing cosignatures.
  */

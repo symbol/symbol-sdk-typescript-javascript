@@ -17,7 +17,6 @@
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
-import {AccountLinkTransaction as  AccountLinkTransactionLibrary } from './builders/AccountLinkTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { LinkAction } from './LinkAction';
@@ -26,6 +25,7 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
+const AccountLinkTransactionLibrary = require('./builders/AccountLinkTransaction').default;
 /**
  * Announce an AccountLinkTransaction to delegate the account importance to a proxy account.
  * By doing so, you can enable delegated harvesting

@@ -18,7 +18,6 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { UInt64 } from '../UInt64';
-import {HashLockTransaction  } from './builders/HashLockTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { SignedTransaction } from './SignedTransaction';
@@ -27,6 +26,7 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
+const HashLockTransaction = require('./builders/HashLockTransaction').default;
 /**
  * Lock funds transaction is used before sending an Aggregate bonded transaction, as a deposit to announce the transaction.
  * When aggregate bonded transaction is confirmed funds are returned to LockFundsTransaction signer.

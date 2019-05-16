@@ -20,15 +20,13 @@ import { MosaicId } from '../mosaic/MosaicId';
 import { AliasActionType } from '../namespace/AliasActionType';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
-import {MosaicAliasTransaction
-        as MosaicAliasTransactionLibrary,
-} from './builders/MosaicAliasTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+const MosaicAliasTransactionLibrary = require('./builders/MosaicAliasTransaction').default;
 
 export class MosaicAliasTransaction extends Transaction {
 

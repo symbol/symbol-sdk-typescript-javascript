@@ -19,14 +19,14 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountPropertyModification } from './AccountPropertyModification';
-import {AccountPropertiesEntityTypeTransaction
-        as AccountPropertiesEntityTypeTransactionLibrary  } from './builders/AccountPropertiesEntityTypeTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+
+const AccountPropertiesEntityTypeTransactionLibrary = require('./builders/AccountPropertiesEntityTypeTransaction').default;
 
 export class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
 

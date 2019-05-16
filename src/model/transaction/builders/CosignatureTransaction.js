@@ -21,9 +21,9 @@ import {convert} from "../../../core/format/convert";
  * @module transactions/AggregateSignatureTransaction
  * @version 1.0.0
  */
-class CosignatureTransaction extends VerifiableTransaction {
+export default class CosignatureTransaction extends VerifiableTransaction {
 	constructor(hash) {
 		super(convert.hexToUint8(hash), undefined);
 	}
 }
-module.exports.CosignatureTransaction=CosignatureTransaction;
+

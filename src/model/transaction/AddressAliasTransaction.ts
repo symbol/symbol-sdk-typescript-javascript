@@ -20,7 +20,6 @@ import { NetworkType } from '../blockchain/NetworkType';
 import { AliasActionType } from '../namespace/AliasActionType';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
-import {AddressAliasTransaction as AddressAliasTransactionLibrary } from './builders/AddressAliasTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
@@ -28,6 +27,7 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
+const AddressAliasTransactionLibrary = require('./builders/AddressAliasTransaction').default;
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
  * i.e. increase or decrease the supply.

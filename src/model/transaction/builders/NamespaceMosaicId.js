@@ -16,32 +16,26 @@
 
 import IdGenerator from '../../../core/format/idGenerator';
 import {nacl_catapult} from '../../../core/crypto/nacl_catapult';
-function mosaicId(nonce, ownerPublicId) {
+export function mosaicId(nonce, ownerPublicId) {
 	return IdGenerator.generateMosaicId(nonce, ownerPublicId);
 }
 
-function generateRandomMosaicNonce() {
+export function generateRandomMosaicNonce() {
 	return nacl_catapult.randomBytes(4);
 }
 
-function namespaceId(namespaceName) {
+export function namespaceId(namespaceName) {
 	const path = IdGenerator.generateNamespacePath(namespaceName);
 	return path.length ? IdGenerator.generateNamespacePath(namespaceName)[path.length - 1] : [];
 }
 
-function subnamespaceParentId(parentNamespaceName, namespaceName) {
+export function subnamespaceParentId(parentNamespaceName, namespaceName) {
 	const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
 	return IdGenerator.generateNamespacePath(parentNamespaceName)[path.length - 2];
 }
 
-function subnamespaceNamespaceId(parentNamespaceName, namespaceName) {
+export function subnamespaceNamespaceId(parentNamespaceName, namespaceName) {
 	const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
 	return path[path.length - 1];
 }
-module.exports.NamespaceMosaicId={
-	mosaicId,
-	generateRandomMosaicNonce,
-	namespaceId,
-	subnamespaceParentId,
-	subnamespaceNamespaceId
-}
+

@@ -22,7 +22,7 @@ import {keyPair as KeyPair} from "../../../core/crypto/keyPair";
  * @module transactions/VerifiableTransaction
  * @version 1.0.0
  */
-class VerifiableTransaction {
+export default class VerifiableTransaction {
 	/**
 	 * @constructor
 	 * @param {Uint8Array} bytes Uint8Array after flatbuffers.build.asUint8Array()
@@ -118,4 +118,3 @@ class VerifiableTransaction {
 		]))).concat(resultBytes);
 	}
 }
-module.exports.VerifiableTransaction=VerifiableTransaction;
