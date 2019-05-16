@@ -35,6 +35,12 @@ export * from './blockchain/BlockchainScore';
 export * from './blockchain/BlockchainStorageInfo';
 export * from './blockchain/BlockInfo';
 export * from './blockchain/NetworkType';
+export * from './blockchain/MerklePathItem';
+export * from './blockchain/MerkleProofInfo';
+export * from './blockchain/MerkleProofInfoPayload';
+
+// Diagnostic
+export * from './diagnostic/ServerInfo';
 
 // Mosaic
 export * from './mosaic/Mosaic';

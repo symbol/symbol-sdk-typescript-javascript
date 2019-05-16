@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-import {BlockchainRoutesApi} from 'nem2-library';
+import {BlockRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
-import {BlockchainScore} from '../model/blockchain/BlockchainScore';
-import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
+import { MerklePathItem } from '../model/blockchain/MerklePathItem';
+import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
+import { MerkleProofInfoPayload } from '../model/blockchain/MerkleProofInfoPayload';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
-import {BlockchainRepository} from './BlockchainRepository';
+import {BlockRepository} from './BlockRepository';
 import {Http} from './Http';
 import {QueryParams} from './QueryParams';
 import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
@@ -33,12 +34,12 @@ import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/Create
  *
  * @since 1.0
  */
-export class BlockchainHttp extends Http implements BlockchainRepository {
+export class BlockHttp extends Http implements BlockRepository {
     /**
      * @internal
-     * Nem2 Library blockchain routes api
+     * Nem2 Library block routes api
      */
-    private blockchainRoutesApi: BlockchainRoutesApi;
+    private blockRoutesApi: BlockRoutesApi;
 
     /**
      * Constructor
@@ -46,7 +47,7 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      */
     constructor(url: string) {
         super(url);
-        this.blockchainRoutesApi = new BlockchainRoutesApi(this.apiClient);
+        this.blockRoutesApi = new BlockRoutesApi(this.apiClient);
     }
 
     /**
@@ -55,7 +56,7 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      * @returns Observable<BlockInfo>
      */
     public getBlockByHeight(height: number): Observable<BlockInfo> {
-        return observableFrom(this.blockchainRoutesApi.getBlockByHeight(height)).pipe(map((blockDTO) => {
+        return observableFrom(this.blockRoutesApi.getBlockByHeight(height)).pipe(map((blockDTO) => {
             const networkType = parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16);
             return new BlockInfo(
                 blockDTO.meta.hash,
@@ -89,7 +90,7 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
     public getBlockTransactions(height: number,
                                 queryParams?: QueryParams): Observable<Transaction[]> {
         return observableFrom(
-            this.blockchainRoutesApi.getBlockTransactions(height, queryParams != null ? queryParams : {})).pipe(map((transactionsDTO) => {
+            this.blockRoutesApi.getBlockTransactions(height, queryParams != null ? queryParams : {})).pipe(map((transactionsDTO) => {
             return transactionsDTO.map((transactionDTO) => {
                 return CreateTransactionFromDTO(transactionDTO);
             });
@@ -104,7 +105,7 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
      */
     public getBlocksByHeightWithLimit(height: number, limit: number = 1): Observable<BlockInfo[]> {
         return observableFrom(
-            this.blockchainRoutesApi.getBlocksByHeightWithLimit(height, limit)).pipe(map((blocksDTO) => {
+            this.blockRoutesApi.getBlocksByHeightWithLimit(height, limit)).pipe(map((blocksDTO) => {
             return blocksDTO.map((blockDTO) => {
                 const networkType = parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16);
                 return new BlockInfo(
@@ -132,40 +133,44 @@ export class BlockchainHttp extends Http implements BlockchainRepository {
     }
 
     /**
-     * Gets current blockchain height
-     * @returns Observable<UInt64>
+     * Get the merkle path for a given a receipt statement hash and block
+     * Returns the merkle path for a [receipt statement or resolution](https://nemtech.github.io/concepts/receipt.html)
+     * linked to a block. The path is the complementary data needed to calculate the merkle root.
+     * A client can compare if the calculated root equals the one recorded in the block header,
+     * verifying that the receipt was linked with the block.
+     * @param height The height of the block.
+     * @param hash The hash of the receipt statement or resolution.
+     * @return Observable<MerkleProofInfo>
      */
-    public getBlockchainHeight(): Observable<UInt64> {
-        return observableFrom(this.blockchainRoutesApi.getBlockchainHeight()).pipe(map((heightDTO) => {
-            return new UInt64(heightDTO.height);
-        }));
-    }
-
-    /**
-     * Gets current blockchain score
-     * @returns Observable<BlockchainScore>
-     */
-    public getBlockchainScore(): Observable<BlockchainScore> {
-        return observableFrom(this.blockchainRoutesApi.getBlockchainScore()).pipe(map((blockchainScoreDTO) => {
-            return new BlockchainScore(
-                new UInt64(blockchainScoreDTO.scoreLow),
-                new UInt64(blockchainScoreDTO.scoreHigh),
-            );
-        }));
-    }
-
-    /**
-     * Gets blockchain storage info.
-     * @returns Observable<BlockchainStorageInfo>
-     */
-    public getDiagnosticStorage(): Observable<BlockchainStorageInfo> {
+    public getMerkleReceipts(height: number, hash: string): Observable<MerkleProofInfo> {
         return observableFrom(
-            this.blockchainRoutesApi.getDiagnosticStorage()).pipe(map((blockchainStorageInfoDTO) => {
-            return new BlockchainStorageInfo(
-                blockchainStorageInfoDTO.numBlocks,
-                blockchainStorageInfoDTO.numTransactions,
-                blockchainStorageInfoDTO.numAccounts,
-            );
+            this.blockRoutesApi.getMerkleReceipts(height, hash)).pipe(map((merkleProofReceipt) => {
+                return new MerkleProofInfo(
+                    new MerkleProofInfoPayload(
+                        merkleProofReceipt.payload.merklePath.map((payload) => new MerklePathItem(payload.position, payload.hash))),
+                    merkleProofReceipt.type,
+                );
+        }));
+    }
+
+    /**
+     * Get the merkle path for a given a transaction and block
+     * Returns the merkle path for a [transaction](https://nemtech.github.io/concepts/transaction.html)
+     * included in a block. The path is the complementary data needed to calculate the merkle root.
+     * A client can compare if the calculated root equals the one recorded in the block header,
+     * verifying that the transaction was included in the block.
+     * @param height The height of the block.
+     * @param hash The hash of the transaction.
+     * @return Observable<MerkleProofInfo>
+     */
+    public getMerkleTransaction(height: number, hash: string): Observable<MerkleProofInfo> {
+        return observableFrom(
+            this.blockRoutesApi.getMerkleReceipts(height, hash)).pipe(map((merkleProofReceipt) => {
+                return new MerkleProofInfo(
+                    new MerkleProofInfoPayload(
+                        merkleProofReceipt.payload.merklePath.map((payload) => new MerklePathItem(payload.position, payload.hash))),
+                    merkleProofReceipt.type,
+                );
         }));
     }
 }
