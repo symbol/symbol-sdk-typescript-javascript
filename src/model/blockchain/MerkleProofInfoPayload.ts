@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-export * from './AccountHttp';
-export * from './BlockHttp';
-export * from './ChainHttps';
-export * from './DiagnosticHttps';
-export * from './Http';
-export * from './MosaicHttp';
-export * from './NamespaceHttp';
-export * from './TransactionHttp';
-export * from './Listener';
-export * from './QueryParams';
-export * from './NetworkHttp';
+import { MerklePathItem } from "./MerklePathItem";
+
+/**
+ * The block merkle proof payload
+ */
+export class MerkleProofInfoPayload {
+
+    /**
+     * @param merklePath
+     */
+    constructor(/**
+                 * The merkle path item
+                 */
+                public readonly merklePath: MerklePathItem[]) {
+
+    }
+}
