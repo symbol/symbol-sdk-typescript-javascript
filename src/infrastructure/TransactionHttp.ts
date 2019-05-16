@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {BlockchainRoutesApi, TransactionRoutesApi} from 'nem2-library';
+import {BlockRoutesApi, TransactionRoutesApi} from 'nem2-library';
 import * as requestPromise from 'request-promise-native';
 import {from as observableFrom, Observable, throwError as observableThrowError} from 'rxjs';
 import {catchError, map, mergeMap} from 'rxjs/operators';
@@ -49,7 +49,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @internal
      * Nem2 Library blockchain routes api
      */
-    private blockchainRoutesApi: BlockchainRoutesApi;
+    private blockRoutesApi: BlockRoutesApi;
 
     /**
      * Constructor
@@ -58,7 +58,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
     constructor(private readonly url: string) {
         super(url);
         this.transactionRoutesApi = new TransactionRoutesApi(this.apiClient);
-        this.blockchainRoutesApi = new BlockchainRoutesApi(this.apiClient);
+        this.blockRoutesApi = new BlockRoutesApi(this.apiClient);
     }
 
     /**
@@ -212,7 +212,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
                 const uintHeight = (transaction.transactionInfo as TransactionInfo).height;
 
                 // now read block details
-                return observableFrom(this.blockchainRoutesApi.getBlockByHeight(uintHeight.compact())).pipe(
+                return observableFrom(this.blockRoutesApi.getBlockByHeight(uintHeight.compact())).pipe(
                 map((blockDTO) => {
 
                     // @see https://nemtech.github.io/concepts/transaction.html#fees

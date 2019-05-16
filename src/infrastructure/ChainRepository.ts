@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
-export * from './AccountHttp';
-export * from './BlockHttp';
-export * from './ChainHttps';
-export * from './DiagnosticHttps';
-export * from './Http';
-export * from './MosaicHttp';
-export * from './NamespaceHttp';
-export * from './TransactionHttp';
-export * from './Listener';
-export * from './QueryParams';
-export * from './NetworkHttp';
+import {Observable} from 'rxjs';
+import {BlockchainScore} from '../model/blockchain/BlockchainScore';
+import { UInt64 } from '../model/UInt64';
+
+/**
+ * Chain interface repository.
+ *
+ * @since 1.0
+ */
+export interface ChainRepository {
+    /**
+     * Gets current blockchain height
+     * @returns Observable<UInt64>
+     */
+    getBlockchainHeight(): Observable<UInt64>;
+
+    /**
+     * Gets current blockchain score
+     * @returns Observable<BlockchainScore>
+     */
+    getBlockchainScore(): Observable<BlockchainScore>;
+}
