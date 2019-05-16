@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-export declare module keyPair {
-    function createKeyPairFromPrivateKeyString(privateKeyString: string): any;
+import { expect } from 'chai';
+const  nacl_catapult = require( '../../../src/core/crypto/nacl_catapult');
 
-    function sign(keyPair: any, data: Uint8Array): Uint8Array;
+describe('nacl_catapult', () => {
 
-    function verify(publicKey: any, data: Uint8Array, signature: Uint8Array): boolean;
-
-    function deriveSharedKey(keyPair: any, publicKey: any, salt: Uint8Array): Uint8Array;
-}
+	it('should create random bytes', () => {
+		const randomBytes = nacl_catapult.randomBytes(32);
+		expect(randomBytes.length).to.be.equal(32);
+	});
+});

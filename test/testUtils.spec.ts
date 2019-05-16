@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-export declare module keyPair {
-    function createKeyPairFromPrivateKeyString(privateKeyString: string): any;
+import * as crypto from 'crypto';
+import { keyPair as Keypair } from '../src/core/crypto/keyPair';
+import {convert} from '../src/core/format/convert';
 
-    function sign(keyPair: any, data: Uint8Array): Uint8Array;
+export default {
 
-    function verify(publicKey: any, data: Uint8Array, signature: Uint8Array): boolean;
+	random: {
+		bytes: size => crypto.randomBytes(size),
+		publicKey: () => crypto.randomBytes(32),
+		keyPair: () => Keypair.createKeyPairFromPrivateKeyString(convert.uint8ToHex(crypto.randomBytes(32)))
+	},
 
-    function deriveSharedKey(keyPair: any, publicKey: any, salt: Uint8Array): Uint8Array;
-}
+	buffer: {
+		fromSize: size => {
+			const buffer = Buffer.allocUnsafe(4);
+			buffer.writeUInt32LE(size,0);
+			return buffer;
+		}
+	}
+};

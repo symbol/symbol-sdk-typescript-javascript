@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-export declare module keyPair {
-    function createKeyPairFromPrivateKeyString(privateKeyString: string): any;
+import {expect} from 'chai';
 
-    function sign(keyPair: any, data: Uint8Array): Uint8Array;
+describe('Health test', () => {
 
-    function verify(publicKey: any, data: Uint8Array, signature: Uint8Array): boolean;
-
-    function deriveSharedKey(keyPair: any, publicKey: any, salt: Uint8Array): Uint8Array;
-}
+    it('should success', () => {
+       expect(true).to.be.equal(true);
+    });
+});

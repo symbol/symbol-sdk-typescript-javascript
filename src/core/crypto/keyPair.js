@@ -15,10 +15,10 @@
  */
 
 /** @module crypto/keyPair */
-import sha3Hasher from './sha3Hasher';
+import {sha3Hasher} from './sha3Hasher';
 import nacl from './nacl_catapult';
 import array from '../format/array';
-import convert from '../format/convert';
+import {convert} from '../format/convert';
 
 const Key_Size = 32;
 const Signature_Size = 64;
@@ -206,7 +206,7 @@ catapult.crypto = (function () {
  * @param {string} privateKeyString A hex encoded private key string.
  * @returns {module:crypto/keyPair~KeyPair} The key pair.
  */
-export function createKeyPairFromPrivateKeyString(privateKeyString) {
+function createKeyPairFromPrivateKeyString(privateKeyString) {
 	const privateKey = convert.hexToUint8(privateKeyString);
 	if (Key_Size !== privateKey.length)
 		throw Error(`private key has unexpected size: ${privateKey.length}`);
@@ -221,7 +221,7 @@ export function createKeyPairFromPrivateKeyString(privateKeyString) {
  * @param {Uint8Array} data The data to sign.
  * @returns {Uint8Array} The signature.
  */
-export function sign(keyPair, data) {
+function sign(keyPair, data) {
 	return catapult.crypto.sign(data, keyPair.publicKey, keyPair.privateKey, catapult.hash.createHasher());
 }
 
@@ -232,7 +232,7 @@ export function sign(keyPair, data) {
  * @param {Uint8Array} signature The signature to verify.
  * @returns {boolean} true if the signature is verifiable, false otherwise.
  */
-export function verify(publicKey, data, signature) {
+function verify(publicKey, data, signature) {
 	return catapult.crypto.verify(publicKey, data, signature, catapult.hash.createHasher());
 }
 
@@ -244,13 +244,19 @@ export function verify(publicKey, data, signature) {
  * @param {Uint8Array} salt A salt that should be applied to the shared key.
  * @returns {Uint8Array} The shared key.
  */
-export function deriveSharedKey(keyPair, publicKey, salt) {
+function deriveSharedKey(keyPair, publicKey, salt) {
 	if (Key_Size !== salt.length)
 		throw Error(`salt has unexpected size: ${salt.length}`);
 
 	return catapult.crypto.deriveSharedKey(salt, keyPair.privateKey, publicKey, catapult.hash.func);
 }
 
-export const hash = catapult.hash;
-
+const hash = catapult.hash;
+module.exports.keyPair = {
+	createKeyPairFromPrivateKeyString,
+	sign,
+	verify,
+	deriveSharedKey,
+	hash
+}
 // endregion

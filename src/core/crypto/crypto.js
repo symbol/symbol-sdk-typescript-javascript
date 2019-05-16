@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import {convert} from '../format/convert';
 import nacl from './nacl_catapult';
 import CryptoJS from 'crypto-js';
-import { createKeyPairFromPrivateKeyString, deriveSharedKey } from './keyPair';
-import convert from "../format/convert";
+import {keyPair as KeyPair } from './keyPair';
 
 /**
  * Encrypt a private key for mobile apps (AES_PBKF2)
@@ -240,9 +240,9 @@ let _encode = function(senderPriv, recipientPub, msg, iv, salt) {
     // Errors
     if (!senderPriv || !recipientPub || !msg || !iv || !salt) throw new Error('Missing argument !');
     // Processing
-    let keyPair = createKeyPairFromPrivateKeyString(senderPriv);
+    let keyPair = KeyPair.createKeyPairFromPrivateKeyString(senderPriv);
     let pk = convert.hexToUint8(recipientPub);
-    let encKey = deriveSharedKey(keyPair, pk, salt);
+    let encKey = KeyPair.deriveSharedKey(keyPair, pk, salt);
     let encIv = {
         iv: ua2words(iv, 16)
     };
@@ -293,9 +293,9 @@ let decode = function(recipientPrivate, senderPublic, _payload) {
     let iv = new Uint8Array(binPayload.buffer, 32, 16);
     let payload = new Uint8Array(binPayload.buffer, 48);
 
-    let keyPair = createKeyPairFromPrivateKeyString(recipientPrivate);
+    let keyPair =  KeyPair.createKeyPairFromPrivateKeyString(recipientPrivate);
     let pk = convert.hexToUint8(senderPublic);
-    let encKey = deriveSharedKey(keyPair, pk, salt);
+    let encKey = KeyPair.deriveSharedKey(keyPair, pk, salt);
     let encIv = {
         iv: ua2words(iv, 16)
     };
@@ -345,7 +345,7 @@ let words2ua = function(destUa, cryptowords) {
     return destUa;
 }
 
-module.exports = {
+module.exports.crypto = {
     toMobileKey,
     derivePassSha,
     passwordToPrivatekey,

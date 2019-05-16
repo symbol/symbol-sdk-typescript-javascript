@@ -16,7 +16,7 @@
 
 import {LocalDateTime} from 'js-joda';
 import { crypto } from '../../core/crypto/crypto';
-import { KeyPair } from '../../core/crypto/KeyPair';
+import { keyPair as KeyPair } from '../../core/crypto/keyPair';
 import { nacl_catapult } from '../../core/crypto/nacl_catapult';
 import { convert } from '../../core/format/convert';
 import {Account} from '../account/Account';

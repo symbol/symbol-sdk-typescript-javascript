@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-export declare module keyPair {
-    function createKeyPairFromPrivateKeyString(privateKeyString: string): any;
+import {expect} from 'chai';
+import {crypto} from '../../../src/core/crypto/crypto';
 
-    function sign(keyPair: any, data: Uint8Array): Uint8Array;
+describe('crypto test', () => {
 
-    function verify(publicKey: any, data: Uint8Array, signature: Uint8Array): boolean;
+    it('Can derive a key from password and count', () => {
+        // Arrange:
+        const  password = 'TestTest';
+        const  count = 20;
+        const  expectedKey = '8cd87bc513857a7079d182a6e19b370e907107d97bd3f81a85bcebcc4b5bd3b5';
 
-    function deriveSharedKey(keyPair: any, publicKey: any, salt: Uint8Array): Uint8Array;
-}
+        // Act:
+        const  result = crypto.derivePassSha(password, count);
+
+        // Assert:
+        expect(result.priv).equal(expectedKey);
+    });
+});

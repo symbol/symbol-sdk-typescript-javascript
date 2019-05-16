@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyPair } from '../../core/crypto/KeyPair';
+import { keyPair as KeyPair} from '../../core/crypto/keyPair';
 import { nacl_catapult } from '../../core/crypto/nacl_catapult';
 import { address as AddressLibrary } from '../../core/format/address';
 import { convert } from '../../core/format/convert';

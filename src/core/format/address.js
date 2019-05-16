@@ -18,7 +18,7 @@ import { sha3_256 } from 'js-sha3';
 import Ripemd160 from 'ripemd160';
 import array from './array';
 import base32 from './base32';
-import convert from './convert';
+import { convert } from './convert';
 
 const constants = {
 	sizes: {
@@ -30,45 +30,44 @@ const constants = {
 	}
 };
 
-/** @exports coders/address */
-const address = {
+
 	/**
 	 * Converts an encoded address string to a decoded address.
 	 * @param {string} encoded The encoded address string.
 	 * @returns {Uint8Array} The decoded address corresponding to the input.
 	 */
-	stringToAddress: encoded => {
+	function stringToAddress(encoded) {
 		if (constants.sizes.addressEncoded !== encoded.length)
 			throw Error(`${encoded} does not represent a valid encoded address`);
 
 		return base32.decode(encoded);
-	},
+	}
 
 	/**
 	 * Format a namespaceId *alias* into a valid recipient field value.
 	 * @param {string} namespaceId The hexadecimal namespaceId
 	 * @returns {Uint8Array} The padded hexadecimal notation of the alias
 	 */
-	aliasToRecipient: namespaceId => {
+	function aliasToRecipient(namespaceId) {
 		// 0x91 | namespaceId on 8 bytes | 16 bytes 0-pad = 25 bytes
 		const padded = new Uint8Array(1 + 8 + 16);
 		padded.set([0x91], 0);
 		padded.set(namespaceId.reverse(), 1);
 		padded.set(convert.hexToUint8('00'.repeat(16)), 9);
 		return padded;
-	},
+	}
 
 	/**
 	 * Converts a decoded address to an encoded address string.
 	 * @param {Uint8Array} decoded The decoded address.
 	 * @returns {string} The encoded address string corresponding to the input.
 	 */
-	addressToString: decoded => {
+	function addressToString(decoded) {
 		if (constants.sizes.addressDecoded !== decoded.length)
 			throw Error(`${convert.uint8ToHex(decoded)} does not represent a valid decoded address`);
 
 		return base32.encode(decoded);
-	},
+	}
 
 	/**
 	 * Converts a public key to a decoded address for a specific network.
@@ -76,7 +75,7 @@ const address = {
 	 * @param {number} networkIdentifier The network identifier.
 	 * @returns {Uint8Array} The decoded address corresponding to the inputs.
 	 */
-	publicKeyToAddress: (publicKey, networkIdentifier) => {
+	function publicKeyToAddress(publicKey, networkIdentifier){
 		// step 1: sha3 hash of the public key
 		const publicKeyHash = sha3_256.arrayBuffer(publicKey);
 
@@ -93,38 +92,45 @@ const address = {
 		array.copy(decodedAddress, array.uint8View(hash), constants.sizes.checksum, constants.sizes.ripemd160 + 1);
 
 		return decodedAddress;
-	},
+	}
 
 	/**
 	 * Determines the validity of a decoded address.
 	 * @param {Uint8Array} decoded The decoded address.
 	 * @returns {boolean} true if the decoded address is valid, false otherwise.
 	 */
-	isValidAddress: decoded => {
+	function isValidAddress(decoded) {
 		const hash = sha3_256.create();
 		const checksumBegin = constants.sizes.addressDecoded - constants.sizes.checksum;
 		hash.update(decoded.subarray(0, checksumBegin));
 		const checksum = new Uint8Array(constants.sizes.checksum);
 		array.copy(checksum, array.uint8View(hash.arrayBuffer()), constants.sizes.checksum);
 		return array.deepEqual(checksum, decoded.subarray(checksumBegin));
-	},
+	}
 
 	/**
 	 * Determines the validity of an encoded address string.
 	 * @param {string} encoded The encoded address string.
 	 * @returns {boolean} true if the encoded address string is valid, false otherwise.
 	 */
-	isValidEncodedAddress: encoded => {
+	function isValidEncodedAddress(encoded) {
 		if (constants.sizes.addressEncoded !== encoded.length)
 			return false;
 
 		try {
-			const decoded = address.stringToAddress(encoded);
-			return address.isValidAddress(decoded);
+			const decoded = stringToAddress(encoded);
+			return isValidAddress(decoded);
 		} catch (err) {
 			return false;
 		}
 	}
-};
 
-export default address;
+
+module.exports.address = {
+	stringToAddress,
+	addressToString,
+	aliasToRecipient,
+	publicKeyToAddress,
+	isValidAddress,
+	isValidEncodedAddress,
+}

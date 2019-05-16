@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyPair } from '../../core/crypto/KeyPair';
+import { keyPair as KeyPair } from '../../core/crypto/keyPair';
 import { convert } from '../../core/format/convert';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Address } from './Address';
