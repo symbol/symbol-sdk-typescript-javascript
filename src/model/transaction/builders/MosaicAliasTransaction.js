@@ -15,8 +15,8 @@
  */
 
 import VerifiableTransaction from './VerifiableTransaction';
-import MosaicAliasTransactionSchema from '../schema/MosaicAliasTransactionSchema';
-import MosaicAliasTransactionBufferPackage from '../buffers/MosaicAliasTransactionBuffer';
+import MosaicAliasTransactionSchema from '../MosaicAliasTransactionSchema';
+import MosaicAliasTransactionBufferPackage from '../MosaicAliasTransactionBuffer';
 
 const { MosaicAliasTransactionBuffer } = MosaicAliasTransactionBufferPackage.Buffers;
 
@@ -25,7 +25,7 @@ const { flatbuffers } = require('flatbuffers');
 /**
  * @module transactions/MosaicAliasTransaction
  */
-export default class MosaicAliasTransaction extends VerifiableTransaction {
+class MosaicAliasTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -112,3 +112,4 @@ export default class MosaicAliasTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
+module.exports.MosaicAliasTransaction=MosaicAliasTransaction;

@@ -18,15 +18,15 @@
  * @module transactions/AggregateTransaction
  */
 import VerifiableTransaction from './VerifiableTransaction';
-import AggregateTransactionSchema from '../schema/AggregateTransactionSchema';
+import AggregateTransactionSchema from '../AggregateTransactionSchema';
 import CosignatureTransaction from './CosignatureTransaction';
-import AggregateTransactionBufferPackage from '../buffers/AggregateTransactionBuffer';
+import AggregateTransactionBufferPackage from '../AggregateTransactionBuffer';
 
 const { flatbuffers } = require('flatbuffers');
 
 const { AggregateTransactionBuffer } = AggregateTransactionBufferPackage.Buffers;
 
-export default class AggregateTransaction extends VerifiableTransaction {
+class AggregateTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -137,3 +137,4 @@ export default class AggregateTransaction extends VerifiableTransaction {
 		return signedTransaction;
 	}
 }
+module.exports.AggregateTransaction=AggregateTransaction;

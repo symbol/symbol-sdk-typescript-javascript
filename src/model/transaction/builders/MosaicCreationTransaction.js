@@ -19,14 +19,14 @@
  */
 import VerifiableTransaction from './VerifiableTransaction';
 import { schema as MosaicCreationTransactionSchema,
-	schemaNoDuration as MosaicCreationTransactionSchemaNoDuration } from '../schema/MosaicCreationTransactionSchema';
-import MosaicCreationTransactionBufferPackage from '../buffers/MosaicCreationTransactionBuffer';
+	schemaNoDuration as MosaicCreationTransactionSchemaNoDuration } from '../MosaicCreationTransactionSchema';
+import MosaicCreationTransactionBufferPackage from '../MosaicCreationTransactionBuffer';
 
 const { flatbuffers } = require('flatbuffers');
 
 const { MosaicCreationTransactionBuffer } = MosaicCreationTransactionBufferPackage.Buffers;
 
-export default class MosaicCreationTransaction extends VerifiableTransaction {
+class MosaicCreationTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -149,3 +149,4 @@ export default class MosaicCreationTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
+module.exports.MosaicCreationTransaction=MosaicCreationTransaction;

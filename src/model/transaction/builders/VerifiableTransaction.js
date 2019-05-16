@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-import convert from '../coders/convert';
-import sha3Hasher from '../crypto/sha3Hasher';
-
-const KeyPair = require('../crypto/keyPair');
-
+import {convert} from "../../../core/format/convert";
+import {sha3Hasher} from "../../../core/crypto/sha3Hasher";
+import {keyPair as KeyPair} from "../../../core/crypto/keyPair";
 /**
  * VerifiableTransaction
  * @module transactions/VerifiableTransaction
  * @version 1.0.0
  */
-export default class VerifiableTransaction {
+class VerifiableTransaction {
 	/**
 	 * @constructor
 	 * @param {Uint8Array} bytes Uint8Array after flatbuffers.build.asUint8Array()
@@ -120,3 +118,4 @@ export default class VerifiableTransaction {
 		]))).concat(resultBytes);
 	}
 }
+module.exports.VerifiableTransaction=VerifiableTransaction;

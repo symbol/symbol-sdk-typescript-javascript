@@ -18,16 +18,16 @@
  * @module transactions/SecretLockTransaction
  */
 import VerifiableTransaction from './VerifiableTransaction';
-import * as SecretLockTransactionBufferPackage from '../buffers/SecretLockTransactionBuffer';
-import SecretLockTransactionSchema from '../schema/SecretLockTransactionSchema';
-import address from '../coders/address';
-import convert from '../coders/convert';
+import * as SecretLockTransactionBufferPackage from '../SecretLockTransactionBuffer';
+import SecretLockTransactionSchema from '../SecretLockTransactionSchema';
+import {address} from "../../../core/format/address";
+import {convert} from "../../../core/format/convert";
 
 const { flatbuffers } = require('flatbuffers');
 
 const { SecretLockTransactionBuffer } = SecretLockTransactionBufferPackage.default.Buffers;
 
-export default class SecretLockTransaction extends VerifiableTransaction {
+class SecretLockTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -128,3 +128,4 @@ export default class SecretLockTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
+module.exports.SecretLockTransaction=SecretLockTransaction;

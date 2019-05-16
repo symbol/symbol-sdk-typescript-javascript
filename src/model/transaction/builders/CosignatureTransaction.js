@@ -15,14 +15,15 @@
  */
 
 import VerifiableTransaction from './VerifiableTransaction';
-import convert from '../coders/convert';
+import {convert} from "../../../core/format/convert";
 
 /**
  * @module transactions/AggregateSignatureTransaction
  * @version 1.0.0
  */
-export default class CosignatureTransaction extends VerifiableTransaction {
+class CosignatureTransaction extends VerifiableTransaction {
 	constructor(hash) {
 		super(convert.hexToUint8(hash), undefined);
 	}
 }
+module.exports.CosignatureTransaction=CosignatureTransaction;

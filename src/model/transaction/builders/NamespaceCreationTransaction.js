@@ -18,15 +18,15 @@
  * @module transactions/NamespaceCreationTransaction
  */
 import VerifiableTransaction from './VerifiableTransaction';
-import NamespaceCreationTransactionSchema from '../schema/NamespaceCreationTransactionSchema';
-import convert from '../coders/convert';
-import * as NamespaceCreationTransactionBufferPackage from '../buffers/NamespaceCreationTransactionBuffer';
+import NamespaceCreationTransactionSchema from '..//NamespaceCreationTransactionSchema';
+import {convert} from "../../../core/format/convert";
+import * as NamespaceCreationTransactionBufferPackage from '../NamespaceCreationTransactionBuffer';
 
 const { NamespaceCreationTransactionBuffer } = NamespaceCreationTransactionBufferPackage.default.Buffers;
 
 const { flatbuffers } = require('flatbuffers');
 
-export default class NamespaceCreationTransaction extends VerifiableTransaction {
+class NamespaceCreationTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -128,3 +128,4 @@ export default class NamespaceCreationTransaction extends VerifiableTransaction 
 		return Builder;
 	}
 }
+module.exports.NamespaceCreationTransaction=NamespaceCreationTransaction;

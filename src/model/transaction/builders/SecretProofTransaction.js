@@ -18,15 +18,15 @@
  * @module transactions/SecretProofTransaction
  */
 import VerifiableTransaction from './VerifiableTransaction';
-import * as SecretProofTransactionBufferPackage from '../buffers/SecretProofTransactionBuffer';
-import SecretProofTransactionSchema from '../schema/SecretProofTransactionSchema';
-import convert from '../coders/convert';
+import * as SecretProofTransactionBufferPackage from '../SecretProofTransactionBuffer';
+import SecretProofTransactionSchema from '../SecretProofTransactionSchema';
+import {convert} from "../../../core/format/convert";
 
 const { flatbuffers } = require('flatbuffers');
 
 const { SecretProofTransactionBuffer } = SecretProofTransactionBufferPackage.default.Buffers;
 
-export default class SecretProofTransaction extends VerifiableTransaction {
+class SecretProofTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -108,3 +108,4 @@ export default class SecretProofTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
+module.exports.SecretProofTransaction=SecretProofTransaction;

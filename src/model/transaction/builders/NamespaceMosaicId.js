@@ -14,29 +14,34 @@
  * limitations under the License.
  */
 
-import IdGenerator from '../coders/idGenerator';
-import {nacl_catapult} from '../crypto/nacl_catapult';
-
-export function mosaicId(nonce, ownerPublicId) {
+import IdGenerator from '../../../core/format/idGenerator';
+import {nacl_catapult} from '../../../core/crypto/nacl_catapult';
+function mosaicId(nonce, ownerPublicId) {
 	return IdGenerator.generateMosaicId(nonce, ownerPublicId);
 }
 
-export function generateRandomMosaicNonce() {
+function generateRandomMosaicNonce() {
 	return nacl_catapult.randomBytes(4);
 }
 
-export function namespaceId(namespaceName) {
+function namespaceId(namespaceName) {
 	const path = IdGenerator.generateNamespacePath(namespaceName);
 	return path.length ? IdGenerator.generateNamespacePath(namespaceName)[path.length - 1] : [];
 }
 
-export function subnamespaceParentId(parentNamespaceName, namespaceName) {
+function subnamespaceParentId(parentNamespaceName, namespaceName) {
 	const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
 	return IdGenerator.generateNamespacePath(parentNamespaceName)[path.length - 2];
 }
 
-export function subnamespaceNamespaceId(parentNamespaceName, namespaceName) {
+function subnamespaceNamespaceId(parentNamespaceName, namespaceName) {
 	const path = IdGenerator.generateNamespacePath(`${parentNamespaceName}.${namespaceName}`);
 	return path[path.length - 1];
 }
-
+module.exports.NamespaceMosaicId={
+	mosaicId,
+	generateRandomMosaicNonce,
+	namespaceId,
+	subnamespaceParentId,
+	subnamespaceNamespaceId
+}

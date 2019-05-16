@@ -17,7 +17,7 @@
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
-import {AccountLinkTransaction as AccountLinkTransactionLibrary } from './builders/AccountLinkTransaction';
+import {AccountLinkTransaction as  AccountLinkTransactionLibrary } from './builders/AccountLinkTransaction';
 import {VerifiableTransaction} from './builders/VerifiableTransaction';
 import { Deadline } from './Deadline';
 import { LinkAction } from './LinkAction';
@@ -37,7 +37,7 @@ export class AccountLinkTransaction extends Transaction {
      * @param remoteAccountKey - The public key of the remote account.
      * @param linkAction - The account link action.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {AccountLinkTransaction}
+     * @returns {AccountLinkTransactionD}
      */
     public static create(deadline: Deadline,
                          remoteAccountKey: string,

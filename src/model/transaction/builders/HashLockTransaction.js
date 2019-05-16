@@ -18,15 +18,15 @@
  * @module transactions/HashLockTransaction
  */
 import VerifiableTransaction from './VerifiableTransaction';
-import * as HashLockTransactionBufferPackage from '../buffers/HashLockTransactionBuffer';
-import HashLockTransactionSchema from '../schema/HashLockTransactionSchema';
-import convert from '../coders/convert';
+import * as HashLockTransactionBufferPackage from '../HashLockTransactionBuffer';
+import HashLockTransactionSchema from '../HashLockTransactionSchema';
+import {convert} from "../../../core/format/convert";
 
 const { flatbuffers } = require('flatbuffers');
 
 const { HashLockTransactionBuffer } = HashLockTransactionBufferPackage.default.Buffers;
 
-export default class HashLockTransaction extends VerifiableTransaction {
+class HashLockTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -114,3 +114,4 @@ export default class HashLockTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
+module.exports.HashLockTransaction=HashLockTransaction;

@@ -18,17 +18,17 @@
  * @module transactions/TransferTransaction
  */
 import VerifiableTransaction from './VerifiableTransaction';
-import * as TransferTransactionBufferPackage from '../buffers/TransferTransactionBuffer';
-import convert from '../coders/convert';
-import TransferTransactionSchema from '../schema/TransferTransactionSchema';
+import * as TransferTransactionBufferPackage from '../TransferTransactionBuffer';
+import {convert} from "../../../core/format/convert";
+import TransferTransactionSchema from '../TransferTransactionSchema';
 
 const { flatbuffers } = require('flatbuffers');
-const address = require('../coders/address').default;
+const address = require('../../../core/format/address').address;
 
 
 const { TransferTransactionBuffer, MessageBuffer, MosaicBuffer } = TransferTransactionBufferPackage.default.Buffers;
 
-export default class TransferTransaction extends VerifiableTransaction {
+class TransferTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -143,3 +143,4 @@ export default class TransferTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
+export default TransferTransaction;

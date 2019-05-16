@@ -18,8 +18,8 @@
  * @module transactions/AccountPropertiesEntityTypeTransaction
  */
 import VerifiableTransaction from './VerifiableTransaction';
-import AccountPropertiesEntityTypeModificationTransactionSchema from '../schema/AccountPropertiesEntityTypeModificationTransactionSchema';
-import AccountPropertiesEntityTypeTransactionBufferPackage from '../buffers/AccountPropertiesEntityTypeTransactionBuffer';
+import AccountPropertiesEntityTypeModificationTransactionSchema from '../AccountPropertiesEntityTypeModificationTransactionSchema';
+import AccountPropertiesEntityTypeTransactionBufferPackage from '../AccountPropertiesEntityTypeTransactionBuffer';
 
 const {
 	AccountPropertiesEntityTypeTransactionBuffer,
@@ -28,7 +28,7 @@ const {
 
 const { flatbuffers } = require('flatbuffers');
 
-export default class AccountPropertiesEntityTypeTransaction extends VerifiableTransaction {
+class AccountPropertiesEntityTypeTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -118,3 +118,4 @@ export default class AccountPropertiesEntityTypeTransaction extends VerifiableTr
 		return Builder;
 	}
 }
+module.exports.AccountPropertiesEntityTypeTransaction=AccountPropertiesEntityTypeTransaction;

@@ -18,16 +18,14 @@
  * @module transactions/AccountLinkTransaction
  */
 import VerifiableTransaction from './VerifiableTransaction';
-import AccountLinkTransactionBufferPackage from '../buffers/AccountLinkTransactionBuffer';
-import AccountLinkTransactionSchema from '../schema/AccountLinkTransactionSchema';
-import convert from '../coders/convert';
-
+import AccountLinkTransactionBufferPackage from '../AccountLinkTransactionBuffer';
+import AccountLinkTransactionSchema from '../AccountLinkTransactionSchema';
+import {convert} from "../../../core/format/convert";
 const { flatbuffers } = require('flatbuffers');
-
 
 const { AccountLinkTransactionBuffer } = AccountLinkTransactionBufferPackage.Buffers;
 
-export default class AccountLinkTransaction extends VerifiableTransaction {
+class AccountLinkTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -102,3 +100,5 @@ export default class AccountLinkTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
+
+module.exports.AccountLinkTransaction = AccountLinkTransaction;

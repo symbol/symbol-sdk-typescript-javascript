@@ -15,9 +15,9 @@
  */
 
 import VerifiableTransaction from './VerifiableTransaction';
-import MultisigModificationTransactionSchema from '../schema/MultisigModificationTransactionSchema';
-import convert from '../coders/convert';
-import MultisigModificationTransactionBufferPackage from '../buffers/MultisigModificationTransactionBuffer';
+import MultisigModificationTransactionSchema from '../MultisigModificationTransactionSchema';
+import {convert} from "../../../core/format/convert";
+import MultisigModificationTransactionBufferPackage from '../MultisigModificationTransactionBuffer';
 
 const { flatbuffers } = require('flatbuffers');
 
@@ -29,7 +29,7 @@ const {
 /**
  * @module transactions/MultisigModificationTransaction
  */
-export default class MultisigModificationTransaction extends VerifiableTransaction {
+class MultisigModificationTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -126,3 +126,4 @@ export default class MultisigModificationTransaction extends VerifiableTransacti
 		return Builder;
 	}
 }
+module.exports.MultisigModificationTransaction=MultisigModificationTransaction;

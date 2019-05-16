@@ -18,18 +18,18 @@
  * @module transactions/AccountPropertiesAddressTransaction
  */
 import VerifiableTransaction from './VerifiableTransaction';
-import AccountPropertiesAddressModificationTransactionSchema from '../schema/AccountPropertiesAddressModificationTransactionSchema';
-import AccountPropertiesAddressTransactionBufferPackage from '../buffers/AccountPropertiesAddressTransactionBuffer';
+import AccountPropertiesAddressModificationTransactionSchema from '../AccountPropertiesAddressModificationTransactionSchema';
+import AccountPropertiesAddressTransactionBufferPackage from '../AccountPropertiesAddressTransactionBuffer';
 
 const {
 	AccountPropertiesAddressTransactionBuffer,
 	PropertyAddressModificationBuffer
 } = AccountPropertiesAddressTransactionBufferPackage.Buffers;
 
-const address = require('../coders/address').default;
+const address = require('../../../core/format/address').address;
 const { flatbuffers } = require('flatbuffers');
 
-export default class AccountPropertiesAddressTransaction extends VerifiableTransaction {
+class AccountPropertiesAddressTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -120,3 +120,4 @@ export default class AccountPropertiesAddressTransaction extends VerifiableTrans
 		return Builder;
 	}
 }
+module.exports.AccountPropertiesAddressTransaction=AccountPropertiesAddressTransaction;

@@ -15,8 +15,8 @@
  */
 
 import VerifiableTransaction from './VerifiableTransaction';
-import MosaicSupplyChangeTransactionSchema from '../schema/MosaicSupplyChangeTransactionSchema';
-import MosaicSupplyChangeTransactionBufferPackage from '../buffers/MosaicSupplyChangeTransactionBuffer';
+import MosaicSupplyChangeTransactionSchema from '../MosaicSupplyChangeTransactionSchema';
+import MosaicSupplyChangeTransactionBufferPackage from '../MosaicSupplyChangeTransactionBuffer';
 
 const { MosaicSupplyChangeTransactionBuffer } = MosaicSupplyChangeTransactionBufferPackage.Buffers;
 
@@ -25,7 +25,7 @@ const { flatbuffers } = require('flatbuffers');
 /**
  * @module transactions/MosaicSupplyChangeTransaction
  */
-export default class MosaicSupplyChangeTransaction extends VerifiableTransaction {
+class MosaicSupplyChangeTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -111,3 +111,4 @@ export default class MosaicSupplyChangeTransaction extends VerifiableTransaction
 		return Builder;
 	}
 }
+module.exports.MosaicSupplyChangeTransaction=MosaicSupplyChangeTransaction;

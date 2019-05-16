@@ -18,8 +18,8 @@
  * @module transactions/AccountPropertiesMosaicTransaction
  */
 import VerifiableTransaction from './VerifiableTransaction';
-import AccountPropertiesMosaicModificationTransactionSchema from '../schema/AccountPropertiesMosaicModificationTransactionSchema';
-import AccountPropertiesMosaicTransactionBufferPackage from '../buffers/AccountPropertiesMosaicTransactionBuffer';
+import AccountPropertiesMosaicModificationTransactionSchema from '../AccountPropertiesMosaicModificationTransactionSchema';
+import AccountPropertiesMosaicTransactionBufferPackage from '../AccountPropertiesMosaicTransactionBuffer';
 
 const {
 	AccountPropertiesMosaicTransactionBuffer,
@@ -28,7 +28,7 @@ const {
 
 const { flatbuffers } = require('flatbuffers');
 
-export default class AccountPropertiesMosaicTransaction extends VerifiableTransaction {
+class AccountPropertiesMosaicTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -120,3 +120,4 @@ export default class AccountPropertiesMosaicTransaction extends VerifiableTransa
 		return Builder;
 	}
 }
+module.exports.AccountPropertiesMosaicTransaction=AccountPropertiesMosaicTransaction;

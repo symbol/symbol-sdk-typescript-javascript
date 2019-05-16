@@ -15,18 +15,17 @@
  */
 
 import VerifiableTransaction from './VerifiableTransaction';
-import AddressAliasTransactionSchema from '../schema/AddressAliasTransactionSchema';
-import AddressAliasTransactionBufferPackage from '../buffers/AddressAliasTransactionBuffer';
+import AddressAliasTransactionSchema from '../AddressAliasTransactionSchema';
+import AddressAliasTransactionBufferPackage from '../AddressAliasTransactionBuffer';
 
 const { AddressAliasTransactionBuffer } = AddressAliasTransactionBufferPackage.Buffers;
 
 const { flatbuffers } = require('flatbuffers');
-const addressEncoder = require('../coders/address').default;
-
+const addressEncoder = require('../../../core/format/address').address;
 /**
  * @module transactions/AddressAliasTransaction
  */
-export default class AddressAliasTransaction extends VerifiableTransaction {
+class AddressAliasTransaction extends VerifiableTransaction {
 	static get Builder() {
 		class Builder {
 			constructor() {
@@ -113,3 +112,4 @@ export default class AddressAliasTransaction extends VerifiableTransaction {
 		return Builder;
 	}
 }
+module.exports.AddressAliasTransaction=AddressAliasTransaction;
