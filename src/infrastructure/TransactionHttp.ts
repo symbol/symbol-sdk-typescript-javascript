@@ -178,6 +178,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
             signedTx.hash,
             address.plain(),
         );
+
         return observableFrom(
             requestPromise.put({url: this.url + `/transaction/sync`, body: syncAnnounce, json: true}),
         ).pipe(map((response) => {

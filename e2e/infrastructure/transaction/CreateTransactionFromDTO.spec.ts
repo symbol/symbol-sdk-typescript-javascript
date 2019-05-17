@@ -1,20 +1,23 @@
 /*
  * Copyright 2018 NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an AS IS BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import {deepEqual} from 'assert';
+import {expect} from 'chai';
 import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
+import { Address } from '../../../src/model/account/Address';
+import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import ValidateTransaction from './ValidateTransaction';
 
 describe('CreateTransactionFromDTO', () => {
@@ -23,99 +26,75 @@ describe('CreateTransactionFromDTO', () => {
         it('standalone', () => {
             const transferTransactionDTO = {
                 meta: {
-                    hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                     height: [
-                        1,
+                        78,
                         0,
                     ],
-                    id: '59FDA0733F17CF0001772CA7',
-                    index: 19,
-                    merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
+                    hash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
+                    merkleComponentHash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
+                    index: 0,
+                    id: '5CD2B76B2B3F0F0001751380',
                 },
                 transaction: {
-                    deadline: [
-                        10000,
-                        0,
-                    ],
-                    fee: [
-                        0,
-                        0,
-                    ],
+                    // tslint:disable-next-line:max-line-length
+                    signature: '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D',
+                    signer: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
+                    version: 36867,
+                    type: 16724,
+                    maxFee: [0, 0],
+                    deadline: [3362498678, 22],
+                    recipient: '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB',
                     message: {
                         payload: '746573742D6D657373616765',
                         type: 0,
                     },
                     mosaics: [
                         {
-                            amount: [
-                                3863990592,
-                                95248,
-                            ],
-                            id: [
-                                3646934825,
-                                3576016193,
-                            ],
+                            id: [3294802500, 2243684972],
+                            amount: [10, 0],
                         },
                     ],
-                    recipient: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
-                    signature: '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E0' +
-                    '2F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
-                    signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                    type: 16724,
-                    version: 36867,
                 },
             };
 
-            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO);
-
-            ValidateTransaction.validateStandaloneTx(transferTransaction, transferTransactionDTO);
+            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
+            deepEqual(transferTransaction.recipient, Address.createFromEncoded(transferTransactionDTO.transaction.recipient));
+            expect(transferTransaction.message.payload).to.be.equal('test-message');
         });
 
         it('standalone without message', () => {
             const transferTransactionDTO = {
                 meta: {
-                    hash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
                     height: [
-                        1,
+                        78,
                         0,
                     ],
-                    id: '59FDA0733F17CF0001772CA7',
-                    index: 19,
-                    merkleComponentHash: '18C036C20B32348D63684E09A13128A2C18F6A75650D3A5FB43853D716E5E219',
+                    hash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
+                    merkleComponentHash: '533243B8575C4058F894C453160AFF055A4A905978AC331460F44104D831E4AC',
+                    index: 0,
+                    id: '5CD2B76B2B3F0F0001751380',
                 },
                 transaction: {
-                    deadline: [
-                        10000,
-                        0,
-                    ],
-                    fee: [
-                        0,
-                        0,
-                    ],
+                    // tslint:disable-next-line:max-line-length
+                    signature: '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D',
+                    signer: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
+                    version: 36867,
+                    type: 16724,
+                    maxFee: [0, 0],
+                    deadline: [3362498678, 22],
+                    recipient: '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB',
                     mosaics: [
                         {
-                            amount: [
-                                3863990592,
-                                95248,
-                            ],
-                            id: [
-                                3646934825,
-                                3576016193,
-                            ],
+                            id: [3294802500, 2243684972],
+                            amount: [10, 0],
                         },
                     ],
-                    recipient: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
-                    signature: '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E0' +
-                    '2F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
-                    signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
-                    type: 16724,
-                    version: 36867,
                 },
             };
 
-            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO);
-
-            ValidateTransaction.validateStandaloneTx(transferTransaction, transferTransactionDTO);
+            const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
+            deepEqual(transferTransaction.recipient, Address.createFromEncoded(transferTransactionDTO.transaction.recipient));
+            expect(transferTransaction.message.payload).to.be.equal('');
         });
 
         it('aggregate', () => {
@@ -142,7 +121,7 @@ describe('CreateTransactionFromDTO', () => {
                         3266625578,
                         11,
                     ],
-                    fee: [
+                    maxFee: [
                         0,
                         0,
                     ],
@@ -186,7 +165,7 @@ describe('CreateTransactionFromDTO', () => {
                         },
                     ],
                     type: 16705,
-                    version: 36867,
+                    version: 36866,
                 },
             };
 
@@ -219,7 +198,7 @@ describe('CreateTransactionFromDTO', () => {
                             1000,
                             0,
                         ],
-                        fee: [
+                        maxFee: [
                             0,
                             0,
                         ],
@@ -266,7 +245,7 @@ describe('CreateTransactionFromDTO', () => {
                             3266625578,
                             11,
                         ],
-                        fee: [
+                        maxFee: [
                             0,
                             0,
                         ],
@@ -334,7 +313,7 @@ describe('CreateTransactionFromDTO', () => {
                             1,
                             0,
                         ],
-                        fee: [
+                        maxFee: [
                             0,
                             0,
                         ],
@@ -384,7 +363,7 @@ describe('CreateTransactionFromDTO', () => {
                             3266625578,
                             11,
                         ],
-                        fee: [
+                        maxFee: [
                             0,
                             0,
                         ],
@@ -452,7 +431,7 @@ describe('CreateTransactionFromDTO', () => {
                         1,
                         0,
                     ],
-                    fee: [
+                    maxFee: [
                         0,
                         0,
                     ],
@@ -524,7 +503,7 @@ describe('CreateTransactionFromDTO', () => {
                         3266625578,
                         11,
                     ],
-                    fee: [
+                    maxFee: [
                         0,
                         0,
                     ],
@@ -617,7 +596,7 @@ describe('CreateTransactionFromDTO', () => {
                         0,
                     ],
                     direction: 1,
-                    fee: [
+                    maxFee: [
                         0,
                         0,
                     ],
@@ -662,7 +641,7 @@ describe('CreateTransactionFromDTO', () => {
                         3266625578,
                         11,
                     ],
-                    fee: [
+                    maxFee: [
                         0,
                         0,
                     ],
@@ -728,7 +707,7 @@ describe('CreateTransactionFromDTO', () => {
                         1,
                         0,
                     ],
-                    fee: [
+                    maxFee: [
                         0,
                         0,
                     ],
@@ -736,7 +715,7 @@ describe('CreateTransactionFromDTO', () => {
                     minRemovalDelta: 1,
                     modifications: [
                         {
-                            cosignatoryPublicKey: '589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5FB8B7310D45F77C1250B97',
+                            cosignatoryPublicKey: '76C1622C7FB58986E500228E8FFB30C606CAAFC1CD78E770E82C73DAB7BD7C9F',
                             type: 0,
                         },
                     ],
@@ -778,7 +757,7 @@ describe('CreateTransactionFromDTO', () => {
                         3266625578,
                         11,
                     ],
-                    fee: [
+                    maxFee: [
                         0,
                         0,
                     ],

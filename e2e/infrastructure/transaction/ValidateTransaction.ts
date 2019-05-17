@@ -20,6 +20,10 @@ import {MultisigCosignatoryModification} from '../../../src/model/transaction/Mu
 import {TransactionType} from '../../../src/model/transaction/TransactionType';
 import {UInt64} from '../../../src/model/UInt64';
 import {Address} from '../../../src/model/account/Address';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 
 const ValidateTransaction = {
     validateStandaloneTx: (transaction, transactionDTO) => {
@@ -44,11 +48,10 @@ const ValidateTransaction = {
             .to.be.equal(parseInt(transactionDTO.transaction.version.toString(16).substr(2, 2), 16));
         expect(transaction.type)
             .to.be.equal(transactionDTO.transaction.type);
-        deepEqual(transaction.fee,
-            new UInt64(transactionDTO.transaction.fee));
+        deepEqual(transaction.maxFee,
+            new UInt64(transactionDTO.transaction.maxFee));
         deepEqual(transaction.deadline.toDTO(),
             transactionDTO.transaction.deadline);
-
 
         if (transaction.type === TransactionType.TRANSFER) {
             ValidateTransaction.validateTransferTx(transaction, transactionDTO);
@@ -84,8 +87,8 @@ const ValidateTransaction = {
             .to.be.equal(parseInt(aggregateTransactionDTO.transaction.version.toString(16).substr(2, 2), 16));
         expect(aggregateTransaction.type)
             .to.be.equal(aggregateTransactionDTO.transaction.type);
-        deepEqual(aggregateTransaction.fee,
-            new UInt64(aggregateTransactionDTO.transaction.fee));
+        deepEqual(aggregateTransaction.maxFee,
+            new UInt64(aggregateTransactionDTO.transaction.maxFee));
         deepEqual(aggregateTransaction.deadline.toDTO(),
             aggregateTransactionDTO.transaction.deadline);
 
@@ -94,12 +97,8 @@ const ValidateTransaction = {
     },
     validateMosaicCreationTx: (mosaicDefinitionTransaction, mosaicDefinitionTransactionDTO) => {
 
-        deepEqual(mosaicDefinitionTransaction.parentId,
-            new UInt64(mosaicDefinitionTransactionDTO.transaction.parentId));
         deepEqual(mosaicDefinitionTransaction.mosaicId,
-            new UInt64(mosaicDefinitionTransactionDTO.transaction.mosaicId));
-        expect(mosaicDefinitionTransaction.mosaicName)
-            .to.be.equal(mosaicDefinitionTransactionDTO.transaction.name);
+            new MosaicId(mosaicDefinitionTransactionDTO.transaction.mosaicId));
         expect(mosaicDefinitionTransaction.mosaicProperties.divisibility)
             .to.be.equal(mosaicDefinitionTransactionDTO.transaction.properties[1].value[0]);
         deepEqual(mosaicDefinitionTransaction.mosaicProperties.duration,
@@ -114,7 +113,7 @@ const ValidateTransaction = {
     },
     validateMosaicSupplyChangeTx: (mosaicSupplyChangeTransaction, mosaicSupplyChangeTransactionDTO) => {
         deepEqual(mosaicSupplyChangeTransaction.mosaicId,
-            new UInt64(mosaicSupplyChangeTransactionDTO.transaction.mosaicId));
+            new MosaicId(mosaicSupplyChangeTransactionDTO.transaction.mosaicId));
         expect(mosaicSupplyChangeTransaction.direction)
             .to.be.equal(mosaicSupplyChangeTransactionDTO.transaction.direction);
         deepEqual(mosaicSupplyChangeTransaction.delta,
@@ -128,7 +127,8 @@ const ValidateTransaction = {
 
         deepEqual(modifyMultisigAccountTransaction.modifications[0], new MultisigCosignatoryModification(
             modifyMultisigAccountTransactionDTO.transaction.modifications[0].type,
-            modifyMultisigAccountTransactionDTO.transaction.modifications[0].cosignatoryPublicAccount,
+            PublicAccount.createFromPublicKey(modifyMultisigAccountTransactionDTO.transaction.modifications[0].cosignatoryPublicKey,
+                                              NetworkType.MIJIN_TEST),
             ),
         );
     },
@@ -138,21 +138,21 @@ const ValidateTransaction = {
         expect(registerNamespaceTransaction.namespaceName)
             .to.be.equal(registerNamespaceTransactionDTO.transaction.name);
         deepEqual(registerNamespaceTransaction.namespaceId,
-            new UInt64(registerNamespaceTransactionDTO.transaction.namespaceId));
+            new NamespaceId(registerNamespaceTransactionDTO.transaction.namespaceId));
 
         if (registerNamespaceTransaction.namespaceType === 0) {
             deepEqual(registerNamespaceTransaction.duration,
                 new UInt64(registerNamespaceTransactionDTO.transaction.duration));
         } else {
             deepEqual(registerNamespaceTransaction.parentId,
-                new UInt64(registerNamespaceTransactionDTO.transaction.parentId));
+                new NamespaceId(registerNamespaceTransactionDTO.transaction.parentId));
         }
     },
     validateTransferTx: (transferTransaction, transferTransactionDTO) => {
         deepEqual(transferTransaction.recipient,
             Address.createFromEncoded(transferTransactionDTO.transaction.recipient));
         expect(transferTransaction.message.payload)
-            .to.be.equal("test-message");
+            .to.be.equal('test-message');
     },
 };
 
