@@ -38,7 +38,7 @@ export function HashTypeLengthValidator(hashType: HashType, input: string): bool
             case HashType.Op_Keccak_256:
                 return input.length === 64;
             case HashType.Op_Hash_160:
-                return input.length === 40;
+                return input.length === 40 || input.length === 64;
             default:
                 break;
         }

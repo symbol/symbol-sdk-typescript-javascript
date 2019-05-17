@@ -14,24 +14,97 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
+import {deepEqual} from 'assert';
+import {assert, expect} from 'chai';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
+import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import {QueryParams} from '../../src/infrastructure/QueryParams';
+import { Account } from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
+import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';
+import { PropertyType } from '../../src/model/account/PropertyType';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
-
-import {APIUrl} from '../conf/conf.spec';
+import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { AccountPropertyModification } from '../../src/model/transaction/AccountPropertyModification';
+import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
+import { Deadline } from '../../src/model/transaction/Deadline';
+import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
+import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
+import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
+import { PlainMessage } from '../../src/model/transaction/PlainMessage';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 
 describe('AccountHttp', () => {
-    const accountAddress = Address.createFromRawAddress('SDRDGFTDLLCB67D4HPGIMIHPNSRYRJRT7DOBGWZY');
-    const accountPublicKey = '1026D70E1954775749C6811084D6450A3184D977383F0E4282CD47118AF37755';
-    const publicAccount = PublicAccount.createFromPublicKey('846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
-        NetworkType.MIJIN_TEST);
-    const multisigPublicAccount = PublicAccount.createFromPublicKey('B694186EE4AB0558CA4AFCFDD43B42114AE71094F5A1FC4A913FE9971CACD21D',
-        NetworkType.MIJIN_TEST);
+    let account: Account;
+    let account2: Account;
+    let account3: Account;
+    let multisigAccount: Account;
+    let cosignAccount1: Account;
+    let cosignAccount2: Account;
+    let cosignAccount3: Account;
+    let accountAddress: Address;
+    let accountPublicKey: string;
+    let publicAccount: PublicAccount;
+    let accountHttp: AccountHttp;
+    let transactionHttp: TransactionHttp;
+    let config;
 
-    const accountHttp = new AccountHttp(APIUrl);
+    before((done) => {
+        const path = require('path');
+        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
+            if (err) {
+                throw err;
+            }
+            const json = JSON.parse(data);
+            config = json;
+            account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
+            account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, NetworkType.MIJIN_TEST);
+            account3 = Account.createFromPrivateKey(json.testAccount3.privateKey, NetworkType.MIJIN_TEST);
+            multisigAccount = Account.createFromPrivateKey(json.multisigAccount.privateKey, NetworkType.MIJIN_TEST);
+            cosignAccount1 = Account.createFromPrivateKey(json.cosignatoryAccount.privateKey, NetworkType.MIJIN_TEST);
+            cosignAccount2 = Account.createFromPrivateKey(json.cosignatory2Account.privateKey, NetworkType.MIJIN_TEST);
+            cosignAccount3 = Account.createFromPrivateKey(json.cosignatory3Account.privateKey, NetworkType.MIJIN_TEST);
+            accountAddress = Address.createFromRawAddress(json.testAccount.address);
+            accountPublicKey = json.testAccount.publicKey;
+            publicAccount = PublicAccount.createFromPublicKey(json.testAccount.publicKey, NetworkType.MIJIN_TEST);
+
+            accountHttp = new AccountHttp(json.apiUrl);
+            transactionHttp = new TransactionHttp(json.apiUrl);
+            done();
+        });
+    });
+    describe('TransferTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                account2.address,
+                [NetworkCurrencyMosaic.createAbsolute(1)],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = transferTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
 
     describe('getAccountInfo', () => {
         it('should return account data given a NEM Address', (done) => {
@@ -53,41 +126,148 @@ describe('AccountHttp', () => {
         });
     });
 
-    describe('getMultisigAccountInfo', () => {
-        it('should call getMultisigAccountInfo successfully', (done) => {
-            accountHttp.getMultisigAccountInfo(multisigPublicAccount.address).subscribe((multisigAccountInfo) => {
-                expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigPublicAccount.publicKey);
+    describe('AccountPropertyTransaction - Address', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('add properties', (done) => {
+            const addressPropertyFilter = AccountPropertyModification.createForAddress(
+                PropertyModificationType.Add,
+                account3.address,
+            );
+            const addressModification = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+                Deadline.create(),
+                PropertyType.BlockAddress,
+                [addressPropertyFilter],
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = addressModification.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction) => {
                 done();
             });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
         });
     });
 
     describe('getAccountProperty', () => {
         it('should call getAccountProperty successfully', (done) => {
-            accountHttp.getAccountProperty(publicAccount).subscribe((accountProperty) => {
-                expect(accountProperty.accountProperties[0]!.address).to.be.equal(accountAddress);
-                done();
-            });
+            setTimeout(() => {
+                accountHttp.getAccountProperties(accountAddress).subscribe((accountProperty) => {
+                    deepEqual(accountProperty.accountProperties.address, accountAddress);
+                    done();
+                });
+            }, 1000);
         });
     });
 
     describe('getAccountProperties', () => {
         it('should call getAccountProperties successfully', (done) => {
-            accountHttp.getAccountProperties([accountAddress]).subscribe((accountProperties) => {
-                expect(accountProperties[0]!.accountProperties[0]!.address).to.be.equal(accountAddress);
+            setTimeout(() => {
+                accountHttp.getAccountPropertiesFromAccounts([accountAddress]).subscribe((accountProperties) => {
+                    deepEqual(accountProperties[0]!.accountProperties.address, accountAddress);
+                    done();
+                });
+            }, 1000);
+        });
+    });
+    describe('AccountPropertyTransaction - Address', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('remove properties', (done) => {
+            const addressPropertyFilter = AccountPropertyModification.createForAddress(
+                PropertyModificationType.Remove,
+                account3.address,
+            );
+            const addressModification = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+                Deadline.create(),
+                PropertyType.BlockAddress,
+                [addressPropertyFilter],
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = addressModification.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction) => {
                 done();
             });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('ModifyMultisigAccountTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('ModifyMultisigAccountTransaction', (done) => {
+            const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                2,
+                1,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount1.publicAccount),
+                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount2.publicAccount),
+                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount3.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = multisigAccount.sign(modifyMultisigAccountTransaction);
+            listener.confirmed(multisigAccount.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(multisigAccount.address).subscribe((error) => {
+                console.log('Error:', error);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
         });
     });
     describe('getMultisigAccountGraphInfo', () => {
         it('should call getMultisigAccountGraphInfo successfully', (done) => {
-            accountHttp.getMultisigAccountGraphInfo(multisigPublicAccount.address).subscribe((multisigAccountGraphInfo) => {
-                expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].account.publicKey).to.be.equal(multisigPublicAccount.publicKey);
-                done();
-            });
+            setTimeout(() => {
+                accountHttp.getMultisigAccountGraphInfo(multisigAccount.address).subscribe((multisigAccountGraphInfo) => {
+                    expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].
+                        account.publicKey).to.be.equal(multisigAccount.publicKey);
+                    done();
+                });
+            }, 1000);
         });
     });
-
+    describe('getMultisigAccountInfo', () => {
+        it('should call getMultisigAccountInfo successfully', (done) => {
+            setTimeout(() => {
+                accountHttp.getMultisigAccountInfo(multisigAccount.address).subscribe((multisigAccountInfo) => {
+                    expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigAccount.publicKey);
+                    done();
+                });
+            }, 1000);
+        });
+    });
     describe('incomingTransactions', () => {
         it('should call incomingTransactions successfully', (done) => {
             accountHttp.incomingTransactions(publicAccount).subscribe((transactions) => {
@@ -98,28 +278,9 @@ describe('AccountHttp', () => {
     });
 
     describe('outgoingTransactions', () => {
-        let nextId: string;
-        let lastId: string;
-
         it('should call outgoingTransactions successfully', (done) => {
             accountHttp.outgoingTransactions(publicAccount).subscribe((transactions) => {
-                expect(transactions.length).to.be.equal(10);
-                done();
-            });
-        });
-        it('should call outgoingTransactions successfully pageSize 11', (done) => {
-            accountHttp.outgoingTransactions(publicAccount, new QueryParams(22)).subscribe((transactions) => {
-                expect(transactions.length).to.be.equal(22);
-                nextId = transactions[10].transactionInfo!.id;
-                lastId = transactions[11].transactionInfo!.id;
-                done();
-            });
-        });
-
-        it('should call outgoingTransactions successfully pageSize 11 and next id', (done) => {
-            accountHttp.outgoingTransactions(publicAccount, new QueryParams(11, nextId)).subscribe((transactions) => {
-                expect(transactions.length).to.be.equal(11);
-                expect(transactions[0].transactionInfo!.id).to.be.equal(lastId);
+                expect(transactions.length).to.be.greaterThan(0);
                 done();
             });
         });
@@ -128,8 +289,10 @@ describe('AccountHttp', () => {
     describe('aggregateBondedTransactions', () => {
         it('should call aggregateBondedTransactions successfully', (done) => {
             accountHttp.aggregateBondedTransactions(publicAccount).subscribe((transactions) => {
-                expect(transactions.length).to.be.equal(0);
                 done();
+            }, (error) => {
+                console.log('Error:', error);
+                assert(false);
             });
         });
     });

@@ -430,11 +430,13 @@ export const extractMosaics = (mosaics: any): Mosaic[] => {
  */
 const extractMessage = (message: any): PlainMessage | EncryptedMessage => {
     let msgObj = EmptyMessage;
-    if (message.type === MessageType.PlainMessage) {
-        msgObj = convert.isHexString(message) ? PlainMessage.createFromPayload(message.payload) :
-                                                PlainMessage.create(message.payload);
-    } else if (message.type === MessageType.EncryptedMessage) {
-        msgObj = EncryptedMessage.createFromPayload(message.payload);
+    if (message) {
+        if (message.type === MessageType.PlainMessage) {
+            msgObj = convert.isHexString(message.payload) ? PlainMessage.createFromPayload(message.payload) :
+                                                    PlainMessage.create(message.payload);
+        } else if (message.type === MessageType.EncryptedMessage) {
+            msgObj = EncryptedMessage.createFromPayload(message.payload);
+        }
     }
     return msgObj;
 };

@@ -17,6 +17,7 @@
 import {AccountRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
+import { DtoMapping } from '../core/utils/DtoMapping';
 import {AccountInfo} from '../model/account/AccountInfo';
 import { AccountPropertiesInfo } from '../model/account/AccountPropertiesInfo';
 import {Address} from '../model/account/Address';
@@ -85,13 +86,10 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param publicAccount public account
      * @returns Observable<AccountProperty>
      */
-    public getAccountProperty(publicAccount: PublicAccount): Observable<AccountPropertiesInfo> {
-        return observableFrom(this.accountRoutesApi.getAccountProperties(publicAccount.publicKey)).pipe(map((accountProperties) => {
-                return new AccountPropertiesInfo(
-                    accountProperties.meta,
-                    accountProperties.accountProperties,
-                );
-            }));
+    public getAccountProperties(address: Address): Observable<AccountPropertiesInfo> {
+        return observableFrom(this.accountRoutesApi.getAccountProperties(address.plain())).pipe(map((accountProperties) => {
+            return DtoMapping.extractAccountPropertyFromDto(accountProperties);
+        }));
     }
 
     /**
@@ -99,15 +97,12 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param address list of addresses
      * @returns Observable<AccountProperty[]>
      */
-    public getAccountProperties(addresses: Address[]): Observable<AccountPropertiesInfo[]> {
+    public getAccountPropertiesFromAccounts(addresses: Address[]): Observable<AccountPropertiesInfo[]> {
         const accountIds = addresses.map((address) => address.plain());
         return observableFrom(
             this.accountRoutesApi.getAccountPropertiesFromAccounts(accountIds)).pipe(map((accountProperties) => {
             return accountProperties.map((property) => {
-                return new AccountPropertiesInfo(
-                    property.meta,
-                    property.accountProperties,
-                );
+                return DtoMapping.extractAccountPropertyFromDto(property);
             });
         }));
     }
@@ -119,7 +114,7 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
         const accountIdsBody = {
-            accountIds: addresses.map((address) => address.plain()),
+            addresses: addresses.map((address) => address.plain()),
         };
         return observableFrom(
             this.accountRoutesApi.getAccountsInfo(accountIdsBody)).pipe(map((accountsInfoMetaDataDTO) => {

@@ -17,11 +17,19 @@
 import {expect} from 'chai';
 import {BlockchainHttp} from '../../src/infrastructure/BlockchainHttp';
 import {QueryParams} from '../../src/infrastructure/QueryParams';
-import {APIUrl} from '../conf/conf.spec';
-
 describe('BlockchainHttp', () => {
-    const blockchainHttp = new BlockchainHttp(APIUrl);
-
+    let blockchainHttp: BlockchainHttp;
+    before((done) => {
+        const path = require('path');
+        require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
+            if (err) {
+                throw err;
+            }
+            const json = JSON.parse(data);
+            blockchainHttp = new BlockchainHttp(json.apiUrl);
+            done();
+        });
+    });
     describe('getBlockByHeight', () => {
         it('should return block info given height', (done) => {
             blockchainHttp.getBlockByHeight(1)
@@ -63,11 +71,7 @@ describe('BlockchainHttp', () => {
         it('should return block info given height and limit', (done) => {
             blockchainHttp.getBlocksByHeightWithLimit(1, 50)
                 .subscribe((blocksInfo) => {
-                    expect(blocksInfo.length).to.be.equal(50);
-                    expect(blocksInfo[49].height.lower).to.be.equal(1);
-                    expect(blocksInfo[49].height.higher).to.be.equal(0);
-                    expect(blocksInfo[49].timestamp.lower).to.be.equal(0);
-                    expect(blocksInfo[49].timestamp.higher).to.be.equal(0);
+                    expect(blocksInfo.length).to.be.greaterThan(0);
                     done();
                 });
         });
