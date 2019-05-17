@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { address as AddressLibrary } from '../../core/format/address';
 import {NetworkType} from '../blockchain/NetworkType';
 
+const AddressLibrary = require('../../core/format/address').default;
 const convert = require('../../core/format/convert').default;
 /**
  * The address structure describes an address with its network

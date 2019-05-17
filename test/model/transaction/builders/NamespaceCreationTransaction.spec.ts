@@ -15,10 +15,10 @@
  */
 
 import { namespaceId, subnamespaceNamespaceId, subnamespaceParentId } from '../../../../src/model/transaction/builders/NamespaceMosaicId';
-import {uint64} from '../../../../src/core/format/uint64';
 import {expect} from 'chai';
 import deadline from '../../../../src/model/transaction/builders/Deadline';
 
+const  uint64 =require('../../../../src/core/format/uint64').default;
 const  NamespaceCreationTransaction = require('../../../../src/model/transaction/builders/NamespaceCreationTransaction').default;
 
 describe('NamespaceCreationTransaction', () => {

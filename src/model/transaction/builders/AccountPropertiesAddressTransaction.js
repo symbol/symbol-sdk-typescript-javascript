@@ -26,7 +26,7 @@ const {
 	PropertyAddressModificationBuffer
 } = AccountPropertiesAddressTransactionBufferPackage.Buffers;
 
-const address = require('../../../core/format/address').address;
+const address = require('../../../core/format/address').default;
 const { flatbuffers } = require('flatbuffers');
 
 export default class AccountPropertiesAddressTransaction extends VerifiableTransaction {

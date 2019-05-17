@@ -15,8 +15,8 @@
  */
 
 import { expect } from 'chai';
-import {uint64} from '../../../src/core/format/uint64';
 
+const  uint64 =require('../../../src/core/format/uint64').default;
 const convert = require('../../../src/core/format/convert').default;
 
 describe('uint64', () => {

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { uint64 } from '../core/format/uint64';
-
+const  uint64 =require('../core/format/uint64').default;
 /**
  * UInt64 data model
  */

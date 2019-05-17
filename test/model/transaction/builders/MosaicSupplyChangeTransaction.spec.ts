@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {uint64} from '../../../../src/core/format/uint64';
 import {expect} from 'chai';
 import deadline from '../../../../src/model/transaction/builders/Deadline';
 const  MosaicSupplyChangeTransaction = require('../../../../src/model/transaction/builders/MosaicSupplyChangeTransaction').default;
+const  uint64 =require('../../../../src/core/format/uint64').default;
 
 describe('MosaicSupplyChangeTransaction', () => {
 	const keyPair = {

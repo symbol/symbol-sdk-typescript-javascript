@@ -15,7 +15,7 @@
  */
 
 /** @module crypto/keyPair */
-import {sha3Hasher} from './sha3Hasher';
+import sha3Hasher from './sha3Hasher';
 import nacl from './nacl_catapult';
 import array from '../format/array';
 import convert from '../format/convert';

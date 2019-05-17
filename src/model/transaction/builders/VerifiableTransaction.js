@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {sha3Hasher} from "../../../core/crypto/sha3Hasher";
+import sha3Hasher from "../../../core/crypto/sha3Hasher";
 import {keyPair as KeyPair} from "../../../core/crypto/keyPair";
 
 const convert = require('../../../core/format/convert').default;

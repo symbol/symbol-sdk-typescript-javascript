@@ -16,10 +16,10 @@
 
 
 import { sha3_512 } from 'js-sha3';
-import {uint64} from '../../../../src/core/format/uint64';
 import {expect} from 'chai';
 import deadline from '../../../../src/model/transaction/builders/Deadline';
 
+const  uint64 =require('../../../../src/core/format/uint64').default;
 const  SecretLockTransaction = require('../../../../src/model/transaction/builders/SecretLockTransaction').default;
 
 describe('SecretLockTransaction', () => {

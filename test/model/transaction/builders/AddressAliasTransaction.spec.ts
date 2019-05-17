@@ -15,9 +15,9 @@
  */
 
 import {expect} from 'chai';
-import { address } from '../../../../src/core/format/address';
 import deadline from '../../../../src/model/transaction/builders/Deadline';
 
+const address = require('../../../../src/core/format/address').default;
 const  AddressAliasTransaction = require('../../../../src/model/transaction/builders/AddressAliasTransaction').default;
 
 describe('AddressAliasTransaction', () => {

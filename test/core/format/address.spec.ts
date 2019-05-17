@@ -15,9 +15,9 @@
  */
 
 import { expect } from 'chai';
-import {address} from '../../../src/core/format/address';
 import  * as test from '../../testUtils.spec';
 
+const address = require('../../../src/core/format/address').default;
 const convert = require('../../../src/core/format/convert').default;
 
 const Address_Decoded_Size = 25;

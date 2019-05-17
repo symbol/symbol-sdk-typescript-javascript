@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {uint64} from "../../../core/format/uint64";
+const uint64 =require('../../../core/format/uint64').default;
 
 export default function deadline(deadlineParam) {
 	const NetworkTime = (new Date()).getTime() - 1459468800000;

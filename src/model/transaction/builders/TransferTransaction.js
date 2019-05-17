@@ -23,8 +23,7 @@ const convert = require('../../../core/format/convert').default;
 import TransferTransactionSchema from '../TransferTransactionSchema';
 
 const { flatbuffers } = require('flatbuffers');
-const address = require('../../../core/format/address').address;
-
+const address = require('../../../core/format/address').default;
 
 const { TransferTransactionBuffer, MessageBuffer, MosaicBuffer } = TransferTransactionBufferPackage.default.Buffers;
 

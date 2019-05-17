@@ -16,7 +16,6 @@
 
 import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
-import { address as AddressLibrary } from '../core/format/address';
 import {Address} from '../model/account/Address';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {MosaicId} from '../model/mosaic/MosaicId';
@@ -36,7 +35,7 @@ import {NetworkHttp} from './NetworkHttp';
 import {QueryParams} from './QueryParams';
 
 const convert = require('../core/format/convert').default;
-
+const AddressLibrary = require('../core/format/address').default;
 /**
  * Namespace http repository.
  *

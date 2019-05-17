@@ -21,7 +21,7 @@ import AddressAliasTransactionBufferPackage from '../AddressAliasTransactionBuff
 const { AddressAliasTransactionBuffer } = AddressAliasTransactionBufferPackage.Buffers;
 
 const { flatbuffers } = require('flatbuffers');
-const addressEncoder = require('../../../core/format/address').address;
+const addressEncoder = require('../../../core/format/address').default;
 /**
  * @module transactions/AddressAliasTransaction
  */
