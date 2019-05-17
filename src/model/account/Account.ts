@@ -15,7 +15,6 @@
  */
 
 import { keyPair as KeyPair} from '../../core/crypto/keyPair';
-import { nacl_catapult } from '../../core/crypto/nacl_catapult';
 import { address as AddressLibrary } from '../../core/format/address';
 import { convert } from '../../core/format/convert';
 import {NetworkType} from '../blockchain/NetworkType';
@@ -28,6 +27,8 @@ import {SignedTransaction} from '../transaction/SignedTransaction';
 import {Transaction} from '../transaction/Transaction';
 import {Address} from './Address';
 import {PublicAccount} from './PublicAccount';
+
+const nacl_catapult = require( '../../core/crypto/nacl_catapult');
 
 interface IKeyPair {
     privateKey: Uint8Array;

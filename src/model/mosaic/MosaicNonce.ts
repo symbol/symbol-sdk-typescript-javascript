@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import {nacl_catapult} from '../../core/crypto/nacl_catapult';
 import {convert} from '../../core/format/convert';
+
+const nacl_catapult = require( '../../core/crypto/nacl_catapult');
 
 /**
  * The mosaic nonce structure

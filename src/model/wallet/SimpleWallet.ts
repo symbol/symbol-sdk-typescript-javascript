@@ -17,7 +17,6 @@
 import {LocalDateTime} from 'js-joda';
 import { crypto } from '../../core/crypto/crypto';
 import { keyPair as KeyPair } from '../../core/crypto/keyPair';
-import { nacl_catapult } from '../../core/crypto/nacl_catapult';
 import { convert } from '../../core/format/convert';
 import {Account} from '../account/Account';
 import {Address} from '../account/Address';
@@ -26,6 +25,7 @@ import {EncryptedPrivateKey} from './EncryptedPrivateKey';
 import {Password} from './Password';
 import {Wallet} from './Wallet';
 
+const nacl_catapult = require( '../../core/crypto/nacl_catapult');
 /**
  * Simple wallet model generates a private key from a PRNG
  */

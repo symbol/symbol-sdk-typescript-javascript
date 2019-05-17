@@ -17,8 +17,8 @@
 import {Observable, of as observableOf} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NetworkType} from '../model/blockchain/NetworkType';
-import { ApiClient } from './ApiClient';
 import {NetworkHttp} from './NetworkHttp';
+const ApiClient = require('./ApiClient').default;
 
 /**
  * Http extended by all http services
