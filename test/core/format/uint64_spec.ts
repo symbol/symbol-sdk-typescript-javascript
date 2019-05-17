@@ -15,8 +15,9 @@
  */
 
 import { expect } from 'chai';
-import {convert} from '../../../src/core/format/convert';
 import {uint64} from '../../../src/core/format/uint64';
+
+const convert = require('../../../src/core/format/convert').default;
 
 describe('uint64', () => {
 	describe('compact', () => {

@@ -16,7 +16,9 @@
 
 import { expect } from 'chai';
 import {sha3Hasher} from '../../../src/core/crypto/sha3Hasher';
-import {convert} from '../../../src/core/format/convert';
+
+const convert = require('../../../src/core/format/convert').default;
+
 
 describe('hasher', () => {
 	const inputs = [

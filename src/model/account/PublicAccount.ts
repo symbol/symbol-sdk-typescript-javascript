@@ -15,10 +15,10 @@
  */
 
 import { keyPair as KeyPair } from '../../core/crypto/keyPair';
-import { convert } from '../../core/format/convert';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Address } from './Address';
 
+const convert = require('../../core/format/convert').default;
 const Hash512 = 64;
 
 /**

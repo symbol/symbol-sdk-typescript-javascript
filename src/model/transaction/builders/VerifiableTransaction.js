@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import {convert} from "../../../core/format/convert";
 import {sha3Hasher} from "../../../core/crypto/sha3Hasher";
 import {keyPair as KeyPair} from "../../../core/crypto/keyPair";
+
+const convert = require('../../../core/format/convert').default;
 /**
  * VerifiableTransaction
  * @module transactions/VerifiableTransaction

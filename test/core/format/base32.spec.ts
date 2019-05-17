@@ -16,7 +16,8 @@
 
 import { expect } from 'chai';
 import base32 from '../../../src/core/format/base32';
-import {convert} from '../../../src/core/format/convert';
+
+const convert = require('../../../src/core/format/convert').default;
 
 describe('base32', () => {
 	const Test_Vectors = [

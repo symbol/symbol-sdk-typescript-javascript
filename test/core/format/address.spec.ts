@@ -16,8 +16,9 @@
 
 import { expect } from 'chai';
 import {address} from '../../../src/core/format/address';
-import {convert} from '../../../src/core/format/convert';
 import  * as test from '../../testUtils.spec';
+
+const convert = require('../../../src/core/format/convert').default;
 
 const Address_Decoded_Size = 25;
 const Network_Mijin_Identifier = 0x60;

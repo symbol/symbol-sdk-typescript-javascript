@@ -15,7 +15,7 @@
  */
 
 import VerifiableTransaction from './VerifiableTransaction';
-import {convert} from "../../../core/format/convert";
+const convert = require('../../../core/format/convert').default;
 
 /**
  * @module transactions/AggregateSignatureTransaction

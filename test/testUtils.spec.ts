@@ -16,7 +16,8 @@
 
 import * as crypto from 'crypto';
 import { keyPair as Keypair } from '../src/core/crypto/keyPair';
-import {convert} from '../src/core/format/convert';
+
+const  convert=require('../src/core/format/convert').default;
 
 export default {
 

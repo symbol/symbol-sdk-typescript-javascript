@@ -16,12 +16,13 @@
 import {expect} from 'chai';
 import * as CryptoJS from 'crypto-js';
 import {keccak_256, sha3_256} from 'js-sha3';
-import {convert} from "../../../src/core/format/convert";
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashType} from '../../../src/model/transaction/HashType';
 import {SecretProofTransaction} from '../../../src/model/transaction/SecretProofTransaction';
 import {UInt64} from '../../../src/model/UInt64';
+
+const convert = require('../../../src/core/format/convert').default;
 
 describe('SecretProofTransaction', () => {
 

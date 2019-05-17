@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {convert} from '../../core/format/convert';
+
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -25,6 +25,7 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
+const convert = require('../../core/format/convert').default;
 const SecretProofTransactionLibrary = require('./builders/SecretProofTransaction').default;
 
 export class SecretProofTransaction extends Transaction {

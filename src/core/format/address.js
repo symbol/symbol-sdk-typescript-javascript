@@ -18,8 +18,8 @@ import { sha3_256 } from 'js-sha3';
 import Ripemd160 from 'ripemd160';
 import array from './array';
 import base32 from './base32';
-import { convert } from './convert';
 
+const convert = require('./convert').default;
 const constants = {
 	sizes: {
 		ripemd160: 20,

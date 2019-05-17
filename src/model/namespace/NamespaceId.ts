@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {convert} from '../../core/format/convert';
 import {Id} from '../Id';
 import { namespaceId as NamespaceIdGenerator } from '../transaction/builders/NamespaceMosaicId';
 
+const convert = require('../../core/format/convert').default;
 /**
  * The namespace id structure describes namespace id
  *

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {convert} from '../../core/format/convert';
 import {uint64 as UInt64Library} from '../../core/format/uint64';
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
@@ -51,6 +50,9 @@ import {TransactionInfo} from '../../model/transaction/TransactionInfo';
 import {TransactionType} from '../../model/transaction/TransactionType';
 import {TransferTransaction} from '../../model/transaction/TransferTransaction';
 import {UInt64} from '../../model/UInt64';
+
+const convert = require('../../core/format/convert').default;
+
 /**
  * @internal
  * @param transactionDTO

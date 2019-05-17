@@ -15,7 +15,8 @@
  */
 
 import { expect } from 'chai';
-import {convert} from '../../../src/core/format/convert';
+
+const convert = require('../../../src/core/format/convert').default;
 
 describe('convert', () => {
 	describe('toByte', () => {

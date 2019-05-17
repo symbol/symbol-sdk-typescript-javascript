@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {convert} from '../../core/format/convert';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -29,6 +28,7 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
+const convert = require('../../core/format/convert').default;
 const TransferTransactionLibrary = require('./builders/TransferTransaction').default;
 
 /**

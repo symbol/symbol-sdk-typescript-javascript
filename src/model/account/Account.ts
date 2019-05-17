@@ -16,7 +16,6 @@
 
 import { keyPair as KeyPair} from '../../core/crypto/keyPair';
 import { address as AddressLibrary } from '../../core/format/address';
-import { convert } from '../../core/format/convert';
 import {NetworkType} from '../blockchain/NetworkType';
 import {AggregateTransaction} from '../transaction/AggregateTransaction';
 import {CosignatureSignedTransaction} from '../transaction/CosignatureSignedTransaction';
@@ -28,6 +27,7 @@ import {Transaction} from '../transaction/Transaction';
 import {Address} from './Address';
 import {PublicAccount} from './PublicAccount';
 
+const convert = require('../../core/format/convert').default;
 const nacl_catapult = require( '../../core/crypto/nacl_catapult');
 
 interface IKeyPair {

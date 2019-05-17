@@ -19,7 +19,7 @@
  */
 import VerifiableTransaction from './VerifiableTransaction';
 import * as TransferTransactionBufferPackage from '../TransferTransactionBuffer';
-import {convert} from "../../../core/format/convert";
+const convert = require('../../../core/format/convert').default;
 import TransferTransactionSchema from '../TransferTransactionSchema';
 
 const { flatbuffers } = require('flatbuffers');

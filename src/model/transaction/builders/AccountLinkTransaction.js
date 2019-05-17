@@ -20,7 +20,7 @@
 import VerifiableTransaction from './VerifiableTransaction';
 import AccountLinkTransactionBufferPackage from '../AccountLinkTransactionBuffer';
 import AccountLinkTransactionSchema from '../AccountLinkTransactionSchema';
-import {convert} from "../../../core/format/convert";
+const convert = require('../../../core/format/convert').default;
 const { flatbuffers } = require('flatbuffers');
 
 const { AccountLinkTransactionBuffer } = AccountLinkTransactionBufferPackage.Buffers;

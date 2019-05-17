@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { convert } from '../../core/format/convert';
 import { uint64 as uint64_t } from '../../core/format/uint64';
 import {PublicAccount} from '../account/PublicAccount';
 import {Id} from '../Id';
 import {MosaicNonce} from '../mosaic/MosaicNonce';
 import { mosaicId as MosaicIdentifierGenerator } from '../transaction/builders/NamespaceMosaicId';
+
+const convert = require('../../core/format/convert').default;
 /**
  * The mosaic id structure describes mosaic id
  *

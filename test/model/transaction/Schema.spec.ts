@@ -15,13 +15,14 @@
  */
 
 import {expect} from 'chai';
-import {convert} from '../../../src/core/format/convert';
 import * as TransferTransactionBufferPackage from '../../../src/model/transaction/TransferTransactionBuffer';
 
 const { array, Schema, table, tableArray, TypeSize, ubyte, uint, ushort } = require('../../../src/model/transaction/Schema');
 const { flatbuffers } = require('flatbuffers');
 const transfer = require ('../../../../resources/request_before_sign.json');
 const { TransferTransactionBuffer, MessageBuffer, MosaicBuffer } = TransferTransactionBufferPackage.default.Buffers;
+
+const convert = require('../../../src/core/format/convert').default;
 
 describe('Schema', () => {
 	let bytes;
@@ -107,10 +108,10 @@ describe('Schema', () => {
 		const result = transferTransactionSchema.serialize(Array.from(bytes));
 		const resPayload = convert.uint8ToHex(result);
 
-		// expect(resPayload).to.be.equal('A600000026A7C1D2071EFB95EC0F5BE949AE4F561485A1A770662A' +
-		// 	'F4F6EF4E1D6896BE30E66F81A4421DF44B2E9644F24C1A45CDCD7AFDDB8EAB1CD98B1C85F73B64A10' +
-		// 	'E9A49366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456B240390014100000000' +
-		// 	'0000000045A40ECB0A00000090E8FEBD671DD41BEE94EC3BA5831CB608A312C2F203BA84AC0200010' +
-		// 	'00029CF5FD941AD25D58096980000000000');
+		expect(resPayload).to.be.equal('A600000026A7C1D2071EFB95EC0F5BE949AE4F561485A1A770662A' +
+			'F4F6EF4E1D6896BE30E66F81A4421DF44B2E9644F24C1A45CDCD7AFDDB8EAB1CD98B1C85F73B64A10' +
+			'E9A49366406ACA952B88BADF5F1E9BE6CE4968141035A60BE503273EA65456B240390014100000000' +
+			'0000000045A40ECB0A00000090E8FEBD671DD41BEE94EC3BA5831CB608A312C2F203BA84AC0200010' +
+			'00029CF5FD941AD25D58096980000000000');
 	});
 });

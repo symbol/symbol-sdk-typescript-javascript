@@ -18,7 +18,7 @@
 import {sha3Hasher} from './sha3Hasher';
 import nacl from './nacl_catapult';
 import array from '../format/array';
-import {convert} from '../format/convert';
+import convert from '../format/convert';
 
 const Key_Size = 32;
 const Signature_Size = 64;

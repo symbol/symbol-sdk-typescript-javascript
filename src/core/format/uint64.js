@@ -16,7 +16,8 @@
 
 /** @module coders/uint64 */
 
-import { convert } from './convert';
+import convert  from './convert';
+
 
 const readUint32At = (bytes, i) => (bytes[i] + (bytes[i + 1] << 8) + (bytes[i + 2] << 16) + (bytes[i + 3] << 24)) >>> 0;
 

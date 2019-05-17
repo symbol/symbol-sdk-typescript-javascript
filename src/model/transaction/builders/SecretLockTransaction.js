@@ -21,7 +21,7 @@ import VerifiableTransaction from './VerifiableTransaction';
 import * as SecretLockTransactionBufferPackage from '../SecretLockTransactionBuffer';
 import SecretLockTransactionSchema from '../SecretLockTransactionSchema';
 import {address} from "../../../core/format/address";
-import {convert} from "../../../core/format/convert";
+const convert = require('../../../core/format/convert').default;
 
 const { flatbuffers } = require('flatbuffers');
 

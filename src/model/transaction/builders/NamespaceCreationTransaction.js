@@ -19,7 +19,7 @@
  */
 import VerifiableTransaction from './VerifiableTransaction';
 import NamespaceCreationTransactionSchema from '..//NamespaceCreationTransactionSchema';
-import {convert} from "../../../core/format/convert";
+const convert = require('../../../core/format/convert').default;
 import * as NamespaceCreationTransactionBufferPackage from '../NamespaceCreationTransactionBuffer';
 
 const { NamespaceCreationTransactionBuffer } = NamespaceCreationTransactionBufferPackage.default.Buffers;

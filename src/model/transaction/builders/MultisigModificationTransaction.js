@@ -16,7 +16,7 @@
 
 import VerifiableTransaction from './VerifiableTransaction';
 import MultisigModificationTransactionSchema from '../MultisigModificationTransactionSchema';
-import {convert} from "../../../core/format/convert";
+const convert = require('../../../core/format/convert').default;
 import MultisigModificationTransactionBufferPackage from '../MultisigModificationTransactionBuffer';
 
 const { flatbuffers } = require('flatbuffers');

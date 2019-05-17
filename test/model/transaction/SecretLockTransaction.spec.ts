@@ -24,7 +24,8 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashType} from '../../../src/model/transaction/HashType';
 import {SecretLockTransaction} from '../../../src/model/transaction/SecretLockTransaction';
 import {UInt64} from '../../../src/model/UInt64';
-import {convert} from "../../../src/core/format/convert";
+
+const convert = require('../../../src/core/format/convert').default;
 
 describe('SecretLockTransaction', () => {
 

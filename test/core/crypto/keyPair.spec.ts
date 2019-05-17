@@ -16,9 +16,9 @@
 
 import { expect } from 'chai';
 import { keyPair as KeyPair} from '../../../src/core/crypto/keyPair';
-import { convert } from '../../../src/core/format/convert';
 import * as test from '../../testUtils.spec';
 
+const convert = require('../../../src/core/format/convert').default;
 
 describe('key pair', () => {
 	const Private_Key_Size = 32;

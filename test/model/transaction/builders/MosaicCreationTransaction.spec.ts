@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import {convert} from '../../../../src/core/format/convert';
 import {uint64} from '../../../../src/core/format/uint64';
 import {expect} from 'chai';
 import deadline from '../../../../src/model/transaction/builders/Deadline';
 import { mosaicId } from '../../../../src/model/transaction/builders/NamespaceMosaicId';
 
 const  MosaicCreationTransaction = require('../../../../src/model/transaction/builders/MosaicCreationTransaction').default;
+const convert = require('../../../../src/core/format/convert').default;
 
 describe('MosaicCreationTransaction', () => {
 	const keyPair = {

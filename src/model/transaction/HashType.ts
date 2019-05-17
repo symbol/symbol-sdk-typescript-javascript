@@ -22,7 +22,7 @@
  * 3: Op_Hash_256: input is hashed twice with SHA-256 (BTC compatibility)
  */
 
-import {convert} from '../../core/format/convert';
+const convert = require('../../core/format/convert').default;
 
 export enum HashType {
     Op_Sha3_256 = 0,

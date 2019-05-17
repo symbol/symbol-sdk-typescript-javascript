@@ -16,7 +16,8 @@
 
 import { expect } from 'chai';
 import array from '../../../src/core/format/array';
-import {convert} from '../../../src/core/format/convert';
+
+const convert = require('../../../src/core/format/convert').default;
 
 describe('array', () => {
 	describe('uint8View', () => {

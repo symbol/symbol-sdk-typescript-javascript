@@ -20,7 +20,7 @@
 import VerifiableTransaction from './VerifiableTransaction';
 import * as HashLockTransactionBufferPackage from '../HashLockTransactionBuffer';
 import HashLockTransactionSchema from '../HashLockTransactionSchema';
-import {convert} from "../../../core/format/convert";
+const convert = require('../../../core/format/convert').default;
 
 const { flatbuffers } = require('flatbuffers');
 

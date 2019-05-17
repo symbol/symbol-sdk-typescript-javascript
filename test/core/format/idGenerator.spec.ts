@@ -17,8 +17,9 @@
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
 import idGenerator from '../../../src/core/format/idGenerator';
-import {convert} from '../../../src/core/format/convert';
 import {uint64} from '../../../src/core/format/uint64';
+
+const convert = require('../../../src/core/format/convert').default;
 
 const constants = {
 	nem_id: [0x375FFA4B, 0x84B3552D],

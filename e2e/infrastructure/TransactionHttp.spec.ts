@@ -53,7 +53,7 @@ import {APIUrl, Cosignatory2Account, CosignatoryAccount, MultisigAccount, Testin
 import * as conf from '../conf/conf.spec';
 
 const nacl_catapult = require( '../../src/core/crypto/nacl_catapult');
-const convert = require( '../../src/core/format/convert');
+const convert = require( '../../src/core/format/convert').default;
 
 describe('TransactionHttp', () => {
     let account: Account;

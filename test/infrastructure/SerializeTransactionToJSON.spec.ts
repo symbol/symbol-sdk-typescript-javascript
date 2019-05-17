@@ -16,7 +16,6 @@
 
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
-import {convert} from '../../src/core/format/convert';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';
@@ -53,6 +52,8 @@ import { TransactionType } from '../../src/model/transaction/TransactionType' ;
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 import { TestingAccount } from '../conf/conf.spec';
+
+const convert = require('../../src/core/format/convert').default;
 
 describe('SerializeTransactionToJSON', () => {
     let account: Account;

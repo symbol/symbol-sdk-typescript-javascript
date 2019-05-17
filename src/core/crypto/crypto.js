@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {convert} from '../format/convert';
+import convert from '../format/convert'
 import nacl from './nacl_catapult';
 import CryptoJS from 'crypto-js';
 import {keyPair as KeyPair } from './keyPair';

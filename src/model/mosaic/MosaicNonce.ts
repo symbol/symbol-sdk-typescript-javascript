@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import {convert} from '../../core/format/convert';
-
+const convert = require('../../core/format/convert').default;
 const nacl_catapult = require( '../../core/crypto/nacl_catapult');
 
 /**

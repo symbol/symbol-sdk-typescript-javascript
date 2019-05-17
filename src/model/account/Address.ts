@@ -15,9 +15,9 @@
  */
 
 import { address as AddressLibrary } from '../../core/format/address';
-import { convert } from '../../core/format/convert';
 import {NetworkType} from '../blockchain/NetworkType';
 
+const convert = require('../../core/format/convert').default;
 /**
  * The address structure describes an address with its network
  */

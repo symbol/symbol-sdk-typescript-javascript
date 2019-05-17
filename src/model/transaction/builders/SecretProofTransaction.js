@@ -20,7 +20,7 @@
 import VerifiableTransaction from './VerifiableTransaction';
 import * as SecretProofTransactionBufferPackage from '../SecretProofTransactionBuffer';
 import SecretProofTransactionSchema from '../SecretProofTransactionSchema';
-import {convert} from "../../../core/format/convert";
+const convert = require('../../../core/format/convert').default;
 
 const { flatbuffers } = require('flatbuffers');
 

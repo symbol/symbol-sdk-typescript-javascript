@@ -15,7 +15,6 @@
  */
 
 import {decode} from 'utf8';
-import { convert } from '../../core/format/convert';
 import { Address } from '../../model/account/Address';
 import { PublicAccount } from '../../model/account/PublicAccount';
 import { NetworkType } from '../../model/blockchain/NetworkType';
@@ -53,6 +52,9 @@ import { Transaction } from '../../model/transaction/Transaction';
 import { TransactionType } from '../../model/transaction/TransactionType';
 import { TransferTransaction } from '../../model/transaction/TransferTransaction';
 import { UInt64 } from '../../model/UInt64';
+
+const convert = require('../../core/format/convert').default;
+
 
 /**
  * @internal
