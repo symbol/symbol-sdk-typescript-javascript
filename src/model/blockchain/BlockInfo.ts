@@ -87,7 +87,7 @@ export class BlockInfo {
                  */
                 public readonly height: UInt64,
                 /**
-                 * The number of seconds elapsed since the creation of the nemesis blockchain.
+                 * The number of milliseconds elapsed since the creation of the nemesis blockchain.
                  */
                 public readonly timestamp: UInt64,
                 /**
