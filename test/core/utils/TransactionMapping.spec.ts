@@ -378,17 +378,18 @@ describe('TransactionMapping - createFromPayload', () => {
             Deadline.create(),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
             proof,
             NetworkType.MIJIN_TEST,
         );
 
         const signedTransaction = secretProofTransaction.signWith(account);
-
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as SecretProofTransaction;
 
         expect(secretProofTransaction.hashType).to.be.equal(0);
         expect(secretProofTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e' );
         expect(secretProofTransaction.proof).to.be.equal(proof);
+        expect(secretProofTransaction.recipient.plain()).to.be.equal(account.address.plain());
 
     });
 
@@ -776,6 +777,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             Deadline.create(),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
             proof,
             NetworkType.MIJIN_TEST,
         );
@@ -786,6 +788,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
         expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
         expect(transaction.secret).to.be.equal(sha3_256.create().update(convert.hexToUint8(proof)).hex());
+        deepEqual(transaction.recipient, account.address);
         expect(transaction.proof).to.be.equal(proof);
 
     });

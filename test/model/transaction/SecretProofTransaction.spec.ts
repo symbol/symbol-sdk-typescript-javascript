@@ -17,13 +17,20 @@ import {expect} from 'chai';
 import * as CryptoJS from 'crypto-js';
 import {keccak_256, sha3_256} from 'js-sha3';
 import {convert} from 'nem2-library';
+import { Account } from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashType} from '../../../src/model/transaction/HashType';
 import {SecretProofTransaction} from '../../../src/model/transaction/SecretProofTransaction';
 import {UInt64} from '../../../src/model/UInt64';
+import { TestingAccount } from '../../conf/conf.spec';
 
 describe('SecretProofTransaction', () => {
+    let account: Account;
+
+    before(() => {
+        account = TestingAccount;
+    });
 
     it('should default maxFee field be set to 0', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
@@ -31,6 +38,7 @@ describe('SecretProofTransaction', () => {
             Deadline.create(),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
             proof,
             NetworkType.MIJIN_TEST,
         );
@@ -45,9 +53,10 @@ describe('SecretProofTransaction', () => {
             Deadline.create(),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
             proof,
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(secretProofTransaction.maxFee.higher).to.be.equal(0);
@@ -60,6 +69,7 @@ describe('SecretProofTransaction', () => {
             Deadline.create(),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
             proof,
             NetworkType.MIJIN_TEST,
         );
@@ -75,6 +85,7 @@ describe('SecretProofTransaction', () => {
                 Deadline.create(),
                 HashType.Op_Sha3_256,
                 'non valid hash',
+                account.address,
                 proof,
                 NetworkType.MIJIN_TEST,
             );
@@ -86,6 +97,7 @@ describe('SecretProofTransaction', () => {
             Deadline.create(),
             HashType.Op_Keccak_256,
             keccak_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
             proof,
             NetworkType.MIJIN_TEST,
         );
@@ -101,6 +113,7 @@ describe('SecretProofTransaction', () => {
                 Deadline.create(),
                 HashType.Op_Keccak_256,
                 'non valid hash',
+                account.address,
                 proof,
                 NetworkType.MIJIN_TEST,
             );
@@ -112,6 +125,7 @@ describe('SecretProofTransaction', () => {
             Deadline.create(),
             HashType.Op_Hash_160,
             CryptoJS.RIPEMD160(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
+            account.address,
             proof,
             NetworkType.MIJIN_TEST,
         );
@@ -127,6 +141,7 @@ describe('SecretProofTransaction', () => {
                 Deadline.create(),
                 HashType.Op_Hash_160,
                 'non valid hash',
+                account.address,
                 proof,
                 NetworkType.MIJIN_TEST,
             );
@@ -139,6 +154,7 @@ describe('SecretProofTransaction', () => {
             Deadline.create(),
             HashType.Op_Hash_256,
             CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
+            account.address,
             proof,
             NetworkType.MIJIN_TEST,
         );
@@ -154,6 +170,7 @@ describe('SecretProofTransaction', () => {
                 Deadline.create(),
                 HashType.Op_Hash_256,
                 'non valid hash',
+                account.address,
                 proof,
                 NetworkType.MIJIN_TEST,
             );
@@ -161,16 +178,17 @@ describe('SecretProofTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 167 for SecretProofTransaction with proof and secret both 32 bytes', () => {
+        it('should return 212 for SecretProofTransaction with proof and secret both 32 bytes', () => {
             const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
             const secretProofTransaction = SecretProofTransaction.create(
                 Deadline.create(),
                 HashType.Op_Hash_256,
                 CryptoJS.SHA256(CryptoJS.SHA256(proof).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex),
+                account.address,
                 proof,
                 NetworkType.MIJIN_TEST,
             );
-            expect(secretProofTransaction.size).to.be.equal(187);
+            expect(secretProofTransaction.size).to.be.equal(212);
         });
     });
 });

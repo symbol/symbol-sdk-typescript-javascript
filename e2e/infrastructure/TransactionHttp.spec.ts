@@ -1190,13 +1190,19 @@ describe('TransactionHttp', () => {
                     Deadline.create(),
                     HashType.Op_Sha3_256,
                     secret,
+                    account2.address,
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
-                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
-                    done();
-                });
                 transactionHttp.announce(secretProofTransaction.signWith(account2));
+            });
+            listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account2.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
@@ -1236,6 +1242,7 @@ describe('TransactionHttp', () => {
                     Deadline.create(),
                     HashType.Op_Sha3_256,
                     secret,
+                    account2.address,
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
@@ -1283,6 +1290,7 @@ describe('TransactionHttp', () => {
                     Deadline.create(),
                     HashType.Op_Keccak_256,
                     secret,
+                    account2.address,
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
@@ -1331,6 +1339,7 @@ describe('TransactionHttp', () => {
                     Deadline.create(),
                     HashType.Op_Keccak_256,
                     secret,
+                    account2.address,
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
@@ -1380,6 +1389,7 @@ describe('TransactionHttp', () => {
                     Deadline.create(),
                     HashType.Op_Hash_160,
                     secret,
+                    account2.address,
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
@@ -1430,6 +1440,7 @@ describe('TransactionHttp', () => {
                     Deadline.create(),
                     HashType.Op_Hash_160,
                     secret,
+                    account2.address,
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
@@ -1484,6 +1495,7 @@ describe('TransactionHttp', () => {
                     Deadline.create(),
                     HashType.Op_Hash_256,
                     secret,
+                    account2.address,
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
@@ -1534,6 +1546,7 @@ describe('TransactionHttp', () => {
                     Deadline.create(),
                     HashType.Op_Hash_256,
                     secret,
+                    account2.address,
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
