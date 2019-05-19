@@ -147,6 +147,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             return {
                 hashAlgorithm: (transaction as SecretProofTransaction).hashType,
                 secret: (transaction as SecretProofTransaction).secret,
+                recipient: (transaction as SecretProofTransaction).recipient.toDTO(),
                 proof: (transaction as SecretProofTransaction).proof,
             };
         case TransactionType.TRANSFER:

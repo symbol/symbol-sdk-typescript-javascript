@@ -311,16 +311,18 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
             const secretProofHashAlgorithm = parseInt(convert.uint8ToHex(convert.hexToUint8(
                 transactionData.substring(0, 2)).reverse()), 16);
 
-            const secretProofSecretLength = HashType.Op_Hash_160 === secretProofHashAlgorithm ? 40 : 64;
-            const secretProofSecret = transactionData.substring(2, 2 + secretProofSecretLength);
-            const secretProofSize = transactionData.substring(2 + secretProofSecretLength, 6 + secretProofSecretLength);
-            const mosaicProof = transactionData.substring(6 + secretProofSecretLength);
+            const secretProofSecretLength = 64;
+            const secretProofSecret = transactionData.substring(2, 66);
+            const secretProofRecipient = transactionData.substring(66, 116);
+            const secretProofSize = transactionData.substring(116, 120);
+            const secretProofProof = transactionData.substring(120);
 
             return SecretProofTransaction.create(
                 Deadline.createFromDTO(deadline),
                 secretProofHashAlgorithm,
                 secretProofSecret,
-                mosaicProof,
+                Address.createFromEncoded(secretProofRecipient),
+                secretProofProof,
                 networkType,
             );
         case TransactionType.MODIFY_MULTISIG_ACCOUNT:
