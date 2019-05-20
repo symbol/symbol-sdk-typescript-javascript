@@ -34,6 +34,7 @@ import { MultisigCosignatoryModification } from '../../src/model/transaction/Mul
 import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 
 describe('AccountHttp', () => {
     let account: Account;
@@ -236,7 +237,14 @@ describe('AccountHttp', () => {
                 ],
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = multisigAccount.sign(modifyMultisigAccountTransaction);
+
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            const signedTransaction = aggregateTransaction
+                .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3]);
+
             listener.confirmed(multisigAccount.address).subscribe((transaction) => {
                 done();
             });
@@ -247,6 +255,7 @@ describe('AccountHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
+
     describe('getMultisigAccountGraphInfo', () => {
         it('should call getMultisigAccountGraphInfo successfully', (done) => {
             setTimeout(() => {
