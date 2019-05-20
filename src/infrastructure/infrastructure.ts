@@ -16,8 +16,8 @@
 
 export * from './AccountHttp';
 export * from './BlockHttp';
-export * from './ChainHttps';
-export * from './DiagnosticHttps';
+export * from './ChainHttp';
+export * from './DiagnosticHttp';
 export * from './Http';
 export * from './MosaicHttp';
 export * from './NamespaceHttp';
