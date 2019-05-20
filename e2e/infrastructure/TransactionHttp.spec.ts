@@ -1176,10 +1176,11 @@ describe('TransactionHttp', () => {
             const secretSeed = nacl_catapult.randomBytes(20);
             const secret = sha3_256.create().update(secretSeed).hex();
             const proof = convert.uint8ToHex(secretSeed);
+
             const secretLockTransaction = SecretLockTransaction.create(
-                Deadline.create(),
+                Deadline.create(1, ChronoUnit.HOURS),
                 NetworkCurrencyMosaic.createAbsolute(10),
-                UInt64.fromUint(100),
+                UInt64.fromUint(11),
                 HashType.Op_Sha3_256,
                 secret,
                 account2.address,
@@ -1194,7 +1195,8 @@ describe('TransactionHttp', () => {
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
-                transactionHttp.announce(secretProofTransaction.signWith(account2));
+                const signedTx = secretProofTransaction.signWith(account2);
+                transactionHttp.announce(signedTx);
             });
             listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
                 done();
@@ -1204,12 +1206,8 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            const signedSecretLockTx = secretLockTransaction.signWith(account);
+            transactionHttp.announce(signedSecretLockTx);
         });
     });
     describe('SecretProofTransaction - HashType: Op_Sha3_256', () => {
@@ -1330,11 +1328,6 @@ describe('TransactionHttp', () => {
                 listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
                     done();
                 });
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
                 const secretProofTransaction = SecretProofTransaction.create(
                     Deadline.create(),
                     HashType.Op_Keccak_256,
@@ -1348,6 +1341,11 @@ describe('TransactionHttp', () => {
                     NetworkType.MIJIN_TEST,
                     []);
                 transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
             });
             transactionHttp.announce(secretLockTransaction.signWith(account));
         });
@@ -1377,14 +1375,6 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
-                    done();
-                });
-                listener.status(account2.address).subscribe((error) => {
-                    console.log('Error:', error);
-                    assert(false);
-                    done();
-                });
                 const secretProofTransaction = SecretProofTransaction.create(
                     Deadline.create(),
                     HashType.Op_Hash_160,
@@ -1393,7 +1383,16 @@ describe('TransactionHttp', () => {
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
-                transactionHttp.announce(secretProofTransaction.signWith(account2));
+                const signedTx = secretProofTransaction.signWith(account2);
+                transactionHttp.announce(signedTx);
+            });
+            listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account2.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
@@ -1524,6 +1523,7 @@ describe('TransactionHttp', () => {
             const hash = sha256(Buffer.from(secretSeed, 'hex'));
             const secret = sha256(Buffer.from(hash, 'hex'));
             const proof = secretSeed;
+            let proofAnnounced = false;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyMosaic.createAbsolute(10),
@@ -1732,40 +1732,6 @@ describe('TransactionHttp', () => {
     //                 expect(err.status).to.be.equal('Failure_LockHash_Invalid_Mosaic_Amount');
     //                 done();
     //             });
-    //     });
-    // });
-
-    // Already created / tested in account http
-    // describe('ModifyMultisigAccountTransaction', () => {
-    //     let listener: Listener;
-    //     before (() => {
-    //         listener = new Listener(config.apiUrl);
-    //         return listener.open();
-    //     });
-    //     after(() => {
-    //         return listener.close();
-    //     });
-    //     it('Add cosigners', (done) => {
-    //         const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
-    //             Deadline.create(),
-    //             2,
-    //             1,
-    //             [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount1.publicAccount),
-    //                 new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount2.publicAccount),
-    //                 new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount3.publicAccount),
-    //             ],
-    //             NetworkType.MIJIN_TEST,
-    //         );
-    //         const signedTransaction = multisigAccount.sign(modifyMultisigAccountTransaction);
-    //         listener.confirmed(multisigAccount.address).subscribe((transaction: Transaction) => {
-    //             done();
-    //         });
-    //         listener.status(multisigAccount.address).subscribe((error) => {
-    //             console.log('Error:', error);
-    //             assert(false);
-    //             done();
-    //         });
-    //         transactionHttp.announce(signedTransaction);
     //     });
     // });
 });
