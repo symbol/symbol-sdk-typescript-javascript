@@ -518,7 +518,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                [accountLinkTransaction.toAggregate(harvestingAccount.publicAccount)],
+                [accountLinkTransaction.toAggregate(account.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 [],
             );
