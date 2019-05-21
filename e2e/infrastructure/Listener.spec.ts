@@ -23,11 +23,15 @@ import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
 import { TransactionUtils } from './TransactionUtils';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { PlainMessage } from '../../src/model/transaction/PlainMessage';
+import { Mosaic, UInt64 } from '../../src/model/model';
 
 describe('Listener', () => {
 
@@ -165,6 +169,77 @@ describe('Listener', () => {
         });
     });
 
+    describe('TransferTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                cosignAccount1.address,
+                [new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY)))],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = transferTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('ModifyMultisigAccountTransaction - Create multisig account', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('ModifyMultisigAccountTransaction', (done) => {
+            const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                2,
+                1,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount1.publicAccount),
+                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount2.publicAccount),
+                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount3.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [modifyMultisigAccountTransaction.toAggregate(multisigAccount.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            const signedTransaction = aggregateTransaction
+                .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3]);
+
+            listener.confirmed(multisigAccount.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(multisigAccount.address).subscribe((error) => {
+                console.log('Error:', error);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
     describe('Aggregate Bonded Transactions', () => {
         let listener: Listener;
         before (() => {
@@ -263,6 +338,62 @@ describe('Listener', () => {
 
             TransactionUtils.
                 createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, networkCurrencyMosaicId, transactionHttp );
+        });
+    });
+
+    describe('ModifyMultisigAccountTransaction - Restore multisig Accounts', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('Restore Multisig Account', (done) => {
+            const removeCosigner1 = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                -1,
+                0,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount1.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+            const removeCosigner2 = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                0,
+                0,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount2.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+
+            const removeCosigner3 = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                -1,
+                -1,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount3.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [removeCosigner1.toAggregate(multisigAccount.publicAccount),
+                 removeCosigner2.toAggregate(multisigAccount.publicAccount),
+                 removeCosigner3.toAggregate(multisigAccount.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            const signedTransaction = aggregateTransaction
+                .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3]);
+
+            listener.confirmed(multisigAccount.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(multisigAccount.address).subscribe((error) => {
+                console.log('Error:', error);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
         });
     });
 

@@ -28,13 +28,13 @@ import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AccountPropertyModification } from '../../src/model/transaction/AccountPropertyModification';
 import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
+import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 
 describe('AccountHttp', () => {
     let account: Account;
@@ -217,7 +217,7 @@ describe('AccountHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('ModifyMultisigAccountTransaction', () => {
+    describe('ModifyMultisigAccountTransaction - Create multisig account', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -277,12 +277,60 @@ describe('AccountHttp', () => {
             }, 1000);
         });
     });
-    describe('incomingTransactions', () => {
-        it('should call incomingTransactions successfully', (done) => {
-            accountHttp.incomingTransactions(publicAccount).subscribe((transactions) => {
-                expect(transactions.length).to.be.greaterThan(0);
+
+    describe('ModifyMultisigAccountTransaction - Restore multisig Accounts', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('Restore Multisig Account', (done) => {
+            const removeCosigner1 = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                -1,
+                0,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount1.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+            const removeCosigner2 = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                0,
+                0,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount2.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+
+            const removeCosigner3 = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                -1,
+                -1,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount3.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [removeCosigner1.toAggregate(multisigAccount.publicAccount),
+                 removeCosigner2.toAggregate(multisigAccount.publicAccount),
+                 removeCosigner3.toAggregate(multisigAccount.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            const signedTransaction = aggregateTransaction
+                .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3]);
+
+            listener.confirmed(multisigAccount.address).subscribe((transaction) => {
                 done();
             });
+            listener.status(multisigAccount.address).subscribe((error) => {
+                console.log('Error:', error);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
         });
     });
 
