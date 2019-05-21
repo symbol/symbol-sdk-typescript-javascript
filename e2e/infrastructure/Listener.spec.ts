@@ -32,6 +32,9 @@ import { MultisigCosignatoryModificationType } from '../../src/model/transaction
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { TransactionUtils } from './TransactionUtils';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { PlainMessage } from '../../src/model/transaction/PlainMessage';
+import { Mosaic, UInt64 } from '../../src/model/model';
 
 describe('Listener', () => {
 
@@ -396,6 +399,62 @@ describe('Listener', () => {
                 done();
             });
             listener.status(cosignAccount1.address).subscribe((error) => {
+                console.log('Error:', error);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('ModifyMultisigAccountTransaction - Restore multisig Accounts', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('Restore Multisig Account', (done) => {
+            const removeCosigner1 = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                -1,
+                0,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount1.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+            const removeCosigner2 = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                0,
+                0,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount2.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+
+            const removeCosigner3 = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                -1,
+                -1,
+                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount3.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+            );
+
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [removeCosigner1.toAggregate(multisigAccount.publicAccount),
+                 removeCosigner2.toAggregate(multisigAccount.publicAccount),
+                 removeCosigner3.toAggregate(multisigAccount.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            const signedTransaction = aggregateTransaction
+                .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3]);
+
+            listener.confirmed(multisigAccount.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(multisigAccount.address).subscribe((error) => {
                 console.log('Error:', error);
                 done();
             });
