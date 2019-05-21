@@ -66,6 +66,21 @@ export * from './namespace/NamespaceName';
 export * from './namespace/NamespaceType';
 export * from './namespace/AliasActionType';
 
+// Receipt
+export * from './receipt/ArtifactExpiryReceipt';
+export * from './receipt/BalanceChangeReceipt';
+export * from './receipt/BalanceTransferReceipt';
+export * from './receipt/Receipt';
+export * from './receipt/ReceiptSource';
+export * from './receipt/ReceiptType';
+export * from './receipt/ReceiptVersion';
+export * from './receipt/ResolutionEntry';
+export * from './receipt/ResolutionStatement';
+export * from './receipt/TransactionStatement';
+export * from './receipt/ResolutionType';
+export * from './receipt/InflationReceipt';
+export * from './receipt/Statement';
+
 // Transaction
 export * from './transaction/AccountLinkTransaction';
 export * from './transaction/AccountPropertyTransaction';

@@ -16,18 +16,21 @@
 
 import {BlockRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, mergeMap} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { MerkleProofInfoPayload } from '../model/blockchain/MerkleProofInfoPayload';
+import { Statement } from '../model/receipt/Statement';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
 import {BlockRepository} from './BlockRepository';
 import {Http} from './Http';
 import {QueryParams} from './QueryParams';
+import { CreateStatementFromDTO } from './receipt/CreateReceiptFromDTO';
 import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
+import { NetworkHttp } from './NetworkHttp';
 
 /**
  * Blockchain http repository.
@@ -45,8 +48,9 @@ export class BlockHttp extends Http implements BlockRepository {
      * Constructor
      * @param url
      */
-    constructor(url: string) {
-        super(url);
+    constructor(url: string, networkHttp?: NetworkHttp) {
+        networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
+        super(url, networkHttp);
         this.blockRoutesApi = new BlockRoutesApi(this.apiClient);
     }
 
@@ -172,5 +176,23 @@ export class BlockHttp extends Http implements BlockRepository {
                     merkleProofReceipt.type,
                 );
         }));
+    }
+
+    /**
+     * Gets an array receipts for a block height.
+     * @param height - Block height from which will be the first block in the array
+     * @param queryParams - (Optional) Query params
+     * @returns Observable<Statement>
+     */
+    public getBlockReceipts(height: number): Observable<Statement> {
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(
+                this.blockRoutesApi.getBlockReceipts(height)).pipe(
+                    map((receiptDTO) => {
+                        return CreateStatementFromDTO(receiptDTO, networkType);
+                    }),
+                ),
+            ),
+        );
     }
 }
