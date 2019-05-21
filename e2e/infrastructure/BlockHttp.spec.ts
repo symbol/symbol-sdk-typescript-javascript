@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
+import {assert, expect} from 'chai';
 import {BlockHttp} from '../../src/infrastructure/BlockHttp';
+import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import {QueryParams} from '../../src/infrastructure/QueryParams';
+import { Account } from '../../src/model/account/Account';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { Deadline } from '../../src/model/transaction/Deadline';
+import { PlainMessage } from '../../src/model/transaction/PlainMessage';
+import { Transaction } from '../../src/model/transaction/Transaction';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 
 describe('BlockHttp', () => {
+    let account: Account;
+    let account2: Account;
     let blockHttp: BlockHttp;
+    let transactionHttp: TransactionHttp;
     let blockReceiptHash = '';
     let blockTransactionHash = '';
+    let config;
+    let chainHeight;
     before((done) => {
         const path = require('path');
         require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
@@ -29,10 +42,50 @@ describe('BlockHttp', () => {
                 throw err;
             }
             const json = JSON.parse(data);
+            config = json;
+            account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
+            account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, NetworkType.MIJIN_TEST);
             blockHttp = new BlockHttp(json.apiUrl);
+            transactionHttp = new TransactionHttp(json.apiUrl);
             done();
         });
     });
+
+    describe('Setup test data', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                account2.address,
+                [NetworkCurrencyMosaic.createAbsolute(1)],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = transferTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+
+                chainHeight = transaction.transactionInfo!.height.lower;
+                console.log(`Test chain height: ${chainHeight}`);
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
     describe('getBlockByHeight', () => {
         it('should return block info given height', (done) => {
             blockHttp.getBlockByHeight(1)
@@ -74,7 +127,7 @@ describe('BlockHttp', () => {
 
     describe('getBlocksByHeightWithLimit', () => {
         it('should return block info given height and limit', (done) => {
-            blockHttp.getBlocksByHeightWithLimit(1, 50)
+            blockHttp.getBlocksByHeightWithLimit(chainHeight, 50)
                 .subscribe((blocksInfo) => {
                     expect(blocksInfo.length).to.be.greaterThan(0);
                     done();
@@ -83,7 +136,7 @@ describe('BlockHttp', () => {
     });
     describe('getMerkleReceipts', () => {
         it('should return Merkle Receipts', (done) => {
-            blockHttp.getMerkleReceipts(1, blockReceiptHash)
+            blockHttp.getMerkleReceipts(chainHeight, blockReceiptHash)
                 .subscribe((merkleReceipts) => {
                     expect(merkleReceipts.type).not.to.be.null;
                     expect(merkleReceipts.payload).not.to.be.null;
@@ -93,7 +146,7 @@ describe('BlockHttp', () => {
     });
     describe('getMerkleTransaction', () => {
         it('should return Merkle Transaction', (done) => {
-            blockHttp.getMerkleTransaction(1, blockTransactionHash)
+            blockHttp.getMerkleTransaction(chainHeight, blockTransactionHash)
                 .subscribe((merkleTransactionss) => {
                     expect(merkleTransactionss.type).not.to.be.null;
                     expect(merkleTransactionss.payload).not.to.be.null;
@@ -102,14 +155,15 @@ describe('BlockHttp', () => {
         });
     });
 
-    // describe('getBlockReceipts', () => {
-    //     it('should return block receipts', (done) => {
-    //         blockHttp.(1, '')
-    //             .subscribe((merkleTransactionss) => {
-    //                 expect(merkleTransactionss.type).not.to.be.null;
-    //                 expect(merkleTransactionss.payload).not.to.be.null;
-    //                 done();
-    //             });
-    //     });
-    // });
+    describe('getBlockReceipts', () => {
+        it('should return block receipts', (done) => {
+            blockHttp.getBlockReceipts(chainHeight)
+                .subscribe((statement) => {
+                    console.log(statement);
+                    expect(statement.transactionStatements).not.to.be.null;
+                    expect(statement.transactionStatements.length).to.be.greaterThan(0);
+                    done();
+                });
+        });
+    });
 });

@@ -17,6 +17,7 @@
 import {Observable} from 'rxjs';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
+import { Statement } from '../model/receipt/Statement';
 import {Transaction} from '../model/transaction/Transaction';
 import {QueryParams} from './QueryParams';
 
@@ -76,6 +77,11 @@ export interface BlockRepository {
      */
     getMerkleTransaction(height: number, hash: string): Observable<MerkleProofInfo>;
 
-    // TODO:
-    // getBlockReceipts(height: number): Observable<any>;
+    /**
+     * Get receipts from a block
+     * Returns the receipts linked to a block.
+     * @param {Number} height The height of the block.
+     * @return Observable<Statement>
+     */
+    getBlockReceipts(height: number): Observable<Statement>;
 }
