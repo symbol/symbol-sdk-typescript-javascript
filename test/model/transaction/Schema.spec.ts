@@ -38,7 +38,7 @@ describe('Schema', () => {
 		const message = MessageBuffer.endMessageBuffer(builder);
 
 		// Create mosaics
-		const mosaics = [null];
+		const mosaics=new Array();
 		transfer.mosaics.forEach(mosaic => {
 			const id = MosaicBuffer.createAmountVector(builder, mosaic.id);
 			const amount = MosaicBuffer.createAmountVector(builder, mosaic.amount);
