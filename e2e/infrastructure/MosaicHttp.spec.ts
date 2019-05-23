@@ -45,7 +45,13 @@ describe('MosaicHttp', () => {
             done();
         });
     });
-    describe('MosaicDefinitionTransaction', () => {
+
+    /**
+     * =========================
+     * Setup Test Data
+     * =========================
+     */
+    describe('Setup test MosaicId', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -54,7 +60,7 @@ describe('MosaicHttp', () => {
         after(() => {
             return listener.close();
         });
-        it('standalone', (done) => {
+        it('Announce MosaicDefinitionTransaction', (done) => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
@@ -85,6 +91,20 @@ describe('MosaicHttp', () => {
                     expect(mosaicInfo.isSupplyMutable()).to.be.equal(true);
                     expect(mosaicInfo.isTransferable()).to.be.equal(true);
                     expect(mosaicInfo.isLevyMutable()).to.be.equal(true);
+                    done();
+                });
+        });
+    });
+
+    describe('getMosaics', () => {
+        it('should return mosaics given array of mosaicIds', (done) => {
+            mosaicHttp.getMosaics([mosaicId])
+                .subscribe((mosaicInfos) => {
+                    expect(mosaicInfos[0].height.lower).not.to.be.null;
+                    expect(mosaicInfos[0].divisibility).to.be.equal(3);
+                    expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(true);
+                    expect(mosaicInfos[0].isTransferable()).to.be.equal(true);
+                    expect(mosaicInfos[0].isLevyMutable()).to.be.equal(true);
                     done();
                 });
         });

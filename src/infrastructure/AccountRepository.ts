@@ -24,6 +24,7 @@ import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {Transaction} from '../model/transaction/Transaction';
 import {QueryParams} from './QueryParams';
 import {AccountPropertiesInfo} from "../model/account/AccountPropertiesInfo";
+import { AccountNames } from '../model/account/AccountNames';
 
 /**
  * Account interface repository.
@@ -45,6 +46,14 @@ export interface AccountRepository {
      * @returns Observable<AccountInfo[]>
      */
     getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]>;
+
+    /**
+     * Get readable names for a set of accountIds.
+     * Returns friendly names for accounts.
+     * @param accountIds List of Address
+     * @return Observable<AccountNames>
+     */
+    getAccountsNames(accountIds: Address[]): Observable<AccountNames[]>;
 
     /**
      * Gets Account property.

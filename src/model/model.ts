@@ -29,6 +29,7 @@ export * from './account/AccountPropertiesInfo';
 export * from './account/AccountProperty';
 export * from './account/PropertyModificationType';
 export * from './account/PropertyType';
+export * from './account/AccountNames';
 
 // Blockchain
 export * from './blockchain/BlockchainScore';
@@ -53,6 +54,7 @@ export * from '../service/MosaicView';
 export * from '../service/MosaicAmountView';
 export * from './mosaic/NetworkCurrencyMosaic';
 export * from './mosaic/NetworkHarvestMosaic';
+export * from './mosaic/MosaicNames';
 
 // Namespace
 export * from '../service/Namespace';
