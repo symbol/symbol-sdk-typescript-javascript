@@ -51,7 +51,13 @@ describe('BlockHttp', () => {
         });
     });
 
-    describe('Setup test data', () => {
+    /**
+     * =========================
+     * Setup Test Data
+     * =========================
+     */
+
+    describe('Setup Test Data', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -61,7 +67,7 @@ describe('BlockHttp', () => {
             return listener.close();
         });
 
-        it('standalone', (done) => {
+        it('Announce TransferTransaction', (done) => {
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
