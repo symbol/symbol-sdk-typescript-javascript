@@ -121,38 +121,6 @@ describe('AccountHttp', () => {
         });
     });
 
-    describe('Setup test AddressAlias', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-
-        it('Announce addressAliasTransaction', (done) => {
-            const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(),
-                AliasActionType.Link,
-                namespaceId,
-                account.address,
-                NetworkType.MIJIN_TEST,
-            );
-            const signedTransaction = addressAliasTransaction.signWith(account);
-
-            listener.confirmed(account.address).subscribe((transaction) => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
-        });
-    });
-
     describe('Setup test NamespaceId', () => {
         let listener: Listener;
         before (() => {
@@ -184,6 +152,37 @@ describe('AccountHttp', () => {
         });
     });
 
+    describe('Setup test AddressAlias', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('Announce addressAliasTransaction', (done) => {
+            const addressAliasTransaction = AddressAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Link,
+                namespaceId,
+                account.address,
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = addressAliasTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
     describe('Setup Test AccountAddressProperty', () => {
         let listener: Listener;
         before (() => {
@@ -447,6 +446,37 @@ describe('AccountHttp', () => {
         });
     });
 
+    describe('Remove test AddressAlias', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('Announce addressAliasTransaction', (done) => {
+            const addressAliasTransaction = AddressAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Unlink,
+                namespaceId,
+                account.address,
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = addressAliasTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
     describe('Restore test multisig Accounts', () => {
         let listener: Listener;
         before (() => {

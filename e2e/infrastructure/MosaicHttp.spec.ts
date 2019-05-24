@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
+import {expect, assert} from 'chai';
 import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import {MosaicHttp} from '../../src/infrastructure/MosaicHttp';
 import { Account } from '../../src/model/account/Account';
@@ -24,12 +24,17 @@ import { MosaicProperties } from '../../src/model/mosaic/MosaicProperties';
 import {NamespaceId} from '../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
+import { RegisterNamespaceTransaction } from '../../src/model/transaction/RegisterNamespaceTransaction';
+import { UInt64 } from '../../src/model/UInt64';
+import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
+import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 
 describe('MosaicHttp', () => {
     let mosaicId: MosaicId;
     let mosaicHttp: MosaicHttp;
     let account: Account;
     let config;
+    let namespaceId: NamespaceId;
     let transactionHttp: TransactionHttp;
     before((done) => {
         const path = require('path');
@@ -82,6 +87,74 @@ describe('MosaicHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
+
+    describe('Setup test NamespaceId', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('Announce RegisterNamespaceTransaction', (done) => {
+            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
+            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+                Deadline.create(),
+                namespaceName,
+                UInt64.fromUint(1000),
+                NetworkType.MIJIN_TEST,
+            );
+            namespaceId = new NamespaceId(namespaceName);
+            const signedTransaction = registerNamespaceTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('Setup test MosaicAlias', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('Announce MosaicAliasTransaction', (done) => {
+            const mosaicAliasTransaction = MosaicAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Link,
+                namespaceId,
+                mosaicId,
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = mosaicAliasTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    /**
+     * =========================
+     * Test
+     * =========================
+     */
     describe('getMosaic', () => {
         it('should return mosaic given mosaicId', (done) => {
             mosaicHttp.getMosaic(mosaicId)
@@ -121,6 +194,52 @@ describe('MosaicHttp', () => {
                     expect(mosaicInfos[0].isLevyMutable()).to.be.equal(true);
                     done();
                 });
+        });
+    });
+
+    describe('getMosaicsNames', () => {
+        it('should call getMosaicsNames successfully', (done) => {
+            mosaicHttp.getMosaicsNames([mosaicId]).subscribe((mosaicNames) => {
+                expect(mosaicNames.length).to.be.greaterThan(0);
+                done();
+            });
+        });
+    });
+
+    /**
+     * =========================
+     * House Keeping
+     * =========================
+     */
+    describe('Remove test MosaicAlias', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('Announce MosaicAliasTransaction', (done) => {
+            const mosaicAliasTransaction = MosaicAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Link,
+                namespaceId,
+                mosaicId,
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = mosaicAliasTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
         });
     });
 });
