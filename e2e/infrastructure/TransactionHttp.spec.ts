@@ -661,71 +661,6 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('MosaicAliasTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-
-        it('standalone', (done) => {
-            const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(),
-                AliasActionType.Link,
-                namespaceId,
-                mosaicId,
-                NetworkType.MIJIN_TEST,
-            );
-            const signedTransaction = mosaicAliasTransaction.signWith(account);
-
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
-        });
-    });
-    describe('MosaicAliasTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('aggregate', (done) => {
-            const mosaicAliasTransaction = MosaicAliasTransaction.create(
-                Deadline.create(),
-                AliasActionType.Unlink,
-                namespaceId,
-                mosaicId,
-                NetworkType.MIJIN_TEST,
-            );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                [mosaicAliasTransaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
-                [],
-            );
-            const signedTransaction = aggregateTransaction.signWith(account);
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
-        });
-    });
 
     describe('MosaicSupplyChangeTransaction', () => {
         let listener: Listener;
@@ -782,6 +717,104 @@ describe('TransactionHttp', () => {
                 done();
             });
             listener.status(account3.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('MosaicAliasTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const mosaicAliasTransaction = MosaicAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Link,
+                namespaceId,
+                mosaicId,
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = mosaicAliasTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('SecretLockTransaction - MosaicAlias', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const secretLockTransaction = SecretLockTransaction.create(
+                Deadline.create(),
+                new Mosaic(namespaceId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
+                UInt64.fromUint(100),
+                HashType.Op_Sha3_256,
+                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                account2.address,
+                NetworkType.MIJIN_TEST,
+            );
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(secretLockTransaction.signWith(account));
+        });
+    });
+
+    describe('MosaicAliasTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const mosaicAliasTransaction = MosaicAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Unlink,
+                namespaceId,
+                mosaicId,
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [mosaicAliasTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
                 done();
