@@ -182,7 +182,6 @@ describe('AccountHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-
     describe('Setup Test AccountAddressProperty', () => {
         let listener: Listener;
         before (() => {
