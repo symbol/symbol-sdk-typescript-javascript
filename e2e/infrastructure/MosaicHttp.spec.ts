@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect, assert} from 'chai';
+import {assert, expect} from 'chai';
 import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import {MosaicHttp} from '../../src/infrastructure/MosaicHttp';
 import { Account } from '../../src/model/account/Account';
@@ -21,13 +21,13 @@ import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { MosaicProperties } from '../../src/model/mosaic/MosaicProperties';
+import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 import {NamespaceId} from '../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../src/model/transaction/Deadline';
+import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { RegisterNamespaceTransaction } from '../../src/model/transaction/RegisterNamespaceTransaction';
 import { UInt64 } from '../../src/model/UInt64';
-import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
-import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 
 describe('MosaicHttp', () => {
     let mosaicId: MosaicId;
