@@ -26,7 +26,7 @@ import {TestingAccount} from '../../conf/conf.spec';
 
 describe('MosaicSupplyChangeTransaction', () => {
     let account: Account;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
     });
@@ -76,7 +76,7 @@ describe('MosaicSupplyChangeTransaction', () => {
         expect(mosaicSupplyChangeTransaction.mosaicId.id.lower).to.be.equal(2262289484);
         expect(mosaicSupplyChangeTransaction.mosaicId.id.higher).to.be.equal(3405110546);
 
-        const signedTransaction = mosaicSupplyChangeTransaction.signWith(account);
+        const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,

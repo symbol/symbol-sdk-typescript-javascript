@@ -27,7 +27,7 @@ import {TestingAccount} from '../../conf/conf.spec';
 
 describe('MosaicDefinitionTransaction', () => {
     let account: Account;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
     });
@@ -93,7 +93,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(true);
         expect(mosaicDefinitionTransaction.mosaicProperties.levyMutable).to.be.equal(true);
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -125,7 +125,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(false);
         expect(mosaicDefinitionTransaction.mosaicProperties.levyMutable).to.be.equal(false);
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -173,7 +173,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(false);
         expect(mosaicDefinitionTransaction.mosaicProperties.levyMutable).to.be.equal(false);
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,

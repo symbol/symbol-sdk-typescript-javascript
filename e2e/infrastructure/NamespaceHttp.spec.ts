@@ -35,6 +35,7 @@ describe('NamespaceHttp', () => {
     let account: Account;
     let config;
     let transactionHttp: TransactionHttp;
+    let generationHash: string;
     before((done) => {
         const path = require('path');
         require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
@@ -46,6 +47,7 @@ describe('NamespaceHttp', () => {
             account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
             namespaceHttp = new NamespaceHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
+            generationHash = json.generationHash;
             done();
         });
     });
@@ -67,7 +69,7 @@ describe('NamespaceHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             namespaceId = new NamespaceId(namespaceName);
-            const signedTransaction = registerNamespaceTransaction.signWith(account);
+            const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction) => {
                 done();
             });
@@ -97,7 +99,7 @@ describe('NamespaceHttp', () => {
                 account.address,
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = addressAliasTransaction.signWith(account);
+            const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction) => {
                 done();
