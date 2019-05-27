@@ -25,7 +25,7 @@ import {TestingAccount} from '../../conf/conf.spec';
 
 describe('LockFundsTransaction', () => {
     const account = TestingAccount;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     it('should default maxFee field be set to 0', () => {
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
@@ -33,7 +33,7 @@ describe('LockFundsTransaction', () => {
             NetworkType.MIJIN_TEST,
             [],
         );
-        const signedTransaction = account.sign(aggregateTransaction);
+        const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyMosaic.createRelative(10),
             UInt64.fromUint(10),
@@ -52,7 +52,7 @@ describe('LockFundsTransaction', () => {
             NetworkType.MIJIN_TEST,
             [],
         );
-        const signedTransaction = account.sign(aggregateTransaction);
+        const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyMosaic.createRelative(10),
             UInt64.fromUint(10),
@@ -72,7 +72,7 @@ describe('LockFundsTransaction', () => {
             NetworkType.MIJIN_TEST,
             [],
         );
-        const signedTransaction = account.sign(aggregateTransaction);
+        const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const transaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyMosaic.createRelative(10),
             UInt64.fromUint(10),
@@ -90,7 +90,7 @@ describe('LockFundsTransaction', () => {
             NetworkType.MIJIN_TEST,
             [],
         );
-        const signedTransaction = account.sign(aggregateTransaction);
+        const signedTransaction = account.sign(aggregateTransaction, generationHash);
         expect(() => {
             LockFundsTransaction.create(Deadline.create(),
                 NetworkCurrencyMosaic.createRelative(10),
@@ -108,7 +108,7 @@ describe('LockFundsTransaction', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = account.sign(aggregateTransaction);
+            const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
                 NetworkCurrencyMosaic.createRelative(10),
                 UInt64.fromUint(10),

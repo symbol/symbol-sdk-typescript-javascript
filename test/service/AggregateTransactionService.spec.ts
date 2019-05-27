@@ -74,6 +74,8 @@ describe('AggregateTransactionService', () => {
 
     const account4 = Account.createFromPrivateKey('4D8B3756592532753344E11E2B7541317BCCFBBCF4444274CDBF359D2C4AE0F1',
                         NetworkType.MIJIN_TEST);
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+
     before(() => {
         const mockedAccountHttp = mock(AccountHttp);
 
@@ -121,7 +123,7 @@ describe('AggregateTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account2]);
+        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account2], generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
@@ -150,7 +152,7 @@ describe('AggregateTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, []);
+        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [], generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });
@@ -179,7 +181,7 @@ describe('AggregateTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4]);
+        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });
@@ -217,7 +219,7 @@ describe('AggregateTransactionService', () => {
              transferTransaction2.toAggregate(account4.publicAccount)],
             NetworkType.MIJIN_TEST,
             []);
-        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4]);
+        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });
@@ -255,7 +257,7 @@ describe('AggregateTransactionService', () => {
              transferTransaction2.toAggregate(account4.publicAccount)],
             NetworkType.MIJIN_TEST,
             []);
-        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4, account2]);
+        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4, account2], generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
@@ -284,7 +286,7 @@ describe('AggregateTransactionService', () => {
             [modifyMultisigTransaction.toAggregate(multisig2.publicAccount)],
             NetworkType.MIJIN_TEST,
             []);
-        const signedTransaction = aggregateTransaction.signWith(account2);
+        const signedTransaction = aggregateTransaction.signWith(account2, generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
@@ -311,7 +313,7 @@ describe('AggregateTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signWith(account1);
+        const signedTransaction = aggregateTransaction.signWith(account1, generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });
@@ -339,7 +341,7 @@ describe('AggregateTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signWith(account4);
+        const signedTransaction = aggregateTransaction.signWith(account4, generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
@@ -382,7 +384,7 @@ describe('AggregateTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4]);
+        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [account4], generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
@@ -424,7 +426,7 @@ describe('AggregateTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, []);
+        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account1, [], generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });
@@ -450,7 +452,7 @@ describe('AggregateTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [account3]);
+        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [account3], generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.true;
         });
@@ -476,7 +478,7 @@ describe('AggregateTransactionService', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, []);
+        const signedTransaction = aggregateTransaction.signTransactionWithCosignatories(account2, [], generationHash);
         aggregateTransactionService.isComplete(signedTransaction).toPromise().then((isComplete) => {
             expect(isComplete).to.be.false;
         });

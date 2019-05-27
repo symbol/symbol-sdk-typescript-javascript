@@ -18,7 +18,6 @@ import {deepEqual} from 'assert';
 import {assert, expect} from 'chai';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
-import {QueryParams} from '../../src/infrastructure/QueryParams';
 import { Account } from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
 import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';
@@ -26,20 +25,19 @@ import { PropertyType } from '../../src/model/account/PropertyType';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
+import { AliasActionType } from '../../src/model/namespace/AliasActionType';
+import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AccountPropertyModification } from '../../src/model/transaction/AccountPropertyModification';
 import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
+import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { AliasActionType } from '../../src/model/namespace/AliasActionType';
-import { namespaceId } from 'nem2-library/dist/transactions/NamespaceMosaicId';
-import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
-import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { RegisterNamespaceTransaction } from '../../src/model/transaction/RegisterNamespaceTransaction';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 
 describe('AccountHttp', () => {
@@ -56,6 +54,7 @@ describe('AccountHttp', () => {
     let accountHttp: AccountHttp;
     let transactionHttp: TransactionHttp;
     let namespaceId: NamespaceId;
+    let generationHash: string;
     let config;
 
     before((done) => {
@@ -76,7 +75,7 @@ describe('AccountHttp', () => {
             accountAddress = Address.createFromRawAddress(json.testAccount.address);
             accountPublicKey = json.testAccount.publicKey;
             publicAccount = PublicAccount.createFromPublicKey(json.testAccount.publicKey, NetworkType.MIJIN_TEST);
-
+            generationHash = json.generationHash;
             accountHttp = new AccountHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
             done();
@@ -107,9 +106,9 @@ describe('AccountHttp', () => {
                 PlainMessage.create('test-message'),
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = transferTransaction.signWith(account);
+            const signedTransaction = transferTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -139,8 +138,8 @@ describe('AccountHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             namespaceId = new NamespaceId(namespaceName);
-            const signedTransaction = registerNamespaceTransaction.signWith(account);
-            listener.confirmed(account.address).subscribe((transaction) => {
+            const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
+            listener.confirmed(account.address).subscribe(() => {
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -170,9 +169,9 @@ describe('AccountHttp', () => {
                 account.address,
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = addressAliasTransaction.signWith(account);
+            const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -204,9 +203,9 @@ describe('AccountHttp', () => {
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = addressModification.signWith(account);
+            const signedTransaction = addressModification.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -243,9 +242,9 @@ describe('AccountHttp', () => {
                 NetworkType.MIJIN_TEST,
                 []);
             const signedTransaction = aggregateTransaction
-                .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3]);
+                .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3], generationHash);
 
-            listener.confirmed(multisigAccount.address).subscribe((transaction) => {
+            listener.confirmed(multisigAccount.address).subscribe(() => {
                 done();
             });
             listener.status(multisigAccount.address).subscribe((error) => {
@@ -337,7 +336,7 @@ describe('AccountHttp', () => {
 
     describe('aggregateBondedTransactions', () => {
         it('should call aggregateBondedTransactions successfully', (done) => {
-            accountHttp.aggregateBondedTransactions(publicAccount).subscribe((transactions) => {
+            accountHttp.aggregateBondedTransactions(publicAccount).subscribe(() => {
                 done();
             }, (error) => {
                 console.log('Error:', error);
@@ -400,9 +399,9 @@ describe('AccountHttp', () => {
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = addressModification.signWith(account);
+            const signedTransaction = addressModification.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -432,9 +431,9 @@ describe('AccountHttp', () => {
                 account.address,
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = addressAliasTransaction.signWith(account);
+            const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -488,9 +487,9 @@ describe('AccountHttp', () => {
                 NetworkType.MIJIN_TEST,
                 []);
             const signedTransaction = aggregateTransaction
-                .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3]);
+                .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
 
-            listener.confirmed(multisigAccount.address).subscribe((transaction) => {
+            listener.confirmed(multisigAccount.address).subscribe(() => {
                 done();
             });
             listener.status(multisigAccount.address).subscribe((error) => {

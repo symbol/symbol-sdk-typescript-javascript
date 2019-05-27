@@ -25,7 +25,7 @@ import { TestingAccount } from '../../conf/conf.spec';
 
 describe('AccountLinkTransaction', () => {
     let account: Account;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
     });
@@ -66,7 +66,7 @@ describe('AccountLinkTransaction', () => {
         expect(accountLinkTransaction.linkAction).to.be.equal(0);
         expect(accountLinkTransaction.remoteAccountKey).to.be.equal(account.publicKey);
 
-        const signedTransaction = accountLinkTransaction.signWith(account);
+        const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -85,7 +85,7 @@ describe('AccountLinkTransaction', () => {
         expect(accountLinkTransaction.linkAction).to.be.equal(1);
         expect(accountLinkTransaction.remoteAccountKey).to.be.equal(account.publicKey);
 
-        const signedTransaction = accountLinkTransaction.signWith(account);
+        const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,

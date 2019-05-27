@@ -132,11 +132,12 @@ export class AggregateTransaction extends Transaction {
      * Sign transaction with cosignatories creating a new SignedTransaction
      * @param initiatorAccount - Initiator account
      * @param cosignatories - The array of accounts that will cosign the transaction
+     * @param generationHash - Network generation hash hex
      * @returns {SignedTransaction}
      */
-    public signTransactionWithCosignatories(initiatorAccount: Account, cosignatories: Account[]) {
+    public signTransactionWithCosignatories(initiatorAccount: Account, cosignatories: Account[], generationHash: string) {
         const aggregateTransaction = this.buildTransaction();
-        const signedTransactionRaw = aggregateTransaction.signTransactionWithCosigners(initiatorAccount, cosignatories);
+        const signedTransactionRaw = aggregateTransaction.signTransactionWithCosigners(initiatorAccount, cosignatories, generationHash);
         return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
                                      this.type, this.networkType);
     }

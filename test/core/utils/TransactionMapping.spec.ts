@@ -63,7 +63,7 @@ import { TestingAccount } from '../../conf/conf.spec';
 
 describe('TransactionMapping - createFromPayload', () => {
     let account: Account;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
     });
@@ -81,7 +81,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = addressPropertyTransaction.signWith(account);
+        const signedTransaction = addressPropertyTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as ModifyAccountPropertyAddressTransaction;
 
@@ -103,7 +103,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicPropertyTransaction.signWith(account);
+        const signedTransaction = mosaicPropertyTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as ModifyAccountPropertyAddressTransaction;
         expect(transaction.propertyType).to.be.equal(PropertyType.AllowMosaic);
@@ -125,7 +125,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = entityTypePropertyTransaction.signWith(account);
+        const signedTransaction = entityTypePropertyTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as ModifyAccountPropertyAddressTransaction;
         expect(transaction.propertyType).to.be.equal(PropertyType.AllowTransaction);
@@ -144,7 +144,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = addressAliasTransaction.signWith(account);
+        const signedTransaction = addressAliasTransaction.signWith(account,generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AddressAliasTransaction;
 
@@ -164,7 +164,7 @@ describe('TransactionMapping - createFromPayload', () => {
             mosaicId,
             NetworkType.MIJIN_TEST,
         );
-        const signedTransaction = mosaicAliasTransaction.signWith(account);
+        const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicAliasTransaction;
 
@@ -191,7 +191,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account,generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
@@ -218,7 +218,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account,generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
@@ -243,7 +243,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account,generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
@@ -268,7 +268,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account,generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
@@ -293,7 +293,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account,generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
@@ -314,7 +314,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicSupplyChangeTransaction.signWith(account);
+        const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicSupplyChangeTransaction;
 
@@ -337,7 +337,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = transferTransaction.signWith(account);
+        const signedTransaction = transferTransaction.signWith(account,generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as TransferTransaction;
 
@@ -360,7 +360,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = secretLockTransaction.signWith(account);
+        const signedTransaction = secretLockTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as SecretLockTransaction;
 
@@ -383,7 +383,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = secretProofTransaction.signWith(account);
+        const signedTransaction = secretProofTransaction.signWith(account, generationHash);
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as SecretProofTransaction;
 
         expect(secretProofTransaction.hashType).to.be.equal(0);
@@ -406,7 +406,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = modifyMultisigAccountTransaction.signWith(account);
+        const signedTransaction = modifyMultisigAccountTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as ModifyMultisigAccountTransaction;
 
@@ -435,7 +435,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signWith(account);
+        const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AggregateTransaction;
 
@@ -457,7 +457,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signWith(account);
+        const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AggregateTransaction;
 
@@ -471,14 +471,14 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
             [],
         );
-        const signedTransaction = account.sign(aggregateTransaction);
+        const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyMosaic.createRelative(10),
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST);
 
-        const signedLockFundTransaction = lockTransaction.signWith(account);
+        const signedLockFundTransaction = lockTransaction.signWith(account,generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedLockFundTransaction.payload) as LockFundsTransaction;
 
@@ -495,7 +495,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = accountLinkTransaction.signWith(account);
+        const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountLinkTransaction;
 
         expect(transaction.linkAction).to.be.equal(0);
@@ -510,7 +510,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = registerNamespaceTransaction.signWith(account);
+        const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as RegisterNamespaceTransaction;
 
@@ -527,7 +527,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = registerNamespaceTransaction.signWith(account);
+        const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as RegisterNamespaceTransaction;
 
@@ -538,7 +538,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
 describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () => {
     let account: Account;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
     });
@@ -865,7 +865,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkType.MIJIN_TEST,
             [],
         );
-        const signedTransaction = account.sign(aggregateTransaction);
+        const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const lockTransaction = LockFundsTransaction.create(Deadline.create(),
             NetworkCurrencyMosaic.createRelative(10),
             UInt64.fromUint(10),
