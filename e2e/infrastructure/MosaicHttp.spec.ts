@@ -36,6 +36,7 @@ describe('MosaicHttp', () => {
     let config;
     let namespaceId: NamespaceId;
     let transactionHttp: TransactionHttp;
+    let generationHash: string;
     before((done) => {
         const path = require('path');
         require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
@@ -47,6 +48,7 @@ describe('MosaicHttp', () => {
             account = Account.createFromPrivateKey(json.testAccount.privateKey, NetworkType.MIJIN_TEST);
             mosaicHttp = new MosaicHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
+            generationHash = json.generationHash;
             done();
         });
     });
@@ -79,7 +81,7 @@ describe('MosaicHttp', () => {
                 }),
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+            const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction) => {
                 done();
             });
@@ -105,7 +107,7 @@ describe('MosaicHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             namespaceId = new NamespaceId(namespaceName);
-            const signedTransaction = registerNamespaceTransaction.signWith(account);
+            const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction) => {
                 done();
             });
@@ -135,7 +137,7 @@ describe('MosaicHttp', () => {
                 mosaicId,
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = mosaicAliasTransaction.signWith(account);
+            const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction) => {
                 done();
@@ -225,7 +227,7 @@ describe('MosaicHttp', () => {
                 mosaicId,
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = mosaicAliasTransaction.signWith(account);
+            const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction) => {
                 done();

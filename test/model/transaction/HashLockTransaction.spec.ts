@@ -24,6 +24,7 @@ import {TestingAccount} from '../../conf/conf.spec';
 
 describe('HashLockTransaction', () => {
     const account = TestingAccount;
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     it('creation with an aggregate bonded tx', () => {
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
@@ -31,7 +32,7 @@ describe('HashLockTransaction', () => {
             NetworkType.MIJIN_TEST,
             [],
         );
-        const signedTransaction = account.sign(aggregateTransaction);
+        const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const transaction = HashLockTransaction.create(Deadline.create(),
             NetworkCurrencyMosaic.createRelative(10),
             UInt64.fromUint(10),
@@ -49,7 +50,7 @@ describe('HashLockTransaction', () => {
             NetworkType.MIJIN_TEST,
             [],
         );
-        const signedTransaction = account.sign(aggregateTransaction);
+        const signedTransaction = account.sign(aggregateTransaction, generationHash);
         expect(() => {
             HashLockTransaction.create(Deadline.create(),
                 NetworkCurrencyMosaic.createRelative(10),
