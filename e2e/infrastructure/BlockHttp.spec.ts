@@ -35,6 +35,7 @@ describe('BlockHttp', () => {
     let blockTransactionHash = '';
     let config;
     let chainHeight;
+    let generationHash: string;
     before((done) => {
         const path = require('path');
         require('fs').readFile(path.resolve(__dirname, '../conf/network.conf'), (err, data) => {
@@ -47,6 +48,7 @@ describe('BlockHttp', () => {
             account2 = Account.createFromPrivateKey(json.testAccount2.privateKey, NetworkType.MIJIN_TEST);
             blockHttp = new BlockHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
+            generationHash = json.generationHash;
             done();
         });
     });
@@ -75,7 +77,7 @@ describe('BlockHttp', () => {
                 PlainMessage.create('test-message'),
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = transferTransaction.signWith(account);
+            const signedTransaction = transferTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
 

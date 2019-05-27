@@ -39,7 +39,8 @@ export class TransactionUtils {
     public static createAndAnnounce(signer: Account,
                                     recipient: Address,
                                     transactionHttp: TransactionHttp,
-                                    mosaic: Mosaic[] = []) {
+                                    mosaic: Mosaic[] = [],
+                                    generationHash: string) {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
             recipient,
@@ -47,7 +48,7 @@ export class TransactionUtils {
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
         );
-        const signedTransaction = signer.sign(transferTransaction);
+        const signedTransaction = signer.sign(transferTransaction, generationHash);
         transactionHttp.announce(signedTransaction);
     }
 
@@ -58,7 +59,8 @@ export class TransactionUtils {
 
     public static createSignedAggregatedBondTransaction(aggregatedTo: Account,
                                                         signer: Account,
-                                                        recipient: Address) {
+                                                        recipient: Address,
+                                                        generationHash: string) {
 
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
@@ -74,13 +76,14 @@ export class TransactionUtils {
             NetworkType.MIJIN_TEST,
             [],
         );
-        return signer.sign(aggregateTransaction);
+        return signer.sign(aggregateTransaction, generationHash);
     }
 
     public static createHashLockTransactionAndAnnounce(signedAggregatedTransaction: SignedTransaction,
                                                        signer: Account,
                                                        mosaicId: MosaicId,
-                                                       transactionHttp: TransactionHttp) {
+                                                       transactionHttp: TransactionHttp,
+                                                       generationHash: string) {
         const lockFundsTransaction = LockFundsTransaction.create(
             Deadline.create(),
             new Mosaic(mosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
@@ -88,7 +91,7 @@ export class TransactionUtils {
             signedAggregatedTransaction,
             NetworkType.MIJIN_TEST,
         );
-        const signedLockFundsTransaction = signer.sign(lockFundsTransaction);
+        const signedLockFundsTransaction = signer.sign(lockFundsTransaction, generationHash);
         transactionHttp.announce(signedLockFundsTransaction);
     }
 
@@ -101,7 +104,8 @@ export class TransactionUtils {
     }
 
     public static createModifyMultisigAccountTransaction( account: Account,
-                                                          transactionHttp: TransactionHttp) {
+                                                          transactionHttp: TransactionHttp,
+                                                          generationHash: string) {
         const modifyMultisig = ModifyMultisigAccountTransaction.create(
             Deadline.create(),
             2,
@@ -112,7 +116,7 @@ export class TransactionUtils {
             )],
             NetworkType.MIJIN_TEST,
         );
-        const signedTransaction = account.sign(modifyMultisig);
+        const signedTransaction = account.sign(modifyMultisig, generationHash);
         transactionHttp.announce(signedTransaction);
     }
 }

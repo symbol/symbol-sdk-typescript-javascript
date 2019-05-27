@@ -27,7 +27,7 @@ import {TestingAccount} from '../../conf/conf.spec';
 
 describe('ModifyMultisigAccountTransaction', () => {
     let account: Account;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
     });
@@ -110,7 +110,7 @@ describe('ModifyMultisigAccountTransaction', () => {
         expect(modifyMultisigAccountTransaction.modifications[1].cosignatoryPublicAccount.publicKey)
             .to.be.equal('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
 
-        const signedTransaction = modifyMultisigAccountTransaction.signWith(account);
+        const signedTransaction = modifyMultisigAccountTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,

@@ -22,11 +22,11 @@ import {AggregateTransaction} from '../../src/model/transaction/AggregateTransac
 import {Deadline} from '../../src/model/transaction/Deadline';
 import {PlainMessage} from '../../src/model/transaction/PlainMessage';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
-import {UInt64} from '../../src/model/UInt64';
 import {NIS2_URL, TestingAccount} from '../conf/conf.spec';
 
 describe('TransactionHttp', () => {
     const account = TestingAccount;
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     it('should return an error when a non aggregate transaction bonded is announced via announceAggregateBonded method', () => {
         const tx = TransferTransaction.create(
             Deadline.create(),
@@ -44,7 +44,7 @@ describe('TransactionHttp', () => {
             [],
         );
 
-        const signedTx = account.sign(aggTx);
+        const signedTx = account.sign(aggTx, generationHash);
         const trnsHttp = new TransactionHttp(NIS2_URL);
         return trnsHttp.announceAggregateBonded(signedTx)
             .toPromise()
