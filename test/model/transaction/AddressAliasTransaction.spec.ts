@@ -28,7 +28,7 @@ import {TestingAccount} from '../../conf/conf.spec';
 
 describe('AddressAliasTransaction', () => {
     let account: Account;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
     });
@@ -80,7 +80,7 @@ describe('AddressAliasTransaction', () => {
         expect(addressAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
         expect(addressAliasTransaction.address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
 
-        const signedTransaction = addressAliasTransaction.signWith(account);
+        const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
