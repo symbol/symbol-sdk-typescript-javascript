@@ -34,7 +34,8 @@ import { TransferTransaction } from '../../src/model/transaction/TransferTransac
 import { TransactionUtils } from './TransactionUtils';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
-import { Mosaic, UInt64 } from '../../src/model/model';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { TransactionUtils } from './TransactionUtils';
 
 describe('Listener', () => {
 
@@ -449,7 +450,7 @@ describe('Listener', () => {
                 NetworkType.MIJIN_TEST,
                 []);
             const signedTransaction = aggregateTransaction
-                .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3]);
+                .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
 
             listener.confirmed(multisigAccount.address).subscribe((transaction) => {
                 done();
