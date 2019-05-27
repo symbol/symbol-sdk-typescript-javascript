@@ -396,9 +396,9 @@ describe('AccountHttp', () => {
                 account.address,
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = addressAliasTransaction.signWith(account);
+            const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
                 done();
             });
             listener.status(account.address).subscribe((error) => {
