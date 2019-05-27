@@ -30,7 +30,7 @@ import {TestingAccount} from '../../conf/conf.spec';
 
 describe('AccountPropertyTransaction', () => {
     let account: Account;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
     });
@@ -162,7 +162,7 @@ describe('AccountPropertyTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = addressPropertyTransaction.signWith(account);
+        const signedTransaction = addressPropertyTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -204,7 +204,7 @@ describe('AccountPropertyTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicPropertyTransaction.signWith(account);
+        const signedTransaction = mosaicPropertyTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -246,7 +246,7 @@ describe('AccountPropertyTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = entityTypePropertyTransaction.signWith(account);
+        const signedTransaction = entityTypePropertyTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
