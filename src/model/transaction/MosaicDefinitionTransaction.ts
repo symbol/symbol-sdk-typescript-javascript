@@ -140,10 +140,6 @@ export class MosaicDefinitionTransaction extends Transaction {
             mosaicDefinitionTransaction = mosaicDefinitionTransaction.addTransferability();
         }
 
-        if (this.mosaicProperties.levyMutable === true) {
-            mosaicDefinitionTransaction = mosaicDefinitionTransaction.addLevyMutable();
-        }
-
         return mosaicDefinitionTransaction.build();
     }
 

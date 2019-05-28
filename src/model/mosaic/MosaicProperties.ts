@@ -37,11 +37,6 @@ export class MosaicProperties {
     public readonly transferable: boolean;
 
     /**
-     * Levy mutable
-     */
-    public readonly levyMutable: boolean;
-
-    /**
      * @param flags
      * @param divisibility
      * @param duration
@@ -63,10 +58,9 @@ export class MosaicProperties {
                  */
                 public readonly duration?: UInt64) {
         let binaryFlags = '00' + (flags.lower >>> 0).toString(2);
-        binaryFlags = binaryFlags.substr(binaryFlags.length - 3, 3);
-        this.supplyMutable = binaryFlags[2] === '1';
-        this.transferable = binaryFlags[1] === '1';
-        this.levyMutable = binaryFlags[0] === '1';
+        binaryFlags = binaryFlags.substr(binaryFlags.length - 2, 2);
+        this.supplyMutable = binaryFlags[1] === '1';
+        this.transferable = binaryFlags[0] === '1';
     }
 
     /**
@@ -77,11 +71,10 @@ export class MosaicProperties {
     public static create(params: {
         supplyMutable: boolean,
         transferable: boolean,
-        levyMutable: boolean,
         divisibility: number,
         duration?: UInt64,
     }) {
-        const flags = (params.supplyMutable ? 1 : 0) + (params.transferable ? 2 : 0) + (params.levyMutable ? 4 : 0);
+        const flags = (params.supplyMutable ? 1 : 0) + (params.transferable ? 2 : 0);
         return new MosaicProperties(UInt64.fromUint(flags), params.divisibility, params.duration);
     }
 
@@ -91,8 +84,7 @@ export class MosaicProperties {
     toDTO() {
         const dto = [
             {id: 0, value: UInt64.fromUint((this.supplyMutable ? 1 : 0) +
-                                        (this.transferable ? 2 : 0) +
-                                        (this.levyMutable ? 4 : 0)).toDTO()},
+                                        (this.transferable ? 2 : 0)).toDTO()},
             {id: 1, value: UInt64.fromUint(this.divisibility).toDTO()},
         ];
 

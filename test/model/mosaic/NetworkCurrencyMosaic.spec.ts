@@ -41,6 +41,5 @@ describe('NetworkCurrencyMosaic', () => {
         expect(NetworkCurrencyMosaic.DIVISIBILITY).to.be.equal(6);
         expect(NetworkCurrencyMosaic.TRANSFERABLE).to.be.equal(true);
         expect(NetworkCurrencyMosaic.SUPPLY_MUTABLE).to.be.equal(false);
-        expect(NetworkCurrencyMosaic.LEVY_MUTABLE).to.be.equal(false);
     });
 });
