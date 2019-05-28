@@ -184,7 +184,6 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicProperties.create({
                 supplyMutable: false,
                 transferable: false,
-                levyMutable: false,
                 divisibility: 3,
                 duration: UInt64.fromUint(1000),
             }),
@@ -200,7 +199,6 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(transaction.mosaicProperties.transferable).to.be.equal(false);
-        expect(transaction.mosaicProperties.levyMutable).to.be.equal(false);
 
     });
 
@@ -212,7 +210,6 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicProperties.create({
                 supplyMutable: false,
                 transferable: false,
-                levyMutable: false,
                 divisibility: 3,
             }),
             NetworkType.MIJIN_TEST,
@@ -225,7 +222,6 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(transaction.mosaicProperties.transferable).to.be.equal(false);
-        expect(transaction.mosaicProperties.levyMutable).to.be.equal(false);
 
     });
 
@@ -237,7 +233,6 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicProperties.create({
                 supplyMutable: false,
                 transferable: false,
-                levyMutable: false,
                 divisibility: 3,
             }),
             NetworkType.MIJIN_TEST,
@@ -250,7 +245,6 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(transaction.mosaicProperties.transferable).to.be.equal(false);
-        expect(transaction.mosaicProperties.levyMutable).to.be.equal(false);
 
     });
 
@@ -262,7 +256,6 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicProperties.create({
                 supplyMutable: false,
                 transferable: false,
-                levyMutable: false,
                 divisibility: 3,
             }),
             NetworkType.MIJIN_TEST,
@@ -275,7 +268,6 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(transaction.mosaicProperties.transferable).to.be.equal(false);
-        expect(transaction.mosaicProperties.levyMutable).to.be.equal(false);
 
     });
 
@@ -287,7 +279,6 @@ describe('TransactionMapping - createFromPayload', () => {
             MosaicProperties.create({
                 supplyMutable: false,
                 transferable: false,
-                levyMutable: false,
                 divisibility: 3,
             }),
             NetworkType.MIJIN_TEST,
@@ -300,7 +291,6 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(transaction.mosaicProperties.transferable).to.be.equal(false);
-        expect(transaction.mosaicProperties.levyMutable).to.be.equal(false);
 
     });
 
@@ -714,7 +704,6 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             MosaicProperties.create({
                 supplyMutable: false,
                 transferable: false,
-                levyMutable: false,
                 divisibility: 3,
                 duration: UInt64.fromUint(1000),
             }),
@@ -727,7 +716,6 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
         expect(transaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(transaction.mosaicProperties.transferable).to.be.equal(false);
-        expect(transaction.mosaicProperties.levyMutable).to.be.equal(false);
         expect(transaction.mosaicProperties.divisibility).to.be.equal(3);
 
     });

@@ -39,10 +39,9 @@ describe('MosaicView', () => {
             MosaicProperties.create({
                 supplyMutable: true,
                 transferable: true,
-                levyMutable: true,
                 divisibility: 2,
                 duration: UInt64.fromUint(1000),
-            }), {});
+            }));
     });
 
     it('should createComplete a Mosaic View', () => {

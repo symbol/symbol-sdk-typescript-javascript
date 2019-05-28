@@ -41,6 +41,5 @@ describe('NetworkHarvestMosaic', () => {
         expect(NetworkHarvestMosaic.DIVISIBILITY).to.be.equal(3);
         expect(NetworkHarvestMosaic.TRANSFERABLE).to.be.equal(true);
         expect(NetworkHarvestMosaic.SUPPLY_MUTABLE).to.be.equal(true);
-        expect(NetworkHarvestMosaic.LEVY_MUTABLE).to.be.equal(false);
     });
 });

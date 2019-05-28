@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import {convert, mosaicId as MosaicIdGenerator} from 'nem2-library';
-import {PublicAccount} from '../account/PublicAccount';
 import {NamespaceId} from '../namespace/NamespaceId';
 import {UInt64} from '../UInt64';
 import {Mosaic} from './Mosaic';
@@ -61,12 +59,6 @@ export class NetworkCurrencyMosaic extends Mosaic {
      * @type {boolean}
      */
     public static SUPPLY_MUTABLE = false;
-
-    /**
-     * Is Levy mutable
-     * @type {boolean}
-     */
-    public static LEVY_MUTABLE = false;
 
     /**
      * constructor

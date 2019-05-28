@@ -72,7 +72,6 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         (new UInt64(mosaicInfoDTO.mosaic.properties[1])).compact(),
                         new UInt64(mosaicInfoDTO.mosaic.properties[2]),
                     ),
-                    mosaicInfoDTO.mosaic.levy,
                 );
             }))));
     }
@@ -102,7 +101,6 @@ export class MosaicHttp extends Http implements MosaicRepository {
                             (new UInt64(mosaicInfoDTO.mosaic.properties[1])).compact(),
                             new UInt64(mosaicInfoDTO.mosaic.properties[2]),
                         ),
-                        mosaicInfoDTO.mosaic.levy,
                     );
                 });
             }))));
