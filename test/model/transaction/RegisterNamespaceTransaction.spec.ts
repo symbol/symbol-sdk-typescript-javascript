@@ -17,15 +17,15 @@
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {RegisterNamespaceTransaction} from '../../../src/model/transaction/RegisterNamespaceTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 
 describe('RegisterNamespaceTransaction', () => {
     let account: Account;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
     });
@@ -48,7 +48,7 @@ describe('RegisterNamespaceTransaction', () => {
             'root-test-namespace',
             UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(registerNamespaceTransaction.maxFee.higher).to.be.equal(0);
@@ -66,7 +66,7 @@ describe('RegisterNamespaceTransaction', () => {
         expect(registerNamespaceTransaction.duration!.lower).to.be.equal(1000);
         expect(registerNamespaceTransaction.duration!.higher).to.be.equal(0);
 
-        const signedTransaction = registerNamespaceTransaction.signWith(account);
+        const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -83,7 +83,7 @@ describe('RegisterNamespaceTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = registerNamespaceTransaction.signWith(account);
+        const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -91,7 +91,7 @@ describe('RegisterNamespaceTransaction', () => {
         )).to.be.equal('014DF55E7F6D8FB7FF924207DF2CA1BBF313726F6F742D746573742D6E616D657370616365');
 
     });
-    
+
     it('should createComplete an sub RegisterNamespaceTransaction object and sign it - ParentId', () => {
         const registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(
             Deadline.create(),
@@ -100,14 +100,14 @@ describe('RegisterNamespaceTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = registerNamespaceTransaction.signWith(account);
+        const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
         )).to.be.equal('014BFA5F372D55B384CFCBE72D994BE69B13726F6F742D746573742D6E616D657370616365');
     });
-  
+
     describe('size', () => {
         it('should return 176 for RegisterNamespaceTransaction with name of 19 bytes', () => {
             const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(

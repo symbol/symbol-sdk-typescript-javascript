@@ -86,6 +86,7 @@ describe('TransactionHttp', () => {
     const secureRandom = require('secure-random');
     const sha256 = require('js-sha256');
     const ripemd160 = require('ripemd160');
+    let generationHash: string;
 
     before((done) => {
         const path = require('path');
@@ -107,6 +108,7 @@ describe('TransactionHttp', () => {
             accountHttp = new AccountHttp(json.apiUrl);
             transactionHttp = new TransactionHttp(json.apiUrl);
             namespaceHttp = new NamespaceHttp(json.apiUrl);
+            generationHash = json.generationHash;
             done();
         });
     });
@@ -141,7 +143,7 @@ describe('TransactionHttp', () => {
                 }),
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = mosaicDefinitionTransaction.signWith(account);
+            const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -179,7 +181,7 @@ describe('TransactionHttp', () => {
                 [mosaicDefinitionTransaction.toAggregate(account.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 []);
-            const signedTransaction = aggregateTransaction.signWith(account);
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -209,7 +211,7 @@ describe('TransactionHttp', () => {
                 PlainMessage.create('test-message'),
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = transferTransaction.signWith(account);
+            const signedTransaction = transferTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
@@ -244,7 +246,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = aggregateTransaction.signWith(account);
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -277,7 +279,7 @@ describe('TransactionHttp', () => {
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = addressModification.signWith(account);
+            const signedTransaction = addressModification.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
@@ -315,7 +317,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = aggregateTransaction.signWith(account);
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -348,7 +350,7 @@ describe('TransactionHttp', () => {
                 [mosaicPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = addressModification.signWith(account);
+            const signedTransaction = addressModification.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
@@ -386,7 +388,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = aggregateTransaction.signWith(account);
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -419,7 +421,7 @@ describe('TransactionHttp', () => {
                 [entityTypePropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = addressModification.signWith(account3);
+            const signedTransaction = addressModification.signWith(account3, generationHash);
 
             listener.confirmed(account3.address).subscribe((transaction: Transaction) => {
                 done();
@@ -457,7 +459,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = aggregateTransaction.signWith(account3);
+            const signedTransaction = aggregateTransaction.signWith(account3, generationHash);
             listener.confirmed(account3.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -486,7 +488,7 @@ describe('TransactionHttp', () => {
                 LinkAction.Unlink,
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = accountLinkTransaction.signWith(account);
+            const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
@@ -520,7 +522,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = aggregateTransaction.signWith(account);
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -550,7 +552,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             namespaceId = new NamespaceId(namespaceName);
-            const signedTransaction = registerNamespaceTransaction.signWith(account);
+            const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -582,7 +584,7 @@ describe('TransactionHttp', () => {
                 [registerNamespaceTransaction.toAggregate(account.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 []);
-            const signedTransaction = aggregateTransaction.signWith(account);
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -612,7 +614,7 @@ describe('TransactionHttp', () => {
                 account.address,
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = addressAliasTransaction.signWith(account);
+            const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
@@ -647,7 +649,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = aggregateTransaction.signWith(account);
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -677,7 +679,7 @@ describe('TransactionHttp', () => {
                 UInt64.fromUint(10),
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = mosaicSupplyChangeTransaction.signWith(account);
+            const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -710,7 +712,7 @@ describe('TransactionHttp', () => {
                 [mosaicSupplyChangeTransaction.toAggregate(account.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 []);
-            const signedTransaction = aggregateTransaction.signWith(account);
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -741,7 +743,7 @@ describe('TransactionHttp', () => {
                 mosaicId,
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = mosaicAliasTransaction.signWith(account);
+            const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
@@ -782,7 +784,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
 
@@ -808,7 +810,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = aggregateTransaction.signWith(account);
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -837,7 +839,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = account.sign(aggregateTransaction);
+            const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
                 new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
                 UInt64.fromUint(10000),
@@ -852,7 +854,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(lockFundsTransaction.signWith(account));
+            transactionHttp.announce(lockFundsTransaction.signWith(account, generationHash));
         });
     });
     describe('LockFundsTransaction', () => {
@@ -871,7 +873,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = account.sign(aggregateTransaction);
+            const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
                 new Mosaic(networkCurrencyMosaicId, UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
                 UInt64.fromUint(10),
@@ -889,7 +891,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(aggregateLockFundsTransaction.signWith(account));
+            transactionHttp.announce(aggregateLockFundsTransaction.signWith(account, generationHash));
         });
     });
 
@@ -920,7 +922,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTx = signerAccount.sign(aggTx);
+            const signedTx = signerAccount.sign(aggTx, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -960,7 +962,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('HashType: Op_Sha3_256', () => {
@@ -995,7 +997,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('HashType: Keccak_256', () => {
@@ -1025,7 +1027,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('HashType: Keccak_256', () => {
@@ -1059,7 +1061,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('HashType: Op_Hash_160', () => {
@@ -1091,7 +1093,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('HashType: Op_Hash_160', () => {
@@ -1127,7 +1129,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('HashType: Op_Hash_256', () => {
@@ -1157,7 +1159,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('HashType: Op_Hash_256', () => {
@@ -1191,7 +1193,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account));
+            transactionHttp.announce(aggregateSecretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('SecretProofTransaction - HashType: Op_Sha3_256', () => {
@@ -1226,7 +1228,7 @@ describe('TransactionHttp', () => {
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
-                const signedTx = secretProofTransaction.signWith(account2);
+                const signedTx = secretProofTransaction.signWith(account2, generationHash);
                 transactionHttp.announce(signedTx);
             });
             listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
@@ -1237,7 +1239,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            const signedSecretLockTx = secretLockTransaction.signWith(account);
+            const signedSecretLockTx = secretLockTransaction.signWith(account, generationHash);
             transactionHttp.announce(signedSecretLockTx);
         });
     });
@@ -1279,14 +1281,14 @@ describe('TransactionHttp', () => {
                     [secretProofTransaction.toAggregate(account2.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
-                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2,generationHash));
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('SecretProofTransaction - HashType: Op_Keccak_256', () => {
@@ -1323,14 +1325,14 @@ describe('TransactionHttp', () => {
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
-                transactionHttp.announce(secretProofTransaction.signWith(account2));
+                transactionHttp.announce(secretProofTransaction.signWith(account2, generationHash));
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('SecretProofTransaction - HashType: Op_Keccak_256', () => {
@@ -1371,14 +1373,14 @@ describe('TransactionHttp', () => {
                     [secretProofTransaction.toAggregate(account2.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
-                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2,generationHash));
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('SecretProofTransaction - HashType: Op_Hash_160', () => {
@@ -1414,7 +1416,7 @@ describe('TransactionHttp', () => {
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
-                const signedTx = secretProofTransaction.signWith(account2);
+                const signedTx = secretProofTransaction.signWith(account2, generationHash);
                 transactionHttp.announce(signedTx);
             });
             listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
@@ -1430,7 +1432,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('SecretProofTransaction - HashType: Op_Hash_160', () => {
@@ -1478,14 +1480,14 @@ describe('TransactionHttp', () => {
                     [secretProofTransaction.toAggregate(account2.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
-                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2,generationHash));
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('SecretProofTransaction - HashType: Op_Hash_256', () => {
@@ -1529,14 +1531,14 @@ describe('TransactionHttp', () => {
                     proof,
                     NetworkType.MIJIN_TEST,
                 );
-                transactionHttp.announce(secretProofTransaction.signWith(account2));
+                transactionHttp.announce(secretProofTransaction.signWith(account2, generationHash));
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
     describe('SecretProofTransaction - HashType: Op_Hash_256', () => {
@@ -1585,14 +1587,14 @@ describe('TransactionHttp', () => {
                     [secretProofTransaction.toAggregate(account2.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
-                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2));
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2,generationHash));
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account));
+            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
         });
     });
 
@@ -1680,7 +1682,7 @@ describe('TransactionHttp', () => {
                         PlainMessage.create('test-message'),
                         NetworkType.MIJIN_TEST,
                     );
-            const signedTransaction = transferTransaction.signWith(account);
+            const signedTransaction = transferTransaction.signWith(account, generationHash);
             transactionHttp.announce(signedTransaction)
                 .subscribe((transactionAnnounceResponse) => {
                     expect(transactionAnnounceResponse.message)
@@ -1704,9 +1706,7 @@ describe('TransactionHttp', () => {
                 [transferTransaction.toAggregate(multisigAccount.publicAccount)],
                 NetworkType.MIJIN_TEST,
                 []);
-            const signedTransaction = aggregateTransaction.signWith(
-                cosignAccount1,
-            );
+            const signedTransaction = aggregateTransaction.signWith(cosignAccount1, generationHash);
             transactionHttp.announceAggregateBonded(signedTransaction)
                 .subscribe((transactionAnnounceResponse) => {
                     expect(transactionAnnounceResponse.message)
@@ -1755,7 +1755,7 @@ describe('TransactionHttp', () => {
     //             NetworkType.MIJIN_TEST);
 
     //         transactionHttp
-    //             .announceSync(lockFundsTransaction.signWith(account))
+    //             .announceSync(lockFundsTransaction.signWith(account, generationHash))
     //             .subscribe((shouldNotBeCalled) => {
     //                 throw new Error('should not be called');
     //             }, (err) => {

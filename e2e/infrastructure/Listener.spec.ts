@@ -20,6 +20,7 @@ import { Listener } from '../../src/infrastructure/Listener';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { Mosaic, UInt64 } from '../../src/model/model';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -28,10 +29,9 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
-import { TransactionUtils } from './TransactionUtils';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
-import { Mosaic, UInt64 } from '../../src/model/model';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
+import { TransactionUtils } from './TransactionUtils';
 
 describe('Listener', () => {
 
@@ -47,6 +47,7 @@ describe('Listener', () => {
     let multisigAccount: Account;
     let networkCurrencyMosaicId: MosaicId;
     let namespaceHttp: NamespaceHttp;
+    let generationHash: string;
     let config;
 
     before((done) => {
@@ -68,6 +69,7 @@ describe('Listener', () => {
             transactionHttp = new TransactionHttp(json.apiUrl);
             accountHttp = new AccountHttp(json.apiUrl);
             namespaceHttp = new NamespaceHttp(json.apiUrl);
+            generationHash = json.generationHash;
             done();
         });
     });
@@ -90,7 +92,7 @@ describe('Listener', () => {
                 assert(false);
                 done();
             });
-            TransactionUtils.createAndAnnounce(account, account.address, transactionHttp);
+            TransactionUtils.createAndAnnounce(account, account.address, transactionHttp, undefined, generationHash);
         });
     });
 
@@ -113,7 +115,7 @@ describe('Listener', () => {
                 assert(false);
                 done();
             });
-            TransactionUtils.createAndAnnounce(account, recipientAddress, transactionHttp);
+            TransactionUtils.createAndAnnounce(account, recipientAddress, transactionHttp, undefined, generationHash);
         });
     });
 
@@ -135,7 +137,7 @@ describe('Listener', () => {
                 assert(false);
                 done();
             });
-            TransactionUtils.createAndAnnounce(account, account.address, transactionHttp);
+            TransactionUtils.createAndAnnounce(account, account.address, transactionHttp, undefined, generationHash);
         });
     });
 
@@ -157,7 +159,7 @@ describe('Listener', () => {
                 assert(false);
                 done();
             });
-            TransactionUtils.createAndAnnounce(account, account.address, transactionHttp);
+            TransactionUtils.createAndAnnounce(account, account.address, transactionHttp, undefined, generationHash);
         });
     });
     describe('Get network currency mosaic id', () => {
@@ -187,7 +189,7 @@ describe('Listener', () => {
                 PlainMessage.create('test-message'),
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = transferTransaction.signWith(account);
+            const signedTransaction = transferTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction) => {
                 done();
@@ -227,7 +229,7 @@ describe('Listener', () => {
                 NetworkType.MIJIN_TEST,
                 []);
             const signedTransaction = aggregateTransaction
-                .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3]);
+                .signTransactionWithCosignatories(multisigAccount, [cosignAccount1, cosignAccount2, cosignAccount3], generationHash);
 
             listener.confirmed(multisigAccount.address).subscribe((transaction) => {
                 done();
@@ -261,9 +263,11 @@ describe('Listener', () => {
                 assert(false);
                 done();
             });
-            const signedAggregatedTx = TransactionUtils.createSignedAggregatedBondTransaction(multisigAccount, account, account2.address);
+            const signedAggregatedTx = TransactionUtils.createSignedAggregatedBondTransaction(multisigAccount, account,
+                    account2.address, generationHash);
 
-            TransactionUtils.createHashLockTransactionAndAnnounce(signedAggregatedTx, account, networkCurrencyMosaicId, transactionHttp );
+            TransactionUtils.createHashLockTransactionAndAnnounce(signedAggregatedTx, account, networkCurrencyMosaicId,
+                    transactionHttp, generationHash);
         });
     });
     describe('Aggregate Bonded Transactions', () => {
@@ -299,10 +303,11 @@ describe('Listener', () => {
                 done();
             });
             const signedAggregatedTx =
-                TransactionUtils.createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
+                TransactionUtils.createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address, generationHash);
 
             TransactionUtils.
-                createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, networkCurrencyMosaicId, transactionHttp );
+                createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1,
+                        networkCurrencyMosaicId, transactionHttp, generationHash);
         });
     });
 
@@ -334,10 +339,11 @@ describe('Listener', () => {
                 done();
             });
             const signedAggregatedTx =
-                TransactionUtils.createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address);
+                TransactionUtils.createSignedAggregatedBondTransaction(multisigAccount, cosignAccount1, account2.address, generationHash);
 
             TransactionUtils.
-                createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1, networkCurrencyMosaicId, transactionHttp );
+                createHashLockTransactionAndAnnounce(signedAggregatedTx, cosignAccount1,
+                        networkCurrencyMosaicId, transactionHttp, generationHash);
         });
     });
 
@@ -384,7 +390,7 @@ describe('Listener', () => {
                 NetworkType.MIJIN_TEST,
                 []);
             const signedTransaction = aggregateTransaction
-                .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3]);
+                .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
 
             listener.confirmed(multisigAccount.address).subscribe((transaction) => {
                 done();
@@ -412,7 +418,7 @@ describe('Listener', () => {
                 done();
             });
             const mosaics = [NetworkCurrencyMosaic.createRelative(1000000000000)];
-            TransactionUtils.createAndAnnounce(account, account2.address, transactionHttp, mosaics);
+            TransactionUtils.createAndAnnounce(account, account2.address, transactionHttp, mosaics, generationHash);
         });
     });
 
@@ -429,7 +435,7 @@ describe('Listener', () => {
             listener.newBlock().subscribe((res) => {
                     done();
             });
-            TransactionUtils.createAndAnnounce(account, account.address, transactionHttp);
+            TransactionUtils.createAndAnnounce(account, account.address, transactionHttp, undefined, generationHash);
         });
     });
 });
