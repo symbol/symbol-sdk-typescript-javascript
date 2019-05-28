@@ -167,7 +167,6 @@ describe('BlockHttp', () => {
         it('should return block receipts', (done) => {
             blockHttp.getBlockReceipts(chainHeight)
                 .subscribe((statement) => {
-                    console.log(statement);
                     expect(statement.transactionStatements).not.to.be.null;
                     expect(statement.transactionStatements.length).to.be.greaterThan(0);
                     done();

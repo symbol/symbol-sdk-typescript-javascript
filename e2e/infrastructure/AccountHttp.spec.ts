@@ -216,7 +216,6 @@ describe('AccountHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-
     describe('Setup test multisig account', () => {
         let listener: Listener;
         before (() => {
