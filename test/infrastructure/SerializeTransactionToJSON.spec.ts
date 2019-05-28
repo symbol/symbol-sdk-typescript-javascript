@@ -177,7 +177,6 @@ describe('SerializeTransactionToJSON', () => {
             MosaicProperties.create({
                 supplyMutable: false,
                 transferable: false,
-                levyMutable: false,
                 divisibility: 3,
                 duration: UInt64.fromUint(1000),
             }),
@@ -202,7 +201,6 @@ describe('SerializeTransactionToJSON', () => {
             MosaicProperties.create({
                 supplyMutable: false,
                 transferable: false,
-                levyMutable: false,
                 divisibility: 3,
             }),
             NetworkType.MIJIN_TEST,

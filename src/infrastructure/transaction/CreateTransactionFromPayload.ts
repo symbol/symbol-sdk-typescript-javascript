@@ -224,7 +224,6 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                 MosaicProperties.create({
                     supplyMutable: (flags & 1) === 1,
                     transferable: (flags & 2) === 2,
-                    levyMutable: (flags & 4) === 4,
                     divisibility: parseInt(convert.uint8ToHex(convert.hexToUint8(divisibility).reverse()), 16),
                     duration: duration ? UInt64.fromHex(reverse(duration)) : undefined,
                 }),

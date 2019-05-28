@@ -33,7 +33,6 @@ export class MosaicInfo {
      * @param height
      * @param owner
      * @param properties
-     * @param levy
      */
     constructor(/**
                  * The meta data id.
@@ -63,10 +62,7 @@ export class MosaicInfo {
                  * The mosaic properties.
                  */
                 private readonly properties: MosaicProperties,
-                /**
-                 * The optional levy for the mosaic. A creator can demand that each mosaic transfer induces an additional fee.
-                 */
-                public readonly levy: any) {
+            ) {
     }
 
     /**
@@ -100,13 +96,4 @@ export class MosaicInfo {
     public isTransferable(): boolean {
         return this.properties.transferable;
     }
-
-    /**
-     * Is levy mutable
-     * @returns {boolean}
-     */
-    public isLevyMutable(): boolean {
-        return this.properties.levyMutable;
-    }
-
 }

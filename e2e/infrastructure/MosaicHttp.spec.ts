@@ -77,7 +77,6 @@ describe('MosaicHttp', () => {
                 MosaicProperties.create({
                     supplyMutable: true,
                     transferable: true,
-                    levyMutable: true,
                     divisibility: 3,
                 }),
                 NetworkType.MIJIN_TEST,
@@ -165,7 +164,6 @@ describe('MosaicHttp', () => {
                     expect(mosaicInfo.divisibility).to.be.equal(3);
                     expect(mosaicInfo.isSupplyMutable()).to.be.equal(true);
                     expect(mosaicInfo.isTransferable()).to.be.equal(true);
-                    expect(mosaicInfo.isLevyMutable()).to.be.equal(true);
                     done();
                 });
         });
@@ -179,7 +177,6 @@ describe('MosaicHttp', () => {
                     expect(mosaicInfos[0].divisibility).to.be.equal(3);
                     expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(true);
                     expect(mosaicInfos[0].isTransferable()).to.be.equal(true);
-                    expect(mosaicInfos[0].isLevyMutable()).to.be.equal(true);
                     done();
                 });
         });
@@ -193,7 +190,6 @@ describe('MosaicHttp', () => {
                     expect(mosaicInfos[0].divisibility).to.be.equal(3);
                     expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(true);
                     expect(mosaicInfos[0].isTransferable()).to.be.equal(true);
-                    expect(mosaicInfos[0].isLevyMutable()).to.be.equal(true);
                     done();
                 });
         });

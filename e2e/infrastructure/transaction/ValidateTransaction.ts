@@ -108,8 +108,6 @@ const ValidateTransaction = {
             .to.be.equal(true);
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable)
             .to.be.equal(true);
-        expect(mosaicDefinitionTransaction.mosaicProperties.levyMutable)
-            .to.be.equal(true);
     },
     validateMosaicSupplyChangeTx: (mosaicSupplyChangeTransaction, mosaicSupplyChangeTransactionDTO) => {
         deepEqual(mosaicSupplyChangeTransaction.mosaicId,
