@@ -146,7 +146,6 @@ describe('AggregateTransaction', () => {
             MosaicProperties.create({
                 supplyMutable: true,
                 transferable: true,
-                levyMutable: true,
                 divisibility: 3,
                 duration: UInt64.fromUint(1000),
             }),

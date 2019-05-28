@@ -48,7 +48,6 @@ describe('MosaicProperties', () => {
 
         expect(mosaicProperties.supplyMutable).to.be.equal(true);
         expect(mosaicProperties.transferable).to.be.equal(true);
-        expect(mosaicProperties.levyMutable).to.be.equal(true);
     });
 
     it('should createComplete an MosaicProperties object with static method', () => {
@@ -57,7 +56,6 @@ describe('MosaicProperties', () => {
         const mosaicProperties = MosaicProperties.create({
             supplyMutable: false,
             transferable: false,
-            levyMutable: false,
             divisibility: 10,
             duration,
         });
@@ -67,14 +65,12 @@ describe('MosaicProperties', () => {
 
         expect(mosaicProperties.supplyMutable).to.be.equal(false);
         expect(mosaicProperties.transferable).to.be.equal(false);
-        expect(mosaicProperties.levyMutable).to.be.equal(false);
     });
 
     it('should createComplete an MosaicProperties object without duration', () => {
         const mosaicProperties = MosaicProperties.create({
             supplyMutable: false,
             transferable: false,
-            levyMutable: false,
             divisibility: 10,
         });
 
@@ -83,6 +79,5 @@ describe('MosaicProperties', () => {
 
         expect(mosaicProperties.supplyMutable).to.be.equal(false);
         expect(mosaicProperties.transferable).to.be.equal(false);
-        expect(mosaicProperties.levyMutable).to.be.equal(false);
     });
 });

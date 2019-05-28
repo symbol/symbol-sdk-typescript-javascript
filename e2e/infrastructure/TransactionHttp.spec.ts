@@ -137,7 +137,6 @@ describe('TransactionHttp', () => {
                 MosaicProperties.create({
                     supplyMutable: true,
                     transferable: true,
-                    levyMutable: true,
                     divisibility: 3,
                 }),
                 NetworkType.MIJIN_TEST,
@@ -172,7 +171,6 @@ describe('TransactionHttp', () => {
                 MosaicProperties.create({
                     supplyMutable: true,
                     transferable: true,
-                    levyMutable: true,
                     divisibility: 3,
                 }),
                 NetworkType.MIJIN_TEST,
