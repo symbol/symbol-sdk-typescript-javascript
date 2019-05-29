@@ -182,6 +182,7 @@ describe('AccountHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
+
     describe('Setup Test AccountAddressProperty', () => {
         let listener: Listener;
         before (() => {
@@ -520,10 +521,10 @@ describe('AccountHttp', () => {
             const signedTransaction = aggregateTransaction
                 .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
 
-            listener.confirmed(multisigAccount.address).subscribe(() => {
+            listener.confirmed(cosignAccount1.address).subscribe(() => {
                 done();
             });
-            listener.status(multisigAccount.address).subscribe((error) => {
+            listener.status(cosignAccount1.address).subscribe((error) => {
                 console.log('Error:', error);
                 done();
             });
