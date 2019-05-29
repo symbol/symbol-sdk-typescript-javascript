@@ -1411,6 +1411,14 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                    done();
+                });
+                listener.status(account2.address).subscribe((error) => {
+                    console.log('Error:', error);
+                    assert(false);
+                    done();
+                });
                 const secretProofTransaction = SecretProofTransaction.create(
                     Deadline.create(),
                     HashType.Op_Hash_160,

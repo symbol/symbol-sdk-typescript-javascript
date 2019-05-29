@@ -455,7 +455,7 @@ describe('Listener', () => {
             listener.confirmed(multisigAccount.address).subscribe((transaction) => {
                 done();
             });
-            listener.status(multisigAccount.address).subscribe((error) => {
+            listener.status(cosignAccount1.address).subscribe((error) => {
                 console.log('Error:', error);
                 done();
             });
