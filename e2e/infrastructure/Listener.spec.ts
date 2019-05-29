@@ -386,10 +386,10 @@ describe('Listener', () => {
             const signedTransaction = aggregateTransaction
                 .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3]);
 
-            listener.confirmed(multisigAccount.address).subscribe((transaction) => {
+            listener.confirmed(cosignAccount1.address).subscribe((transaction) => {
                 done();
             });
-            listener.status(multisigAccount.address).subscribe((error) => {
+            listener.status(cosignAccount1.address).subscribe((error) => {
                 console.log('Error:', error);
                 done();
             });
