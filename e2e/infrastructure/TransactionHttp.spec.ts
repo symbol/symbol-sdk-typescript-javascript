@@ -774,7 +774,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = account.sign(aggregateTransaction, generationHash);
+            const signedTransaction = account.sign(aggregateTransaction);
             const hashLockTransaction = HashLockTransaction.create(Deadline.create(),
                 new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
                 UInt64.fromUint(10000),
@@ -1559,7 +1559,6 @@ describe('TransactionHttp', () => {
             const hash = sha256(Buffer.from(secretSeed, 'hex'));
             const secret = sha256(Buffer.from(hash, 'hex'));
             const proof = secretSeed;
-            const proofAnnounced = false;
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyMosaic.createAbsolute(10),
