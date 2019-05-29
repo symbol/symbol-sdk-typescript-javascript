@@ -774,7 +774,7 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTransaction = account.sign(aggregateTransaction);
+            const signedTransaction = account.sign(aggregateTransaction, generationHash);
             const hashLockTransaction = HashLockTransaction.create(Deadline.create(),
                 new Mosaic(new NamespaceId('cat.currency'), UInt64.fromUint(10 * Math.pow(10, NetworkCurrencyMosaic.DIVISIBILITY))),
                 UInt64.fromUint(10000),
@@ -789,7 +789,7 @@ describe('TransactionHttp', () => {
                 assert(false);
                 done();
             });
-            transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
+            transactionHttp.announce(hashLockTransaction.signWith(account, generationHash));
         });
     });
 
@@ -910,8 +910,6 @@ describe('TransactionHttp', () => {
             return listener.close();
         });
         it('should announce aggregated complete transaction', (done) => {
-            const signerAccount = account;
-
             const tx = TransferTransaction.create(
                 Deadline.create(),
                 account2.address,
@@ -922,12 +920,12 @@ describe('TransactionHttp', () => {
             const aggTx = AggregateTransaction.createComplete(
                 Deadline.create(),
                 [
-                    tx.toAggregate(signerAccount.publicAccount),
+                    tx.toAggregate(account.publicAccount),
                 ],
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            const signedTx = signerAccount.sign(aggTx, generationHash);
+            const signedTx = account.sign(aggTx, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
@@ -1225,6 +1223,9 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                    done();
+                });
                 const secretProofTransaction = SecretProofTransaction.create(
                     Deadline.create(),
                     HashType.Op_Sha3_256,
@@ -1235,9 +1236,6 @@ describe('TransactionHttp', () => {
                 );
                 const signedTx = secretProofTransaction.signWith(account2, generationHash);
                 transactionHttp.announce(signedTx);
-            });
-            listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
-                done();
             });
             listener.status(account2.address).subscribe((error) => {
                 console.log('Error:', error);
@@ -1286,7 +1284,7 @@ describe('TransactionHttp', () => {
                     [secretProofTransaction.toAggregate(account2.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
-                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2,generationHash));
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2, generationHash));
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
@@ -1378,7 +1376,7 @@ describe('TransactionHttp', () => {
                     [secretProofTransaction.toAggregate(account2.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
-                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2,generationHash));
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2, generationHash));
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
@@ -1413,6 +1411,14 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                    done();
+                });
+                listener.status(account2.address).subscribe((error) => {
+                    console.log('Error:', error);
+                    assert(false);
+                    done();
+                });
                 const secretProofTransaction = SecretProofTransaction.create(
                     Deadline.create(),
                     HashType.Op_Hash_160,
@@ -1423,14 +1429,6 @@ describe('TransactionHttp', () => {
                 );
                 const signedTx = secretProofTransaction.signWith(account2, generationHash);
                 transactionHttp.announce(signedTx);
-            });
-            listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
-                done();
-            });
-            listener.status(account2.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
@@ -1485,7 +1483,7 @@ describe('TransactionHttp', () => {
                     [secretProofTransaction.toAggregate(account2.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
-                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2,generationHash));
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2, generationHash));
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
@@ -1591,7 +1589,7 @@ describe('TransactionHttp', () => {
                     [secretProofTransaction.toAggregate(account2.publicAccount)],
                     NetworkType.MIJIN_TEST,
                     []);
-                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2,generationHash));
+                transactionHttp.announce(aggregateSecretProofTransaction.signWith(account2, generationHash));
             });
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
