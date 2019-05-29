@@ -70,6 +70,7 @@ describe('MosaicHttp', () => {
         it('Announce MosaicDefinitionTransaction', (done) => {
             const nonce = MosaicNonce.createRandom();
             mosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            console.log(mosaicId.toHex());
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 nonce,
@@ -222,7 +223,7 @@ describe('MosaicHttp', () => {
         it('Announce MosaicAliasTransaction', (done) => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Link,
+                AliasActionType.Unlink,
                 namespaceId,
                 mosaicId,
                 NetworkType.MIJIN_TEST,

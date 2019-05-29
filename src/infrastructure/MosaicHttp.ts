@@ -60,19 +60,18 @@ export class MosaicHttp extends Http implements MosaicRepository {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.mosaicRoutesApi.getMosaic(mosaicId.toHex())).pipe(map((mosaicInfoDTO) => {
-                return new MosaicInfo(
-                    mosaicInfoDTO.meta.id,
-                    new MosaicId(mosaicInfoDTO.mosaic.mosaicId),
-                    new UInt64(mosaicInfoDTO.mosaic.supply),
-                    new UInt64(mosaicInfoDTO.mosaic.height),
-                    PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
-                    mosaicInfoDTO.mosaic.revision,
-                    new MosaicProperties(
-                        new UInt64(mosaicInfoDTO.mosaic.properties[0]),
-                        (new UInt64(mosaicInfoDTO.mosaic.properties[1])).compact(),
-                        new UInt64(mosaicInfoDTO.mosaic.properties[2]),
-                    ),
-                );
+                    return new MosaicInfo(
+                        mosaicInfoDTO.meta.id,
+                        new MosaicId(mosaicInfoDTO.mosaic.mosaicId),
+                        new UInt64(mosaicInfoDTO.mosaic.supply),
+                        new UInt64(mosaicInfoDTO.mosaic.height),
+                        PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
+                        mosaicInfoDTO.mosaic.revision,
+                        new MosaicProperties(
+                            new UInt64(mosaicInfoDTO.mosaic.properties[0].value),
+                            (new UInt64(mosaicInfoDTO.mosaic.properties[1].value)).compact(),
+                        ),
+                    );
             }))));
     }
 
@@ -97,9 +96,8 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
                         mosaicInfoDTO.mosaic.revision,
                         new MosaicProperties(
-                            new UInt64(mosaicInfoDTO.mosaic.properties[0]),
-                            (new UInt64(mosaicInfoDTO.mosaic.properties[1])).compact(),
-                            new UInt64(mosaicInfoDTO.mosaic.properties[2]),
+                            new UInt64(mosaicInfoDTO.mosaic.properties[0].value),
+                            (new UInt64(mosaicInfoDTO.mosaic.properties[1].value)).compact(),
                         ),
                     );
                 });
