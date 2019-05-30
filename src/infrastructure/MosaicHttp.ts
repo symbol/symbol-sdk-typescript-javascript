@@ -22,6 +22,7 @@ import {MosaicId} from '../model/mosaic/MosaicId';
 import {MosaicInfo} from '../model/mosaic/MosaicInfo';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
 import {MosaicProperties} from '../model/mosaic/MosaicProperties';
+import { MosaicPropertyIdEnum } from '../model/mosaic/MosaicPropertyIdEnum';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {UInt64} from '../model/UInt64';
 import {Http} from './Http';
@@ -60,18 +61,19 @@ export class MosaicHttp extends Http implements MosaicRepository {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.mosaicRoutesApi.getMosaic(mosaicId.toHex())).pipe(map((mosaicInfoDTO) => {
-                    return new MosaicInfo(
-                        mosaicInfoDTO.meta.id,
-                        new MosaicId(mosaicInfoDTO.mosaic.mosaicId),
-                        new UInt64(mosaicInfoDTO.mosaic.supply),
-                        new UInt64(mosaicInfoDTO.mosaic.height),
-                        PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
-                        mosaicInfoDTO.mosaic.revision,
-                        new MosaicProperties(
-                            new UInt64(mosaicInfoDTO.mosaic.properties[0].value),
-                            (new UInt64(mosaicInfoDTO.mosaic.properties[1].value)).compact(),
-                        ),
-                    );
+                return new MosaicInfo(
+                    mosaicInfoDTO.meta.id,
+                    new MosaicId(mosaicInfoDTO.mosaic.mosaicId),
+                    new UInt64(mosaicInfoDTO.mosaic.supply),
+                    new UInt64(mosaicInfoDTO.mosaic.height),
+                    PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
+                    mosaicInfoDTO.mosaic.revision,
+                    new MosaicProperties(
+                        new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.MosaicFlags].value),
+                        (new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.Divisibility].value)).compact(),
+                        new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.Duration].value),
+                    ),
+                );
             }))));
     }
 
@@ -96,8 +98,9 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
                         mosaicInfoDTO.mosaic.revision,
                         new MosaicProperties(
-                            new UInt64(mosaicInfoDTO.mosaic.properties[0].value),
-                            (new UInt64(mosaicInfoDTO.mosaic.properties[1].value)).compact(),
+                            new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.MosaicFlags].value),
+                            (new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.Divisibility].value)).compact(),
+                            new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.Duration].value),
                         ),
                     );
                 });
