@@ -94,7 +94,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('E6DE84B8010000000000000001070302E803000000000000');
+        )).to.be.equal('E6DE84B8010000000000000001030302E803000000000000');
 
     });
 
