@@ -396,9 +396,9 @@ describe('AccountHttp', () => {
                 account.address,
                 NetworkType.MIJIN_TEST,
             );
-            const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
+            const signedTransaction = addressAliasTransaction.signWith(account);
 
-            listener.confirmed(account.address).subscribe(() => {
+            listener.confirmed(account.address).subscribe((transaction) => {
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -409,7 +409,6 @@ describe('AccountHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-
     describe('Remove test AccountProperty - Address', () => {
         let listener: Listener;
         before (() => {
