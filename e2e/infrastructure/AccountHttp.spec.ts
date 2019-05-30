@@ -378,7 +378,37 @@ describe('AccountHttp', () => {
      * House Keeping
      * =========================
      */
+    describe('Remove test AddressAlias', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
 
+        it('Announce addressAliasTransaction', (done) => {
+            const addressAliasTransaction = AddressAliasTransaction.create(
+                Deadline.create(),
+                AliasActionType.Unlink,
+                namespaceId,
+                account.address,
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = addressAliasTransaction.signWith(account);
+
+            listener.confirmed(account.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
     describe('Remove test AccountProperty - Address', () => {
         let listener: Listener;
         before (() => {
