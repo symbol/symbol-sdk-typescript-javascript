@@ -410,6 +410,17 @@ describe('AccountHttp', () => {
         });
     });
 
+            listener.confirmed(account.address).subscribe((transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
     describe('Remove test AccountProperty - Address', () => {
         let listener: Listener;
         before (() => {
