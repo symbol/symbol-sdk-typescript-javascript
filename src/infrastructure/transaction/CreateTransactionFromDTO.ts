@@ -22,6 +22,7 @@ import {Id} from '../../model/Id';
 import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicId} from '../../model/mosaic/MosaicId';
 import {MosaicProperties} from '../../model/mosaic/MosaicProperties';
+import { MosaicPropertyIdEnum } from '../../model/mosaic/MosaicPropertyIdEnum';
 import {NamespaceId} from '../../model/namespace/NamespaceId';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
 import {AccountPropertyModification} from '../../model/transaction/AccountPropertyModification';
@@ -159,10 +160,10 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.nonce,
             new MosaicId(transactionDTO.mosaicId),
             new MosaicProperties(
-                new UInt64(transactionDTO.properties[0].value),
-                (new UInt64(transactionDTO.properties[1].value)).compact(),
-                transactionDTO.properties.length === 3 &&  transactionDTO.properties[2].value ?
-                    new UInt64(transactionDTO.properties[2].value) : undefined,
+                new UInt64(transactionDTO.properties[MosaicPropertyIdEnum.MosaicFlags].value),
+                (new UInt64(transactionDTO.properties[MosaicPropertyIdEnum.Divisibility].value)).compact(),
+                transactionDTO.properties.length === 3 &&  transactionDTO.properties[MosaicPropertyIdEnum.Duration].value ?
+                    new UInt64(transactionDTO.properties[MosaicPropertyIdEnum.Duration].value) : undefined,
             ),
             transactionDTO.signature,
             transactionDTO.signer ? PublicAccount.createFromPublicKey(transactionDTO.signer,
