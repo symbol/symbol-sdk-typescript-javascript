@@ -22,6 +22,7 @@ import {MosaicId} from '../model/mosaic/MosaicId';
 import {MosaicInfo} from '../model/mosaic/MosaicInfo';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
 import {MosaicProperties} from '../model/mosaic/MosaicProperties';
+import { MosaicPropertyIdEnum } from '../model/mosaic/MosaicPropertyIdEnum';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {UInt64} from '../model/UInt64';
 import {Http} from './Http';
@@ -68,9 +69,9 @@ export class MosaicHttp extends Http implements MosaicRepository {
                     PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
                     mosaicInfoDTO.mosaic.revision,
                     new MosaicProperties(
-                        new UInt64(mosaicInfoDTO.mosaic.properties[0]),
-                        (new UInt64(mosaicInfoDTO.mosaic.properties[1])).compact(),
-                        new UInt64(mosaicInfoDTO.mosaic.properties[2]),
+                        new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.MosaicFlags].value),
+                        (new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.Divisibility].value)).compact(),
+                        new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.Duration].value),
                     ),
                 );
             }))));
@@ -97,9 +98,9 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
                         mosaicInfoDTO.mosaic.revision,
                         new MosaicProperties(
-                            new UInt64(mosaicInfoDTO.mosaic.properties[0]),
-                            (new UInt64(mosaicInfoDTO.mosaic.properties[1])).compact(),
-                            new UInt64(mosaicInfoDTO.mosaic.properties[2]),
+                            new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.MosaicFlags].value),
+                            (new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.Divisibility].value)).compact(),
+                            new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyIdEnum.Duration].value),
                         ),
                     );
                 });
