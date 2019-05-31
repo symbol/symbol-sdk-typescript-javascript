@@ -110,7 +110,7 @@ describe('Receipt', () => {
                       primaryId: 1,
                       secondaryId: 0,
                     },
-                    resolved: '08a12f89ee5a49f8',
+                    resolved: [2553890912, 2234768168],
                   },
                 ],
             },
@@ -129,7 +129,7 @@ describe('Receipt', () => {
                       primaryId: 5,
                       secondaryId: 0,
                     },
-                    resolved: '08a12f89ee5a49f8',
+                    resolved: [2553890912, 2234768168],
                   },
                 ],
             },
@@ -294,7 +294,7 @@ describe('Receipt', () => {
             }),
         );
         deepEqual((statement.unresolved as MosaicId).toDTO().id, statementDto.unresolved);
-        deepEqual((statement.resolutionEntries[0].resolved as MosaicAlias).mosaicId.toHex(), '08a12f89ee5a49f8');
+        deepEqual((statement.resolutionEntries[0].resolved as MosaicAlias).mosaicId.id.toDTO(), [2553890912, 2234768168]);
     });
 
     it('should createComplete resolution statement - address', () => {
