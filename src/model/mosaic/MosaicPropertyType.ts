@@ -20,7 +20,7 @@
  * 1 - Divisibility
  * 2 - Duration
  */
-export enum MosaicPropertyIdEnum {
+export enum MosaicPropertyType {
     MosaicFlags = 0,
     Divisibility = 1,
     Duration = 2,
