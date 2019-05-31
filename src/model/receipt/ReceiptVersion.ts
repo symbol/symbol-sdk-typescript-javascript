@@ -17,7 +17,8 @@
 /**
  * Receipt version constants.
  *
- * @see https://nemtech.github.io/concepts/receipt.html
+ * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.h
+ * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.cpp
  */
 export class ReceiptVersion {
 

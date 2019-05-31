@@ -15,7 +15,7 @@
  */
 
 import {UInt64} from '../UInt64';
-import { MosaicPropertyIdEnum } from './MosaicPropertyIdEnum';
+import { MosaicPropertyType } from './MosaicPropertyType';
 
 /**
  * Mosaic properties model
@@ -84,13 +84,13 @@ export class MosaicProperties {
      */
     toDTO() {
         const dto = [
-            {id: MosaicPropertyIdEnum.MosaicFlags, value: UInt64.fromUint((this.supplyMutable ? 1 : 0) +
+            {id: MosaicPropertyType.MosaicFlags, value: UInt64.fromUint((this.supplyMutable ? 1 : 0) +
                                         (this.transferable ? 2 : 0)).toDTO()},
-            {id: MosaicPropertyIdEnum.Divisibility, value: UInt64.fromUint(this.divisibility).toDTO()},
+            {id: MosaicPropertyType.Divisibility, value: UInt64.fromUint(this.divisibility).toDTO()},
         ];
 
         if (this.duration !== undefined) {
-            dto.push({id: MosaicPropertyIdEnum.Duration, value: this.duration.toDTO()});
+            dto.push({id: MosaicPropertyType.Duration, value: this.duration.toDTO()});
         }
 
         return dto;

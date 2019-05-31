@@ -93,7 +93,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                       primaryId: 1,
                       secondaryId: 0,
                     },
-                    resolved: '08a12f89ee5a49f8',
+                    resolved: [2553890912, 2234768168],
                   },
                 ],
             },
@@ -112,7 +112,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                       primaryId: 5,
                       secondaryId: 0,
                     },
-                    resolved: '08a12f89ee5a49f8',
+                    resolved: [2553890912, 2234768168],
                   },
                 ],
             },
@@ -144,6 +144,6 @@ describe('Receipt - CreateStatementFromDTO', () => {
         deepEqual(unresolvedMosaicId.toDTO().id, [4014740460, 2448037180]);
         expect(statement.mosaicResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
         deepEqual((statement.mosaicResolutionStatements[0].resolutionEntries[0].resolved as MosaicAlias)
-                .mosaicId.toHex(), '08a12f89ee5a49f8');
+                .mosaicId.id.toDTO(), [2553890912, 2234768168]);
     });
 });
