@@ -39,6 +39,8 @@ import {UInt64} from '../../model/UInt64';
  * @param receiptDTO
  * @param networkType
  * @returns {Statement}
+ * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.h
+ * @see https://github.com/nemtech/catapult-server/blob/master/src/catapult/model/ReceiptType.cpp
  * @constructor
  */
 export const CreateStatementFromDTO = (receiptDTO, networkType): Statement => {

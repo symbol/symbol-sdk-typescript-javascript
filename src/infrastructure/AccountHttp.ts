@@ -28,6 +28,7 @@ import {PublicAccount} from '../model/account/PublicAccount';
 import {Mosaic} from '../model/mosaic/Mosaic';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import { NamespaceId } from '../model/namespace/NamespaceId';
+import { NamespaceName } from '../model/namespace/NamespaceName';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
@@ -147,7 +148,7 @@ export class AccountHttp extends Http implements AccountRepository {
                 return new AccountNames(
                     Address.createFromEncoded(accountName.address),
                     accountName.names.map((name) => {
-                        new NamespaceId(name);
+                        new NamespaceName(new NamespaceId(name), name);
                     }),
                 );
             });

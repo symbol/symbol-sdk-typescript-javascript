@@ -82,7 +82,6 @@ describe('BlockHttp', () => {
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
 
                 chainHeight = transaction.transactionInfo!.height.lower;
-                console.log(`Test chain height: ${chainHeight}`);
                 done();
             });
             listener.status(account.address).subscribe((error) => {
