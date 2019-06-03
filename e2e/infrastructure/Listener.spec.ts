@@ -20,7 +20,7 @@ import { Listener } from '../../src/infrastructure/Listener';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
-import { Mosaic, UInt64 } from '../../src/model/model';
+import { Mosaic, PlainMessage, UInt64, TransferTransaction } from '../../src/model/model';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -29,12 +29,6 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
-import { PlainMessage } from '../../src/model/transaction/PlainMessage';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { TransactionUtils } from './TransactionUtils';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
-import { PlainMessage } from '../../src/model/transaction/PlainMessage';
-import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { TransactionUtils } from './TransactionUtils';
 
 describe('Listener', () => {
