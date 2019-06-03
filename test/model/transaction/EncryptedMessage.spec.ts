@@ -52,13 +52,12 @@ describe('EncryptedMessage', () => {
 
     it('should return empty string if given payload is not valid', () => {
         // message payload generated from catapult-server
-        const encryptedMessage = sender.encryptMessage('test transaction', recipient.publicAccount);
         const encryptMessage = EncryptedMessage
-            .createFromPayload('4132343743314236463730363143314331453730434334373744323831464132343731364343443635313334354' +
-                           '33433383842364546413532364139354144463043354431424545463939373044314337384537413837353435363938424' +
-                           '63336413939413631373630313936324238324246453435454241353037303236424144313032394141364636383242343' +
-                           '339334142453843383931343143413938');
+            .createFromPayload('3131313842393038373141353141363431453630414537413636314638454645463' +
+                    '946383431364646344336304536324443304235303943394242433039364230383343363438374' +
+                    '137364239433434314433303932363942414536434339364230423339454430303233453236333' +
+                    '8373531414345313132443732353430344341374632353634324642383230433744373633413434313132323833414639');
         const plainMessage = recipient.decryptMessage(encryptMessage, sender.publicAccount);
-        expect(plainMessage.payload).to.be.equal('');
+        expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
 });
