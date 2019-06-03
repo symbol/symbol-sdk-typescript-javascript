@@ -20,7 +20,7 @@ import { Listener } from '../../src/infrastructure/Listener';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
-import { Mosaic, PlainMessage, UInt64, TransferTransaction } from '../../src/model/model';
+import { Mosaic, UInt64 } from '../../src/model/model';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -29,6 +29,8 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
+import { PlainMessage } from '../../src/model/transaction/PlainMessage';
+import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { TransactionUtils } from './TransactionUtils';
 
 describe('Listener', () => {
@@ -391,62 +393,6 @@ describe('Listener', () => {
                 .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
 
             listener.confirmed(cosignAccount1.address).subscribe((transaction) => {
-                done();
-            });
-            listener.status(cosignAccount1.address).subscribe((error) => {
-                console.log('Error:', error);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
-        });
-    });
-
-    describe('ModifyMultisigAccountTransaction - Restore multisig Accounts', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('Restore Multisig Account', (done) => {
-            const removeCosigner1 = ModifyMultisigAccountTransaction.create(
-                Deadline.create(),
-                -1,
-                0,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount1.publicAccount),
-                ],
-                NetworkType.MIJIN_TEST,
-            );
-            const removeCosigner2 = ModifyMultisigAccountTransaction.create(
-                Deadline.create(),
-                0,
-                0,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount2.publicAccount),
-                ],
-                NetworkType.MIJIN_TEST,
-            );
-
-            const removeCosigner3 = ModifyMultisigAccountTransaction.create(
-                Deadline.create(),
-                -1,
-                -1,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount3.publicAccount),
-                ],
-                NetworkType.MIJIN_TEST,
-            );
-
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                [removeCosigner1.toAggregate(multisigAccount.publicAccount),
-                 removeCosigner2.toAggregate(multisigAccount.publicAccount),
-                 removeCosigner3.toAggregate(multisigAccount.publicAccount)],
-                NetworkType.MIJIN_TEST,
-                []);
-            const signedTransaction = aggregateTransaction
-                .signTransactionWithCosignatories(cosignAccount1, [cosignAccount2, cosignAccount3], generationHash);
-
-            listener.confirmed(multisigAccount.address).subscribe((transaction) => {
                 done();
             });
             listener.status(cosignAccount1.address).subscribe((error) => {
