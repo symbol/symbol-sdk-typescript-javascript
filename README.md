@@ -55,6 +55,7 @@ Please, use the following available resources to get help:
 
 Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
 
+- [0.12.0](CHANGELOG.md#0120-03-Jun-2019) - **Dragon compatible** - 03.06.2019
 - [0.11.6](CHANGELOG.md#0116-03-Jun-2019) - **Cow compatible** - 03.06.2019
 - [0.11.5](CHANGELOG.md#0115-18-Apr-2019) - **Cow compatible** - 18.04.2019
 - [0.11.4](CHANGELOG.md#0114-17-Apr-2019) - **Cow compatible** - 17.04.2019
