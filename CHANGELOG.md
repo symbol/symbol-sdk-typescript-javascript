@@ -5,6 +5,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.12.0] - 03-Jun-2019
 
+- Added 'Receipt'
 - Added 'generationHash' to transaction.sign(...) to prevent transactions from being replayed on different networks by prepending the network generation hash to transaction data prior to signing and verifying.
 - Added 'recipient' (unresolved address) field to SecretProofTransaction.
 - BlockChainHttp routes into 3 routes (Block, Chain, Diagnostic).
