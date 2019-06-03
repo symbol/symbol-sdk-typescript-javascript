@@ -10,9 +10,11 @@ with the NEM2 (a.k.a Catapult)
 
 ## Important Notes
 
-Due to a network upgrade with [catapult-server@cow](https://github.com/nemtech/catapult-server/releases/tag/v0.3.0.2) version, **transactions from Alpaca&Bison are not compatible anymore**.
+The upgrade to this SDK's [version v0.12.0](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.12.0) is mandatory for **dragon compatibility**.
 
-The upgrade to this SDK's [version v0.11.5](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.11.5) is mandatory for **cow compatibility**.
+[version v0.11.6](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.11.6) is the latest locked version for **cow compatibility**.
+
+Due to a network upgrade with [catapult-server@cow](https://github.com/nemtech/catapult-server/releases/tag/v0.3.0.2) version, **transactions from Alpaca&Bison are not compatible anymore**.
 
 Other versions like [version v0.10.1-beta](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.10.1-beta) can be used for **bison** network version.
 
