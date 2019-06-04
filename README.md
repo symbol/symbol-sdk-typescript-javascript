@@ -67,7 +67,7 @@ Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a fu
 - [0.10.1-beta](CHANGELOG.md#v0101-beta) - **Alpaca compatible** 07.2018
 - [0.9.5](CHANGELOG.md#095-27-Jun-2018) - **Alpaca compatible** 07.2018
 
-## License
+## License 
 
 Copyright (c) 2018-2019 NEM
 Licensed under the [Apache License 2.0](LICENSE)
