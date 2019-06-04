@@ -29,12 +29,19 @@ export * from './account/AccountPropertiesInfo';
 export * from './account/AccountProperty';
 export * from './account/PropertyModificationType';
 export * from './account/PropertyType';
+export * from './account/AccountNames';
 
 // Blockchain
 export * from './blockchain/BlockchainScore';
 export * from './blockchain/BlockchainStorageInfo';
 export * from './blockchain/BlockInfo';
 export * from './blockchain/NetworkType';
+export * from './blockchain/MerklePathItem';
+export * from './blockchain/MerkleProofInfo';
+export * from './blockchain/MerkleProofInfoPayload';
+
+// Diagnostic
+export * from './diagnostic/ServerInfo';
 
 // Mosaic
 export * from './mosaic/Mosaic';
@@ -47,6 +54,8 @@ export * from '../service/MosaicView';
 export * from '../service/MosaicAmountView';
 export * from './mosaic/NetworkCurrencyMosaic';
 export * from './mosaic/NetworkHarvestMosaic';
+export * from './mosaic/MosaicNames';
+export * from './mosaic/MosaicPropertyType';
 
 // Namespace
 export * from '../service/Namespace';
@@ -59,6 +68,21 @@ export * from './namespace/NamespaceInfo';
 export * from './namespace/NamespaceName';
 export * from './namespace/NamespaceType';
 export * from './namespace/AliasActionType';
+
+// Receipt
+export * from './receipt/ArtifactExpiryReceipt';
+export * from './receipt/BalanceChangeReceipt';
+export * from './receipt/BalanceTransferReceipt';
+export * from './receipt/Receipt';
+export * from './receipt/ReceiptSource';
+export * from './receipt/ReceiptType';
+export * from './receipt/ReceiptVersion';
+export * from './receipt/ResolutionEntry';
+export * from './receipt/ResolutionStatement';
+export * from './receipt/TransactionStatement';
+export * from './receipt/ResolutionType';
+export * from './receipt/InflationReceipt';
+export * from './receipt/Statement';
 
 // Transaction
 export * from './transaction/AccountLinkTransaction';

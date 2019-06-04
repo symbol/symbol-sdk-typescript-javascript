@@ -15,6 +15,7 @@
  */
 
 import {UInt64} from '../UInt64';
+import { MosaicPropertyType } from './MosaicPropertyType';
 
 /**
  * Mosaic properties model
@@ -35,11 +36,6 @@ export class MosaicProperties {
      * Allowed values for the property are thus "true" and "false". The default value is "true".
      */
     public readonly transferable: boolean;
-
-    /**
-     * Levy mutable
-     */
-    public readonly levyMutable: boolean;
 
     /**
      * @param flags
@@ -63,10 +59,9 @@ export class MosaicProperties {
                  */
                 public readonly duration?: UInt64) {
         let binaryFlags = '00' + (flags.lower >>> 0).toString(2);
-        binaryFlags = binaryFlags.substr(binaryFlags.length - 3, 3);
-        this.supplyMutable = binaryFlags[2] === '1';
-        this.transferable = binaryFlags[1] === '1';
-        this.levyMutable = binaryFlags[0] === '1';
+        binaryFlags = binaryFlags.substr(binaryFlags.length - 2, 2);
+        this.supplyMutable = binaryFlags[1] === '1';
+        this.transferable = binaryFlags[0] === '1';
     }
 
     /**
@@ -77,11 +72,10 @@ export class MosaicProperties {
     public static create(params: {
         supplyMutable: boolean,
         transferable: boolean,
-        levyMutable: boolean,
         divisibility: number,
         duration?: UInt64,
     }) {
-        const flags = (params.supplyMutable ? 1 : 0) + (params.transferable ? 2 : 0) + (params.levyMutable ? 4 : 0);
+        const flags = (params.supplyMutable ? 1 : 0) + (params.transferable ? 2 : 0);
         return new MosaicProperties(UInt64.fromUint(flags), params.divisibility, params.duration);
     }
 
@@ -90,14 +84,13 @@ export class MosaicProperties {
      */
     toDTO() {
         const dto = [
-            {id: 0, value: UInt64.fromUint((this.supplyMutable ? 1 : 0) +
-                                        (this.transferable ? 2 : 0) +
-                                        (this.levyMutable ? 4 : 0)).toDTO()},
-            {id: 1, value: UInt64.fromUint(this.divisibility).toDTO()},
+            {id: MosaicPropertyType.MosaicFlags, value: UInt64.fromUint((this.supplyMutable ? 1 : 0) +
+                                        (this.transferable ? 2 : 0)).toDTO()},
+            {id: MosaicPropertyType.Divisibility, value: UInt64.fromUint(this.divisibility).toDTO()},
         ];
 
         if (this.duration !== undefined) {
-            dto.push({id: 2, value: this.duration.toDTO()});
+            dto.push({id: MosaicPropertyType.Duration, value: this.duration.toDTO()});
         }
 
         return dto;

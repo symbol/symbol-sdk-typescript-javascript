@@ -19,6 +19,7 @@ import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import {AccountInfo} from '../model/account/AccountInfo';
+import { AccountNames } from '../model/account/AccountNames';
 import { AccountPropertiesInfo } from '../model/account/AccountPropertiesInfo';
 import {Address} from '../model/account/Address';
 import {MultisigAccountGraphInfo} from '../model/account/MultisigAccountGraphInfo';
@@ -26,6 +27,8 @@ import {MultisigAccountInfo} from '../model/account/MultisigAccountInfo';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {Mosaic} from '../model/mosaic/Mosaic';
 import {MosaicId} from '../model/mosaic/MosaicId';
+import { NamespaceId } from '../model/namespace/NamespaceId';
+import { NamespaceName } from '../model/namespace/NamespaceName';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
@@ -98,7 +101,9 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<AccountProperty[]>
      */
     public getAccountPropertiesFromAccounts(addresses: Address[]): Observable<AccountPropertiesInfo[]> {
-        const accountIds = addresses.map((address) => address.plain());
+        const accountIds = {
+            addresses: addresses.map((address) => address.plain()),
+        };
         return observableFrom(
             this.accountRoutesApi.getAccountPropertiesFromAccounts(accountIds)).pipe(map((accountProperties) => {
             return accountProperties.map((property) => {
@@ -133,6 +138,22 @@ export class AccountHttp extends Http implements AccountRepository {
         }));
     }
 
+    public getAccountsNames(addresses: Address[]): Observable<AccountNames[]> {
+        const accountIdsBody = {
+            addresses: addresses.map((address) => address.plain()),
+        };
+        return observableFrom(
+            this.accountRoutesApi.getAccountsNames(accountIdsBody)).pipe(map((accountNames) => {
+            return accountNames.map((accountName) => {
+                return new AccountNames(
+                    Address.createFromEncoded(accountName.address),
+                    accountName.names.map((name) => {
+                        new NamespaceName(new NamespaceId(name), name);
+                    }),
+                );
+            });
+        }));
+    }
     /**
      * Gets a MultisigAccountInfo for an account.
      * @param address - User address

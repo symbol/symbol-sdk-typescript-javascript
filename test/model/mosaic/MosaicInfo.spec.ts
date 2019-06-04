@@ -42,7 +42,6 @@ describe('MosaicInfo', () => {
                 new UInt64([3, 0]), // flags
                 new UInt64([1000, 0]), // duration
             ],
-            levy: {},
         },
     };
 
@@ -63,7 +62,6 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.mosaic.properties[1].compact(),
                 mosaicInfoDTO.mosaic.properties[2],
             ),
-            mosaicInfoDTO.mosaic.levy,
         );
 
         expect(mosaicInfo.metaId).to.be.equal(mosaicInfoDTO.meta.id);
@@ -90,7 +88,6 @@ describe('MosaicInfo', () => {
                 mosaicInfoDTO.mosaic.properties[0],
                 mosaicInfoDTO.mosaic.properties[1].compact(),
             ),
-            mosaicInfoDTO.mosaic.levy,
         );
 
         expect(mosaicInfo.metaId).to.be.equal(mosaicInfoDTO.meta.id);
@@ -117,11 +114,9 @@ describe('MosaicInfo', () => {
                 MosaicProperties.create({
                     supplyMutable: true,
                     transferable: false,
-                    levyMutable: false,
                     divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
                     duration: mosaicInfoDTO.mosaic.properties[2],
                 }),
-                mosaicInfoDTO.mosaic.levy,
                 )
             ;
             expect(mosaicInfo.isSupplyMutable()).to.be.equal(true);
@@ -138,11 +133,9 @@ describe('MosaicInfo', () => {
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: false,
-                    levyMutable: false,
                     divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
                     duration: mosaicInfoDTO.mosaic.properties[2],
                 }),
-                mosaicInfoDTO.mosaic.levy,
             );
             expect(mosaicInfo.isSupplyMutable()).to.be.equal(false);
         });
@@ -160,11 +153,9 @@ describe('MosaicInfo', () => {
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: true,
-                    levyMutable: false,
                     divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
                     duration: mosaicInfoDTO.mosaic.properties[2],
                 }),
-                mosaicInfoDTO.mosaic.levy,
             );
             expect(mosaicInfo.isTransferable()).to.be.equal(true);
         });
@@ -180,55 +171,12 @@ describe('MosaicInfo', () => {
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: false,
-                    levyMutable: false,
                     divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
                     duration: mosaicInfoDTO.mosaic.properties[2],
                 }),
-                mosaicInfoDTO.mosaic.levy,
             );
             expect(mosaicInfo.isTransferable()).to.be.equal(false);
         });
     });
 
-    describe('isLevyMutable', () => {
-        it('should return true when it\'s mutable', () => {
-            const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.meta.id,
-                mosaicInfoDTO.mosaic.mosaicId,
-                mosaicInfoDTO.mosaic.supply,
-                mosaicInfoDTO.mosaic.height,
-                mosaicInfoDTO.mosaic.owner,
-                mosaicInfoDTO.mosaic.revision,
-                MosaicProperties.create({
-                    supplyMutable: true,
-                    transferable: false,
-                    levyMutable: true,
-                    divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
-                    duration: mosaicInfoDTO.mosaic.properties[2],
-                }),
-                mosaicInfoDTO.mosaic.levy,
-            );
-            expect(mosaicInfo.isLevyMutable()).to.be.equal(true);
-        });
-
-        it('should return false when it\'s immutable', () => {
-            const mosaicInfo = new MosaicInfo(
-                mosaicInfoDTO.meta.id,
-                mosaicInfoDTO.mosaic.mosaicId,
-                mosaicInfoDTO.mosaic.supply,
-                mosaicInfoDTO.mosaic.height,
-                mosaicInfoDTO.mosaic.owner,
-                mosaicInfoDTO.mosaic.revision,
-                MosaicProperties.create({
-                    supplyMutable: false,
-                    transferable: false,
-                    levyMutable: false,
-                    divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
-                    duration: mosaicInfoDTO.mosaic.properties[2],
-                }),
-                mosaicInfoDTO.mosaic.levy,
-            );
-            expect(mosaicInfo.isLevyMutable()).to.be.equal(false);
-        });
-    });
 });

@@ -20,13 +20,15 @@ import {map, mergeMap} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import {MosaicInfo} from '../model/mosaic/MosaicInfo';
+import { MosaicNames } from '../model/mosaic/MosaicNames';
 import {MosaicProperties} from '../model/mosaic/MosaicProperties';
+import { MosaicPropertyType } from '../model/mosaic/MosaicPropertyType';
 import {NamespaceId} from '../model/namespace/NamespaceId';
+import { NamespaceName } from '../model/namespace/NamespaceName';
 import {UInt64} from '../model/UInt64';
 import {Http} from './Http';
 import {MosaicRepository} from './MosaicRepository';
 import {NetworkHttp} from './NetworkHttp';
-import {QueryParams} from './QueryParams';
 
 /**
  * Mosaic http repository.
@@ -68,11 +70,10 @@ export class MosaicHttp extends Http implements MosaicRepository {
                     PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
                     mosaicInfoDTO.mosaic.revision,
                     new MosaicProperties(
-                        new UInt64(mosaicInfoDTO.mosaic.properties[0]),
-                        (new UInt64(mosaicInfoDTO.mosaic.properties[1])).compact(),
-                        new UInt64(mosaicInfoDTO.mosaic.properties[2]),
+                        new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyType.MosaicFlags].value),
+                        (new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Divisibility].value)).compact(),
+                        new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value),
                     ),
-                    mosaicInfoDTO.mosaic.levy,
                 );
             }))));
     }
@@ -98,13 +99,35 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
                         mosaicInfoDTO.mosaic.revision,
                         new MosaicProperties(
-                            new UInt64(mosaicInfoDTO.mosaic.properties[0]),
-                            (new UInt64(mosaicInfoDTO.mosaic.properties[1])).compact(),
-                            new UInt64(mosaicInfoDTO.mosaic.properties[2]),
+                            new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyType.MosaicFlags].value),
+                            (new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Divisibility].value)).compact(),
+                            new UInt64(mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value),
                         ),
-                        mosaicInfoDTO.mosaic.levy,
                     );
                 });
             }))));
+    }
+
+    /**
+     * Get readable names for a set of mosaics
+     * Returns friendly names for mosaics.
+     * @param mosaicIds - Array of mosaic ids
+     * @return Observable<MosaicNames[]>
+     */
+    public getMosaicsNames(mosaicIds: MosaicId[]): Observable<MosaicNames[]> {
+        const mosaicIdsBody = {
+            mosaicIds: mosaicIds.map((id) => id.toHex()),
+        };
+        return observableFrom(
+            this.mosaicRoutesApi.getMosaicsNames(mosaicIdsBody)).pipe(map((mosaics) => {
+            return mosaics.map((mosaic) => {
+                return new MosaicNames(
+                    new MosaicId(mosaic.mosaicId),
+                    mosaic.names.map((name) => {
+                        new NamespaceName(new NamespaceId(name), name);
+                    }),
+                );
+            });
+        }));
     }
 }

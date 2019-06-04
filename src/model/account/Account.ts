@@ -127,20 +127,24 @@ export class Account {
     /**
      * Sign a transaction
      * @param transaction - The transaction to be signed.
+     * @param generationHash - Network generation hash hex
      * @return {SignedTransaction}
      */
-    public sign(transaction: Transaction): SignedTransaction {
-        return transaction.signWith(this);
+    public sign(transaction: Transaction, generationHash): SignedTransaction {
+        return transaction.signWith(this, generationHash);
     }
 
     /**
      * Sign transaction with cosignatories creating a new SignedTransaction
      * @param transaction - The aggregate transaction to be signed.
      * @param cosignatories - The array of accounts that will cosign the transaction
+     * @param generationHash - Network generation hash hex
      * @return {SignedTransaction}
      */
-    public signTransactionWithCosignatories(transaction: AggregateTransaction, cosignatories: Account[]): SignedTransaction {
-        return transaction.signTransactionWithCosignatories(this, cosignatories);
+    public signTransactionWithCosignatories(transaction: AggregateTransaction,
+                                            cosignatories: Account[],
+                                            generationHash: string): SignedTransaction {
+    return transaction.signTransactionWithCosignatories(this, cosignatories, generationHash);
     }
 
     /**

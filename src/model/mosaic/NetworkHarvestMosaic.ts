@@ -63,12 +63,6 @@ export class NetworkHarvestMosaic extends Mosaic {
     public static SUPPLY_MUTABLE = true;
 
     /**
-     * Is Levy mutable
-     * @type {boolean}
-     */
-    public static LEVY_MUTABLE = false;
-
-    /**
      * constructor
      * @param owner
      * @param amount
