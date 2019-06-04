@@ -10,6 +10,10 @@ with the NEM2 (a.k.a Catapult)
 
 ## Important Notes
 
+### Dragon Network Compatibility (catapult-server@0.4.0.1)
+
+Due to a network upgrade with [catapult-server@dragon](https://github.com/nemtech/catapult-server/releases/tag/v0.4.0.1) version, **it is recommended to use this package's 0.10.0 version and upwards in order to use this package with Dragon versioned networks**.
+
 The upgrade to this SDK's [version v0.12.0](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.12.0) is mandatory for **dragon compatibility**.
 
 [version v0.11.6](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.11.6) is the latest locked version for **cow compatibility**.
@@ -42,7 +46,7 @@ The release notes for the nem2-sdk can be found [here](CHANGELOG.md).
 
 ## Contributing
 
-This project is developed and maintained by NEM Foundation. Contributions are welcome and appreciated. You can find [nem2-sdk on GitHub][self]; 
+This project is developed and maintained by NEM Foundation. Contributions are welcome and appreciated. You can find [nem2-sdk on GitHub][self];
 Feel free to start an issue or create a pull request. Check [CONTRIBUTING](CONTRIBUTING.md) before start.
 
 ## Getting help
@@ -57,7 +61,7 @@ Please, use the following available resources to get help:
 
 Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
 
-- [0.12.0](CHANGELOG.md#0120-03-Jun-2019) - **Dragon compatible** - 03.06.2019
+- [0.12.0](CHANGELOG.md#0120-04-Jun-2019) - **Dragon compatible** - 04.06.2019
 - [0.11.6](CHANGELOG.md#0116-03-Jun-2019) - **Cow compatible** - 03.06.2019
 - [0.11.5](CHANGELOG.md#0115-18-Apr-2019) - **Cow compatible** - 18.04.2019
 - [0.11.4](CHANGELOG.md#0114-17-Apr-2019) - **Cow compatible** - 17.04.2019
