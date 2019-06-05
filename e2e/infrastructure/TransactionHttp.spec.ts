@@ -48,6 +48,9 @@ import { HashLockTransaction } from '../../src/model/transaction/HashLockTransac
 import {HashType} from '../../src/model/transaction/HashType';
 import { LinkAction } from '../../src/model/transaction/LinkAction';
 import {LockFundsTransaction} from '../../src/model/transaction/LockFundsTransaction';
+import { ModifyAccountPropertyAddressTransaction } from '../../src/model/transaction/ModifyAccountPropertyAddressTransaction';
+import { ModifyAccountPropertyEntityTypeTransaction } from '../../src/model/transaction/ModifyAccountPropertyEntityTypeTransaction';
+import { ModifyAccountPropertyMosaicTransaction } from '../../src/model/transaction/ModifyAccountPropertyMosaicTransaction';
 import {ModifyMultisigAccountTransaction} from '../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../src/model/transaction/MosaicDefinitionTransaction';
@@ -141,11 +144,18 @@ describe('TransactionHttp', () => {
                     supplyMutable: true,
                     transferable: true,
                     divisibility: 3,
+                    duration: UInt64.fromUint(1000),
                 }),
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe((transaction: MosaicDefinitionTransaction) => {
+                expect(transaction.mosaicId, 'MosaicId').not.to.be.undefined;
+                expect(transaction.nonce, 'Nonce').not.to.be.undefined;
+                expect(transaction.mosaicProperties.divisibility, 'Divisibility').not.to.be.undefined;
+                expect(transaction.mosaicProperties.duration, 'Duration').not.to.be.undefined;
+                expect(transaction.mosaicProperties.supplyMutable, 'SupplyMutable').not.to.be.undefined;
+                expect(transaction.mosaicProperties.transferable, 'Transferable').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -214,7 +224,10 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = transferTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe((transaction: TransferTransaction) => {
+                expect(transaction.message, 'Message').not.to.be.undefined;
+                expect(transaction.mosaics, 'Mosaic').not.to.be.undefined;
+                expect(transaction.recipient, 'Recipient').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -282,7 +295,11 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe((transaction: ModifyAccountPropertyAddressTransaction) => {
+                expect(transaction.modifications, 'Modifications').not.to.be.undefined;
+                expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
+                expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
+                expect(transaction.propertyType, 'PropertyType').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -353,7 +370,11 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe((transaction: ModifyAccountPropertyMosaicTransaction) => {
+                expect(transaction.modifications, 'Modifications').not.to.be.undefined;
+                expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
+                expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
+                expect(transaction.propertyType, 'PropertyType').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -424,7 +445,11 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = addressModification.signWith(account3, generationHash);
 
-            listener.confirmed(account3.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account3.address).subscribe((transaction: ModifyAccountPropertyEntityTypeTransaction) => {
+                expect(transaction.modifications, 'Modifications').not.to.be.undefined;
+                expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
+                expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
+                expect(transaction.propertyType, 'PropertyType').not.to.be.undefined;
                 done();
             });
             listener.status(account3.address).subscribe((error) => {
@@ -491,7 +516,9 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe((transaction: AccountLinkTransaction) => {
+                expect(transaction.remoteAccountKey, 'RemoteAccountKey').not.to.be.undefined;
+                expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -554,7 +581,10 @@ describe('TransactionHttp', () => {
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe((transaction: RegisterNamespaceTransaction) => {
+                expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
+                expect(transaction.namespaceName, 'NamespaceName').not.to.be.undefined;
+                expect(transaction.namespaceType, 'NamespaceType').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -617,7 +647,10 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe((transaction: AddressAliasTransaction) => {
+                expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
+                expect(transaction.actionType, 'ActionType').not.to.be.undefined;
+                expect(transaction.address, 'Address').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -681,7 +714,10 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe((transaction: MosaicSupplyChangeTransaction) => {
+                expect(transaction.delta, 'Delta').not.to.be.undefined;
+                expect(transaction.direction, 'Direction').not.to.be.undefined;
+                expect(transaction.mosaicId, 'MosaicId').not.to.be.undefined;
                 done();
             });
             listener.status(account3.address).subscribe((error) => {
@@ -746,7 +782,10 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe((transaction: MosaicAliasTransaction) => {
+                expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
+                expect(transaction.actionType, 'ActionType').not.to.be.undefined;
+                expect(transaction.mosaicId, 'MosaicId').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -957,7 +996,12 @@ describe('TransactionHttp', () => {
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe((transaction: SecretLockTransaction) => {
+                expect(transaction.mosaic, 'Mosaic').not.to.be.undefined;
+                expect(transaction.duration, 'Duration').not.to.be.undefined;
+                expect(transaction.hashType, 'HashType').not.to.be.undefined;
+                expect(transaction.secret, 'Secret').not.to.be.undefined;
+                expect(transaction.recipient, 'Recipient').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -1223,7 +1267,11 @@ describe('TransactionHttp', () => {
                 NetworkType.MIJIN_TEST,
             );
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+                listener.confirmed(account2.address).subscribe((transaction: SecretProofTransaction) => {
+                    expect(transaction.secret, 'Secret').not.to.be.undefined;
+                    expect(transaction.recipient, 'Recipient').not.to.be.undefined;
+                    expect(transaction.hashType, 'HashType').not.to.be.undefined;
+                    expect(transaction.proof, 'Proof').not.to.be.undefined;
                     done();
                 });
                 const secretProofTransaction = SecretProofTransaction.create(
