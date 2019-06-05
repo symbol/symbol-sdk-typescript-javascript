@@ -10,17 +10,22 @@ with the NEM2 (a.k.a Catapult)
 
 ## Important Notes
 
-### Dragon Network Compatibility (catapult-server@0.4.0.1)
 
-Due to a network upgrade with [catapult-server@dragon](https://github.com/nemtech/catapult-server/releases/tag/v0.4.0.1) version, **it is recommended to use this package's 0.10.0 version and upwards in order to use this package with Dragon versioned networks**.
+### _Dragon_ Network Compatibility (catapult-server@0.4.0.1)
 
-The upgrade to this SDK's [version v0.12.1](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.12.1) is mandatory for **dragon compatibility**.
+Due to a network upgrade with [catapult-server@dragon](https://github.com/nemtech/catapult-server/releases/tag/v0.4.0.1) version, **it is recommended to use this package's 0.12.1 version and upwards in order to use this package with Dragon versioned networks**.
+
+The upgrade to this package's [version v0.12.1](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.12.1) is mandatory for **dragon compatibility**.
+
+### _Cow_ Network Compatibility (catapult-server@0.3.0.2)
 
 [version v0.11.6](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.11.6) is the latest locked version for **cow compatibility**.
 
-Due to a network upgrade with [catapult-server@cow](https://github.com/nemtech/catapult-server/releases/tag/v0.3.0.2) version, **transactions from Alpaca&Bison are not compatible anymore**.
+Due to a network upgrade with [catapult-server@cow](https://github.com/nemtech/catapult-server/releases/tag/v0.3.0.2) version, **transactions from Alpaca & Bison are not compatible with cow versioned networks**.
 
-Other versions like [version v0.10.1-beta](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.10.1-beta) can be used for **bison** network version.
+### _Alpaca_ / _Bison_ Network Compatibility (catapult-server@0.1 & 0.2)
+
+In order to be able to use this package with _Alpaca_ or _Bison_ versioned network, you must use [version v0.10.1-beta](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.10.1-beta).
 
 ## Requirements
 
@@ -32,7 +37,9 @@ Other versions like [version v0.10.1-beta](https://github.com/nemtech/nem2-sdk-t
 
 ## Installation
 
-```npm install nem2-sdk rxjs```
+```bash
+npm install nem2-sdk rxjs
+```
 
 ## Documentation and Getting Started
 
@@ -61,7 +68,7 @@ Please, use the following available resources to get help:
 
 Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
 
-- [0.12.1](CHANGELOG.md#0121-04-Jun-2019) - **Dragon compatible** - 04.06.2019
+- [0.12.1](CHANGELOG.md#0121-05-Jun-2019) - **Dragon compatible** - 05.06.2019
 - [0.11.6](CHANGELOG.md#0116-03-Jun-2019) - **Cow compatible** - 03.06.2019
 - [0.11.5](CHANGELOG.md#0115-18-Apr-2019) - **Cow compatible** - 18.04.2019
 - [0.11.4](CHANGELOG.md#0114-17-Apr-2019) - **Cow compatible** - 17.04.2019
