@@ -76,7 +76,7 @@ export class AccountPropertyModification<T> {
     toDTO() {
         return {
             value: this.value,
-            modificationType: this.modificationType,
+            type: this.modificationType,
         };
     }
 }

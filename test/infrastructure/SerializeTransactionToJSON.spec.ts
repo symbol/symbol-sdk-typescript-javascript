@@ -72,7 +72,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = accountLinkTransaction.toJSON();
 
         expect(json.transaction.remoteAccountKey).to.be.equal(account.publicKey);
-        expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
+        expect(json.transaction.action).to.be.equal(LinkAction.Link);
     });
 
     it('should create AccountPropertyAddressTransaction', () => {
@@ -149,7 +149,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = addressAliasTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.ADDRESS_ALIAS);
-        expect(json.transaction.aliasAction).to.be.equal(AliasActionType.Link);
+        expect(json.transaction.action).to.be.equal(AliasActionType.Link);
     });
 
     it('should create MosaicAliasTransaction', () => {
@@ -165,7 +165,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicAliasTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_ALIAS);
-        expect(json.transaction.aliasAction).to.be.equal(AliasActionType.Link);
+        expect(json.transaction.action).to.be.equal(AliasActionType.Link);
 
     });
 
