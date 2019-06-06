@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { VerifiableTransaction } from 'nem2-library';
+import { VerifiableTransaction } from '../../core/transaction/VerifiableTransaction';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
