@@ -16,7 +16,6 @@
 
 import {
     MosaicCreationTransaction as MosaicDefinitionTransactionLibrary,
-    mosaicId as mosaicIdLibrary,
     VerifiableTransaction,
 } from 'nem2-library';
 import { PublicAccount } from '../account/PublicAccount';

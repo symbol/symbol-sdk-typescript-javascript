@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { convert } from 'nem2-library';
 import {decode} from 'utf8';
+import * as convert from '../../core/format/Convert';
 import { Address } from '../../model/account/Address';
 import { PublicAccount } from '../../model/account/PublicAccount';
 import { NetworkType } from '../../model/blockchain/NetworkType';

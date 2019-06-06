@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-    convert,
-    nacl_catapult,
-} from 'nem2-library';
 
+import * as nacl_catapult from '../../core/crypto/nacl_catapult';
+import * as convert from '../../core/format/Convert';
 /**
  * The mosaic nonce structure
  *

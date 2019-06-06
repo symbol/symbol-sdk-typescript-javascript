@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-    convert,
-    mosaicId as MosaicIdentifierGenerator,
-    nacl_catapult,
-    uint64 as uint64_t,
-} from 'nem2-library';
-
+import * as convert from '../../core/format/Convert';
+import * as uint64_t from '../../core/format/UInt64';
+import {mosaicId as MosaicIdentifierGenerator} from '../../infrastructure/transaction/NamespaceMosaicId';
 import {PublicAccount} from '../account/PublicAccount';
 import {Id} from '../Id';
 import {MosaicNonce} from '../mosaic/MosaicNonce';

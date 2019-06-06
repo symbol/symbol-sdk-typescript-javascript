@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {convert} from 'nem2-library';
-import {uint64 as UInt64Library} from 'nem2-library';
+import * as convert from '../../core/format/Convert';
+import * as UInt64Library from '../../core/format/UInt64';
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';

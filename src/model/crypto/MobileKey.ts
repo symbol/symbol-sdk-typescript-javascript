@@ -13,35 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Alias} from './Alias';
 
 /**
- * The EmptyAlias structure describes empty aliases (type:0)
- *
- * @since 0.10.2
+ * The Mobile Key model
  */
-export class EmptyAlias implements Alias {
-    /**
-     * The alias type
-     */
-    public readonly type: number;
+export class MobileKey {
 
     /**
-     * Create EmptyAlias object
-     *
-     * @param type
-     * @param content
+     * @param encrypted - Encrypted key
+     * @param salt - Encryption salt
      */
-    constructor() {
-        this.type = 0;
-    }
+    constructor(/**
+                 * Encrypted key
+                 */
+                public readonly encrypted: string,
+                /**
+                 * Encryption salt
+                 */
+                public readonly salt: string) {
 
-    /**
-     * Compares EmptyAlias for equality.
-     *
-     * @return boolean
-     */
-    public equals(alias: any): boolean {
-        return alias instanceof EmptyAlias || alias.type === 0;
     }
 }

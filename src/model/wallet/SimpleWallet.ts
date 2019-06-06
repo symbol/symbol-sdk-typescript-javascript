@@ -15,7 +15,10 @@
  */
 
 import {LocalDateTime} from 'js-joda';
-import {convert, crypto, KeyPair, nacl_catapult} from 'nem2-library';
+import * as crypto from '../../core/crypto/Crypto';
+import * as KeyPair from '../../core/crypto/KeyPair';
+import * as nacl_catapult from '../../core/crypto/nacl_catapult';
+import * as convert from '../../core/format/Convert';
 import {Account} from '../account/Account';
 import {Address} from '../account/Address';
 import {NetworkType} from '../blockchain/NetworkType';
@@ -68,7 +71,7 @@ export class SimpleWallet extends Wallet {
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);
 
         // Encrypt private key using password
-        const encrypted = crypto.encodePrivKey(hashKey, password.value);
+        const encrypted = crypto.encodePrivateKey(hashKey, password.value);
 
         const encryptedPrivateKey = new EncryptedPrivateKey(encrypted.ciphertext, encrypted.iv);
 
@@ -91,7 +94,7 @@ export class SimpleWallet extends Wallet {
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);
 
         // Encrypt private key using password
-        const encrypted = crypto.encodePrivKey(privateKey, password.value);
+        const encrypted = crypto.encodePrivateKey(privateKey, password.value);
 
         const encryptedPrivateKey = new EncryptedPrivateKey(encrypted.ciphertext, encrypted.iv);
 

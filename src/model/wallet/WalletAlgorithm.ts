@@ -13,35 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Alias} from './Alias';
 
-/**
- * The EmptyAlias structure describes empty aliases (type:0)
- *
- * @since 0.10.2
- */
-export class EmptyAlias implements Alias {
-    /**
-     * The alias type
-     */
-    public readonly type: number;
-
-    /**
-     * Create EmptyAlias object
-     *
-     * @param type
-     * @param content
-     */
-    constructor() {
-        this.type = 0;
-    }
-
-    /**
-     * Compares EmptyAlias for equality.
-     *
-     * @return boolean
-     */
-    public equals(alias: any): boolean {
-        return alias instanceof EmptyAlias || alias.type === 0;
-    }
+export enum WalletAlgorithm {
+    Pass_6k = 1,
+    Pass_bip32 = 2,
+    Pass_enc = 4,
+    Trezor = 3,
 }

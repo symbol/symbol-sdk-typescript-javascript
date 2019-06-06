@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {namespaceId as NamespaceIdGenerator} from 'nem2-library';
+
 import {Address} from '../account/Address';
 import {Alias} from './Alias';
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {uint64} from 'nem2-library';
+import * as uint64 from '../core/format/UInt64';
 
 /**
  * UInt64 data model

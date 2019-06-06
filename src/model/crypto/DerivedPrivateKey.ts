@@ -13,35 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Alias} from './Alias';
 
 /**
- * The EmptyAlias structure describes empty aliases (type:0)
- *
- * @since 0.10.2
+ * The Derived Private Key model
  */
-export class EmptyAlias implements Alias {
-    /**
-     * The alias type
-     */
-    public readonly type: number;
+export class DerivedPrivateKey {
 
     /**
-     * Create EmptyAlias object
-     *
-     * @param type
-     * @param content
+     * @param privateKey - Derived private key
      */
-    constructor() {
-        this.type = 0;
-    }
+    constructor(/**
+                 * Derived private key
+                 */
+                public readonly privateKey: string) {
 
-    /**
-     * Compares EmptyAlias for equality.
-     *
-     * @return boolean
-     */
-    public equals(alias: any): boolean {
-        return alias instanceof EmptyAlias || alias.type === 0;
     }
 }

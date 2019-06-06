@@ -17,7 +17,7 @@
 import {deepEqual} from 'assert';
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
-import { convert } from 'nem2-library';
+import * as convert from '../../../src/core/format/Convert';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
