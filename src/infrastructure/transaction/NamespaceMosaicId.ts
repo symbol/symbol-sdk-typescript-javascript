@@ -15,7 +15,7 @@
  */
 
 import * as nacl from '../../core/crypto/nacl_catapult';
-import * as IdGenerator from '../../core/format/idGenerator';
+import * as IdGenerator from '../../core/format/IdGenerator';
 
 export const mosaicId = (nonce, ownerPublicId) => {
     return IdGenerator.generateMosaicId(nonce, ownerPublicId);
