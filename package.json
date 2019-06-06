@@ -58,6 +58,7 @@
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1",
+    "flatbuffers": "^1.11.0",
     "js-joda": "^1.6.2",
     "nem2-library": "0.10.2",
     "request": "^2.83.0",

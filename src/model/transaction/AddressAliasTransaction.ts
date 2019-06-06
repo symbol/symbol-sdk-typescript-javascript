@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { AddressAliasTransaction as AddressAliasTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { Builder } from '../../core/transaction/AddressAliasTransaction';
+import { VerifiableTransaction } from '../../core/transaction/VerifiableTransaction';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -115,7 +116,7 @@ export class AddressAliasTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new AddressAliasTransactionLibrary.Builder()
+        return new Builder()
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())

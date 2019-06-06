@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { convert, SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+
+import * as convert from '../../core/format/Convert';
+import { Builder } from '../../core/transaction/SecretProofTransaction';
+import {VerifiableTransaction} from '../../core/transaction/VerifiableTransaction';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -115,7 +118,7 @@ export class SecretProofTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new SecretProofTransactionLibrary.Builder()
+        return new Builder()
             .addDeadline(this.deadline.toDTO())
             .addType(this.type)
             .addFee(this.maxFee.toDTO())

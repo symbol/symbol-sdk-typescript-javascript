@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { MosaicAliasTransaction as MosaicAliasTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { Builder } from '../../core/transaction/MosaicAliasTransaction';
+import {VerifiableTransaction} from '../../core/transaction/VerifiableTransaction';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -111,7 +112,7 @@ export class MosaicAliasTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new MosaicAliasTransactionLibrary.Builder()
+        return new Builder()
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())

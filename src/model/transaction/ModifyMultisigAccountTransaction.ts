@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { MultisigModificationTransaction as ModifyMultisigAccountTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { Builder } from '../../core/transaction/MultisigModificationTransaction';
+import {VerifiableTransaction} from '../../core/transaction/VerifiableTransaction';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -121,7 +122,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new ModifyMultisigAccountTransactionLibrary.Builder()
+        return new Builder()
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())

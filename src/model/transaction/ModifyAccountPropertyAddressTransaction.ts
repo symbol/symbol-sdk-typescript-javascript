@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { AccountPropertiesAddressTransaction as AccountPropertiesAddressTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { Builder } from '../../core/transaction/AccountPropertiesAddressTransaction';
+import {VerifiableTransaction} from '../../core/transaction/VerifiableTransaction';
 import { PropertyType } from '../account/PropertyType';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -100,7 +101,7 @@ export class ModifyAccountPropertyAddressTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new AccountPropertiesAddressTransactionLibrary.Builder()
+        return new Builder()
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())

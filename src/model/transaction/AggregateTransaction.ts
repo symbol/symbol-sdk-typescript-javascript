@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { AggregateTransaction as AggregateTransactionLibrary } from 'nem2-library';
+import { Builder } from '../../core/transaction/AggregateTransaction';
+import { AggregateTransaction as AggregatedTransactionCore} from '../../core/transaction/AggregateTransaction';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -116,8 +117,8 @@ export class AggregateTransaction extends Transaction {
      * @internal
      * @returns {AggregateTransaction}
      */
-    public buildTransaction(): AggregateTransactionLibrary {
-        return new AggregateTransactionLibrary.Builder()
+    public buildTransaction(): AggregatedTransactionCore {
+        return new Builder()
             .addDeadline(this.deadline.toDTO())
             .addType(this.type)
             .addFee(this.maxFee.toDTO())
