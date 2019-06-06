@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {NamespaceRoutesApi} from 'nem2-library';
+
 import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import * as AddressLibrary from '../core/format/Address';
@@ -41,11 +41,6 @@ import {QueryParams} from './QueryParams';
  * @since 1.0
  */
 export class NamespaceHttp extends Http implements NamespaceRepository {
-    /**
-     * @internal
-     * Nem2 Library namespace routes api
-     */
-    private namespaceRoutesApi: NamespaceRoutesApi;
 
     /**
      * Constructor
@@ -55,7 +50,6 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     constructor(url: string, networkHttp?: NetworkHttp) {
         networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
         super(url, networkHttp);
-        this.namespaceRoutesApi = new NamespaceRoutesApi(this.apiClient);
     }
 
     /**
@@ -64,9 +58,32 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @returns Observable<NamespaceInfo>
      */
     public getNamespace(namespaceId: NamespaceId): Observable<NamespaceInfo> {
+        const postBody = null;
+
+        // verify the required parameter 'namespaceId' is set
+        if (namespaceId === undefined || namespaceId === null) {
+            throw new Error('Missing the required parameter \'namespaceId\' when calling getNamespace');
+        }
+
+        const pathParams = {
+            namespaceId: namespaceId.toHex(),
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+        const response = this.apiClient.callApi(
+            '/namespace/{namespaceId}', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
         return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(map((namespaceInfoDTO) => {
+            mergeMap((networkType) => observableFrom(response).pipe(map((namespaceInfoDTO: any) => {
                 return new NamespaceInfo(
                     namespaceInfoDTO.meta.active,
                     namespaceInfoDTO.meta.index,
@@ -91,10 +108,31 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      */
     public getNamespacesFromAccount(address: Address,
                                     queryParams?: QueryParams): Observable<NamespaceInfo[]> {
+        const postBody = null;
+        const accountId = address.plain();
+        // verify the required parameter 'accountId' is set
+        if (accountId === undefined || accountId === null) {
+            throw new Error('Missing the required parameter \'accountId\' when calling getNamespacesFromAccount');
+        }
+        const pathParams = {
+            accountId,
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account/{accountId}/namespaces', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
         return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.namespaceRoutesApi.getNamespacesFromAccount(address.plain(), queryParams != null ? queryParams : {})).pipe(
-                map((namespaceInfosDTO) => {
+            mergeMap((networkType) => observableFrom(response).pipe(
+                map((namespaceInfosDTO: any) => {
                     return namespaceInfosDTO.map((namespaceInfoDTO) => {
                         return new NamespaceInfo(
                             namespaceInfoDTO.meta.active,
@@ -121,13 +159,35 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      */
     public getNamespacesFromAccounts(addresses: Address[],
                                      queryParams?: QueryParams): Observable<NamespaceInfo[]> {
-        const publicKeysBody = {
+        const accountsIds = {
             addresses: addresses.map((address) => address.plain()),
         };
+        const postBody = accountsIds;
+
+        // verify the required parameter 'accountsIds' is set
+        if (accountsIds === undefined || accountsIds === null) {
+            throw new Error('Missing the required parameter \'accountsIds\' when calling getNamespacesFromAccounts');
+        }
+
+        const pathParams = {
+        };
+
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account/namespaces', 'POST',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
         return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.namespaceRoutesApi.getNamespacesFromAccounts(publicKeysBody, queryParams != null ? queryParams : {})).pipe(
-                map((namespaceInfosDTO) => {
+            mergeMap((networkType) => observableFrom(response).pipe(
+                map((namespaceInfosDTO: any) => {
                     return namespaceInfosDTO.map((namespaceInfoDTO) => {
                         return new NamespaceInfo(
                             namespaceInfoDTO.meta.active,
@@ -155,8 +215,31 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
         const namespaceIdsBody = {
             namespaceIds: namespaceIds.map((id) => id.toHex()),
         };
-        return observableFrom(
-            this.namespaceRoutesApi.getNamespacesNames(namespaceIdsBody)).pipe(map((namespaceNamesDTO) => {
+        const postBody = namespaceIdsBody;
+
+        // verify the required parameter 'accountsIds' is set
+        if (namespaceIdsBody === undefined || namespaceIdsBody === null) {
+            throw new Error('Missing the required parameter \'accountsIds\' when calling getNamespacesNames');
+        }
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/namespace/names', 'POST',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((namespaceNamesDTO: any) => {
             return namespaceNamesDTO.map((namespaceNameDTO) => {
                 return new NamespaceName(
                     new NamespaceId(namespaceNameDTO.namespaceId),
@@ -175,8 +258,8 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     public getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
-                this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
-                map((namespaceInfoDTO) => {
+                this.getNamespace(namespaceId)).pipe(
+                map((namespaceInfoDTO: any) => {
 
                     if (namespaceInfoDTO.namespace === undefined) {
                         // forward catapult-rest error
@@ -200,8 +283,8 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     public getLinkedAddress(namespaceId: NamespaceId): Observable<Address> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
-                this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
-                map((namespaceInfoDTO) => {
+                this.getNamespace(namespaceId)).pipe(
+                map((namespaceInfoDTO: any) => {
 
                     if (namespaceInfoDTO.namespace === undefined) {
                         // forward catapult-rest error

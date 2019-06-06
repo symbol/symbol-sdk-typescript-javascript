@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {ChainRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
@@ -29,18 +28,11 @@ import {Http} from './Http';
  */
 export class ChainHttp extends Http implements ChainRepository {
     /**
-     * @internal
-     * Nem2 Library chain routes api
-     */
-    private chainRoutesApi: ChainRoutesApi;
-
-    /**
      * Constructor
      * @param url
      */
     constructor(url: string) {
         super(url);
-        this.chainRoutesApi = new ChainRoutesApi(this.apiClient);
     }
 
     /**
@@ -48,7 +40,26 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<UInt64>
      */
     public getBlockchainHeight(): Observable<UInt64> {
-        return observableFrom(this.chainRoutesApi.getBlockchainHeight()).pipe(map((heightDTO) => {
+        const postBody = null;
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/chain/height', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((heightDTO: any) => {
             return new UInt64(heightDTO.height);
         }));
     }
@@ -58,7 +69,26 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<BlockchainScore>
      */
     public getBlockchainScore(): Observable<BlockchainScore> {
-        return observableFrom(this.chainRoutesApi.getBlockchainScore()).pipe(map((blockchainScoreDTO) => {
+        const postBody = null;
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/chain/score', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((blockchainScoreDTO: any) => {
             return new BlockchainScore(
                 new UInt64(blockchainScoreDTO.scoreLow),
                 new UInt64(blockchainScoreDTO.scoreHigh),

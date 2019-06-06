@@ -64,6 +64,7 @@
     "request-promise-native": "^1.0.5",
     "rxjs": "^6.2.1",
     "rxjs-compat": "^6.2.1",
+    "superagent": "^5.0.6",
     "utf8": "^2.1.2",
     "ws": "^5.2.0"
   },

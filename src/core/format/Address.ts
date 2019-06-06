@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as CryptoJS from 'crypto-js';
+
 import { sha3_256 } from 'js-sha3';
 import * as array from './Array';
 import * as base32 from './Base32';

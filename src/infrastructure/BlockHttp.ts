@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {BlockRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
@@ -27,10 +26,10 @@ import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
 import {BlockRepository} from './BlockRepository';
 import {Http} from './Http';
+import { NetworkHttp } from './NetworkHttp';
 import {QueryParams} from './QueryParams';
 import { CreateStatementFromDTO } from './receipt/CreateReceiptFromDTO';
 import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
-import { NetworkHttp } from './NetworkHttp';
 
 /**
  * Blockchain http repository.
@@ -38,11 +37,6 @@ import { NetworkHttp } from './NetworkHttp';
  * @since 1.0
  */
 export class BlockHttp extends Http implements BlockRepository {
-    /**
-     * @internal
-     * Nem2 Library block routes api
-     */
-    private blockRoutesApi: BlockRoutesApi;
 
     /**
      * Constructor
@@ -51,7 +45,6 @@ export class BlockHttp extends Http implements BlockRepository {
     constructor(url: string, networkHttp?: NetworkHttp) {
         networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
         super(url, networkHttp);
-        this.blockRoutesApi = new BlockRoutesApi(this.apiClient);
     }
 
     /**
@@ -60,7 +53,30 @@ export class BlockHttp extends Http implements BlockRepository {
      * @returns Observable<BlockInfo>
      */
     public getBlockByHeight(height: number): Observable<BlockInfo> {
-        return observableFrom(this.blockRoutesApi.getBlockByHeight(height)).pipe(map((blockDTO) => {
+        const postBody = null;
+
+        // verify the required parameter 'height' is set
+        if (height === undefined || height === null) {
+            throw new Error('Missing the required parameter \'height\' when calling getBlockByHeight');
+        }
+
+        const pathParams = { height };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/block/{height}', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((blockDTO: any) => {
             const networkType = parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16);
             return new BlockInfo(
                 blockDTO.meta.hash,
@@ -93,8 +109,28 @@ export class BlockHttp extends Http implements BlockRepository {
      */
     public getBlockTransactions(height: number,
                                 queryParams?: QueryParams): Observable<Transaction[]> {
-        return observableFrom(
-            this.blockRoutesApi.getBlockTransactions(height, queryParams != null ? queryParams : {})).pipe(map((transactionsDTO) => {
+        const postBody = null;
+
+        // verify the required parameter 'height' is set
+        if (height === undefined || height === null) {
+            throw new Error('Missing the required parameter \'height\' when calling getBlockTransactions');
+        }
+
+        const pathParams = { height };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/block/{height}/transactions', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((transactionsDTO: any) => {
             return transactionsDTO.map((transactionDTO) => {
                 return CreateTransactionFromDTO(transactionDTO);
             });
@@ -108,8 +144,38 @@ export class BlockHttp extends Http implements BlockRepository {
      * @returns Observable<BlockInfo[]>
      */
     public getBlocksByHeightWithLimit(height: number, limit: number = 1): Observable<BlockInfo[]> {
-        return observableFrom(
-            this.blockRoutesApi.getBlocksByHeightWithLimit(height, limit)).pipe(map((blocksDTO) => {
+        const postBody = null;
+
+        // verify the required parameter 'height' is set
+        if (height === undefined || height === null) {
+            throw new Error('Missing the required parameter \'height\' when calling getBlocksByHeightWithLimit');
+        }
+
+        // verify the required parameter 'limit' is set
+        if (limit === undefined || limit === null) {
+            throw new Error('Missing the required parameter \'limit\' when calling getBlocksByHeightWithLimit');
+        }
+
+        const pathParams = {
+            height,
+            limit,
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/blocks/{height}/limit/{limit}', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((blocksDTO: any) => {
             return blocksDTO.map((blockDTO) => {
                 const networkType = parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16);
                 return new BlockInfo(
@@ -147,8 +213,38 @@ export class BlockHttp extends Http implements BlockRepository {
      * @return Observable<MerkleProofInfo>
      */
     public getMerkleReceipts(height: number, hash: string): Observable<MerkleProofInfo> {
-        return observableFrom(
-            this.blockRoutesApi.getMerkleReceipts(height, hash)).pipe(map((merkleProofReceipt) => {
+        const postBody = null;
+
+        // verify the required parameter 'height' is set
+        if (height === undefined || height === null) {
+            throw new Error('Missing the required parameter \'height\' when calling getMerkleReceipts');
+        }
+
+        // verify the required parameter 'hash' is set
+        if (hash === undefined || hash === null) {
+            throw new Error('Missing the required parameter \'hash\' when calling getMerkleReceipts');
+        }
+
+        const pathParams = {
+            height,
+            hash,
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/block/{height}/receipt/{hash}/merkle', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((merkleProofReceipt: any) => {
                 return new MerkleProofInfo(
                     new MerkleProofInfoPayload(
                         merkleProofReceipt.payload.merklePath.map((payload) => new MerklePathItem(payload.position, payload.hash))),
@@ -168,8 +264,38 @@ export class BlockHttp extends Http implements BlockRepository {
      * @return Observable<MerkleProofInfo>
      */
     public getMerkleTransaction(height: number, hash: string): Observable<MerkleProofInfo> {
-        return observableFrom(
-            this.blockRoutesApi.getMerkleReceipts(height, hash)).pipe(map((merkleProofReceipt) => {
+        const postBody = null;
+
+        // verify the required parameter 'height' is set
+        if (height === undefined || height === null) {
+            throw new Error('Missing the required parameter \'height\' when calling getMerkleTransaction');
+        }
+
+        // verify the required parameter 'hash' is set
+        if (hash === undefined || hash === null) {
+            throw new Error('Missing the required parameter \'hash\' when calling getMerkleTransaction');
+        }
+
+        const pathParams = {
+            height,
+            hash,
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/block/{height}/transaction/{hash}/merkle', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((merkleProofReceipt: any) => {
                 return new MerkleProofInfo(
                     new MerkleProofInfoPayload(
                         merkleProofReceipt.payload.merklePath.map((payload) => new MerklePathItem(payload.position, payload.hash))),
@@ -185,9 +311,33 @@ export class BlockHttp extends Http implements BlockRepository {
      * @returns Observable<Statement>
      */
     public getBlockReceipts(height: number): Observable<Statement> {
+        const postBody = null;
+
+        // verify the required parameter 'height' is set
+        if (height === undefined || height === null) {
+            throw new Error('Missing the required parameter \'height\' when calling getBlockReceipts');
+        }
+
+        const pathParams = {
+            height,
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/block/{height}/receipts', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
         return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.blockRoutesApi.getBlockReceipts(height)).pipe(
+            mergeMap((networkType) => observableFrom(response).pipe(
                     map((receiptDTO) => {
                         return CreateStatementFromDTO(receiptDTO, networkType);
                     }),

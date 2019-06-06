@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {AccountRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
@@ -44,11 +43,6 @@ import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
  * @since 1.0
  */
 export class AccountHttp extends Http implements AccountRepository {
-    /**
-     * @internal
-     * Nem2 Library account routes api
-     */
-    private accountRoutesApi: AccountRoutesApi;
 
     /**
      * Constructor
@@ -58,7 +52,6 @@ export class AccountHttp extends Http implements AccountRepository {
     constructor(url: string, networkHttp?: NetworkHttp) {
         networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
         super(url, networkHttp);
-        this.accountRoutesApi = new AccountRoutesApi(this.apiClient);
     }
 
     /**
@@ -67,7 +60,33 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<AccountInfo>
      */
     public getAccountInfo(address: Address): Observable<AccountInfo> {
-        return observableFrom(this.accountRoutesApi.getAccountInfo(address.plain())).pipe(map((accountInfoDTO) => {
+
+        const accountId = address.plain();
+        const postBody = null;
+
+        // verify the required parameter 'accountId' is set
+        if (accountId === undefined || accountId === null) {
+            throw new Error('Missing the required parameter accountId when calling getAccountInfo');
+        }
+
+        const pathParams = {accountId};
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response =  this.apiClient.callApi(
+            '/account/{accountId}', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts,
+        );
+        return observableFrom(response).pipe(map((accountInfoDTO: any) => {
             return new AccountInfo(
                 accountInfoDTO.meta,
                 Address.createFromEncoded(accountInfoDTO.account.address),
@@ -90,7 +109,31 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<AccountProperty>
      */
     public getAccountProperties(address: Address): Observable<AccountPropertiesInfo> {
-        return observableFrom(this.accountRoutesApi.getAccountProperties(address.plain())).pipe(map((accountProperties) => {
+        const postBody = null;
+        const accountId = address.plain();
+        // verify the required parameter 'accountId' is set
+        if (accountId === undefined || accountId === null) {
+            throw new Error('Missing the required parameter accountId when calling getAccountProperties');
+        }
+
+        const pathParams = {accountId};
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account/{accountId}/properties/', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+
+        return observableFrom(response).pipe(map((accountProperties) => {
             return DtoMapping.extractAccountPropertyFromDto(accountProperties);
         }));
     }
@@ -104,8 +147,31 @@ export class AccountHttp extends Http implements AccountRepository {
         const accountIds = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return observableFrom(
-            this.accountRoutesApi.getAccountPropertiesFromAccounts(accountIds)).pipe(map((accountProperties) => {
+        const postBody = accountIds;
+
+        // verify the required parameter 'accounstIds' is set
+        if (accountIds === undefined || accountIds === null) {
+            throw new Error('Missing the required parameter accounstIds when calling getAccountPropertiesFromAccounts');
+        }
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account/properties', 'POST',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((accountProperties: any) => {
             return accountProperties.map((property) => {
                 return DtoMapping.extractAccountPropertyFromDto(property);
             });
@@ -118,11 +184,34 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<AccountInfo[]>
      */
     public getAccountsInfo(addresses: Address[]): Observable<AccountInfo[]> {
-        const accountIdsBody = {
+        const accountsIds = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return observableFrom(
-            this.accountRoutesApi.getAccountsInfo(accountIdsBody)).pipe(map((accountsInfoMetaDataDTO) => {
+        const postBody = accountsIds;
+
+        // verify the required parameter 'accountsIds' is set
+        if (accountsIds === undefined || accountsIds === null) {
+            throw new Error('Missing the required parameter accountsIds when calling getAccountsInfo');
+        }
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account', 'POST',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((accountsInfoMetaDataDTO: any) => {
             return accountsInfoMetaDataDTO.map((accountInfoDTO) => {
                 return new AccountInfo(
                     accountInfoDTO.meta,
@@ -134,16 +223,40 @@ export class AccountHttp extends Http implements AccountRepository {
                     new UInt64(accountInfoDTO.account.importance),
                     new UInt64(accountInfoDTO.account.importanceHeight),
                 );
+
             });
         }));
     }
 
     public getAccountsNames(addresses: Address[]): Observable<AccountNames[]> {
-        const accountIdsBody = {
+        const accountIds = {
             addresses: addresses.map((address) => address.plain()),
         };
-        return observableFrom(
-            this.accountRoutesApi.getAccountsNames(accountIdsBody)).pipe(map((accountNames) => {
+        const postBody = accountIds;
+
+        // verify the required parameter 'accountIds' is set
+        if (accountIds === undefined || accountIds === null) {
+            throw new Error('Missing the required parameter accountIds when calling getAccountsNames');
+        }
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account/names', 'POST',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((accountNames: any) => {
             return accountNames.map((accountName) => {
                 return new AccountNames(
                     Address.createFromEncoded(accountName.address),
@@ -160,9 +273,33 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<MultisigAccountInfo>
      */
     public getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
+        const postBody = null;
+        const accountId = address.plain();
+        // verify the required parameter 'accountId' is set
+        if (accountId === undefined || accountId === null) {
+        throw new Error('Missing the required parameter accountId when calling getAccountMultisig');
+        }
+
+        const pathParams = {
+        accountId,
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+        '/account/{accountId}/multisig', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts);
         return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.accountRoutesApi.getAccountMultisig(address.plain())).pipe(map((multisigAccountInfoDTO) => {
+            mergeMap((networkType) => observableFrom(response).pipe(map((multisigAccountInfoDTO: any) => {
                 return new MultisigAccountInfo(
                     PublicAccount.createFromPublicKey(multisigAccountInfoDTO.multisig.account, networkType),
                     multisigAccountInfoDTO.multisig.minApproval,
@@ -181,9 +318,33 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<MultisigAccountGraphInfo>
      */
     public getMultisigAccountGraphInfo(address: Address): Observable<MultisigAccountGraphInfo> {
+        const postBody = null;
+        const accountId = address.plain();
+        // verify the required parameter 'accountId' is set
+        if (accountId === undefined || accountId === null) {
+            throw new Error('Missing the required parameter accountId when calling getAccountMultisigGraph');
+        }
+
+        const pathParams = {
+            accountId,
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account/{accountId}/multisig/graph', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
         return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.accountRoutesApi.getAccountMultisigGraph(address.plain())).pipe(map((multisigAccountGraphInfosDTO) => {
+            mergeMap((networkType) => observableFrom(response).pipe(map((multisigAccountGraphInfosDTO: any) => {
                 const multisigAccounts = new Map<number, MultisigAccountInfo[]>();
                 multisigAccountGraphInfosDTO.map((multisigAccountGraphInfoDTO) => {
                     multisigAccounts.set(multisigAccountGraphInfoDTO.level,
@@ -210,9 +371,32 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<Transaction[]>
      */
     public transactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable<Transaction[]> {
-        return observableFrom(
-            this.accountRoutesApi.transactions(publicAccount.publicKey, queryParams != null ? queryParams : {})).pipe(
-            map((transactionsDTO) => {
+        const postBody = null;
+        const publicKey = publicAccount.publicKey;
+
+        // verify the required parameter 'publicKey' is set
+        if (publicKey === undefined || publicKey === null) {
+            throw new Error('Missing the required parameter publicKey when calling transactions');
+        }
+
+        const pathParams = {
+            publicKey,
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account/{publicKey}/transactions', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(
+            map((transactionsDTO: any) => {
                 return transactionsDTO.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
@@ -227,9 +411,31 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<Transaction[]>
      */
     public incomingTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <Transaction[]> {
-        return observableFrom(
-            this.accountRoutesApi.incomingTransactions(publicAccount.publicKey, queryParams != null ? queryParams : {})).pipe(
-            map((transactionsDTO) => {
+        const postBody = null;
+        const publicKey = publicAccount.publicKey;
+        // verify the required parameter 'publicKey' is set
+        if (publicKey === undefined || publicKey === null) {
+            throw new Error('Missing the required parameter publicKey when calling incomingTransactions');
+        }
+
+        const pathParams = {
+            publicKey,
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account/{publicKey}/transactions/incoming', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(
+            map((transactionsDTO: any) => {
                 return transactionsDTO.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
@@ -244,9 +450,30 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<Transaction[]>
      */
     public outgoingTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <Transaction[]> {
-        return observableFrom(
-            this.accountRoutesApi.outgoingTransactions(publicAccount.publicKey, queryParams != null ? queryParams : {})).pipe(
-            map((transactionsDTO) => {
+        const postBody = null;
+        const publicKey = publicAccount.publicKey;
+        // verify the required parameter 'publicKey' is set
+        if (publicKey === undefined || publicKey === null) {
+            throw new Error('Missing the required parameter publicKey when calling unconfirmedTransactions');
+        }
+        const pathParams = {
+            publicKey,
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account/{publicKey}/transactions/outgoing', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(
+            map((transactionsDTO: any) => {
                 return transactionsDTO.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
@@ -262,9 +489,31 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<Transaction[]>
      */
     public unconfirmedTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <Transaction[]> {
-        return observableFrom(
-            this.accountRoutesApi.unconfirmedTransactions(publicAccount.publicKey, queryParams != null ? queryParams : {})).pipe(
-            map((transactionsDTO) => {
+        const postBody = null;
+        const publicKey = publicAccount.publicKey;
+        // verify the required parameter 'publicKey' is set
+        if (publicKey === undefined || publicKey === null) {
+            throw new Error('Missing the required parameter publicKey when calling unconfirmedTransactions');
+        }
+        const pathParams = {
+            publicKey,
+        };
+
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account/{publicKey}/transactions/unconfirmed', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(
+            map((transactionsDTO: any) => {
                 return transactionsDTO.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
@@ -279,9 +528,31 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<AggregateTransaction[]>
      */
     public aggregateBondedTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <AggregateTransaction[]> {
-        return observableFrom(
-            this.accountRoutesApi.partialTransactions(publicAccount.publicKey, queryParams != null ? queryParams : {})).pipe(
-            map((transactionsDTO) => {
+        const postBody = null;
+        const publicKey = publicAccount.publicKey;
+        // verify the required parameter 'publicKey' is set
+        if (publicKey === undefined || publicKey === null) {
+            throw new Error('Missing the required parameter publicKey when calling partialTransactions');
+        }
+
+        const pathParams = {
+            publicKey,
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/account/{publicKey}/transactions/partial', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(
+            map((transactionsDTO: any) => {
                 return transactionsDTO.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO) as AggregateTransaction;
                 });

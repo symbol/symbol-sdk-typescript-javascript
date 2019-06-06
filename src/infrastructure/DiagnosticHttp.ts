@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {DiagnosticRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
@@ -28,11 +27,6 @@ import {Http} from './Http';
  * @since 1.0
  */
 export class DiagnosticHttp extends Http implements DiagnosticRepository {
-    /**
-     * @internal
-     * Nem2 Library diagnostic routes api
-     */
-    private diagnosticRoutesApi: DiagnosticRoutesApi;
 
     /**
      * Constructor
@@ -40,7 +34,6 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
      */
     constructor(url: string) {
         super(url);
-        this.diagnosticRoutesApi = new DiagnosticRoutesApi(this.apiClient);
     }
 
     /**
@@ -48,8 +41,26 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
      * @returns Observable<BlockchainStorageInfo>
      */
     public getDiagnosticStorage(): Observable<BlockchainStorageInfo> {
-        return observableFrom(
-            this.diagnosticRoutesApi.getDiagnosticStorage()).pipe(map((blockchainStorageInfoDTO) => {
+        const postBody = null;
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/diagnostic/storage', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((blockchainStorageInfoDTO: any) => {
             return new BlockchainStorageInfo(
                 blockchainStorageInfoDTO.numBlocks,
                 blockchainStorageInfoDTO.numTransactions,
@@ -63,8 +74,26 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
      * @returns Observable<Server>
      */
     public getServerInfo(): Observable<ServerInfo> {
-        return observableFrom(
-            this.diagnosticRoutesApi.getServerInfo()).pipe(map((serverDTO) => {
+        const postBody = null;
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/diagnostic/server', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((serverDTO: any) => {
             return new ServerInfo(serverDTO.serverInfo.restVersion,
                 serverDTO.serverInfo.sdkVersion);
         }));

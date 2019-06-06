@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {BlockRoutesApi, TransactionRoutesApi} from 'nem2-library';
 import * as requestPromise from 'request-promise-native';
 import {from as observableFrom, Observable, throwError as observableThrowError} from 'rxjs';
 import {catchError, map, mergeMap} from 'rxjs/operators';
@@ -29,6 +28,7 @@ import {TransactionInfo} from '../model/transaction/TransactionInfo';
 import {TransactionStatus} from '../model/transaction/TransactionStatus';
 import {TransactionType} from '../model/transaction/TransactionType';
 import {UInt64} from '../model/UInt64';
+import {BlockHttp} from './BlockHttp';
 import {Http} from './Http';
 import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
 import {TransactionRepository} from './TransactionRepository';
@@ -41,15 +41,9 @@ import {TransactionRepository} from './TransactionRepository';
 export class TransactionHttp extends Http implements TransactionRepository {
     /**
      * @internal
-     * Nem2 Library transaction routes api
-     */
-    private transactionRoutesApi: TransactionRoutesApi;
-
-    /**
-     * @internal
      * Nem2 Library blockchain routes api
      */
-    private blockRoutesApi: BlockRoutesApi;
+    private blockHttp: BlockHttp;
 
     /**
      * Constructor
@@ -57,8 +51,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     constructor(private readonly url: string) {
         super(url);
-        this.transactionRoutesApi = new TransactionRoutesApi(this.apiClient);
-        this.blockRoutesApi = new BlockRoutesApi(this.apiClient);
+        this.blockHttp = new BlockHttp(this.apiClient);
     }
 
     /**
@@ -67,7 +60,32 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<Transaction>
      */
     public getTransaction(transactionId: string): Observable<Transaction> {
-        return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(map((transactionDTO) => {
+        const postBody = null;
+
+        // verify the required parameter 'transactionId' is set
+        if (transactionId === undefined || transactionId === null) {
+            throw new Error('Missing the required parameter \'transactionId\' when calling getTransaction');
+        }
+
+        const pathParams = {
+            transactionId,
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/transaction/{transactionId}', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((transactionDTO) => {
             return CreateTransactionFromDTO(transactionDTO);
         }));
     }
@@ -81,8 +99,31 @@ export class TransactionHttp extends Http implements TransactionRepository {
         const transactionIdsBody = {
             transactionIds,
         };
-        return observableFrom(
-            this.transactionRoutesApi.getTransactions(transactionIdsBody)).pipe(map((transactionsDTO) => {
+        const postBody = transactionIdsBody;
+
+        // verify the required parameter 'transactionIds' is set
+        if (transactionIdsBody === undefined || transactionIdsBody === null) {
+            throw new Error('Missing the required parameter \'transactionIds\' when calling getTransactions');
+        }
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/transaction', 'POST',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((transactionsDTO: any) => {
             return transactionsDTO.map((transactionDTO) => {
                 return CreateTransactionFromDTO(transactionDTO);
             });
@@ -95,8 +136,33 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<TransactionStatus>
      */
     public getTransactionStatus(transactionHash: string): Observable<TransactionStatus> {
-        return observableFrom(this.transactionRoutesApi.getTransactionStatus(transactionHash)).pipe(
-            map((transactionStatusDTO) => {
+        const postBody = null;
+
+        // verify the required parameter 'transactionId' is set
+        if (transactionHash === undefined || transactionHash === null) {
+            throw new Error('Missing the required parameter \'transactionHash\' when calling getTransactionStatus');
+        }
+
+        const pathParams = {
+            transactionId: transactionHash,
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/transaction/{hash}/status', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(
+            map((transactionStatusDTO: any) => {
                 return new TransactionStatus(
                     transactionStatusDTO.group,
                     transactionStatusDTO.status,
@@ -115,9 +181,32 @@ export class TransactionHttp extends Http implements TransactionRepository {
         const transactionHashesBody = {
             hashes: transactionHashes,
         };
-        return observableFrom(
-            this.transactionRoutesApi.getTransactionsStatuses(transactionHashesBody)).pipe(
-            map((transactionStatusesDTO) => {
+        const postBody = transactionHashesBody;
+
+        // verify the required parameter 'transactionHashes' is set
+        if (transactionHashesBody === undefined || transactionHashesBody === null) {
+            throw new Error('Missing the required parameter \'transactionHashes\' when calling getTransactionsStatuses');
+        }
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/transaction/statuses', 'POST',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(
+            map((transactionStatusesDTO: any) => {
                 return transactionStatusesDTO.map((transactionStatusDTO) => {
                     return new TransactionStatus(
                         transactionStatusDTO.group,
@@ -135,8 +224,32 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<TransactionAnnounceResponse>
      */
     public announce(signedTransaction: SignedTransaction): Observable<TransactionAnnounceResponse> {
-        return observableFrom(this.transactionRoutesApi.announceTransaction(signedTransaction)).pipe(
-            map((transactionAnnounceResponseDTO) => {
+        const postBody = signedTransaction;
+
+        // verify the required parameter 'transactionPayload' is set
+        if (signedTransaction === undefined || signedTransaction === null) {
+            throw new Error('Missing the required parameter \'transactionPayload\' when calling announceTransaction');
+        }
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/transaction', 'PUT',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(
+            map((transactionAnnounceResponseDTO: any) => {
                 return new TransactionAnnounceResponse(transactionAnnounceResponseDTO.message);
             }));
     }
@@ -152,8 +265,32 @@ export class TransactionHttp extends Http implements TransactionRepository {
                 reject('Only Transaction Type 0x4241 is allowed for announce aggregate bonded');
             }));
         }
-        return observableFrom(this.transactionRoutesApi.announcePartialTransaction(signedTransaction)).pipe(
-            map((transactionAnnounceResponseDTO) => {
+        const postBody = signedTransaction;
+
+        // verify the required parameter 'transactionPayload' is set
+        if (signedTransaction === undefined || signedTransaction === null) {
+            throw new Error('Missing the required parameter \'transactionPayload\' when calling announcePartialTransaction');
+        }
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/transaction/partial', 'PUT',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(
+            map((transactionAnnounceResponseDTO: any) => {
                 return new TransactionAnnounceResponse(transactionAnnounceResponseDTO.message);
             }));
     }
@@ -165,8 +302,32 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public announceAggregateBondedCosignature(
         cosignatureSignedTransaction: CosignatureSignedTransaction): Observable<TransactionAnnounceResponse> {
-        return observableFrom(this.transactionRoutesApi.announceCosignatureTransaction(cosignatureSignedTransaction)).pipe(
-            map((transactionAnnounceResponseDTO) => {
+        const postBody = cosignatureSignedTransaction;
+
+        // verify the required parameter 'transactionPayload' is set
+        if (cosignatureSignedTransaction === undefined || cosignatureSignedTransaction === null) {
+            throw new Error('Missing the required parameter \'transactionPayload\' when calling announceCosignatureTransaction');
+        }
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/transaction/cosignature', 'PUT',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(
+            map((transactionAnnounceResponseDTO: any) => {
                 return new TransactionAnnounceResponse(transactionAnnounceResponseDTO.message);
             }));
     }
@@ -206,15 +367,15 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<number>
      */
     public getTransactionEffectiveFee(transactionId: string): Observable<number> {
-        return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(
+        return observableFrom(this.getTransaction(transactionId)).pipe(
             mergeMap((transactionDTO) => {
                 // parse transaction to take advantage of `size` getter overload
                 const transaction = CreateTransactionFromDTO(transactionDTO);
                 const uintHeight = (transaction.transactionInfo as TransactionInfo).height;
 
                 // now read block details
-                return observableFrom(this.blockRoutesApi.getBlockByHeight(uintHeight.compact())).pipe(
-                map((blockDTO) => {
+                return observableFrom(this.blockHttp.getBlockByHeight(uintHeight.compact())).pipe(
+                map((blockDTO: any) => {
 
                     // @see https://nemtech.github.io/concepts/transaction.html#fees
                     // effective_fee = feeMultiplier x transaction::size

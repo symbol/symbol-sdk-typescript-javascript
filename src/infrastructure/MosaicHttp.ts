@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {MosaicRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
@@ -36,11 +35,6 @@ import {NetworkHttp} from './NetworkHttp';
  * @since 1.0
  */
 export class MosaicHttp extends Http implements MosaicRepository {
-    /**
-     * @internal
-     * Nem2 Library mosaic routes api
-     */
-    private mosaicRoutesApi: MosaicRoutesApi;
 
     /**
      * Constructor
@@ -50,7 +44,6 @@ export class MosaicHttp extends Http implements MosaicRepository {
     constructor(url: string, networkHttp?: NetworkHttp) {
         networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
         super(url, networkHttp);
-        this.mosaicRoutesApi = new MosaicRoutesApi(this.apiClient);
     }
 
     /**
@@ -59,9 +52,33 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @returns Observable<MosaicInfo>
      */
     public getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> {
+        const postBody = null;
+
+        // verify the required parameter 'mosaicId' is set
+        if (mosaicId === undefined || mosaicId === null) {
+            throw new Error('Missing the required parameter \'mosaicId\' when calling getMosaic');
+        }
+
+        const pathParams = {
+            mosaicId: mosaicId.toHex(),
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/mosaic/{mosaicId}', 'GET',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
         return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.mosaicRoutesApi.getMosaic(mosaicId.toHex())).pipe(map((mosaicInfoDTO) => {
+            mergeMap((networkType) => observableFrom(response).pipe(map((mosaicInfoDTO: any) => {
                 return new MosaicInfo(
                     mosaicInfoDTO.meta.id,
                     new MosaicId(mosaicInfoDTO.mosaic.mosaicId),
@@ -87,9 +104,32 @@ export class MosaicHttp extends Http implements MosaicRepository {
         const mosaicIdsBody = {
             mosaicIds: mosaicIds.map((id) => id.toHex()),
         };
+        const postBody = mosaicIdsBody;
+
+        // verify the required parameter 'mosaicIds' is set
+        if (mosaicIdsBody === undefined || mosaicIdsBody === null) {
+            throw new Error('Missing the required parameter \'mosaicIds\' when calling getMosaics');
+        }
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/mosaic', 'POST',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
         return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.mosaicRoutesApi.getMosaics(mosaicIdsBody)).pipe(map((mosaicInfosDTO) => {
+            mergeMap((networkType) => observableFrom(response).pipe(map((mosaicInfosDTO: any) => {
                 return mosaicInfosDTO.map((mosaicInfoDTO) => {
                     return new MosaicInfo(
                         mosaicInfoDTO.meta.id,
@@ -118,8 +158,31 @@ export class MosaicHttp extends Http implements MosaicRepository {
         const mosaicIdsBody = {
             mosaicIds: mosaicIds.map((id) => id.toHex()),
         };
-        return observableFrom(
-            this.mosaicRoutesApi.getMosaicsNames(mosaicIdsBody)).pipe(map((mosaics) => {
+        const postBody = mosaicIdsBody;
+
+        // verify the required parameter 'mosaicIds' is set
+        if (mosaicIdsBody === undefined || mosaicIdsBody === null) {
+            throw new Error('Missing the required parameter \'mosaicIds\' when calling getMosaicsNames');
+        }
+
+        const pathParams = {
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+
+        const response = this.apiClient.callApi(
+            '/mosaic/names', 'POST',
+            pathParams, queryParams, headerParams, formParams, postBody,
+            authNames, contentTypes, accepts);
+        return observableFrom(response).pipe(map((mosaics: any) => {
             return mosaics.map((mosaic) => {
                 return new MosaicNames(
                     new MosaicId(mosaic.mosaicId),
