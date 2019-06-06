@@ -65,7 +65,7 @@ const decodeBlock = (input, inputOffset, output, outputOffset) => {
  * @param {Uint8Array} data The binary data to encode.
  * @returns {string} The base32 encoded string corresponding to the input data.
  */
-export const encode = (data) => {
+export const Base32Encode = (data) => {
     if (0 !== data.length % Decoded_Block_Size) {
         throw Error(`decoded size must be multiple of ${Decoded_Block_Size}`);
     }
@@ -83,7 +83,7 @@ export const encode = (data) => {
  * @param {string} encoded The base32 encoded string to decode.
  * @returns {Uint8Array} The binary data corresponding to the input string.
  */
-export const decode = (encoded) => {
+export const Base32Decode = (encoded) => {
     if (0 !== encoded.length % Encoded_Block_Size) {
         throw Error(`encoded size must be multiple of ${Encoded_Block_Size}`);
     }

@@ -40,7 +40,7 @@ export const stringToAddress = (encoded) => {
         throw Error(`${encoded} does not represent a valid encoded address`);
     }
 
-    return base32.decode(encoded);
+    return base32.Base32Decode(encoded);
 };
 
 /**
@@ -67,7 +67,7 @@ export const addressToString = (decoded) => {
         throw Error(`${convert.uint8ToHex(decoded)} does not represent a valid decoded address`);
     }
 
-    return base32.encode(decoded);
+    return base32.Base32Encode(decoded);
 };
 
 /**

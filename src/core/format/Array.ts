@@ -49,7 +49,7 @@ export const copy = (dest, src, numElementsToCopy?, destOffset = 0, srcOffset = 
  * @param {Array} array The array to check.
  * @returns {boolean} true if the array is zero-filled, false otherwise.
  */
-export const isZero = (array) => array.every(value => 0 === value);
+export const isZeroFilled = (array) => array.every(value => 0 === value);
 
 /**
  * Deeply checks the equality of two arrays.

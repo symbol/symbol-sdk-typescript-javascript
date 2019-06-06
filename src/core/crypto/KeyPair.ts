@@ -51,7 +51,7 @@ const catapult_crypto = (function() {
         const Is_Zero = 2;
 
         function validateEncodedSPart(s) {
-            if (array.isZero(s)) {
+            if (array.isZeroFilled(s)) {
                 return Is_Zero | Is_Reduced;
             }
             const copy = new Uint8Array(Signature_Size);
@@ -136,7 +136,7 @@ const catapult_crypto = (function() {
             }
 
             // reject weak (zero) public key
-            if (array.isZero(pk)) {
+            if (array.isZeroFilled(pk)) {
                 return false;
             }
 

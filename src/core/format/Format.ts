@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-export * from './src/infrastructure/infrastructure';
-export * from './src/model/model';
-export * from './src/service/service';
-export * from './src/core/utils/utility';
-export * from './src/core/crypto/Cryptos';
-export * from './src/core/format/Format';
+export * from './Address';
+export * from './Array';
+export * from './Base32';
+export * from './CharMapping';
+export * from './Convert';
+export * from './IdGenerator';
+export * from './UInt64';
