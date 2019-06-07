@@ -256,11 +256,31 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @returns Observable<MosaicId | null>
      */
     public getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId> {
-        return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.getNamespace(namespaceId)).pipe(
-                map((namespaceInfoDTO: any) => {
+        // verify the required parameter 'namespaceId' is set
+        if (namespaceId === undefined || namespaceId === null) {
+            throw new Error('Missing the required parameter \'namespaceId\' when calling getNamespace');
+        }
 
+        const pathParams = {
+            namespaceId: namespaceId.toHex(),
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+        const response = this.apiClient.callApi(
+            '/namespace/{namespaceId}', 'GET',
+            pathParams, queryParams, headerParams, formParams, null,
+            authNames, contentTypes, accepts);
+        return this.getNetworkTypeObservable().pipe(
+            mergeMap((networkType) => observableFrom(response).pipe(
+                map((namespaceInfoDTO: any) => {
                     if (namespaceInfoDTO.namespace === undefined) {
                         // forward catapult-rest error
                         throw namespaceInfoDTO;
@@ -281,9 +301,30 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      * @returns Observable<Address>
      */
     public getLinkedAddress(namespaceId: NamespaceId): Observable<Address> {
+        // verify the required parameter 'namespaceId' is set
+        if (namespaceId === undefined || namespaceId === null) {
+            throw new Error('Missing the required parameter \'namespaceId\' when calling getNamespace');
+        }
+
+        const pathParams = {
+            namespaceId: namespaceId.toHex(),
+        };
+        const queryParams = {
+        };
+        const headerParams = {
+        };
+        const formParams = {
+        };
+
+        const authNames = [];
+        const contentTypes = [];
+        const accepts = ['application/json'];
+        const response = this.apiClient.callApi(
+            '/namespace/{namespaceId}', 'GET',
+            pathParams, queryParams, headerParams, formParams, null,
+            authNames, contentTypes, accepts);
         return this.getNetworkTypeObservable().pipe(
-            mergeMap((networkType) => observableFrom(
-                this.getNamespace(namespaceId)).pipe(
+            mergeMap((networkType) => observableFrom(response).pipe(
                 map((namespaceInfoDTO: any) => {
 
                     if (namespaceInfoDTO.namespace === undefined) {
