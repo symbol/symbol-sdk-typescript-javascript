@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as uint64 from '../core/format/UInt64';
+import { RawUInt64 as uint64 } from '../core/format/RawUInt64';
 
 /**
  * UInt64 data model

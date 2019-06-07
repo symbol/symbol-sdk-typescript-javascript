@@ -13,40 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as addressEncoder from '../../core/format/Address';
-import AddressAliasTransactionSchema from '../../core/schema/AddressAliasTransactionSchema';
-import AddressAliasTransactionBufferPackage from '../buffers/AddressAliasTransactionBuffer';
+import MosaicAliasTransactionBufferPackage from '../buffers/MosaicAliasTransactionBuffer';
+import MosaicAliasTransactionSchema from '../schemas/MosaicAliasTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
 const {
-    AddressAliasTransactionBuffer,
-} = AddressAliasTransactionBufferPackage.Buffers;
+    MosaicAliasTransactionBuffer,
+} = MosaicAliasTransactionBufferPackage.Buffers;
 
 const {
     flatbuffers,
 } = require('flatbuffers');
 
 /**
- * @module transactions/AddressAliasTransaction
+ * @module transactions/MosaicAliasTransaction
  */
-export class AddressAliasTransaction extends VerifiableTransaction {
+export default class MosaicAliasTransaction extends VerifiableTransaction {
     constructor(bytes) {
-        super(bytes, AddressAliasTransactionSchema);
+        super(bytes, MosaicAliasTransactionSchema);
     }
 }
+
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
     fee: any;
     version: any;
     type: any;
     deadline: any;
-    address: any;
-    namespaceId: any;
+    mosaicId: any;
     actionType: any;
+    namespaceId: any;
     constructor() {
         this.fee = [0, 0];
         this.version = 36865;
-        this.type = 0x424E;
+        this.type = 0x434E;
     }
 
     addFee(fee) {
@@ -79,8 +79,8 @@ export class Builder {
         return this;
     }
 
-    addAddress(address) {
-        this.address = addressEncoder.stringToAddress(address);
+    addMosaicId(mosaicId) {
+        this.mosaicId = mosaicId;
         return this;
     }
 
@@ -88,37 +88,37 @@ export class Builder {
         const builder = new flatbuffers.Builder(1);
 
         // Create vectors
-        const signatureVector = AddressAliasTransactionBuffer
+        const signatureVector = MosaicAliasTransactionBuffer
             .createSignatureVector(builder, Array(...Array(64)).map(Number.prototype.valueOf, 0));
-        const signerVector = AddressAliasTransactionBuffer
+        const signerVector = MosaicAliasTransactionBuffer
             .createSignerVector(builder, Array(...Array(32)).map(Number.prototype.valueOf, 0));
-        const deadlineVector = AddressAliasTransactionBuffer
+        const deadlineVector = MosaicAliasTransactionBuffer
             .createDeadlineVector(builder, this.deadline);
-        const feeVector = AddressAliasTransactionBuffer
+        const feeVector = MosaicAliasTransactionBuffer
             .createFeeVector(builder, this.fee);
-        const namespaceIdVector = AddressAliasTransactionBuffer
+        const namespaceIdVector = MosaicAliasTransactionBuffer
             .createNamespaceIdVector(builder, this.namespaceId);
-        const addressVector = AddressAliasTransactionBuffer
-            .createAddressVector(builder, this.address);
+        const mosaicIdVector = MosaicAliasTransactionBuffer
+            .createMosaicIdVector(builder, this.mosaicId);
 
-        AddressAliasTransactionBuffer.startAddressAliasTransactionBuffer(builder);
-        AddressAliasTransactionBuffer.addSize(builder, 154);
-        AddressAliasTransactionBuffer.addSignature(builder, signatureVector);
-        AddressAliasTransactionBuffer.addSigner(builder, signerVector);
-        AddressAliasTransactionBuffer.addVersion(builder, this.version);
-        AddressAliasTransactionBuffer.addType(builder, this.type);
-        AddressAliasTransactionBuffer.addFee(builder, feeVector);
-        AddressAliasTransactionBuffer.addDeadline(builder, deadlineVector);
-        AddressAliasTransactionBuffer.addActionType(builder, this.actionType);
-        AddressAliasTransactionBuffer.addNamespaceId(builder, namespaceIdVector);
-        AddressAliasTransactionBuffer.addAddress(builder, addressVector);
+        MosaicAliasTransactionBuffer.startMosaicAliasTransactionBuffer(builder);
+        MosaicAliasTransactionBuffer.addSize(builder, 137);
+        MosaicAliasTransactionBuffer.addSignature(builder, signatureVector);
+        MosaicAliasTransactionBuffer.addSigner(builder, signerVector);
+        MosaicAliasTransactionBuffer.addVersion(builder, this.version);
+        MosaicAliasTransactionBuffer.addType(builder, this.type);
+        MosaicAliasTransactionBuffer.addFee(builder, feeVector);
+        MosaicAliasTransactionBuffer.addDeadline(builder, deadlineVector);
+        MosaicAliasTransactionBuffer.addActionType(builder, this.actionType);
+        MosaicAliasTransactionBuffer.addNamespaceId(builder, namespaceIdVector);
+        MosaicAliasTransactionBuffer.addMosaicId(builder, mosaicIdVector);
 
         // Calculate size
-        const codedMosaicChangeSupply = AddressAliasTransactionBuffer.endAddressAliasTransactionBuffer(builder);
+        const codedMosaicChangeSupply = MosaicAliasTransactionBuffer.endMosaicAliasTransactionBuffer(builder);
         builder.finish(codedMosaicChangeSupply);
 
         const bytes = builder.asUint8Array();
 
-        return new AddressAliasTransaction(bytes);
+        return new MosaicAliasTransaction(bytes);
     }
 }

@@ -13,212 +13,163 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as CharMapping from './CharMapping';
+import * as utilities from './Utilities';
 
-const builder = CharMapping.createBuilder();
+export class Convert {
 
-const Char_To_Nibble_Map = () => {
-    builder.addRange('0', '9', 0);
-    builder.addRange('a', 'f', 10);
-    builder.addRange('A', 'F', 10);
-    return builder.map;
-};
-
-const Char_To_Digit_Map = () => {
-    builder.addRange('0', '9', 0);
-    return builder.map;
-};
-
-const Nibble_To_Char_Map = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
-
-const tryParseByte = (char1, char2) => {
-    const charMap = Char_To_Nibble_Map();
-    const nibble1 = charMap[char1];
-    const nibble2 = charMap[char2];
-    return undefined === nibble1 || undefined === nibble2 ?
-        undefined :
-        (nibble1 << 4) | nibble2;
-};
-
-/**
- * Decodes two hex characters into a byte.
- * @param {string} char1 The first hex digit.
- * @param {string} char2 The second hex digit.
- * @returns {number} The decoded byte.
- */
-export const toByte = (char1, char2) => {
-    const byte = tryParseByte(char1, char2);
-    if (undefined === byte) {
-        throw Error(`unrecognised hex char '${char1}${char2}'`);
+    /**
+     * Decodes two hex characters into a byte.
+     * @param {string} char1 The first hex digit.
+     * @param {string} char2 The second hex digit.
+     * @returns {number} The decoded byte.
+     */
+    public static toByte = (char1, char2) => {
+        const byte = utilities.tryParseByte(char1, char2);
+        if (undefined === byte) {
+            throw Error(`unrecognised hex char '${char1}${char2}'`);
+        }
+        return byte;
     }
-    return byte;
-};
 
-/**
- * Determines whether or not a string is a hex string.
- * @param {string} input The string to test.
- * @returns {boolean} true if the input is a hex string, false otherwise.
- */
-export const isHexString = (input) => {
-    if (0 !== input.length % 2) {
-        return false;
-    }
-    for (let i = 0; i < input.length; i += 2) {
-        if (undefined === tryParseByte(input[i], input[i + 1])) {
+    /**
+     * Determines whether or not a string is a hex string.
+     * @param {string} input The string to test.
+     * @returns {boolean} true if the input is a hex string, false otherwise.
+     */
+    public static isHexString = (input) => {
+        if (0 !== input.length % 2) {
             return false;
         }
-    }
-    return true;
-};
-
-/**
- * Converts a hex string to a uint8 array.
- * @param {string} input A hex encoded string.
- * @returns {Uint8Array} A uint8 array corresponding to the input.
- */
-export const hexToUint8 = (input) => {
-    if (0 !== input.length % 2) {
-        throw Error(`hex string has unexpected size '${input.length}'`);
-    }
-    const output = new Uint8Array(input.length / 2);
-    for (let i = 0; i < input.length; i += 2) {
-        output[i / 2] = toByte(input[i], input[i + 1]);
-    }
-    return output;
-};
-
-/**
- * Reversed convertion hex string to a uint8 array.
- * @param {string} input A hex encoded string.
- * @returns {Uint8Array} A uint8 array corresponding to the input.
- */
-export const hexToUint8Reverse = (input) => {
-    if (0 !== input.length % 2) {
-        throw Error(`hex string has unexpected size '${input.length}'`);
-    }
-    const output = new Uint8Array(input.length / 2);
-    for (let i = 0; i < input.length; i += 2) {
-        output[output.length - 1 - (i / 2)] = toByte(input[i], input[i + 1]);
-    }
-    return output;
-};
-
-/**
- * Converts a uint8 array to a hex string.
- * @param {Uint8Array} input A uint8 array.
- * @returns {string} A hex encoded string corresponding to the input.
- */
-export const uint8ToHex = (input) => {
-    let s = '';
-    for (const byte of input) {
-        s += Nibble_To_Char_Map[byte >> 4];
-        s += Nibble_To_Char_Map[byte & 0x0F];
-    }
-
-    return s;
-};
-
-/**
- * Converts a uint8 array to a uint32 array.
- * @param {Uint8Array} input A uint8 array.
- * @returns {Uint32Array} A uint32 array created from the input.
- */
-export const uint8ToUint32 = (input) => new Uint32Array(input.buffer);
-
-/**
- * Converts a uint32 array to a uint8 array.
- * @param {Uint32Array} input A uint32 array.
- * @returns {Uint8Array} A uint8 array created from the input.
- */
-export const uint32ToUint8 = (input) => new Uint8Array(input.buffer);
-
-/** Converts an unsigned byte to a signed byte with the same binary representation.
- * @param {number} input An unsigned byte.
- * @returns {number} A signed byte with the same binary representation as the input.
- *
- */
-export const uint8ToInt8 = (input) => {
-    if (0xFF < input) {
-        throw Error(`input '${input}' is out of range`);
-    }
-    return input << 24 >> 24;
-};
-
-/** Converts a signed byte to an unsigned byte with the same binary representation.
- * @param {number} input A signed byte.
- * @returns {number} An unsigned byte with the same binary representation as the input.
- */
-export const int8ToUint8 = (input) => {
-    if (127 < input || -128 > input) {
-        throw Error(`input '${input}' is out of range`);
-    }
-    return input & 0xFF;
-};
-
-/**
- * Converts a raw javascript string into a string of single byte characters using utf8 encoding.
- * This makes it easier to perform other encoding operations on the string.
- * @param {string} input - A raw string
- * @return {string} - UTF-8 string
- */
-export const rstr2utf8 = (input) => {
-    let output = '';
-
-    for (let n = 0; n < input.length; n++) {
-        const c = input.charCodeAt(n);
-
-        if (128 > c) {
-            output += String.fromCharCode(c);
-        } else if ((127 < c) && (2048 > c)) {
-            output += String.fromCharCode((c >> 6) | 192);
-            output += String.fromCharCode((c & 63) | 128);
-        } else {
-            output += String.fromCharCode((c >> 12) | 224);
-            output += String.fromCharCode(((c >> 6) & 63) | 128);
-            output += String.fromCharCode((c & 63) | 128);
+        for (let i = 0; i < input.length; i += 2) {
+            if (undefined === utilities.tryParseByte(input[i], input[i + 1])) {
+                return false;
+            }
         }
+        return true;
     }
 
-    return output;
-};
-
-/**
- * Convert UTF-8 to hex
- * @param {string} str - An UTF-8 string
- * @return {string}
- */
-export const utf8ToHex = (str) => {
-    const rawString = rstr2utf8(str);
-    let result = '';
-    for (let i = 0; i < rawString.length; i++) {
-        result += rawString.charCodeAt(i).toString(16);
+    /**
+     * Converts a hex string to a uint8 array.
+     * @param {string} input A hex encoded string.
+     * @returns {Uint8Array} A uint8 array corresponding to the input.
+     */
+    public static hexToUint8 = (input) => {
+        if (0 !== input.length % 2) {
+            throw Error(`hex string has unexpected size '${input.length}'`);
+        }
+        const output = new Uint8Array(input.length / 2);
+        for (let i = 0; i < input.length; i += 2) {
+            output[i / 2] = Convert.toByte(input[i], input[i + 1]);
+        }
+        return output;
     }
-    return result;
-};
 
-/**
- * Tries to parse a string representing an unsigned integer.
- * @param {string} str The string to parse.
- * @returns {number} The number represented by the input or undefined.
- */
-const tryParseUint = (str) => {
-    if ('0' === str) {
-        return 0;
+    /**
+     * Reversed convertion hex string to a uint8 array.
+     * @param {string} input A hex encoded string.
+     * @returns {Uint8Array} A uint8 array corresponding to the input.
+     */
+    public static hexToUint8Reverse = (input) => {
+        if (0 !== input.length % 2) {
+            throw Error(`hex string has unexpected size '${input.length}'`);
+        }
+        const output = new Uint8Array(input.length / 2);
+        for (let i = 0; i < input.length; i += 2) {
+            output[output.length - 1 - (i / 2)] = Convert.toByte(input[i], input[i + 1]);
+        }
+        return output;
     }
-    let value = 0;
-    for (const char of str) {
-        const charMap = Char_To_Digit_Map();
-        const digit = charMap[char];
-        if (undefined === digit || (0 === value && 0 === digit)) {
-            return undefined;
+
+    /**
+     * Converts a uint8 array to a hex string.
+     * @param {Uint8Array} input A uint8 array.
+     * @returns {string} A hex encoded string corresponding to the input.
+     */
+    public static uint8ToHex = (input) => {
+        let s = '';
+        for (const byte of input) {
+            s += utilities.Nibble_To_Char_Map[byte >> 4];
+            s += utilities.Nibble_To_Char_Map[byte & 0x0F];
         }
 
-        value *= 10;
-        value += digit;
-
-        if (value > Number.MAX_SAFE_INTEGER) {
-            return undefined;
-        }
+        return s;
     }
-    return value;
-};
+
+    /**
+     * Converts a uint8 array to a uint32 array.
+     * @param {Uint8Array} input A uint8 array.
+     * @returns {Uint32Array} A uint32 array created from the input.
+     */
+    public static uint8ToUint32 = (input) => new Uint32Array(input.buffer);
+
+    /**
+     * Converts a uint32 array to a uint8 array.
+     * @param {Uint32Array} input A uint32 array.
+     * @returns {Uint8Array} A uint8 array created from the input.
+     */
+    public static uint32ToUint8 = (input) => new Uint8Array(input.buffer);
+
+    /** Converts an unsigned byte to a signed byte with the same binary representation.
+     * @param {number} input An unsigned byte.
+     * @returns {number} A signed byte with the same binary representation as the input.
+     *
+     */
+    public static uint8ToInt8 = (input) => {
+        if (0xFF < input) {
+            throw Error(`input '${input}' is out of range`);
+        }
+        return input << 24 >> 24;
+    }
+
+    /** Converts a signed byte to an unsigned byte with the same binary representation.
+     * @param {number} input A signed byte.
+     * @returns {number} An unsigned byte with the same binary representation as the input.
+     */
+    public static int8ToUint8 = (input) => {
+        if (127 < input || -128 > input) {
+            throw Error(`input '${input}' is out of range`);
+        }
+        return input & 0xFF;
+    }
+
+    /**
+     * Converts a raw javascript string into a string of single byte characters using utf8 encoding.
+     * This makes it easier to perform other encoding operations on the string.
+     * @param {string} input - A raw string
+     * @return {string} - UTF-8 string
+     */
+    public static rstr2utf8 = (input) => {
+        let output = '';
+
+        for (let n = 0; n < input.length; n++) {
+            const c = input.charCodeAt(n);
+
+            if (128 > c) {
+                output += String.fromCharCode(c);
+            } else if ((127 < c) && (2048 > c)) {
+                output += String.fromCharCode((c >> 6) | 192);
+                output += String.fromCharCode((c & 63) | 128);
+            } else {
+                output += String.fromCharCode((c >> 12) | 224);
+                output += String.fromCharCode(((c >> 6) & 63) | 128);
+                output += String.fromCharCode((c & 63) | 128);
+            }
+        }
+
+        return output;
+    }
+
+    /**
+     * Convert UTF-8 to hex
+     * @param {string} str - An UTF-8 string
+     * @return {string}
+     */
+    public static utf8ToHex = (str) => {
+        const rawString = Convert.rstr2utf8(str);
+        let result = '';
+        for (let i = 0; i < rawString.length; i++) {
+            result += rawString.charCodeAt(i).toString(16);
+        }
+        return result;
+    }
+}

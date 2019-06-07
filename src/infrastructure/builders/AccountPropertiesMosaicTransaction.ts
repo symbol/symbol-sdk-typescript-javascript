@@ -18,7 +18,7 @@
  * @module transactions/AccountPropertiesMosaicTransaction
  */
 import AccountPropertiesMosaicTransactionBufferPackage from '../buffers/AccountPropertiesMosaicTransactionBuffer';
-import AccountPropertiesMosaicModificationTransactionSchema from '../schema/AccountPropertiesMosaicModificationTransactionSchema';
+import AccountPropertiesMosaicModificationTransactionSchema from '../schemas/AccountPropertiesMosaicModificationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
 const {

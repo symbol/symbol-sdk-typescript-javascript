@@ -18,7 +18,7 @@ import {LocalDateTime} from 'js-joda';
 import * as crypto from '../../core/crypto/Crypto';
 import * as KeyPair from '../../core/crypto/KeyPair';
 import * as nacl_catapult from '../../core/crypto/nacl_catapult';
-import * as convert from '../../core/format/Convert';
+import { Convert as convert } from '../../core/format/Convert';
 import {Account} from '../account/Account';
 import {Address} from '../account/Address';
 import {NetworkType} from '../blockchain/NetworkType';

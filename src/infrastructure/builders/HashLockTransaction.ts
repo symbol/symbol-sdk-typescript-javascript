@@ -17,9 +17,9 @@
 /**
  * @module transactions/HashLockTransaction
  */
+import { Convert as convert } from '../../core/format/Convert';
 import * as HashLockTransactionBufferPackage from '../buffers/HashLockTransactionBuffer';
-import * as convert from '../format/Convert';
-import HashLockTransactionSchema from '../schema/HashLockTransactionSchema';
+import HashLockTransactionSchema from '../schemas/HashLockTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
 const {

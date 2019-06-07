@@ -17,9 +17,9 @@
 /**
  * @module transactions/AccountLinkTransaction
  */
+import { Convert as convert } from '../../core/format/Convert';
 import AccountLinkTransactionBufferPackage from '../buffers/AccountLinkTransactionBuffer';
-import * as convert from '../format/Convert';
-import AccountLinkTransactionSchema from '../schema/AccountLinkTransactionSchema';
+import AccountLinkTransactionSchema from '../schemas/AccountLinkTransactionSchema';
 import {
     VerifiableTransaction,
 } from './VerifiableTransaction';

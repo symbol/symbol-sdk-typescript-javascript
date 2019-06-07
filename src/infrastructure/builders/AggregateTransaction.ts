@@ -17,8 +17,8 @@
 /**
  * @module transactions/AggregateTransaction
  */
-import AggregateTransactionBufferPackage from '../../core/buffers/AggregateTransactionBuffer';
-import AggregateTransactionSchema from '../../core/schema/AggregateTransactionSchema';
+import AggregateTransactionBufferPackage from '../buffers/AggregateTransactionBuffer';
+import AggregateTransactionSchema from '../schemas/AggregateTransactionSchema';
 import { CosignatureTransaction} from './CosignatureTransaction';
 import { VerifiableTransaction } from './VerifiableTransaction';
 

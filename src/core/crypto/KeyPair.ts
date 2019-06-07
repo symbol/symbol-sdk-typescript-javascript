@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import * as array from '../format/Array';
-import * as convert from '../format/Convert';
+import { Convert as convert } from '../format/Convert';
+import { RawArray as array } from '../format/RawArray';
 import * as nacl from './nacl_catapult';
-import * as sha3Hasher from './SHA3Hasher';
+import { SHA3Hasher as sha3Hasher } from './SHA3Hasher';
 
 const Key_Size = 32;
 const Signature_Size = 64;

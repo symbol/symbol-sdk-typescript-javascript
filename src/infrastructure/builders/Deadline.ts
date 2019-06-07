@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as convert from '../../core/format/Convert';
-import { VerifiableTransaction } from './VerifiableTransaction';
+import { RawUInt64 as uint64 } from '../../core/format/RawUInt64';
 
-/**
- * @module transactions/AggregateSignatureTransaction
- * @version 1.0.0
- */
-export class CosignatureTransaction extends VerifiableTransaction {
-    constructor(hash) {
-        super(convert.hexToUint8(hash), undefined);
-    }
+export default function deadline(deadlineParam) {
+    const NetworkTime = (new Date()).getTime() - 1459468800000;
+    const deadlineValue = deadlineParam || 60 * 60 * 1000;
+    return uint64.fromUint(deadlineValue + NetworkTime);
 }

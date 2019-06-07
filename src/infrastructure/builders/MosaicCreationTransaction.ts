@@ -21,7 +21,7 @@ import MosaicCreationTransactionBufferPackage from '../buffers/MosaicCreationTra
 import {
     schema as MosaicCreationTransactionSchema,
     schemaNoDuration as MosaicCreationTransactionSchemaNoDuration
-} from '../schema/MosaicCreationTransactionSchema';
+} from '../schemas/MosaicCreationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
 const {

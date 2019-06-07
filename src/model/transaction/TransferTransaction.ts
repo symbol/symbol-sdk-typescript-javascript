@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import * as convert from '../../core/format/Convert';
-import { Builder } from '../../core/transaction/TransferTransaction';
-import {VerifiableTransaction} from '../../core/transaction/VerifiableTransaction';
+import { Convert as convert } from '../../core/format/Convert';
+import { Builder } from '../../infrastructure/builders/TransferTransaction';
+import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

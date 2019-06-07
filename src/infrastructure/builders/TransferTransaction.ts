@@ -17,11 +17,11 @@
 /**
  * @module transactions/TransferTransaction
  */
-import * as address from '../../core/format/Address';
-import * as TransferTransactionBufferPackage from '../buffers/TransferTransactionBuffer';
-import * as convert from '../format/Convert';
-import TransferTransactionSchema from '../schema/TransferTransactionSchema';
-import { VerifiableTransaction } from './VerifiableTransaction';
+import { Convert as convert } from '../../core/format/Convert';
+import { RawAddress as address } from '../../core/format/RawAddress';
+import * as TransferTransactionBufferPackage from '../../infrastructure/buffers/TransferTransactionBuffer';
+import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
+import TransferTransactionSchema from '../../infrastructure/schemas/TransferTransactionSchema';
 
 const {
     flatbuffers,

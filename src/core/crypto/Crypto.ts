@@ -15,12 +15,11 @@
  */
 
 import { WalletAlgorithm } from '../../model/wallet/WalletAlgorithm';
-import * as convert from '../format/Convert';
+import { Convert as convert } from '../format/Convert';
 import { createKeyPairFromPrivateKeyString, deriveSharedKey } from './KeyPair';
 import * as nacl from './nacl_catapult';
 
 const CryptoJS = require('crypto-js');
-
 
 /**
  * Convert an Uint8Array to WordArray

@@ -16,8 +16,8 @@
 
 import {from as observableFrom, Observable} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
-import * as AddressLibrary from '../core/format/Address';
-import * as convert from '../core/format/Convert';
+import { Convert as convert } from '../core/format/Convert';
+import { RawAddress as AddressLibrary } from '../core/format/RawAddress';
 import {Address} from '../model/account/Address';
 import {PublicAccount} from '../model/account/PublicAccount';
 import {MosaicId} from '../model/mosaic/MosaicId';

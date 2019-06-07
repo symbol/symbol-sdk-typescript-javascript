@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../core/transaction/AccountPropertiesAddressTransaction';
-import {VerifiableTransaction} from '../../core/transaction/VerifiableTransaction';
+import { Builder } from '../../infrastructure/builders/AccountPropertiesAddressTransaction';
+import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { PropertyType } from '../account/PropertyType';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

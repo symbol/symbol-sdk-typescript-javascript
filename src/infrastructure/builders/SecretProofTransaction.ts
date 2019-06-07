@@ -17,10 +17,10 @@
 /**
  * @module transactions/SecretProofTransaction
  */
-import * as address from '../../core/format/Address';
+import { Convert as convert } from '../../core/format/Convert';
+import { RawAddress as address } from '../../core/format/RawAddress';
 import * as SecretProofTransactionBufferPackage from '../buffers/SecretProofTransactionBuffer';
-import * as convert from '../format/Convert';
-import SecretProofTransactionSchema from '../schema/SecretProofTransactionSchema';
+import SecretProofTransactionSchema from '../schemas/SecretProofTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
 const {

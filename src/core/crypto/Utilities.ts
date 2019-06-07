@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-export * from './Address';
-export * from './Array';
-export * from './Base32';
-export * from './CharMapping';
-export * from './Convert';
-export * from './IdGenerator';
-export * from './UInt64';
+import { sha3_256, sha3_512 } from 'js-sha3';
+
+export const getHasher = (length = 64) => {
+    return {
+        32: sha3_256,
+        64: sha3_512,
+    } [length];
+};

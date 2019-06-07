@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as convert from '../../core/format/Convert';
+import { Convert as convert } from '../../core/format/Convert';
 import {namespaceId as NamespaceIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicId';
 import {Id} from '../Id';
 

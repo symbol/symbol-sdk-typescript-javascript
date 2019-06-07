@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import MosaicSupplyChangeTransactionBufferPackage from '../buffers/MosaicSupplyChangeTransactionBuffer';
-import MosaicSupplyChangeTransactionSchema from '../schema/MosaicSupplyChangeTransactionSchema';
+import MosaicSupplyChangeTransactionSchema from '../schemas/MosaicSupplyChangeTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
 const {

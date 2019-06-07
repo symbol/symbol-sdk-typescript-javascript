@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as KeyPair from '../crypto/KeyPair';
-import * as sha3Hasher from '../crypto/SHA3Hasher';
-import * as convert from '../format/Convert';
+import * as KeyPair from '../../core/crypto/KeyPair';
+import { SHA3Hasher as sha3Hasher } from '../../core/crypto/SHA3Hasher';
+import { Convert as convert } from '../../core/format/Convert';
 
 /**
  * VerifiableTransaction

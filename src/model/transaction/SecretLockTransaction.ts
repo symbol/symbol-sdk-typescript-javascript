@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as convert from '../../core/format/Convert';
-import { Builder } from '../../core/transaction/SecretLockTransaction';
-import {VerifiableTransaction} from '../../core/transaction/VerifiableTransaction';
+import { Convert as convert } from '../../core/format/Convert';
+import { Builder } from '../../infrastructure/builders/SecretLockTransaction';
+import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

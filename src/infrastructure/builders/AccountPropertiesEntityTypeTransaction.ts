@@ -18,7 +18,7 @@
  * @module transactions/AccountPropertiesEntityTypeTransaction
  */
 import AccountPropertiesEntityTypeTransactionBufferPackage from '../buffers/AccountPropertiesEntityTypeTransactionBuffer';
-import AccountPropertiesEntityTypeModificationTransactionSchema from '../schema/AccountPropertiesEntityTypeModificationTransactionSchema';
+import AccountPropertiesEntityTypeModificationTransactionSchema from '../schemas/AccountPropertiesEntityTypeModificationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
 const {

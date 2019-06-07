@@ -17,9 +17,9 @@
 /**
  * @module transactions/NamespaceCreationTransaction
  */
+import { Convert as convert } from '../../core/format/Convert';
 import * as NamespaceCreationTransactionBufferPackage from '../buffers/NamespaceCreationTransactionBuffer';
-import * as convert from '../format/Convert';
-import NamespaceCreationTransactionSchema from '../schema/NamespaceCreationTransactionSchema';
+import NamespaceCreationTransactionSchema from '../schemas/NamespaceCreationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
 const {

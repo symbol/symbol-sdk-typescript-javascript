@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Convert as convert } from '../../core/format/Convert';
 import MultisigModificationTransactionBufferPackage from '../buffers/MultisigModificationTransactionBuffer';
-import * as convert from '../format/Convert';
-import MultisigModificationTransactionSchema from '../schema/MultisigModificationTransactionSchema';
+import MultisigModificationTransactionSchema from '../schemas/MultisigModificationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
 const {

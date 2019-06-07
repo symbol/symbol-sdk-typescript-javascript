@@ -15,7 +15,7 @@
  */
 
 import * as nacl_catapult from '../../core/crypto/nacl_catapult';
-import * as convert from '../../core/format/Convert';
+import { Convert as convert } from '../../core/format/Convert';
 /**
  * The mosaic nonce structure
  *

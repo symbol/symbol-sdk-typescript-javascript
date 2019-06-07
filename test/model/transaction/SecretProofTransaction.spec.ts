@@ -16,7 +16,7 @@
 import {expect} from 'chai';
 import * as CryptoJS from 'crypto-js';
 import {keccak_256, sha3_256} from 'js-sha3';
-import * as convert from '../../../src/core/format/Convert';
+import { Convert as convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {Deadline} from '../../../src/model/transaction/Deadline';

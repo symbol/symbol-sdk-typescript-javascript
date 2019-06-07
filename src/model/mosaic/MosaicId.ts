@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as convert from '../../core/format/Convert';
-import * as uint64_t from '../../core/format/UInt64';
+import { Convert as convert } from '../../core/format/Convert';
+import { RawUInt64 as uint64_t } from '../../core/format/RawUInt64';
 import {mosaicId as MosaicIdentifierGenerator} from '../../infrastructure/transaction/NamespaceMosaicId';
 import {PublicAccount} from '../account/PublicAccount';
 import {Id} from '../Id';

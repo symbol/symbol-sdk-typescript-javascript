@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import * as AddressLibrary from '../../core/format/Address';
-import * as convert from '../../core/format/Convert';
+import { Convert as convert } from '../../core/format/Convert';
+import { RawAddress as AddressLibrary } from '../../core/format/RawAddress';
 import {NetworkType} from '../blockchain/NetworkType';
 
 /**

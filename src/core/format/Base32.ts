@@ -14,84 +14,39 @@
  * limitations under the License.
  */
 
-import * as charMapping from './CharMapping';
+import * as utilities from './Utilities';
 
-const Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-const Decoded_Block_Size = 5;
-const Encoded_Block_Size = 8;
-
-const encodeBlock = (input, inputOffset, output, outputOffset) => {
-    output[outputOffset + 0] = Alphabet[input[inputOffset + 0] >> 3];
-    output[outputOffset + 1] = Alphabet[((input[inputOffset + 0] & 0x07) << 2) | (input[inputOffset + 1] >> 6)];
-    output[outputOffset + 2] = Alphabet[(input[inputOffset + 1] & 0x3E) >> 1];
-    output[outputOffset + 3] = Alphabet[((input[inputOffset + 1] & 0x01) << 4) | (input[inputOffset + 2] >> 4)];
-    output[outputOffset + 4] = Alphabet[((input[inputOffset + 2] & 0x0F) << 1) | (input[inputOffset + 3] >> 7)];
-    output[outputOffset + 5] = Alphabet[(input[inputOffset + 3] & 0x7F) >> 2];
-    output[outputOffset + 6] = Alphabet[((input[inputOffset + 3] & 0x03) << 3) | (input[inputOffset + 4] >> 5)];
-    output[outputOffset + 7] = Alphabet[input[inputOffset + 4] & 0x1F];
-};
-
-const Char_To_Decoded_Char_Map = () => {
-    const builder = charMapping.createBuilder();
-    builder.addRange('A', 'Z', 0);
-    builder.addRange('2', '7', 26);
-    return builder.map;
-};
-
-const decodeChar = (c) => {
-    const charMap = Char_To_Decoded_Char_Map();
-    const decodedChar = charMap[c];
-    if (undefined !== decodedChar) {
-        return decodedChar;
-    }
-    throw Error(`illegal base32 character ${c}`);
-};
-
-const decodeBlock = (input, inputOffset, output, outputOffset) => {
-    const bytes = new Uint8Array(Encoded_Block_Size);
-    for (let i = 0; i < Encoded_Block_Size; ++i) {
-        bytes[i] = decodeChar(input[inputOffset + i]);
+export class Base32 {
+    /**
+     * Base32 encodes a binary buffer.
+     * @param {Uint8Array} data The binary data to encode.
+     * @returns {string} The base32 encoded string corresponding to the input data.
+     */
+    public static Base32Encode = (data) => {
+        if (0 !== data.length % utilities.Decoded_Block_Size) {
+            throw Error(`decoded size must be multiple of ${utilities.Decoded_Block_Size}`);
+        }
+        const output = new Array(data.length / utilities.Decoded_Block_Size * utilities.Encoded_Block_Size);
+        for (let i = 0; i < data.length / utilities.Decoded_Block_Size; ++i) {
+            utilities.encodeBlock(data, i * utilities.Decoded_Block_Size, output, i * utilities.Encoded_Block_Size);
+        }
+        return output.join('');
     }
 
-    output[outputOffset + 0] = (bytes[0] << 3) | (bytes[1] >> 2);
-    output[outputOffset + 1] = ((bytes[1] & 0x03) << 6) | (bytes[2] << 1) | (bytes[3] >> 4);
-    output[outputOffset + 2] = ((bytes[3] & 0x0F) << 4) | (bytes[4] >> 1);
-    output[outputOffset + 3] = ((bytes[4] & 0x01) << 7) | (bytes[5] << 2) | (bytes[6] >> 3);
-    output[outputOffset + 4] = ((bytes[6] & 0x07) << 5) | bytes[7];
-};
+    /**
+     * Base32 decodes a base32 encoded string.
+     * @param {string} encoded The base32 encoded string to decode.
+     * @returns {Uint8Array} The binary data corresponding to the input string.
+     */
+    public static Base32Decode = (encoded) => {
+        if (0 !== encoded.length % utilities.Encoded_Block_Size) {
+            throw Error(`encoded size must be multiple of ${utilities.Encoded_Block_Size}`);
+        }
 
-/**
- * Base32 encodes a binary buffer.
- * @param {Uint8Array} data The binary data to encode.
- * @returns {string} The base32 encoded string corresponding to the input data.
- */
-export const Base32Encode = (data) => {
-    if (0 !== data.length % Decoded_Block_Size) {
-        throw Error(`decoded size must be multiple of ${Decoded_Block_Size}`);
+        const output = new Uint8Array(encoded.length / utilities.Encoded_Block_Size * utilities.Decoded_Block_Size);
+        for (let i = 0; i < encoded.length / utilities.Encoded_Block_Size; ++i) {
+            utilities.decodeBlock(encoded, i * utilities.Encoded_Block_Size, output, i * utilities.Decoded_Block_Size);
+        }
+        return output;
     }
-
-    const output = new Array(data.length / Decoded_Block_Size * Encoded_Block_Size);
-    for (let i = 0; i < data.length / Decoded_Block_Size; ++i) {
-        encodeBlock(data, i * Decoded_Block_Size, output, i * Encoded_Block_Size);
-    }
-
-    return output.join('');
-};
-
-/**
- * Base32 decodes a base32 encoded string.
- * @param {string} encoded The base32 encoded string to decode.
- * @returns {Uint8Array} The binary data corresponding to the input string.
- */
-export const Base32Decode = (encoded) => {
-    if (0 !== encoded.length % Encoded_Block_Size) {
-        throw Error(`encoded size must be multiple of ${Encoded_Block_Size}`);
-    }
-
-    const output = new Uint8Array(encoded.length / Encoded_Block_Size * Decoded_Block_Size);
-    for (let i = 0; i < encoded.length / Encoded_Block_Size; ++i) {
-        decodeBlock(encoded, i * Encoded_Block_Size, output, i * Decoded_Block_Size);
-    }
-
-    return output;
-};
+}

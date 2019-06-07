@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../core/transaction/MosaicCreationTransaction';
-import {VerifiableTransaction} from '../../core/transaction/VerifiableTransaction';
+import { Builder } from '../../infrastructure/builders/MosaicCreationTransaction';
+import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';

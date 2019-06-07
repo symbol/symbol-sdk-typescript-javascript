@@ -17,11 +17,11 @@
 /**
  * @module transactions/SecretLockTransaction
  */
-import * as SecretLockTransactionBufferPackage from '../buffers/SecretLockTransactionBuffer';
-import * as address from '../format/Address';
-import * as convert from '../format/Convert';
-import SecretLockTransactionSchema from '../schema/SecretLockTransactionSchema';
-import { VerifiableTransaction } from './VerifiableTransaction';
+import { Convert as convert } from '../../core/format/Convert';
+import { RawAddress as address } from '../../core/format/RawAddress';
+import * as SecretLockTransactionBufferPackage from '../../infrastructure/buffers/SecretLockTransactionBuffer';
+import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
+import SecretLockTransactionSchema from '../../infrastructure/schemas/SecretLockTransactionSchema';
 
 const {
     flatbuffers,

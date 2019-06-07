@@ -17,9 +17,9 @@
 /**
  * @module transactions/AccountPropertiesAddressTransaction
  */
-import * as address from '../../core/format/Address';
+import { RawAddress as address } from '../../core/format/RawAddress';
 import AccountPropertiesAddressTransactionBufferPackage from '../buffers/AccountPropertiesAddressTransactionBuffer';
-import AccountPropertiesAddressModificationTransactionSchema from '../schema/AccountPropertiesAddressModificationTransactionSchema';
+import AccountPropertiesAddressModificationTransactionSchema from '../schemas/AccountPropertiesAddressModificationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 const {
     AccountPropertiesAddressTransactionBuffer,

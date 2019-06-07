@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../core/transaction/AggregateTransaction';
-import { AggregateTransaction as AggregatedTransactionCore} from '../../core/transaction/AggregateTransaction';
+import { Builder } from '../../infrastructure/builders/AggregateTransaction';
+import { AggregateTransaction as AggregatedTransactionCore} from '../../infrastructure/builders/AggregateTransaction';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

@@ -16,7 +16,7 @@
 
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
-import * as convert from '../../src/core/format/Convert';
+import { Convert as convert } from '../../src/core/format/Convert';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
 import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';

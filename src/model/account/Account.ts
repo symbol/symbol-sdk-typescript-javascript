@@ -16,8 +16,8 @@
 
 import * as KeyPair from '../../core/crypto/KeyPair';
 import * as nacl from '../../core/crypto/nacl_catapult';
-import * as AddressLibrary from '../../core/format/Address';
-import * as convert from '../../core/format/Convert';
+import { Convert as convert } from '../../core/format/Convert';
+import { RawAddress as AddressLibrary } from '../../core/format/RawAddress';
 import {NetworkType} from '../blockchain/NetworkType';
 import {AggregateTransaction} from '../transaction/AggregateTransaction';
 import {CosignatureSignedTransaction} from '../transaction/CosignatureSignedTransaction';

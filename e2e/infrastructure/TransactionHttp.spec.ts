@@ -18,7 +18,7 @@ import * as CryptoJS from 'crypto-js';
 import {ChronoUnit} from 'js-joda';
 import {keccak_256, sha3_256} from 'js-sha3';
 import * as nacl_catapult from '../../src/core/crypto/nacl_catapult';
-import * as convert from '../../src/core/format/Convert';
+import { Convert as convert } from '../../src/core/format/Convert';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import { NamespaceHttp } from '../../src/infrastructure/infrastructure';
 import {Listener} from '../../src/infrastructure/Listener';
