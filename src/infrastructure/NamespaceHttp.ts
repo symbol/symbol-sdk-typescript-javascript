@@ -258,7 +258,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
     public getLinkedMosaicId(namespaceId: NamespaceId): Observable<MosaicId> {
         // verify the required parameter 'namespaceId' is set
         if (namespaceId === undefined || namespaceId === null) {
-            throw new Error('Missing the required parameter \'namespaceId\' when calling getNamespace');
+            throw new Error('Missing the required parameter \'namespaceId\' when calling getLinkedMosaicId');
         }
 
         const pathParams = {
