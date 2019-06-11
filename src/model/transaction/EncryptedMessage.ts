@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {crypto} from 'nem2-library';
+import {Crypto} from '../../core/crypto';
 import {PublicAccount} from '../account/PublicAccount';
 import {Message} from './Message';
 import {MessageType} from './MessageType';
@@ -41,7 +41,7 @@ export class EncryptedMessage extends Message {
      */
     public static create(message: string, recipientPublicAccount: PublicAccount, privateKey) {
         return new EncryptedMessage(
-            crypto.encode(privateKey, recipientPublicAccount.publicKey, message).toUpperCase(),
+            Crypto.encode(privateKey, recipientPublicAccount.publicKey, message).toUpperCase(),
             recipientPublicAccount);
     }
 
@@ -60,6 +60,6 @@ export class EncryptedMessage extends Message {
      * @param recipientPublicAccount - Sender public account
      */
     public static decrypt(encryptMessage: EncryptedMessage, privateKey, recipientPublicAccount: PublicAccount): PlainMessage {
-        return new PlainMessage(this.decodeHex(crypto.decode(privateKey, recipientPublicAccount.publicKey, encryptMessage.payload)));
+        return new PlainMessage(this.decodeHex(Crypto.decode(privateKey, recipientPublicAccount.publicKey, encryptMessage.payload)));
     }
 }
