@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 import {
-    convert,
     nacl_catapult,
 } from 'nem2-library';
-
+import { Convert as convert} from '../../core/format';
 /**
  * The mosaic nonce structure
  *

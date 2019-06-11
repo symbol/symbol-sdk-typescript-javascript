@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {namespaceId as NamespaceIdGenerator} from 'nem2-library';
 import {MosaicId} from '../mosaic/MosaicId';
 import {Alias} from './Alias';
 

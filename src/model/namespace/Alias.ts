@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {namespaceId as NamespaceIdGenerator} from 'nem2-library';
 import {Address} from '../account/Address';
 import {MosaicId} from '../mosaic/MosaicId';
-import {AddressAlias} from './AddressAlias';
-import {AliasType} from './AliasType';
-import {MosaicAlias} from './MosaicAlias';
 
 /**
  * The alias structure defines an interface for Aliases

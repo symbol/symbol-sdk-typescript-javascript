@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { convert, SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { SecretProofTransaction as SecretProofTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { Convert as convert} from '../../core/format';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';

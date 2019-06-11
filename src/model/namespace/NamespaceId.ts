@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {convert, namespaceId as NamespaceIdGenerator} from 'nem2-library';
+import {namespaceId as NamespaceIdGenerator} from 'nem2-library';
+import {Convert as convert} from '../../core/format';
 import {Id} from '../Id';
 
 /**

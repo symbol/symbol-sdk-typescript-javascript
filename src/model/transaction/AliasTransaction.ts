@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import { MosaicSupplyChangeTransaction as MosaicSupplyChangeTransactionLibrary, VerifiableTransaction } from 'nem2-library';
 import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { AliasActionType } from '../namespace/AliasActionType';
@@ -26,9 +24,6 @@ import { AddressAliasTransaction } from './AddressAliasTransaction';
 import { Deadline } from './Deadline';
 import { MosaicAliasTransaction } from './MosaicAliasTransaction';
 import { Transaction } from './Transaction';
-import { TransactionInfo } from './TransactionInfo';
-import { TransactionType } from './TransactionType';
-import { TransactionVersion } from './TransactionVersion';
 
 export abstract class AliasTransaction extends Transaction {
 
