@@ -15,7 +15,7 @@
  */
 
 import {LocalDateTime} from 'js-joda';
-import {crypto, KeyPair, nacl_catapult} from 'nem2-library';
+import {Crypto, KeyPair} from '../../core/crypto';
 import { Convert as convert} from '../../core/format';
 import {Account} from '../account/Account';
 import {Address} from '../account/Address';
@@ -57,7 +57,7 @@ export class SimpleWallet extends Wallet {
      */
     public static create(name: string, password: Password, network: NetworkType): SimpleWallet {
         // Create random bytes
-        const randomBytesArray = nacl_catapult.randomBytes(32);
+        const randomBytesArray = Crypto.randomBytes(32);
         // Hash random bytes with entropy seed
         // Finalize and keep only 32 bytes
         const hashKey = convert.uint8ToHex(randomBytesArray); // TODO: derive private key correctly
@@ -69,7 +69,7 @@ export class SimpleWallet extends Wallet {
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);
 
         // Encrypt private key using password
-        const encrypted = crypto.encodePrivKey(hashKey, password.value);
+        const encrypted = Crypto.encodePrivateKey(hashKey, password.value);
 
         const encryptedPrivateKey = new EncryptedPrivateKey(encrypted.ciphertext, encrypted.iv);
 
@@ -92,7 +92,7 @@ export class SimpleWallet extends Wallet {
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);
 
         // Encrypt private key using password
-        const encrypted = crypto.encodePrivKey(privateKey, password.value);
+        const encrypted = Crypto.encodePrivateKey(privateKey, password.value);
 
         const encryptedPrivateKey = new EncryptedPrivateKey(encrypted.ciphertext, encrypted.iv);
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {KeyPair, nacl_catapult} from 'nem2-library';
+import {Crypto, KeyPair} from '../../core/crypto';
 import {Convert as convert, RawAddress as AddressLibrary} from '../../core/format';
 import {NetworkType} from '../blockchain/NetworkType';
 import {AggregateTransaction} from '../transaction/AggregateTransaction';
@@ -71,7 +71,7 @@ export class Account {
 
     public static generateNewAccount(networkType: NetworkType): Account {
         // Create random bytes
-        const randomBytesArray = nacl_catapult.randomBytes(32);
+        const randomBytesArray = Crypto.randomBytes(32);
         // Hash random bytes with entropy seed
         // Finalize and keep only 32 bytes
         const hashKey = convert.uint8ToHex(randomBytesArray); // TODO: derive private key correctly

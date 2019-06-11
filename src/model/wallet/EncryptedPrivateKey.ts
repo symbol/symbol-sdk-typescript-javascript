@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import {crypto} from 'nem2-library';
+import {Crypto} from '../../core/crypto';
 import {Password} from './Password';
+import { WalletAlgorithm } from './WalletAlgorithm';
 
 /**
  * EncryptedPrivateKey model
@@ -52,7 +53,7 @@ export class EncryptedPrivateKey {
             encrypted: this.encryptedKey,
             iv: this.iv,
         };
-        crypto.passwordToPrivatekey(common, wallet, 'pass:bip32');
+        Crypto.passwordToPrivateKey(common, wallet, WalletAlgorithm.Pass_bip32);
         return common.privateKey;
     }
 }
