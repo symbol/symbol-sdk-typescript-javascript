@@ -89,7 +89,7 @@ export class Builder {
             const addressModificationVector = PropertyAddressModificationBuffer
                 .createValueVector(builder, address.stringToAddress(modification.value));
             PropertyAddressModificationBuffer.startPropertyAddressModificationBuffer(builder);
-            PropertyAddressModificationBuffer.addModificationType(builder, modification.modificationType);
+            PropertyAddressModificationBuffer.addModificationType(builder, modification.type);
             PropertyAddressModificationBuffer.addValue(builder, addressModificationVector);
             modificationsArray.push(PropertyAddressModificationBuffer.endPropertyAddressModificationBuffer(builder));
         });

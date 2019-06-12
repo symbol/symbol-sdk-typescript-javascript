@@ -89,7 +89,7 @@ export class Builder {
             const addressModificationVector = PropertyMosaicModificationBuffer
                 .createValueVector(builder, modification.value);
             PropertyMosaicModificationBuffer.startPropertyMosaicModificationBuffer(builder);
-            PropertyMosaicModificationBuffer.addModificationType(builder, modification.modificationType);
+            PropertyMosaicModificationBuffer.addModificationType(builder, modification.type);
             PropertyMosaicModificationBuffer.addValue(builder, addressModificationVector);
             modificationsArray.push(PropertyMosaicModificationBuffer.endPropertyMosaicModificationBuffer(builder));
         });
