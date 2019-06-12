@@ -87,7 +87,7 @@ export class Builder {
         const modificationsArray: any = [];
         this.modifications.forEach(modification => {
             PropertyEntityTypeModificationBuffer.startPropertyEntityTypeModificationBuffer(builder);
-            PropertyEntityTypeModificationBuffer.addModificationType(builder, modification.modificationType);
+            PropertyEntityTypeModificationBuffer.addModificationType(builder, modification.type);
             PropertyEntityTypeModificationBuffer.addValue(builder, modification.value);
             modificationsArray.push(PropertyEntityTypeModificationBuffer.endPropertyEntityTypeModificationBuffer(builder));
         });
