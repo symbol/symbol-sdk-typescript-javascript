@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { AccountPropertiesMosaicTransaction as AccountPropertiesMosaicTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { Builder } from '../../infrastructure/builders/AccountPropertiesMosaicTransaction';
+import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { PropertyType } from '../account/PropertyType';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -100,7 +101,7 @@ export class ModifyAccountPropertyMosaicTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new AccountPropertiesMosaicTransactionLibrary.Builder()
+        return new Builder()
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())

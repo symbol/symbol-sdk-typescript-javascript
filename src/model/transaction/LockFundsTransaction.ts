@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { HashLockTransaction, VerifiableTransaction } from 'nem2-library';
+import { Builder } from '../../infrastructure/builders/HashLockTransaction';
+import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
@@ -124,7 +125,7 @@ export class LockFundsTransaction extends Transaction {
      * @return {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new HashLockTransaction.Builder()
+        return new Builder()
             .addDeadline(this.deadline.toDTO())
             .addType(this.type)
             .addFee(this.maxFee.toDTO())

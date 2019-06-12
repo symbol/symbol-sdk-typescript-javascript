@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import { NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary, subnamespaceNamespaceId, subnamespaceParentId, namespaceId, VerifiableTransaction } from 'nem2-library';
-import { Convert as convert} from '../../core/format';
+import { Convert as convert } from '../../core/format';
+import { Builder } from '../../infrastructure/builders/NamespaceCreationTransaction';
+import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';
@@ -74,7 +76,7 @@ export class RegisterNamespaceTransaction extends Transaction {
                                      maxFee: UInt64 = new UInt64([0, 0])): RegisterNamespaceTransaction {
         let parentId: NamespaceId;
         if (typeof parentNamespace === 'string') {
-            parentId = new NamespaceId(subnamespaceParentId(parentNamespace, namespaceName));
+            parentId = new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceParentId(parentNamespace, namespaceName));
         } else {
             parentId = parentNamespace;
         }
@@ -85,8 +87,8 @@ export class RegisterNamespaceTransaction extends Transaction {
             NamespaceType.SubNamespace,
             namespaceName,
             typeof parentNamespace === 'string' ?
-                new NamespaceId(subnamespaceNamespaceId(parentNamespace, namespaceName)) :
-                new NamespaceId(namespaceId(namespaceName)),
+                new NamespaceId(NamespaceMosaicIdGenerator.subnamespaceNamespaceId(parentNamespace, namespaceName)) :
+                new NamespaceId(NamespaceMosaicIdGenerator.namespaceId(namespaceName)),
             undefined,
             parentId,
         );
@@ -163,7 +165,7 @@ export class RegisterNamespaceTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        let registerNamespacetransaction = new RegisterNamespaceTransactionLibrary.Builder()
+        let registerNamespacetransaction = new Builder()
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())

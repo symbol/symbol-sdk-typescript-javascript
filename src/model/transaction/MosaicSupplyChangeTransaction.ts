@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { MosaicSupplyChangeTransaction as MosaicSupplyChangeTransactionLibrary, VerifiableTransaction } from 'nem2-library';
+import { Builder } from '../../infrastructure/builders/MosaicSupplyChangeTransaction';
+import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -114,7 +115,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @returns {VerifiableTransaction}
      */
     protected buildTransaction(): VerifiableTransaction {
-        return new MosaicSupplyChangeTransactionLibrary.Builder()
+        return new Builder()
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
