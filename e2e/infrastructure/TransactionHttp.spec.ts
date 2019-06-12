@@ -1704,8 +1704,8 @@ describe('TransactionHttp', () => {
             transactionHttp.getTransactionStatus(transactionHash)
                 .subscribe((transactionStatus) => {
                     expect(transactionStatus.group).to.be.equal('confirmed');
-                    expect(transactionStatus.height.lower).to.be.greaterThan(0);
-                    expect(transactionStatus.height.higher).to.be.equal(0);
+                    expect(transactionStatus.height!.lower).to.be.greaterThan(0);
+                    expect(transactionStatus.height!.higher).to.be.equal(0);
                     done();
                 });
         });
@@ -1716,8 +1716,8 @@ describe('TransactionHttp', () => {
             transactionHttp.getTransactionsStatuses([transactionHash])
                 .subscribe((transactionStatuses) => {
                     expect(transactionStatuses[0].group).to.be.equal('confirmed');
-                    expect(transactionStatuses[0].height.lower).to.be.greaterThan(0);
-                    expect(transactionStatuses[0].height.higher).to.be.equal(0);
+                    expect(transactionStatuses[0].height!.lower).to.be.greaterThan(0);
+                    expect(transactionStatuses[0].height!.higher).to.be.equal(0);
                     done();
                 });
         });

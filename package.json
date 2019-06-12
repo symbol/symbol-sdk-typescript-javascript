@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "@types/crypto-js": "^3.1.43",
+    "bluebird": "^3.5.5",
     "crypto-js": "^3.1.9-1",
     "js-joda": "^1.6.2",
     "nem2-library": "0.10.2",
