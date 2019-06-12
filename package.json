@@ -57,6 +57,7 @@
     "typescript-require": "^0.2.9-1"
   },
   "dependencies": {
+    "bluebird": "^3.5.5",
     "crypto-js": "^3.1.9-1",
     "flatbuffers": "^1.11.0",
     "js-joda": "^1.6.2",

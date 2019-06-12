@@ -31,23 +31,23 @@ export class TransactionStatus {
      */
     constructor(
                 /**
-                 * The transaction status group "failed", "unconfirmed", "confirmed", etc...
-                 */
-                public readonly group: string,
-                /**
                  * The transaction status being the error name in case of failure and success otherwise.
                  */
                 public readonly status: string,
                 /**
+                 * The transaction status group "failed", "unconfirmed", "confirmed", etc...
+                 */
+                public readonly group?: string,
+                /**
                  * The transaction hash.
                  */
-                public readonly hash: string,
+                public readonly hash?: string,
                 /**
                  * The transaction deadline.
                  */
-                public readonly deadline: Deadline,
+                public readonly deadline?: Deadline,
                 /**
                  * The height of the block at which it was confirmed or rejected.
                  */
-                public readonly height: UInt64) {}
+                public readonly height?: UInt64) {}
 }

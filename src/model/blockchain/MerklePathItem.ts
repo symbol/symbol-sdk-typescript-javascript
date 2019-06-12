@@ -26,11 +26,11 @@ export class MerklePathItem {
     constructor(/**
                  * The position
                  */
-                public readonly position: number,
+                public readonly position?: number,
                 /**
                  * The hash
                  */
-                public readonly hash: string) {
+                public readonly hash?: string) {
 
     }
 }
