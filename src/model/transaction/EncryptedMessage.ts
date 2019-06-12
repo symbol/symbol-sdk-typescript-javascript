@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {crypto} from 'nem2-library';
+import {Crypto as crypto} from '../../core/crypto';
 import {PublicAccount} from '../account/PublicAccount';
 import {Message} from './Message';
 import {MessageType} from './MessageType';

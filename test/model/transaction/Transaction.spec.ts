@@ -15,7 +15,7 @@
  */
 
 import { expect } from 'chai';
-import { VerifiableTransaction } from 'nem2-library';
+import { VerifiableTransaction } from '../../../src/infrastructure/builders/VerifiableTransaction';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';

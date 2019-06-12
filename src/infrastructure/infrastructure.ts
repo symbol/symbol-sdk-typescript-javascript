@@ -25,3 +25,4 @@ export * from './TransactionHttp';
 export * from './Listener';
 export * from './QueryParams';
 export * from './NetworkHttp';
+export * from './transaction/NamespaceMosaicIdGenerator';
