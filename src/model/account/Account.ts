@@ -94,7 +94,7 @@ export class Account {
     /**
      * Decrypts an encrypted message
      * @param encryptedMessage - Encrypted message
-     * @param recipientPublicAccount - The public account originally encrypted the message
+     * @param publicAccount - The public account originally encrypted the message
      * @returns {PlainMessage}
      */
     public decryptMessage(encryptedMessage: EncryptedMessage, publicAccount: PublicAccount): PlainMessage {
