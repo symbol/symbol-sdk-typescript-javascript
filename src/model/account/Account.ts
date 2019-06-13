@@ -84,8 +84,8 @@ export class Account {
     }
     /**
      * Create a new encrypted Message
-     * @param message
-     * @param recipientPublicAccount
+     * @param message - Plain message to be encrypted
+     * @param recipientPublicAccount - Recipient public account
      * @returns {EncryptedMessage}
      */
     public encryptMessage(message: string, recipientPublicAccount: PublicAccount): EncryptedMessage {
@@ -94,12 +94,12 @@ export class Account {
 
     /**
      * Decrypts an encrypted message
-     * @param encryptedMessage
-     * @param recipientPublicAccount
+     * @param encryptedMessage - Encrypted message
+     * @param recipientPublicAccount - The public account originally encrypted the message
      * @returns {PlainMessage}
      */
-    public decryptMessage(encryptedMessage: EncryptedMessage, recipientPublicAccount: PublicAccount): PlainMessage {
-        return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, recipientPublicAccount);
+    public decryptMessage(encryptedMessage: EncryptedMessage, publicAccount: PublicAccount): PlainMessage {
+        return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, publicAccount);
     }
     /**
      * Account public key.
