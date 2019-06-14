@@ -131,3 +131,4 @@ export * from './wallet/EncryptedPrivateKey';
 export * from './wallet/Password';
 export * from './wallet/SimpleWallet';
 export * from './wallet/Wallet';
+export * from './wallet/WalletAlgorithm';

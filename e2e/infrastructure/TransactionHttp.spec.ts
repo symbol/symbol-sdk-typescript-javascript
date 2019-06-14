@@ -17,7 +17,7 @@ import {assert, expect} from 'chai';
 import * as CryptoJS from 'crypto-js';
 import {ChronoUnit} from 'js-joda';
 import {keccak_256, sha3_256} from 'js-sha3';
-import {nacl_catapult} from 'nem2-library';
+import {Crypto} from '../../src/core/crypto';
 import { Convert as convert } from '../../src/core/format';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import { NamespaceHttp } from '../../src/infrastructure/infrastructure';
@@ -67,7 +67,6 @@ import {Transaction} from '../../src/model/transaction/Transaction';
 import {TransactionType} from '../../src/model/transaction/TransactionType';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../src/model/UInt64';
-
 describe('TransactionHttp', () => {
     let transactionHash;
     let transactionId;
@@ -993,7 +992,7 @@ describe('TransactionHttp', () => {
                 NetworkCurrencyMosaic.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Sha3_256,
-                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
@@ -1029,7 +1028,7 @@ describe('TransactionHttp', () => {
                 NetworkCurrencyMosaic.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Sha3_256,
-                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
@@ -1063,7 +1062,7 @@ describe('TransactionHttp', () => {
                 NetworkCurrencyMosaic.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Keccak_256,
-                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
@@ -1093,7 +1092,7 @@ describe('TransactionHttp', () => {
                 NetworkCurrencyMosaic.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Keccak_256,
-                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
@@ -1122,7 +1121,7 @@ describe('TransactionHttp', () => {
             return listener.close();
         });
         it('standalone', (done) => {
-            const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
+            const secretSeed = String.fromCharCode.apply(null, Crypto.randomBytes(20));
             const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
@@ -1154,7 +1153,7 @@ describe('TransactionHttp', () => {
             return listener.close();
         });
         it('aggregate', (done) => {
-            const secretSeed = String.fromCharCode.apply(null, nacl_catapult.randomBytes(20));
+            const secretSeed = String.fromCharCode.apply(null, Crypto.randomBytes(20));
             const secret = CryptoJS.RIPEMD160(CryptoJS.SHA256(secretSeed).toString(CryptoJS.enc.Hex)).toString(CryptoJS.enc.Hex);
             const secretLockTransaction = SecretLockTransaction.create(
                 Deadline.create(),
@@ -1195,7 +1194,7 @@ describe('TransactionHttp', () => {
                 NetworkCurrencyMosaic.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_256,
-                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
@@ -1225,7 +1224,7 @@ describe('TransactionHttp', () => {
                 NetworkCurrencyMosaic.createAbsolute(10),
                 UInt64.fromUint(100),
                 HashType.Op_Hash_256,
-                sha3_256.create().update(nacl_catapult.randomBytes(20)).hex(),
+                sha3_256.create().update(Crypto.randomBytes(20)).hex(),
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
@@ -1254,7 +1253,7 @@ describe('TransactionHttp', () => {
             return listener.close();
         });
         it('standalone', (done) => {
-            const secretSeed = nacl_catapult.randomBytes(20);
+            const secretSeed = Crypto.randomBytes(20);
             const secret = sha3_256.create().update(secretSeed).hex();
             const proof = convert.uint8ToHex(secretSeed);
 
@@ -1305,7 +1304,7 @@ describe('TransactionHttp', () => {
             return listener.close();
         });
         it('aggregate', (done) => {
-            const secretSeed = nacl_catapult.randomBytes(20);
+            const secretSeed = Crypto.randomBytes(20);
             const secret = sha3_256.create().update(secretSeed).hex();
             const proof = convert.uint8ToHex(secretSeed);
             const secretLockTransaction = SecretLockTransaction.create(
@@ -1353,7 +1352,7 @@ describe('TransactionHttp', () => {
             return listener.close();
         });
         it('standalone', (done) => {
-            const secretSeed = nacl_catapult.randomBytes(20);
+            const secretSeed = Crypto.randomBytes(20);
             const secret = keccak_256.create().update(secretSeed).hex();
             const proof = convert.uint8ToHex(secretSeed);
             const secretLockTransaction = SecretLockTransaction.create(
@@ -1397,7 +1396,7 @@ describe('TransactionHttp', () => {
             return listener.close();
         });
         it('aggregate', (done) => {
-            const secretSeed = nacl_catapult.randomBytes(20);
+            const secretSeed = Crypto.randomBytes(20);
             const secret = keccak_256.create().update(secretSeed).hex();
             const proof = convert.uint8ToHex(secretSeed);
             const secretLockTransaction = SecretLockTransaction.create(
