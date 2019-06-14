@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { convert, NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary, subnamespaceNamespaceId, subnamespaceParentId, namespaceId, VerifiableTransaction } from 'nem2-library';
+import { NamespaceCreationTransaction as RegisterNamespaceTransactionLibrary, subnamespaceNamespaceId, subnamespaceParentId, namespaceId, VerifiableTransaction } from 'nem2-library';
+import { Convert as convert} from '../../core/format';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { NamespaceId } from '../namespace/NamespaceId';

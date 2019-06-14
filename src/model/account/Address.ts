@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {address as AddressLibrary, convert} from 'nem2-library';
+import { Convert as convert, RawAddress as AddressLibrary} from '../../core/format';
 import {NetworkType} from '../blockchain/NetworkType';
 
 /**

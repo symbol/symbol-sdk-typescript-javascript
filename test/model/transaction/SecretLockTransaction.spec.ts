@@ -17,7 +17,7 @@ import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import * as CryptoJS from 'crypto-js';
 import {keccak_256, sha3_256} from 'js-sha3';
-import {convert} from 'nem2-library';
+import {Convert as convert} from '../../../src/core/format';
 import {Address} from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {NetworkCurrencyMosaic} from '../../../src/model/mosaic/NetworkCurrencyMosaic';
