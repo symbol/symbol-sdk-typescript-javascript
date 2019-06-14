@@ -19,6 +19,13 @@ import { IdGenerator } from '../../core/format';
 
 export class NamespaceMosaicIdGenerator {
     /**
+     * @returns mosaic Id
+     */
+    public static mosaicId = (nonce, ownerPublicId) => {
+        return IdGenerator.generateMosaicId(nonce, ownerPublicId);
+    }
+
+    /**
      * @returns random mosaic nonce
      */
     public static generateRandomMosaicNonce = () => {
