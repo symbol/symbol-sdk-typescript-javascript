@@ -52,7 +52,6 @@ import {TransactionInfo} from '../../model/transaction/TransactionInfo';
 import {TransactionType} from '../../model/transaction/TransactionType';
 import {TransferTransaction} from '../../model/transaction/TransferTransaction';
 import {UInt64} from '../../model/UInt64';
-import { RawUInt64 } from '../../core/format/RawUInt64';
 
 /**
  * @internal
