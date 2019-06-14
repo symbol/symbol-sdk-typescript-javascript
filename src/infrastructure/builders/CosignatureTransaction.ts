@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Convert as convert } from '../../core/format/Convert';
+import { VerifiableTransaction } from './VerifiableTransaction';
 
-export * from './AccountHttp';
-export * from './BlockHttp';
-export * from './ChainHttp';
-export * from './DiagnosticHttp';
-export * from './Http';
-export * from './MosaicHttp';
-export * from './NamespaceHttp';
-export * from './TransactionHttp';
-export * from './Listener';
-export * from './QueryParams';
-export * from './NetworkHttp';
-export * from './transaction/NamespaceMosaicIdGenerator';
+/**
+ * @module transactions/AggregateSignatureTransaction
+ * @version 1.0.0
+ */
+export class CosignatureTransaction extends VerifiableTransaction {
+    constructor(hash) {
+        super(convert.hexToUint8(hash), undefined);
+    }
+}

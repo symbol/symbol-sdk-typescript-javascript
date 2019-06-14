@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-    mosaicId as MosaicIdentifierGenerator,
-} from 'nem2-library';
 import { Convert as convert, RawUInt64 as uint64_t } from '../../core/format';
+import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import {PublicAccount} from '../account/PublicAccount';
 import {Id} from '../Id';
 import {MosaicNonce} from '../mosaic/MosaicNonce';
@@ -41,7 +39,7 @@ export class MosaicId {
      * @return  {MosaicId}
      */
     public static createFromNonce(nonce: MosaicNonce, owner: PublicAccount): MosaicId {
-        const mosaicId = MosaicIdentifierGenerator(nonce.nonce, convert.hexToUint8(owner.publicKey));
+        const mosaicId = NamespaceMosaicIdGenerator.mosaicId(nonce.nonce, convert.hexToUint8(owner.publicKey));
         return new MosaicId(mosaicId);
     }
 

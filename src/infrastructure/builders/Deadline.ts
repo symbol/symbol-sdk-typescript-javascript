@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { RawUInt64 as uint64 } from '../../core/format';
 
-export * from './AccountHttp';
-export * from './BlockHttp';
-export * from './ChainHttp';
-export * from './DiagnosticHttp';
-export * from './Http';
-export * from './MosaicHttp';
-export * from './NamespaceHttp';
-export * from './TransactionHttp';
-export * from './Listener';
-export * from './QueryParams';
-export * from './NetworkHttp';
-export * from './transaction/NamespaceMosaicIdGenerator';
+export default function deadline(deadlineParam) {
+    const NetworkTime = (new Date()).getTime() - 1459468800000;
+    const deadlineValue = deadlineParam || 60 * 60 * 1000;
+    return uint64.fromUint(deadlineValue + NetworkTime);
+}
