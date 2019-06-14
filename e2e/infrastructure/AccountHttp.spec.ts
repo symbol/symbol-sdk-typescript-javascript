@@ -444,37 +444,6 @@ describe('AccountHttp', () => {
         });
     });
 
-    describe('Remove test AddressAlias', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-
-        it('Announce addressAliasTransaction', (done) => {
-            const addressAliasTransaction = AddressAliasTransaction.create(
-                Deadline.create(),
-                AliasActionType.Unlink,
-                namespaceId,
-                account.address,
-                NetworkType.MIJIN_TEST,
-            );
-            const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
-
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
-        });
-    });
     describe('Restore test multisig Accounts', () => {
         let listener: Listener;
         before (() => {
