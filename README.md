@@ -78,6 +78,96 @@ Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a fu
 - [0.10.1-beta](CHANGELOG.md#v0101-beta) - **Alpaca compatible** 07.2018
 - [0.9.5](CHANGELOG.md#095-27-Jun-2018) - **Alpaca compatible** 07.2018
 
+## Notes on generation of catapult-rest DTO and API client
+
+Following command can be used to generate DTOs and Api clients for the [nem2-sdk-typescript-javascript](https://github.com/nemtech/nem2-sdk-typescript-javascript) :
+
+1.
+    ```bash
+    $ git clone git@github.com:nemtech/nem2-docs
+    $ cd nem2-docs && mkdir sdks && cd sdks
+    $ cp ../source/resources/collections/swagger.yaml .
+    ```
+ 2. Copy the `templates` folder from {nem2-sdk-typescript-javascript}/infrustructure/ into `sdk` folder
+
+3.
+    ```bash
+    $ brew install openapi-generator
+    $ openapi-generator generate -i ./swagger2.yaml -g typescript-node -t templates/ -o ./nem2-ts-sdk/ && rm -R nem2-ts-sdk/test
+    ```
+4. As the generator doesn't recognize `enum` type alias, we need to manually move enum classes in to the `enumsMap` list.
+    - Open generated file `./nem2-ts-sdk/model/models.ts` in editor
+    - Search for line contains `let enumsMap: {[index: string]: any}`.
+    - Move all `xxxTypeEnum` entries from below `typeMap` into `enumsMap`.
+
+    example below:
+    ```js
+    let enumsMap: {[index: string]: any} = {
+        "AccountPropertyTypeEnum": AccountPropertyTypeEnum,
+        "AliasTypeEnum": AliasTypeEnum,
+        "ResolutionStatementDTO": ResolutionStatementDTO,
+        "MosaicPropertyIdEnum": MosaicPropertyIdEnum,
+        "MultisigModificationTypeEnum": MultisigModificationTypeEnum,
+        "NamespaceTypeEnum": NamespaceTypeEnum,
+        "ReceiptTypeEnum": ReceiptTypeEnum,
+        "RolesTypeEnum": RolesTypeEnum,
+    }
+
+    let typeMap: {[index: string]: any} = {
+        "AccountDTO": AccountDTO,
+        "AccountIds": AccountIds,
+        "AccountInfoDTO": AccountInfoDTO,
+        "AccountMetaDTO": AccountMetaDTO,
+        "AccountNamesDTO": AccountNamesDTO,
+        "AccountPropertiesDTO": AccountPropertiesDTO,
+        "AccountPropertiesInfoDTO": AccountPropertiesInfoDTO,
+        "AccountPropertyDTO": AccountPropertyDTO,
+        "AliasDTO": AliasDTO,
+        "AnnounceTransactionInfoDTO": AnnounceTransactionInfoDTO,
+        "BlockDTO": BlockDTO,
+        "BlockInfoDTO": BlockInfoDTO,
+        "BlockMetaDTO": BlockMetaDTO,
+        "BlockchainScoreDTO": BlockchainScoreDTO,
+        "CommunicationTimestamps": CommunicationTimestamps,
+        "Cosignature": Cosignature,
+        "HeightInfoDTO": HeightInfoDTO,
+        "MerklePathItem": MerklePathItem,
+        "MerkleProofInfo": MerkleProofInfo,
+        "MerkleProofInfoDTO": MerkleProofInfoDTO,
+        "MosaicDTO": MosaicDTO,
+        "MosaicDefinitionDTO": MosaicDefinitionDTO,
+        "MosaicIds": MosaicIds,
+        "MosaicInfoDTO": MosaicInfoDTO,
+        "MosaicMetaDTO": MosaicMetaDTO,
+        "MosaicNamesDTO": MosaicNamesDTO,
+        "MosaicPropertyDTO": MosaicPropertyDTO,
+        "MultisigAccountGraphInfoDTO": MultisigAccountGraphInfoDTO,
+        "MultisigAccountInfoDTO": MultisigAccountInfoDTO,
+        "MultisigDTO": MultisigDTO,
+        "NamespaceDTO": NamespaceDTO,
+        "NamespaceIds": NamespaceIds,
+        "NamespaceInfoDTO": NamespaceInfoDTO,
+        "NamespaceMetaDTO": NamespaceMetaDTO,
+        "NamespaceNameDTO": NamespaceNameDTO,
+        "NetworkTypeDTO": NetworkTypeDTO,
+        "NodeInfoDTO": NodeInfoDTO,
+        "NodeTimeDTO": NodeTimeDTO,
+        "ResolutionEntryDTO": ResolutionEntryDTO,
+        "ServerDTO": ServerDTO,
+        "ServerInfoDTO": ServerInfoDTO,
+        "SourceDTO": SourceDTO,
+        "StatementsDTO": StatementsDTO,
+        "StorageInfoDTO": StorageInfoDTO,
+        "TransactionHashes": TransactionHashes,
+        "TransactionIds": TransactionIds,
+        "TransactionInfoDTO": TransactionInfoDTO,
+        "TransactionMetaDTO": TransactionMetaDTO,
+        "TransactionPayload": TransactionPayload,
+        "TransactionStatementDTO": TransactionStatementDTO,
+        "TransactionStatusDTO": TransactionStatusDTO,
+    }
+    ```
+
 ## License 
 
 Copyright (c) 2018-2019 NEM
