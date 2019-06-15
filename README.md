@@ -95,6 +95,7 @@ Following command can be used to generate DTOs and Api clients for the [nem2-sdk
     $ brew install openapi-generator
     $ openapi-generator generate -i ./swagger2.yaml -g typescript-node -t templates/ -o ./nem2-ts-sdk/ && rm -R nem2-ts-sdk/test
     ```
+    ** Note openapi-generator is also available on docker. (`https://hub.docker.com/r/openapitools/openapi-generator`)
 4. As the generator doesn't recognize `enum` type alias, we need to manually move enum classes in to the `enumsMap` list.
     - Open generated file `./nem2-ts-sdk/model/models.ts` in editor
     - Search for line contains `let enumsMap: {[index: string]: any}`.
