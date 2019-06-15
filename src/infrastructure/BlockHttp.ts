@@ -36,6 +36,13 @@ import {QueryParams} from './QueryParams';
 import { CreateStatementFromDTO } from './receipt/CreateReceiptFromDTO';
 import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
 
+/**
+ * Blocks returned limits:
+ * N_25: 25 blocks.
+ * N_50: 50 blocks.
+ * N_75: 75 blocks.
+ * N_100: 100 blocks.
+ */
 export enum LimitType {
     N_25 = 25,
     N_50 = 50,
@@ -120,7 +127,7 @@ export class BlockHttp extends Http implements BlockRepository {
     /**
      * Gets array of BlockInfo for a block height with limit
      * @param height - Block height from which will be the first block in the array
-     * @param limit - Number of blocks returned
+     * @param limit - Number of blocks returned. Limit value only available in 25, 50. 75 and 100. (default 25)
      * @returns Observable<BlockInfo[]>
      */
     public getBlocksByHeightWithLimit(height: number, limit: LimitType = LimitType.N_25): Observable<BlockInfo[]> {
