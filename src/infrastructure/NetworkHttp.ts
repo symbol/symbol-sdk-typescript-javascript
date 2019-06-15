@@ -17,7 +17,7 @@
 import {from as observableFrom, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NetworkType} from '../model/blockchain/NetworkType';
-import * as api from './ApiClient';
+import { NetworkRoutesApi, NetworkTypeDTO } from './api';
 import {Http} from './Http';
 import {NetworkRepository} from './NetworkRepository';
 
@@ -31,7 +31,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @internal
      * Nem2 Library account routes api
      */
-    private networkRoutesApi: api.NetworkRoutesApi;
+    private networkRoutesApi: NetworkRoutesApi;
 
     /**
      * Constructor
@@ -39,7 +39,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      */
     constructor(url: string) {
         super();
-        this.networkRoutesApi = new api.NetworkRoutesApi(url);
+        this.networkRoutesApi = new NetworkRoutesApi(url);
 
     }
 
@@ -49,7 +49,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @return network type enum.
      */
     public getNetworkType(): Observable<NetworkType> {
-        return observableFrom(this.networkRoutesApi.getNetworkType()).pipe(map((networkTypeDTO: api.NetworkTypeDTO) => {
+        return observableFrom(this.networkRoutesApi.getNetworkType()).pipe(map((networkTypeDTO: NetworkTypeDTO) => {
             if (networkTypeDTO.name === 'mijinTest') {
                 return NetworkType.MIJIN_TEST;
             } else {

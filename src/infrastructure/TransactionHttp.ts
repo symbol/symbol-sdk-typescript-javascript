@@ -28,7 +28,11 @@ import {TransactionInfo} from '../model/transaction/TransactionInfo';
 import {TransactionStatus} from '../model/transaction/TransactionStatus';
 import {TransactionType} from '../model/transaction/TransactionType';
 import {UInt64} from '../model/UInt64';
-import * as api from './ApiClient';
+import { AnnounceTransactionInfoDTO,
+         BlockInfoDTO, BlockRoutesApi,
+         TransactionInfoDTO,
+         TransactionRoutesApi,
+         TransactionStatusDTO } from './api';
 import {Http} from './Http';
 import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
 import {TransactionRepository} from './TransactionRepository';
@@ -43,13 +47,13 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @internal
      * Nem2 Library transaction routes api
      */
-    private transactionRoutesApi: api.TransactionRoutesApi;
+    private transactionRoutesApi: TransactionRoutesApi;
 
     /**
      * @internal
      * Nem2 Library blockchain routes api
      */
-    private blockRoutesApi: api.BlockRoutesApi;
+    private blockRoutesApi: BlockRoutesApi;
 
     /**
      * Constructor
@@ -57,8 +61,8 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     constructor(private readonly url: string) {
         super();
-        this.transactionRoutesApi = new api.TransactionRoutesApi(url);
-        this.blockRoutesApi = new api.BlockRoutesApi(url);
+        this.transactionRoutesApi = new TransactionRoutesApi(url);
+        this.blockRoutesApi = new BlockRoutesApi(url);
     }
 
     /**
@@ -82,7 +86,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
             transactionIds,
         };
         return observableFrom(
-            this.transactionRoutesApi.getTransactions(transactionIdsBody)).pipe(map((transactionsDTO: api.TransactionInfoDTO[]) => {
+            this.transactionRoutesApi.getTransactions(transactionIdsBody)).pipe(map((transactionsDTO: TransactionInfoDTO[]) => {
             return transactionsDTO.map((transactionDTO) => {
                 return CreateTransactionFromDTO(transactionDTO);
             });
@@ -96,7 +100,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public getTransactionStatus(transactionHash: string): Observable<TransactionStatus> {
         return observableFrom(this.transactionRoutesApi.getTransactionStatus(transactionHash)).pipe(
-            map((transactionStatusDTO: api.TransactionStatusDTO) => {
+            map((transactionStatusDTO: TransactionStatusDTO) => {
                 return new TransactionStatus(
                     transactionStatusDTO.status,
                     transactionStatusDTO.group,
@@ -117,7 +121,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
         };
         return observableFrom(
             this.transactionRoutesApi.getTransactionsStatuses(transactionHashesBody)).pipe(
-            map((transactionStatusesDTO: api.TransactionStatusDTO[]) => {
+            map((transactionStatusesDTO: TransactionStatusDTO[]) => {
                 return transactionStatusesDTO.map((transactionStatusDTO) => {
                     return new TransactionStatus(
                         transactionStatusDTO.status,
@@ -136,7 +140,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public announce(signedTransaction: SignedTransaction): Observable<TransactionAnnounceResponse> {
         return observableFrom(this.transactionRoutesApi.announceTransaction(signedTransaction)).pipe(
-            map((transactionAnnounceResponseDTO: api.AnnounceTransactionInfoDTO) => {
+            map((transactionAnnounceResponseDTO: AnnounceTransactionInfoDTO) => {
                 return new TransactionAnnounceResponse(transactionAnnounceResponseDTO.message);
             }));
     }
@@ -153,7 +157,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
             }));
         }
         return observableFrom(this.transactionRoutesApi.announcePartialTransaction(signedTransaction)).pipe(
-            map((transactionAnnounceResponseDTO: api.AnnounceTransactionInfoDTO) => {
+            map((transactionAnnounceResponseDTO: AnnounceTransactionInfoDTO) => {
                 return new TransactionAnnounceResponse(transactionAnnounceResponseDTO.message);
             }));
     }
@@ -166,7 +170,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
     public announceAggregateBondedCosignature(
         cosignatureSignedTransaction: CosignatureSignedTransaction): Observable<TransactionAnnounceResponse> {
         return observableFrom(this.transactionRoutesApi.announceCosignatureTransaction(cosignatureSignedTransaction)).pipe(
-            map((transactionAnnounceResponseDTO: api.AnnounceTransactionInfoDTO) => {
+            map((transactionAnnounceResponseDTO: AnnounceTransactionInfoDTO) => {
                 return new TransactionAnnounceResponse(transactionAnnounceResponseDTO.message);
             }));
     }
@@ -214,7 +218,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
 
                 // now read block details
                 return observableFrom(this.blockRoutesApi.getBlockByHeight(uintHeight.compact())).pipe(
-                map((blockDTO: api.BlockInfoDTO) => {
+                map((blockDTO: BlockInfoDTO) => {
 
                     // @see https://nemtech.github.io/concepts/transaction.html#fees
                     // effective_fee = feeMultiplier x transaction::size

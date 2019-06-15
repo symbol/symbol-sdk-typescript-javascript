@@ -25,7 +25,7 @@ import { MosaicPropertyType } from '../model/mosaic/MosaicPropertyType';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import {UInt64} from '../model/UInt64';
-import * as api from './ApiClient';
+import { MosaicInfoDTO, MosaicNamesDTO, MosaicRoutesApi } from './api';
 import {Http} from './Http';
 import {MosaicRepository} from './MosaicRepository';
 import {NetworkHttp} from './NetworkHttp';
@@ -40,7 +40,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
      * @internal
      * Nem2 Library mosaic routes api
      */
-    private mosaicRoutesApi: api.MosaicRoutesApi;
+    private mosaicRoutesApi: MosaicRoutesApi;
 
     /**
      * Constructor
@@ -50,7 +50,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
     constructor(url: string, networkHttp?: NetworkHttp) {
         networkHttp = networkHttp == null ? new NetworkHttp(url) : networkHttp;
         super(networkHttp);
-        this.mosaicRoutesApi = new api.MosaicRoutesApi(url);
+        this.mosaicRoutesApi = new MosaicRoutesApi(url);
     }
 
     /**
@@ -61,7 +61,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
     public getMosaic(mosaicId: MosaicId): Observable<MosaicInfo> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
-                this.mosaicRoutesApi.getMosaic(mosaicId.toHex())).pipe(map((mosaicInfoDTO: api.MosaicInfoDTO) => {
+                this.mosaicRoutesApi.getMosaic(mosaicId.toHex())).pipe(map((mosaicInfoDTO: MosaicInfoDTO) => {
                     let mosaicFlag;
                     let divisibility;
                     let duration;
@@ -101,7 +101,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
         };
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
-                this.mosaicRoutesApi.getMosaics(mosaicIdsBody)).pipe(map((mosaicInfosDTO: api.MosaicInfoDTO[]) => {
+                this.mosaicRoutesApi.getMosaics(mosaicIdsBody)).pipe(map((mosaicInfosDTO: MosaicInfoDTO[]) => {
                 return mosaicInfosDTO.map((mosaicInfoDTO) => {
                     let mosaicFlag;
                     let divisibility;
@@ -143,7 +143,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
             mosaicIds: mosaicIds.map((id) => id.toHex()),
         };
         return observableFrom(
-            this.mosaicRoutesApi.getMosaicsNames(mosaicIdsBody)).pipe(map((mosaics: api.MosaicNamesDTO[]) => {
+            this.mosaicRoutesApi.getMosaicsNames(mosaicIdsBody)).pipe(map((mosaics: MosaicNamesDTO[]) => {
             return mosaics.map((mosaic) => {
                 return new MosaicNames(
                     new MosaicId(mosaic.mosaicId),

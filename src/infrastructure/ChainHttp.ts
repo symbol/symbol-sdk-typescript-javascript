@@ -18,7 +18,9 @@ import {from as observableFrom, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {UInt64} from '../model/UInt64';
-import * as api from './ApiClient';
+import { BlockchainScoreDTO,
+         ChainRoutesApi,
+         HeightInfoDTO } from './api';
 import { ChainRepository } from './ChainRepository';
 import {Http} from './Http';
 
@@ -32,7 +34,7 @@ export class ChainHttp extends Http implements ChainRepository {
      * @internal
      * Nem2 Library chain routes api
      */
-    private chainRoutesApi: api.ChainRoutesApi;
+    private chainRoutesApi: ChainRoutesApi;
 
     /**
      * Constructor
@@ -40,7 +42,7 @@ export class ChainHttp extends Http implements ChainRepository {
      */
     constructor(url: string) {
         super();
-        this.chainRoutesApi = new api.ChainRoutesApi(url);
+        this.chainRoutesApi = new ChainRoutesApi(url);
     }
 
     /**
@@ -48,7 +50,7 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<UInt64>
      */
     public getBlockchainHeight(): Observable<UInt64> {
-        return observableFrom(this.chainRoutesApi.getBlockchainHeight()).pipe(map((heightDTO: api.HeightInfoDTO) => {
+        return observableFrom(this.chainRoutesApi.getBlockchainHeight()).pipe(map((heightDTO: HeightInfoDTO) => {
             return new UInt64(heightDTO.height);
         }));
     }
@@ -58,7 +60,7 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<BlockchainScore>
      */
     public getBlockchainScore(): Observable<BlockchainScore> {
-        return observableFrom(this.chainRoutesApi.getBlockchainScore()).pipe(map((blockchainScoreDTO: api.BlockchainScoreDTO) => {
+        return observableFrom(this.chainRoutesApi.getBlockchainScore()).pipe(map((blockchainScoreDTO: BlockchainScoreDTO) => {
             return new BlockchainScore(
                 new UInt64(blockchainScoreDTO.scoreLow),
                 new UInt64(blockchainScoreDTO.scoreHigh),

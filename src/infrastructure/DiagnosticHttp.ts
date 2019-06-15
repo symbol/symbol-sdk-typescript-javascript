@@ -18,7 +18,7 @@ import {from as observableFrom, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
 import { ServerInfo } from '../model/diagnostic/ServerInfo';
-import * as api from './ApiClient';
+import { DiagnosticRoutesApi, ServerDTO, StorageInfoDTO } from './api';
 import {DiagnosticRepository} from './DiagnosticRepository';
 import {Http} from './Http';
 
@@ -32,7 +32,7 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
      * @internal
      * Nem2 Library diagnostic routes api
      */
-    private diagnosticRoutesApi: api.DiagnosticRoutesApi;
+    private diagnosticRoutesApi: DiagnosticRoutesApi;
 
     /**
      * Constructor
@@ -40,7 +40,7 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
      */
     constructor(url: string) {
         super();
-        this.diagnosticRoutesApi = new api.DiagnosticRoutesApi(url);
+        this.diagnosticRoutesApi = new DiagnosticRoutesApi(url);
     }
 
     /**
@@ -49,7 +49,7 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
      */
     public getDiagnosticStorage(): Observable<BlockchainStorageInfo> {
         return observableFrom(
-            this.diagnosticRoutesApi.getDiagnosticStorage()).pipe(map((blockchainStorageInfoDTO: api.StorageInfoDTO) => {
+            this.diagnosticRoutesApi.getDiagnosticStorage()).pipe(map((blockchainStorageInfoDTO: StorageInfoDTO) => {
             return new BlockchainStorageInfo(
                 blockchainStorageInfoDTO.numBlocks,
                 blockchainStorageInfoDTO.numTransactions,
@@ -64,7 +64,7 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
      */
     public getServerInfo(): Observable<ServerInfo> {
         return observableFrom(
-            this.diagnosticRoutesApi.getServerInfo()).pipe(map((serverDTO: api.ServerDTO) => {
+            this.diagnosticRoutesApi.getServerInfo()).pipe(map((serverDTO: ServerDTO) => {
             return new ServerInfo(serverDTO.serverInfo.restVersion,
                 serverDTO.serverInfo.sdkVersion);
         }));
