@@ -82,21 +82,25 @@ Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a fu
 
 Following command can be used to generate DTOs and Api clients for the [nem2-sdk-typescript-javascript](https://github.com/nemtech/nem2-sdk-typescript-javascript) :
 
-1.
+1. Download latest NEM2 swagger definition
     ```bash
     $ git clone git@github.com:nemtech/nem2-docs
     $ cd nem2-docs && mkdir sdks && cd sdks
     $ cp ../source/resources/collections/swagger.yaml .
     ```
- 2. Copy the `templates` folder from {nem2-sdk-typescript-javascript}/infrustructure/ into `sdk` folder
+ 2. Copy OpenAPI generator template
+ 
+    Copy the `templates` folder from {nem2-sdk-typescript-javascript}/infrastructure/ into `sdk` folder
 
-3.
+3. Download OpenAPI generator and generate codes
     ```bash
     $ brew install openapi-generator
     $ openapi-generator generate -i ./swagger2.yaml -g typescript-node -t templates/ -o ./nem2-ts-sdk/ && rm -R nem2-ts-sdk/test
     ```
     ** Note openapi-generator is also available on docker. (`https://hub.docker.com/r/openapitools/openapi-generator`)
-4. As the generator doesn't recognize `enum` type alias, we need to manually move enum classes in to the `enumsMap` list.
+4. Fix enum type definitions
+    
+    As the generator doesn't recognize `enum` type alias, we need to manually move enum classes in to the `enumsMap` list.
     - Open generated file `./nem2-ts-sdk/model/models.ts` in editor
     - Search for line contains `let enumsMap: {[index: string]: any}`.
     - Move all `xxxTypeEnum` entries from below `typeMap` into `enumsMap`.
