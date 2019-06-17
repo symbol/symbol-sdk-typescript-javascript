@@ -13,9 +13,9 @@ with the NEM2 (a.k.a Catapult)
 
 ### _Dragon_ Network Compatibility (catapult-server@0.4.0.1)
 
-Due to a network upgrade with [catapult-server@dragon](https://github.com/nemtech/catapult-server/releases/tag/v0.4.0.1) version, **it is recommended to use this package's 0.12.1 version and upwards in order to use this package with Dragon versioned networks**.
+Due to a network upgrade with [catapult-server@dragon](https://github.com/nemtech/catapult-server/releases/tag/v0.4.0.1) version, **it is recommended to use this package's 0.12.2 version and upwards in order to use this package with Dragon versioned networks**.
 
-The upgrade to this package's [version v0.12.1](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.12.1) is mandatory for **dragon compatibility**.
+The upgrade to this package's [version v0.12.2](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.12.2) is mandatory for **dragon compatibility**.
 
 ### _Cow_ Network Compatibility (catapult-server@0.3.0.2)
 
@@ -68,7 +68,7 @@ Please, use the following available resources to get help:
 
 Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
 
-- [0.12.1](CHANGELOG.md#0121-05-Jun-2019) - **Dragon compatible** - 05.06.2019
+- [0.12.2](CHANGELOG.md#0121-05-Jun-2019) - **Dragon compatible** - 17.06.2019
 - [0.11.6](CHANGELOG.md#0116-03-Jun-2019) - **Cow compatible** - 03.06.2019
 - [0.11.5](CHANGELOG.md#0115-18-Apr-2019) - **Cow compatible** - 18.04.2019
 - [0.11.4](CHANGELOG.md#0114-17-Apr-2019) - **Cow compatible** - 17.04.2019

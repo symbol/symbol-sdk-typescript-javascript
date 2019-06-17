@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.12.2] - 17-Jun-2019
+
+- Removed nem2-library dependency
+- Added `infrastructure/model/` with DTOs
+- Added `infrastructure/api` with APIs
+- Added `infrastructure/buffers` and `infrastructure/schemas`
+
 ## [0.12.1] - 05-Jun-2019
 
 - Fixed alias and modification type field names in Http
