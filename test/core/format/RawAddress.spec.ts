@@ -18,6 +18,7 @@ import {
     Convert as convert,
     RawAddress as address,
 } from '../../../src/core/format';
+import { HashType } from '../../../src/model/transaction/HashType';
 
 const Address_Decoded_Size = 25;
 const Network_Mijin_Identifier = 0x60;
@@ -145,6 +146,21 @@ describe('address', () => {
             expect(address.isValidAddress(decoded2)).to.equal(true);
             expect(decoded1).to.not.deep.equal(decoded2);
         });
+    });
+
+    it('can create address from public key - Keccak', () => {
+        const nonKeccakHex = '9823BB7C3C089D996585466380EDBDC19D495918484BF7E997';
+        const keccakHex = '981A00208CDDCC647BF1E065E93824FAA732AAB187CC1A9B02';
+        const publicKey = convert.hexToUint8('3485D98EFD7EB07ADAFCFD1A157D89DE2796A95E780813C0258AF3F5F84ED8CB');
+
+        // Act:
+        const decoded = address.publicKeyToAddress(publicKey, Network_Public_Test_Identifier, 1);
+
+        // Assert:
+        expect(decoded[0]).to.equal(Network_Public_Test_Identifier);
+        expect(address.isValidAddress(decoded, HashType.Op_Keccak_256)).to.equal(true);
+        expect(convert.uint8ToHex(decoded)).to.equal(keccakHex);
+        expect(convert.uint8ToHex(decoded)).not.to.equal(nonKeccakHex);
     });
 
     describe('isValidAddress', () => {

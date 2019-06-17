@@ -58,12 +58,15 @@ export class Account {
      * Create an Account from a given private key
      * @param privateKey - Private key from an account
      * @param networkType - Network type
-     * @param hashType - The hash type
+     * @param hashType - 0: SHA3_256 (NIS2), 1: KECCAK_256 (NIS1)
      * @return {Account}
      */
     public static createFromPrivateKey(privateKey: string,
                                        networkType: NetworkType,
                                        hashType: HashType = HashType.Op_Sha3_256): Account {
+        if (hashType !== HashType.Op_Sha3_256 && hashType !== HashType.Op_Keccak_256) {
+            throw new Error('Only SHA3_256 / KECCAK_256 hash type supported.');
+        }
         const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
         const address = AddressLibrary.addressToString(
             AddressLibrary.publicKeyToAddress(keyPair.publicKey, networkType, hashType));
