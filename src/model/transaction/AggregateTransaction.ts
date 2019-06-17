@@ -333,13 +333,16 @@ export class AggregateTransaction extends Transaction {
      * For off chain Aggregated Complete Transaction co-signing.
      * @param initiatorAccount - Initiator account
      * @param {CosignatureSignedTransaction[]} cosignatureSignedTransactions - Array of cosigned transaction
+     * @param generationHash - Network generation hash hex
      * @return {SignedTransaction}
      */
     public signTransactionGivenSignatures(initiatorAccount: Account,
-                                          cosignatureSignedTransactions: CosignatureSignedTransaction[]) {
+                                          cosignatureSignedTransactions: CosignatureSignedTransaction[],
+                                          generationHash: string) {
         const aggregateTransaction = this.buildTransaction();
         const signedTransactionRaw = aggregateTransaction.signTransactionGivenSignatures(initiatorAccount,
-                                                                                         cosignatureSignedTransactions);
+                                                                                         cosignatureSignedTransactions,
+                                                                                         generationHash);
         return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
                                      this.type, this.networkType);
     }
