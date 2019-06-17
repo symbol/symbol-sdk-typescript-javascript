@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import {DiagnosticRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
 import { ServerInfo } from '../model/diagnostic/ServerInfo';
+import { DiagnosticRoutesApi, ServerDTO, StorageInfoDTO } from './api';
 import {DiagnosticRepository} from './DiagnosticRepository';
 import {Http} from './Http';
 
@@ -39,8 +39,8 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
      * @param url
      */
     constructor(url: string) {
-        super(url);
-        this.diagnosticRoutesApi = new DiagnosticRoutesApi(this.apiClient);
+        super();
+        this.diagnosticRoutesApi = new DiagnosticRoutesApi(url);
     }
 
     /**
@@ -49,7 +49,7 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
      */
     public getDiagnosticStorage(): Observable<BlockchainStorageInfo> {
         return observableFrom(
-            this.diagnosticRoutesApi.getDiagnosticStorage()).pipe(map((blockchainStorageInfoDTO) => {
+            this.diagnosticRoutesApi.getDiagnosticStorage()).pipe(map((blockchainStorageInfoDTO: StorageInfoDTO) => {
             return new BlockchainStorageInfo(
                 blockchainStorageInfoDTO.numBlocks,
                 blockchainStorageInfoDTO.numTransactions,
@@ -64,7 +64,7 @@ export class DiagnosticHttp extends Http implements DiagnosticRepository {
      */
     public getServerInfo(): Observable<ServerInfo> {
         return observableFrom(
-            this.diagnosticRoutesApi.getServerInfo()).pipe(map((serverDTO) => {
+            this.diagnosticRoutesApi.getServerInfo()).pipe(map((serverDTO: ServerDTO) => {
             return new ServerInfo(serverDTO.serverInfo.restVersion,
                 serverDTO.serverInfo.sdkVersion);
         }));

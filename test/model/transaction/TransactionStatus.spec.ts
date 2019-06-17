@@ -31,8 +31,8 @@ describe('TransactionStatus', () => {
         };
 
         const transactionStatus = new TransactionStatus(
-            transactionStatusDTO.group,
             transactionStatusDTO.status,
+            transactionStatusDTO.group,
             transactionStatusDTO.hash,
             transactionStatusDTO.deadline,
             transactionStatusDTO.height,

@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-import {ApiClient} from 'nem2-library';
 import {Observable, of as observableOf} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NetworkType} from '../model/blockchain/NetworkType';
 import {NetworkHttp} from './NetworkHttp';
-
+import { QueryParams } from './QueryParams';
 /**
  * Http extended by all http services
  */
 export abstract class Http {
-    /**
-     * @internal
-     */
-    protected readonly apiClient;
-
     private networkHttp: NetworkHttp;
     private networkType: NetworkType;
 
@@ -37,11 +31,7 @@ export abstract class Http {
      * @param url
      * @param networkHttp
      */
-    constructor(url: string, networkHttp?: NetworkHttp) {
-        this.apiClient = new ApiClient();
-        if (url) {
-            this.apiClient.basePath = url;
-        }
+    constructor(networkHttp?: NetworkHttp) {
         if (networkHttp) {
             this.networkHttp = networkHttp;
         }
@@ -58,5 +48,13 @@ export abstract class Http {
             networkTypeResolve = observableOf(this.networkType);
         }
         return networkTypeResolve;
+    }
+
+    queryParams(queryParams?: QueryParams): any {
+        return {
+            pageSize: queryParams ? queryParams.pageSize : undefined,
+            id: queryParams ? queryParams.id : undefined,
+            order: queryParams ? queryParams.order : undefined,
+        };
     }
 }

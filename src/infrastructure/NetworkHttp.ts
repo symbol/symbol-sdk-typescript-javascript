@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {NetworkRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NetworkType} from '../model/blockchain/NetworkType';
+import { NetworkRoutesApi, NetworkTypeDTO } from './api';
 import {Http} from './Http';
 import {NetworkRepository} from './NetworkRepository';
 
@@ -38,8 +38,8 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @param url
      */
     constructor(url: string) {
-        super(url);
-        this.networkRoutesApi = new NetworkRoutesApi(this.apiClient);
+        super();
+        this.networkRoutesApi = new NetworkRoutesApi(url);
 
     }
 
@@ -49,7 +49,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @return network type enum.
      */
     public getNetworkType(): Observable<NetworkType> {
-        return observableFrom(this.networkRoutesApi.getNetworkType()).pipe(map((networkTypeDTO) => {
+        return observableFrom(this.networkRoutesApi.getNetworkType()).pipe(map((networkTypeDTO: NetworkTypeDTO) => {
             if (networkTypeDTO.name === 'mijinTest') {
                 return NetworkType.MIJIN_TEST;
             } else {

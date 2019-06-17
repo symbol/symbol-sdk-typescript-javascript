@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import {ChainRoutesApi} from 'nem2-library';
 import {from as observableFrom, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {UInt64} from '../model/UInt64';
+import { BlockchainScoreDTO,
+         ChainRoutesApi,
+         HeightInfoDTO } from './api';
 import { ChainRepository } from './ChainRepository';
 import {Http} from './Http';
 
@@ -39,8 +41,8 @@ export class ChainHttp extends Http implements ChainRepository {
      * @param url
      */
     constructor(url: string) {
-        super(url);
-        this.chainRoutesApi = new ChainRoutesApi(this.apiClient);
+        super();
+        this.chainRoutesApi = new ChainRoutesApi(url);
     }
 
     /**
@@ -48,7 +50,7 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<UInt64>
      */
     public getBlockchainHeight(): Observable<UInt64> {
-        return observableFrom(this.chainRoutesApi.getBlockchainHeight()).pipe(map((heightDTO) => {
+        return observableFrom(this.chainRoutesApi.getBlockchainHeight()).pipe(map((heightDTO: HeightInfoDTO) => {
             return new UInt64(heightDTO.height);
         }));
     }
@@ -58,7 +60,7 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<BlockchainScore>
      */
     public getBlockchainScore(): Observable<BlockchainScore> {
-        return observableFrom(this.chainRoutesApi.getBlockchainScore()).pipe(map((blockchainScoreDTO) => {
+        return observableFrom(this.chainRoutesApi.getBlockchainScore()).pipe(map((blockchainScoreDTO: BlockchainScoreDTO) => {
             return new BlockchainScore(
                 new UInt64(blockchainScoreDTO.scoreLow),
                 new UInt64(blockchainScoreDTO.scoreHigh),
