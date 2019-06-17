@@ -15,7 +15,6 @@
  */
 
 import {expect} from 'chai';
-import { VerifiableTransaction } from 'nem2-library';
 import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import {Account} from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
