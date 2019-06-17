@@ -69,6 +69,11 @@ export * from './namespace/NamespaceName';
 export * from './namespace/NamespaceType';
 export * from './namespace/AliasActionType';
 
+// Node
+export * from './node/NodeInfo';
+export * from './node/NodeTime';
+export * from './node/RoleType';
+
 // Receipt
 export * from './receipt/ArtifactExpiryReceipt';
 export * from './receipt/BalanceChangeReceipt';
