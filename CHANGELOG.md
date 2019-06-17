@@ -5,6 +5,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.12.2] - 17-Jun-2019
 
+**Milestone**: Dragon
+
 - Removed nem2-library dependency
 - Added `infrastructure/model/` with DTOs
 - Added `infrastructure/api` with APIs
@@ -12,9 +14,13 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.12.1] - 05-Jun-2019
 
+**Milestone**: Dragon
+
 - Fixed alias and modification type field names in Http
 
 ## [0.12.0] - 04-Jun-2019
+
+**Milestone**: Dragon
 
 - Added 'Receipt'
 - Added 'generationHash' to transaction.sign(...) to prevent transactions from being replayed on different networks by prepending the network generation hash to transaction data prior to signing and verifying.
@@ -29,14 +35,20 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.11.6] - 03-Jun-2019
 
+**Milestone**: Cow
+
 - Version lock for cow compatibility
 - Fixed #150, AccountHttp.transactions outputs aggregate transactions supplementary data
 
 ## [0.11.5] - 18-Apr-2019
 
+**Milestone**: Cow
+
 - Fixed #125, maxFee DTO value errors with in-aggregate MosaicSupplyChange and HashLock transactions  
 
 ## [0.11.4] - 17-Apr-2019
+
+**Milestone**: Cow
 
 - Fixed #117, Typo in AddressAliasTransaction and MosaicAliasTransaction comments
 - Fixed several typos in documentation
@@ -46,6 +58,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.11.3] - 10-Apr-2019
 
+**Milestone**: Cow
+
 - Added `Transaction.maxFee` optional property in `create()` methods. (fixes #53)
 - Added `service/AggregateTransactionService` with `isComplete()` validates cosigners (fixes #4)
 - Fixed issue in `createFromDTO` with JSON format (fixes #107)
@@ -54,6 +68,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Added `service/AggregateTransactionService` with `validateCosignatories` for completeness check (fixes #4)
 
 ## [0.11.2] - 1-Apr-2019
+
+**Milestone**: Cow
 
 - Added TransactionMapping (fixes #56 )
 - Added CreateTransactionFromPayload (fixes #56 )
@@ -67,6 +83,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Todo
 
 ## [0.11] - 14-Mar-2019
+
+**Milestone**: Cow
 
 - Fixed NetworkCurrencyMosaic, NetworkHarvestMosaic
 - Added exposed UInt64.fromHex and UInt64.toHex
@@ -84,23 +102,37 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.10.1-beta] - 27-Jun-2018
 
+**Milestone**: Cow
+
 - added replyGiven in Transaction model
 - several linter fixes
 
 ## [0.10.0-beta] - 27-Jun-2018
+
+**Milestone**: Cow
 
 - update rxjs to v6
 - use observableFrom
 
 ## [0.9.5] - 27-Jun-2018
 
+**Milestone**: Alpaca
+
 - data signatures
 - nodejs version 10 updates
 
 ## [0.9.0] - 30-Mar-2018
+
+**Milestone**: Alpaca
+
 - Initial code release.
 
-
+[0.12.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.1...v0.12.2
+[0.12.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.0...v0.12.1
+[0.12.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.6...v0.12.0
+[0.11.6]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.5...v0.11.6
+[0.11.5]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.4...v0.11.5
+[0.11.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.3...v0.11.4
 [0.11.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.0...v0.11.1
