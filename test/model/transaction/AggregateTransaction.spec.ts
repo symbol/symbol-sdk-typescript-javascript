@@ -16,7 +16,6 @@
 
 import {expect} from 'chai';
 import {ChronoUnit} from 'js-joda';
-import { VerifiableTransaction } from 'nem2-library';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import {Account} from '../../../src/model/account/Account';
@@ -423,10 +422,10 @@ describe('AggregateTransaction', () => {
         ).serialize();
 
         // 02.1 Bob cosigns the tx and sends it back to Alice
-        const signedTxBob = CosignatureTransaction.signTransactionPayload(accountBob, aggregateTransactionPayload);
+        const signedTxBob = CosignatureTransaction.signTransactionPayload(accountBob, aggregateTransactionPayload, generationHash);
 
         // 02.2 Carol cosigns the tx and sends it back to Alice
-        const signedTxCarol = CosignatureTransaction.signTransactionPayload(accountCarol, aggregateTransactionPayload);
+        const signedTxCarol = CosignatureTransaction.signTransactionPayload(accountCarol, aggregateTransactionPayload, generationHash);
 
         // 03. Alice collects the cosignatures, recreate, sign, and announces the transaction
 
@@ -438,7 +437,7 @@ describe('AggregateTransaction', () => {
 
         const recreatedTx = TransactionMapping.createFromPayload(aggregateTransactionPayload) as AggregateTransaction;
 
-        const signedTransaction = recreatedTx.signTransactionGivenSignatures(accountAlice, cosignatureSignedTransactions);
+        const signedTransaction = recreatedTx.signTransactionGivenSignatures(accountAlice, cosignatureSignedTransactions, generationHash);
 
         expect(signedTransaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(signedTransaction.signer).to.be.equal(accountAlice.publicKey);
