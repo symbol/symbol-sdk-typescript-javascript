@@ -15,7 +15,6 @@
  */
 
 import {expect} from 'chai';
-import {convert} from 'nem2-library';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import { HashType } from '../../../src/model/transaction/HashType';
@@ -41,7 +40,6 @@ describe('Account', () => {
         expect(account.address.plain()).not.to.be.equal(accountInformation.address);
         expect(account.address.plain()).to.be.equal('SB3AIJASMUZQK2X5LXISBMCCC6SC5PAURPSFZPCG');
     });
-
 
     it('should throw exception when the private key is not valid', () => {
         expect(() => {
