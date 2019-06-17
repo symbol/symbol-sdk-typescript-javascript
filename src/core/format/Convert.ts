@@ -168,7 +168,12 @@ export class Convert {
         const rawString = Convert.rstr2utf8(input);
         let result = '';
         for (let i = 0; i < rawString.length; i++) {
-            result += rawString.charCodeAt(i).toString(16);
+            if (rawString.charCodeAt(i) < 16) {
+                // Add insignificant zero for control chars (0x00 - 0x0f)
+                result += '0' + rawString.charCodeAt(i).toString(16);
+            } else {
+                result += rawString.charCodeAt(i).toString(16);
+            }
         }
         return result;
     }
