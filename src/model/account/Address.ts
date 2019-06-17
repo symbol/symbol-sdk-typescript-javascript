@@ -26,12 +26,15 @@ export class Address {
      * Create from private key
      * @param publicKey - The account public key.
      * @param networkType - The NEM network type.
-     * @param hashType - The hash type
+     * @param hashType - 0: SHA3_256 (NIS2), 1: KECCAK_256 (NIS1)
      * @returns {Address}
      */
     public static createFromPublicKey(publicKey: string,
                                       networkType: NetworkType,
                                       hashType: HashType = HashType.Op_Sha3_256): Address {
+        if (hashType !== HashType.Op_Sha3_256 && hashType !== HashType.Op_Keccak_256) {
+            throw new Error('Only SHA3_256 / KECCAK_256 hash type supported.');
+        }
         const publicKeyUint8 = convert.hexToUint8(publicKey);
         const address = AddressLibrary
             .addressToString(AddressLibrary.publicKeyToAddress(publicKeyUint8, networkType, hashType));
