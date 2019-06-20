@@ -24,8 +24,6 @@ export class MosaicView {
     /**
      * @internal
      * @param mosaicInfo
-     * @param namespaceName
-     * @param mosaicName
      */
     constructor(/**
                  * The mosaic information
