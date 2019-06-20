@@ -15,7 +15,6 @@
  */
 
 import {expect} from 'chai';
-import { VerifiableTransaction } from 'nem2-library';
 import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import {Account} from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
@@ -28,7 +27,7 @@ import {TestingAccount} from '../../conf/conf.spec';
 
 describe('CosignatureTransaction', () => {
     let account: Account;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
     });
@@ -125,7 +124,7 @@ describe('CosignatureTransaction', () => {
                                               PlainMessage.create('a to b'),
                                               NetworkType.MIJIN_TEST).serialize();
 
-        const signedTx = CosignatureTransaction.signTransactionPayload(account, txPayload);
+        const signedTx = CosignatureTransaction.signTransactionPayload(account, txPayload, generationHash);
 
         expect(signedTx.signer).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE');
         expect(signedTx.signer).to.be.equal(account.publicKey);
