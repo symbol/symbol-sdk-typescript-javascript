@@ -143,7 +143,7 @@ const mosaicTestVector = {
 describe('id generator', () => {
     function generateNamespaceId(parentId, name) {
         const hash = sha3_256.create();
-        hash.update(Uint32Array.from(parentId).buffer);
+        hash.update(Uint32Array.from(parentId).buffer as any);
         hash.update(name);
         const result = new Uint32Array(hash.arrayBuffer());
         // right zero-filling required to keep unsigned number representation
