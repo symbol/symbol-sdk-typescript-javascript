@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,7 @@
  * limitations under the License.
  */
 
-export * from './AccountHttp';
-export * from './BlockHttp';
-export * from './ChainHttp';
-export * from './DiagnosticHttp';
-export * from './Http';
-export * from './MosaicHttp';
-export * from './NamespaceHttp';
-export * from './TransactionHttp';
-export * from './Listener';
-export * from './QueryParams';
-export * from './NetworkHttp';
-export * from './NodeHttp';
-export * from './transaction/NamespaceMosaicIdGenerator';
+export enum RoleType {
+    PeerNode = 1,
+    ApiNode = 2,
+}
