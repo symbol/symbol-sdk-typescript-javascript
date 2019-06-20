@@ -277,10 +277,12 @@ export class AggregateTransaction extends Transaction {
      * @return {SignedTransaction}
      */
     public signTransactionGivenSignatures(initiatorAccount: Account,
-                                          cosignatureSignedTransactions: CosignatureSignedTransaction[]) {
+                                          cosignatureSignedTransactions: CosignatureSignedTransaction[],
+                                          generationHash: string) {
         const aggregateTransaction = this.buildTransaction();
         const signedTransactionRaw = aggregateTransaction.signTransactionGivenSignatures(initiatorAccount,
-                                                                                         cosignatureSignedTransactions);
+                                                                                         cosignatureSignedTransactions,
+                                                                                         generationHash);
         return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
                                      this.type, this.networkType);
     }
