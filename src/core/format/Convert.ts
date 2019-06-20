@@ -170,7 +170,7 @@ export class Convert {
         for (let i = 0; i < rawString.length; i++) {
             if (rawString.charCodeAt(i) < 16) {
                 // Add insignificant zero for control chars (0x00 - 0x0f)
-                result += '0' + rawString.charCodeAt(i).toString(16);
+                result += rawString.charCodeAt(i).toString(16).padStart(2, '0');
             } else {
                 result += rawString.charCodeAt(i).toString(16);
             }
