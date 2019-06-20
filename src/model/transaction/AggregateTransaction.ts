@@ -96,7 +96,7 @@ export class AggregateTransaction extends Transaction {
      * @param {InnerTransaction[]} innerTransactions
      * @param {NetworkType} networkType
      * @param {AggregateTransactionCosignature[]} cosignatures
-     * @param {UInt64} maxFee - (Optional) Max fee defined by the sender
+     * @param {UInt64} maxFee - (Optional) Max fee defined by the sender
      * @return {AggregateTransaction}
      */
     public static createBonded(deadline: Deadline,
