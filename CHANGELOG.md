@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.12.3] - 20-Jun-2019
+
+- Fixed null mosaic property in MosaicHttp
+- Added NodeHttp
+- Fixed Uint8 conversions (control char added)
+- Fixed ResolutionStatementDTO in exports
+
 ## [0.12.2] - 17-Jun-2019
 
 **Milestone**: Dragon

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-import {MosaicInfo} from '../model/mosaic/MosaicInfo';
+import {Observable} from 'rxjs';
+import { NodeInfo } from '../model/node/NodeInfo';
+import { NodeTime } from '../model/node/NodeTime';
 
 /**
- * Class representing mosaic view information
+ * Node interface repository.
+ *
+ * @since 1.0
  */
-export class MosaicView {
+export interface NodeRepository {
 
     /**
-     * @internal
-     * @param mosaicInfo
+     * Supplies additional information about the application running on a node.
+     * @summary Get the node information
      */
-    constructor(/**
-                 * The mosaic information
-                 */
-                public readonly mosaicInfo: MosaicInfo) {
+    getNodeInfo(): Observable<NodeInfo>;
 
-    }
+    /**
+     * Gets the node time at the moment the reply was sent and received.
+     * @summary Get the node time
+     */
+    getNodeTime(): Observable<NodeTime>;
 }

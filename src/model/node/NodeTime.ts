@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import {MosaicInfo} from '../model/mosaic/MosaicInfo';
-
+import { RoleType } from './RoleType';
+import { NetworkType } from '../blockchain/NetworkType';
+import { UInt64 } from '../UInt64';
 /**
- * Class representing mosaic view information
+ * The node info structure describes basic information of a node.
  */
-export class MosaicView {
+export class NodeTime {
 
     /**
-     * @internal
-     * @param mosaicInfo
+     * @param sendTimeStamp
+     * @param receiveTimeStamp
      */
     constructor(/**
-                 * The mosaic information
+                 * The request send timestamp
                  */
-                public readonly mosaicInfo: MosaicInfo) {
-
-    }
+                public readonly sendTimeStamp?: number[],
+                /**
+                 * The request received timestamp
+                 */
+                public readonly receiveTimeStamp?: number[] ) {}
 }

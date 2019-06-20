@@ -82,8 +82,8 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
                         mosaicInfoDTO.mosaic.revision,
                         new MosaicProperties(
-                            new UInt64(mosaicFlag),
-                            (new UInt64(divisibility)).compact(),
+                            mosaicFlag ? new UInt64(mosaicFlag) : UInt64.fromUint(0),
+                            (divisibility ? new UInt64(divisibility) : UInt64.fromUint(0)).compact(),
                             duration ? new UInt64(duration) : undefined,
                         ),
                 );
@@ -113,7 +113,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         divisibility = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Divisibility].value;
                     }
                     if (mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value) {
-                        duration = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Divisibility].value;
+                        duration = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value;
                     }
                     return new MosaicInfo(
                         mosaicInfoDTO.meta.id,
@@ -123,8 +123,8 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
                         mosaicInfoDTO.mosaic.revision,
                         new MosaicProperties(
-                            new UInt64(mosaicFlag),
-                            (new UInt64(divisibility)).compact(),
+                            mosaicFlag ? new UInt64(mosaicFlag) : UInt64.fromUint(0),
+                            (divisibility ? new UInt64(divisibility) : UInt64.fromUint(0)).compact(),
                             duration ? new UInt64(duration) : undefined,
                         ),
                     );
