@@ -233,6 +233,14 @@ describe('convert', () => {
             // Assert:
             expect(actual).to.equal('e58588e7a7a6e585a9e6bca2');
         });
+
+        it('utf8 text to hex with control char', () => {
+            // Act:
+            const actual = convert.utf8ToHex(String.fromCodePoint(0x0f) + ' Hello World!');
+
+            // Assert:
+            expect(actual).to.equal('0f2048656c6c6f20576f726c6421');
+        });
     });
 
     describe('signed <-> unsigned byte', () => {
