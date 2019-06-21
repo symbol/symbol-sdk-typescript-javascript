@@ -5,6 +5,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.12.3] - 20-Jun-2019
 
+**Milestone**: Dragon
+
 - Fixed null mosaic property in MosaicHttp
 - Added NodeHttp
 - Fixed Uint8 conversions (control char added)
@@ -134,6 +136,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 - Initial code release.
 
+[0.12.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.2...v0.12.3
 [0.12.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.1...v0.12.2
 [0.12.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.11.6...v0.12.0
