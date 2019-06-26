@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { SignSchema } from '../../core/crypto';
 import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
@@ -83,11 +84,12 @@ export abstract class Transaction {
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account - The account to sign the transaction
      * @param generationHash - Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @returns {SignedTransaction}
      */
-    public signWith(account: Account, generationHash: string): SignedTransaction {
+    public signWith(account: Account, generationHash: string, signSchema: SignSchema = SignSchema.Catapult): SignedTransaction {
         const transaction = this.buildTransaction();
-        const signedTransactionRaw = transaction.signTransaction(account, generationHash);
+        const signedTransactionRaw = transaction.signTransaction(account, generationHash, signSchema);
         return new SignedTransaction(
             signedTransactionRaw.payload,
             signedTransactionRaw.hash,
