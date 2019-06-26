@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
-export * from './Crypto';
-export * from './KeyPair';
-export * from './SignSchema';
+export enum SignSchema {
+    NIS = 1,
+    Catapult = 2,
+}

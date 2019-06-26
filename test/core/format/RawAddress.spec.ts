@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {expect} from 'chai';
+import { SignSchema } from '../../../src/core/crypto';
 import {
     Convert as convert,
     RawAddress as address,
@@ -144,6 +145,21 @@ describe('address', () => {
             expect(address.isValidAddress(decoded1)).to.equal(true);
             expect(address.isValidAddress(decoded2)).to.equal(true);
             expect(decoded1).to.not.deep.equal(decoded2);
+        });
+
+        it('can create address from public key using NIS1 schema', () => {
+            const nonKeccakHex = '9823BB7C3C089D996585466380EDBDC19D495918484BF7E997';
+            const keccakHex = '981A00208CDDCC647BF1E065E93824FAA732AAB187CC1A9B02';
+            const publicKey = convert.hexToUint8('3485D98EFD7EB07ADAFCFD1A157D89DE2796A95E780813C0258AF3F5F84ED8CB');
+
+            // Act:
+            const decoded = address.publicKeyToAddress(publicKey, Network_Public_Test_Identifier, 1);
+
+            // Assert:
+            expect(decoded[0]).to.equal(Network_Public_Test_Identifier);
+            expect(address.isValidAddress(decoded, SignSchema.NIS)).to.equal(true);
+            expect(convert.uint8ToHex(decoded)).to.equal(keccakHex);
+            expect(convert.uint8ToHex(decoded)).not.to.equal(nonKeccakHex);
         });
     });
 

@@ -18,6 +18,7 @@ import { WalletAlgorithm } from '../../model/wallet/WalletAlgorithm';
 import { Convert as convert } from '../format/Convert';
 import { KeyPair } from './KeyPair';
 import * as utility from './Utilities';
+import { SignSchema } from './SignSchema';
 const CryptoJS = require('crypto-js');
 export class Crypto {
     /**
@@ -218,16 +219,16 @@ export class Crypto {
      * @param {string} msg - A text message
      * @param {Uint8Array} iv - An initialization vector
      * @param {Uint8Array} salt - A salt
-     *
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @return {string} - The encoded message
      */
-    public static _encode = function(senderPriv, recipientPub, msg, iv, salt) {
+    public static _encode = (senderPriv, recipientPub, msg, iv, salt, signSchema: SignSchema = SignSchema.Catapult) => {
         // Errors
         if (!senderPriv || !recipientPub || !msg || !iv || !salt) { throw new Error('Missing argument !'); }
         // Processing
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(senderPriv);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(senderPriv, signSchema);
         const pk = convert.hexToUint8(recipientPub);
-        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, salt), 32);
+        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, salt, signSchema), 32);
         const encIv = {
             iv: utility.ua2words(iv, 16),
         };
@@ -243,16 +244,16 @@ export class Crypto {
      * @param {string} senderPriv - A sender private key
      * @param {string} recipientPub - A recipient public key
      * @param {string} msg - A text message
-     *
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @return {string} - The encoded message
      */
-    public static encode = (senderPriv, recipientPub, msg) => {
+    public static encode = (senderPriv, recipientPub, msg, signSchema: SignSchema = SignSchema.Catapult) => {
         // Errors
         if (!senderPriv || !recipientPub || !msg) { throw new Error('Missing argument !'); }
         // Processing
         const iv = Crypto.randomBytes(16);
         const salt = Crypto.randomBytes(32);
-        const encoded = Crypto._encode(senderPriv, recipientPub, msg, iv, salt);
+        const encoded = Crypto._encode(senderPriv, recipientPub, msg, iv, salt, signSchema);
         // Result
         return encoded;
     }
@@ -263,16 +264,16 @@ export class Crypto {
      * @param {string} recipientPrivate - A recipient private key
      * @param {string} senderPublic - A sender public key
      * @param {Uint8Array} _payload - An encrypted message payload in bytes
-     *
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @return {string} - The decoded payload as hex
      */
-    public static _decode = (recipientPrivate, senderPublic, payload, iv, salt) => {
+    public static _decode = (recipientPrivate, senderPublic, payload, iv, salt, signSchema: SignSchema = SignSchema.Catapult) => {
         // Error
         if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
         // Processing
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(recipientPrivate);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(recipientPrivate, signSchema);
         const pk = convert.hexToUint8(senderPublic);
-        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, salt), 32);
+        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, salt, signSchema), 32);
         const encIv = {
             iv: utility.ua2words(iv, 16),
         };
@@ -290,10 +291,10 @@ export class Crypto {
      * @param {string} recipientPrivate - A recipient private key
      * @param {string} senderPublic - A sender public key
      * @param {string} _payload - An encrypted message payload
-     *
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @return {string} - The decoded payload as hex
      */
-    public static decode = (recipientPrivate, senderPublic, _payload) => {
+    public static decode = (recipientPrivate, senderPublic, _payload, signSchema: SignSchema = SignSchema.Catapult) => {
         // Error
         if (!recipientPrivate || !senderPublic || !_payload) { throw new Error('Missing argument !'); }
         // Processing
@@ -301,7 +302,7 @@ export class Crypto {
         const payload = new Uint8Array(binPayload.buffer, 48);
         const salt = new Uint8Array(binPayload.buffer, 0, 32);
         const iv = new Uint8Array(binPayload.buffer, 32, 16);
-        const decoded = Crypto._decode(recipientPrivate, senderPublic, payload, iv, salt);
+        const decoded = Crypto._decode(recipientPrivate, senderPublic, payload, iv, salt, signSchema);
         return decoded;
     }
 

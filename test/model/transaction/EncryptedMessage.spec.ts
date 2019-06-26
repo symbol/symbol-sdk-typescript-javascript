@@ -15,8 +15,9 @@
  */
 
 import {expect} from 'chai';
+import { SignSchema } from '../../../src/core/crypto';
 import {Account} from '../../../src/model/account/Account';
-import { NetworkType } from '../../../src/model/model';
+import { Deadline, NetworkCurrencyMosaic, NetworkType, TransferTransaction } from '../../../src/model/model';
 import {EncryptedMessage} from '../../../src/model/transaction/EncryptedMessage';
 
 describe('EncryptedMessage', () => {
@@ -24,12 +25,18 @@ describe('EncryptedMessage', () => {
     let sender: Account;
     let recipient: Account;
 
+    let sender_nis: Account;
+    let recipient_nis: Account;
     before(() => {
-        // Catapult-server-bootstrap generated account
         sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108',
                                               NetworkType.MIJIN_TEST);
         recipient = Account.createFromPrivateKey('B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
                                               NetworkType.MIJIN_TEST);
+
+        sender_nis = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108',
+                                              NetworkType.MIJIN_TEST, SignSchema.NIS);
+        recipient_nis = Account.createFromPrivateKey('B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
+                                              NetworkType.MIJIN_TEST, SignSchema.NIS);
     });
 
     it('should create a encrypted message from a DTO', () => {
@@ -50,14 +57,27 @@ describe('EncryptedMessage', () => {
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
 
-    it('should return empty string if given payload is not valid', () => {
-        // message payload generated from catapult-server
+    it('should return should return decrepted message reading from message payload', () => {
+        const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            recipient.address,
+            [NetworkCurrencyMosaic.createAbsolute(1)],
+            sender.encryptMessage('Testing simple transfer', recipient.publicAccount),
+            NetworkType.MIJIN_TEST,
+        );
+        const signedTransaction = transferTransaction.signWith(sender, generationHash);
         const encryptMessage = EncryptedMessage
-            .createFromPayload('3131313842393038373141353141363431453630414537413636314638454645463' +
-                    '946383431364646344336304536324443304235303943394242433039364230383343363438374' +
-                    '137364239433434314433303932363942414536434339364230423339454430303233453236333' +
-                    '8373531414345313132443732353430344341374632353634324642383230433744373633413434313132323833414639');
+            .createFromPayload(signedTransaction.payload.substring(298, signedTransaction.payload.length - 32));
         const plainMessage = recipient.decryptMessage(encryptMessage, sender.publicAccount);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
+
+    it('should encrypt and decrypt message using NIS1 schema', () => {
+        const encryptedMessage = sender_nis.encryptMessage('Testing simple transfer', recipient_nis.publicAccount, SignSchema.NIS);
+        const payload = encryptedMessage.payload;
+        const plainMessage = recipient_nis.decryptMessage(new EncryptedMessage(payload), sender_nis.publicAccount, SignSchema.NIS);
+        expect(plainMessage.payload).to.be.equal('Testing simple transfer');
+    });
+
 });
