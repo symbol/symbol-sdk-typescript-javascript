@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { SignSchema } from '../../core/crypto';
 import { Builder } from '../../infrastructure/builders/AggregateTransaction';
 import { AggregateTransaction as AggregatedTransactionCore} from '../../infrastructure/builders/AggregateTransaction';
 import { Account } from '../account/Account';
@@ -134,11 +135,16 @@ export class AggregateTransaction extends Transaction {
      * @param initiatorAccount - Initiator account
      * @param cosignatories - The array of accounts that will cosign the transaction
      * @param generationHash - Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @returns {SignedTransaction}
      */
-    public signTransactionWithCosignatories(initiatorAccount: Account, cosignatories: Account[], generationHash: string) {
+    public signTransactionWithCosignatories(initiatorAccount: Account,
+                                            cosignatories: Account[],
+                                            generationHash: string,
+                                            signSchema: SignSchema = SignSchema.Catapult) {
         const aggregateTransaction = this.buildTransaction();
-        const signedTransactionRaw = aggregateTransaction.signTransactionWithCosigners(initiatorAccount, cosignatories, generationHash);
+        const signedTransactionRaw = aggregateTransaction
+                .signTransactionWithCosigners(initiatorAccount, cosignatories, generationHash, signSchema);
         return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
                                      this.type, this.networkType);
     }

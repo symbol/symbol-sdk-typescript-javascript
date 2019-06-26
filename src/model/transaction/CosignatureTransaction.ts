@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { SignSchema } from '../../core/crypto';
 import {CosignatureTransaction as CosignaturetransactionLibrary} from '../../infrastructure/builders/CosignatureTransaction';
 import {Account} from '../account/Account';
 import {AggregateTransaction} from './AggregateTransaction';
@@ -49,11 +50,12 @@ export class CosignatureTransaction {
      * @internal
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @returns {CosignatureSignedTransaction}
      */
-    public signWith(account: Account): CosignatureSignedTransaction {
+    public signWith(account: Account, signSchema: SignSchema = SignSchema.Catapult): CosignatureSignedTransaction {
         const aggregateSignatureTransaction = new CosignaturetransactionLibrary(this.transactionToCosign.transactionInfo!.hash);
-        const signedTransactionRaw = aggregateSignatureTransaction.signCosignatoriesTransaction(account);
+        const signedTransactionRaw = aggregateSignatureTransaction.signCosignatoriesTransaction(account, signSchema);
         return new CosignatureSignedTransaction(signedTransactionRaw.parentHash,
             signedTransactionRaw.signature,
             signedTransactionRaw.signer);

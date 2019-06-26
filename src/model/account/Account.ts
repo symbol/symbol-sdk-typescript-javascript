@@ -149,10 +149,11 @@ export class Account {
      * Sign a transaction
      * @param transaction - The transaction to be signed.
      * @param generationHash - Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @return {SignedTransaction}
      */
-    public sign(transaction: Transaction, generationHash): SignedTransaction {
-        return transaction.signWith(this, generationHash);
+    public sign(transaction: Transaction, generationHash, signSchema: SignSchema = SignSchema.Catapult): SignedTransaction {
+        return transaction.signWith(this, generationHash, signSchema);
     }
 
     /**
@@ -160,21 +161,25 @@ export class Account {
      * @param transaction - The aggregate transaction to be signed.
      * @param cosignatories - The array of accounts that will cosign the transaction
      * @param generationHash - Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @return {SignedTransaction}
      */
     public signTransactionWithCosignatories(transaction: AggregateTransaction,
                                             cosignatories: Account[],
-                                            generationHash: string): SignedTransaction {
-    return transaction.signTransactionWithCosignatories(this, cosignatories, generationHash);
+                                            generationHash: string,
+                                            signSchema: SignSchema = SignSchema.Catapult): SignedTransaction {
+    return transaction.signTransactionWithCosignatories(this, cosignatories, generationHash, signSchema);
     }
 
     /**
      * Sign aggregate signature transaction
      * @param cosignatureTransaction - The aggregate signature transaction.
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @return {CosignatureSignedTransaction}
      */
-    public signCosignatureTransaction(cosignatureTransaction: CosignatureTransaction): CosignatureSignedTransaction {
-        return cosignatureTransaction.signWith(this);
+    public signCosignatureTransaction(cosignatureTransaction: CosignatureTransaction,
+                                      signSchema: SignSchema = SignSchema.Catapult): CosignatureSignedTransaction {
+        return cosignatureTransaction.signWith(this, signSchema);
     }
 
     /**
