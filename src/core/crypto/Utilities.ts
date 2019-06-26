@@ -16,7 +16,7 @@
 import { RawArray as array } from '../format';
 import * as nacl from './nacl_catapult';
 import { SHA3Hasher as sha3Hasher } from './SHA3Hasher';
-
+import { SignSchema } from './SignSchema';
 export const CryptoJS = require('crypto-js');
 export const Key_Size = 32;
 export const Signature_Size = 64;
@@ -74,9 +74,9 @@ export const catapult_crypto = (function() {
         d[31] |= 64;
     }
 
-    function prepareForScalarMult(sk, hashfunc) {
+    function prepareForScalarMult(sk, hashfunc, signSchema: SignSchema) {
         const d = new Uint8Array(Hash_Size);
-        hashfunc(d, sk);
+        hashfunc(d, sk, Hash_Size, signSchema);
         clamp(d);
         return d;
     }
@@ -108,9 +108,9 @@ export const catapult_crypto = (function() {
     })();
 
     return {
-        extractPublicKey: (sk, hashfunc) => {
+        extractPublicKey: (sk, hashfunc, signSchema: SignSchema) => {
             const c = nacl;
-            const d = prepareForScalarMult(sk, hashfunc);
+            const d = prepareForScalarMult(sk, hashfunc, signSchema);
 
             const p = [c.gf(), c.gf(), c.gf(), c.gf()];
             const pk = new Uint8Array(Key_Size);
@@ -201,26 +201,24 @@ export const catapult_crypto = (function() {
             return 0 === c.crypto_verify_32(signature, 0, t, 0);
         },
 
-        deriveSharedKey: (salt, sk, pk, hashfunc) => {
+        deriveSharedKey: (salt, sk, pk, hashfunc, signSchema: SignSchema) => {
             const c = nacl;
-            const d = prepareForScalarMult(sk, hashfunc);
+            const d = prepareForScalarMult(sk, hashfunc, signSchema);
 
             // sharedKey = pack(p = d (derived from sk) * q (derived from pk))
             const q = [c.gf(), c.gf(), c.gf(), c.gf()];
             const p = [c.gf(), c.gf(), c.gf(), c.gf()];
             const sharedKey = new Uint8Array(Key_Size);
-            c.unpackneg(q, pk);
+            c.unpack(q, pk);
             c.scalarmult(p, q, d);
             c.pack(sharedKey, p);
-
             // salt the shared key
             for (let i = 0; i < Key_Size; ++i) {
                 sharedKey[i] ^= salt[i];
             }
-
             // return the hash of the result
             const sharedKeyHash = new Uint8Array(Key_Size);
-            hashfunc(sharedKeyHash, sharedKey, Key_Size);
+            hashfunc(sharedKeyHash, sharedKey, Key_Size, signSchema);
             return sharedKeyHash;
         },
     };

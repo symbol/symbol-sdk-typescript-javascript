@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Crypto} from '../../core/crypto';
+import {Crypto, SignSchema} from '../../core/crypto';
 import {PublicAccount} from '../account/PublicAccount';
 import {Message} from './Message';
 import {MessageType} from './MessageType';
@@ -38,10 +38,12 @@ export class EncryptedMessage extends Message {
      * @param message - Plain message to be encrypted
      * @param recipientPublicAccount - Recipient public account
      * @param privateKey - Sender private key
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @return {EncryptedMessage}
      */
-    public static create(message: string, recipientPublicAccount: PublicAccount, privateKey) {
+    public static create(message: string, recipientPublicAccount: PublicAccount, privateKey, signSchema: SignSchema = SignSchema.Catapult) {
         return new EncryptedMessage(
-            Crypto.encode(privateKey, recipientPublicAccount.publicKey, message).toUpperCase(),
+            Crypto.encode(privateKey, recipientPublicAccount.publicKey, message, signSchema).toUpperCase(),
             recipientPublicAccount);
     }
 
@@ -58,8 +60,14 @@ export class EncryptedMessage extends Message {
      * @param encryptMessage - Encrypted message to be decrypted
      * @param privateKey - Recipient private key
      * @param recipientPublicAccount - Sender public account
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @return {PlainMessage}
      */
-    public static decrypt(encryptMessage: EncryptedMessage, privateKey, recipientPublicAccount: PublicAccount): PlainMessage {
-        return new PlainMessage(this.decodeHex(Crypto.decode(privateKey, recipientPublicAccount.publicKey, encryptMessage.payload)));
+    public static decrypt(encryptMessage: EncryptedMessage,
+                          privateKey,
+                          recipientPublicAccount: PublicAccount,
+                          signSchema: SignSchema = SignSchema.Catapult): PlainMessage {
+        return new PlainMessage(this.decodeHex(
+                Crypto.decode(privateKey, recipientPublicAccount.publicKey, encryptMessage.payload, signSchema)));
     }
 }

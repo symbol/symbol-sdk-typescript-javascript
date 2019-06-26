@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { sha3_256, sha3_512 } from 'js-sha3';
+import { keccak256, keccak512, sha3_256, sha3_512 } from 'js-sha3';
 import { Convert as convert, RawArray as array } from '../format';
+import { SignSchema } from './SignSchema';
 
 export class SHA3Hasher {
     /**
@@ -23,9 +24,10 @@ export class SHA3Hasher {
      * @param {Uint8Array} dest The computed hash destination.
      * @param {Uint8Array} data The data to hash.
      * @param {numeric} length The hash length in bytes.
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      */
-    public static func = (dest, data, length) => {
-        const hasher = SHA3Hasher.getHasher(length);
+    public static func = (dest, data, length, signSchema = SignSchema.Catapult) => {
+        const hasher = SHA3Hasher.getHasher(length, signSchema);
         const hash = hasher.arrayBuffer(data);
         array.copy(dest, array.uint8View(hash));
     }
@@ -33,13 +35,14 @@ export class SHA3Hasher {
     /**
      * Creates a hasher object.
      * @param {numeric} length The hash length in bytes.
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @returns {object} The hasher.
      */
-    public static createHasher = (length = 64) => {
+    public static createHasher = (length = 64, signSchema = SignSchema.Catapult) => {
         let hash;
         return {
             reset: () => {
-                hash = SHA3Hasher.getHasher(length).create();
+                hash = SHA3Hasher.getHasher(length, signSchema).create();
             },
             update: (data: any) => {
                 if (data instanceof Uint8Array) {
@@ -59,12 +62,13 @@ export class SHA3Hasher {
     /**
      * Get a hasher instance.
      * @param {numeric} length The hash length in bytes.
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @returns {object} The hasher.
      */
-    public static getHasher = (length = 64) => {
+    public static getHasher = (length = 64, signSchema = SignSchema.Catapult) => {
         return {
-            32: sha3_256,
-            64: sha3_512,
+            32: signSchema === SignSchema.Catapult ? sha3_256 : keccak256,
+            64: signSchema === SignSchema.Catapult ? sha3_512 : keccak512 ,
         } [length];
     }
 }

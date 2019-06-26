@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyPair } from '../../core/crypto';
+import { KeyPair, SignSchema } from '../../core/crypto';
 import { Convert as convert} from '../../core/format';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Address } from './Address';
@@ -47,13 +47,14 @@ export class PublicAccount {
      * Create a PublicAccount from a public key and network type.
      * @param publicKey Public key
      * @param networkType Network type
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @returns {PublicAccount}
      */
-    static createFromPublicKey(publicKey: string, networkType: NetworkType): PublicAccount {
+    static createFromPublicKey(publicKey: string, networkType: NetworkType, signSchema = SignSchema.Catapult): PublicAccount {
         if (publicKey == null || (publicKey.length !== 64 && publicKey.length !== 66)) {
             throw new Error('Not a valid public key');
         }
-        const address = Address.createFromPublicKey(publicKey, networkType);
+        const address = Address.createFromPublicKey(publicKey, networkType, signSchema);
         return new PublicAccount(publicKey, address);
     }
 
@@ -62,10 +63,10 @@ export class PublicAccount {
      *
      * @param {string} data - The data to verify.
      * @param {string} signature - The signature to verify.
-     *
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @return {boolean}  - True if the signature is valid, false otherwise.
      */
-    public verifySignature(data: string, signature: string): boolean {
+    public verifySignature(data: string, signature: string, signSchema: SignSchema = SignSchema.Catapult): boolean {
         if (!signature) {
             throw new Error('Missing argument');
         }
@@ -77,14 +78,13 @@ export class PublicAccount {
         if (!convert.isHexString(signature)) {
             throw new Error('Signature must be hexadecimal only');
         }
-
         // Convert signature key to Uint8Array
         const convertedSignature = convert.hexToUint8(signature);
 
         // Convert to Uint8Array
         const convertedData = convert.hexToUint8(convert.utf8ToHex(data));
 
-        return KeyPair.verify(convert.hexToUint8(this.publicKey), convertedData, convertedSignature);
+        return KeyPair.verify(convert.hexToUint8(this.publicKey), convertedData, convertedSignature, signSchema);
     }
 
     /**
