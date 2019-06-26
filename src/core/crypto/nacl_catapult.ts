@@ -42,22 +42,22 @@ const gf0 = gf(),
     gf1 = gf([1]),
     _121665 = gf([0xdb41, 1]),
     D = gf([0x78a3, 0x1359, 0x4dca, 0x75eb, 0xd8ab, 0x4141, 0x0a4d,
-        0x0070, 0xe898, 0x7779, 0x4079, 0x8cc7, 0xfe73, 0x2b6f, 0x6cee, 0x5203
+        0x0070, 0xe898, 0x7779, 0x4079, 0x8cc7, 0xfe73, 0x2b6f, 0x6cee, 0x5203,
     ]),
     D2 = gf([0xf159, 0x26b2, 0x9b94, 0xebd6, 0xb156, 0x8283, 0x149a,
-        0x00e0, 0xd130, 0xeef3, 0x80f2, 0x198e, 0xfce7, 0x56df, 0xd9dc, 0x2406
+        0x00e0, 0xd130, 0xeef3, 0x80f2, 0x198e, 0xfce7, 0x56df, 0xd9dc, 0x2406,
     ]),
     X = gf([0xd51a, 0x8f25, 0x2d60, 0xc956, 0xa7b2, 0x9525, 0xc760,
-        0x692c, 0xdc5c, 0xfdd6, 0xe231, 0xc0a4, 0x53fe, 0xcd6e, 0x36d3, 0x2169
+        0x692c, 0xdc5c, 0xfdd6, 0xe231, 0xc0a4, 0x53fe, 0xcd6e, 0x36d3, 0x2169,
     ]),
     Y = gf([0x6658, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666,
-        0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666
+        0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666,
     ]),
     I = gf([0xa0b0, 0x4a0e, 0x1b27, 0xc4ee, 0xe478, 0xad2f, 0x1806,
-        0x2f43, 0xd7a7, 0x3dfb, 0x0099, 0x2b4d, 0xdf0b, 0x4fc1, 0x2480, 0x2b83
+        0x2f43, 0xd7a7, 0x3dfb, 0x0099, 0x2b4d, 0xdf0b, 0x4fc1, 0x2480, 0x2b83,
     ]);
 const L = new Float64Array([0xed, 0xd3, 0xf5, 0x5c, 0x1a, 0x63, 0x12, 0x58, 0xd6, 0x9c,
-    0xf7, 0xa2, 0xde, 0xf9, 0xde, 0x14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x10
+    0xf7, 0xa2, 0xde, 0xf9, 0xde, 0x14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x10,
 ]);
 
 const A = (o, a, b) => {
@@ -667,21 +667,21 @@ const unpack25519 = (o, n) => {
 };
 
 export const cleanup = (arr) => {
-    for (var i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
         arr[i] = 0;
     }
 };
 
-export const crypto_shared_key_hash = (shared, pk, sk, hashfunc) => {
+export const crypto_shared_key_hash = (shared, pk, sk, hashfunc, hasherType) => {
     const d = new Uint8Array(64);
     const p = [gf(), gf(), gf(), gf()];
 
-    hashfunc(d, sk, 32);
+    hashfunc(d, sk, 32, hasherType);
     d[0] &= 248;
     d[31] &= 127;
     d[31] |= 64;
 
-    let q = [gf(), gf(), gf(), gf()];
+    const q = [gf(), gf(), gf(), gf()];
     unpackneg(q, pk);
     scalarmult(p, q, d);
     pack(shared, p);
@@ -844,6 +844,60 @@ export const unpackneg = (r, p) => {
     }
 
     if (par25519(r[0]) === (p[31] >> 7)) {
+        Z(r[0], gf0, r[0]);
+    }
+
+    M(r[3], r[0], r[1]);
+    return 0;
+};
+
+export const unpack = (r, p) => {
+    // tslint:disable-next-line:one-variable-per-declaration
+    const t = gf(),
+        chk = gf(),
+        num = gf(),
+        den = gf(),
+        den2 = gf(),
+        den4 = gf(),
+        den6 = gf();
+
+    set25519(r[2], gf1);
+    unpack25519(r[1], p);
+
+    // num = u = y^2 - 1
+    // den = v = d * y^2 + 1
+    S(num, r[1]);
+    M(den, num, D);
+    Z(num, num, r[2]);
+    A(den, r[2], den);
+
+    // r[0] = x = sqrt(u / v)
+    S(den2, den);
+    S(den4, den2);
+    M(den6, den4, den2);
+    M(t, den6, num);
+    M(t, t, den);
+
+    pow2523(t, t);
+    M(t, t, num);
+    M(t, t, den);
+    M(t, t, den);
+    M(r[0], t, den);
+
+    S(chk, r[0]);
+    M(chk, chk, den);
+    if (neq25519(chk, num)) {
+        M(r[0], r[0], I);
+    }
+
+    S(chk, r[0]);
+    M(chk, chk, den);
+    if (neq25519(chk, num)) {
+        console.log('not a valid Ed25519EncodedGroupElement.');
+        return -1;
+    }
+
+    if (par25519(r[0]) !== (p[31] >> 7)) {
         Z(r[0], gf0, r[0]);
     }
 

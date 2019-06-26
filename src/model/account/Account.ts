@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Crypto, KeyPair} from '../../core/crypto';
+import {Crypto, KeyPair, SignSchema} from '../../core/crypto';
 import {Convert as convert, RawAddress as AddressLibrary} from '../../core/format';
 import {NetworkType} from '../blockchain/NetworkType';
 import {AggregateTransaction} from '../transaction/AggregateTransaction';
@@ -57,49 +57,63 @@ export class Account {
      * Create an Account from a given private key
      * @param privateKey - Private key from an account
      * @param networkType - Network type
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @return {Account}
      */
-    public static createFromPrivateKey(privateKey: string, networkType: NetworkType): Account {
-        const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
+    public static createFromPrivateKey(privateKey: string,
+                                       networkType: NetworkType,
+                                       signSchema: SignSchema = SignSchema.Catapult): Account {
+        const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, signSchema);
         const address = AddressLibrary.addressToString(
-            AddressLibrary.publicKeyToAddress(keyPair.publicKey, networkType));
+            AddressLibrary.publicKeyToAddress(keyPair.publicKey, networkType, signSchema));
         return new Account(
             Address.createFromRawAddress(address),
             keyPair,
         );
     }
 
-    public static generateNewAccount(networkType: NetworkType): Account {
+    /**
+     * Generate a new account
+     * @param networkType - Network type
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     */
+    public static generateNewAccount(networkType: NetworkType, signSchema: SignSchema = SignSchema.Catapult): Account {
         // Create random bytes
         const randomBytesArray = Crypto.randomBytes(32);
         // Hash random bytes with entropy seed
         // Finalize and keep only 32 bytes
-        const hashKey = convert.uint8ToHex(randomBytesArray); // TODO: derive private key correctly
+        const hashKey = convert.uint8ToHex(randomBytesArray);
 
         // Create KeyPair from hash key
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey, signSchema);
 
-        const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), networkType);
+        const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), networkType, signSchema);
         return new Account(address, keyPair);
     }
     /**
      * Create a new encrypted Message
      * @param message - Plain message to be encrypted
      * @param recipientPublicAccount - Recipient public account
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @returns {EncryptedMessage}
      */
-    public encryptMessage(message: string, recipientPublicAccount: PublicAccount): EncryptedMessage {
-        return EncryptedMessage.create(message, recipientPublicAccount, this.privateKey);
+    public encryptMessage(message: string,
+                          recipientPublicAccount: PublicAccount,
+                          signSchema: SignSchema = SignSchema.Catapult): EncryptedMessage {
+        return EncryptedMessage.create(message, recipientPublicAccount, this.privateKey, signSchema);
     }
 
     /**
      * Decrypts an encrypted message
      * @param encryptedMessage - Encrypted message
      * @param publicAccount - The public account originally encrypted the message
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @returns {PlainMessage}
      */
-    public decryptMessage(encryptedMessage: EncryptedMessage, publicAccount: PublicAccount): PlainMessage {
-        return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, publicAccount);
+    public decryptMessage(encryptedMessage: EncryptedMessage,
+                          publicAccount: PublicAccount,
+                          signSchema: SignSchema = SignSchema.Catapult): PlainMessage {
+        return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, publicAccount, signSchema);
     }
     /**
      * Account public key.
@@ -160,11 +174,13 @@ export class Account {
     /**
      * Sign raw data
      * @param data - Data to be signed
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @return {string} - Signed data result
      */
-    public signData(data: string): string {
+    public signData(data: string, signSchema: SignSchema = SignSchema.Catapult): string {
         return convert.uint8ToHex(KeyPair.sign(this.keyPair,
                             convert.hexToUint8(convert.utf8ToHex(data)),
+                            signSchema,
                         ));
     }
 }

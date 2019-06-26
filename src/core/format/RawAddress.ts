@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { sha3_256 } from 'js-sha3';
+import { keccak256, sha3_256 } from 'js-sha3';
 import RIPEMD160 = require('ripemd160');
+import { SignSchema } from '../crypto';
 import { Base32 } from './Base32';
 import { Convert } from './Convert';
 import { RawArray } from './RawArray';
@@ -74,11 +75,14 @@ export class RawAddress {
      * Converts a public key to a decoded address for a specific network.
      * @param {Uint8Array} publicKey The public key.
      * @param {number} networkIdentifier The network identifier.
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @returns {Uint8Array} The decoded address corresponding to the inputs.
      */
-    public static publicKeyToAddress = (publicKey: Uint8Array, networkIdentifier: number): Uint8Array => {
+    public static publicKeyToAddress = (publicKey: Uint8Array,
+                                        networkIdentifier: number,
+                                        signSchema: SignSchema = SignSchema.Catapult): Uint8Array => {
         // step 1: sha3 hash of the public key
-        const publicKeyHash = (sha3_256 as any).arrayBuffer(publicKey);
+        const publicKeyHash = signSchema === SignSchema.Catapult ? sha3_256.arrayBuffer(publicKey) : keccak256.arrayBuffer(publicKey);
 
         // step 2: ripemd160 hash of (1)
         const ripemdHash = new RIPEMD160().update(new Buffer(publicKeyHash)).digest();
@@ -89,7 +93,9 @@ export class RawAddress {
         RawArray.copy(decodedAddress, ripemdHash, RawAddress.constants.sizes.ripemd160, 1);
 
         // step 4: concatenate (3) and the checksum of (3)
-        const hash = (sha3_256 as any).arrayBuffer(decodedAddress.subarray(0, RawAddress.constants.sizes.ripemd160 + 1));
+        const hash = signSchema === SignSchema.Catapult ?
+            sha3_256.arrayBuffer(decodedAddress.subarray(0, RawAddress.constants.sizes.ripemd160 + 1)) :
+            keccak256.arrayBuffer(decodedAddress.subarray(0, RawAddress.constants.sizes.ripemd160 + 1));
         RawArray.copy(decodedAddress, RawArray.uint8View(hash),
             RawAddress.constants.sizes.checksum, RawAddress.constants.sizes.ripemd160 + 1);
 
@@ -99,10 +105,11 @@ export class RawAddress {
     /**
      * Determines the validity of a decoded address.
      * @param {Uint8Array} decoded The decoded address.
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      * @returns {boolean} true if the decoded address is valid, false otherwise.
      */
-    public static isValidAddress = (decoded: Uint8Array): boolean => {
-        const hash = sha3_256.create();
+    public static isValidAddress = (decoded: Uint8Array, signSchema: SignSchema = SignSchema.Catapult): boolean => {
+        const hash = signSchema === SignSchema.Catapult ? sha3_256.create() : keccak256.create();
         const checksumBegin = RawAddress.constants.sizes.addressDecoded - RawAddress.constants.sizes.checksum;
         hash.update(decoded.subarray(0, checksumBegin));
         const checksum = new Uint8Array(RawAddress.constants.sizes.checksum);
