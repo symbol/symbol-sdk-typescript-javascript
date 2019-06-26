@@ -41,6 +41,7 @@ export class Account {
      * @internal
      * @param address
      * @param keyPair
+     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
      */
     private constructor(
                         /**
@@ -50,7 +51,11 @@ export class Account {
                         /**
                          * The account keyPair, public and private key.
                          */
-                        private readonly keyPair: IKeyPair) {
+                        private readonly keyPair: IKeyPair,
+                        /**
+                         * The Sign Schema (NIS / Catapult).
+                         */
+                        private readonly signSchema: SignSchema = SignSchema.Catapult) {
     }
 
     /**
@@ -69,6 +74,7 @@ export class Account {
         return new Account(
             Address.createFromRawAddress(address),
             keyPair,
+            signSchema,
         );
     }
 
@@ -88,7 +94,7 @@ export class Account {
         const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey, signSchema);
 
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), networkType, signSchema);
-        return new Account(address, keyPair);
+        return new Account(address, keyPair, signSchema);
     }
     /**
      * Create a new encrypted Message
@@ -128,7 +134,7 @@ export class Account {
      * @return {PublicAccount}
      */
     get publicAccount(): PublicAccount {
-        return PublicAccount.createFromPublicKey(this.publicKey, this.address.networkType);
+        return PublicAccount.createFromPublicKey(this.publicKey, this.address.networkType, this.signSchema);
     }
 
     /**
