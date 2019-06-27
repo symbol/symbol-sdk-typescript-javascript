@@ -139,6 +139,65 @@ describe('key pair', () => {
         });
     });
 
+    /**
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-keys-catapult.json
+     */
+    describe('Catapult test vector - SHA3', () => {
+        it('can extract from private key test vectors', () => {
+            // Arrange:
+            const Private_Key = [
+                '575dbb3062267eff57c970a336ebbc8fbcfe12c5bd3ed7bc11eb0481d7704ced',
+                '5b0e3fa5d3b49a79022d7c1e121ba1cbbf4db5821f47ab8c708ef88defc29bfe',
+                '738ba9bb9110aea8f15caa353aca5653b4bdfca1db9f34d0efed2ce1325aeeda',
+                'e8bf9bc0f35c12d8c8bf94dd3a8b5b4034f1063948e3cc5304e55e31aa4b95a6',
+                'c325ea529674396db5675939e7988883d59a5fc17a28ca977e3ba85370232a83',
+            ];
+
+            const Expected_Public_Keys = [
+                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
+                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
+                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
+                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
+                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
+            ];
+
+            // Sanity:
+            expect(Private_Key.length).equal(Expected_Public_Keys.length);
+
+            for (let i = 0; i < Private_Key.length; ++i) {
+                // Arrange:
+                const privateKeyHex = Private_Key[i];
+                const expectedPublicKey = Expected_Public_Keys[i];
+
+                // Act:
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex);
+
+                // Assert:
+                const message = ` from ${privateKeyHex}`;
+                expect(convert.uint8ToHex(keyPair.publicKey).toUpperCase(), `public ${message}`).equal(expectedPublicKey.toUpperCase());
+                expect(convert.uint8ToHex(keyPair.privateKey).toUpperCase(), `private ${message}`).equal(privateKeyHex.toUpperCase());
+            }
+        });
+
+        it('cannot extract from invalid private key', () => {
+            // Arrange:
+            const invalidPrivateKeys = [
+                '', // empty
+                '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB', // short
+                '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB1BBB', // long
+            ];
+
+            // Act:
+            invalidPrivateKeys.forEach((privateKey) => {
+                // Assert:
+                expect(() => {
+                        KeyPair.createKeyPairFromPrivateKeyString(privateKey);
+                    }, `from ${privateKey}`)
+                    .to.throw('private key has unexpected size');
+            });
+        });
+    });
+
     describe('sign & verify- Test Vector', () => {
         /**
          * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/2.test-sign-nis1.json
@@ -616,6 +675,61 @@ describe('key pair', () => {
 
                 // Assert:
                 const message = ` from ${Nis1_Private_Key[i]}`;
+                expect(sharedKey.toUpperCase()).to.deep.equal(Expected_Derived_Key[i].toUpperCase());
+            }
+        });
+    });
+
+    /**
+     * @see https://github.com/nemtech/test-vectors/blob/master/3.test-derive-catapult.json
+     */
+    describe('derive shared key - Test Vecto Catapult', () => {
+        it('derive shared key using sha3', () => {
+            // Arrange: create a salt that is too long
+            // Arrange:
+            const Private_Key = [
+                '00137c7c32881d1fff2e905f5b7034bcbcdb806d232f351db48a7816285c548f',
+                'e8857f8e488d4e6d4b71bcd44bb4cff49208c32651e1f6500c3b58cafeb8def6',
+                'd7f67b5f52cbcd1a1367e0376a8eb1012b634acfcf35e8322bae8b22bb9e8dea',
+                'd026ddb445fb3bbf3020e4b55ed7b5f9b7fd1278c34978ca1a6ed6b358dadbae',
+                'c522b38c391d1c3fa539cc58802bc66ac34bb3c73accd7f41b47f539bedcd016',
+            ];
+
+            const Public_Keys = [
+                'bf684fb1a85a8c8091ee0442eddb22e51683802afa0c0e7c6fe3f3e3e87a8d72',
+                '9d8e5f200b05a2638fb084a375408cabd6d5989590d96e3eea5f2cb34668178e',
+                '9735c92d150dcee0ade5a8d1822f46a4db22c9cda25f33773ae856fe374a3e8a',
+                'd19e6beca3b26b9d1abc127835ebeb7a6c19c33dec8ec472e1c4d458202f4ec8',
+                'ea5b6a0053237f7712b1d2347c447d3e83e0f2191762d07e1f53f8eb7f2dfeaa',
+            ];
+
+            const Salt = [
+                '422c39df16aae42a74a5597d6ee2d59cfb4eeb6b3f26d98425b9163a03daa3b5',
+                'ad63ac08f9afc85eb0bf4f8881ca6eaa0215924c87aa2f137d56109bb76c6f98',
+                '96104f0a28f9cca40901c066cd435134662a3b053eb6c8df80ee0d05dc941963',
+                'd8f94a0bbb1de80aea17aab42e2ffb982e73fc49b649a318479e951e392d8728',
+                '3f8c969678a8abdbfb76866a142c284a6f01636c1c1607947436e0d2c30d5245',
+            ];
+
+            const Expected_Derived_Key = [
+                '32628d4ecf167487881de9e81466614a3442c1b1f6eb146ebe7ad69c37184696',
+                'da30f8081c065f5c4e2d17a551af3634a63395991af9642c29a7bbc9312b98a5',
+                '58c9a027b30fcbec8ac7962df1eb81f27317ab6f39ada66be8d9453653a305af',
+                '58815adb5f8ef154c6091c65b28e3d6d5ea25da40040e7489ee05f65ecffa61c',
+                '8c677358d7512c4d53b0f5d59cff421625851322fae4c66e98f670c49c916f32',
+            ];
+
+            for (let i = 0; i < Private_Key.length; ++i) {
+                // Arrange:
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Key[i]);
+                const publicKey = Convert.hexToUint8(Public_Keys[i]);
+                const salt = Convert.hexToUint8(Salt[i]);
+
+                // Act:
+                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, salt));
+
+                // Assert:
+                const message = ` from ${Private_Key[i]}`;
                 expect(sharedKey.toUpperCase()).to.deep.equal(Expected_Derived_Key[i].toUpperCase());
             }
         });
