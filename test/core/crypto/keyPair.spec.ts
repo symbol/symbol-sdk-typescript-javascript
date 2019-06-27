@@ -198,6 +198,65 @@ describe('key pair', () => {
         });
     });
 
+    /**
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-keys-catapult.json
+     */
+    describe('Catapult test vector - SHA3', () => {
+        it('can extract from private key test vectors', () => {
+            // Arrange:
+            const Private_Key = [
+                '575dbb3062267eff57c970a336ebbc8fbcfe12c5bd3ed7bc11eb0481d7704ced',
+                '5b0e3fa5d3b49a79022d7c1e121ba1cbbf4db5821f47ab8c708ef88defc29bfe',
+                '738ba9bb9110aea8f15caa353aca5653b4bdfca1db9f34d0efed2ce1325aeeda',
+                'e8bf9bc0f35c12d8c8bf94dd3a8b5b4034f1063948e3cc5304e55e31aa4b95a6',
+                'c325ea529674396db5675939e7988883d59a5fc17a28ca977e3ba85370232a83',
+            ];
+
+            const Expected_Public_Keys = [
+                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
+                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
+                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
+                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
+                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
+            ];
+
+            // Sanity:
+            expect(Private_Key.length).equal(Expected_Public_Keys.length);
+
+            for (let i = 0; i < Private_Key.length; ++i) {
+                // Arrange:
+                const privateKeyHex = Private_Key[i];
+                const expectedPublicKey = Expected_Public_Keys[i];
+
+                // Act:
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex);
+
+                // Assert:
+                const message = ` from ${privateKeyHex}`;
+                expect(convert.uint8ToHex(keyPair.publicKey).toUpperCase(), `public ${message}`).equal(expectedPublicKey.toUpperCase());
+                expect(convert.uint8ToHex(keyPair.privateKey).toUpperCase(), `private ${message}`).equal(privateKeyHex.toUpperCase());
+            }
+        });
+
+        it('cannot extract from invalid private key', () => {
+            // Arrange:
+            const invalidPrivateKeys = [
+                '', // empty
+                '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB', // short
+                '53C659B47C176A70EB228DE5C0A0FF391282C96640C2A42CD5BBD0982176AB1BBB', // long
+            ];
+
+            // Act:
+            invalidPrivateKeys.forEach((privateKey) => {
+                // Assert:
+                expect(() => {
+                        KeyPair.createKeyPairFromPrivateKeyString(privateKey);
+                    }, `from ${privateKey}`)
+                    .to.throw('private key has unexpected size');
+            });
+        });
+    });
+
     describe('sign & verify- Test Vector', () => {
         /**
          * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/2.test-sign-nis1.json
