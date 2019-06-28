@@ -31,42 +31,42 @@ export class TransactionVersion {
      * Transfer Transaction transaction version.
      * @type {number}
      */
-    public static readonly TRANSFER = 3;
+    public static readonly TRANSFER = 1;
 
     /**
      * Register namespace transaction version.
      * @type {number}
      */
-    public static readonly REGISTER_NAMESPACE = 2;
+    public static readonly REGISTER_NAMESPACE = 1;
 
     /**
      * Mosaic definition transaction version.
      * @type {number}
      */
-    public static readonly MOSAIC_DEFINITION = 3;
+    public static readonly MOSAIC_DEFINITION = 1;
 
     /**
      * Mosaic supply change transaction.
      * @type {number}
      */
-    public static readonly MOSAIC_SUPPLY_CHANGE = 2;
+    public static readonly MOSAIC_SUPPLY_CHANGE = 1;
 
     /**
      * Modify multisig account transaction version.
      * @type {number}
      */
-    public static readonly MODIFY_MULTISIG_ACCOUNT = 3;
+    public static readonly MODIFY_MULTISIG_ACCOUNT = 1;
 
     /**
      * Aggregate complete transaction version.
      * @type {number}
      */
-    public static readonly AGGREGATE_COMPLETE = 2;
+    public static readonly AGGREGATE_COMPLETE = 1;
 
     /**
      * Aggregate bonded transaction version
      */
-    public static readonly AGGREGATE_BONDED = 2;
+    public static readonly AGGREGATE_BONDED = 1;
 
     /**
      * Lock transaction version
@@ -120,5 +120,5 @@ export class TransactionVersion {
      * Link account transaction version
      * @type {number}
      */
-    public static readonly LINK_ACCOUNT = 2;
+    public static readonly LINK_ACCOUNT = 1;
 }

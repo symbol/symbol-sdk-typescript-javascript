@@ -38,7 +38,7 @@ describe('BlockInfo', () => {
                 beneficiaryPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 timestamp: new UInt64([ 0, 0 ]),
                 type: 32768,
-                version: 36867,
+                version: 36865,
             },
             meta: {
                 generationHash: '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6',
