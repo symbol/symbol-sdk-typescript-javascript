@@ -15,8 +15,8 @@
  */
 
  /**
-  * [KECCAK_REVERSED_KEY]: Keccak hash algorithm with key reversed.
-  * [SHA3]: Sha3 hash algorithm without key resersed
+  * [KECCAK_REVERSED_KEY]: Keccak hash algorithm with reversed private keys.
+  * [SHA3]: SHA3 hash algorithm without key reversal
   */
 export enum SignSchema {
     KECCAK_REVERSED_KEY = 1,
