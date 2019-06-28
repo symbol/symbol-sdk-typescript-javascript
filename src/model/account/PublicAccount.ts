@@ -47,10 +47,10 @@ export class PublicAccount {
      * Create a PublicAccount from a public key and network type.
      * @param publicKey Public key
      * @param networkType Network type
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {PublicAccount}
      */
-    static createFromPublicKey(publicKey: string, networkType: NetworkType, signSchema = SignSchema.Catapult): PublicAccount {
+    static createFromPublicKey(publicKey: string, networkType: NetworkType, signSchema = SignSchema.SHA3): PublicAccount {
         if (publicKey == null || (publicKey.length !== 64 && publicKey.length !== 66)) {
             throw new Error('Not a valid public key');
         }
@@ -63,10 +63,10 @@ export class PublicAccount {
      *
      * @param {string} data - The data to verify.
      * @param {string} signature - The signature to verify.
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {boolean}  - True if the signature is valid, false otherwise.
      */
-    public verifySignature(data: string, signature: string, signSchema: SignSchema = SignSchema.Catapult): boolean {
+    public verifySignature(data: string, signature: string, signSchema: SignSchema = SignSchema.SHA3): boolean {
         if (!signature) {
             throw new Error('Missing argument');
         }

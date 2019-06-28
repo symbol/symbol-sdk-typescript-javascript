@@ -34,9 +34,9 @@ describe('EncryptedMessage', () => {
                                               NetworkType.MIJIN_TEST);
 
         sender_nis = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108',
-                                              NetworkType.MIJIN_TEST, SignSchema.NIS);
+                                              NetworkType.MIJIN_TEST, SignSchema.KECCAK_REVERSED_KEY);
         recipient_nis = Account.createFromPrivateKey('B72F2950498111BADF276D6D9D5E345F04E0D5C9B8342DA983C3395B4CF18F08',
-                                              NetworkType.MIJIN_TEST, SignSchema.NIS);
+                                              NetworkType.MIJIN_TEST, SignSchema.KECCAK_REVERSED_KEY);
     });
 
     it('should create a encrypted message from a DTO', () => {
@@ -74,9 +74,9 @@ describe('EncryptedMessage', () => {
     });
 
     it('should encrypt and decrypt message using NIS1 schema', () => {
-        const encryptedMessage = sender_nis.encryptMessage('Testing simple transfer', recipient_nis.publicAccount, SignSchema.NIS);
+        const encryptedMessage = sender_nis.encryptMessage('Testing simple transfer', recipient_nis.publicAccount, SignSchema.KECCAK_REVERSED_KEY);
         const payload = encryptedMessage.payload;
-        const plainMessage = recipient_nis.decryptMessage(new EncryptedMessage(payload), sender_nis.publicAccount, SignSchema.NIS);
+        const plainMessage = recipient_nis.decryptMessage(new EncryptedMessage(payload), sender_nis.publicAccount, SignSchema.KECCAK_REVERSED_KEY);
         expect(plainMessage.payload).to.be.equal('Testing simple transfer');
     });
 

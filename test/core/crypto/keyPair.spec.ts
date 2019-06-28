@@ -111,7 +111,7 @@ describe('key pair', () => {
                 const expectedPublicKey = Expected_Public_Keys[i];
 
                 // Act:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex, SignSchema.NIS);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex, SignSchema.KECCAK_REVERSED_KEY);
 
                 // Assert:
                 const message = ` from ${privateKeyHex}`;
@@ -227,18 +227,18 @@ describe('key pair', () => {
 
             for (let i = 0; i < Nis1_Private_Key.length; ++i) {
                 // Arrange:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Nis1_Private_Key[i], SignSchema.NIS);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Nis1_Private_Key[i], SignSchema.KECCAK_REVERSED_KEY);
                 const payload = Convert.hexToUint8(Nis1_Data[i]);
 
                 // Act:
-                const signature = KeyPair.sign(keyPair, payload, SignSchema.NIS);
+                const signature = KeyPair.sign(keyPair, payload, SignSchema.KECCAK_REVERSED_KEY);
 
                 // Assert:
                 const message = ` from ${Nis1_Private_Key[i]}`;
-                expect(Convert.uint8ToHex(KeyPair.sign(keyPair, payload, SignSchema.NIS)).toUpperCase(),
+                expect(Convert.uint8ToHex(KeyPair.sign(keyPair, payload, SignSchema.KECCAK_REVERSED_KEY)).toUpperCase(),
                     `private ${message}`).to.deep.equal(Expected_Signature[i].toUpperCase());
 
-                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, SignSchema.NIS);
+                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, SignSchema.KECCAK_REVERSED_KEY);
                 expect(isVerified, `private ${message}`).to.equal(true);
             }
         });
@@ -271,11 +271,11 @@ describe('key pair', () => {
 
             for (let i = 0; i < Catapult_Private_Key.length; ++i) {
                 // Arrange:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Catapult_Private_Key[i], SignSchema.Catapult);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Catapult_Private_Key[i], SignSchema.SHA3);
                 const payload = Convert.hexToUint8(Catapult_Data[i]);
 
                 // Act:
-                const signature = KeyPair.sign(keyPair, payload, SignSchema.Catapult);
+                const signature = KeyPair.sign(keyPair, payload, SignSchema.SHA3);
 
                 // Assert:
                 const message = ` from ${Catapult_Private_Key[i]}`;
@@ -666,12 +666,12 @@ describe('key pair', () => {
 
             for (let i = 0; i < Nis1_Private_Key.length; ++i) {
                 // Arrange:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Nis1_Private_Key[i], SignSchema.NIS);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Nis1_Private_Key[i], SignSchema.KECCAK_REVERSED_KEY);
                 const publicKey = Convert.hexToUint8(Nis1_Public_Keys[i]);
                 const salt = Convert.hexToUint8(Nis1_Salt[i]);
 
                 // Act:
-                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, salt, SignSchema.NIS));
+                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, salt, SignSchema.KECCAK_REVERSED_KEY));
 
                 // Assert:
                 const message = ` from ${Nis1_Private_Key[i]}`;

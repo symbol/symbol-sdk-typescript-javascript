@@ -26,12 +26,12 @@ export class Address {
      * Create from private key
      * @param publicKey - The account public key.
      * @param networkType - The NEM network type.
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {Address}
      */
     public static createFromPublicKey(publicKey: string,
                                       networkType: NetworkType,
-                                      signSchema = SignSchema.Catapult): Address {
+                                      signSchema = SignSchema.SHA3): Address {
         const publicKeyUint8 = convert.hexToUint8(publicKey);
         const address = AddressLibrary
             .addressToString(AddressLibrary.publicKeyToAddress(publicKeyUint8, networkType, signSchema));

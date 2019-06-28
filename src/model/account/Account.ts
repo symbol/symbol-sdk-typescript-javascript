@@ -41,7 +41,7 @@ export class Account {
      * @internal
      * @param address
      * @param keyPair
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      */
     private constructor(
                         /**
@@ -53,21 +53,21 @@ export class Account {
                          */
                         private readonly keyPair: IKeyPair,
                         /**
-                         * The Sign Schema (NIS / Catapult).
+                         * The Sign Schema (KECCAK_REVERSED_KEY / SHA3).
                          */
-                        private readonly signSchema: SignSchema = SignSchema.Catapult) {
+                        private readonly signSchema: SignSchema = SignSchema.SHA3) {
     }
 
     /**
      * Create an Account from a given private key
      * @param privateKey - Private key from an account
      * @param networkType - Network type
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {Account}
      */
     public static createFromPrivateKey(privateKey: string,
                                        networkType: NetworkType,
-                                       signSchema: SignSchema = SignSchema.Catapult): Account {
+                                       signSchema: SignSchema = SignSchema.SHA3): Account {
         const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, signSchema);
         const address = AddressLibrary.addressToString(
             AddressLibrary.publicKeyToAddress(keyPair.publicKey, networkType, signSchema));
@@ -81,9 +81,9 @@ export class Account {
     /**
      * Generate a new account
      * @param networkType - Network type
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      */
-    public static generateNewAccount(networkType: NetworkType, signSchema: SignSchema = SignSchema.Catapult): Account {
+    public static generateNewAccount(networkType: NetworkType, signSchema: SignSchema = SignSchema.SHA3): Account {
         // Create random bytes
         const randomBytesArray = Crypto.randomBytes(32);
         // Hash random bytes with entropy seed
@@ -100,12 +100,12 @@ export class Account {
      * Create a new encrypted Message
      * @param message - Plain message to be encrypted
      * @param recipientPublicAccount - Recipient public account
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {EncryptedMessage}
      */
     public encryptMessage(message: string,
                           recipientPublicAccount: PublicAccount,
-                          signSchema: SignSchema = SignSchema.Catapult): EncryptedMessage {
+                          signSchema: SignSchema = SignSchema.SHA3): EncryptedMessage {
         return EncryptedMessage.create(message, recipientPublicAccount, this.privateKey, signSchema);
     }
 
@@ -113,12 +113,12 @@ export class Account {
      * Decrypts an encrypted message
      * @param encryptedMessage - Encrypted message
      * @param publicAccount - The public account originally encrypted the message
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {PlainMessage}
      */
     public decryptMessage(encryptedMessage: EncryptedMessage,
                           publicAccount: PublicAccount,
-                          signSchema: SignSchema = SignSchema.Catapult): PlainMessage {
+                          signSchema: SignSchema = SignSchema.SHA3): PlainMessage {
         return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, publicAccount, signSchema);
     }
     /**
@@ -149,10 +149,10 @@ export class Account {
      * Sign a transaction
      * @param transaction - The transaction to be signed.
      * @param generationHash - Network generation hash hex
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {SignedTransaction}
      */
-    public sign(transaction: Transaction, generationHash, signSchema: SignSchema = SignSchema.Catapult): SignedTransaction {
+    public sign(transaction: Transaction, generationHash, signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
         return transaction.signWith(this, generationHash, signSchema);
     }
 
@@ -161,34 +161,34 @@ export class Account {
      * @param transaction - The aggregate transaction to be signed.
      * @param cosignatories - The array of accounts that will cosign the transaction
      * @param generationHash - Network generation hash hex
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {SignedTransaction}
      */
     public signTransactionWithCosignatories(transaction: AggregateTransaction,
                                             cosignatories: Account[],
                                             generationHash: string,
-                                            signSchema: SignSchema = SignSchema.Catapult): SignedTransaction {
+                                            signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
     return transaction.signTransactionWithCosignatories(this, cosignatories, generationHash, signSchema);
     }
 
     /**
      * Sign aggregate signature transaction
      * @param cosignatureTransaction - The aggregate signature transaction.
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {CosignatureSignedTransaction}
      */
     public signCosignatureTransaction(cosignatureTransaction: CosignatureTransaction,
-                                      signSchema: SignSchema = SignSchema.Catapult): CosignatureSignedTransaction {
+                                      signSchema: SignSchema = SignSchema.SHA3): CosignatureSignedTransaction {
         return cosignatureTransaction.signWith(this, signSchema);
     }
 
     /**
      * Sign raw data
      * @param data - Data to be signed
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {string} - Signed data result
      */
-    public signData(data: string, signSchema: SignSchema = SignSchema.Catapult): string {
+    public signData(data: string, signSchema: SignSchema = SignSchema.SHA3): string {
         return convert.uint8ToHex(KeyPair.sign(this.keyPair,
                             convert.hexToUint8(convert.utf8ToHex(data)),
                             signSchema,
