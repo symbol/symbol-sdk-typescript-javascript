@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { RawAddress as addressLibrary } from '../../core/format';
+import { TransactionType } from '../../model/transaction/TransactionType';
 import AddressAliasTransactionBufferPackage from '../buffers/AddressAliasTransactionBuffer';
 import AddressAliasTransactionSchema from '../schemas/AddressAliasTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
@@ -22,9 +23,7 @@ const {
     AddressAliasTransactionBuffer,
 } = AddressAliasTransactionBufferPackage.Buffers;
 
-const {
-    flatbuffers,
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 /**
  * @module transactions/AddressAliasTransaction
@@ -36,7 +35,7 @@ export class AddressAliasTransaction extends VerifiableTransaction {
 }
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
@@ -44,13 +43,12 @@ export class Builder {
     namespaceId: any;
     actionType: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36865;
-        this.type = 0x424E;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.ADDRESS_ALIAS;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -95,7 +93,7 @@ export class Builder {
         const deadlineVector = AddressAliasTransactionBuffer
             .createDeadlineVector(builder, this.deadline);
         const feeVector = AddressAliasTransactionBuffer
-            .createFeeVector(builder, this.fee);
+            .createFeeVector(builder, this.maxFee);
         const namespaceIdVector = AddressAliasTransactionBuffer
             .createNamespaceIdVector(builder, this.namespaceId);
         const addressVector = AddressAliasTransactionBuffer

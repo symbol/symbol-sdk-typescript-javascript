@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 import { Convert as convert } from '../../core/format';
+import { TransactionType } from '../../model/transaction/TransactionType';
 import MultisigModificationTransactionBufferPackage from '../buffers/MultisigModificationTransactionBuffer';
 import MultisigModificationTransactionSchema from '../schemas/MultisigModificationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
-const {
-    flatbuffers
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 const {
     MultisigModificationTransactionBuffer,
@@ -38,7 +37,7 @@ export default class MultisigModificationTransaction extends VerifiableTransacti
 
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
@@ -46,13 +45,12 @@ export class Builder {
     minApprovalDelta: any;
     modifications: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36865;
-        this.type = 0x4155;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.MODIFY_MULTISIG_ACCOUNT;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -91,7 +89,7 @@ export class Builder {
 
         // Create modifications
         const modificationsArray: any = [];
-        this.modifications.forEach(modification => {
+        this.modifications.forEach((modification) => {
             const cosignatoryPublicKeyVector = CosignatoryModificationBuffer
                 .createCosignatoryPublicKeyVector(builder, convert.hexToUint8(modification.cosignatoryPublicKey));
             CosignatoryModificationBuffer.startCosignatoryModificationBuffer(builder);
@@ -108,7 +106,7 @@ export class Builder {
         const deadlineVector = MultisigModificationTransactionBuffer
             .createDeadlineVector(builder, this.deadline);
         const feeVector = MultisigModificationTransactionBuffer
-            .createFeeVector(builder, this.fee);
+            .createFeeVector(builder, this.maxFee);
         const modificationsVector = MultisigModificationTransactionBuffer
             .createModificationsVector(builder, modificationsArray);
 
