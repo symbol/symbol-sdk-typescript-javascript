@@ -1,3 +1,5 @@
+import { NetworkType } from "../blockchain/NetworkType";
+
 /*
  * Copyright 2019 NEM
  *
@@ -31,94 +33,94 @@ export class TransactionVersion {
      * Transfer Transaction transaction version.
      * @type {number}
      */
-    public static readonly TRANSFER = 1;
+    public static readonly TRANSFER = 0x01;
 
     /**
      * Register namespace transaction version.
      * @type {number}
      */
-    public static readonly REGISTER_NAMESPACE = 1;
+    public static readonly REGISTER_NAMESPACE = 0x01;
 
     /**
      * Mosaic definition transaction version.
      * @type {number}
      */
-    public static readonly MOSAIC_DEFINITION = 1;
+    public static readonly MOSAIC_DEFINITION = 0x01;
 
     /**
      * Mosaic supply change transaction.
      * @type {number}
      */
-    public static readonly MOSAIC_SUPPLY_CHANGE = 1;
+    public static readonly MOSAIC_SUPPLY_CHANGE = 0x01;
 
     /**
      * Modify multisig account transaction version.
      * @type {number}
      */
-    public static readonly MODIFY_MULTISIG_ACCOUNT = 1;
+    public static readonly MODIFY_MULTISIG_ACCOUNT = 0x01;
 
     /**
      * Aggregate complete transaction version.
      * @type {number}
      */
-    public static readonly AGGREGATE_COMPLETE = 1;
+    public static readonly AGGREGATE_COMPLETE = 0x01;
 
     /**
      * Aggregate bonded transaction version
      */
-    public static readonly AGGREGATE_BONDED = 1;
+    public static readonly AGGREGATE_BONDED = 0x01;
 
     /**
      * Lock transaction version
      * @type {number}
      */
-    public static readonly LOCK = 1;
+    public static readonly LOCK = 0x01;
 
     /**
      * Secret Lock transaction version
      * @type {number}
      */
-    public static readonly SECRET_LOCK = 1;
+    public static readonly SECRET_LOCK = 0x01;
 
     /**
      * Secret Proof transaction version
      * @type {number}
      */
-    public static readonly SECRET_PROOF = 1;
+    public static readonly SECRET_PROOF = 0x01;
 
     /**
      * Address Alias transaction version
      * @type {number}
      */
-    public static readonly ADDRESS_ALIAS = 1;
+    public static readonly ADDRESS_ALIAS = 0x01;
 
     /**
      * Mosaic Alias transaction version
      * @type {number}
      */
-    public static readonly MOSAIC_ALIAS = 1;
+    public static readonly MOSAIC_ALIAS = 0x01;
 
     /**
      * Account Property address transaction version
      * @type {number}
      */
-    public static readonly MODIFY_ACCOUNT_PROPERTY_ADDRESS = 1;
+    public static readonly MODIFY_ACCOUNT_PROPERTY_ADDRESS = 0x01;
 
     /**
      * Account Property mosaic transaction version
      * @type {number}
      */
-    public static readonly MODIFY_ACCOUNT_PROPERTY_MOSAIC = 1;
+    public static readonly MODIFY_ACCOUNT_PROPERTY_MOSAIC = 0x01;
 
     /**
      * Account Property entity type transaction version
      * @type {number}
      */
-    public static readonly MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE = 1;
+    public static readonly MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE = 0x01;
 
     /**
      * Link account transaction version
      * @type {number}
      */
-    public static readonly LINK_ACCOUNT = 1;
+    public static readonly LINK_ACCOUNT = 0x01;
 }

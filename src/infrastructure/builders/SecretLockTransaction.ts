@@ -21,10 +21,9 @@ import { Convert as convert, RawAddress as address } from '../../core/format';
 import * as SecretLockTransactionBufferPackage from '../../infrastructure/buffers/SecretLockTransactionBuffer';
 import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
 import SecretLockTransactionSchema from '../../infrastructure/schemas/SecretLockTransactionSchema';
+import { TransactionType } from '../../model/transaction/TransactionType';
 
-const {
-    flatbuffers,
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 const {
     SecretLockTransactionBuffer,
@@ -38,7 +37,7 @@ export default class SecretLockTransaction extends VerifiableTransaction {
 
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
@@ -49,13 +48,12 @@ export class Builder {
     secret: any;
     recipient: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36865;
-        this.type = 0x424C;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.SECRET_LOCK;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -112,7 +110,7 @@ export class Builder {
             .createSignatureVector(builder, Array(...Array(64)).map(Number.prototype.valueOf, 0));
         const signerVector = SecretLockTransactionBuffer.createSignerVector(builder, Array(...Array(32)).map(Number.prototype.valueOf, 0));
         const deadlineVector = SecretLockTransactionBuffer.createDeadlineVector(builder, this.deadline);
-        const feeVector = SecretLockTransactionBuffer.createFeeVector(builder, this.fee);
+        const feeVector = SecretLockTransactionBuffer.createFeeVector(builder, this.maxFee);
         const mosaicIdVector = SecretLockTransactionBuffer.createMosaicIdVector(builder, this.mosaicId);
         const mosaicAmountVector = SecretLockTransactionBuffer.createMosaicAmountVector(builder, this.mosaicAmount);
         const durationVector = SecretLockTransactionBuffer.createDurationVector(builder, this.duration);
