@@ -51,7 +51,7 @@ export class Builder {
     constructor() {
         this.flags = 0;
         this.fee = [0, 0];
-        this.version = 36867;
+        this.version = 36865;
         this.type = 0x414d;
         this.nonce = 0;
     }
