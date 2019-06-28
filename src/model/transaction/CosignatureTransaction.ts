@@ -50,10 +50,10 @@ export class CosignatureTransaction {
      * @internal
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {CosignatureSignedTransaction}
      */
-    public signWith(account: Account, signSchema: SignSchema = SignSchema.Catapult): CosignatureSignedTransaction {
+    public signWith(account: Account, signSchema: SignSchema = SignSchema.SHA3): CosignatureSignedTransaction {
         const aggregateSignatureTransaction = new CosignaturetransactionLibrary(this.transactionToCosign.transactionInfo!.hash);
         const signedTransactionRaw = aggregateSignatureTransaction.signCosignatoriesTransaction(account, signSchema);
         return new CosignatureSignedTransaction(signedTransactionRaw.parentHash,

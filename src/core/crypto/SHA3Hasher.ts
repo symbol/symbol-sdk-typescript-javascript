@@ -24,9 +24,9 @@ export class SHA3Hasher {
      * @param {Uint8Array} dest The computed hash destination.
      * @param {Uint8Array} data The data to hash.
      * @param {numeric} length The hash length in bytes.
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      */
-    public static func = (dest, data, length, signSchema = SignSchema.Catapult) => {
+    public static func = (dest, data, length, signSchema = SignSchema.SHA3) => {
         const hasher = SHA3Hasher.getHasher(length, signSchema);
         const hash = hasher.arrayBuffer(data);
         array.copy(dest, array.uint8View(hash));
@@ -35,10 +35,10 @@ export class SHA3Hasher {
     /**
      * Creates a hasher object.
      * @param {numeric} length The hash length in bytes.
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {object} The hasher.
      */
-    public static createHasher = (length = 64, signSchema = SignSchema.Catapult) => {
+    public static createHasher = (length = 64, signSchema = SignSchema.SHA3) => {
         let hash;
         return {
             reset: () => {
@@ -62,13 +62,13 @@ export class SHA3Hasher {
     /**
      * Get a hasher instance.
      * @param {numeric} length The hash length in bytes.
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {object} The hasher.
      */
-    public static getHasher = (length = 64, signSchema = SignSchema.Catapult) => {
+    public static getHasher = (length = 64, signSchema = SignSchema.SHA3) => {
         return {
-            32: signSchema === SignSchema.Catapult ? sha3_256 : keccak256,
-            64: signSchema === SignSchema.Catapult ? sha3_512 : keccak512 ,
+            32: signSchema === SignSchema.SHA3 ? sha3_256 : keccak256,
+            64: signSchema === SignSchema.SHA3 ? sha3_512 : keccak512 ,
         } [length];
     }
 }

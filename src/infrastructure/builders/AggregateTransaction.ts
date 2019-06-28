@@ -36,7 +36,7 @@ export class AggregateTransaction extends VerifiableTransaction {
         super(bytes, AggregateTransactionSchema);
     }
 
-    signTransactionWithCosigners(initializer, cosigners, generationHash, signSchema: SignSchema = SignSchema.Catapult) {
+    signTransactionWithCosigners(initializer, cosigners, generationHash, signSchema: SignSchema = SignSchema.SHA3) {
         const signedTransaction = this.signTransaction(initializer, generationHash, signSchema);
         cosigners.forEach((cosigner) => {
             const signatureTransaction = new CosignatureTransaction(signedTransaction.hash);

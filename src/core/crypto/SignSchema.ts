@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
+ /**
+  * [KECCAK_REVERSED_KEY]: Keccak hash algorithm with key reversed.
+  * [SHA3]: Sha3 has algorithm without key resersed
+  */
 export enum SignSchema {
-    NIS = 1,
-    Catapult = 2,
+    KECCAK_REVERSED_KEY = 1,
+    SHA3 = 2,
 }

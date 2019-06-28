@@ -38,7 +38,7 @@ describe('Account', () => {
      */
     it('should be created via private key using NIS1 schema', () => {
         const account = Account.createFromPrivateKey('575dbb3062267eff57c970a336ebbc8fbcfe12c5bd3ed7bc11eb0481d7704ced',
-            NetworkType.MIJIN_TEST, SignSchema.NIS);
+            NetworkType.MIJIN_TEST, SignSchema.KECCAK_REVERSED_KEY);
         expect(account.publicKey.toUpperCase()).to.be.
             equal('c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844'.toUpperCase());
         expect(account.address.plain()).to.be.equal('SDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5JGDTV3S');
@@ -58,7 +58,7 @@ describe('Account', () => {
     });
 
     it('should generate a new account using NIS1 schema', () => {
-        const account = Account.generateNewAccount(NetworkType.MIJIN_TEST, SignSchema.NIS);
+        const account = Account.generateNewAccount(NetworkType.MIJIN_TEST, SignSchema.KECCAK_REVERSED_KEY);
         expect(account.publicKey).to.not.be.equal(undefined);
         expect(account.privateKey).to.not.be.equal(undefined);
         expect(account.address).to.not.be.equal(undefined);
@@ -91,11 +91,11 @@ describe('Account', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
                 NetworkType.MIJIN_TEST,
-                SignSchema.NIS,
+                SignSchema.KECCAK_REVERSED_KEY,
             );
             const publicAccount = account.publicAccount;
-            const signed = account.signData('catapult rocks!', SignSchema.NIS);
-            expect(publicAccount.verifySignature('catapult rocks!', signed, SignSchema.NIS))
+            const signed = account.signData('catapult rocks!', SignSchema.KECCAK_REVERSED_KEY);
+            expect(publicAccount.verifySignature('catapult rocks!', signed, SignSchema.KECCAK_REVERSED_KEY))
                 .to.be.true;
         });
 
@@ -103,11 +103,11 @@ describe('Account', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
                 NetworkType.MIJIN_TEST,
-                SignSchema.NIS,
+                SignSchema.KECCAK_REVERSED_KEY,
             );
             const publicAccount = account.publicAccount;
-            const signed = account.signData('0xAA', SignSchema.NIS);
-            expect(publicAccount.verifySignature('0xAA', signed, SignSchema.NIS))
+            const signed = account.signData('0xAA', SignSchema.KECCAK_REVERSED_KEY);
+            expect(publicAccount.verifySignature('0xAA', signed, SignSchema.KECCAK_REVERSED_KEY))
                 .to.be.true;
         });
     });

@@ -60,10 +60,10 @@ export class VerifiableTransaction {
     /**
      * @param {KeyPair } keyPair KeyPair instance
      * @param {string} generationHash Network generation hash hex
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {module:model/TransactionPayload} - Signed Transaction Payload
      */
-    signTransaction(keyPair, generationHash, signSchema: SignSchema = SignSchema.Catapult) {
+    signTransaction(keyPair, generationHash, signSchema: SignSchema = SignSchema.SHA3) {
         const generationHashBytes = Array.from(convert.hexToUint8(generationHash));
         const byteBuffer = this.serialize();
         const signingBytes = generationHashBytes.concat(byteBuffer.slice(4 + 64 + 32));
@@ -95,10 +95,10 @@ export class VerifiableTransaction {
 
     /**
      * @param {KeyPair} keyPair KeyPair instance
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {module:model/TransactionPayload} Returns TransactionPayload instance
      */
-    signCosignatoriesTransaction(keyPair, signSchema: SignSchema = SignSchema.Catapult) {
+    signCosignatoriesTransaction(keyPair, signSchema: SignSchema = SignSchema.SHA3) {
         const signature = KeyPair.sign(keyPair, new Uint8Array(this.bytes), signSchema);
         return {
             parentHash: convert.uint8ToHex(this.bytes),

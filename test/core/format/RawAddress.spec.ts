@@ -158,7 +158,7 @@ describe('address', () => {
 
             // Assert:
             expect(decoded[0]).to.equal(Network_Public_Test_Identifier);
-            expect(address.isValidAddress(decoded, SignSchema.NIS)).to.equal(true);
+            expect(address.isValidAddress(decoded, SignSchema.KECCAK_REVERSED_KEY)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(keccakHex);
             expect(convert.uint8ToHex(decoded)).not.to.equal(nonKeccakHex);
         });
@@ -263,7 +263,7 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MAIN_NET, SignSchema.NIS));
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MAIN_NET, SignSchema.KECCAK_REVERSED_KEY));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -304,7 +304,7 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET, SignSchema.NIS));
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET, SignSchema.KECCAK_REVERSED_KEY));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -345,7 +345,7 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN, SignSchema.NIS));
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN, SignSchema.KECCAK_REVERSED_KEY));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
