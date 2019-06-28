@@ -84,10 +84,10 @@ export abstract class Transaction {
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account - The account to sign the transaction
      * @param generationHash - Network generation hash hex
-     * @param {SignSchema} signSchema The Sign Schema (NIS / Catapult)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {SignedTransaction}
      */
-    public signWith(account: Account, generationHash: string, signSchema: SignSchema = SignSchema.Catapult): SignedTransaction {
+    public signWith(account: Account, generationHash: string, signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
         const transaction = this.buildTransaction();
         const signedTransactionRaw = transaction.signTransaction(account, generationHash, signSchema);
         return new SignedTransaction(

@@ -35,7 +35,7 @@ describe('PublicAccount', () => {
      */
     it('should createComplete a public account from public key using NIS1', () => {
         const publicAccount = PublicAccount.createFromPublicKey('c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
-            NetworkType.MIJIN, SignSchema.NIS);
+            NetworkType.MIJIN, SignSchema.KECCAK_REVERSED_KEY);
         expect(publicAccount.address.plain()).to.be.equal('MDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5LDT7JHT');
     });
 });
@@ -58,11 +58,11 @@ describe('Signature verification', () => {
         const account = Account.createFromPrivateKey(
             'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
             NetworkType.MIJIN_TEST,
-            SignSchema.NIS,
+            SignSchema.KECCAK_REVERSED_KEY,
         );
         const publicAccount = account.publicAccount;
-        const signed = account.signData('catapult rocks!', SignSchema.NIS);
-        expect(publicAccount.verifySignature('catapult rocks!', signed, SignSchema.NIS))
+        const signed = account.signData('catapult rocks!', SignSchema.KECCAK_REVERSED_KEY);
+        expect(publicAccount.verifySignature('catapult rocks!', signed, SignSchema.KECCAK_REVERSED_KEY))
             .to.be.true;
     });
 
