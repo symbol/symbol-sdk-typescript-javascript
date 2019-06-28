@@ -159,8 +159,14 @@ export abstract class Transaction {
      * @internal
      */
     public versionToDTO(): number {
-        const versionDTO = this.networkType.toString(16) + '0' + this.version.toString(16);
-        return parseInt(versionDTO, 16);
+        return (this.networkType << 8) + this.version;
+    }
+
+    /**
+     * @internal
+     */
+    public versionToHex(): string {
+        return '0x' + this.versionToDTO().toString(16);
     }
 
     /**

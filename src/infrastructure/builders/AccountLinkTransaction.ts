@@ -18,15 +18,12 @@
  * @module transactions/AccountLinkTransaction
  */
 import { Convert as convert } from '../../core/format';
+import { TransactionType } from '../../model/transaction/TransactionType';
 import AccountLinkTransactionBufferPackage from '../buffers/AccountLinkTransactionBuffer';
 import AccountLinkTransactionSchema from '../schemas/AccountLinkTransactionSchema';
-import {
-    VerifiableTransaction,
-} from './VerifiableTransaction';
+import {VerifiableTransaction} from './VerifiableTransaction';
 
-const {
-    flatbuffers,
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 const {
     AccountLinkTransactionBuffer,
@@ -40,20 +37,19 @@ export class AccountLinkTransaction extends VerifiableTransaction {
 
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
     remoteAccountKey: any;
     linkAction: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36865;
-        this.type = 0x414C;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.LINK_ACCOUNT;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -89,7 +85,7 @@ export class Builder {
             .createSignatureVector(builder, Array(...Array(64)).map(Number.prototype.valueOf, 0));
         const signerVector = AccountLinkTransactionBuffer.createSignerVector(builder, Array(...Array(32)).map(Number.prototype.valueOf, 0));
         const deadlineVector = AccountLinkTransactionBuffer.createDeadlineVector(builder, this.deadline);
-        const feeVector = AccountLinkTransactionBuffer.createFeeVector(builder, this.fee);
+        const feeVector = AccountLinkTransactionBuffer.createFeeVector(builder, this.maxFee);
         const remoteAccountKeyVector = AccountLinkTransactionBuffer.createRemoteAccountKeyVector(builder, this.remoteAccountKey);
 
         AccountLinkTransactionBuffer.startAccountLinkTransactionBuffer(builder);

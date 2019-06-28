@@ -17,6 +17,7 @@
 /**
  * @module transactions/AccountPropertiesMosaicTransaction
  */
+import { TransactionType } from '../../model/transaction/TransactionType';
 import AccountPropertiesMosaicTransactionBufferPackage from '../buffers/AccountPropertiesMosaicTransactionBuffer';
 import AccountPropertiesMosaicModificationTransactionSchema from '../schemas/AccountPropertiesMosaicModificationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
@@ -26,9 +27,7 @@ const {
     PropertyMosaicModificationBuffer,
 } = AccountPropertiesMosaicTransactionBufferPackage.Buffers;
 
-const {
-    flatbuffers,
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 export default class AccountPropertiesMosaicTransaction extends VerifiableTransaction {
     constructor(bytes) {
@@ -38,20 +37,19 @@ export default class AccountPropertiesMosaicTransaction extends VerifiableTransa
 
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
     propertyType: any;
     modifications: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36865;
-        this.type = 0x4250;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -85,7 +83,7 @@ export class Builder {
 
         // Create modifications
         const modificationsArray: any = [];
-        this.modifications.forEach(modification => {
+        this.modifications.forEach((modification) => {
             const addressModificationVector = PropertyMosaicModificationBuffer
                 .createValueVector(builder, modification.value);
             PropertyMosaicModificationBuffer.startPropertyMosaicModificationBuffer(builder);
@@ -102,7 +100,7 @@ export class Builder {
         const deadlineVector = AccountPropertiesMosaicTransactionBuffer
             .createDeadlineVector(builder, this.deadline);
         const feeVector = AccountPropertiesMosaicTransactionBuffer
-            .createFeeVector(builder, this.fee);
+            .createFeeVector(builder, this.maxFee);
         const modificationVector = AccountPropertiesMosaicTransactionBuffer
             .createModificationsVector(builder, modificationsArray);
 
