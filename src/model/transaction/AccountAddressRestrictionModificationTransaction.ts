@@ -14,37 +14,37 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/AccountPropertiesEntityTypeTransaction';
+import { Builder } from '../../infrastructure/builders/AccountPropertiesAddressTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { PropertyType } from '../account/PropertyType';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
-import { AccountPropertyModification } from './AccountPropertyModification';
+import { AccountRestrictionModification } from './AccountRestrictionModification';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
-export class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
+export class AccountAddressRestrictionModificationTransaction extends Transaction {
 
     /**
-     * Create a modify account property entity type transaction object
+     * Create a modify account property address transaction object
      * @param deadline - The deadline to include the transaction.
      * @param propertyType - The account property type.
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {ModifyAccountPropertyEntityTypeTransaction}
+     * @returns {AccountAddressRestrictionModificationTransaction}
      */
     public static create(deadline: Deadline,
                          propertyType: PropertyType,
-                         modifications: Array<AccountPropertyModification<TransactionType>>,
+                         modifications: Array<AccountRestrictionModification<string>>,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): ModifyAccountPropertyEntityTypeTransaction {
-        return new ModifyAccountPropertyEntityTypeTransaction(networkType,
-            TransactionVersion.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE,
+                         maxFee: UInt64 = new UInt64([0, 0])): AccountAddressRestrictionModificationTransaction {
+        return new AccountAddressRestrictionModificationTransaction(networkType,
+            TransactionVersion.MODIFY_ACCOUNT_PROPERTY_ADDRESS,
             deadline,
             maxFee,
             propertyType,
@@ -68,18 +68,18 @@ export class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
                 deadline: Deadline,
                 maxFee: UInt64,
                 public readonly propertyType: PropertyType,
-                public readonly modifications: Array<AccountPropertyModification<TransactionType>>,
+                public readonly modifications: Array<AccountRestrictionModification<string>>,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
      * @override Transaction.size()
-     * @description get the byte size of a ModifyAccountPropertyEntityTypeTransaction
+     * @description get the byte size of a AccountAddressRestrictionModificationTransaction
      * @returns {number}
-     * @memberof ModifyAccountPropertyEntityTypeTransaction
+     * @memberof AccountAddressRestrictionModificationTransaction
      */
     public get size(): number {
         const byteSize = super.size;
@@ -90,8 +90,8 @@ export class ModifyAccountPropertyEntityTypeTransaction extends Transaction {
 
         // each modification contains :
         // - 1 byte for modificationType
-        // - 2 bytes for the modification value (transaction type)
-        const byteModifications = 3 * this.modifications.length;
+        // - 25 bytes for the modification value (address)
+        const byteModifications = 26 * this.modifications.length;
 
         return byteSize + bytePropertyType + byteModificationCount + byteModifications;
     }

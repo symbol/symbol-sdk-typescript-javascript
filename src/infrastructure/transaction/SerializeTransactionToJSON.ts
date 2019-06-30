@@ -18,9 +18,9 @@ import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTrans
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
-import { ModifyAccountPropertyAddressTransaction } from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
-import { ModifyAccountPropertyEntityTypeTransaction } from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
-import { ModifyAccountPropertyMosaicTransaction } from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
+import { AccountAddressRestrictionModificationTransaction } from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
+import { AccountEntityTypeRestrictionModificationTransaction } from '../../model/transaction/AccountEntityTypeRestrictionModificationTransaction';
+import { AccountMosaicRestrictionModificationTransaction } from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
 import { ModifyMultisigAccountTransaction } from '../../model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
@@ -70,24 +70,24 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
             return {
-                propertyType: (transaction as ModifyAccountPropertyAddressTransaction).propertyType,
-                modifications: (transaction as ModifyAccountPropertyAddressTransaction).
+                propertyType: (transaction as AccountAddressRestrictionModificationTransaction).propertyType,
+                modifications: (transaction as AccountAddressRestrictionModificationTransaction).
                     modifications.map((modification) => {
                         return modification.toDTO();
                     }),
             };
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
             return {
-                propertyType: (transaction as ModifyAccountPropertyEntityTypeTransaction).propertyType,
-                modifications: (transaction as ModifyAccountPropertyEntityTypeTransaction).
+                propertyType: (transaction as AccountEntityTypeRestrictionModificationTransaction).propertyType,
+                modifications: (transaction as AccountEntityTypeRestrictionModificationTransaction).
                     modifications.map((modification) => {
                         return modification.toDTO();
                     }),
             };
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
             return {
-                propertyType: (transaction as ModifyAccountPropertyMosaicTransaction).propertyType,
-                modifications: (transaction as ModifyAccountPropertyMosaicTransaction).modifications.map((modification) => {
+                propertyType: (transaction as AccountMosaicRestrictionModificationTransaction).propertyType,
+                modifications: (transaction as AccountMosaicRestrictionModificationTransaction).modifications.map((modification) => {
                         return modification.toDTO();
                     }),
             };

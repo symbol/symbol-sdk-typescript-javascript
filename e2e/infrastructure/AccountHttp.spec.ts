@@ -27,8 +27,8 @@ import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { AccountPropertyModification } from '../../src/model/transaction/AccountPropertyModification';
-import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
+import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
+import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -193,12 +193,12 @@ describe('AccountHttp', () => {
             return listener.close();
         });
 
-        it('Announce AccountPropertyTransaction', (done) => {
-            const addressPropertyFilter = AccountPropertyModification.createForAddress(
+        it('Announce AccountRestrictionTransaction', (done) => {
+            const addressPropertyFilter = AccountRestrictionModification.createForAddress(
                 PropertyModificationType.Add,
                 account3.address,
             );
-            const addressModification = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
                 Deadline.create(),
                 PropertyType.BlockAddress,
                 [addressPropertyFilter],
@@ -419,12 +419,12 @@ describe('AccountHttp', () => {
             return listener.close();
         });
 
-        it('Announce AccountPropertyTransaction', (done) => {
-            const addressPropertyFilter = AccountPropertyModification.createForAddress(
+        it('Announce AccountRestrictionTransaction', (done) => {
+            const addressPropertyFilter = AccountRestrictionModification.createForAddress(
                 PropertyModificationType.Remove,
                 account3.address,
             );
-            const addressModification = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
                 Deadline.create(),
                 PropertyType.BlockAddress,
                 [addressPropertyFilter],

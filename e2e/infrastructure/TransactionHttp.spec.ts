@@ -37,9 +37,12 @@ import {MosaicSupplyType} from '../../src/model/mosaic/MosaicSupplyType';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { AccountAddressRestrictionModificationTransaction } from '../../src/model/transaction/AccountAddressRestrictionModificationTransaction';
+import { AccountEntityTypeRestrictionModificationTransaction } from '../../src/model/transaction/AccountEntityTypeRestrictionModificationTransaction';
 import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
-import { AccountPropertyModification } from '../../src/model/transaction/AccountPropertyModification';
-import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
+import { AccountMosaicRestrictionModificationTransaction } from '../../src/model/transaction/AccountMosaicRestrictionModificationTransaction';
+import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
+import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import {AggregateTransaction} from '../../src/model/transaction/AggregateTransaction';
 import {CosignatureSignedTransaction} from '../../src/model/transaction/CosignatureSignedTransaction';
@@ -49,9 +52,6 @@ import { HashLockTransaction } from '../../src/model/transaction/HashLockTransac
 import {HashType} from '../../src/model/transaction/HashType';
 import { LinkAction } from '../../src/model/transaction/LinkAction';
 import {LockFundsTransaction} from '../../src/model/transaction/LockFundsTransaction';
-import { ModifyAccountPropertyAddressTransaction } from '../../src/model/transaction/ModifyAccountPropertyAddressTransaction';
-import { ModifyAccountPropertyEntityTypeTransaction } from '../../src/model/transaction/ModifyAccountPropertyEntityTypeTransaction';
-import { ModifyAccountPropertyMosaicTransaction } from '../../src/model/transaction/ModifyAccountPropertyMosaicTransaction';
 import {ModifyMultisigAccountTransaction} from '../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../src/model/transaction/MosaicDefinitionTransaction';
@@ -272,7 +272,7 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('AccountPropertyTransaction - Address', () => {
+    describe('AccountRestrictionTransaction - Address', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -283,11 +283,11 @@ describe('TransactionHttp', () => {
         });
 
         it('standalone', (done) => {
-            const addressPropertyFilter = AccountPropertyModification.createForAddress(
+            const addressPropertyFilter = AccountRestrictionModification.createForAddress(
                 PropertyModificationType.Add,
                 account3.address,
             );
-            const addressModification = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
                 Deadline.create(),
                 PropertyType.BlockAddress,
                 [addressPropertyFilter],
@@ -295,7 +295,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction: ModifyAccountPropertyAddressTransaction) => {
+            listener.confirmed(account.address).subscribe((transaction: AccountAddressRestrictionModificationTransaction) => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
                 expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
@@ -310,7 +310,7 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('AccountPropertyTransaction - Address', () => {
+    describe('AccountRestrictionTransaction - Address', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -320,11 +320,11 @@ describe('TransactionHttp', () => {
             return listener.close();
         });
         it('aggregate', (done) => {
-            const addressPropertyFilter = AccountPropertyModification.createForAddress(
+            const addressPropertyFilter = AccountRestrictionModification.createForAddress(
                 PropertyModificationType.Remove,
                 account3.address,
             );
-            const addressModification = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
                 Deadline.create(),
                 PropertyType.BlockAddress,
                 [addressPropertyFilter],
@@ -347,7 +347,7 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('AccountPropertyTransaction - Mosaic', () => {
+    describe('AccountRestrictionTransaction - Mosaic', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -358,11 +358,11 @@ describe('TransactionHttp', () => {
         });
 
         it('standalone', (done) => {
-            const mosaicPropertyFilter = AccountPropertyModification.createForMosaic(
+            const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
                 PropertyModificationType.Add,
                 mosaicId,
             );
-            const addressModification = AccountPropertyTransaction.createMosaicPropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createMosaicPropertyModificationTransaction(
                 Deadline.create(),
                 PropertyType.BlockMosaic,
                 [mosaicPropertyFilter],
@@ -370,7 +370,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction: ModifyAccountPropertyMosaicTransaction) => {
+            listener.confirmed(account.address).subscribe((transaction: AccountMosaicRestrictionModificationTransaction) => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
                 expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
@@ -385,7 +385,7 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('AccountPropertyTransaction - Mosaic', () => {
+    describe('AccountRestrictionTransaction - Mosaic', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -395,11 +395,11 @@ describe('TransactionHttp', () => {
             return listener.close();
         });
         it('aggregate', (done) => {
-            const mosaicPropertyFilter = AccountPropertyModification.createForMosaic(
+            const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
                 PropertyModificationType.Remove,
                 mosaicId,
             );
-            const addressModification = AccountPropertyTransaction.createMosaicPropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createMosaicPropertyModificationTransaction(
                 Deadline.create(),
                 PropertyType.BlockMosaic,
                 [mosaicPropertyFilter],
@@ -422,7 +422,7 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('AccountPropertyTransaction - EntityType', () => {
+    describe('AccountRestrictionTransaction - EntityType', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -433,11 +433,11 @@ describe('TransactionHttp', () => {
         });
 
         it('standalone', (done) => {
-            const entityTypePropertyFilter = AccountPropertyModification.createForEntityType(
+            const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
                 PropertyModificationType.Add,
                 TransactionType.LINK_ACCOUNT,
             );
-            const addressModification = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createEntityTypePropertyModificationTransaction(
                 Deadline.create(),
                 PropertyType.BlockTransaction,
                 [entityTypePropertyFilter],
@@ -445,7 +445,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = addressModification.signWith(account3, generationHash);
 
-            listener.confirmed(account3.address).subscribe((transaction: ModifyAccountPropertyEntityTypeTransaction) => {
+            listener.confirmed(account3.address).subscribe((transaction: AccountEntityTypeRestrictionModificationTransaction) => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
                 expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
@@ -460,7 +460,7 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('AccountPropertyTransaction - EntityType', () => {
+    describe('AccountRestrictionTransaction - EntityType', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -470,11 +470,11 @@ describe('TransactionHttp', () => {
             return listener.close();
         });
         it('aggregate', (done) => {
-            const entityTypePropertyFilter = AccountPropertyModification.createForEntityType(
+            const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
                 PropertyModificationType.Remove,
                 TransactionType.LINK_ACCOUNT,
             );
-            const addressModification = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createEntityTypePropertyModificationTransaction(
                 Deadline.create(),
                 PropertyType.BlockTransaction,
                 [entityTypePropertyFilter],
