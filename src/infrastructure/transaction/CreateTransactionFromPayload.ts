@@ -37,7 +37,7 @@ import { LockFundsTransaction } from '../../model/transaction/LockFundsTransacti
 import { Message } from '../../model/transaction/Message';
 import { MessageType } from '../../model/transaction/MessageType';
 import { AccountAddressRestrictionModificationTransaction } from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
-import { AccountEntityTypeRestrictionModificationTransaction } from '../../model/transaction/AccountEntityTypeRestrictionModificationTransaction';
+import { AccountOperationRestrictionModificationTransaction } from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
 import { AccountMosaicRestrictionModificationTransaction } from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
 import { ModifyMultisigAccountTransaction } from '../../model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
@@ -134,7 +134,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                         networkType,
                     );
                 case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
-                    return AccountEntityTypeRestrictionModificationTransaction.create(
+                    return AccountOperationRestrictionModificationTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
                         modificationArray ? modificationArray.map((modification) => new AccountRestrictionModification(

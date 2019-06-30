@@ -38,7 +38,7 @@ import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosai
 import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AccountAddressRestrictionModificationTransaction } from '../../src/model/transaction/AccountAddressRestrictionModificationTransaction';
-import { AccountEntityTypeRestrictionModificationTransaction } from '../../src/model/transaction/AccountEntityTypeRestrictionModificationTransaction';
+import { AccountOperationRestrictionModificationTransaction } from '../../src/model/transaction/AccountOperationRestrictionModificationTransaction';
 import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
 import { AccountMosaicRestrictionModificationTransaction } from '../../src/model/transaction/AccountMosaicRestrictionModificationTransaction';
 import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
@@ -445,7 +445,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = addressModification.signWith(account3, generationHash);
 
-            listener.confirmed(account3.address).subscribe((transaction: AccountEntityTypeRestrictionModificationTransaction) => {
+            listener.confirmed(account3.address).subscribe((transaction: AccountOperationRestrictionModificationTransaction) => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
                 expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;

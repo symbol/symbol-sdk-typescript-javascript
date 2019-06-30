@@ -35,7 +35,7 @@ import { EncryptedMessage } from '../../model/transaction/EncryptedMessage';
 import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
 import { MessageType } from '../../model/transaction/MessageType';
 import {AccountAddressRestrictionModificationTransaction} from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
-import {AccountEntityTypeRestrictionModificationTransaction} from '../../model/transaction/AccountEntityTypeRestrictionModificationTransaction';
+import {AccountOperationRestrictionModificationTransaction} from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
 import {AccountMosaicRestrictionModificationTransaction} from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
 import {ModifyMultisigAccountTransaction} from '../../model/transaction/ModifyMultisigAccountTransaction';
 import {MosaicAliasTransaction} from '../../model/transaction/MosaicAliasTransaction';
@@ -293,7 +293,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE) {
-        return new AccountEntityTypeRestrictionModificationTransaction(
+        return new AccountOperationRestrictionModificationTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
