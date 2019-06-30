@@ -31,8 +31,8 @@ import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMos
 import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
-import { AccountPropertyModification } from '../../src/model/transaction/AccountPropertyModification';
-import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
+import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
+import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -77,11 +77,11 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AccountPropertyAddressTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressPropertyFilter = AccountPropertyModification.createForAddress(
+        const addressPropertyFilter = AccountRestrictionModification.createForAddress(
             PropertyModificationType.Add,
             address,
         );
-        const addressPropertyTransaction = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+        const addressPropertyTransaction = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
             Deadline.create(),
             PropertyType.AllowAddress,
             [addressPropertyFilter],
@@ -97,11 +97,11 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AccountPropertyMosaicTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const mosaicPropertyFilter = AccountPropertyModification.createForMosaic(
+        const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
             PropertyModificationType.Add,
             mosaicId,
         );
-        const mosaicPropertyTransaction = AccountPropertyTransaction.createMosaicPropertyModificationTransaction(
+        const mosaicPropertyTransaction = AccountRestrictionTransaction.createMosaicPropertyModificationTransaction(
             Deadline.create(),
             PropertyType.AllowMosaic,
             [mosaicPropertyFilter],
@@ -117,11 +117,11 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create AccountPropertyMosaicTransaction', () => {
         const entityType = TransactionType.ADDRESS_ALIAS;
-        const entityTypePropertyFilter = AccountPropertyModification.createForEntityType(
+        const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
             PropertyModificationType.Add,
             entityType,
         );
-        const entityTypePropertyTransaction = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
+        const entityTypePropertyTransaction = AccountRestrictionTransaction.createEntityTypePropertyModificationTransaction(
             Deadline.create(),
             PropertyType.AllowTransaction,
             [entityTypePropertyFilter],

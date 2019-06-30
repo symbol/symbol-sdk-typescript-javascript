@@ -26,7 +26,7 @@ import { MosaicProperties } from '../../model/mosaic/MosaicProperties';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { NamespaceType } from '../../model/namespace/NamespaceType';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
-import { AccountPropertyModification } from '../../model/transaction/AccountPropertyModification';
+import { AccountRestrictionModification } from '../../model/transaction/AccountRestrictionModification';
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { AggregateTransactionCosignature } from '../../model/transaction/AggregateTransactionCosignature';
@@ -36,9 +36,9 @@ import { HashType } from '../../model/transaction/HashType';
 import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
 import { Message } from '../../model/transaction/Message';
 import { MessageType } from '../../model/transaction/MessageType';
-import { ModifyAccountPropertyAddressTransaction } from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
-import { ModifyAccountPropertyEntityTypeTransaction } from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
-import { ModifyAccountPropertyMosaicTransaction } from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
+import { AccountAddressRestrictionModificationTransaction } from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
+import { AccountEntityTypeRestrictionModificationTransaction } from '../../model/transaction/AccountEntityTypeRestrictionModificationTransaction';
+import { AccountMosaicRestrictionModificationTransaction } from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
 import { ModifyMultisigAccountTransaction } from '../../model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
@@ -113,10 +113,10 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
 
             switch (type) {
                 case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
-                    const t =  ModifyAccountPropertyAddressTransaction.create(
+                    const t =  AccountAddressRestrictionModificationTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
-                        modificationArray ? modificationArray.map((modification) => new AccountPropertyModification(
+                        modificationArray ? modificationArray.map((modification) => new AccountRestrictionModification(
                             parseInt(convert.uint8ToHex(convert.hexToUint8(modification.substring(0, 2)).reverse()), 16),
                             Address.createFromEncoded(modification.substring(2, modification.length)).plain(),
                         )) : [],
@@ -124,20 +124,20 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                     );
                     return t;
                 case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
-                    return ModifyAccountPropertyMosaicTransaction.create(
+                    return AccountMosaicRestrictionModificationTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
-                        modificationArray ? modificationArray.map((modification) => new AccountPropertyModification(
+                        modificationArray ? modificationArray.map((modification) => new AccountRestrictionModification(
                             parseInt(convert.uint8ToHex(convert.hexToUint8(modification.substring(0, 2)).reverse()), 16),
                             UInt64.fromHex(reverse(modification.substring(2, modification.length))).toDTO(),
                         )) : [],
                         networkType,
                     );
                 case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
-                    return ModifyAccountPropertyEntityTypeTransaction.create(
+                    return AccountEntityTypeRestrictionModificationTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
-                        modificationArray ? modificationArray.map((modification) => new AccountPropertyModification(
+                        modificationArray ? modificationArray.map((modification) => new AccountRestrictionModification(
                             parseInt(convert.uint8ToHex(convert.hexToUint8(modification.substring(0, 2)).reverse()), 16),
                             parseInt(convert.uint8ToHex(convert.hexToUint8(
                                 modification.substring(2, modification.length)).reverse()), 16),
