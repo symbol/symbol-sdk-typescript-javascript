@@ -17,7 +17,7 @@
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {Address} from '../../../src/model/account/Address';
-import { AccountProperties, PropertyModificationType, PropertyType } from '../../../src/model/model';
+import { AccountRestrictions, RestrictionModificationType, RestrictionType, AccountRestriction } from '../../../src/model/model';
 
 describe('AccountProperties', () => {
 
@@ -25,19 +25,24 @@ describe('AccountProperties', () => {
         const accountPropertiesDTO = {
             address: Address.createFromEncoded('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142'),
             properties: [{
-                propertyType: PropertyType.AllowAddress,
-                values: [{modificationType: PropertyModificationType.Add,
+                propertyType: RestrictionType.AllowAddress,
+                values: [{modificationType: RestrictionModificationType.Add,
                           value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
                          }],
             }],
         };
 
-        const accountProperties = new AccountProperties(
+        const accountRestrictions = new AccountRestrictions(
             accountPropertiesDTO.address,
-            accountPropertiesDTO.properties,
+            accountPropertiesDTO.properties.map((r) => {
+                return new AccountRestriction(
+                    r.propertyType,
+                    r.values,
+                );
+            }),
         );
 
-        expect(accountProperties.address).to.be.equal(accountPropertiesDTO.address);
+        expect(accountRestrictions.address).to.be.equal(accountPropertiesDTO.address);
         deepEqual(accountPropertiesDTO.properties.length, accountPropertiesDTO.properties.length);
         deepEqual(accountPropertiesDTO.properties[0].propertyType, accountPropertiesDTO.properties[0].propertyType);
         deepEqual(accountPropertiesDTO.properties[0].values.length, accountPropertiesDTO.properties[0].values.length);

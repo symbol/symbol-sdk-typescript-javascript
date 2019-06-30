@@ -25,8 +25,8 @@ import {Listener} from '../../src/infrastructure/Listener';
 import {TransactionHttp} from '../../src/infrastructure/TransactionHttp';
 import {Account} from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
-import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';
-import { PropertyType } from '../../src/model/account/PropertyType';
+import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
+import { RestrictionType } from '../../src/model/account/RestrictionType';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
@@ -284,12 +284,12 @@ describe('TransactionHttp', () => {
 
         it('standalone', (done) => {
             const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-                PropertyModificationType.Add,
+                RestrictionModificationType.Add,
                 account3.address,
             );
             const addressModification = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.BlockAddress,
+                RestrictionType.BlockAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -299,7 +299,7 @@ describe('TransactionHttp', () => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
                 expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
-                expect(transaction.propertyType, 'PropertyType').not.to.be.undefined;
+                expect(transaction.restrictionType, 'PropertyType').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -321,12 +321,12 @@ describe('TransactionHttp', () => {
         });
         it('aggregate', (done) => {
             const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-                PropertyModificationType.Remove,
+                RestrictionModificationType.Remove,
                 account3.address,
             );
             const addressModification = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.BlockAddress,
+                RestrictionType.BlockAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -359,12 +359,12 @@ describe('TransactionHttp', () => {
 
         it('standalone', (done) => {
             const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
-                PropertyModificationType.Add,
+                RestrictionModificationType.Add,
                 mosaicId,
             );
             const addressModification = AccountRestrictionTransaction.createMosaicPropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.BlockMosaic,
+                RestrictionType.BlockMosaic,
                 [mosaicPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -374,7 +374,7 @@ describe('TransactionHttp', () => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
                 expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
-                expect(transaction.propertyType, 'PropertyType').not.to.be.undefined;
+                expect(transaction.restrictionType, 'PropertyType').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -396,12 +396,12 @@ describe('TransactionHttp', () => {
         });
         it('aggregate', (done) => {
             const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
-                PropertyModificationType.Remove,
+                RestrictionModificationType.Remove,
                 mosaicId,
             );
             const addressModification = AccountRestrictionTransaction.createMosaicPropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.BlockMosaic,
+                RestrictionType.BlockMosaic,
                 [mosaicPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -434,12 +434,12 @@ describe('TransactionHttp', () => {
 
         it('standalone', (done) => {
             const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
-                PropertyModificationType.Add,
+                RestrictionModificationType.Add,
                 TransactionType.LINK_ACCOUNT,
             );
             const addressModification = AccountRestrictionTransaction.createEntityTypePropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.BlockTransaction,
+                RestrictionType.BlockTransaction,
                 [entityTypePropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -449,7 +449,7 @@ describe('TransactionHttp', () => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
                 expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
-                expect(transaction.propertyType, 'PropertyType').not.to.be.undefined;
+                expect(transaction.restrictionType, 'PropertyType').not.to.be.undefined;
                 done();
             });
             listener.status(account3.address).subscribe((error) => {
@@ -471,12 +471,12 @@ describe('TransactionHttp', () => {
         });
         it('aggregate', (done) => {
             const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
-                PropertyModificationType.Remove,
+                RestrictionModificationType.Remove,
                 TransactionType.LINK_ACCOUNT,
             );
             const addressModification = AccountRestrictionTransaction.createEntityTypePropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.BlockTransaction,
+                RestrictionType.BlockTransaction,
                 [entityTypePropertyFilter],
                 NetworkType.MIJIN_TEST,
             );

@@ -19,8 +19,8 @@ import { sha3_256 } from 'js-sha3';
 import {Convert as convert} from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
 import { Address } from '../../src/model/account/Address';
-import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';
-import { PropertyType } from '../../src/model/account/PropertyType';
+import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
+import { RestrictionType } from '../../src/model/account/RestrictionType';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
@@ -78,12 +78,12 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AccountPropertyAddressTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             address,
         );
         const addressPropertyTransaction = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
             Deadline.create(),
-            PropertyType.AllowAddress,
+            RestrictionType.AllowAddress,
             [addressPropertyFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -91,19 +91,19 @@ describe('SerializeTransactionToJSON', () => {
         const json = addressPropertyTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS);
-        expect(json.transaction.propertyType).to.be.equal(PropertyType.AllowAddress);
+        expect(json.transaction.propertyType).to.be.equal(RestrictionType.AllowAddress);
         expect(json.transaction.modifications.length).to.be.equal(1);
     });
 
     it('should create AccountPropertyMosaicTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             mosaicId,
         );
         const mosaicPropertyTransaction = AccountRestrictionTransaction.createMosaicPropertyModificationTransaction(
             Deadline.create(),
-            PropertyType.AllowMosaic,
+            RestrictionType.AllowMosaic,
             [mosaicPropertyFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -111,19 +111,19 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicPropertyTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC);
-        expect(json.transaction.propertyType).to.be.equal(PropertyType.AllowMosaic);
+        expect(json.transaction.propertyType).to.be.equal(RestrictionType.AllowMosaic);
         expect(json.transaction.modifications.length).to.be.equal(1);
     });
 
     it('should create AccountPropertyMosaicTransaction', () => {
         const entityType = TransactionType.ADDRESS_ALIAS;
         const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             entityType,
         );
         const entityTypePropertyTransaction = AccountRestrictionTransaction.createEntityTypePropertyModificationTransaction(
             Deadline.create(),
-            PropertyType.AllowTransaction,
+            RestrictionType.AllowTransaction,
             [entityTypePropertyFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -131,7 +131,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = entityTypePropertyTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE);
-        expect(json.transaction.propertyType).to.be.equal(PropertyType.AllowTransaction);
+        expect(json.transaction.propertyType).to.be.equal(RestrictionType.AllowTransaction);
         expect(json.transaction.modifications.length).to.be.equal(1);
     });
 

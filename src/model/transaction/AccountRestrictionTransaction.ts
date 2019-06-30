@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PropertyType } from '../account/PropertyType';
+import { RestrictionType } from '../account/RestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionModificationTransaction } from './AccountAddressRestrictionModificationTransaction';
@@ -26,9 +26,9 @@ import { TransactionType } from './TransactionType';
 
 export class AccountRestrictionTransaction {
     /**
-     * Create an address modification transaction object
+     * Create an account address restriction transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param propertyType - Type of account property transaction
+     * @param restrictionType - Type of account restriction transaction
      * @param modification - array of address modifications
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
@@ -36,17 +36,17 @@ export class AccountRestrictionTransaction {
      */
     public static createAddressPropertyModificationTransaction(
         deadline: Deadline,
-        propertyType: PropertyType,
+        restrictionType: RestrictionType,
         modifications: Array<AccountRestrictionModification<string>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountAddressRestrictionModificationTransaction {
-        if (![PropertyType.AllowAddress, PropertyType.BlockAddress].includes(propertyType)) {
+        if (![RestrictionType.AllowAddress, RestrictionType.BlockAddress].includes(restrictionType)) {
             throw new Error ('Property type is not allowed.');
         }
         return AccountAddressRestrictionModificationTransaction.create(
             deadline,
-            propertyType,
+            restrictionType,
             modifications,
             networkType,
             maxFee,
@@ -54,9 +54,9 @@ export class AccountRestrictionTransaction {
     }
 
     /**
-     * Create an mosaic modification transaction object
+     * Create an account mosaic restriction transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param propertyType - Type of account property transaction
+     * @param restrictionType - Type of account restriction transaction
      * @param modification - array of mosaic modifications
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
@@ -64,17 +64,17 @@ export class AccountRestrictionTransaction {
      */
     public static createMosaicPropertyModificationTransaction(
         deadline: Deadline,
-        propertyType: PropertyType,
+        restrictionType: RestrictionType,
         modifications: Array<AccountRestrictionModification<number[]>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountMosaicRestrictionModificationTransaction {
-        if (![PropertyType.AllowMosaic, PropertyType.BlockMosaic].includes(propertyType)) {
+        if (![RestrictionType.AllowMosaic, RestrictionType.BlockMosaic].includes(restrictionType)) {
             throw new Error ('Property type is not allowed.');
         }
         return AccountMosaicRestrictionModificationTransaction.create(
             deadline,
-            propertyType,
+            restrictionType,
             modifications,
             networkType,
             maxFee,
@@ -82,9 +82,9 @@ export class AccountRestrictionTransaction {
     }
 
     /**
-     * Create an entity type modification transaction object
+     * Create an account operation restriction transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param propertyType - Type of account property transaction
+     * @param restrictionType - Type of account property transaction
      * @param modification - array of entity type modifications
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
@@ -92,17 +92,17 @@ export class AccountRestrictionTransaction {
      */
     public static createEntityTypePropertyModificationTransaction(
         deadline: Deadline,
-        propertyType: PropertyType,
+        restrictionType: RestrictionType,
         modifications: Array<AccountRestrictionModification<TransactionType>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountOperationRestrictionModificationTransaction {
-        if (![PropertyType.AllowTransaction, PropertyType.BlockTransaction].includes(propertyType)) {
+        if (![RestrictionType.AllowTransaction, RestrictionType.BlockTransaction].includes(restrictionType)) {
             throw new Error ('Property type is not allowed.');
         }
         return AccountOperationRestrictionModificationTransaction.create(
             deadline,
-            propertyType,
+            restrictionType,
             modifications,
             networkType,
             maxFee,

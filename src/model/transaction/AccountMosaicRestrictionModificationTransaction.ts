@@ -16,7 +16,7 @@
 
 import { Builder } from '../../infrastructure/builders/AccountPropertiesMosaicTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
-import { PropertyType } from '../account/PropertyType';
+import { RestrictionType } from '../account/RestrictionType';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -30,16 +30,16 @@ import { TransactionVersion } from './TransactionVersion';
 export class AccountMosaicRestrictionModificationTransaction extends Transaction {
 
     /**
-     * Create a modify account property mosaic transaction object
+     * Create a modify account mosaic restriction transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param propertyType - The account property type.
+     * @param restrictionType - The account restriction type.
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AccountAddressRestrictionModificationTransaction}
      */
     public static create(deadline: Deadline,
-                         propertyType: PropertyType,
+                         restrictionType: RestrictionType,
                          modifications: Array<AccountRestrictionModification<number[]>>,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountMosaicRestrictionModificationTransaction {
@@ -47,7 +47,7 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
             TransactionVersion.MODIFY_ACCOUNT_PROPERTY_MOSAIC,
             deadline,
             maxFee,
-            propertyType,
+            restrictionType,
             modifications);
     }
 
@@ -56,8 +56,7 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
      * @param version
      * @param deadline
      * @param maxFee
-     * @param minApprovalDelta
-     * @param minRemovalDelta
+     * @param restrictionType
      * @param modifications
      * @param signature
      * @param signer
@@ -67,7 +66,7 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
                 version: number,
                 deadline: Deadline,
                 maxFee: UInt64,
-                public readonly propertyType: PropertyType,
+                public readonly restrictionType: RestrictionType,
                 public readonly modifications: Array<AccountRestrictionModification<number[]>>,
                 signature?: string,
                 signer?: PublicAccount,
@@ -105,7 +104,7 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
-            .addPropertyType(this.propertyType)
+            .addPropertyType(this.restrictionType)
             .addModifications(this.modifications.map((modification) => modification.toDTO()))
             .build();
     }
