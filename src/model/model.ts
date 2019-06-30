@@ -93,7 +93,7 @@ export * from './receipt/Statement';
 export * from './transaction/AccountLinkTransaction';
 export * from './transaction/AccountRestrictionTransaction';
 export * from './transaction/AccountAddressRestrictionModificationTransaction';
-export * from './transaction/AccountEntityTypeRestrictionModificationTransaction';
+export * from './transaction/AccountOperationRestrictionModificationTransaction';
 export * from './transaction/AccountMosaicRestrictionModificationTransaction';
 export * from './transaction/AccountRestrictionModification';
 export * from './transaction/AddressAliasTransaction';

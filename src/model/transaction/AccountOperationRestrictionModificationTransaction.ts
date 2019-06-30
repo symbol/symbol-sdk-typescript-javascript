@@ -27,7 +27,7 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
-export class AccountEntityTypeRestrictionModificationTransaction extends Transaction {
+export class AccountOperationRestrictionModificationTransaction extends Transaction {
 
     /**
      * Create a modify account property entity type transaction object
@@ -36,14 +36,14 @@ export class AccountEntityTypeRestrictionModificationTransaction extends Transac
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {AccountEntityTypeRestrictionModificationTransaction}
+     * @returns {AccountOperationRestrictionModificationTransaction}
      */
     public static create(deadline: Deadline,
                          propertyType: PropertyType,
                          modifications: Array<AccountRestrictionModification<TransactionType>>,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AccountEntityTypeRestrictionModificationTransaction {
-        return new AccountEntityTypeRestrictionModificationTransaction(networkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): AccountOperationRestrictionModificationTransaction {
+        return new AccountOperationRestrictionModificationTransaction(networkType,
             TransactionVersion.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE,
             deadline,
             maxFee,
@@ -77,9 +77,9 @@ export class AccountEntityTypeRestrictionModificationTransaction extends Transac
 
     /**
      * @override Transaction.size()
-     * @description get the byte size of a AccountEntityTypeRestrictionModificationTransaction
+     * @description get the byte size of a AccountOperationRestrictionModificationTransaction
      * @returns {number}
-     * @memberof AccountEntityTypeRestrictionModificationTransaction
+     * @memberof AccountOperationRestrictionModificationTransaction
      */
     public get size(): number {
         const byteSize = super.size;

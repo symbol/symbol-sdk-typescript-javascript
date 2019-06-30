@@ -19,7 +19,7 @@ import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTra
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
 import { AccountAddressRestrictionModificationTransaction } from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
-import { AccountEntityTypeRestrictionModificationTransaction } from '../../model/transaction/AccountEntityTypeRestrictionModificationTransaction';
+import { AccountOperationRestrictionModificationTransaction } from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
 import { AccountMosaicRestrictionModificationTransaction } from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
 import { ModifyMultisigAccountTransaction } from '../../model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
@@ -78,8 +78,8 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
             return {
-                propertyType: (transaction as AccountEntityTypeRestrictionModificationTransaction).propertyType,
-                modifications: (transaction as AccountEntityTypeRestrictionModificationTransaction).
+                propertyType: (transaction as AccountOperationRestrictionModificationTransaction).propertyType,
+                modifications: (transaction as AccountOperationRestrictionModificationTransaction).
                     modifications.map((modification) => {
                         return modification.toDTO();
                     }),

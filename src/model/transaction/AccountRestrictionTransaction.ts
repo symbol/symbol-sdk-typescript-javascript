@@ -18,8 +18,8 @@ import { PropertyType } from '../account/PropertyType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionModificationTransaction } from './AccountAddressRestrictionModificationTransaction';
-import { AccountEntityTypeRestrictionModificationTransaction } from './AccountEntityTypeRestrictionModificationTransaction';
 import { AccountMosaicRestrictionModificationTransaction } from './AccountMosaicRestrictionModificationTransaction';
+import { AccountOperationRestrictionModificationTransaction } from './AccountOperationRestrictionModificationTransaction';
 import { AccountRestrictionModification } from './AccountRestrictionModification';
 import { Deadline } from './Deadline';
 import { TransactionType } from './TransactionType';
@@ -88,7 +88,7 @@ export class AccountRestrictionTransaction {
      * @param modification - array of entity type modifications
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {AccountEntityTypeRestrictionModificationTransaction}
+     * @returns {AccountOperationRestrictionModificationTransaction}
      */
     public static createEntityTypePropertyModificationTransaction(
         deadline: Deadline,
@@ -96,11 +96,11 @@ export class AccountRestrictionTransaction {
         modifications: Array<AccountRestrictionModification<TransactionType>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
-    ): AccountEntityTypeRestrictionModificationTransaction {
+    ): AccountOperationRestrictionModificationTransaction {
         if (![PropertyType.AllowTransaction, PropertyType.BlockTransaction].includes(propertyType)) {
             throw new Error ('Property type is not allowed.');
         }
-        return AccountEntityTypeRestrictionModificationTransaction.create(
+        return AccountOperationRestrictionModificationTransaction.create(
             deadline,
             propertyType,
             modifications,
