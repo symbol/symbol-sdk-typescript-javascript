@@ -20,14 +20,14 @@ import { PropertyType } from '../account/PropertyType';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
-import { AccountPropertyModification } from './AccountPropertyModification';
+import { AccountRestrictionModification } from './AccountRestrictionModification';
 import { Deadline } from './Deadline';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
-export class ModifyAccountPropertyMosaicTransaction extends Transaction {
+export class AccountMosaicRestrictionModificationTransaction extends Transaction {
 
     /**
      * Create a modify account property mosaic transaction object
@@ -36,14 +36,14 @@ export class ModifyAccountPropertyMosaicTransaction extends Transaction {
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {ModifyAccountPropertyAddressTransaction}
+     * @returns {AccountAddressRestrictionModificationTransaction}
      */
     public static create(deadline: Deadline,
                          propertyType: PropertyType,
-                         modifications: Array<AccountPropertyModification<number[]>>,
+                         modifications: Array<AccountRestrictionModification<number[]>>,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): ModifyAccountPropertyMosaicTransaction {
-        return new ModifyAccountPropertyMosaicTransaction(networkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): AccountMosaicRestrictionModificationTransaction {
+        return new AccountMosaicRestrictionModificationTransaction(networkType,
             TransactionVersion.MODIFY_ACCOUNT_PROPERTY_MOSAIC,
             deadline,
             maxFee,
@@ -68,7 +68,7 @@ export class ModifyAccountPropertyMosaicTransaction extends Transaction {
                 deadline: Deadline,
                 maxFee: UInt64,
                 public readonly propertyType: PropertyType,
-                public readonly modifications: Array<AccountPropertyModification<number[]>>,
+                public readonly modifications: Array<AccountRestrictionModification<number[]>>,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
@@ -77,9 +77,9 @@ export class ModifyAccountPropertyMosaicTransaction extends Transaction {
 
     /**
      * @override Transaction.size()
-     * @description get the byte size of a ModifyAccountPropertyMosaicTransaction
+     * @description get the byte size of a AccountMosaicRestrictionModificationTransaction
      * @returns {number}
-     * @memberof ModifyAccountPropertyMosaicTransaction
+     * @memberof AccountMosaicRestrictionModificationTransaction
      */
     public get size(): number {
         const byteSize = super.size;

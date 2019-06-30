@@ -91,11 +91,11 @@ export * from './receipt/Statement';
 
 // Transaction
 export * from './transaction/AccountLinkTransaction';
-export * from './transaction/AccountPropertyTransaction';
-export * from './transaction/ModifyAccountPropertyAddressTransaction';
-export * from './transaction/ModifyAccountPropertyEntityTypeTransaction';
-export * from './transaction/ModifyAccountPropertyMosaicTransaction';
-export * from './transaction/AccountPropertyModification';
+export * from './transaction/AccountRestrictionTransaction';
+export * from './transaction/AccountAddressRestrictionModificationTransaction';
+export * from './transaction/AccountEntityTypeRestrictionModificationTransaction';
+export * from './transaction/AccountMosaicRestrictionModificationTransaction';
+export * from './transaction/AccountRestrictionModification';
 export * from './transaction/AddressAliasTransaction';
 export * from './transaction/AggregateTransaction';
 export * from './transaction/AggregateTransactionCosignature';

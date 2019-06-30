@@ -19,7 +19,7 @@ import { PropertyModificationType } from '../account/PropertyModificationType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { TransactionType } from './TransactionType';
 
-export class AccountPropertyModification<T> {
+export class AccountRestrictionModification<T> {
 
     /**
      * Constructor
@@ -42,32 +42,32 @@ export class AccountPropertyModification<T> {
      * Create an address filter for account property modification
      * @param modificationType - modification type. 0: Add, 1: Remove
      * @param address - modification value (Address)
-     * @returns {AccountPropertyModification}
+     * @returns {AccountRestrictionModification}
      */
     public static createForAddress(modificationType: PropertyModificationType,
-                                   address: Address): AccountPropertyModification<string> {
-        return new AccountPropertyModification<string>(modificationType, address.plain());
+                                   address: Address): AccountRestrictionModification<string> {
+        return new AccountRestrictionModification<string>(modificationType, address.plain());
     }
     /**
      * Create an mosaic filter for account property modification
      * @param modificationType - modification type. 0: Add, 1: Remove
      * @param mosaicId - modification value (Mosaic)
-     * @returns {AccountPropertyModification}
+     * @returns {AccountRestrictionModification}
      */
     public static createForMosaic(modificationType: PropertyModificationType,
-                                  mosaicId: MosaicId): AccountPropertyModification<number[]> {
-    return new AccountPropertyModification<number[]>(modificationType, mosaicId.id.toDTO());
+                                  mosaicId: MosaicId): AccountRestrictionModification<number[]> {
+    return new AccountRestrictionModification<number[]>(modificationType, mosaicId.id.toDTO());
     }
 
     /**
      * Create an entity type filter for account property modification
      * @param modificationType - modification type. 0: Add, 1: Remove
      * @param entityType - modification value (Transaction Type)
-     * @returns {AccountPropertyModification}
+     * @returns {AccountRestrictionModification}
      */
     public static createForEntityType(modificationType: PropertyModificationType,
-                                      entityType: number): AccountPropertyModification<TransactionType> {
-    return new AccountPropertyModification<TransactionType>(modificationType, entityType);
+                                      entityType: number): AccountRestrictionModification<TransactionType> {
+    return new AccountRestrictionModification<TransactionType>(modificationType, entityType);
     }
 
     /**
