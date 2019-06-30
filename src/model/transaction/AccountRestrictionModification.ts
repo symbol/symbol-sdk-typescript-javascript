@@ -15,7 +15,7 @@
  */
 
 import { Address } from '../account/Address';
-import { PropertyModificationType } from '../account/PropertyModificationType';
+import { RestrictionModificationType } from '../account/RestrictionModificationType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { TransactionType } from './TransactionType';
 
@@ -30,7 +30,7 @@ export class AccountRestrictionModification<T> {
                 /**
                  * Modification type.
                  */
-                public readonly modificationType: PropertyModificationType,
+                public readonly modificationType: RestrictionModificationType,
                 /**
                  * Modification value (Address, Mosaic or Transaction Type).
                  */
@@ -44,7 +44,7 @@ export class AccountRestrictionModification<T> {
      * @param address - modification value (Address)
      * @returns {AccountRestrictionModification}
      */
-    public static createForAddress(modificationType: PropertyModificationType,
+    public static createForAddress(modificationType: RestrictionModificationType,
                                    address: Address): AccountRestrictionModification<string> {
         return new AccountRestrictionModification<string>(modificationType, address.plain());
     }
@@ -54,7 +54,7 @@ export class AccountRestrictionModification<T> {
      * @param mosaicId - modification value (Mosaic)
      * @returns {AccountRestrictionModification}
      */
-    public static createForMosaic(modificationType: PropertyModificationType,
+    public static createForMosaic(modificationType: RestrictionModificationType,
                                   mosaicId: MosaicId): AccountRestrictionModification<number[]> {
     return new AccountRestrictionModification<number[]>(modificationType, mosaicId.id.toDTO());
     }
@@ -65,7 +65,7 @@ export class AccountRestrictionModification<T> {
      * @param entityType - modification value (Transaction Type)
      * @returns {AccountRestrictionModification}
      */
-    public static createForEntityType(modificationType: PropertyModificationType,
+    public static createForEntityType(modificationType: RestrictionModificationType,
                                       entityType: number): AccountRestrictionModification<TransactionType> {
     return new AccountRestrictionModification<TransactionType>(modificationType, entityType);
     }

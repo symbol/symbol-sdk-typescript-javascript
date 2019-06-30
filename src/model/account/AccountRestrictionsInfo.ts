@@ -13,11 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { AccountRestrictions } from './AccountRestrictions';
 /**
- * Account property modification type
+ * Account restrictions structure describes restriction information for an account.
  */
-export enum PropertyModificationType {
-    Add = 0x00,
-    Remove = 0x01,
+export class AccountRestrictionsInfo {
+
+    /**
+     * Constructor
+     * @param meta
+     * @param accountRestrictions
+     */
+    constructor(
+                /**
+                 * meta
+                 */
+                public readonly meta: any,
+                /**
+                 * Restrictions.
+                 */
+                public readonly accountRestrictions: AccountRestrictions) {
+
+    }
 }

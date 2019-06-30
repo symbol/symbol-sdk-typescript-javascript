@@ -19,7 +19,7 @@ import {map, mergeMap} from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import {AccountInfo} from '../model/account/AccountInfo';
 import { AccountNames } from '../model/account/AccountNames';
-import { AccountPropertiesInfo } from '../model/account/AccountPropertiesInfo';
+import { AccountRestrictionsInfo } from '../model/account/AccountRestrictionsInfo';
 import {Address} from '../model/account/Address';
 import {MultisigAccountGraphInfo} from '../model/account/MultisigAccountGraphInfo';
 import {MultisigAccountInfo} from '../model/account/MultisigAccountInfo';
@@ -97,7 +97,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param publicAccount public account
      * @returns Observable<AccountProperty>
      */
-    public getAccountProperties(address: Address): Observable<AccountPropertiesInfo> {
+    public getAccountProperties(address: Address): Observable<AccountRestrictionsInfo> {
         return observableFrom(this.accountRoutesApi.getAccountProperties(address.plain()))
             .pipe(map((accountProperties: AccountPropertiesInfoDTO) => {
             return DtoMapping.extractAccountPropertyFromDto(accountProperties);
@@ -109,7 +109,7 @@ export class AccountHttp extends Http implements AccountRepository {
      * @param address list of addresses
      * @returns Observable<AccountProperty[]>
      */
-    public getAccountPropertiesFromAccounts(addresses: Address[]): Observable<AccountPropertiesInfo[]> {
+    public getAccountPropertiesFromAccounts(addresses: Address[]): Observable<AccountRestrictionsInfo[]> {
         const accountIds = {
             addresses: addresses.map((address) => address.plain()),
         };

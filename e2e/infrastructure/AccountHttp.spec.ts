@@ -20,8 +20,8 @@ import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import { Account } from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
-import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';
-import { PropertyType } from '../../src/model/account/PropertyType';
+import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
+import { RestrictionType } from '../../src/model/account/RestrictionType';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
@@ -195,12 +195,12 @@ describe('AccountHttp', () => {
 
         it('Announce AccountRestrictionTransaction', (done) => {
             const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-                PropertyModificationType.Add,
+                RestrictionModificationType.Add,
                 account3.address,
             );
             const addressModification = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.BlockAddress,
+                RestrictionType.BlockAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -286,7 +286,7 @@ describe('AccountHttp', () => {
         it('should call getAccountProperty successfully', (done) => {
             setTimeout(() => {
                 accountHttp.getAccountProperties(accountAddress).subscribe((accountProperty) => {
-                    deepEqual(accountProperty.accountProperties.address, accountAddress);
+                    deepEqual(accountProperty.accountRestrictions.address, accountAddress);
                     done();
                 });
             }, 1000);
@@ -297,7 +297,7 @@ describe('AccountHttp', () => {
         it('should call getAccountProperties successfully', (done) => {
             setTimeout(() => {
                 accountHttp.getAccountPropertiesFromAccounts([accountAddress]).subscribe((accountProperties) => {
-                    deepEqual(accountProperties[0]!.accountProperties.address, accountAddress);
+                    deepEqual(accountProperties[0]!.accountRestrictions.address, accountAddress);
                     done();
                 });
             }, 1000);
@@ -421,12 +421,12 @@ describe('AccountHttp', () => {
 
         it('Announce AccountRestrictionTransaction', (done) => {
             const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-                PropertyModificationType.Remove,
+                RestrictionModificationType.Remove,
                 account3.address,
             );
             const addressModification = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.BlockAddress,
+                RestrictionType.BlockAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );

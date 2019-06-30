@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { AccountProperties } from '../../model/account/AccountProperties';
-import { AccountPropertiesInfo } from '../../model/account/AccountPropertiesInfo';
-import { AccountProperty } from '../../model/account/AccountProperty';
+import { AccountRestrictions } from '../../model/account/AccountRestrictions';
+import { AccountRestrictionsInfo } from '../../model/account/AccountRestrictionsInfo';
+import { AccountRestriction } from '../../model/account/AccountRestriction';
 import { Address } from '../../model/account/Address';
-import { PropertyType } from '../../model/account/PropertyType';
+import { RestrictionType } from '../../model/account/RestrictionType';
 import { MosaicId } from '../../model/mosaic/MosaicId';
 
 export class DtoMapping {
@@ -28,23 +28,23 @@ export class DtoMapping {
      * @param {object} dataJson The account property json object.
      * @returns {module: model/Account/AccountPropertiesInfo} The AccountPropertiesInfo class.
      */
-    public static extractAccountPropertyFromDto(accountProperties): AccountPropertiesInfo {
-        return new AccountPropertiesInfo(
+    public static extractAccountPropertyFromDto(accountProperties): AccountRestrictionsInfo {
+        return new AccountRestrictionsInfo(
             accountProperties.meta,
-            new AccountProperties(Address.createFromEncoded(accountProperties.accountProperties.address),
+            new AccountRestrictions(Address.createFromEncoded(accountProperties.accountProperties.address),
                     accountProperties.accountProperties.properties.map((prop) => {
                         switch (prop.propertyType) {
-                            case PropertyType.AllowAddress:
-                            case PropertyType.BlockAddress:
-                                return new AccountProperty(prop.propertyType,
+                            case RestrictionType.AllowAddress:
+                            case RestrictionType.BlockAddress:
+                                return new AccountRestriction(prop.propertyType,
                                                             prop.values.map((value) => Address.createFromEncoded(value)));
-                            case PropertyType.AllowMosaic:
-                            case PropertyType.BlockMosaic:
-                                return new AccountProperty(prop.propertyType,
+                            case RestrictionType.AllowMosaic:
+                            case RestrictionType.BlockMosaic:
+                                return new AccountRestriction(prop.propertyType,
                                                             prop.values.map((value) => new MosaicId(value)));
-                            case PropertyType.AllowTransaction:
-                            case PropertyType.BlockTransaction:
-                                return new AccountProperty(prop.propertyType, prop.values);
+                            case RestrictionType.AllowTransaction:
+                            case RestrictionType.BlockTransaction:
+                                return new AccountRestriction(prop.propertyType, prop.values);
                             default:
                                 throw new Error(`Invalid property type: ${prop.propertyType}`);
                         }
