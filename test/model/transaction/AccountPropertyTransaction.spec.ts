@@ -17,8 +17,8 @@
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
-import { PropertyModificationType } from '../../../src/model/account/PropertyModificationType';
-import { PropertyType } from '../../../src/model/account/PropertyType';
+import { RestrictionModificationType } from '../../../src/model/account/RestrictionModificationType';
+import { RestrictionType } from '../../../src/model/account/RestrictionType';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import { AccountRestrictionModification } from '../../../src/model/transaction/AccountRestrictionModification';
@@ -37,20 +37,20 @@ describe('AccountRestrictionTransaction', () => {
     it('should create address property filter', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             address,
         );
-        expect(addressPropertyFilter.modificationType).to.be.equal(PropertyModificationType.Add);
+        expect(addressPropertyFilter.modificationType).to.be.equal(RestrictionModificationType.Add);
         expect(addressPropertyFilter.value).to.be.equal(address.plain());
     });
 
     it('should create mosaic property filter', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             mosaicId,
         );
-        expect(mosaicPropertyFilter.modificationType).to.be.equal(PropertyModificationType.Add);
+        expect(mosaicPropertyFilter.modificationType).to.be.equal(RestrictionModificationType.Add);
         expect(mosaicPropertyFilter.value[0]).to.be.equal(mosaicId.id.lower);
         expect(mosaicPropertyFilter.value[1]).to.be.equal(mosaicId.id.higher);
     });
@@ -58,10 +58,10 @@ describe('AccountRestrictionTransaction', () => {
     it('should create entity type property filter', () => {
         const entityType = TransactionType.ADDRESS_ALIAS;
         const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             entityType,
         );
-        expect(entityTypePropertyFilter.modificationType).to.be.equal(PropertyModificationType.Add);
+        expect(entityTypePropertyFilter.modificationType).to.be.equal(RestrictionModificationType.Add);
         expect(entityTypePropertyFilter.value).to.be.equal(entityType);
     });
 
@@ -69,12 +69,12 @@ describe('AccountRestrictionTransaction', () => {
         it('should return 148 for AccountAddressRestrictionModificationTransaction transaction byte size with 1 modification', () => {
             const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
             const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-                PropertyModificationType.Add,
+                RestrictionModificationType.Add,
                 address,
             );
             const addressPropertyTransaction = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.AllowAddress,
+                RestrictionType.AllowAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -85,12 +85,12 @@ describe('AccountRestrictionTransaction', () => {
         it('should return 131 for AccountMosaicRestrictionModificationTransaction transaction byte size with 1 modification', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
-                PropertyModificationType.Add,
+                RestrictionModificationType.Add,
                 mosaicId,
             );
             const mosaicPropertyTransaction = AccountRestrictionTransaction.createMosaicPropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.AllowMosaic,
+                RestrictionType.AllowMosaic,
                 [mosaicPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -100,12 +100,12 @@ describe('AccountRestrictionTransaction', () => {
         it('should return 125 for AccountOperationRestrictionModificationTransaction transaction byte size with 1 modification', () => {
             const entityType = TransactionType.ADDRESS_ALIAS;
             const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
-                PropertyModificationType.Add,
+                RestrictionModificationType.Add,
                 entityType,
             );
             const entityTypePropertyTransaction = AccountRestrictionTransaction.createEntityTypePropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.AllowTransaction,
+                RestrictionType.AllowTransaction,
                 [entityTypePropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -116,12 +116,12 @@ describe('AccountRestrictionTransaction', () => {
     it('should default maxFee field be set to 0', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             address,
         );
         const addressPropertyTransaction = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
             Deadline.create(),
-            PropertyType.AllowAddress,
+            RestrictionType.AllowAddress,
             [addressPropertyFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -133,12 +133,12 @@ describe('AccountRestrictionTransaction', () => {
     it('should filled maxFee override transaction maxFee', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             address,
         );
         const addressPropertyTransaction = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
             Deadline.create(),
-            PropertyType.AllowAddress,
+            RestrictionType.AllowAddress,
             [addressPropertyFilter],
             NetworkType.MIJIN_TEST,
             new UInt64([1, 0]),
@@ -152,12 +152,12 @@ describe('AccountRestrictionTransaction', () => {
 
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             address,
         );
         const addressPropertyTransaction = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
             Deadline.create(),
-            PropertyType.AllowAddress,
+            RestrictionType.AllowAddress,
             [addressPropertyFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -175,14 +175,14 @@ describe('AccountRestrictionTransaction', () => {
 
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             address,
         );
 
         expect(() => {
             AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.Sentinel,
+                RestrictionType.Sentinel,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -194,12 +194,12 @@ describe('AccountRestrictionTransaction', () => {
 
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             mosaicId,
         );
         const mosaicPropertyTransaction = AccountRestrictionTransaction.createMosaicPropertyModificationTransaction(
             Deadline.create(),
-            PropertyType.AllowMosaic,
+            RestrictionType.AllowMosaic,
             [mosaicPropertyFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -217,14 +217,14 @@ describe('AccountRestrictionTransaction', () => {
 
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             mosaicId,
         );
 
         expect(() => {
             AccountRestrictionTransaction.createMosaicPropertyModificationTransaction(
                 Deadline.create(),
-                PropertyType.Sentinel,
+                RestrictionType.Sentinel,
                 [mosaicPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -236,12 +236,12 @@ describe('AccountRestrictionTransaction', () => {
 
         const entityType = TransactionType.ADDRESS_ALIAS;
         const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
-            PropertyModificationType.Add,
+            RestrictionModificationType.Add,
             entityType,
         );
         const entityTypePropertyTransaction = AccountRestrictionTransaction.createEntityTypePropertyModificationTransaction(
             Deadline.create(),
-            PropertyType.AllowTransaction,
+            RestrictionType.AllowTransaction,
             [entityTypePropertyFilter],
             NetworkType.MIJIN_TEST,
         );

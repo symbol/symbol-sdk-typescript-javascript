@@ -24,11 +24,11 @@ export * from './account/Address';
 export * from './account/MultisigAccountGraphInfo';
 export * from './account/MultisigAccountInfo';
 export * from './account/PublicAccount';
-export * from './account/AccountProperties';
-export * from './account/AccountPropertiesInfo';
-export * from './account/AccountProperty';
-export * from './account/PropertyModificationType';
-export * from './account/PropertyType';
+export * from './account/AccountRestrictions';
+export * from './account/AccountRestrictionsInfo';
+export * from './account/AccountRestriction';
+export * from './account/RestrictionModificationType';
+export * from './account/RestrictionType';
 export * from './account/AccountNames';
 
 // Blockchain

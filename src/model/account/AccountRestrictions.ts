@@ -13,22 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { AccountRestriction } from './AccountRestriction';
+import { Address } from './Address';
 /**
- * Account property type
- * 0x01	The property type is an address.
- * 0x02	The property type is mosaic id.
- * 0x03	The property type is a transaction type.
- * 0x04	Property type sentinel.
- * 0x80 + type	The property is interpreted as a blocking operation.
+ * Account restrictions structure describes restriction information for an account.
  */
+export class AccountRestrictions {
 
-export enum PropertyType {
-    AllowAddress = 0x01,
-    AllowMosaic = 0x02,
-    AllowTransaction = 0x04,
-    Sentinel = 0x05,
-    BlockAddress = (0x80 + 0x01),
-    BlockMosaic = (0x80 + 0x02),
-    BlockTransaction = (0x80 + 0x04),
+    /**
+     * Constructor
+     * @param address
+     * @param restrictions
+     */
+    constructor(
+                /**
+                 * Account Address
+                 */
+                public readonly address: Address,
+                /**
+                 * Restrictions.
+                 */
+                public readonly restrictions: AccountRestriction[]) {
+
+    }
 }

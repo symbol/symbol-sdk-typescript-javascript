@@ -70,7 +70,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
             return {
-                propertyType: (transaction as AccountAddressRestrictionModificationTransaction).propertyType,
+                propertyType: (transaction as AccountAddressRestrictionModificationTransaction).restrictionType,
                 modifications: (transaction as AccountAddressRestrictionModificationTransaction).
                     modifications.map((modification) => {
                         return modification.toDTO();
@@ -78,7 +78,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
             return {
-                propertyType: (transaction as AccountOperationRestrictionModificationTransaction).propertyType,
+                propertyType: (transaction as AccountOperationRestrictionModificationTransaction).restrictionType,
                 modifications: (transaction as AccountOperationRestrictionModificationTransaction).
                     modifications.map((modification) => {
                         return modification.toDTO();
@@ -86,7 +86,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
             return {
-                propertyType: (transaction as AccountMosaicRestrictionModificationTransaction).propertyType,
+                propertyType: (transaction as AccountMosaicRestrictionModificationTransaction).restrictionType,
                 modifications: (transaction as AccountMosaicRestrictionModificationTransaction).modifications.map((modification) => {
                         return modification.toDTO();
                     }),
