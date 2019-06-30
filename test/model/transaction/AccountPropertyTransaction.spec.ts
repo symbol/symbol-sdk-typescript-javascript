@@ -97,7 +97,7 @@ describe('AccountRestrictionTransaction', () => {
             expect(mosaicPropertyTransaction.size).to.be.equal(131);
         });
 
-        it('should return 125 for AccountEntityTypeRestrictionModificationTransaction transaction byte size with 1 modification', () => {
+        it('should return 125 for AccountOperationRestrictionModificationTransaction transaction byte size with 1 modification', () => {
             const entityType = TransactionType.ADDRESS_ALIAS;
             const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
                 PropertyModificationType.Add,
