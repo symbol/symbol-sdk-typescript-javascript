@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Crypto, KeyPair} from '../../core/crypto';
+import {Crypto, KeyPair, SignSchema} from '../../core/crypto';
 import {Convert as convert, RawAddress as AddressLibrary} from '../../core/format';
 import {NetworkType} from '../blockchain/NetworkType';
 import {AggregateTransaction} from '../transaction/AggregateTransaction';
@@ -41,6 +41,7 @@ export class Account {
      * @internal
      * @param address
      * @param keyPair
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      */
     private constructor(
                         /**
@@ -50,56 +51,75 @@ export class Account {
                         /**
                          * The account keyPair, public and private key.
                          */
-                        private readonly keyPair: IKeyPair) {
+                        private readonly keyPair: IKeyPair,
+                        /**
+                         * The Sign Schema (KECCAK_REVERSED_KEY / SHA3).
+                         */
+                        private readonly signSchema: SignSchema = SignSchema.SHA3) {
     }
 
     /**
      * Create an Account from a given private key
      * @param privateKey - Private key from an account
      * @param networkType - Network type
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {Account}
      */
-    public static createFromPrivateKey(privateKey: string, networkType: NetworkType): Account {
-        const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
+    public static createFromPrivateKey(privateKey: string,
+                                       networkType: NetworkType,
+                                       signSchema: SignSchema = SignSchema.SHA3): Account {
+        const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, signSchema);
         const address = AddressLibrary.addressToString(
-            AddressLibrary.publicKeyToAddress(keyPair.publicKey, networkType));
+            AddressLibrary.publicKeyToAddress(keyPair.publicKey, networkType, signSchema));
         return new Account(
             Address.createFromRawAddress(address),
             keyPair,
+            signSchema,
         );
     }
 
-    public static generateNewAccount(networkType: NetworkType): Account {
+    /**
+     * Generate a new account
+     * @param networkType - Network type
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     */
+    public static generateNewAccount(networkType: NetworkType, signSchema: SignSchema = SignSchema.SHA3): Account {
         // Create random bytes
         const randomBytesArray = Crypto.randomBytes(32);
         // Hash random bytes with entropy seed
         // Finalize and keep only 32 bytes
-        const hashKey = convert.uint8ToHex(randomBytesArray); // TODO: derive private key correctly
+        const hashKey = convert.uint8ToHex(randomBytesArray);
 
         // Create KeyPair from hash key
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey, signSchema);
 
-        const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), networkType);
-        return new Account(address, keyPair);
+        const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), networkType, signSchema);
+        return new Account(address, keyPair, signSchema);
     }
     /**
      * Create a new encrypted Message
      * @param message - Plain message to be encrypted
      * @param recipientPublicAccount - Recipient public account
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {EncryptedMessage}
      */
-    public encryptMessage(message: string, recipientPublicAccount: PublicAccount): EncryptedMessage {
-        return EncryptedMessage.create(message, recipientPublicAccount, this.privateKey);
+    public encryptMessage(message: string,
+                          recipientPublicAccount: PublicAccount,
+                          signSchema: SignSchema = SignSchema.SHA3): EncryptedMessage {
+        return EncryptedMessage.create(message, recipientPublicAccount, this.privateKey, signSchema);
     }
 
     /**
      * Decrypts an encrypted message
      * @param encryptedMessage - Encrypted message
      * @param publicAccount - The public account originally encrypted the message
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {PlainMessage}
      */
-    public decryptMessage(encryptedMessage: EncryptedMessage, publicAccount: PublicAccount): PlainMessage {
-        return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, publicAccount);
+    public decryptMessage(encryptedMessage: EncryptedMessage,
+                          publicAccount: PublicAccount,
+                          signSchema: SignSchema = SignSchema.SHA3): PlainMessage {
+        return EncryptedMessage.decrypt(encryptedMessage, this.privateKey, publicAccount, signSchema);
     }
     /**
      * Account public key.
@@ -114,7 +134,7 @@ export class Account {
      * @return {PublicAccount}
      */
     get publicAccount(): PublicAccount {
-        return PublicAccount.createFromPublicKey(this.publicKey, this.address.networkType);
+        return PublicAccount.createFromPublicKey(this.publicKey, this.address.networkType, this.signSchema);
     }
 
     /**
@@ -129,10 +149,11 @@ export class Account {
      * Sign a transaction
      * @param transaction - The transaction to be signed.
      * @param generationHash - Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {SignedTransaction}
      */
-    public sign(transaction: Transaction, generationHash): SignedTransaction {
-        return transaction.signWith(this, generationHash);
+    public sign(transaction: Transaction, generationHash, signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
+        return transaction.signWith(this, generationHash, signSchema);
     }
 
     /**
@@ -140,31 +161,37 @@ export class Account {
      * @param transaction - The aggregate transaction to be signed.
      * @param cosignatories - The array of accounts that will cosign the transaction
      * @param generationHash - Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {SignedTransaction}
      */
     public signTransactionWithCosignatories(transaction: AggregateTransaction,
                                             cosignatories: Account[],
-                                            generationHash: string): SignedTransaction {
-    return transaction.signTransactionWithCosignatories(this, cosignatories, generationHash);
+                                            generationHash: string,
+                                            signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
+    return transaction.signTransactionWithCosignatories(this, cosignatories, generationHash, signSchema);
     }
 
     /**
      * Sign aggregate signature transaction
      * @param cosignatureTransaction - The aggregate signature transaction.
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {CosignatureSignedTransaction}
      */
-    public signCosignatureTransaction(cosignatureTransaction: CosignatureTransaction): CosignatureSignedTransaction {
-        return cosignatureTransaction.signWith(this);
+    public signCosignatureTransaction(cosignatureTransaction: CosignatureTransaction,
+                                      signSchema: SignSchema = SignSchema.SHA3): CosignatureSignedTransaction {
+        return cosignatureTransaction.signWith(this, signSchema);
     }
 
     /**
      * Sign raw data
      * @param data - Data to be signed
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {string} - Signed data result
      */
-    public signData(data: string): string {
+    public signData(data: string, signSchema: SignSchema = SignSchema.SHA3): string {
         return convert.uint8ToHex(KeyPair.sign(this.keyPair,
                             convert.hexToUint8(convert.utf8ToHex(data)),
+                            signSchema,
                         ));
     }
 }

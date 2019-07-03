@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 import {expect} from 'chai';
+import { SignSchema } from '../../../src/core/crypto';
 import {
     Convert as convert,
     RawAddress as address,
 } from '../../../src/core/format';
+import { NetworkType } from '../../../src/model/model';
 
 const Address_Decoded_Size = 25;
 const Network_Mijin_Identifier = 0x60;
@@ -145,6 +147,21 @@ describe('address', () => {
             expect(address.isValidAddress(decoded2)).to.equal(true);
             expect(decoded1).to.not.deep.equal(decoded2);
         });
+
+        it('can create address from public key using NIS1 schema', () => {
+            const nonKeccakHex = '9823BB7C3C089D996585466380EDBDC19D495918484BF7E997';
+            const keccakHex = '981A00208CDDCC647BF1E065E93824FAA732AAB187CC1A9B02';
+            const publicKey = convert.hexToUint8('3485D98EFD7EB07ADAFCFD1A157D89DE2796A95E780813C0258AF3F5F84ED8CB');
+
+            // Act:
+            const decoded = address.publicKeyToAddress(publicKey, Network_Public_Test_Identifier, 1);
+
+            // Assert:
+            expect(decoded[0]).to.equal(Network_Public_Test_Identifier);
+            expect(address.isValidAddress(decoded, SignSchema.KECCAK_REVERSED_KEY)).to.equal(true);
+            expect(convert.uint8ToHex(decoded)).to.equal(keccakHex);
+            expect(convert.uint8ToHex(decoded)).not.to.equal(nonKeccakHex);
+        });
     });
 
     describe('isValidAddress', () => {
@@ -211,6 +228,293 @@ describe('address', () => {
             expect(address.isValidEncodedAddress(`   \t    ${encoded}`)).to.equal(false);
             expect(address.isValidEncodedAddress(`${encoded}   \t    `)).to.equal(false);
             expect(address.isValidEncodedAddress(`   \t    ${encoded}   \t    `)).to.equal(false);
+        });
+    });
+
+    /**
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
+     */
+    describe('NIS1 test vector [PublicNet] - PublicKey to Address', () => {
+        it('can create Address from NIS public Key', () => {
+            // Arrange:
+            const Public_Keys = [
+                'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
+                '96eb2a145211b1b7ab5f0d4b14f8abc8d695c7aee31a3cfc2d4881313c68eea3',
+                '2d8425e4ca2d8926346c7a7ca39826acd881a8639e81bd68820409c6e30d142a',
+                '4feed486777ed38e44c489c7c4e93a830e4c4a907fa19a174e630ef0f6ed0409',
+                '83ee32e4e145024d29bca54f71fa335a98b3e68283f1a3099c4d4ae113b53e54',
+            ];
+
+            const Addresses = [
+                'NDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5JFXJ4R4',
+                'NABHFGE5ORQD3LE4O6B7JUFN47ECOFBFASC3SCAC',
+                'NAVOZX4HDVOAR4W6K4WJHWPD3MOFU27DFHC7KZOZ',
+                'NBZ6JK5YOCU6UPSSZ5D3G27UHAPHTY5HDQMGE6TT',
+                'NCQW2P5DNZ5BBXQVGS367DQ4AHC3RXOEVGRCLY6V',
+            ];
+
+            // Sanity:
+            expect(Public_Keys.length).equal(Addresses.length);
+
+            for (let i = 0; i < Public_Keys.length; ++i) {
+                // Arrange:
+                const publicKeyHex = Public_Keys[i];
+                const expectedAddress = Addresses[i];
+
+                // Act:
+                const result = address.addressToString(
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MAIN_NET, SignSchema.KECCAK_REVERSED_KEY));
+
+                // Assert:
+                const message = ` from ${publicKeyHex}`;
+                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
+            }
+        });
+    });
+
+    /**
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
+     */
+    describe('NIS1 test vector [PublicTest] - PublicKey to Address', () => {
+        it('can create Address from NIS public Key', () => {
+            // Arrange:
+            const Public_Keys = [
+                'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
+                '96eb2a145211b1b7ab5f0d4b14f8abc8d695c7aee31a3cfc2d4881313c68eea3',
+                '2d8425e4ca2d8926346c7a7ca39826acd881a8639e81bd68820409c6e30d142a',
+                '4feed486777ed38e44c489c7c4e93a830e4c4a907fa19a174e630ef0f6ed0409',
+                '83ee32e4e145024d29bca54f71fa335a98b3e68283f1a3099c4d4ae113b53e54',
+            ];
+
+            const Addresses = [
+                'TDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5KZPFMK2',
+                'TABHFGE5ORQD3LE4O6B7JUFN47ECOFBFATE53N2I',
+                'TAVOZX4HDVOAR4W6K4WJHWPD3MOFU27DFEJDR2PR',
+                'TBZ6JK5YOCU6UPSSZ5D3G27UHAPHTY5HDQCDS5YA',
+                'TCQW2P5DNZ5BBXQVGS367DQ4AHC3RXOEVFZOQCJ6',
+            ];
+
+            // Sanity:
+            expect(Public_Keys.length).equal(Addresses.length);
+
+            for (let i = 0; i < Public_Keys.length; ++i) {
+                // Arrange:
+                const publicKeyHex = Public_Keys[i];
+                const expectedAddress = Addresses[i];
+
+                // Act:
+                const result = address.addressToString(
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET, SignSchema.KECCAK_REVERSED_KEY));
+
+                // Assert:
+                const message = ` from ${publicKeyHex}`;
+                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
+            }
+        });
+    });
+
+    /**
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
+     */
+    describe('NIS1 test vector [MIJIN] - PublicKey to Address', () => {
+        it('can create Address from NIS public Key', () => {
+            // Arrange:
+            const Public_Keys = [
+                'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
+                '96eb2a145211b1b7ab5f0d4b14f8abc8d695c7aee31a3cfc2d4881313c68eea3',
+                '2d8425e4ca2d8926346c7a7ca39826acd881a8639e81bd68820409c6e30d142a',
+                '4feed486777ed38e44c489c7c4e93a830e4c4a907fa19a174e630ef0f6ed0409',
+                '83ee32e4e145024d29bca54f71fa335a98b3e68283f1a3099c4d4ae113b53e54',
+            ];
+
+            const Addresses = [
+                'MDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5LDT7JHT',
+                'MABHFGE5ORQD3LE4O6B7JUFN47ECOFBFAQ4XDSJH',
+                'MAVOZX4HDVOAR4W6K4WJHWPD3MOFU27DFEVDXFMY',
+                'MBZ6JK5YOCU6UPSSZ5D3G27UHAPHTY5HDSWBYUNP',
+                'MCQW2P5DNZ5BBXQVGS367DQ4AHC3RXOEVHTXSIR6',
+            ];
+
+            // Sanity:
+            expect(Public_Keys.length).equal(Addresses.length);
+
+            for (let i = 0; i < Public_Keys.length; ++i) {
+                // Arrange:
+                const publicKeyHex = Public_Keys[i];
+                const expectedAddress = Addresses[i];
+
+                // Act:
+                const result = address.addressToString(
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN, SignSchema.KECCAK_REVERSED_KEY));
+
+                // Assert:
+                const message = ` from ${publicKeyHex}`;
+                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
+            }
+        });
+    });
+
+    /**
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-catapult.json
+     */
+    describe('Catapult test vector [PublicNet] - PublicKey to Address', () => {
+        it('can create Address from Catapult public Key', () => {
+            // Arrange:
+            const Public_Keys = [
+                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
+                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
+                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
+                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
+                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
+            ];
+
+            const Addresses = [
+                'NDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN7DBVFHB',
+                'NC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEFP5QME7',
+                'NCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VW7RKW7K',
+                'NBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFO7NUCOM',
+                'NA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJFMMIEEQ',
+            ];
+
+            // Sanity:
+            expect(Public_Keys.length).equal(Addresses.length);
+
+            for (let i = 0; i < Public_Keys.length; ++i) {
+                // Arrange:
+                const publicKeyHex = Public_Keys[i];
+                const expectedAddress = Addresses[i];
+
+                // Act:
+                const result = address.addressToString(
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MAIN_NET));
+
+                // Assert:
+                const message = ` from ${publicKeyHex}`;
+                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
+            }
+        });
+    });
+
+    /**
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-catapult.json
+     */
+    describe('Catapult test vector [PublicTest] - PublicKey to Address', () => {
+        it('can create Address from Catapult public Key', () => {
+            // Arrange:
+            const Public_Keys = [
+                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
+                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
+                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
+                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
+                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
+            ];
+
+            const Addresses = [
+                'TDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN6Q33DFP',
+                'TC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEHM5K3P3',
+                'TCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VXFNZO4N',
+                'TBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFOEM2TCJ',
+                'TA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJFLBWZH3',
+            ];
+
+            // Sanity:
+            expect(Public_Keys.length).equal(Addresses.length);
+
+            for (let i = 0; i < Public_Keys.length; ++i) {
+                // Arrange:
+                const publicKeyHex = Public_Keys[i];
+                const expectedAddress = Addresses[i];
+
+                // Act:
+                const result = address.addressToString(
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET));
+
+                // Assert:
+                const message = ` from ${publicKeyHex}`;
+                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
+            }
+        });
+    });
+
+    /**
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-catapult.json
+     */
+    describe('Catapult test vector [MIJIN] - PublicKey to Address', () => {
+        it('can create Address from Catapult public Key', () => {
+            // Arrange:
+            const Public_Keys = [
+                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
+                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
+                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
+                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
+                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
+            ];
+
+            const Addresses = [
+                'MDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN5YHHZMD',
+                'MC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEEZ6ADFH',
+                'MCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VUHV7FNU',
+                'MBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFN4NBABW',
+                'MA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJEMAYYMV',
+            ];
+
+            // Sanity:
+            expect(Public_Keys.length).equal(Addresses.length);
+
+            for (let i = 0; i < Public_Keys.length; ++i) {
+                // Arrange:
+                const publicKeyHex = Public_Keys[i];
+                const expectedAddress = Addresses[i];
+
+                // Act:
+                const result = address.addressToString(
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN));
+
+                // Assert:
+                const message = ` from ${publicKeyHex}`;
+                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
+            }
+        });
+    });
+
+    /**
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-catapult.json
+     */
+    describe('Catapult test vector [MIJIN_TEST] - PublicKey to Address', () => {
+        it('can create Address from Catapult public Key', () => {
+            // Arrange:
+            const Public_Keys = [
+                'BD8D3F8B7E1B3839C650F458234AB1FF87CDB1EDA36338D9E446E27D454717F2',
+                '26821636A618FD524A3AB57276EFC36CAF787DF19EE00F60035CE376A18E8C47',
+                'DFC7F40FC549AC8BB2EF097600103FF457A1D7DC5755D434474761459B030E6F',
+                '96C7AB358EBB91104322C56435642BD939A77432286B229372987FC366EA319F',
+                '9488CFB5D7D439213B11FA80C1B57E8A7AB7E41B64CBA18A89180D412C04915C',
+            ];
+
+            const Addresses = [
+                'SDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN5EIRD3D',
+                'SC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEGTDOMI3',
+                'SCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VVLQRCX6',
+                'SBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFNJYN46J',
+                'SA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJGV24AZM',
+            ];
+
+            // Sanity:
+            expect(Public_Keys.length).equal(Addresses.length);
+
+            for (let i = 0; i < Public_Keys.length; ++i) {
+                // Arrange:
+                const publicKeyHex = Public_Keys[i];
+                const expectedAddress = Addresses[i];
+
+                // Act:
+                const result = address.addressToString(
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN_TEST));
+
+                // Assert:
+                const message = ` from ${publicKeyHex}`;
+                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
+            }
         });
     });
 });

@@ -15,8 +15,11 @@
  */
 
 import { expect } from 'chai';
+import { SignSchema } from '../../../src/core/crypto';
+import { Convert } from '../../../src/core/format/Convert';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { Account } from '../../../src/model/account/Account';
 
 describe('PublicAccount', () => {
     const publicKey = 'b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf';
@@ -25,6 +28,15 @@ describe('PublicAccount', () => {
         const publicAccount = PublicAccount.createFromPublicKey(publicKey, NetworkType.MIJIN_TEST);
         expect(publicAccount.publicKey).to.be.equal(publicKey);
         expect(publicAccount.address.plain()).to.be.equal('SARNASAS2BIAB6LMFA3FPMGBPGIJGK6IJETM3ZSP');
+    });
+
+    /**
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
+     */
+    it('should createComplete a public account from public key using NIS1', () => {
+        const publicAccount = PublicAccount.createFromPublicKey('c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
+            NetworkType.MIJIN, SignSchema.KECCAK_REVERSED_KEY);
+        expect(publicAccount.address.plain()).to.be.equal('MDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5LDT7JHT');
     });
 });
 
@@ -39,6 +51,19 @@ describe('Signature verification', () => {
 
         // Act & Assert:
         expect(signerPublicAccount.verifySignature(data, signature)).to.be.true;
+    });
+
+    it('Verify a signature using NIS1 schema', () => {
+        // Arrange:'
+        const account = Account.createFromPrivateKey(
+            'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
+            NetworkType.MIJIN_TEST,
+            SignSchema.KECCAK_REVERSED_KEY,
+        );
+        const publicAccount = account.publicAccount;
+        const signed = account.signData('catapult rocks!', SignSchema.KECCAK_REVERSED_KEY);
+        expect(publicAccount.verifySignature('catapult rocks!', signed, SignSchema.KECCAK_REVERSED_KEY))
+            .to.be.true;
     });
 
     it('Throw error if signature has invalid length', () => {

@@ -1,5 +1,4 @@
 /*
-import { SHA3Hasher } from './SHA3Hasher';
  * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +14,11 @@ import { SHA3Hasher } from './SHA3Hasher';
  * limitations under the License.
  */
 
-export * from './Crypto';
-export * from './KeyPair';
-export * from './SHA3Hasher';
-export * from './nacl_catapult';
-export * from './SignSchema';
+ /**
+  * [KECCAK_REVERSED_KEY]: Keccak hash algorithm with reversed private keys.
+  * [SHA3]: SHA3 hash algorithm without key reversal
+  */
+export enum SignSchema {
+    KECCAK_REVERSED_KEY = 1,
+    SHA3 = 2,
+}

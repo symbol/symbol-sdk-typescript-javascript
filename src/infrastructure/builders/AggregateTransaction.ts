@@ -17,6 +17,7 @@
 /**
  * @module transactions/AggregateTransaction
  */
+import { SignSchema } from '../../core/crypto';
 import AggregateTransactionBufferPackage from '../buffers/AggregateTransactionBuffer';
 import AggregateTransactionSchema from '../schemas/AggregateTransactionSchema';
 import { CosignatureTransaction} from './CosignatureTransaction';
@@ -35,11 +36,11 @@ export class AggregateTransaction extends VerifiableTransaction {
         super(bytes, AggregateTransactionSchema);
     }
 
-    signTransactionWithCosigners(initializer, cosigners, generationHash) {
-        const signedTransaction = this.signTransaction(initializer, generationHash);
+    signTransactionWithCosigners(initializer, cosigners, generationHash, signSchema: SignSchema = SignSchema.SHA3) {
+        const signedTransaction = this.signTransaction(initializer, generationHash, signSchema);
         cosigners.forEach((cosigner) => {
             const signatureTransaction = new CosignatureTransaction(signedTransaction.hash);
-            const signatureCosignTransaction = signatureTransaction.signCosignatoriesTransaction(cosigner);
+            const signatureCosignTransaction = signatureTransaction.signCosignatoriesTransaction(cosigner, signSchema);
             signedTransaction.payload = signedTransaction.payload +
                 signatureCosignTransaction.signer + signatureCosignTransaction.signature;
         });
@@ -56,8 +57,8 @@ export class AggregateTransaction extends VerifiableTransaction {
         return signedTransaction;
     }
 
-    signTransactionGivenSignatures(initializer, cosignedSignedTransactions, generationHash) {
-        const signedTransaction = this.signTransaction(initializer, generationHash);
+    signTransactionGivenSignatures(initializer, cosignedSignedTransactions, generationHash, signSchema) {
+        const signedTransaction = this.signTransaction(initializer, generationHash, signSchema);
         cosignedSignedTransactions.forEach((cosignedTransaction) => {
             signedTransaction.payload = signedTransaction.payload + cosignedTransaction.signer + cosignedTransaction.signature;
         });
