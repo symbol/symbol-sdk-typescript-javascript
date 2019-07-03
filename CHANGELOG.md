@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.0] - 03-Jul-2019
+
+**Milestone**: Elephant
+
+- Added SignSchema to make KeyPair generation compatible with either of Catapult and NIS.
+- Added SignSchema with KECCAK_REVERSED_KEY and SHA3. The SDK by default uses SHA3 which is the Catapult signature schema.
+- Fixed transaction versions back to version 1
+- Added `signTransactionGivenSignatures` to cope with off chain aggregated complete transaction co signing.
+
 ## [0.12.4] - 03-Jul-2019
 
 **Milestone**: Dragon
@@ -143,7 +152,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Alpaca
 
 - Initial code release.
-
+[0.13.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.4...v0.13.0
 [0.12.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.3...v0.12.4
 [0.12.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.2...v0.12.3
 [0.12.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.1...v0.12.2
