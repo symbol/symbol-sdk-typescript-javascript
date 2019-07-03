@@ -22,6 +22,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';
+import { CosignatureSignedTransaction } from './CosignatureSignedTransaction';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
@@ -96,7 +97,7 @@ export class AggregateTransaction extends Transaction {
      * @param {InnerTransaction[]} innerTransactions
      * @param {NetworkType} networkType
      * @param {AggregateTransactionCosignature[]} cosignatures
-     * @param {UInt64} maxFee - (Optional) Max fee defined by the sender
+     * @param {UInt64} maxFee - (Optional) Max fee defined by the sender
      * @return {AggregateTransaction}
      */
     public static createBonded(deadline: Deadline,
@@ -145,6 +146,29 @@ export class AggregateTransaction extends Transaction {
         const aggregateTransaction = this.buildTransaction();
         const signedTransactionRaw = aggregateTransaction
                 .signTransactionWithCosigners(initiatorAccount, cosignatories, generationHash, signSchema);
+        return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
+                                     this.type, this.networkType);
+    }
+
+    /**
+     * @internal
+     * Sign transaction with cosignatories collected from cosigned transactions and creating a new SignedTransaction
+     * For off chain Aggregated Complete Transaction co-signing.
+     * @param initiatorAccount - Initiator account
+     * @param {CosignatureSignedTransaction[]} cosignatureSignedTransactions - Array of cosigned transaction
+     * @param generationHash - Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @return {SignedTransaction}
+     */
+    public signTransactionGivenSignatures(initiatorAccount: Account,
+                                          cosignatureSignedTransactions: CosignatureSignedTransaction[],
+                                          generationHash: string,
+                                          signSchema: SignSchema= SignSchema.SHA3) {
+        const aggregateTransaction = this.buildTransaction();
+        const signedTransactionRaw = aggregateTransaction.signTransactionGivenSignatures(initiatorAccount,
+                                                                                         cosignatureSignedTransactions,
+                                                                                         generationHash,
+                                                                                         signSchema);
         return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
                                      this.type, this.networkType);
     }
