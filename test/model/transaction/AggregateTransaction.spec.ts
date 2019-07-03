@@ -109,7 +109,7 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('039054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
+        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
     });
 
     it('should createComplete an AggregateTransaction object with RegisterNamespaceTransaction', () => {
@@ -135,7 +135,7 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('02904E4100E803000000000000CFCBE72D994BE69B13726F6F742D746573742D6E616D657370616365');
+        )).to.be.equal('01904E4100E803000000000000CFCBE72D994BE69B13726F6F742D746573742D6E616D657370616365');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicDefinitionTransaction', () => {
@@ -166,7 +166,7 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('03904D41E6DE84B8010000000000000001030302E803000000000000');
+        )).to.be.equal('01904D41E6DE84B8010000000000000001030302E803000000000000');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicSupplyChangeTransaction', () => {
@@ -193,7 +193,7 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('02904D424CCCD78612DDF5CA010A00000000000000');
+        )).to.be.equal('01904D424CCCD78612DDF5CA010A00000000000000');
     });
 
     it('should createComplete an AggregateTransaction object with ModifyMultisigAccountTransaction', () => {
@@ -227,7 +227,7 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('0390554101020200B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC240' +
+        )).to.be.equal('0190554101020200B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC240' +
             '0B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
     });
 
@@ -255,7 +255,7 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(
             320,
             474,
-        )).to.be.equal('039054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742' +
+        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742' +
             'D6D65737361676568B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763');
 
     });
@@ -315,12 +315,12 @@ describe('AggregateTransaction', () => {
                             ],
                             signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                             type: 16725,
-                            version: 36867,
+                            version: 36865,
                         },
                     },
                 ],
                 type: 16705,
-                version: 36867,
+                version: 36865,
             },
         };
 

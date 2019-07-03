@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { TransactionType } from '../../model/transaction/TransactionType';
 import MosaicAliasTransactionBufferPackage from '../buffers/MosaicAliasTransactionBuffer';
 import MosaicAliasTransactionSchema from '../schemas/MosaicAliasTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
@@ -21,9 +22,7 @@ const {
     MosaicAliasTransactionBuffer,
 } = MosaicAliasTransactionBufferPackage.Buffers;
 
-const {
-    flatbuffers,
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 /**
  * @module transactions/MosaicAliasTransaction
@@ -36,7 +35,7 @@ export default class MosaicAliasTransaction extends VerifiableTransaction {
 
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
@@ -44,13 +43,12 @@ export class Builder {
     actionType: any;
     namespaceId: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36865;
-        this.type = 0x434E;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.MOSAIC_ALIAS;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -95,7 +93,7 @@ export class Builder {
         const deadlineVector = MosaicAliasTransactionBuffer
             .createDeadlineVector(builder, this.deadline);
         const feeVector = MosaicAliasTransactionBuffer
-            .createFeeVector(builder, this.fee);
+            .createFeeVector(builder, this.maxFee);
         const namespaceIdVector = MosaicAliasTransactionBuffer
             .createNamespaceIdVector(builder, this.namespaceId);
         const mosaicIdVector = MosaicAliasTransactionBuffer

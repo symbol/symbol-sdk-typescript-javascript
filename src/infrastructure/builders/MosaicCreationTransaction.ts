@@ -17,6 +17,7 @@
 /**
  * @module transactions/MosaicCreationTransaction
  */
+import { TransactionType } from '../../model/transaction/TransactionType';
 import MosaicCreationTransactionBufferPackage from '../buffers/MosaicCreationTransactionBuffer';
 import {
     schema as MosaicCreationTransactionSchema,
@@ -24,9 +25,7 @@ import {
 } from '../schemas/MosaicCreationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
-const {
-    flatbuffers,
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 const {
     MosaicCreationTransactionBuffer,
@@ -39,7 +38,7 @@ export default class MosaicCreationTransaction extends VerifiableTransaction {
 }
 // tslint:disable-next-line: max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
@@ -50,14 +49,13 @@ export class Builder {
     duration: any;
     constructor() {
         this.flags = 0;
-        this.fee = [0, 0];
-        this.version = 36867;
-        this.type = 0x414d;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.MOSAIC_DEFINITION;
         this.nonce = 0;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -122,7 +120,7 @@ export class Builder {
         const deadlineVector = MosaicCreationTransactionBuffer
             .createDeadlineVector(builder, this.deadline);
         const feeVector = MosaicCreationTransactionBuffer
-            .createFeeVector(builder, this.fee);
+            .createFeeVector(builder, this.maxFee);
         const nonceVector = MosaicCreationTransactionBuffer
             .createNonceVector(builder, this.nonce);
         const mosaicIdVector = MosaicCreationTransactionBuffer

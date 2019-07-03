@@ -213,6 +213,21 @@ describe('Transaction', () => {
             expect(transaction.size).to.be.equal(120);
         });
     });
+
+    describe('version', () => {
+        it('should return version in hex format', () => {
+            const transaction = new FakeTransaction(TransactionType.TRANSFER,
+                NetworkType.MIJIN_TEST,
+                1,
+                Deadline.create(),
+                UInt64.fromUint(0),
+                undefined,
+                undefined,
+                new TransactionInfo(UInt64.fromUint(100), 1, 'id_hash', 'hash', 'hash'),
+            );
+            expect(transaction.versionToHex()).to.be.equal('0x9001');
+        });
+    });
 });
 
 class FakeTransaction extends Transaction {

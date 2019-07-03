@@ -18,6 +18,7 @@
  * @module transactions/NamespaceCreationTransaction
  */
 import { Convert as convert } from '../../core/format';
+import { TransactionType } from '../../model/transaction/TransactionType';
 import * as NamespaceCreationTransactionBufferPackage from '../buffers/NamespaceCreationTransactionBuffer';
 import NamespaceCreationTransactionSchema from '../schemas/NamespaceCreationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
@@ -26,9 +27,7 @@ const {
     NamespaceCreationTransactionBuffer,
 } = NamespaceCreationTransactionBufferPackage.default.Buffers;
 
-const {
-    flatbuffers,
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 export default class NamespaceCreationTransaction extends VerifiableTransaction {
     constructor(bytes) {
@@ -38,7 +37,7 @@ export default class NamespaceCreationTransaction extends VerifiableTransaction 
 
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
@@ -48,13 +47,12 @@ export class Builder {
     namespaceId: any;
     namespaceName: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36867;
-        this.type = 0x414e;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.REGISTER_NAMESPACE;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -111,7 +109,7 @@ export class Builder {
         const deadlineVector = NamespaceCreationTransactionBuffer
             .createDeadlineVector(builder, this.deadline);
         const feeVector = NamespaceCreationTransactionBuffer
-            .createFeeVector(builder, this.fee);
+            .createFeeVector(builder, this.maxFee);
         const parentIdVector = 1 === this.namespaceType ? this.parentId : this.duration;
         const durationParentIdVector = NamespaceCreationTransactionBuffer
             .createDurationParentIdVector(builder, parentIdVector);

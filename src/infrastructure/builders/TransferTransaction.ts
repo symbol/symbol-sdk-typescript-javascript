@@ -21,10 +21,9 @@ import { Convert as convert, RawAddress as address} from '../../core/format';
 import * as TransferTransactionBufferPackage from '../../infrastructure/buffers/TransferTransactionBuffer';
 import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
 import TransferTransactionSchema from '../../infrastructure/schemas/TransferTransactionSchema';
+import { TransactionType } from '../../model/transaction/TransactionType';
 
-const {
-    flatbuffers,
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 const {
     TransferTransactionBuffer,
@@ -40,7 +39,7 @@ export default class TransferTransaction extends VerifiableTransaction {
 
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
@@ -48,13 +47,12 @@ export class Builder {
     message: any;
     mosaics: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36867;
-        this.type = 0x4154;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.TRANSFER;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -125,7 +123,7 @@ export class Builder {
             .createSignatureVector(builder, Array(...Array(64)).map(Number.prototype.valueOf, 0));
         const signerVector = TransferTransactionBuffer.createSignerVector(builder, Array(...Array(32)).map(Number.prototype.valueOf, 0));
         const deadlineVector = TransferTransactionBuffer.createDeadlineVector(builder, this.deadline);
-        const feeVector = TransferTransactionBuffer.createFeeVector(builder, this.fee);
+        const feeVector = TransferTransactionBuffer.createFeeVector(builder, this.maxFee);
         const recipientVector = TransferTransactionBuffer.createRecipientVector(builder, this.recipient);
         const mosaicsVector = TransferTransactionBuffer.createMosaicsVector(builder, mosaics);
 

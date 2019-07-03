@@ -18,14 +18,13 @@
  * @module transactions/AggregateTransaction
  */
 import { SignSchema } from '../../core/crypto';
+import { TransactionType } from '../../model/transaction/TransactionType';
 import AggregateTransactionBufferPackage from '../buffers/AggregateTransactionBuffer';
 import AggregateTransactionSchema from '../schemas/AggregateTransactionSchema';
 import { CosignatureTransaction} from './CosignatureTransaction';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
-const {
-    flatbuffers,
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 const {
     AggregateTransactionBuffer,
@@ -77,19 +76,18 @@ export class AggregateTransaction extends VerifiableTransaction {
 }
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
     transactions: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36867;
-        this.type = 0x4141;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.AGGREGATE_COMPLETE;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -129,7 +127,7 @@ export class Builder {
             .createSignerVector(builder, Array(...Array(32))
                 .map(Number.prototype.valueOf, 0));
         const deadlineVector = AggregateTransactionBuffer.createDeadlineVector(builder, this.deadline);
-        const feeVector = AggregateTransactionBuffer.createFeeVector(builder, this.fee);
+        const feeVector = AggregateTransactionBuffer.createFeeVector(builder, this.maxFee);
         const modificationsVector = AggregateTransactionBuffer.createTransactionsVector(builder, this.transactions);
 
         AggregateTransactionBuffer.startAggregateTransactionBuffer(builder);
