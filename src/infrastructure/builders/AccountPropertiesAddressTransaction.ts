@@ -18,6 +18,7 @@
  * @module transactions/AccountPropertiesAddressTransaction
  */
 import { RawAddress as address } from '../../core/format';
+import { TransactionType } from '../../model/transaction/TransactionType';
 import AccountPropertiesAddressTransactionBufferPackage from '../buffers/AccountPropertiesAddressTransactionBuffer';
 import AccountPropertiesAddressModificationTransactionSchema from '../schemas/AccountPropertiesAddressModificationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
@@ -26,9 +27,7 @@ const {
     PropertyAddressModificationBuffer,
 } = AccountPropertiesAddressTransactionBufferPackage.Buffers;
 
-const {
-    flatbuffers
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 export default class AccountPropertiesAddressTransaction extends VerifiableTransaction {
     constructor(bytes) {
@@ -38,20 +37,19 @@ export default class AccountPropertiesAddressTransaction extends VerifiableTrans
 
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
     propertyType: any;
     modifications: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36865;
-        this.type = 0x4150;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -85,7 +83,7 @@ export class Builder {
 
         // Create modifications
         const modificationsArray: any = [];
-        this.modifications.forEach(modification => {
+        this.modifications.forEach((modification) => {
             const addressModificationVector = PropertyAddressModificationBuffer
                 .createValueVector(builder, address.stringToAddress(modification.value));
             PropertyAddressModificationBuffer.startPropertyAddressModificationBuffer(builder);
@@ -102,7 +100,7 @@ export class Builder {
         const deadlineVector = AccountPropertiesAddressTransactionBuffer
             .createDeadlineVector(builder, this.deadline);
         const feeVector = AccountPropertiesAddressTransactionBuffer
-            .createFeeVector(builder, this.fee);
+            .createFeeVector(builder, this.maxFee);
         const modificationVector = AccountPropertiesAddressTransactionBuffer
             .createModificationsVector(builder, modificationsArray);
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { KeyPair } from '../../core/crypto';
+import { KeyPair, SignSchema } from '../../core/crypto';
 import { SHA3Hasher as sha3Hasher } from '../../core/crypto/SHA3Hasher';
 import { Convert as convert } from '../../core/format';
 
@@ -60,14 +60,15 @@ export class VerifiableTransaction {
     /**
      * @param {KeyPair } keyPair KeyPair instance
      * @param {string} generationHash Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {module:model/TransactionPayload} - Signed Transaction Payload
      */
-    signTransaction(keyPair, generationHash) {
+    signTransaction(keyPair, generationHash, signSchema: SignSchema = SignSchema.SHA3) {
         const generationHashBytes = Array.from(convert.hexToUint8(generationHash));
         const byteBuffer = this.serialize();
         const signingBytes = generationHashBytes.concat(byteBuffer.slice(4 + 64 + 32));
-        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(keyPair.privateKey);
-        const signature = Array.from(KeyPair.sign(keyPair, new Uint8Array(signingBytes)));
+        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(keyPair.privateKey, signSchema);
+        const signature = Array.from(KeyPair.sign(keyPair, new Uint8Array(signingBytes), signSchema));
         const signedTransactionBuffer = byteBuffer
             .splice(0, 4)
             .concat(signature)
@@ -94,10 +95,11 @@ export class VerifiableTransaction {
 
     /**
      * @param {KeyPair} keyPair KeyPair instance
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {module:model/TransactionPayload} Returns TransactionPayload instance
      */
-    signCosignatoriesTransaction(keyPair) {
-        const signature = KeyPair.sign(keyPair, new Uint8Array(this.bytes));
+    signCosignatoriesTransaction(keyPair, signSchema: SignSchema = SignSchema.SHA3) {
+        const signature = KeyPair.sign(keyPair, new Uint8Array(this.bytes), signSchema);
         return {
             parentHash: convert.uint8ToHex(this.bytes),
             signature: convert.uint8ToHex(signature),

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { TransactionType } from '../../model/transaction/TransactionType';
 import MosaicSupplyChangeTransactionBufferPackage from '../buffers/MosaicSupplyChangeTransactionBuffer';
 import MosaicSupplyChangeTransactionSchema from '../schemas/MosaicSupplyChangeTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
@@ -21,9 +22,7 @@ const {
     MosaicSupplyChangeTransactionBuffer,
 } = MosaicSupplyChangeTransactionBufferPackage.Buffers;
 
-const {
-    flatbuffers,
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 /**
  * @module transactions/MosaicSupplyChangeTransaction
@@ -35,7 +34,7 @@ export default class MosaicSupplyChangeTransaction extends VerifiableTransaction
 }
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
@@ -43,13 +42,12 @@ export class Builder {
     direction: any;
     delta: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36867;
-        this.type = 0x424d;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.MOSAIC_SUPPLY_CHANGE;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -94,7 +92,7 @@ export class Builder {
         const deadlineVector = MosaicSupplyChangeTransactionBuffer
             .createDeadlineVector(builder, this.deadline);
         const feeVector = MosaicSupplyChangeTransactionBuffer
-            .createFeeVector(builder, this.fee);
+            .createFeeVector(builder, this.maxFee);
         const mosaicIdVector = MosaicSupplyChangeTransactionBuffer
             .createFeeVector(builder, this.mosaicId);
         const deltaVector = MosaicSupplyChangeTransactionBuffer

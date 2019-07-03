@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { SignSchema } from '../../core/crypto';
 import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
@@ -83,11 +84,12 @@ export abstract class Transaction {
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account - The account to sign the transaction
      * @param generationHash - Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {SignedTransaction}
      */
-    public signWith(account: Account, generationHash: string): SignedTransaction {
+    public signWith(account: Account, generationHash: string, signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
         const transaction = this.buildTransaction();
-        const signedTransactionRaw = transaction.signTransaction(account, generationHash);
+        const signedTransactionRaw = transaction.signTransaction(account, generationHash, signSchema);
         return new SignedTransaction(
             signedTransactionRaw.payload,
             signedTransactionRaw.hash,
@@ -159,8 +161,14 @@ export abstract class Transaction {
      * @internal
      */
     public versionToDTO(): number {
-        const versionDTO = this.networkType.toString(16) + '0' + this.version.toString(16);
-        return parseInt(versionDTO, 16);
+        return (this.networkType << 8) + this.version;
+    }
+
+    /**
+     * @internal
+     */
+    public versionToHex(): string {
+        return '0x' + this.versionToDTO().toString(16);
     }
 
     /**
