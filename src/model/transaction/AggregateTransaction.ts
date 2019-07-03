@@ -157,95 +157,18 @@ export class AggregateTransaction extends Transaction {
      * @param initiatorAccount - Initiator account
      * @param {CosignatureSignedTransaction[]} cosignatureSignedTransactions - Array of cosigned transaction
      * @param generationHash - Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {SignedTransaction}
      */
     public signTransactionGivenSignatures(initiatorAccount: Account,
                                           cosignatureSignedTransactions: CosignatureSignedTransaction[],
-                                          generationHash: string) {
+                                          generationHash: string,
+                                          signSchema: SignSchema= SignSchema.SHA3) {
         const aggregateTransaction = this.buildTransaction();
         const signedTransactionRaw = aggregateTransaction.signTransactionGivenSignatures(initiatorAccount,
                                                                                          cosignatureSignedTransactions,
-                                                                                         generationHash);
-        return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
-                                     this.type, this.networkType);
-    }
-
-    /**
-     * @internal
-     * Sign transaction with cosignatories collected from cosigned transactions and creating a new SignedTransaction
-     * For off chain Aggregated Complete Transaction co-signing.
-     * @param initiatorAccount - Initiator account
-     * @param {CosignatureSignedTransaction[]} cosignatureSignedTransactions - Array of cosigned transaction
-     * @param generationHash - Network generation hash hex
-     * @return {SignedTransaction}
-     */
-    public signTransactionGivenSignatures(initiatorAccount: Account,
-                                          cosignatureSignedTransactions: CosignatureSignedTransaction[],
-                                          generationHash: string) {
-        const aggregateTransaction = this.buildTransaction();
-        const signedTransactionRaw = aggregateTransaction.signTransactionGivenSignatures(initiatorAccount,
-                                                                                         cosignatureSignedTransactions,
-                                                                                         generationHash);
-        return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
-                                     this.type, this.networkType);
-    }
-
-    /**
-     * @internal
-     * Sign transaction with cosignatories collected from cosigned transactions and creating a new SignedTransaction
-     * For off chain Aggregated Complete Transaction co-signing.
-     * @param initiatorAccount - Initiator account
-     * @param {CosignatureSignedTransaction[]} cosignatureSignedTransactions - Array of cosigned transaction
-     * @param generationHash - Network generation hash hex
-     * @return {SignedTransaction}
-     */
-    public signTransactionGivenSignatures(initiatorAccount: Account,
-                                          cosignatureSignedTransactions: CosignatureSignedTransaction[],
-                                          generationHash: string) {
-        const aggregateTransaction = this.buildTransaction();
-        const signedTransactionRaw = aggregateTransaction.signTransactionGivenSignatures(initiatorAccount,
-                                                                                         cosignatureSignedTransactions,
-                                                                                         generationHash);
-        return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
-                                     this.type, this.networkType);
-    }
-
-    /**
-     * @internal
-     * Sign transaction with cosignatories collected from cosigned transactions and creating a new SignedTransaction
-     * For off chain Aggregated Complete Transaction co-signing.
-     * @param initiatorAccount - Initiator account
-     * @param {CosignatureSignedTransaction[]} cosignatureSignedTransactions - Array of cosigned transaction
-     * @param generationHash - Network generation hash hex
-     * @return {SignedTransaction}
-     */
-    public signTransactionGivenSignatures(initiatorAccount: Account,
-                                          cosignatureSignedTransactions: CosignatureSignedTransaction[],
-                                          generationHash: string) {
-        const aggregateTransaction = this.buildTransaction();
-        const signedTransactionRaw = aggregateTransaction.signTransactionGivenSignatures(initiatorAccount,
-                                                                                         cosignatureSignedTransactions,
-                                                                                         generationHash);
-        return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
-                                     this.type, this.networkType);
-    }
-
-    /**
-     * @internal
-     * Sign transaction with cosignatories collected from cosigned transactions and creating a new SignedTransaction
-     * For off chain Aggregated Complete Transaction co-signing.
-     * @param initiatorAccount - Initiator account
-     * @param {CosignatureSignedTransaction[]} cosignatureSignedTransactions - Array of cosigned transaction
-     * @param generationHash - Network generation hash hex
-     * @return {SignedTransaction}
-     */
-    public signTransactionGivenSignatures(initiatorAccount: Account,
-                                          cosignatureSignedTransactions: CosignatureSignedTransaction[],
-                                          generationHash: string) {
-        const aggregateTransaction = this.buildTransaction();
-        const signedTransactionRaw = aggregateTransaction.signTransactionGivenSignatures(initiatorAccount,
-                                                                                         cosignatureSignedTransactions,
-                                                                                         generationHash);
+                                                                                         generationHash,
+                                                                                         signSchema);
         return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
                                      this.type, this.networkType);
     }
