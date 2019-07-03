@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.12.4] - 03-Jul-2019
+
+**Milestone**: Dragon
+
+- Added export for Sha3Hasher
+- Added export for nacl_catapult
+- Added changelog milestone attribution
+
 ## [0.12.3] - 20-Jun-2019
 
 **Milestone**: Dragon
@@ -136,6 +144,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 - Initial code release.
 
+[0.12.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.3...v0.12.4
 [0.12.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.2...v0.12.3
 [0.12.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.1...v0.12.2
 [0.12.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.0...v0.12.1

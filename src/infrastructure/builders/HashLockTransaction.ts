@@ -21,10 +21,9 @@ import { Convert as convert } from '../../core/format';
 import * as HashLockTransactionBufferPackage from '../buffers/HashLockTransactionBuffer';
 import HashLockTransactionSchema from '../schemas/HashLockTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
+import { TransactionType } from '../../model/transaction/TransactionType';
 
-const {
-    flatbuffers,
-} = require('flatbuffers');
+import {flatbuffers} from 'flatbuffers';
 
 const {
     HashLockTransactionBuffer,
@@ -38,7 +37,7 @@ export default class HashLockTransaction extends VerifiableTransaction {
 
 // tslint:disable-next-line:max-classes-per-file
 export class Builder {
-    fee: any;
+    maxFee: any;
     version: any;
     type: any;
     deadline: any;
@@ -47,13 +46,12 @@ export class Builder {
     duration: any;
     hash: any;
     constructor() {
-        this.fee = [0, 0];
-        this.version = 36867;
-        this.type = 0x414C;
+        this.maxFee = [0, 0];
+        this.type = TransactionType.LOCK;
     }
 
-    addFee(fee) {
-        this.fee = fee;
+    addFee(maxFee) {
+        this.maxFee = maxFee;
         return this;
     }
 
@@ -100,7 +98,7 @@ export class Builder {
             .createSignatureVector(builder, Array(...Array(64)).map(Number.prototype.valueOf, 0));
         const signerVector = HashLockTransactionBuffer.createSignerVector(builder, Array(...Array(32)).map(Number.prototype.valueOf, 0));
         const deadlineVector = HashLockTransactionBuffer.createDeadlineVector(builder, this.deadline);
-        const feeVector = HashLockTransactionBuffer.createFeeVector(builder, this.fee);
+        const feeVector = HashLockTransactionBuffer.createFeeVector(builder, this.maxFee);
         const mosaicIdVector = HashLockTransactionBuffer.createMosaicIdVector(builder, this.mosaicId);
         const mosaicAmountVector = HashLockTransactionBuffer.createMosaicAmountVector(builder, this.mosaicAmount);
         const durationVector = HashLockTransactionBuffer.createDurationVector(builder, this.duration);
