@@ -25,11 +25,11 @@ module.exports = {
         sourceMap: false,
         // css预设器配置项
         loaderOptions: {
-            postcss:{
-                config: {
-                    path: '.postcss.config.js'
-                }
-            }
+            // postcss:{
+            //     config: {
+            //         path: '.postcss.config.js'
+            //     }
+            // }
         },
         // 启用 CSS modules for all css / pre-processor files.
         modules: false
