@@ -3,7 +3,7 @@ module.exports = {
       "postcss-import": {},
       "autoprefixer": {},
       "postcss-pxtorem": {
-          "rootValue": 64,
+          "rootValue": 128,
           "propList": ["*"],
           "selectorBlackList": ["mint-"]
       }

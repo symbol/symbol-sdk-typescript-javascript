@@ -2,7 +2,7 @@ import QRCode from 'qrcode'
 import i18n from './locale/index'
 import Vue from 'vue'
 const vueInstance = new Vue({i18n})
-const {dialog} = require('electron')
+
 
 export const getUnion = (arr1, arr2) => {
   return Array.from(new Set([...arr1, ...arr2]))
@@ -85,24 +85,3 @@ export const copyTxt = (txt) => {
   })
 }
 
-export const openFile = (fn) => {
-    dialog.showOpenDialog({
-        properties: ['openFile', 'openDirectory']
-    }, (files) => {
-        if (files) {
-            fn(files)
-        }
-    })
-}
-
-export const saveFile = (name,extensions,fn) => {
-    const options = {
-        title: 'Save File',
-        filters: [
-            { name: name, extensions: [extensions] }
-        ]
-    }
-    dialog.showSaveDialog(options, (filename) => {
-        fn(filename)
-    })
-}
