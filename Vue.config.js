@@ -5,7 +5,7 @@ module.exports = {
         ? './'
         : '/',
     // 输出文件目录
-    outputDir: '../www',
+    outputDir: './www',
     assetsDir: 'static',
     // eslint-loader 是否在保存的时候检查
     lintOnSave: true,

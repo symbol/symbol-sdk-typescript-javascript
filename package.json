@@ -1,28 +1,40 @@
 {
   "name": "nem2_desk_wallet_cn",
-  "version": "1.0.0",
-  "description": "Nem2_Desk_Wallet_Cn",
-  "main": "main.js",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "start": "electron .",
-    "packMac": "electron-packager . Nem2_Desk_Wallet_Cn --platform=darwin --arch=x64 --out ./mac_Client  --app-version=0.0.1 --electron-version=5.0.6",
-    "packWin32": "electron-packager . Nem2_Desk_Wallet_Cn --platform=win32 --arch=x64 --out ./win32_Client  --app-version=0.0.1 --electron-version=5.0.6",
-    "packLinux": "electron-packager . Nem2_Desk_Wallet_Cn --platform=linux --arch=x64 --out ./linux_Client  --app-version=0.0.1 --electron-version=5.0.6"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NemTechCN/NEM2_Desk_Wallet_CN.git"
-  },
-  "author": "Nemcn",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/NemTechCN/NEM2_Desk_Wallet_CN/issues"
-  },
-  "homepage": "https://github.com/NemTechCN/NEM2_Desk_Wallet_CN#readme",
-  "devDependencies": {
-    "electron": "^5.0.6"
+    "dev": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "electron-packager": "^14.0.1"
+    "core-js": "^2.6.5",
+    "echarts": "^4.2.1",
+    "electron": "^5.0.6",
+    "iview": "^3.4.2",
+    "nem2-sdk": "^0.13.0",
+    "qrcode": "^1.3.4",
+    "vue": "^2.6.10",
+    "vue-class-component": "^7.0.2",
+    "vue-i18n": "^8.11.2",
+    "vue-property-decorator": "^8.1.0",
+    "vue-router": "^3.0.3",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.1.4",
+    "@vue/cli-plugin-babel": "^3.9.0",
+    "@vue/cli-plugin-typescript": "^3.9.0",
+    "@vue/cli-plugin-unit-jest": "^3.9.0",
+    "@vue/cli-service": "^3.9.0",
+    "@vue/test-utils": "1.0.0-beta.29",
+    "babel-core": "7.0.0-bridge.0",
+    "less": "^3.0.4",
+    "less-loader": "^4.1.0",
+    "postcss-import": "^12.0.1",
+    "postcss-pxtorem": "^4.0.1",
+    "ts-jest": "^23.0.0",
+    "typescript": "^3.4.3",
+    "vue-template-compiler": "^2.6.10"
   }
 }
