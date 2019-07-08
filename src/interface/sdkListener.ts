@@ -1,5 +1,6 @@
 import {Listener,TransactionHttp} from 'nem2-sdk'
 import {SdkV0} from './sdkDefine'
+// @ts-ignore
 import {filter, mergeMap} from 'rxjs/operators'
 
 export const wsInterface: SdkV0.ws = {

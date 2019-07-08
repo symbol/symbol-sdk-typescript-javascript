@@ -2,7 +2,14 @@ const routers = [
     {
         path: '/home',
         name: 'home',
-        component: () => import('@/views/Home.vue')
+        component: () => import('@/components/menu-bar/MenuBar.vue'),
+        children: [
+            {
+                path: '/home',
+                name: 'home',
+                component: () => import('@/components/menu-bar/MenuBar.vue')
+            }
+        ]
     },
 ]
 
