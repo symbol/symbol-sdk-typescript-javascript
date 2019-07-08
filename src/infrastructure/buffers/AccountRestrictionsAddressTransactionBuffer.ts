@@ -31,7 +31,7 @@ Catapult.Buffers = Catapult.Buffers || {};
 /**
  * @constructor
  */
-Catapult.Buffers.PropertyAddressModificationBuffer = function() {
+Catapult.Buffers.RestrictionAddressModificationBuffer = function() {
     /**
      * @type {flatbuffers.ByteBuffer}
      */
@@ -46,9 +46,9 @@ Catapult.Buffers.PropertyAddressModificationBuffer = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {Catapult.Buffers.PropertyAddressModificationBuffer}
+ * @returns {Catapult.Buffers.RestrictionAddressModificationBuffer}
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.prototype.__init = function(i, bb) {
+Catapult.Buffers.RestrictionAddressModificationBuffer.prototype.__init = function(i, bb) {
     this.bb_pos = i;
     this.bb = bb;
     return this;
@@ -56,17 +56,17 @@ Catapult.Buffers.PropertyAddressModificationBuffer.prototype.__init = function(i
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {Catapult.Buffers.PropertyAddressModificationBuffer=} obj
- * @returns {Catapult.Buffers.PropertyAddressModificationBuffer}
+ * @param {Catapult.Buffers.RestrictionAddressModificationBuffer=} obj
+ * @returns {Catapult.Buffers.RestrictionAddressModificationBuffer}
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.getRootAsPropertyAddressModificationBuffer = function(bb, obj) {
-    return (obj || new Catapult.Buffers.PropertyAddressModificationBuffer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+Catapult.Buffers.RestrictionAddressModificationBuffer.getRootAsRestrictionAddressModificationBuffer = function(bb, obj) {
+    return (obj || new Catapult.Buffers.RestrictionAddressModificationBuffer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {number}
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.prototype.modificationType = function() {
+Catapult.Buffers.RestrictionAddressModificationBuffer.prototype.modificationType = function() {
     var offset = this.bb.__offset(this.bb_pos, 4);
     return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
@@ -75,7 +75,7 @@ Catapult.Buffers.PropertyAddressModificationBuffer.prototype.modificationType = 
  * @param {number} index
  * @returns {number}
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.prototype.value = function(index) {
+Catapult.Buffers.RestrictionAddressModificationBuffer.prototype.value = function(index) {
     var offset = this.bb.__offset(this.bb_pos, 6);
     return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
 };
@@ -83,7 +83,7 @@ Catapult.Buffers.PropertyAddressModificationBuffer.prototype.value = function(in
 /**
  * @returns {number}
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.prototype.valueLength = function() {
+Catapult.Buffers.RestrictionAddressModificationBuffer.prototype.valueLength = function() {
     var offset = this.bb.__offset(this.bb_pos, 6);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -91,7 +91,7 @@ Catapult.Buffers.PropertyAddressModificationBuffer.prototype.valueLength = funct
 /**
  * @returns {Uint8Array}
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.prototype.valueArray = function() {
+Catapult.Buffers.RestrictionAddressModificationBuffer.prototype.valueArray = function() {
     var offset = this.bb.__offset(this.bb_pos, 6);
     return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -99,7 +99,7 @@ Catapult.Buffers.PropertyAddressModificationBuffer.prototype.valueArray = functi
 /**
  * @param {flatbuffers.Builder} builder
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.startPropertyAddressModificationBuffer = function(builder) {
+Catapult.Buffers.RestrictionAddressModificationBuffer.startRestrictionAddressModificationBuffer = function(builder) {
     builder.startObject(2);
 };
 
@@ -107,7 +107,7 @@ Catapult.Buffers.PropertyAddressModificationBuffer.startPropertyAddressModificat
  * @param {flatbuffers.Builder} builder
  * @param {number} type
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.addModificationType = function(builder, type) {
+Catapult.Buffers.RestrictionAddressModificationBuffer.addModificationType = function(builder, type) {
     builder.addFieldInt8(0, type, 0);
 };
 
@@ -115,7 +115,7 @@ Catapult.Buffers.PropertyAddressModificationBuffer.addModificationType = functio
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} valueOffset
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.addValue = function(builder, valueOffset) {
+Catapult.Buffers.RestrictionAddressModificationBuffer.addValue = function(builder, valueOffset) {
     builder.addFieldOffset(1, valueOffset, 0);
 };
 
@@ -124,7 +124,7 @@ Catapult.Buffers.PropertyAddressModificationBuffer.addValue = function(builder, 
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.createValueVector = function(builder, data) {
+Catapult.Buffers.RestrictionAddressModificationBuffer.createValueVector = function(builder, data) {
     builder.startVector(1, data.length, 1);
     for (var i = data.length - 1; i >= 0; i--) {
         builder.addInt8(data[i]);
@@ -136,7 +136,7 @@ Catapult.Buffers.PropertyAddressModificationBuffer.createValueVector = function(
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.startValueVector = function(builder, numElems) {
+Catapult.Buffers.RestrictionAddressModificationBuffer.startValueVector = function(builder, numElems) {
     builder.startVector(1, numElems, 1);
 };
 
@@ -144,7 +144,7 @@ Catapult.Buffers.PropertyAddressModificationBuffer.startValueVector = function(b
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.PropertyAddressModificationBuffer.endPropertyAddressModificationBuffer = function(builder) {
+Catapult.Buffers.RestrictionAddressModificationBuffer.endRestrictionAddressModificationBuffer = function(builder) {
     var offset = builder.endObject();
     return offset;
 };
@@ -152,7 +152,7 @@ Catapult.Buffers.PropertyAddressModificationBuffer.endPropertyAddressModificatio
 /**
  * @constructor
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer = function() {
     /**
      * @type {flatbuffers.ByteBuffer}
      */
@@ -167,9 +167,9 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {Catapult.Buffers.AccountPropertiesAddressTransactionBuffer}
+ * @returns {Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.__init = function(i, bb) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.__init = function(i, bb) {
     this.bb_pos = i;
     this.bb = bb;
     return this;
@@ -177,17 +177,17 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.__init = fu
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {Catapult.Buffers.AccountPropertiesAddressTransactionBuffer=} obj
- * @returns {Catapult.Buffers.AccountPropertiesAddressTransactionBuffer}
+ * @param {Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer=} obj
+ * @returns {Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.getRootAsAccountPropertiesAddressTransactionBuffer = function(bb, obj) {
-    return (obj || new Catapult.Buffers.AccountPropertiesAddressTransactionBuffer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.getRootAsAccountRestrictionsAddressTransactionBuffer = function(bb, obj) {
+    return (obj || new Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.size = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.size = function() {
     var offset = this.bb.__offset(this.bb_pos, 4);
     return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
@@ -196,7 +196,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.size = func
  * @param {number} index
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signature = function(index) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.signature = function(index) {
     var offset = this.bb.__offset(this.bb_pos, 6);
     return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
 };
@@ -204,7 +204,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signature =
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signatureLength = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.signatureLength = function() {
     var offset = this.bb.__offset(this.bb_pos, 6);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -212,7 +212,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signatureLe
 /**
  * @returns {Uint8Array}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signatureArray = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.signatureArray = function() {
     var offset = this.bb.__offset(this.bb_pos, 6);
     return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -221,7 +221,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signatureAr
  * @param {number} index
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signer = function(index) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.signer = function(index) {
     var offset = this.bb.__offset(this.bb_pos, 8);
     return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
 };
@@ -229,7 +229,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signer = fu
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signerLength = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.signerLength = function() {
     var offset = this.bb.__offset(this.bb_pos, 8);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -237,7 +237,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signerLengt
 /**
  * @returns {Uint8Array}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signerArray = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.signerArray = function() {
     var offset = this.bb.__offset(this.bb_pos, 8);
     return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -245,7 +245,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.signerArray
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.version = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.version = function() {
     var offset = this.bb.__offset(this.bb_pos, 10);
     return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -253,7 +253,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.version = f
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.type = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.type = function() {
     var offset = this.bb.__offset(this.bb_pos, 12);
     return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -262,7 +262,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.type = func
  * @param {number} index
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.fee = function(index) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.fee = function(index) {
     var offset = this.bb.__offset(this.bb_pos, 14);
     return offset ? this.bb.readUint32(this.bb.__vector(this.bb_pos + offset) + index * 4) : 0;
 };
@@ -270,7 +270,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.fee = funct
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.feeLength = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.feeLength = function() {
     var offset = this.bb.__offset(this.bb_pos, 14);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -278,7 +278,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.feeLength =
 /**
  * @returns {Uint32Array}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.feeArray = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.feeArray = function() {
     var offset = this.bb.__offset(this.bb_pos, 14);
     return offset ? new Uint32Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -287,7 +287,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.feeArray = 
  * @param {number} index
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.deadline = function(index) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.deadline = function(index) {
     var offset = this.bb.__offset(this.bb_pos, 16);
     return offset ? this.bb.readUint32(this.bb.__vector(this.bb_pos + offset) + index * 4) : 0;
 };
@@ -295,7 +295,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.deadline = 
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.deadlineLength = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.deadlineLength = function() {
     var offset = this.bb.__offset(this.bb_pos, 16);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -303,7 +303,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.deadlineLen
 /**
  * @returns {Uint32Array}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.deadlineArray = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.deadlineArray = function() {
     var offset = this.bb.__offset(this.bb_pos, 16);
     return offset ? new Uint32Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -311,7 +311,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.deadlineArr
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.propertyType = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.restrictionType = function() {
     var offset = this.bb.__offset(this.bb_pos, 18);
     return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
@@ -320,25 +320,25 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.propertyTyp
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.modificationCount = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.modificationCount = function() {
     var offset = this.bb.__offset(this.bb_pos, 20);
     return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
 
 /**
  * @param {number} index
- * @param {Catapult.Buffers.PropertyAddressModificationBuffer=} obj
- * @returns {Catapult.Buffers.PropertyAddressModificationBuffer}
+ * @param {Catapult.Buffers.RestrictionAddressModificationBuffer=} obj
+ * @returns {Catapult.Buffers.RestrictionAddressModificationBuffer}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.modifications = function(index, obj) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.modifications = function(index, obj) {
     var offset = this.bb.__offset(this.bb_pos, 22);
-    return offset ? (obj || new Catapult.Buffers.PropertyAddressModificationBuffer).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+    return offset ? (obj || new Catapult.Buffers.RestrictionAddressModificationBuffer).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.modificationsLength = function() {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.prototype.modificationsLength = function() {
     var offset = this.bb.__offset(this.bb_pos, 22);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -346,7 +346,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.prototype.modificatio
 /**
  * @param {flatbuffers.Builder} builder
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.startAccountPropertiesAddressTransactionBuffer = function(builder) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.startAccountRestrictionsAddressTransactionBuffer = function(builder) {
     builder.startObject(11);
 };
 
@@ -354,7 +354,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.startAccountPropertie
  * @param {flatbuffers.Builder} builder
  * @param {number} size
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addSize = function(builder, size) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.addSize = function(builder, size) {
     builder.addFieldInt32(0, size, 0);
 };
 
@@ -362,7 +362,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addSize = function(bu
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} signatureOffset
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addSignature = function(builder, signatureOffset) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.addSignature = function(builder, signatureOffset) {
     builder.addFieldOffset(1, signatureOffset, 0);
 };
 
@@ -371,7 +371,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addSignature = functi
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.createSignatureVector = function(builder, data) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.createSignatureVector = function(builder, data) {
     builder.startVector(1, data.length, 1);
     for (var i = data.length - 1; i >= 0; i--) {
         builder.addInt8(data[i]);
@@ -383,7 +383,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.createSignatureVector
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.startSignatureVector = function(builder, numElems) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.startSignatureVector = function(builder, numElems) {
     builder.startVector(1, numElems, 1);
 };
 
@@ -391,7 +391,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.startSignatureVector 
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} signerOffset
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addSigner = function(builder, signerOffset) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.addSigner = function(builder, signerOffset) {
     builder.addFieldOffset(2, signerOffset, 0);
 };
 
@@ -400,7 +400,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addSigner = function(
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.createSignerVector = function(builder, data) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.createSignerVector = function(builder, data) {
     builder.startVector(1, data.length, 1);
     for (var i = data.length - 1; i >= 0; i--) {
         builder.addInt8(data[i]);
@@ -412,7 +412,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.createSignerVector = 
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.startSignerVector = function(builder, numElems) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.startSignerVector = function(builder, numElems) {
     builder.startVector(1, numElems, 1);
 };
 
@@ -420,7 +420,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.startSignerVector = f
  * @param {flatbuffers.Builder} builder
  * @param {number} version
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addVersion = function(builder, version) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.addVersion = function(builder, version) {
     builder.addFieldInt16(3, version, 0);
 };
 
@@ -428,7 +428,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addVersion = function
  * @param {flatbuffers.Builder} builder
  * @param {number} type
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addType = function(builder, type) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.addType = function(builder, type) {
     builder.addFieldInt16(4, type, 0);
 };
 
@@ -436,7 +436,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addType = function(bu
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} feeOffset
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addFee = function(builder, feeOffset) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.addFee = function(builder, feeOffset) {
     builder.addFieldOffset(5, feeOffset, 0);
 };
 
@@ -445,7 +445,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addFee = function(bui
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.createFeeVector = function(builder, data) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.createFeeVector = function(builder, data) {
     builder.startVector(4, data.length, 4);
     for (var i = data.length - 1; i >= 0; i--) {
         builder.addInt32(data[i]);
@@ -457,7 +457,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.createFeeVector = fun
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.startFeeVector = function(builder, numElems) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.startFeeVector = function(builder, numElems) {
     builder.startVector(4, numElems, 4);
 };
 
@@ -465,7 +465,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.startFeeVector = func
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} deadlineOffset
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addDeadline = function(builder, deadlineOffset) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.addDeadline = function(builder, deadlineOffset) {
     builder.addFieldOffset(6, deadlineOffset, 0);
 };
 
@@ -474,7 +474,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addDeadline = functio
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.createDeadlineVector = function(builder, data) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.createDeadlineVector = function(builder, data) {
     builder.startVector(4, data.length, 4);
     for (var i = data.length - 1; i >= 0; i--) {
         builder.addInt32(data[i]);
@@ -486,16 +486,16 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.createDeadlineVector 
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.startDeadlineVector = function(builder, numElems) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.startDeadlineVector = function(builder, numElems) {
     builder.startVector(4, numElems, 4);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} propertyType
+ * @param {number} restrictionType
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addPropertyType = function(builder, propertyType) {
-    builder.addFieldInt8(7, propertyType, 0);
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.addRestrictionType = function(builder, restrictionType) {
+    builder.addFieldInt8(7, restrictionType, 0);
 };
 
 
@@ -503,7 +503,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addPropertyType = fun
  * @param {flatbuffers.Builder} builder
  * @param {number} modificationCount
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addModificationCount = function(builder, modificationCount) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.addModificationCount = function(builder, modificationCount) {
     builder.addFieldInt8(8, modificationCount, 0);
 };
 
@@ -511,7 +511,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addModificationCount 
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} modificationsOffset
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addModifications = function(builder, modificationsOffset) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.addModifications = function(builder, modificationsOffset) {
     builder.addFieldOffset(9, modificationsOffset, 0);
 };
 
@@ -520,7 +520,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.addModifications = fu
  * @param {Array.<flatbuffers.Offset>} data
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.createModificationsVector = function(builder, data) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.createModificationsVector = function(builder, data) {
     builder.startVector(4, data.length, 4);
     for (var i = data.length - 1; i >= 0; i--) {
         builder.addOffset(data[i]);
@@ -532,7 +532,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.createModificationsVe
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.startModificationsVector = function(builder, numElems) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.startModificationsVector = function(builder, numElems) {
     builder.startVector(4, numElems, 4);
 };
 
@@ -540,7 +540,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.startModificationsVec
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.endAccountPropertiesAddressTransactionBuffer = function(builder) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.endAccountRestrictionsAddressTransactionBuffer = function(builder) {
     var offset = builder.endObject();
     return offset;
 };
@@ -549,7 +549,7 @@ Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.endAccountPropertiesA
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} offset
  */
-Catapult.Buffers.AccountPropertiesAddressTransactionBuffer.finishAccountPropertiesAddressTransactionBufferBuffer = function(builder, offset) {
+Catapult.Buffers.AccountRestrictionsAddressTransactionBuffer.finishAccountRestrictionsAddressTransactionBufferBuffer = function(builder, offset) {
     builder.finish(offset);
 };
 

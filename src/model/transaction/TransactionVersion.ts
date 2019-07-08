@@ -101,22 +101,22 @@ export class TransactionVersion {
     public static readonly MOSAIC_ALIAS = 0x01;
 
     /**
-     * Account Property address transaction version
+     * Account Restriction address transaction version
      * @type {number}
      */
-    public static readonly MODIFY_ACCOUNT_PROPERTY_ADDRESS = 0x01;
+    public static readonly MODIFY_ACCOUNT_RESTRICTION_ADDRESS = 0x01;
 
     /**
-     * Account Property mosaic transaction version
+     * Account Restriction mosaic transaction version
      * @type {number}
      */
-    public static readonly MODIFY_ACCOUNT_PROPERTY_MOSAIC = 0x01;
+    public static readonly MODIFY_ACCOUNT_RESTRICTION_MOSAIC = 0x01;
 
     /**
-     * Account Property entity type transaction version
+     * Account Restriction operation transaction version
      * @type {number}
      */
-    public static readonly MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE = 0x01;
+    public static readonly MODIFY_ACCOUNT_RESTRICTION_ENTITY_TYPE = 0x01;
 
     /**
      * Link account transaction version

@@ -56,18 +56,18 @@ export interface AccountRepository {
     getAccountsNames(accountIds: Address[]): Observable<AccountNames[]>;
 
     /**
-     * Gets Account property.
+     * Gets Account restrictions.
      * @param publicAccount public account
-     * @returns Observable<AccountProperty>
+     * @returns Observable<AccountRestrictionsInfo>
      */
-    getAccountProperties(address: Address): Observable<AccountRestrictionsInfo>;
+    getAccountRestrictions(address: Address): Observable<AccountRestrictionsInfo>;
 
     /**
-     * Gets Account properties.
+     * Gets Account restrictions.
      * @param address list of addresses
-     * @returns Observable<AccountProperty[]>
+     * @returns Observable<AccountRestrictionsInfo[]>
      */
-    getAccountPropertiesFromAccounts(addresses: Address[]): Observable<AccountRestrictionsInfo[]>;
+    getAccountRestrictionsFromAccounts(addresses: Address[]): Observable<AccountRestrictionsInfo[]>;
 
     /**
      * Gets a MultisigAccountInfo for an account.

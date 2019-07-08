@@ -276,13 +276,13 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             extractNetworkType(transactionDTO.version)) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS) {
+    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS) {
         return new AccountAddressRestrictionModificationTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.maxFee || [0, 0]),
-            transactionDTO.propertyType,
+            transactionDTO.restrictionType,
             transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountRestrictionModification(
                 modificationDTO.type,
                 modificationDTO.value,
@@ -292,13 +292,13 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             extractNetworkType(transactionDTO.version)) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE) {
+    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION) {
         return new AccountOperationRestrictionModificationTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.maxFee || [0, 0]),
-            transactionDTO.propertyType,
+            transactionDTO.restrictionType,
             transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountRestrictionModification(
                 modificationDTO.type,
                 modificationDTO.value,
@@ -308,13 +308,13 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             extractNetworkType(transactionDTO.version)) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC) {
+    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC) {
         return new AccountMosaicRestrictionModificationTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.maxFee || [0, 0]),
-            transactionDTO.propertyType,
+            transactionDTO.restrictionType,
             transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountRestrictionModification(
                 modificationDTO.type,
                 modificationDTO.value,

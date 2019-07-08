@@ -68,25 +68,25 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 duration: (transaction as LockFundsTransaction).duration.toDTO(),
                 hash: (transaction as LockFundsTransaction).hash,
             };
-        case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
+        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS:
             return {
-                propertyType: (transaction as AccountAddressRestrictionModificationTransaction).restrictionType,
+                restrictionType: (transaction as AccountAddressRestrictionModificationTransaction).restrictionType,
                 modifications: (transaction as AccountAddressRestrictionModificationTransaction).
                     modifications.map((modification) => {
                         return modification.toDTO();
                     }),
             };
-        case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
+        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION:
             return {
-                propertyType: (transaction as AccountOperationRestrictionModificationTransaction).restrictionType,
+                restrictionType: (transaction as AccountOperationRestrictionModificationTransaction).restrictionType,
                 modifications: (transaction as AccountOperationRestrictionModificationTransaction).
                     modifications.map((modification) => {
                         return modification.toDTO();
                     }),
             };
-        case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
+        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC:
             return {
-                propertyType: (transaction as AccountMosaicRestrictionModificationTransaction).restrictionType,
+                restrictionType: (transaction as AccountMosaicRestrictionModificationTransaction).restrictionType,
                 modifications: (transaction as AccountMosaicRestrictionModificationTransaction).modifications.map((modification) => {
                         return modification.toDTO();
                     }),

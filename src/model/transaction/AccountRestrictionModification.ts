@@ -39,7 +39,7 @@ export class AccountRestrictionModification<T> {
     }
 
     /**
-     * Create an address filter for account property modification
+     * Create an address filter for account restriction modification
      * @param modificationType - modification type. 0: Add, 1: Remove
      * @param address - modification value (Address)
      * @returns {AccountRestrictionModification}
@@ -49,7 +49,7 @@ export class AccountRestrictionModification<T> {
         return new AccountRestrictionModification<string>(modificationType, address.plain());
     }
     /**
-     * Create an mosaic filter for account property modification
+     * Create an mosaic filter for account restriction modification
      * @param modificationType - modification type. 0: Add, 1: Remove
      * @param mosaicId - modification value (Mosaic)
      * @returns {AccountRestrictionModification}
@@ -60,14 +60,14 @@ export class AccountRestrictionModification<T> {
     }
 
     /**
-     * Create an entity type filter for account property modification
+     * Create an operation filter for account restriction modification
      * @param modificationType - modification type. 0: Add, 1: Remove
-     * @param entityType - modification value (Transaction Type)
+     * @param operation - modification value (Transaction Type)
      * @returns {AccountRestrictionModification}
      */
-    public static createForEntityType(modificationType: RestrictionModificationType,
-                                      entityType: number): AccountRestrictionModification<TransactionType> {
-    return new AccountRestrictionModification<TransactionType>(modificationType, entityType);
+    public static createForOperation(modificationType: RestrictionModificationType,
+                                     operation: number): AccountRestrictionModification<TransactionType> {
+    return new AccountRestrictionModification<TransactionType>(modificationType, operation);
     }
 
     /**

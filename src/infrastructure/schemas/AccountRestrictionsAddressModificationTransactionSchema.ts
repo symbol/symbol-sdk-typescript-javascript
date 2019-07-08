@@ -18,17 +18,17 @@ import {
     Schema,
     TypeSize,
     ubyte,
-    ushort,
-    tableArray,
+	ushort,
+	tableArray,
     uint
 } from './Schema';
 
 /**
- * @module schema/AccountPropertiesMosaicModificationTransactionSchema
+ * @module schema/AccountRestrictionsAddressModificationTransactionSchema
  */
 
 /**
- * Account properties address transaction schema
+ * Account restriction address transaction schema
  * @const {module:schema/Schema}
  */
 export default new Schema([
@@ -39,10 +39,10 @@ export default new Schema([
     ushort('type'),
     array('fee', TypeSize.INT),
     array('deadline', TypeSize.INT),
-    ubyte('propertyType'),
+    ubyte('restrictionType'),
     ubyte('modificationCount'),
     tableArray('modifications', [
         ubyte('modificationType'),
-        array('value', TypeSize.INT)
+        array('value', TypeSize.BYTE)
     ])
 ]);

@@ -21,9 +21,9 @@ import {Convert as convert} from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { RestrictionModificationType } from '../../../src/model/account/RestrictionModificationType';
 import { RestrictionType } from '../../../src/model/account/RestrictionType';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { EncryptedMessage } from '../../../src/model/model';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
@@ -34,7 +34,9 @@ import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrency
 import { AliasActionType } from '../../../src/model/namespace/AliasActionType';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceType } from '../../../src/model/namespace/NamespaceType';
+import { AccountAddressRestrictionModificationTransaction } from '../../../src/model/transaction/AccountAddressRestrictionModificationTransaction';
 import { AccountLinkTransaction } from '../../../src/model/transaction/AccountLinkTransaction';
+import { AccountMosaicRestrictionModificationTransaction } from '../../../src/model/transaction/AccountMosaicRestrictionModificationTransaction';
 import { AccountRestrictionModification } from '../../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../../src/model/transaction/AddressAliasTransaction';
@@ -44,8 +46,6 @@ import { HashType } from '../../../src/model/transaction/HashType';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../../src/model/transaction/LockFundsTransaction';
 import { MessageType } from '../../../src/model/transaction/MessageType';
-import { AccountAddressRestrictionModificationTransaction } from '../../../src/model/transaction/AccountAddressRestrictionModificationTransaction';
-import { AccountMosaicRestrictionModificationTransaction } from '../../../src/model/transaction/AccountMosaicRestrictionModificationTransaction';
 import { ModifyMultisigAccountTransaction } from '../../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAliasTransaction } from '../../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../../src/model/transaction/MosaicDefinitionTransaction';
@@ -68,20 +68,20 @@ describe('TransactionMapping - createFromPayload', () => {
         account = TestingAccount;
     });
 
-    it('should create AccountPropertyAddressTransaction', () => {
+    it('should create AccountRestrictionAddressTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressPropertyFilter = AccountRestrictionModification.createForAddress(
+        const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
             RestrictionModificationType.Add,
             address,
         );
-        const addressPropertyTransaction = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
+        const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
             RestrictionType.AllowAddress,
-            [addressPropertyFilter],
+            [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = addressPropertyTransaction.signWith(account, generationHash);
+        const signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountAddressRestrictionModificationTransaction;
 
@@ -90,20 +90,20 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.modifications[0].value).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
     });
 
-    it('should create AccountPropertyMosaicTransaction', () => {
+    it('should create AccountRestrictionMosaicTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
+        const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
             RestrictionModificationType.Add,
             mosaicId,
         );
-        const mosaicPropertyTransaction = AccountRestrictionTransaction.createMosaicPropertyModificationTransaction(
+        const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             RestrictionType.AllowMosaic,
-            [mosaicPropertyFilter],
+            [mosaicRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicPropertyTransaction.signWith(account, generationHash);
+        const signedTransaction = mosaicRestrictionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountAddressRestrictionModificationTransaction;
         expect(transaction.restrictionType).to.be.equal(RestrictionType.AllowMosaic);
@@ -112,24 +112,24 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.modifications[0].modificationType).to.be.equal(RestrictionModificationType.Add);
     });
 
-    it('should create AccountPropertyMosaicTransaction', () => {
-        const entityType = TransactionType.ADDRESS_ALIAS;
-        const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
+    it('should create AccountRestrictionOperationTransaction', () => {
+        const operation = TransactionType.ADDRESS_ALIAS;
+        const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
             RestrictionModificationType.Add,
-            entityType,
+            operation,
         );
-        const entityTypePropertyTransaction = AccountRestrictionTransaction.createEntityTypePropertyModificationTransaction(
+        const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
             RestrictionType.AllowTransaction,
-            [entityTypePropertyFilter],
+            [operationRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = entityTypePropertyTransaction.signWith(account, generationHash);
+        const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountAddressRestrictionModificationTransaction;
         expect(transaction.restrictionType).to.be.equal(RestrictionType.AllowTransaction);
-        expect(transaction.modifications[0].value).to.be.equal(entityType);
+        expect(transaction.modifications[0].value).to.be.equal(operation);
         expect(transaction.modifications[0].modificationType).to.be.equal(RestrictionModificationType.Add);
     });
 
@@ -144,7 +144,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = addressAliasTransaction.signWith(account,generationHash);
+        const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AddressAliasTransaction;
 
@@ -190,7 +190,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account,generationHash);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
@@ -215,7 +215,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account,generationHash);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
@@ -238,7 +238,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account,generationHash);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
@@ -261,7 +261,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account,generationHash);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
@@ -284,7 +284,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicDefinitionTransaction.signWith(account,generationHash);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicDefinitionTransaction;
 
@@ -327,7 +327,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = transferTransaction.signWith(account,generationHash);
+        const signedTransaction = transferTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as TransferTransaction;
 
@@ -468,7 +468,7 @@ describe('TransactionMapping - createFromPayload', () => {
             signedTransaction,
             NetworkType.MIJIN_TEST);
 
-        const signedLockFundTransaction = lockTransaction.signWith(account,generationHash);
+        const signedLockFundTransaction = lockTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedLockFundTransaction.payload) as LockFundsTransaction;
 
@@ -597,65 +597,65 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
-    it('should create AccountPropertyAddressTransaction', () => {
+    it('should create AccountRestrictionAddressTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        const addressPropertyFilter = AccountRestrictionModification.createForAddress(
+        const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
             RestrictionModificationType.Add,
             address,
         );
-        const addressPropertyTransaction = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
+        const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
             RestrictionType.AllowAddress,
-            [addressPropertyFilter],
+            [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
 
         const transaction =
-            TransactionMapping.createFromDTO(addressPropertyTransaction.toJSON()) as AccountAddressRestrictionModificationTransaction;
+            TransactionMapping.createFromDTO(addressRestrictionTransaction.toJSON()) as AccountAddressRestrictionModificationTransaction;
 
         expect(transaction.modifications[0].value).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         expect(transaction.restrictionType).to.be.equal(RestrictionType.AllowAddress);
         expect(transaction.modifications[0].modificationType).to.be.equal(RestrictionModificationType.Add);
     });
 
-    it('should create AccountPropertyMosaicTransaction', () => {
+    it('should create AccountRestrictionMosaicTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
-        const mosaicPropertyFilter = AccountRestrictionModification.createForMosaic(
+        const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
             RestrictionModificationType.Add,
             mosaicId,
         );
-        const mosaicPropertyTransaction = AccountRestrictionTransaction.createMosaicPropertyModificationTransaction(
+        const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             RestrictionType.AllowMosaic,
-            [mosaicPropertyFilter],
+            [mosaicRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
 
         const transaction =
-            TransactionMapping.createFromDTO(mosaicPropertyTransaction.toJSON()) as AccountMosaicRestrictionModificationTransaction;
+            TransactionMapping.createFromDTO(mosaicRestrictionTransaction.toJSON()) as AccountMosaicRestrictionModificationTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC);
+        expect(transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC);
         expect(transaction.restrictionType).to.be.equal(RestrictionType.AllowMosaic);
         expect(transaction.modifications.length).to.be.equal(1);
     });
 
-    it('should create AccountPropertyMosaicTransaction', () => {
-        const entityType = TransactionType.ADDRESS_ALIAS;
-        const entityTypePropertyFilter = AccountRestrictionModification.createForEntityType(
+    it('should create AccountRestrictionMosaicTransaction', () => {
+        const operation = TransactionType.ADDRESS_ALIAS;
+        const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
             RestrictionModificationType.Add,
-            entityType,
+            operation,
         );
-        const entityTypePropertyTransaction = AccountRestrictionTransaction.createEntityTypePropertyModificationTransaction(
+        const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
             RestrictionType.AllowTransaction,
-            [entityTypePropertyFilter],
+            [operationRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
 
         const transaction =
-            TransactionMapping.createFromDTO(entityTypePropertyTransaction.toJSON()) as AccountMosaicRestrictionModificationTransaction;
+            TransactionMapping.createFromDTO(operationRestrictionTransaction.toJSON()) as AccountMosaicRestrictionModificationTransaction;
 
-        expect(transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE);
+        expect(transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION);
         expect(transaction.restrictionType).to.be.equal(RestrictionType.AllowTransaction);
         expect(transaction.modifications.length).to.be.equal(1);
     });

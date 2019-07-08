@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/AccountPropertiesMosaicTransaction';
+import { Builder } from '../../infrastructure/builders/AccountRestrictionsMosaicTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
-import { RestrictionType } from '../account/RestrictionType';
 import { PublicAccount } from '../account/PublicAccount';
+import { RestrictionType } from '../account/RestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountRestrictionModification } from './AccountRestrictionModification';
@@ -44,7 +44,7 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountMosaicRestrictionModificationTransaction {
         return new AccountMosaicRestrictionModificationTransaction(networkType,
-            TransactionVersion.MODIFY_ACCOUNT_PROPERTY_MOSAIC,
+            TransactionVersion.MODIFY_ACCOUNT_RESTRICTION_MOSAIC,
             deadline,
             maxFee,
             restrictionType,
@@ -71,7 +71,8 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC,
+              networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -84,7 +85,7 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
         const byteSize = super.size;
 
         // set static byte size fields
-        const bytePropertyType = 1;
+        const byteRestrictionType = 1;
         const byteModificationCount = 1;
 
         // each modification contains :
@@ -92,7 +93,7 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
         // - 8 bytes for the modification value (mosaicId)
         const byteModifications = 9 * this.modifications.length;
 
-        return byteSize + bytePropertyType + byteModificationCount + byteModifications;
+        return byteSize + byteRestrictionType + byteModificationCount + byteModifications;
     }
 
     /**
@@ -104,7 +105,7 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
-            .addPropertyType(this.restrictionType)
+            .addRestrictionType(this.restrictionType)
             .addModifications(this.modifications.map((modification) => modification.toDTO()))
             .build();
     }

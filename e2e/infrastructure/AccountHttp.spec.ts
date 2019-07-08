@@ -198,7 +198,7 @@ describe('AccountHttp', () => {
                 RestrictionModificationType.Add,
                 account3.address,
             );
-            const addressModification = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
                 RestrictionType.BlockAddress,
                 [addressPropertyFilter],
@@ -282,22 +282,22 @@ describe('AccountHttp', () => {
         });
     });
 
-    describe('getAccountProperty', () => {
-        it('should call getAccountProperty successfully', (done) => {
+    describe('getAccountRestrictions', () => {
+        it('should call getAccountRestrictions successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getAccountProperties(accountAddress).subscribe((accountProperty) => {
-                    deepEqual(accountProperty.accountRestrictions.address, accountAddress);
+                accountHttp.getAccountRestrictions(accountAddress).subscribe((accountRestrictions) => {
+                    deepEqual(accountRestrictions.accountRestrictions.address, accountAddress);
                     done();
                 });
             }, 1000);
         });
     });
 
-    describe('getAccountProperties', () => {
-        it('should call getAccountProperties successfully', (done) => {
+    describe('getAccountRestrictions', () => {
+        it('should call getAccountRestrictions successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getAccountPropertiesFromAccounts([accountAddress]).subscribe((accountProperties) => {
-                    deepEqual(accountProperties[0]!.accountRestrictions.address, accountAddress);
+                accountHttp.getAccountRestrictionsFromAccounts([accountAddress]).subscribe((accountRestrictions) => {
+                    deepEqual(accountRestrictions[0]!.accountRestrictions.address, accountAddress);
                     done();
                 });
             }, 1000);
@@ -409,7 +409,7 @@ describe('AccountHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('Remove test AccountProperty - Address', () => {
+    describe('Remove test AccountRestriction - Address', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -424,7 +424,7 @@ describe('AccountHttp', () => {
                 RestrictionModificationType.Remove,
                 account3.address,
             );
-            const addressModification = AccountRestrictionTransaction.createAddressPropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
                 RestrictionType.BlockAddress,
                 [addressPropertyFilter],
