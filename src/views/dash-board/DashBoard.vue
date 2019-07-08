@@ -1,5 +1,9 @@
 <template>
-
+  <div>
+    <h2>
+      dashboard
+    </h2>
+  </div>
 </template>
 
 <script lang="ts">
@@ -13,5 +17,5 @@
 </script>
 
 <style scoped>
-@import "DashBoard.less";
+  @import "DashBoard.less";
 </style>

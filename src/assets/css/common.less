@@ -1,0 +1,62 @@
+body,
+html {
+  height: 100%;
+}
+
+#app {
+  background-color: #eee;
+  height: 100%;
+}
+
+.clear::after,
+.clear::before {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.absolute {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.switch_wallet {
+  .ivu-select-placeholder,
+  .ivu-select-selected-value {
+    font-size: 20px !important;
+    color: #222;
+  }
+}
+
+
+.switch_language {
+  .ivu-select-placeholder {
+    position: relative;
+    top: 1px !important;
+    right: 1px !important;
+  }
+}
+
+.ivu-select-selection {
+  border: none !important;
+
+  .ivu-select-placeholder {
+    color: #333 !important;
+  }
+
+  i {
+    color: #222 !important;
+    font-size: 20px;
+  }
+
+  i::before {
+    color: #222 !important;
+    font-size: 20px;
+    content: "\F33D";
+  }
+}
+
