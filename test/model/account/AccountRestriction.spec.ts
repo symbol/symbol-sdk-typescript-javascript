@@ -16,25 +16,25 @@
 
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
-import { AccountProperty } from '../../../src/model/account/AccountProperty';
+import { AccountRestriction } from '../../../src/model/account/AccountRestriction';
 import { Address } from '../../../src/model/account/Address';
-import { PropertyType } from '../../../src/model/account/PropertyType';
-describe('AccountProperty', () => {
+import { RestrictionType } from '../../../src/model/account/RestrictionType';
+describe('AccountRestriction', () => {
 
-    it('should createComplete an AccountProperty object', () => {
-        const accountPropertyDTO = {
-            propertyType: PropertyType.AllowAddress,
+    it('should createComplete an AccountRestriction object', () => {
+        const accountRestrictionDTO = {
+            restrictionType: RestrictionType.AllowAddress,
             values: ['906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB'],
         };
 
-        const accountProperty = new AccountProperty(
-            accountPropertyDTO.propertyType,
-            accountPropertyDTO.values.map((value) => {
+        const accountRestriction = new AccountRestriction(
+            accountRestrictionDTO.restrictionType,
+            accountRestrictionDTO.values.map((value) => {
                 return Address.createFromEncoded(value);
             }),
         );
 
-        expect(accountProperty.propertyType).to.be.equal(accountPropertyDTO.propertyType);
-        deepEqual(accountProperty.values.length, accountPropertyDTO.values.length);
+        expect(accountRestriction.restrictionType).to.be.equal(accountRestrictionDTO.restrictionType);
+        deepEqual(accountRestriction.values.length, accountRestrictionDTO.values.length);
     });
 });

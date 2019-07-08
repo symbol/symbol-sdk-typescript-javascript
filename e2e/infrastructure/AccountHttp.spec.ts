@@ -20,15 +20,15 @@ import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import { Account } from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
-import { PropertyModificationType } from '../../src/model/account/PropertyModificationType';
-import { PropertyType } from '../../src/model/account/PropertyType';
+import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
+import { RestrictionType } from '../../src/model/account/RestrictionType';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasActionType } from '../../src/model/namespace/AliasActionType';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
-import { AccountPropertyModification } from '../../src/model/transaction/AccountPropertyModification';
-import { AccountPropertyTransaction } from '../../src/model/transaction/AccountPropertyTransaction';
+import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
+import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -193,14 +193,14 @@ describe('AccountHttp', () => {
             return listener.close();
         });
 
-        it('Announce AccountPropertyTransaction', (done) => {
-            const addressPropertyFilter = AccountPropertyModification.createForAddress(
-                PropertyModificationType.Add,
+        it('Announce AccountRestrictionTransaction', (done) => {
+            const addressPropertyFilter = AccountRestrictionModification.createForAddress(
+                RestrictionModificationType.Add,
                 account3.address,
             );
-            const addressModification = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                PropertyType.BlockAddress,
+                RestrictionType.BlockAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -282,22 +282,22 @@ describe('AccountHttp', () => {
         });
     });
 
-    describe('getAccountProperty', () => {
-        it('should call getAccountProperty successfully', (done) => {
+    describe('getAccountRestrictions', () => {
+        it('should call getAccountRestrictions successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getAccountProperties(accountAddress).subscribe((accountProperty) => {
-                    deepEqual(accountProperty.accountProperties.address, accountAddress);
+                accountHttp.getAccountRestrictions(accountAddress).subscribe((accountRestrictions) => {
+                    deepEqual(accountRestrictions.accountRestrictions.address, accountAddress);
                     done();
                 });
             }, 1000);
         });
     });
 
-    describe('getAccountProperties', () => {
-        it('should call getAccountProperties successfully', (done) => {
+    describe('getAccountRestrictions', () => {
+        it('should call getAccountRestrictions successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getAccountPropertiesFromAccounts([accountAddress]).subscribe((accountProperties) => {
-                    deepEqual(accountProperties[0]!.accountProperties.address, accountAddress);
+                accountHttp.getAccountRestrictionsFromAccounts([accountAddress]).subscribe((accountRestrictions) => {
+                    deepEqual(accountRestrictions[0]!.accountRestrictions.address, accountAddress);
                     done();
                 });
             }, 1000);
@@ -409,7 +409,7 @@ describe('AccountHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('Remove test AccountProperty - Address', () => {
+    describe('Remove test AccountRestriction - Address', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -419,14 +419,14 @@ describe('AccountHttp', () => {
             return listener.close();
         });
 
-        it('Announce AccountPropertyTransaction', (done) => {
-            const addressPropertyFilter = AccountPropertyModification.createForAddress(
-                PropertyModificationType.Remove,
+        it('Announce AccountRestrictionTransaction', (done) => {
+            const addressPropertyFilter = AccountRestrictionModification.createForAddress(
+                RestrictionModificationType.Remove,
                 account3.address,
             );
-            const addressModification = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+            const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                PropertyType.BlockAddress,
+                RestrictionType.BlockAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );

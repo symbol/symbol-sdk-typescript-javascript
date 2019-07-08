@@ -25,7 +25,7 @@ import {MosaicProperties} from '../../model/mosaic/MosaicProperties';
 import { MosaicPropertyType } from '../../model/mosaic/MosaicPropertyType';
 import {NamespaceId} from '../../model/namespace/NamespaceId';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
-import {AccountPropertyModification} from '../../model/transaction/AccountPropertyModification';
+import {AccountRestrictionModification} from '../../model/transaction/AccountRestrictionModification';
 import {AddressAliasTransaction} from '../../model/transaction/AddressAliasTransaction';
 import {AggregateTransaction} from '../../model/transaction/AggregateTransaction';
 import {AggregateTransactionCosignature} from '../../model/transaction/AggregateTransactionCosignature';
@@ -34,9 +34,9 @@ import {Deadline} from '../../model/transaction/Deadline';
 import { EncryptedMessage } from '../../model/transaction/EncryptedMessage';
 import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
 import { MessageType } from '../../model/transaction/MessageType';
-import {ModifyAccountPropertyAddressTransaction} from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
-import {ModifyAccountPropertyEntityTypeTransaction} from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
-import {ModifyAccountPropertyMosaicTransaction} from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
+import {AccountAddressRestrictionModificationTransaction} from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
+import {AccountOperationRestrictionModificationTransaction} from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
+import {AccountMosaicRestrictionModificationTransaction} from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
 import {ModifyMultisigAccountTransaction} from '../../model/transaction/ModifyMultisigAccountTransaction';
 import {MosaicAliasTransaction} from '../../model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../model/transaction/MosaicDefinitionTransaction';
@@ -276,14 +276,14 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             extractNetworkType(transactionDTO.version)) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS) {
-        return new ModifyAccountPropertyAddressTransaction(
+    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS) {
+        return new AccountAddressRestrictionModificationTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.maxFee || [0, 0]),
-            transactionDTO.propertyType,
-            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
+            transactionDTO.restrictionType,
+            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountRestrictionModification(
                 modificationDTO.type,
                 modificationDTO.value,
             )) : [],
@@ -292,14 +292,14 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             extractNetworkType(transactionDTO.version)) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE) {
-        return new ModifyAccountPropertyEntityTypeTransaction(
+    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION) {
+        return new AccountOperationRestrictionModificationTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.maxFee || [0, 0]),
-            transactionDTO.propertyType,
-            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
+            transactionDTO.restrictionType,
+            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountRestrictionModification(
                 modificationDTO.type,
                 modificationDTO.value,
             )) : [],
@@ -308,14 +308,14 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             extractNetworkType(transactionDTO.version)) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC) {
-        return new ModifyAccountPropertyMosaicTransaction(
+    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC) {
+        return new AccountMosaicRestrictionModificationTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             new UInt64(transactionDTO.maxFee || [0, 0]),
-            transactionDTO.propertyType,
-            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountPropertyModification(
+            transactionDTO.restrictionType,
+            transactionDTO.modifications ? transactionDTO.modifications.map((modificationDTO) => new AccountRestrictionModification(
                 modificationDTO.type,
                 modificationDTO.value,
             )) : [],

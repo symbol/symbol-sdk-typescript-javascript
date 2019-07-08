@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AccountProperty } from './AccountProperty';
-import { Address } from './Address';
+
+import { RestrictionType } from './RestrictionType';
 /**
- * Account properties structure describes property information for an account.
+ * Account restriction structure describes restriction information.
  */
-export class AccountProperties {
+export class AccountRestriction {
 
     /**
      * Constructor
-     * @param address
-     * @param properties
+     * @param restrictionType
+     * @param values
      */
     constructor(
-                /**
-                 * Account Address
-                 */
-                public readonly address: Address,
-                /**
-                 * Properties.
-                 */
-                public readonly properties: AccountProperty[]) {
+            /**
+             * Account restriction type
+             */
+            public readonly restrictionType: RestrictionType,
+            /**
+             * Restriction values.
+             */
+            public readonly values: object[]) {
 
     }
+
 }

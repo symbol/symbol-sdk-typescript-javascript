@@ -26,7 +26,7 @@ import { MosaicProperties } from '../../model/mosaic/MosaicProperties';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { NamespaceType } from '../../model/namespace/NamespaceType';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
-import { AccountPropertyModification } from '../../model/transaction/AccountPropertyModification';
+import { AccountRestrictionModification } from '../../model/transaction/AccountRestrictionModification';
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { AggregateTransactionCosignature } from '../../model/transaction/AggregateTransactionCosignature';
@@ -36,9 +36,9 @@ import { HashType } from '../../model/transaction/HashType';
 import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
 import { Message } from '../../model/transaction/Message';
 import { MessageType } from '../../model/transaction/MessageType';
-import { ModifyAccountPropertyAddressTransaction } from '../../model/transaction/ModifyAccountPropertyAddressTransaction';
-import { ModifyAccountPropertyEntityTypeTransaction } from '../../model/transaction/ModifyAccountPropertyEntityTypeTransaction';
-import { ModifyAccountPropertyMosaicTransaction } from '../../model/transaction/ModifyAccountPropertyMosaicTransaction';
+import { AccountAddressRestrictionModificationTransaction } from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
+import { AccountOperationRestrictionModificationTransaction } from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
+import { AccountMosaicRestrictionModificationTransaction } from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
 import { ModifyMultisigAccountTransaction } from '../../model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
@@ -98,9 +98,9 @@ export const CreateTransactionFromPayload = (transactionBinary: string): Transac
  */
 const CreateTransaction = (type: number, transactionData: string, networkType: NetworkType, deadline: number[]): Transaction => {
     switch (type) {
-        case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
-        case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
-        case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
+        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS:
+        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION:
+        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC:
             const propertyTypeLength = 2;
 
             const modificationCountOffset = propertyTypeLength;
@@ -112,32 +112,32 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
             const modificationArray = modifications.match(/.{1,52}/g);
 
             switch (type) {
-                case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
-                    const t =  ModifyAccountPropertyAddressTransaction.create(
+                case TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS:
+                    const t =  AccountAddressRestrictionModificationTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
-                        modificationArray ? modificationArray.map((modification) => new AccountPropertyModification(
+                        modificationArray ? modificationArray.map((modification) => new AccountRestrictionModification(
                             parseInt(convert.uint8ToHex(convert.hexToUint8(modification.substring(0, 2)).reverse()), 16),
                             Address.createFromEncoded(modification.substring(2, modification.length)).plain(),
                         )) : [],
                         networkType,
                     );
                     return t;
-                case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
-                    return ModifyAccountPropertyMosaicTransaction.create(
+                case TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC:
+                    return AccountMosaicRestrictionModificationTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
-                        modificationArray ? modificationArray.map((modification) => new AccountPropertyModification(
+                        modificationArray ? modificationArray.map((modification) => new AccountRestrictionModification(
                             parseInt(convert.uint8ToHex(convert.hexToUint8(modification.substring(0, 2)).reverse()), 16),
                             UInt64.fromHex(reverse(modification.substring(2, modification.length))).toDTO(),
                         )) : [],
                         networkType,
                     );
-                case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
-                    return ModifyAccountPropertyEntityTypeTransaction.create(
+                case TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION:
+                    return AccountOperationRestrictionModificationTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
-                        modificationArray ? modificationArray.map((modification) => new AccountPropertyModification(
+                        modificationArray ? modificationArray.map((modification) => new AccountRestrictionModification(
                             parseInt(convert.uint8ToHex(convert.hexToUint8(modification.substring(0, 2)).reverse()), 16),
                             parseInt(convert.uint8ToHex(convert.hexToUint8(
                                 modification.substring(2, modification.length)).reverse()), 16),
@@ -145,7 +145,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                         networkType,
                     );
             }
-            throw new Error ('Account property transaction type not recognised.');
+            throw new Error ('Account restriction transaction type not recognised.');
         case TransactionType.LINK_ACCOUNT:
             // read bytes
             const remoteAccountKey = transactionData.substring(0, 64);

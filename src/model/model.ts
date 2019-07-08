@@ -24,11 +24,11 @@ export * from './account/Address';
 export * from './account/MultisigAccountGraphInfo';
 export * from './account/MultisigAccountInfo';
 export * from './account/PublicAccount';
-export * from './account/AccountProperties';
-export * from './account/AccountPropertiesInfo';
-export * from './account/AccountProperty';
-export * from './account/PropertyModificationType';
-export * from './account/PropertyType';
+export * from './account/AccountRestrictions';
+export * from './account/AccountRestrictionsInfo';
+export * from './account/AccountRestriction';
+export * from './account/RestrictionModificationType';
+export * from './account/RestrictionType';
 export * from './account/AccountNames';
 
 // Blockchain
@@ -91,11 +91,11 @@ export * from './receipt/Statement';
 
 // Transaction
 export * from './transaction/AccountLinkTransaction';
-export * from './transaction/AccountPropertyTransaction';
-export * from './transaction/ModifyAccountPropertyAddressTransaction';
-export * from './transaction/ModifyAccountPropertyEntityTypeTransaction';
-export * from './transaction/ModifyAccountPropertyMosaicTransaction';
-export * from './transaction/AccountPropertyModification';
+export * from './transaction/AccountRestrictionTransaction';
+export * from './transaction/AccountAddressRestrictionModificationTransaction';
+export * from './transaction/AccountOperationRestrictionModificationTransaction';
+export * from './transaction/AccountMosaicRestrictionModificationTransaction';
+export * from './transaction/AccountRestrictionModification';
 export * from './transaction/AddressAliasTransaction';
 export * from './transaction/AggregateTransaction';
 export * from './transaction/AggregateTransactionCosignature';

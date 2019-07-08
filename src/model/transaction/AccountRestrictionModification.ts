@@ -15,11 +15,11 @@
  */
 
 import { Address } from '../account/Address';
-import { PropertyModificationType } from '../account/PropertyModificationType';
+import { RestrictionModificationType } from '../account/RestrictionModificationType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { TransactionType } from './TransactionType';
 
-export class AccountPropertyModification<T> {
+export class AccountRestrictionModification<T> {
 
     /**
      * Constructor
@@ -30,7 +30,7 @@ export class AccountPropertyModification<T> {
                 /**
                  * Modification type.
                  */
-                public readonly modificationType: PropertyModificationType,
+                public readonly modificationType: RestrictionModificationType,
                 /**
                  * Modification value (Address, Mosaic or Transaction Type).
                  */
@@ -39,35 +39,35 @@ export class AccountPropertyModification<T> {
     }
 
     /**
-     * Create an address filter for account property modification
+     * Create an address filter for account restriction modification
      * @param modificationType - modification type. 0: Add, 1: Remove
      * @param address - modification value (Address)
-     * @returns {AccountPropertyModification}
+     * @returns {AccountRestrictionModification}
      */
-    public static createForAddress(modificationType: PropertyModificationType,
-                                   address: Address): AccountPropertyModification<string> {
-        return new AccountPropertyModification<string>(modificationType, address.plain());
+    public static createForAddress(modificationType: RestrictionModificationType,
+                                   address: Address): AccountRestrictionModification<string> {
+        return new AccountRestrictionModification<string>(modificationType, address.plain());
     }
     /**
-     * Create an mosaic filter for account property modification
+     * Create an mosaic filter for account restriction modification
      * @param modificationType - modification type. 0: Add, 1: Remove
      * @param mosaicId - modification value (Mosaic)
-     * @returns {AccountPropertyModification}
+     * @returns {AccountRestrictionModification}
      */
-    public static createForMosaic(modificationType: PropertyModificationType,
-                                  mosaicId: MosaicId): AccountPropertyModification<number[]> {
-    return new AccountPropertyModification<number[]>(modificationType, mosaicId.id.toDTO());
+    public static createForMosaic(modificationType: RestrictionModificationType,
+                                  mosaicId: MosaicId): AccountRestrictionModification<number[]> {
+    return new AccountRestrictionModification<number[]>(modificationType, mosaicId.id.toDTO());
     }
 
     /**
-     * Create an entity type filter for account property modification
+     * Create an operation filter for account restriction modification
      * @param modificationType - modification type. 0: Add, 1: Remove
-     * @param entityType - modification value (Transaction Type)
-     * @returns {AccountPropertyModification}
+     * @param operation - modification value (Transaction Type)
+     * @returns {AccountRestrictionModification}
      */
-    public static createForEntityType(modificationType: PropertyModificationType,
-                                      entityType: number): AccountPropertyModification<TransactionType> {
-    return new AccountPropertyModification<TransactionType>(modificationType, entityType);
+    public static createForOperation(modificationType: RestrictionModificationType,
+                                     operation: number): AccountRestrictionModification<TransactionType> {
+    return new AccountRestrictionModification<TransactionType>(modificationType, operation);
     }
 
     /**

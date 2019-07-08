@@ -31,7 +31,7 @@ Catapult.Buffers = Catapult.Buffers || {};
 /**
  * @constructor
  */
-Catapult.Buffers.PropertyMosaicModificationBuffer = function() {
+Catapult.Buffers.RestrictionEntityTypeModificationBuffer = function() {
     /**
      * @type {flatbuffers.ByteBuffer}
      */
@@ -46,9 +46,9 @@ Catapult.Buffers.PropertyMosaicModificationBuffer = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {Catapult.Buffers.PropertyMosaicModificationBuffer}
+ * @returns {Catapult.Buffers.RestrictionEntityTypeModificationBuffer}
  */
-Catapult.Buffers.PropertyMosaicModificationBuffer.prototype.__init = function(i, bb) {
+Catapult.Buffers.RestrictionEntityTypeModificationBuffer.prototype.__init = function(i, bb) {
     this.bb_pos = i;
     this.bb = bb;
     return this;
@@ -56,17 +56,17 @@ Catapult.Buffers.PropertyMosaicModificationBuffer.prototype.__init = function(i,
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {Catapult.Buffers.PropertyMosaicModificationBuffer=} obj
- * @returns {Catapult.Buffers.PropertyMosaicModificationBuffer}
+ * @param {Catapult.Buffers.RestrictionEntityTypeModificationBuffer=} obj
+ * @returns {Catapult.Buffers.RestrictionEntityTypeModificationBuffer}
  */
-Catapult.Buffers.PropertyMosaicModificationBuffer.getRootAsPropertyMosaicModificationBuffer = function(bb, obj) {
-    return (obj || new Catapult.Buffers.PropertyMosaicModificationBuffer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+Catapult.Buffers.RestrictionEntityTypeModificationBuffer.getRootAsRestrictionEntityTypeModificationBuffer = function(bb, obj) {
+    return (obj || new Catapult.Buffers.RestrictionEntityTypeModificationBuffer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {number}
  */
-Catapult.Buffers.PropertyMosaicModificationBuffer.prototype.modificationType = function() {
+Catapult.Buffers.RestrictionEntityTypeModificationBuffer.prototype.modificationType = function() {
     var offset = this.bb.__offset(this.bb_pos, 4);
     return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
@@ -75,31 +75,15 @@ Catapult.Buffers.PropertyMosaicModificationBuffer.prototype.modificationType = f
  * @param {number} index
  * @returns {number}
  */
-Catapult.Buffers.PropertyMosaicModificationBuffer.prototype.value = function(index) {
+Catapult.Buffers.RestrictionEntityTypeModificationBuffer.prototype.value = function() {
     var offset = this.bb.__offset(this.bb_pos, 6);
-    return offset ? this.bb.readUint32(this.bb.__vector(this.bb_pos + offset) + index) : 0;
-};
-
-/**
- * @returns {number}
- */
-Catapult.Buffers.PropertyMosaicModificationBuffer.prototype.valueLength = function() {
-    var offset = this.bb.__offset(this.bb_pos, 6);
-    return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @returns {Uint8Array}
- */
-Catapult.Buffers.PropertyMosaicModificationBuffer.prototype.valueArray = function() {
-    var offset = this.bb.__offset(this.bb_pos, 6);
-    return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
+    return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  */
-Catapult.Buffers.PropertyMosaicModificationBuffer.startPropertyMosaicModificationBuffer = function(builder) {
+Catapult.Buffers.RestrictionEntityTypeModificationBuffer.startRestrictionEntityTypeModificationBuffer = function(builder) {
     builder.startObject(2);
 };
 
@@ -107,44 +91,23 @@ Catapult.Buffers.PropertyMosaicModificationBuffer.startPropertyMosaicModificatio
  * @param {flatbuffers.Builder} builder
  * @param {number} type
  */
-Catapult.Buffers.PropertyMosaicModificationBuffer.addModificationType = function(builder, type) {
+Catapult.Buffers.RestrictionEntityTypeModificationBuffer.addModificationType = function(builder, type) {
     builder.addFieldInt8(0, type, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} valueOffset
+ * @param {number} valueOffset
  */
-Catapult.Buffers.PropertyMosaicModificationBuffer.addValue = function(builder, valueOffset) {
-    builder.addFieldOffset(1, valueOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {Array.<number>} data
- * @returns {flatbuffers.Offset}
- */
-Catapult.Buffers.PropertyMosaicModificationBuffer.createValueVector = function(builder, data) {
-    builder.startVector(4, data.length, 4);
-    for (var i = data.length - 1; i >= 0; i--) {
-        builder.addInt32(data[i]);
-    }
-    return builder.endVector();
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} numElems
- */
-Catapult.Buffers.PropertyMosaicModificationBuffer.startValueVector = function(builder, numElems) {
-    builder.startVector(4, numElems, 4);
+Catapult.Buffers.RestrictionEntityTypeModificationBuffer.addValue = function(builder, valueOffset) {
+    builder.addFieldInt16(1, valueOffset, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.PropertyMosaicModificationBuffer.endPropertyMosaicModificationBuffer = function(builder) {
+Catapult.Buffers.RestrictionEntityTypeModificationBuffer.endRestrictionEntityTypeModificationBuffer = function(builder) {
     var offset = builder.endObject();
     return offset;
 };
@@ -152,7 +115,7 @@ Catapult.Buffers.PropertyMosaicModificationBuffer.endPropertyMosaicModificationB
 /**
  * @constructor
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer = function() {
     /**
      * @type {flatbuffers.ByteBuffer}
      */
@@ -167,9 +130,9 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer}
+ * @returns {Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.__init = function(i, bb) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.__init = function(i, bb) {
     this.bb_pos = i;
     this.bb = bb;
     return this;
@@ -177,17 +140,17 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.__init = fun
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer=} obj
- * @returns {Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer}
+ * @param {Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer=} obj
+ * @returns {Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.getRootAsAccountPropertiesMosaicTransactionBuffer = function(bb, obj) {
-    return (obj || new Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.getRootAsAccountRestrictionsEntityTypeTransactionBuffer = function(bb, obj) {
+    return (obj || new Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.size = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.size = function() {
     var offset = this.bb.__offset(this.bb_pos, 4);
     return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
@@ -196,7 +159,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.size = funct
  * @param {number} index
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signature = function(index) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.signature = function(index) {
     var offset = this.bb.__offset(this.bb_pos, 6);
     return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
 };
@@ -204,7 +167,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signature = 
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signatureLength = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.signatureLength = function() {
     var offset = this.bb.__offset(this.bb_pos, 6);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -212,7 +175,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signatureLen
 /**
  * @returns {Uint8Array}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signatureArray = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.signatureArray = function() {
     var offset = this.bb.__offset(this.bb_pos, 6);
     return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -221,7 +184,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signatureArr
  * @param {number} index
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signer = function(index) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.signer = function(index) {
     var offset = this.bb.__offset(this.bb_pos, 8);
     return offset ? this.bb.readUint8(this.bb.__vector(this.bb_pos + offset) + index) : 0;
 };
@@ -229,7 +192,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signer = fun
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signerLength = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.signerLength = function() {
     var offset = this.bb.__offset(this.bb_pos, 8);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -237,7 +200,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signerLength
 /**
  * @returns {Uint8Array}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signerArray = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.signerArray = function() {
     var offset = this.bb.__offset(this.bb_pos, 8);
     return offset ? new Uint8Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -245,7 +208,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.signerArray 
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.version = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.version = function() {
     var offset = this.bb.__offset(this.bb_pos, 10);
     return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -253,7 +216,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.version = fu
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.type = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.type = function() {
     var offset = this.bb.__offset(this.bb_pos, 12);
     return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
 };
@@ -262,7 +225,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.type = funct
  * @param {number} index
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.fee = function(index) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.fee = function(index) {
     var offset = this.bb.__offset(this.bb_pos, 14);
     return offset ? this.bb.readUint32(this.bb.__vector(this.bb_pos + offset) + index * 4) : 0;
 };
@@ -270,7 +233,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.fee = functi
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.feeLength = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.feeLength = function() {
     var offset = this.bb.__offset(this.bb_pos, 14);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -278,7 +241,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.feeLength = 
 /**
  * @returns {Uint32Array}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.feeArray = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.feeArray = function() {
     var offset = this.bb.__offset(this.bb_pos, 14);
     return offset ? new Uint32Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -287,7 +250,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.feeArray = f
  * @param {number} index
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.deadline = function(index) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.deadline = function(index) {
     var offset = this.bb.__offset(this.bb_pos, 16);
     return offset ? this.bb.readUint32(this.bb.__vector(this.bb_pos + offset) + index * 4) : 0;
 };
@@ -295,7 +258,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.deadline = f
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.deadlineLength = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.deadlineLength = function() {
     var offset = this.bb.__offset(this.bb_pos, 16);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -303,7 +266,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.deadlineLeng
 /**
  * @returns {Uint32Array}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.deadlineArray = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.deadlineArray = function() {
     var offset = this.bb.__offset(this.bb_pos, 16);
     return offset ? new Uint32Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
 };
@@ -311,7 +274,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.deadlineArra
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.propertyType = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.restrictionType = function() {
     var offset = this.bb.__offset(this.bb_pos, 18);
     return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
@@ -320,25 +283,25 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.propertyType
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.modificationCount = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.modificationCount = function() {
     var offset = this.bb.__offset(this.bb_pos, 20);
     return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
 
 /**
  * @param {number} index
- * @param {Catapult.Buffers.PropertyMosaicModificationBuffer=} obj
- * @returns {Catapult.Buffers.PropertyMosaicModificationBuffer}
+ * @param {Catapult.Buffers.RestrictionEntityTypeModificationBuffer=} obj
+ * @returns {Catapult.Buffers.RestrictionEntityTypeModificationBuffer}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.modifications = function(index, obj) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.modifications = function(index, obj) {
     var offset = this.bb.__offset(this.bb_pos, 22);
-    return offset ? (obj || new Catapult.Buffers.PropertyMosaicModificationBuffer).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+    return offset ? (obj || new Catapult.Buffers.RestrictionEntityTypeModificationBuffer).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
 /**
  * @returns {number}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.modificationsLength = function() {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.prototype.modificationsLength = function() {
     var offset = this.bb.__offset(this.bb_pos, 22);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
@@ -346,7 +309,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.prototype.modification
 /**
  * @param {flatbuffers.Builder} builder
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.startAccountPropertiesMosaicTransactionBuffer = function(builder) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.startAccountRestrictionsEntityTypeTransactionBuffer = function(builder) {
     builder.startObject(11);
 };
 
@@ -354,7 +317,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.startAccountProperties
  * @param {flatbuffers.Builder} builder
  * @param {number} size
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addSize = function(builder, size) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.addSize = function(builder, size) {
     builder.addFieldInt32(0, size, 0);
 };
 
@@ -362,7 +325,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addSize = function(bui
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} signatureOffset
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addSignature = function(builder, signatureOffset) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.addSignature = function(builder, signatureOffset) {
     builder.addFieldOffset(1, signatureOffset, 0);
 };
 
@@ -371,7 +334,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addSignature = functio
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.createSignatureVector = function(builder, data) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.createSignatureVector = function(builder, data) {
     builder.startVector(1, data.length, 1);
     for (var i = data.length - 1; i >= 0; i--) {
         builder.addInt8(data[i]);
@@ -383,7 +346,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.createSignatureVector 
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.startSignatureVector = function(builder, numElems) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.startSignatureVector = function(builder, numElems) {
     builder.startVector(1, numElems, 1);
 };
 
@@ -391,7 +354,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.startSignatureVector =
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} signerOffset
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addSigner = function(builder, signerOffset) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.addSigner = function(builder, signerOffset) {
     builder.addFieldOffset(2, signerOffset, 0);
 };
 
@@ -400,7 +363,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addSigner = function(b
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.createSignerVector = function(builder, data) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.createSignerVector = function(builder, data) {
     builder.startVector(1, data.length, 1);
     for (var i = data.length - 1; i >= 0; i--) {
         builder.addInt8(data[i]);
@@ -412,7 +375,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.createSignerVector = f
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.startSignerVector = function(builder, numElems) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.startSignerVector = function(builder, numElems) {
     builder.startVector(1, numElems, 1);
 };
 
@@ -420,7 +383,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.startSignerVector = fu
  * @param {flatbuffers.Builder} builder
  * @param {number} version
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addVersion = function(builder, version) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.addVersion = function(builder, version) {
     builder.addFieldInt16(3, version, 0);
 };
 
@@ -428,7 +391,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addVersion = function(
  * @param {flatbuffers.Builder} builder
  * @param {number} type
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addType = function(builder, type) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.addType = function(builder, type) {
     builder.addFieldInt16(4, type, 0);
 };
 
@@ -436,7 +399,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addType = function(bui
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} feeOffset
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addFee = function(builder, feeOffset) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.addFee = function(builder, feeOffset) {
     builder.addFieldOffset(5, feeOffset, 0);
 };
 
@@ -445,7 +408,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addFee = function(buil
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.createFeeVector = function(builder, data) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.createFeeVector = function(builder, data) {
     builder.startVector(4, data.length, 4);
     for (var i = data.length - 1; i >= 0; i--) {
         builder.addInt32(data[i]);
@@ -457,7 +420,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.createFeeVector = func
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.startFeeVector = function(builder, numElems) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.startFeeVector = function(builder, numElems) {
     builder.startVector(4, numElems, 4);
 };
 
@@ -465,7 +428,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.startFeeVector = funct
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} deadlineOffset
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addDeadline = function(builder, deadlineOffset) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.addDeadline = function(builder, deadlineOffset) {
     builder.addFieldOffset(6, deadlineOffset, 0);
 };
 
@@ -474,7 +437,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addDeadline = function
  * @param {Array.<number>} data
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.createDeadlineVector = function(builder, data) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.createDeadlineVector = function(builder, data) {
     builder.startVector(4, data.length, 4);
     for (var i = data.length - 1; i >= 0; i--) {
         builder.addInt32(data[i]);
@@ -486,16 +449,16 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.createDeadlineVector =
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.startDeadlineVector = function(builder, numElems) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.startDeadlineVector = function(builder, numElems) {
     builder.startVector(4, numElems, 4);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} propertyType
+ * @param {number} restrictionType
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addPropertyType = function(builder, propertyType) {
-    builder.addFieldInt8(7, propertyType, 0);
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.addRestrictionType = function(builder, restrictionType) {
+    builder.addFieldInt8(7, restrictionType, 0);
 };
 
 
@@ -503,7 +466,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addPropertyType = func
  * @param {flatbuffers.Builder} builder
  * @param {number} modificationCount
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addModificationCount = function(builder, modificationCount) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.addModificationCount = function(builder, modificationCount) {
     builder.addFieldInt8(8, modificationCount, 0);
 };
 
@@ -511,7 +474,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addModificationCount =
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} modificationsOffset
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addModifications = function(builder, modificationsOffset) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.addModifications = function(builder, modificationsOffset) {
     builder.addFieldOffset(9, modificationsOffset, 0);
 };
 
@@ -520,7 +483,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.addModifications = fun
  * @param {Array.<flatbuffers.Offset>} data
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.createModificationsVector = function(builder, data) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.createModificationsVector = function(builder, data) {
     builder.startVector(4, data.length, 4);
     for (var i = data.length - 1; i >= 0; i--) {
         builder.addOffset(data[i]);
@@ -532,7 +495,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.createModificationsVec
  * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.startModificationsVector = function(builder, numElems) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.startModificationsVector = function(builder, numElems) {
     builder.startVector(4, numElems, 4);
 };
 
@@ -540,7 +503,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.startModificationsVect
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.endAccountPropertiesMosaicTransactionBuffer = function(builder) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.endAccountRestrictionsEntityTypeTransactionBuffer = function(builder) {
     var offset = builder.endObject();
     return offset;
 };
@@ -549,7 +512,7 @@ Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.endAccountPropertiesMo
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} offset
  */
-Catapult.Buffers.AccountPropertiesMosaicTransactionBuffer.finishAccountPropertiesMosaicTransactionBufferBuffer = function(builder, offset) {
+Catapult.Buffers.AccountRestrictionsEntityTypeTransactionBuffer.finishAccountRestrictionsEntityTypeTransactionBufferBuffer = function(builder, offset) {
     builder.finish(offset);
 };
 
