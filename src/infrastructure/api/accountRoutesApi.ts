@@ -136,12 +136,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "AccountInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -193,12 +190,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "MultisigAccountInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -250,12 +244,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<MultisigAccountGraphInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -307,12 +298,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "AccountRestrictionsInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -364,12 +352,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<AccountRestrictionsInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -421,12 +406,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<AccountInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -478,12 +460,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<AccountNamesDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -550,12 +529,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<TransactionInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -622,12 +598,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<TransactionInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -694,12 +667,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<TransactionInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -766,12 +736,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<TransactionInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -838,12 +805,9 @@ export class AccountRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<TransactionInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });

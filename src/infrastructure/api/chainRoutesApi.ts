@@ -124,12 +124,9 @@ export class ChainRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "HeightInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -174,12 +171,9 @@ export class ChainRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "BlockchainScoreDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
