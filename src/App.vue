@@ -9,8 +9,10 @@
 
   @Component
   export default class App extends Vue {
-
-
+      ipcRenderer = window['electron']['ipcRenderer'];
+      created(){
+          this.ipcRenderer.send('app', 'max')
+      }
   }
 </script>
 

@@ -1,0 +1,88 @@
+.walletSwitchWrap{
+  box-sizing: border-box;
+  width: 420px;
+  height: 100%;
+  background-color: #fff;
+  padding: 30px;
+  border-radius:8px;
+  .walletSwitchHead{
+    height: 30px;
+    line-height: 30px;
+    position: relative;
+    .tit{
+      font-size:20px;
+      font-weight:bold;
+      color:#222222;
+    }
+    .changeNetType{
+      height:30px;
+      line-height: 30px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 999;
+      .ivu-select-selection{
+        height:30px;
+        line-height: 30px;
+        border: 1px solid #CCCCCC !important;
+        .ivu-select-selected-value{
+          padding-right: 30px;
+        }
+      }
+    }
+  }
+  .walletList{
+    margin-top: 25px;
+    .walletItem{
+      width: 360px;
+      height: 80px;
+      color: #20B5AC;
+      background-image: url("../../../assets/images/wallet-management/walletItem.png");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      padding: 16px 0 0 28px;
+      .walletName{
+        font-size:12px;
+        font-weight:400;
+        color:#20B5AC;
+        margin-bottom: 4px;
+      }
+      .walletAmount{
+        font-size:20px;
+        font-weight:400;
+        color:#20B5AC;
+        .tails{
+          font-size:12px;
+          font-weight:400;
+          color:#20B5AC;
+          margin-left: 10px;
+          vertical-align: text-bottom;
+        }
+      }
+    }
+    .walletItem.active{
+      color: #FFFFFF;
+      background-image: url("../../../assets/images/wallet-management/walletItemActive.png");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      .walletName{
+        font-size:12px;
+        font-weight:400;
+        color:#FFFFFF;
+        margin-bottom: 4px;
+      }
+      .walletAmount{
+        font-size:20px;
+        font-weight:400;
+        color:#FFFFFF;
+        .tails{
+          font-size:12px;
+          font-weight:400;
+          color:#FFFFFF;
+          margin-left: 10px;
+          vertical-align: text-bottom;
+        }
+      }
+    }
+  }
+}

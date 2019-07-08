@@ -4,7 +4,7 @@
         recalc = function() {
             var clientWidth = docEl.clientWidth;
             if (!clientWidth) return;
-          docEl.style.fontSize = 10 * (clientWidth / 135) + 'px';
+          docEl.style.fontSize = 10 * (clientWidth / 192) + 'px';
         };
     if (!doc.addEventListener) return;
     //适配手机翻转
