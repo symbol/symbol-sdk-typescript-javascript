@@ -10,7 +10,7 @@ import i18n from '@/locale'
 
 //Introduced the global
 Vue.use(iView);
-// Vue.use(rem);
+Vue.use(rem);
 
 Vue.config.productionTip = false
 

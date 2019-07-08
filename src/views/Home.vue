@@ -1,8 +1,8 @@
 <template>
     <div class="wrap">
-        <Button type="primary" shape="circle" @click="min">Min</Button>&nbsp;&nbsp;
-        <Button type="primary" shape="circle" @click="max">Max</Button>&nbsp;&nbsp;
-        <Button type="primary" shape="circle" @click="close">Quit</Button>
+        <Button type="primary" @click="min">Min</Button>&nbsp;&nbsp;
+        <Button type="primary" @click="max">Max</Button>&nbsp;&nbsp;
+        <Button type="primary" @click="close">Quit</Button>
     </div>
 </template>
 
@@ -31,5 +31,8 @@
 <style scoped lang="less">
     .wrap{
         background-color: #fafafa;
+        button{
+            font-size: 14px;
+        }
     }
 </style>

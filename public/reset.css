@@ -1,0 +1,29 @@
+html {
+  overflow-x:auto;
+  overflow-y:scroll;
+}
+body, dl, dt, dd, ul, ol, li, pre, form, fieldset, input, p, blockquote, th, td {
+  font-weight:400;
+  margin:0;
+  padding:0;
+}
+h1, h2, h3, h4, h4, h5 {
+  margin:0;
+  padding:0;
+}
+body {
+  font-family:Helvetica,Arial,sans-serif;
+  text-align:left;
+}
+table {
+  border-collapse:collapse;
+}
+address, caption, em, strong, th, i {
+  font-style:normal;
+  font-weight:400;
+}
+ol, ul {
+  list-style-image:none;
+  list-style-position:outside;
+  list-style-type:none;
+}
