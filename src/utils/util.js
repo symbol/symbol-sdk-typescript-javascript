@@ -1,4 +1,4 @@
-import i18n from './locale/index'
+import i18n from '../locale/index'
 import Vue from 'vue'
 import {AliasActionType} from 'nem2-sdk'
 
