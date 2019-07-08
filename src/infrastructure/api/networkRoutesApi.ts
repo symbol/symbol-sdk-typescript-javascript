@@ -123,12 +123,9 @@ export class NetworkRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "NetworkTypeDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
