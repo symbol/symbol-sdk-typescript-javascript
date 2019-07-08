@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/AccountPropertiesAddressTransaction';
+import { Builder } from '../../infrastructure/builders/AccountRestrictionsAddressTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
-import { RestrictionType } from '../account/RestrictionType';
 import { PublicAccount } from '../account/PublicAccount';
+import { RestrictionType } from '../account/RestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountRestrictionModification } from './AccountRestrictionModification';
@@ -44,7 +44,7 @@ export class AccountAddressRestrictionModificationTransaction extends Transactio
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountAddressRestrictionModificationTransaction {
         return new AccountAddressRestrictionModificationTransaction(networkType,
-            TransactionVersion.MODIFY_ACCOUNT_PROPERTY_ADDRESS,
+            TransactionVersion.MODIFY_ACCOUNT_RESTRICTION_ADDRESS,
             deadline,
             maxFee,
             restrictionType,
@@ -71,7 +71,8 @@ export class AccountAddressRestrictionModificationTransaction extends Transactio
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        super(TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS,
+              networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
@@ -84,7 +85,7 @@ export class AccountAddressRestrictionModificationTransaction extends Transactio
         const byteSize = super.size;
 
         // set static byte size fields
-        const bytePropertyType = 1;
+        const byteRestrictionType = 1;
         const byteModificationCount = 1;
 
         // each modification contains :
@@ -92,7 +93,7 @@ export class AccountAddressRestrictionModificationTransaction extends Transactio
         // - 25 bytes for the modification value (address)
         const byteModifications = 26 * this.modifications.length;
 
-        return byteSize + bytePropertyType + byteModificationCount + byteModifications;
+        return byteSize + byteRestrictionType + byteModificationCount + byteModifications;
     }
 
     /**
@@ -104,7 +105,7 @@ export class AccountAddressRestrictionModificationTransaction extends Transactio
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
-            .addPropertyType(this.restrictionType)
+            .addRestrictionType(this.restrictionType)
             .addModifications(this.modifications.map((modification) => modification.toDTO()))
             .build();
     }

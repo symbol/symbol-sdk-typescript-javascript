@@ -34,8 +34,8 @@ import {UInt64} from '../model/UInt64';
 import {AccountRepository} from './AccountRepository';
 import { AccountInfoDTO,
          AccountNamesDTO,
-         AccountPropertiesDTO,
-         AccountPropertiesInfoDTO,
+         AccountRestrictionsDTO,
+         AccountRestrictionsInfoDTO,
          AccountRoutesApi,
          MosaicDTO,
          MultisigAccountGraphInfoDTO,
@@ -93,31 +93,31 @@ export class AccountHttp extends Http implements AccountRepository {
     }
 
     /**
-     * Gets Account property.
+     * Get Account restrictions.
      * @param publicAccount public account
-     * @returns Observable<AccountProperty>
+     * @returns Observable<AccountRestrictionsInfo>
      */
-    public getAccountProperties(address: Address): Observable<AccountRestrictionsInfo> {
-        return observableFrom(this.accountRoutesApi.getAccountProperties(address.plain()))
-            .pipe(map((accountProperties: AccountPropertiesInfoDTO) => {
-            return DtoMapping.extractAccountPropertyFromDto(accountProperties);
+    public getAccountRestrictions(address: Address): Observable<AccountRestrictionsInfo> {
+        return observableFrom(this.accountRoutesApi.getAccountRestrictions(address.plain()))
+            .pipe(map((accountRestrictions: AccountRestrictionsInfoDTO) => {
+            return DtoMapping.extractAccountRestrictionFromDto(accountRestrictions);
         }));
     }
 
     /**
-     * Gets Account properties.
+     * Get Account restrictions.
      * @param address list of addresses
-     * @returns Observable<AccountProperty[]>
+     * @returns Observable<AccountRestrictionsInfo[]>
      */
-    public getAccountPropertiesFromAccounts(addresses: Address[]): Observable<AccountRestrictionsInfo[]> {
+    public getAccountRestrictionsFromAccounts(addresses: Address[]): Observable<AccountRestrictionsInfo[]> {
         const accountIds = {
             addresses: addresses.map((address) => address.plain()),
         };
         return observableFrom(
-            this.accountRoutesApi.getAccountPropertiesFromAccounts(accountIds))
-                .pipe(map((accountProperties: AccountPropertiesDTO[]) => {
-            return accountProperties.map((property) => {
-                return DtoMapping.extractAccountPropertyFromDto(property);
+            this.accountRoutesApi.getAccountRestrictionsFromAccounts(accountIds))
+                .pipe(map((accountRestrictions: AccountRestrictionsDTO[]) => {
+            return accountRestrictions.map((restriction) => {
+                return DtoMapping.extractAccountRestrictionFromDto(restriction);
             });
         }));
     }

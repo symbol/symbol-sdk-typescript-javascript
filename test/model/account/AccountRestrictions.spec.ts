@@ -19,13 +19,13 @@ import {expect} from 'chai';
 import {Address} from '../../../src/model/account/Address';
 import { AccountRestrictions, RestrictionModificationType, RestrictionType, AccountRestriction } from '../../../src/model/model';
 
-describe('AccountProperties', () => {
+describe('AccountRestrictions', () => {
 
-    it('should createComplete an AccountProperties object', () => {
-        const accountPropertiesDTO = {
+    it('should createComplete an AccountRestrictions object', () => {
+        const accountRestrictionsDTO = {
             address: Address.createFromEncoded('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142'),
-            properties: [{
-                propertyType: RestrictionType.AllowAddress,
+            restrictions: [{
+                restrictionType: RestrictionType.AllowAddress,
                 values: [{modificationType: RestrictionModificationType.Add,
                           value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
                          }],
@@ -33,21 +33,21 @@ describe('AccountProperties', () => {
         };
 
         const accountRestrictions = new AccountRestrictions(
-            accountPropertiesDTO.address,
-            accountPropertiesDTO.properties.map((r) => {
+            accountRestrictionsDTO.address,
+            accountRestrictionsDTO.restrictions.map((r) => {
                 return new AccountRestriction(
-                    r.propertyType,
+                    r.restrictionType,
                     r.values,
                 );
             }),
         );
 
-        expect(accountRestrictions.address).to.be.equal(accountPropertiesDTO.address);
-        deepEqual(accountPropertiesDTO.properties.length, accountPropertiesDTO.properties.length);
-        deepEqual(accountPropertiesDTO.properties[0].propertyType, accountPropertiesDTO.properties[0].propertyType);
-        deepEqual(accountPropertiesDTO.properties[0].values.length, accountPropertiesDTO.properties[0].values.length);
-        deepEqual(accountPropertiesDTO.properties[0].values[0].modificationType,
-            accountPropertiesDTO.properties[0].values[0].modificationType);
-        deepEqual(accountPropertiesDTO.properties[0].values[0].value, accountPropertiesDTO.properties[0].values[0].value);
+        expect(accountRestrictions.address).to.be.equal(accountRestrictionsDTO.address);
+        deepEqual(accountRestrictions.restrictions.length, accountRestrictionsDTO.restrictions.length);
+        deepEqual(accountRestrictions.restrictions[0].restrictionType, accountRestrictionsDTO.restrictions[0].restrictionType);
+        deepEqual(accountRestrictions.restrictions[0].values.length, accountRestrictionsDTO.restrictions[0].values.length);
+        deepEqual((accountRestrictions.restrictions[0].values[0] as any).modificationType,
+            accountRestrictionsDTO.restrictions[0].values[0].modificationType);
+        deepEqual((accountRestrictions.restrictions[0].values[0] as any).value, accountRestrictionsDTO.restrictions[0].values[0].value);
     });
 });

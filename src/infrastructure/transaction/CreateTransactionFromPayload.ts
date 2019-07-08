@@ -98,9 +98,9 @@ export const CreateTransactionFromPayload = (transactionBinary: string): Transac
  */
 const CreateTransaction = (type: number, transactionData: string, networkType: NetworkType, deadline: number[]): Transaction => {
     switch (type) {
-        case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
-        case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
-        case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
+        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS:
+        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION:
+        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC:
             const propertyTypeLength = 2;
 
             const modificationCountOffset = propertyTypeLength;
@@ -112,7 +112,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
             const modificationArray = modifications.match(/.{1,52}/g);
 
             switch (type) {
-                case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
+                case TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS:
                     const t =  AccountAddressRestrictionModificationTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
@@ -123,7 +123,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                         networkType,
                     );
                     return t;
-                case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
+                case TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC:
                     return AccountMosaicRestrictionModificationTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
@@ -133,7 +133,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                         )) : [],
                         networkType,
                     );
-                case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
+                case TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION:
                     return AccountOperationRestrictionModificationTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
@@ -145,7 +145,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                         networkType,
                     );
             }
-            throw new Error ('Account property transaction type not recognised.');
+            throw new Error ('Account restriction transaction type not recognised.');
         case TransactionType.LINK_ACCOUNT:
             // read bytes
             const remoteAccountKey = transactionData.substring(0, 64);

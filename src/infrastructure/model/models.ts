@@ -29,10 +29,10 @@ export * from './accountIds';
 export * from './accountInfoDTO';
 export * from './accountMetaDTO';
 export * from './accountNamesDTO';
-export * from './accountPropertiesDTO';
-export * from './accountPropertiesInfoDTO';
-export * from './accountPropertyDTO';
-export * from './accountPropertyTypeEnum';
+export * from './accountRestrictionDTO';
+export * from './accountRestrictionTypeEnum';
+export * from './accountRestrictionsDTO';
+export * from './accountRestrictionsInfoDTO';
 export * from './aliasDTO';
 export * from './aliasTypeEnum';
 export * from './announceTransactionInfoDTO';
@@ -91,10 +91,10 @@ import { AccountIds } from './accountIds';
 import { AccountInfoDTO } from './accountInfoDTO';
 import { AccountMetaDTO } from './accountMetaDTO';
 import { AccountNamesDTO } from './accountNamesDTO';
-import { AccountPropertiesDTO } from './accountPropertiesDTO';
-import { AccountPropertiesInfoDTO } from './accountPropertiesInfoDTO';
-import { AccountPropertyDTO } from './accountPropertyDTO';
-import { AccountPropertyTypeEnum } from './accountPropertyTypeEnum';
+import { AccountRestrictionDTO } from './accountRestrictionDTO';
+import { AccountRestrictionTypeEnum } from './accountRestrictionTypeEnum';
+import { AccountRestrictionsDTO } from './accountRestrictionsDTO';
+import { AccountRestrictionsInfoDTO } from './accountRestrictionsInfoDTO';
 import { AliasDTO } from './aliasDTO';
 import { AliasTypeEnum } from './aliasTypeEnum';
 import { AnnounceTransactionInfoDTO } from './announceTransactionInfoDTO';
@@ -159,7 +159,7 @@ let primitives = [
                  ];
                  
 let enumsMap: {[index: string]: any} = {
-    "AccountPropertyTypeEnum": AccountPropertyTypeEnum,
+
     "AliasTypeEnum": AliasTypeEnum,
     "MosaicPropertyIdEnum": MosaicPropertyIdEnum,
     "MultisigModificationTypeEnum": MultisigModificationTypeEnum,
@@ -174,9 +174,10 @@ let typeMap: {[index: string]: any} = {
     "AccountInfoDTO": AccountInfoDTO,
     "AccountMetaDTO": AccountMetaDTO,
     "AccountNamesDTO": AccountNamesDTO,
-    "AccountPropertiesDTO": AccountPropertiesDTO,
-    "AccountPropertiesInfoDTO": AccountPropertiesInfoDTO,
-    "AccountPropertyDTO": AccountPropertyDTO,
+    "AccountRestrictionDTO": AccountRestrictionDTO,
+    "AccountRestrictionTypeEnum": AccountRestrictionTypeEnum,
+    "AccountRestrictionsDTO": AccountRestrictionsDTO,
+    "AccountRestrictionsInfoDTO": AccountRestrictionsInfoDTO,
     "AliasDTO": AliasDTO,
     "AnnounceTransactionInfoDTO": AnnounceTransactionInfoDTO,
     "BlockDTO": BlockDTO,

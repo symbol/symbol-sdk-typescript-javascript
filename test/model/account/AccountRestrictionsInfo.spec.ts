@@ -15,23 +15,23 @@
  */
 
 import {deepEqual} from 'assert';
+import { AccountRestriction } from '../../../src/model/account/AccountRestriction';
 import { AccountRestrictions } from '../../../src/model/account/AccountRestrictions';
 import { AccountRestrictionsInfo } from '../../../src/model/account/AccountRestrictionsInfo';
-import { AccountRestriction } from '../../../src/model/account/AccountRestriction';
 import {Address} from '../../../src/model/account/Address';
 import { RestrictionModificationType } from '../../../src/model/account/RestrictionModificationType';
 import { RestrictionType } from '../../../src/model/account/RestrictionType';
 
-describe('AccountPropertiesInfo', () => {
+describe('AccountRestrictionsInfo', () => {
 
-    it('should createComplete an AccountPropertiesInfo object', () => {
+    it('should createComplete an AccountRestrictionsInfo object', () => {
 
-        const accountPropertiesInfoDTO = {
+        const accountRestrictionsInfoDTO = {
             meta: {id: '12345'},
-            accountProperties: {
+            accountRestrictions: {
                 address: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
-                properties: [{
-                    propertyType: RestrictionType.AllowAddress,
+                restrictions: [{
+                    restrictionType: RestrictionType.AllowAddress,
                     values: [{modificationType: RestrictionModificationType.Add,
                               value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
                              }],
@@ -39,19 +39,19 @@ describe('AccountPropertiesInfo', () => {
             },
         };
 
-        const accountPropertiesInfo = new AccountRestrictionsInfo(
-            accountPropertiesInfoDTO.meta,
-            new AccountRestrictions(Address.createFromEncoded(accountPropertiesInfoDTO.accountProperties.address),
-                                  accountPropertiesInfoDTO.accountProperties.properties.map((prop) =>
-                                            new AccountRestriction(prop.propertyType, prop.values))),
+        const accountRestrictionsInfo = new AccountRestrictionsInfo(
+            accountRestrictionsInfoDTO.meta,
+            new AccountRestrictions(Address.createFromEncoded(accountRestrictionsInfoDTO.accountRestrictions.address),
+                accountRestrictionsInfoDTO.accountRestrictions.restrictions.map((prop) =>
+                                            new AccountRestriction(prop.restrictionType, prop.values))),
         );
 
-        deepEqual(accountPropertiesInfo.meta.id, accountPropertiesInfoDTO.meta.id);
-        deepEqual(accountPropertiesInfo.accountRestrictions.address,
-                    Address.createFromEncoded(accountPropertiesInfoDTO.accountProperties.address));
-        deepEqual(accountPropertiesInfo.accountRestrictions.restrictions.length,
-            accountPropertiesInfoDTO.accountProperties.properties.length);
-        deepEqual(accountPropertiesInfo.accountRestrictions.restrictions[0].values[0],
-            accountPropertiesInfoDTO.accountProperties.properties[0].values[0]);
+        deepEqual(accountRestrictionsInfo.meta.id, accountRestrictionsInfoDTO.meta.id);
+        deepEqual(accountRestrictionsInfo.accountRestrictions.address,
+                    Address.createFromEncoded(accountRestrictionsInfoDTO.accountRestrictions.address));
+        deepEqual(accountRestrictionsInfo.accountRestrictions.restrictions.length,
+            accountRestrictionsInfoDTO.accountRestrictions.restrictions.length);
+        deepEqual(accountRestrictionsInfo.accountRestrictions.restrictions[0].values[0],
+            accountRestrictionsInfoDTO.accountRestrictions.restrictions[0].values[0]);
     });
 });
