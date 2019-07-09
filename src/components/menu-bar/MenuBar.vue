@@ -81,17 +81,17 @@
             }
         ]
         closeWindow() {
-            const ipcRenderer = window.electron.ipcRenderer;
+            const ipcRenderer = window['electron']['ipcRenderer'];
             ipcRenderer.send('app', 'quit')
         }
 
         maxWindow() {
-            const ipcRenderer = window.electron.ipcRenderer;
+            const ipcRenderer = window['electron']['ipcRenderer'];
             ipcRenderer.send('app', 'max')
         }
 
         minWindow() {
-            const ipcRenderer = window.electron.ipcRenderer;
+            const ipcRenderer = window['electron']['ipcRenderer'];
             ipcRenderer.send('app', 'min')
         }
 
