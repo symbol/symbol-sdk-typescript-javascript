@@ -35,8 +35,13 @@ html {
   border-radius: 8px;
 }
 
+.hide_scroll {
+  overflow-y: scroll;
+}
+.hide_scroll::-webkit-scrollbar {
+  display: none;
 
-
+}
 
 
 .switch_wallet {
@@ -73,5 +78,35 @@ html {
     font-size: 20px;
     content: "\F33D";
   }
+}
+
+.ivu-tabs-nav .ivu-tabs-tab:hover,
+.ivu-tabs-nav .ivu-tabs-tab-active {
+  color: #20B5AC !important;
+
+  span:first-of-type {
+    display: inline-block;
+    font-weight: bold;
+    padding-bottom: 11px !important;
+  }
+}
+
+.ivu-tabs-ink-bar {
+  background-color: #20B5AC !important;
+  width: 32px !important;
+  height: 3px !important;
+  margin-left: 50px;
+
+}
+
+.ivu-tabs-bar {
+  border: none !important;
+  margin: 0 !important;
+}
+
+.ivu-badge-count {
+  bottom: 5px !important;
+  background-color: #999999 !important;
+  left: 3px !important;
 }
 

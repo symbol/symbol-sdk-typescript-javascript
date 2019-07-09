@@ -99,6 +99,11 @@
             list[index].isSelect = true
             this.accountInfoNavigatorList = list
         }
+        created() {
+            this.$router.push({
+                name:'dashBoard'
+            })
+        }
     }
 </script>
 
