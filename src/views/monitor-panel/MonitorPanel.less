@@ -1,0 +1,114 @@
+.monitor_panel_container {
+  padding: 30px;
+  height: 100%;
+
+  .monitor_panel_left_container {
+    height: 100%;
+    float: left;
+    margin-right: 30px;
+
+    .top_wallet_balance {
+      width: 420px;
+      height: 240px;
+      padding: 22px 0 0 30px;
+      position: relative;
+      background: linear-gradient(-10deg, rgba(56, 85, 111, 1) 0%, rgba(18, 157, 174, 1) 100%);
+
+      .wallet_balance {
+        padding-bottom: 23px;
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+      }
+
+      .split {
+        width: 100%;
+        left: 0;
+        border: 1px solid rgba(56, 85, 111, 1);
+        opacity: 0.18;
+        position: absolute;
+      }
+
+      .XEM_amount {
+        margin: 15px 0 8px 0;
+        font-size: 24px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+
+        .amount {
+          font-size: 40px;
+          margin-left: 10px;
+        }
+      }
+
+      .exchange {
+        font-size: 18px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+      }
+    }
+
+    .bottom_account_info {
+      width: 420px;
+      height: 676px;
+      background-color: white;
+      margin-top: 20px;
+      padding: 0 24px;
+      .account_info_navigator {
+        padding: 27px 0;
+        span {
+          margin-right: 40px;
+          padding-bottom: 8px;
+          font-size:16px;
+        }
+        .active_navigator {
+          font-weight: bold;
+          color: rgba(32, 181, 172, 1);
+          border-bottom: 2px solid rgba(32, 181, 172, 1);
+        }
+      }
+    }
+  }
+
+  .monitor_panel_right_container {
+    float: right;
+
+    .top_navidator {
+      background-color: white;
+      width: 1310px;
+      height: 60px;
+
+      span {
+        padding: 20px 0 8px 0;
+        font-size: 20px;
+        position: relative;
+        margin: 0 30px;
+        display: inline-block;
+      }
+
+      .active_navigator {
+        font-size: 20px;
+        font-weight: bold;
+        color: rgba(32, 181, 172, 1);
+        border-bottom: 3px solid rgba(32, 181, 172, 1);
+      }
+
+      span::after {
+        position: absolute;
+        right: -30px;
+        bottom: 16px;
+        width: 1px;
+        height: 14px;
+        background-color: #222222;
+        display: block;
+        content: '';
+      }
+
+      span:last-child::after {
+        background-color: transparent;
+      }
+    }
+  }
+
+}
+

@@ -1,21 +1,18 @@
 <template>
-  <div>
-    <h2>
-      dashboard
-    </h2>
-  </div>
+<div>
+  <h2>transfer</h2>
+</div>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
 
     @Component
-    export default class DashBoard extends Vue {
+    export default class Transfer extends Vue {
 
 
     }
 </script>
+<style scoped lang="less">
 
-<style scoped>
-  @import "DashBoard.less";
 </style>
