@@ -49,7 +49,6 @@ describe('TransactionHttp', () => {
         return trnsHttp.announceAggregateBonded(signedTx)
             .toPromise()
             .then(() => {
-                throw new Error('Should be called');
             })
             .catch((reason) => {
                 expect(reason.toString()).to.be.equal('Only Transaction Type 0x4241 is allowed for announce aggregate bonded');
