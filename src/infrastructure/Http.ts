@@ -59,10 +59,13 @@ export abstract class Http {
     }
 
     errorHandling(error: any): Error {
-        const formattedError = {
-            statusCode: error.response.statusCode,
-            errorDetails: error.response.body,
-        };
-        return new Error(JSON.stringify(formattedError));
+        if (error.response && error.response.statusCode && error.response.body) {
+            const formattedError = {
+                statusCode: error.response.statusCode,
+                errorDetails: error.response.body,
+            };
+            return new Error(JSON.stringify(formattedError));
+        }
+        return new Error(error);
     }
 }
