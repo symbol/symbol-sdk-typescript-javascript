@@ -12,7 +12,8 @@
       height: 240px;
       padding: 22px 0 0 30px;
       position: relative;
-      background: linear-gradient(-10deg, rgba(56, 85, 111, 1) 0%, rgba(18, 157, 174, 1) 100%);
+      background-size: contain;
+      background-image: url("../../assets/images/monitor/dash-board/dashboardWalletBackground.png");
 
       .wallet_balance {
         padding-bottom: 23px;
@@ -53,18 +54,91 @@
       height: 676px;
       background-color: white;
       margin-top: 20px;
-      padding: 0 24px;
-      .account_info_navigator {
-        padding: 27px 0;
-        span {
-          margin-right: 40px;
-          padding-bottom: 8px;
-          font-size:16px;
+      padding: 27px 28px;
+      position: relative;
+
+      .asset_list {
+        width: 24px;
+        top: 27px;
+        height: 20px;
+        position: absolute;
+        right: 33px;
+        z-index: 999;
+      }
+
+      .mosaic_data {
+        height: 76px;
+        padding: 15px 0;
+        display: flex;
+        flex-direction: row;
+        justify-items: center;
+        justify-content: space-between;
+        align-content: center;
+        align-items: center;
+        border-bottom: 1px solid rgba(238, 238, 238, .5);
+
+        .mosaic_name {
+          position: relative;
+          right: 90px;
+          top: 3px;
+          font-size: 18px;
+          font-weight: 400;
+          color: rgba(34, 34, 34, 1);
         }
-        .active_navigator {
-          font-weight: bold;
-          color: rgba(32, 181, 172, 1);
-          border-bottom: 2px solid rgba(32, 181, 172, 1);
+
+        .mosaic_value {
+          div:first-of-type {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            font-weight: 400;
+            color: rgba(34, 34, 34, 1);
+          }
+
+          div:nth-of-type(2) {
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(102, 102, 102, 1);
+          }
+        }
+
+        img {
+          width: 30px;
+          height: 30px;
+        }
+      }
+
+      .namespace_data {
+        span {
+          color: #222222;
+          width: 50%;
+          display: inline-block;
+          border-bottom: 1px solid #eee;
+          padding: 19px 0 19px 30px;
+
+        }
+
+        .namespace_table_head {
+          span {
+            color: #999999;
+            font-size: 14px;
+
+          }
+        }
+      }
+
+      .harvesting_data {
+        .harvesting_item {
+          padding: 20px 0;
+          .top_info {
+            font-size:14px;
+            font-weight:400;
+            color:rgba(34,34,34,1);
+          }
+          .bottom_info {
+            font-size:12px;
+            font-weight:400;
+            color:rgba(153,153,153,1);
+          }
         }
       }
     }

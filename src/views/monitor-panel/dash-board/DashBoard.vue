@@ -2,7 +2,7 @@
   <div class="dash_board_container">
     <div class="top_network_info">
       <div class="left_echart radius">
-
+        <LineChart></LineChart>
       </div>
       <div class="right_net_status radius">
         <div class="panel_name">网络状态</div>
@@ -15,8 +15,31 @@
     </div>
 
     <div class="bottom_transactions radius">
-      <Tabs value="name1">
+      <Page class="splite_page" :total="100" show-total/>
+      <Tabs size="small">
         <TabPane :label="confirmedTxTit" name="name1">
+          <div class="confirmed_transactions">
+            <div class="table_head">
+              <span class="account">账户</span>
+              <span class="transfer_type">交易类型</span>
+              <span class="amount">量</span>
+              <span class="date">日期</span>
+            </div>
+            <div class="table_body hide_scroll">
+              <div class="table_item" v-for="i in 7">
+                <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
+                <span class="account">fsf-fsf-sdfdsf-fdsf-sdfsdgdfgdfgs-dgsdgdf</span>
+                <span class="transfer_type">收款</span>
+                <span class="amount">+454.511xem</span>
+                <span class="date">2019-09-09 16:13:15</span>
+                <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png" class="radius expand_mosaic_info" alt="">
+              </div>
+            </div>
+          </div>
+        </TabPane>
+
+
+        <TabPane :label="unConfirmedTxTit" name="name2">
           <div class="confirmed_transactions">
             <div class="table_head">
               <span class="account">账户</span>
@@ -34,11 +57,7 @@
               </div>
             </div>
           </div>
-
         </TabPane>
-
-
-        <TabPane :label="unConfirmedTxTit" name="name2">标签二的内容</TabPane>
       </Tabs>
     </div>
   </div>
@@ -46,8 +65,12 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-
-    @Component
+    import LineChart from './LineChart.vue'
+    @Component({
+        components:{
+            LineChart
+        }
+    })
     export default class DashBoard extends Vue {
         networkStatusList = [
             {

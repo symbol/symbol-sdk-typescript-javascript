@@ -9,18 +9,52 @@
       </div>
 
       <div class="bottom_account_info radius">
-        <div class="account_info_navigator">
-          <span :class="a.isSelect? 'active_navigator':''" @click="swichInfoPanel(index)" v-for="(a,index) in accountInfoNavigatorList">{{a.name}}</span>
+        <div v-if="isShowAccountInfo">
+          <img @click="hideAssetInfo()" class="asset_list" src="../../assets/images/monitor/monitorAssetList.png">
+          <Tabs size="small">
+
+            <TabPane label="马赛克 " name="name1">
+              <div class="mosaic_data" v-for="i in 4">
+                <img src="../../assets/images/monitor/monitorMosaicIcon.png" alt="">
+                <span class="mosaic_name">XEM</span>
+                <span class="mosaic_value">
+                  <div>0.056627</div>
+                  <div>￥30.55</div>
+                </span>
+              </div>
+            </TabPane>
+
+            <TabPane label="命名空间" name="name2">
+              <div class="namespace_data">
+                <div class="namespace_table_head">
+                  <span class="namespace">命名空间</span>
+                  <span class="duration">有效期</span>
+                </div>
+                <div class="namespace_item" v-for="i in 3">
+                  <span class="namespace">@123.456</span>
+                  <span class="duration">2019-02-09</span>
+                </div>
+              </div>
+            </TabPane>
+
+            <TabPane label="收获的块" name="name3">
+              <div class="harvesting_data">
+               <div class="harvesting_item " v-for="i in 3">
+                 <div class="clear top_info" >
+                   <span class="left">块：4585464</span>
+                   <span class="right">fees:1.0546551xem</span>
+                 </div>
+                 <div class="bottom_info" >
+                   <span class="left">include: 1 txs</span>
+                   <span class="right">2019-07-09 16:00</span>
+                 </div>
+               </div>
+              </div>
+            </TabPane>
+          </Tabs>
         </div>
-        <div class="mosaic_info" v-show="accountInfoNavigatorList[0].isSelect">
-          马赛克。。。
-        </div>
-        <div class="namespace" v-show="accountInfoNavigatorList[1].isSelect">
-          命名空间。。。
-        </div>
-        <div class="havesting" v-show="accountInfoNavigatorList[2].isSelect">
-          收获的块。。。
-        </div>
+
+
       </div>
     </div>
 
@@ -66,18 +100,7 @@
                 isSelect: false,
                 path: 'remote'
             }]
-        accountInfoNavigatorList: any = [
-            {
-                name: '马赛克',
-                isSelect: true,
-            }, {
-                name: '命名空间',
-                isSelect: false,
-            },{
-                name: '收获的块',
-                isSelect: false,
-            },
-        ]
+        isShowAccountInfo = true;
 
         switchPanel(index) {
             const list = this.navigatorList.map((item) => {
@@ -91,17 +114,13 @@
             })
         }
 
-        swichInfoPanel(index) {
-            const list = this.accountInfoNavigatorList.map((item) => {
-                item.isSelect = false
-                return item
-            });
-            list[index].isSelect = true
-            this.accountInfoNavigatorList = list
+        hideAssetInfo() {
+            this.isShowAccountInfo = false;
         }
+
         created() {
             this.$router.push({
-                name:'dashBoard'
+                name: 'dashBoard'
             })
         }
     }
