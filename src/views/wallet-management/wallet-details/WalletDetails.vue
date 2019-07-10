@@ -38,7 +38,7 @@
                     <i><img :src="Mnemonic"></i>
                     <span>导出助记词</span>
                 </div>
-                <div class="privateKey left">
+                <div class="privateKey left" @click="changePrivatekeyDialog">
                     <i><img :src="privateKey"></i>
                     <span>导出私钥</span>
                 </div>
@@ -70,7 +70,7 @@
                         <Col span="7">操作</Col>
                     </Row>
                 </div>
-                <div class="tableCell">
+                <div class="tableCell" v-for="(item,index) in aliasList" :key="index" v-if="aliasList.length>0">
                     <Row>
                         <Col span="7">girme</Col>
                         <Col span="6">2019-11-05</Col>
@@ -84,132 +84,59 @@
                         </Col>
                     </Row>
                 </div>
-                <div class="tableCell">
-                    <Row>
-                        <Col span="7">girme</Col>
-                        <Col span="6">2019-11-05</Col>
-                        <Col span="4">已绑定</Col>
-                        <Col span="7">
-                            <div class="tableFn">
-                                <span class="bind">绑定</span>
-                                <span class="unbind active">解绑</span>
-                                <span class="updateTime">更新</span>
-                            </div>
-                        </Col>
-                    </Row>
+                <div class="noData" v-if="aliasList.length<=0">
+                    <i><img :src="no_data"></i>
+                    <p>暂无别名</p>
                 </div>
             </div>
         </div>
-        <Modal
-                v-model="showMnemonicDialog"
-                class-name="vertical-center-modal"
-                :footer-hide="true"
-                :width="1000"
-                @on-cancel="mnemonicDialogCancel">
-        >
-            <div slot="header" class="mnemonicDialogHeader">
-                <span class="title">导出助记词</span>
-            </div>
-            <div class="mnemonicDialogBody">
-                <div class="steps">
-                    <span :class="['stepItem',stepIndex == 0?'active':'']">输入密码</span>
-                    <span :class="['stepItem',stepIndex == 1?'active':'']">备份提示</span>
-                    <span :class="['stepItem',stepIndex == 2?'active':'']">备份助记词</span>
-                    <span :class="['stepItem',stepIndex == 3?'active':'']">确认备份</span>
-                </div>
-                <div class="stepItem1" v-if="stepIndex == 0">
-                    <Form :model="wallet">
-                    <FormItem>
-                        <Input v-model="wallet.password" required placeholder="请输入你的钱包密码"></Input>
-                    </FormItem>
-                        <FormItem>
-                            <Button type="success" @click="exportMnemonic">下一步 <Icon type="ios-arrow-round-forward" /></Button>
-                        </FormItem>
-                    </Form>
-                </div>
-                <div class="stepItem2" v-if="stepIndex == 1">
-                    <div class="step2Txt">
-                        <Row>
-                            <Col span="9">
-                                <div class="step2Img">
-                                    <img :src="mnemonicStep2">
-                                </div>
-                            </Col>
-                            <Col span="15">
-                                <p class="tit">获得助记词等于拥有钱包资产所有权</p>
-                                <div class="ul1">
-                                    <p class="ul1Tit">备份助记词</p>
-                                    <p class="ul1Txt">使用纸和笔正确抄写助记词,如果你的手机丢失、被盗、损坏,助记词将可以恢复你的资产</p>
-                                </div>
-                                <div class="ul2">
-                                    <p class="ul2Tit">离线保管</p>
-                                    <p class="ul2Txt">妥善保管至隔离网络的安全地方,请勿将助记词在联网环境下分享和存储,比如邮件、相册、社交应用等</p>
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
-                    <Button type="success" @click="exportMnemonic">下一步 <Icon type="ios-arrow-round-forward" /></Button>
-                </div>
-            </div>
-        </Modal>
+        <mnemonicDialog :showMnemonicDialog="showMnemonicDialog" @closeMnemonicDialog="closeMnemonicDialog"></mnemonicDialog>
+        <privatekeyDialog :showPrivatekeyDialog="showPrivatekeyDialog" @closePrivatekeyDialog="closePrivatekeyDialog"></privatekeyDialog>
     </div>
 </template>
 
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
     import {createQRCode} from '@/utils/tools'
+    import mnemonicDialog from '@/views/wallet-management/mnemonic-dialog/mnemonicDialog.vue'
+    import privatekeyDialog from '@/views/wallet-management/privatekey-dialog/privatekeyDialog.vue'
     import Mnemonic from '@/assets/images/wallet-management/Auxiliaries.png'
     import privateKey from '@/assets/images/wallet-management/privatekey.png'
     import Keystore from '@/assets/images/wallet-management/keystore.png'
     import Other from '@/assets/images/wallet-management/other.png'
-    import mnemonicStep2 from '@/assets/images/wallet-management/mnemonicStep2.png'
+    import no_data from '@/assets/images/wallet-management/no_data.png'
     import './WalletDetails.less';
 
     @Component({
-        components: {},
+        components: {
+            mnemonicDialog,
+            privatekeyDialog
+        },
     })
     export default class WalletDetails extends Vue{
         Mnemonic = Mnemonic
         privateKey = privateKey
         Keystore = Keystore
         Other = Other
-        mnemonicStep2 = mnemonicStep2
+        no_data = no_data
 
         showMnemonicDialog:boolean = false
+        showPrivatekeyDialog:boolean = false
         QRCode:string = ''
-        wallet = {
-            password:'',
+        aliasList = []
 
-        }
-        stepIndex = 0
         changeMnemonicDialog () {
             this.showMnemonicDialog = true
         }
-        mnemonicDialogCancel () {
-            setTimeout(()=>{
-                this.stepIndex = 0
-            },300)
+        closeMnemonicDialog () {
+            this.showMnemonicDialog = false
         }
-        exportMnemonic () {
-            switch (this.stepIndex) {
-                case 0 :
-                    this.stepIndex = 1
-                    break;
-                case 1 :
-                    this.stepIndex = 2
-                    break;
-                case 2 :
-                    this.stepIndex = 3
-                    break;
-                case 3 :
-                    this.stepIndex = 4
-                    break;
-                case 4 :
-                    this.stepIndex = 5
-                    break;
-            }
+        changePrivatekeyDialog () {
+            this.showPrivatekeyDialog = true
         }
-
+        closePrivatekeyDialog () {
+            this.showPrivatekeyDialog = false
+        }
         onresize () {
             const height = this.$refs['walletDetailsWrap'].clientHeight - ( this.$refs['accountFn'].offsetTop - this.$refs['walletDetailsWrap'].offsetTop)
             this.$refs['accountFn'].style.height = height +'px'
@@ -222,7 +149,7 @@
         mounted () {
             const that = this
             window.addEventListener('resize',function () {
-                if(that.$route.name == 'walletDetails'){
+                if(that.$refs['walletDetailsWrap'] && that.$route.name == 'walletDetails'){
                     that.onresize()
                 }
             })
