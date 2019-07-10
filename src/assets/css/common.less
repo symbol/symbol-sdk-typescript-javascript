@@ -35,8 +35,14 @@ html {
   border-radius: 8px;
 }
 
+.hide_scroll {
+  overflow-y: scroll;
+}
 
+.hide_scroll::-webkit-scrollbar {
+  display: none;
 
+}
 
 
 .switch_wallet {
@@ -232,4 +238,75 @@ html {
 
 }
 
+
+.ivu-tabs-nav .ivu-tabs-tab:hover,
+.ivu-tabs-nav .ivu-tabs-tab-active {
+  color: #20B5AC !important;
+
+  span:first-of-type {
+    display: inline-block;
+    font-weight: bold;
+    padding-bottom: 8px !important;
+  }
+}
+
+.ivu-tabs-ink-bar {
+  background-color: #20B5AC !important;
+}
+
+.bottom_transactions {
+  .ivu-tabs-ink-bar {
+    margin-left: 50px;
+    width: 30px !important;
+    height: 3px !important;
+
+  }
+}
+
+.bottom_account_info {
+  .ivu-tabs-mini .ivu-tabs-tab {
+    padding: 0 40px 11px 0 !important;
+  }
+
+  .ivu-tabs-ink-bar {
+    margin-left: 13px;
+    width: 30px !important;
+    height: 3px !important;
+
+  }
+}
+
+.ivu-tabs-bar {
+  border: none !important;
+  margin: 0 !important;
+}
+
+.ivu-badge-count {
+  bottom: 5px !important;
+  background-color: #999999 !important;
+  left: 3px !important;
+}
+
+
+.splite_page {
+  .ivu-page-item {
+    border: none;
+    color: #666666;
+  }
+
+  .ivu-page-item-active {
+    border-radius: 50%;
+    background-color: #20B5AC;
+  }
+  .ivu-page-item-active a,
+  .ivu-page-item-active:hover a {
+    color: white !important;
+  }
+
+  .ivu-page-prev,
+  .ivu-page-next{
+    border: none;
+  }
+
+}
 

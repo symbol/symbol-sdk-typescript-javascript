@@ -10,13 +10,13 @@
 
 
       <div class="quit_account">
-        <img src="../../assets/images/window/window_accout_quit.png" alt="">
+        <img src="../../assets/images/window/windowAccoutQuit.png" alt="">
         <span>账户名</span>
       </div>
     </div>
     <div class="top_window">
       <div class="nem_logo">
-        <img class="absolute" src="../../assets/images/window/window_nem_logo.png" alt="">
+        <img class="absolute" src="../../assets/images/window/windowNemLogo.png" alt="">
       </div>
       <div class="controller">
         <div class="window_controller">
@@ -36,7 +36,7 @@
             </i-select>
           </div>
           <div class="switch_wallet">
-            <img class="select_wallet_icon" src="../../assets/images/window/window_wallet_select.png" alt="">
+            <img class="select_wallet_icon" src="../../assets/images/window/windowWalletSelect.png" alt="">
             <i-select @on-change="switchWallet" :model="currentWallet"  placeholder="wallet-1">
               <i-option v-for="item in walletList" :value="item.value">{{ item.label }}</i-option>
             </i-select>

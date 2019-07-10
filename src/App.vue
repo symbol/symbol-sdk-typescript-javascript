@@ -5,15 +5,22 @@
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue} from 'vue-property-decorator';
 
-  @Component
-  export default class App extends Vue {
-      ipcRenderer = window['electron']['ipcRenderer'];
-      created(){
-          this.ipcRenderer.send('app', 'max')
-      }
-  }
+    @Component
+    export default class App extends Vue {
+        ;
+
+        created() {
+            if (window['electron']) {
+                const ipcRenderer = window['electron']['ipcRenderer']
+                ipcRenderer.send('app', 'max')
+            }
+            this.$router.push({
+                name: 'dashBoard'
+            })
+        }
+    }
 </script>
 
 <style lang="less">
