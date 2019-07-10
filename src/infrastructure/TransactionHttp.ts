@@ -166,7 +166,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public announceAggregateBonded(signedTransaction: SignedTransaction): Observable<TransactionAnnounceResponse> {
         if (signedTransaction.type !== TransactionType.AGGREGATE_BONDED) {
-            throwError('Only Transaction Type 0x4241 is allowed for announce aggregate bonded');
+            throw new Error('Only Transaction Type 0x4241 is allowed for announce aggregate bonded');
         }
         return observableFrom(this.transactionRoutesApi.announcePartialTransaction(signedTransaction)).pipe(
             map((response: { response: ClientResponse; body: AnnounceTransactionInfoDTO; } ) => {
