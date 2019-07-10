@@ -9,7 +9,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
     import WalletSwitch from '@/views/wallet-management/wallet-switch/WalletSwitch.vue';
     import WalletFn from '@/views/wallet-management/wallet-fn/WalletFn.vue';

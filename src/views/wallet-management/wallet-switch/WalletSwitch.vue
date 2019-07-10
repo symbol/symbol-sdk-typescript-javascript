@@ -13,6 +13,10 @@
                 <p class="walletName">Test Wallet</p>
                 <p class="walletAmount">800,000,000<span class="tails">XEM</span> </p>
             </div>
+            <div class="walletItem">
+                <p class="walletName">Test Wallet</p>
+                <p class="walletAmount">800,000,000<span class="tails">XEM</span> </p>
+            </div>
         </div>
     </div>
 </template>

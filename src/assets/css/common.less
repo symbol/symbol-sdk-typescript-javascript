@@ -74,4 +74,162 @@ html {
     content: "\F33D";
   }
 }
+.mnemonicDialogHeader{
+  height: 74px;
+  line-height: 74px;
+  font-size:28px;
+  font-weight:400;
+  color:#222222;
+  .title{
+    padding-left: 64px;
+  }
+}
+.ivu-modal-content{
+  .ivu-modal-close{
+    top: 30px ;
+    right: 40px ;
+    .ivu-icon-ios-close{
+      font-size: 40px;
+      color: #666666;
+      font-weight: 400;
+    }
+  }
+}
+.mnemonicDialogBody{
+  padding: 40px 0 80px;
+  .steps{
+    height: 54px;
+    text-align: center;
+    .stepItem{
+      display: inline-block;
+      width: 100px;
+      height: 50px;
+      line-height: 50px;
+      font-size:16px;
+      font-weight:400;
+      white-space: nowrap;
+      color:#999999;
+      text-align: center;
+      margin-right: 93px;
+      position: relative;
+    }
+    .stepItem:last-of-type{
+      margin-right: 0;
+    }
+    .stepItem:after{
+      content: '';
+      display: inline-block;
+      width:100px;
+      height:4Px;
+      background:#CCCCCC;
+      position: absolute;
+      left: 0;
+      bottom: -4Px;
+    }
+    .stepItem.active{
+      color:#20B5AC;
+    }
+    .stepItem.active:after{
+      background:#20B5AC;
+    }
+  }
+  .stepItem1{
+    padding-top: 120px;
+    input{
+      display: block;
+      width:580px;
+      height:60px;
+      font-size:14px;
+      font-weight:400;
+      color:#999999;
+      padding-left: 40px;
+      border:1px solid #CCCCCC;
+      border-radius:8px;
+      margin: 0 auto;
+    }
+    button{
+      display: block;
+      width:200px;
+      height:60px;
+      line-height: 50px;
+      font-size:16px;
+      font-weight:400;
+      text-align: center;
+      color:#fff;
+      background:#20B5AC;
+      border: none;
+      border-radius:30px;
+      margin: 120px auto 0;
+      position: relative;
+      .ivu-icon{
+        font-size: 32px;
+        font-weight: bold;
+        position: absolute;
+        top: 14px;
+        right: 20px;
+      }
+    }
+  }
+  .stepItem2{
+    padding-top: 59px;
+    .step2Txt{
+      .step2Img{
+        width: 147px;
+        height: 151px;
+        margin: 3px auto;
+        img{
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .tit{
+        font-size:16px;
+        font-weight:400;
+        color:#F65C5C;
+      }
+      .ul1,.ul2{
+        margin-top: 22px;
+        .ul1Tit,.ul2Tit{
+          font-size:14px;
+          font-weight:400;
+          color:#222222;
+          line-height:22px;
+        }
+        .ul1Txt,.ul2Txt{
+          width: 480px;
+          word-wrap: break-word;
+          font-size:14px;
+          font-weight:400;
+          color:#666666;
+          line-height:20px;
+        }
+      }
+    }
+    button{
+      display: block;
+      width:200px;
+      height:60px;
+      line-height: 50px;
+      font-size:16px;
+      font-weight:400;
+      text-align: center;
+      color:#fff;
+      background:#20B5AC;
+      border: none;
+      border-radius:30px;
+      margin: 87px auto 10px;
+      position: relative;
+      .ivu-icon{
+        font-size: 32px;
+        font-weight: bold;
+        position: absolute;
+        top: 14px;
+        right: 20px;
+      }
+    }
+  }
+
+}
+
 

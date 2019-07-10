@@ -2,10 +2,16 @@
     <div class="WalletFnWrap">
         <div class="walletFnNav">
             <ul class="navList clear">
-                <li class="active left">钱包详情</li>
-                <li class="left">创建</li>
-                <li class="left">导入</li>
+                <li :class="[item.active?'active':'','left']"
+                    v-for="(item,index) in navList"
+                    :key="index"
+                    @click="goToPage(item)"
+                >{{item.name}}</li>
             </ul>
+            <div class="delBtn">
+                <i><img :src="delBtn"></i>
+                <span>删除</span>
+            </div>
         </div>
         <div class="walletFnContent">
             <router-view/>
@@ -13,15 +19,35 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
+    // @ts-ignore
+    import delBtn from '@/assets/images/wallet-management/delete.png'
     import './WalletFn.less';
 
     @Component({
         components: {},
     })
     export default class WalletFnNavigation extends Vue{
-
+        delBtn = delBtn
+        navList = [
+            {name:'钱包详情',to:'/walletDetails',active:true},
+            {name:'创建',to:'/walletCreate',active:false},
+            {name:'导入',to:'/walletImport',active:false},
+        ]
+        goToPage (item) {
+            for(let i in this.navList){
+                if(this.navList[i].to == item.to){
+                    this.navList[i].active = true
+                }else {
+                    this.navList[i].active = false
+                }
+            }
+            this.$router.push({path:item.to})
+        }
+        created () {
+            this.$router.push({path:'/walletDetails'})
+        }
     }
 </script>
 

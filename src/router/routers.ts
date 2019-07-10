@@ -33,21 +33,25 @@ const routers = [
                     },
                 ]
             },{
-                path:'/WalletPanel',
-                name:'WalletPanel',
+                path:'/walletPanel',
+                name:'walletPanel',
                 component: () => import('@/views/wallet-management/wallet-panel/WalletPanel.vue'),
                 children: [
                     {
                         path: '/walletDetails',
                         name: 'walletDetails',
-                        component: () => import('@/views/wallet-management/wallet-details/walletDetails.vue')
+                        component: () => import('@/views/wallet-management/wallet-details/WalletDetails.vue')
                     },{
-                        path: '/WalletCreate',
-                        name: 'WalletCreate',
+                        path: '/walletCreate',
+                        name: 'walletCreate',
                         component: () => import('@/views/wallet-management/wallet-create/WalletCreate.vue')
                     },{
-                        path: '/WalletImport',
-                        name: 'WalletImport',
+                        path: '/WalletCreated',
+                        name: 'WalletCreated',
+                        component: () => import('@/views/wallet-management/wallet-created/WalletCreated.vue')
+                    },{
+                        path: '/walletImport',
+                        name: 'walletImport',
                         component: () => import('@/views/wallet-management/wallet-import/WalletImport.vue')
                     },
                 ]
