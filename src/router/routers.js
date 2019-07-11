@@ -1,4 +1,3 @@
-// @ts-ignore
 var routers = [
     {
         path: '/home',
@@ -42,25 +41,50 @@ var routers = [
             }, {
                 path: '/walletPanel',
                 name: 'walletPanel',
+                // @ts-ignore
                 component: function () { return import('@/views/wallet-management/wallet-panel/WalletPanel.vue'); },
                 children: [
                     {
                         path: '/walletDetails',
                         name: 'walletDetails',
+                        // @ts-ignore
                         component: function () { return import('@/views/wallet-management/wallet-details/WalletDetails.vue'); }
-                    },
-                    {
+                    }, {
                         path: '/walletCreate',
                         name: 'walletCreate',
+                        // @ts-ignore
                         component: function () { return import('@/views/wallet-management/wallet-create/WalletCreate.vue'); }
                     }, {
                         path: '/WalletCreated',
                         name: 'WalletCreated',
+                        // @ts-ignore
                         component: function () { return import('@/views/wallet-management/wallet-created/WalletCreated.vue'); }
                     }, {
                         path: '/walletImport',
                         name: 'walletImport',
+                        // @ts-ignore
                         component: function () { return import('@/views/wallet-management/wallet-import/WalletImport.vue'); }
+                    },
+                ]
+            }, {
+                path: '/otherPanel',
+                name: 'otherPanel',
+            }, {
+                path: '/communityPanel',
+                name: 'communityPanel',
+                // @ts-ignore
+                component: function () { return import('@/views/community/community-panel/communityPanel.vue'); },
+                children: [
+                    {
+                        path: '/information',
+                        name: 'information',
+                        // @ts-ignore
+                        component: function () { return import('@/views/community/information/information.vue'); }
+                    }, {
+                        path: '/vote',
+                        name: 'vote',
+                        // @ts-ignore
+                        component: function () { return import('@/views/community/vote/vote.vue'); }
                     },
                 ]
             }

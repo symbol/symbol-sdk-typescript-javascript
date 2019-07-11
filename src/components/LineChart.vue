@@ -14,7 +14,7 @@
     @Component
     export default class LineChart extends Vue {
         dom: any = {};
-        screenWidth: document.body.clientWidth
+        screenWidth = document.body.clientWidth
         option = {
             tooltip: {
                 formatter: function (params, ticket, callback) {

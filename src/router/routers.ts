@@ -2,6 +2,7 @@ const routers = [
     {
         path: '/home',
         name: 'home',
+        // @ts-ignore
         component: () => import('@/components/menu-bar/MenuBar.vue'),
         children: [
 

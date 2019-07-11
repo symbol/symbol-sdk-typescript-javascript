@@ -4,9 +4,18 @@ export default {
         localMap: {
             'zh-CN': '中文',
             'en-US': '英文'
-        }
+        },
+        walletList: [],
+        hasWallet: false
     },
     getters: {},
-    mutations: {},
+    mutations: {
+        SET_WALLET_LIST: function (state, walletList) {
+            state.walletList = walletList;
+        },
+        SET_HAS_WALLET: function (state, hasWallet) {
+            state.hasWallet = hasWallet;
+        },
+    },
 };
 //# sourceMappingURL=index.js.map
