@@ -45,6 +45,11 @@
             }
             this.$router.push({path:item.to})
         }
+        created() {
+            this.$router.push({
+                name: 'information'
+            })
+        }
     }
 </script>
 

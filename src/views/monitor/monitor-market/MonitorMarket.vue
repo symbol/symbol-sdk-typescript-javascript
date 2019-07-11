@@ -3,6 +3,18 @@
 
     <div class="top_network_info">
       <div class="left_echart radius">
+        <span class="trend">XEM行情走势（近7天）</span>
+        <span class="price_info right">
+          <span class="price_item">
+            <span>最高价格</span><span class="black">￥0.7540</span>
+          </span>
+          <span class="price_item">
+            <span>最低价格</span><span class="black">￥0.5945</span>
+          </span>
+          <span class="price_item">
+            <span>平均价格</span><span class="black">￥0.5945</span><span class="red">-4.903%</span>
+          </span>
+        </span>
         <LineChart></LineChart>
       </div>
       <div class="right_net_txs radius">

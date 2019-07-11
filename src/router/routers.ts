@@ -13,6 +13,11 @@ const routers = [
                 component: () => import('@/views/monitor/monitor-panel/MonitorPanel.vue'),
                 children: [
                     {
+                        path: '/monitorPanel',
+                        name: 'monitorPanel',
+                        // @ts-ignore
+                        component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
+                    }, {
                         path: '/dashBoard',
                         name: 'dashBoard',
                         // @ts-ignore
@@ -68,12 +73,20 @@ const routers = [
                     },
                 ]
             },{
+                path:'/service',
+                name:'service',
+            },{
                 path:'/communityPanel',
                 name:'communityPanel',
                 // @ts-ignore
                 component: () => import('@/views/community/community-panel/communityPanel.vue'),
                 children: [
                     {
+                        path:'/communityPanel',
+                        name:'communityPanel',
+                        // @ts-ignore
+                        component: () => import('@/views/community/information/information.vue')
+                    }, {
                         path: '/information',
                         name: 'information',
                         // @ts-ignore

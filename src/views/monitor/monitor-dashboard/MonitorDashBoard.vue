@@ -18,6 +18,12 @@
 
     <div class="top_network_info">
       <div class="left_echart radius">
+        <span class="trend">XEM行情走势（近7天）</span>
+        <span class="right">
+          <span >总市值（CNY）</span>
+          <span class="black">836,341,288.11</span>
+
+        </span>
         <LineChart></LineChart>
       </div>
       <div class="right_net_status radius">

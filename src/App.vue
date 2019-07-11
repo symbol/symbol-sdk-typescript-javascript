@@ -23,4 +23,5 @@
 
 <style lang="less">
   @import "./assets/css/common.less";
+  @import "./assets/css/iview.less";
 </style>

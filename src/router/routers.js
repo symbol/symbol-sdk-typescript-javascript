@@ -12,6 +12,11 @@ var routers = [
                 component: function () { return import('@/views/monitor/monitor-panel/MonitorPanel.vue'); },
                 children: [
                     {
+                        path: '/monitorPanel',
+                        name: 'monitorPanel',
+                        // @ts-ignore
+                        component: function () { return import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'); }
+                    }, {
                         path: '/dashBoard',
                         name: 'dashBoard',
                         // @ts-ignore
@@ -67,12 +72,20 @@ var routers = [
                     },
                 ]
             }, {
+                path: '/service',
+                name: 'service',
+            }, {
                 path: '/communityPanel',
                 name: 'communityPanel',
                 // @ts-ignore
                 component: function () { return import('@/views/community/community-panel/communityPanel.vue'); },
                 children: [
                     {
+                        path: '/communityPanel',
+                        name: 'communityPanel',
+                        // @ts-ignore
+                        component: function () { return import('@/views/community/information/information.vue'); }
+                    }, {
                         path: '/information',
                         name: 'information',
                         // @ts-ignore

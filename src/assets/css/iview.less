@@ -1,4 +1,4 @@
-.monitor_panel_container {
+.app_controller {
   .switch_wallet {
     .ivu-select-placeholder,
     .ivu-select-selected-value {
@@ -6,6 +6,7 @@
       color: #222;
     }
   }
+
   .switch_language {
     .ivu-select-placeholder {
       position: relative;
@@ -13,7 +14,6 @@
       right: 1px !important;
     }
   }
-
 
   .ivu-select-selection {
     border: none !important;
@@ -32,6 +32,28 @@
       font-size: 20px;
       content: "\F33D";
     }
+  }
+}
+
+.monitor_panel_container {
+  .switch_wallet {
+    .ivu-select-placeholder,
+    .ivu-select-selected-value {
+      font-size: 20px !important;
+      color: #222;
+    }
+  }
+
+  .switch_language {
+    .ivu-select-placeholder {
+      position: relative;
+      top: 1px !important;
+      right: 1px !important;
+    }
+  }
+
+  .ivu-select-selection {
+    border: none !important;
   }
 
   .ivu-tabs-nav .ivu-tabs-tab:hover,
@@ -150,6 +172,10 @@
       outline: none;
     }
 
+    input::placeholder {
+      color: transparent;
+    }
+
     .ivu-date-picker-focused input {
       border: none;
       border-shadow: 0 0 0 transparent;
@@ -166,6 +192,57 @@
 }
 
 
+.ivu-select-selection {
+
+  .ivu-select-placeholder {
+    color: #333 !important;
+  }
+
+  i {
+    color: #222 !important;
+    font-size: 20px;
+  }
+
+  i::before {
+    color: #222 !important;
+    font-size: 20px;
+    content: "\F33D";
+  }
+}
+
+.vote_container {
+
+  .ivu-checkbox-checked .ivu-checkbox-inner {
+    border-color: #20B5AC !important;
+    background-color: #20B5AC !important;
+  }
+
+  .ivu-radio-checked .ivu-radio-inner {
+    border-color: #20B5AC !important;
+    width: 25px !important;
+    height: 25px !important;
+  }
+
+  .ivu-radio-inner {
+    width: 25px;
+    height: 25px;
+    position: relative;
+    border-color: #20B5AC !important;
+    border-radius: 50% !important;
+  }
+
+  .ivu-radio-inner:after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 12px;
+    height: 12px;
+    background-color: #20B5AC !important;
+  }
+}
 
 
 

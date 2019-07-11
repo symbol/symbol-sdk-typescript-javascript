@@ -1,7 +1,5 @@
 <template>
   <div class="line_chart_container">
-    <span>XEM行情走势（近7天）</span>
-    <span class="right">总市值（CNY）836,341,288.11</span>
     <div class="line" id="id" ref="dom"></div>
   </div>
 

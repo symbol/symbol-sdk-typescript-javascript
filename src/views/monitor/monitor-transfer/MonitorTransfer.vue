@@ -5,7 +5,8 @@
         <span
                 @click="swicthTransferType(index)"
                 :class="['transaction_btn',t.isSelect?'selected_button':'', t.disabled?'disabled_button':'']"
-                v-for="(t,index) in transferTypeList">{{t.name}}</span>
+                v-for="(t,index) in transferTypeList">{{t.name}}
+        </span>
       </div>
       <div class="bottom_transfer_info">
         <div class="transfer" v-if="transferTypeList[0].isSelect">
@@ -152,7 +153,6 @@
         }
 
         swicthTransferType(index) {
-
             const list: any = this.transferTypeList
             if (list[index].disabled) {
                 return

@@ -37,7 +37,8 @@
         {{address}}
       </div>
       <div class="qr_button ">
-        <span class="radius" @click="copyAddress">复制地址</span>
+        <span class="radius" ref="copy" data-clipboard-action="copy" data-clipboard-target="#address_text"
+              @click="copyAddress">复制地址</span>
         <span class="radius" @click="showAssetSettingDialog()">设置金额</span>
         <span class="radius">复制二维码</span>
       </div>
@@ -95,14 +96,15 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import {createQRCode, copyTxt} from '@/utils/tools'
+    import {createQRCode} from '@/utils/tools'
+    import clipboard from 'clipboard'
 
     @Component
     export default class MonitorReceipt extends Vue {
         currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
         isShowSearchDetail = false
         QRCode: string = ''
-        isShowDialog = true
+        isShowDialog = false
         copyBtn: any = false
         assetAmount = 0
         address = 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
@@ -192,9 +194,14 @@
 
         copyAddress() {
             const that = this
-            copyTxt(this.address).then(()=>{
-                that.$Message.success('复制成功')
-            })
+            const {copyBtn} = this
+            that.$Message.success('复制成功')
+        }
+
+        mounted() {
+            if (!this.copyBtn) {
+                this.copyBtn = new clipboard(this.$refs.copy);
+            }
         }
 
         created() {
