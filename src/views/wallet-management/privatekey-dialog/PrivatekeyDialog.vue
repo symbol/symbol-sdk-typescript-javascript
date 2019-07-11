@@ -87,7 +87,7 @@
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
     import {createQRCode} from '@/utils/tools'
-    import './privatekeyDialog.less';
+    import './PrivatekeyDialog.less';
     @Component({
         components: {},
     })

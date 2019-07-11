@@ -1,0 +1,101 @@
+.serviceSwitchWrap{
+  box-sizing: border-box;
+  width: 420px;
+  height: 100%;
+  background-color: #fff;
+  padding: 30px;
+  border-radius:8px;
+  overflow: hidden;
+  .serviceSwitchHead{
+    height: 30px;
+    line-height: 30px;
+    position: relative;
+    .tit{
+      font-size:20px;
+      font-weight:bold;
+      color:#222222;
+    }
+  }
+  .serviceList{
+    margin-top: 25px;
+    .serviceItem{
+      box-sizing: border-box;
+      width: 360px;
+      height: inherit;
+      color: #20B5AC;
+      background-image: url("../../../assets/images/wallet-management/walletItem.png");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      padding: 24px 30px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: .3s;
+      .serviceName{
+        font-size:18px;
+        font-weight:400;
+        text-align: center;
+        color:#20B5AC;
+        i{
+          display: inline-block;
+          width: 31px;
+          height: 31px;
+          margin-right: 15px;
+          vertical-align: middle;
+          img{
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+          }
+        }
+        span{
+          vertical-align: middle;
+        }
+      }
+      .serviceTxt{
+        display: none;
+        font-size:12px;
+        font-weight:400;
+        word-break: break-all;
+        color:#FFFFFF;
+        line-height:18px;
+        margin-top: 14px;
+      }
+    }
+    .serviceItem.active{
+      color: #FFFFFF;
+      background-image: url("../../../assets/images/wallet-management/walletItemActive.png");
+      background-size: 100% 100% ;
+      background-repeat: no-repeat;
+      .serviceName{
+        font-size:24px;
+        font-weight:bold;
+        text-align: left;
+        color:#fff;
+        i{
+          display: inline-block;
+          width: 33px;
+          height: 33px;
+          margin-right: 15px;
+          vertical-align: middle;
+          img{
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+          }
+        }
+        span{
+          vertical-align: middle;
+        }
+      }
+      .serviceTxt{
+        display: block;
+        font-size:12px;
+        font-weight:400;
+        word-break: break-all;
+        color:#FFFFFF;
+        line-height:18px;
+        margin-top: 14px;
+      }
+    }
+  }
+}

@@ -12,11 +12,6 @@ var routers = [
                 component: function () { return import('@/views/monitor/monitor-panel/MonitorPanel.vue'); },
                 children: [
                     {
-                        path: '/monitorPanel',
-                        name: 'monitorPanel',
-                        // @ts-ignore
-                        component: function () { return import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'); }
-                    }, {
                         path: '/dashBoard',
                         name: 'dashBoard',
                         // @ts-ignore
@@ -72,8 +67,28 @@ var routers = [
                     },
                 ]
             }, {
-                path: '/service',
-                name: 'service',
+                path: '/servicePanel',
+                name: 'servicePanel',
+                // @ts-ignore
+                component: function () { return import('@/views/service/service-panel/ServicePanel.vue'); },
+                children: [
+                    {
+                        path: '/onDev',
+                        name: 'onDev',
+                        // @ts-ignore
+                        component: function () { return import('@/views/other/onDev/onDev.vue'); }
+                    }, {
+                        path: '/namespace',
+                        name: 'namespace',
+                        // @ts-ignore
+                        component: function () { return import('@/views/service/namespace/Namespace.vue'); }
+                    }, {
+                        path: '/mosaic',
+                        name: 'mosaic',
+                        // @ts-ignore
+                        component: function () { return import('@/views/service/mosaic/Mosaic.vue'); }
+                    },
+                ]
             }, {
                 path: '/communityPanel',
                 name: 'communityPanel',
@@ -81,11 +96,6 @@ var routers = [
                 component: function () { return import('@/views/community/community-panel/communityPanel.vue'); },
                 children: [
                     {
-                        path: '/communityPanel',
-                        name: 'communityPanel',
-                        // @ts-ignore
-                        component: function () { return import('@/views/community/information/information.vue'); }
-                    }, {
                         path: '/information',
                         name: 'information',
                         // @ts-ignore
@@ -97,9 +107,6 @@ var routers = [
                         component: function () { return import('@/views/community/vote/vote.vue'); }
                     },
                 ]
-            }, {
-                path: '/otherPanel',
-                name: 'otherPanel',
             }
         ]
     },

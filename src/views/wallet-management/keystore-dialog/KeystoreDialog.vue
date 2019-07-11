@@ -101,7 +101,7 @@
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
     import {createQRCode, copyTxt} from '@/utils/tools'
-    import './keystoreDialog.less';
+    import './KeystoreDialog.less';
     @Component({
         components: {},
     })

@@ -73,8 +73,28 @@ const routers = [
                     },
                 ]
             },{
-                path:'/service',
-                name:'service',
+                path:'/servicePanel',
+                name:'servicePanel',
+                // @ts-ignore
+                component: () => import('@/views/service/service-panel/ServicePanel.vue'),
+                children: [
+                    {
+                        path: '/onDev',
+                        name: 'onDev',
+                        // @ts-ignore
+                        component: () => import('@/views/other/onDev/onDev.vue')
+                    },  {
+                        path: '/namespace',
+                        name: 'namespace',
+                        // @ts-ignore
+                        component: () => import('@/views/service/namespace/Namespace.vue')
+                    },  {
+                        path: '/mosaic',
+                        name: 'mosaic',
+                        // @ts-ignore
+                        component: () => import('@/views/service/mosaic/Mosaic.vue')
+                    },
+                ]
             },{
                 path:'/communityPanel',
                 name:'communityPanel',
@@ -98,9 +118,6 @@ const routers = [
                         component: () => import('@/views/community/vote/vote.vue')
                     },
                 ]
-            },{
-                path:'/otherPanel',
-                name:'otherPanel',
             }
         ]
     },
