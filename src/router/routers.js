@@ -9,33 +9,33 @@ var routers = [
                 path: '/monitorPanel',
                 name: 'monitorPanel',
                 // @ts-ignore
-                component: function () { return import('@/views/monitor-panel/monitor-panel/MonitorPanel.vue'); },
+                component: function () { return import('@/views/monitor/monitor-panel/MonitorPanel.vue'); },
                 children: [
                     {
                         path: '/dashBoard',
                         name: 'dashBoard',
                         // @ts-ignore
-                        component: function () { return import('@/views/monitor-panel/monitor-dashboard/MonitorDashBoard.vue'); }
+                        component: function () { return import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'); }
                     }, {
                         path: '/market',
                         name: 'market',
                         // @ts-ignore
-                        component: function () { return import('@/views/monitor-panel/monitor-market/MonitorMarket.vue'); }
+                        component: function () { return import('@/views/monitor/monitor-market/MonitorMarket.vue'); }
                     }, {
                         path: '/transfer',
                         name: 'transfer',
                         // @ts-ignore
-                        component: function () { return import('@/views/monitor-panel/monitor-transfer/MonitorTransfer.vue'); }
+                        component: function () { return import('@/views/monitor/monitor-transfer/MonitorTransfer.vue'); }
                     }, {
                         path: '/receipt',
                         name: 'receipt',
                         // @ts-ignore
-                        component: function () { return import('@/views/monitor-panel/monitor-receipt/MonitorReceipt.vue'); }
+                        component: function () { return import('@/views/monitor/monitor-receipt/MonitorReceipt.vue'); }
                     }, {
                         path: '/remote',
                         name: 'remote',
                         // @ts-ignore
-                        component: function () { return import('@/views/monitor-panel/monitor-dashboard/MonitorDashBoard.vue'); }
+                        component: function () { return import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'); }
                     },
                 ]
             }, {
@@ -67,9 +67,6 @@ var routers = [
                     },
                 ]
             }, {
-                path: '/otherPanel',
-                name: 'otherPanel',
-            }, {
                 path: '/communityPanel',
                 name: 'communityPanel',
                 // @ts-ignore
@@ -87,6 +84,9 @@ var routers = [
                         component: function () { return import('@/views/community/vote/vote.vue'); }
                     },
                 ]
+            }, {
+                path: '/otherPanel',
+                name: 'otherPanel',
             }
         ]
     },

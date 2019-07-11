@@ -10,33 +10,33 @@ const routers = [
                 path: '/monitorPanel',
                 name: 'monitorPanel',
                 // @ts-ignore
-                component: () => import('@/views/monitor-panel/monitor-panel/MonitorPanel.vue'),
+                component: () => import('@/views/monitor/monitor-panel/MonitorPanel.vue'),
                 children: [
                     {
                         path: '/dashBoard',
                         name: 'dashBoard',
                         // @ts-ignore
-                        component: () => import('@/views/monitor-panel/monitor-dashboard/MonitorDashBoard.vue')
+                        component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
                     }, {
                         path: '/market',
                         name: 'market',
                         // @ts-ignore
-                        component: () => import('@/views/monitor-panel/monitor-market/MonitorMarket.vue')
+                        component: () => import('@/views/monitor/monitor-market/MonitorMarket.vue')
                     }, {
                         path: '/transfer',
                         name: 'transfer',
                         // @ts-ignore
-                        component: () => import('@/views/monitor-panel/monitor-transfer/MonitorTransfer.vue')
+                        component: () => import('@/views/monitor/monitor-transfer/MonitorTransfer.vue')
                     }, {
                         path: '/receipt',
                         name: 'receipt',
                         // @ts-ignore
-                        component: () => import('@/views/monitor-panel/monitor-receipt/MonitorReceipt.vue')
+                        component: () => import('@/views/monitor/monitor-receipt/MonitorReceipt.vue')
                     },{
                         path: '/remote',
                         name: 'remote',
                         // @ts-ignore
-                        component: () => import('@/views/monitor-panel/monitor-dashboard/MonitorDashBoard.vue')
+                        component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
                     },
                 ]
             },{
@@ -68,9 +68,6 @@ const routers = [
                     },
                 ]
             },{
-                path:'/otherPanel',
-                name:'otherPanel',
-            },{
                 path:'/communityPanel',
                 name:'communityPanel',
                 // @ts-ignore
@@ -88,6 +85,9 @@ const routers = [
                         component: () => import('@/views/community/vote/vote.vue')
                     },
                 ]
+            },{
+                path:'/otherPanel',
+                name:'otherPanel',
             }
         ]
     },

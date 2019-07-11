@@ -76,6 +76,7 @@
       position: absolute;
       right: 90px;
       z-index: 999;
+
       .ivu-page-item-active {
         border-radius: 50%;
       }
@@ -128,6 +129,7 @@
           border-radius: 4px;
           margin-bottom: 10px;
           box-sizing: border-box;
+          position: relative;
 
           img {
             position: absolute;
@@ -165,3 +167,46 @@
   }
 }
 
+.dash_board_dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .value {
+    border: none;
+  }
+
+  .title {
+    display: inline-block;
+    width: 80px;
+    margin-right: 60px;
+    font-weight: 400;
+    color: rgba(153, 153, 153, 1);
+    text-align: right;
+
+  }
+
+  span {
+    margin-top: 8px;
+    font-size: 16px;
+  }
+
+  .value {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(34, 34, 34, 1);
+  }
+
+  .other_info:nth-of-type(odd) {
+    margin-top: 20px;
+  }
+
+  .transfer_type {
+    .value {
+      font-size: 20px;
+      font-weight: bold;
+      color: rgba(241, 95, 35, 1);
+    }
+  }
+
+}
