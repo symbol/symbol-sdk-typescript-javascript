@@ -90,25 +90,25 @@
                 </div>
             </div>
         </div>
-        <mnemonicDialog :showMnemonicDialog="showMnemonicDialog" @closeMnemonicDialog="closeMnemonicDialog"></mnemonicDialog>
-        <privatekeyDialog :showPrivatekeyDialog="showPrivatekeyDialog" @closePrivatekeyDialog="closePrivatekeyDialog"></privatekeyDialog>
-        <keystoreDialog :showKeystoreDialog="showKeystoreDialog" @closeKeystoreDialog="closeKeystoreDialog"></keystoreDialog>
+        <MnemonicDialog :showMnemonicDialog="showMnemonicDialog" @closeMnemonicDialog="closeMnemonicDialog"></MnemonicDialog>
+        <PrivatekeyDialog :showPrivatekeyDialog="showPrivatekeyDialog" @closePrivatekeyDialog="closePrivatekeyDialog"></PrivatekeyDialog>
+        <KeystoreDialog :showKeystoreDialog="showKeystoreDialog" @closeKeystoreDialog="closeKeystoreDialog"></KeystoreDialog>
     </div>
 </template>
 
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
     import {createQRCode} from '@/utils/tools'
-    import mnemonicDialog from '@/views/wallet-management/mnemonic-dialog/mnemonicDialog.vue'
-    import privatekeyDialog from '@/views/wallet-management/privatekey-dialog/privatekeyDialog.vue'
-    import keystoreDialog from '@/views/wallet-management/keystore-dialog/keystoreDialog.vue'
+    import MnemonicDialog from '@/views/wallet-management/mnemonic-dialog/MnemonicDialog.vue'
+    import PrivatekeyDialog from '@/views/wallet-management/privatekey-dialog/PrivatekeyDialog.vue'
+    import KeystoreDialog from '@/views/wallet-management/keystore-dialog/KeystoreDialog.vue'
     import './WalletDetails.less';
 
     @Component({
         components: {
-            mnemonicDialog,
-            privatekeyDialog,
-            keystoreDialog
+            MnemonicDialog,
+            PrivatekeyDialog,
+            KeystoreDialog
         },
     })
     export default class WalletDetails extends Vue{

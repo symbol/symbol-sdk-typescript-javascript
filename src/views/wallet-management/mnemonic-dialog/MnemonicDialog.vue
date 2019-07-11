@@ -77,7 +77,7 @@
 
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
-    import './mnemonicDialog.less';
+    import './MnemonicDialog.less';
     @Component({
         components: {},
     })
