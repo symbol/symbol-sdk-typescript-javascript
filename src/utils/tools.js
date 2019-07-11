@@ -1,5 +1,5 @@
 import QRCode from 'qrcode'
-import i18n from './locale/index'
+import i18n from '../locale/index'
 import Vue from 'vue'
 const vueInstance = new Vue({i18n})
 
@@ -71,6 +71,8 @@ export const createQRCode = (txt) => {
       })
   })
 }
+
+
 
 export const copyTxt = (txt) => {
   return new Promise((resolve, reject) => {

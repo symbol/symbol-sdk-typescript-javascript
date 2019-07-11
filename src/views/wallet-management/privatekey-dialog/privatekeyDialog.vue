@@ -1,0 +1,125 @@
+<template>
+    <div class="privatekeyDialogWrap">
+        <Modal
+                v-model="show"
+                class-name="vertical-center-modal"
+                :footer-hide="true"
+                :width="1000"
+                :transfer="false"
+                @on-cancel="privatekeyDialogCancel">
+            <div slot="header" class="privatekeyDialogHeader">
+                <span class="title">导出私钥</span>
+            </div>
+            <div class="privatekeyDialogBody">
+                <div class="steps"  v-if="stepIndex != 4">
+                    <span :class="['stepItem',stepIndex == 0?'active':'']">输入密码</span>
+                    <span :class="['stepItem',stepIndex == 1?'active':'']">备份提示</span>
+                    <span :class="['stepItem',stepIndex == 2?'active':'']">备份私钥</span>
+                </div>
+                <div class="stepItem1" v-if="stepIndex == 0">
+                    <Form :model="wallet">
+                        <FormItem>
+                            <Input v-model="wallet.password" required placeholder="请输入你的钱包密码"></Input>
+                        </FormItem>
+                        <FormItem>
+                            <Button type="success" @click="exportPrivatekey">下一步 <Icon type="ios-arrow-round-forward" /></Button>
+                        </FormItem>
+                    </Form>
+                </div>
+                <div class="stepItem2" v-if="stepIndex == 1">
+                    <div class="step2Txt">
+                        <Row>
+                            <Col span="9">
+                                <div class="imgDiv">
+                                    <div class="step2Img">
+                                        <img :src="Step2Img">
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col span="15">
+                                <p class="tit">获得私钥等于拥有钱包资产所有权</p>
+                                <div class="ul1">
+                                    <p class="ul1Tit"><span class="point"></span> 备份私钥</p>
+                                    <p class="ul1Txt">使用纸和笔正确抄写私钥,如果你的手机丢失、被盗、损坏,私钥将可以恢复你的资产</p>
+                                </div>
+                                <div class="ul2">
+                                    <p class="ul2Tit"><span class="point"></span> 离线保管</p>
+                                    <p class="ul2Txt">妥善保管至隔离网络的安全地方,请勿将助记词在联网环境下分享和存储,比如邮件、相册、社交应用等</p>
+                                </div>
+                            </Col>
+                        </Row>
+                    </div>
+                    <Button type="success" @click="exportPrivatekey">下一步 <Icon type="ios-arrow-round-forward" /></Button>
+                </div>
+                <div class="stepItem3" v-if="stepIndex == 2">
+                    <p class="tit">请准确抄写安全备份私钥</p>
+                    <p class="txt">切勿保存至邮箱、记事本、网盘、聊天工具等，非常危险请勿使用网络传输</p>
+                    <p class="tit">请勿使用网络传输</p>
+                    <p class="txt">请勿通过网络工具传输，一旦被黑客获取将造成不可挽回的资产损失。建议离线设备通过扫二维码方式传输。</p>
+                    <p class="tit">密码管理工具保存</p>
+                    <p class="txt">建议使用密码管理工具管理</p>
+                    <div class="privateKeyCode">79375884ce4e01f82e3128f4a9aadbdeab6e1 c4ef7718fca93aa1fOec38ab4b2</div>
+                    <Button type="success" @click="exportPrivatekey">下一步 <Icon type="ios-arrow-round-forward" /></Button>
+                </div>
+                <div class="stepItem4" v-if="stepIndex == 3">
+                    <p class="tit">请按顺序点击助记词，以确认您正确备份</p>
+                    <div class="surePrivatekeyWords"></div>
+                    <p class="mnemonicWords">level   hello   omit   donor   device   vivid   maximum   rail   merit   zone   alter   oven</p>
+                    <Button type="success" @click="exportPrivatekey">下一步 <Icon type="ios-arrow-round-forward" /></Button>
+                </div>
+            </div>
+        </Modal>
+    </div>
+</template>
+
+<script lang="ts">
+    import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
+    import Step2Img from '@/assets/images/wallet-management/Step2Img.png'
+    import './privatekeyDialog.less';
+    @Component({
+        components: {},
+    })
+    export default class privatekeyDialog extends Vue{
+        stepIndex = 0
+        Step2Img = Step2Img
+        show = false
+        wallet = {
+            password:'',
+            privatekey:''
+        }
+
+        @Prop()
+        showPrivatekeyDialog:boolean
+
+        privatekeyDialogCancel () {
+            this.$emit('closePrivatekeyDialog')
+            setTimeout(()=>{
+                this.stepIndex = 0
+            },300)
+        }
+        exportPrivatekey () {
+            switch (this.stepIndex) {
+                case 0 :
+                    this.stepIndex = 1
+                    break;
+                case 1 :
+                    this.stepIndex = 2
+                    break;
+                case 2 :
+                    this.stepIndex = 3
+                    break;
+                case 3 :
+                    this.stepIndex = 4
+                    break;
+            }
+        }
+        @Watch('showPrivatekeyDialog')
+        onShowPrivatekeyDialogChange(){
+            this.show = this.showPrivatekeyDialog
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>

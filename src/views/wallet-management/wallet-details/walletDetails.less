@@ -1,0 +1,245 @@
+.walletDetailsWrap{
+  box-sizing: border-box;
+  height: 100%;
+  padding-top: 20px;
+  .Information{
+    font-size:16px;
+    background-color: #fff;
+    padding: 25px 76px 25px 25px;
+    border-radius:8px;
+    margin-bottom: 20px;
+    h6{
+      font-size:16px;
+      font-weight:400;
+      color:#222222;
+      margin-bottom: 32px;
+    }
+    .walletInfo{
+      p{
+        padding-left: 25px;
+        margin-bottom: 23px;
+      }
+      p:last-of-type{
+        margin-bottom: 0;
+      }
+      .tit{
+        display: inline-block;
+        width:68px;
+        height:14px;
+        text-align: right;
+        font-size:14px;
+        font-weight:400;
+        white-space: nowrap;
+        color:rgba(102,102,102,1);
+        margin-right: 30px;
+      }
+      .walletName{
+        font-size:14px;
+        font-weight:400;
+        color:rgba(34,34,34,1);
+      }
+      .walletAddress{
+        font-size:14px;
+        font-weight:400;
+        color:rgba(34,34,34,1);
+      }
+      .walletPublicKey{
+        font-size:14px;
+        font-weight:400;
+        color:rgba(34,34,34,1);
+      }
+      .walletAlias{
+        font-size:14px;
+        font-weight:400;
+        color:rgba(34,34,34,1);
+      }
+    }
+    .addressQRCode{
+      width: 140px;
+      height: 140px;
+      margin:53px auto 5px;
+      img{
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .codeTit{
+      font-size:16px;
+      text-align: center;
+      font-weight:400;
+      color:#666666;
+    }
+  }
+  .fnAndBackup{
+    background-color: #fff;
+    padding: 25px 30px 29px;
+    border-radius:8px;
+    margin-bottom: 20px;
+    h6{
+      font-size:16px;
+      font-weight:400;
+      color:#222222;
+      margin-bottom: 25px;
+    }
+    .backupDiv{
+      padding-left: 30px;
+      .Mnemonic,.privateKey,.Keystore,.Other{
+        height: 53px;
+        line-height: 53px;
+        margin-right: 100px;
+        cursor: pointer;
+        i{
+          display: inline-block;
+          width: 56px;
+          height: 53px;
+          margin-right: 20px;
+          vertical-align: middle;
+          img{
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+          }
+        }
+        span{
+          display: inline-block;
+          line-height: 53px;
+          font-size:14px;
+          font-weight:400;
+          color:#666666;
+        }
+      }
+    }
+  }
+  .accountFn{
+    background-color: #fff;
+    padding:5px 0 25px;
+    border-radius:8px;
+    .accountFnNav{
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      border-radius:8px;
+      background-color: #fff;
+      position: relative;
+      .navList{
+        height: 100%;
+        li{
+          width: 130px;
+          height: 100%;
+          line-height: 60px;
+          font-size:14px;
+          text-align: center;
+          font-weight:400;
+          color:#666666;
+          position: relative;
+          cursor: pointer;
+        }
+        li:before{
+          display: block;
+          content: '';
+          width:1Px;
+          height:14px;
+          background:#CCCCCC;
+          position: absolute;
+          left: 0;
+          top: 23px;
+        }
+        li:first-of-type:before{
+          display: none;
+        }
+        .active{
+          font-size:16px;
+          font-weight:bold;
+          color:#20B5AC;
+        }
+        .active:after{
+          display: block;
+          content: '';
+          width:30px;
+          height:4Px;
+          background:#4DC2BF;
+          position: absolute;
+          bottom: 0;
+          left: 45px;
+        }
+      }
+    }
+    .aliasTable{
+      padding: 0 20px;
+      .tableTit{
+        height: 52px;
+        line-height: 52px;
+        font-size:14px;
+        font-weight:400;
+        color:#999999;
+        .ivu-col{
+          padding-left: 60px;
+        }
+      }
+      .tableCell{
+        height: 60px;
+        line-height: 60px;
+        font-size:14px;
+        font-weight:400;
+        color:#222222;
+        background-color: #F7FBFC;
+        margin-bottom: 5px;
+        .ivu-col{
+          padding-left: 60px;
+        }
+        .tableFn{
+          height: 30px;
+          line-height: 30px;
+          margin-top: 15px;
+          span{
+            display: inline-block;
+            width:60px;
+            height:30px;
+            text-align: center;
+            font-size:14px;
+            font-weight:400;
+            color:#666666;
+            background:#DDDDDD;
+            border-radius:4px;
+            margin-right: 20px;
+          }
+          .bind.active{
+            color: #fff;
+            background:#20B5AC;
+          }
+          .unbind.active{
+            color: #fff;
+            background:#F65C5C;
+          }
+          .updateTime.active{
+            color: #fff;
+            background:#F16328;
+          }
+        }
+      }
+      .noData{
+        width: 76px;
+        text-align: center;
+        margin: 80px auto 0;
+        i{
+          display: block;
+          width: 76px;
+          height: 78px;
+          margin-bottom: 10px;
+          img{
+            display: block;
+            width: 100%;
+            height: 100%;
+          }
+        }
+        p{
+          font-size:14px;
+          font-weight:400;
+          color:#CCCCCC;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}

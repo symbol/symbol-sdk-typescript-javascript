@@ -1,0 +1,210 @@
+.dash_board_container {
+  .top_network_info {
+    margin: 20px 0;
+    height: 480px;
+
+    .left_echart {
+      width: 960px;
+      height: 480px;
+      padding: 30px;
+      background-color: white;
+      float: left;
+      position: relative;
+    }
+
+    .right_net_status {
+      float: left;
+      width: 330px;
+      height: 480px;
+      background-color: white;
+      margin-left: 20px;
+      padding: 29px 31px;
+
+      .panel_name {
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
+        margin-bottom: 28px;
+      }
+
+      .network_item {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-content: center;
+        align-items: center;
+        padding: 20px 22px;
+        border: 1px solid rgba(238, 238, 238, 1);
+        margin: 20px 0;
+
+        .descript {
+          padding-left: 20px;
+          display: inline-block;
+          width: 150px;
+          font-size: 14px;
+          font-weight: 400;
+          color: rgba(102, 102, 102, 1);
+          line-height: 4px;
+        }
+
+        .data {
+          display: inline-block;
+          width: 70px;
+          text-align: right;
+          font-size: 16px;
+          font-weight: 400;
+          color: rgba(34, 34, 34, 1);
+          line-height: 4px;
+        }
+
+        img {
+          width: 36px;
+          height: 36px;
+        }
+      }
+    }
+  }
+
+  .bottom_transactions {
+    width: 1310px;
+    height: 356px;
+    background-color: white;
+    padding: 24px 31px;
+    position: relative;
+
+    .splite_page {
+      position: absolute;
+      right: 90px;
+      z-index: 999;
+
+      .ivu-page-item-active {
+        border-radius: 50%;
+      }
+    }
+
+    .active_select {
+      border: 2px solid gainsboro;
+    }
+
+    .confirmed_transactions {
+      span {
+        display: inline-block;
+      }
+
+      .account {
+        width: 566px;
+      }
+
+      .transfer_type {
+        width: 180px;
+      }
+
+      .amount {
+        width: 214px;
+      }
+
+      .date {
+        width: 245px;
+      }
+
+      .table_head {
+        span {
+          color: #999999;
+          padding: 15px 0;
+        }
+
+        .account {
+          padding-left: 69px;
+        }
+      }
+
+      .table_body {
+        height: 200px;
+        width: 1250px;
+
+        .table_item {
+          width: 100%;
+          height: 60px;
+          background: rgba(247, 251, 252, 1);
+          border-radius: 4px;
+          margin-bottom: 10px;
+          box-sizing: border-box;
+          position: relative;
+
+          img {
+            position: absolute;
+          }
+
+          .mosaic_action {
+            width: 20px;
+            height: 20px;
+            left: 30px;
+            margin-top: 20px;
+          }
+
+          .expand_mosaic_info {
+            width: 16px;
+            height: 16px;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0px 1px 5px 0px rgba(32, 181, 172, 0.4);
+            margin-top: 24px;
+            right: 30px;
+          }
+
+          span {
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(34, 34, 34, 1);
+            padding: 20px 0 22px 0;
+          }
+
+          .account {
+            padding-left: 69px;
+          }
+        }
+      }
+    }
+  }
+
+
+}
+
+.dash_board_dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .title {
+    display: inline-block;
+    width: 80px;
+    margin-right: 60px;
+    font-weight: 400;
+    color: rgba(153, 153, 153, 1);
+    text-align: right;
+
+  }
+
+  span {
+    margin-top: 8px;
+    font-size:16px;
+  }
+
+  .value {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(34, 34, 34, 1);
+  }
+
+  .other_info:nth-of-type(odd) {
+    margin-top: 20px;
+  }
+
+  .transfer_type {
+    .value {
+      font-size: 20px;
+      font-weight: bold;
+      color: rgba(241, 95, 35, 1);
+    }
+  }
+
+}
