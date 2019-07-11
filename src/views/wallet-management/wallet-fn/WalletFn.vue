@@ -1,14 +1,15 @@
 <template>
-    <div class="WalletFnWrap">
+    <div class="WalletFnWrap" :style="(!importHasWallet)&&importTabIndex ? 'width:inherit':''">
         <div class="walletFnNav">
             <ul class="navList clear">
                 <li :class="[item.active?'active':'','left']"
                     v-for="(item,index) in navList"
                     :key="index"
                     @click="goToPage(item)"
+                    v-if="importHasWallet||!(importTabIndex&&index == 0)"
                 >{{item.name}}</li>
             </ul>
-            <div class="delBtn">
+            <div class="delBtn" v-if="importHasWallet||!importTabIndex">
                 <i><img :src="delBtn"></i>
                 <span>删除</span>
             </div>
@@ -20,7 +21,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
     // @ts-ignore
     import delBtn from '@/assets/images/wallet-management/delete.png'
     import './WalletFn.less';
@@ -35,6 +36,19 @@
             {name:'创建',to:'/walletCreate',active:false},
             {name:'导入',to:'/walletImport',active:false},
         ]
+        importTabIndex = null
+        importHasWallet = false
+
+        @Prop()
+        tabIndex:any
+
+        get importIndex () {
+            return this.tabIndex
+        }
+
+        get hasWallet () {
+            return this.$store.state.app.hasWallet
+        }
         goToPage (item) {
             for(let i in this.navList){
                 if(this.navList[i].to == item.to){
@@ -45,8 +59,21 @@
             }
             this.$router.push({path:item.to})
         }
+        @Watch('hasWallet')
+        onHasWalletChange(){
+            this.importHasWallet = this.hasWallet
+        }
         created () {
-            this.$router.push({path:'/walletDetails'})
+            if(this.importIndex){
+                this.importTabIndex = this.importIndex
+            }
+        }
+        mounted () {
+            if(this.importTabIndex){
+                this.goToPage(this.navList[this.importTabIndex])
+            }else {
+                this.$router.push({path:'/walletDetails'})
+            }
         }
     }
 </script>

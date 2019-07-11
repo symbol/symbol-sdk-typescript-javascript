@@ -119,7 +119,7 @@
         }
         .tit{
           font-size:16px;
-          font-weight:400;
+          font-weight:bold;
           color:#F65C5C;
         }
         .ul1,.ul2{
@@ -162,7 +162,7 @@
         background:#20B5AC;
         border: none;
         border-radius:30px;
-        margin: 87px auto 0;
+        margin: 80px auto 0;
         position: relative;
         .ivu-icon{
           font-size: 32px;
@@ -174,24 +174,37 @@
       }
     }
     .stepItem3{
-      padding-top: 80px;
+      padding-top: 30px;
       p{
         width: 680px;
         white-space: nowrap;
         margin: 0 auto;
       }
       .tit{
-        font-size:16px;
-        font-weight:400;
+        font-size:14px;
+        font-weight:bold;
         color:#F65C5C;
-        margin-bottom: 30px;
+        margin-bottom: 5px;
       }
       .txt{
-        font-size:16px;
+        font-size:14px;
         font-weight:bold;
-        word-spacing: 10px;
-        color:#222222;
+        color:#666666;
         line-height:20px;
+        margin-bottom: 30px;
+      }
+      .privateKeyCode{
+        width: 680px;
+        height: 40px;
+        line-height: 40px;
+        font-size:16px;
+        font-weight:400;
+        color:#222222;
+        text-align: center;
+        background:#FAFAFA;
+        border:1px solid #CCCCCC;
+        border-radius:4px;
+        margin: 0 auto;
       }
       button{
         display: block;
@@ -205,66 +218,50 @@
         background:#20B5AC;
         border: none;
         border-radius:30px;
-        margin: 195px auto 0;
+        margin: 43px auto 0;
         position: relative;
-        .ivu-icon{
-          font-size: 32px;
-          font-weight: bold;
-          position: absolute;
-          top: 14px;
-          right: 20px;
-        }
       }
     }
     .stepItem4{
-      padding-top: 60px;
-      p{
-        width: 680px;
+      padding-top: 80px;
+      .QRCodeImg{
+        width:178px;
+        height:178px;
         white-space: nowrap;
         margin: 0 auto;
-      }
-      .tit{
-        font-size:16px;
-        font-weight:400;
-        color:#F65C5C;
-        margin-bottom: 20px;
-      }
-      .sureMnemonicWords{
-        width: 680px;
-        height:80px;
-        background:#FAFAFA;
-        border:1px solid #CCCCCC;
-        border-radius:10px;
-        margin: 0 auto 20px;
-      }
-      .mnemonicWords{
-        font-size:16px;
-        font-weight:bold;
-        word-spacing: 10px;
-        color:#222222;
-        line-height:20px;
-        cursor: pointer;
-      }
-      button{
-        display: block;
-        width:200px;
-        height:60px;
-        line-height: 50px;
-        font-size:16px;
-        font-weight:400;
-        text-align: center;
-        color:#fff;
-        background:#20B5AC;
-        border: none;
-        border-radius:30px;
-        margin: 125px auto 0;
         position: relative;
-        .ivu-icon{
-          font-size: 32px;
-          font-weight: bold;
+        img{
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+        .imgBorder{
+          width:160px;
+          height:160px;
+          border:1px solid #CCCCCC;
+          border-radius:4px;
           position: absolute;
-          top: 14px;
-          right: 20px;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%,-50%);
+        }
+      }
+      .btns{
+        margin-top: 84px;
+        button{
+          display: block;
+          width:140px;
+          height:50px;
+          line-height: 42px;
+          font-size:16px;
+          font-weight:400;
+          text-align: center;
+          color:#fff;
+          background:#20B5AC;
+          border: none;
+          border-radius:30px;
+          margin: 0 auto;
+          position: relative;
         }
       }
     }

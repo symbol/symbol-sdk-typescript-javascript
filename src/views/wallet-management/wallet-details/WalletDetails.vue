@@ -35,19 +35,19 @@
             <h6>功能与备份</h6>
             <div class="backupDiv clear">
                 <div class="Mnemonic left" @click="changeMnemonicDialog">
-                    <i><img :src="Mnemonic"></i>
+                    <i><img src="@/assets/images/wallet-management/auxiliaries.png"></i>
                     <span>导出助记词</span>
                 </div>
                 <div class="privateKey left" @click="changePrivatekeyDialog">
-                    <i><img :src="privateKey"></i>
+                    <i><img src="@/assets/images/wallet-management/privatekey.png"></i>
                     <span>导出私钥</span>
                 </div>
-                <div class="Keystore left">
-                    <i><img :src="Keystore"></i>
+                <div class="Keystore left" @click="changeKeystoreDialog">
+                    <i><img src="@/assets/images/wallet-management/keystore.png"></i>
                     <span>导出Keystore</span>
                 </div>
                 <div class="Other left">
-                    <i><img :src="Other"></i>
+                    <i><img src="@/assets/images/wallet-management/other.png"></i>
                     <span>其他</span>
                 </div>
             </div>
@@ -85,13 +85,14 @@
                     </Row>
                 </div>
                 <div class="noData" v-if="aliasList.length<=0">
-                    <i><img :src="no_data"></i>
+                    <i><img src="@/assets/images/wallet-management/no_data.png"></i>
                     <p>暂无别名</p>
                 </div>
             </div>
         </div>
         <mnemonicDialog :showMnemonicDialog="showMnemonicDialog" @closeMnemonicDialog="closeMnemonicDialog"></mnemonicDialog>
         <privatekeyDialog :showPrivatekeyDialog="showPrivatekeyDialog" @closePrivatekeyDialog="closePrivatekeyDialog"></privatekeyDialog>
+        <keystoreDialog :showKeystoreDialog="showKeystoreDialog" @closeKeystoreDialog="closeKeystoreDialog"></keystoreDialog>
     </div>
 </template>
 
@@ -100,28 +101,20 @@
     import {createQRCode} from '@/utils/tools'
     import mnemonicDialog from '@/views/wallet-management/mnemonic-dialog/mnemonicDialog.vue'
     import privatekeyDialog from '@/views/wallet-management/privatekey-dialog/privatekeyDialog.vue'
-    import Mnemonic from '@/assets/images/wallet-management/Auxiliaries.png'
-    import privateKey from '@/assets/images/wallet-management/privatekey.png'
-    import Keystore from '@/assets/images/wallet-management/keystore.png'
-    import Other from '@/assets/images/wallet-management/other.png'
-    import no_data from '@/assets/images/wallet-management/no_data.png'
+    import keystoreDialog from '@/views/wallet-management/keystore-dialog/keystoreDialog.vue'
     import './WalletDetails.less';
 
     @Component({
         components: {
             mnemonicDialog,
-            privatekeyDialog
+            privatekeyDialog,
+            keystoreDialog
         },
     })
     export default class WalletDetails extends Vue{
-        Mnemonic = Mnemonic
-        privateKey = privateKey
-        Keystore = Keystore
-        Other = Other
-        no_data = no_data
-
         showMnemonicDialog:boolean = false
         showPrivatekeyDialog:boolean = false
+        showKeystoreDialog:boolean = false
         QRCode:string = ''
         aliasList = []
 
@@ -137,9 +130,15 @@
         closePrivatekeyDialog () {
             this.showPrivatekeyDialog = false
         }
+        changeKeystoreDialog () {
+            this.showKeystoreDialog = true
+        }
+        closeKeystoreDialog () {
+            this.showKeystoreDialog = false
+        }
         onresize () {
-            const height = this.$refs['walletDetailsWrap'].clientHeight - ( this.$refs['accountFn'].offsetTop - this.$refs['walletDetailsWrap'].offsetTop)
-            this.$refs['accountFn'].style.height = height +'px'
+            const height = this.$refs['walletDetailsWrap']['clientHeight'] - ( this.$refs['accountFn']['offsetTop'] - this.$refs['walletDetailsWrap']['offsetTop'])
+            this.$refs['accountFn']['style']['height'] = height +'px'
         }
         created () {
             createQRCode('TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN').then((data)=>{

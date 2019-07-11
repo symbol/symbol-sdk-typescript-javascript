@@ -12,7 +12,7 @@
                         </FormItem>
                         <FormItem label="设置密码">
                             <Input v-model="mnemonic.password" type="password" required placeholder="请设置你的钱包密码"></Input>
-                            <i class="icon"><img :src="psd_hidden"></i>
+                            <i class="icon"><img src="@/assets/images/wallet-management/psd_hidden.png"></i>
                         </FormItem>
                         <FormItem>
                             <Button type="success" @click="importWallet">导入</Button>
@@ -28,11 +28,11 @@
                         </FormItem>
                         <FormItem label="设置密码">
                             <Input v-model="privateKey.password" type="password" required placeholder="请设置你的钱包密码"></Input>
-                            <i class="icon"><img :src="psd_hidden"></i>
+                            <i class="icon"><img src="@/assets/images/wallet-management/psd_hidden.png"></i>
                         </FormItem>
                         <FormItem label="确认密码">
                             <Input v-model="privateKey.checkPW" type="password" required placeholder="请再次输入你的密码"></Input>
-                            <i class="icon"><img :src="psd_hidden"></i>
+                            <i class="icon"><img src="@/assets/images/wallet-management/psd_hidden.png"></i>
                         </FormItem>
                         <FormItem>
                             <Button type="success" @click="importWallet">导入</Button>
@@ -48,7 +48,7 @@
                         </FormItem>
                         <FormItem label="输入密码">
                             <Input v-model="keystore.password" type="password" required placeholder="请输入你的钱包密码"></Input>
-                            <i class="icon"><img :src="psd_hidden"></i>
+                            <i class="icon"><img src="@/assets/images/wallet-management/psd_hidden.png"></i>
                         </FormItem>
                         <FormItem>
                             <Button type="success" @click="importWallet">导入</Button>
@@ -64,13 +64,11 @@
     import { Component, Vue } from 'vue-property-decorator';
     import './WalletImport.less'
     import {NetworkType} from "nem2-sdk";
-    import psd_hidden from '@/assets/images/wallet-management/psd_hidden.png'
 
     @Component({
         components: {},
     })
     export default class WalletImport extends Vue{
-        psd_hidden = psd_hidden
         currentTab = 'mnemonic'
         mnemonic = {
             mnemonic:'',
@@ -103,16 +101,41 @@
         changeTab (name) {
             this.currentTab = name
         }
+        success (title,desc) {
+            this.$Notice.success({
+                title: title,
+                desc:  desc?desc:''
+            });
+        }
         importWallet () {
             switch (this.currentTab) {
                 case 'mnemonic':
-
+                    this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
+                    this.$store.commit('SET_HAS_WALLET',true)
+                    this.success('成功导入钱包','')
+                    this.mnemonic = {
+                        mnemonic:'',
+                        password: '',
+                    }
                     break;
                 case 'privateKey':
-
+                    this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
+                    this.$store.commit('SET_HAS_WALLET',true)
+                    this.success('成功导入钱包','')
+                    this.privateKey = {
+                        privateKey:'',
+                        password: '',
+                        checkPW: '',
+                    }
                     break;
                 case 'keystore':
-
+                    this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
+                    this.$store.commit('SET_HAS_WALLET',true)
+                    this.success('成功导入钱包','')
+                    this.keystore = {
+                        keystore:'',
+                        password: '',
+                    }
                     break;
             }
         }

@@ -55,6 +55,24 @@ const routers = [
                         component: () => import('@/views/wallet-management/wallet-import/WalletImport.vue')
                     },
                 ]
+            },{
+                path:'/otherPanel',
+                name:'otherPanel',
+            },{
+                path:'/communityPanel',
+                name:'communityPanel',
+                component: () => import('@/views/community/community-panel/communityPanel.vue'),
+                children: [
+                    {
+                        path: '/information',
+                        name: 'information',
+                        component: () => import('@/views/community/information/information.vue')
+                    },{
+                        path: '/vote',
+                        name: 'vote',
+                        component: () => import('@/views/community/vote/vote.vue')
+                    },
+                ]
             }
         ]
     },

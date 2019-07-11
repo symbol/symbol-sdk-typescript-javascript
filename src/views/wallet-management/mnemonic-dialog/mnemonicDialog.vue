@@ -33,7 +33,7 @@
                             <Col span="9">
                                 <div class="imgDiv">
                                     <div class="step2Img">
-                                        <img :src="Step2Img">
+                                        <img src="@/assets/images/wallet-management/step2Img.png">
                                     </div>
                                 </div>
                             </Col>
@@ -65,7 +65,7 @@
                 </div>
                 <div class="stepItem5" v-if="stepIndex == 4">
                     <div class="backupImg">
-                        <img src="">
+                        <img src="@/assets/images/wallet-management/exportSuccess.png">
                     </div>
                     <p class="backupTxt">助记词顺序正确，备份成功</p>
                     <Button type="success" @click="exportMnemonic">完成</Button>
@@ -77,14 +77,12 @@
 
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
-    import Step2Img from '@/assets/images/wallet-management/Step2Img.png'
     import './mnemonicDialog.less';
     @Component({
         components: {},
     })
     export default class mnemonicDialog extends Vue{
         stepIndex = 0
-        Step2Img = Step2Img
         show = false
         wallet = {
             password:'',
