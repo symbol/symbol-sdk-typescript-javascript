@@ -72,6 +72,8 @@ export const createQRCode = (txt) => {
   })
 }
 
+
+
 export const copyTxt = (txt) => {
   return new Promise((resolve, reject) => {
     const input = document.createElement('input')

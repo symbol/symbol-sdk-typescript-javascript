@@ -9,8 +9,6 @@
 
     @Component
     export default class App extends Vue {
-        ;
-
         created() {
             if (window['electron']) {
                 const ipcRenderer = window['electron']['ipcRenderer']

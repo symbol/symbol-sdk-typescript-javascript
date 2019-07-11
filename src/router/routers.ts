@@ -8,50 +8,61 @@ const routers = [
             {
                 path: '/monitorPanel',
                 name: 'monitorPanel',
-                component: () => import('@/views/monitor-panel/MonitorPanel.vue'),
+                // @ts-ignore
+                component: () => import('@/views/monitor-panel/monitor-panel/MonitorPanel.vue'),
                 children: [
                     {
                         path: '/dashBoard',
                         name: 'dashBoard',
-                        component: () => import('@/views/monitor-panel/dash-board/DashBoard.vue')
+                        // @ts-ignore
+                        component: () => import('@/views/monitor-panel/monitor-dashboard/MonitorDashBoard.vue')
                     }, {
                         path: '/market',
                         name: 'market',
-                        component: () => import('@/views/monitor-panel/dash-board/DashBoard.vue')
+                        // @ts-ignore
+                        component: () => import('@/views/monitor-panel/monitor-market/MonitorMarket.vue')
                     }, {
                         path: '/transfer',
                         name: 'transfer',
-                        component: () => import('@/views/monitor-panel/transfer/Transfer.vue')
+                        // @ts-ignore
+                        component: () => import('@/views/monitor-panel/monitor-transfer/MonitorTransfer.vue')
                     }, {
                         path: '/receipt',
                         name: 'receipt',
-                        component: () => import('@/views/monitor-panel/dash-board/DashBoard.vue')
+                        // @ts-ignore
+                        component: () => import('@/views/monitor-panel/monitor-receipt/MonitorReceipt.vue')
                     },{
                         path: '/remote',
                         name: 'remote',
-                        component: () => import('@/views/monitor-panel/dash-board/DashBoard.vue')
+                        // @ts-ignore
+                        component: () => import('@/views/monitor-panel/monitor-dashboard/MonitorDashBoard.vue')
                     },
                 ]
             },{
                 path:'/walletPanel',
                 name:'walletPanel',
+                // @ts-ignore
                 component: () => import('@/views/wallet-management/wallet-panel/WalletPanel.vue'),
                 children: [
                     {
                         path: '/walletDetails',
                         name: 'walletDetails',
+                        // @ts-ignore
                         component: () => import('@/views/wallet-management/wallet-details/WalletDetails.vue')
-                    },{
+                    }, {
                         path: '/walletCreate',
                         name: 'walletCreate',
+                        // @ts-ignore
                         component: () => import('@/views/wallet-management/wallet-create/WalletCreate.vue')
                     },{
                         path: '/WalletCreated',
                         name: 'WalletCreated',
+                        // @ts-ignore
                         component: () => import('@/views/wallet-management/wallet-created/WalletCreated.vue')
                     },{
                         path: '/walletImport',
                         name: 'walletImport',
+                        // @ts-ignore
                         component: () => import('@/views/wallet-management/wallet-import/WalletImport.vue')
                     },
                 ]
@@ -61,15 +72,18 @@ const routers = [
             },{
                 path:'/communityPanel',
                 name:'communityPanel',
+                // @ts-ignore
                 component: () => import('@/views/community/community-panel/communityPanel.vue'),
                 children: [
                     {
                         path: '/information',
                         name: 'information',
+                        // @ts-ignore
                         component: () => import('@/views/community/information/information.vue')
                     },{
                         path: '/vote',
                         name: 'vote',
+                        // @ts-ignore
                         component: () => import('@/views/community/vote/vote.vue')
                     },
                 ]

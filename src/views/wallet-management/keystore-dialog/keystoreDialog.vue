@@ -32,7 +32,7 @@
                             <Col span="9">
                                 <div class="imgDiv">
                                     <div class="step2Img">
-                                        <img src="@/assets/images/wallet-management/step2Img.png">
+                                        <img src="@/assets/images/wallet-management/Step2Img.png">
                                     </div>
                                 </div>
                             </Col>

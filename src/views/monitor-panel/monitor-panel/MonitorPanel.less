@@ -1,0 +1,188 @@
+.monitor_panel_container {
+  padding: 30px;
+  height: 100%;
+
+  .monitor_panel_left_container {
+    height: 100%;
+    float: left;
+    margin-right: 30px;
+
+    .top_wallet_balance {
+      width: 420px;
+      height: 240px;
+      padding: 22px 0 0 30px;
+      position: relative;
+      background-size: contain;
+      background-image: url("../../../assets/images/monitor/dash-board/dashboardWalletBackground.png");
+
+      .wallet_balance {
+        padding-bottom: 23px;
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+      }
+
+      .split {
+        width: 100%;
+        left: 0;
+        border: 1px solid rgba(56, 85, 111, 1);
+        opacity: 0.18;
+        position: absolute;
+      }
+
+      .XEM_amount {
+        margin: 15px 0 8px 0;
+        font-size: 24px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+
+        .amount {
+          font-size: 40px;
+          margin-left: 10px;
+        }
+      }
+
+      .exchange {
+        font-size: 18px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+      }
+    }
+
+    .bottom_account_info {
+      width: 420px;
+      height: 676px;
+      background-color: white;
+      margin-top: 20px;
+      padding: 27px 28px;
+      position: relative;
+
+      .asset_list {
+        width: 24px;
+        top: 27px;
+        height: 20px;
+        position: absolute;
+        right: 33px;
+        z-index: 999;
+      }
+
+      .mosaic_data {
+        height: 76px;
+        padding: 15px 0;
+        display: flex;
+        flex-direction: row;
+        justify-items: center;
+        justify-content: space-between;
+        align-content: center;
+        align-items: center;
+        border-bottom: 1px solid rgba(238, 238, 238, .5);
+
+        .mosaic_name {
+          position: relative;
+          right: 90px;
+          top: 3px;
+          font-size: 18px;
+          font-weight: 400;
+          color: rgba(34, 34, 34, 1);
+        }
+
+        .mosaic_value {
+          div:first-of-type {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            font-weight: 400;
+            color: rgba(34, 34, 34, 1);
+          }
+
+          div:nth-of-type(2) {
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(102, 102, 102, 1);
+          }
+        }
+
+        img {
+          width: 30px;
+          height: 30px;
+        }
+      }
+
+      .namespace_data {
+        span {
+          color: #222222;
+          width: 50%;
+          display: inline-block;
+          border-bottom: 1px solid #eee;
+          padding: 19px 0 19px 30px;
+
+        }
+
+        .namespace_table_head {
+          span {
+            color: #999999;
+            font-size: 14px;
+
+          }
+        }
+      }
+
+      .harvesting_data {
+        .harvesting_item {
+          padding: 20px 0;
+          .top_info {
+            font-size:14px;
+            font-weight:400;
+            color:rgba(34,34,34,1);
+          }
+          .bottom_info {
+            font-size:12px;
+            font-weight:400;
+            color:rgba(153,153,153,1);
+          }
+        }
+      }
+    }
+  }
+
+  .monitor_panel_right_container {
+    float: right;
+
+    .top_navidator {
+      background-color: white;
+      width: 1310px;
+      height: 60px;
+
+      span {
+        padding: 20px 0 8px 0;
+        font-size: 20px;
+        position: relative;
+        margin: 0 30px;
+        display: inline-block;
+      }
+
+      .active_navigator {
+        font-size: 20px;
+        font-weight: bold;
+        color: rgba(32, 181, 172, 1);
+        border-bottom: 3px solid rgba(32, 181, 172, 1);
+      }
+
+      span::after {
+        position: absolute;
+        right: -30px;
+        bottom: 16px;
+        width: 1px;
+        height: 14px;
+        background-color: #222222;
+        display: block;
+        content: '';
+      }
+
+      span:last-child::after {
+        background-color: transparent;
+      }
+    }
+  }
+
+}
+
