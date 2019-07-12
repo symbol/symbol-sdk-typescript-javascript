@@ -179,4 +179,42 @@ describe('MosaicInfo', () => {
         });
     });
 
+    describe('isRestrictable', () => {
+        it('should return true when it\'s restrictable', () => {
+            const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.meta.id,
+                mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.mosaic.supply,
+                mosaicInfoDTO.mosaic.height,
+                mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.revision,
+                MosaicProperties.create({
+                    supplyMutable: false,
+                    transferable: false,
+                    divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
+                    restrictable: true,
+                    duration: mosaicInfoDTO.mosaic.properties[2],
+                }),
+            );
+            expect(mosaicInfo.isRestrictable()).to.be.equal(true);
+        });
+
+        it('should return false when it\'s not restrictable', () => {
+            const mosaicInfo = new MosaicInfo(
+                mosaicInfoDTO.meta.id,
+                mosaicInfoDTO.mosaic.mosaicId,
+                mosaicInfoDTO.mosaic.supply,
+                mosaicInfoDTO.mosaic.height,
+                mosaicInfoDTO.mosaic.owner,
+                mosaicInfoDTO.mosaic.revision,
+                MosaicProperties.create({
+                    supplyMutable: false,
+                    transferable: false,
+                    divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
+                    duration: mosaicInfoDTO.mosaic.properties[2],
+                }),
+            );
+            expect(mosaicInfo.isRestrictable()).to.be.equal(false);
+        });
+    });
 });

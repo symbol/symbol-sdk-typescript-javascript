@@ -137,6 +137,10 @@ export class MosaicDefinitionTransaction extends Transaction {
             mosaicDefinitionTransaction = mosaicDefinitionTransaction.addTransferability();
         }
 
+        if (this.mosaicProperties.restrictable === true) {
+            mosaicDefinitionTransaction = mosaicDefinitionTransaction.addRestrictable();
+        }
+
         return mosaicDefinitionTransaction.build();
     }
 

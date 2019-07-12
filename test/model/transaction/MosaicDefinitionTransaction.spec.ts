@@ -41,6 +41,7 @@ describe('MosaicDefinitionTransaction', () => {
                 supplyMutable: true,
                 transferable: true,
                 divisibility: 3,
+                restrictable: true,
                 duration: UInt64.fromUint(1000),
             }),
             NetworkType.MIJIN_TEST,
@@ -59,6 +60,7 @@ describe('MosaicDefinitionTransaction', () => {
                 supplyMutable: true,
                 transferable: true,
                 divisibility: 3,
+                restrictable: true,
                 duration: UInt64.fromUint(1000),
             }),
             NetworkType.MIJIN_TEST,
@@ -78,6 +80,7 @@ describe('MosaicDefinitionTransaction', () => {
                 supplyMutable: true,
                 transferable: true,
                 divisibility: 3,
+                restrictable: true,
                 duration: UInt64.fromUint(1000),
             }),
             NetworkType.MIJIN_TEST,
@@ -88,13 +91,14 @@ describe('MosaicDefinitionTransaction', () => {
         expect(mosaicDefinitionTransaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(mosaicDefinitionTransaction.mosaicProperties.supplyMutable).to.be.equal(true);
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(true);
+        expect(mosaicDefinitionTransaction.mosaicProperties.restrictable).to.be.equal(true);
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('E6DE84B8010000000000000001030302E803000000000000');
+        )).to.be.equal('E6DE84B8010000000000000001070302E803000000000000');
 
     });
 
@@ -118,6 +122,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(mosaicDefinitionTransaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(mosaicDefinitionTransaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(false);
+        expect(mosaicDefinitionTransaction.mosaicProperties.restrictable).to.be.equal(false);
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
@@ -163,6 +168,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(mosaicDefinitionTransaction.mosaicProperties.divisibility).to.be.equal(3);
         expect(mosaicDefinitionTransaction.mosaicProperties.supplyMutable).to.be.equal(false);
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(false);
+        expect(mosaicDefinitionTransaction.mosaicProperties.restrictable).to.be.equal(false);
 
         const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
