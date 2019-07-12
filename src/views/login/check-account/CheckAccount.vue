@@ -7,7 +7,7 @@
     <div class="login_password">
       <div class="gray_boder">
         <input type="text" placeholder="请输入登陆密码">
-        <img :src="loginSeePassword" alt="">
+        <img src="../../../assets/images/login/loginSeePassword.png" alt="">
       </div>
     </div>
     <div class="password_tips">
@@ -15,21 +15,17 @@
     </div>
     <div class="bottom_btn">
       <div @click="jumpToMonitorPanel" class="arrow_login_container">
-        <img class="absolute" :src="loginArrowLogin" alt="">
+        <img class="absolute" src="../../../assets/images/login/loginArrowLogin.png" alt="">
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-    import loginSeePassword from '@/assets/images/login/loginSeePassword.png';
-    import loginArrowLogin from '@/assets/images/login/loginArrowLogin.png';
     import {Component, Vue} from 'vue-property-decorator';
 
     @Component
     export default class CheckAccount extends Vue {
-        loginSeePassword = loginSeePassword
-        loginArrowLogin = loginArrowLogin
 
         jumpToMonitorPanel() {
             this.$router.push({

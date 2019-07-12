@@ -1,8 +1,8 @@
 <template>
-  <div class="line_chart_container">
-    <Spin size="large" class="absolute" fix v-if="spinShow"></Spin>
-    <div class="line" id="id" ref="dom"></div>
-  </div>
+    <div class="line_chart_container">
+        <Spin size="large" class="absolute" fix v-if="spinShow"></Spin>
+        <div class="line" id="id" ref="dom"></div>
+    </div>
 
 </template>
 
@@ -19,8 +19,22 @@
         option = {
             tooltip: {
                 backgroundColor: 'white',
-                formatter: function () {
-                    return ''
+                formatter: (params: any) => {
+                    const {dataIndex, value} = params
+                    let riseRange: any = 0
+                    if (dataIndex !== 0) {
+                        const preData = this.option.series[0].data[dataIndex - 1]
+                        riseRange = ((value - preData) / preData).toFixed(3)
+                    }
+                    const date = formatDate(params.name)
+                    const template = `<div>
+                                    <div style="color: #999;">${date}</div>
+                                    <div style="display: flex;justify-content: center;justify-items: center">
+                                      <span style="color: #666666;margin-right: 5px">￥${value}</span>
+                                      <span style="float:right;color: #20B5AC">${riseRange}%</span>
+                                    </div>
+                                    </div>`
+                    return template
                 }
             },
             xAxis: [{
@@ -162,41 +176,23 @@
         }
 
         async created() {
-            const that = this
             await this.getChartData()
-            this.option.tooltip.formatter = (params) => {
-                const {dataIndex, value} = params
-                let riseRange: any = 0
-                if (dataIndex !== 0) {
-                    const preData = that.option.series[0].data[dataIndex - 1]
-                    riseRange = ((value - preData) / preData).toFixed(3)
-                }
-                const date = formatDate(params.name)
-                const template = `<div>
-                                    <div style="color: #999;">${date}</div>
-                                    <div style="display: flex;justify-content: center;justify-items: center">
-                                      <span style="color: #666666;margin-right: 5px">￥${value}</span>
-                                      <span style="float:right;color: #20B5AC">${riseRange}%</span>
-                                    </div>
-                                    </div>`
-                return template
-            }
         }
     }
 </script>
 <style scoped lang="less">
-  .line_chart_container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
+    .line_chart_container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
 
-  .line {
-    width: 854px;
-    height: 360px;
-    position: absolute;
-    top: 50px;
-    left: 30px;
-  }
+    .line {
+        width: 854px;
+        height: 360px;
+        position: absolute;
+        top: 50px;
+        left: 30px;
+    }
 
 </style>
