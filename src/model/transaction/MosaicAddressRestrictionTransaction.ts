@@ -38,7 +38,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * The mosaic creator can modify the permissions of an account by sending a
      * mosaic restriction transaction targeting the account address.
      *
-     * **MosaicAddressRestrictionTransaction can only be announced in with Aggregated Transaction
+     * **MosaicAddressRestrictionTransaction can only be announced in with Aggregate Transaction
      *
      * @param deadline - The deadline to include the transaction.
      * @param mosaicId - The mosaic id ex: new MosaicId([481110499, 231112638]).
