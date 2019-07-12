@@ -70,24 +70,27 @@
         <div class="vote_describle">
           <span class="title">描述</span>
           <span class="value radius">
-          <textarea placeholder="关于投票内容描述" class="hide_scroll" name="" id="" cols="100" rows="3"></textarea>
+          <textarea placeholder="关于投票内容描述" class="hide_scroll" name="" id="" cols="95" rows="3"></textarea>
         </span>
         </div>
         <div class="vote_selections">
           <span class="title">选项</span>
-          <span class="selection_list">
-          <div class="right" v-for="s in selectionList">
+          <span class="selection_list right">
+          <div v-for="(s,index) in selectionList">
             <span class="value radius">
-              <input type="text"/>
+              <input :value="s" type="text"/>
              </span>
-            <img src="../../../assets/images/community/vote/voteAdd.png" @click="addSelection()" alt="">
-            <img src="../../../assets/images/community/vote/voteDelete.png" @click="deleteSelection()" alt="">
+            <span class="button_content">
+              <img src="../../../assets/images/community/vote/voteAdd.png" @click="addSelection()" alt="">
+            <img src="../../../assets/images/community/vote/voteDelete.png" v-if="index !== 0" @click="deleteSelection(index)" alt="">
+            </span>
+
           </div>
         </span>
 
         </div>
+
         <div class="vote_vote_type">
-          <span class="title"></span>
           <RadioGroup v-model="voteType">
             <Radio class="vote_mul" label="多选"></Radio>
             <Radio class="vote_single" label="单选"></Radio>
@@ -96,16 +99,27 @@
         <div class="vote_deadline">
           <span class="title">截止时间</span>
           <span class="value radius">
-          <input type="text" placeholder="输入日期 ISO格式有效日期YYYY-MM DD HH:mm，例如：2019-12-28 14:57">
+          <input type="text" :value="deadline" placeholder="输入日期 ISO格式有效日期YYYY-MM DD HH:mm，例如：2019-12-28 14:57">
+
+            <span class="select_date">
+              <div class="month_value">
+                <img src="../../../assets/images/monitor/market/marketCalendar.png" alt="">
+              </div>
+              <div class="date_selector">
+                <DatePicker @on-change="changeCurrentMonth" type="datetime" placeholder="" :value="currentMonth"
+                            style="width: 70px"></DatePicker>
+              </div>
+            </span>
         </span>
         </div>
         <div class="vote_fee">
           <span class="title">费用</span>
           <span class="value radius">
           <input placeholder="0.050000" type="text">
-          <span class="right">xem</span>
+          <span class="right">XEM</span>
         </span>
         </div>
+        <div class="tips red right">默认为：0.05000XEM，设置的费用越多，处理优先级越高</div>
 
         <div class="create_button">
           创建
@@ -114,22 +128,26 @@
 
     </div>
 
+    <CheckPWDialog :showCheckPWDialog="true" @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"></CheckPWDialog>
   </div>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import PieChart from './PieChart.vue';
+    import CheckPWDialog from '../../../components/checkPW-dialog/checkPWDialog'
 
     @Component({
             components: {
-                PieChart
+                PieChart,
+                CheckPWDialog
             }
         }
     )
     export default class information extends Vue {
         currentVoteFilter = {}
         voteType = '多选'
+        deadline = ''
         voteFilterList = [
             {
                 value: 0,
@@ -148,7 +166,7 @@
                 label: '已结束'
             }
         ]
-        selectionList = ['','','']
+        selectionList = ['1','2']
         voteList = [
             {
                 initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
@@ -267,12 +285,24 @@
         addSelection() {
             this.selectionList.push('')
         }
-        deleteSelection() {
-            this.selectionList.pop()
+        deleteSelection(index) {
+            console.log(index)
+            console.log(this.selectionList)
+            this.selectionList.splice(index ,1)
+            console.log(this.selectionList)
+        }
+        changeCurrentMonth(e) {
+            this.deadline = e
         }
         created() {
             this.currentVote = this.voteList[0]
             this.currentVoteFilter = '全部'
+        }
+        closeCheckPWDialog() {
+            console.log('......closeCheckPWDialog')
+        }
+        checkEnd(boolean){
+            console.log(boolean)
         }
     }
 </script>

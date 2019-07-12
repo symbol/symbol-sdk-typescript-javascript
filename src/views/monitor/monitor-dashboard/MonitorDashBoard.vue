@@ -1,26 +1,27 @@
 <template>
   <div class="dash_board_container">
-      <Modal
-              title="事务详情"
-              v-model="isShowDialog"
-              class-name="dash_board_dialog">
-        <div class="transfer_type" >
-          <span class="title">{{transactionDetails[0].key}}</span>
-          <span class="value" >{{transactionDetails[0].value}}</span>
+    <Modal
+            title="事务详情"
+            v-model="isShowDialog"
+            :transfer="false"
+            class-name="dash_board_dialog">
+      <div class="transfer_type">
+        <span class="title">{{transactionDetails[0].key}}</span>
+        <span class="value">{{transactionDetails[0].value}}</span>
+      </div>
+      <div>
+        <div v-for="t in transactionDetails" class="other_info">
+          <span class="title">{{t.key}}</span>
+          <span class="value">{{t.value}}</span>
         </div>
-        <div>
-          <div v-for="t in transactionDetails" class="other_info">
-            <span class="title">{{t.key}}</span>
-            <span class="value" >{{t.value}}</span>
-          </div>
-        </div>
-      </Modal>
+      </div>
+    </Modal>
 
     <div class="top_network_info">
       <div class="left_echart radius">
         <span class="trend">XEM行情走势（近7天）</span>
         <span class="right">
-          <span >总市值（CNY）</span>
+          <span>总市值（CNY）</span>
           <span class="black">836,341,288.11</span>
 
         </span>
@@ -61,7 +62,6 @@
           </div>
         </TabPane>
 
-
         <TabPane :label="unConfirmedTxTit" name="name2">
           <div class="confirmed_transactions">
             <div class="table_head">
@@ -84,9 +84,7 @@
           </div>
         </TabPane>
       </Tabs>
-
     </div>
-
   </div>
 </template>
 
@@ -122,36 +120,36 @@
         ]
         transactionDetails = [
             {
-                key:'转账类型',
-                value:'收款'
+                key: '转账类型',
+                value: '收款'
             },
             {
-                key:'来自',
-                value:'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
+                key: '来自',
+                value: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
             },
             {
-                key:'目标',
-                value:'Test wallet'
+                key: '目标',
+                value: 'Test wallet'
             },
             {
-                key:'量',
-                value:'10.000000XEM'
+                key: '量',
+                value: '10.000000XEM'
             },
             {
-                key:'费用',
-                value:'0.050000000XEM'
+                key: '费用',
+                value: '0.050000000XEM'
             },
             {
-                key:'块',
-                value:'1951249'
+                key: '块',
+                value: '1951249'
             },
             {
-                key:'hash',
-                value:'9BBCAECDD5E2D04317DE9873DC99255A9F8A33FA5BB570D1353F65CB31A44151'
+                key: 'hash',
+                value: '9BBCAECDD5E2D04317DE9873DC99255A9F8A33FA5BB570D1353F65CB31A44151'
             },
             {
-                key:'消息',
-                value:'message'
+                key: '消息',
+                value: 'message'
             }
         ]
 
@@ -175,11 +173,10 @@
                 })
             ])
         }
+
         showDialog() {
             this.isShowDialog = true
-            console.log('...........')
         }
-
 
     }
 </script>

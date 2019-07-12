@@ -8,11 +8,19 @@ html {
   height: 100%;
 }
 
+input {
+  background-color: transparent;
+  outline: none;
+}
+input::placeholder {
+  color: #999;
+}
 #app {
   background-color: #eee;
   height: 100%;
   overflow: hidden;
 }
+
 
 .clear::after,
 .clear::before {
@@ -49,8 +57,22 @@ html {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
 textarea {
   border: none;
   outline: none;
   resize: none;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

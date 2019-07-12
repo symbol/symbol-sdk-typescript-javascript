@@ -15,7 +15,7 @@
                 ipcRenderer.send('app', 'max')
             }
             this.$router.push({
-                name: 'dashBoard'
+                name: 'login'
             })
         }
     }

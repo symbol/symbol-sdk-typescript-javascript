@@ -5,7 +5,6 @@ const routers = [
         // @ts-ignore
         component: () => import('@/components/menu-bar/MenuBar.vue'),
         children: [
-
             {
                 path: '/monitorPanel',
                 name: 'monitorPanel',
@@ -37,16 +36,16 @@ const routers = [
                         name: 'receipt',
                         // @ts-ignore
                         component: () => import('@/views/monitor/monitor-receipt/MonitorReceipt.vue')
-                    },{
+                    }, {
                         path: '/remote',
                         name: 'remote',
                         // @ts-ignore
                         component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
                     },
                 ]
-            },{
-                path:'/walletPanel',
-                name:'walletPanel',
+            }, {
+                path: '/walletPanel',
+                name: 'walletPanel',
                 // @ts-ignore
                 component: () => import('@/views/wallet-management/wallet-panel/WalletPanel.vue'),
                 children: [
@@ -60,21 +59,21 @@ const routers = [
                         name: 'walletCreate',
                         // @ts-ignore
                         component: () => import('@/views/wallet-management/wallet-create/WalletCreate.vue')
-                    },{
+                    }, {
                         path: '/WalletCreated',
                         name: 'WalletCreated',
                         // @ts-ignore
                         component: () => import('@/views/wallet-management/wallet-created/WalletCreated.vue')
-                    },{
+                    }, {
                         path: '/walletImport',
                         name: 'walletImport',
                         // @ts-ignore
                         component: () => import('@/views/wallet-management/wallet-import/WalletImport.vue')
                     },
                 ]
-            },{
-                path:'/servicePanel',
-                name:'servicePanel',
+            }, {
+                path: '/servicePanel',
+                name: 'servicePanel',
                 // @ts-ignore
                 component: () => import('@/views/service/service-panel/ServicePanel.vue'),
                 children: [
@@ -83,27 +82,27 @@ const routers = [
                         name: 'onDev',
                         // @ts-ignore
                         component: () => import('@/views/other/onDev/onDev.vue')
-                    },  {
+                    }, {
                         path: '/namespace',
                         name: 'namespace',
                         // @ts-ignore
                         component: () => import('@/views/service/namespace/Namespace.vue')
-                    },  {
+                    }, {
                         path: '/mosaic',
                         name: 'mosaic',
                         // @ts-ignore
                         component: () => import('@/views/service/mosaic/Mosaic.vue')
                     },
                 ]
-            },{
-                path:'/communityPanel',
-                name:'communityPanel',
+            }, {
+                path: '/communityPanel',
+                name: 'communityPanel',
                 // @ts-ignore
                 component: () => import('@/views/community/community-panel/communityPanel.vue'),
                 children: [
                     {
-                        path:'/communityPanel',
-                        name:'communityPanel',
+                        path: '/communityPanel',
+                        name: 'communityPanel',
                         // @ts-ignore
                         component: () => import('@/views/community/information/information.vue')
                     }, {
@@ -111,16 +110,50 @@ const routers = [
                         name: 'information',
                         // @ts-ignore
                         component: () => import('@/views/community/information/information.vue')
-                    },{
+                    }, {
                         path: '/vote',
                         name: 'vote',
                         // @ts-ignore
                         component: () => import('@/views/community/vote/vote.vue')
                     },
                 ]
+            },{
+                path: '/setting',
+                name: 'setting',
+                // @ts-ignore
+                component: () => import('@/views/setting/Setting.vue'),
             }
         ]
     },
+    {
+        path: '/login',
+        name: 'login',
+        component: function () {
+            return import('@/views/login/Login.vue');
+        },
+        children: [
+            {
+                path: '/login',
+                name: 'login',
+                component: function () {
+                    return import('@/views/login/set-account/SetAccount.vue');
+                },
+            },
+            {
+                path: '/checkAccount',
+                name: 'checkAccount',
+                component: function () {
+                    return import('@/views/login/check-account/CheckAccount.vue');
+                },
+            }
+        ]
+    }, {
+        path: '/',
+        name: 'login',
+        component: function () {
+            return import('@/views/login/Login.vue');
+        },
+    }
 ]
 
-export default  routers
+export default routers

@@ -3,6 +3,7 @@
     <Modal
             title="设置金额"
             v-model="isShowDialog"
+            :transfer="false"
             class-name="dash_board_dialog">
       <div class="asset flex_center">
         <span class="title">资产类型</span>

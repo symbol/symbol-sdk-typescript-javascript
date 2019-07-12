@@ -178,7 +178,7 @@
   }
 
   .create_vote {
-    height: 880px;
+    height: 780px;
     width: 100%;
     overflow: scroll;
 
@@ -197,8 +197,8 @@
     }
 
     .value {
-      margin: 20px 0;
-      padding: 18px 40px;
+      margin-bottom: 40px;
+      padding: 18px 20px 18px 40px;
       display: inline-block;
       width: 950px;
       height: 60px;
@@ -218,6 +218,34 @@
       margin: 0 70px 0 0;
     }
 
+    .vote_deadline {
+      position: relative;
+      margin-top: 40px;
+      .select_date {
+        position: absolute;
+        right: -50px;
+        bottom: 40px;
+        .date_selector {
+          display: inline-block;
+          position: relative;
+          right: 20px;
+        }
+
+        .month_value {
+          display: inline-block;
+          position: relative;
+          left: 30px;
+          bottom: 3px;
+
+          img {
+            position: relative;
+            top: 2px;
+          }
+        }
+      }
+    }
+
+
     .vote_describle {
       display: flex;
       flex-direction: row;
@@ -235,9 +263,11 @@
     .vote_selections {
       .title {
         position: relative;
-        top: 65px;
+        top: 35px;
       }
-
+      .button_content {
+        width: 120px;
+      }
       span {
         display: inline-block;
       }
@@ -256,12 +286,21 @@
       }
     }
 
+
+    .vote_vote_type {
+      width: 300px;
+      display: inline-block;
+      margin-left: 150px;
+    }
+    .tips {
+      width: 950px;
+    }
     .create_button {
       width: 200px;
       height: 60px;
       background: rgba(32, 181, 172, 1);
       border-radius: 30px;
-      margin: 0 auto;
+      margin: 50px auto;
       font-size: 16px;
       font-weight: 400;
       color: rgba(255, 255, 255, 1);
