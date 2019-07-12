@@ -117,9 +117,43 @@ var routers = [
                         component: function () { return import('@/views/community/vote/vote.vue'); }
                     },
                 ]
+            }, {
+                path: '/setting',
+                name: 'setting',
+                // @ts-ignore
+                component: function () { return import('@/views/setting/Setting.vue'); },
             }
         ]
     },
+    {
+        path: '/login',
+        name: 'login',
+        component: function () {
+            return import('@/views/login/Login.vue');
+        },
+        children: [
+            {
+                path: '/login',
+                name: 'login',
+                component: function () {
+                    return import('@/views/login/set-account/SetAccount.vue');
+                },
+            },
+            {
+                path: '/checkAccount',
+                name: 'checkAccount',
+                component: function () {
+                    return import('@/views/login/check-account/CheckAccount.vue');
+                },
+            }
+        ]
+    }, {
+        path: '/',
+        name: 'login',
+        component: function () {
+            return import('@/views/login/Login.vue');
+        },
+    }
 ];
 export default routers;
 //# sourceMappingURL=routers.js.map
