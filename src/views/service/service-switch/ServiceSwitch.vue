@@ -42,14 +42,14 @@
                 active:true
             },  {
                 name:'命名空间',
-                to:'/onDev',
+                to:'/namespace',
                 iconDefault:namespace1Icon,
                 iconActive:namespace2Icon,
                 introduce:'命名空间是存储马赛克的域名，每个命名空间在区块链中唯一，可在多层子命名空间上定义和认证马赛克。',
                 active:false
             },  {
                 name:'马赛克',
-                to:'/onDev',
+                to:'/mosaic',
                 iconDefault:mosaic1Icon,
                 iconActive:mosaic2Icon,
                 introduce:'NEM马赛克是具备丰富属性和功能的智能资产。如需创建马赛克，必须为账户置备根命名空间。',
@@ -102,7 +102,7 @@
             this.$router.push({path:item.to})
         }
 
-        created () {
+        mounted () {
             this.toPage(this.serviceFnList[0])
         }
     }

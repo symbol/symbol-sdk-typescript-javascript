@@ -38,7 +38,7 @@
 
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
-    import './checkPWDialog.less';
+    import './CheckPWDialog.less';
     @Component({
         components: {},
     })
