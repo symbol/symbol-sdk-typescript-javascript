@@ -135,7 +135,7 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import PieChart from './PieChart.vue';
-    import CheckPWDialog from '../../../components/checkPW-dialog/checkPWDialog'
+    import CheckPWDialog from '../../../components/checkPW-dialog/CheckPWDialog'
 
     @Component({
             components: {
