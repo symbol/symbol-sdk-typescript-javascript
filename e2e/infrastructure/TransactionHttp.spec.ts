@@ -230,7 +230,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction: MosaicAliasTransaction) => {
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -255,7 +255,7 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 mosaicId,
                 new MosaicId(UInt64.fromUint(0).toDTO()),
-                UInt64.fromUint(9999),
+                UInt64.fromUint(4444),
                 UInt64.fromUint(10),
                 MosaicRestrictionType.GE,
                 UInt64.fromUint(1),
@@ -308,7 +308,6 @@ describe('TransactionHttp', () => {
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
                 done();
             });
-            console.log(SignedTransaction);
             listener.status(account.address).subscribe((error) => {
                 console.log('Error:', error);
                 assert(false);
