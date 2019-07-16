@@ -172,6 +172,21 @@ export class Account {
     }
 
     /**
+     * Sign transaction with cosignatories collected from cosigned transactions and creating a new SignedTransaction
+     * For off chain Aggregated Complete Transaction co-signing.
+     * @param initiatorAccount - Initiator account
+     * @param {CosignatureSignedTransaction[]} cosignatureSignedTransactions - Array of cosigned transaction
+     * @param generationHash - Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @return {SignedTransaction}
+     */
+    public signTransactionGivenSignatures(transaction: AggregateTransaction,
+                                          cosignatureSignedTransactions: CosignatureSignedTransaction[],
+                                          generationHash: string,
+                                          signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
+    return transaction.signTransactionGivenSignatures(this, cosignatureSignedTransactions, generationHash, signSchema);
+    }
+    /**
      * Sign aggregate signature transaction
      * @param cosignatureTransaction - The aggregate signature transaction.
      * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
