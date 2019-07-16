@@ -56,7 +56,7 @@ export class AggregateTransaction extends VerifiableTransaction {
         return signedTransaction;
     }
 
-    signTransactionGivenSignatures(initializer, cosignedSignedTransactions, generationHash, signSchema) {
+    signTransactionGivenSignatures(initializer, cosignedSignedTransactions, generationHash, signSchema = SignSchema.SHA3) {
         const signedTransaction = this.signTransaction(initializer, generationHash, signSchema);
         cosignedSignedTransactions.forEach((cosignedTransaction) => {
             signedTransaction.payload = signedTransaction.payload + cosignedTransaction.signer + cosignedTransaction.signature;
