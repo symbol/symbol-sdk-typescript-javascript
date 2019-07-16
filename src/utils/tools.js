@@ -1,6 +1,7 @@
 import QRCode from 'qrcode'
 import i18n from '../locale/index'
 import Vue from 'vue'
+
 const vueInstance = new Vue({i18n})
 
 
@@ -54,24 +55,23 @@ export const getRelativeTime = timeStamp => {
 export const createQRCode = (txt) => {
   return new Promise((resolve, reject) => {
     QRCode.toDataURL(
-      txt,
-      {errorCorrectionLevel: 'H'},
-      (err, url) => {
-        if (err) {
-          resolve({
-            created: false,
-            url: ''
-          })
-        } else {
-          resolve({
-            created: true,
-            url: url
-          })
-        }
-      })
+        txt,
+        {errorCorrectionLevel: 'H'},
+        (err, url) => {
+          if (err) {
+            resolve({
+              created: false,
+              url: ''
+            })
+          } else {
+            resolve({
+              created: true,
+              url: url
+            })
+          }
+        })
   })
 }
-
 
 
 export const copyTxt = (txt) => {
@@ -85,5 +85,19 @@ export const copyTxt = (txt) => {
     document.body.removeChild(input)
     resolve()
   })
+}
+
+export const formatNumber = (number) => {
+  let floatNumber = number.substr(number.indexOf('.'))
+  let intNumber = number.substr(0, number.indexOf('.'))
+  intNumber = intNumber + ''
+  const len = intNumber.length
+  const time = (len / 3).toFixed(0) - 1
+  intNumber = intNumber.split('').reverse().join('')
+  for (let i = 0; i < time; i++) {
+    intNumber = intNumber.substr(0, i * 3 + 3 + i) + ',' + intNumber.substr(i * 3 + 3 + i)
+  }
+  intNumber = intNumber.split('').reverse().join('')
+  return intNumber + floatNumber
 }
 

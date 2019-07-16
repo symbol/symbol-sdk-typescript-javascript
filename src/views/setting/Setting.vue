@@ -95,7 +95,7 @@
             }
         ]
         currentList = ''
-        isShowDialog = true
+        isShowDialog = false
 
         updatePassword() {
             this.isShowDialog = true

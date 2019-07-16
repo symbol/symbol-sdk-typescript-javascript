@@ -1,6 +1,6 @@
 <template>
   <div class="transaction_content" @click="hideSearchDetail()">
-    <div class="left_container radius">
+    <div class="left_container radius hide_scroll">
       <div class="top_transfer_type">
         <span
                 @click="swicthTransferType(index)"

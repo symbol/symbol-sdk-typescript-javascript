@@ -74,14 +74,6 @@
     background-color: #20B5AC !important;
   }
 
-  .bottom_transactions {
-    .ivu-tabs-ink-bar {
-      margin-left: 50px;
-      width: 30px !important;
-      height: 3px !important;
-
-    }
-  }
 
   .bottom_account_info {
     .ivu-tabs-nav {
@@ -107,11 +99,6 @@
     margin: 0 !important;
   }
 
-  .ivu-badge-count {
-    bottom: 5px !important;
-    background-color: #999999 !important;
-    left: 3px !important;
-  }
 
   .splite_page {
     .ivu-page-item {
@@ -355,7 +342,11 @@
   }
 
   .ivu-carousel-list {
-    height: 1080px;
+    height: 100%;
+    background: linear-gradient(60deg,rgba(42,49,75,1) 0%,rgba(18,155,167,1) 100%);
+    .ivu-carousel-track {
+      height: 100% !important;
+    }
   }
 
   .ivu-carousel-dots li button {
@@ -407,14 +398,51 @@
   .ivu-input {
     padding-left: 40px !important;
   }
+
   .ivu-inpu::placeholder {
   }
-  .ivu-select-single .ivu-select-selection{
+
+  .ivu-select-single .ivu-select-selection {
     padding-left: 30px !important;
   }
-   .ivu-select-single .ivu-select-selection .ivu-select-placeholder{
-     font-size:14px;
-     font-weight:400;
-     color:#999999 !important;
-   }
+
+  .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
+    font-size: 14px;
+    font-weight: 400;
+    color: #999999 !important;
+  }
+}
+
+
+.dash_board_container {
+
+  .bottom_transactions {
+    .ivu-badge {
+      position: absolute;
+
+      .ivu-badge-count {
+        bottom: 5px !important;
+        background-color: #999999 !important;
+        left: 3px !important;
+      }
+    }
+
+    .ivu-tabs-nav {
+      position: relative;
+      right: 15px;
+    }
+
+    .ivu-tabs-tab {
+      text-align: center;
+      padding: 6px 0 !important;
+      width: 150px;
+    }
+
+    .ivu-tabs-ink-bar {
+      width: 30px !important;
+      margin-left: 60px;
+      height: 3px;
+
+    }
+  }
 }

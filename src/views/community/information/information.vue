@@ -1,6 +1,6 @@
 <template>
   <div class="informationWrap">
-    <div class="left  hide_scroll left_article_list">
+    <div class="left  scroll left_article_list">
       <div @click="switchArticle(index)" v-for="(a,index) in articleList"
            :class="['article_summary_item',a.isSelect?'selected':'']">
         <div class="title overflow_ellipsis">{{a.title}}
@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div class="right_article_detail hide_scroll right">
+    <div class="right_article_detail scroll right">
       <div class="title">
         {{currentArticle.title}}
       </div>

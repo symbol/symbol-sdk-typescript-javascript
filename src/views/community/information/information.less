@@ -1,14 +1,15 @@
 .informationWrap {
   width: 1760px;
-  height: 856px;
+  height: calc(100% - 10px);
   background: rgba(255, 255, 255, 1);
   border-radius: 8px;
-  padding: 40px 30px 30px 30px;
+  padding: 40px 30px 20px 30px;
   position: relative;
 
   .left_article_list {
     height: 100%;
     overflow: scroll;
+    padding-right: 15px;
 
     .article_summary_item {
       margin-left: 10px;
@@ -70,10 +71,11 @@
 
   .right_article_detail {
     width: 756px;
-    height: 778px;
+    padding-right: 15px;
+    height: calc(100% - 3px);
     background: rgba(250, 250, 250, 1);
     border-radius: 4px;
-    padding: 39px 70px 39px 41px;
+    padding: 39px 70px 20px 41px;
     overflow: scroll;
     .title {
       font-size: 24px;

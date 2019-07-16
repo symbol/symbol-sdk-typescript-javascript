@@ -1,13 +1,13 @@
 <template>
   <div class="monitor_panel_container">
-    <div class="monitor_panel_left_container">
+    <div class="monitor_panel_left_container" ref="monitorPanelLeftContainer">
       <div class="top_wallet_balance radius">
         <div class="wallet_balance">钱包余额</div>
         <div class="split"></div>
         <div class="XEM_amount"><span>XEM</span><span class="amount">166.000.000000</span></div>
         <div class="exchange">￥ 63.911.64</div>
       </div>
-      <div class="bottom_account_info radius">
+      <div class="bottom_account_info radius" ref="bottomAccountInfo">
         <div v-if="isShowAccountInfo">
 
           <Tabs size="small">
@@ -146,6 +146,21 @@
 
         deleteMosaic(index) {
             this.mosaicList.splice(index, 1)
+        }
+        bottomAccountInfo
+        onResize () {
+            const height = this.$refs['monitorPanelLeftContainer']['clientHeight'] - ( this.$refs['bottomAccountInfo']['offsetTop'] - this.$refs['monitorPanelLeftContainer']['offsetTop'])
+            this.$refs['bottomAccountInfo']['style']['height'] = height + 5 +'px'
+            console.log(height)
+        }
+        mounted() {
+            const that = this
+            window.addEventListener('resize',function () {
+                if(that.$refs['bottomAccountInfo']){
+                    that.onResize()
+                }
+            })
+            that.onResize()
         }
 
         created() {

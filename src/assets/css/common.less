@@ -12,9 +12,11 @@ input {
   background-color: transparent;
   outline: none;
 }
+
 input::placeholder {
   color: #999;
 }
+
 #app {
   background-color: #eee;
   height: 100%;
@@ -43,13 +45,38 @@ input::placeholder {
   border-radius: 8px;
 }
 
-.hide_scroll {
-  overflow-y: scroll;
+.hide_scroll,
+.scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .hide_scroll::-webkit-scrollbar {
   display: none;
+}
 
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: #fdf8f5;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: rgba(77, 194, 191, 1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(77, 194, 191, 1);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: rgba(77, 194, 191, 1);
+  cursor: pointer;
 }
 
 .overflow_ellipsis {
@@ -61,7 +88,7 @@ input::placeholder {
 textarea {
   border: none;
   outline: none;
-  resize: none;
+  resize: none !important;
 }
 
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="dash_board_container">
+  <div class="dash_board_container" ref="dashBoardContainer">
     <Modal
             title="事务详情"
             v-model="isShowDialog"
@@ -22,7 +22,7 @@
         <span class="trend">XEM行情走势（近7天）</span>
         <span class="right">
           <span>总市值（CNY）</span>
-          <span class="black">836,341,288.11</span>
+          <span class="black">{{currentPrice}}</span>
 
         </span>
         <LineChart></LineChart>
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <div class="bottom_transactions radius">
+    <div class="bottom_transactions radius" ref="bottomTransactions">
       <Page class="splite_page" :total="100" show-total/>
       <Tabs size="small">
         <TabPane :label="confirmedTxTit" name="name1">
@@ -48,7 +48,7 @@
               <span class="amount">量</span>
               <span class="date">日期</span>
             </div>
-            <div class="table_body hide_scroll">
+            <div class="table_body hide_scroll" ref="confirmedTableBody">
               <div class="table_item" @click="showDialog" v-for="i in 7">
                 <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
                 <span class="account">fsf-fsf-sdfdsf-fdsf-sdfsdgdfgdfgs-dgsdgdf</span>
@@ -70,7 +70,7 @@
               <span class="amount">量</span>
               <span class="date">日期</span>
             </div>
-            <div class="table_body hide_scroll">
+            <div class="table_body hide_scroll" ref="unconfirmedTableBody">
               <div class="table_item" @click="showDialog" v-for="i in 7">
                 <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
                 <span class="account">fsf-fsf-sdfdsf-fdsf-sdfsdgdfgdfgs-dgsdgdf</span>
@@ -91,6 +91,9 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import LineChart from '@/components/LineChart.vue'
+    import axios from 'axios'
+    import {formatNumber} from '../../../utils/tools.js'
+    import {blockchainInterface} from '../../../interface/sdkBlockchain.ts'
 
     @Component({
         components: {
@@ -99,6 +102,8 @@
     })
     export default class DashBoard extends Vue {
         isShowDialog = false
+        xemNum: number = 8999999999
+        currentPrice: any = 0
         networkStatusList = [
             {
                 icon: '',
@@ -174,10 +179,63 @@
             ])
         }
 
+        onResize() {
+            const height = this.$refs['dashBoardContainer']['clientHeight'] - (this.$refs['bottomTransactions']['offsetTop'] - this.$refs['dashBoardContainer']['offsetTop'])
+            this.$refs['bottomTransactions']['style']['height'] = height - 5 + 'px'
+            this.$refs['confirmedTableBody']['style']['height'] = height - 130 + 'px'
+            this.$refs['unconfirmedTableBody']['style']['height'] = height - 130 + 'px'
+        }
+
         showDialog() {
             this.isShowDialog = true
         }
 
+        async getMarketOpenPrice() {
+            const that = this
+            const url = this.$store.state.app.apiUrl + '/market/kline/xemusdt/1min/1'
+            await axios.get(url).then(function (response) {
+                const result = response.data.data[0]
+                that.currentPrice = formatNumber((result.open * that.xemNum).toFixed(2))
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+
+        getPointInfo() {
+            const that = this
+            const node = 'http://dragon.48gh23s.xyz:3000'
+            blockchainInterface.getBlockchainHeight({
+                node
+            }).then((result) => {
+                result.result.blockchainHeight.subscribe((res) => {
+                    const height = Number.parseInt(res.toHex(), 16)
+                    that.networkStatusList[0].data = height
+                    blockchainInterface.getBlockByHeight({
+                        node,
+                        height: height
+                    }).then((blockInfo) => {
+                        blockInfo.result.Block.subscribe((block) => {
+                            that.networkStatusList[3].data = block.numTransactions
+                        })
+                    })
+                })
+            })
+        }
+
+        mounted() {
+            const that = this
+            window.addEventListener('resize', function () {
+                if (that.$refs['dashBoardContainer'] && that.$route.name == 'dashBoard') {
+                    that.onResize()
+                }
+            })
+            that.onResize()
+        }
+
+        created() {
+            this.getMarketOpenPrice()
+            this.getPointInfo()
+        }
     }
 </script>
 

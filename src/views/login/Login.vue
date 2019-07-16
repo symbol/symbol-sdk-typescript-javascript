@@ -25,26 +25,19 @@
   })
   export default class Login extends Vue {
 
-    minWindow() {
-      if (window.require) {
-        var ipcRenderer = window.require('electron').ipcRenderer
-        ipcRenderer.send('min')
-      }
+    closeWindow() {
+      const ipcRenderer = window['electron']['ipcRenderer'];
+      ipcRenderer.send('app', 'quit')
     }
 
     maxWindow() {
-      if (window.require) {
-        var ipcRenderer = window.require('electron').ipcRenderer
-        ipcRenderer.send('max')
-      }
+      const ipcRenderer = window['electron']['ipcRenderer'];
+      ipcRenderer.send('app', 'max')
     }
 
-    closeWindow() {
-      if (window.require) {
-        var ipcRenderer = window.require('electron').ipcRenderer
-        ipcRenderer.send('quit')
-      }
-
+    minWindow() {
+      const ipcRenderer = window['electron']['ipcRenderer'];
+      ipcRenderer.send('app', 'min')
     }
   }
 </script>

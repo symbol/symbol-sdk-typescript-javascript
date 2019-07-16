@@ -1,9 +1,13 @@
 .monitor_panel_container {
   padding: 30px;
   height: 100%;
+  margin-bottom: 30px;
 
+  .monitor_panel_right_container,
   .monitor_panel_left_container {
     height: 100%;
+  }
+  .monitor_panel_left_container {
     float: left;
     margin-right: 30px;
 
@@ -56,6 +60,8 @@
       margin-top: 20px;
       padding: 27px 28px;
       position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
 
         .asset_list {
         width: 24px;
@@ -152,7 +158,9 @@
 
   .monitor_panel_right_container {
     float: right;
-
+    .bottom_router_view {
+      height: 100%;
+    }
     .top_navidator {
       background-color: white;
       width: 1310px;

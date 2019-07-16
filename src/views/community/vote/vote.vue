@@ -14,7 +14,7 @@
 
     <div class="show_exists_vote_list" v-show="voteActionList[0].isSelect">
       <div class="bottom_vote_list">
-        <div class="left  hide_scroll left_article_list">
+        <div class="left  scroll left_article_list">
 
           <div @click="switchVote(index)" v-for="(a,index) in voteList"
                :class="['article_summary_item',a.isSelect?'selected':'']">
@@ -34,7 +34,7 @@
           </div>
         </div>
 
-        <div class="right_article_detail hide_scroll right">
+        <div class="right_article_detail scroll right">
           <div class="initor">
             <span class="blue">发起地址</span>
             <span>  f65sf5s5af65as6df5sa5f6s5f6s5af65sa6f5s6af5s6a5f6f</span>
@@ -60,7 +60,7 @@
         </div>
       </div>
     </div>
-    <div class="create_vote hide_scroll" v-show="!voteActionList[0].isSelect">
+    <div class="create_vote scroll" v-show="!voteActionList[0].isSelect">
 
       <div class="vote_creating_content">
         <div class="vote_title">
@@ -70,7 +70,7 @@
         <div class="vote_describle">
           <span class="title">描述</span>
           <span class="value radius">
-          <textarea placeholder="关于投票内容描述" class="hide_scroll" name="" id="" cols="95" rows="3"></textarea>
+          <textarea placeholder="关于投票内容描述" class="scroll" name="" id="" cols="95" rows="3"></textarea>
         </span>
         </div>
         <div class="vote_selections">
@@ -135,7 +135,7 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import PieChart from './PieChart.vue';
-    import CheckPWDialog from '../../../components/checkPW-dialog/CheckPWDialog.vue'
+    import CheckPWDialog from '../../../components/checkPW-dialog/checkPWDialog.vue'
 
     @Component({
             components: {
@@ -169,6 +169,222 @@
         selectionList = ['1','2']
         voteList = [
             {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: false,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: true,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: true,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: true,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: true,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: true,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: true,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: true,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: true,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: true,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: true,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
+                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                deadline: '2019-05-21 14:00',
+                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                isMultiple: true,
+                selctions: [
+                    {
+                        name: '是',
+                        value: 99
+                    }, {
+                        name: '否',
+                        value: 59
+                    }
+                ],
+                isSelect: false,
+                max: 2,
+            }, {
                 initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
                 vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
                 title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',

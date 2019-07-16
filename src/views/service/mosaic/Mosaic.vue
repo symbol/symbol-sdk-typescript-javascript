@@ -130,7 +130,7 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import EditDialog from '../mosaicEdit-dialog/MosaicEditDialog.vue'
-    import CheckPWDialog from '../../../components/checkPW-dialog/CheckPWDialog.vue'
+    import CheckPWDialog from '../../../components/checkPW-dialog/checkPWDialog.vue'
     import MosaicAliasDialog from '../mosaicAlias-dialog/MosaicAliasDialog.vue'
     import './Mosaic.less';
 

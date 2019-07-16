@@ -1,4 +1,5 @@
 .market_board_container {
+  height: calc(100% - 75px);
   .top_network_info {
     margin: 20px 0;
     height: 480px;
@@ -21,6 +22,8 @@
       .price_info {
         font-size:14px;
         font-weight:400;
+        position: relative;
+        left: 30px;
         color:rgba(153,153,153,1);
       }
       .black {
@@ -29,6 +32,10 @@
       }
       .red {
         color: #F65C5C;
+        margin-left: 10px;
+      }
+      .green {
+        color: green;
         margin-left: 10px;
       }
     }
@@ -48,6 +55,7 @@
           font-size: 16px;
           font-weight: 400;
           color: rgba(32, 181, 172, 1);
+          position: relative;
 
           .select_date {
             position: relative;
@@ -127,10 +135,12 @@
       .bottom_new_transactions {
         height: 400px;
         width: 100%;
+        padding-right: 10px;
 
         .transaction_item {
           border-bottom: 1px solid rgba(238, 238, 238, 1);;
-          padding: 18px 0;
+          padding: 18px 0 ;
+          width: 100%;
           display: flex;
           flex-direction: row;
           align-items: center;
@@ -141,17 +151,19 @@
 
           .bottom {
             white-space: nowrap;
-            font-size: 13px;
+            font-size: 12px;
             padding-left: 12px;
 
           }
 
           .top {
             padding-left: 12px;
+            width: 100px;
             color: #222222;
           }
           .right {
-            margin-left: 18px;
+            margin-left: 0px;
+            position: relative;
           }
 
           img {
@@ -165,7 +177,7 @@
 
   .bottom_transactions {
     width: 1310px;
-    height: 356px;
+    height: calc(100% - 500px);
     position: relative;
     font-size:14px;
 
@@ -173,7 +185,7 @@
     .right_sell {
       background-color: white;
       width: 645px;
-      height: 356px;
+      height: 100%;
       padding: 29px 31px;
 
       .transfer_action {
@@ -274,4 +286,15 @@
       float: right;
     }
   }
+}
+
+.coin_amount {
+  position: relative;
+  right: 10px;
+  text-align: right;
+}
+.coin_cost {
+  position: relative;
+  right: 10px;
+  text-align: right;
 }

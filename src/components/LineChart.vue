@@ -139,12 +139,11 @@
             }
             this.spinShow = false
             dataList.sort((a, b) => {
-                return a.high > b.high ? 1 : -1
+                return a.open > b.open ? 1 : -1
             })
-            const low = dataList[0].high
-            const high = dataList[dataList.length - 1].high
-            const min = (low - (high - low) / 2).toFixed(3)
-            console.log(low, high)
+            const low = dataList[0].open
+            const open = dataList[dataList.length - 1].open
+            const min = (low - (open - low) / 2).toFixed(3)
 
             dataList.sort((a, b) => {
                 return a.id > b.id ? 1 : -1
@@ -153,7 +152,7 @@
             dataList = dataList.map(item => {
                 let i: any = {}
                 xAxisData.push(item.id * 1000)
-                return item.high
+                return item.open
             })
             this.option.series[0].data = dataList
             this.option.xAxis[0].data = xAxisData
@@ -165,7 +164,6 @@
         async getChartData() {
             const that = this
             const url = this.$store.state.app.apiUrl + '/market/kline/xemusdt/4hour/42'
-            console.log(url);
             await axios.get(url).then(function (response) {
                 that.dataList = response.data.data
                 that.$set(that, 'dataList', response.data.data)

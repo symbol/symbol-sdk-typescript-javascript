@@ -9,6 +9,8 @@
     background-color: transparent;
     outline: none;
     width: 90%;
+    height: 30px;
+    font-size: 20px;
   }
 
   ::-webkit-input-placeholder {
@@ -17,30 +19,30 @@
 }
 
 .left_banner {
-  height: 1080px;
+  height: 100%;
   width: 1120px;
   float: left;
 }
 
 .right_login {
   float: left;
-  height: 1080px;
+  height: 100%;
   width: 800px;
   box-sizing: border-box;
   background-color: #f4f7fe;
+  -webkit-app-region: drag;
 
   .program_controller {
     right: 12px;
     top: 3px;
     position: absolute;
-    -webkit-app-region: drag;
 
     span {
       -webkit-app-region: no-drag;
       display: inline-block;
       margin-left: 10px;
-      width: 9px;
-      height: 9px;
+      width: 18px;
+      height: 18px;
       background-size: contain;
       background-repeat: no-repeat;
     }

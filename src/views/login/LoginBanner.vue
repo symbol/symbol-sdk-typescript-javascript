@@ -23,6 +23,6 @@
 <style scoped lang="less">
   .banner_img {
     width: 1120px;
-    height: 1080px;
+    height: 100%;
   }
 </style>
