@@ -38,11 +38,11 @@
 
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
-    import './checkPWDialog.less';
+    import './CheckPWDialog.less';
     @Component({
         components: {},
     })
-    export default class checkPWDialog extends Vue{
+    export default class CheckPWDialog extends Vue{
         stepIndex = 0
         show = false
         wallet = {

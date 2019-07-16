@@ -21,15 +21,15 @@
         <div class="top_select_conditions">
           <span class="left">全网交易</span>
           <div class="right" v-show="!isShowSearchDetail">
-            <span class="select_date">
-              <div class="month_value">
-                <img src="../../../assets/images/monitor/market/marketCalendar.png" alt="">
-              <span>{{currentMonth}}</span>
-              </div>
+            <!--            <span class="select_date">-->
+            <!--              <div class="month_value">-->
+            <!--                <img src="../../../assets/images/monitor/market/marketCalendar.png" alt="">-->
+            <!--              <span>{{currentMonth}}</span>-->
+            <!--              </div>-->
 
-              <DatePicker @on-change="changeCurrentMonth" type="month" placeholder="" :value="currentMonth"
-                          style="width: 70px"></DatePicker>
-            </span>
+            <!--              <DatePicker @on-change="changeCurrentMonth" type="month" placeholder="" :value="currentMonth"-->
+            <!--                          style="width: 70px"></DatePicker>-->
+            <!--            </span>-->
             <span class="search_input" @click.stop="showSearchDetail">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
             </span>
@@ -43,6 +43,10 @@
           </div>
         </div>
         <div class="bottom_new_transactions  scroll">
+
+          <Spin size="large" class="absolute" fix v-if="recentTransactionList.length <= 0"></Spin>
+
+
           <div class="transaction_item" v-for="r in recentTransactionList">
             <img v-if="r.type == 'XEM'" src="../../../assets/images/monitor/market/marketAssetLogo.png" alt="">
             <img v-if="r.type == 'BTC'" src="../../../assets/images/monitor/market/marketCoinBTC.png" alt="">
@@ -61,7 +65,7 @@
     </div>
 
     <div class="bottom_transactions radius">
-      <div class="left_buy radius hide_scroll">
+      <div class="left_buy radius scroll">
         <div class="transfer_action">
           buy xem
         </div>
@@ -74,7 +78,7 @@
           <div class="right">
             <span class="title">数量</span>
             <span class="value">
-              <input :value="purchaseAmount" type="text">
+              <input v-model="purchaseAmount" type="text">
             </span>
             <span class="update_arrow">
               <img @click="cutPurchaseAmount" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
@@ -84,13 +88,13 @@
           </div>
         </div>
         <div class="clear conversion ">
-          <span>xem <span class="bigger">10.000</span> ≈ ￥{{currentPrice * 10}}</span>
+          <span>xem <span class="bigger">{{purchaseAmount.toFixed(2)}}</span> ≈ ￥{{currentPrice * purchaseAmount}}</span>
         </div>
         <div class="purchase_XEM right">
           <span>buy</span>
         </div>
       </div>
-      <div class="right_sell radius hide_scroll">
+      <div class="right_sell radius scroll">
         <div class="transfer_action">
           sell xem
         </div>
@@ -103,17 +107,17 @@
           <div class="right">
             <span class="title">数量</span>
             <span class="value">
-              <input :value="sellAmount" type="text">
+              <input v-model="sellAmount" type="text">
             </span>
             <span class="update_arrow">
+              <img @click="addSellAmount " src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
               <img @click="cutSellAmount" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
-              <img @click="addSellAmount" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
             </span>
             <span>XEM</span>
           </div>
         </div>
         <div class="clear conversion ">
-          <span>xem <span class="bigger">10.000</span> ≈ ￥{{currentPrice*10}}</span>
+          <span>xem <span class="bigger">{{sellAmount.toFixed(2)}}</span> ≈ ￥{{currentPrice * sellAmount}}</span>
         </div>
         <div class="purchase_XEM right">
           <span>sell</span>
@@ -156,30 +160,33 @@
             this.isShowSearchDetail = false
         }
 
-        searchByasset() {
 
-        }
-
-        addPurchaseAmount() {
-            if (this.purchaseAmount >= 1) {
-                this.purchaseAmount--
-            }
-        }
 
         formatDate(timestamp) {
             return formatDate(timestamp)
         }
 
+        addPurchaseAmount() {
+            if (this.purchaseAmount >= 1) {
+                this.purchaseAmount += 1
+            }
+        }
+
         cutPurchaseAmount() {
-            this.purchaseAmount++
+            this.purchaseAmount -= 1
+        }
+
+        addSellAmount() {
+            this.sellAmount += 1
+        }
+
+
+        cutSellAmount() {
+            this.sellAmount -= 1
         }
 
         changeCurrentMonth(e) {
             this.currentMonth = e
-        }
-
-        cutSellAmount() {
-            this.sellAmount--
         }
 
         async getMarketPrice() {
@@ -218,10 +225,6 @@
             });
         }
 
-        addSellAmount() {
-            this.sellAmount++
-        }
-
         async getMarketOpenPrice() {
             const that = this
             const url = this.$store.state.app.apiUrl + '/market/kline/xemusdt/1min/1'
@@ -232,7 +235,6 @@
                 console.log(error);
             });
         }
-
 
         async getRecentTransactionList() {
             const that = this
@@ -285,7 +287,6 @@
             })
             that.recentTransactionList = recentTransactionList
         }
-
 
         async created() {
             this.getMarketPrice()
