@@ -31,7 +31,7 @@
             <!--                          style="width: 70px"></DatePicker>-->
             <!--            </span>-->
             <span class="search_input" @click.stop="showSearchDetail">
-              <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
+              <img class="pointer" src="../../../assets/images/monitor/market/marketSearch.png" alt="">
             </span>
           </div>
           <div v-show="isShowSearchDetail" class="search_expand">
@@ -39,7 +39,7 @@
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
               <input @click.stop type="text" class="absolute" placeholder="请输入资产类型">
             </span>
-            <span class="search_btn" @click.stop="searchByasset">搜索</span>
+            <span class="search_btn pointer" @click.stop="searchByasset">搜索</span>
           </div>
         </div>
         <div class="bottom_new_transactions  scroll">
@@ -78,19 +78,19 @@
           <div class="right">
             <span class="title">数量</span>
             <span class="value">
-              <input v-model="purchaseAmount" type="text">
+              <input v-model.number="purchaseAmount" type="number">
             </span>
             <span class="update_arrow">
-              <img @click="cutPurchaseAmount" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
-              <img @click="addPurchaseAmount" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+              <img @click="cutPurchaseAmount" class="pointer" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+              <img @click="addPurchaseAmount" class="pointer" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
             </span>
             <span>XEM</span>
           </div>
         </div>
         <div class="clear conversion ">
-          <span>xem <span class="bigger">{{purchaseAmount.toFixed(2)}}</span> ≈ ￥{{currentPrice * purchaseAmount}}</span>
+          <span>xem <span class="bigger">{{Number(purchaseAmount).toFixed(2)}}</span> ≈ ￥{{currentPrice * purchaseAmount}}</span>
         </div>
-        <div class="purchase_XEM right">
+        <div class="purchase_XEM right pointer">
           <span>buy</span>
         </div>
       </div>
@@ -110,16 +110,16 @@
               <input v-model="sellAmount" type="text">
             </span>
             <span class="update_arrow">
-              <img @click="addSellAmount " src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
-              <img @click="cutSellAmount" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+              <img @click="addSellAmount " class="pointer" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+              <img @click="cutSellAmount" class="pointer" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
             </span>
             <span>XEM</span>
           </div>
         </div>
         <div class="clear conversion ">
-          <span>xem <span class="bigger">{{sellAmount.toFixed(2)}}</span> ≈ ￥{{currentPrice * sellAmount}}</span>
+          <span>xem <span class="bigger">{{Number(sellAmount).toFixed(2)}}</span> ≈ ￥{{currentPrice * sellAmount}}</span>
         </div>
-        <div class="purchase_XEM right">
+        <div class="purchase_XEM right pointer">
           <span>sell</span>
         </div>
       </div>
@@ -129,7 +129,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import axios from 'axios'
     import LineChart from '../../../components/LineChart.vue'
     import {formatDate} from '../../../utils/util.js'
@@ -150,7 +150,6 @@
         riseRange: any = 0
         currentPrice: any = 0
         recentTransactionList = []
-
 
         showSearchDetail() {
             this.isShowSearchDetail = true

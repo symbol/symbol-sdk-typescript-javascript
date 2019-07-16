@@ -1,64 +1,77 @@
-.communityPanelWrap{
+.communityPanelWrap {
   box-sizing: border-box;
   width: 100%;
-  height: 100%;
-  .communityPanel{
+  height: calc(100% - 30px);
+
+  .communityPanel {
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
-    padding: 30px;
-    .communityPanelNav{
-      height:60px;
+    height: calc(100% - 30px);
+    margin: 30px;
+    position: relative;
+
+    .communityPanelNav {
+      z-index: 999;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 60px;
+      width: 960px;
       background-color: #fff;
-      border-radius:8px;
-      .navList{
+      border-radius: 8px;
+
+      .navList {
+        width: 960px;
         height: 100%;
-        li{
+
+        li {
           width: 120px;
           height: 100%;
           line-height: 60px;
-          font-size:14px;
+          font-size: 14px;
           text-align: center;
-          font-weight:400;
-          color:#666666;
+          font-weight: 400;
+          color: #666666;
           position: relative;
           cursor: pointer;
         }
-        li:before{
+
+        li:before {
           display: block;
           content: '';
-          width:1Px;
-          height:14px;
-          background:#CCCCCC;
+          width: 1Px;
+          height: 14px;
+          background: #CCCCCC;
           position: absolute;
           left: 0;
           top: 23px;
         }
-        li:first-of-type:before{
+
+        li:first-of-type:before {
           display: none;
         }
-        .active{
-          font-size:16px;
-          font-weight:bold;
-          color:#20B5AC;
+
+        .active {
+          font-size: 16px;
+          font-weight: bold;
+          color: #20B5AC;
         }
-        .active:after{
+
+        .active:after {
           display: block;
           content: '';
-          width:30px;
-          height:4px;
-          background:#4DC2BF;
+          width: 30px;
+          height: 4px;
+          background: #4DC2BF;
           position: absolute;
           bottom: 0;
           left: 45px;
         }
       }
     }
-    .contentPanel{
+
+    .contentPanel {
       height: calc(100% - 80px);
-      background-color: #fff;
-      border-radius:8px;
-      margin-top: 20px;
     }
   }
 }

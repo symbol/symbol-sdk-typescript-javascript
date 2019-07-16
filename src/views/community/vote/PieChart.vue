@@ -68,7 +68,7 @@
     height: 300px;
     position: absolute;
     top: 50px;
-    left: 30px;
+    left: 0;
   }
 
 </style>

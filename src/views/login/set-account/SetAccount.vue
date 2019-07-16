@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="bottom_btn">
-      <div @click="jumpToCheckAccount" class="arrow_login_container">
+      <div @click="jumpToCheckAccount" class="arrow_login_container pointer">
         <img class="absolute" :src="loginArrowLogin" alt="">
       </div>
       <div class="login_tips">登陆即注册</div>

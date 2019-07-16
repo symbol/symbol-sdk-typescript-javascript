@@ -1,165 +1,104 @@
 <template>
   <div class="informationWrap">
-    <div class="left  scroll left_article_list">
-      <div @click="switchArticle(index)" v-for="(a,index) in articleList"
-           :class="['article_summary_item',a.isSelect?'selected':'']">
-        <div class="title overflow_ellipsis">{{a.title}}
+    <div class="left left_article_list radius">
+      <div class="list_container scroll" ref="listContainer" @scroll="automaticLoading">
+        <div @click="switchArticle(index)" v-for="(a,index) in articleList"
+             :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
+          <div class="title overflow_ellipsis">{{a.title}}
+          </div>
+          <div class="summary overflow_ellipsis">{{a.summary}}</div>
+          <div class="other_info">
+            <span class="tag">商业</span>
+            <span class="from">nem</span>
+            <span class="date">2019年7月10日</span>
+          </div>
         </div>
-        <div class="summary overflow_ellipsis">{{a.summary}}</div>
-        <div class="other_info">
-          <span class="tag">商业</span>
-          <span class="from">nem</span>
-          <span class="date">2019年7月10日</span>
-        </div>
+        <div class="load_all_data" v-if="loadAllData">无更多数据</div>
       </div>
+
     </div>
-    <div class="right_article_detail scroll right">
-      <div class="title">
-        {{currentArticle.title}}
-      </div>
-      <div class="other_info">
+    <div class="right_article_detail right radius">
+      <div class="article_container scroll">
+        <div class="title content">
+          {{currentArticle.title}}
+        </div>
+        <div class="other_info content">
         <span class="tag">
           商业/服务
         </span>
-        <span class="from">
-          NEM社区
+          <span class="from">
+          {{currentArticle.author}}
         </span>
-        <span class="date">
-          2019年7月10日
+          <span class="date">
+          {{currentArticle.gtmCreate}}
         </span>
-      </div>
-      <div class="picture">
-        <img src="../../../assets/images/community/article/articleBanner.png" alt="">
-      </div>
-      <div class="artile_content">
-        <pre>{{currentArticle.content}}</pre>
+        </div>
+        <div class="picture content">
+          <img src="../../../assets/images/community/article/articleBanner.png" alt="">
+        </div>
+        <div v-html="currentArticle.content" class="artile_content content">
+        </div>
 
+        <div class="comment">
+          <span class="comment_title"><span class="comment_title_text">评论 </span>(1)</span>
+
+          <div class="input_container">
+            <textarea v-model="commentContent" name="" id=""></textarea>
+            <span class="textarea_text">剩余：{{remainingWords}}字</span>
+          </div>
+
+          <div @click="sendComment" class="send_comment pointer">
+            发表
+          </div>
+
+          <div class="comment_item_content">
+            <div v-for="c in commentList" class="comment_item">
+              <div class="account_name">{{c.nickName == ''? '匿名用户':c.nickName}}</div>
+              <div class="comment_content">{{c.comment}}</div>
+              <div class="comment_time">{{c.gtmCreate}}</div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
+    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"></CheckPWDialog>
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue, Watch} from 'vue-property-decorator'
+    import axios from 'axios'
+    import {formatDate} from '../../../utils/util.js'
+    import CheckPWDialog from '../../../components/checkPW-dialog/CheckPWDialog.vue'
 
-    @Component
+    @Component({
+        components:{
+            CheckPWDialog
+        }
+    })
     export default class information extends Vue {
-        articleList = [
-            {
-                title: '目前在模式下无法读取加密消息并捕获',
-                summary: 'Football正在重新创造一个游戏中的收藏运动卡体验',
-                isSelect: false,
-                content: '亲爱的社区，\n' +
-                    '本月我们一直在忙着迎接即将到来的Catapult今年秋季推出。以下是NEM基金会的最新进展。\n' +
-                    '翻译\n' +
-                    '中国人 - 这里\n' +
-                    '西班牙语 - 这里\n' +
-                    '俄罗斯 - 在这里\n' +
-                    '日本人 - 在这里\n' +
-                    '意大利语 - 这里\n' +
-                    'NEM基金会路线图和弹射器更新2019年6月\n' +
-                    'Catapult开发人员中心正在开发中。它包含工具和知识库，包括教程，文档和示例应用程序，以便开始使用Catapult。Javascript / Typescript和Java SDK正/en/tet'
-            },{
-                title: '目前在模式下无法读取加密消息并捕获',
-                summary: 'Football正在重新创造一个游戏中的收藏运动卡体验',
-                isSelect: false,
-                content: '亲爱的社区，\n' +
-                    '本月我们一直在忙着迎接即将到来的Catapult今年秋季推出。以下是NEM基金会的最新进展。\n' +
-                    '翻译\n' +
-                    '中国人 - 这里\n' +
-                    '西班牙语 - 这里\n' +
-                    '俄罗斯 - 在这里\n' +
-                    '日本人 - 在这里\n' +
-                    '意大利语 - 这里\n' +
-                    'NEM基金会路线图和弹射器更新2019年6月\n' +
-                    'Catapult开发人员中心正在开发中。它包含工具和知识库，包括教程，文档和示例应用程序，以便开始使用Catapult。Javascript / Typescript和Java SDK正/en/tet'
-            },{
-                title: '目前在模式下无法读取加密消息并捕获',
-                summary: 'Football正在重新创造一个游戏中的收藏运动卡体验',
-                isSelect: false,
-                content: '亲爱的社区，\n' +
-                    '本月我们一直在忙着迎接即将到来的Catapult今年秋季推出。以下是NEM基金会的最新进展。\n' +
-                    '翻译\n' +
-                    '中国人 - 这里\n' +
-                    '西班牙语 - 这里\n' +
-                    '俄罗斯 - 在这里\n' +
-                    '日本人 - 在这里\n' +
-                    '意大利语 - 这里\n' +
-                    'NEM基金会路线图和弹射器更新2019年6月\n' +
-                    'Catapult开发人员中心正在开发中。它包含工具和知识库，包括教程，文档和示例应用程序，以便开始使用Catapult。Javascript / Typescript和Java SDK正/en/tet'
-            },{
-                title: '目前在模式下无法读取加密消息并捕获',
-                summary: 'Football正在重新创造一个游戏中的收藏运动卡体验',
-                isSelect: false,
-                content: '亲爱的社区，\n' +
-                    '本月我们一直在忙着迎接即将到来的Catapult今年秋季推出。以下是NEM基金会的最新进展。\n' +
-                    '翻译\n' +
-                    '中国人 - 这里\n' +
-                    '西班牙语 - 这里\n' +
-                    '俄罗斯 - 在这里\n' +
-                    '日本人 - 在这里\n' +
-                    '意大利语 - 这里\n' +
-                    'NEM基金会路线图和弹射器更新2019年6月\n' +
-                    'Catapult开发人员中心正在开发中。它包含工具和知识库，包括教程，文档和示例应用程序，以便开始使用Catapult。Javascript / Typescript和Java SDK正/en/tet'
-            },{
-                title: '目前在模式下无法读取加密消息并捕获',
-                summary: 'Football正在重新创造一个游戏中的收藏运动卡体验',
-                isSelect: false,
-                content: '亲爱的社区，\n' +
-                    '本月我们一直在忙着迎接即将到来的Catapult今年秋季推出。以下是NEM基金会的最新进展。\n' +
-                    '翻译\n' +
-                    '中国人 - 这里\n' +
-                    '西班牙语 - 这里\n' +
-                    '俄罗斯 - 在这里\n' +
-                    '日本人 - 在这里\n' +
-                    '意大利语 - 这里\n' +
-                    'NEM基金会路线图和弹射器更新2019年6月\n' +
-                    'Catapult开发人员中心正在开发中。它包含工具和知识库，包括教程，文档和示例应用程序，以便开始使用Catapult。Javascript / Typescript和Java SDK正/en/tet'
-            },{
-                title: '目前在模式下无法读取加密消息并捕获',
-                summary: 'Football正在重新创造一个游戏中的收藏运动卡体验',
-                isSelect: false,
-                content: '亲爱的社区，\n' +
-                    '本月我们一直在忙着迎接即将到来的Catapult今年秋季推出。以下是NEM基金会的最新进展。\n' +
-                    '翻译\n' +
-                    '中国人 - 这里\n' +
-                    '西班牙语 - 这里\n' +
-                    '俄罗斯 - 在这里\n' +
-                    '日本人 - 在这里\n' +
-                    '意大利语 - 这里\n' +
-                    'NEM基金会路线图和弹射器更新2019年6月\n' +
-                    'Catapult开发人员中心正在开发中。它包含工具和知识库，包括教程，文档和示例应用程序，以便开始使用Catapult。Javascript / Typescript和Java SDK正/en/tet'
-            },{
-                title: '目前在模式下无法读取加密消息并捕获',
-                summary: 'Football正在重新创造一个游戏中的收藏运动卡体验',
-                isSelect: false,
-                content: '亲爱的社区，\n' +
-                    '本月我们一直在忙着迎接即将到来的Catapult今年秋季推出。以下是NEM基金会的最新进展。\n' +
-                    '翻译\n' +
-                    '中国人 - 这里\n' +
-                    '西班牙语 - 这里\n' +
-                    '俄罗斯 - 在这里\n' +
-                    '日本人 - 在这里\n' +
-                    '意大利语 - 这里\n' +
-                    'NEM基金会路线图和弹射器更新2019年6月\n' +
-                    'Catapult开发人员中心正在开发中。它包含工具和知识库，包括教程，文档和示例应用程序，以便开始使用Catapult。Javascript / Typescript和Java SDK正/en/tet'
-            },{
-                title: '目前在模式下无法读取加密消息并捕获',
-                summary: 'Football正在重新创造一个游戏中的收藏运动卡体验',
-                isSelect: false,
-                content: '亲爱的社区，\n' +
-                    '本月我们一直在忙着迎接即将到来的Catapult今年秋季推出。以下是NEM基金会的最新进展。\n' +
-                    '翻译\n' +
-                    '中国人 - 这里\n' +
-                    '西班牙语 - 这里\n' +
-                    '俄罗斯 - 在这里\n' +
-                    '日本人 - 在这里\n' +
-                    '意大利语 - 这里\n' +
-                    'NEM基金会路线图和弹射器更新2019年6月\n' +
-                    'Catapult开发人员中心正在开发中。它包含工具和知识库，包括教程，文档和示例应用程序，以便开始使用Catapult。Javascript / Typescript和Java SDK正/en/tet'
-            }
-        ]
-        currentArticle = {}
+        showCheckPWDialog = false
+        articleList = []
+        currentArticle: any = {
+            title: 'null',
+            content: 'null'
+        }
+        commentContent = ''
+        startPage = 0
+        loadAllData = false
+        commentList = []
+        remainingWords = 300
+
+
+        closeCheckPWDialog () {
+            this.showCheckPWDialog = false
+        }
+
+        checkEnd (flag) {
+            console.log(flag)
+        }
+
         switchArticle(index) {
             let list = this.articleList
             this.currentArticle = list[index]
@@ -170,8 +109,106 @@
             list[index].isSelect = true
             this.articleList = list
         }
-        created() {
+
+        async sendComment() {
+
+            this.showCheckPWDialog = true
+
+            const that = this
+            const comment = this.commentContent
+            const cid = this.currentArticle.cid
+            const address = 'addres stest'
+            const nickName = 'nick nametest'
+            const gtmCreate = formatDate((new Date()).valueOf())
+
+            const url = `${this.$store.state.app.communityUrl}/rest/blog/comment/save?cid=${cid}&comment=${comment}&address=${address}&nickName=${nickName}`
+            console.log(url)
+            await axios.get(url).then(function (response) {
+                console.log(response)
+            })
+            this.onCurrentArticleChange()
+        }
+
+        formatDate(timestamp) {
+            return formatDate(timestamp)
+        }
+
+        switchLanguege() {
+            const abbreviation = this.$store.state.app.local.abbr
+            let languageNumber = 1
+            switch (abbreviation) {
+                case 'zh-CN':
+                    languageNumber = 1;
+                    break;
+                case 'en-US' :
+                    languageNumber = 2;
+                    break;
+            }
+            return languageNumber;
+        }
+
+        automaticLoading(e) {
+            const allHeight = this.$refs.listContainer['scrollHeight']
+            const scrollHeight = this.$refs.listContainer['offsetHeight'] + this.$refs['listContainer']['scrollTop']
+            if (allHeight <= scrollHeight) {
+                this.getArticleByPage()
+            }
+        }
+
+
+        addStartPage() {
+            this.startPage += 1
+        }
+
+
+        async getArticleByPage() {
+
+            if (this.loadAllData) {
+                return
+            }
+            const languageNumber = this.switchLanguege()
+            const that = this
+            const {startPage} = this
+            const url = `${this.$store.state.app.communityUrl}/rest/blog/list?limit=10&offset=${startPage}&language=${languageNumber}`
+            await axios.get(url).then(function (response) {
+                that.articleList = that.articleList.concat(response.data.rows)
+                console.log(response)
+                if (response.data.total <= that.articleList.length) {
+                    that.loadAllData = true
+                }
+            })
+            this.addStartPage()
+        }
+
+        async getComment() {
+            const that = this
+            const cid = this.currentArticle.cid
+            const url = `${this.$store.state.app.communityUrl}/rest/blog/comment/list?cid=${cid}&limit=10&offset=0`
+            await axios.get(url).then(function (response) {
+                that.commentList.push(...response.data.rows)
+                console.log(response)
+            })
+        }
+
+        @Watch('currentArticle')
+        onCurrentArticleChange() {
+            this.commentList = []
+            this.getComment()
+        }
+
+        @Watch('commentContent')
+        onCommentContent(after, before) {
+            this.remainingWords = 300 - this.commentContent.length
+            if (this.commentContent.length > 300) {
+                this.commentContent = before
+            }
+        }
+
+        async created() {
+            const languageNumber = this.switchLanguege()
+            await this.getArticleByPage()
             this.currentArticle = this.articleList[0]
+            const listContainer = this.$refs.listContainer;
         }
 
     }

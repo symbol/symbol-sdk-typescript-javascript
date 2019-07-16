@@ -12,7 +12,7 @@ import i18n from '@/locale';
 Vue.use(iView);
 Vue.use(rem);
 Vue.config.productionTip = false;
-new Vue({
+export default new Vue({
     el: '#app',
     router: router,
     store: store,

@@ -60,7 +60,10 @@
     </div>
     <div class="monitor_panel_right_container">
       <div class="top_navidator radius">
-        <span :class="n.isSelect?'active_navigator':''" @click="switchPanel(index)" v-for="(n,index) in navigatorList">{{n.name}}</span>
+        <span :class="[n.isSelect?'active_navigator':'','pointer','outter_container']" @click="switchPanel(index)" v-for="(n,index) in navigatorList">
+          <span class="inner_container absolute">{{n.name}}</span>
+          <span class="line">|</span>
+        </span>
       </div>
       <div class="bottom_router_view">
         <router-view/>

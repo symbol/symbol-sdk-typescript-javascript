@@ -14,7 +14,7 @@
       忘记密码？查看<span class="see_password_tips">密码提示</span>
     </div>
     <div class="bottom_btn">
-      <div @click="jumpToMonitorPanel" class="arrow_login_container">
+      <div @click="jumpToMonitorPanel" class="arrow_login_container pointer">
         <img class="absolute" src="../../../assets/images/login/loginArrowLogin.png" alt="">
       </div>
     </div>

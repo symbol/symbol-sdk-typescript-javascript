@@ -15,7 +15,7 @@ Vue.use(rem);
 
 Vue.config.productionTip = false
 
-new Vue({
+export default new Vue({
     el:'#app',
     router,
     store,

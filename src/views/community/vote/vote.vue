@@ -1,14 +1,14 @@
 <template>
-  <div class="vote_container">
+  <div class="vote_container radius">
     <div class="top_button">
       <span
               @click="swicthVoteAction(index)"
-              :class="['transaction_btn',t.isSelect?'selected_button':'', t.disabled?'disabled_button':'']"
+              :class="['transaction_btn',t.isSelect?'selected_button':'', t.disabled?'disabled_button':'','pointer']"
               v-for="(t,index) in voteActionList">
         {{t.name}}
         </span>
       <Select v-show="voteActionList[0].isSelect" class="vote_filter" v-model="currentVoteFilter" style="width:100px">
-        <Option v-for="(item,index) in voteFilterList" :value="item.value" :key="index">{{ item.label }}</Option>
+        <Option class="pointer" v-for="(item,index) in voteFilterList" :value="item.value" :key="index">{{ item.label }}</Option>
       </Select>
     </div>
 
@@ -17,7 +17,7 @@
         <div class="left  scroll left_article_list">
 
           <div @click="switchVote(index)" v-for="(a,index) in voteList"
-               :class="['article_summary_item',a.isSelect?'selected':'']">
+               :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
             <div class="left left_info">
               <div class="title overflow_ellipsis">{{a.title}}
               </div>
@@ -34,32 +34,39 @@
           </div>
         </div>
 
-        <div class="right_article_detail scroll right">
-          <div class="initor">
-            <span class="blue">发起地址</span>
-            <span>  f65sf5s5af65as6df5sa5f6s5f6s5af65sa6f5s6af5s6a5f6f</span>
+        <div class="right_article_detail radius  right">
+          <div class="right_container scroll">
+            <div class="initor">
+              <span class="blue">发起地址</span>
+              <span>  f65sf5s5af65as6df5sa5f6s5f6s5af65sa6f5s6af5s6a5f6f</span>
+            </div>
+            <div class="vote_address">
+              <span class="blue">投票地址</span>
+              <span>ad5as4d5a4d5as4d5as5d45asd54sa5d45as4d5as4d5a</span>
+            </div>
+            <div class="title">{{currentVote.title}}</div>
+            <div class="date"><span class="red">截止时间</span><span>2019年7月10日 16:33</span></div>
+            <div class="content">{{currentVote.title}}</div>
+            <div class="selection">
+              <RadioGroup v-model="animal" v-if="!currentVote.isMultiple">
+                <Radio v-for="i in currentVote.selctions" :label="i.name"></Radio>
+              </RadioGroup>
+              <CheckboxGroup v-model="fruit" v-else>
+                <Checkbox v-for="i in currentVote.selctions" :label="i.name"></Checkbox>
+              </CheckboxGroup>
+            </div>
+            <div class="pie_chart">
+              <PieChart :currentVote="currentVote"></PieChart>
+            </div>
+            <div @click="sendVote" class="click_to_vote pointer">
+              确认投票
+            </div>
           </div>
-          <div class="vote_address">
-            <span class="blue">投票地址</span>
-            <span>ad5as4d5a4d5as4d5as5d45asd54sa5d45as4d5as4d5a</span>
-          </div>
-          <div class="title">{{currentVote.title}}</div>
-          <div class="date"><span class="red">截止时间</span><span>2019年7月10日 16:33</span></div>
-          <div class="content">{{currentVote.title}}</div>
-          <div class="selection">
-            <RadioGroup v-model="animal" v-if="!currentVote.isMultiple">
-              <Radio v-for="i in currentVote.selctions" :label="i.name"></Radio>
-            </RadioGroup>
-            <CheckboxGroup v-model="fruit" v-else>
-              <Checkbox v-for="i in currentVote.selctions" :label="i.name"></Checkbox>
-            </CheckboxGroup>
-          </div>
-          <div class="pie_chart">
-            <PieChart :currentVote="currentVote"></PieChart>
-          </div>
+
         </div>
       </div>
     </div>
+
     <div class="create_vote scroll" v-show="!voteActionList[0].isSelect">
 
       <div class="vote_creating_content">
@@ -76,13 +83,14 @@
         <div class="vote_selections">
           <span class="title">选项</span>
           <span class="selection_list right">
-          <div v-for="(s,index) in selectionList">
+          <div class="list_cloumn" v-for="(s,index) in selectionList">
             <span class="value radius">
               <input :value="s" type="text"/>
              </span>
             <span class="button_content">
-              <img src="../../../assets/images/community/vote/voteAdd.png" @click="addSelection()" alt="">
-            <img src="../../../assets/images/community/vote/voteDelete.png" v-if="index !== 0" @click="deleteSelection(index)" alt="">
+              <img src="../../../assets/images/community/vote/voteAdd.png" class="pointer" @click="addSelection()" alt="">
+              <img src="../../../assets/images/community/vote/voteDelete.png" class="pointer" v-if="index !== 0"
+                 @click="deleteSelection(index)" alt="">
             </span>
 
           </div>
@@ -101,14 +109,17 @@
           <span class="value radius">
           <input type="text" :value="deadline" placeholder="输入日期 ISO格式有效日期YYYY-MM DD HH:mm，例如：2019-12-28 14:57">
 
-            <span class="select_date">
-              <div class="month_value">
+            <span class="select_date pointer">
+              <div class="date_container pointer">
+                <div class="month_value pointer">
                 <img src="../../../assets/images/monitor/market/marketCalendar.png" alt="">
               </div>
-              <div class="date_selector">
-                <DatePicker @on-change="changeCurrentMonth" type="datetime" placeholder="" :value="currentMonth"
+              <div class="date_selector pointer">
+                <DatePicker class="pointer" @on-change="changeCurrentMonth" type="datetime" placeholder="" :value="currentMonth"
                             style="width: 70px"></DatePicker>
               </div>
+              </div>
+
             </span>
         </span>
         </div>
@@ -121,14 +132,15 @@
         </div>
         <div class="tips red right">默认为：0.05000XEM，设置的费用越多，处理优先级越高</div>
 
-        <div class="create_button">
+        <div class="create_button pointer">
           创建
         </div>
       </div>
 
     </div>
 
-    <CheckPWDialog :showCheckPWDialog="true" @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"></CheckPWDialog>
+    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
+                   @checkEnd="checkEnd"></CheckPWDialog>
   </div>
 </template>
 
@@ -145,6 +157,7 @@
         }
     )
     export default class information extends Vue {
+        showCheckPWDialog = false
         currentVoteFilter = {}
         voteType = '多选'
         deadline = ''
@@ -166,7 +179,7 @@
                 label: '已结束'
             }
         ]
-        selectionList = ['1','2']
+        selectionList = ['1', '2']
         voteList = [
             {
                 initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
@@ -460,6 +473,7 @@
                 max: 1,
             },
         ]
+        currentMonth = ''
         currentVote = {}
         voteActionList = [
             {
@@ -501,24 +515,32 @@
         addSelection() {
             this.selectionList.push('')
         }
+
         deleteSelection(index) {
             console.log(index)
             console.log(this.selectionList)
-            this.selectionList.splice(index ,1)
+            this.selectionList.splice(index, 1)
             console.log(this.selectionList)
         }
+
         changeCurrentMonth(e) {
             this.deadline = e
         }
+
         created() {
             this.currentVote = this.voteList[0]
             this.currentVoteFilter = '全部'
         }
+
         closeCheckPWDialog() {
             console.log('......closeCheckPWDialog')
         }
-        checkEnd(boolean){
+
+        checkEnd(boolean) {
             console.log(boolean)
+        }
+        sendVote(){
+            this.showCheckPWDialog = true
         }
     }
 </script>

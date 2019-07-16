@@ -4,7 +4,7 @@
       <div class="top_transfer_type">
         <span
                 @click="swicthTransferType(index)"
-                :class="['transaction_btn',t.isSelect?'selected_button':'', t.disabled?'disabled_button':'']"
+                :class="['transaction_btn',t.isSelect?'selected_button':'', t.disabled?'disabled_button':'pointer']"
                 v-for="(t,index) in transferTypeList">{{t.name}}
         </span>
       </div>
@@ -14,7 +14,7 @@
             <span class="title">转账目标</span>
             <span class="value radius flex_center">
               <input type="text">
-              <span>@</span>
+              <span class="pointer">@</span>
             </span>
           </div>
           <div class="asset flex_center">
@@ -41,7 +41,7 @@
             <span>费用</span>
             <span>0.050000xem</span>
           </div>
-          <div class="send_button">
+          <div class="send_button pointer">
             发送
           </div>
         </div>

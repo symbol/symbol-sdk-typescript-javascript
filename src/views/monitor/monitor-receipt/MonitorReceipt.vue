@@ -26,7 +26,7 @@
               <textarea name="" id="" cols="70" rows="4"></textarea>
             </span>
       </div>
-      <div @click="genaerateQR()" class="send_button">
+      <div @click="genaerateQR()" class="send_button pointer">
         生成二维码
       </div>
     </Modal>
@@ -38,9 +38,9 @@
         {{address}}
       </div>
       <div class="qr_button ">
-        <span class="radius" @click="copyAddress">复制地址</span>
-        <span class="radius" @click="showAssetSettingDialog()">设置金额</span>
-        <span class="radius">复制二维码</span>
+        <span class="radius pointer" @click="copyAddress">复制地址</span>
+        <span class="radius pointer" @click="showAssetSettingDialog()">设置金额</span>
+        <span class="radius pointer">复制二维码</span>
       </div>
     </div>
 
@@ -49,7 +49,7 @@
       <div class="top_title">
         <span>收款记录</span>
         <div class="right" v-show="!isShowSearchDetail">
-            <span class="select_date">
+            <span class="select_date pointer">
               <div class="month_value">
                 <img src="../../../assets/images/monitor/market/marketCalendar.png" alt="">
               <span>{{currentMonth}}</span>
@@ -59,7 +59,7 @@
                             style="width: 70px"></DatePicker>
               </div>
             </span>
-          <span class="search_input" @click.stop="showSearchDetail">
+          <span class="search_input pointer" @click.stop="showSearchDetail">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
               <span>搜索</span>
             </span>

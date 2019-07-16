@@ -30,14 +30,14 @@
       <div class="right_net_status radius">
         <div class="panel_name">网络状态</div>
         <div class="network_item radius" v-for="n in networkStatusList">
-          <img src="../../../assets/images/window/windowNetworkItem.png" alt="">
+          <img :src="n.icon" alt="">
           <span class="descript">{{n.descript}}</span>
           <span class="data">{{n.data}}</span>
         </div>
       </div>
     </div>
 
-    <div class="bottom_transactions radius" ref="bottomTransactions">
+    <div class="bottom_transactions radius scroll" ref="bottomTransactions">
       <Page class="splite_page" :total="100" show-total/>
       <Tabs size="small">
         <TabPane :label="confirmedTxTit" name="name1">
@@ -49,7 +49,7 @@
               <span class="date">日期</span>
             </div>
             <div class="table_body hide_scroll" ref="confirmedTableBody">
-              <div class="table_item" @click="showDialog" v-for="i in 7">
+              <div class="table_item pointer" @click="showDialog" v-for="i in 7">
                 <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
                 <span class="account">fsf-fsf-sdfdsf-fdsf-sdfsdgdfgdfgs-dgsdgdf</span>
                 <span class="transfer_type">收款</span>
@@ -71,7 +71,7 @@
               <span class="date">日期</span>
             </div>
             <div class="table_body hide_scroll" ref="unconfirmedTableBody">
-              <div class="table_item" @click="showDialog" v-for="i in 7">
+              <div class="table_item pointer" @click="showDialog" v-for="i in 7">
                 <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
                 <span class="account">fsf-fsf-sdfdsf-fdsf-sdfsdgdfgdfgs-dgsdgdf</span>
                 <span class="transfer_type">收款</span>
@@ -93,7 +93,11 @@
     import LineChart from '@/components/LineChart.vue'
     import axios from 'axios'
     import {formatNumber} from '../../../utils/tools.js'
-    import {blockchainInterface} from '../../../interface/sdkBlockchain.ts'
+    import {blockchainInterface} from '../../../interface/sdkBlockchain'
+    import dashboardBlockHeight from '../../../assets/images/monitor/dash-board/dashboardBlockHeight.png'
+    import dashboardBlockTime from '../../../assets/images/monitor/dash-board/dashboardBlockTime.png'
+    import dashboardPointAmount from '../../../assets/images/monitor/dash-board/dashboardPointAmount.png'
+    import dashboardTransactionAmount from '../../../assets/images/monitor/dash-board/dashboardTransactionAmount.png'
 
     @Component({
         components: {
@@ -106,19 +110,20 @@
         currentPrice: any = 0
         networkStatusList = [
             {
-                icon: '',
+                icon: dashboardBlockHeight,
                 descript: '块高',
                 data: 1978365,
+
             }, {
-                icon: '',
+                icon: dashboardBlockTime,
                 descript: '平均产块时间',
                 data: 12,
             }, {
-                icon: '',
+                icon: dashboardPointAmount,
                 descript: '节点',
                 data: 1,
             }, {
-                icon: '',
+                icon: dashboardTransactionAmount,
                 descript: '交易数',
                 data: 0,
             }

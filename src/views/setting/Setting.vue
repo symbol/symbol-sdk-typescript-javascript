@@ -1,5 +1,5 @@
 <template>
-  <div class="setting_container radius">
+  <div class="setting_container scroll radius">
     <Modal
             title="修改账户密码"
             v-model="isShowDialog"
@@ -64,9 +64,9 @@
           <Input v-model="value" placeholder="请输入新的账户名"/>
         </div>
       </div>
-      <div class="item_container">
+      <div class="item_container pointer">
         <div class="item_title" @click="updatePassword">
-          <span class="left">修改密码</span>
+          <span class="left ">修改密码</span>
           <img class="right" src="../../assets/images/setting/settingUpdatePassword.png" alt="">
         </div>
       </div>

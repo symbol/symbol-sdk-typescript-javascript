@@ -1,7 +1,7 @@
 <template>
     <div class="communityPanelWrap clear">
         <div class="communityPanel">
-            <div class="communityPanelNav">
+            <div class="communityPanelNav left">
                 <ul class="navList clear">
                     <li :class="[item.active?'active':'','left']"
                         v-for="(item,index) in navList"

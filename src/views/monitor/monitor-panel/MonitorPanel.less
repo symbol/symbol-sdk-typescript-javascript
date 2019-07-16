@@ -7,6 +7,7 @@
   .monitor_panel_left_container {
     height: 100%;
   }
+
   .monitor_panel_left_container {
     float: left;
     margin-right: 30px;
@@ -63,7 +64,7 @@
       overflow-y: auto;
       overflow-x: hidden;
 
-        .asset_list {
+      .asset_list {
         width: 24px;
         top: -35px;
         height: 20px;
@@ -112,6 +113,7 @@
           height: 30px;
           margin-right: 15px;
         }
+
         .small_icon {
           width: 20px;
           height: 20px;
@@ -141,15 +143,17 @@
       .harvesting_data {
         .harvesting_item {
           padding: 20px 0;
+
           .top_info {
-            font-size:14px;
-            font-weight:400;
-            color:rgba(34,34,34,1);
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(34, 34, 34, 1);
           }
+
           .bottom_info {
-            font-size:12px;
-            font-weight:400;
-            color:rgba(153,153,153,1);
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(153, 153, 153, 1);
           }
         }
       }
@@ -158,42 +162,69 @@
 
   .monitor_panel_right_container {
     float: right;
+
     .bottom_router_view {
       height: 100%;
     }
+
     .top_navidator {
       background-color: white;
       width: 1310px;
       height: 60px;
 
-      span {
-        padding: 20px 0 8px 0;
-        font-size: 20px;
+      .outter_container {
+        font-size: 16px;
         position: relative;
-        margin: 0 30px;
+        width: 119px;
+        height: 100%;
+        text-align: center;
         display: inline-block;
+      }
+      .outter_container:last-of-type {
+        .line {
+          color: transparent;
+        }
       }
 
       .active_navigator {
+        position: relative;
         font-size: 20px;
         font-weight: bold;
-        color: rgba(32, 181, 172, 1);
-        border-bottom: 3px solid rgba(32, 181, 172, 1);
+        .inner_container {
+          color: rgba(32, 181, 172, 1);
+        }
+      }
+      .inner_container {
+        position: relative;
+        line-height: 60px;
+        padding-bottom: 20px;
       }
 
-      span::after {
-        position: absolute;
-        right: -30px;
-        bottom: 16px;
+      .line {
+        display: inline-block;
         width: 1px;
-        height: 14px;
-        background-color: #222222;
-        display: block;
-        content: '';
+        height: 20px;
+        float: right;
+        line-height: 60px;
+        font-size: 20px;
+        padding-bottom: 20px;
+        color: #ccc;
+        font-weight: normal;
       }
+      .active_navigator {
+        .inner_container:after {
+          background-color: rgba(32, 181, 172, 1);
+          display: block;
+          position: absolute;
+          content: '';
+          bottom: 0;
+          width: 30px;
+          height: 3px;
+          margin-left: 50%;
+          left: -15px;
+          bottom: 0;
+        }
 
-      span:last-child::after {
-        background-color: transparent;
       }
     }
   }
