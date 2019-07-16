@@ -257,7 +257,7 @@ describe('TransactionHttp', () => {
                 new MosaicId(UInt64.fromUint(0).toDTO()),
                 UInt64.fromUint(60641),
                 UInt64.fromUint(0),
-                MosaicRestrictionType.NONE,
+                MosaicRestrictionType.GE,
                 UInt64.fromUint(1),
                 MosaicRestrictionType.GE,
                 NetworkType.MIJIN_TEST,
