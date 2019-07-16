@@ -19,6 +19,7 @@ import {ChronoUnit} from 'js-joda';
 import {keccak_256, sha3_256} from 'js-sha3';
 import {Crypto} from '../../src/core/crypto';
 import { Convert as convert } from '../../src/core/format';
+import { TransactionMapping } from '../../src/core/utils/TransactionMapping';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import { NamespaceHttp } from '../../src/infrastructure/infrastructure';
 import {Listener} from '../../src/infrastructure/Listener';
@@ -44,6 +45,7 @@ import { AccountRestrictionTransaction } from '../../src/model/transaction/Accou
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import {AggregateTransaction} from '../../src/model/transaction/AggregateTransaction';
 import {CosignatureSignedTransaction} from '../../src/model/transaction/CosignatureSignedTransaction';
+import { CosignatureTransaction } from '../../src/model/transaction/CosignatureTransaction';
 import {Deadline} from '../../src/model/transaction/Deadline';
 import { HashLockTransaction } from '../../src/model/transaction/HashLockTransaction';
 import {HashType} from '../../src/model/transaction/HashType';
@@ -1638,6 +1640,67 @@ describe('TransactionHttp', () => {
                 done();
             });
             transactionHttp.announce(secretLockTransaction.signWith(account, generationHash));
+        });
+    });
+
+    describe('SignTransactionGivenSignatures', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('Announce cosign signatures given', (done) => {
+
+            /**
+             * @see https://github.com/nemtech/nem2-sdk-typescript-javascript/issues/112
+             */
+            // AliceAccount: account
+            // BobAccount: account
+
+            const sendAmount = NetworkCurrencyMosaic.createRelative(1000);
+            const backAmount = NetworkCurrencyMosaic.createRelative(1);
+
+            const aliceTransferTransaction = TransferTransaction.create(Deadline.create(), account2.address, [sendAmount],
+                                                                        PlainMessage.create('payout'), NetworkType.MIJIN_TEST);
+            const bobTransferTransaction   = TransferTransaction.create(Deadline.create(), account.address, [backAmount],
+                                                                        PlainMessage.create('payout'), NetworkType.MIJIN_TEST);
+
+            // 01. Alice creates the aggregated tx and sign it. Then payload send to Bob
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
+                [
+                    aliceTransferTransaction.toAggregate(account.publicAccount),
+                    bobTransferTransaction.toAggregate(account2.publicAccount),
+                ],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+
+            const aliceSignedTransaction = aggregateTransaction.signWith(account, generationHash);
+
+            // 02 Bob cosigns the tx and sends it back to Alice
+            const signedTxBob = CosignatureTransaction.signTransactionPayload(account2, aliceSignedTransaction.payload, generationHash);
+
+            // 03. Alice collects the cosignatures, recreate, sign, and announces the transaction
+            const cosignatureSignedTransactions = [
+                new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signer),
+            ];
+            const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
+
+            const signedTransaction = recreatedTx.signTransactionGivenSignatures(account, cosignatureSignedTransactions, generationHash);
+
+            listener.confirmed(account.address).subscribe(() => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
         });
     });
 
