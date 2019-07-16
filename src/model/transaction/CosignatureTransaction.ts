@@ -54,15 +54,19 @@ export class CosignatureTransaction {
      * @param account - The signing account
      * @param payload - off transaction payload (aggregated transaction is unannounced)
      * @param generationHash - Network generation hash
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {CosignatureSignedTransaction}
      */
-    public static signTransactionPayload(account: Account, payload: string, generationHash: string): CosignatureSignedTransaction {
+    public static signTransactionPayload(account: Account,
+                                         payload: string,
+                                         generationHash: string,
+                                         signSchema: SignSchema = SignSchema.SHA3): CosignatureSignedTransaction {
         /**
          * For aggregated complete transaction, cosignatories are gathered off chain announced.
          */
         const transactionHash = VerifiableTransaction.createTransactionHash(payload, Array.from(Convert.hexToUint8(generationHash)));
         const aggregateSignatureTransaction = new CosignaturetransactionLibrary(transactionHash);
-        const signedTransactionRaw = aggregateSignatureTransaction.signCosignatoriesTransaction(account);
+        const signedTransactionRaw = aggregateSignatureTransaction.signCosignatoriesTransaction(account, signSchema);
         return new CosignatureSignedTransaction(signedTransactionRaw.parentHash,
             signedTransactionRaw.signature,
             signedTransactionRaw.signer);
