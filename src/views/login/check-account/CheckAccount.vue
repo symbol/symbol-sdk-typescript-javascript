@@ -29,7 +29,7 @@
 
         jumpToMonitorPanel() {
             this.$router.push({
-                name: 'monitorPanel'
+                name: 'monitorRelogin'
             })
         }
     }

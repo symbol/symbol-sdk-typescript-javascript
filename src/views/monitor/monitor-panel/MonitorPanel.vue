@@ -10,22 +10,22 @@
       <div class="bottom_account_info radius" ref="bottomAccountInfo">
         <div v-if="isShowAccountInfo">
 
-          <Tabs size="small">
+          <Tabs size="small" v-if="!isShowManageMosaicIcon">
             <TabPane label="马赛克" name="name1">
               <img @click="manageMosaicList()" class="asset_list"
                    src="../../../assets/images/monitor/monitorAssetList.png">
-              <div class="mosaic_data" v-for="(m,index) in mosaicList">
+              <!--        all       -->
+              <div >
+                <div class="mosaic_data" v-if="m.show" v-for="(m,index) in mosaicList">
                 <span>
-                    <img @click="deleteMosaic(index)" v-if="isShowManageMosaicIcon" class="small_icon"
-                         src="../../../assets/images/monitor/monitorDelMosaic.png" alt="">
                     <img src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
                 </span>
-
-                <span class="mosaic_name">{{m.name}}</span>
-                <span class="mosaic_value">
+                  <span class="mosaic_name">{{m.name}}</span>
+                  <span class="mosaic_value">
                   <div>{{m.amount}}</div>
-                  <div>{{m.rate}}</div>
+                  <div>￥{{m.rate}}</div>
                 </span>
+                </div>
               </div>
             </TabPane>
             <TabPane label="命名空间" name="name2">
@@ -55,12 +55,37 @@
               </div>
             </TabPane>
           </Tabs>
+
+          <!--        sevral      -->
+          <div v-if="isShowManageMosaicIcon">
+            <div class="asset_setting_tit" @click="isShowManageMosaicIcon = !isShowManageMosaicIcon">
+              <img src="../../../assets/images/monitor/monitorLeftArrow.png" alt="">
+              <span>资产设置</span>
+            </div>
+            <div class="input_outter">
+              <img src="../../../assets/images/monitor/monitorSearchIcon.png" alt="">
+              <input type="text" placeholder="搜索资产名">
+            </div>
+            <div class="mosaic_data" v-for="(m,index) in mosaicList">
+                <span>
+                    <img @click="m.show=!m.show" class="small_icon"
+                         :src="m.show?monitorSeleted:monitorUnselected" alt="">
+                    <img src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
+                </span>
+              <span class="mosaic_name">{{m.name}}</span>
+              <span class="mosaic_value">
+                  <div>{{m.amount}}</div>
+                  <div>￥{{m.rate}}</div>
+                </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="monitor_panel_right_container">
       <div class="top_navidator radius">
-        <span :class="[n.isSelect?'active_navigator':'','pointer','outter_container']" @click="switchPanel(index)" v-for="(n,index) in navigatorList">
+        <span :class="[n.isSelect?'active_navigator':'','pointer','outter_container']" @click="switchPanel(index)"
+              v-for="(n,index) in navigatorList">
           <span class="inner_container absolute">{{n.name}}</span>
           <span class="line">|</span>
         </span>
@@ -76,10 +101,14 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
+    import monitorSeleted from '../../../assets/images/monitor/monitorSeleted.png'
+    import monitorUnselected from '../../../assets/images/monitor/monitorUnselected.png'
 
     @Component
     export default class DashBoard extends Vue {
 
+        monitorUnselected = monitorUnselected
+        monitorSeleted = monitorSeleted
         navigatorList: any = [
             {
                 name: '仪表盘',
@@ -102,30 +131,32 @@
                 isSelect: false,
                 path: 'remote'
             }]
-        mosaicList = [
-            {
-                name: 'XEM',
-                amount: 0.265874,
-                rate: 30.55
-            },
+        isShowAccountInfo = true;
+        isShowManageMosaicIcon = false
+        mosaicList = [{
+            name: 'XEM',
+            amount: 0.265874,
+            rate: 30.55,
+            show: true
+        },
             {
                 name: 'ETC',
                 amount: 0.265874,
-                rate: 30.55
+                rate: 30.55,
+                show: true
             },
             {
                 name: 'ETH',
                 amount: 0.265874,
-                rate: 30.55
+                rate: 30.55,
+                show: true
             },
             {
                 name: 'BTC',
                 amount: 0.265874,
-                rate: 30.55
-            }
-        ]
-        isShowAccountInfo = true;
-        isShowManageMosaicIcon = false
+                rate: 30.55,
+                show: true
+            }]
 
         switchPanel(index) {
             const list = this.navigatorList.map((item) => {
@@ -147,30 +178,7 @@
             this.isShowManageMosaicIcon = !this.isShowManageMosaicIcon
         }
 
-        deleteMosaic(index) {
-            this.mosaicList.splice(index, 1)
-        }
-        bottomAccountInfo
-        onResize () {
-            const height = this.$refs['monitorPanelLeftContainer']['clientHeight'] - ( this.$refs['bottomAccountInfo']['offsetTop'] - this.$refs['monitorPanelLeftContainer']['offsetTop'])
-            this.$refs['bottomAccountInfo']['style']['height'] = height + 5 +'px'
-            console.log(height)
-        }
-        mounted() {
-            const that = this
-            window.addEventListener('resize',function () {
-                if(that.$refs['bottomAccountInfo']){
-                    that.onResize()
-                }
-            })
-            that.onResize()
-        }
 
-        created() {
-            this.$router.push({
-                name: 'dashBoard'
-            })
-        }
     }
 </script>
 

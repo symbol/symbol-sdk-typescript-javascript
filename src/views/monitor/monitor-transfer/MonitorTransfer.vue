@@ -1,6 +1,6 @@
 <template>
   <div class="transaction_content" @click="hideSearchDetail()">
-    <div class="left_container radius hide_scroll">
+    <div class="left_container radius ">
       <div class="top_transfer_type">
         <span
                 @click="swicthTransferType(index)"
@@ -8,8 +8,8 @@
                 v-for="(t,index) in transferTypeList">{{t.name}}
         </span>
       </div>
-      <div class="bottom_transfer_info">
-        <div class="transfer" v-if="transferTypeList[0].isSelect">
+      <div class="bottom_transfer_info scroll ">
+        <div class="transfer  " v-if="transferTypeList[0].isSelect">
           <div class="address flex_center">
             <span class="title">转账目标</span>
             <span class="value radius flex_center">

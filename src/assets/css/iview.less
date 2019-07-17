@@ -1,4 +1,9 @@
 .app_controller {
+
+  .ivu-select-visible .ivu-select-selection {
+    box-shadow: none;
+  }
+
   .switch_wallet {
     .ivu-select-placeholder,
     .ivu-select-selected-value {
@@ -8,7 +13,14 @@
   }
 
   .switch_language {
+    width: 120px;
+
+    .ivu-select-selected-value {
+      text-align: center;
+    }
+
     .ivu-select-placeholder {
+      text-align: center;
       position: relative;
       top: 1px !important;
       right: 1px !important;
@@ -40,6 +52,19 @@
   .ivu-select-selection {
     border: none !important;
   }
+
+  .bottom_transactions {
+    .ivu-tabs-content-animated {
+      height: calc(100% - 50px)
+    }
+
+    .ivu-tabs-mini,
+    .ivu-tabs-tabpane {
+      height: 100% !important;
+    }
+  }
+
+
 }
 
 .monitor_panel_container,
@@ -68,6 +93,7 @@
   .ivu-tabs-nav .ivu-tabs-tab-active {
     color: #20B5AC !important;
     font-size: 16px !important;
+    font-weight: bold;
 
     span:first-of-type {
       display: inline-block;
@@ -86,6 +112,7 @@
       right: 25px !important;
     }
 
+
     .ivu-tabs-mini .ivu-tabs-tab {
       padding: 0 0 15px 0 !important;
       width: 100px;
@@ -96,7 +123,7 @@
     .ivu-tabs-ink-bar {
       margin-left: 35px;
       width: 30px !important;
-      height: 3px !important;
+      height: 4px !important;
 
     }
   }
@@ -463,8 +490,44 @@
     .ivu-tabs-ink-bar {
       width: 30px !important;
       margin-left: 60px;
-      height: 3px;
+      height: 4px;
 
     }
   }
+}
+
+.bottom_transactions {
+  .ivu-tabs-tab {
+    position: relative;
+  }
+
+  .ivu-tabs-tab:last-child::after {
+    display: block;
+    position: absolute;
+    content: '';
+    width: 1px;
+    height: 14px;
+    background-color: #ccc;
+    left: 0;
+    bottom: 10px;
+  }
+}
+
+.normal_set {
+  .ivu-select-visible .ivu-select-selection {
+    box-shadow: none;
+  }
+
+  .ivu-select-selection {
+    margin-left: 1px;
+    width: 99%;
+    border: none;
+  }
+  .ivu-select-placeholder {
+    font-size:16px;
+    font-weight:400;
+    color:rgba(153,153,153,1) !important;
+    margin-left: 30px;
+  }
+
 }

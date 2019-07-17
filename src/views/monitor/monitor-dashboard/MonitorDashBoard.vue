@@ -1,5 +1,5 @@
 <template>
-  <div class="dash_board_container" ref="dashBoardContainer">
+  <div class="dash_board_container">
     <Modal
             title="事务详情"
             v-model="isShowDialog"
@@ -184,13 +184,6 @@
             ])
         }
 
-        onResize() {
-            const height = this.$refs['dashBoardContainer']['clientHeight'] - (this.$refs['bottomTransactions']['offsetTop'] - this.$refs['dashBoardContainer']['offsetTop'])
-            this.$refs['bottomTransactions']['style']['height'] = height - 5 + 'px'
-            this.$refs['confirmedTableBody']['style']['height'] = height - 130 + 'px'
-            this.$refs['unconfirmedTableBody']['style']['height'] = height - 130 + 'px'
-        }
-
         showDialog() {
             this.isShowDialog = true
         }
@@ -225,16 +218,6 @@
                     })
                 })
             })
-        }
-
-        mounted() {
-            const that = this
-            window.addEventListener('resize', function () {
-                if (that.$refs['dashBoardContainer'] && that.$route.name == 'dashBoard') {
-                    that.onResize()
-                }
-            })
-            that.onResize()
         }
 
         created() {

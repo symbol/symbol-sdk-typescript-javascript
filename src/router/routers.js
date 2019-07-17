@@ -16,7 +16,8 @@ var routers = [
                         name: 'monitorPanel',
                         // @ts-ignore
                         component: function () { return import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'); }
-                    }, {
+                    },
+                    {
                         path: '/dashBoard',
                         name: 'dashBoard',
                         // @ts-ignore
@@ -118,41 +119,60 @@ var routers = [
                     },
                 ]
             }, {
-                path: '/setting',
-                name: 'setting',
+                path: '/settingPanel',
+                name: 'settingPanel',
                 // @ts-ignore
-                component: function () { return import('@/views/setting/Setting.vue'); },
-            }
+                component: function () { return import('@/views/setting/setting-panel/SettingPanel.vue'); },
+                children: [
+                    {
+                        path: '/settingAbout',
+                        name: 'settingAbout',
+                        // @ts-ignore
+                        component: function () { return import('@/views/setting/network-about/SettingAbout.vue'); }
+                    }, {
+                        path: '/settingLock',
+                        name: 'settingLock',
+                        // @ts-ignore
+                        component: function () { return import('@/views/setting/setting-lock/SettingLock.vue'); }
+                    }, {
+                        path: '/settingNetwork',
+                        name: 'settingNetwork',
+                        // @ts-ignore
+                        component: function () { return import('@/views/setting/setting-network/SettingNetwork.vue'); }
+                    }, {
+                        path: '/settingNormal',
+                        name: 'settingNormal',
+                        // @ts-ignore
+                        component: function () { return import('@/views/setting/setting-normal/SettingNormal.vue'); }
+                    }, {
+                        path: '/settingPanel',
+                        name: 'settingPanel',
+                        // @ts-ignore
+                        component: function () { return import('@/views/setting/setting-normal/SettingNormal.vue'); }
+                    },
+                ]
+            }, {
+                path: '/monitorRelogin',
+                name: 'monitorRelogin',
+                // @ts-ignore
+                component: function () { return import('@/views/monitor/monitor-relogin/MonitorRelogin.vue'); },
+            },
         ]
     },
     {
-        path: '/login',
+        path: '/',
         name: 'login',
         component: function () {
-            return import('@/views/login/Login.vue');
+            return import('@/components/menu-bar/MenuBar.vue');
         },
         children: [
             {
                 path: '/login',
                 name: 'login',
-                component: function () {
-                    return import('@/views/login/set-account/SetAccount.vue');
-                },
+                // @ts-ignore
+                component: function () { return import('@/views/monitor/monitor-relogin/MonitorRelogin.vue'); },
             },
-            {
-                path: '/checkAccount',
-                name: 'checkAccount',
-                component: function () {
-                    return import('@/views/login/check-account/CheckAccount.vue');
-                },
-            }
         ]
-    }, {
-        path: '/',
-        name: 'login',
-        component: function () {
-            return import('@/views/login/Login.vue');
-        },
     }
 ];
 export default routers;

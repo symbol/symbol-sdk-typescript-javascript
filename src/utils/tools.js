@@ -88,13 +88,16 @@ export const copyTxt = (txt) => {
 }
 
 export const formatNumber = (number) => {
+  if(number < 1000){
+    return number
+  }
   let floatNumber = number.substr(number.indexOf('.'))
   let intNumber = number.substr(0, number.indexOf('.'))
   intNumber = intNumber + ''
   const len = intNumber.length
   const time = (len / 3).toFixed(0) - 1
   intNumber = intNumber.split('').reverse().join('')
-  for (let i = 0; i < time; i++) {
+  for (let i = 0; i <= time; i++) {
     intNumber = intNumber.substr(0, i * 3 + 3 + i) + ',' + intNumber.substr(i * 3 + 3 + i)
   }
   intNumber = intNumber.split('').reverse().join('')

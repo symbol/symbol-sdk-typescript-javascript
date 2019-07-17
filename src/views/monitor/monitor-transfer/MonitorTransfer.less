@@ -41,9 +41,12 @@
     }
 
     .bottom_transfer_info {
-      padding: 60px 120px 60px 86px;
+      padding: 60px 120px 0 86px;
+      height: calc(100% - 150px);
 
       .transfer {
+        position: relative;
+
         .title {
           display: inline-block;
           width: 80px;
@@ -137,6 +140,7 @@
           left: -100px;
           margin-left: 50%;
           margin-top: 123px;
+          margin-bottom: 20px;
         }
       }
     }
@@ -257,8 +261,8 @@
           display: inline-block;
           margin-left: 15px;
           font-weight: 400;
-          font-size:16px;
-          color:rgba(32,181,172,1);
+          font-size: 16px;
+          color: rgba(32, 181, 172, 1);
           position: relative;
           bottom: 15px;
         }
@@ -267,34 +271,40 @@
 
     .bottom_transfer_record_list {
       padding: 34px 42px;
+
       .transaction_record_item {
         padding: 14px 0;
-        border-bottom: 1px solid rgba(238,238,238,1);
+        border-bottom: 1px solid rgba(238, 238, 238, 1);
         display: flex;
         flex-direction: row;
         align-items: center;
+
         .flex_content {
           margin-left: 20px;
           width: 300px;
+
           .right {
             text-align: right;
           }
         }
+
         img {
-          width:32px;
-          height:32px;
+          width: 32px;
+          height: 32px;
         }
+
         .top {
-          font-size:14px;
-          font-weight:400;
-          color:rgba(34,34,34,1);
+          font-size: 14px;
+          font-weight: 400;
+          color: rgba(34, 34, 34, 1);
           display: block;
         }
+
         .bottom {
           display: block;
-          font-size:12px;
-          font-weight:400;
-          color:rgba(153,153,153,1);
+          font-size: 12px;
+          font-weight: 400;
+          color: rgba(153, 153, 153, 1);
         }
       }
 

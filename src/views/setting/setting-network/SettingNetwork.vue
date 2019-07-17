@@ -1,0 +1,107 @@
+<template>
+  <div class="network_content">
+    <div class="left_point_list left">
+      <ul>
+        <li @click="selectPoint(index)" v-for="(p,index) in pointList"
+            :class="['green_point',' pointer',pointerColorList[index%4],p.isSelected?'selected_point':'']">
+          {{p.name}}
+        </li>
+      </ul>
+
+    </div>
+    <div class="right_set_point left">
+      <ul>
+        <li>
+          Network Name
+          <div class="gray_content">
+            <input class="absolute" type="text" :placeholder="currentPoint.name">
+          </div>
+        </li>
+        <li>
+          New RPC URL
+          <div class="gray_content">
+            <input class="absolute" type="text" :placeholder="currentPoint.rpcUrl">
+          </div>
+        </li>
+        <li>
+          ChainID(optional)
+          <div class="gray_content">
+            <input class="absolute" type="text" :placeholder="currentPoint.chainId">
+          </div>
+        </li>
+        <li>
+          Symbol(optional)
+          <div class="gray_content">
+            <input class="absolute" type="text" :placeholder="currentPoint.symbol">
+          </div>
+        </li>
+        <li>
+          Block Explorer URL（optional）
+          <div class="gray_content">
+            <input class="absolute" type="text" :placeholder="currentPoint.exploerUrl">
+          </div>
+        </li>
+      </ul>
+      <div class="bottom_button">
+        <span class="save_button pointer">保存</span>
+        <span class="cancel_button pointer">取消</span>
+      </div>
+    </div>
+
+
+  </div>
+</template>
+
+<script lang="ts">
+    import {Component, Vue} from 'vue-property-decorator';
+
+    @Component
+    export default class SettingNetwork extends Vue {
+        pointList = [
+            {
+                name: 'NEM私有网络1',
+                rpcUrl: 'Https://12.10.0.10',
+                chainId: 1,
+                symbol: 'XEM',
+                exploerUrl: 'https://nodeexplorer.com/',
+                isSelected:true
+            }, {
+                name: 'NEM主网络',
+                rpcUrl: 'Https://12.10.0.10',
+                chainId: 2,
+                symbol: 'XEM',
+                exploerUrl: 'https://nodeexplorer.com/',
+                isSelected:false
+            },
+            {
+                name: 'NEM主网络',
+                rpcUrl: 'Https://12.10.0.10',
+                chainId: 2,
+                symbol: 'XEM',
+                exploerUrl: 'https://nodeexplorer.com/',
+                isSelected:false
+            }
+        ]
+        currentPoint = {}
+        pointerColorList = ['green_point', 'pink_point', 'purple_point', 'yellow_point']
+
+        selectPoint (index) {
+
+            let list = this.pointList
+            list.map((item) => {
+                item.isSelected = false
+                return item
+            })
+            list[index].isSelected = true
+            this.currentPoint = list[index]
+            this.pointList = list
+        }
+        created() {
+            this.currentPoint = this.pointList[0]
+        }
+
+    }
+</script>
+<style scoped lang="less">
+  @import "SettingNetwork.less";
+</style>

@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="left_navigator">
       <div class="navigator_icon">
-        <div :key="index" :class="[a ? 'active_panel' : '','pointer']" @click="switchPanel(index)"
+        <div :key="index" :class="[a ? 'active_panel' : '',$store.state.app.unClick?'un_click':'pointer']" @click="switchPanel(index)"
              v-for="(a,index) in activePanelList">
           <span :class="['absolute', a ? 'active_icon' : '']"></span>
         </div>
@@ -38,7 +38,7 @@
           </div>
           <div class="switch_wallet">
             <img class="select_wallet_icon" src="../../assets/images/window/windowWalletSelect.png" alt="">
-            <i-select @on-change="switchWallet" :model="currentWallet" placeholder="wallet-1">
+            <i-select @on-change="switchWallet" :model="currentWallet" :placeholder="walletList[0].label">
               <i-option v-for="item in walletList" :value="item.value">{{ item.label }}</i-option>
             </i-select>
           </div>
@@ -68,14 +68,14 @@
                 label: '中文'
             }, {
                 value: 'en-US',
-                label: '英语'
+                label: 'English'
             },
         ]
         currentWallet = ''
         walletList = [
             {
                 value: 'wallet1',
-                label: 'wallet-1'
+                label: 'wallet-1xxxxxxxxxx'
             }, {
                 value: 'wallet12',
                 label: 'wallet-2'
@@ -98,6 +98,9 @@
         }
 
         switchPanel(index) {
+            if(this.$store.state.app.unClick) {
+                return
+            }
             this.$router.push({
                 params: {},
                 name: routers[0].children[index].name
@@ -112,13 +115,13 @@
                 abbr: language,
                 language: this.$store.state.app.localMap[language]
             }
+            this.$i18n.locale = language
             localSave('local', language)
         }
 
         switchWallet(walletNmae) {
             console.log('switch wallet', walletNmae)
         }
-
         created() {
             this.currentLanguage = localRead('local')
         }

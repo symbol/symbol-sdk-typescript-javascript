@@ -1,8 +1,8 @@
 <template>
-    <div class="line_chart_container">
-        <Spin size="large" class="absolute" fix v-if="spinShow"></Spin>
-        <div class="line" id="id" ref="dom"></div>
-    </div>
+  <div class="line_chart_container">
+    <Spin size="large" class="absolute" fix v-if="spinShow"></Spin>
+    <div class="line" id="id" ref="dom"></div>
+  </div>
 
 </template>
 
@@ -18,8 +18,10 @@
         spinShow = true
         option = {
             tooltip: {
+                trigger: 'axis',
                 backgroundColor: 'white',
                 formatter: (params: any) => {
+                    params = params[0]
                     const {dataIndex, value} = params
                     let riseRange: any = 0
                     if (dataIndex !== 0) {
@@ -82,12 +84,15 @@
                 symbolSize: function (parmas) {
                     return 7;
                 },
+                showSymbol: false,
                 areaStyle: {},
                 itemStyle: {
                     normal: {
-                        color: 'transparent',
+                        // color: 'transparent',
+                        color: '#20B5AC',
                         lineStyle: {
-                            color: '#20B5AC'
+                            color: '#20B5AC',
+                            width: 3
                         },
                         areaStyle: {
                             color: {
@@ -129,7 +134,6 @@
         }
 
         refresh() {
-
             this.dom = echarts.init(this.$refs.dom);
             let {dataList} = this
             let xAxisData = []
@@ -167,10 +171,11 @@
             await axios.get(url).then(function (response) {
                 that.dataList = response.data.data
                 that.$set(that, 'dataList', response.data.data)
-                that.refresh()
             }).catch(function (error) {
                 console.log(error);
+                that.getChartData()
             });
+            this.refresh()
         }
 
         async created() {
@@ -179,18 +184,18 @@
     }
 </script>
 <style scoped lang="less">
-    .line_chart_container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-    }
+  .line_chart_container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
 
-    .line {
-        width: 854px;
-        height: 360px;
-        position: absolute;
-        top: 50px;
-        left: 30px;
-    }
+  .line {
+    width: 854px;
+    height: 360px;
+    position: absolute;
+    top: 50px;
+    left: 30px;
+  }
 
 </style>

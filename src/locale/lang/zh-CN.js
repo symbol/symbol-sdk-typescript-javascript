@@ -13,4 +13,6 @@ export default {
     d_ago: '天前',
     month_ago: '个月前',
     year_ago: '年前',
+    english:'英语',
+    chinese:'中文'
 }

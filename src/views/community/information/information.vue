@@ -1,7 +1,7 @@
 <template>
   <div class="informationWrap">
     <div class="left left_article_list radius">
-      <div class="list_container scroll" ref="listContainer" @scroll="automaticLoading">
+      <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticla">
         <div @click="switchArticle(index)" v-for="(a,index) in articleList"
              :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
           <div class="title overflow_ellipsis">{{a.title}}
@@ -18,7 +18,7 @@
 
     </div>
     <div class="right_article_detail right radius">
-      <div class="article_container scroll">
+      <div class="article_container scroll" ref="articleContainer" @scroll="automaticLoadingComment">
         <div class="title content">
           {{currentArticle.title}}
         </div>
@@ -40,7 +40,7 @@
         </div>
 
         <div class="comment">
-          <span class="comment_title"><span class="comment_title_text">评论 </span>(1)</span>
+          <span class="comment_title"><span class="comment_title_text">评论 </span>({{totalComment}})</span>
 
           <div class="input_container">
             <textarea v-model="commentContent" name="" id=""></textarea>
@@ -52,17 +52,21 @@
           </div>
 
           <div class="comment_item_content">
-            <div v-for="c in commentList" class="comment_item">
-              <div class="account_name">{{c.nickName == ''? '匿名用户':c.nickName}}</div>
+            <div v-for="(c,index) in commentList" class="comment_item">
+              <div class="account_name">{{index}}{{c.nickName == ''? '匿名用户':c.nickName}}</div>
               <div class="comment_content">{{c.comment}}</div>
               <div class="comment_time">{{c.gtmCreate}}</div>
             </div>
+            <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">无更多数据</div>
+            <div class="load_all_data" v-if="commentList.length === 0">暂无评论</div>
+
           </div>
 
         </div>
       </div>
     </div>
-    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"></CheckPWDialog>
+    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
+                   @checkEnd="checkEnd"></CheckPWDialog>
   </div>
 </template>
 
@@ -73,7 +77,7 @@
     import CheckPWDialog from '../../../components/checkPW-dialog/CheckPWDialog.vue'
 
     @Component({
-        components:{
+        components: {
             CheckPWDialog
         }
     })
@@ -84,19 +88,29 @@
             title: 'null',
             content: 'null'
         }
+        totalComment = 0
         commentContent = ''
         startPage = 0
+        commentStartPage = 0
         loadAllData = false
         commentList = []
         remainingWords = 300
+        loadAllCommentData = false
 
 
-        closeCheckPWDialog () {
+        closeCheckPWDialog() {
             this.showCheckPWDialog = false
         }
 
-        checkEnd (flag) {
+        checkEnd(flag) {
             console.log(flag)
+        }
+        addArticleStartIndex() {
+            this.startPage += 10
+        }
+
+        addCommentStartIndex(){
+            this.commentStartPage += 10
         }
 
         switchArticle(index) {
@@ -119,9 +133,10 @@
             const cid = this.currentArticle.cid
             const address = 'addres stest'
             const nickName = 'nick nametest'
-            const gtmCreate = formatDate((new Date()).valueOf())
+            // const gtmCreate = formatDate((new Date()).valueOf()).replace('-','/')
+            const gtmCreate = new Date()
 
-            const url = `${this.$store.state.app.communityUrl}/rest/blog/comment/save?cid=${cid}&comment=${comment}&address=${address}&nickName=${nickName}`
+            const url = `${this.$store.state.app.communityUrl}/rest/blog/comment/save?cid=${cid}&comment=${comment}&address=${address}&nickName=${nickName}&gtmCreate=${gtmCreate}`
             console.log(url)
             await axios.get(url).then(function (response) {
                 console.log(response)
@@ -147,7 +162,7 @@
             return languageNumber;
         }
 
-        automaticLoading(e) {
+        automaticLoadingArticla(e) {
             const allHeight = this.$refs.listContainer['scrollHeight']
             const scrollHeight = this.$refs.listContainer['offsetHeight'] + this.$refs['listContainer']['scrollTop']
             if (allHeight <= scrollHeight) {
@@ -155,14 +170,18 @@
             }
         }
 
-
-        addStartPage() {
-            this.startPage += 1
+        automaticLoadingComment() {
+            const allHeight = this.$refs.articleContainer['scrollHeight']
+            const scrollHeight = this.$refs.articleContainer['offsetHeight'] + this.$refs.articleContainer['scrollTop']
+            if (allHeight <= scrollHeight) {
+                this.getCommentByPage()
+            }
         }
 
 
-        async getArticleByPage() {
 
+
+        async getArticleByPage() {
             if (this.loadAllData) {
                 return
             }
@@ -177,23 +196,38 @@
                     that.loadAllData = true
                 }
             })
-            this.addStartPage()
+            this.addArticleStartIndex()
         }
 
-        async getComment() {
+        async getCommentByPage() {
+            if (this.loadAllCommentData) {
+                return
+            }
             const that = this
             const cid = this.currentArticle.cid
-            const url = `${this.$store.state.app.communityUrl}/rest/blog/comment/list?cid=${cid}&limit=10&offset=0`
+            const offset = this.commentStartPage
+            const url = `${this.$store.state.app.communityUrl}/rest/blog/comment/list?cid=${cid}&limit=10&offset=${offset}`
             await axios.get(url).then(function (response) {
                 that.commentList.push(...response.data.rows)
-                console.log(response)
+                that.totalComment = response.data.total
+                if (response.data.total <= that.commentList.length) {
+                    that.loadAllCommentData = true
+                }
             })
+            this.addCommentStartIndex()
+        }
+
+        resetComment() {
+            this.commentList = []
+            this.commentStartPage = 0
+            this.totalComment = 0
+            this.loadAllCommentData = false
         }
 
         @Watch('currentArticle')
         onCurrentArticleChange() {
-            this.commentList = []
-            this.getComment()
+            this.resetComment()
+            this.getCommentByPage()
         }
 
         @Watch('commentContent')

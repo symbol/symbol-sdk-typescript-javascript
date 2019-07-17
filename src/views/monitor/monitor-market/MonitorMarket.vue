@@ -37,14 +37,17 @@
           <div v-show="isShowSearchDetail" class="search_expand">
             <span class="search_container">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
-              <input @click.stop type="text" class="absolute" placeholder="请输入资产类型">
+              <input @click.stop v-model="assetType" type="text" class="absolute" placeholder="请输入资产类型">
             </span>
             <span class="search_btn pointer" @click.stop="searchByasset">搜索</span>
           </div>
         </div>
         <div class="bottom_new_transactions  scroll">
 
-          <Spin size="large" class="absolute" fix v-if="recentTransactionList.length <= 0"></Spin>
+          <Spin size="large" class="absolute" fix
+                v-if="recentTransactionList.length <= 0 && !noTransactionRecord"></Spin>
+
+          <span v-if="noTransactionRecord" class="no_record absolute">暂无任何该货币交易记录</span>
 
 
           <div class="transaction_item" v-for="r in recentTransactionList">
@@ -57,7 +60,7 @@
             </div>
             <div class="right">
               <div class="top coin_amount">{{r.direction === 'sell'? '+':'-'}}{{r.amount.toFixed(6)}}</div>
-              <div class="bottom coin_cost">CNY {{(r.amount * r.price).toFixed(1)}}</div>
+              <div class="bottom coin_cost">CNY {{r.result}}</div>
             </div>
           </div>
         </div>
@@ -67,7 +70,7 @@
     <div class="bottom_transactions radius">
       <div class="left_buy radius scroll">
         <div class="transfer_action">
-          buy xem
+          Buy XEM
         </div>
         <div class="setAmount">
           <div class="left">
@@ -81,14 +84,16 @@
               <input v-model.number="purchaseAmount" type="number">
             </span>
             <span class="update_arrow">
-              <img @click="cutPurchaseAmount" class="pointer" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
-              <img @click="addPurchaseAmount" class="pointer" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+              <img @click="cutPurchaseAmount" class="pointer"
+                   src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+              <img @click="addPurchaseAmount" class="pointer"
+                   src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
             </span>
             <span>XEM</span>
           </div>
         </div>
         <div class="clear conversion ">
-          <span>xem <span class="bigger">{{Number(purchaseAmount).toFixed(2)}}</span> ≈ ￥{{currentPrice * purchaseAmount}}</span>
+          <span>XEM <span class="bigger">{{Number(purchaseAmount).toFixed(2)}}</span> ≈ ￥{{currentPrice * purchaseAmount}}</span>
         </div>
         <div class="purchase_XEM right pointer">
           <span>buy</span>
@@ -96,7 +101,7 @@
       </div>
       <div class="right_sell radius scroll">
         <div class="transfer_action">
-          sell xem
+          Sell XEM
         </div>
         <div class="setAmount">
           <div class="left">
@@ -110,14 +115,17 @@
               <input v-model="sellAmount" type="text">
             </span>
             <span class="update_arrow">
-              <img @click="addSellAmount " class="pointer" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
-              <img @click="cutSellAmount" class="pointer" src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+              <img @click="addSellAmount " class="pointer"
+                   src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+              <img @click="cutSellAmount" class="pointer"
+                   src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
             </span>
             <span>XEM</span>
           </div>
         </div>
         <div class="clear conversion ">
-          <span>xem <span class="bigger">{{Number(sellAmount).toFixed(2)}}</span> ≈ ￥{{currentPrice * sellAmount}}</span>
+          <span>XEM <span
+                  class="bigger">{{Number(sellAmount).toFixed(2)}}</span> ≈ ￥{{currentPrice * sellAmount}}</span>
         </div>
         <div class="purchase_XEM right pointer">
           <span>sell</span>
@@ -133,6 +141,7 @@
     import axios from 'axios'
     import LineChart from '../../../components/LineChart.vue'
     import {formatDate} from '../../../utils/util.js'
+    import {formatNumber} from '../../../utils/tools.js'
 
     @Component({
         components: {
@@ -150,6 +159,8 @@
         riseRange: any = 0
         currentPrice: any = 0
         recentTransactionList = []
+        assetType = ''
+        noTransactionRecord = false
 
         showSearchDetail() {
             this.isShowSearchDetail = true
@@ -159,10 +170,41 @@
             this.isShowSearchDetail = false
         }
 
+        resetTransactionList() {
+            this.recentTransactionList = []
 
+        }
+
+        async searchByasset() {
+            this.resetTransactionList()
+            const upperCase = this.assetType.toLocaleUpperCase()
+            let lowerCase = upperCase.toLowerCase() + 'usdt'
+            const that = this
+            let recentTransactionList = []
+            const url = `${this.$store.state.app.apiUrl}/market/trade/${lowerCase}/50`
+            await axios.get(url).then(function (response) {
+                let result = response.data.data
+                result.map((item) => {
+                    item.data.map((i) => {
+                        i.type = upperCase
+                        i.time = that.formatDate(i.ts)
+                        recentTransactionList.push(i)
+                    })
+                    return item
+                })
+            }).catch(function (error) {
+                console.log(error);
+            });
+            if (recentTransactionList.length == 0) {
+                this.noTransactionRecord = true
+            } else {
+                this.noTransactionRecord = false
+                that.recentTransactionList = recentTransactionList
+            }
+        }
 
         formatDate(timestamp) {
-            return formatDate(timestamp)
+            return formatDate(timestamp).replace(/-/g,'/')
         }
 
         addPurchaseAmount() {
@@ -220,6 +262,7 @@
                 preAverage = (preAverage / 14).toFixed(4)
                 that.riseRange = (((that.averagePrice - preAverage) / preAverage) * 100).toFixed(2)
             }).catch(function (error) {
+                that.getMarketPrice()
                 console.log(error);
             });
         }
@@ -232,6 +275,7 @@
                 that.currentPrice = result
             }).catch(function (error) {
                 console.log(error);
+                that.getMarketOpenPrice()
             });
         }
 
@@ -240,13 +284,15 @@
             const xemUrl = this.$store.state.app.apiUrl + '/market/trade/xemusdt/50'
             const btcUrl = this.$store.state.app.apiUrl + '/market/trade/btcusdt/50'
             const ethUrl = this.$store.state.app.apiUrl + '/market/trade/ethbtc/50'
-            const recentTransactionList = []
+            let recentTransactionList = []
+
             await axios.get(xemUrl).then(function (response) {
                 let result = response.data.data
                 result.map((item) => {
                     item.data.map((i) => {
                         i.type = 'XEM'
                         i.time = that.formatDate(i.ts)
+                        i.result = formatNumber((i.amount * i.price).toFixed(2))
                         recentTransactionList.push(i)
                     })
                     return item
@@ -260,6 +306,7 @@
                     item.data.map((i) => {
                         i.type = 'BTC'
                         i.time = that.formatDate(i.ts)
+                        i.result = formatNumber((i.amount * i.price).toFixed(2))
                         recentTransactionList.push(i)
                     })
                     return item
@@ -273,6 +320,7 @@
                     item.data.map((i) => {
                         i.type = 'ETH'
                         i.time = that.formatDate(i.ts)
+                        i.result = formatNumber((i.amount * i.price).toFixed(2))
                         recentTransactionList.push(i)
                     })
                     return item
@@ -284,7 +332,12 @@
             recentTransactionList.sort((a, b) => {
                 return a.ts > b.ts ? -1 : 1
             })
-            that.recentTransactionList = recentTransactionList
+            if (recentTransactionList.length == 0) {
+                this.noTransactionRecord = true
+            } else {
+                this.noTransactionRecord = false
+                that.recentTransactionList = recentTransactionList
+            }
         }
 
         async created() {

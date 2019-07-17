@@ -2,7 +2,8 @@ declare interface appInfo {
     local: any,
     localMap: any,
     walletList:any[]
-    hasWallet:boolean
+    hasWallet:boolean,
+    unClick:boolean
 }
 export default {
     state: {
@@ -11,10 +12,11 @@ export default {
         local: false,
         localMap: {
             'zh-CN': '中文',
-            'en-US': '英文'
+            'en-US': 'English'
         },
         walletList:[],
-        hasWallet:false
+        hasWallet:false,
+        unClick:true
     },
     getters: {
 

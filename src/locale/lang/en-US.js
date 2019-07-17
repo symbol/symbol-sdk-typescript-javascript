@@ -13,4 +13,6 @@ export default {
     d_ago: 'day ago',
     month_ago: 'month ago',
     year_ago: 'year ago',
+    english:'English',
+    chinese:'Chinese'
 }

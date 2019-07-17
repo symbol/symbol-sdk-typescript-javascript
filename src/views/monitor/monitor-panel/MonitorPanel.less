@@ -2,6 +2,7 @@
   padding: 30px;
   height: 100%;
   margin-bottom: 30px;
+  position: relative;
 
   .monitor_panel_right_container,
   .monitor_panel_left_container {
@@ -56,13 +57,57 @@
 
     .bottom_account_info {
       width: 420px;
-      height: 676px;
+      height: calc(100% - 250px);
       background-color: white;
       margin-top: 20px;
       padding: 27px 28px;
       position: relative;
       overflow-y: auto;
       overflow-x: hidden;
+
+      .asset_setting_tit {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
+        height: 20px;
+        margin-bottom: 30px;
+
+        img {
+          margin-right: 19px;
+          width: 12px;
+          height: 20px;
+        }
+      }
+
+      .input_outter {
+        width: 330px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+
+        img {
+          width: 18px;
+          height: 18px;
+          margin: 0 10px 0 0px;
+        }
+
+        border: 1px solid rgba(238, 238, 238, 1);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        input {
+          border: none;
+          width: 280px;
+
+
+        }
+      }
 
       .asset_list {
         width: 24px;
@@ -94,6 +139,8 @@
         }
 
         .mosaic_value {
+          text-align: right;
+
           div:first-of-type {
             font-size: 14px;
             font-family: MicrosoftYaHei;
@@ -161,7 +208,10 @@
   }
 
   .monitor_panel_right_container {
-    float: right;
+    //float: right;
+    position: absolute;
+    right: 30px;
+    height: calc(100% - 60px);
 
     .bottom_router_view {
       height: 100%;
@@ -180,6 +230,7 @@
         text-align: center;
         display: inline-block;
       }
+
       .outter_container:last-of-type {
         .line {
           color: transparent;
@@ -190,10 +241,12 @@
         position: relative;
         font-size: 20px;
         font-weight: bold;
+
         .inner_container {
           color: rgba(32, 181, 172, 1);
         }
       }
+
       .inner_container {
         position: relative;
         line-height: 60px;
@@ -211,6 +264,7 @@
         color: #ccc;
         font-weight: normal;
       }
+
       .active_navigator {
         .inner_container:after {
           background-color: rgba(32, 181, 172, 1);

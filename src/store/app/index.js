@@ -5,10 +5,11 @@ export default {
         local: false,
         localMap: {
             'zh-CN': '中文',
-            'en-US': '英文'
+            'en-US': 'English'
         },
         walletList: [],
-        hasWallet: false
+        hasWallet: false,
+        unClick: true
     },
     getters: {},
     mutations: {
