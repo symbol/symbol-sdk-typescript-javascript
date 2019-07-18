@@ -3,33 +3,24 @@
 
     <div class="top_network_info">
       <div class="left_echart radius">
-        <span class="trend">XEM行情走势（近7天）</span>
+        <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
         <span class="price_info right">
           <span class="price_item">
-            <span>最高价格</span><span class="black">￥{{highestPricae}}</span>
+            <span>{{$t('highest_price')}}</span><span class="black">￥{{highestPricae}}</span>
           </span>
           <span class="price_item">
-            <span>最低价格</span><span class="black">￥{{lowestPrice}}</span>
+            <span>{{$t('lowest_price')}}</span><span class="black">￥{{lowestPrice}}</span>
           </span>
           <span class="price_item">
-            <span>平均价格</span><span class="black">￥{{averagePrice}}</span><span :class="riseRange < 0 ? 'red':'green'">{{riseRange}}%</span>
+            <span>{{$t('average_price')}}</span><span class="black">￥{{averagePrice}}</span><span :class="riseRange < 0 ? 'red':'green'">{{riseRange}}%</span>
           </span>
         </span>
         <LineChart></LineChart>
       </div>
       <div class="right_net_txs radius">
         <div class="top_select_conditions">
-          <span class="left">全网交易</span>
+          <span class="left">{{$t('whole_network_transaction')}}</span>
           <div class="right" v-show="!isShowSearchDetail">
-            <!--            <span class="select_date">-->
-            <!--              <div class="month_value">-->
-            <!--                <img src="../../../assets/images/monitor/market/marketCalendar.png" alt="">-->
-            <!--              <span>{{currentMonth}}</span>-->
-            <!--              </div>-->
-
-            <!--              <DatePicker @on-change="changeCurrentMonth" type="month" placeholder="" :value="currentMonth"-->
-            <!--                          style="width: 70px"></DatePicker>-->
-            <!--            </span>-->
             <span class="search_input" @click.stop="showSearchDetail">
               <img class="pointer" src="../../../assets/images/monitor/market/marketSearch.png" alt="">
             </span>
@@ -37,9 +28,9 @@
           <div v-show="isShowSearchDetail" class="search_expand">
             <span class="search_container">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
-              <input @click.stop v-model="assetType" type="text" class="absolute" placeholder="请输入资产类型">
+              <input @click.stop v-model="assetType" type="text" class="absolute" :placeholder="$t('please_enter_the_asset_type')">
             </span>
-            <span class="search_btn pointer" @click.stop="searchByasset">搜索</span>
+            <span class="search_btn pointer" @click.stop="searchByasset">{{$t('search')}}</span>
           </div>
         </div>
         <div class="bottom_new_transactions  scroll">
@@ -47,7 +38,7 @@
           <Spin size="large" class="absolute" fix
                 v-if="recentTransactionList.length <= 0 && !noTransactionRecord"></Spin>
 
-          <span v-if="noTransactionRecord" class="no_record absolute">暂无任何该货币交易记录</span>
+          <span v-if="noTransactionRecord" class="no_record absolute">{{$t('no_such_currency_transaction_record_yet')}}</span>
 
 
           <div class="transaction_item" v-for="r in recentTransactionList">
@@ -74,12 +65,12 @@
         </div>
         <div class="setAmount">
           <div class="left">
-            <span class="title">价格</span>
+            <span class="title">{{$t('price')}}</span>
             <span class="value">{{currentPrice}}</span>
             <span>CNY</span>
           </div>
           <div class="right">
-            <span class="title">数量</span>
+            <span class="title">{{$t('quantity')}}</span>
             <span class="value">
               <input v-model.number="purchaseAmount" type="number">
             </span>
@@ -93,7 +84,9 @@
           </div>
         </div>
         <div class="clear conversion ">
-          <span>XEM <span class="bigger">{{Number(purchaseAmount).toFixed(2)}}</span> ≈ ￥{{currentPrice * purchaseAmount}}</span>
+          <span>XEM
+            <span class="bigger">{{Number(purchaseAmount).toFixed(2)}}</span>
+            ≈ ￥{{currentPrice * purchaseAmount}}</span>
         </div>
         <div class="purchase_XEM right pointer">
           <span>buy</span>
@@ -105,12 +98,12 @@
         </div>
         <div class="setAmount">
           <div class="left">
-            <span class="title">价格</span>
+            <span class="title">{{$t('price')}}</span>
             <span class="value">{{currentPrice}}</span>
             <span>CNY</span>
           </div>
           <div class="right">
-            <span class="title">数量</span>
+            <span class="title">{{$t('quantity')}}</span>
             <span class="value">
               <input v-model="sellAmount" type="text">
             </span>
@@ -232,7 +225,7 @@
 
         async getMarketPrice() {
             const that = this
-            const url = this.$store.state.app.apiUrl + '/market/kline/xemusdt/1day/14'
+            const url = this.$store.state.app.marketUrl + '/xemusdt/1day/14'
             await axios.get(url).then(function (response) {
                 const result = response.data.data
                 const currentWeek = result.slice(0, 7)
@@ -262,20 +255,20 @@
                 preAverage = (preAverage / 14).toFixed(4)
                 that.riseRange = (((that.averagePrice - preAverage) / preAverage) * 100).toFixed(2)
             }).catch(function (error) {
-                that.getMarketPrice()
+                // that.getMarketPrice()
                 console.log(error);
             });
         }
 
         async getMarketOpenPrice() {
             const that = this
-            const url = this.$store.state.app.apiUrl + '/market/kline/xemusdt/1min/1'
+            const url = this.$store.state.app.marketUrl + 'xemusdt/1min/1'
             await axios.get(url).then(function (response) {
                 const result = response.data.data[0].open
                 that.currentPrice = result
             }).catch(function (error) {
                 console.log(error);
-                that.getMarketOpenPrice()
+                // that.getMarketOpenPrice()
             });
         }
 

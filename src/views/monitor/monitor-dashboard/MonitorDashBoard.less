@@ -92,53 +92,120 @@
     padding: 24px 31px;
     position: relative;
 
+
     .splite_page {
       position: absolute;
       right: 90px;
       z-index: 999;
+
+      .page_content {
+        display: inline-block;
+        position: relative;
+        top: 10px;
+      }
 
       .ivu-page-item-active {
         border-radius: 50%;
       }
     }
 
+    .label_page {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
+      padding: 0 0 5px 0;
+
+      .page_title {
+        padding: 0 25px 15px 16px;
+        position: relative;
+
+        .transacrion_num {
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          background: rgba(153, 153, 153, 1);
+          color: white;
+          text-align: center;
+          line-height: 20px;
+          right: 0;
+          top: -5px;
+          border-radius: 50%;
+        }
+      }
+
+      .line {
+        margin: 0 5px;
+        color: rgba(204, 204, 204, 1);;
+      }
+
+      .selected {
+        font-size: 16px;
+        position: relative;
+        font-weight: bold;
+        color: rgba(32, 181, 172, 1);
+      }
+
+      .selected::before {
+        position: absolute;
+        display: block;
+        content: '';
+        width: 32px;
+        height: 4px;
+        background: rgba(32, 181, 172, 1);
+        bottom: 0;
+        left: -16px;
+        margin-left: 50%;
+      }
+    }
+
+    .all_transaction {
+      position: relative;
+      height: calc(100% - 100px);
+    }
+
+    span {
+      display: inline-block;
+    }
+
     .active_select {
       border: 2px solid gainsboro;
     }
 
-    .confirmed_transactions {
-      height: 100%;
-
+    .table_head {
       span {
-        display: inline-block;
+        color: #999999;
+        padding: 15px 0;
       }
 
       .account {
-        width: 566px;
+        padding-left: 69px;
       }
+    }
 
-      .transfer_type {
-        width: 180px;
-      }
+    .account {
+      width: 566px;
+    }
 
-      .amount {
-        width: 214px;
-      }
+    .transfer_type {
+      width: 180px;
+    }
 
-      .date {
-        width: 245px;
-      }
+    .amount {
+      width: 214px;
+    }
 
-      .table_head {
-        span {
-          color: #999999;
-          padding: 15px 0;
-        }
+    .date {
+      width: 245px;
+    }
 
-        .account {
-          padding-left: 69px;
-        }
-      }
+    .unconfirmed_transactions,
+    .confirmed_transactions {
+      margin-top: 60px;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+
 
       .table_body {
         padding: 0 0 15px 0;

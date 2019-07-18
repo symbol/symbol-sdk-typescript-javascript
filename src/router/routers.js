@@ -128,7 +128,7 @@ var routers = [
                         path: '/settingAbout',
                         name: 'settingAbout',
                         // @ts-ignore
-                        component: function () { return import('@/views/setting/network-about/SettingAbout.vue'); }
+                        component: function () { return import('@/views/setting/setting-about/SettingAbout.vue'); }
                     }, {
                         path: '/settingLock',
                         name: 'settingLock',

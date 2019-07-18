@@ -1,12 +1,12 @@
 <template>
   <div class="qr_content">
     <Modal
-            title="设置金额"
+            :title="$t('set_amount')"
             v-model="isShowDialog"
             :transfer="false"
             class-name="dash_board_dialog">
       <div class="asset flex_center">
-        <span class="title">资产类型</span>
+        <span class="title">{{$t('asset_type')}}</span>
         <span class="value radius flex_center">
               <Select placeholder="XEM" v-model="assetType" class="asset_type">
               <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -14,20 +14,20 @@
             </span>
       </div>
       <div class="amount flex_center">
-        <span class="title">转账金额</span>
+        <span class="title">{{$t('transfer_amount')}}</span>
         <span class="value radius flex_center">
               <input type="text" v-model="assetAmount">
                   <span class="mosaic_type">xem</span>
         </span>
       </div>
       <div class="remark flex_center">
-        <span class="title">备注</span>
+        <span class="title">{{$t('remarks')}}</span>
         <span class=" textarea_container flex_center value radius ">
               <textarea name="" id="" cols="70" rows="4"></textarea>
             </span>
       </div>
       <div @click="genaerateQR()" class="send_button pointer">
-        生成二维码
+        {{$t('generate_QR_code')}}
       </div>
     </Modal>
 
@@ -38,16 +38,16 @@
         {{address}}
       </div>
       <div class="qr_button ">
-        <span class="radius pointer" @click="copyAddress">复制地址</span>
-        <span class="radius pointer" @click="showAssetSettingDialog()">设置金额</span>
-        <span class="radius pointer">复制二维码</span>
+        <span class="radius pointer" @click="copyAddress">{{$t('copy_address')}}</span>
+        <span class="radius pointer" @click="showAssetSettingDialog()">{{$t('set_amount')}}</span>
+        <span class="radius pointer">{{$t('copy_QR_code')}}</span>
       </div>
     </div>
 
 
     <div class="right_record radius">
       <div class="top_title">
-        <span>收款记录</span>
+        <span>{{$t('collection_record')}}</span>
         <div class="right" v-show="!isShowSearchDetail">
             <span class="select_date pointer">
               <div class="month_value">
@@ -61,16 +61,16 @@
             </span>
           <span class="search_input pointer" @click.stop="showSearchDetail">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
-              <span>搜索</span>
+              <span>{{$t('search')}}</span>
             </span>
         </div>
 
         <div v-show="isShowSearchDetail" class="search_expand">
             <span class="search_container">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
-              <input @click.stop type="text" class="absolute" placeholder="输入资产类型，别名或地址搜索">
+              <input @click.stop type="text" class="absolute" :placeholder="$t('enter_asset_type_alias_or_address_search')">
             </span>
-          <span class="search_btn" @click.stop="searchByasset">搜索</span>
+          <span class="search_btn" @click.stop="searchByasset">{{$t('search')}}</span>
         </div>
 
 
@@ -121,19 +121,19 @@
 
         transferTypeList = [
             {
-                name: '普通转账',
+                name: 'ordinary_transfer',
                 isSelect: true,
                 disabled: false
             }, {
-                name: '多签转账',
+                name: 'Multisign_transfer',
                 isSelect: false,
                 disabled: false
             }, {
-                name: '跨链转账',
+                name: 'crosschain_transfer',
                 isSelect: false,
                 disabled: true
             }, {
-                name: '聚合转账',
+                name: 'aggregate_transfer',
                 isSelect: false,
                 disabled: true
             }
@@ -166,7 +166,7 @@
                 if (codeObj.created) {
                     this.QRCode = codeObj.url
                 } else {
-                    that.$Message.error('二维码生成失败')
+                    that.$Message.error(that['$t']('QR_code_generation_failed'))
                 }
             })
         }

@@ -8,12 +8,12 @@
           </div>
           <div class="summary overflow_ellipsis">{{a.summary}}</div>
           <div class="other_info">
-            <span class="tag">商业</span>
-            <span class="from">nem</span>
-            <span class="date">2019年7月10日</span>
+            <span class="tag">{{$t('business')}}</span>
+            <span class="from">{{a.author}}</span>
+            <span class="date">{{a.gtmCreate}}</span>
           </div>
         </div>
-        <div class="load_all_data" v-if="loadAllData">无更多数据</div>
+        <div class="load_all_data" v-if="loadAllData">{{$t('no_more_data')}}</div>
       </div>
 
     </div>
@@ -24,7 +24,7 @@
         </div>
         <div class="other_info content">
         <span class="tag">
-          商业/服务
+          {{$t('business')}}/{{$t('service')}}
         </span>
           <span class="from">
           {{currentArticle.author}}
@@ -44,21 +44,21 @@
 
           <div class="input_container">
             <textarea v-model="commentContent" name="" id=""></textarea>
-            <span class="textarea_text">剩余：{{remainingWords}}字</span>
+            <span class="textarea_text">{{$t('remaining')}}：{{remainingWords}}{{$t('word')}}</span>
           </div>
 
           <div @click="sendComment" class="send_comment pointer">
-            发表
+            {{$t('publish')}}
           </div>
 
           <div class="comment_item_content">
             <div v-for="(c,index) in commentList" class="comment_item">
-              <div class="account_name">{{index}}{{c.nickName == ''? '匿名用户':c.nickName}}</div>
+              <div class="account_name">{{c.nickName == ''? $t('anonymous_user'):c.nickName}}</div>
               <div class="comment_content">{{c.comment}}</div>
               <div class="comment_time">{{c.gtmCreate}}</div>
             </div>
-            <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">无更多数据</div>
-            <div class="load_all_data" v-if="commentList.length === 0">暂无评论</div>
+            <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">{{$t('no_more_data')}}</div>
+            <div class="load_all_data" v-if="commentList.length === 0">{{$t('no_comment_yet')}}</div>
 
           </div>
 
@@ -105,11 +105,12 @@
         checkEnd(flag) {
             console.log(flag)
         }
+
         addArticleStartIndex() {
             this.startPage += 10
         }
 
-        addCommentStartIndex(){
+        addCommentStartIndex() {
             this.commentStartPage += 10
         }
 
@@ -159,6 +160,7 @@
                     languageNumber = 2;
                     break;
             }
+            console.log(languageNumber)
             return languageNumber;
         }
 
@@ -179,8 +181,6 @@
         }
 
 
-
-
         async getArticleByPage() {
             if (this.loadAllData) {
                 return
@@ -190,7 +190,12 @@
             const {startPage} = this
             const url = `${this.$store.state.app.communityUrl}/rest/blog/list?limit=10&offset=${startPage}&language=${languageNumber}`
             await axios.get(url).then(function (response) {
-                that.articleList = that.articleList.concat(response.data.rows)
+                let articleList = that.articleList.concat(response.data.rows)
+                articleList.map((item) => {
+                    item.summary = item.title
+                    return item
+                })
+                that.articleList = articleList
                 console.log(response)
                 if (response.data.total <= that.articleList.length) {
                     that.loadAllData = true

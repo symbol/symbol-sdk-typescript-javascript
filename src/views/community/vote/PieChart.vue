@@ -19,7 +19,7 @@
             color:['#91C7AE','#61a0a8'],
             series: [
                 {
-                    name: '投票人数',
+                    name: 'vote',
                     type: 'pie',
                     radius: '50%',
                     center: ['50%', '50%'],
@@ -54,6 +54,8 @@
             this.pie.setOption(this.option)
         }
 
+        created(){
+        }
     }
 </script>
 <style scoped lang="less">

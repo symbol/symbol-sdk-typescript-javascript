@@ -1,9 +1,9 @@
 <template>
   <div class="normal_set">
     <ul>
-      <li>隐私政策</li>
-      <li>使用条款</li>
-      <li>关于我们</li>
+      <li>{{$t('privacy_policy')}}</li>
+      <li>{{$t('terms_of_use')}}</li>
+      <li>{{$t('about_us')}}</li>
     </ul>
   </div>
 </template>

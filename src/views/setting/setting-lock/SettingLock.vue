@@ -2,22 +2,24 @@
   <div class="lock_content">
     <ul>
       <li>
-        原密码
+        {{$t('old_password')}}
         <div class="gray_content">
-          <input class="absolute" type="text" placeholder="请输入原始密码">
+          <input class="absolute" type="text" :placeholder="$t('please_enter_the_original_password')">
         </div>
       </li>
       <li>
-        设置密码
-        <div class="tips">本密码用于桌面钱包的锁定，一旦丢失，你将失去进入桌面钱包的权利.</div>
+        {{$t('set_password')}}
+        <div class="tips">
+          {{$t('this_password_is_used_to_lock_the_desktop_wallet_Once_lost_you_will_lose_the_right_to_enter_the_desktop_wallet')}}
+        </div>
         <div class="gray_content">
-          <input class="absolute" type="text" placeholder="请输入新的密码">
+          <input class="absolute" type="text" :placeholder="$t('please_enter_a_new_password')">
         </div>
       </li>
       <li>
-        确认密码
+        {{$t('confirm_password')}}
         <div class="gray_content">
-          <input class="absolute" type="text" placeholder="请再次输入新的密码">
+          <input class="absolute" type="text" :placeholder="$t('please_enter_your_new_password_again')">
         </div>
       </li>
     </ul>
@@ -34,5 +36,5 @@
     }
 </script>
 <style scoped lang="less">
-@import "SettingLock.less";
+  @import "SettingLock.less";
 </style>

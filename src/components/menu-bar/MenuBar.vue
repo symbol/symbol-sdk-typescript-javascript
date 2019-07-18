@@ -61,16 +61,8 @@
     @Component
     export default class Home extends Vue {
         activePanelList = [true, false, false, false, false]
-        currentLanguage = false
-        languageList = [
-            {
-                value: 'zh-CN',
-                label: '中文'
-            }, {
-                value: 'en-US',
-                label: 'English'
-            },
-        ]
+        currentLanguage:any = false
+        languageList = []
         currentWallet = ''
         walletList = [
             {
@@ -115,6 +107,7 @@
                 abbr: language,
                 language: this.$store.state.app.localMap[language]
             }
+            // @ts-ignore
             this.$i18n.locale = language
             localSave('local', language)
         }
@@ -123,7 +116,12 @@
             console.log('switch wallet', walletNmae)
         }
         created() {
+            this.languageList = this.$store.state.app.languageList
             this.currentLanguage = localRead('local')
+            this.$store.state.app.local = {
+                abbr: this.currentLanguage,
+                language: this.$store.state.app.localMap[this.currentLanguage]
+            }
         }
     }
 </script>

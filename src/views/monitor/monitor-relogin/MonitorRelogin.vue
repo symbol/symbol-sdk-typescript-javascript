@@ -3,14 +3,14 @@
     <div class="top_slogan">
       <img src="../../../assets/images/relogin/reloginNemLogo.png" alt="">
       <span>
-        <div class="top">欢迎回到CATAPULT测试版</div>
-        <div class="bottom">这是一个基于CATAPULT的分布式桌面钱包 祝你旅途愉快</div>
+        <div class="top">{{$t('welcome_back_to_the_CATAPULT_beta')}}</div>
+        <div class="bottom">{{$t('this_is_a_distributed_desktop_wallet_based_on_CATAPULT_I_wish_you_a_pleasant_trip')}}</div>
       </span>
     </div>
 
     <div class="middle_icon">
       <div class="icon_content">
-        <div class="icon_item" v-for="i in iconList" @mouseover="changeText(i.text)">
+        <div class="icon_item" v-for="i in iconList" @mouseover="changeText($t(i.text))">
           <img :src="i.icon" alt="">
         </div>
       </div>
@@ -51,28 +51,28 @@
         iconList = [
             {
                 icon: reloginSend,
-                text: '只需1分钟的时间，几乎立即发送和接收XEM !'
+                text: 'send_and_receive_XEM_almost_instantly_in_just_1_minute'
             }, {
                 icon: reloginFile,
-                text: '多重签名账户中提供可编辑的链上协议，是存储资金，实现共有账户的最佳实现方式'
+                text: 'provides_an_editable_chain_on_protocol_in_a_multi_signature_account_which_is_the_best_way_to_store_funds_and_achieve_a_common_account'
             }, {
                 icon: reloginNamespace,
-                text: '命名空间是存储马赛克的域名，每个命名空间在区块链中唯一，可在多层子命名空间上定义和认证马赛克。'
+                text: 'a_namespace_is_a_domain_name_that_stores_mosaics_Each_namespace_is_unique_within_a_blockchain_and_mosaics_can_be_defined_and_authenticated_on_a_multi_level_sub_namespace'
             }, {
                 icon: reloginAsset,
-                text: 'NEM马赛克是具备丰富属性和功能的智能资产。如需创建马赛克，必须为账户置备根命名空间。'
+                text: 'NEM_Mosaic_is_a_smart_asset_with_rich_attributes_and_features_To_create_a_mosaic_you_must_provision_the_root_namespace_for_your_account'
             }, {
                 icon: reloginLink,
-                text: '委托收获是可以实现远程在线“挖矿”而不必保持原账号开启的途径'
+                text: 'entrusted_harvesting_is_a_way_to_achieve_remote_online_mining_without_having_to_keep_the_original_account_open'
             }, {
                 icon: reloginApostille,
-                text: '使用NEM Apostille服务创建区块链公证时间戳,跟踪和审计文件认证状态。'
+                text: 'use_the_NEM_Apostille_service_to_create_blockchain_notarized_timestamps_to_track_and_audit_file_authentication_status'
             }, {
                 icon: reloginAddress,
-                text: '将标签分配给地址以轻松跟踪联系人.'
+                text: 'assign_tags_to_addresses_to_easily_track_contacts.'
             }, {
                 icon: reloginWidgets,
-                text: 'Use Changelly and ShapeShift widgets to buy XEM at the best rates!'
+                text: 'use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates'
             }
         ]
         currentText = ''

@@ -1,7 +1,7 @@
 <template>
   <div class="dash_board_container">
     <Modal
-            title="事务详情"
+            :title="transactionDetail"
             v-model="isShowDialog"
             :transfer="false"
             class-name="dash_board_dialog">
@@ -19,71 +19,77 @@
 
     <div class="top_network_info">
       <div class="left_echart radius">
-        <span class="trend">XEM行情走势（近7天）</span>
+        <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
         <span class="right">
-          <span>总市值（CNY）</span>
+          <span>{{$t('The_total_market_capitalization')}}（CNY）</span>
           <span class="black">{{currentPrice}}</span>
-
         </span>
         <LineChart></LineChart>
       </div>
       <div class="right_net_status radius">
-        <div class="panel_name">网络状态</div>
+        <div class="panel_name">{{$t('network_status')}}</div>
         <div class="network_item radius" v-for="n in networkStatusList">
           <img :src="n.icon" alt="">
-          <span class="descript">{{n.descript}}</span>
+          <span class="descript">{{$t(n.descript)}}</span>
           <span class="data">{{n.data}}</span>
         </div>
       </div>
     </div>
 
     <div class="bottom_transactions radius scroll" ref="bottomTransactions">
-      <Page class="splite_page" :total="100" show-total/>
-      <Tabs size="small">
-        <TabPane :label="confirmedTxTit" name="name1">
-          <div class="confirmed_transactions">
-            <div class="table_head">
-              <span class="account">账户</span>
-              <span class="transfer_type">交易类型</span>
-              <span class="amount">量</span>
-              <span class="date">日期</span>
-            </div>
-            <div class="table_body hide_scroll" ref="confirmedTableBody">
-              <div class="table_item pointer" @click="showDialog" v-for="i in 7">
-                <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
-                <span class="account">fsf-fsf-sdfdsf-fdsf-sdfsdgdfgdfgs-dgsdgdf</span>
-                <span class="transfer_type">收款</span>
-                <span class="amount">+454.511xem</span>
-                <span class="date">2019-09-09 16:13:15</span>
-                <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
-                     class="radius expand_mosaic_info" alt="">
-              </div>
-            </div>
-          </div>
-        </TabPane>
+      <div  class="splite_page">
+        <span>{{$t('total')}} 100 {{$t('data')}}</span>
+        <Page :total="100" class="page_content" />
+      </div>
 
-        <TabPane :label="unConfirmedTxTit" name="name2">
-          <div class="confirmed_transactions">
-            <div class="table_head">
-              <span class="account">账户</span>
-              <span class="transfer_type">交易类型</span>
-              <span class="amount">量</span>
-              <span class="date">日期</span>
-            </div>
-            <div class="table_body hide_scroll" ref="unconfirmedTableBody">
-              <div class="table_item pointer" @click="showDialog" v-for="i in 7">
-                <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
-                <span class="account">fsf-fsf-sdfdsf-fdsf-sdfsdgdfgdfgs-dgsdgdf</span>
-                <span class="transfer_type">收款</span>
-                <span class="amount">+454.511xem</span>
-                <span class="date">2019-09-09 16:13:15</span>
-                <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
-                     class="radius expand_mosaic_info" alt="">
-              </div>
+
+      <div class="label_page">
+        <span @click="showConfirmedTransactions=true" :class="[showConfirmedTransactions?'selected':'','page_title']">{{$t('confirmed_transaction')}}
+          <span class="transacrion_num">3</span>
+        </span>
+        <span class="line">|</span>
+        <span @click="showConfirmedTransactions=false" :class="[showConfirmedTransactions?'':'selected','page_title']">{{$t('unconfirmed_transaction')}}
+          <span class="transacrion_num">3</span>
+        </span>
+      </div>
+
+      <div class="all_transaction">
+        <div class="table_head">
+          <span class="account">{{$t('account')}}</span>
+          <span class="transfer_type">{{$t('transaction_type')}}</span>
+          <span class="amount">{{$t('the_amount')}}</span>
+          <span class="date">{{$t('date')}}</span>
+        </div>
+        <div class="confirmed_transactions" v-if="showConfirmedTransactions">
+
+          <div class="table_body hide_scroll" ref="confirmedTableBody">
+            <div class="table_item pointer" @click="showDialog" v-for="i in 7">
+              <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
+              <span class="account">fsf-fsf-sdfdsf-fdsf-sdfsdgdfgdfgs-dgsdgdf</span>
+              <span class="transfer_type">{{$t('payment')}}</span>
+              <span class="amount">+454.511xem</span>
+              <span class="date">2019-09-09 16:13:15</span>
+              <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
+                   class="radius expand_mosaic_info" alt="">
             </div>
           </div>
-        </TabPane>
-      </Tabs>
+        </div>
+
+        <div class="unconfirmed_transactions" v-if="!showConfirmedTransactions">
+
+          <div class="table_body hide_scroll" ref="unconfirmedTableBody">
+            <div class="table_item pointer" @click="showDialog" v-for="i in 7">
+              <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
+              <span class="account">fsf-fsf-sdfdsf-fdsf-sdfsdgdfgdfgs-dgsdgdf</span>
+              <span class="transfer_type">{{$t('gathering')}}</span>
+              <span class="amount">+454.511xem</span>
+              <span class="date">2019-09-09 16:13:15</span>
+              <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
+                   class="radius expand_mosaic_info" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -106,51 +112,53 @@
     })
     export default class DashBoard extends Vue {
         isShowDialog = false
+        transactionDetail = '交易详情'
         xemNum: number = 8999999999
         currentPrice: any = 0
         networkStatusList = [
             {
                 icon: dashboardBlockHeight,
-                descript: '块高',
+                descript: 'block_height',
                 data: 1978365,
 
             }, {
                 icon: dashboardBlockTime,
-                descript: '平均产块时间',
+                descript: 'average_block_time',
                 data: 12,
             }, {
                 icon: dashboardPointAmount,
-                descript: '节点',
+                descript: 'point',
                 data: 1,
             }, {
                 icon: dashboardTransactionAmount,
-                descript: '交易数',
+                descript: 'number_of_transactions',
                 data: 0,
             }
         ]
+        showConfirmedTransactions = false
         transactionDetails = [
             {
-                key: '转账类型',
-                value: '收款'
+                key: 'transfer_type',
+                value: 'gathering'
             },
             {
-                key: '来自',
+                key: 'from',
                 value: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
             },
             {
-                key: '目标',
+                key: 'aims',
                 value: 'Test wallet'
             },
             {
-                key: '量',
+                key: 'the_amount',
                 value: '10.000000XEM'
             },
             {
-                key: '费用',
+                key: 'fee',
                 value: '0.050000000XEM'
             },
             {
-                key: '块',
+                key: 'block',
                 value: '1951249'
             },
             {
@@ -158,31 +166,10 @@
                 value: '9BBCAECDD5E2D04317DE9873DC99255A9F8A33FA5BB570D1353F65CB31A44151'
             },
             {
-                key: '消息',
+                key: 'message',
                 value: 'message'
             }
         ]
-
-        confirmedTxTit = (h) => {
-            return h('div', [
-                h('span', '已确认事务'),
-                h('Badge', {
-                    props: {
-                        count: 3
-                    }
-                })
-            ])
-        }
-        unConfirmedTxTit = (h) => {
-            return h('div', [
-                h('span', '未确认事务'),
-                h('Badge', {
-                    props: {
-                        count: 3
-                    }
-                })
-            ])
-        }
 
         showDialog() {
             this.isShowDialog = true
@@ -190,7 +177,8 @@
 
         async getMarketOpenPrice() {
             const that = this
-            const url = this.$store.state.app.apiUrl + '/market/kline/xemusdt/1min/1'
+            /////xemusdt/1min/100
+            const url = this.$store.state.app.marketUrl + '/xemusdt/1min/1'
             await axios.get(url).then(function (response) {
                 const result = response.data.data[0]
                 that.currentPrice = formatNumber((result.open * that.xemNum).toFixed(2))

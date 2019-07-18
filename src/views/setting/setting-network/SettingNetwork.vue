@@ -43,8 +43,8 @@
         </li>
       </ul>
       <div class="bottom_button">
-        <span class="save_button pointer">保存</span>
-        <span class="cancel_button pointer">取消</span>
+        <span class="save_button pointer">{{$t('save')}}</span>
+        <span class="cancel_button pointer">{{$t('canel')}}</span>
       </div>
     </div>
 

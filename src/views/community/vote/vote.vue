@@ -8,7 +8,9 @@
         {{t.name}}
         </span>
       <Select v-show="voteActionList[0].isSelect" class="vote_filter" v-model="currentVoteFilter" style="width:100px">
-        <Option class="pointer" v-for="(item,index) in voteFilterList" :value="item.value" :key="index">{{ item.label }}</Option>
+        <Option class="pointer" v-for="(item,index) in voteFilterList" :value="item.value" :key="index">
+          {{ $t(item.label)}}
+        </Option>
       </Select>
     </div>
 
@@ -23,13 +25,13 @@
               </div>
               <div class="summary overflow_ellipsis">{{a.content}}</div>
               <div class="other_info">
-                <span class="tag">商业</span>
+                <span class="tag">{{$t('business')}}</span>
                 <span class="from">nem</span>
                 <span class="date">2019年7月10日</span>
               </div>
             </div>
             <div class="right right_duration_flag">
-              <span :class="index % 2 == 0 ? 'red':'blue'">已结束</span>
+              <span :class="index % 2 == 0 ? 'red':'blue'">{{$t('over')}}</span>
             </div>
           </div>
         </div>
@@ -37,21 +39,21 @@
         <div class="right_article_detail radius  right">
           <div class="right_container scroll">
             <div class="initor">
-              <span class="blue">发起地址</span>
+              <span class="blue">{{$t('initiation_address')}}</span>
               <span>  f65sf5s5af65as6df5sa5f6s5f6s5af65sa6f5s6af5s6a5f6f</span>
             </div>
             <div class="vote_address">
-              <span class="blue">投票地址</span>
+              <span class="blue">{{$t('voting_address')}}</span>
               <span>ad5as4d5a4d5as4d5as5d45asd54sa5d45as4d5as4d5a</span>
             </div>
             <div class="title">{{currentVote.title}}</div>
-            <div class="date"><span class="red">截止时间</span><span>2019年7月10日 16:33</span></div>
+            <div class="date"><span class="red">{{$t('deadline')}}</span><span>2019年7月10日 16:33</span></div>
             <div class="content">{{currentVote.title}}</div>
             <div class="selection">
-              <RadioGroup v-model="animal" v-if="!currentVote.isMultiple">
+              <RadioGroup v-model="sigleSelection" v-if="!currentVote.isMultiple">
                 <Radio v-for="i in currentVote.selctions" :label="i.name"></Radio>
               </RadioGroup>
-              <CheckboxGroup v-model="fruit" v-else>
+              <CheckboxGroup v-model="multiSelectionList" v-else>
                 <Checkbox v-for="i in currentVote.selctions" :label="i.name"></Checkbox>
               </CheckboxGroup>
             </div>
@@ -59,7 +61,7 @@
               <PieChart :currentVote="currentVote"></PieChart>
             </div>
             <div @click="sendVote" class="click_to_vote pointer">
-              确认投票
+              {{$t('confirm_vote')}}
             </div>
           </div>
 
@@ -71,28 +73,29 @@
 
       <div class="vote_creating_content">
         <div class="vote_title">
-          <span class="title">标题</span>
-          <span class="value radius"><input placeholder="请输入投票标题" type="text"></span>
+          <span class="title">{{$t('title')}}</span>
+          <span class="value radius"><input :placeholder="$t('please_enter_a_voting_title')" type="text"></span>
         </div>
         <div class="vote_describle">
-          <span class="title">描述</span>
+          <span class="title">{{$t('description')}}</span>
           <span class="value radius">
-          <textarea placeholder="关于投票内容描述" class="scroll" name="" id="" cols="95" rows="3"></textarea>
+          <textarea :placeholder="$t('about_voting_content_description')" class="scroll" name="" id="" cols="95"
+                    rows="3"></textarea>
         </span>
         </div>
         <div class="vote_selections">
-          <span class="title">选项</span>
+          <span class="title">{{$t('option')}}</span>
           <span class="selection_list right">
           <div class="list_cloumn" v-for="(s,index) in selectionList">
             <span class="value radius">
               <input :value="s" type="text"/>
              </span>
             <span class="button_content">
-              <img src="../../../assets/images/community/vote/voteAdd.png" class="pointer" @click="addSelection()" alt="">
+              <img src="../../../assets/images/community/vote/voteAdd.png" class="pointer" @click="addSelection()"
+                   alt="">
               <img src="../../../assets/images/community/vote/voteDelete.png" class="pointer" v-if="index !== 0"
-                 @click="deleteSelection(index)" alt="">
+                   @click="deleteSelection(index)" alt="">
             </span>
-
           </div>
         </span>
 
@@ -100,14 +103,14 @@
 
         <div class="vote_vote_type">
           <RadioGroup v-model="voteType">
-            <Radio class="vote_mul" label="多选"></Radio>
-            <Radio class="vote_single" label="单选"></Radio>
+            <Radio class="vote_mul" :label="$t('multiple_selection')"></Radio>
+            <Radio class="vote_single" :label="$t('radio')"></Radio>
           </RadioGroup>
         </div>
         <div class="vote_deadline">
-          <span class="title">截止时间</span>
+          <span class="title">{{$t('deadline')}}</span>
           <span class="value radius">
-          <input type="text" :value="deadline" placeholder="输入日期 ISO格式有效日期YYYY-MM DD HH:mm，例如：2019-12-28 14:57">
+          <input type="text" :value="deadline" :placeholder="$t('enter_the_date_for_example')+'2019-12-28 14:57'">
 
             <span class="select_date pointer">
               <div class="date_container pointer">
@@ -115,7 +118,8 @@
                 <img src="../../../assets/images/monitor/market/marketCalendar.png" alt="">
               </div>
               <div class="date_selector pointer">
-                <DatePicker class="pointer" @on-change="changeCurrentMonth" type="datetime" placeholder="" :value="currentMonth"
+                <DatePicker class="pointer" @on-change="changeCurrentMonth" type="datetime" placeholder=""
+                            :value="currentMonth"
                             style="width: 70px"></DatePicker>
               </div>
               </div>
@@ -124,16 +128,18 @@
         </span>
         </div>
         <div class="vote_fee">
-          <span class="title">费用</span>
+          <span class="title">{{$t('fee')}}</span>
           <span class="value radius">
           <input placeholder="0.050000" type="text">
           <span class="right">XEM</span>
         </span>
         </div>
-        <div class="tips red right">默认为：0.05000XEM，设置的费用越多，处理优先级越高</div>
+        <div class="tips red right">
+          {{$t('the_default_is')}}:0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+        </div>
 
         <div class="create_button pointer">
-          创建
+          {{$t('create')}}
         </div>
       </div>
 
@@ -159,24 +165,24 @@
     export default class information extends Vue {
         showCheckPWDialog = false
         currentVoteFilter = {}
-        voteType = '多选'
+        voteType = ''
         deadline = ''
         voteFilterList = [
             {
                 value: 0,
-                label: '全部'
+                label: 'all'
             },
             {
                 value: 1,
-                label: '进行中'
+                label: 'processing'
             },
             {
                 value: 2,
-                label: '已参与'
+                label: 'already_involved'
             },
             {
                 value: 3,
-                label: '已结束'
+                label: 'over'
             }
         ]
         selectionList = ['1', '2']
@@ -477,15 +483,15 @@
         currentVote = {}
         voteActionList = [
             {
-                name: '选择投票',
+                name: 'choose_to_vote',
                 isSelect: true
             }, {
-                name: '创建投票',
+                name: 'create_a_vote',
                 isSelect: false
             }
         ]
-        animal = '爪哇犀牛'
-        fruit = ['苹果']
+        sigleSelection = ''
+        multiSelectionList = []
 
         swicthVoteAction(index) {
             const list: any = this.voteActionList
@@ -529,7 +535,7 @@
 
         created() {
             this.currentVote = this.voteList[0]
-            this.currentVoteFilter = '全部'
+            this.currentVoteFilter = this.voteFilterList[0].label
         }
 
         closeCheckPWDialog() {
@@ -539,7 +545,8 @@
         checkEnd(boolean) {
             console.log(boolean)
         }
-        sendVote(){
+
+        sendVote() {
             this.showCheckPWDialog = true
         }
     }

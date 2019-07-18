@@ -9,6 +9,8 @@
   .top_button {
     height: 120px;
     width: 880px;
+    z-index: 9999;
+    position: absolute;
 
     .transaction_btn {
       width: 120px;
@@ -43,6 +45,7 @@
 
   .show_exists_vote_list {
     height: calc(100% - 150px);
+    margin-top: 120px;
   }
 
   .bottom_vote_list {
@@ -208,10 +211,14 @@
   }
 
   .create_vote {
-    height: calc(100% - 150px);
-    width: 100%;
+    height: 100%;
+    width: 1760px;
     overflow-y: auto;
     overflow-x: hidden;
+    background-color: white;
+    position: absolute;
+    padding-top: 124px;
+    top: 0;
 
     .vote_creating_content {
       width: 1090px;
@@ -364,7 +371,7 @@
 
 
     .vote_vote_type {
-      width: 300px;
+      width: 900px;
       display: inline-block;
       margin-left: 150px;
       margin-top: 10px;

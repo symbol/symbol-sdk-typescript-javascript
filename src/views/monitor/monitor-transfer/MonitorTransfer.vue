@@ -5,20 +5,20 @@
         <span
                 @click="swicthTransferType(index)"
                 :class="['transaction_btn',t.isSelect?'selected_button':'', t.disabled?'disabled_button':'pointer']"
-                v-for="(t,index) in transferTypeList">{{t.name}}
+                v-for="(t,index) in transferTypeList">{{$t(t.name)}}
         </span>
       </div>
       <div class="bottom_transfer_info scroll ">
         <div class="transfer  " v-if="transferTypeList[0].isSelect">
           <div class="address flex_center">
-            <span class="title">转账目标</span>
+            <span class="title">{{$t('transfer_target')}}</span>
             <span class="value radius flex_center">
               <input type="text">
               <span class="pointer">@</span>
             </span>
           </div>
           <div class="asset flex_center">
-            <span class="title">资产类型</span>
+            <span class="title">{{$t('asset_type')}}</span>
             <span class="value radius flex_center">
               <Select placeholder="XEM" v-model="assetType" class="asset_type">
               <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -26,23 +26,23 @@
             </span>
           </div>
           <div class="amount flex_center">
-            <span class="title">转账金额</span>
+            <span class="title">{{$t('transfer_amount')}}</span>
             <span class="value radius flex_center">
               <input type="text">
             </span>
           </div>
           <div class="remark flex_center">
-            <span class="title">备注</span>
+            <span class="title">{{$t('备注')}}</span>
             <span class=" textarea_container flex_center value radius ">
               <textarea name="" id="" cols="70" rows="4"></textarea>
             </span>
           </div>
           <div class="fee right">
-            <span>费用</span>
+            <span>{{$t('fee')}}</span>
             <span>0.050000xem</span>
           </div>
           <div class="send_button pointer">
-            发送
+            {{$t('send')}}
           </div>
         </div>
 
@@ -54,7 +54,7 @@
     </div>
     <div class="right_record radius">
       <div class="top_title">
-        <span>转账记录</span>
+        <span>{{$t('transfer_record')}}</span>
         <div class="right" v-show="!isShowSearchDetail">
             <span class="select_date">
               <div class="month_value">
@@ -68,7 +68,7 @@
             </span>
           <span class="search_input" @click.stop="showSearchDetail">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
-              <span>搜索</span>
+              <span>{{$t('search')}}</span>
             </span>
         </div>
 
@@ -77,7 +77,7 @@
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
               <input @click.stop type="text" class="absolute" placeholder="输入资产类型，别名或地址搜索">
             </span>
-          <span class="search_btn" @click.stop="searchByasset">搜索</span>
+          <span class="search_btn" @click.stop="searchByasset">{{$t('search')}}</span>
         </div>
 
 
@@ -122,19 +122,19 @@
 
         transferTypeList = [
             {
-                name: '普通转账',
+                name: 'ordinary_transfer',
                 isSelect: true,
                 disabled: false
             }, {
-                name: '多签转账',
+                name: 'Multisign_transfer',
                 isSelect: false,
                 disabled: false
             }, {
-                name: '跨链转账',
+                name: 'crosschain_transfer',
                 isSelect: false,
                 disabled: true
             }, {
-                name: '聚合转账',
+                name: 'aggregate_transfer',
                 isSelect: false,
                 disabled: true
             }

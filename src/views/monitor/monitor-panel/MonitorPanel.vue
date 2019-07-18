@@ -2,7 +2,7 @@
   <div class="monitor_panel_container">
     <div class="monitor_panel_left_container" ref="monitorPanelLeftContainer">
       <div class="top_wallet_balance radius">
-        <div class="wallet_balance">钱包余额</div>
+        <div class="wallet_balance">{{$t('wallet_balance')}}</div>
         <div class="split"></div>
         <div class="XEM_amount"><span>XEM</span><span class="amount">166.000.000000</span></div>
         <div class="exchange">￥ 63.911.64</div>
@@ -11,11 +11,11 @@
         <div v-if="isShowAccountInfo">
 
           <Tabs size="small" v-if="!isShowManageMosaicIcon">
-            <TabPane label="马赛克" name="name1">
+            <TabPane :label="$t('mosaic')" name="name1">
               <img @click="manageMosaicList()" class="asset_list"
                    src="../../../assets/images/monitor/monitorAssetList.png">
               <!--        all       -->
-              <div >
+              <div>
                 <div class="mosaic_data" v-if="m.show" v-for="(m,index) in mosaicList">
                 <span>
                     <img src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
@@ -28,11 +28,11 @@
                 </div>
               </div>
             </TabPane>
-            <TabPane label="命名空间" name="name2">
+            <TabPane :label="$t('namespace')" name="name2">
               <div class="namespace_data">
                 <div class="namespace_table_head">
-                  <span class="namespace">命名空间</span>
-                  <span class="duration">有效期</span>
+                  <span class="namespace">{{$t('namespace')}}</span>
+                  <span class="duration">{{$t('validity_period')}}</span>
                 </div>
                 <div class="namespace_item" v-for="i in 3">
                   <span class="namespace">@123.456</span>
@@ -40,11 +40,11 @@
                 </div>
               </div>
             </TabPane>
-            <TabPane label="收获的块" name="name3">
+            <TabPane :label="$t('harvested_block')" name="name3">
               <div class="harvesting_data">
                 <div class="harvesting_item " v-for="i in 3">
                   <div class="clear top_info">
-                    <span class="left">块：4585464</span>
+                    <span class="left">{{$t('block')}}：4585464</span>
                     <span class="right">fees:1.0546551xem</span>
                   </div>
                   <div class="bottom_info">
@@ -60,17 +60,17 @@
           <div v-if="isShowManageMosaicIcon">
             <div class="asset_setting_tit" @click="isShowManageMosaicIcon = !isShowManageMosaicIcon">
               <img src="../../../assets/images/monitor/monitorLeftArrow.png" alt="">
-              <span>资产设置</span>
+              <span>{{$t('asset_setting')}}</span>
             </div>
             <div class="input_outter">
               <img src="../../../assets/images/monitor/monitorSearchIcon.png" alt="">
-              <input type="text" placeholder="搜索资产名">
+              <input type="text" :placeholder="$t('search_for_asset_name')">
             </div>
             <div class="mosaic_data" v-for="(m,index) in mosaicList">
                 <span>
                     <img @click="m.show=!m.show" class="small_icon"
-                         :src="m.show?monitorSeleted:monitorUnselected" alt="">
-                    <img src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
+                         :src="m.show?monitorSeleted:monitorUnselected">
+                    <img src="../../../assets/images/monitor/monitorMosaicIcon.png">
                 </span>
               <span class="mosaic_name">{{m.name}}</span>
               <span class="mosaic_value">
@@ -86,7 +86,7 @@
       <div class="top_navidator radius">
         <span :class="[n.isSelect?'active_navigator':'','pointer','outter_container']" @click="switchPanel(index)"
               v-for="(n,index) in navigatorList">
-          <span class="inner_container absolute">{{n.name}}</span>
+          <span class="inner_container absolute">{{$t(n.name)}}</span>
           <span class="line">|</span>
         </span>
       </div>
@@ -111,23 +111,23 @@
         monitorSeleted = monitorSeleted
         navigatorList: any = [
             {
-                name: '仪表盘',
+                name: 'dash_board',
                 isSelect: true,
                 path: 'dashBoard'
             }, {
-                name: '市场',
+                name: 'market',
                 isSelect: false,
                 path: 'market'
             }, {
-                name: '转账',
+                name: 'transfer',
                 isSelect: false,
                 path: 'transfer'
             }, {
-                name: '收据',
+                name: 'receipt',
                 isSelect: false,
                 path: 'receipt'
             }, {
-                name: '委托收益',
+                name: 'remote',
                 isSelect: false,
                 path: 'remote'
             }]

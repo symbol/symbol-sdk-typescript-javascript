@@ -2,7 +2,7 @@
   <div class="normal_set">
     <ul>
       <li>
-        切换语言
+        {{$t('switch_language')}}
         <div class="gray_content">
           <Select v-model="language">
             <Option v-for="item in languageList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -11,7 +11,7 @@
 
       </li>
       <li>
-        货币设置
+        {{$t('currency_setting')}}
         <div class="gray_content">
           <Select v-model="coin">
             <Option v-for="item in coinList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -20,12 +20,12 @@
 
       </li>
       <li>
-        账户名
-        <div class="tips">默认为Number</div>
+        {{$t('account_name')}}
+        <div class="tips">{{$t('the_default_is_Number')}}</div>
         <div class="gray_content">
-          <input class="absolute" type="text" placeholder="请再次输入新的密码">
+          <input class="absolute" type="text" :placeholder="$t('please_enter_your_new_password_again')">
         </div>
-        <span class="confirm_button">确认</span>
+        <span class="confirm_button">{{$t('confirm')}}</span>
 
       </li>
     </ul>
@@ -39,16 +39,7 @@
     export default class SettingNormal extends Vue {
         language = ''
         coin = ''
-        languageList = [
-            {
-                value: 'zh-CN',
-                label: '中文'
-            },
-            {
-                value: 'en-US',
-                label: 'English'
-            }
-        ]
+        languageList = []
         coinList = [
             {
                 value: 'XEM',
@@ -59,6 +50,10 @@
                 label: 'ETC'
             }
         ]
+
+        created() {
+            this.languageList = this.$store.state.app.languageList
+        }
 
     }
 </script>
