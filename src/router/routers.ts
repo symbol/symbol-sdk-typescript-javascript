@@ -45,7 +45,8 @@ const routers = [
                     },
 
                 ]
-            }, {
+            },
+            {
                 path: '/walletPanel',
                 name: 'walletPanel',
                 // @ts-ignore
@@ -73,7 +74,8 @@ const routers = [
                         component: () => import('@/views/wallet-management/wallet-import/WalletImport.vue')
                     },
                 ]
-            }, {
+            },
+            {
                 path: '/servicePanel',
                 name: 'servicePanel',
                 // @ts-ignore
@@ -96,7 +98,8 @@ const routers = [
                         component: () => import('@/views/service/mosaic/Mosaic.vue')
                     },
                 ]
-            }, {
+            },
+            {
                 path: '/communityPanel',
                 name: 'communityPanel',
                 // @ts-ignore
@@ -119,7 +122,8 @@ const routers = [
                         component: () => import('@/views/community/vote/vote.vue')
                     },
                 ]
-            }, {
+            },
+            {
                 path: '/settingPanel',
                 name: 'settingPanel',
                 // @ts-ignore
@@ -152,7 +156,8 @@ const routers = [
                         component: () => import('@/views/setting/setting-normal/SettingNormal.vue')
                     },
                 ]
-            }, {
+            },
+            {
                 path: '/monitorRelogin',
                 name: 'monitorRelogin',
                 // @ts-ignore
@@ -168,14 +173,35 @@ const routers = [
         },
         children: [
             {
-                path: '/login',
-                name: 'login',
+                path: '/reLogin',
+                name: 'reLogin',
                 // @ts-ignore
                 component: () => import('@/views/monitor/monitor-relogin/MonitorRelogin.vue'),
             },
-        ]
-    }
+            {
+                path: '/login',
+                name: 'login',
+                component: function () {
+                    return import('@/views/login/set-account/SetAccount.vue');
+                },
+            },
+            {
+                path: '/checkAccount',
+                name: 'checkAccount',
+                component: function () {
+                    return import('@/views/login/check-account/CheckAccount.vue');
+                },
+            },
 
+        ]
+    },
+    , {
+        path: '/',
+        name: 'login',
+        component: function () {
+            return import('@/views/login/Login.vue');
+        },
+    }
 ]
 
 export default routers

@@ -1,81 +1,75 @@
-.walletCreatedWrap{
+.walletCreatedWrap {
   box-sizing: border-box;
   height: 100%;
-  padding-top: 20px;
-  .createdDiv{
+  background-color: #fff;
+  border-radius: 10px;
+  margin-top: 20px;
+  overflow-y: auto;
+  .createdDiv1 {
     height: 100%;
-    background-color: #fff;
-    border-radius:10px;
-    padding-top: 68px;
+    padding: 35px 40px 20px;
     position: relative;
-    .createdForm{
-      width: 688px;
-      margin: 0 auto 0;
-      .formTit{
-        font-size:30px;
-        font-weight:400;
-        text-align: center;
-        color:#4DC2BF;
-        margin-bottom: 50px;
+    .pageTit {
+      font-size:28px;
+      line-height: 28px;
+      font-weight:bold;
+      color:#222222;
+      margin-bottom: 39px;
+    }
+    .pageTxt {
+      font-size:16px;
+      line-height: 16px;
+      font-weight:400;
+      color:rgba(34,34,34,1);
+      margin-bottom: 39px;
+    }
+    .pageRemind {
+      font-size: 16px;
+      font-weight: 400;
+      color: #222222;
+      word-wrap: break-word;
+      padding-left: 50px;
+      position: relative;
+      .tails {
+        color: #F65C5C;
+        position: absolute;
+        left: 0;
+        top: 0;
       }
-      .formRemind{
-        width: 605px;
-        font-size:16px;
-        text-align: center;
-        font-weight:400;
-        color:#222222;
-        word-wrap: break-word;
-        margin:0 auto 60px;
-        .tails{
-          color:#F65C5C;
-        }
-      }
-      .ivu-collapse{
-        border: none;
-        background-color: #fff;
-        .ivu-collapse-item{
-          margin-bottom: 40px;
-          background-color: #586D87;
-          border: 1Px solid #dcdee2;
-          border-radius:4px;
-          .ivu-collapse-header{
-            height: 60px;
-            line-height: 60px;
-            font-size:16px;
-            font-weight:400;
-            text-indent: -10px;
-            color: #fff;
-            text-align: center;
-            border-bottom: none;
-          }
-          .ivu-collapse-content{
-            background-color: #828FA0;
-            font-size:14px;
-            font-weight:400;
-            color:#fff;
-            p{
-              word-break: break-all;
-            }
-            .mnemonic,.privateKey{
-              text-align: center;
-            }
-            button{
-              display: block;
-              width:200px;
-              height:40px;
-              font-size: 14px;
-              background:#586D87;
-              border-radius:4px;
-              margin: 20px auto 0;
-              box-shadow:0 0 5px #999999;
-              border: 0;
-              .ivu-icon-ios-download-outline:before{
-                font-size: 18px;
-              }
-            }
-          }
-        }
-      }
+    }
+    .mnemonicDiv{
+      width:580px;
+      height:120px;
+      background:rgba(0,0,0,1);
+      border:1px solid rgba(204,204,204,1);
+      opacity:0.5;
+      border-radius:8px;
+      margin-top: 100px;
+      margin-bottom: 200px;
+    }
+    .btns{
+      width:580px;
+    }
+    button {
+      display: block;
+      width: 200px;
+      height: 60px;
+      line-height: 50px;
+      font-size: 16px;
+      font-weight: 400;
+      text-align: center;
+      color: #fff;
+      background: #20B5AC;
+      border: none;
+      border-radius: 30px;
+    }
+    .prev {
+      color: #20B5AC;
+      background: #fff;
+      border: 1px solid rgba(32, 181, 172, 1);
+    }
+    .next {
+      border: 1px solid rgba(32, 181, 172, 1);
     }
   }
 }

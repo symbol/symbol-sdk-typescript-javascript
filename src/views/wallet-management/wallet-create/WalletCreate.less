@@ -1,23 +1,24 @@
 .walletCreateWrap{
   box-sizing: border-box;
   height: 100%;
-  padding-top: 20px;
+  font-family:MicrosoftYaHei;
+  background-color: #fff;
+  border-radius:8px;
+  margin-top: 20px;
+  overflow-y: auto;
   .createDiv{
     height: 100%;
-    background-color: #fff;
     border-radius:10px;
-    padding-top: 68px;
     position: relative;
     .createForm{
-      width: 688px;
-      margin: 0 auto 0;
+      width: 680px;
+      padding: 35px 40px 20px;
       .formTit{
-        font-size:30px;
-        font-weight:400;
-        text-align: center;
-        color:#4DC2BF;
-        padding-left: 60px;
-        margin-bottom: 68px;
+        font-size:28px;
+        line-height: 28px;
+        font-weight:bold;
+        color:#222222;
+        margin-bottom: 27px;
       }
       .ivu-select-selection{
         height:30px;
@@ -32,19 +33,44 @@
       }
       .ivu-form-item{
         margin-bottom: 40px;
+        .formItemTxt{
+          width: 1080px;
+          font-size:16px;
+          line-height: 24px;
+          font-weight:400;
+          color:#999999;
+          margin-bottom: 10px;
+        }
+      }
+      .ivu-form-item:last-of-type{
+        margin-bottom: 0;
       }
       .ivu-form-item-label{
-        width: 105px;
         height: 16px;
-        font-size:16px;
+        font-size:18px;
         line-height: 16px;
         font-weight:400;
-        color:#666666;
+        color:#222222;
         white-space: nowrap;
-        margin-top: 12px;
+        padding-left: 18px;
+        margin-left: 21px;
+        position: relative;
+        margin-bottom: 13px;
+      }
+      .ivu-form-item-label:after{
+        display: block;
+        content: '';
+        width:8px;
+        height:8px;
+        background:#666666;
+        border-radius:50%;
+        overflow: hidden;
+        position: absolute;
+        top: 4px;
+        left: 0;
       }
       .ivu-form-item-content{
-        margin-left: 124px;
+        margin-left: 21px;
         position: relative;
         input{
           padding-right: 50px;
@@ -101,7 +127,14 @@
         background:#20B5AC;
         border: none;
         border-radius:30px;
-        margin: 60px auto 0;
+      }
+      .prev{
+        color: #20B5AC;
+        background: #fff;
+        border:1px solid rgba(32,181,172,1);
+      }
+      .next{
+        border:1px solid rgba(32,181,172,1);
       }
     }
   }

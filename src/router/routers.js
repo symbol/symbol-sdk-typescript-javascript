@@ -44,7 +44,8 @@ var routers = [
                         component: function () { return import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'); }
                     },
                 ]
-            }, {
+            },
+            {
                 path: '/walletPanel',
                 name: 'walletPanel',
                 // @ts-ignore
@@ -72,7 +73,8 @@ var routers = [
                         component: function () { return import('@/views/wallet-management/wallet-import/WalletImport.vue'); }
                     },
                 ]
-            }, {
+            },
+            {
                 path: '/servicePanel',
                 name: 'servicePanel',
                 // @ts-ignore
@@ -95,7 +97,8 @@ var routers = [
                         component: function () { return import('@/views/service/mosaic/Mosaic.vue'); }
                     },
                 ]
-            }, {
+            },
+            {
                 path: '/communityPanel',
                 name: 'communityPanel',
                 // @ts-ignore
@@ -118,7 +121,8 @@ var routers = [
                         component: function () { return import('@/views/community/vote/vote.vue'); }
                     },
                 ]
-            }, {
+            },
+            {
                 path: '/settingPanel',
                 name: 'settingPanel',
                 // @ts-ignore
@@ -151,7 +155,8 @@ var routers = [
                         component: function () { return import('@/views/setting/setting-normal/SettingNormal.vue'); }
                     },
                 ]
-            }, {
+            },
+            {
                 path: '/monitorRelogin',
                 name: 'monitorRelogin',
                 // @ts-ignore
@@ -167,12 +172,34 @@ var routers = [
         },
         children: [
             {
-                path: '/login',
-                name: 'login',
+                path: '/reLogin',
+                name: 'reLogin',
                 // @ts-ignore
                 component: function () { return import('@/views/monitor/monitor-relogin/MonitorRelogin.vue'); },
             },
+            {
+                path: '/login',
+                name: 'login',
+                component: function () {
+                    return import('@/views/login/set-account/SetAccount.vue');
+                },
+            },
+            {
+                path: '/checkAccount',
+                name: 'checkAccount',
+                component: function () {
+                    return import('@/views/login/check-account/CheckAccount.vue');
+                },
+            },
         ]
+    },
+    ,
+    {
+        path: '/',
+        name: 'login',
+        component: function () {
+            return import('@/views/login/Login.vue');
+        },
     }
 ];
 export default routers;
