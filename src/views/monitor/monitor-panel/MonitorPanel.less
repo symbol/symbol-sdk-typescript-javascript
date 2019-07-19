@@ -13,19 +13,33 @@
     float: left;
     margin-right: 30px;
 
-    .top_wallet_balance {
+    .top_wallet_address {
       width: 420px;
       height: 240px;
-      padding: 22px 0 0 30px;
+      padding: 22px 20px 0 21px;
       position: relative;
       background-size: contain;
       background-image: url("../../../assets/images/monitor/dash-board/dashboardWalletBackground.png");
 
-      .wallet_balance {
+      .wallet_address {
         padding-bottom: 23px;
-        font-size: 16px;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .address {
+          color: rgba(255, 255, 255, 1);
+          font-size: 12px;
+          font-weight: 400;
+          display: inline-block;
+          width: 350px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        img {
+          width:18px;
+          height:18px;
+        }
       }
 
       .split {
@@ -37,7 +51,7 @@
       }
 
       .XEM_amount {
-        margin: 15px 0 8px 0;
+        margin: 15px 0 8px 9px;
         font-size: 24px;
         font-weight: 400;
         color: rgba(255, 255, 255, 1);
@@ -52,6 +66,14 @@
         font-size: 18px;
         font-weight: 400;
         color: rgba(255, 255, 255, 1);
+      }
+      .account_alias {
+        position: absolute;
+        bottom: 20px;
+        right: 19px;
+        font-size:12px;
+        font-weight:400;
+        color:rgba(255,255,255,1);
       }
     }
 
@@ -223,7 +245,7 @@
       height: 60px;
 
       .outter_container {
-        font-size: 16px;
+        font-size: 18px;
         position: relative;
         width: 119px;
         height: 100%;
@@ -276,7 +298,6 @@
           height: 3px;
           margin-left: 50%;
           left: -15px;
-          bottom: 0;
         }
 
       }

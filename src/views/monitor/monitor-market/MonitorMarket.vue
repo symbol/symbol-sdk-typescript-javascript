@@ -12,7 +12,8 @@
             <span>{{$t('lowest_price')}}</span><span class="black">￥{{lowestPrice}}</span>
           </span>
           <span class="price_item">
-            <span>{{$t('average_price')}}</span><span class="black">￥{{averagePrice}}</span><span :class="riseRange < 0 ? 'red':'green'">{{riseRange}}%</span>
+            <span>{{$t('average_price')}}</span><span class="black">￥{{averagePrice}}</span><span
+                  :class="riseRange < 0 ? 'red':'green'">{{riseRange}}%</span>
           </span>
         </span>
         <LineChart></LineChart>
@@ -28,7 +29,8 @@
           <div v-show="isShowSearchDetail" class="search_expand">
             <span class="search_container">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
-              <input @click.stop v-model="assetType" type="text" class="absolute" :placeholder="$t('please_enter_the_asset_type')">
+              <input @click.stop v-model="assetType" type="text" class="absolute"
+                     :placeholder="$t('please_enter_the_asset_type')">
             </span>
             <span class="search_btn pointer" @click.stop="searchByasset">{{$t('search')}}</span>
           </div>
@@ -38,7 +40,8 @@
           <Spin size="large" class="absolute" fix
                 v-if="recentTransactionList.length <= 0 && !noTransactionRecord"></Spin>
 
-          <span v-if="noTransactionRecord" class="no_record absolute">{{$t('no_such_currency_transaction_record_yet')}}</span>
+          <span v-if="noTransactionRecord"
+                class="no_record absolute">{{$t('no_such_currency_transaction_record_yet')}}</span>
 
 
           <div class="transaction_item" v-for="r in recentTransactionList">
@@ -75,15 +78,15 @@
               <input v-model.number="purchaseAmount" type="number">
             </span>
             <span class="update_arrow">
-              <img @click="cutPurchaseAmount" class="pointer"
+              <img @click="addPurchaseAmount " class="pointer"
                    src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
-              <img @click="addPurchaseAmount" class="pointer"
+              <img @click="cutPurchaseAmount" class="pointer"
                    src="../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
             </span>
             <span>XEM</span>
           </div>
         </div>
-        <div class="clear conversion ">
+        <div v-show="purchaseAmount > 0" class="clear conversion ">
           <span>XEM
             <span class="bigger">{{Number(purchaseAmount).toFixed(2)}}</span>
             ≈ ￥{{currentPrice * purchaseAmount}}</span>
@@ -105,7 +108,7 @@
           <div class="right">
             <span class="title">{{$t('quantity')}}</span>
             <span class="value">
-              <input v-model="sellAmount" type="text">
+              <input v-model="sellAmount">
             </span>
             <span class="update_arrow">
               <img @click="addSellAmount " class="pointer"
@@ -116,7 +119,7 @@
             <span>XEM</span>
           </div>
         </div>
-        <div class="clear conversion ">
+        <div v-if="sellAmount > 0" class="clear conversion ">
           <span>XEM <span
                   class="bigger">{{Number(sellAmount).toFixed(2)}}</span> ≈ ￥{{currentPrice * sellAmount}}</span>
         </div>
@@ -174,7 +177,7 @@
             let lowerCase = upperCase.toLowerCase() + 'usdt'
             const that = this
             let recentTransactionList = []
-            const url = `${this.$store.state.app.apiUrl}/market/trade/${lowerCase}/50`
+            const url = `${this.$store.state.app.marketUrl}/trade/${lowerCase}/50`
             await axios.get(url).then(function (response) {
                 let result = response.data.data
                 result.map((item) => {
@@ -197,17 +200,15 @@
         }
 
         formatDate(timestamp) {
-            return formatDate(timestamp).replace(/-/g,'/')
+            return formatDate(timestamp).replace(/-/g, '/')
         }
 
         addPurchaseAmount() {
-            if (this.purchaseAmount >= 1) {
                 this.purchaseAmount += 1
-            }
         }
 
         cutPurchaseAmount() {
-            this.purchaseAmount -= 1
+            this.purchaseAmount =  this.purchaseAmount >= 1 ? this.purchaseAmount -1 : this.purchaseAmount
         }
 
         addSellAmount() {
@@ -216,7 +217,7 @@
 
 
         cutSellAmount() {
-            this.sellAmount -= 1
+            this.sellAmount =  this.sellAmount >= 1 ? this.sellAmount -1 : this.sellAmount
         }
 
         changeCurrentMonth(e) {
@@ -225,7 +226,7 @@
 
         async getMarketPrice() {
             const that = this
-            const url = this.$store.state.app.marketUrl + '/xemusdt/1day/14'
+            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1day/14'
             await axios.get(url).then(function (response) {
                 const result = response.data.data
                 const currentWeek = result.slice(0, 7)
@@ -262,21 +263,21 @@
 
         async getMarketOpenPrice() {
             const that = this
-            const url = this.$store.state.app.marketUrl + 'xemusdt/1min/1'
+            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
             await axios.get(url).then(function (response) {
                 const result = response.data.data[0].open
                 that.currentPrice = result
             }).catch(function (error) {
                 console.log(error);
-                // that.getMarketOpenPrice()
+                that.getMarketOpenPrice()
             });
         }
 
         async getRecentTransactionList() {
             const that = this
-            const xemUrl = this.$store.state.app.apiUrl + '/market/trade/xemusdt/50'
-            const btcUrl = this.$store.state.app.apiUrl + '/market/trade/btcusdt/50'
-            const ethUrl = this.$store.state.app.apiUrl + '/market/trade/ethbtc/50'
+            const xemUrl = this.$store.state.app.marketUrl + '/trade/xemusdt/50'
+            const btcUrl = this.$store.state.app.marketUrl + '/trade/btcusdt/50'
+            const ethUrl = this.$store.state.app.marketUrl + '/trade/ethbtc/50'
             let recentTransactionList = []
 
             await axios.get(xemUrl).then(function (response) {
@@ -285,7 +286,7 @@
                     item.data.map((i) => {
                         i.type = 'XEM'
                         i.time = that.formatDate(i.ts)
-                        i.result = formatNumber((i.amount * i.price).toFixed(2))
+                        i.result = (i.amount * i.price).toFixed(2)
                         recentTransactionList.push(i)
                     })
                     return item
@@ -299,7 +300,7 @@
                     item.data.map((i) => {
                         i.type = 'BTC'
                         i.time = that.formatDate(i.ts)
-                        i.result = formatNumber((i.amount * i.price).toFixed(2))
+                        i.result = (i.amount * i.price).toFixed(2)
                         recentTransactionList.push(i)
                     })
                     return item
@@ -313,7 +314,7 @@
                     item.data.map((i) => {
                         i.type = 'ETH'
                         i.time = that.formatDate(i.ts)
-                        i.result = formatNumber((i.amount * i.price).toFixed(2))
+                        i.result = (i.amount * i.price).toFixed(2)
                         recentTransactionList.push(i)
                     })
                     return item

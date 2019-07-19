@@ -194,7 +194,7 @@
         copyAddress() {
             const that = this
             copyTxt(this.address).then(()=>{
-                that.$Message.success('复制成功')
+                that.$Message.success(that['$t']('successful_copy'))
             })
         }
 

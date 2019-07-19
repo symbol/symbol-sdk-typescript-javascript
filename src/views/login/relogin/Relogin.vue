@@ -1,7 +1,7 @@
 <template>
   <div class="relogin_container radius scroll">
     <div class="top_slogan">
-      <img src="../../../assets/images/relogin/reloginNemLogo.png" alt="">
+      <img src="../../../assets/images/login/relogin/reloginNemLogo.png" alt="">
       <span>
         <div class="top">{{$t('welcome_back_to_the_CATAPULT_beta')}}</div>
         <div class="bottom">{{$t('this_is_a_distributed_desktop_wallet_based_on_CATAPULT_I_wish_you_a_pleasant_trip')}}</div>
@@ -25,7 +25,7 @@
       <div class="bottom_content">
         <div class="top_password">
           <input type="text" placeholder="Lock Password">
-          <img src="../../../assets/images/relogin/reloginDoubt.png" alt="">
+          <img src="../../../assets/images/login/relogin/reloginDoubt.png" alt="">
         </div>
         <div @click="jumpToDashBoard" class="bottom_button pointer"> LOG IN</div>
       </div>
@@ -36,14 +36,14 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import reloginAddress from '../../../assets/images/relogin/reloginAddress.png'
-    import reloginApostille from '../../../assets/images/relogin/reloginApostille.png'
-    import reloginAsset from '../../../assets/images/relogin/reloginAsset.png'
-    import reloginFile from '../../../assets/images/relogin/reloginFile.png'
-    import reloginLink from '../../../assets/images/relogin/reloginLink.png'
-    import reloginNamespace from '../../../assets/images/relogin/reloginNamespace.png'
-    import reloginSend from '../../../assets/images/relogin/reloginSend.png'
-    import reloginWidgets from '../../../assets/images/relogin/reloginWidgets.png'
+    import reloginAddress from '../../../assets/images/login/relogin/reloginAddress.png'
+    import reloginApostille from '../../../assets/images/login/relogin/reloginApostille.png'
+    import reloginAsset from '../../../assets/images/login/relogin/reloginAsset.png'
+    import reloginFile from '../../../assets/images/login/relogin/reloginFile.png'
+    import reloginLink from '../../../assets/images/login/relogin/reloginLink.png'
+    import reloginNamespace from '../../../assets/images/login/relogin/reloginNamespace.png'
+    import reloginSend from '../../../assets/images/login/relogin/reloginSend.png'
+    import reloginWidgets from '../../../assets/images/login/relogin/reloginWidgets.png'
 
 
     @Component
@@ -95,5 +95,5 @@
     }
 </script>
 <style scoped lang="less">
-  @import "MonitorRelogin.less";
+  @import "Relogin.less";
 </style>

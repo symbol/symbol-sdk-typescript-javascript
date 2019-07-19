@@ -13,7 +13,7 @@
           <div class="address flex_center">
             <span class="title">{{$t('transfer_target')}}</span>
             <span class="value radius flex_center">
-              <input type="text">
+              <input type="text" :placeholder="$t('receive_address_or_alias')">
               <span class="pointer">@</span>
             </span>
           </div>
@@ -28,19 +28,24 @@
           <div class="amount flex_center">
             <span class="title">{{$t('transfer_amount')}}</span>
             <span class="value radius flex_center">
-              <input type="text">
+              <input :placeholder="$t('please_enter_the_transfer_amount')" type="text">
             </span>
           </div>
           <div class="remark flex_center">
-            <span class="title">{{$t('备注')}}</span>
+            <span class="title">{{$t('remarks')}}</span>
             <span class=" textarea_container flex_center value radius ">
-              <textarea name="" id="" cols="70" rows="4"></textarea>
+              <textarea :placeholder="$t('please_enter_a_comment')"></textarea>
             </span>
           </div>
-          <div class="fee right">
-            <span>{{$t('fee')}}</span>
-            <span>0.050000xem</span>
+          <div class="fee flex_center">
+            <span class="title">{{$t('fee')}}</span>
+            <span class="value radius flex_center">
+              <input placeholder="0.050000" type="text">
+              <span class="uint">XEM</span>
+            </span>
           </div>
+          <span class="xem_tips">{{$t('the_default_is')}}：0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
+
           <div class="send_button pointer">
             {{$t('send')}}
           </div>

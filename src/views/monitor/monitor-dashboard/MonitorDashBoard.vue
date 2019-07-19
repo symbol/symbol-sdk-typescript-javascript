@@ -1,17 +1,17 @@
 <template>
   <div class="dash_board_container">
     <Modal
-            :title="transactionDetail"
+            :title="$t('transaction_detail')"
             v-model="isShowDialog"
             :transfer="false"
             class-name="dash_board_dialog">
       <div class="transfer_type">
-        <span class="title">{{transactionDetails[0].key}}</span>
-        <span class="value">{{transactionDetails[0].value}}</span>
+        <span class="title">{{$t(transactionDetails[0].key)}}</span>
+        <span class="value">{{$t(transactionDetails[0].value)}}</span>
       </div>
       <div>
-        <div v-for="t in transactionDetails" class="other_info">
-          <span class="title">{{t.key}}</span>
+        <div v-if="index !== 0" v-for="(t,index) in transactionDetails" class="other_info">
+          <span class="title" >{{$t(t.key)}}</span>
           <span class="value">{{t.value}}</span>
         </div>
       </div>
@@ -38,7 +38,7 @@
 
     <div class="bottom_transactions radius scroll" ref="bottomTransactions">
       <div  class="splite_page">
-        <span>{{$t('total')}} 100 {{$t('data')}}</span>
+        <span>{{$t('total')}}：100 {{$t('data')}}</span>
         <Page :total="100" class="page_content" />
       </div>
 
@@ -112,7 +112,6 @@
     })
     export default class DashBoard extends Vue {
         isShowDialog = false
-        transactionDetail = '交易详情'
         xemNum: number = 8999999999
         currentPrice: any = 0
         networkStatusList = [
@@ -167,7 +166,7 @@
             },
             {
                 key: 'message',
-                value: 'message'
+                value: 'message test this'
             }
         ]
 
@@ -178,10 +177,10 @@
         async getMarketOpenPrice() {
             const that = this
             /////xemusdt/1min/100
-            const url = this.$store.state.app.marketUrl + '/xemusdt/1min/1'
+            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
             await axios.get(url).then(function (response) {
                 const result = response.data.data[0]
-                that.currentPrice = formatNumber((result.open * that.xemNum).toFixed(2))
+                that.currentPrice = result.open * that.xemNum
             }).catch(function (error) {
                 console.log(error);
             });

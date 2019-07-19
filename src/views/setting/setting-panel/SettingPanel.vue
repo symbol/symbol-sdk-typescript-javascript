@@ -1,7 +1,7 @@
 <template>
   <div class="setting_container scroll radius">
     <div class="setting_head">
-      设置
+      {{$t('setting')}}
     </div>
     <div class="seeting_main_container">
       <div class="left_navigator left">
@@ -11,7 +11,7 @@
       </div>
       <div class="right_view right">
         <div class="top_title">
-          {{currentHeadText}}
+          {{$t(currentHeadText)}}
         </div>
         <div class="main_view">
           <router-view/>

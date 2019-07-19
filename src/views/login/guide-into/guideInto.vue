@@ -1,47 +1,48 @@
 <template>
-    <div class="guideIntoWrap">
-        <h1 class="pageTit">开始NEM之旅</h1>
-        <div class="methodDiv">
-            <Row>
-                <Col span="12">
-                    <div class="importDiv">
-                        <div class="importIcon">
-                            <img src="">
-                        </div>
-                        <p class="importTit">已有钱包</p>
-                        <p class="importTxt">可以使用私钥、记助词或KeyStore等信息 导入已有钱包到本程序</p>
-                        <Button @click="toImportPage">导入钱包</Button>
-                    </div>
-                </Col>
-                <Col span="12">
-                    <div class="createDiv">
-                        <div class="createIcon">
-                            <img src="">
-                        </div>
-                        <p class="createTit">立即创建</p>
-                        <p class="createTxt">这将会创建一个新的钱包和新的种子文件</p>
-                        <Button @click="toCreatePage">创建钱包</Button>
-                    </div>
-                </Col>
-            </Row>
+  <div class="guideIntoWrap">
+    <h1 class="pageTit">{{$t('start_the_NEM_tour')}}</h1>
+    <div class="methodDiv">
+      <div class="importDiv">
+        <div class="importIcon">
+          <img src="../../../assets/images/login/guide-into/guideIntoImport.png">
         </div>
+        <p class="importTit">{{$t('existing_wallet')}}</p>
+        <p class="importTxt">{{$t('import_text')}}</p>
+        <div class="button pointer" @click="jumpToOtherPage('walletImportKeystore')">{{$t('import_wallet')}}</div>
+      </div>
+      <div class=" createDiv
+        ">
+        <div class="createIcon">
+          <img src="../../../assets/images/login/guide-into/guideIntoCreate.png">
+        </div>
+        <p class="createTit">{{$t('create_now')}}</p>
+        <p class="createTxt">{{$t('this_will_create_a_new_wallet_and_a_new_torrent_file')}}</p>
+        <div class="button pointer" @click="jumpToOtherPage('walletCreate')">
+          {{$t('create_wallet')}}
+          <div/>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
 
     @Component({})
-    export default class guideIntoWrap extends Vue{
-        toImportPage () {
-
-        }
-        toCreatePage () {
-
+    export default class guideIntoWrap extends Vue {
+        jumpToOtherPage(name) {
+            this.$store.state.app.unClick = false
+            this.$router.push({
+                name,
+                params: {
+                    name
+                }
+            })
         }
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+  @import "guideInto.less";
 </style>

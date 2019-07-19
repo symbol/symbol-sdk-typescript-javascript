@@ -88,19 +88,15 @@ export const copyTxt = (txt) => {
 }
 
 export const formatNumber = (number) => {
-  if(number < 1000){
-    return number
+  {
+    if (!/^(\+|-)?(\d+)(\.\d+)?$/.test(num)) {
+      alert("wrong!");
+      return num;
+    }
+    var a = RegExp.$1, b = RegExp.$2, c = RegExp.$3;
+    var re = new RegExp().compile("(\\d)(\\d{3})(,|$)");
+    while (re.test(b)) b = b.replace(re, "$1,$2$3");
+    return a + "" + b + "" + c;
   }
-  let floatNumber = number.substr(number.indexOf('.'))
-  let intNumber = number.substr(0, number.indexOf('.'))
-  intNumber = intNumber + ''
-  const len = intNumber.length
-  const time = (len / 3).toFixed(0) - 1
-  intNumber = intNumber.split('').reverse().join('')
-  for (let i = 0; i <= time; i++) {
-    intNumber = intNumber.substr(0, i * 3 + 3 + i) + ',' + intNumber.substr(i * 3 + 3 + i)
-  }
-  intNumber = intNumber.split('').reverse().join('')
-  return intNumber + floatNumber
 }
 

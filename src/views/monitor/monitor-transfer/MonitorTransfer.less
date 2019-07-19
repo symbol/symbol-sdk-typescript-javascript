@@ -75,7 +75,7 @@
           width: 520px;
           border: none;
           outline: none;
-          padding-left: 20px;
+          padding-left: 39px;
           font-size: 20px;
         }
 
@@ -113,19 +113,44 @@
           .textarea_container {
             height: 120px;
             justify-content: center;
+            padding: 23px 39px;
 
             textarea {
               border: none;
               outline: none;
               font-size: 16px;
             }
+            textarea::placeholder {
+              font-size:14px;
+              font-weight:400;
+              color:rgba(153,153,153,1);
+            }
           }
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+          font-size:14px;
+          font-weight:400;
+          color:rgba(153,153,153,1);
         }
 
         .fee {
           padding-top: 21px;
+          text-align: left;
+          .uint {
+            margin-right: 19px;
+          }
         }
 
+        .xem_tips {
+          font-size:14px;
+          font-weight:400;
+          margin-left: 115px;
+          display: inline-block;
+          padding-top: 20px;
+          color:rgba(246,92,92,1);
+        }
         .send_button {
           width: 200px;
           height: 60px;
@@ -139,7 +164,7 @@
           position: absolute;
           left: -100px;
           margin-left: 50%;
-          margin-top: 123px;
+          margin-top: 39px;
           margin-bottom: 20px;
         }
       }

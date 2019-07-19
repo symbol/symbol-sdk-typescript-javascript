@@ -13,7 +13,7 @@ export const localRead = (key) => {
 }
 
 export const localRemove = (key) => {
-    localStorage.removeItem(key)
+  localStorage.removeItem(key)
 }
 
 export const sessionSave = (key, value) => {
@@ -99,7 +99,7 @@ export const formatNamespaces = (namespacesInfo, blockHeight) => namespacesInfo.
       isExpandMore: false,
       namespaceName: name,
       aliasActionType:
-        ns.namespaceInfo.alias.type === 0 ? AliasActionType.Link : AliasActionType.Unlink,
+          ns.namespaceInfo.alias.type === 0 ? AliasActionType.Link : AliasActionType.Unlink,
       currentAliasType: ns.namespaceInfo.alias.type,
       currentAlias: ns.namespaceInfo.alias.type === 0 ? '' : aliasText
     }

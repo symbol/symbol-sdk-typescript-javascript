@@ -2,16 +2,16 @@
   <div class="wrap">
     <div class="left_navigator">
       <div class="navigator_icon">
-        <div :key="index" :class="[a ? 'active_panel' : '',$store.state.app.unClick?'un_click':'pointer']" @click="switchPanel(index)"
+        <div :key="index" :class="[$store.state.app.currentPanelIndex == index ? 'active_panel' : '',$store.state.app.unClick?'un_click':'pointer']" @click="switchPanel(index)"
              v-for="(a,index) in activePanelList">
-          <span :class="['absolute', a ? 'active_icon' : '']"></span>
+          <span :class="['absolute', $store.state.app.currentPanelIndex == index ? 'active_icon' : '']"></span>
         </div>
       </div>
 
 
       <div class="quit_account pointer">
         <img src="../../assets/images/window/windowAccoutQuit.png" alt="">
-        <span>账户名</span>
+        <span>{{$t('wallet_name')}}</span>
       </div>
     </div>
     <div class="top_window">
@@ -60,7 +60,7 @@
 
     @Component
     export default class Home extends Vue {
-        activePanelList = [true, false, false, false, false]
+        activePanelList = [false, false, false, false, false]
         currentLanguage:any = false
         languageList = []
         currentWallet = ''
@@ -98,8 +98,7 @@
                 name: routers[0].children[index].name
             })
             console.log('jump to ' + routers[0].children[index].name)
-            this.activePanelList = [false, false, false, false, false]
-            this.activePanelList[index] = true
+            this.$store.commit('SET_CURRENT_PANEL_INDEX', index)
         }
 
         switchLanguage(language) {
@@ -115,6 +114,7 @@
         switchWallet(walletNmae) {
             console.log('switch wallet', walletNmae)
         }
+
         created() {
             this.languageList = this.$store.state.app.languageList
             this.currentLanguage = localRead('local')
