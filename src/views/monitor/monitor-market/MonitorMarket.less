@@ -299,7 +299,9 @@
       }
 
       .purchase_XEM {
-        padding-top: 15px;
+        position: absolute;
+        top: 246px;
+        right: 30px;
 
         span {
           display: inline-block;
@@ -319,10 +321,12 @@
 
     .left_buy {
       float: left;
+      position: relative;
     }
 
     .right_sell {
       float: right;
+      position: relative;
     }
   }
 }
@@ -335,6 +339,10 @@
 
 .coin_cost {
   position: relative;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   right: 10px;
   text-align: right;
 }

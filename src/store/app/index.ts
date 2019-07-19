@@ -4,15 +4,16 @@ declare interface appInfo {
     walletList: any[]
     hasWallet: boolean,
     unClick: boolean,
-    languageList: Array<any>
+    languageList: Array<any>,
+    currentPanelIndex:number
 }
 
 export default {
     state: {
-        apiUrl: 'http://185.239.227.252:8087',
-        communityUrl: 'http://192.168.0.119',
-        marketUrl: 'http://app.nemcn.io/rest/market/kline',
+        apiUrl: 'http://120.79.181.170',
+        marketUrl: 'http://app.nemcn.io/rest/market',
         local: false,
+        currentPanelIndex:0,
         localMap: {
             'zh-CN': '中文',
             'en-US': 'English'
@@ -33,6 +34,9 @@ export default {
     },
     getters: {},
     mutations: {
+        SET_CURRENT_PANEL_INDEX(state: appInfo, index:any){
+            state.currentPanelIndex = index
+        },
         SET_WALLET_LIST(state: appInfo, walletList: any[]): void {
             state.walletList = walletList
         },

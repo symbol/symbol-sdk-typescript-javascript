@@ -5,7 +5,7 @@
               @click="swicthVoteAction(index)"
               :class="['transaction_btn',t.isSelect?'selected_button':'', t.disabled?'disabled_button':'','pointer']"
               v-for="(t,index) in voteActionList">
-        {{t.name}}
+        {{$t(t.name)}}
         </span>
       <Select v-show="voteActionList[0].isSelect" class="vote_filter" v-model="currentVoteFilter" style="width:100px">
         <Option class="pointer" v-for="(item,index) in voteFilterList" :value="item.value" :key="index">
@@ -18,20 +18,23 @@
       <div class="bottom_vote_list">
         <div class="left  scroll left_article_list">
 
-          <div @click="switchVote(index)" v-for="(a,index) in voteList"
-               :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
+          <div @click="switchVote(index)" v-for="(v,index) in currentVoteList"
+               :class="['article_summary_item',v.isSelect?'selected':'','pointer']">
             <div class="left left_info">
-              <div class="title overflow_ellipsis">{{a.title}}
+              <div class="title overflow_ellipsis">{{v.title}}
               </div>
-              <div class="summary overflow_ellipsis">{{a.content}}</div>
+              <div class="summary overflow_ellipsis">{{v.content}}</div>
               <div class="other_info">
                 <span class="tag">{{$t('business')}}</span>
                 <span class="from">nem</span>
-                <span class="date">2019年7月10日</span>
+                <span class="date">2019/7/10</span>
               </div>
             </div>
             <div class="right right_duration_flag">
-              <span :class="index % 2 == 0 ? 'red':'blue'">{{$t('over')}}</span>
+              <span v-if='v.voteStatus == 1'
+                    class='blue'>{{$t('processing')}}</span>
+              <span v-if='v.voteStatus == 2' class='orange'>{{$t('already_involved')}}</span>
+              <span v-if='v.voteStatus == 3' class='red'>{{$t('finished')}}</span>
             </div>
           </div>
         </div>
@@ -151,7 +154,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import PieChart from './PieChart.vue';
     import CheckPWDialog from '../../../components/checkPW-dialog/CheckPWDialog.vue'
 
@@ -163,6 +166,7 @@
         }
     )
     export default class information extends Vue {
+        currentTimestamp: any = 0
         showCheckPWDialog = false
         currentVoteFilter = {}
         voteType = ''
@@ -182,18 +186,22 @@
             },
             {
                 value: 3,
-                label: 'over'
+                label: 'finished'
             }
         ]
         selectionList = ['1', '2']
+        currentVoteList = []
         voteList = [
             {
                 initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
                 vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
                 title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 deadline: '2019-05-21 14:00',
+                startTimestamp: '1537333994',
+                endTimestamp: '1571462284',
                 content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 isMultiple: false,
+                voteStatus: 3,
                 selctions: [
                     {
                         name: '是',
@@ -212,6 +220,10 @@
                 deadline: '2019-05-21 14:00',
                 content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 isMultiple: true,
+                startTimestamp: '1334812684',
+                endTimestamp: '1571462284',
+                isInvolved: false,
+                voteStatus: 1,
                 selctions: [
                     {
                         name: '是',
@@ -230,6 +242,10 @@
                 deadline: '2019-05-21 14:00',
                 content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 isMultiple: true,
+                isInvolved: true,
+                voteStatus: 2,
+                startTimestamp: '1537333994',
+                endTimestamp: '1555650794',
                 selctions: [
                     {
                         name: '是',
@@ -242,12 +258,16 @@
                 isSelect: false,
                 max: 2,
             }, {
+                voteStatus: 2,
                 initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
                 vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
+                title: 'niniinnininni目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 deadline: '2019-05-21 14:00',
                 content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 isMultiple: true,
+                startTimestamp: '1555651084',
+                isInvolved: false,
+                endTimestamp: '1366348684',
                 selctions: [
                     {
                         name: '是',
@@ -260,12 +280,16 @@
                 isSelect: false,
                 max: 2,
             }, {
+                voteStatus: 1,
                 initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
                 vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
                 title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 deadline: '2019-05-21 14:00',
                 content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 isMultiple: true,
+                isInvolved: true,
+                startTimestamp: '1537333994',
+                endTimestamp: '1555650794',
                 selctions: [
                     {
                         name: '是',
@@ -278,12 +302,16 @@
                 isSelect: false,
                 max: 2,
             }, {
+                voteStatus: 3,
                 initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
                 vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
                 title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 deadline: '2019-05-21 14:00',
                 content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 isMultiple: true,
+                isInvolved: true,
+                startTimestamp: '1537333994',
+                endTimestamp: '1566191594',
                 selctions: [
                     {
                         name: '是',
@@ -296,12 +324,16 @@
                 isSelect: false,
                 max: 2,
             }, {
+                voteStatus: 1,
                 initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
                 vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
                 title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 deadline: '2019-05-21 14:00',
                 content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 isMultiple: true,
+                isInvolved: false,
+                startTimestamp: '1537333994',
+                endTimestamp: '1566191594',
                 selctions: [
                     {
                         name: '是',
@@ -314,12 +346,16 @@
                 isSelect: false,
                 max: 2,
             }, {
+                voteStatus: 2,
                 initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
                 vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
                 title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 deadline: '2019-05-21 14:00',
                 content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 isMultiple: true,
+                isInvolved: false,
+                startTimestamp: '1537333994',
+                endTimestamp: '1555650794',
                 selctions: [
                     {
                         name: '是',
@@ -332,12 +368,16 @@
                 isSelect: false,
                 max: 2,
             }, {
+                voteStatus: 1,
                 initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
                 vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
                 title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 deadline: '2019-05-21 14:00',
+                isInvolved: false,
                 content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
                 isMultiple: true,
+                startTimestamp: '1537333994',
+                endTimestamp: '1555650794',
                 selctions: [
                     {
                         name: '是',
@@ -349,134 +389,6 @@
                 ],
                 isSelect: false,
                 max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                deadline: '2019-05-21 14:00',
-                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                isMultiple: true,
-                selctions: [
-                    {
-                        name: '是',
-                        value: 99
-                    }, {
-                        name: '否',
-                        value: 59
-                    }
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                deadline: '2019-05-21 14:00',
-                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                isMultiple: true,
-                selctions: [
-                    {
-                        name: '是',
-                        value: 99
-                    }, {
-                        name: '否',
-                        value: 59
-                    }
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                deadline: '2019-05-21 14:00',
-                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                isMultiple: true,
-                selctions: [
-                    {
-                        name: '是',
-                        value: 99
-                    }, {
-                        name: '否',
-                        value: 59
-                    }
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                deadline: '2019-05-21 14:00',
-                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                isMultiple: true,
-                selctions: [
-                    {
-                        name: '是',
-                        value: 99
-                    }, {
-                        name: '否',
-                        value: 59
-                    }
-                ],
-                isSelect: false,
-                max: 2,
-            },
-            {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                deadline: '2019-05-21 14:00',
-                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                isMultiple: false,
-                selctions: [
-                    {
-                        name: '是',
-                        value: 19
-                    }, {
-                        name: '否',
-                        value: 59
-                    }
-                ],
-                isSelect: false,
-                max: 1,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                deadline: '2019-05-21 14:00',
-                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                isMultiple: true,
-                selctions: [
-                    {
-                        name: '是',
-                        value: 99
-                    }, {
-                        name: '否',
-                        value: 29
-                    }
-                ],
-                isSelect: false,
-                max: 2,
-            },
-            {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                deadline: '2019-05-21 14:00',
-                content: '目前在模式下无法读取加密消息并捕获。这是不能接受的条件。开发人员应该修复它。你同意吗?',
-                isMultiple: false,
-                selctions: [
-                    {
-                        name: '是',
-                        value: 59
-                    }, {
-                        name: '否',
-                        value: 59
-                    }
-                ],
-                isSelect: false,
-                max: 1,
             },
         ]
         currentMonth = ''
@@ -523,20 +435,13 @@
         }
 
         deleteSelection(index) {
-            console.log(index)
-            console.log(this.selectionList)
             this.selectionList.splice(index, 1)
-            console.log(this.selectionList)
         }
 
         changeCurrentMonth(e) {
             this.deadline = e
         }
 
-        created() {
-            this.currentVote = this.voteList[0]
-            this.currentVoteFilter = this.voteFilterList[0].label
-        }
 
         closeCheckPWDialog() {
             console.log('......closeCheckPWDialog')
@@ -548,6 +453,28 @@
 
         sendVote() {
             this.showCheckPWDialog = true
+        }
+
+        @Watch('currentVoteFilter')
+        onCurrentVoteFilterChange() {
+            if(this.currentVoteFilter == 0 ){
+                this.currentVoteList = this.voteList
+                return
+            }
+            let list = this.voteList
+            this.currentVoteList = []
+            list.map((item) => {
+                if (item.voteStatus == this.currentVoteFilter) {
+                    this.currentVoteList.push(item)
+                }
+            })
+        }
+
+        created() {
+            this.currentVote = this.voteList[0]
+            this.currentVoteFilter = this.voteFilterList[0].value
+            this.currentTimestamp = Number((new Date()).valueOf() / 1000).toFixed(0)
+            this.currentVoteList = this.voteList
         }
     }
 </script>

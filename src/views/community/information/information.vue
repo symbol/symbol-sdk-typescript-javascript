@@ -33,9 +33,6 @@
           {{currentArticle.gtmCreate}}
         </span>
         </div>
-        <div class="picture content">
-          <img src="../../../assets/images/community/article/articleBanner.png" alt="">
-        </div>
         <div v-html="currentArticle.content" class="artile_content content">
         </div>
 
@@ -57,7 +54,8 @@
               <div class="comment_content">{{c.comment}}</div>
               <div class="comment_time">{{c.gtmCreate}}</div>
             </div>
-            <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">{{$t('no_more_data')}}</div>
+            <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">{{$t('no_more_data')}}
+            </div>
             <div class="load_all_data" v-if="commentList.length === 0">{{$t('no_comment_yet')}}</div>
 
           </div>
@@ -132,15 +130,28 @@
             const that = this
             const comment = this.commentContent
             const cid = this.currentArticle.cid
-            const address = 'addres stest'
-            const nickName = 'nick nametest'
-            // const gtmCreate = formatDate((new Date()).valueOf()).replace('-','/')
+            const address = 'address stest'
+            const nickName = 'account test'
             const gtmCreate = new Date()
 
-            const url = `${this.$store.state.app.communityUrl}/rest/blog/comment/save?cid=${cid}&comment=${comment}&address=${address}&nickName=${nickName}&gtmCreate=${gtmCreate}`
-            console.log(url)
+            const url = `${this.$store.state.app.apiUrl}/rest/blog/comment/save?cid=${cid}&comment=${comment}&address=${address}&nickName=${nickName}&gtmCreate=${gtmCreate}`
             await axios.get(url).then(function (response) {
                 console.log(response)
+                that.$Notice.success({
+                    title: 'success',
+                    desc: 'success',
+                    render: h => {
+                        return h('span', [that['$t']('successful_operation')])
+                    }
+                });
+            }).catch(() => {
+                that.$Notice.error({
+                    title: 'failure',
+                    desc: 'failure',
+                    render: h => {
+                        return h('span', [that['$t']('operatio_failed')])
+                    }
+                });
             })
             this.onCurrentArticleChange()
         }
@@ -160,7 +171,6 @@
                     languageNumber = 2;
                     break;
             }
-            console.log(languageNumber)
             return languageNumber;
         }
 
@@ -188,15 +198,15 @@
             const languageNumber = this.switchLanguege()
             const that = this
             const {startPage} = this
-            const url = `${this.$store.state.app.communityUrl}/rest/blog/list?limit=10&offset=${startPage}&language=${languageNumber}`
+            const url = `${this.$store.state.app.apiUrl}/rest/blog/list?limit=10&offset=${startPage}&language=${languageNumber}`
             await axios.get(url).then(function (response) {
                 let articleList = that.articleList.concat(response.data.rows)
                 articleList.map((item) => {
                     item.summary = item.title
+                    item.content = item.content.replace(/src="/g, 'src="http://120.79.181.170/')
                     return item
                 })
                 that.articleList = articleList
-                console.log(response)
                 if (response.data.total <= that.articleList.length) {
                     that.loadAllData = true
                 }
@@ -211,7 +221,7 @@
             const that = this
             const cid = this.currentArticle.cid
             const offset = this.commentStartPage
-            const url = `${this.$store.state.app.communityUrl}/rest/blog/comment/list?cid=${cid}&limit=10&offset=${offset}`
+            const url = `${this.$store.state.app.apiUrl}/rest/blog/comment/list?cid=${cid}&limit=10&offset=${offset}`
             await axios.get(url).then(function (response) {
                 that.commentList.push(...response.data.rows)
                 that.totalComment = response.data.total

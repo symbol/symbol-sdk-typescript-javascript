@@ -67,6 +67,16 @@
                this.$store.commit('SET_HAS_WALLET',true)
            }
         }
+
+        created(){
+            this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
+            const name = this.$route.params.name
+            if(name == 'walletImportKeystore'){
+                this.toImport()
+            }else if(name == 'walletCreate'){
+                this. toCreate()
+            }
+        }
     }
 </script>
 

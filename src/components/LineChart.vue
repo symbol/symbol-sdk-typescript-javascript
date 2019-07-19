@@ -168,7 +168,7 @@
         async getChartData() {
             const that = this
             ///xemusdt/1min/100
-            const url = this.$store.state.app.marketUrl + '/xemusdt/4hour/42'
+            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/4hour/42'
             await axios.get(url).then(function (response) {
                 that.dataList = response.data.data
                 that.$set(that, 'dataList', response.data.data)

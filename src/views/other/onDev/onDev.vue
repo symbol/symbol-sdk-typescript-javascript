@@ -1,7 +1,7 @@
 <template>
-    <div class="onDevWrap">
-        <p class="remindTxt">暂未开放</p>
-    </div>
+  <div class="onDevWrap">
+    <p class="remindTxt">{{$t('not_yet_open')}}</p>
+  </div>
 </template>
 
 <script lang="ts">
@@ -11,7 +11,7 @@
     @Component({
         components: {}
     })
-    export default class onDev extends Vue{
+    export default class onDev extends Vue {
 
     }
 </script>
