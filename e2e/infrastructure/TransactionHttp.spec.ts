@@ -31,6 +31,7 @@ import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
 import {MosaicNonce} from '../../src/model/mosaic/MosaicNonce';
 import {MosaicProperties} from '../../src/model/mosaic/MosaicProperties';
+import { MosaicRestrictionType } from '../../src/model/mosaic/MosaicRestrictionType';
 import {MosaicSupplyType} from '../../src/model/mosaic/MosaicSupplyType';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasActionType } from '../../src/model/namespace/AliasActionType';
@@ -49,13 +50,16 @@ import { HashLockTransaction } from '../../src/model/transaction/HashLockTransac
 import {HashType} from '../../src/model/transaction/HashType';
 import { LinkAction } from '../../src/model/transaction/LinkAction';
 import {LockFundsTransaction} from '../../src/model/transaction/LockFundsTransaction';
+import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../src/model/transaction/MosaicDefinitionTransaction';
+import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import {MosaicSupplyChangeTransaction} from '../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import {RegisterNamespaceTransaction} from '../../src/model/transaction/RegisterNamespaceTransaction';
 import {SecretLockTransaction} from '../../src/model/transaction/SecretLockTransaction';
 import {SecretProofTransaction} from '../../src/model/transaction/SecretProofTransaction';
+import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import {Transaction} from '../../src/model/transaction/Transaction';
 import {TransactionType} from '../../src/model/transaction/TransactionType';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
@@ -117,6 +121,7 @@ describe('TransactionHttp', () => {
             });
         });
     });
+
     describe('MosaicDefinitionTransaction', () => {
         let listener: Listener;
         before (() => {
@@ -137,6 +142,7 @@ describe('TransactionHttp', () => {
                     supplyMutable: true,
                     transferable: true,
                     divisibility: 3,
+                    restrictable: true,
                     duration: UInt64.fromUint(1000),
                 }),
                 NetworkType.MIJIN_TEST,
@@ -159,6 +165,7 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
+
     describe('MosaicDefinitionTransaction', () => {
         let listener: Listener;
         before (() => {
@@ -178,6 +185,7 @@ describe('TransactionHttp', () => {
                     supplyMutable: true,
                     transferable: true,
                     divisibility: 3,
+                    restrictable: true,
                 }),
                 NetworkType.MIJIN_TEST,
             );
@@ -197,6 +205,118 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
+
+    describe('MosaicGlobalRestrictionTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
+                Deadline.create(),
+                mosaicId,
+                new MosaicId(UInt64.fromUint(0).toDTO()),
+                UInt64.fromUint(60641),
+                UInt64.fromUint(0),
+                MosaicRestrictionType.NONE,
+                UInt64.fromUint(0),
+                MosaicRestrictionType.GE,
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
+
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('MosaicGlobalRestrictionTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
+                Deadline.create(),
+                mosaicId,
+                new MosaicId(UInt64.fromUint(0).toDTO()),
+                UInt64.fromUint(60641),
+                UInt64.fromUint(0),
+                MosaicRestrictionType.GE,
+                UInt64.fromUint(1),
+                MosaicRestrictionType.GE,
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [mosaicGlobalRestrictionTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('MosaicAddressRestrictionTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
+                Deadline.create(),
+                mosaicId,
+                UInt64.fromUint(60641),
+                account3.address,
+                UInt64.fromHex('FFFFFFFFFFFFFFFF'),
+                UInt64.fromUint(2),
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [mosaicAddressRestrictionTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
     describe('TransferTransaction', () => {
         let listener: Listener;
         before (() => {

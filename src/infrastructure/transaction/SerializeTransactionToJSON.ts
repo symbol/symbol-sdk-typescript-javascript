@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
+import { AccountAddressRestrictionModificationTransaction } from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import { AccountMosaicRestrictionModificationTransaction } from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
+import { AccountOperationRestrictionModificationTransaction } from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
-import { AccountAddressRestrictionModificationTransaction } from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
-import { AccountOperationRestrictionModificationTransaction } from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
-import { AccountMosaicRestrictionModificationTransaction } from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
 import { ModifyMultisigAccountTransaction } from '../../model/transaction/ModifyMultisigAccountTransaction';
+import { MosaicAddressRestrictionTransaction } from '../../model/transaction/MosaicAddressRestrictionTransaction';
 import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
+import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
 import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSupplyChangeTransaction';
 import { RegisterNamespaceTransaction } from '../../model/transaction/RegisterNamespaceTransaction';
 import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
@@ -157,6 +159,25 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                     return mosaic.toDTO();
                 }),
                 message: (transaction as TransferTransaction).message.toDTO(),
+            };
+        case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
+            return {
+                mosaicId: (transaction as MosaicGlobalRestrictionTransaction).mosaicId.toDTO(),
+                referenceMosaicId: (transaction as MosaicGlobalRestrictionTransaction).referenceMosaicId.toDTO(),
+                restrictionKey: (transaction as MosaicGlobalRestrictionTransaction).restrictionKey.toDTO(),
+                previousRestrictionValue: (transaction as MosaicGlobalRestrictionTransaction).previousRestrictionValue.toDTO(),
+                previousRestrictionType: (transaction as MosaicGlobalRestrictionTransaction).previousRestrictionType,
+                newRestrictionValue: (transaction as MosaicGlobalRestrictionTransaction).newRestrictionValue.toDTO(),
+                newRestrictionType: (transaction as MosaicGlobalRestrictionTransaction).newRestrictionType,
+            };
+        case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
+            return {
+                mosaicId: (transaction as MosaicAddressRestrictionTransaction).mosaicId.toDTO(),
+                restrictionKey: (transaction as MosaicAddressRestrictionTransaction).restrictionKey.toDTO(),
+                targetAddress: (transaction as MosaicAddressRestrictionTransaction).targetAddress.toDTO(),
+                previousRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).previousRestrictionValue.toDTO(),
+                newRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).newRestrictionValue.toDTO(),
+
             };
         default:
             throw new Error ('Transaction type not implemented yet.');

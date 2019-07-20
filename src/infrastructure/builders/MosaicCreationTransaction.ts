@@ -21,7 +21,7 @@ import { TransactionType } from '../../model/transaction/TransactionType';
 import MosaicCreationTransactionBufferPackage from '../buffers/MosaicCreationTransactionBuffer';
 import {
     schema as MosaicCreationTransactionSchema,
-    schemaNoDuration as MosaicCreationTransactionSchemaNoDuration
+    schemaNoDuration as MosaicCreationTransactionSchemaNoDuration,
 } from '../schemas/MosaicCreationTransactionSchema';
 import { VerifiableTransaction } from './VerifiableTransaction';
 
@@ -99,7 +99,7 @@ export class Builder {
         return this;
     }
 
-    addLevyMutable() {
+    addRestrictable() {
         this.flags += 4;
         return this;
     }

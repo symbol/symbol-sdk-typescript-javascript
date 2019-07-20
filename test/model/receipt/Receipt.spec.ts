@@ -155,7 +155,7 @@ describe('Receipt', () => {
         );
 
         deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
-        deepEqual(receipt.mosaicId.toDTO().id, receiptDTO.mosaicId);
+        deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Levy);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
         deepEqual(receipt.recipient, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
@@ -182,7 +182,7 @@ describe('Receipt', () => {
 
         deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
         deepEqual(receipt.recipient, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
-        deepEqual(receipt.mosaicId.toDTO().id, receiptDTO.mosaicId);
+        deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Rental_Fee);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
     });
@@ -206,7 +206,7 @@ describe('Receipt', () => {
 
         deepEqual(receipt.account.publicKey, receiptDTO.account);
         deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
-        deepEqual(receipt.mosaicId.toDTO().id, receiptDTO.mosaicId);
+        deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Harvest_Fee);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_CHANGE);
     });
@@ -230,7 +230,7 @@ describe('Receipt', () => {
 
         deepEqual(receipt.account.publicKey, receiptDTO.account);
         deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
-        deepEqual(receipt.mosaicId.toDTO().id, receiptDTO.mosaicId);
+        deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.LockHash_Created);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_CHANGE);
     });
@@ -248,7 +248,7 @@ describe('Receipt', () => {
             receiptDTO.type,
         );
 
-        deepEqual(receipt.artifactId.toDTO().id, receiptDTO.artifactId);
+        deepEqual(receipt.artifactId.id.toDTO(), receiptDTO.artifactId);
         deepEqual(receipt.type, ReceiptType.Namespace_Expired);
         deepEqual(receipt.version, ReceiptVersion.ARTIFACT_EXPIRY);
     });
@@ -265,7 +265,7 @@ describe('Receipt', () => {
             receiptDTO.version,
             receiptDTO.type,
         );
-        deepEqual(receipt.artifactId.toDTO().id, receiptDTO.artifactId);
+        deepEqual(receipt.artifactId.toDTO(), receiptDTO.artifactId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Expired);
         deepEqual(receipt.version, ReceiptVersion.ARTIFACT_EXPIRY);
     });
@@ -293,7 +293,7 @@ describe('Receipt', () => {
                 new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
             }),
         );
-        deepEqual((statement.unresolved as MosaicId).toDTO().id, statementDto.unresolved);
+        deepEqual((statement.unresolved as MosaicId).toDTO(), statementDto.unresolved);
         deepEqual((statement.resolutionEntries[0].resolved as MosaicAlias).mosaicId.id.toDTO(), [2553890912, 2234768168]);
     });
 
@@ -329,7 +329,7 @@ describe('Receipt', () => {
         );
 
         deepEqual(receipt.amount.compact(), receiptDTO.amount);
-        deepEqual(receipt.mosaicId.toDTO().id, receiptDTO.mosaicId);
+        deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Inflation);
         deepEqual(receipt.version, ReceiptVersion.INFLATION_RECEIPT);
     });

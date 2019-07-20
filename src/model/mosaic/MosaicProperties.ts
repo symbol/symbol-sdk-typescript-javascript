@@ -38,6 +38,12 @@ export class MosaicProperties {
     public readonly transferable: boolean;
 
     /**
+     * Not all the mosaics of a given network will be subject to mosaic restrictions. The feature will only affect
+     * those to which the issuer adds the "restrictable" property explicitly at the moment of its creation. This
+     * property appears disabled by default, as it is undesirable for autonomous tokens like the public network currency.
+     */
+    public readonly restrictable: boolean;
+    /**
      * @param flags
      * @param divisibility
      * @param duration
@@ -59,9 +65,10 @@ export class MosaicProperties {
                  */
                 public readonly duration?: UInt64) {
         let binaryFlags = '00' + (flags.lower >>> 0).toString(2);
-        binaryFlags = binaryFlags.substr(binaryFlags.length - 2, 2);
-        this.supplyMutable = binaryFlags[1] === '1';
-        this.transferable = binaryFlags[0] === '1';
+        binaryFlags = binaryFlags.substr(binaryFlags.length - 3, 3);
+        this.supplyMutable = binaryFlags[2] === '1';
+        this.transferable = binaryFlags[1] === '1';
+        this.restrictable = binaryFlags[0] === '1';
     }
 
     /**
@@ -73,9 +80,11 @@ export class MosaicProperties {
         supplyMutable: boolean,
         transferable: boolean,
         divisibility: number,
+        restrictable?: boolean,
         duration?: UInt64,
     }) {
-        const flags = (params.supplyMutable ? 1 : 0) + (params.transferable ? 2 : 0);
+        const restrictable = params.restrictable ? 4 : 0;
+        const flags = (params.supplyMutable ? 1 : 0) + (params.transferable ? 2 : 0) + restrictable;
         return new MosaicProperties(UInt64.fromUint(flags), params.divisibility, params.duration);
     }
 
@@ -85,7 +94,8 @@ export class MosaicProperties {
     toDTO() {
         const dto = [
             {id: MosaicPropertyType.MosaicFlags, value: UInt64.fromUint((this.supplyMutable ? 1 : 0) +
-                                        (this.transferable ? 2 : 0)).toDTO()},
+                                        (this.transferable ? 2 : 0) +
+                                        (this.transferable ? 4 : 0)).toDTO()},
             {id: MosaicPropertyType.Divisibility, value: UInt64.fromUint(this.divisibility).toDTO()},
         ];
 

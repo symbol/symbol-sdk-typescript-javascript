@@ -113,4 +113,16 @@ export class TransactionType {
      * @type {number}
      */
     public static readonly LINK_ACCOUNT = 0x414C;
+
+    /**
+     * Mosaic address restriction type
+     * @type {number}
+     */
+    public static readonly MOSAIC_ADDRESS_RESTRICTION = 0x4251;
+
+    /**
+     * Mosaic global restriction type
+     * @type {number}
+     */
+    public static readonly MOSAIC_GLOBAL_RESTRICTION = 0x4151;
 }

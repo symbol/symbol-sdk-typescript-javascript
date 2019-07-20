@@ -65,6 +65,7 @@ describe('MosaicProperties', () => {
 
         expect(mosaicProperties.supplyMutable).to.be.equal(false);
         expect(mosaicProperties.transferable).to.be.equal(false);
+        expect(mosaicProperties.restrictable).to.be.equal(false);
     });
 
     it('should createComplete an MosaicProperties object without duration', () => {
@@ -79,5 +80,6 @@ describe('MosaicProperties', () => {
 
         expect(mosaicProperties.supplyMutable).to.be.equal(false);
         expect(mosaicProperties.transferable).to.be.equal(false);
+        expect(mosaicProperties.restrictable).to.be.equal(false);
     });
 });
