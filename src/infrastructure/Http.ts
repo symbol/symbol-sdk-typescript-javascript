@@ -57,4 +57,15 @@ export abstract class Http {
             order: queryParams ? queryParams.order : undefined,
         };
     }
+
+    errorHandling(error: any): Error {
+        if (error.response && error.response.statusCode && error.response.body) {
+            const formattedError = {
+                statusCode: error.response.statusCode,
+                errorDetails: error.response.body,
+            };
+            return new Error(JSON.stringify(formattedError));
+        }
+        return new Error(error);
+    }
 }

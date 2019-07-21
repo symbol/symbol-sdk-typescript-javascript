@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import {from as observableFrom, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { ClientResponse } from 'http';
+import {from as observableFrom, Observable, throwError} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {UInt64} from '../model/UInt64';
 import { BlockchainScoreDTO,
@@ -50,9 +51,13 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<UInt64>
      */
     public getBlockchainHeight(): Observable<UInt64> {
-        return observableFrom(this.chainRoutesApi.getBlockchainHeight()).pipe(map((heightDTO: HeightInfoDTO) => {
-            return new UInt64(heightDTO.height);
-        }));
+        return observableFrom(this.chainRoutesApi.getBlockchainHeight()).pipe(
+            map((response: { response: ClientResponse; body: HeightInfoDTO; } ) => {
+                const heightDTO = response.body;
+                return new UInt64(heightDTO.height);
+            }),
+            catchError((error) =>  throwError(this.errorHandling(error))),
+        );
     }
 
     /**
@@ -60,11 +65,15 @@ export class ChainHttp extends Http implements ChainRepository {
      * @returns Observable<BlockchainScore>
      */
     public getBlockchainScore(): Observable<BlockchainScore> {
-        return observableFrom(this.chainRoutesApi.getBlockchainScore()).pipe(map((blockchainScoreDTO: BlockchainScoreDTO) => {
-            return new BlockchainScore(
-                new UInt64(blockchainScoreDTO.scoreLow),
-                new UInt64(blockchainScoreDTO.scoreHigh),
-            );
-        }));
+        return observableFrom(this.chainRoutesApi.getBlockchainScore()).pipe(
+            map((response: { response: ClientResponse; body: BlockchainScoreDTO; } ) => {
+                const blockchainScoreDTO = response.body;
+                return new BlockchainScore(
+                    new UInt64(blockchainScoreDTO.scoreLow),
+                    new UInt64(blockchainScoreDTO.scoreHigh),
+                );
+            }),
+            catchError((error) =>  throwError(this.errorHandling(error))),
+        );
     }
 }

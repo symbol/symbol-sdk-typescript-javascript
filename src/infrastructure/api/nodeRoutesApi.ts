@@ -124,12 +124,9 @@ export class NodeRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "NodeInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
@@ -174,12 +171,9 @@ export class NodeRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "NodeTimeDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
