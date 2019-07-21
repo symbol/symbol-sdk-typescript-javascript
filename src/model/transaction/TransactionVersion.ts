@@ -101,6 +101,18 @@ export class TransactionVersion {
     public static readonly MOSAIC_ALIAS = 0x01;
 
     /**
+     * Mosaic global restriction transaction version
+     * @type {number}
+     */
+    public static readonly MOSAIC_GLOBAL_RESTRICTION = 0x01;
+
+    /**
+     * Mosaic address restriction transaction version
+     * @type {number}
+     */
+    public static readonly MOSAIC_ADDRESS_RESTRICTION = 0x01;
+
+    /**
      * Account Restriction address transaction version
      * @type {number}
      */

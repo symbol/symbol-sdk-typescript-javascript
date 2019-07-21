@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Convert as convert } from '../../core/format';
 import {decode} from 'utf8';
+import { Convert as convert } from '../../core/format';
 import { Address } from '../../model/account/Address';
 import { PublicAccount } from '../../model/account/PublicAccount';
 import { NetworkType } from '../../model/blockchain/NetworkType';
@@ -25,7 +25,10 @@ import { MosaicNonce } from '../../model/mosaic/MosaicNonce';
 import { MosaicProperties } from '../../model/mosaic/MosaicProperties';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { NamespaceType } from '../../model/namespace/NamespaceType';
+import { AccountAddressRestrictionModificationTransaction } from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import { AccountMosaicRestrictionModificationTransaction } from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
+import { AccountOperationRestrictionModificationTransaction } from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
 import { AccountRestrictionModification } from '../../model/transaction/AccountRestrictionModification';
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
@@ -36,12 +39,11 @@ import { HashType } from '../../model/transaction/HashType';
 import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
 import { Message } from '../../model/transaction/Message';
 import { MessageType } from '../../model/transaction/MessageType';
-import { AccountAddressRestrictionModificationTransaction } from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
-import { AccountOperationRestrictionModificationTransaction } from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
-import { AccountMosaicRestrictionModificationTransaction } from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
 import { ModifyMultisigAccountTransaction } from '../../model/transaction/ModifyMultisigAccountTransaction';
+import { MosaicAddressRestrictionTransaction } from '../../model/transaction/MosaicAddressRestrictionTransaction';
 import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
+import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
 import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSupplyChangeTransaction';
 import { MultisigCosignatoryModification } from '../../model/transaction/MultisigCosignatoryModification';
 import { PlainMessage } from '../../model/transaction/PlainMessage';
@@ -225,6 +227,7 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                     supplyMutable: (flags & 1) === 1,
                     transferable: (flags & 2) === 2,
                     divisibility: parseInt(convert.uint8ToHex(convert.hexToUint8(divisibility).reverse()), 16),
+                    restrictable: (flags & 4) === 4,
                     duration: duration ? UInt64.fromHex(reverse(duration)) : undefined,
                 }),
                 networkType,
@@ -359,6 +362,44 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                 new SignedTransaction('', hashLockHash, '', TransactionType.AGGREGATE_BONDED, networkType),
                 networkType,
             );
+        case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
+            // read bytes
+            const globalRestrictionMosaicId = transactionData.substring(0, 16);
+            const globalRestrictionReferenceMosaicId = transactionData.substring(16, 32);
+            const globalRestrictionRestrictionKey = transactionData.substring(32, 48);
+            const globalRestrictionPrevValue = transactionData.substring(48, 64);
+            const globalRestrictionPrevType = transactionData.substring(64, 66);
+            const globalRestrictionNewValue = transactionData.substring(66, 82);
+            const globalRestrictionNewType = transactionData.substring(82, 84);
+
+            return MosaicGlobalRestrictionTransaction.create(
+                Deadline.createFromDTO(deadline),
+                new MosaicId(UInt64.fromHex(reverse(globalRestrictionMosaicId)).toDTO()),
+                new MosaicId(UInt64.fromHex(reverse(globalRestrictionReferenceMosaicId)).toDTO()),
+                UInt64.fromHex(reverse(globalRestrictionRestrictionKey)),
+                UInt64.fromHex(reverse(globalRestrictionPrevValue)),
+                parseInt(convert.uint8ToHex(convert.hexToUint8(globalRestrictionPrevType).reverse()), 16),
+                UInt64.fromHex(reverse(globalRestrictionNewValue)),
+                parseInt(convert.uint8ToHex(convert.hexToUint8(globalRestrictionNewType).reverse()), 16),
+                networkType,
+            );
+        case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
+            // read bytes
+            const addressRestrictionMosaicId = transactionData.substring(0, 16);
+            const addressRestrictionRestrictionKey = transactionData.substring(16, 32);
+            const addressRestrictionTargetAddress = transactionData.substring(32, 82);
+            const addressRestrictionPrevValue = transactionData.substring(82, 98);
+            const addressRestrictionNewValue = transactionData.substring(98, 114);
+
+            return MosaicAddressRestrictionTransaction.create(
+                Deadline.createFromDTO(deadline),
+                new MosaicId(UInt64.fromHex(reverse(addressRestrictionMosaicId)).toDTO()),
+                UInt64.fromHex(reverse(addressRestrictionRestrictionKey)),
+                Address.createFromEncoded(addressRestrictionTargetAddress),
+                UInt64.fromHex(reverse(addressRestrictionPrevValue)),
+                UInt64.fromHex(reverse(addressRestrictionNewValue)),
+                networkType,
+            );
         case TransactionType.AGGREGATE_COMPLETE:
             // read bytes
             const payloadSize = parseInt(convert.uint8ToHex(convert.hexToUint8(transactionData.substring(0, 8)).reverse()), 16) * 2;
@@ -484,7 +525,6 @@ const decodeHex = (hex: string): string => {
         return str;
     }
 };
-
 
 /**
  * @internal

@@ -151,6 +151,7 @@ describe('AggregateTransaction', () => {
                 supplyMutable: true,
                 transferable: true,
                 divisibility: 3,
+                restrictable: true,
                 duration: UInt64.fromUint(1000),
             }),
             NetworkType.MIJIN_TEST,
@@ -170,7 +171,7 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('01904D41E6DE84B8010000000000000001030302E803000000000000');
+        )).to.be.equal('01904D41E6DE84B8010000000000000001070302E803000000000000');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicSupplyChangeTransaction', () => {

@@ -96,4 +96,12 @@ export class MosaicInfo {
     public isTransferable(): boolean {
         return this.properties.transferable;
     }
+
+    /**
+     * Is mosaic restrictable
+     * @returns {boolean}
+     */
+    public isRestrictable(): boolean {
+        return this.properties.restrictable;
+    }
 }

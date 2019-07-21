@@ -141,7 +141,7 @@ describe('Receipt - CreateStatementFromDTO', () => {
                 .address.plain()).to.be.equal(Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain());
 
         deepEqual(statement.mosaicResolutionStatements[0].height, [1506, 0]);
-        deepEqual(unresolvedMosaicId.toDTO().id, [4014740460, 2448037180]);
+        deepEqual(unresolvedMosaicId.toDTO(), [4014740460, 2448037180]);
         expect(statement.mosaicResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
         deepEqual((statement.mosaicResolutionStatements[0].resolutionEntries[0].resolved as MosaicAlias)
                 .mosaicId.id.toDTO(), [2553890912, 2234768168]);

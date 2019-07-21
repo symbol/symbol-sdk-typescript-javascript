@@ -40,6 +40,7 @@ describe('MosaicAmountView', () => {
                 supplyMutable: true,
                 transferable: true,
                 divisibility: 3,
+                restrictable: true,
                 duration: UInt64.fromUint(1000),
             }),
         );
