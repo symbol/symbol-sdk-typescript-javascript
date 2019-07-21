@@ -132,9 +132,12 @@ export class MosaicRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "MosaicInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -186,9 +189,12 @@ export class MosaicRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<MosaicInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -240,9 +246,12 @@ export class MosaicRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<MosaicNamesDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });

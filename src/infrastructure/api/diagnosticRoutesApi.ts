@@ -124,9 +124,12 @@ export class DiagnosticRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "StorageInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -171,9 +174,12 @@ export class DiagnosticRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "ServerDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });

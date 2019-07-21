@@ -46,10 +46,13 @@ describe('TransactionHttp', () => {
 
         const signedTx = account.sign(aggTx, generationHash);
         const trnsHttp = new TransactionHttp(NIS2_URL);
-        expect(() => {
-            trnsHttp.announceAggregateBonded(signedTx)
+        return trnsHttp.announceAggregateBonded(signedTx)
             .toPromise()
-            .then();
-        }).to.throw(Error, 'Only Transaction Type 0x4241 is allowed for announce aggregate bonded');
+            .then(() => {
+                throw new Error('Should be called');
+            })
+            .catch((reason) => {
+                expect(reason.toString()).to.be.equal('Only Transaction Type 0x4241 is allowed for announce aggregate bonded');
+            });
     });
 });

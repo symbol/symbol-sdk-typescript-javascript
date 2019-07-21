@@ -133,9 +133,12 @@ export class BlockRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "BlockInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -187,9 +190,12 @@ export class BlockRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "StatementsDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -251,9 +257,12 @@ export class BlockRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<TransactionInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -312,9 +321,12 @@ export class BlockRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<BlockInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -373,9 +385,12 @@ export class BlockRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "MerkleProofInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -434,9 +449,12 @@ export class BlockRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "MerkleProofInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });

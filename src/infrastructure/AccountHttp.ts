@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { ClientResponse } from 'http';
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map, mergeMap} from 'rxjs/operators';
+import {from as observableFrom, Observable} from 'rxjs';
+import {map, mergeMap} from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import {AccountInfo} from '../model/account/AccountInfo';
 import { AccountNames } from '../model/account/AccountNames';
@@ -35,6 +34,7 @@ import {UInt64} from '../model/UInt64';
 import {AccountRepository} from './AccountRepository';
 import { AccountInfoDTO,
          AccountNamesDTO,
+         AccountRestrictionsDTO,
          AccountRestrictionsInfoDTO,
          AccountRoutesApi,
          MosaicDTO,
@@ -75,25 +75,21 @@ export class AccountHttp extends Http implements AccountRepository {
      * @returns Observable<AccountInfo>
      */
     public getAccountInfo(address: Address): Observable<AccountInfo> {
-        return observableFrom(this.accountRoutesApi.getAccountInfo(address.plain())).pipe(
-            map((response: { response: ClientResponse; body: AccountInfoDTO; }) => {
-                const accountInfoDTO = response.body;
-                return new AccountInfo(
-                    accountInfoDTO.meta,
-                    Address.createFromEncoded(accountInfoDTO.account.address),
-                    new UInt64(accountInfoDTO.account.addressHeight),
-                    accountInfoDTO.account.publicKey,
-                    new UInt64(accountInfoDTO.account.publicKeyHeight),
-                    accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(
-                        new MosaicId(mosaicDTO.id),
-                        new UInt64(mosaicDTO.amount),
-                    )),
-                    new UInt64(accountInfoDTO.account.importance),
-                    new UInt64(accountInfoDTO.account.importanceHeight),
-                );
-            }),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+        return observableFrom(this.accountRoutesApi.getAccountInfo(address.plain())).pipe(map((accountInfoDTO: AccountInfoDTO) => {
+            return new AccountInfo(
+                accountInfoDTO.meta,
+                Address.createFromEncoded(accountInfoDTO.account.address),
+                new UInt64(accountInfoDTO.account.addressHeight),
+                accountInfoDTO.account.publicKey,
+                new UInt64(accountInfoDTO.account.publicKeyHeight),
+                accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(
+                    new MosaicId(mosaicDTO.id),
+                    new UInt64(mosaicDTO.amount),
+                )),
+                new UInt64(accountInfoDTO.account.importance),
+                new UInt64(accountInfoDTO.account.importanceHeight),
+            );
+        }));
     }
 
     /**
@@ -103,12 +99,9 @@ export class AccountHttp extends Http implements AccountRepository {
      */
     public getAccountRestrictions(address: Address): Observable<AccountRestrictionsInfo> {
         return observableFrom(this.accountRoutesApi.getAccountRestrictions(address.plain()))
-            .pipe(map((response: { response: ClientResponse; body: AccountRestrictionsInfoDTO; }) => {
-                const accountRestrictions = response.body;
-                return DtoMapping.extractAccountRestrictionFromDto(accountRestrictions);
-            }),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-        );
+            .pipe(map((accountRestrictions: AccountRestrictionsInfoDTO) => {
+            return DtoMapping.extractAccountRestrictionFromDto(accountRestrictions);
+        }));
     }
 
     /**
@@ -122,14 +115,11 @@ export class AccountHttp extends Http implements AccountRepository {
         };
         return observableFrom(
             this.accountRoutesApi.getAccountRestrictionsFromAccounts(accountIds))
-                .pipe(map((response: { response: ClientResponse; body: AccountRestrictionsInfoDTO[]; }) => {
-                    const accountRestrictions = response.body;
-                    return accountRestrictions.map((restriction) => {
-                        return DtoMapping.extractAccountRestrictionFromDto(restriction);
-                    });
-                }),
-                catchError((error) =>  throwError(error)),
-        );
+                .pipe(map((accountRestrictions: AccountRestrictionsDTO[]) => {
+            return accountRestrictions.map((restriction) => {
+                return DtoMapping.extractAccountRestrictionFromDto(restriction);
+            });
+        }));
     }
 
     /**
@@ -142,25 +132,21 @@ export class AccountHttp extends Http implements AccountRepository {
             addresses: addresses.map((address) => address.plain()),
         };
         return observableFrom(
-            this.accountRoutesApi.getAccountsInfo(accountIdsBody)).pipe(
-                map((response: { response: ClientResponse; body: AccountInfoDTO[]; }) => {
-                    const accountsInfoMetaDataDTO = response.body;
-                    return accountsInfoMetaDataDTO.map((accountInfoDTO: AccountInfoDTO) => {
-                        return new AccountInfo(
-                            accountInfoDTO.meta,
-                            Address.createFromEncoded(accountInfoDTO.account.address),
-                            new UInt64(accountInfoDTO.account.addressHeight),
-                            accountInfoDTO.account.publicKey,
-                            new UInt64(accountInfoDTO.account.publicKeyHeight),
-                            accountInfoDTO.account.mosaics.map((mosaicDTO: MosaicDTO) =>
-                                new Mosaic(new MosaicId(mosaicDTO.id), new UInt64(mosaicDTO.amount))),
-                            new UInt64(accountInfoDTO.account.importance),
-                            new UInt64(accountInfoDTO.account.importanceHeight),
-                        );
-                    });
-                }),
-                catchError((error) =>  throwError(error)),
-        );
+            this.accountRoutesApi.getAccountsInfo(accountIdsBody)).pipe(map((accountsInfoMetaDataDTO: AccountInfoDTO[]) => {
+            return accountsInfoMetaDataDTO.map((accountInfoDTO: AccountInfoDTO) => {
+                return new AccountInfo(
+                    accountInfoDTO.meta,
+                    Address.createFromEncoded(accountInfoDTO.account.address),
+                    new UInt64(accountInfoDTO.account.addressHeight),
+                    accountInfoDTO.account.publicKey,
+                    new UInt64(accountInfoDTO.account.publicKeyHeight),
+                    accountInfoDTO.account.mosaics.map((mosaicDTO: MosaicDTO) =>
+                        new Mosaic(new MosaicId(mosaicDTO.id), new UInt64(mosaicDTO.amount))),
+                    new UInt64(accountInfoDTO.account.importance),
+                    new UInt64(accountInfoDTO.account.importanceHeight),
+                );
+            });
+        }));
     }
 
     public getAccountsNames(addresses: Address[]): Observable<AccountNames[]> {
@@ -168,20 +154,16 @@ export class AccountHttp extends Http implements AccountRepository {
             addresses: addresses.map((address) => address.plain()),
         };
         return observableFrom(
-            this.accountRoutesApi.getAccountsNames(accountIdsBody)).pipe(
-                map((response: { response: ClientResponse; body: AccountNamesDTO[]; }) => {
-                    const accountNames = response.body;
-                    return accountNames.map((accountName) => {
-                        return new AccountNames(
-                            Address.createFromEncoded(accountName.address),
-                            accountName.names.map((name) => {
-                                return new NamespaceName(new NamespaceId(name), name);
-                            }),
-                        );
-                    });
-                }),
-                catchError((error) =>  throwError(error)),
-        );
+            this.accountRoutesApi.getAccountsNames(accountIdsBody)).pipe(map((accountNames: AccountNamesDTO[]) => {
+            return accountNames.map((accountName) => {
+                return new AccountNames(
+                    Address.createFromEncoded(accountName.address),
+                    accountName.names.map((name) => {
+                        return new NamespaceName(new NamespaceId(name), name);
+                    }),
+                );
+            });
+        }));
     }
     /**
      * Gets a MultisigAccountInfo for an account.
@@ -192,20 +174,17 @@ export class AccountHttp extends Http implements AccountRepository {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.accountRoutesApi.getAccountMultisig(address.plain()))
-                    .pipe(map((response: { response: ClientResponse; body: MultisigAccountInfoDTO; }) => {
-                        const multisigAccountInfoDTO = response.body;
-                        return new MultisigAccountInfo(
-                            PublicAccount.createFromPublicKey(multisigAccountInfoDTO.multisig.account, networkType),
-                            multisigAccountInfoDTO.multisig.minApproval,
-                            multisigAccountInfoDTO.multisig.minRemoval,
-                            multisigAccountInfoDTO.multisig.cosignatories
-                                .map((cosigner) => PublicAccount.createFromPublicKey(cosigner, networkType)),
-                            multisigAccountInfoDTO.multisig.multisigAccounts
-                                .map((multisigAccount) => PublicAccount.createFromPublicKey(multisigAccount, networkType)),
-                        );
-                    }),
-                    catchError((error) =>  throwError(error)),
-        )));
+                    .pipe(map((multisigAccountInfoDTO: MultisigAccountInfoDTO) => {
+                return new MultisigAccountInfo(
+                    PublicAccount.createFromPublicKey(multisigAccountInfoDTO.multisig.account, networkType),
+                    multisigAccountInfoDTO.multisig.minApproval,
+                    multisigAccountInfoDTO.multisig.minRemoval,
+                    multisigAccountInfoDTO.multisig.cosignatories
+                        .map((cosigner) => PublicAccount.createFromPublicKey(cosigner, networkType)),
+                    multisigAccountInfoDTO.multisig.multisigAccounts
+                        .map((multisigAccount) => PublicAccount.createFromPublicKey(multisigAccount, networkType)),
+                );
+            }))));
     }
 
     /**
@@ -217,28 +196,24 @@ export class AccountHttp extends Http implements AccountRepository {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
                 this.accountRoutesApi.getAccountMultisigGraph(address.plain()))
-                    .pipe(map((response: { response: ClientResponse; body: MultisigAccountGraphInfoDTO[]; }) => {
-                        const multisigAccountGraphInfosDTO = response.body;
-                        const multisigAccounts = new Map<number, MultisigAccountInfo[]>();
-                        multisigAccountGraphInfosDTO.map((multisigAccountGraphInfoDTO) => {
-                            multisigAccounts.set(multisigAccountGraphInfoDTO.level,
-                                multisigAccountGraphInfoDTO.multisigEntries.map((multisigAccountInfoDTO) => {
-                                    return new MultisigAccountInfo(
-                                        PublicAccount.createFromPublicKey(multisigAccountInfoDTO.multisig.account, networkType),
-                                        multisigAccountInfoDTO.multisig.minApproval,
-                                        multisigAccountInfoDTO.multisig.minRemoval,
-                                        multisigAccountInfoDTO.multisig.cosignatories
-                                            .map((cosigner) => PublicAccount.createFromPublicKey(cosigner, networkType)),
-                                        multisigAccountInfoDTO.multisig.multisigAccounts
-                                            .map((multisigAccountDTO) =>
-                                                PublicAccount.createFromPublicKey(multisigAccountDTO, networkType)));
-                                }),
-                            );
-                        });
-                        return new MultisigAccountGraphInfo(multisigAccounts);
-                    }),
-                    catchError((error) =>  throwError(error)),
-        )));
+                    .pipe(map((multisigAccountGraphInfosDTO: MultisigAccountGraphInfoDTO[]) => {
+                const multisigAccounts = new Map<number, MultisigAccountInfo[]>();
+                multisigAccountGraphInfosDTO.map((multisigAccountGraphInfoDTO) => {
+                    multisigAccounts.set(multisigAccountGraphInfoDTO.level,
+                        multisigAccountGraphInfoDTO.multisigEntries.map((multisigAccountInfoDTO) => {
+                            return new MultisigAccountInfo(
+                                PublicAccount.createFromPublicKey(multisigAccountInfoDTO.multisig.account, networkType),
+                                multisigAccountInfoDTO.multisig.minApproval,
+                                multisigAccountInfoDTO.multisig.minRemoval,
+                                multisigAccountInfoDTO.multisig.cosignatories
+                                    .map((cosigner) => PublicAccount.createFromPublicKey(cosigner, networkType)),
+                                multisigAccountInfoDTO.multisig.multisigAccounts
+                                    .map((multisigAccountDTO) => PublicAccount.createFromPublicKey(multisigAccountDTO, networkType)));
+                        }),
+                    );
+                });
+                return new MultisigAccountGraphInfo(multisigAccounts);
+            }))));
     }
 
     /**
@@ -253,14 +228,11 @@ export class AccountHttp extends Http implements AccountRepository {
                                                this.queryParams(queryParams).pageSize,
                                                this.queryParams(queryParams).id,
                                                this.queryParams(queryParams).order)).pipe(
-            map((response: { response: ClientResponse; body: TransactionInfoDTO[]; }) => {
-                const transactionsDTO = response.body;
+            map((transactionsDTO: TransactionInfoDTO[]) => {
                 return transactionsDTO.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
-            }),
-            catchError((error) =>  throwError(error)),
-        );
+            }));
     }
 
     /**
@@ -276,14 +248,11 @@ export class AccountHttp extends Http implements AccountRepository {
                                                        this.queryParams(queryParams).pageSize,
                                                        this.queryParams(queryParams).id,
                                                        this.queryParams(queryParams).order)).pipe(
-            map((response: { response: ClientResponse; body: TransactionInfoDTO[]; }) => {
-                const transactionsDTO = response.body;
+            map((transactionsDTO: TransactionInfoDTO[]) => {
                 return transactionsDTO.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
-            }),
-            catchError((error) =>  throwError(error)),
-        );
+            }));
     }
 
     /**
@@ -299,14 +268,11 @@ export class AccountHttp extends Http implements AccountRepository {
                                                        this.queryParams(queryParams).pageSize,
                                                        this.queryParams(queryParams).id,
                                                        this.queryParams(queryParams).order)).pipe(
-            map((response: { response: ClientResponse; body: TransactionInfoDTO[]; }) => {
-                const transactionsDTO = response.body;
+            map((transactionsDTO: TransactionInfoDTO[]) => {
                 return transactionsDTO.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
-            }),
-            catchError((error) =>  throwError(error)),
-        );
+            }));
     }
 
     /**
@@ -323,14 +289,11 @@ export class AccountHttp extends Http implements AccountRepository {
                                                           this.queryParams(queryParams).pageSize,
                                                           this.queryParams(queryParams).id,
                                                           this.queryParams(queryParams).order)).pipe(
-            map((response: { response: ClientResponse; body: TransactionInfoDTO[]; }) => {
-                const transactionsDTO = response.body;
+            map((transactionsDTO: TransactionInfoDTO[]) => {
                 return transactionsDTO.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
-            }),
-            catchError((error) =>  throwError(error)),
-        );
+            }));
     }
 
     /**
@@ -346,13 +309,10 @@ export class AccountHttp extends Http implements AccountRepository {
                                                       this.queryParams(queryParams).pageSize,
                                                       this.queryParams(queryParams).id,
                                                       this.queryParams(queryParams).order)).pipe(
-            map((response: { response: ClientResponse; body: TransactionInfoDTO[]; }) => {
-                const transactionsDTO = response.body;
+            map((transactionsDTO: TransactionInfoDTO[]) => {
                 return transactionsDTO.map((transactionDTO) => {
                     return CreateTransactionFromDTO(transactionDTO) as AggregateTransaction;
                 });
-            }),
-            catchError((error) =>  throwError(error)),
-        );
+            }));
     }
 }
