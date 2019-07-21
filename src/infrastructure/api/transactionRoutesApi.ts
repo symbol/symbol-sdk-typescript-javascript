@@ -136,9 +136,12 @@ export class TransactionRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "AnnounceTransactionInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -190,9 +193,12 @@ export class TransactionRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "AnnounceTransactionInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -244,9 +250,12 @@ export class TransactionRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "AnnounceTransactionInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -298,9 +307,12 @@ export class TransactionRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "TransactionInfoDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -352,9 +364,12 @@ export class TransactionRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "TransactionStatusDTO");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -406,9 +421,12 @@ export class TransactionRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<TransactionInfoDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
@@ -460,9 +478,12 @@ export class TransactionRoutesApi {
                 } else {
                     body = ObjectSerializer.deserialize(body, "Array<TransactionStatusDTO>");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response, body });
+                        resolve(body);
                     } else {
-                        reject({ response, body });
+                        reject({
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage
+                        });
                     }
                 }
             });
