@@ -10,11 +10,11 @@
         </div>
 
         <div class="split"></div>
-        <div class="XEM_amount"><span>XEM</span><span class="amount">166.000.000000</span></div>
-        <div class="exchange">￥ 63.911.64</div>
+        <div class="XEM_amount"><span>XEM</span><span class="amount">{{XEMamount}}</span></div>
+        <div class="exchange">￥{{(XEMamount*currentPrice).toFixed(2)}}</div>
 
-        <div class="account_alias">
-          别名：wallet.name
+        <div class="account_alias" v-show="isShowAccountAlias">
+          {{$t('alias')}}：wallet.name
         </div>
       </div>
       <div class="bottom_account_info radius" ref="bottomAccountInfo">
@@ -27,13 +27,12 @@
               <!--        all       -->
               <div>
                 <div class="mosaic_data" v-if="m.show" v-for="(m,index) in mosaicList">
-                <span>
+                <span class="img_container">
                     <img src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
                 </span>
                   <span class="mosaic_name">{{m.name}}</span>
                   <span class="mosaic_value">
                   <div>{{m.amount}}</div>
-                  <div>￥{{m.rate}}</div>
                 </span>
                 </div>
               </div>
@@ -72,12 +71,14 @@
               <img src="../../../assets/images/monitor/monitorLeftArrow.png" alt="">
               <span>{{$t('asset_setting')}}</span>
             </div>
-            <div class="input_outter">
+            <div @click="searchMosaic" class="input_outter">
               <img src="../../../assets/images/monitor/monitorSearchIcon.png" alt="">
-              <input type="text" :placeholder="$t('search_for_asset_name')">
+              <input  v-model="mosaicName" type="text" :placeholder="$t('search_for_asset_name')">
+              <span class="search">{{$t('search')}}</span>
+
             </div>
             <div class="mosaic_data" v-for="(m,index) in mosaicList">
-                <span>
+                <span class="namege_img">
                     <img @click="m.show=!m.show" class="small_icon"
                          :src="m.show?monitorSeleted:monitorUnselected">
                     <img src="../../../assets/images/monitor/monitorMosaicIcon.png">
@@ -85,7 +86,6 @@
               <span class="mosaic_name">{{m.name}}</span>
               <span class="mosaic_value">
                   <div>{{m.amount}}</div>
-                  <div>￥{{m.rate}}</div>
                 </span>
             </div>
           </div>
@@ -110,18 +110,31 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Address} from 'nem2-sdk'
+    import axios from 'axios'
+    import {copyTxt} from '@/utils/tools'
+    import {accountInterface} from '@/interface/sdkAccount'
+    import {Component, Vue} from 'vue-property-decorator'
     import monitorSeleted from '../../../assets/images/monitor/monitorSeleted.png'
     import monitorUnselected from '../../../assets/images/monitor/monitorUnselected.png'
     import monitorMosaicIcon from '../../../assets/images/monitor/monitorMosaicIcon.png'
-    import {copyTxt} from '@/utils/tools'
+    import {mosaicInterface} from '@/interface/sdkMosaic';
 
     @Component
     export default class DashBoard extends Vue {
-
-        address = 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
+        accountPrivateKey = ''
+        accountPublicKey = ''
+        accountAddress = ''
+        node = ''
+        XEMamount = 0
+        currentPrice = 0
+        currentXem = ''
+        address = ''
+        currentXEM1 = ''
+        currentXEM2 = ''
         monitorUnselected = monitorUnselected
         monitorSeleted = monitorSeleted
+        mosaicName = ''
         navigatorList: any = [
             {
                 name: 'dash_board',
@@ -139,12 +152,13 @@
                 name: 'receipt',
                 isSelect: false,
                 path: 'receipt'
+            },
+            {
+                name: 'remote',
+                isSelect: false,
+                path: 'receipt',
+                disabled: true
             }
-            // , {
-            //     name: 'remote',
-            //     isSelect: false,
-            //     path: 'remote'
-            // }
         ]
         isShowAccountInfo = true;
         isShowManageMosaicIcon = false
@@ -152,27 +166,25 @@
             {
                 name: 'XEM',
                 amount: 0.265874,
-                rate: 30.55,
                 show: true
             },
             {
                 name: 'ETC',
                 amount: 0.265874,
-                rate: 30.55,
                 show: true
             },
             {
                 name: 'ETH',
                 amount: 0.265874,
-                rate: 30.55,
                 show: true
             },
             {
                 name: 'BTC',
                 amount: 0.265874,
-                rate: 30.55,
                 show: true
             }]
+        isShowAccountAlias = false
+        mosaic: string;
 
         switchPanel(index) {
             const list = this.navigatorList.map((item) => {
@@ -234,17 +246,135 @@
                                         lineHeight: '24px'
                                     },
                                 },
-                                '公告：Nem发布了最新投票，你可以在https://forum.nem.io/t/2020/ele-\n' +
-                                'ction查看更多'
+                                '公告：Nem发布了最新投票，你可以在https://forum.nem.io/t/2020/ele-ction查看更多'
                             )
                         ])
                 }
             });
         }
 
-        created() {
+        initData() {
+            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
+            this.accountPublicKey = this.$store.state.account.accountPublicKey
+            this.accountAddress = this.$store.state.account.accountAddress
+            this.address = this.$store.state.account.accountAddress
+            this.node = this.$store.state.account.node
+            this.currentXem = this.$store.state.account.currentXem
+            this.currentXEM2 = this.$store.state.account.currentXEM2
+            this.currentXEM1 = this.$store.state.account.currentXEM1
+        }
+
+        getXEMAmount() {
+            const that = this
+            const {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node, address} = this
+            accountInterface.getAccountInfo({
+                node,
+                address: accountAddress
+            }).then((accountResult: any) => {
+                console.log(accountResult)
+                accountResult.result.accountInfo.subscribe((accountInfo) => {
+                    const mosaicList = accountInfo.mosaics
+                    console.log(mosaicList)
+                    mosaicList.map((item) => {
+                        if (item.id.toHex() == that.currentXEM2 || item.id.toHex() == that.currentXEM1) {
+                            that.XEMamount = item.amount.compact() / 1000000
+                        }
+                    })
+
+                })
+            })
+        }
+
+        getAccountsName() {
+            const that = this
+            const {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node, address} = this
+            accountInterface.getAccountsNames({
+                node,
+                addressList: [Address.createFromRawAddress(accountAddress)]
+            }).then((namespaceResult) => {
+                console.log(namespaceResult)
+                namespaceResult.result.namespaceList.subscribe((namespaceInfo) => {
+                    that.isShowAccountAlias = false
+                })
+            }).catch(() => {
+                console.log('no alias in this account')
+                that.isShowAccountAlias = false
+            })
+        }
+
+        async getMarketOpenPrice() {
+            const that = this
+            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
+            await axios.get(url).then(function (response) {
+                const result = response.data.data[0].open
+                that.currentPrice = result
+            }).catch(function (error) {
+                console.log(error);
+                that.getMarketOpenPrice()
+            });
+        }
+
+        async getMosaicList() {
+            const that = this
+            let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node, address, mosaic} = this
+            await accountInterface.getAccountInfo({
+                node,
+                address: accountAddress
+            }).then(async accountInfoResult => {
+                await accountInfoResult.result.accountInfo.subscribe((accountInfo) => {
+                    let mosaicList = accountInfo.mosaics
+                    mosaicList = mosaicList.map((item) => {
+                        if (item.id.toHex() == that.currentXEM2 || item.id.toHex() == that.currentXEM1) {
+                            item.name = 'nem.xem'
+                            item.amount = item.amount.compact() / 1000000
+                        } else {
+                            item.name = item.id.toHex()
+                            item.amount = item.amount.compact()
+                        }
+
+                        item.show = true
+                        return item
+                    })
+                    // get nem.xem
+                    let currentXEMHex = ''
+                    let isCrrentXEMExists = false
+                    isCrrentXEMExists = mosaicList.every((item) => {
+                        if (item.id.toHex() == that.currentXEM2 || item.id.toHex() == that.currentXEM1) {
+                            return false
+                        }
+                        return true
+                    })
+                    if (isCrrentXEMExists) {
+                        mosaicList.push({
+                            amount: 0,
+                            name: 'nem.xem',
+                            show: true
+                        })
+                    }
+                    that.mosaicList = mosaicList
+                    that.mosaic = currentXEMHex
+                })
+
+            })
+        }
+
+        initLeftNavigator() {
             this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
+        }
+
+        searchMosaic(){
+            console.log(this.mosaicName)
+
+        }
+
+        created() {
+            this.initLeftNavigator()
             this.noticeComponent()
+            this.initData()
+            this.getXEMAmount()
+            this.getAccountsName()
+            this.getMarketOpenPrice()
+            this.getMosaicList()
         }
 
     }

@@ -110,6 +110,7 @@ export default {
   namespace: 'namespace',
   validity_period: 'validity',
   harvested_block: 'harvested block',
+  successful_copy: 'successful copy',
 
   // monitor-receipt
   set_amount: 'set amount',

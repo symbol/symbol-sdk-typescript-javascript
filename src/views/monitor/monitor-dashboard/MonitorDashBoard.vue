@@ -127,7 +127,7 @@
             }, {
                 icon: dashboardPointAmount,
                 descript: 'point',
-                data: 1,
+                data: 4,
             }, {
                 icon: dashboardTransactionAmount,
                 descript: 'number_of_transactions',
@@ -176,7 +176,6 @@
 
         async getMarketOpenPrice() {
             const that = this
-            /////xemusdt/1min/100
             const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
             await axios.get(url).then(function (response) {
                 const result = response.data.data[0]
@@ -188,7 +187,7 @@
 
         getPointInfo() {
             const that = this
-            const node = 'http://dragon.48gh23s.xyz:3000'
+            const node = this.$store.state.account.node
             blockchainInterface.getBlockchainHeight({
                 node
             }).then((result) => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="createLockWrap">
+  <div class="createLockWrap scroll">
     <h1 class="pageTit">{{$t('create_a_Lock_password')}}</h1>
     <p class="pageRemind">{{$t('lock_pass_text')}}</p>
     <p class="pageRemind">{{$t('lock_pass_text_2')}}</p>

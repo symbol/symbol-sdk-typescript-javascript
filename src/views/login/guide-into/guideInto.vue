@@ -1,5 +1,5 @@
 <template>
-  <div class="guideIntoWrap">
+  <div class="guideIntoWrap scroll">
     <h1 class="pageTit">{{$t('start_the_NEM_tour')}}</h1>
     <div class="methodDiv">
       <div class="importDiv">

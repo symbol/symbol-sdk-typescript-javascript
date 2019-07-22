@@ -64,7 +64,7 @@
                 text: 'use_the_NEM_Apostille_service_to_create_blockchain_notarized_timestamps_to_track_and_audit_file_authentication_status'
             }, {
                 icon: reloginAddress,
-                text: 'assign_tags_to_addresses_to_easily_track_contacts.'
+                text: 'assign_tags_to_addresses_to_easily_track_contacts'
             }, {
                 icon: reloginWidgets,
                 text: 'use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates'

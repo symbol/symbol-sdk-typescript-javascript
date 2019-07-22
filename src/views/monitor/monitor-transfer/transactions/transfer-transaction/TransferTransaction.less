@@ -1,0 +1,151 @@
+.transfer {
+  position: relative;
+
+  .title {
+    display: inline-block;
+    width: 80px;
+    text-align: right;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(102, 102, 102, 1);
+    margin-right: 40px;
+  }
+
+  .value {
+    width: 580px;
+    overflow: hidden;
+    height: 60px;
+    border: 1px solid rgba(204, 204, 204, 1);
+
+  }
+
+  .flex_center {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  input {
+    width: 520px;
+    border: none;
+    outline: none;
+    padding-left: 39px;
+    padding-right: 15px;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .address {
+    margin-bottom: 40px;
+    height: 60px;
+
+    .value {
+      span {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        background-color: #4DC2BF;
+        line-height: 60px;
+        color: white;
+        font-size: 20px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+        text-align: center;
+      }
+
+    }
+  }
+
+  .asset {
+  }
+
+  .amount {
+    margin-top: 40px;
+  }
+
+  .remark {
+    margin-top: 40px;
+
+    .textarea_container {
+      height: 120px;
+      justify-content: center;
+      padding: 23px 39px;
+
+      textarea {
+        border: none;
+        outline: none;
+        font-size: 16px;
+      }
+
+      textarea::placeholder {
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(153, 153, 153, 1);
+      }
+    }
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(153, 153, 153, 1);
+  }
+
+  .fee {
+    padding-top: 21px;
+    text-align: left;
+
+    .uint {
+      margin-right: 19px;
+    }
+  }
+
+  .xem_tips {
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 115px;
+    display: inline-block;
+    padding-top: 20px;
+    color: rgba(246, 92, 92, 1);
+  }
+
+  .send_button {
+    width: 200px;
+    height: 60px;
+    background: rgba(32, 181, 172, 1);
+    border-radius: 30px;
+    line-height: 60px;
+    color: white;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    position: absolute;
+    left: -100px;
+    margin-left: 50%;
+    margin-top: 39px;
+    margin-bottom: 20px;
+  }
+}
+
+.selections {
+  width: calc(100% - 118px);
+  background-color: white;
+  border: 1px solid rgba(204, 204, 204, 1);
+  position: absolute;
+  top: 60px;
+  z-index: 999;
+  border-radius: 0 0 4px 4px;
+  border-top: none;
+
+  div {
+    padding: 5px 15px;
+    font-size: 16px;
+  }
+
+  div:hover {
+    background-color: #ddd;
+  }
+}

@@ -16,6 +16,7 @@
             }
             this.$router.push({
                 name: 'login'
+                // name: 'monitorPanel'
             })
         }
     }

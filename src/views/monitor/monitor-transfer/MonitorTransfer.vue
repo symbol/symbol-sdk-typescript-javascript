@@ -10,45 +10,7 @@
       </div>
       <div class="bottom_transfer_info scroll ">
         <div class="transfer  " v-if="transferTypeList[0].isSelect">
-          <div class="address flex_center">
-            <span class="title">{{$t('transfer_target')}}</span>
-            <span class="value radius flex_center">
-              <input type="text" :placeholder="$t('receive_address_or_alias')">
-              <span class="pointer">@</span>
-            </span>
-          </div>
-          <div class="asset flex_center">
-            <span class="title">{{$t('asset_type')}}</span>
-            <span class="value radius flex_center">
-              <Select placeholder="XEM" v-model="assetType" class="asset_type">
-              <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-            </span>
-          </div>
-          <div class="amount flex_center">
-            <span class="title">{{$t('transfer_amount')}}</span>
-            <span class="value radius flex_center">
-              <input :placeholder="$t('please_enter_the_transfer_amount')" type="text">
-            </span>
-          </div>
-          <div class="remark flex_center">
-            <span class="title">{{$t('remarks')}}</span>
-            <span class=" textarea_container flex_center value radius ">
-              <textarea :placeholder="$t('please_enter_a_comment')"></textarea>
-            </span>
-          </div>
-          <div class="fee flex_center">
-            <span class="title">{{$t('fee')}}</span>
-            <span class="value radius flex_center">
-              <input placeholder="0.050000" type="text">
-              <span class="uint">XEM</span>
-            </span>
-          </div>
-          <span class="xem_tips">{{$t('the_default_is')}}：0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
-
-          <div class="send_button pointer">
-            {{$t('send')}}
-          </div>
+          <TransferTransaction></TransferTransaction>
         </div>
 
         <div class="multisig" v-if="transferTypeList[1].isSelect">
@@ -108,22 +70,18 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
+    import TransferTransaction from './transactions/transfer-transaction/TransferTransaction.vue'
 
-    @Component
+    @Component({
+        components: {
+            TransferTransaction
+        }
+    })
     export default class Transfer extends Vue {
+
         currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
         isShowSearchDetail = false
-        cityList = [
-            {
-                value: 'xem',
-                label: 'xem'
-            },
-            {
-                value: 'etc',
-                label: 'etc'
-            }
-        ]
-        assetType = ''
+
 
         transferTypeList = [
             {

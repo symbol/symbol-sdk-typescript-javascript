@@ -1,7 +1,37 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-import { MosaicDefinitionTransaction, Deadline, MosaicNonce, MosaicId, MosaicProperties, UInt64, MosaicSupplyChangeTransaction, MosaicHttp, Convert } from 'nem2-sdk';
+import { MosaicDefinitionTransaction, Deadline, MosaicNonce, MosaicId, NamespaceMosaicIdGenerator, MosaicProperties, UInt64, MosaicSupplyChangeTransaction, MosaicHttp, Convert, NetworkCurrencyMosaic } from 'nem2-sdk';
 export var mosaicInterface = {
+    getMosaicByNamespace: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        var currentXem, uintArray, mosaicId;
+        return tslib_1.__generator(this, function (_a) {
+            currentXem = params.currentXem;
+            uintArray = NamespaceMosaicIdGenerator.namespaceId(currentXem);
+            mosaicId = new MosaicId(uintArray);
+            return [2 /*return*/, {
+                    result: {
+                        mosaicId: mosaicId
+                    }
+                }];
+        });
+    }); },
+    getcurrentXEM: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        function convertNonce(input) {
+            var hex = input.toString(16);
+            var hex2 = '0000000'.concat(hex).substr(-8);
+            return Convert.hexToUint8(hex2).reverse();
+        }
+        var node, currentXEM;
+        return tslib_1.__generator(this, function (_a) {
+            node = params.node;
+            currentXEM = NetworkCurrencyMosaic.createRelative(0);
+            return [2 /*return*/, {
+                    result: {
+                        currentXEM: currentXEM
+                    }
+                }];
+        });
+    }); },
     createMosaicNonce: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         function convertNonce(input) {
             var hex = input.toString(16);
@@ -93,6 +123,6 @@ export var mosaicInterface = {
                     }
                 }];
         });
-    }); }
+    }); },
 };
 //# sourceMappingURL=sdkMosaic.js.map
