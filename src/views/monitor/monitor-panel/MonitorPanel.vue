@@ -26,13 +26,13 @@
                    src="../../../assets/images/monitor/monitorAssetList.png">
               <!--        all       -->
               <div>
-                <div class="mosaic_data" v-if="m.show" v-for="(m,index) in mosaicList">
+                <div class="mosaic_data" v-if="value.show" v-for="(value,key,index) in mosaicMap">
                 <span class="img_container">
                     <img src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
                 </span>
-                  <span class="mosaic_name">{{m.name}}</span>
+                  <span class="mosaic_name">{{value.name}}</span>
                   <span class="mosaic_value">
-                  <div>{{m.amount}}</div>
+                  <div>{{value.amount}}</div>
                 </span>
                 </div>
               </div>
@@ -67,25 +67,25 @@
 
           <!--        sevral      -->
           <div v-if="isShowManageMosaicIcon">
-            <div class="asset_setting_tit" @click="isShowManageMosaicIcon = !isShowManageMosaicIcon">
+            <div class="asset_setting_tit" @click="showMosaicMap">
               <img src="../../../assets/images/monitor/monitorLeftArrow.png" alt="">
               <span>{{$t('asset_setting')}}</span>
             </div>
-            <div @click="searchMosaic" class="input_outter">
+            <div class="input_outter">
               <img src="../../../assets/images/monitor/monitorSearchIcon.png" alt="">
-              <input  v-model="mosaicName" type="text" :placeholder="$t('search_for_asset_name')">
-              <span class="search">{{$t('search')}}</span>
+              <input v-model="mosaicName" type="text" :placeholder="$t('search_for_asset_name')">
+              <span class="search" @click="searchMosaic">{{$t('search')}}</span>
 
             </div>
-            <div class="mosaic_data" v-for="(m,index) in mosaicList">
+            <div class="mosaic_data" v-for="(value,key,index) in mosaicMap">
                 <span class="namege_img">
-                    <img @click="m.show=!m.show" class="small_icon"
-                         :src="m.show?monitorSeleted:monitorUnselected">
+                    <img @click="toggleShowMosaic(key,value)" class="small_icon"
+                         :src="value.show?monitorSeleted:monitorUnselected">
                     <img src="../../../assets/images/monitor/monitorMosaicIcon.png">
                 </span>
-              <span class="mosaic_name">{{m.name}}</span>
+              <span class="mosaic_name">{{value.name}}</span>
               <span class="mosaic_value">
-                  <div>{{m.amount}}</div>
+                  <div>{{value.amount}}</div>
                 </span>
             </div>
           </div>
@@ -162,27 +162,16 @@
         ]
         isShowAccountInfo = true;
         isShowManageMosaicIcon = false
-        mosaicList = [
-            {
+        mosaicMap: any = {
+            aabby: {
                 name: 'XEM',
+                hex: 'aabby',
                 amount: 0.265874,
                 show: true
-            },
-            {
-                name: 'ETC',
-                amount: 0.265874,
-                show: true
-            },
-            {
-                name: 'ETH',
-                amount: 0.265874,
-                show: true
-            },
-            {
-                name: 'BTC',
-                amount: 0.265874,
-                show: true
-            }]
+            }
+        }
+
+        localMosaicMap: any = {}
         isShowAccountAlias = false
         mosaic: string;
 
@@ -205,6 +194,7 @@
         manageMosaicList() {
             this.isShowManageMosaicIcon = !this.isShowManageMosaicIcon
         }
+
 
         copyAddress() {
             const that = this
@@ -271,10 +261,8 @@
                 node,
                 address: accountAddress
             }).then((accountResult: any) => {
-                console.log(accountResult)
                 accountResult.result.accountInfo.subscribe((accountInfo) => {
                     const mosaicList = accountInfo.mosaics
-                    console.log(mosaicList)
                     mosaicList.map((item) => {
                         if (item.id.toHex() == that.currentXEM2 || item.id.toHex() == that.currentXEM1) {
                             that.XEMamount = item.amount.compact() / 1000000
@@ -285,6 +273,18 @@
             })
         }
 
+        showMosaicMap() {
+            this.isShowManageMosaicIcon = !this.isShowManageMosaicIcon
+            this.mosaicMap = this.localMosaicMap
+        }
+
+        toggleShowMosaic(key, value) {
+            if (!this.localMosaicMap[key]) {
+                this.localMosaicMap[key] = value
+            }
+            this.localMosaicMap[key].show = !this.localMosaicMap[key].show
+        }
+
         getAccountsName() {
             const that = this
             const {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node, address} = this
@@ -292,7 +292,6 @@
                 node,
                 addressList: [Address.createFromRawAddress(accountAddress)]
             }).then((namespaceResult) => {
-                console.log(namespaceResult)
                 namespaceResult.result.namespaceList.subscribe((namespaceInfo) => {
                     that.isShowAccountAlias = false
                 })
@@ -324,6 +323,7 @@
                 await accountInfoResult.result.accountInfo.subscribe((accountInfo) => {
                     let mosaicList = accountInfo.mosaics
                     mosaicList = mosaicList.map((item) => {
+                        item.hex = item.id.toHex()
                         if (item.id.toHex() == that.currentXEM2 || item.id.toHex() == that.currentXEM1) {
                             item.name = 'nem.xem'
                             item.amount = item.amount.compact() / 1000000
@@ -348,10 +348,23 @@
                         mosaicList.push({
                             amount: 0,
                             name: 'nem.xem',
+                            hex: that.currentXEM2,
                             show: true
                         })
                     }
-                    that.mosaicList = mosaicList
+                    let mosaicMap = {}
+                    mosaicList.forEach((item) => {
+                        const hex = item.hex
+                        mosaicMap[hex] = {
+                            amount: item.amount,
+                            name: item.name,
+                            hex: item.hex,
+                            show: true
+                        }
+
+                    })
+                    that.localMosaicMap = mosaicMap
+                    that.mosaicMap = mosaicMap
                     that.mosaic = currentXEMHex
                 })
 
@@ -362,14 +375,46 @@
             this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
         }
 
-        searchMosaic(){
-            console.log(this.mosaicName)
+        searchMosaic() {
+            // need hex search way
+            const that = this
+            const {mosaicName, mosaicMap} = this
+            const {currentXEM1, currentXEM2} = this.$store.state.account
+            if (this.mosaicName == '') {
+                this.showErrorMessage(this['$t']('mosaic_name_can_not_be_null'))
+                return
+            }
+            let searchResult = {}
 
+            mosaicInterface.getMosaicByNamespace({
+                namespace: mosaicName
+            }).then((result: any) => {
+                const mosaicHex = result.result.mosaicId.toHex()
+                if (mosaicMap[mosaicHex]) {
+                    searchResult[mosaicHex] = mosaicMap[mosaicHex]
+                } else if (mosaicHex == currentXEM1 || currentXEM2 == mosaicHex) {
+                    searchResult[mosaicHex] = mosaicMap[currentXEM1] ? mosaicMap[currentXEM1] : mosaicMap[currentXEM2]
+                } else {
+                    searchResult[mosaicHex] = {
+                        name: mosaicName,
+                        hex: mosaicHex,
+                        amount: 0,
+                        show: false
+                    }
+                }
+                that.mosaicMap = searchResult
+            })
         }
+
+        showErrorMessage(message) {
+            this.$Message.destroy()
+            this.$Message.error(message)
+        }
+
 
         created() {
             this.initLeftNavigator()
-            this.noticeComponent()
+            // this.noticeComponent()   tips
             this.initData()
             this.getXEMAmount()
             this.getAccountsName()

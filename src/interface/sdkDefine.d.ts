@@ -266,7 +266,7 @@ declare namespace SdkV0 {
             mosaicsNamesInfos: object
         }>;
         getMosaicByNamespace: (params: {
-            currentXem: string,
+            namespace: string,
         }) => Rst<{
             mosaicId: object
         }>;

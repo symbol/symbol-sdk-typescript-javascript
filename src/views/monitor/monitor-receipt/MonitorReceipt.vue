@@ -1,5 +1,5 @@
 <template>
-  <div class="qr_content">
+  <div class="qr_content" @click="hideSearchDetail">
     <Modal
             :title="$t('set_amount')"
             v-model="isShowDialog"
@@ -35,7 +35,7 @@
       <div>{{assetAmount}}XEM</div>
       <img :src="QRCode" alt="">
       <div class="address_text" id="address_text">
-        {{address}}
+        {{accountAddress}}
       </div>
       <div class="qr_button ">
         <span class="radius pointer" @click="copyAddress">{{$t('copy_address')}}</span>
@@ -68,24 +68,28 @@
         <div v-show="isShowSearchDetail" class="search_expand">
             <span class="search_container">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
-              <input @click.stop type="text" class="absolute" :placeholder="$t('enter_asset_type_alias_or_address_search')">
+              <input @click.stop type="text" class="absolute"
+                     :placeholder="$t('enter_asset_type_alias_or_address_search')">
             </span>
-          <span class="search_btn" @click.stop="searchByasset">{{$t('search')}}</span>
+          <span class="search_btn pointer" @click.stop="searchByasset">{{$t('search')}}</span>
         </div>
 
 
       </div>
-      <div class="bottom_transfer_record_list">
-        <div class="transaction_record_item" v-for="i in 5">
+      <div class="bottom_transfer_record_list scroll">
+        <div v-show="c.date  " class="transaction_record_item" v-for="c in confirmedTransactionList">
           <img src="../../../assets/images/monitor/transaction/transacrionAssetIcon.png" alt="">
           <div class="flex_content">
-            <div class="left">
-              <div class="top">Jane healy</div>
-              <div class="bottom"> 2018/06/04 16:00</div>
+            <div class="left left_components">
+              <div class="top">{{c.oppositeAddress}}</div>
+              <div class="bottom"> {{c.time}}</div>
             </div>
-            <div class="right">
-              <div class="top">xem 10.000</div>
-              <div class="bottom">USD 69,254,125</div>
+            <div class="right right_components">
+              <div class="top">{{c.mosaic?c.mosaic.amount.compact():0}}</div>
+              <div class="bottom">CNY
+                {{c.mosaic && c.mosaic.id.toHex() == $store.state.account.currentXEM1 || c.mosaic.id.toHex() ==
+                $store.state.account.currentXEM2?c.mosaic.amount.compact() * currentPrice:0}}
+              </div>
             </div>
           </div>
         </div>
@@ -95,18 +99,27 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {PublicAccount, NetworkType, TransactionType} from 'nem2-sdk';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import {createQRCode, copyTxt} from '@/utils/tools'
+    import {transactionInterface} from '@/interface/sdkTransaction';
+    import {
+        formatNemDeadline,
+        addZero,
+        formatTransactions,
+        getCurrentMonthFirst,
+        getCurrentMonthLast
+    } from '@/utils/util.js'
+    import axios from 'axios'
 
     @Component
     export default class MonitorReceipt extends Vue {
-        currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
+        currentMonth = ''
         isShowSearchDetail = false
         QRCode: string = ''
         isShowDialog = false
         copyBtn: any = false
         assetAmount = 0
-        address = 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
         cityList = [
             {
                 value: 'xem',
@@ -118,7 +131,7 @@
             }
         ]
         assetType = ''
-
+        monthFlag = new Date()
         transferTypeList = [
             {
                 name: 'ordinary_transfer',
@@ -139,6 +152,18 @@
             }
         ]
 
+        accountPrivateKey = ''
+        accountPublicKey = ''
+        accountAddress = ''
+        node = ''
+        currentXem = ''
+        confirmedTransactionList = []
+        unconfirmedTransactionList = []
+        confirmedDataAmount = 0
+        currentPrice = 0
+        currentMonthFirst = ''
+        currentMonthLast = ''
+
         hideSetAmountDetail() {
             this.isShowDialog = false
         }
@@ -150,12 +175,13 @@
         hideSearchDetail() {
             this.isShowSearchDetail = false
         }
+
         genaerateQR() {
             const that = this
             this.isShowDialog = false
-            const  QRCodeData = {
+            const QRCodeData = {
                 type: 1002,
-                address: this.address,
+                address: this.accountAddress,
                 timestamp: new Date().getTime().toString(),
                 amount: this.assetAmount,
                 amountId: '321d45sa4das4d5ad',
@@ -170,12 +196,15 @@
                 }
             })
         }
+
         showAssetSettingDialog() {
             this.isShowDialog = true
         }
+
         changeCurrentMonth(e) {
             this.currentMonth = e
         }
+
 
         swicthTransferType(index) {
             const list: any = this.transferTypeList
@@ -193,16 +222,76 @@
 
         copyAddress() {
             const that = this
-            copyTxt(this.address).then(()=>{
+            copyTxt(this.accountAddress).then(() => {
                 that.$Message.success(that['$t']('successful_copy'))
             })
         }
 
-        created() {
-            createQRCode('TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN').then((data) => {
+        getConfirmedTransactions() {
+            const that = this
+            let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
+            const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
+            transactionInterface.transactions({
+                publicAccount,
+                node,
+                queryParams: {
+                    pageSize: 100
+                }
+            }).then((transactionsResult) => {
+                transactionsResult.result.transactions.subscribe((transactionsInfo) => {
+
+                    let transferTransaction = formatTransactions(transactionsInfo, accountPublicKey)
+                    that.confirmedDataAmount = transferTransaction.length
+                    that.confirmedTransactionList = transferTransaction
+                    console.log(transferTransaction)
+                })
+            })
+        }
+
+        initData() {
+            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
+            this.accountPublicKey = this.$store.state.account.accountPublicKey
+            this.accountAddress = this.$store.state.account.accountAddress
+            this.node = this.$store.state.account.node
+            this.currentXem = this.$store.state.account.currentXem
+            this.currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
+        }
+
+        createQRCode() {
+            createQRCode(this.accountPublicKey).then((data) => {
                 this.QRCode = data.url
             })
         }
+
+        async getMarketOpenPrice() {
+            const that = this
+            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
+            await axios.get(url).then(function (response) {
+                const result = response.data.data[0]
+                that.currentPrice = result.open
+                console.log(that.currentPrice)
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+
+        @Watch('currentMonth')
+        onCurrentMonthChange() {
+            const currentMonth = new Date(this.currentMonth)
+            this.currentMonthFirst = getCurrentMonthFirst(currentMonth);
+            this.currentMonthLast = getCurrentMonthLast(currentMonth)
+        }
+
+        created() {
+            this.initData()
+            this.createQRCode()
+            this.getConfirmedTransactions()
+            this.getMarketOpenPrice()
+
+
+        }
+
+
     }
 </script>
 <style scoped lang="less">

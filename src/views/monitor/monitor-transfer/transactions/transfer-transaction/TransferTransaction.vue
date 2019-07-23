@@ -90,12 +90,16 @@
         mosaicList = []
 
         sendTransaction() {
+            if (!this.checkForm()) {
+                return
+            }
             let {accountPrivateKey, accountPublicKey, accountAddress, node, address, mosaic, amount, remark, fee, generationHash} = this
 
             //test data--
             const account = Account.createFromPrivateKey(accountPrivateKey, NetworkType.MIJIN_TEST)
             //--test data
             // create tx
+            const mosaics = mosaic ? [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(amount))] : []
             const transferTransaction = transactionInterface.transferTransaction({
                 network: NetworkType.MIJIN_TEST,
                 MaxFee: fee,
@@ -119,6 +123,29 @@
             })
         }
 
+        checkForm() {
+            const {address, mosaic, amount, remark, fee} = this
+            if (address.length < 40) {
+                this.showErrorMessage(this['$t']('address_format_error'))
+                return false
+            }
+            if (amount < 0) {
+                this.showErrorMessage(this['$t']('amount_can_not_be_less_than_0'))
+                return false
+            }
+            if (fee < 0) {
+                this.showErrorMessage(this['$t']('fee_can_not_be_less_than_0'))
+
+                return false
+            }
+
+            return true
+        }
+
+        showErrorMessage(message){
+            this.$Message.destroy()
+            this.$Message.error(message)
+        }
 
         async getMosaicList() {
             const that = this
@@ -168,12 +195,11 @@
                     // get nem.xem
                     let currentXEMHex = ''
                     mosaicInterface.getMosaicByNamespace({
-                        currentXem
+                        namespace:currentXem
                     }).then((result: any) => {
                         currentXEMHex = result.result.mosaicId.toHex()
                         let isCrrentXEMExists = true
                         isCrrentXEMExists = mosaicIdList.every((item) => {
-                            console.log(item.value, currentXEMHex)
                             if (item.value == currentXEMHex) {
                                 return false
                             }

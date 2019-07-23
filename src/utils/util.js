@@ -1,6 +1,6 @@
 import i18n from '../locale/index'
 import Vue from 'vue'
-import {AliasActionType} from 'nem2-sdk'
+import {AliasActionType, TransactionType} from 'nem2-sdk'
 
 const vueInstance = new Vue({i18n})
 
@@ -106,19 +106,50 @@ export const formatNamespaces = (namespacesInfo, blockHeight) => namespacesInfo.
   }
 })
 
-export const ActionType = {
-  INCOMING: 'incoming',
-  OUTGOING: 'outgoing'
+
+export const addZero = function (number) {
+  if (number < 10) {
+    return '0' + number
+  }
+  return number
 }
 
-export const TransferType = {
-  MESSAGE: 'message',
-  TRANSFER: 'transfer',
-  MULTISIG: 'multisig'
+export const formatNemDeadline = function (deadline) {
+  const dateTime = deadline.value._date
+  const dayTime = deadline.value._time
+  const date = `${addZero(dateTime._year)}-${addZero(dateTime._month)}-${addZero(dateTime._day)} `
+  const time = ` ${addZero(dayTime._hour)}:${addZero(dayTime._minute)}:${addZero(dayTime._second)}`
+  return date + time
 }
 
-export const PopupType = {
-  TRANSACTION: 'transaction',
-  MOSAIC: 'mosaic',
-  MULTISIG: 'multisig'
+
+export const formatTransactions = function (transactionList, accountPublicKey) {
+  const that = this
+  let transferTransaction = []
+  transactionList.map((item) => {
+    if (item.type == TransactionType.TRANSFER) {
+      item.isReceipt = item.recipient.address == accountPublicKey ? true : false
+      item.oppositeAddress = item.recipient.address == accountPublicKey ? item.signer.address : item.recipient.address
+      item.target = 'my wallet name'
+      item.time = formatNemDeadline(item.deadline)
+      item.mosaic = item.mosaics.length == 0 ? false : item.mosaics[0]
+      item.date = new Date(item.time)
+      transferTransaction.push(item)
+    }
+  })
+  return transferTransaction
+}
+
+export const getCurrentMonthFirst = function (date) {
+
+  date.setDate(1);
+  return date;
+}
+
+export const getCurrentMonthLast = function (date) {
+  var currentMonth = date.getMonth();
+  var nextMonth = ++currentMonth;
+  var nextMonthFirstDay = new Date(date.getFullYear(), nextMonth, 1);
+  var oneDay = 1000 * 60 * 60 * 24;
+  return new Date(nextMonthFirstDay - oneDay);
 }

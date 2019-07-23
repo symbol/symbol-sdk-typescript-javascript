@@ -67,8 +67,8 @@ export default {
   The_total_market_capitalization: 'the total market capitalization',
   network_status: 'network status',
   account: 'account',
-  transaction_type: 'transaction type',
-  the_amount: 'the amount',
+  transaction_type: 'type',
+  the_amount: 'amount',
   date: 'date',
   block_height: 'block height',
   average_block_time: 'average',
@@ -85,6 +85,8 @@ export default {
   unconfirmed_transaction: 'unconfirmed',
   total: 'total',
   data: 'data',
+  no_unconfirmed_transactions:'no unconfirmed transactions',
+  no_confirmed_transactions:'no confirmed transactions',
 
   //monitor-market
   highest_price: 'highest price',
@@ -111,6 +113,11 @@ export default {
   validity_period: 'validity',
   harvested_block: 'harvested block',
   successful_copy: 'successful copy',
+  address_format_error:'address format error',
+  amount_can_not_be_less_than_0:'amount can not be less than 0',
+  fee_can_not_be_less_than_0:'fee can not be less than 0',
+  mosaic_name_can_not_be_null:'mosaic name can not be null',
+
 
   // monitor-receipt
   set_amount: 'set amount',
