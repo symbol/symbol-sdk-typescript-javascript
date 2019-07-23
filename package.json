@@ -24,6 +24,8 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@types/node": "^9.4.6",
+    "@types/node-uuid": "^0.0.28",
     "@types/jest": "^23.1.4",
     "@vue/cli-plugin-babel": "^3.9.0",
     "@vue/cli-plugin-typescript": "^3.9.0",
