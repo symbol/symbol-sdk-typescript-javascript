@@ -113,6 +113,11 @@ var routers = [
                         name: 'mosaic',
                         // @ts-ignore
                         component: function () { return import('@/views/service/mosaic/Mosaic.vue'); }
+                    }, {
+                        path: '/multisig',
+                        name: 'multisig',
+                        // @ts-ignore
+                        component: function () { return import('@/views/service/multisig/Multisig.vue'); }
                     },
                 ]
             },

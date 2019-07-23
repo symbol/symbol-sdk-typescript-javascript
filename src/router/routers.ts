@@ -114,6 +114,11 @@ const routers = [
                         name: 'mosaic',
                         // @ts-ignore
                         component: () => import('@/views/service/mosaic/Mosaic.vue')
+                    }, {
+                        path: '/multisig',
+                        name: 'multisig',
+                        // @ts-ignore
+                        component: () => import('@/views/service/multisig/Multisig.vue')
                     },
                 ]
             },

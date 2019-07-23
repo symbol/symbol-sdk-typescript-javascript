@@ -77,7 +77,8 @@
 
       </div>
       <div class="bottom_transfer_record_list scroll">
-        <div v-show="c.date  " class="transaction_record_item" v-for="c in confirmedTransactionList">
+        <div v-show="c.date<=currentMonthLast && c.date>=currentMonthFirst" class="transaction_record_item"
+             v-for="c in confirmedTransactionList">
           <img src="../../../assets/images/monitor/transaction/transacrionAssetIcon.png" alt="">
           <div class="flex_content">
             <div class="left left_components">
@@ -275,6 +276,7 @@
             });
         }
 
+        // month filter
         @Watch('currentMonth')
         onCurrentMonthChange() {
             const currentMonth = new Date(this.currentMonth)
