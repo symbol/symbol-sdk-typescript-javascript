@@ -105,7 +105,10 @@
       }
       .search {
         position: absolute;
-        right: -45px;
+        display: inline-block;
+        width: 60px;
+        text-align: center;
+        right: -60px;
         color: #20B5AC;
       }
 
@@ -156,15 +159,19 @@
         align-content: center;
         align-items: center;
         border-bottom: 1px solid rgba(238, 238, 238, .5);
+        position: relative;
         .namege_img {
+          position: absolute;
           display: inline-block;
           width: 200px;
+          top: 25px;
         }
 
         .mosaic_name {
           position: relative;
           top: 3px;
-          width: 100%;
+          left: 80px;
+          width: 180px;
           font-size: 18px;
           font-weight: 400;
           color: rgba(34, 34, 34, 1);
@@ -178,7 +185,6 @@
 
           div:first-of-type {
             font-size: 14px;
-            font-family: MicrosoftYaHei;
             font-weight: 400;
             color: rgba(34, 34, 34, 1);
           }
@@ -196,12 +202,10 @@
           margin-right: 15px;
         }
         .img_container{
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: row;
           display: inline-block;
-          width: 200px;
+          width: 100px;
+          position: absolute;
+          top: 25px;
         }
         .small_icon {
           width: 20px;

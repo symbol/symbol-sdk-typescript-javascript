@@ -6,7 +6,7 @@ import {SdkV0} from "./sdkDefine";
 
 export const mosaicInterface: SdkV0.mosaic = {
     getMosaicByNamespace: async (params) => {
-        const currentXem = params.currentXem
+        const currentXem = params.namespace
         const uintArray = NamespaceMosaicIdGenerator.namespaceId(currentXem)
         const mosaicId = new MosaicId(uintArray)
         return {

@@ -5,7 +5,7 @@ export var mosaicInterface = {
     getMosaicByNamespace: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var currentXem, uintArray, mosaicId;
         return tslib_1.__generator(this, function (_a) {
-            currentXem = params.currentXem;
+            currentXem = params.namespace;
             uintArray = NamespaceMosaicIdGenerator.namespaceId(currentXem);
             mosaicId = new MosaicId(uintArray);
             return [2 /*return*/, {

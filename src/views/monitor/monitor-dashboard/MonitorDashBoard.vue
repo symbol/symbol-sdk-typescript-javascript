@@ -1,3 +1,4 @@
+import {NetworkType} from "nem2-sdk";
 <template>
   <div class="dash_board_container">
     <Modal
@@ -11,7 +12,7 @@
       </div>
       <div>
         <div v-if="index !== 0" v-for="(t,index) in transactionDetails" class="other_info">
-          <span class="title" >{{$t(t.key)}}</span>
+          <span class="title">{{$t(t.key)}}</span>
           <span class="value">{{t.value}}</span>
         </div>
       </div>
@@ -37,19 +38,23 @@
     </div>
 
     <div class="bottom_transactions radius scroll" ref="bottomTransactions">
-      <div  class="splite_page">
-        <span>{{$t('total')}}：100 {{$t('data')}}</span>
-        <Page :total="100" class="page_content" />
+      <div class="splite_page">
+        <span>{{$t('total')}}：{{currentDataAmount}} {{$t('data')}}</span>
+        <Page :total="currentDataAmount" class="page_content"/>
       </div>
 
 
       <div class="label_page">
-        <span @click="showConfirmedTransactions=true" :class="[showConfirmedTransactions?'selected':'','page_title']">{{$t('confirmed_transaction')}}
-          <span class="transacrion_num">3</span>
+        <span @click="switchTransactionPanel(true)" :class="[showConfirmedTransactions?'selected':'','page_title']">{{$t('confirmed_transaction')}}
+          <span class="transacrion_num">
+            <span>{{confirmedDataAmount}}</span>
+          </span>
         </span>
         <span class="line">|</span>
-        <span @click="showConfirmedTransactions=false" :class="[showConfirmedTransactions?'':'selected','page_title']">{{$t('unconfirmed_transaction')}}
-          <span class="transacrion_num">3</span>
+        <span @click="switchTransactionPanel(false)" :class="[showConfirmedTransactions?'':'selected','page_title']">{{$t('unconfirmed_transaction')}}
+          <span class="transacrion_num">
+            <span>{{unconfirmedDataAmount}}</span>
+          </span>
         </span>
       </div>
 
@@ -61,31 +66,33 @@
           <span class="date">{{$t('date')}}</span>
         </div>
         <div class="confirmed_transactions" v-if="showConfirmedTransactions">
-
           <div class="table_body hide_scroll" ref="confirmedTableBody">
-            <div class="table_item pointer" @click="showDialog" v-for="i in 7">
+            <div class="table_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">
               <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
-              <span class="account">fsf-fsf-sdfdsf-fdsf-sdfsdgdfgdfgs-dgsdgdf</span>
-              <span class="transfer_type">{{$t('payment')}}</span>
-              <span class="amount">+454.511xem</span>
-              <span class="date">2019-09-09 16:13:15</span>
+              <span class="account">{{c.oppositeAddress}}</span>
+              <span class="transfer_type">{{c.isReceipt ? $t('gathering'):$t('payment')}}</span>
+              <span class="amount" v-if="c.mosaic">{{c.isReceipt ? '+':'-'}}{{c.mosaic.amount.compact()}}</span>
+              <span class="date">{{c.time}}</span>
               <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
-                   class="radius expand_mosaic_info" alt="">
+                   class="radius expand_mosaic_info">
             </div>
+            <div class="no_data" v-if="confirmedTransactionList.length == 0">{{$t('no_confirmed_transactions')}}</div>
           </div>
         </div>
 
         <div class="unconfirmed_transactions" v-if="!showConfirmedTransactions">
 
           <div class="table_body hide_scroll" ref="unconfirmedTableBody">
-            <div class="table_item pointer" @click="showDialog" v-for="i in 7">
+            <div class="table_item pointer" @click="showDialog(u)" v-for="u in unconfirmedTransactionList">
               <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
-              <span class="account">fsf-fsf-sdfdsf-fdsf-sdfsdgdfgdfgs-dgsdgdf</span>
-              <span class="transfer_type">{{$t('gathering')}}</span>
-              <span class="amount">+454.511xem</span>
-              <span class="date">2019-09-09 16:13:15</span>
+              <span class="account">{{u.oppositeAddress}}</span>
+              <span class="transfer_type">{{u.isReceipt ? $t('gathering'):$t('payment')}}</span>
+              <span class="amount">{{u.isReceipt ? '+':'-'}}{{u.mosaic.amount.compact()}}</span>
+              <span class="date">{{u.time}}</span>
               <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
-                   class="radius expand_mosaic_info" alt="">
+                   class="radius expand_mosaic_info">
+            </div>
+            <div class="no_data" v-if="unconfirmedTransactionList.length == 0">{{$t('no_unconfirmed_transactions')}}
             </div>
           </div>
         </div>
@@ -98,12 +105,14 @@
     import {Component, Vue} from 'vue-property-decorator';
     import LineChart from '@/components/LineChart.vue'
     import axios from 'axios'
-    import {formatNumber} from '../../../utils/tools.js'
-    import {blockchainInterface} from '../../../interface/sdkBlockchain'
+    import {PublicAccount, NetworkType, TransactionType} from 'nem2-sdk';
+    import {transactionInterface} from '@/interface/sdkTransaction'
+    import {blockchainInterface} from '@/interface/sdkBlockchain'
     import dashboardBlockHeight from '../../../assets/images/monitor/dash-board/dashboardBlockHeight.png'
     import dashboardBlockTime from '../../../assets/images/monitor/dash-board/dashboardBlockTime.png'
     import dashboardPointAmount from '../../../assets/images/monitor/dash-board/dashboardPointAmount.png'
     import dashboardTransactionAmount from '../../../assets/images/monitor/dash-board/dashboardTransactionAmount.png'
+    import {formatNemDeadline, addZero, formatTransactions} from '@/utils/util.js'
 
     @Component({
         components: {
@@ -112,6 +121,9 @@
     })
     export default class DashBoard extends Vue {
         isShowDialog = false
+        currentDataAmount = 0
+        unconfirmedDataAmount = 0
+        confirmedDataAmount = 0
         xemNum: number = 8999999999
         currentPrice: any = 0
         networkStatusList = [
@@ -134,7 +146,7 @@
                 data: 0,
             }
         ]
-        showConfirmedTransactions = false
+        showConfirmedTransactions = true
         transactionDetails = [
             {
                 key: 'transfer_type',
@@ -170,9 +182,54 @@
             }
         ]
 
-        showDialog() {
+
+        accountPrivateKey = ''
+        accountPublicKey = ''
+        accountAddress = ''
+        node = ''
+        currentXem = ''
+        confirmedTransactionList = []
+        unconfirmedTransactionList = []
+
+
+        showDialog(transaction) {
             this.isShowDialog = true
+            this.transactionDetails = [
+                {
+                    key: 'transfer_type',
+                    value: transaction.isReceipt ? 'gathering' : 'payment'
+                },
+                {
+                    key: 'from',
+                    value: transaction.oppositeAddress
+                },
+                {
+                    key: 'aims',
+                    value: transaction.target
+                },
+                {
+                    key: 'the_amount',
+                    value: transaction.mosaic ? transaction.mosaic.amount.compact() : 0
+                },
+                {
+                    key: 'fee',
+                    value: transaction.maxFee.compact()
+                },
+                {
+                    key: 'block',
+                    value: transaction.transactionInfo.height.compact()
+                },
+                {
+                    key: 'hash',
+                    value: transaction.transactionInfo.hash
+                },
+                {
+                    key: 'message',
+                    value: transaction.message.payload
+                }
+            ]
         }
+
 
         async getMarketOpenPrice() {
             const that = this
@@ -183,6 +240,12 @@
             }).catch(function (error) {
                 console.log(error);
             });
+        }
+
+        switchTransactionPanel(flag) {
+            this.showConfirmedTransactions = flag
+            this.currentDataAmount = flag ? this.confirmedDataAmount : this.unconfirmedDataAmount
+            console.log(this.currentDataAmount)
         }
 
         getPointInfo() {
@@ -206,7 +269,59 @@
             })
         }
 
+
+        getConfirmedTransactions() {
+            const that = this
+            let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
+            const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
+            transactionInterface.transactions({
+                publicAccount,
+                node,
+                queryParams: {
+                    pageSize: 100
+                }
+            }).then((transactionsResult) => {
+                transactionsResult.result.transactions.subscribe((transactionsInfo) => {
+                    console.log(transactionsInfo, '............')
+                    let transferTransaction = formatTransactions(transactionsInfo, accountPublicKey)
+                    that.confirmedDataAmount = transferTransaction.length
+                    that.confirmedTransactionList = transferTransaction
+                })
+            })
+        }
+
+        getUnconfirmedTransactions() {
+            const that = this
+            let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
+            const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
+            transactionInterface.unconfirmedTransactions({
+                publicAccount,
+                node,
+                queryParams: {
+                    pageSize: 100
+                }
+            }).then((transactionsResult) => {
+                transactionsResult.result.unconfirmedTransactions.subscribe((unconfirmedtransactionsInfo) => {
+                    let transferTransaction = formatTransactions(unconfirmedtransactionsInfo, accountPublicKey)
+                    that.unconfirmedDataAmount = transferTransaction.length
+                    that.unconfirmedTransactionList = transferTransaction
+                })
+            })
+        }
+
+        initData() {
+            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
+            this.accountPublicKey = this.$store.state.account.accountPublicKey
+            this.accountAddress = this.$store.state.account.accountAddress
+            this.node = this.$store.state.account.node
+            this.currentXem = this.$store.state.account.currentXem
+        }
+
+
         created() {
+            this.initData()
+            this.getUnconfirmedTransactions()
+            this.getConfirmedTransactions()
             this.getMarketOpenPrice()
             this.getPointInfo()
         }

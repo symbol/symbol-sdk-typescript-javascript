@@ -86,7 +86,8 @@ export default {
   total: '共 ',
   data: '条 ',
   transaction_detail: '交易详情',
-
+  no_unconfirmed_transactions:'暂无未确认交易',
+  no_confirmed_transactions:'暂无已确认交易',
   //monitor-market
   highest_price: '最高价格',
   lowest_price: '最低价格',
@@ -174,7 +175,10 @@ export default {
   network_settings: '网络设置',
   about: '关于',
   setting: '设置',
-
+  address_format_error: '地址格式错误',
+  amount_can_not_be_less_than_0: '马赛克交易数量不可小于0',
+  fee_can_not_be_less_than_0: 'fee不可小于0',
+  mosaic_name_can_not_be_null: '马赛克名称不能为空',
   //setting-normal
   switch_language: '切换语言',
   currency_setting: '货币设置',
@@ -293,10 +297,10 @@ export default {
   create_now: '立即创建',
   this_will_create_a_new_wallet_and_a_new_torrent_file: '这将会创建一个新的钱包和新的种子文件',
   create_wallet: '创建钱包',
-  hash:'hash',
+  hash: 'hash',
 
   //menu bar
-  wallet_name:'账户名'
+  wallet_name: '账户名'
 
 
 }
