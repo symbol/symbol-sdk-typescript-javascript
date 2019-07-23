@@ -49,6 +49,10 @@
         get hasWallet () {
             return this.$store.state.app.hasWallet
         }
+        get query () {
+            return this.$route.query
+        }
+
         goToPage (item) {
             for(let i in this.navList){
                 if(this.navList[i].to == item.to){
@@ -68,6 +72,15 @@
                 this.importTabIndex = this.importIndex
             }
         }
+
+        @Watch('query')
+        onQueryChange(){
+            let index:number = Number(this.query['tabIndex'])
+            if(index){
+                this.goToPage(this.navList[index])
+            }
+        }
+
         mounted () {
             if(this.importTabIndex){
                 this.goToPage(this.navList[this.importTabIndex])

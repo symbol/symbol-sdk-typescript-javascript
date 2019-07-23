@@ -63,6 +63,11 @@ const routers = [
                         // @ts-ignore
                         component: () => import('@/views/wallet-management/wallet-create/WalletCreate.vue')
                     }, {
+                        path: '/walletCreated',
+                        name: 'walletCreated',
+                        // @ts-ignore
+                        component: () => import('@/views/wallet-management/wallet-created/WalletCreated.vue')
+                    }, {
                         path: '/walletImport',
                         name: 'walletImport',
                         // @ts-ignore

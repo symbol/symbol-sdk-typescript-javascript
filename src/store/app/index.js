@@ -20,7 +20,8 @@ export default {
         ],
         walletList: [],
         hasWallet: false,
-        unClick: true
+        unClick: true,
+        mnemonic: ''
     },
     getters: {},
     mutations: {
@@ -32,6 +33,9 @@ export default {
         },
         SET_HAS_WALLET: function (state, hasWallet) {
             state.hasWallet = hasWallet;
+        },
+        SET_MNEMONIC: function (state, mnemonic) {
+            state.mnemonic = mnemonic;
         },
     },
 };
