@@ -26,7 +26,7 @@
                     </FormItem>
                     <FormItem>
                         <div class="clear">
-                            <Button class="prev left" type="default" @click="createWallet">返回</Button>
+                            <Button class="prev left" type="default" @click="toBack">返回</Button>
                             <Button class="next right" type="success" @click="createWallet">下一步</Button>
                         </div>
                     </FormItem>
@@ -77,6 +77,9 @@
         createWallet () {
             this.createMnemonic()
             this.$router.push({path: '/walletCreated',query:this.formItem})
+        }
+        toBack () {
+            this.$router.back()
         }
     }
 </script>

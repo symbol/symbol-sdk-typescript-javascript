@@ -14,12 +14,7 @@ export default {
         currentXem: 'nem.xem',
         currentXEM1:'77a1969932d987d7',
         currentXEM2:'d525ad41d95fcf29',
-        account:{
-            address:{},
-            privateKey:'',
-            publicAccount:{},
-            publicKey:''
-        },
+        account:{},
         wallet:{},
         mosaic:[]
     },

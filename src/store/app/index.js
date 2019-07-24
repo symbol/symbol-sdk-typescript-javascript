@@ -36,7 +36,7 @@ export default {
         },
         SET_MNEMONIC: function (state, mnemonic) {
             state.mnemonic = mnemonic;
-        },
+        }
     },
 };
 //# sourceMappingURL=index.js.map

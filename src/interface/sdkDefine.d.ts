@@ -35,6 +35,15 @@ declare namespace SdkV0 {
             privateKey: string,
             password: Password
         }>;
+        getWallet: (params: {
+            name: string,
+            privateKey: string,
+            networkType: NetworkType,
+        }) => Rst<{
+            wallet: SimpleWallet,
+            password: Password,
+            privateKey: string,
+        }>;
         getKeys: (params: {
             password: Password,
             wallet: SimpleWallet

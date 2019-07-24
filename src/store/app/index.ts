@@ -6,7 +6,7 @@ declare interface appInfo {
     unClick: boolean,
     languageList: Array<any>,
     currentPanelIndex:number,
-    mnemonic:any
+    mnemonic:string
 }
 
 export default {
@@ -45,8 +45,8 @@ export default {
         SET_HAS_WALLET(state: appInfo, hasWallet: boolean): void {
             state.hasWallet = hasWallet
         },
-        SET_MNEMONIC(state: appInfo, mnemonic: any): void {
+        SET_MNEMONIC(state: appInfo, mnemonic: string): void {
             state.mnemonic = mnemonic
-        },
+        }
     },
 }

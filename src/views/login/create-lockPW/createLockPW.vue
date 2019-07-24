@@ -30,8 +30,8 @@
       </ul>
     </div>
     <div class="buttonDiv clear">
-      <Button @click="jumpToOtherPage('welcomePage')" class="prev left">{{$t('return_to_the_welcome_page')}}</Button>
-      <Button @click="jumpToOtherPage('guideInto')" class="next right">{{$t('next')}}</Button>
+      <Button @click="jumpToOtherPage('/welcomePage')" class="prev left">{{$t('return_to_the_welcome_page')}}</Button>
+      <Button @click="jumpToOtherPage('/walletPanel')" class="next right">{{$t('next')}}</Button>
     </div>
   </div>
 </template>
@@ -49,9 +49,9 @@
             remindTxt: ''
         }
 
-        jumpToOtherPage(name) {
+        jumpToOtherPage(path) {
             this.$router.push({
-                name
+                path: path
             })
         }
     }

@@ -6,20 +6,23 @@
                     <h6>基本信息</h6>
                     <div class="walletInfo">
                         <p>
+                            <span class="tit">钱包类型</span>
+                            <span class="walletType">公共钱包</span>
+                        </p>
+                        <p>
                             <span class="tit">钱包名</span>
-                            <span class="walletName">Test wallet <i class="updateWalletName"><img src=""></i></span>
+                            <span class="walletName">{{getWallet.name}}</span>
+                            <i class="updateWalletName"><img src="@/assets/images/wallet-management/editIcon.png"></i>
                         </p>
                         <p>
                             <span class="tit">钱包地址</span>
-                            <span class="walletAddress">TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN</span>
+                            <span class="walletAddress">{{getWallet.address}}</span>
+                            <i class="copyIcon" @click="copy(getWallet.address)"><img src="@/assets/images/wallet-management/copyIcon.png"></i>
                         </p>
                         <p>
-                            <span class="tit">钱包公钥</span>
-                            <span class="walletPublicKey">262c12c4ad2edc1aa45213907737f985f62fdb0d6d7f0fa07450eafd37e17253</span>
-                        </p>
-                        <p>
-                            <span class="tit">钱包别名</span>
-                            <span class="walletAlias">1</span>
+                            <span class="tit">公钥</span>
+                            <span class="walletPublicKey">{{getWallet.publicKey}}</span>
+                            <i class="copyIcon" @click="copy(getWallet.publicKey)"><img src="@/assets/images/wallet-management/copyIcon.png"></i>
                         </p>
                     </div>
                 </Col>
@@ -45,10 +48,6 @@
                 <div class="Keystore left" @click="changeKeystoreDialog">
                     <i><img src="@/assets/images/wallet-management/keystore.png"></i>
                     <span>导出Keystore</span>
-                </div>
-                <div class="Other left">
-                    <i><img src="@/assets/images/wallet-management/other.png"></i>
-                    <span>其他</span>
                 </div>
             </div>
         </div>
@@ -98,7 +97,7 @@
 
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
-    import {createQRCode} from '@/utils/tools'
+    import {createQRCode, copyTxt} from '@/utils/tools'
     import MnemonicDialog from '@/views/wallet-management/mnemonic-dialog/MnemonicDialog.vue'
     import PrivatekeyDialog from '@/views/wallet-management/privatekey-dialog/PrivatekeyDialog.vue'
     import KeystoreDialog from '@/views/wallet-management/keystore-dialog/KeystoreDialog.vue'
@@ -118,6 +117,10 @@
         QRCode:string = ''
         aliasList = []
 
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
+
         changeMnemonicDialog () {
             this.showMnemonicDialog = true
         }
@@ -136,14 +139,30 @@
         closeKeystoreDialog () {
             this.showKeystoreDialog = false
         }
+
+        setQRCode (address) {
+            createQRCode(address).then((data)=>{
+                this.QRCode = data.url
+            })
+        }
+
+        copy (txt) {
+            copyTxt(txt).then(()=>{
+                this.$Message.success('复制成功!');
+            })
+        }
+
         onresize () {
             const height = this.$refs['walletDetailsWrap']['clientHeight'] - ( this.$refs['accountFn']['offsetTop'] - this.$refs['walletDetailsWrap']['offsetTop'])
             this.$refs['accountFn']['style']['height'] = height +'px'
         }
+
+        init() {
+            this.setQRCode(this.getWallet.address)
+        }
+
         created () {
-            createQRCode('TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN').then((data)=>{
-                this.QRCode = data.url
-            })
+            this.init()
         }
         mounted () {
             const that = this

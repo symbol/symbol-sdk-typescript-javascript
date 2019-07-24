@@ -106,6 +106,7 @@
         showCover = true
         mnemonicRandomArr = []
         mosaics = []
+        storeWallet = {}
 
         get mnemonic () {
             const mnemonic = this.$store.state.app.mnemonic
@@ -118,6 +119,10 @@
 
         get node () {
             return 'http://120.79.181.170:3000'
+        }
+
+        get walletList () {
+            return this.$store.state.app.walletList
         }
 
         hideCover () {
@@ -178,17 +183,22 @@
         }
 
         changeTabs (index) {
-            if(index || index === 0){
-                if(index === 1) this.mnemonicRandom()
-                if(index === 2){
+            switch (index) {
+                case 0:
+                    this.tags = index
+                    break;
+                case 1:
+                    this.mnemonicRandom()
+                    this.tags = index
+                    break;
+                case 2:
                     if(this.checkMnemonic()){
                         return
-                    }else {
-                        const account = this.createPrivateKey()
-                        this.loginWallet(account.privateKey)
                     }
-                }
-                this.tags = index
+                    const account = this.createAccount()
+                    this.loginWallet(account)
+                    this.tags = index
+                    break;
             }
         }
 
@@ -214,7 +224,7 @@
             return hexParts.join('');
         }
 
-        createPrivateKey () {
+        createAccount () {
             const mnemonic = new MnemonicPassPhrase(this.mnemonic.join(' '));
             const bip32Seed = mnemonic.toSeed();
             const  bip32Node = ExtendedKey.createFromSeed(this.buf2hex(bip32Seed));
@@ -224,42 +234,44 @@
             return account
         }
 
-        loginWallet (privateKey:string) {
+        loginWallet (account) {
             const that = this
             const walletName:any = this.formInfo['walletName'];
             const netType:NetworkType = Number(this.formInfo['currentNetType'])
-            walletInterface.loginWallet({
-                name: walletName,
-                privateKey: privateKey,
+            that.setUserDefault(walletName, account, netType)
+        }
+
+        setUserDefault  (name, account, netType) {
+            const that = this
+            walletInterface.getWallet({
+                name: name,
                 networkType: netType,
-                node:this.node
-            }).then((loginWallet: any) => {
-                console.log(loginWallet)
-                that.getUserInfo(walletName, loginWallet.result.password, privateKey, loginWallet)
+                privateKey: account.privateKey
+            }).then((Wallet: any) => {
+                const storeWallet = {
+                    name: Wallet.result.wallet.name,
+                    address: Wallet.result.wallet.address['address'],
+                    networkType: Wallet.result.wallet.address['networkType'],
+                    privateKey: Wallet.result.privateKey,
+                    publicKey: account.publicKey,
+                    publicAccount: account.publicAccount,
+                    mosaics: [],
+                    wallet: Wallet.result.wallet,
+                    password: Wallet.result.password,
+                    mnemonic: this.mnemonic.join(' '),
+                    balance: 0
+                }
+                this.storeWallet = storeWallet
+                that.$store.commit('SET_WALLET', storeWallet)
+                const encryptObj = Crypto.encrypt(Wallet.result.privateKey, that.formInfo['password'])
+                that.localKey(name, encryptObj, Wallet.result.wallet.address.address)
             })
         }
 
-        getUserInfo (walletName, password, privateKey, loginWallet) {
-            const that = this
-            walletInterface.getKeys({
-                password: password,
-                wallet: loginWallet.result.wallet
-            }).then((getKeys: any) => {
-                console.log(getKeys)
-                that.$store.commit('SET_WALLET', {
-                    name: loginWallet.result.wallet.name,
-                    address: loginWallet.result.wallet.address['address'],
-                    networkType: loginWallet.result.wallet.address['networkType'],
-                    privateKey: getKeys.result.account.privateKey,
-                    publicKey: getKeys.result.account.publicAccount.publicKey,
-                    publicAccount: getKeys.result.account.publicAccount,
-                    mosaics: [],
-                    wallet: loginWallet.result.wallet,
-                    password: loginWallet.result.password
-                })
-                const encryptObj = Crypto.encrypt(privateKey, that.formInfo['password'])
-                that.localKey(walletName, encryptObj, loginWallet.result.wallet.address.address)
-            })
+        setWalletList (wallet) {
+            let list:any[] = this.walletList;
+            list.unshift(wallet)
+            this.$store.commit('SET_WALLET_LIST',list)
         }
 
         localKey (walletName, keyObj, address, balance = 0) {
@@ -289,7 +301,7 @@
         }
 
         toWalletPage () {
-            this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
+            this.setWalletList(this.storeWallet)
             this.$store.commit('SET_HAS_WALLET',true)
             this.$router.replace({
                 path:'/walletDetails',

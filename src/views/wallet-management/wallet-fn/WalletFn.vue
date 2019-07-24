@@ -36,7 +36,7 @@
             {name:'创建',to:'/walletCreate',active:false},
             {name:'导入',to:'/walletImport',active:false},
         ]
-        importTabIndex = null
+        importTabIndex = 0
         importHasWallet = false
 
         @Prop()
@@ -75,10 +75,9 @@
 
         @Watch('query')
         onQueryChange(){
+            if(!this.query['tabIndex']) return
             let index:number = Number(this.query['tabIndex'])
-            if(index){
-                this.goToPage(this.navList[index])
-            }
+            this.goToPage(this.navList[index])
         }
 
         mounted () {

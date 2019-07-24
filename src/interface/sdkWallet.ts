@@ -46,6 +46,21 @@ export const walletInterface: SdkV0.wallet = {
     };
   },
 
+    getWallet: async (params) =>{
+        const name = params.name;
+        const privateKey = params.privateKey;
+        const networkType = params.networkType;
+        const password = new Password(generator.generate({length: 50, numbers: true, symbols: true,}));
+        const wallet = await SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType);
+        return {
+            result: {
+                wallet: wallet,
+                privateKey: privateKey,
+                password: password
+            }
+        };
+    },
+
   getKeys: async (params) => {
     const password = params.password;
     const wallet = params.wallet;

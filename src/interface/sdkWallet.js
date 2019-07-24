@@ -59,6 +59,28 @@ export var walletInterface = {
             }
         });
     }); },
+    getWallet: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        var name, privateKey, networkType, password, wallet;
+        return tslib_1.__generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    name = params.name;
+                    privateKey = params.privateKey;
+                    networkType = params.networkType;
+                    password = new Password(generator.generate({ length: 50, numbers: true, symbols: true, }));
+                    return [4 /*yield*/, SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType)];
+                case 1:
+                    wallet = _a.sent();
+                    return [2 /*return*/, {
+                            result: {
+                                wallet: wallet,
+                                privateKey: privateKey,
+                                password: password
+                            }
+                        }];
+            }
+        });
+    }); },
     getKeys: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var password, wallet, account;
         return tslib_1.__generator(this, function (_a) {
