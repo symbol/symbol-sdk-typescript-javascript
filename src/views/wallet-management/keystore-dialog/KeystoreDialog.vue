@@ -29,22 +29,24 @@
                 <div class="stepItem2" v-if="stepIndex == 1">
                     <div class="step2Txt">
                         <Row>
-                            <Col span="9">
-                                <div class="imgDiv">
+                            <Col span="8">
+                                <div class="imgDiv clear">
                                     <div class="step2Img">
                                         <img src="@/assets/images/wallet-management/Step2Img.png">
                                     </div>
                                 </div>
                             </Col>
-                            <Col span="15">
-                                <p class="tit">获得Keystore+密码等于拥有钱包资产所有权</p>
-                                <div class="ul1">
-                                    <p class="ul1Tit"><span class="point"></span> 备份Keystore</p>
-                                    <p class="ul1Txt">请妥善备份Keystore,如果你的手机丢失、被盗、损坏,Keystore+密码将可以恢复你的资产</p>
-                                </div>
-                                <div class="ul2">
-                                    <p class="ul2Tit"><span class="point"></span> 离线保管</p>
-                                    <p class="ul2Txt">妥善保管至隔离网络的安全地方,请勿将助记词在联网环境下分享和存储,比如邮件、相册、社交应用等</p>
+                            <Col span="16">
+                                <div class="step2Remind">
+                                    <p class="tit">获得Keystore+密码等于拥有钱包资产所有权</p>
+                                    <div class="ul1">
+                                        <p class="ul1Tit"><span class="point"></span> 备份Keystore</p>
+                                        <p class="ul1Txt">请妥善备份Keystore,如果你的手机丢失、被盗、损坏,Keystore+密码将可以恢复你的资产</p>
+                                    </div>
+                                    <div class="ul2">
+                                        <p class="ul2Tit"><span class="point"></span> 离线保管</p>
+                                        <p class="ul2Txt">妥善保管至隔离网络的安全地方,请勿将助记词在联网环境下分享和存储,比如邮件、相册、社交应用等</p>
+                                    </div>
                                 </div>
                             </Col>
                         </Row>

@@ -307,7 +307,8 @@ export default {
   please_enter_a_custom_nod_address:'please input point url',
   point_null_error:'point null error',
   //check pw dialog
-  please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe:'Please enter your wallet password to ensure your own operation and keep your wallet safe.'
+  please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe:'Please enter your wallet password to ensure your own operation and keep your wallet safe.',
 
-
+  // wallet import keystore
+  please_choose: 'please choose'
 }

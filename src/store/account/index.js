@@ -7,8 +7,34 @@ export default {
         currentXem: 'nem.xem',
         currentXEM1: '77a1969932d987d7',
         currentXEM2: 'd525ad41d95fcf29',
+        account: {},
+        wallet: {},
+        mosaic: []
     },
-    getters: {},
-    mutations: {},
+    getters: {
+        Address: function (state) {
+            return state.account.address;
+        },
+        PublicAccount: function (state) {
+            return state.account.publicAccount;
+        },
+        privateKey: function (state) {
+            return state.account.privateKey;
+        },
+        publicKey: function (state) {
+            return state.account.publicKey;
+        }
+    },
+    mutations: {
+        SET_ACCOUNT: function (state, account) {
+            state.account = account;
+        },
+        SET_WALLET: function (state, wallet) {
+            state.wallet = wallet;
+        },
+        SET_MOSAICS: function (state, mosaic) {
+            state.mosaic = mosaic;
+        },
+    },
 };
 //# sourceMappingURL=index.js.map

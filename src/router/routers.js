@@ -64,6 +64,11 @@ var routers = [
                         // @ts-ignore
                         component: function () { return import('@/views/wallet-management/wallet-create/WalletCreate.vue'); }
                     }, {
+                        path: '/walletCreated',
+                        name: 'walletCreated',
+                        // @ts-ignore
+                        component: function () { return import('@/views/wallet-management/wallet-created/WalletCreated.vue'); }
+                    }, {
                         path: '/walletImport',
                         name: 'walletImport',
                         // @ts-ignore

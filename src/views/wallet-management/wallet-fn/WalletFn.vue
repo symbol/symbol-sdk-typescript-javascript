@@ -36,7 +36,7 @@
             {name:'创建',to:'/walletCreate',active:false},
             {name:'导入',to:'/walletImport',active:false},
         ]
-        importTabIndex = null
+        importTabIndex = 0
         importHasWallet = false
 
         @Prop()
@@ -49,6 +49,10 @@
         get hasWallet () {
             return this.$store.state.app.hasWallet
         }
+        get query () {
+            return this.$route.query
+        }
+
         goToPage (item) {
             for(let i in this.navList){
                 if(this.navList[i].to == item.to){
@@ -68,6 +72,14 @@
                 this.importTabIndex = this.importIndex
             }
         }
+
+        @Watch('query')
+        onQueryChange(){
+            if(!this.query['tabIndex']) return
+            let index:number = Number(this.query['tabIndex'])
+            this.goToPage(this.navList[index])
+        }
+
         mounted () {
             if(this.importTabIndex){
                 this.goToPage(this.navList[this.importTabIndex])

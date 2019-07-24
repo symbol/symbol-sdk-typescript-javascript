@@ -43,20 +43,48 @@
     .mnemonicDiv{
       width:580px;
       height:120px;
-      background:rgba(0,0,0,0.9);
       border:1px solid rgba(204,204,204,1);
-      opacity:0.5;
       border-radius:8px;
-      padding: 34px 97px;
+      opacity:0.5;
+      padding: 34px 80px;
       margin-top: 100px;
       margin-bottom: 200px;
+      position: relative;
       span{
         font-size:18px;
         font-weight:400;
         color:#000000;
         margin-right: 11px;
-        margin-bottom: 20px;
+        margin-bottom: 2px;
         float: left;
+      }
+      .covering{
+        width:580px;
+        height:120px;
+        background:rgba(0,0,0,0.9);
+        border-radius:8px;
+        padding: 30px 0 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 999;
+        cursor: pointer;
+        .lock{
+          width:18px;
+          height:22px;
+          margin: 0 auto 20px;
+          img{
+            display: block;
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .txt{
+          font-size:16px;
+          font-weight:bold;
+          text-align: center;
+          color:#FFFFFF;
+        }
       }
     }
     .btns{
@@ -123,6 +151,7 @@
         padding: 19px 29px;
         border-radius:8px;
         margin-bottom: 20px;
+        overflow: hidden;
         span{
           font-size:18px;
           font-weight:400;
@@ -134,7 +163,7 @@
         }
       }
       .wordDiv{
-        width:578px;
+        width:648px;
         height:146px;
         span{
           font-size:16px;
@@ -197,7 +226,8 @@
       .successImg{
         width:124px;
         height:116px;
-        margin: 56px;
+        margin-top: 65px;
+        margin-left: -10px;
         img{
           display: block;
           width:100%;
@@ -205,6 +235,7 @@
         }
       }
       .safetyRemind{
+        padding-left: 31px;
         .remindTit{
           font-size:16px;
           font-weight:400;

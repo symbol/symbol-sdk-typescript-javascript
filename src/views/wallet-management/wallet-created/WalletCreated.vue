@@ -9,9 +9,11 @@
                 </p>
                 <p class="pageRemind ">请将你的助记词写在一张纸上，如果你想更安全，可以写在多张纸上并在多个位置保存备份，（如外部加密硬盘驱动器或存储介质）。</p>
                 <div class="mnemonicDiv clear">
-                    <span>asda</span>
-                    <span>qwewdas</span>
-                    <span>qweqwe</span>
+                    <span v-for="(item,index) in mnemonic" :key="index">{{item}}</span>
+                    <div class="covering" @click="hideCover" v-if="showCover">
+                        <div class="lock"><img src="../../../assets/images/wallet-management/mnemonicLock.png"></div>
+                        <p class="txt">显示助记词</p>
+                    </div>
                 </div>
                 <div class="btns clear">
                     <Button class="prev left" type="default" @click="toBack">上一步</Button>
@@ -27,15 +29,10 @@
                 跳过此操作，但是请确认你的风险。如果需要再次备份助记词，可以钱包详情-导出助记词中找到。
             </p>
             <div class="mnemonicInputDiv">
-                <div class="mnemonicWordDiv clear">
-                    <span>asda</span>
-                    <span>qwewdas</span>
-                    <span>qweqwe</span>
+                <div class="mnemonicWordDiv clear" ref="mnemonicWordDiv">
                 </div>
                 <div class="wordDiv clear">
-                    <span>asda</span>
-                    <span>qwewdas</span>
-                    <span>qweqwe</span>
+                    <span v-for="(item,index) in mnemonicRandomArr" :key="index" @click="sureWord(index)">{{item}}</span>
                 </div>
             </div>
             <div class="btns clear">
@@ -48,9 +45,9 @@
             <p class="pageTxt">你通过了测试，请务必保证你的助记词安全</p>
             <div class="safetyTips">
                 <Row>
-                    <Col span="5">
+                    <Col span="2">
                         <div class="successImg">
-                            <img src="">
+                            <img src="../../../assets/images/wallet-management/exported.png">
                         </div>
                     </Col>
                     <Col span="19">
@@ -75,7 +72,10 @@
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator';
     import './WalletCreated.less'
-    import {NetworkType} from "nem2-sdk";
+    import {NetworkType, UInt64, Crypto} from "nem2-sdk";
+    import {MnemonicPassPhrase, ExtendedKey, Wallet} from 'nem2-hd-wallets';
+    import {localRead, localSave} from '../../../utils/util'
+    import {walletInterface} from "../../../interface/sdkWallet";
 
     @Component({
         components: {},
@@ -103,14 +103,212 @@
                 label:'MIJIN'
             },
         ]
+        showCover = true
+        mnemonicRandomArr = []
+        mosaics = []
+        storeWallet = {}
 
-        changeTabs (index) {
-            if(index || index === 0){
-                this.tags = index
+        get mnemonic () {
+            const mnemonic = this.$store.state.app.mnemonic
+            return mnemonic['split'](' ')
+        }
+
+        get formInfo () {
+            return this.$route.query;
+        }
+
+        get node () {
+            return 'http://120.79.181.170:3000'
+        }
+
+        get walletList () {
+            return this.$store.state.app.walletList
+        }
+
+        hideCover () {
+            this.showCover = false
+        }
+        checkRandomArr (arr,mnemonic) {
+            const randomNum = this.randomNum(mnemonic)
+            if(arr.includes(randomNum)){
+                return this.checkRandomArr(arr,mnemonic)
+            }else {
+                return randomNum
             }
         }
+
+        randomNum (mnemonic) {
+            return Math.floor(Math.random()*(mnemonic.length))
+        }
+
+        mnemonicRandom () {
+            const mnemonic = this.mnemonic;
+            let numberArr = [];
+            let randomWord =[];
+            for(let i=0;i<mnemonic.length;i++){
+                const randomNum = this.checkRandomArr(numberArr,mnemonic)
+                numberArr.push(randomNum)
+                randomWord.push(mnemonic[randomNum])
+            }
+            this.mnemonicRandomArr = randomWord
+        }
+
+        sureWord (index) {
+            const word = this.mnemonicRandomArr[index]
+            const wordSpan = document.createElement('span');
+            wordSpan.innerText = word;
+            wordSpan.onclick = () => {
+                this.$refs['mnemonicWordDiv']['removeChild'](wordSpan)
+            }
+            this.$refs['mnemonicWordDiv']['append'](wordSpan)
+        }
+
+        checkMnemonic () {
+            const mnemonicDiv = this.$refs['mnemonicWordDiv'];
+            const mnemonicDivChild = mnemonicDiv['getElementsByTagName']('span');
+            let childWord = []
+            for(let i in mnemonicDivChild){
+                if( typeof mnemonicDivChild[i] !== "object") continue;
+                childWord.push(mnemonicDivChild[i]['innerText'])
+            }
+            if(JSON.stringify(childWord) != JSON.stringify(this.mnemonic)) {
+                if(childWord.length < 1){
+                    this.$Message.warning('请输入助记词，确保助记词事正确的');
+                }else {
+                    this.$Message.warning('助记词不一致');
+                }
+                return false
+            }
+            return true
+        }
+
+        changeTabs (index) {
+            switch (index) {
+                case 0:
+                    this.tags = index
+                    break;
+                case 1:
+                    this.mnemonicRandom()
+                    this.tags = index
+                    break;
+                case 2:
+                    if(this.checkMnemonic()){
+                        return
+                    }
+                    const account = this.createAccount()
+                    this.loginWallet(account)
+                    this.tags = index
+                    break;
+            }
+        }
+
+        buf2hex(buffer) {
+            // buffer is an ArrayBuffer
+            // create a byte array (Uint8Array) that we can use to read the array buffer
+            const byteArray = new Uint8Array(buffer);
+
+            // for each element, we want to get its two-digit hexadecimal representation
+            const hexParts = [];
+            for(let i = 0; i < byteArray.length; i++) {
+                // convert value to hexadecimal
+                const hex = byteArray[i].toString(16);
+
+                // pad with zeros to length 2
+                const paddedHex = ('00' + hex).slice(-2);
+
+                // push to array
+                hexParts.push(paddedHex);
+            }
+
+            // join all the hex values of the elements into a single string
+            return hexParts.join('');
+        }
+
+        createAccount () {
+            const mnemonic = new MnemonicPassPhrase(this.mnemonic.join(' '));
+            const bip32Seed = mnemonic.toSeed();
+            const  bip32Node = ExtendedKey.createFromSeed(this.buf2hex(bip32Seed));
+            const wallet = new Wallet(bip32Node);
+            const account = wallet.getAccount();
+            this.$store.commit('SET_ACCOUNT',account);
+            return account
+        }
+
+        loginWallet (account) {
+            const that = this
+            const walletName:any = this.formInfo['walletName'];
+            const netType:NetworkType = Number(this.formInfo['currentNetType'])
+            that.setUserDefault(walletName, account, netType)
+        }
+
+        setUserDefault  (name, account, netType) {
+            const that = this
+            walletInterface.getWallet({
+                name: name,
+                networkType: netType,
+                privateKey: account.privateKey
+            }).then((Wallet: any) => {
+                const storeWallet = {
+                    name: Wallet.result.wallet.name,
+                    address: Wallet.result.wallet.address['address'],
+                    networkType: Wallet.result.wallet.address['networkType'],
+                    privateKey: Wallet.result.privateKey,
+                    publicKey: account.publicKey,
+                    publicAccount: account.publicAccount,
+                    mosaics: [],
+                    wallet: Wallet.result.wallet,
+                    password: Wallet.result.password,
+                    mnemonic: this.mnemonic.join(' '),
+                    balance: 0
+                }
+                this.storeWallet = storeWallet
+                that.$store.commit('SET_WALLET', storeWallet)
+                const encryptObj = Crypto.encrypt(Wallet.result.privateKey, that.formInfo['password'])
+                that.localKey(name, encryptObj, Wallet.result.wallet.address.address)
+            })
+        }
+
+        setWalletList (wallet) {
+            let list:any[] = this.walletList;
+            list.unshift(wallet)
+            this.$store.commit('SET_WALLET_LIST',list)
+        }
+
+        localKey (walletName, keyObj, address, balance = 0) {
+            let localData: any[] = []
+            let isExist: boolean = false
+            try {
+                localData = JSON.parse(localRead('wallets'))
+            } catch (e) {
+                localData = []
+            }
+            const saveData = {
+                name: walletName,
+                ciphertext: keyObj.ciphertext,
+                iv: keyObj.iv,
+                networkType: Number(this.formInfo['currentNetType']),
+                address: address,
+                balance: balance
+            }
+            for (let i in localData) {
+                if (localData[i].address === address) {
+                    localData[i] = saveData
+                    isExist = true
+                }
+            }
+            if (!isExist) localData.unshift(saveData)
+            localSave('wallets', JSON.stringify(localData))
+        }
+
         toWalletPage () {
-            this.$router.replace({path:'/walletDetails'})
+            this.setWalletList(this.storeWallet)
+            this.$store.commit('SET_HAS_WALLET',true)
+            this.$router.replace({
+                path:'/walletDetails',
+                query: {
+                    tabIndex: '0'
+                }
+            })
         }
         toBack () {
             this.$router.go(-1)

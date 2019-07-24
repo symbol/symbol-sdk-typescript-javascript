@@ -1,3 +1,10 @@
+import {Account} from 'nem2-sdk'
+declare interface account {
+    account: Account,
+    wallet: any,
+    mosaic:any[]
+}
+
 export default {
     state: {
         accountPrivateKey: '25B3F54217340F7061D02676C4B928ADB4395EB70A2A52D2A11E2F4AE011B03E',
@@ -7,7 +14,33 @@ export default {
         currentXem: 'nem.xem',
         currentXEM1:'77a1969932d987d7',
         currentXEM2:'d525ad41d95fcf29',
+        account:{},
+        wallet:{},
+        mosaic:[]
     },
-    getters: {},
-    mutations: {},
+    getters: {
+        Address(state){
+            return state.account.address;
+        },
+        PublicAccount(state){
+            return state.account.publicAccount;
+        },
+        privateKey(state){
+            return state.account.privateKey;
+        },
+        publicKey(state){
+            return state.account.publicKey;
+        }
+    },
+    mutations: {
+        SET_ACCOUNT(state: account, account: Account): void {
+            state.account = account
+        },
+        SET_WALLET(state: account, wallet: any): void {
+            state.wallet = wallet
+        },
+        SET_MOSAICS(state: account, mosaic: any[]): void {
+            state.mosaic = mosaic
+        },
+    },
 }

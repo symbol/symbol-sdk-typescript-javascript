@@ -26,7 +26,7 @@
                     </FormItem>
                     <FormItem>
                         <div class="clear">
-                            <Button class="prev left" type="default" @click="createWallet">返回</Button>
+                            <Button class="prev left" type="default" @click="toBack">返回</Button>
                             <Button class="next right" type="success" @click="createWallet">下一步</Button>
                         </div>
                     </FormItem>
@@ -40,6 +40,8 @@
     import { Component, Vue } from 'vue-property-decorator';
     import './WalletCreate.less'
     import {NetworkType} from "nem2-sdk";
+    import {MnemonicPassPhrase} from 'nem2-hd-wallets';
+
 
     @Component({
         components: {},
@@ -66,10 +68,18 @@
                 label:'MIJIN'
             },
         ]
+
+        createMnemonic () {
+            const mnemonic = MnemonicPassPhrase.createRandom('english', 128);
+            this.$store.commit('SET_MNEMONIC',mnemonic.plain)
+        }
+
         createWallet () {
-            this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
-            this.$store.commit('SET_HAS_WALLET',true)
-            this.$router.push({path: '/WalletCreated'})
+            this.createMnemonic()
+            this.$router.push({path: '/walletCreated',query:this.formItem})
+        }
+        toBack () {
+            this.$router.back()
         }
     }
 </script>

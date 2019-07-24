@@ -1,7 +1,9 @@
-// import * as nodeuuid from "node-uuid";
-// import * as crypto from 'crypto';
-// import "reflect-metadata";
-//
+/**
+ * tools
+ */
+import * as nodeuuid from "node-uuid";
+import * as crypto from 'crypto';
+import "reflect-metadata";
 export var help = {
     //时间相关
     timeUnixMS: timeUnixMS,
@@ -15,7 +17,6 @@ export var help = {
     nextDay0S: nextDay0S,
     isToday: isToday,
     timeMonthUnix0MS: getFirstDayOfMonth0MS,
-    timeMonthLastDayUnix0MS: getLastDayOfMonth0MS,
     timeLastMonthUnix0MS: getLastMathDayOMS,
     getFirstDayOfWeekMS: getFirstDayOfWeekMS,
     //数据类型扩展
@@ -38,9 +39,17 @@ export var help = {
     isNullArray: isNullArray,
     //数学相关
     toFixed: toFixed,
+    //并发
+    uuid: uuid,
+    //密码学
+    md5: md5,
+    sha: sha,
+    hmac: hmac,
     //字符串处理
     hideString: hideString,
 };
+//挂载到全局
+global.help = help;
 function timeUnixMS(timeMan) {
     if (undefined !== timeMan) {
         return new Date(timeMan).getTime();
@@ -74,15 +83,6 @@ function getFirstDayOfMonth0MS(date, timeZone) {
     if (timeZone === void 0) { timeZone = 8; }
     date.setDate(1);
     return date.getTime() - ((date.getTime() + timeZone * oneHourMS) % oneDayMS);
-}
-//获取当月最后1天0毫秒的时间戳
-function getLastDayOfMonth0MS(date, timeZone) {
-    if (timeZone === void 0) { timeZone = 8; }
-    var currentMonth = date.getMonth();
-    var nextMonth = ++currentMonth;
-    var nextMonthFirstDay = new Date(date.getFullYear(), nextMonth, 1).getTime();
-    var oneDay = 1000 * 60 * 60 * 24;
-    return new Date(nextMonthFirstDay - oneDay).getTime();
 }
 //获取上个月第一天0秒的时间戳
 function getLastMathDayOMS(timeZone) {
@@ -315,6 +315,20 @@ function isNullArray(arr) {
 }
 function toFixed(num, fractionDigits) {
     return parseFloat(num.toFixed(fractionDigits));
+}
+function uuid() {
+    return nodeuuid.v4();
+}
+function md5(data) {
+    return crypto.createHash('md5').update(data).digest('hex').toLowerCase();
+}
+function sha(data, algorithm) {
+    if (algorithm === void 0) { algorithm = 'sha1'; }
+    return crypto.createHash(algorithm).update(data).digest('hex').toLowerCase();
+}
+function hmac(data, key, algorithm) {
+    if (algorithm === void 0) { algorithm = 'sha1'; }
+    return crypto.createHmac(algorithm, key).update(data).digest('hex').toLowerCase();
 }
 /**
  * 隐藏字符串, 将起止区间的字符替换成另一个字符串
