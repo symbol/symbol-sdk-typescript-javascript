@@ -264,5 +264,5 @@
 </script>
 
 <style lang="less" scoped>
-  @import "information.less";
+  @import "Information.less";
 </style>

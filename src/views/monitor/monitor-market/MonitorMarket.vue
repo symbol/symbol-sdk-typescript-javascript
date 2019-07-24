@@ -6,13 +6,13 @@
         <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
         <span class="price_info right">
           <span class="price_item">
-            <span>{{$t('highest_price')}}</span><span class="black">￥{{highestPricae}}</span>
+            <span>{{$t('highest_price')}}</span><span class="black">${{highestPrice}}</span>
           </span>
           <span class="price_item">
-            <span>{{$t('lowest_price')}}</span><span class="black">￥{{lowestPrice}}</span>
+            <span>{{$t('lowest_price')}}</span><span class="black">${{lowestPrice}}</span>
           </span>
           <span class="price_item">
-            <span>{{$t('average_price')}}</span><span class="black">￥{{averagePrice}}</span><span
+            <span>{{$t('average_price')}}</span><span class="black">${{averagePrice}}</span><span
                   :class="riseRange < 0 ? 'red':'green'">{{riseRange}}%</span>
           </span>
         </span>
@@ -22,9 +22,9 @@
         <div class="top_select_conditions">
           <span class="left">{{$t('whole_network_transaction')}}</span>
           <div class="right" v-show="!isShowSearchDetail">
-            <span class="search_input" @click.stop="showSearchDetail">
-              <img class="pointer" src="../../../assets/images/monitor/market/marketSearch.png" alt="">
-            </span>
+<!--            <span class="search_input" @click.stop="showSearchDetail">-->
+<!--              <img class="pointer" src="../../../assets/images/monitor/market/marketSearch.png" alt="">-->
+<!--            </span>-->
           </div>
           <div v-show="isShowSearchDetail" class="search_expand">
             <span class="search_container">
@@ -54,7 +54,7 @@
             </div>
             <div class="right">
               <div class="top coin_amount">{{r.direction === 'sell'? '+':'-'}}{{r.amount.toFixed(6)}}</div>
-              <div class="bottom coin_cost">CNY {{r.result}}</div>
+              <div class="bottom coin_cost">USD {{r.result}}</div>
             </div>
           </div>
         </div>
@@ -62,7 +62,7 @@
     </div>
 
     <div class="bottom_transactions radius">
-      <div class="left_buy radius scroll">
+      <div class="left_buy radius scroll ">
         <div class="transfer_action">
           Buy XEM
         </div>
@@ -70,7 +70,7 @@
           <div class="left">
             <span class="title">{{$t('price')}}</span>
             <span class="value">{{currentPrice}}</span>
-            <span>CNY</span>
+            <span>USD</span>
           </div>
           <div class="right">
             <span class="title">{{$t('quantity')}}</span>
@@ -89,12 +89,13 @@
         <div v-show="purchaseAmount > 0" class="clear conversion ">
           <span>XEM
             <span class="bigger">{{Number(purchaseAmount).toFixed(2)}}</span>
-            ≈ ￥{{currentPrice * purchaseAmount}}</span>
+            ≈ ${{currentPrice * purchaseAmount}}</span>
         </div>
-        <div class="purchase_XEM right pointer">
+        <div class="purchase_XEM right un_click ">
           <span>buy</span>
         </div>
       </div>
+
       <div class="right_sell radius scroll">
         <div class="transfer_action">
           Sell XEM
@@ -103,7 +104,7 @@
           <div class="left">
             <span class="title">{{$t('price')}}</span>
             <span class="value">{{currentPrice}}</span>
-            <span>CNY</span>
+            <span>USD</span>
           </div>
           <div class="right">
             <span class="title">{{$t('quantity')}}</span>
@@ -121,9 +122,9 @@
         </div>
         <div v-if="sellAmount > 0" class="clear conversion ">
           <span>XEM <span
-                  class="bigger">{{Number(sellAmount).toFixed(2)}}</span> ≈ ￥{{currentPrice * sellAmount}}</span>
+                  class="bigger">{{Number(sellAmount).toFixed(2)}}</span> ≈ ${{currentPrice * sellAmount}}</span>
         </div>
-        <div class="purchase_XEM right pointer">
+        <div class="purchase_XEM right un_click">
           <span>sell</span>
         </div>
       </div>
@@ -136,7 +137,12 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import axios from 'axios'
     import LineChart from '../../../components/LineChart.vue'
-    import {formatDate} from '../../../utils/util.js'
+    import {
+        isRefreshData,
+        localSave,
+        localRead,
+        formatDate
+    } from '@/utils/util.js'
     import {formatNumber} from '../../../utils/tools.js'
 
     @Component({
@@ -148,7 +154,7 @@
         purchaseAmount = 10
         sellAmount = 10
         isShowSearchDetail = false
-        highestPricae = 0
+        highestPrice = 0
         lowestPrice = 0
         averagePrice: any = 0
         currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
@@ -204,11 +210,11 @@
         }
 
         addPurchaseAmount() {
-                this.purchaseAmount += 1
+            this.purchaseAmount += 1
         }
 
         cutPurchaseAmount() {
-            this.purchaseAmount =  this.purchaseAmount >= 1 ? this.purchaseAmount -1 : this.purchaseAmount
+            this.purchaseAmount = this.purchaseAmount >= 1 ? this.purchaseAmount - 1 : this.purchaseAmount
         }
 
         addSellAmount() {
@@ -217,7 +223,7 @@
 
 
         cutSellAmount() {
-            this.sellAmount =  this.sellAmount >= 1 ? this.sellAmount -1 : this.sellAmount
+            this.sellAmount = this.sellAmount >= 1 ? this.sellAmount - 1 : this.sellAmount
         }
 
         changeCurrentMonth(e) {
@@ -225,6 +231,15 @@
         }
 
         async getMarketPrice() {
+            if (!isRefreshData('oneWeekPrice', 1000 * 60 * 60 * 24, new Date().getHours())) {
+                const oneWeekPrice = JSON.parse(localRead('oneWeekPrice'))
+                this.highestPrice = oneWeekPrice.highestPrice
+                this.lowestPrice = oneWeekPrice.lowestPrice
+                this.averagePrice = oneWeekPrice.averagePrice
+                this.riseRange = oneWeekPrice.riseRange
+                return
+            }
+
             const that = this
             const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1day/14'
             await axios.get(url).then(function (response) {
@@ -235,7 +250,7 @@
                 currentWeek.sort((a, b) => {
                     return a.high < b.high ? 1 : -1;
                 })
-                that.highestPricae = currentWeek[0].high
+                that.highestPrice = currentWeek[0].high
 
                 currentWeek.sort((a, b) => {
                     return a.low < b.low ? -1 : 1;
@@ -248,25 +263,42 @@
                 })
                 that.averagePrice = (average / 14).toFixed(4)
 
-                preWeek
                 let preAverage: any = 0
                 preWeek.forEach((item) => {
                     preAverage += item.high + item.low
                 })
                 preAverage = (preAverage / 14).toFixed(4)
                 that.riseRange = (((that.averagePrice - preAverage) / preAverage) * 100).toFixed(2)
+                const oneWeekPrice = {
+                    averagePrice: that.averagePrice,
+                    lowestPrice: that.lowestPrice,
+                    highestPrice: that.highestPrice,
+                    riseRange: that.riseRange,
+                    timestamp: new Date().getTime()
+                }
+                localSave('oneWeekPrice', JSON.stringify(oneWeekPrice))
             }).catch(function (error) {
-                // that.getMarketPrice()
+                that.getMarketPrice()
                 console.log(error);
             });
         }
 
         async getMarketOpenPrice() {
+            if (!isRefreshData('openPriceOneMinute', 1000 * 60, new Date().getSeconds())) {
+                const openPriceOneMinute = JSON.parse(localRead('openPriceOneMinute'))
+                this.currentPrice = openPriceOneMinute.openPrice
+                return
+            }
             const that = this
             const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
             await axios.get(url).then(function (response) {
                 const result = response.data.data[0].open
                 that.currentPrice = result
+                const openPriceOneMinute = {
+                    timestamp: new Date().getTime(),
+                    openPrice: result
+                }
+                localSave('openPriceOneMinute', JSON.stringify(openPriceOneMinute))
             }).catch(function (error) {
                 console.log(error);
                 that.getMarketOpenPrice()
@@ -274,6 +306,12 @@
         }
 
         async getRecentTransactionList() {
+
+            if (!isRefreshData('transactionsOverNetwork', 1000 * 60 * 3, 1)){
+                const transactionsOverNetwork = JSON.parse(localRead('transactionsOverNetwork'))
+                this.recentTransactionList = transactionsOverNetwork.recentTransactionList
+                return
+            }
             const that = this
             const xemUrl = this.$store.state.app.marketUrl + '/trade/xemusdt/50'
             const btcUrl = this.$store.state.app.marketUrl + '/trade/btcusdt/50'
@@ -331,6 +369,11 @@
             } else {
                 this.noTransactionRecord = false
                 that.recentTransactionList = recentTransactionList
+                const transactionsOverNetwork = {
+                    timestamp: new Date().getTime(),
+                    recentTransactionList: recentTransactionList
+                }
+                localSave('transactionsOverNetwork', JSON.stringify(transactionsOverNetwork))
             }
         }
 

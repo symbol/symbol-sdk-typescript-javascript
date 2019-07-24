@@ -8,20 +8,20 @@
                 :transfer="false"
                 @on-cancel="checkPWDialogCancel">
             <div slot="header" class="checkPWDialogHeader">
-                <span class="title">确认密码</span>
+                <span class="title">{{$t('confirm_password')}}</span>
             </div>
             <div class="checkPWDialogBody">
                 <div class="stepItem1">
                     <div class="checkPWImg">
                         <img src="@/assets/images/window/checkPW.png">
                     </div>
-                    <p class="checkRemind">请输入钱包密码，以确保为本人操作，保证你的钱包安全</p>
+                    <p class="checkRemind">{{$('please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe')}}</p>
                     <Form :model="wallet">
                         <FormItem>
-                            <Input v-model="wallet.password" type="password" required placeholder="请输入你的钱包密码"></Input>
+                            <Input v-model="wallet.password" type="password" required :placeholder="$t('please_enter_your_wallet_password')"></Input>
                         </FormItem>
                         <FormItem>
-                            <Button type="success" @click="checkPWed"> 确认 </Button>
+                            <Button type="success" @click="checkPWed"> {{$t('confirm')}} </Button>
                         </FormItem>
                     </Form>
                 </div>

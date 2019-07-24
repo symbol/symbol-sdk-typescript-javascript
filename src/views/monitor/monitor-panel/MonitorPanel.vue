@@ -6,12 +6,12 @@
           <span class="address">
             {{address}}
           </span>
-          <img @click="copyAddress" src="../../../assets/images/monitor/monitorCopyAddress.png" alt="">
+          <img class="pointer" @click="copyAddress" src="../../../assets/images/monitor/monitorCopyAddress.png" alt="">
         </div>
 
         <div class="split"></div>
         <div class="XEM_amount"><span>XEM</span><span class="amount">{{XEMamount}}</span></div>
-        <div class="exchange">￥{{(XEMamount*currentPrice).toFixed(2)}}</div>
+        <div class="exchange">${{(XEMamount*currentPrice).toFixed(2)}}</div>
 
         <div class="account_alias" v-show="isShowAccountAlias">
           {{$t('alias')}}：wallet.name
@@ -22,7 +22,7 @@
 
           <Tabs size="small" v-if="!isShowManageMosaicIcon">
             <TabPane :label="$t('mosaic')" name="name1">
-              <img @click="manageMosaicList()" class="asset_list"
+              <img @click="manageMosaicList()" class="asset_list pointer"
                    src="../../../assets/images/monitor/monitorAssetList.png">
               <!--        all       -->
               <div>
@@ -67,19 +67,19 @@
 
           <!--        sevral      -->
           <div v-if="isShowManageMosaicIcon">
-            <div class="asset_setting_tit" @click="showMosaicMap">
+            <div class="asset_setting_tit pointer" @click="showMosaicMap">
               <img src="../../../assets/images/monitor/monitorLeftArrow.png" alt="">
               <span>{{$t('asset_setting')}}</span>
             </div>
             <div class="input_outter">
               <img src="../../../assets/images/monitor/monitorSearchIcon.png" alt="">
               <input v-model="mosaicName" type="text" :placeholder="$t('search_for_asset_name')">
-              <span class="search" @click="searchMosaic">{{$t('search')}}</span>
+              <span class="search pointer" @click="searchMosaic">{{$t('search')}}</span>
 
             </div>
             <div class="mosaic_data" v-for="(value,key,index) in mosaicMap">
                 <span class="namege_img">
-                    <img @click="toggleShowMosaic(key,value)" class="small_icon"
+                    <img @click="toggleShowMosaic(key,value)" class="small_icon pointer"
                          :src="value.show?monitorSeleted:monitorUnselected">
                     <img src="../../../assets/images/monitor/monitorMosaicIcon.png">
                 </span>
@@ -94,7 +94,8 @@
     </div>
     <div class="monitor_panel_right_container">
       <div class="top_navidator radius">
-        <span :class="[n.isSelect?'active_navigator':'','pointer','outter_container']" @click="switchPanel(index)"
+        <span :class="[n.isSelect?'active_navigator':'','outter_container',n.disabled?'disabled':'pointer']"
+              @click="switchPanel(index)"
               v-for="(n,index) in navigatorList">
           <span class="inner_container absolute">{{$t(n.name)}}</span>
           <span class="line">|</span>
@@ -111,14 +112,15 @@
 
 <script lang="ts">
     import {Address} from 'nem2-sdk'
-    import axios from 'axios'
-    import {copyTxt} from '@/utils/tools'
     import {accountInterface} from '@/interface/sdkAccount'
-    import {Component, Vue} from 'vue-property-decorator'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
+    import {mosaicInterface} from '@/interface/sdkMosaic';
+    import {copyTxt} from '@/utils/tools'
+    import {localSave, localRead} from '@/utils/util'
+    import axios from 'axios'
     import monitorSeleted from '../../../assets/images/monitor/monitorSeleted.png'
     import monitorUnselected from '../../../assets/images/monitor/monitorUnselected.png'
     import monitorMosaicIcon from '../../../assets/images/monitor/monitorMosaicIcon.png'
-    import {mosaicInterface} from '@/interface/sdkMosaic';
 
     @Component
     export default class DashBoard extends Vue {
@@ -176,6 +178,9 @@
         mosaic: string;
 
         switchPanel(index) {
+            if (this.navigatorList[index].disabled) {
+                return
+            }
             const list = this.navigatorList.map((item) => {
                 item.isSelect = false
                 return item
@@ -252,6 +257,9 @@
             this.currentXem = this.$store.state.account.currentXem
             this.currentXEM2 = this.$store.state.account.currentXEM2
             this.currentXEM1 = this.$store.state.account.currentXEM1
+            this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
+
+
         }
 
         getXEMAmount() {
@@ -270,6 +278,8 @@
                     })
 
                 })
+            }).catch(()=>{
+                console.log('error getXEMAmount ')
             })
         }
 
@@ -283,6 +293,12 @@
                 this.localMosaicMap[key] = value
             }
             this.localMosaicMap[key].show = !this.localMosaicMap[key].show
+            this.saveMosaicRecordInLocal()
+        }
+
+        saveMosaicRecordInLocal() {
+            // save address
+            localSave(this.accountAddress, JSON.stringify(this.localMosaicMap))
         }
 
         getAccountsName() {
@@ -308,7 +324,7 @@
                 const result = response.data.data[0].open
                 that.currentPrice = result
             }).catch(function (error) {
-                console.log(error);
+                console.log('error ',error);
                 that.getMarketOpenPrice()
             });
         }
@@ -325,7 +341,7 @@
                     mosaicList = mosaicList.map((item) => {
                         item.hex = item.id.toHex()
                         if (item.id.toHex() == that.currentXEM2 || item.id.toHex() == that.currentXEM1) {
-                            item.name = 'nem.xem'
+                            item.name = that.$store.state.account.currentXem
                             item.amount = item.amount.compact() / 1000000
                         } else {
                             item.name = item.id.toHex()
@@ -336,7 +352,6 @@
                         return item
                     })
                     // get nem.xem
-                    let currentXEMHex = ''
                     let isCrrentXEMExists = false
                     isCrrentXEMExists = mosaicList.every((item) => {
                         if (item.id.toHex() == that.currentXEM2 || item.id.toHex() == that.currentXEM1) {
@@ -365,9 +380,10 @@
                     })
                     that.localMosaicMap = mosaicMap
                     that.mosaicMap = mosaicMap
-                    that.mosaic = currentXEMHex
                 })
 
+            }).catch(()=>{
+                console.log('monitor panel error getMosaicList')
             })
         }
 
@@ -403,6 +419,8 @@
                     }
                 }
                 that.mosaicMap = searchResult
+            }).catch(()=>{
+                console.log('monitor paenl searchMosaic error')
             })
         }
 
@@ -411,15 +429,58 @@
             this.$Message.error(message)
         }
 
+        async realLocalStorage() {
+            const that = this
+            let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node, address, mosaic} = this
+            let mosaicMap = localRead(this.accountAddress)
+            if (mosaicMap) {
+                mosaicMap = JSON.parse(mosaicMap)
 
+                // refresh mosaic amount
+                const that = this
+                await accountInterface.getAccountInfo({
+                    node,
+                    address: accountAddress
+                }).then(async accountInfoResult => {
+                    await accountInfoResult.result.accountInfo.subscribe((accountInfo) => {
+                        const mosaicList = accountInfo.mosaics
+                        mosaicList.forEach((item) => {
+                            const mosaicHex = item.id.toHex()
+                            const mosaicAmount = item.amount.compact()
+                            if (mosaicMap[mosaicHex]) {
+                                // refresh amount
+                                mosaicMap[mosaicHex].amount = mosaicAmount
+                            } else {
+                                // add new mosaic into record
+                                mosaicMap[mosaicHex] = item
+                                mosaicMap[mosaicHex].show = true
+                            }
+                        })
+                        that.localMosaicMap = mosaicMap
+                        that.mosaicMap = mosaicMap
+                        that.saveMosaicRecordInLocal()
+                    })
+                }).catch(()=>{
+                    console.log('monitor paenl realLocalStorage error')
+                })
+            } else {
+                this.getMosaicList()
+            }
+        }
+
+        setLeftSwitchIcon(){
+            this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
+
+        }
         created() {
+            this.setLeftSwitchIcon()
             this.initLeftNavigator()
             // this.noticeComponent()   tips
             this.initData()
             this.getXEMAmount()
             this.getAccountsName()
             this.getMarketOpenPrice()
-            this.getMosaicList()
+            this.realLocalStorage()
         }
 
     }

@@ -2,7 +2,9 @@
   <div class="wrap">
     <div class="left_navigator">
       <div class="navigator_icon">
-        <div :key="index" :class="[$store.state.app.currentPanelIndex == index ? 'active_panel' : '',$store.state.app.unClick?'un_click':'pointer']" @click="switchPanel(index)"
+        <div :key="index"
+             :class="[$store.state.app.currentPanelIndex == index ? 'active_panel' : '',$store.state.app.unClick?'un_click':'pointer']"
+             @click="switchPanel(index)"
              v-for="(a,index) in activePanelList">
           <span :class="['absolute', $store.state.app.currentPanelIndex == index ? 'active_icon' : '']"></span>
         </div>
@@ -21,14 +23,29 @@
       <div class="controller">
         <div class="window_controller">
           <div>
-            <span class="pointer" @click="minWindow"></span>
-            <span class="pointer" @click="maxWindow"></span>
-            <span class="pointer" @click="closeWindow"></span>
+            <!--            <span class="pointer" @click="minWindow"></span>-->
+            <!--            <span class="pointer" @click="maxWindow"></span>-->
+            <!--            <span class="pointer" @click="closeWindow"></span>-->
           </div>
         </div>
         <div class="app_controller clear">
-          <div class="point_health">
-            <i></i>
+          <div :class="[isNodeHealthy?'point_healthy':'point_unhealthy']">
+            <Poptip placement="bottom">
+              <i class="pointer point" @click="toggleNodeList"></i>
+              <div slot="title" class="title">{{$t('current_point')}}：{{$store.state.account.node}}</div>
+              <div slot="content">
+                <div @click="selectPoint(index)" class="point_item pointer" v-for="(p,index) in nodetList">
+                  <img :src="p.isSelected ? monitorSeleted : monitorUnselected">
+                  <span>{{p.name}} ({{p.url}})</span>
+                </div>
+
+                <div class="input_point point_item">
+                  <input v-model="inputNodeValue" type="text" :placeholder="$t('please_enter_a_custom_nod_address')">
+                  <span @click="changePointByInput" class="sure_button radius pointer">{{$t('confirm')}}</span>
+                </div>
+
+              </div>
+            </Poptip>
           </div>
           <div class="switch_language">
             <i-select @on-change="switchLanguage" :model="currentLanguage"
@@ -54,16 +71,42 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator/lib/vue-property-decorator';
-    import routers from '../../router/routers';
-    import {localSave, localRead} from '../../utils/util.js';
+    import {Component, Vue, Watch} from 'vue-property-decorator/lib/vue-property-decorator'
+    import {localSave, localRead} from '../../utils/util.js'
+    import routers from '../../router/routers'
+    import axios from 'axios'
+    import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
+    import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
 
     @Component
     export default class Home extends Vue {
+        isShowNodeList = false
+        inputNodeValue = ''
+        nodetList = [
+            {
+                value: 'http://3.0.78.183:3000',
+                name: 'my-8',
+                url: '3.0.78.183',
+                isSelected: true,
+            }, {
+                value: 'http://13.114.200.132:3000',
+                name: 'jp-5',
+                url: '13.114.200.132',
+                isSelected: false,
+            }, {
+                value: 'http://47.107.245.217:3000',
+                name: 'cn-2',
+                url: '47.107.245.217',
+                isSelected: false,
+            }
+        ]
+        isShowDialog = true
         activePanelList = [false, false, false, false, false]
-        currentLanguage:any = false
+        currentLanguage: any = false
         languageList = []
         currentWallet = ''
+        monitorSeleted = monitorSeleted
+        monitorUnselected = monitorUnselected
         walletList = [
             {
                 value: 'wallet1',
@@ -73,6 +116,9 @@
                 label: 'wallet-2'
             }
         ]
+        currentNode = ''
+        isNodeHealthy = true
+
 
         closeWindow() {
             const ipcRenderer = window['electron']['ipcRenderer'];
@@ -89,15 +135,47 @@
             ipcRenderer.send('app', 'min')
         }
 
+        selectPoint(index) {
+            let list = this.nodetList
+            list = list.map((item) => {
+                item.isSelected = false
+                return item
+            })
+            list[index].isSelected = true
+            this.currentNode = list[index].value
+            this.nodetList = list
+        }
+
+        changePointByInput() {
+            let inputValue = this.inputNodeValue
+            if (inputValue == '') {
+                this.$Message.destroy()
+                this.$Message.error(this['$t']('point_null_error'))
+                return
+            }
+            if (inputValue.indexOf(':') == -1) {
+                inputValue = "http://" + inputValue + ':3000'
+            }
+            this.currentNode = inputValue
+        }
+
+        toggleNodeList() {
+            this.isShowNodeList = !this.isShowNodeList
+        }
+
         switchPanel(index) {
-            if(this.$store.state.app.unClick) {
+            const routerIcon = routers[0].children
+            if (this.$store.state.app.unClick) {
+                return
+            }
+            if (routerIcon[index].meta.disabled) {
                 return
             }
             this.$router.push({
                 params: {},
-                name: routers[0].children[index].name
+                name: routerIcon[index].name
             })
-            console.log('jump to ' + routers[0].children[index].name)
+            console.log('jump to ' + routerIcon[index].name)
             this.$store.commit('SET_CURRENT_PANEL_INDEX', index)
         }
 
@@ -115,13 +193,32 @@
             console.log('switch wallet', walletNmae)
         }
 
-        created() {
+        initData() {
             this.languageList = this.$store.state.app.languageList
             this.currentLanguage = localRead('local')
             this.$store.state.app.local = {
                 abbr: this.currentLanguage,
                 language: this.$store.state.app.localMap[this.currentLanguage]
             }
+            this.currentNode = this.$store.state.account.node
+        }
+
+        @Watch('currentNode')
+        onCurrentNode() {
+            const {currentNode} = this
+            this.$store.state.account.node = currentNode
+            const that = this
+            axios.get(currentNode + '/chain/height').then(function (response) {
+                that.isNodeHealthy = true
+            }).catch(function (error) {
+                that.isNodeHealthy = false
+            });
+
+        }
+
+
+        created() {
+            this.initData()
         }
     }
 </script>

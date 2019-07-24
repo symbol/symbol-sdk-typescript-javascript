@@ -4,7 +4,7 @@
       <div class="communityPanelNav left">
         <ul class="navList clear">
 
-          <li :class="[item.active?'active':'','left']"
+          <li :class="[item.active?'active':'','left',item.disabled?'disabled':'']"
               v-for="(item,index) in navList"
               :key="index"
               @click="goToPage(item)"
@@ -21,7 +21,7 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import './communityPanel.less';
+    import './CommunityPanel.less';
 
     @Component({
         components: {},
@@ -30,7 +30,7 @@
         walletList = []
         navList = [
             {name: 'news', to: '/information', active: true},
-            {name: 'vote', to: '/vote', active: false},
+            {name: 'vote', to: '/vote', active: false, disabled: true},
         ]
 
         get nowWalletList() {
@@ -38,6 +38,9 @@
         }
 
         goToPage(item) {
+            if (item.disabled) {
+                return
+            }
             for (let i in this.navList) {
                 if (this.navList[i].to == item.to) {
                     this.navList[i].active = true

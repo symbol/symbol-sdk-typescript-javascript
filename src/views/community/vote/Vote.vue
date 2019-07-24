@@ -480,5 +480,5 @@
 </script>
 
 <style scoped lang="less">
-  @import "vote.less";
+  @import "Vote.less";
 </style>

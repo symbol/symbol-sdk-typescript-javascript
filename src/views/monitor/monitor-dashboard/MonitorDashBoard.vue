@@ -22,7 +22,7 @@ import {NetworkType} from "nem2-sdk";
       <div class="left_echart radius">
         <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
         <span class="right">
-          <span>{{$t('The_total_market_capitalization')}}（CNY）</span>
+          <span>{{$t('The_total_market_capitalization')}}（USD）</span>
           <span class="black">{{currentPrice}}</span>
         </span>
         <LineChart></LineChart>
@@ -38,20 +38,22 @@ import {NetworkType} from "nem2-sdk";
     </div>
 
     <div class="bottom_transactions radius scroll" ref="bottomTransactions">
-      <div class="splite_page">
-        <span>{{$t('total')}}：{{currentDataAmount}} {{$t('data')}}</span>
-        <Page :total="currentDataAmount" class="page_content"/>
-      </div>
+      <!--      <div class="splite_page">-->
+      <!--        <span>{{$t('total')}}：{{currentDataAmount}} {{$t('data')}}</span>-->
+      <!--        <Page :total="currentDataAmount" class="page_content"/>-->
+      <!--      </div>-->
 
 
       <div class="label_page">
-        <span @click="switchTransactionPanel(true)" :class="[showConfirmedTransactions?'selected':'','page_title']">{{$t('confirmed_transaction')}}
+        <span @click="switchTransactionPanel(true)"
+              :class="['pointer',showConfirmedTransactions?'selected':'','page_title']">{{$t('confirmed_transaction')}}
           <span class="transacrion_num">
             <span>{{confirmedDataAmount}}</span>
           </span>
         </span>
         <span class="line">|</span>
-        <span @click="switchTransactionPanel(false)" :class="[showConfirmedTransactions?'':'selected','page_title']">{{$t('unconfirmed_transaction')}}
+        <span @click="switchTransactionPanel(false)"
+              :class="['pointer',showConfirmedTransactions?'':'selected','page_title']">{{$t('unconfirmed_transaction')}}
           <span class="transacrion_num">
             <span>{{unconfirmedDataAmount}}</span>
           </span>
@@ -66,6 +68,7 @@ import {NetworkType} from "nem2-sdk";
           <span class="date">{{$t('date')}}</span>
         </div>
         <div class="confirmed_transactions" v-if="showConfirmedTransactions">
+          <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
           <div class="table_body hide_scroll" ref="confirmedTableBody">
             <div class="table_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">
               <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
@@ -76,12 +79,14 @@ import {NetworkType} from "nem2-sdk";
               <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">
             </div>
-            <div class="no_data" v-if="confirmedTransactionList.length == 0">{{$t('no_confirmed_transactions')}}</div>
+            <div class="no_data" v-if="confirmedTransactionList.length == 0 && isLoadingConfirmedTx">
+              {{$t('no_confirmed_transactions')}}
+            </div>
           </div>
         </div>
 
         <div class="unconfirmed_transactions" v-if="!showConfirmedTransactions">
-
+          <Spin v-if="isLoadingUnconfirmedTx" size="large" fix class="absolute"></Spin>
           <div class="table_body hide_scroll" ref="unconfirmedTableBody">
             <div class="table_item pointer" @click="showDialog(u)" v-for="u in unconfirmedTransactionList">
               <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
@@ -102,17 +107,26 @@ import {NetworkType} from "nem2-sdk";
 </template>
 
 <script lang="ts">
+    import {
+        PublicAccount,
+        NetworkType,
+    } from 'nem2-sdk';
+    import {
+        isRefreshData,
+        localSave,
+        localRead,
+        formatTransactions
+    } from '@/utils/util.js'
     import {Component, Vue} from 'vue-property-decorator';
     import LineChart from '@/components/LineChart.vue'
     import axios from 'axios'
-    import {PublicAccount, NetworkType, TransactionType} from 'nem2-sdk';
     import {transactionInterface} from '@/interface/sdkTransaction'
     import {blockchainInterface} from '@/interface/sdkBlockchain'
     import dashboardBlockHeight from '../../../assets/images/monitor/dash-board/dashboardBlockHeight.png'
     import dashboardBlockTime from '../../../assets/images/monitor/dash-board/dashboardBlockTime.png'
     import dashboardPointAmount from '../../../assets/images/monitor/dash-board/dashboardPointAmount.png'
     import dashboardTransactionAmount from '../../../assets/images/monitor/dash-board/dashboardTransactionAmount.png'
-    import {formatNemDeadline, addZero, formatTransactions} from '@/utils/util.js'
+
 
     @Component({
         components: {
@@ -120,6 +134,8 @@ import {NetworkType} from "nem2-sdk";
         }
     })
     export default class DashBoard extends Vue {
+        isLoadingConfirmedTx = true
+        isLoadingUnconfirmedTx = false
         isShowDialog = false
         currentDataAmount = 0
         unconfirmedDataAmount = 0
@@ -182,7 +198,6 @@ import {NetworkType} from "nem2-sdk";
             }
         ]
 
-
         accountPrivateKey = ''
         accountPublicKey = ''
         accountAddress = ''
@@ -232,11 +247,21 @@ import {NetworkType} from "nem2-sdk";
 
 
         async getMarketOpenPrice() {
+            if (!isRefreshData('openPriceOneMinute', 1000 * 60, new Date().getSeconds())) {
+                const openPriceOneMinute = JSON.parse(localRead('openPriceOneMinute'))
+                this.currentPrice = openPriceOneMinute.openPrice * this.xemNum
+                return
+            }
             const that = this
             const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
             await axios.get(url).then(function (response) {
-                const result = response.data.data[0]
-                that.currentPrice = result.open * that.xemNum
+                const result = response.data.data[0].open
+                that.currentPrice = result * that.xemNum
+                const openPriceOneMinute = {
+                    timestamp: new Date().getTime(),
+                    openPrice: result
+                }
+                localSave('openPriceOneMinute', JSON.stringify(openPriceOneMinute))
             }).catch(function (error) {
                 console.log(error);
             });
@@ -282,10 +307,10 @@ import {NetworkType} from "nem2-sdk";
                 }
             }).then((transactionsResult) => {
                 transactionsResult.result.transactions.subscribe((transactionsInfo) => {
-                    console.log(transactionsInfo, '............')
                     let transferTransaction = formatTransactions(transactionsInfo, accountPublicKey)
                     that.confirmedDataAmount = transferTransaction.length
                     that.confirmedTransactionList = transferTransaction
+                    that.isLoadingConfirmedTx = false
                 })
             })
         }
@@ -305,6 +330,7 @@ import {NetworkType} from "nem2-sdk";
                     let transferTransaction = formatTransactions(unconfirmedtransactionsInfo, accountPublicKey)
                     that.unconfirmedDataAmount = transferTransaction.length
                     that.unconfirmedTransactionList = transferTransaction
+                    that.isLoadingUnconfirmedTx = false
                 })
             })
         }

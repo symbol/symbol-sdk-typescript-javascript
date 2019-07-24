@@ -171,6 +171,13 @@
 
     .bottom_transfer_record_list {
       padding: 34px 42px;
+      height: calc(100% - 130px);
+      position: relative;
+
+      .no_data {
+        text-align: center;
+        margin-top: 30px;
+      }
 
       .transaction_record_item {
         padding: 14px 0;
@@ -182,6 +189,26 @@
         .flex_content {
           margin-left: 20px;
           width: 300px;
+
+          .right_components {
+            padding-right: 40px;
+
+          }
+
+          .left_components,
+          .right_components {
+            width: 50%;
+
+            div {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+
+          .right_components {
+            width: 50%;
+          }
 
           .right {
             text-align: right;

@@ -3,6 +3,54 @@
   height: 100%;
   width: 100%;
   overflow: hidden;
+  .point {
+    -webkit-app-region: no-drag;
+  }
+  .title {
+    font-size: 18px;
+    text-align: center;
+    padding: 10px;
+    min-width:500px ;
+  }
+  .input_point {
+    padding-top: 20px;
+    input {
+      border: none;
+      width: 100%;
+      border-bottom: 1px solid #ccc;
+      padding-left: 10px;
+      margin-right: 20px;
+      padding-bottom: 5px;
+    }
+    input::placeholder{
+      font-size: 16px;
+    }
+    .sure_button {
+      padding: 2px 5px;
+      font-size: 16px;
+      background-color: #20B5AC;
+      color:white;
+    }
+  }
+  .point_item {
+    margin: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+    justify-items: center;
+    align-items: center;
+    text-align: left;
+    img {
+      width: 15px;
+      height: 15px;
+      margin-right: 10px;
+    }
+
+    span {
+      font-size: 20px;
+    }
+  }
 
   .top_window {
     position: absolute;
@@ -72,7 +120,7 @@
           position: relative;
         }
 
-        .point_health {
+        .point_healthy {
           i {
             display: inline-block;
             width: 14px;
@@ -81,6 +129,15 @@
             border-radius: 50%;
           }
 
+        }
+        .point_unhealthy {
+          i {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background-color: red;
+            border-radius: 50%;
+          }
         }
         .switch_language {
           -webkit-app-region: no-drag;
@@ -155,6 +212,8 @@
       }
 
       div:nth-of-type(3) {
+        cursor:  not-allowed !important;
+        opacity: .2;
         span {
           background-image: url("../../assets/images/window/windowService.png");
         }
@@ -175,8 +234,11 @@
       }
 
       div:nth-of-type(5) {
+        cursor:  not-allowed !important;
+        opacity: .2;
         span {
           background-image: url("../../assets/images/window/windowSetting.png");
+
         }
 
         .active_icon {
