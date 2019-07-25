@@ -10,9 +10,9 @@
               <input type="text" v-model="address" :placeholder="$t('receive_address_or_alias')">
               <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>
                <div v-if="isShowSubAlias" class="selections">
-              <div class="pointer">@q.w.e</div>
-              <div>@qq.ww.ee</div>
-              <div>@qqqqw.eeeer.ttt</div>
+              <div class="pointer" style="text-align: center;color: #ccc">no alias</div>
+<!--              <div>@qq.ww.ee</div>-->
+<!--              <div>@qqqqw.eeeer.ttt</div>-->
             </div>
             </span>
     </div>
@@ -284,27 +284,13 @@
             })
         }
 
-        async getGenerateHash() {
-            const that = this
-            let {accountPrivateKey, accountPublicKey, accountAddress, node, address, mosaic, amount, remark, fee} = this
-            await blockchainInterface.getBlockByHeight({
-                height: 1,
-                node
-            }).then(async (blockReasult: any) => {
-                await blockReasult.result.Block.subscribe((blockInfo) => {
-                    that.generationHash = blockInfo.generationHash
-                })
-            }).catch(() => {
-                console.log('generationHash  null')
-            })
-        }
-
         initData() {
             this.accountPrivateKey = this.$store.state.account.accountPrivateKey
             this.accountPublicKey = this.$store.state.account.accountPublicKey
             this.accountAddress = this.$store.state.account.accountAddress
             this.node = this.$store.state.account.node
             this.currentXem = this.$store.state.account.currentXem
+            this.generationHash = this.$store.state.account.generationHash
         }
 
         closeCheckPWDialog() {
@@ -332,7 +318,6 @@
             // this.initForm()
             this.initData()
             this.getMosaicList()
-            this.getGenerateHash()
         }
 
     }

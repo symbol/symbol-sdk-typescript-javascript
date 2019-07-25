@@ -1,4 +1,3 @@
-import {NetworkType} from "nem2-sdk";
 <template>
   <div>
     <div class="privatekey">
@@ -60,13 +59,13 @@ import {NetworkType} from "nem2-sdk";
         }
 
         checkImport() {
-            if(!this.checkPrivateKey()) return
+            if (!this.checkPrivateKey()) return
             if (!this.form.password || this.form.password == '') {
-                this.$Message.error('设置密码输入错误! ');
+                this.$Message.error(this['$t']('Set_password_input_error'));
                 return
             }
             if (this.form.password !== this.form.checkPW) {
-                this.$Message.error('两次密码不一致! ');
+                this.$Message.error(this['$t']('Two_passwords_are_inconsistent'));
                 return
             }
         }
@@ -74,13 +73,13 @@ import {NetworkType} from "nem2-sdk";
         checkPrivateKey() {
             try {
                 if(!this.form.privateKey || this.form.privateKey === ''){
-                    this.$Message.error('私钥输入错误! ');
+                    this.$Message.error('Mnemonic_input_error');
                     return false
                 }
-                const account = Account.createFromPrivateKey(this.form.privateKey,NetworkType.MIJIN_TEST)
+                const account = Account.createFromPrivateKey(this.form.privateKey, NetworkType.MIJIN_TEST)
                 this.account = account
             } catch (e) {
-                this.$Message.error('私钥输入错误! ');
+                this.$Message.error(this['$t']('Mnemonic_input_error'));
             }
 
         }
@@ -150,8 +149,8 @@ import {NetworkType} from "nem2-sdk";
 
         toWalletDetails () {
             this.$Notice.success({
-                title: '导入私钥操作',
-                desc: '导入钱包成功！ '
+                title: this['$t']('Import_private_key_operation') + '',
+                desc: this['$t']('Imported_wallet_successfully') + '',
             });
             this.$store.commit('SET_HAS_WALLET',true)
             this.$emit('toWalletDetails')

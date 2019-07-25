@@ -1,6 +1,6 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-import { MosaicDefinitionTransaction, Deadline, MosaicNonce, MosaicId, NamespaceMosaicIdGenerator, MosaicProperties, UInt64, MosaicSupplyChangeTransaction, MosaicHttp, Convert, NetworkCurrencyMosaic } from 'nem2-sdk';
+import { MosaicDefinitionTransaction, Deadline, MosaicNonce, MosaicId, NamespaceMosaicIdGenerator, AggregateTransaction, MosaicProperties, UInt64, MosaicSupplyChangeTransaction, MosaicHttp, Convert, NetworkCurrencyMosaic, MosaicSupplyType } from 'nem2-sdk';
 export var mosaicInterface = {
     getMosaicByNamespace: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var currentXem, uintArray, mosaicId;
@@ -63,7 +63,7 @@ export var mosaicInterface = {
         });
     }); },
     createMosaic: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-        var mosaicNonce, mosaicId, supplyMutable, transferable, divisibility, duration, netWorkType, maxFee, mosaicDefinitionTransaction;
+        var mosaicNonce, mosaicId, supplyMutable, transferable, divisibility, duration, netWorkType, maxFee, supply, publicAccount, mosaicDefinitionTx, mosaicSupplyChangeTx, mosaicDefinitionTransaction;
         return tslib_1.__generator(this, function (_a) {
             mosaicNonce = params.mosaicNonce;
             mosaicId = params.mosaicId;
@@ -73,12 +73,19 @@ export var mosaicInterface = {
             duration = params.duration;
             netWorkType = params.netWorkType;
             maxFee = params.maxFee;
-            mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(Deadline.create(), mosaicNonce, mosaicId, MosaicProperties.create({
+            supply = params.supply;
+            publicAccount = params.publicAccount;
+            mosaicDefinitionTx = MosaicDefinitionTransaction.create(Deadline.create(), mosaicNonce, mosaicId, MosaicProperties.create({
                 supplyMutable: supplyMutable,
                 transferable: transferable,
                 divisibility: divisibility,
                 duration: UInt64.fromUint(duration)
             }), netWorkType, maxFee ? UInt64.fromUint(maxFee) : undefined);
+            mosaicSupplyChangeTx = MosaicSupplyChangeTransaction.create(Deadline.create(), mosaicDefinitionTx.mosaicId, MosaicSupplyType.Increase, UInt64.fromUint(supply), netWorkType);
+            mosaicDefinitionTransaction = AggregateTransaction.createComplete(Deadline.create(), [
+                mosaicDefinitionTx.toAggregate(publicAccount),
+                mosaicSupplyChangeTx.toAggregate(publicAccount)
+            ], netWorkType, [], UInt64.fromUint(maxFee));
             return [2 /*return*/, {
                     result: {
                         mosaicDefinitionTransaction: mosaicDefinitionTransaction
@@ -105,7 +112,7 @@ export var mosaicInterface = {
     getMosaics: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var mosaicsInfos;
         return tslib_1.__generator(this, function (_a) {
-            mosaicsInfos = new MosaicHttp(params.node).getMosaics(params.mosaics);
+            mosaicsInfos = new MosaicHttp(params.node).getMosaics(params.mosaicIdList);
             return [2 /*return*/, {
                     result: {
                         mosaicsInfos: mosaicsInfos

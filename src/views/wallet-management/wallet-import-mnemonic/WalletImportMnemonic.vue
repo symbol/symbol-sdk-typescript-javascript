@@ -65,11 +65,11 @@
         checkImport() {
             if(!this.checkMnemonic()) return
             if (!this.form.password || this.form.password == '') {
-                this.$Message.error('设置密码输入错误! ');
+               this.$Message.error(this.$t('Set_password_input_error'));
                 return
             }
             if (this.form.password !== this.form.checkPW) {
-                this.$Message.error('两次密码不一致! ');
+                this.$Message.error(this.$t('Two_passwords_are_inconsistent'))
                 return
             }
         }
@@ -77,14 +77,14 @@
         checkMnemonic() {
             try {
                 if(!this.form.mnemonic || this.form.mnemonic === ''){
-                    this.$Message.error('助记词输入错误! ');
+                    this.$Message.error(this.$t('Mnemonic_input_error'));
                     return false
                 }
                 const account = this.createAccount(this.form.mnemonic)
                 this.$store.commit('SET_ACCOUNT', account);
                 this.account = account
             } catch (e) {
-                this.$Message.error('助记词输入错误! ');
+                this.$Message.error(this.$t('Mnemonic_input_error'));
             }
 
         }
@@ -185,8 +185,8 @@
 
         toWalletDetails () {
             this.$Notice.success({
-                title: '导入助记词操作',
-                desc: '导入钱包成功！ '
+                title: '' + this['$t']('Import_mnemonic_operations'),
+                desc: this['$t']('Imported_wallet_successfully') + ''
             });
             this.$store.commit('SET_HAS_WALLET',true)
             this.$emit('toWalletDetails')

@@ -6,7 +6,7 @@
                     v-for="(item,index) in navList"
                     :key="index"
                     @click="goToPage(item,index)"
-                >{{item.name}}</li>
+                >{{$t(item.name)}}</li>
             </ul>
         </div>
         <div class="walletFnContent">
@@ -39,8 +39,8 @@
 
         delBtn = delBtn
         navList = [
-            {name:'创建',to:'/walletCreate',active:false},
-            {name:'导入',to:'/walletImportKeystore',active:false},
+            {name:'create',to:'/walletCreate',active:false},
+            {name:'import',to:'/walletImportKeystore',active:false},
         ]
         Index = 0
         walletCreated = false

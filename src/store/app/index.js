@@ -20,7 +20,7 @@ export default {
         ],
         walletList: [],
         hasWallet: false,
-        unClick: true,
+        isInLoginPage: true,
         mnemonic: ''
     },
     getters: {},

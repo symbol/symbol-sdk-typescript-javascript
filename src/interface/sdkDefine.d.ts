@@ -249,6 +249,8 @@ declare namespace SdkV0 {
             divisibility: number,
             duration: number,
             netWorkType: number,
+            supply:number,
+            publicAccount:PublicAccount,
             maxFee?: number
         }) => Rst<{
             mosaicDefinitionTransaction: object
@@ -264,7 +266,7 @@ declare namespace SdkV0 {
         }>;
         getMosaics: (params: {
             node: string,
-            mosaics: any[],
+            mosaicIdList: MosaicId[],
         }) => Rst<{
             mosaicsInfos: object
         }>;

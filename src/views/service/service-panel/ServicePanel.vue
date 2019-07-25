@@ -1,5 +1,6 @@
 <template>
     <div class="servicePanelWrap clear">
+<!--        <div class="white_wrap">{{$t('not_yet_open')}}</div>-->
         <div class="left serviceSwitch">
             <ServiceSwitch></ServiceSwitch>
         </div>
@@ -20,7 +21,9 @@
         },
     })
     export default class ServicePanel extends Vue{
-
+        created(){
+            this.$store.state.app.isInLoginPage = false
+        }
     }
 </script>
 

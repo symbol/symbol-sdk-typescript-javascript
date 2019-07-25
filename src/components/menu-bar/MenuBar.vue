@@ -3,17 +3,16 @@
     <div class="left_navigator">
       <div class="navigator_icon">
         <div :key="index"
-             :class="[$store.state.app.currentPanelIndex == index ? 'active_panel' : '',$store.state.app.unClick?'un_click':'pointer']"
+             :class="[$store.state.app.currentPanelIndex == index ? 'active_panel' : '',$store.state.app.isInLoginPage?'un_click':'pointer']"
              @click="switchPanel(index)"
              v-for="(a,index) in activePanelList">
           <span :class="['absolute', $store.state.app.currentPanelIndex == index ? 'active_icon' : '']"></span>
         </div>
       </div>
 
-
-      <div class="quit_account pointer">
+      <div class="quit_account pointer" v-if="!$store.state.account.wallet.name">
         <img src="../../assets/images/window/windowAccoutQuit.png" alt="">
-        <span>{{$t('wallet_name')}}</span>
+        <span>{{$store.state.account.wallet.name}}</span>
       </div>
     </div>
     <div class="top_window">
@@ -53,10 +52,10 @@
               <i-option v-for="item in languageList" :value="item.value">{{ item.label }}</i-option>
             </i-select>
           </div>
-          <div class="switch_wallet">
+          <div class="switch_wallet" v-if="walletList.length > 0">
             <img class="select_wallet_icon" src="../../assets/images/window/windowWalletSelect.png" alt="">
-            <i-select @on-change="switchWallet" :model="currentWallet" :placeholder="walletList[0].label">
-              <i-option v-for="item in walletList" :value="item.value">{{ item.label }}</i-option>
+            <i-select @on-change="switchWallet" :model="currentWallet" :placeholder="walletList[0].name">
+              <i-option v-for="item in walletList" :value="item.address">{{ item.name }}</i-option>
             </i-select>
           </div>
         </div>
@@ -77,6 +76,7 @@
     import axios from 'axios'
     import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
     import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
+    import {blockchainInterface} from '@/interface/sdkBlockchain.js';
 
     @Component
     export default class Home extends Vue {
@@ -107,17 +107,13 @@
         currentWallet = ''
         monitorSeleted = monitorSeleted
         monitorUnselected = monitorUnselected
-        walletList = [
-            {
-                value: 'wallet1',
-                label: 'wallet-1xxxxxxxxxx'
-            }, {
-                value: 'wallet12',
-                label: 'wallet-2'
-            }
-        ]
         currentNode = ''
         isNodeHealthy = true
+
+        accountPrivateKey = ''
+        accountPublicKey = ''
+        accountAddress = ''
+        walletList: any[] = []
 
 
         closeWindow() {
@@ -164,13 +160,12 @@
         }
 
         switchPanel(index) {
+            if (this.$store.state.app.isInLoginPage) {
+                return
+            }
+            console.log('routers', routers)
             const routerIcon = routers[0].children
-            if (this.$store.state.app.unClick) {
-                return
-            }
-            if (routerIcon[index].meta.disabled) {
-                return
-            }
+
             this.$router.push({
                 params: {},
                 name: routerIcon[index].name
@@ -189,8 +184,18 @@
             localSave('local', language)
         }
 
-        switchWallet(walletNmae) {
-            console.log('switch wallet', walletNmae)
+        switchWallet(address) {
+            const {walletList} = this
+            const that = this
+            walletList.every((item) => {
+                if(item.address == address){
+                    that.$store.state.account.wallet = item
+                    return false
+                }
+                return true
+            })
+
+
         }
 
         initData() {
@@ -201,6 +206,7 @@
                 language: this.$store.state.app.localMap[this.currentLanguage]
             }
             this.currentNode = this.$store.state.account.node
+            this.walletList = this.$store.state.app.walletList
         }
 
         @Watch('currentNode')
@@ -210,12 +216,26 @@
             const that = this
             axios.get(currentNode + '/chain/height').then(function (response) {
                 that.isNodeHealthy = true
+                that.getGenerateHash(currentNode)
             }).catch(function (error) {
                 that.isNodeHealthy = false
             });
-
         }
 
+        async getGenerateHash(node) {
+            const that = this
+            let {accountPrivateKey, accountPublicKey, accountAddress} = this
+            await blockchainInterface.getBlockByHeight({
+                height: 1,
+                node
+            }).then(async (blockReasult: any) => {
+                await blockReasult.result.Block.subscribe((blockInfo) => {
+                    that.$store.state.account.generationHash = blockInfo.generationHash
+                })
+            }).catch(() => {
+                console.log('generationHash  null')
+            })
+        }
 
         created() {
             this.initData()

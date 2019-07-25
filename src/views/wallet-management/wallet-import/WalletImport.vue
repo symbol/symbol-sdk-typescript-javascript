@@ -119,7 +119,7 @@
                 case 'mnemonic':
                     this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
                     this.$store.commit('SET_HAS_WALLET',true)
-                    this.success('成功导入钱包','')
+                    this.success(this['$t']('Successfully_imported_wallet'),'')
                     this.mnemonic = {
                         mnemonic:'',
                         password: '',
@@ -128,7 +128,7 @@
                 case 'privateKey':
                     this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
                     this.$store.commit('SET_HAS_WALLET',true)
-                    this.success('成功导入钱包','')
+                    this.success(this['$t']('Successfully_imported_wallet'),'')
                     this.privateKey = {
                         privateKey:'',
                         password: '',
@@ -138,7 +138,7 @@
                 case 'keystore':
                     this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
                     this.$store.commit('SET_HAS_WALLET',true)
-                    this.success('成功导入钱包','')
+                    this.success(this['$t']('Successfully_imported_wallet'),'')
                     this.keystore = {
                         keystore:'',
                         password: '',

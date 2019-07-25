@@ -3,7 +3,7 @@ declare interface appInfo {
     localMap: any,
     walletList: any[]
     hasWallet: boolean,
-    unClick: boolean,
+    isInLoginPage: boolean,
     languageList: Array<any>,
     currentPanelIndex:number,
     mnemonic:string
@@ -31,7 +31,7 @@ export default {
         ],
         walletList: [],
         hasWallet: false,
-        unClick: true,
+        isInLoginPage: true,
         mnemonic:''
     },
     getters: {},

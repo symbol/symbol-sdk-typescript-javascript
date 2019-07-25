@@ -10,6 +10,11 @@
 
     @Component
     export default class App extends Vue {
+        initData() {
+            this.$store.state.app.walletList = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
+            this.$store.state.app.isInLoginPage = true
+        }
+
         created() {
             if (window['electron']) {
                 const ipcRenderer = window['electron']['ipcRenderer']

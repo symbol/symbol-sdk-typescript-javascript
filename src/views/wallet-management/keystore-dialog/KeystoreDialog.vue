@@ -8,21 +8,21 @@
                 :transfer="false"
                 @on-cancel="keystoreDialogCancel">
             <div slot="header" class="keystoreDialogHeader">
-                <span class="title">导出Keystore</span>
+                <span class="title">{{$t('export')}} Keystore</span>
             </div>
             <div class="keystoreDialogBody">
                 <div class="steps"  v-if="stepIndex != 4">
-                    <span :class="['stepItem',stepIndex == 0?'active':'']">输入密码</span>
-                    <span :class="['stepItem',stepIndex == 1?'active':'']">备份提示</span>
-                    <span :class="['stepItem',stepIndex == 2||stepIndex == 3?'active':'']">备份Keystore</span>
+                    <span :class="['stepItem',stepIndex == 0?'active':'']">{{$t('input_password')}}</span>
+                    <span :class="['stepItem',stepIndex == 1?'active':'']">{{$t('backup_prompt')}}</span>
+                    <span :class="['stepItem',stepIndex == 2||stepIndex == 3?'active':'']">{{$t('backup')}} Keystore</span>
                 </div>
                 <div class="stepItem1" v-if="stepIndex == 0">
                     <Form :model="wallet">
                         <FormItem>
-                            <Input v-model="wallet.password" required placeholder="请输入你的钱包密码"></Input>
+                            <Input v-model="wallet.password" required :placeholder="$t('please_enter_your_wallet_password')"></Input>
                         </FormItem>
                         <FormItem>
-                            <Button type="success" @click="exportKeystore">下一步 <Icon type="ios-arrow-round-forward" /></Button>
+                            <Button type="success" @click="exportKeystore">{{$t('next')}} <Icon type="ios-arrow-round-forward" /></Button>
                         </FormItem>
                     </Form>
                 </div>
@@ -38,20 +38,20 @@
                             </Col>
                             <Col span="16">
                                 <div class="step2Remind">
-                                    <p class="tit">获得Keystore+密码等于拥有钱包资产所有权</p>
+                                    <p class="tit">{{$t('obtaining_a_Keystore_password_is_equal_to_owning_a_wallet_asset')}}</p>
                                     <div class="ul1">
-                                        <p class="ul1Tit"><span class="point"></span> 备份Keystore</p>
-                                        <p class="ul1Txt">请妥善备份Keystore,如果你的手机丢失、被盗、损坏,Keystore+密码将可以恢复你的资产</p>
+                                        <p class="ul1Tit"><span class="point"></span> {{$t('backup')}}Keystore</p>
+                                        <p class="ul1Txt">{{$t('Please_back_up_the_Keystore_properly_If_your_phone_is_lost_stolen_or_damaged')}}</p>
                                     </div>
                                     <div class="ul2">
-                                        <p class="ul2Tit"><span class="point"></span> 离线保管</p>
-                                        <p class="ul2Txt">妥善保管至隔离网络的安全地方,请勿将助记词在联网环境下分享和存储,比如邮件、相册、社交应用等</p>
+                                        <p class="ul2Tit"><span class="point"></span> {{$t('offline_storage')}}</p>
+                                        <p class="ul2Txt">{{$t('keep_it_in_a_safe_place_on_the_isolated_network')}}</p>
                                     </div>
                                 </div>
                             </Col>
                         </Row>
                     </div>
-                    <Button type="success" @click="exportKeystore">下一步 <Icon type="ios-arrow-round-forward" /></Button>
+                    <Button type="success" @click="exportKeystore">{{$t('next')}} <Icon type="ios-arrow-round-forward" /></Button>
                 </div>
                 <div class="stepItem3" v-if="stepIndex == 2">
                     <Row>
@@ -60,20 +60,20 @@
                             </div>
                         </Col>
                         <Col span="9">
-                            <p class="tit">请安全备份Keystore</p>
-                            <p class="txt">切勿保存至邮箱、记事本、网盘、聊天工具等，非常危险请勿使用网络传输</p>
-                            <p class="tit">请勿使用网络传输</p>
-                            <p class="txt">请勿通过网络工具传输，一旦被黑客获取将造成不可挽回的资产损失。建议离线设备通过扫二维码方式传输。</p>
-                            <p class="tit">密码管理工具保存</p>
-                            <p class="txt">建议使用密码管理工具管理</p>
+                            <p class="tit">{{$t('please_safely_back_up_the_Keystore')}}</p>
+                            <p class="txt">{{$t('do_not_save_to_email_notepad_web_chat_etc_It_is_very_dangerous_Please_don_use_network_transmission')}}</p>
+                            <p class="tit">{{$t('do_not_use_network_transmission')}}</p>
+                            <p class="txt">{{$t('Do_not_transmit_through_network_tools_once_acquired_by_hackers_will_cause_irreparable_asset_losses_It_is_recommended_that_the_offline_device_be_transmitted_by_scanning_the_QR_code')}}</p>
+                            <p class="tit">{{$t('password_management_tool_save')}}</p>
+                            <p class="txt">{{$t('it_is_recommended_to_use_password_management_tool_management')}}</p>
                         </Col>
                     </Row>
                     <Row :gutter="80">
                         <Col span="12">
-                            <Button type="success" @click="copyKeystore">复制Keystore</Button>
+                            <Button type="success" @click="copyKeystore">{{$t('copy')}} Keystore</Button>
                         </Col>
                         <Col span="8">
-                            <Button type="success" @click="exportKeystore">显示Keystore二维码</Button>
+                            <Button type="success" @click="exportKeystore">{{$t('Display_Keystore_QR_code')}}</Button>
                         </Col>
                     </Row>
                 </div>
@@ -86,10 +86,10 @@
                         <Row :gutter="80">
                             <Col span="7">&nbsp;</Col>
                             <Col span="5">
-                                <Button type="success" @click="toPrevPage">显示Keystore</Button>
+                                <Button type="success" @click="toPrevPage">{{$t('Show_Keystore')}}</Button>
                             </Col>
                             <Col span="5">
-                                <Button type="success" @click="saveQRCode">复制二维码</Button>
+                                <Button type="success" @click="saveQRCode">{{$t('copy_QR_code')}}</Button>
                             </Col>
                             <Col span="7">&nbsp;</Col>
                         </Row>
@@ -143,7 +143,7 @@
         }
         copyKeystore () {
             copyTxt(this.wallet.keystore).then((data)=>{
-                this.$Message.success('复制成功');
+                this.$Message.success(this['$t']('successful_copy'));
             })
         }
         saveQRCode () {

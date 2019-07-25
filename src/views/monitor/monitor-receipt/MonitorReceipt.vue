@@ -1,5 +1,5 @@
 <template>
-  <div class="qr_content" @click="hideSearchDetail">
+  <div class="qr_content">
     <Modal
             :title="$t('set_amount')"
             v-model="isShowDialog"
@@ -44,88 +44,23 @@
       </div>
     </div>
 
-
-    <div class="right_record radius">
-      <div class="top_title">
-        <span>{{$t('collection_record')}}</span>
-        <div class="right" v-show="!isShowSearchDetail">
-            <span class="select_date pointer">
-              <div class="month_value">
-                <img src="../../../assets/images/monitor/market/marketCalendar.png" alt="">
-              <span>{{currentMonth}}</span>
-              </div>
-              <div class="date_selector">
-                <DatePicker @on-change="changeCurrentMonth" type="month" placeholder="" :value="currentMonth"
-                            style="width: 70px"></DatePicker>
-              </div>
-            </span>
-          <span class="search_input un_click" @click.stop="showSearchDetail">
-              <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
-              <span>{{$t('search')}}</span>
-            </span>
-        </div>
-
-        <div v-show="isShowSearchDetail" class="search_expand">
-            <span class="search_container">
-              <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
-              <input @click.stop type="text" class="absolute" v-model="transactionHash"
-                     :placeholder="$t('enter_asset_type_alias_or_address_search')">
-            </span>
-          <span class="search_btn pointer " @click.stop="searchByasset">{{$t('search')}}</span>
-        </div>
-
-
-      </div>
-      <div class="bottom_transfer_record_list scroll">
-        <Spin v-if="isLoadingTransactionRecord" size="large" fix></Spin>
-        <div class="transaction_record_item"
-             v-for="c in confirmedTransactionList">
-          <img src="../../../assets/images/monitor/transaction/transacrionAssetIcon.png" alt="">
-          <div class="flex_content">
-            <div class="left left_components">
-              <div class="top">{{c.oppositeAddress}}</div>
-              <div class="bottom"> {{c.time}}</div>
-            </div>
-            <div class="right right_components">
-              <div class="top">{{c.mosaic?c.mosaic.amount.compact():0}}</div>
-              <div class="bottom">USD
-                {{c.mosaic && c.mosaic.id.toHex() == $store.state.account.currentXEM1 || c.mosaic.id.toHex() ==
-                $store.state.account.currentXEM2?c.mosaic.amount.compact() * currentPrice:0}}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="no_data" v-if="confirmedTransactionList.length == 0 && !isLoadingTransactionRecord">
-          {{$t('no_confirmed_transactions')}}
-        </div>
-      </div>
-    </div>
+    <CollectionRecord></CollectionRecord>
   </div>
 </template>
 
 <script lang="ts">
-    import {PublicAccount, NetworkType, TransactionType} from 'nem2-sdk';
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Vue} from 'vue-property-decorator';
     import {createQRCode, copyTxt} from '@/utils/tools'
-    import {transactionInterface} from '@/interface/sdkTransaction';
-    import {
-        formatNemDeadline,
-        addZero,
-        formatTransactions,
-        getCurrentMonthFirst,
-        getCurrentMonthLast
-    } from '@/utils/util.js'
-    import axios from 'axios'
+    import CollectionRecord from '@/components/CollectionRecord.vue'
 
-    @Component
+    @Component({
+        components: {
+            CollectionRecord
+        }
+    })
     export default class MonitorReceipt extends Vue {
-        isLoadingTransactionRecord = true
-        currentMonth = ''
-        isShowSearchDetail = false
         QRCode: string = ''
         isShowDialog = false
-        copyBtn: any = false
         assetAmount = 0
         transactionHash = ''
         cityList = [
@@ -139,7 +74,6 @@
             }
         ]
         assetType = ''
-        monthFlag = new Date()
         transferTypeList = [
             {
                 name: 'ordinary_transfer',
@@ -165,24 +99,10 @@
         accountAddress = ''
         node = ''
         currentXem = ''
-        confirmedTransactionList = []
-        localConfirmedTransactions = []
-        currentPrice = 0
-        currentMonthFirst: number = 0
-        currentMonthLast: number = 0
 
         hideSetAmountDetail() {
             this.isShowDialog = false
         }
-
-        showSearchDetail() {
-            // this.isShowSearchDetail = true
-        }
-
-        hideSearchDetail() {
-            this.isShowSearchDetail = false
-        }
-
         genaerateQR() {
             const that = this
             this.isShowDialog = false
@@ -204,9 +124,9 @@
             })
         }
 
-        downloadQR(){
+        downloadQR() {
             const accountAddress = this.$store.state.account.accountAddress
-            var oQrcode:any = document.querySelector('#qrImg')
+            var oQrcode: any = document.querySelector('#qrImg')
             var url = oQrcode.src
             var a = document.createElement('a')
             var event = new MouseEvent('click')
@@ -217,10 +137,6 @@
 
         showAssetSettingDialog() {
             this.isShowDialog = true
-        }
-
-        changeCurrentMonth(e) {
-            this.currentMonth = e
         }
 
 
@@ -245,25 +161,6 @@
             })
         }
 
-        getConfirmedTransactions() {
-            const that = this
-            let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
-            const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
-            transactionInterface.transactions({
-                publicAccount,
-                node,
-                queryParams: {
-                    pageSize: 100
-                }
-            }).then((transactionsResult) => {
-                transactionsResult.result.transactions.subscribe((transactionsInfo) => {
-                    let transferTransaction = formatTransactions(transactionsInfo, accountPublicKey)
-                    this.localConfirmedTransactions = transferTransaction
-                    that.onCurrentMonthChange()
-                    that.isLoadingTransactionRecord = false
-                })
-            })
-        }
 
         initData() {
             this.accountPrivateKey = this.$store.state.account.accountPrivateKey
@@ -271,7 +168,6 @@
             this.accountAddress = this.$store.state.account.accountAddress
             this.node = this.$store.state.account.node
             this.currentXem = this.$store.state.account.currentXem
-            this.currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
         }
 
         createQRCode() {
@@ -280,57 +176,10 @@
             })
         }
 
-        async getMarketOpenPrice() {
-            const that = this
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
-            await axios.get(url).then(function (response) {
-                const result = response.data.data[0]
-                that.currentPrice = result.open
-                console.log(that.currentPrice)
-            }).catch(function (error) {
-                console.log(error);
-            });
-        }
-
-        // month filter
-        @Watch('currentMonth')
-        onCurrentMonthChange() {
-            this.confirmedTransactionList = []
-            const that = this
-            const currentMonth = new Date(this.currentMonth)
-            this.currentMonthFirst = getCurrentMonthFirst(currentMonth)
-            this.currentMonthLast = getCurrentMonthLast(currentMonth)
-            const {currentMonthFirst, currentMonthLast, localConfirmedTransactions} = this
-            localConfirmedTransactions.forEach((item) => {
-                if (item.date <= currentMonthLast && item.date >= currentMonthFirst) {
-                    that.confirmedTransactionList.push(item)
-
-                }
-            })
-        }
-
-        searchByasset() {
-            // let {transactionHash, accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
-            // if (transactionHash.length < 64) {
-            //     this.$Message.destroy()
-            //     this.$Message.error(this['$t']('transaction_hash_error'))
-            //     return
-            // }
-            // const that = this
-            // console.log(transactionHash)
-            // const url = `${node}/transaction/${transactionHash}`
-            // axios.get(url).then(function (response) {
-            //     let result = response.data.transaction
-            // }).catch(() => {
-            //     console.log('no this transaction')
-            // })
-        }
 
         created() {
             this.initData()
             this.createQRCode()
-            this.getConfirmedTransactions()
-            this.getMarketOpenPrice()
 
         }
     }

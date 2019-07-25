@@ -82,7 +82,6 @@
             for (const key in obj) {
                 const value = obj[key];
                 if (value && 'object' == typeof value) {
-                    //递归clone
                     newObj[key] = this.copyObj(value);
                 } else {
                     newObj[key] = value;
@@ -120,13 +119,16 @@
         }
         setLeftSwitchIcon(){
             this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
-
+        }
+        initData(){
+            this.$store.state.app.isInLoginPage = false
         }
 
         created(){
             this.setLeftSwitchIcon()
             this.setDefaultPage()
             this.setWalletList()
+            this.initData()
         }
     }
 </script>

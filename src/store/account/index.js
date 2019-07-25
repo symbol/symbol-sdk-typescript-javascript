@@ -9,7 +9,8 @@ export default {
         currentXEM2: 'd525ad41d95fcf29',
         account: {},
         wallet: {},
-        mosaic: []
+        mosaic: [],
+        generationHash: ''
     },
     getters: {
         Address: function (state) {

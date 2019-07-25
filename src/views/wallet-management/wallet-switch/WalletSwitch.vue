@@ -1,48 +1,50 @@
 <template>
-    <div class="walletSwitchWrap">
-        <div class="walletSwitchHead">
-            <p class="tit">钱包管理</p>
-        </div>
-        <div class="walletMethod">
-            <Row>
-                <Col span="12">
-                    <div class="createBtn" @click="toCreate">创建</div>
-                </Col>
-                <Col span="12">
-                    <div class="importBtn" @click="toImport">导入</div>
-                </Col>
-            </Row>
-        </div>
-        <div class="walletList">
-            <div :class="['walletItem', item.active ? 'active':'']" @click="chooseWallet(index)" v-for="(item, index) in walletList" :key="index">
-               <Row>
-                   <Col span="17">
-                       <div>
-                           <p class="walletName">{{item.name}}</p>
-                           <p class="walletAmount">{{item.balance}}&nbsp;<span class="tails">XEM</span> </p>
-                       </div>
-                   </Col>
-                   <Col span="7">
-                       <div @click.stop>
-                           <p class="walletTypeTxt">公共账户</p>
-                           <div class="options">
-                               <Poptip  placement="bottom">
-                                  <img src="../../../assets/images/wallet-management/moreActive.png" v-if="item.active">
-                                  <img src="../../../assets/images/wallet-management/more.png" v-else>
-                                   <div slot="content">
-                                       <p class="optionItem" @click.stop="delWallet(index, item.active)">
-                                           <i><img src="../../../assets/images/wallet-management/delete.png"></i>
-                                           <span>删除</span>
-                                       </p>
-                                   </div>
-                               </Poptip>
-                           </div>
-                       </div>
-                   </Col>
-               </Row>
-            </div>
-        </div>
+  <div class="walletSwitchWrap">
+    <div class="walletSwitchHead">
+      <p class="tit">{{$t('Wallet_management')}}</p>
     </div>
+    <div class="walletMethod">
+      <Row>
+        <Col span="12">
+          <div class="createBtn" @click="toCreate">{{$t('create')}}</div>
+        </Col>
+        <Col span="12">
+          <div class="importBtn" @click="toImport">{{$t('import')}}</div>
+        </Col>
+      </Row>
+    </div>
+    <div class="walletList">
+      <div :class="['walletItem', item.active ? 'active':'']" @click="chooseWallet(index)"
+           v-for="(item, index) in walletList" :key="index">
+        <Row>
+          <Col span="17">
+            <div>
+              <p class="walletName">{{item.name}}</p>
+              <p class="walletAmount">{{item.balance}}&nbsp;<span class="tails">XEM</span></p>
+            </div>
+          </Col>
+          <Col span="7">
+            <div @click.stop>
+              <p class="walletTypeTxt">{{$t('Public_account')}}</p>
+              <div class="options">
+                <Poptip placement="bottom">
+                  <img src="../../../assets/images/wallet-management/moreActive.png" v-if="item.active">
+                  <img src="../../../assets/images/wallet-management/more.png" v-else>
+                  <div slot="content">
+                    <p class="optionItem" @click.stop="delWallet(index, item.active)">
+                      <i><img src="../../../assets/images/wallet-management/delete.png"></i>
+                      <span>{{$t('delete')}}</span>
+                    </p>
+                  </div>
+                </Poptip>
+              </div>
+            </div>
+          </Col>
+        </Row>
+
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -130,8 +132,8 @@
             }
             this.$store.commit('SET_WALLET_LIST',list)
             this.$Notice.success({
-                title: '钱包操作',
-                desc: '删除钱包成功！'
+                title: this['$t']('Wallet_management') + '',
+                desc: this['$t']('Delete_wallet_successfully') + '',
             });
             document.body.click()
             this.initWalletList()

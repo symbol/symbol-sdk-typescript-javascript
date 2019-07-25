@@ -15,7 +15,7 @@
                     <div class="checkPWImg">
                         <img src="@/assets/images/window/checkPW.png">
                     </div>
-                    <p class="checkRemind">{{$('please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe')}}</p>
+                    <p class="checkRemind">{{$t('please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe')}}</p>
                     <Form :model="wallet">
                         <FormItem>
                             <Input v-model="wallet.password" type="password" required :placeholder="$t('please_enter_your_wallet_password')"></Input>
