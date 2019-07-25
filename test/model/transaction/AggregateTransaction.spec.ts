@@ -389,7 +389,7 @@ describe('AggregateTransaction', () => {
 
     it('Should create signed transaction with cosignatories - Aggregated Complete', () => {
         /**
-         * https://github.com/nemtech/nem2-sdk-typescript-javascript/issues/112
+         * @see https://github.com/nemtech/nem2-sdk-typescript-javascript/issues/112
          */
         const accountAlice = TestingAccount;
         const accountBob = CosignatoryAccount;
@@ -411,8 +411,8 @@ describe('AggregateTransaction', () => {
                                                   PlainMessage.create('c to a'),
                                                   NetworkType.MIJIN_TEST);
 
-        // 01. Alice creates the aggregated tx and serialize it, Then payload send to Bob & Carol
-        const aggregateTransactionPayload = AggregateTransaction.createComplete(
+        // 01. Alice creates the aggregated tx and sign it, Then payload send to Bob & Carol
+        const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [
                 AtoBTx.toAggregate(accountAlice.publicAccount),
@@ -420,13 +420,15 @@ describe('AggregateTransaction', () => {
                 CtoATx.toAggregate(accountCarol.publicAccount)],
             NetworkType.MIJIN_TEST,
             [],
-        ).serialize();
+        );
+
+        const aliceSignedTransaction = aggregateTransaction.signWith(accountAlice, generationHash);
 
         // 02.1 Bob cosigns the tx and sends it back to Alice
-        const signedTxBob = CosignatureTransaction.signTransactionPayload(accountBob, aggregateTransactionPayload, generationHash);
+        const signedTxBob = CosignatureTransaction.signTransactionPayload(accountBob, aliceSignedTransaction.payload, generationHash);
 
         // 02.2 Carol cosigns the tx and sends it back to Alice
-        const signedTxCarol = CosignatureTransaction.signTransactionPayload(accountCarol, aggregateTransactionPayload, generationHash);
+        const signedTxCarol = CosignatureTransaction.signTransactionPayload(accountCarol, aliceSignedTransaction.payload, generationHash);
 
         // 03. Alice collects the cosignatures, recreate, sign, and announces the transaction
 
@@ -436,7 +438,7 @@ describe('AggregateTransaction', () => {
             new CosignatureSignedTransaction(signedTxCarol.parentHash, signedTxCarol.signature, signedTxCarol.signer),
         ];
 
-        const recreatedTx = TransactionMapping.createFromPayload(aggregateTransactionPayload) as AggregateTransaction;
+        const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
 
         const signedTransaction = recreatedTx.signTransactionGivenSignatures(accountAlice, cosignatureSignedTransactions, generationHash);
 
@@ -444,6 +446,12 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.signer).to.be.equal(accountAlice.publicKey);
         expect(signedTransaction.payload.indexOf(accountBob.publicKey) > -1).to.be.true;
         expect(signedTransaction.payload.indexOf(accountCarol.publicKey) > -1).to.be.true;
+
+        // To make sure that the new cosign method returns the same payload & hash as standard cosigning
+        const standardCosignedTransaction = aggregateTransaction
+                    .signTransactionWithCosignatories(accountAlice, [accountBob, accountCarol], generationHash);
+        expect(standardCosignedTransaction.payload).to.be.equal(signedTransaction.payload);
+        expect(standardCosignedTransaction.hash).to.be.equal(signedTransaction.hash);
     });
 
     describe('size', () => {
