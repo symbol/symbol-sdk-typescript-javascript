@@ -11,6 +11,7 @@
     import echarts from 'echarts';
     import {formatDate} from '../utils/util.js'
     import axios from 'axios'
+    import {localSave, localRead, isRefreshData} from '@/utils/util'
 
     @Component
     export default class LineChart extends Vue {
@@ -32,7 +33,7 @@
                     const template = `<div>
                                     <div style="color: #999;">${date}</div>
                                     <div style="display: flex;justify-content: center;justify-items: center">
-                                      <span style="color: #666666;margin-right: 5px">￥${value}</span>
+                                      <span style="color: #666666;margin-right: 5px">$${value}</span>
                                       <span style="float:right;color: #20B5AC">${riseRange}%</span>
                                     </div>
                                     </div>`
@@ -166,12 +167,23 @@
         }
 
         async getChartData() {
+
+
             const that = this
-            ///xemusdt/1min/100
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/4hour/42'
+            //60min/168
+            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/60min/168'
             await axios.get(url).then(function (response) {
-                that.dataList = response.data.data
-                that.$set(that, 'dataList', response.data.data)
+                let dataList = []
+                response.data.data.forEach((item, index) => {
+                    index % 4 == 0 ? dataList.push(item) : dataList;
+                })
+
+                that.dataList = dataList
+                let marketPriceDataObject = {
+                    dataList: dataList,
+                    timestamp: new Date().getTime()
+                }
+                localSave('marketPriceDataList', JSON.stringify(marketPriceDataObject))
             }).catch(function (error) {
                 console.log(error);
                 that.getChartData()
@@ -179,8 +191,16 @@
             this.refresh()
         }
 
+        async refreshData() {
+            if (isRefreshData('marketPriceDataList', 1000 * 60 * 60, new Date().getMinutes())) {
+                await this.getChartData()
+            }else {
+                this.dataList = (JSON.parse(localRead('marketPriceDataList'))).dataList
+            }
+        }
+
         async created() {
-            await this.getChartData()
+            await this.refreshData()
         }
     }
 </script>

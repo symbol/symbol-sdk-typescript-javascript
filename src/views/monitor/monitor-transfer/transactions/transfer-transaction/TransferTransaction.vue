@@ -1,5 +1,9 @@
 <template>
   <div class="transfer" @click="isShowSubAlias=false">
+    <Alert v-if="showAlert" type="success" show-icon closable>
+      success
+    </Alert>
+
     <div class="address flex_center">
       <span class="title">{{$t('transfer_target')}}</span>
       <span class="value radius flex_center">
@@ -12,7 +16,6 @@
             </div>
             </span>
     </div>
-
     <div class="asset flex_center">
       <span class="title">{{$t('asset_type')}}</span>
       <span class="value radius flex_center">
@@ -43,9 +46,13 @@
             </span>
     </div>
     <span class="xem_tips">{{$t('the_default_is')}}：0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
-    <div @click="sendTransaction" class="send_button pointer">
+    <div @click="checkInfo" class="send_button pointer">
       {{$t('send')}}
     </div>
+
+
+    <CheckPWDialog @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"
+                   :showCheckPWDialog="showCheckPWDialog"></CheckPWDialog>
   </div>
 </template>
 
@@ -64,15 +71,23 @@
         Id,
         NamespaceMosaicIdGenerator
     } from 'nem2-sdk'
+    import {Component, Vue} from 'vue-property-decorator';
     import {accountInterface} from '@/interface/sdkAccount'
     import {mosaicInterface} from '@/interface/sdkMosaic'
-    import {aliasInterface} from '@/interface/sdkNamespace'
     import {transactionInterface} from '@/interface/sdkTransaction'
     import {blockchainInterface} from '@/interface/sdkBlockchain'
-    import {Component, Vue} from 'vue-property-decorator';
+    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
 
-    @Component
+
+    @Component({
+        components: {
+            CheckPWDialog
+        }
+    })
     export default class TransferTransactionCompoent extends Vue {
+        showCheckPWDialog = false
+        showAlert = false
+
         accountPrivateKey = ''
         accountPublicKey = ''
         accountAddress = ''
@@ -89,10 +104,24 @@
         isShowSubAlias = false
         mosaicList = []
 
-        sendTransaction() {
+
+        initForm() {
+            this.fee = '0.05000'
+            this.remark = ''
+            this.address = ''
+            this.mosaic = ''
+            this.amount = '0'
+        }
+
+        checkInfo() {
             if (!this.checkForm()) {
                 return
             }
+            this.showCheckPWDialog = true
+        }
+
+        sendTransaction() {
+            const that = this
             let {accountPrivateKey, accountPublicKey, accountAddress, node, address, mosaic, amount, remark, fee, generationHash} = this
 
             //test data--
@@ -117,6 +146,9 @@
                     // get announce status
                     announceResult.result.announceStatus.subscribe((announceInfo: any) => {
                         console.log(signature)
+                        that.$Message.success('success')
+                        that.manageAlert('success')
+                        that.initForm()
                     })
                 })
 
@@ -135,14 +167,12 @@
             }
             if (fee < 0) {
                 this.showErrorMessage(this['$t']('fee_can_not_be_less_than_0'))
-
                 return false
             }
-
             return true
         }
 
-        showErrorMessage(message){
+        showErrorMessage(message) {
             this.$Message.destroy()
             this.$Message.error(message)
         }
@@ -150,6 +180,7 @@
         async getMosaicList() {
             const that = this
             let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node, address, mosaic, amount, remark, fee} = this
+            const {currentXEM1, currentXEM2} = this.$store.state.account
             let mosaicIdList = []
             await accountInterface.getAccountInfo({
                 node,
@@ -195,17 +226,25 @@
                     // get nem.xem
                     let currentXEMHex = ''
                     mosaicInterface.getMosaicByNamespace({
-                        namespace:currentXem
+                        namespace: currentXem
                     }).then((result: any) => {
                         currentXEMHex = result.result.mosaicId.toHex()
                         let isCrrentXEMExists = true
-                        isCrrentXEMExists = mosaicIdList.every((item) => {
-                            if (item.value == currentXEMHex) {
+                        let spliceIndex = -1
+                        isCrrentXEMExists = mosaicIdList.every((item, index) => {
+
+                            if (item.value == currentXEM1) {
+                                spliceIndex = index
+                                return false
+                            }
+                            if (item.value == currentXEM2) {
+                                spliceIndex = index
                                 return false
                             }
                             return true
                         })
-                        if (isCrrentXEMExists) {
+                        if (!isCrrentXEMExists) {
+                            mosaicList.splice(spliceIndex, 1)
                             mosaicList.push({
                                 label: currentXem,
                                 value: currentXEMHex
@@ -268,7 +307,29 @@
             this.currentXem = this.$store.state.account.currentXem
         }
 
+        closeCheckPWDialog() {
+            this.showCheckPWDialog = false
+        }
+
+        checkEnd(flag) {
+            if (flag) {
+                this.sendTransaction()
+            } else {
+                this.$Message.error('password_error')
+            }
+        }
+
+        manageAlert(status){
+            this.showAlert = true
+            const that = this
+            setInterval(()=>{
+                that.showAlert = false
+            },3000)
+        }
+
+
         created() {
+            // this.initForm()
             this.initData()
             this.getMosaicList()
             this.getGenerateHash()

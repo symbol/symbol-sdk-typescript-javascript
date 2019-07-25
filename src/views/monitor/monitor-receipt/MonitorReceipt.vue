@@ -33,14 +33,14 @@
 
     <div class="left_container radius">
       <div>{{assetAmount}}XEM</div>
-      <img :src="QRCode" alt="">
+      <img id="qrImg" :src="QRCode" alt="">
       <div class="address_text" id="address_text">
         {{accountAddress}}
       </div>
       <div class="qr_button ">
         <span class="radius pointer" @click="copyAddress">{{$t('copy_address')}}</span>
         <span class="radius pointer" @click="showAssetSettingDialog()">{{$t('set_amount')}}</span>
-        <span class="radius pointer">{{$t('copy_QR_code')}}</span>
+        <span class="radius pointer" @click="downloadQR">{{$t('copy_QR_code')}}</span>
       </div>
     </div>
 
@@ -59,7 +59,7 @@
                             style="width: 70px"></DatePicker>
               </div>
             </span>
-          <span class="search_input pointer" @click.stop="showSearchDetail">
+          <span class="search_input un_click" @click.stop="showSearchDetail">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
               <span>{{$t('search')}}</span>
             </span>
@@ -68,16 +68,18 @@
         <div v-show="isShowSearchDetail" class="search_expand">
             <span class="search_container">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
-              <input @click.stop type="text" class="absolute"
+              <input @click.stop type="text" class="absolute" v-model="transactionHash"
                      :placeholder="$t('enter_asset_type_alias_or_address_search')">
             </span>
-          <span class="search_btn pointer" @click.stop="searchByasset">{{$t('search')}}</span>
+          <span class="search_btn pointer " @click.stop="searchByasset">{{$t('search')}}</span>
         </div>
 
 
       </div>
       <div class="bottom_transfer_record_list scroll">
-        <div v-show="c.date  " class="transaction_record_item" v-for="c in confirmedTransactionList">
+        <Spin v-if="isLoadingTransactionRecord" size="large" fix></Spin>
+        <div class="transaction_record_item"
+             v-for="c in confirmedTransactionList">
           <img src="../../../assets/images/monitor/transaction/transacrionAssetIcon.png" alt="">
           <div class="flex_content">
             <div class="left left_components">
@@ -86,12 +88,16 @@
             </div>
             <div class="right right_components">
               <div class="top">{{c.mosaic?c.mosaic.amount.compact():0}}</div>
-              <div class="bottom">CNY
+              <div class="bottom">USD
                 {{c.mosaic && c.mosaic.id.toHex() == $store.state.account.currentXEM1 || c.mosaic.id.toHex() ==
                 $store.state.account.currentXEM2?c.mosaic.amount.compact() * currentPrice:0}}
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="no_data" v-if="confirmedTransactionList.length == 0 && !isLoadingTransactionRecord">
+          {{$t('no_confirmed_transactions')}}
         </div>
       </div>
     </div>
@@ -114,12 +120,14 @@
 
     @Component
     export default class MonitorReceipt extends Vue {
+        isLoadingTransactionRecord = true
         currentMonth = ''
         isShowSearchDetail = false
         QRCode: string = ''
         isShowDialog = false
         copyBtn: any = false
         assetAmount = 0
+        transactionHash = ''
         cityList = [
             {
                 value: 'xem',
@@ -158,18 +166,17 @@
         node = ''
         currentXem = ''
         confirmedTransactionList = []
-        unconfirmedTransactionList = []
-        confirmedDataAmount = 0
+        localConfirmedTransactions = []
         currentPrice = 0
-        currentMonthFirst = ''
-        currentMonthLast = ''
+        currentMonthFirst: number = 0
+        currentMonthLast: number = 0
 
         hideSetAmountDetail() {
             this.isShowDialog = false
         }
 
         showSearchDetail() {
-            this.isShowSearchDetail = true
+            // this.isShowSearchDetail = true
         }
 
         hideSearchDetail() {
@@ -195,6 +202,17 @@
                     that.$Message.error(that['$t']('QR_code_generation_failed'))
                 }
             })
+        }
+
+        downloadQR(){
+            const accountAddress = this.$store.state.account.accountAddress
+            var oQrcode:any = document.querySelector('#qrImg')
+            var url = oQrcode.src
+            var a = document.createElement('a')
+            var event = new MouseEvent('click')
+            a.download = 'qr_receive_' + accountAddress
+            a.href = url
+            a.dispatchEvent(event)
         }
 
         showAssetSettingDialog() {
@@ -239,11 +257,10 @@
                 }
             }).then((transactionsResult) => {
                 transactionsResult.result.transactions.subscribe((transactionsInfo) => {
-
                     let transferTransaction = formatTransactions(transactionsInfo, accountPublicKey)
-                    that.confirmedDataAmount = transferTransaction.length
-                    that.confirmedTransactionList = transferTransaction
-                    console.log(transferTransaction)
+                    this.localConfirmedTransactions = transferTransaction
+                    that.onCurrentMonthChange()
+                    that.isLoadingTransactionRecord = false
                 })
             })
         }
@@ -275,11 +292,38 @@
             });
         }
 
+        // month filter
         @Watch('currentMonth')
         onCurrentMonthChange() {
+            this.confirmedTransactionList = []
+            const that = this
             const currentMonth = new Date(this.currentMonth)
-            this.currentMonthFirst = getCurrentMonthFirst(currentMonth);
+            this.currentMonthFirst = getCurrentMonthFirst(currentMonth)
             this.currentMonthLast = getCurrentMonthLast(currentMonth)
+            const {currentMonthFirst, currentMonthLast, localConfirmedTransactions} = this
+            localConfirmedTransactions.forEach((item) => {
+                if (item.date <= currentMonthLast && item.date >= currentMonthFirst) {
+                    that.confirmedTransactionList.push(item)
+
+                }
+            })
+        }
+
+        searchByasset() {
+            // let {transactionHash, accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
+            // if (transactionHash.length < 64) {
+            //     this.$Message.destroy()
+            //     this.$Message.error(this['$t']('transaction_hash_error'))
+            //     return
+            // }
+            // const that = this
+            // console.log(transactionHash)
+            // const url = `${node}/transaction/${transactionHash}`
+            // axios.get(url).then(function (response) {
+            //     let result = response.data.transaction
+            // }).catch(() => {
+            //     console.log('no this transaction')
+            // })
         }
 
         created() {
@@ -288,10 +332,7 @@
             this.getConfirmedTransactions()
             this.getMarketOpenPrice()
 
-
         }
-
-
     }
 </script>
 <style scoped lang="less">

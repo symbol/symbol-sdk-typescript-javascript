@@ -86,8 +86,8 @@ export default {
   total: '共 ',
   data: '条 ',
   transaction_detail: '交易详情',
-  no_unconfirmed_transactions:'暂无未确认交易',
-  no_confirmed_transactions:'暂无已确认交易',
+  no_unconfirmed_transactions: '暂无未确认交易',
+  no_confirmed_transactions: '暂无已确认交易',
   //monitor-market
   highest_price: '最高价格',
   lowest_price: '最低价格',
@@ -123,7 +123,7 @@ export default {
   copy_address: '复制地址',
   copy_QR_code: '复制二维码',
   collection_record: '收款记录',
-  enter_asset_type_alias_or_address_search: '输入资产类型，别名或地址搜索',
+  enter_asset_type_alias_or_address_search: '输入交易hash搜索',
   ordinary_transfer: '普通转账',
   Multisign_transfer: '多签转账',
   crosschain_transfer: '跨链转账',
@@ -149,6 +149,8 @@ export default {
   receive_address_or_alias: '接收地址或别名',
   please_enter_the_transfer_amount: '请输入转账金额',
   please_enter_a_comment: '请输入备注信息',
+  password_error: '密码错误',
+  transaction_hash_error: '交易哈希错误',
 
 
   //setting-about
@@ -300,7 +302,16 @@ export default {
   hash: 'hash',
 
   //menu bar
-  wallet_name: '账户名'
+  wallet_name: '账户名',
+  switch_point: '选择节点',
+  current_point: '当前节点',
+  please_enter_a_custom_nod_address: '请输入自定义节点地址',
+  point_null_error: '节点数据不可为空',
+  //check pw dialog
+  please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe: '请输入钱包密码，以确保为本人操作，保证你的钱包安全',
+
+  // wallet import keystore
+  please_choose: '请选择'
 
 
 }

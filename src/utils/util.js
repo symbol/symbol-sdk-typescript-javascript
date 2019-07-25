@@ -153,3 +153,18 @@ export const getCurrentMonthLast = function (date) {
   var oneDay = 1000 * 60 * 60 * 24;
   return new Date(nextMonthFirstDay - oneDay);
 }
+
+export const isRefreshData = function (localstorageName, refreshTime, borderlineTime) {
+  if (!localRead(localstorageName)) {
+    return true
+  }
+  const currentTime = new Date()
+  const currentTimestamp = currentTime.getTime()
+  const marketPriceDataList = JSON.parse(localRead(localstorageName))
+  const timeDifference = currentTimestamp - marketPriceDataList
+  if (refreshTime < timeDifference || borderlineTime == 0) {
+    return true
+  }
+  return false
+
+}

@@ -128,7 +128,7 @@ export default {
   copy_address: 'copy address',
   copy_QR_code: 'copy QR code',
   collection_record: 'collection record',
-  enter_asset_type_alias_or_address_search: 'enter asset type alias or address search.',
+  enter_asset_type_alias_or_address_search: 'enter transaction hash search',
   ordinary_transfer: 'Transfer',
   Multisign_transfer: 'Multi-sign',
   crosschain_transfer: 'Crosschain',
@@ -154,6 +154,9 @@ export default {
   receive_address_or_alias: 'receive address or alias',
   please_enter_the_transfer_amount: 'please enter the transfer amount',
   please_enter_a_comment: 'please enter a comment',
+  password_error:'密码错误',
+  transaction_hash_error:'transaction hash error',
+
 
 
   //setting-about
@@ -298,6 +301,14 @@ export default {
   create_wallet: 'create wallet',
   hash:'hash',
   //menu bar
-  wallet_name:'wallet name'
+  wallet_name:'wallet name',
+  switch_point:'switch point',
+  current_point:'current point',
+  please_enter_a_custom_nod_address:'please input point url',
+  point_null_error:'point null error',
+  //check pw dialog
+  please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe:'Please enter your wallet password to ensure your own operation and keep your wallet safe.',
 
+  // wallet import keystore
+  please_choose: 'please choose'
 }

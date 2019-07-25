@@ -33,12 +33,11 @@
                             style="width: 70px"></DatePicker>
               </div>
             </span>
-          <span class="search_input" @click.stop="showSearchDetail">
+          <span class="search_input un_click" @click.stop="showSearchDetail">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
               <span>{{$t('search')}}</span>
             </span>
         </div>
-
         <div v-show="isShowSearchDetail" class="search_expand">
             <span class="search_container">
               <img src="../../../assets/images/monitor/market/marketSearch.png" alt="">
@@ -47,42 +46,71 @@
           <span class="search_btn" @click.stop="searchByasset">{{$t('search')}}</span>
         </div>
 
-
       </div>
-      <div class="bottom_transfer_record_list">
-        <div class="transaction_record_item" v-for="i in 5">
+      <div class="bottom_transfer_record_list scroll">
+
+        <Spin v-if="isLoadingTransactionRecord" size="large" fix></Spin>
+
+        <div v-show="c.date<=currentMonthLast && c.date>=currentMonthFirst" class="transaction_record_item"
+             v-for="c in confirmedTransactionList">
           <img src="../../../assets/images/monitor/transaction/transacrionAssetIcon.png" alt="">
           <div class="flex_content">
-            <div class="left">
-              <div class="top">Jane healy</div>
-              <div class="bottom"> 2018/06/04 16:00</div>
+            <div class="left left_components">
+              <div class="top">{{c.oppositeAddress}}</div>
+              <div class="bottom"> {{c.time}}</div>
             </div>
-            <div class="right">
-              <div class="top">xem 10.000</div>
-              <div class="bottom">USD 69,254,125</div>
+            <div class="right right_components">
+              <div class="top">{{c.mosaic?c.mosaic.amount.compact():0}}</div>
+              <div class="bottom">USD
+                {{c.mosaic && c.mosaic.id.toHex() == $store.state.account.currentXEM1 || c.mosaic.id.toHex() ==
+                $store.state.account.currentXEM2?c.mosaic.amount.compact() * currentPrice:0}}
+              </div>
             </div>
           </div>
         </div>
+
+        <div class="no_data" v-if="confirmedTransactionList.length == 0 && !isLoadingTransactionRecord">{{$t('no_confirmed_transactions')}}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {
+        PublicAccount,
+        NetworkType
+    } from 'nem2-sdk';
+    import {
+        formatTransactions,
+        getCurrentMonthFirst,
+        getCurrentMonthLast,
+        isRefreshData,
+        localSave,
+        localRead
+    } from '@/utils/util.js'
+    import {transactionInterface} from '@/interface/sdkTransaction';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import axios from 'axios'
     import TransferTransaction from './transactions/transfer-transaction/TransferTransaction.vue'
+
 
     @Component({
         components: {
-            TransferTransaction
+            TransferTransaction,
         }
     })
     export default class Transfer extends Vue {
-
-        currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
+        isLoadingTransactionRecord = true
+        currentMonth = ''
         isShowSearchDetail = false
-
-
+        accountPrivateKey = ''
+        accountPublicKey = ''
+        accountAddress = ''
+        node = ''
+        confirmedTransactionList = []
+        currentMonthFirst: number = 0
+        currentMonthLast: number = 0
+        localConfirmedTransactions = []
         transferTypeList = [
             {
                 name: 'ordinary_transfer',
@@ -91,7 +119,7 @@
             }, {
                 name: 'Multisign_transfer',
                 isSelect: false,
-                disabled: false
+                disabled: true
             }, {
                 name: 'crosschain_transfer',
                 isSelect: false,
@@ -102,9 +130,10 @@
                 disabled: true
             }
         ]
+        currentPrice = 0
 
         showSearchDetail() {
-            this.isShowSearchDetail = true
+            // this.isShowSearchDetail = true
         }
 
         hideSearchDetail() {
@@ -114,6 +143,7 @@
         changeCurrentMonth(e) {
             this.currentMonth = e
         }
+
 
         swicthTransferType(index) {
             const list: any = this.transferTypeList
@@ -126,6 +156,79 @@
             })
             list[index].isSelect = true
             this.transferTypeList = list
+        }
+
+        // month filter
+        @Watch('currentMonth')
+        onCurrentMonthChange() {
+            this.confirmedTransactionList = []
+            const that = this
+            const currentMonth = new Date(this.currentMonth)
+            this.currentMonthFirst = getCurrentMonthFirst(currentMonth)
+            this.currentMonthLast = getCurrentMonthLast(currentMonth)
+            const {currentMonthFirst, currentMonthLast, localConfirmedTransactions} = this
+            localConfirmedTransactions.forEach((item) => {
+                if (item.date <= currentMonthLast && item.date >= currentMonthFirst) {
+                    that.confirmedTransactionList.push(item)
+                }
+            })
+        }
+
+        getConfirmedTransactions() {
+            const that = this
+            let {accountPrivateKey, accountPublicKey, accountAddress, node} = this
+            const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
+            transactionInterface.transactions({
+                publicAccount,
+                node,
+                queryParams: {
+                    pageSize: 100
+                }
+            }).then((transactionsResult) => {
+                transactionsResult.result.transactions.subscribe((transactionsInfo) => {
+                    let transferTransaction = formatTransactions(transactionsInfo, accountPublicKey)
+                    that.confirmedTransactionList = transferTransaction
+                    this.localConfirmedTransactions = transferTransaction
+                    that.onCurrentMonthChange()
+                    that.isLoadingTransactionRecord = false
+                })
+            })
+        }
+
+        async getMarketOpenPrice() {
+            if(!isRefreshData('openPriceOneMinute', 1000*60, new Date().getSeconds())){
+                const openPriceOneMinute = JSON.parse(localRead('openPriceOneMinute'))
+                this.currentPrice = openPriceOneMinute.openPrice
+                return
+            }
+            const that = this
+            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
+            await axios.get(url).then(function (response) {
+                const result = response.data.data[0].open
+                that.currentPrice = result
+                const openPriceOneMinute = {
+                    timestamp: new Date().getTime(),
+                    openPrice: result
+                }
+                localSave('openPriceOneMinute', JSON.stringify(openPriceOneMinute))
+            }).catch(function (error) {
+                console.log('transfer monitor');
+            });
+        }
+
+        initData() {
+            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
+            this.accountPublicKey = this.$store.state.account.accountPublicKey
+            this.accountAddress = this.$store.state.account.accountAddress
+            this.node = this.$store.state.account.node
+            this.currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
+        }
+
+
+        created() {
+            this.initData()
+            this.getMarketOpenPrice()
+            this.getConfirmedTransactions()
         }
     }
 </script>

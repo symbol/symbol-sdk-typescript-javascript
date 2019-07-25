@@ -110,7 +110,22 @@
             this.setWalletList()
         }
 
+        setDefaultPage(){
+            const name = this.$route.params.name
+            if(name == 'walletImportKeystore'){
+                this.toImport()
+            }else if(name == 'walletCreate'){
+                this. toCreate()
+            }
+        }
+        setLeftSwitchIcon(){
+            this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
+
+        }
+
         created(){
+            this.setLeftSwitchIcon()
+            this.setDefaultPage()
             this.setWalletList()
         }
     }
