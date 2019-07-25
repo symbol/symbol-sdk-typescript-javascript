@@ -6,6 +6,7 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
+    import {localRead} from './utils/util'
 
     @Component
     export default class App extends Vue {
@@ -14,10 +15,13 @@
                 const ipcRenderer = window['electron']['ipcRenderer']
                 ipcRenderer.send('app', 'max')
             }
-            this.$router.push({
-                name: 'login'
-                // name: 'monitorPanel'
-            })
+            const lock = localRead('lock')
+            if(lock){
+                this.$router.push({name: 'reLogin'})
+            }else {
+                this.$router.push({name: 'login'})
+            }
+
         }
     }
 </script>

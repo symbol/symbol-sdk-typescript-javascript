@@ -23,14 +23,14 @@
                        </div>
                    </Col>
                    <Col span="7">
-                       <div>
+                       <div @click.stop>
                            <p class="walletTypeTxt">公共账户</p>
                            <div class="options">
                                <Poptip  placement="bottom">
                                   <img src="../../../assets/images/wallet-management/moreActive.png" v-if="item.active">
                                   <img src="../../../assets/images/wallet-management/more.png" v-else>
                                    <div slot="content">
-                                       <p class="optionItem" @click="delWallet(index, item.active)">
+                                       <p class="optionItem" @click.stop="delWallet(index, item.active)">
                                            <i><img src="../../../assets/images/wallet-management/delete.png"></i>
                                            <span>删除</span>
                                        </p>
@@ -40,7 +40,6 @@
                        </div>
                    </Col>
                </Row>
-
             </div>
         </div>
     </div>
@@ -76,6 +75,7 @@
         }
 
         chooseWallet (walletIndex) {
+
             let list = this.getWalletList
             const storeWallet = this.walletList[walletIndex]
             list.splice(walletIndex, 1)

@@ -195,7 +195,7 @@
                     this.tags = index
                     break;
                 case 2:
-                    if(this.checkMnemonic()){
+                    if(!this.checkMnemonic()){
                         return
                     }
                     const account = this.createAccount()

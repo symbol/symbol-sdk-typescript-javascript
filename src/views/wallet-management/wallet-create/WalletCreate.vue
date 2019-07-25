@@ -69,12 +69,33 @@
             },
         ]
 
+        checkInput () {
+            if (!this.formItem.currentNetType || this.formItem.currentNetType == '') {
+                this.$Message.error('请选择钱包网络! ');
+                return false
+            }
+            if (!this.formItem.walletName || this.formItem.walletName == '') {
+                this.$Message.error('设置钱包名输入错误! ');
+                return false
+            }
+            if (!this.formItem.password || this.formItem.password == '') {
+                this.$Message.error('设置密码输入错误! ');
+                return false
+            }
+            if (this.formItem.password !== this.formItem.checkPW) {
+                this.$Message.error('两次密码不一致! ');
+                return false
+            }
+            return true
+        }
+
         createMnemonic () {
             const mnemonic = MnemonicPassPhrase.createRandom('english', 128);
             this.$store.commit('SET_MNEMONIC',mnemonic.plain)
         }
 
         createWallet () {
+            if(!this.checkInput()) return
             this.createMnemonic()
             this.$emit('isCreated', this.formItem)
         }

@@ -8,13 +8,13 @@
         <li>
           {{$t('new_password')}}
           <div class="gray_content">
-            <input class="absolute" type="text" :placeholder="$t('please_enter_the_original_password')">
+            <input class="absolute" type="text" v-model="lockPW.password" :placeholder="$t('please_enter_the_original_password')">
           </div>
         </li>
         <li>
           {{$t('confirm_password')}}
           <div class="gray_content">
-            <input class="absolute" type="text" :placeholder="$t('please_enter_a_new_password')">
+            <input class="absolute" type="text" v-model="lockPW.checkPW" :placeholder="$t('please_enter_a_new_password')">
           </div>
         </li>
         <li>
@@ -24,7 +24,7 @@
             {{$t('password_hints_great_help_when_you_forget_your_password')}}
           </div>
           <div class="gray_content">
-            <input class="absolute" type="text" :placeholder="$t('please_set_a_password_prompt')">
+            <input class="absolute" type="text" v-model="lockPW.remindTxt" :placeholder="$t('please_set_a_password_prompt')">
           </div>
         </li>
       </ul>
@@ -38,18 +38,45 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
+    import {Crypto, UInt64} from 'nem2-sdk'
+    import {localSave} from '../../../utils/util'
 
     @Component({
         components: {}
     })
     export default class createLockPW extends Vue {
-        lockPW: any = {
+        lockPW = {
             password: '',
             checkPW: '',
             remindTxt: ''
         }
 
+        checkInput () {
+            if(!this.lockPW.password || this.lockPW.password === ''){
+                this.$Message.error('密码设置错误');
+                return
+            }
+            if(this.lockPW.password !== this.lockPW.checkPW){
+                this.$Message.error('两次密码不一致');
+                return
+            }
+            if(!this.lockPW.remindTxt || this.lockPW.remindTxt === ''){
+                this.$Message.error('设置密码提示错误');
+                return
+            }
+        }
+
         jumpToOtherPage(path) {
+            if(path === '/walletPanel'){
+                const u = [50,50]
+                this.checkInput()
+                const encryptObj = Crypto.encrypt(new UInt64(u).toHex(), this.lockPW.password)
+                let saveData = {
+                    ciphertext: encryptObj.ciphertext,
+                    iv: encryptObj.iv,
+                }
+                localSave('lock', JSON.stringify(saveData))
+            }
             this.$router.push({
                 path: path
             })

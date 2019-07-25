@@ -58,22 +58,28 @@
         account = {}
 
         importWallet() {
-            this.checkImport()
+            !this.checkImport()
             this.loginWallet(this.account)
         }
 
         checkImport() {
-            this.checkMnemonic()
+            if(!this.checkMnemonic()) return
             if (!this.form.password || this.form.password == '') {
                 this.$Message.error('设置密码输入错误! ');
+                return
             }
             if (this.form.password !== this.form.checkPW) {
                 this.$Message.error('两次密码不一致! ');
+                return
             }
         }
 
         checkMnemonic() {
             try {
+                if(!this.form.mnemonic || this.form.mnemonic === ''){
+                    this.$Message.error('助记词输入错误! ');
+                    return false
+                }
                 const account = this.createAccount(this.form.mnemonic)
                 this.$store.commit('SET_ACCOUNT', account);
                 this.account = account
@@ -114,16 +120,16 @@
             return hexParts.join('');
         }
 
-        async loginWallet(account) {
+        loginWallet(account) {
             const that = this
             const walletName: any = 'wallet';
             const netType: NetworkType = account.address.networkType
-            await that.setUserDefault(walletName, account, netType)
+            that.setUserDefault(walletName, account, netType)
         }
 
-       async setUserDefault  (name, account, netType) {
+       setUserDefault  (name, account, netType) {
             const that = this
-            await walletInterface.getWallet({
+            walletInterface.getWallet({
                 name: name,
                 networkType: netType,
                 privateKey: account.privateKey
@@ -156,7 +162,7 @@
             } catch (e) {
                 localData = []
             }
-            const saveData = {
+            let saveData = {
                 name: walletName,
                 ciphertext: keyObj.ciphertext,
                 iv: keyObj.iv,
@@ -164,6 +170,9 @@
                 address: address,
                 balance: balance
             }
+            const account = this.$store.state.account.wallet;
+            saveData = Object.assign(saveData,account)
+            this.$store.commit('SET_WALLET', saveData)
             for (let i in localData) {
                 if (localData[i].address === address) {
                     localData[i] = saveData

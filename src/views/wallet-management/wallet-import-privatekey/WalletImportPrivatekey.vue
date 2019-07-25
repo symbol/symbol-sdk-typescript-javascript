@@ -60,22 +60,27 @@ import {NetworkType} from "nem2-sdk";
         }
 
         checkImport() {
+            if(!this.checkPrivateKey()) return
             if (!this.form.password || this.form.password == '') {
                 this.$Message.error('设置密码输入错误! ');
+                return
             }
             if (this.form.password !== this.form.checkPW) {
                 this.$Message.error('两次密码不一致! ');
+                return
             }
-            this.checkPrivateKey()
         }
 
         checkPrivateKey() {
             try {
+                if(!this.form.privateKey || this.form.privateKey === ''){
+                    this.$Message.error('私钥输入错误! ');
+                    return false
+                }
                 const account = Account.createFromPrivateKey(this.form.privateKey,NetworkType.MIJIN_TEST)
-                console.log(account)
                 this.account = account
             } catch (e) {
-                this.$Message.error('助记词输入错误! ');
+                this.$Message.error('私钥输入错误! ');
             }
 
         }
@@ -122,7 +127,7 @@ import {NetworkType} from "nem2-sdk";
             } catch (e) {
                 localData = []
             }
-            const saveData = {
+            let saveData = {
                 name: walletName,
                 ciphertext: keyObj.ciphertext,
                 iv: keyObj.iv,
@@ -130,6 +135,9 @@ import {NetworkType} from "nem2-sdk";
                 address: address,
                 balance: balance
             }
+            const account = this.$store.state.account.wallet;
+            saveData = Object.assign(saveData,account)
+            this.$store.commit('SET_WALLET', saveData)
             for (let i in localData) {
                 if (localData[i].address === address) {
                     localData[i] = saveData
