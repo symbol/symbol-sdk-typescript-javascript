@@ -76,10 +76,10 @@
 
         createWallet () {
             this.createMnemonic()
-            this.$router.push({path: '/walletCreated',query:this.formItem})
+            this.$emit('isCreated', this.formItem)
         }
         toBack () {
-            this.$router.back()
+            this.$emit('closeCreate')
         }
     }
 </script>

@@ -38,12 +38,6 @@
             }else if(name === 'walletCreate'){
                 this.$emit('toCreate')
             }
-            this.$router.push({
-                name,
-                params: {
-                    name
-                }
-            })
         }
     }
 </script>

@@ -3,8 +3,18 @@
         <div class="walletSwitchHead">
             <p class="tit">钱包管理</p>
         </div>
+        <div class="walletMethod">
+            <Row>
+                <Col span="12">
+                    <div class="createBtn" @click="toCreate">创建</div>
+                </Col>
+                <Col span="12">
+                    <div class="importBtn" @click="toImport">导入</div>
+                </Col>
+            </Row>
+        </div>
         <div class="walletList">
-            <div :class="['walletItem', item.active ? 'active':'']" v-for="(item, index) in walletList" :key="index">
+            <div :class="['walletItem', item.active ? 'active':'']" @click="chooseWallet(index)" v-for="(item, index) in walletList" :key="index">
                <Row>
                    <Col span="17">
                        <div>
@@ -37,7 +47,8 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Vue} from 'vue-property-decorator';
+    import {localRead, localSave} from '../../../utils/util'
     import {NetworkType} from  'nem2-sdk'
     import './WalletSwitch.less'
     @Component
@@ -64,22 +75,85 @@
             return this.$store.state.app.walletList
         }
 
+        chooseWallet (walletIndex) {
+            let list = this.getWalletList
+            const storeWallet = this.walletList[walletIndex]
+            list.splice(walletIndex, 1)
+            list.unshift(storeWallet)
+            this.$store.commit('SET_WALLET', storeWallet)
+            list.map((item,index)=>{
+                if(index === 0){
+                    item.active = true
+                }else {
+                    item.active = false
+                }
+            })
+            this.localKey(storeWallet.name, walletIndex, storeWallet.address, storeWallet.networkType, storeWallet.balance)
+            this.walletList = list
+        }
+
+        localKey (walletName, index, address, netType, balance = 0) {
+            let localData: any[] = []
+            let isExist: boolean = false
+            try {
+                localData = JSON.parse(localRead('wallets'))
+            } catch (e) {
+                localData = []
+            }
+            const saveData = {
+                name: walletName,
+                ciphertext: localData[index].ciphertext,
+                iv: localData[index].iv,
+                networkType: Number(netType),
+                address: address,
+                balance: balance
+            }
+            for (let i in localData) {
+                if (localData[i].address === address) {
+                    localData[i] = saveData
+                    isExist = true
+                }
+            }
+            if (!isExist) localData.unshift(saveData)
+            localSave('wallets', JSON.stringify(localData))
+        }
+
         delWallet (index, current) {
             let list = this.walletList;
             list.splice(index,1)
             if(list.length < 1){
-                this.$store.commit('SET_HAS_WALLET',false)
+                this.$emit('noHasWallet')
             }else {
                 if(current){
                     this.$store.commit('SET_WALLET', this.walletList[0])
                 }
             }
             this.$store.commit('SET_WALLET_LIST',list)
-            this.$emit('reload')
+            this.$Notice.success({
+                title: '钱包操作',
+                desc: '删除钱包成功！'
+            });
+            document.body.click()
+            this.initWalletList()
+
+        }
+
+        copyObj (obj) {
+            const newObj:any = Object.prototype.toString.call(obj) == '[object Array]' ? [] : {};
+            for (const key in obj) {
+                const value = obj[key];
+                if (value && 'object' == typeof value) {
+                    //递归clone
+                    newObj[key] = this.copyObj(value);
+                } else {
+                    newObj[key] = value;
+                }
+            }
+            return newObj;
         }
 
         initWalletList () {
-            const list = this.getWalletList
+            const list = this.copyObj(this.getWalletList)
             list.map((item,index)=>{
                 if(index === 0){
                     item.active = true
@@ -91,20 +165,23 @@
                 this.$set(this.walletList,i,list[i])
             }
             if(this.walletList.length > 0){
+                this.$emit('hasWallet')
                 this.$store.commit('SET_HAS_WALLET',true)
             }else {
                 this.$store.commit('SET_HAS_WALLET',false)
             }
         }
 
-        @Watch('getWalletList')
-        onNowWalletListChange(){
-            this.$emit('setWalletList')
-            this.initWalletList()
+        toImport () {
+            this.$emit('toImport')
         }
 
-        mounted () {
-            // this.initWalletList()
+        toCreate () {
+            this.$emit('toCreate')
+        }
+
+        created () {
+            this.initWalletList()
         }
     }
 </script>

@@ -32,7 +32,7 @@
 
     </div>
     <div class="bottom_button ">
-      <span class="back left"> {{$t('back')}}</span>
+      <span class="back left" @click="toBack"> {{$t('back')}}</span>
       <span class="import right">{{$t('import')}}</span>
     </div>
   </div>
@@ -54,6 +54,10 @@
                 label: 'ETC'
             }]
         file = ''
+
+        toBack () {
+            this.$emit('closeImport')
+        }
     }
 </script>
 <style scoped lang="less">

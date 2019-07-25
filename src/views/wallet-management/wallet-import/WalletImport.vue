@@ -11,7 +11,9 @@
                     {{$t('import')}}{{$t(currentHeadText)}}
                 </div>
                 <div class="main_view">
-                    <router-view/>
+                    <WalletImportMnemonic v-if="tabIndex === 0" @toWalletDetails="toWalletDetails" @closeImport="closeImport"></WalletImportMnemonic>
+                    <WalletImportPrivatekey v-else-if="tabIndex === 1" @toWalletDetails="toWalletDetails" @closeImport="closeImport"></WalletImportPrivatekey>
+                    <WalletImportKeystore v-else-if="tabIndex === 2" @toWalletDetails="toWalletDetails" @closeImport="closeImport"></WalletImportKeystore>
                 </div>
             </div>
         </div>
@@ -22,12 +24,20 @@
     import { Component, Vue } from 'vue-property-decorator';
     import './WalletImport.less'
     import {NetworkType} from "nem2-sdk";
+    import WalletImportKeystore from '@/views/wallet-management/wallet-import-keystore/WalletImportKeystore.vue';
+    import WalletImportMnemonic from '@/views/wallet-management/wallet-import-mnemonic/WalletImportMnemonic.vue';
+    import WalletImportPrivatekey from '@/views/wallet-management/wallet-import-privatekey/WalletImportPrivatekey.vue';
 
     @Component({
-        components: {},
+        components: {
+            WalletImportKeystore,
+            WalletImportMnemonic,
+            WalletImportPrivatekey
+        },
     })
     export default class WalletImport extends Vue{
         currentTab = 'mnemonic'
+        tabIndex = 0
         mnemonic = {
             mnemonic:'',
             password: '',
@@ -83,13 +93,7 @@
             list[index].isSelected = true
             this.navagatorList = list
             this.currentHeadText = n.title
-            this.$router.push({
-                name: n.name
-            })
-        }
-
-        created() {
-            this.currentHeadText = this.navagatorList[0].title
+            this.tabIndex = index
         }
 
         changeTab (name) {
@@ -101,6 +105,15 @@
                 desc:  desc?desc:''
             });
         }
+
+        toWalletDetails () {
+            this.$emit('toWalletDetails')
+        }
+
+        closeImport () {
+            this.$emit('closeImport')
+        }
+
         importWallet () {
             switch (this.currentTab) {
                 case 'mnemonic':
@@ -132,6 +145,10 @@
                     }
                     break;
             }
+        }
+        created () {
+            this.jumpToView(this.navagatorList[0], 0)
+            this.currentHeadText = this.navagatorList[0].title
         }
     }
 </script>

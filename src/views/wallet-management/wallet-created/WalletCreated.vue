@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
     import './WalletCreated.less'
     import {NetworkType, UInt64, Crypto} from "nem2-sdk";
     import {MnemonicPassPhrase, ExtendedKey, Wallet} from 'nem2-hd-wallets';
@@ -81,6 +81,9 @@
         components: {},
     })
     export default class WalletCreated extends Vue{
+        @Prop({default:{}})
+        createForm: any
+
         tags = 0
         formItem = {
             currentNetType: '',
@@ -114,7 +117,7 @@
         }
 
         get formInfo () {
-            return this.$route.query;
+            return this.createForm;
         }
 
         get node () {
@@ -268,12 +271,6 @@
             })
         }
 
-        setWalletList (wallet) {
-            let list:any[] = this.walletList;
-            list.unshift(wallet)
-            this.$store.commit('SET_WALLET_LIST',list)
-        }
-
         localKey (walletName, keyObj, address, balance = 0) {
             let localData: any[] = []
             let isExist: boolean = false
@@ -301,17 +298,12 @@
         }
 
         toWalletPage () {
-            this.setWalletList(this.storeWallet)
             this.$store.commit('SET_HAS_WALLET',true)
-            this.$router.replace({
-                path:'/walletDetails',
-                query: {
-                    tabIndex: '0'
-                }
-            })
+            this.$emit('toWalletDetails')
         }
+
         toBack () {
-            this.$router.go(-1)
+            this.$emit('closeCreated')
         }
     }
 </script>

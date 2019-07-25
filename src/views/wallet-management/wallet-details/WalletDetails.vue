@@ -57,7 +57,7 @@
                     <li class="active left">别名设置</li>
                     <li class="left">过滤器管理</li>
                     <li class="left">子地址管理</li>
-                    <li class="left">修改密码</li>
+                    <li class="left">修改私钥钱包密码</li>
                 </ul>
             </div>
             <div class="aliasTable">
@@ -154,7 +154,7 @@
 
         onresize () {
             const height = this.$refs['walletDetailsWrap']['clientHeight'] - ( this.$refs['accountFn']['offsetTop'] - this.$refs['walletDetailsWrap']['offsetTop'])
-            this.$refs['accountFn']['style']['height'] = height +'px'
+            this.$refs['accountFn']['style']['height'] = height  +'px'
         }
 
         init() {
