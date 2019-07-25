@@ -141,6 +141,7 @@
                     title: 'success',
                     desc: 'success',
                     render: h => {
+                        // @ts-ignore
                         return h('span', [that['$t']('successful_operation')])
                     }
                 });
@@ -149,6 +150,7 @@
                     title: 'failure',
                     desc: 'failure',
                     render: h => {
+                        // @ts-ignore
                         return h('span', [that['$t']('operatio_failed')])
                     }
                 });

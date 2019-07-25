@@ -70,6 +70,7 @@
         updateMosaicAlias() {
             this.show = false
             this.mosaicAliasDialogCancel()
+            // @ts-ignore
             this.$Notice.success({title: this['$t']('mosaic_alias_operation'), desc: this['$t']('binding_success')});
         }
 

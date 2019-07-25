@@ -84,6 +84,7 @@
         updateMosaic() {
             this.show = false
             this.mosaicEditDialogCancel()
+            // @ts-ignore
             this.$Notice.success({title: this['$t']('mosaic_operation'), desc: this['$t']('update_completed')});
         }
 

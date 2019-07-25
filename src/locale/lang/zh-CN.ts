@@ -426,7 +426,9 @@ export const zh_CN = {
     Wallet_management: '钱包管理',
     Public_account: '公共账户',
     delete: '删除',
-    Delete_wallet_successfully: '删除钱包成功'
-
+    Delete_wallet_successfully: '删除钱包成功',
+    createLockPWRemind:'密码设置错误',
+    createLockCheckPWRemind:'两次密码不一致',
+    createLockPWTxtRemind:'设置密码提示错误',
 
 }

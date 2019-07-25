@@ -423,7 +423,9 @@ export const en_US ={
   Wallet_management: 'Wallet management',
   Public_account: 'Public account',
   delete: 'delete',
-  Delete_wallet_successfully: 'Delete wallet successfully'
-
+  Delete_wallet_successfully: 'Delete wallet successfully',
+  createLockPWRemind:'Password setting error',
+  createLockCheckPWRemind:'Two passwords are inconsistent',
+  createLockPWTxtRemind:'Password hint error',
 
 }

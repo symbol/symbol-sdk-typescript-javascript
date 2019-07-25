@@ -66,6 +66,7 @@
         updateNamespace() {
             this.show = false
             this.namespaceEditDialogCancel()
+            // @ts-ignore
             this.$Notice.success({title: this['$t']('namespace_operation'), desc: this['$t']('update_completed')});
         }
 

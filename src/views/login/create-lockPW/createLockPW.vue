@@ -53,15 +53,15 @@
 
         checkInput () {
             if(!this.lockPW.password || this.lockPW.password === ''){
-                this.$Message.error('密码设置错误');
+                this.$Message.error(this.$t('createLockPWRemind'));
                 return
             }
             if(this.lockPW.password !== this.lockPW.checkPW){
-                this.$Message.error('两次密码不一致');
+                this.$Message.error(this.$t('createLockCheckPWRemind'));
                 return
             }
             if(!this.lockPW.remindTxt || this.lockPW.remindTxt === ''){
-                this.$Message.error('设置密码提示错误');
+                this.$Message.error(this.$t('createLockPWTxtRemind'));
                 return
             }
         }

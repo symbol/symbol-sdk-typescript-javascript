@@ -58,7 +58,7 @@
         account = {}
 
         importWallet() {
-            !this.checkImport()
+            this.checkImport()
             this.loginWallet(this.account)
         }
 

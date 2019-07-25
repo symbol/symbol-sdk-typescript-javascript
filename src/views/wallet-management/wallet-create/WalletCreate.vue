@@ -76,19 +76,19 @@
 
         checkInput () {
             if (!this.formItem.currentNetType || this.formItem.currentNetType == '') {
-                this.$Message.error('请选择钱包网络! ');
+                this.$Message.error(this.$t('walletCreateNetTypeRemind'));
                 return false
             }
             if (!this.formItem.walletName || this.formItem.walletName == '') {
-                this.$Message.error('设置钱包名输入错误! ');
+                this.$Message.error(this.$t('walletCreateWalletNameRemind'));
                 return false
             }
             if (!this.formItem.password || this.formItem.password == '') {
-                this.$Message.error('设置密码输入错误! ');
+                this.$Message.error(this.$t('walletCreatePasswordRemind'));
                 return false
             }
             if (this.formItem.password !== this.formItem.checkPW) {
-                this.$Message.error('两次密码不一致! ');
+                this.$Message.error(this.$t('walletCreateCheckPWRemind'));
                 return false
             }
             return true
