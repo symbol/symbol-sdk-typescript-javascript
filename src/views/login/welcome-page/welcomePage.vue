@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <div class="icon_text" >
+      <div class="icon_text">
         {{currentText}}
       </div>
 
@@ -70,22 +70,21 @@
                 text: 'use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates'
             }
         ]
-        currentText = ' '
+        currentText = ''
 
 
         changeText(text) {
             this.currentText = text
         }
 
-        created() {
-            this.$store.state.app.unClick = true
-            this.currentText = this['$t'](this.iconList[0].text)
-        }
-
         jumpToDashBoard() {
             this.$router.push({
                 name: 'createLockPW'
             })
+        }
+        created() {
+            this.$store.state.app.isInLoginPage = true
+            this.currentText = this['$t'](this.iconList[0].text) + ''
         }
     }
 </script>

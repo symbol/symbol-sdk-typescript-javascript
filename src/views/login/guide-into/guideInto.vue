@@ -32,18 +32,12 @@
     @Component({})
     export default class guideIntoWrap extends Vue {
         jumpToOtherPage(name) {
-            this.$store.state.app.unClick = false
+            this.$store.state.app.isInLoginPage = false
             if(name === 'walletImportKeystore'){
                 this.$emit('toImport')
             }else if(name === 'walletCreate'){
                 this.$emit('toCreate')
             }
-            this.$router.push({
-                name,
-                params: {
-                    name
-                }
-            })
         }
     }
 </script>

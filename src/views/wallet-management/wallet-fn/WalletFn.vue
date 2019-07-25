@@ -1,59 +1,77 @@
 <template>
-    <div class="WalletFnWrap" :style="(!importHasWallet)&&importTabIndex ? 'width:inherit':''">
+    <div class="WalletFnWrap" >
         <div class="walletFnNav">
             <ul class="navList clear">
                 <li :class="[item.active?'active':'','left']"
                     v-for="(item,index) in navList"
                     :key="index"
-                    @click="goToPage(item)"
-                    v-if="importHasWallet||!(importTabIndex&&index == 0)"
-                >{{item.name}}</li>
+                    @click="goToPage(item,index)"
+                >{{$t(item.name)}}</li>
             </ul>
-            <div class="delBtn" v-if="importHasWallet||!importTabIndex">
-                <i><img :src="delBtn"></i>
-                <span>删除</span>
-            </div>
         </div>
         <div class="walletFnContent">
-            <router-view/>
+            <WalletCreate v-if="Index === 0 && !walletCreated" @isCreated="isCreated" @closeCreate="closeCreate"></WalletCreate>
+            <WalletCreated :createForm='createForm' @toWalletDetails="toWalletDetails" @closeCreated="closeCreated" v-if="walletCreated"></WalletCreated>
+            <WalletImport v-if="Index === 1" @toWalletDetails="toWalletDetails" @closeImport="closeImport"></WalletImport>
         </div>
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+    import WalletCreate from '@/views/wallet-management/wallet-create/WalletCreate.vue';
+    import WalletCreated from '@/views/wallet-management/wallet-created/WalletCreated.vue';
+    import WalletImport from '@/views/wallet-management/wallet-import/WalletImport.vue';
     // @ts-ignore
     import delBtn from '@/assets/images/wallet-management/delete.png'
     import './WalletFn.less';
 
     @Component({
-        components: {},
+        components: {
+            WalletCreate,
+            WalletCreated,
+            WalletImport
+        },
     })
     export default class WalletFnNavigation extends Vue{
-        delBtn = delBtn
-        navList = [
-            {name:'钱包详情',to:'/walletDetails',active:true},
-            {name:'创建',to:'/walletCreate',active:false},
-            {name:'导入',to:'/walletImport',active:false},
-        ]
-        importTabIndex = 0
-        importHasWallet = false
-
         @Prop()
         tabIndex:any
 
-        get importIndex () {
+        delBtn = delBtn
+        navList = [
+            {name:'create',to:'/walletCreate',active:false},
+            {name:'import',to:'/walletImportKeystore',active:false},
+        ]
+        Index = 0
+        walletCreated = false
+        createForm = {}
+
+        get tabIndexNumber () {
             return this.tabIndex
         }
 
-        get hasWallet () {
-            return this.$store.state.app.hasWallet
-        }
-        get query () {
-            return this.$route.query
+        isCreated (form) {
+            this.createForm = form
+            this.walletCreated = true
         }
 
-        goToPage (item) {
+        closeCreated () {
+            this.walletCreated = false
+        }
+
+        closeCreate () {
+            this.$emit('backToGuideInto')
+        }
+
+        closeImport () {
+            this.$emit('backToGuideInto')
+        }
+
+        toWalletDetails () {
+            this.$emit('toWalletDetails')
+        }
+
+        goToPage (item,index) {
             for(let i in this.navList){
                 if(this.navList[i].to == item.to){
                     this.navList[i].active = true
@@ -61,31 +79,12 @@
                     this.navList[i].active = false
                 }
             }
-            this.$router.push({path:item.to})
+            this.Index = index
         }
-        @Watch('hasWallet')
-        onHasWalletChange(){
-            this.importHasWallet = this.hasWallet
-        }
+
         created () {
-            if(this.importIndex){
-                this.importTabIndex = this.importIndex
-            }
-        }
-
-        @Watch('query')
-        onQueryChange(){
-            if(!this.query['tabIndex']) return
-            let index:number = Number(this.query['tabIndex'])
-            this.goToPage(this.navList[index])
-        }
-
-        mounted () {
-            if(this.importTabIndex){
-                this.goToPage(this.navList[this.importTabIndex])
-            }else {
-                this.$router.push({path:'/walletDetails'})
-            }
+            this.Index = this.tabIndexNumber
+            this.goToPage(this.navList[this.tabIndexNumber], this.Index)
         }
     }
 </script>

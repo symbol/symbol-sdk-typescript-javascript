@@ -3,24 +3,24 @@
         <div class="Information">
             <Row>
                 <Col span="18">
-                    <h6>基本信息</h6>
+                    <h6>{{$t('Basic_information')}}</h6>
                     <div class="walletInfo">
                         <p>
-                            <span class="tit">钱包类型</span>
-                            <span class="walletType">公共钱包</span>
+                            <span class="tit">{{$t('Wallet_type')}}</span>
+                            <span class="walletType">{{$t('Public_wallet')}}</span>
                         </p>
                         <p>
-                            <span class="tit">钱包名</span>
+                            <span class="tit">{{$t('Wallet_name')}}</span>
                             <span class="walletName">{{getWallet.name}}</span>
                             <i class="updateWalletName"><img src="@/assets/images/wallet-management/editIcon.png"></i>
                         </p>
                         <p>
-                            <span class="tit">钱包地址</span>
+                            <span class="tit">{{$t('Wallet_address')}}</span>
                             <span class="walletAddress">{{getWallet.address}}</span>
                             <i class="copyIcon" @click="copy(getWallet.address)"><img src="@/assets/images/wallet-management/copyIcon.png"></i>
                         </p>
                         <p>
-                            <span class="tit">公钥</span>
+                            <span class="tit">{{$t('publickey')}}</span>
                             <span class="walletPublicKey">{{getWallet.publicKey}}</span>
                             <i class="copyIcon" @click="copy(getWallet.publicKey)"><img src="@/assets/images/wallet-management/copyIcon.png"></i>
                         </p>
@@ -30,62 +30,62 @@
                     <div class="addressQRCode">
                         <img :src="QRCode">
                     </div>
-                    <p class="codeTit">地址二维码</p>
+                    <p class="codeTit">{{$t('Address_QR_code')}}</p>
                 </Col>
             </Row>
         </div>
         <div class="fnAndBackup">
-            <h6>功能与备份</h6>
+            <h6>{{$t('Function_and_backup')}}</h6>
             <div class="backupDiv clear">
                 <div class="Mnemonic left" @click="changeMnemonicDialog">
                     <i><img src="@/assets/images/wallet-management/auxiliaries.png"></i>
-                    <span>导出助记词</span>
+                    <span>{{$t('Export_mnemonic')}}</span>
                 </div>
                 <div class="privateKey left" @click="changePrivatekeyDialog">
                     <i><img src="@/assets/images/wallet-management/privatekey.png"></i>
-                    <span>导出私钥</span>
+                    <span>{{$t('Export_private_key')}}</span>
                 </div>
                 <div class="Keystore left" @click="changeKeystoreDialog">
                     <i><img src="@/assets/images/wallet-management/keystore.png"></i>
-                    <span>导出Keystore</span>
+                    <span>{{$t('Export_Keystore')}}</span>
                 </div>
             </div>
         </div>
         <div class="accountFn" ref="accountFn">
             <div class="accountFnNav">
                 <ul class="navList clear">
-                    <li class="active left">别名设置</li>
-                    <li class="left">过滤器管理</li>
-                    <li class="left">子地址管理</li>
-                    <li class="left">修改密码</li>
+                    <li class="active left">{{$t('Alias_settings')}}</li>
+                    <li class="left">{{$t('Filter_management')}}</li>
+                    <li class="left">{{$t('Subaddress_management')}}</li>
+                    <li class="left">{{$t('Modify_the_private_key_wallet_password')}}</li>
                 </ul>
             </div>
             <div class="aliasTable">
                 <div class="tableTit">
                     <Row>
-                        <Col span="7">空间别名</Col>
-                        <Col span="6">有效期</Col>
-                        <Col span="4">状态</Col>
-                        <Col span="7">操作</Col>
+                        <Col span="7">{{$t('namespace')}}</Col>
+                        <Col span="6">{{$t('validity_period')}}</Col>
+                        <Col span="4">{{$t('status')}}</Col>
+                        <Col span="7">{{$t('operating')}}</Col>
                     </Row>
                 </div>
                 <div class="tableCell" v-for="(item,index) in aliasList" :key="index" v-if="aliasList.length>0">
                     <Row>
                         <Col span="7">girme</Col>
                         <Col span="6">2019-11-05</Col>
-                        <Col span="4">已绑定</Col>
+                        <Col span="4">{{$t('binded')}}</Col>
                         <Col span="7">
                             <div class="tableFn">
-                                <span class="bind">绑定</span>
-                                <span class="unbind active">解绑</span>
-                                <span class="updateTime">更新</span>
+                                <span class="bind">{{$t('bind')}}</span>
+                                <span class="unbind active">{{$t('unbind')}}</span>
+                                <span class="updateTime">{{$t('update')}}</span>
                             </div>
                         </Col>
                     </Row>
                 </div>
                 <div class="noData" v-if="aliasList.length<=0">
                     <i><img src="@/assets/images/wallet-management/no_data.png"></i>
-                    <p>暂无别名</p>
+                    <p>{{$t('No_alias_yet')}}</p>
                 </div>
             </div>
         </div>
@@ -154,7 +154,7 @@
 
         onresize () {
             const height = this.$refs['walletDetailsWrap']['clientHeight'] - ( this.$refs['accountFn']['offsetTop'] - this.$refs['walletDetailsWrap']['offsetTop'])
-            this.$refs['accountFn']['style']['height'] = height +'px'
+            this.$refs['accountFn']['style']['height'] = height  +'px'
         }
 
         init() {

@@ -69,7 +69,7 @@ var routers = [
                         // @ts-ignore
                         component: function () { return import('@/views/wallet-management/wallet-created/WalletCreated.vue'); }
                     }, {
-                        path: '/walletImport',
+                        path: 'walletImport',
                         name: 'walletImport',
                         // @ts-ignore
                         component: function () { return import('@/views/wallet-management/wallet-import/WalletImport.vue'); },
@@ -85,15 +85,10 @@ var routers = [
                                 // @ts-ignore
                                 component: function () { return import('@/views/wallet-management/wallet-import-mnemonic/WalletImportMnemonic.vue'); },
                             }, {
-                                path: 'walletImportPrivatekey',
+                                path: '/walletImportPrivatekey',
                                 name: 'walletImportPrivatekey',
                                 // @ts-ignore
                                 component: function () { return import('@/views/wallet-management/wallet-import-privatekey/WalletImportPrivatekey.vue'); },
-                            }, {
-                                path: '/walletImport',
-                                name: 'walletImport',
-                                // @ts-ignore
-                                component: function () { return import('@/views/wallet-management/wallet-import-mnemonic/WalletImportMnemonic.vue'); },
                             }
                         ]
                     },

@@ -83,11 +83,11 @@
         }
 
         created() {
-            this.$store.state.app.unClick = true
+            this.$store.state.app.isInLoginPage = true
             this.currentText = this.iconList[0].text
         }
         jumpToDashBoard(){
-            this.$store.state.app.unClick = false
+            this.$store.state.app.isInLoginPage = false
             this.$router.push({
                 name:'dashBoard'
             })

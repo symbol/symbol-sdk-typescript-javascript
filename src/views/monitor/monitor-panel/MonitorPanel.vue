@@ -118,9 +118,9 @@
     import {copyTxt} from '@/utils/tools'
     import {localSave, localRead} from '@/utils/util'
     import axios from 'axios'
-    import monitorSeleted from '../../../assets/images/monitor/monitorSeleted.png'
-    import monitorUnselected from '../../../assets/images/monitor/monitorUnselected.png'
-    import monitorMosaicIcon from '../../../assets/images/monitor/monitorMosaicIcon.png'
+    import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
+    import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
+    import monitorMosaicIcon from '@/assets/images/monitor/monitorMosaicIcon.png'
 
     @Component
     export default class DashBoard extends Vue {
@@ -259,7 +259,7 @@
             this.currentXEM2 = this.$store.state.account.currentXEM2
             this.currentXEM1 = this.$store.state.account.currentXEM1
             this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
-            this.$store.state.app.unClick = false
+            this.$store.state.app.isInLoginPage = false
 
 
         }

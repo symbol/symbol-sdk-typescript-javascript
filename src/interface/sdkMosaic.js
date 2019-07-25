@@ -112,7 +112,7 @@ export var mosaicInterface = {
     getMosaics: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var mosaicsInfos;
         return tslib_1.__generator(this, function (_a) {
-            mosaicsInfos = new MosaicHttp(params.node).getMosaics(params.mosaics);
+            mosaicsInfos = new MosaicHttp(params.node).getMosaics(params.mosaicIdList);
             return [2 /*return*/, {
                     result: {
                         mosaicsInfos: mosaicsInfos

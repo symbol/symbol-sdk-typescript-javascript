@@ -22,7 +22,7 @@
     })
     export default class ServicePanel extends Vue{
         created(){
-            this.$store.state.app.unClick = false
+            this.$store.state.app.isInLoginPage = false
         }
     }
 </script>
