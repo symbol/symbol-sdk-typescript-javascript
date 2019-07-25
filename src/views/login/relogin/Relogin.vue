@@ -24,7 +24,7 @@
     <div class="bottom_login">
       <div class="bottom_content">
         <div class="top_password">
-          <input type="text" placeholder="Lock Password">
+          <input type="password" v-model="form.password" placeholder="Lock Password">
           <img src="../../../assets/images/login/relogin/reloginDoubt.png" alt="">
         </div>
         <div @click="jumpToDashBoard" class="bottom_button pointer"> LOG IN</div>
@@ -36,6 +36,8 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
+    import {localRead} from '../../../utils/util'
+    import {Crypto, UInt64} from 'nem2-sdk'
     import reloginAddress from '../../../assets/images/login/relogin/reloginAddress.png'
     import reloginApostille from '../../../assets/images/login/relogin/reloginApostille.png'
     import reloginAsset from '../../../assets/images/login/relogin/reloginAsset.png'
@@ -48,6 +50,9 @@
 
     @Component
     export default class MonitorRelogin extends Vue {
+        form = {
+            password:''
+        }
         iconList = [
             {
                 icon: reloginSend,
@@ -83,11 +88,32 @@
         }
 
         created() {
-            this.$store.state.app.isInLoginPage = true
+            this.$store.state.app.unClick = true
             this.currentText = this.iconList[0].text
         }
+
+        checkLock(){
+            let lock = localRead('lock')
+            try {
+                const u = [50,50]
+                lock = JSON.parse(lock)
+                let saveData = {
+                    ciphertext: lock.ciphertext,
+                    iv: lock.iv.data,
+                    key:this.form.password
+                }
+                const enTxt = Crypto.decrypt(saveData)
+                if(enTxt !== new UInt64(u).toHex()){
+                    this.$Message.error('密码输入错误! ');
+                }
+            }catch (e) {
+                this.$Message.error('密码输入错误! ');
+            }
+        }
+
         jumpToDashBoard(){
-            this.$store.state.app.isInLoginPage = false
+            this.checkLock()
+            this.$store.state.app.unClick = false
             this.$router.push({
                 name:'dashBoard'
             })

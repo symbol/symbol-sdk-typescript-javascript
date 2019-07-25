@@ -1,8 +1,9 @@
-import {NetworkType} from "nem2-sdk";
 <template>
   <div>
     <div class="privatekey">
-      <div class="describle">{{$t('the_private_key_is_a_string_of_256_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe')}}</div>
+      <div class="describle">
+        {{$t('the_private_key_is_a_string_of_256_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe')}}
+      </div>
       <ul>
         <li>
           {{$t('private_key_string')}}
@@ -10,7 +11,8 @@ import {NetworkType} from "nem2-sdk";
             {{$t('Please_paste_the_private_key_string_in_the_input_box_below')}}
           </div>
           <div class="gray_content textarea">
-            <textarea class="absolute" v-model="form.privateKey" :placeholder="$t('Paste_the_private_key_string_in_the_input_box')"/>
+            <textarea class="absolute" v-model="form.privateKey"
+                      :placeholder="$t('Paste_the_private_key_string_in_the_input_box')"/>
           </div>
         </li>
         <li>
@@ -19,13 +21,14 @@ import {NetworkType} from "nem2-sdk";
             {{$t('This_password_is_a_private_key_password_and_will_be_used_when_you_pay')}}
           </div>
           <div class="gray_content">
-            <input class="absolute" v-model="form.password"  type="text" :placeholder="$t('please_set_your_password')">
+            <input class="absolute" v-model="form.password" type="text" :placeholder="$t('please_set_your_password')">
           </div>
         </li>
         <li>
           {{$t('confirm_password')}}
           <div class="gray_content">
-            <input class="absolute" v-model="form.checkPW"  type="text" :placeholder="$t('please_enter_your_wallet_password_again')">
+            <input class="absolute" v-model="form.checkPW" type="text"
+                   :placeholder="$t('please_enter_your_wallet_password_again')">
           </div>
         </li>
       </ul>
@@ -40,10 +43,11 @@ import {NetworkType} from "nem2-sdk";
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import {Account, NetworkType, Crypto} from "nem2-sdk";
+    import {Component, Vue} from 'vue-property-decorator'
+    import {Account, NetworkType, Crypto} from "nem2-sdk"
     import {localRead, localSave} from '../../../utils/util'
-    import {walletInterface} from "../../../interface/sdkWallet";
+    import {walletInterface} from "../../../interface/sdkWallet"
+    // import "../wallet-import-privatekey/WalletImportPrivatekey.less"
 
     @Component
     export default class WalletImportPrivatekey extends Vue {
@@ -60,19 +64,24 @@ import {NetworkType} from "nem2-sdk";
         }
 
         checkImport() {
+            if (!this.checkPrivateKey()) return
             if (!this.form.password || this.form.password == '') {
                 this.$Message.error(this['$t']('Set_password_input_error'));
+                return
             }
             if (this.form.password !== this.form.checkPW) {
                 this.$Message.error(this['$t']('Two_passwords_are_inconsistent'));
+                return
             }
-            this.checkPrivateKey()
         }
 
         checkPrivateKey() {
             try {
-                const account = Account.createFromPrivateKey(this.form.privateKey,NetworkType.MIJIN_TEST)
-                console.log(account)
+                if (!this.form.privateKey || this.form.privateKey === '') {
+                    this.$Message.error('Mnemonic_input_error');
+                    return false
+                }
+                const account = Account.createFromPrivateKey(this.form.privateKey, NetworkType.MIJIN_TEST)
                 this.account = account
             } catch (e) {
                 this.$Message.error(this['$t']('Mnemonic_input_error'));
@@ -87,7 +96,7 @@ import {NetworkType} from "nem2-sdk";
             await that.setUserDefault(walletName, account, netType)
         }
 
-        async setUserDefault  (name, account, netType) {
+        async setUserDefault(name, account, netType) {
             const that = this
             await walletInterface.getWallet({
                 name: name,
@@ -109,12 +118,12 @@ import {NetworkType} from "nem2-sdk";
                 }
                 that.$store.commit('SET_WALLET', storeWallet)
                 const encryptObj = Crypto.encrypt(Wallet.result.privateKey, that.form['password'])
-                that.localKey(name, encryptObj, Wallet.result.wallet.address.address,netType)
+                that.localKey(name, encryptObj, Wallet.result.wallet.address.address, netType)
                 this.toWalletDetails()
             })
         }
 
-        localKey (walletName, keyObj, address, netType, balance = 0) {
+        localKey(walletName, keyObj, address, netType, balance = 0) {
             let localData: any[] = []
             let isExist: boolean = false
             try {
@@ -122,7 +131,7 @@ import {NetworkType} from "nem2-sdk";
             } catch (e) {
                 localData = []
             }
-            const saveData = {
+            let saveData = {
                 name: walletName,
                 ciphertext: keyObj.ciphertext,
                 iv: keyObj.iv,
@@ -130,6 +139,9 @@ import {NetworkType} from "nem2-sdk";
                 address: address,
                 balance: balance
             }
+            const account = this.$store.state.account.wallet;
+            saveData = Object.assign(saveData, account)
+            this.$store.commit('SET_WALLET', saveData)
             for (let i in localData) {
                 if (localData[i].address === address) {
                     localData[i] = saveData
@@ -140,21 +152,102 @@ import {NetworkType} from "nem2-sdk";
             localSave('wallets', JSON.stringify(localData))
         }
 
-        toWalletDetails () {
+        toWalletDetails() {
             this.$Notice.success({
                 title: this['$t']('Import_private_key_operation') + '',
                 desc: this['$t']('Imported_wallet_successfully') + '',
             });
-            this.$store.commit('SET_HAS_WALLET',true)
+            this.$store.commit('SET_HAS_WALLET', true)
             this.$emit('toWalletDetails')
         }
 
-        toBack () {
+        toBack() {
             this.$emit('closeImport')
         }
 
     }
 </script>
 <style scoped lang="less">
-@import "WalletImportPrivatekey.less";
+  .privatekey {
+    padding: 39px 19px;
+
+    .describle {
+      position: relative;
+      right: 19px;
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
+      padding-bottom: 39px;
+    }
+
+    li {
+      list-style: disc;
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(34, 34, 34, 1);
+      padding-bottom: 40px;
+    }
+
+    .tips {
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(153, 153, 153, 1);
+      margin-top: 15px;
+      position: relative;
+      right: 25px;
+    }
+
+    .gray_content.textarea {
+      height: 120px;
+
+      textarea {
+        padding: 21px 30px;
+      }
+    }
+
+    .gray_content {
+      overflow: hidden;
+      right: 20px;
+      margin-top: 15px;
+      width: 680px;
+      height: 60px;
+      border: 1px solid rgba(204, 204, 204, 1);
+      border-radius: 8px;
+      position: relative;
+
+      input {
+        width: 650px;
+        height: 40px;
+        border: none;
+        padding-left: 20px;
+      }
+
+      input::placeholder {
+        color: rgba(153, 153, 153, 1);
+      }
+    }
+  }
+
+  .bottom_button {
+    width: 680px;
+
+    span {
+      width: 200px;
+      height: 60px;
+      border-radius: 30px;
+      border: 1px solid rgba(32, 181, 172, 1);
+      display: inline-block;
+      line-height: 60px;
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(32, 181, 172, 1);
+      text-align: center;
+    }
+
+    .import {
+      background: rgba(32, 181, 172, 1);
+      color: white;
+    }
+  }
+
 </style>

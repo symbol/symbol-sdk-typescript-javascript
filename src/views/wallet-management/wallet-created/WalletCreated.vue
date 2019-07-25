@@ -83,8 +83,8 @@
     @Component({
         components: {},
     })
-    export default class WalletCreated extends Vue {
-        @Prop({default: {}})
+    export default class WalletCreated extends Vue{
+        @Prop({default:{}})
         createForm: any
 
         tags = 0
@@ -114,53 +114,52 @@
         mosaics = []
         storeWallet = {}
 
-        get mnemonic() {
+        get mnemonic () {
             const mnemonic = this.$store.state.app.mnemonic
             return mnemonic['split'](' ')
         }
 
-        get formInfo() {
+        get formInfo () {
             return this.createForm;
         }
 
-        get node() {
+        get node () {
             return 'http://120.79.181.170:3000'
         }
 
-        get walletList() {
+        get walletList () {
             return this.$store.state.app.walletList
         }
 
-        hideCover() {
+        hideCover () {
             this.showCover = false
         }
-
-        checkRandomArr(arr, mnemonic) {
+        checkRandomArr (arr,mnemonic) {
             const randomNum = this.randomNum(mnemonic)
-            if (arr.includes(randomNum)) {
-                return this.checkRandomArr(arr, mnemonic)
-            } else {
+            if(arr.includes(randomNum)){
+                return this.checkRandomArr(arr,mnemonic)
+            }else {
                 return randomNum
             }
         }
 
-        randomNum(mnemonic) {
-            return Math.floor(Math.random() * (mnemonic.length))
+        randomNum (mnemonic) {
+            return Math.floor(Math.random()*(mnemonic.length))
         }
 
-        mnemonicRandom() {
+        mnemonicRandom () {
             const mnemonic = this.mnemonic;
             let numberArr = [];
-            let randomWord = [];
-            for (let i = 0; i < mnemonic.length; i++) {
-                const randomNum = this.checkRandomArr(numberArr, mnemonic)
+            let randomWord =[];
+            for(let i=0;i<mnemonic.length;i++){
+                const randomNum = this.checkRandomArr(numberArr,mnemonic)
                 numberArr.push(randomNum)
                 randomWord.push(mnemonic[randomNum])
             }
             this.mnemonicRandomArr = randomWord
         }
 
-        sureWord(index) {
+        sureWord (index) {
             const word = this.mnemonicRandomArr[index]
             const wordSpan = document.createElement('span');
             wordSpan.innerText = word;
@@ -170,12 +169,12 @@
             this.$refs['mnemonicWordDiv']['append'](wordSpan)
         }
 
-        checkMnemonic() {
+        checkMnemonic () {
             const mnemonicDiv = this.$refs['mnemonicWordDiv'];
             const mnemonicDivChild = mnemonicDiv['getElementsByTagName']('span');
             let childWord = []
-            for (let i in mnemonicDivChild) {
-                if (typeof mnemonicDivChild[i] !== "object") continue;
+            for(let i in mnemonicDivChild){
+                if( typeof mnemonicDivChild[i] !== "object") continue;
                 childWord.push(mnemonicDivChild[i]['innerText'])
             }
             if (JSON.stringify(childWord) != JSON.stringify(this.mnemonic)) {
@@ -189,7 +188,7 @@
             return true
         }
 
-        changeTabs(index) {
+        changeTabs (index) {
             switch (index) {
                 case 0:
                     this.tags = index
@@ -199,7 +198,7 @@
                     this.tags = index
                     break;
                 case 2:
-                    if (this.checkMnemonic()) {
+                    if(!this.checkMnemonic()){
                         return
                     }
                     const account = this.createAccount()
@@ -216,7 +215,7 @@
 
             // for each element, we want to get its two-digit hexadecimal representation
             const hexParts = [];
-            for (let i = 0; i < byteArray.length; i++) {
+            for(let i = 0; i < byteArray.length; i++) {
                 // convert value to hexadecimal
                 const hex = byteArray[i].toString(16);
 
@@ -231,24 +230,24 @@
             return hexParts.join('');
         }
 
-        createAccount() {
+        createAccount () {
             const mnemonic = new MnemonicPassPhrase(this.mnemonic.join(' '));
             const bip32Seed = mnemonic.toSeed();
-            const bip32Node = ExtendedKey.createFromSeed(this.buf2hex(bip32Seed));
+            const  bip32Node = ExtendedKey.createFromSeed(this.buf2hex(bip32Seed));
             const wallet = new Wallet(bip32Node);
             const account = wallet.getAccount();
-            this.$store.commit('SET_ACCOUNT', account);
+            this.$store.commit('SET_ACCOUNT',account);
             return account
         }
 
-        loginWallet(account) {
+        loginWallet (account) {
             const that = this
-            const walletName: any = this.formInfo['walletName'];
-            const netType: NetworkType = Number(this.formInfo['currentNetType'])
+            const walletName:any = this.formInfo['walletName'];
+            const netType:NetworkType = Number(this.formInfo['currentNetType'])
             that.setUserDefault(walletName, account, netType)
         }
 
-        setUserDefault(name, account, netType) {
+        setUserDefault  (name, account, netType) {
             const that = this
             walletInterface.getWallet({
                 name: name,
@@ -275,7 +274,7 @@
             })
         }
 
-        localKey(walletName, keyObj, address, balance = 0) {
+        localKey (walletName, keyObj, address, balance = 0) {
             let localData: any[] = []
             let isExist: boolean = false
             try {
@@ -301,17 +300,13 @@
             localSave('wallets', JSON.stringify(localData))
         }
 
-        toWalletPage() {
-            this.$store.commit('SET_HAS_WALLET', true)
+        toWalletPage () {
+            this.$store.commit('SET_HAS_WALLET',true)
             this.$emit('toWalletDetails')
         }
 
-        toBack() {
+        toBack () {
             this.$emit('closeCreated')
-        }
-
-        created() {
-            this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
         }
     }
 </script>

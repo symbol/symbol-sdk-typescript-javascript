@@ -148,7 +148,7 @@
 
         copy (txt) {
             copyTxt(txt).then(()=>{
-                this.$Message.success('复制成功!');
+                this.$Message.success(this['$t']('successful_copy'));
             })
         }
 

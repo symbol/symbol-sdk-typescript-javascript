@@ -369,7 +369,10 @@ export const zh_CN = {
     please_set_your_wallet_password: '请输入设置的密码',
     please_enter_your_password_again: '请再次输入你设置的密码',
     repeat_the_password: '重复密码',
-
+    walletCreateNetTypeRemind:'请选择钱包网络! ',
+    walletCreateWalletNameRemind:'设置钱包名输入错误! ',
+    walletCreatePasswordRemind:'设置密码输入错误! ',
+    walletCreateCheckPWRemind:'两次密码不一致! ',
     //Backup mnemonic  created
     Backup_mnemonics_can_effectively_back_up_and_restore_your_account: '备份助记词能有效备份和恢复你的账户',
     tips: '提示',

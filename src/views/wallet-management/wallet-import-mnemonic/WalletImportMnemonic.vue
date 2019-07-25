@@ -42,11 +42,12 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import {MnemonicPassPhrase, ExtendedKey, Wallet} from 'nem2-hd-wallets';
-    import {NetworkType, Account, Crypto} from "nem2-sdk";
+    import {Component, Vue} from 'vue-property-decorator'
+    import {MnemonicPassPhrase, ExtendedKey, Wallet} from 'nem2-hd-wallets'
+    import {NetworkType, Account, Crypto} from "nem2-sdk"
     import {localRead, localSave} from '../../../utils/util'
-    import {walletInterface} from "../../../interface/sdkWallet";
+    import {walletInterface} from "../../../interface/sdkWallet"
+
 
     @Component
     export default class WalletImportMnemonic extends Vue {
@@ -58,22 +59,28 @@
         account = {}
 
         importWallet() {
-            this.checkImport()
+            !this.checkImport()
             this.loginWallet(this.account)
         }
 
         checkImport() {
-            this.checkMnemonic()
+            if (!this.checkMnemonic()) return
             if (!this.form.password || this.form.password == '') {
                 this.$Message.error(this.$t('Set_password_input_error'));
+                return
             }
             if (this.form.password !== this.form.checkPW) {
                 this.$Message.error(this.$t('Two_passwords_are_inconsistent'))
+                return
             }
         }
 
         checkMnemonic() {
             try {
+                if (!this.form.mnemonic || this.form.mnemonic === '') {
+                    this.$Message.error(this.$t('Mnemonic_input_error'));
+                    return false
+                }
                 const account = this.createAccount(this.form.mnemonic)
                 this.$store.commit('SET_ACCOUNT', account);
                 this.account = account
@@ -114,16 +121,16 @@
             return hexParts.join('');
         }
 
-        async loginWallet(account) {
+        loginWallet(account) {
             const that = this
             const walletName: any = 'wallet';
             const netType: NetworkType = account.address.networkType
-            await that.setUserDefault(walletName, account, netType)
+            that.setUserDefault(walletName, account, netType)
         }
 
-        async setUserDefault(name, account, netType) {
+        setUserDefault(name, account, netType) {
             const that = this
-            await walletInterface.getWallet({
+            walletInterface.getWallet({
                 name: name,
                 networkType: netType,
                 privateKey: account.privateKey
@@ -156,7 +163,7 @@
             } catch (e) {
                 localData = []
             }
-            const saveData = {
+            let saveData = {
                 name: walletName,
                 ciphertext: keyObj.ciphertext,
                 iv: keyObj.iv,
@@ -164,6 +171,9 @@
                 address: address,
                 balance: balance
             }
+            const account = this.$store.state.account.wallet;
+            saveData = Object.assign(saveData, account)
+            this.$store.commit('SET_WALLET', saveData)
             for (let i in localData) {
                 if (localData[i].address === address) {
                     localData[i] = saveData
@@ -189,5 +199,85 @@
     }
 </script>
 <style scoped lang="less">
-  @import "WalletImportMnemonic";
+  .mnemonic {
+    padding: 39px 19px;
+
+    .describle {
+      position: relative;
+      right: 19px;
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
+      padding-bottom: 39px;
+    }
+
+    li {
+      list-style: disc;
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(34, 34, 34, 1);
+      padding-bottom: 40px;
+    }
+
+    .tips {
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(153, 153, 153, 1);
+      margin-top: 15px;
+      position: relative;
+      right: 25px;
+    }
+
+    .gray_content.textarea {
+      height: 120px;
+
+      textarea {
+        padding: 21px 30px;
+      }
+    }
+
+    .gray_content {
+      overflow: hidden;
+      right: 20px;
+      margin-top: 15px;
+      width: 680px;
+      height: 60px;
+      border: 1px solid rgba(204, 204, 204, 1);
+      border-radius: 8px;
+      position: relative;
+
+      input {
+        width: 650px;
+        height: 40px;
+        border: none;
+        padding-left: 20px;
+      }
+
+      input::placeholder {
+        color: rgba(153, 153, 153, 1);
+      }
+    }
+  }
+
+  .bottom_button {
+    width: 680px;
+
+    span {
+      width: 200px;
+      height: 60px;
+      border-radius: 30px;
+      border: 1px solid rgba(32, 181, 172, 1);
+      display: inline-block;
+      line-height: 60px;
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(32, 181, 172, 1);
+      text-align: center;
+    }
+    .import {
+      background:rgba(32,181,172,1);
+      color: white;
+    }
+  }
+
 </style>
