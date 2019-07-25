@@ -2,7 +2,9 @@
     <div class="WalletPanelWrap clear" v-if="!reload">
         <div class="hasWalletPanel" v-if="toFn||walletList.length > 0">
             <div class="left WalletSwitch" v-if="walletList.length > 0">
-                <WalletSwitch :walletList="walletList" @reload="onReloadChange" @setWalletList="setWalletList"></WalletSwitch>
+                <WalletSwitch @reload="onReloadChange"
+                              @noHasWallet="noHasWallet"
+                @hasWallet="hasWallet"></WalletSwitch>
             </div>
             <div :class="[walletList.length > 0?'left':'ML30' ,'WalletFn']">
                 <WalletFn :tabIndex="WalletFnTabIndex"></WalletFn>
@@ -66,32 +68,19 @@
         }
 
         onReloadChange(){
-            if(this.nowWalletList.len() < 1){
-                this.toFn = false
-                this.$store.commit('SET_HAS_WALLET',false)
-            }
             this.reload = false
             setTimeout(()=>{
                 this.reload = true
             },0)
         }
 
-        setDefaultPage(){
-            const name = this.$route.params.name
-            if(name == 'walletImportKeystore'){
-                this.toImport()
-            }else if(name == 'walletCreate'){
-                this. toCreate()
-            }
+        noHasWallet () {
+            this.walletList = []
+            this.$store.commit('SET_HAS_WALLET',false)
         }
-        setLeftSwitchIcon(){
-            this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
 
-        }
 
         created(){
-            this.setLeftSwitchIcon()
-            this.setDefaultPage()
             this.setWalletList()
         }
     }

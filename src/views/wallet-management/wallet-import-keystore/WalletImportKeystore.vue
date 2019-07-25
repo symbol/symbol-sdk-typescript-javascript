@@ -10,7 +10,7 @@
             {{$t('keystore_describle_import')}}
           </div>
           <div class="gray_content">
-            <Select v-model="file" :placeholder="$t('please_choose')">
+            <Select v-model="file">
               <Option v-for="item in fileList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </div>

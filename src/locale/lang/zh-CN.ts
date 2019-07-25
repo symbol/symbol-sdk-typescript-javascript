@@ -1,4 +1,4 @@
-export default {
+export const zh_CN ={
   just_now: '刚刚',
   time_ago: '前',
   time_after: '后',
@@ -214,6 +214,11 @@ export default {
   variable_supply: '可变供应量',
   effective_time: '有效时间',
   alias: '别名',
+  supply_can_not_less_than_0:'供应量不可小于零',
+  divisibility_can_not_less_than_0:'可分性不可小于零',
+  duration_can_not_less_than_0:'持续时间不可小于零',
+  fee_can_not_less_than_0:'费用不可小于零',
+  duration_can_not_less_than_10_years:'持续时间不可大于10年',
 
   // edit dialog
   modify_supply: '修改供应量',
@@ -311,7 +316,48 @@ export default {
   please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe: '请输入钱包密码，以确保为本人操作，保证你的钱包安全',
 
   // wallet import keystore
-  please_choose: '请选择'
+  please_choose: '请选择',
+
+// wallet detail
+  export: '导出',
+  input_password: '输入密码',
+  backup_prompt: '备份提示',
+  backup: '备份',
+  obtaining_a_Keystore_password_is_equal_to_owning_a_wallet_asset: '获得Keystore+密码等于拥有钱包资产所有权',
+  Please_back_up_the_Keystore_properly_If_your_phone_is_lost_stolen_or_damaged: '请妥善备份Keystore,如果你的手机丢失、被盗、损坏,Keystore+密码将可以恢复你的资产',
+  offline_storage: '离线保管',
+  keep_it_in_a_safe_place_on_the_isolated_network: '妥善保管至隔离网络的安全地方,请勿将助记词在联网环境下分享和存储,比如邮件、相册、社交应用等',
+  please_safely_back_up_the_Keystore: '请安全备份Keystore',
+  do_not_save_to_email_notepad_web_chat_etc_It_is_very_dangerous_Please_don_use_network_transmission: '切勿保存至邮箱、记事本、网盘、聊天工具等，非常危险请勿使用网络传输',
+  do_not_use_network_transmission: '请勿使用网络传输',
+  Do_not_transmit_through_network_tools_once_acquired_by_hackers_will_cause_irreparable_asset_losses_It_is_recommended_that_the_offline_device_be_transmitted_by_scanning_the_QR_code: '请勿通过网络工具传输，一旦被黑客获取将造成不可挽回的资产损失。建议离线设备通过扫二维码方式传输。',
+  password_management_tool_save: '密码管理工具保存',
+  it_is_recommended_to_use_password_management_tool_management: '建议使用密码管理工具管理',
+  copy: '复制',
+  Display_Keystore_QR_code: '显示Keystore二维码',
+  Show_Keystore: '显示Keystore',
+
+  //export dialog
+  export_mnemonic: '导出助记词',
+  backup_mnemonic: '备份助记词',
+  confirm_backup: '确认备份',
+  getting_a_mnemonic_equals_ownership_of_a_wallet_asset: '获得助记词等于拥有钱包资产所有权',
+  use_paper_and_pen_to_correctly_copy_mnemonics_If_your_phone_is_lost_stolen_or_damaged_mnemonic_will_restore_your_assets: '使用纸和笔正确抄写助记词,如果你的手机丢失、被盗、损坏,助记词将可以恢复你的资产',
+  keep_it_in_a_safe_place_on_the_isolated_network_mnemonics: '妥善保管至隔离网络的安全地方,请勿将助记词在联网环境下分享和存储,比如邮件、相册、社交应用等',
+  complete: '完成',
+  please_accurately_copy_the_safety_backup_mnemonic: '请准确抄写安全备份助记词',
+  please_click_on_the_mnemonic_in_order_to_confirm_that_you_are_backing_up_correctly: '请按顺序点击助记词，以确认您正确备份',
+  the_mnemonic_order_is_correct_and_the_backup_is_successful: '助记词顺序正确，备份成功',
+
+  // privatekey
+  export_private_key: '导出私钥',
+  backup_private_key: '备份私钥',
+  Obtaining_a_private_key_equals_ownership_of_the_wallet_asset: '获得私钥等于拥有钱包资产所有权',
+  use_paper_and_pen_to_correctly_copy_the_private_key: '使用纸和笔正确抄写私钥,如果你的手机丢失、被盗、损坏,私钥将可以恢复你的资产',
+  keep_it_in_a_safe_place_on_the_isolated_network_private_key: '妥善保管至隔离网络的安全地方,请勿将私钥在联网环境下分享和存储,比如邮件、相册、社交应用等',
+  please_accurately_copy_the_secure_backup_private_key: '请准确抄写安全备份私钥',
+  display_private_key_QR_code: '显示私钥二维码',
+  display_private_key:'显示私钥'
 
 
 }

@@ -1,20 +1,23 @@
 <template>
-  <div class="setting_container scroll radius">
-    <div class="setting_head">
-      {{$t('setting')}}
-    </div>
-    <div class="seeting_main_container">
-      <div class="left_navigator left">
-        <div class="navigator_item pointer" @click="jumpToView(n,index)" v-for="(n,index) in navagatorList">
-          <span :class="n.isSelected ? 'selected_title':''">{{$t(n.title)}}</span>
-        </div>
+  <div class="setting_wrap">
+    <div class="white_wrap">{{$t('not_yet_open')}}</div>
+    <div class="setting_container scroll radius">
+      <div class="setting_head">
+        {{$t('setting')}}
       </div>
-      <div class="right_view right">
-        <div class="top_title">
-          {{$t(currentHeadText)}}
+      <div class="seeting_main_container">
+        <div class="left_navigator left">
+          <div class="navigator_item pointer" @click="jumpToView(n,index)" v-for="(n,index) in navagatorList">
+            <span :class="n.isSelected ? 'selected_title':''">{{$t(n.title)}}</span>
+          </div>
         </div>
-        <div class="main_view">
-          <router-view/>
+        <div class="right_view right">
+          <div class="top_title">
+            {{$t(currentHeadText)}}
+          </div>
+          <div class="main_view">
+            <router-view/>
+          </div>
         </div>
       </div>
     </div>

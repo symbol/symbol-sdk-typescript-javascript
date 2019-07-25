@@ -313,6 +313,10 @@
         toBack () {
             this.$router.go(-1)
         }
+
+        created(){
+            this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
+        }
     }
 </script>
 

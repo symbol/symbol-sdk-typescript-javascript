@@ -77,6 +77,7 @@
     import axios from 'axios'
     import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
     import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
+    import {blockchainInterface} from '@/interface/sdkBlockchain.js';
 
     @Component
     export default class Home extends Vue {
@@ -118,6 +119,10 @@
         ]
         currentNode = ''
         isNodeHealthy = true
+
+        accountPrivateKey = ''
+        accountPublicKey = ''
+        accountAddress = ''
 
 
         closeWindow() {
@@ -164,11 +169,9 @@
         }
 
         switchPanel(index) {
+            console.log('routers', routers)
             const routerIcon = routers[0].children
             if (this.$store.state.app.unClick) {
-                return
-            }
-            if (routerIcon[index].meta.disabled) {
                 return
             }
             this.$router.push({
@@ -210,10 +213,26 @@
             const that = this
             axios.get(currentNode + '/chain/height').then(function (response) {
                 that.isNodeHealthy = true
+                that.getGenerateHash(currentNode)
             }).catch(function (error) {
                 that.isNodeHealthy = false
             });
 
+        }
+
+        async getGenerateHash(node) {
+            const that = this
+            let {accountPrivateKey, accountPublicKey, accountAddress} = this
+            await blockchainInterface.getBlockByHeight({
+                height: 1,
+                node
+            }).then(async (blockReasult: any) => {
+                await blockReasult.result.Block.subscribe((blockInfo) => {
+                    that.$store.state.account.generationHash = blockInfo.generationHash
+                })
+            }).catch(() => {
+                console.log('generationHash  null')
+            })
         }
 
 

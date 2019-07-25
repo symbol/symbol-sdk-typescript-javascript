@@ -1,4 +1,4 @@
-export default {
+export const en_US ={
   just_now: 'Just',
   time_ago: 'ago',
   time_after: 'later',
@@ -85,8 +85,8 @@ export default {
   unconfirmed_transaction: 'unconfirmed',
   total: 'total',
   data: 'data',
-  no_unconfirmed_transactions:'no unconfirmed transactions',
-  no_confirmed_transactions:'no confirmed transactions',
+  no_unconfirmed_transactions: 'no unconfirmed transactions',
+  no_confirmed_transactions: 'no confirmed transactions',
 
   //monitor-market
   highest_price: 'highest price',
@@ -113,11 +113,15 @@ export default {
   validity_period: 'validity',
   harvested_block: 'harvested block',
   successful_copy: 'successful copy',
-  address_format_error:'address format error',
-  amount_can_not_be_less_than_0:'amount can not be less than 0',
-  fee_can_not_be_less_than_0:'fee can not be less than 0',
-  mosaic_name_can_not_be_null:'mosaic name can not be null',
-
+  address_format_error: 'address format error',
+  amount_can_not_be_less_than_0: 'amount can not be less than 0',
+  fee_can_not_be_less_than_0: 'fee can not be less than 0',
+  mosaic_name_can_not_be_null: 'mosaic name can not be null',
+  supply_can_not_less_than_0:'supply can not less than 0',
+  divisibility_can_not_less_than_0:'divisibilit can not less than 0',
+  duration_can_not_less_than_0:'duration can not less than 0',
+  fee_can_not_less_than_0:'max fee can not less than 0',
+  duration_can_not_less_than_10_years:'duration can not more than 10 years',
 
   // monitor-receipt
   set_amount: 'set amount',
@@ -154,9 +158,8 @@ export default {
   receive_address_or_alias: 'receive address or alias',
   please_enter_the_transfer_amount: 'please enter the transfer amount',
   please_enter_a_comment: 'please enter a comment',
-  password_error:'密码错误',
-  transaction_hash_error:'transaction hash error',
-
+  password_error: '密码错误',
+  transaction_hash_error: 'transaction hash error',
 
 
   //setting-about
@@ -299,16 +302,59 @@ export default {
   create_now: 'create now',
   this_will_create_a_new_wallet_and_a_new_torrent_file: 'This will create a new wallet and a new torrent file',
   create_wallet: 'create wallet',
-  hash:'hash',
+  hash: 'hash',
   //menu bar
-  wallet_name:'wallet name',
-  switch_point:'switch point',
-  current_point:'current point',
-  please_enter_a_custom_nod_address:'please input point url',
-  point_null_error:'point null error',
+  wallet_name: 'wallet name',
+  switch_point: 'switch point',
+  current_point: 'current point',
+  please_enter_a_custom_nod_address: 'please input point url',
+  point_null_error: 'point null error',
   //check pw dialog
-  please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe:'Please enter your wallet password to ensure your own operation and keep your wallet safe.',
+  please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe: 'Please enter your wallet password to ensure your own operation and keep your wallet safe.',
 
   // wallet import keystore
-  please_choose: 'please choose'
+  please_choose: 'please choose',
+
+  //export keystore
+  export: 'export',
+  input_password: 'input password',
+  backup_prompt: 'backup prompt',
+  backup: 'backup',
+  obtaining_a_Keystore_password_is_equal_to_owning_a_wallet_asset: 'Obtaining a Keystore+ password is equal to owning a wallet asset',
+  Please_back_up_the_Keystore_properly_If_your_phone_is_lost_stolen_or_damaged: 'Please back up the Keystore properly. If your phone is lost, stolen or damaged, Keystore+ password will be able to recover your assets.',
+  offline_storage: 'offline storage',
+  keep_it_in_a_safe_place_on_the_isolated_network: 'Keep it in a safe place on the isolated network. Do not share and store mnemonics in a networked environment, such as emails, photo albums, social applications, etc.',
+  please_safely_back_up_the_Keystore: 'please safely back up the Keystore',
+  do_not_save_to_email_notepad_web_chat_etc_It_is_very_dangerous_Please_don_use_network_transmission: 'Don\'t save to email, notepad, web, chat, etc. It\'s very dangerous. Please don\'t use network transmission.',
+  do_not_use_network_transmission: 'do not use network transmission',
+  Do_not_transmit_through_network_tools_once_acquired_by_hackers_will_cause_irreparable_asset_losses_It_is_recommended_that_the_offline_device_be_transmitted_by_scanning_the_QR_code: 'Do not transmit through network tools, once acquired by hackers will cause irreparable asset losses. It is recommended that the offline device be transmitted by scanning the QR code.',
+  password_management_tool_save: 'password management tool save',
+  it_is_recommended_to_use_password_management_tool_management: 'it is recommended to use password management tool management',
+  copy: 'copy',
+  Display_Keystore_QR_code: 'Display QR code',
+  Show_Keystore: 'Show Keystore',
+
+  //
+  export_mnemonic: 'export mnemonic',
+  backup_mnemonic: 'backup mnemonic',
+  confirm_backup: 'confirm backup',
+  getting_a_mnemonic_equals_ownership_of_a_wallet_asset: ' Getting a mnemonic equals ownership of a wallet asset',
+  use_paper_and_pen_to_correctly_copy_mnemonics_If_your_phone_is_lost_stolen_or_damaged_mnemonic_will_restore_your_assets: 'Use paper and pen to correctly copy mnemonics. If your phone is lost, stolen or damaged, mnemonic will restore your assets.',
+  keep_it_in_a_safe_place_on_the_isolated_network_mnemonics: 'Keep it in a safe place on the isolated network. Do not share and store mnemonics in a networked environment, such as emails, photo albums, social applications, etc.',
+  complete: 'complete',
+  please_accurately_copy_the_safety_backup_mnemonic: 'please accurately copy the safety backup mnemonic',
+  please_click_on_the_mnemonic_in_y_backup_mnemonic: 'please accurately copy the safety backup mnemonic',
+  please_click_on_the_mnemonic_in_order_to_confirm_that_you_are_backing_up_correctly: 'Please click on the mnemonic in order to confirm that you are backing up correctly.',
+  the_mnemonic_order_is_correct_and_the_backup_is_successful: 'The mnemonic order is correct and the backup is successful.',
+
+  //private key
+  export_private_key: 'export private key',
+  backup_private_key: 'backup private key',
+  Obtaining_a_private_key_equals_ownership_of_the_wallet_asset: 'Obtaining a private key equals ownership of the wallet asset',
+  use_paper_and_pen_to_correctly_copy_the_private_key: 'Use paper and pen to correctly copy the private key. If your phone is lost, stolen or damaged, the private key will be able to recover your assets.',
+  keep_it_in_a_safe_place_on_the_isolated_network_private_key: 'Keep it in a safe place on the isolated network. Do not share and store private key in a networked environment, such as emails, photo albums, social applications, etc.',
+  please_accurately_copy_the_secure_backup_private_key: 'Please accurately copy the secure backup private key',
+  display_private_key_QR_code: 'Display QR code',
+  display_private_key:'display privatekey'
+
 }

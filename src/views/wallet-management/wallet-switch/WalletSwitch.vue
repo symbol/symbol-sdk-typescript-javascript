@@ -2,6 +2,11 @@
     <div class="walletSwitchWrap">
         <div class="walletSwitchHead">
             <p class="tit">钱包管理</p>
+            <!--<div class="changeNetType">-->
+                <!--<Select  @on-change="changeNetType" v-model="currentNetType">-->
+                    <!--<Option v-for="item in netType" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+                <!--</Select>-->
+            <!--</div>-->
         </div>
         <div class="walletList">
             <div :class="['walletItem', item.active ? 'active':'']" v-for="(item, index) in walletList" :key="index">
@@ -61,14 +66,22 @@
         currentNetType = this.netType[0].value
 
         get getWalletList () {
-            return this.$store.state.app.walletList
+            let list = this.$store.state.app.walletList
+            list.map((item,index)=>{
+                if(index === 0){
+                    item.active = true
+                }else {
+                    item.active = false
+                }
+            })
+            return list
         }
 
         delWallet (index, current) {
             let list = this.walletList;
             list.splice(index,1)
             if(list.length < 1){
-                this.$store.commit('SET_HAS_WALLET',false)
+                this.$emit('noHasWallet')
             }else {
                 if(current){
                     this.$store.commit('SET_WALLET', this.walletList[0])
@@ -80,17 +93,11 @@
 
         initWalletList () {
             const list = this.getWalletList
-            list.map((item,index)=>{
-                if(index === 0){
-                    item.active = true
-                }else {
-                    item.active = false
-                }
-            })
             for(let i in list){
                 this.$set(this.walletList,i,list[i])
             }
             if(this.walletList.length > 0){
+                this.$emit('hasWallet')
                 this.$store.commit('SET_HAS_WALLET',true)
             }else {
                 this.$store.commit('SET_HAS_WALLET',false)
@@ -103,8 +110,8 @@
             this.initWalletList()
         }
 
-        mounted () {
-            // this.initWalletList()
+        created () {
+            this.initWalletList()
         }
     }
 </script>

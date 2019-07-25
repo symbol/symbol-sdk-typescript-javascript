@@ -16,7 +16,7 @@
             <FormItem :label="$t('mosaic_ID')">
               <p class="mosaicTxt">{{mosaic.id}}</p>
             </FormItem>
-            <FormItem :label="$t(alias_selection)">
+            <FormItem :label="$t('alias_selection')">
               <Select v-model="mosaic.aliasName" required>
                 <Option :value="item.value" v-for="(item,index) in aliasNameList" :key="index">{{item.label}}</Option>
               </Select>

@@ -1,6 +1,6 @@
 import {
-    MosaicDefinitionTransaction, Deadline, MosaicNonce, MosaicId, NamespaceMosaicIdGenerator,Id,Mosaic,
-    MosaicProperties, UInt64, MosaicSupplyChangeTransaction, MosaicHttp, Convert, NetworkCurrencyMosaic
+    MosaicDefinitionTransaction, Deadline, MosaicNonce, MosaicId, NamespaceMosaicIdGenerator,Id,Mosaic,AggregateTransaction,
+    MosaicProperties, UInt64, MosaicSupplyChangeTransaction, MosaicHttp, Convert, NetworkCurrencyMosaic,MosaicSupplyType
 } from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
 
@@ -66,7 +66,9 @@ export const mosaicInterface: SdkV0.mosaic = {
         const duration = params.duration;
         const netWorkType = params.netWorkType;
         const maxFee = params.maxFee;
-        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+        const supply = params.supply
+        const publicAccount = params.publicAccount
+        const mosaicDefinitionTx = MosaicDefinitionTransaction.create(
             Deadline.create(),
             mosaicNonce,
             mosaicId,
@@ -79,6 +81,24 @@ export const mosaicInterface: SdkV0.mosaic = {
             netWorkType,
             maxFee ? UInt64.fromUint(maxFee) : undefined
         )
+        const mosaicSupplyChangeTx = MosaicSupplyChangeTransaction.create(
+            Deadline.create(),
+            mosaicDefinitionTx.mosaicId,
+            MosaicSupplyType.Increase,
+            UInt64.fromUint(supply),
+            netWorkType
+        )
+        const mosaicDefinitionTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [
+                mosaicDefinitionTx.toAggregate(publicAccount),
+                mosaicSupplyChangeTx.toAggregate(publicAccount)
+            ],
+            netWorkType,
+            [],
+            UInt64.fromUint(maxFee)
+        )
+
         return {
             result: {
                 mosaicDefinitionTransaction: mosaicDefinitionTransaction
@@ -108,7 +128,7 @@ export const mosaicInterface: SdkV0.mosaic = {
     },
 
     getMosaics: async (params) => {
-        const mosaicsInfos = new MosaicHttp(params.node).getMosaics(params.mosaics)
+        const mosaicsInfos = new MosaicHttp(params.node).getMosaics(params.mosaicIdList)
         return {
             result: {
                 mosaicsInfos: mosaicsInfos

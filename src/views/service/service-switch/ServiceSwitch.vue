@@ -71,21 +71,22 @@
         iconActive: apostille2Icon,
         introduce: 'provides_an_editable_chain_on_protocol_in_a_multi_signature_account_which_is_the_best_way_to_store_funds_and_achieve_a_common_account',
         active: false
-      }, {
-        name: 'address_book',
-        to: '/onDev',
-        iconDefault: address1Icon,
-        iconActive: address2Icon,
-        introduce: 'assign_tags_to_addresses_to_easily_track_contacts',
-        active: false
-      }, {
-        name: 'instant_xchanges',
-        to: '/onDev',
-        iconDefault: exchange1Icon,
-        iconActive: exchange2Icon,
-        introduce: 'use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates',
-        active: false
       },
+      // {
+      //   name: 'address_book',
+      //   to: '/onDev',
+      //   iconDefault: address1Icon,
+      //   iconActive: address2Icon,
+      //   introduce: 'assign_tags_to_addresses_to_easily_track_contacts',
+      //   active: false
+      // }, {
+      //   name: 'instant_xchanges',
+      //   to: '/onDev',
+      //   iconDefault: exchange1Icon,
+      //   iconActive: exchange2Icon,
+      //   introduce: 'use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates',
+      //   active: false
+      // },
     ]
 
     nowIcon(item) {

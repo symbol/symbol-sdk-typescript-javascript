@@ -15,7 +15,8 @@
                 ipcRenderer.send('app', 'max')
             }
             this.$router.push({
-                name: 'login'
+                name: 'servicePanel'
+                // name: 'login'
                 // name: 'monitorPanel'
             })
         }

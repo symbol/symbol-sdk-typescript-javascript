@@ -47,8 +47,8 @@ export const formatDate = (timestamp) => {
 export const formatTime = (time) => {
   let oldDate = new Date(Number(time))
   let newDate = new Date()
-  var dayNum = ''
-  var getTime = (newDate.getTime() - oldDate.getTime()) / 1000
+  let dayNum = ''
+  let getTime = (newDate.getTime() - oldDate.getTime()) / 1000
 
   if (getTime < 60 * 5) {
     dayNum = vueInstance.$t('just_now')
@@ -147,10 +147,10 @@ export const getCurrentMonthFirst = function (date) {
 }
 
 export const getCurrentMonthLast = function (date) {
-  var currentMonth = date.getMonth();
-  var nextMonth = ++currentMonth;
-  var nextMonthFirstDay = new Date(date.getFullYear(), nextMonth, 1);
-  var oneDay = 1000 * 60 * 60 * 24;
+  let currentMonth = date.getMonth();
+  let nextMonth = ++currentMonth;
+  let nextMonthFirstDay = new Date(date.getFullYear(), nextMonth, 1);
+  let oneDay = 1000 * 60 * 60 * 24;
   return new Date(nextMonthFirstDay - oneDay);
 }
 
@@ -166,5 +166,34 @@ export const isRefreshData = function (localstorageName, refreshTime, borderline
     return true
   }
   return false
+}
+export const formatSeconds = function (second) {
+  let d = 0, h = 0, m = 0;
+
+  if (second > 86400) {
+    d = Math.floor(second / 86400);
+    second = second % 86400;
+  }
+  if (second > 3600) {
+    h = Math.floor(second / 3600);
+    second = second % 3600;
+  }
+  if (second > 60) {
+    m = Math.floor(second / 60);
+    second = second % 60;
+  }
+  let result = second + vueInstance.$t('time_second');
+  if (m > 0 || h > 0 || d > 0 ) {
+    result = m + vueInstance.$t('time_minute') + result;
+  }
+  if ( h > 0 || d > 0 ) {
+    result = h + vueInstance.$t('time_hour') + result;
+  }
+  if (d > 0 ) {
+    result = d + vueInstance.$t('time_day') + result;
+  }
+
+  return result;
 
 }
+

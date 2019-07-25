@@ -90,6 +90,7 @@
 
         created() {
             this.currentHeadText = this.navagatorList[0].title
+            this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
         }
 
         changeTab (name) {

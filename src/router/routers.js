@@ -100,10 +100,35 @@ var routers = [
                 ]
             },
             {
+                path: '/communityPanel',
+                name: 'communityPanel',
+                meta: {},
+                // @ts-ignore
+                component: function () { return import('@/views/community/community-panel/CommunityPanel.vue'); },
+                children: [
+                    {
+                        path: '/communityPanel',
+                        name: 'communityPanel',
+                        // @ts-ignore
+                        component: function () { return import('@/views/community/information/Information.vue'); }
+                    }, {
+                        path: '/information',
+                        name: 'information',
+                        // @ts-ignore
+                        component: function () { return import('@/views/community/information/Information.vue'); }
+                    }, {
+                        path: '/vote',
+                        name: 'vote',
+                        // @ts-ignore
+                        component: function () { return import('@/views/community/vote/Vote.vue'); }
+                    },
+                ]
+            },
+            {
                 path: '/servicePanel',
                 name: 'servicePanel',
                 meta: {
-                    disabled: true,
+                //     disabled: true,
                 },
                 // @ts-ignore
                 component: function () { return import('@/views/service/service-panel/ServicePanel.vue'); },
@@ -132,35 +157,10 @@ var routers = [
                 ]
             },
             {
-                path: '/communityPanel',
-                name: 'communityPanel',
-                meta: {},
-                // @ts-ignore
-                component: function () { return import('@/views/community/community-panel/CommunityPanel.vue'); },
-                children: [
-                    {
-                        path: '/communityPanel',
-                        name: 'communityPanel',
-                        // @ts-ignore
-                        component: function () { return import('@/views/community/information/Information.vue'); }
-                    }, {
-                        path: '/information',
-                        name: 'information',
-                        // @ts-ignore
-                        component: function () { return import('@/views/community/information/Information.vue'); }
-                    }, {
-                        path: '/vote',
-                        name: 'vote',
-                        // @ts-ignore
-                        component: function () { return import('@/views/community/vote/Vote.vue'); }
-                    },
-                ]
-            },
-            {
                 path: '/settingPanel',
                 name: 'settingPanel',
                 meta: {
-                    disabled: true,
+                //     disabled: true,
                 },
                 // @ts-ignore
                 component: function () { return import('@/views/setting/setting-panel/SettingPanel.vue'); },

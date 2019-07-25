@@ -19,7 +19,7 @@
       </div>
       <div class="bottom_account_info radius" ref="bottomAccountInfo">
         <div v-if="isShowAccountInfo">
-
+          <Spin v-if="isLoadingMosaic" size="large" fix class="absolute"></Spin>
           <Tabs size="small" v-if="!isShowManageMosaicIcon">
             <TabPane :label="$t('mosaic')" name="name1">
               <img @click="manageMosaicList()" class="asset_list pointer"
@@ -137,6 +137,7 @@
         monitorUnselected = monitorUnselected
         monitorSeleted = monitorSeleted
         mosaicName = ''
+        isLoadingMosaic = true
         navigatorList: any = [
             {
                 name: 'dash_board',
@@ -258,6 +259,7 @@
             this.currentXEM2 = this.$store.state.account.currentXEM2
             this.currentXEM1 = this.$store.state.account.currentXEM1
             this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
+            this.$store.state.app.unClick = false
 
 
         }
@@ -380,6 +382,7 @@
                     })
                     that.localMosaicMap = mosaicMap
                     that.mosaicMap = mosaicMap
+                    that.isLoadingMosaic = false
                 })
 
             }).catch(()=>{
