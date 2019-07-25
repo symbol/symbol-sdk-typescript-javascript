@@ -30,12 +30,7 @@
                 const ipcRenderer = window['electron']['ipcRenderer']
                 ipcRenderer.send('app', 'max')
             }
-
-            // this.$router.push({
-            //     // name: 'servicePanel'
-            //     name: 'login'
-            //     // name: 'monitorPanel'
-            // })
+            const lock = localRead('lock')
         }
     }
 </script>

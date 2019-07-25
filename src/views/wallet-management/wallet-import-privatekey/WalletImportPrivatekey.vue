@@ -1,3 +1,4 @@
+import {NetworkType} from "nem2-sdk";
 <template>
   <div>
     <div class="privatekey">

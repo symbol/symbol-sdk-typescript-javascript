@@ -64,7 +64,7 @@
         }
 
         checkImport() {
-            if (!this.checkMnemonic()) return
+            if(!this.checkMnemonic()) return
             if (!this.form.password || this.form.password == '') {
                 this.$Message.error(this.$t('Set_password_input_error'));
                 return
@@ -77,7 +77,7 @@
 
         checkMnemonic() {
             try {
-                if (!this.form.mnemonic || this.form.mnemonic === '') {
+                if(!this.form.mnemonic || this.form.mnemonic === ''){
                     this.$Message.error(this.$t('Mnemonic_input_error'));
                     return false
                 }
@@ -128,7 +128,7 @@
             that.setUserDefault(walletName, account, netType)
         }
 
-        setUserDefault(name, account, netType) {
+       setUserDefault  (name, account, netType) {
             const that = this
             walletInterface.getWallet({
                 name: name,
@@ -172,7 +172,7 @@
                 balance: balance
             }
             const account = this.$store.state.account.wallet;
-            saveData = Object.assign(saveData, account)
+            saveData = Object.assign(saveData,account)
             this.$store.commit('SET_WALLET', saveData)
             for (let i in localData) {
                 if (localData[i].address === address) {
