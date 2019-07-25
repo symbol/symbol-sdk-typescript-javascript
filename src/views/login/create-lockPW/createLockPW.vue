@@ -8,7 +8,7 @@
         <li>
           {{$t('new_password')}}
           <div class="gray_content">
-            <input class="absolute" v-model="lockPW.password" type="password"  type="text" :placeholder="$t('please_enter_the_original_password')">
+            <input class="absolute" v-model="lockPW.password" type="password"  :placeholder="$t('please_enter_the_original_password')">
           </div>
         </li>
         <li>
