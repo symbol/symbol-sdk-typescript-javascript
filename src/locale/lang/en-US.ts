@@ -213,10 +213,10 @@ export const en_US ={
   multi_sign_account: 'multi-sign',
   mosaic_list: 'mosaic list',
   mosaic_ID: 'mosaic ID',
-  available_quantity: 'available quantity',
+  available_quantity: 'supply',
   transportability: 'transportability',
-  variable_supply: 'variable supply',
-  effective_time: 'effective time',
+  variable_supply: 'supply',
+  effective_time: 'duration',
   alias: 'alias',
 
   // edit dialog
@@ -392,10 +392,10 @@ export const en_US ={
 
   //wallet details
   Basic_information: 'Basic information',
-  Wallet_type: 'Wallet type',
+  Wallet_type: 'type',
   Public_wallet: 'Public wallet',
-  Wallet_name: 'Wallet name',
-  Wallet_address: 'Wallet address',
+  Wallet_name: 'name',
+  Wallet_address: 'address',
   publickey: 'publickey',
   Address_QR_code: 'Address QR code',
   Function_and_backup: 'Function and backup',
@@ -404,8 +404,8 @@ export const en_US ={
   Export_Keystore: 'Export Keystore',
   Alias_settings: 'Alias settings',
   Filter_management: 'Filter management',
-  Subaddress_management: 'Subaddress management',
-  Modify_the_private_key_wallet_password: 'Modify the private key wallet password',
+  Subaddress_management: 'Subaddress ',
+  Modify_the_private_key_wallet_password: 'Modify password',
   status: 'status',
   operating: 'operating',
   binded: 'binded',

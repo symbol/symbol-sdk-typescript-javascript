@@ -40,11 +40,11 @@
               <Input v-model="mosaic.fee" required placeholder="0.05"></Input>
               <p class="tails">XEM</p>
             </FormItem>
-            <FormItem :label="$t('password')">
+            <FormItem :label="$t('password')" >
               <Input v-model="mosaic.password" type="password" required
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
-            <FormItem>
+            <FormItem class="button_update">
               <Button type="success" @click="updateMosaic"> {{$t('update')}}</Button>
             </FormItem>
           </Form>

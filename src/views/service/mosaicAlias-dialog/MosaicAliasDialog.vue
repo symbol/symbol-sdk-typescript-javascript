@@ -30,7 +30,7 @@
               <Input v-model="mosaic.password" type="password" required
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
-            <FormItem>
+            <FormItem class="button_update">
               <Button type="success" @click="updateMosaicAlias">{{$t('bind')}}</Button>
             </FormItem>
           </Form>

@@ -13,6 +13,15 @@
         initData() {
             this.$store.state.app.walletList = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
             this.$store.state.app.isInLoginPage = true
+            if(this.$store.state.app.walletList.length == 0){
+                this.$router.push({
+                    name: 'login'
+                })
+            }else {
+                this.$router.push({
+                    name: 'reLogin'
+                })
+            }
         }
 
         created() {
@@ -21,11 +30,12 @@
                 const ipcRenderer = window['electron']['ipcRenderer']
                 ipcRenderer.send('app', 'max')
             }
-            this.$router.push({
-                // name: 'servicePanel'
-                name: 'login'
-                // name: 'monitorPanel'
-            })
+
+            // this.$router.push({
+            //     // name: 'servicePanel'
+            //     name: 'login'
+            //     // name: 'monitorPanel'
+            // })
         }
     }
 </script>

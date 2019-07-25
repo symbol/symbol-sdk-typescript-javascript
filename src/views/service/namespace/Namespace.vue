@@ -1,5 +1,6 @@
 <template>
   <div class="namespaceWrap clear">
+    <div class="white_wrap">{{$t('not_yet_open')}}</div>
     <div class="left createDiv">
       <Tabs type="card" :animated="false" :value="currentTab">
         <TabPane :label="$t('ordinary_account')" name="ordinary">

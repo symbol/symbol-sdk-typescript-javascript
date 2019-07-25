@@ -8,13 +8,13 @@
         <li>
           {{$t('new_password')}}
           <div class="gray_content">
-            <input class="absolute" type="text" :placeholder="$t('please_enter_the_original_password')">
+            <input class="absolute" type="password" :placeholder="$t('please_enter_the_original_password')">
           </div>
         </li>
         <li>
           {{$t('confirm_password')}}
           <div class="gray_content">
-            <input class="absolute" type="text" :placeholder="$t('please_enter_a_new_password')">
+            <input class="absolute" type="password" :placeholder="$t('please_enter_a_new_password')">
           </div>
         </li>
         <li>

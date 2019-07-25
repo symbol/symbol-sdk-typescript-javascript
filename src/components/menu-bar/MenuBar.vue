@@ -10,7 +10,8 @@
         </div>
       </div>
 
-      <div class="quit_account pointer" v-if="!$store.state.account.wallet.name">
+      <div @click="accountQuit" class="quit_account pointer"
+           v-if=" !$store.state.app.isInLoginPage && $store.state.app.walletList.length !==0">
         <img src="../../assets/images/window/windowAccoutQuit.png" alt="">
         <span>{{$store.state.account.wallet.name}}</span>
       </div>
@@ -188,7 +189,7 @@
             const {walletList} = this
             const that = this
             walletList.every((item) => {
-                if(item.address == address){
+                if (item.address == address) {
                     that.$store.state.account.wallet = item
                     return false
                 }
@@ -220,6 +221,12 @@
             }).catch(function (error) {
                 that.isNodeHealthy = false
             });
+        }
+
+        accountQuit() {
+            this.$router.push({
+                name: 'walletPanel'
+            })
         }
 
         async getGenerateHash(node) {

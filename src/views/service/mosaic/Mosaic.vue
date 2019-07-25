@@ -55,61 +55,62 @@
         </TabPane>
 
         <TabPane :label="$t('multi_sign_account')" name="multiple">
-          <hr>
-          <Form :model="formItem">
-            <Row>
-              <Col span="10">
-                <h6>{{$t('basic_attribute')}}</h6>
-                <FormItem :label="$t('supply')">
-                  <Input v-model="formItem.supply" required
-                         :placeholder="$t('please_enter_the_initial_supply')"></Input>
-                </FormItem>
-                <FormItem :label="$t('severability')">
-                  <Input v-model="formItem.divisibility" required
-                         :placeholder="$t('please_enter_separability') + '（0~6）'"></Input>
-                </FormItem>
-                <FormItem label=" ">
-                  <Checkbox v-model="formItem.transferable">{{$t('transmittable')}}</Checkbox>
-                  <Checkbox v-model="formItem.supplyMutable">{{$t('variable_upply')}}</Checkbox>
-                </FormItem>
-              </Col>
-              <Col span="14">
-                <h6>{{$t('other_information')}}</h6>
-                <FormItem :label="$t('duration')">
-                  <Input v-model="formItem.duration" required
-                         :placeholder="$t('enter_the_number_of_blocks_integer')"></Input>
-                  <p class="remindTxt">{{$t('enter_the_number_of_blocks')}}</p>
-                  <p class="tails">{{$t('validity_period')}}：{{durationIntoDate}}{{$t('time_day')}}</p>
-                </FormItem>
-                <FormItem :label="$t('fee')">
-                  <Input v-model="formItem.fee" required placeholder="0.05"></Input>
-                  <p class="remindTxt">
-                    {{$t('the_default_is')}}：0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</p>
-                  <p class="tails">XEM</p>
-                </FormItem>
-                <FormItem class="clear">
-                  <Button type="success" class="right" @click="createMosaic">{{$t('create')}}</Button>
-                </FormItem>
-              </Col>
-            </Row>
-          </Form>
+         <div style="text-align: center"> {{$t('not_yet_open')}}</div>
+<!--          <hr>-->
+<!--          <Form :model="formItem">-->
+<!--            <Row>-->
+<!--              <Col span="10">-->
+<!--                <h6>{{$t('basic_attribute')}}</h6>-->
+<!--                <FormItem :label="$t('supply')">-->
+<!--                  <Input v-model="formItem.supply" required-->
+<!--                         :placeholder="$t('please_enter_the_initial_supply')"></Input>-->
+<!--                </FormItem>-->
+<!--                <FormItem :label="$t('severability')">-->
+<!--                  <Input v-model="formItem.divisibility" required-->
+<!--                         :placeholder="$t('please_enter_separability') + '（0~6）'"></Input>-->
+<!--                </FormItem>-->
+<!--                <FormItem label=" ">-->
+<!--                  <Checkbox v-model="formItem.transferable">{{$t('transmittable')}}</Checkbox>-->
+<!--                  <Checkbox v-model="formItem.supplyMutable">{{$t('variable_upply')}}</Checkbox>-->
+<!--                </FormItem>-->
+<!--              </Col>-->
+<!--              <Col span="14">-->
+<!--                <h6>{{$t('other_information')}}</h6>-->
+<!--                <FormItem :label="$t('duration')">-->
+<!--                  <Input v-model="formItem.duration" required-->
+<!--                         :placeholder="$t('enter_the_number_of_blocks_integer')"></Input>-->
+<!--                  <p class="remindTxt">{{$t('enter_the_number_of_blocks')}}</p>-->
+<!--                  <p class="tails">{{$t('validity_period')}}：{{durationIntoDate}}{{$t('time_day')}}</p>-->
+<!--                </FormItem>-->
+<!--                <FormItem :label="$t('fee')">-->
+<!--                  <Input v-model="formItem.fee" required placeholder="0.05"></Input>-->
+<!--                  <p class="remindTxt">-->
+<!--                    {{$t('the_default_is')}}：0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</p>-->
+<!--                  <p class="tails">XEM</p>-->
+<!--                </FormItem>-->
+<!--                <FormItem class="clear">-->
+<!--                  <Button type="success" class="right" @click="createMosaic">{{$t('create')}}</Button>-->
+<!--                </FormItem>-->
+<!--              </Col>-->
+<!--            </Row>-->
+<!--          </Form>-->
         </TabPane>
       </Tabs>
     </div>
-    <div class="mosaicList">
+    <div class="mosaicList scroll">
       <div class="mosaicListHeader clear">
         <div class="headerTit left">{{$t('mosaic_list')}}</div>
-        <div class="listPages right">
-          <Page :total="100" size="small" show-total/>
-        </div>
+<!--        <div class="listPages right">-->
+<!--          <Page :total="100" size="small" show-total/>-->
+<!--        </div>-->
       </div>
       <div class="mosaicListBody">
         <div class="listTit">
           <Row>
             <Col span="1">&nbsp;</Col>
             <Col span="5">{{$t('mosaic_ID')}}</Col>
-            <Col span="5">{{$t('available_quantity')}}</Col>
-            <Col span="2">{{$t('transportability')}}</Col>
+            <Col span="4">{{$t('available_quantity')}}</Col>
+            <Col span="3">{{$t('transportability')}}</Col>
             <Col span="2">{{$t('variable_supply')}}</Col>
             <Col span="3">{{$t('effective_time')}}</Col>
             <Col span="3">{{$t('alias')}}</Col>
@@ -120,8 +121,8 @@
           <Row>
             <Col span="1">&nbsp;</Col>
             <Col span="5">{{value.hex}}</Col>
-            <Col span="5">{{value.supply}}</Col>
-            <Col span="2">{{value.transferable}}</Col>
+            <Col span="4">{{value.supply}}</Col>
+            <Col span="3">{{value.transferable}}</Col>
             <Col span="2">{{value.supplyMutable}}</Col>
             <Col span="3">{{value._duration}}</Col>
             <Col span="3">null</Col>
