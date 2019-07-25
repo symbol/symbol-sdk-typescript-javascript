@@ -1,43 +1,43 @@
 <template>
-  <div>
-    <div class="mnemonic">
-      <div class="describle">{{$t('mnemonic_describle')}}</div>
-      <ul>
-        <li>
-          {{$t('input_mnemonic')}}
-          <div class="tips">
-            {{$t('enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word')}}
-          </div>
-          <div class="gray_content textarea">
-            <textarea class="absolute" v-model="form.mnemonic"/>
-          </div>
-        </li>
-        <li>
-          {{$t('set_password')}}
-          <div class="tips">
-            {{$t('mnemonic_describle_tips')}}
-          </div>
-          <div class="gray_content">
-            <input class="absolute" type="password" v-model="form.password"
-                   :placeholder="$t('please_set_your_password')">
-          </div>
-        </li>
-        <li>
-          {{$t('confirm_password')}}
-          <div class="gray_content">
-            <input class="absolute" type="password" v-model="form.checkPW"
-                   :placeholder="$t('please_enter_your_wallet_password_again')">
-          </div>
-        </li>
-      </ul>
+    <div>
+        <div class="mnemonic">
+            <div class="describle">{{$t('mnemonic_describle')}}</div>
+            <ul>
+                <li>
+                    {{$t('input_mnemonic')}}
+                    <div class="tips">
+                        {{$t('enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word')}}
+                    </div>
+                    <div class="gray_content textarea">
+                        <textarea class="absolute" v-model="form.mnemonic"/>
+                    </div>
+                </li>
+                <li>
+                    {{$t('set_password')}}
+                    <div class="tips">
+                        {{$t('mnemonic_describle_tips')}}
+                    </div>
+                    <div class="gray_content">
+                        <input class="absolute" type="password" v-model="form.password"
+                               :placeholder="$t('please_set_your_password')">
+                    </div>
+                </li>
+                <li>
+                    {{$t('confirm_password')}}
+                    <div class="gray_content">
+                        <input class="absolute" type="password" v-model="form.checkPW"
+                               :placeholder="$t('please_enter_your_wallet_password_again')">
+                    </div>
+                </li>
+            </ul>
 
 
+        </div>
+        <div class="bottom_button ">
+            <span class="back left" @click="toBack"> {{$t('back')}}</span>
+            <span class="import right" @click="importWallet">{{$t('import')}}</span>
+        </div>
     </div>
-    <div class="bottom_button ">
-      <span class="back left" @click="toBack"> {{$t('back')}}</span>
-      <span class="import right" @click="importWallet">{{$t('import')}}</span>
-    </div>
-  </div>
 
 </template>
 
@@ -150,12 +150,12 @@
                 }
                 that.$store.commit('SET_WALLET', storeWallet)
                 const encryptObj = Crypto.encrypt(Wallet.result.privateKey, that.form['password'])
-                that.localKey(name, encryptObj, Wallet.result.wallet.address.address, netType)
+                that.localKey(name, encryptObj, Wallet.result.wallet.address.address,netType)
                 this.toWalletDetails()
             })
         }
 
-        localKey(walletName, keyObj, address, netType, balance = 0) {
+        localKey (walletName, keyObj, address, netType, balance = 0) {
             let localData: any[] = []
             let isExist: boolean = false
             try {
@@ -184,12 +184,12 @@
             localSave('wallets', JSON.stringify(localData))
         }
 
-        toWalletDetails() {
+        toWalletDetails () {
             this.$Notice.success({
                 title: '' + this['$t']('Import_mnemonic_operations'),
                 desc: this['$t']('Imported_wallet_successfully') + ''
             });
-            this.$store.commit('SET_HAS_WALLET', true)
+            this.$store.commit('SET_HAS_WALLET',true)
             this.$emit('toWalletDetails')
         }
 
@@ -199,85 +199,5 @@
     }
 </script>
 <style scoped lang="less">
-  .mnemonic {
-    padding: 39px 19px;
-
-    .describle {
-      position: relative;
-      right: 19px;
-      font-size: 16px;
-      font-weight: 400;
-      color: rgba(102, 102, 102, 1);
-      padding-bottom: 39px;
-    }
-
-    li {
-      list-style: disc;
-      font-size: 18px;
-      font-weight: 400;
-      color: rgba(34, 34, 34, 1);
-      padding-bottom: 40px;
-    }
-
-    .tips {
-      font-size: 16px;
-      font-weight: 400;
-      color: rgba(153, 153, 153, 1);
-      margin-top: 15px;
-      position: relative;
-      right: 25px;
-    }
-
-    .gray_content.textarea {
-      height: 120px;
-
-      textarea {
-        padding: 21px 30px;
-      }
-    }
-
-    .gray_content {
-      overflow: hidden;
-      right: 20px;
-      margin-top: 15px;
-      width: 680px;
-      height: 60px;
-      border: 1px solid rgba(204, 204, 204, 1);
-      border-radius: 8px;
-      position: relative;
-
-      input {
-        width: 650px;
-        height: 40px;
-        border: none;
-        padding-left: 20px;
-      }
-
-      input::placeholder {
-        color: rgba(153, 153, 153, 1);
-      }
-    }
-  }
-
-  .bottom_button {
-    width: 680px;
-
-    span {
-      width: 200px;
-      height: 60px;
-      border-radius: 30px;
-      border: 1px solid rgba(32, 181, 172, 1);
-      display: inline-block;
-      line-height: 60px;
-      font-size: 16px;
-      font-weight: 400;
-      color: rgba(32, 181, 172, 1);
-      text-align: center;
-    }
-    .import {
-      background:rgba(32,181,172,1);
-      color: white;
-    }
-  }
-
+    @import "WalletImportMnemonic";
 </style>

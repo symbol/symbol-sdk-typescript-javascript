@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import { Component, Vue } from 'vue-property-decorator';
     import './WalletCreate.less'
     import {NetworkType} from "nem2-sdk";
     import {MnemonicPassPhrase} from 'nem2-hd-wallets';
@@ -51,7 +51,7 @@
     @Component({
         components: {},
     })
-    export default class WalletCreate extends Vue {
+    export default class WalletCreate extends Vue{
         formItem = {
             currentNetType: '',
             walletName: '',
@@ -60,31 +60,51 @@
         }
         netType = [
             {
-                value: NetworkType.MIJIN_TEST,
-                label: 'MIJIN_TEST'
-            }, {
-                value: NetworkType.MAIN_NET,
-                label: 'MAIN_NET'
-            }, {
-                value: NetworkType.TEST_NET,
-                label: 'TEST_NET'
-            }, {
-                value: NetworkType.MIJIN,
-                label: 'MIJIN'
+                value:NetworkType.MIJIN_TEST,
+                label:'MIJIN_TEST'
+            },{
+                value:NetworkType.MAIN_NET,
+                label:'MAIN_NET'
+            },{
+                value:NetworkType.TEST_NET,
+                label:'TEST_NET'
+            },{
+                value:NetworkType.MIJIN,
+                label:'MIJIN'
             },
         ]
 
-        createMnemonic() {
-            const mnemonic = MnemonicPassPhrase.createRandom('english', 128);
-            this.$store.commit('SET_MNEMONIC', mnemonic.plain)
+        checkInput () {
+            if (!this.formItem.currentNetType || this.formItem.currentNetType == '') {
+                this.$Message.error(this.$t('walletCreateNetTypeRemind'));
+                return false
+            }
+            if (!this.formItem.walletName || this.formItem.walletName == '') {
+                this.$Message.error(this.$t('walletCreateWalletNameRemind'));
+                return false
+            }
+            if (!this.formItem.password || this.formItem.password == '') {
+                this.$Message.error(this.$t('walletCreatePasswordRemind'));
+                return false
+            }
+            if (this.formItem.password !== this.formItem.checkPW) {
+                this.$Message.error(this.$t('walletCreateCheckPWRemind'));
+                return false
+            }
+            return true
         }
 
-        createWallet() {
+        createMnemonic () {
+            const mnemonic = MnemonicPassPhrase.createRandom('english', 128);
+            this.$store.commit('SET_MNEMONIC',mnemonic.plain)
+        }
+
+        createWallet () {
+            if(!this.checkInput()) return
             this.createMnemonic()
             this.$emit('isCreated', this.formItem)
         }
-
-        toBack() {
+        toBack () {
             this.$emit('closeCreate')
         }
     }

@@ -6,7 +6,7 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import {localSave, localRead} from '@/utils/util.js'
+    import {localRead} from './utils/util'
 
     @Component
     export default class App extends Vue {

@@ -366,7 +366,10 @@ export const en_US ={
   please_set_your_wallet_password: 'Please set your wallet password',
   please_enter_your_password_again: 'Please enter your password again',
   repeat_the_password: 'Repeat the password',
-
+  walletCreateNetTypeRemind:'Please select a wallet network! ',
+  walletCreateWalletNameRemind:'Wallet name input error! ',
+  walletCreatePasswordRemind:'Password input error! ',
+  walletCreateCheckPWRemind:'Two passwords are inconsistent! ',
   //Backup mnemonic  created
   Backup_mnemonics_can_effectively_back_up_and_restore_your_account: 'Backup mnemonics can effectively back up and restore your account',
   tips: 'tips',
@@ -420,7 +423,9 @@ export const en_US ={
   Wallet_management: 'Wallet management',
   Public_account: 'Public account',
   delete: 'delete',
-  Delete_wallet_successfully: 'Delete wallet successfully'
-
+  Delete_wallet_successfully: 'Delete wallet successfully',
+  createLockPWRemind:'Password setting error',
+  createLockCheckPWRemind:'Two passwords are inconsistent',
+  createLockPWTxtRemind:'Password hint error',
 
 }
