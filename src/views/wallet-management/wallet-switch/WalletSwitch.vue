@@ -201,6 +201,7 @@
         created() {
             this.$store.commit('SET_WALLET', this.getWalletList[0])
             this.initWalletList()
+            console.log(this.$store.state.account.wallet)
         }
     }
 </script>

@@ -66,7 +66,15 @@
         toWalletDetails () {
             const wallet = this.$store.state.account.wallet;
             let list:any[] = this.$store.state.app.walletList;
-            list.unshift(wallet)
+            let bl = false
+            list.map((item,index)=>{
+                if(item.address === wallet.address){
+                    item = wallet
+                    bl = true
+                }
+                return item
+            })
+            if(!bl)  list.unshift(wallet)
             this.walletList = list
             this.$store.commit('SET_WALLET_LIST',list)
             this.$router.replace({path:'/monitorPanel'})

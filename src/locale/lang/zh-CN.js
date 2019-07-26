@@ -401,5 +401,6 @@ export var zh_CN = {
     createLockPWRemind: '密码设置错误',
     createLockCheckPWRemind: '两次密码不一致',
     createLockPWTxtRemind: '设置密码提示错误',
+    no_mnemonic: '暂无助记词',
 };
 //# sourceMappingURL=zh-CN.js.map

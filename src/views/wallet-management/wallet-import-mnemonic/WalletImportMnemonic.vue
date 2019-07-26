@@ -63,33 +63,32 @@
     import {NetworkType, Account, Crypto} from "nem2-sdk"
     import {localRead, localSave} from '../../../utils/util'
     import {walletInterface} from "../../../interface/sdkWallet"
+    import {accountInterface} from "../../../interface/sdkAccount";
 
 
     @Component
     export default class WalletImportMnemonic extends Vue {
         form = {
             mnemonic: '',
-            networkType: '',
+            networkType: 0,
             walletName: '',
             password: '',
             checkPW: '',
         }
         NetworkTypeList = [
             {
-                value: 'MIJIN_TEST',
-                label: 'MIJIN_TEST'
+                value:NetworkType.MIJIN_TEST,
+                label:'MIJIN_TEST'
+            },{
+                value:NetworkType.MAIN_NET,
+                label:'MAIN_NET'
+            },{
+                value:NetworkType.TEST_NET,
+                label:'TEST_NET'
+            },{
+                value:NetworkType.MIJIN,
+                label:'MIJIN'
             },
-            {
-                value: 'TEST_NET',
-                label: 'TEST_NET'
-            }, {
-                value: 'MAIN_NET',
-                label: 'MAIN_NET'
-            },
-            {
-                value: 'MIJIN',
-                label: 'MIJIN'
-            }
         ]
         account = {}
 
@@ -121,7 +120,7 @@
 
         checkMnemonic() {
             try {
-                if (!this.form.mnemonic || this.form.mnemonic === '') {
+                if (!this.form.mnemonic || this.form.mnemonic === '' || this.form.mnemonic.split(' ').length != 12) {
                     this.$Message.error(this.$t('Mnemonic_input_error'));
                     return false
                 }
@@ -170,7 +169,7 @@
         loginWallet(account) {
             const that = this
             const walletName: any = this.form.walletName;
-            const netType: NetworkType = account.address.networkType
+            const netType: NetworkType = this.form.networkType;
             that.setUserDefault(walletName, account, netType)
         }
 
@@ -182,8 +181,8 @@
                 name: name,
                 networkType: netType,
                 privateKey: account.privateKey
-            }).then((Wallet: any) => {
-                const storeWallet = {
+            }).then(async (Wallet: any) => {
+                let storeWallet = {
                     name: Wallet.result.wallet.name,
                     address: Wallet.result.wallet.address['address'],
                     networkType: Wallet.result.wallet.address['networkType'],
