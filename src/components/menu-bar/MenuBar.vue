@@ -13,12 +13,14 @@
       <div @click="accountQuit" class="quit_account pointer"
            v-if=" !$store.state.app.isInLoginPage && $store.state.app.walletList.length !==0">
         <img src="../../assets/images/window/windowAccoutQuit.png" alt="">
-        <span>{{$store.state.account.wallet.name}}</span>
+        <span>Number</span>
       </div>
     </div>
     <div class="top_window">
-      <div class="nem_logo">
-        <img class="absolute" src="../../assets/images/window/windowNemLogo.png" alt="">
+      <div class="nem_logo_wrap">
+        <div class="nem_logo">
+          <img class="absolute" src="../../assets/images/window/windowNemLogo.png" alt="">
+        </div>
       </div>
       <div class="controller">
         <div class="window_controller">

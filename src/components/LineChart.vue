@@ -86,14 +86,33 @@
                     return 7;
                 },
                 showSymbol: false,
-                areaStyle: {},
+                areaStyle: {
+                    normal:{
+                        color:{
+                            type: 'linear',
+                            x: 0,
+                            y: 1,
+                            x2: 0,
+                            y2: 0,
+                            colorStops: [{
+                                offset: 0, color: '#fff' // 0% 处的颜色
+                            }, {
+                                offset: 0.2, color: '#fff' // 20% 处的颜色
+                            }, {
+                                offset: 0.8, color: '#fce8e1' // 80% 处的颜色
+                            }, {
+                                offset: 1, color: '#fce8e1' // 100% 处的颜色
+                            }],
+                        }
+                    }
+                },
                 itemStyle: {
                     normal: {
                         // color: 'transparent',
-                        color: '#20B5AC',
+                        color: '#ED8359',
                         lineStyle: {
-                            color: '#20B5AC',
-                            width: 3
+                            color: '#ED8359',
+                            width: 2
                         },
                         areaStyle: {
                             color: {
@@ -124,8 +143,9 @@
             grid: {
                 x: 40,
                 y: 10,
-                x2: 10,
-                y2: 20
+                x2: 0,
+                y2: 20,
+                right:0
             }
         };
         dataList = []
@@ -212,7 +232,7 @@
   }
 
   .line {
-    width: 854px;
+    width: calc(100% - 60px);
     height: 360px;
     position: absolute;
     top: 50px;

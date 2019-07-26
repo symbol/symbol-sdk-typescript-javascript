@@ -2,13 +2,13 @@
   height: calc(100% - 70px);
 
   .top_network_info {
-    margin: 20px 0;
+    margin: 15px 0;
     height: 480px;
 
     .left_echart {
-      width: 960px;
+      width: 980px;
       height: 480px;
-      padding: 30px;
+      padding: 30px 0;
       background-color: white;
       float: left;
       position: relative;
@@ -17,12 +17,14 @@
         font-size: 16px;
         font-weight: 400;
         color: rgba(34, 34, 34, 1);
+        padding-left: 30px;
       }
 
       .right {
         font-size: 14px;
         font-weight: 400;
         color: rgba(153, 153, 153, 1);
+        padding-right: 30px;
       }
 
       .black {
@@ -34,10 +36,10 @@
 
     .right_net_status {
       float: left;
-      width: 330px;
+      width: 345px;
       height: 480px;
       background-color: white;
-      margin-left: 20px;
+      margin-left: 15px;
       padding: 29px 31px;
 
       .panel_name {
@@ -86,12 +88,12 @@
   }
 
   .bottom_transactions {
-    width: 1310px;
-    height: calc(100% - 500px);
+    width: 1340px;
+    height: calc(100% - 440px);
     background-color: white;
     padding: 24px 31px;
     position: relative;
-
+    overflow: hidden;
 
     .splite_page {
       position: absolute;
@@ -113,10 +115,10 @@
       font-size: 18px;
       font-weight: 400;
       color: rgba(102, 102, 102, 1);
-      padding: 0 0 5px 0;
 
       .page_title {
-        padding: 0 28px 15px 15px;
+        font-size: 15px;
+        padding: 0 28px 5px 15px;
         position: relative;
 
         .transacrion_num {
@@ -144,7 +146,7 @@
       }
 
       .selected {
-        font-size: 20px;
+        font-size: 15px;
         position: relative;
         font-weight: bold;
         color: rgba(32, 181, 172, 1);
@@ -155,7 +157,7 @@
         display: block;
         content: '';
         width: 32px;
-        height: 4px;
+        height: 3px;
         background: rgba(32, 181, 172, 1);
         bottom: 0;
         left: -16px;
@@ -165,7 +167,8 @@
 
     .all_transaction {
       position: relative;
-      height: calc(100% - 100px);
+      height: calc(100% - 50px);
+      margin-top: 20px;
     }
 
     span {
@@ -177,35 +180,40 @@
     }
 
     .table_head {
+      display: none;
+      padding: 2px 0 10px;
       span {
         color: #999999;
-        padding: 15px 0;
       }
 
       .account {
-        padding-left: 69px;
+        //padding-left: 69px;
+        text-align: center;
       }
     }
 
     .account {
-      width: 626px;
+      width: 526px;
     }
 
     .transfer_type {
-      width: 100px;
+      width: 200px;
+      text-align: center;
     }
 
     .amount {
-      width: 214px;
+      width: 254px;
+      text-align: center;
+      padding-left: 0 !important;
     }
 
     .date {
-      width: 245px;
+      width: 205px;
+      padding-left: 50px;
     }
 
     .unconfirmed_transactions,
     .confirmed_transactions {
-      margin-top: 60px;
       height: 100%;
       position: absolute;
       left: 0;
@@ -219,7 +227,6 @@
 
         .table_item {
           width: 100%;
-          height: 60px;
           background: rgba(247, 251, 252, 1);
           border-radius: 4px;
           margin-bottom: 5px;
@@ -234,7 +241,7 @@
             width: 20px;
             height: 20px;
             left: 30px;
-            margin-top: 20px;
+            margin-top: 15px;
           }
 
           .expand_mosaic_info {
@@ -250,11 +257,11 @@
             font-size: 14px;
             font-weight: 400;
             color: rgba(34, 34, 34, 1);
-            padding: 20px 0 22px 0;
+            padding: 15px 0 15px;
           }
 
           .account {
-            padding-left: 69px;
+            padding-left: 70px ;
           }
         }
       }

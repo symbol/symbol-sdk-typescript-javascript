@@ -18,17 +18,18 @@
         </div>
       </div>
       <div class="bottom_account_info radius" ref="bottomAccountInfo">
-        <div v-if="isShowAccountInfo">
+        <div v-if="isShowAccountInfo" class="mosaicListWrap">
           <Spin v-if="isLoadingMosaic" size="large" fix class="absolute"></Spin>
           <Tabs size="small" v-if="!isShowManageMosaicIcon">
             <TabPane :label="$t('mosaic')" name="name1">
               <img @click="manageMosaicList()" class="asset_list pointer"
                    src="../../../assets/images/monitor/monitorAssetList.png">
               <!--        all       -->
-              <div>
-                <div class="mosaic_data" v-if="value.show" v-for="(value,key,index) in mosaicMap">
+              <div class="mosaicList">
+                <div class="mosaic_data" v-if="value.show" v-for="(value,key,index) in mosaicMap" :key="index">
                 <span class="img_container">
-                    <img src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
+                    <img v-if="index == 0" src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
+                    <img v-else src="../../../assets/images/monitor/mosaicDefault.png" alt="">
                 </span>
                   <span class="mosaic_name">{{value.name}}</span>
                   <span class="mosaic_value">
@@ -66,7 +67,7 @@
           </Tabs>
 
           <!--        sevral      -->
-          <div v-if="isShowManageMosaicIcon">
+          <div v-if="isShowManageMosaicIcon" class="searchMosaic">
             <div class="asset_setting_tit pointer" @click="showMosaicMap">
               <img src="../../../assets/images/monitor/monitorLeftArrow.png" alt="">
               <span>{{$t('asset_setting')}}</span>
@@ -77,16 +78,19 @@
               <span class="search pointer" @click="searchMosaic">{{$t('search')}}</span>
 
             </div>
-            <div class="mosaic_data" v-for="(value,key,index) in mosaicMap">
+            <div class="mosaicList">
+              <div class="mosaic_data" v-for="(value,key,index) in mosaicMap" :key="index">
                 <span class="namege_img">
                     <img @click="toggleShowMosaic(key,value)" class="small_icon pointer"
                          :src="value.show?monitorSeleted:monitorUnselected">
-                    <img src="../../../assets/images/monitor/monitorMosaicIcon.png">
+                    <img v-if="index == 0" class="mosaicIcon" src="../../../assets/images/monitor/monitorMosaicIcon.png">
+                    <img v-else class="mosaicIcon" src="../../../assets/images/monitor/mosaicDefault.png">
                 </span>
-              <span class="mosaic_name">{{value.name}}</span>
-              <span class="mosaic_value">
+                <span class="mosaic_name">{{value.name}}</span>
+                <span class="mosaic_value">
                   <div>{{value.amount}}</div>
                 </span>
+              </div>
             </div>
           </div>
         </div>
@@ -300,6 +304,7 @@
 
         saveMosaicRecordInLocal() {
             // save address
+            this.isLoadingMosaic = false
             localSave(this.accountAddress, JSON.stringify(this.localMosaicMap))
         }
 
@@ -438,7 +443,6 @@
             let mosaicMap = localRead(this.accountAddress)
             if (mosaicMap) {
                 mosaicMap = JSON.parse(mosaicMap)
-
                 // refresh mosaic amount
                 const that = this
                 await accountInterface.getAccountInfo({

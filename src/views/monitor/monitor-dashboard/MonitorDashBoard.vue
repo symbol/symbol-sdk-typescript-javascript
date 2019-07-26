@@ -88,7 +88,7 @@ import {NetworkType} from "nem2-sdk";
         <div class="unconfirmed_transactions" v-if="!showConfirmedTransactions">
           <Spin v-if="isLoadingUnconfirmedTx" size="large" fix class="absolute"></Spin>
           <div class="table_body hide_scroll" ref="unconfirmedTableBody">
-            <div class="table_item pointer" @click="showDialog(u)" v-for="u in unconfirmedTransactionList">
+            <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in unconfirmedTransactionList" :key="index">
               <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
               <span class="account">{{u.oppositeAddress}}</span>
               <span class="transfer_type">{{u.isReceipt ? $t('gathering'):$t('payment')}}</span>

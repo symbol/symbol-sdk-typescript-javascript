@@ -32,7 +32,7 @@
     </Modal>
 
     <div class="left_container radius">
-      <div>{{assetAmount}}XEM</div>
+      <div class="amount">{{assetAmount}}XEM</div>
       <img id="qrImg" :src="QRCode" alt="">
       <div class="address_text" id="address_text">
         {{accountAddress}}
