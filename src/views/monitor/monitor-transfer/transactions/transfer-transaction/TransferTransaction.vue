@@ -45,7 +45,7 @@
               <span class="uint">XEM</span>
             </span>
     </div>
-    <span class="xem_tips">{{$t('the_default_is')}}：0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
+    <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
     <div @click="checkInfo" class="send_button pointer">
       {{$t('send')}}
     </div>

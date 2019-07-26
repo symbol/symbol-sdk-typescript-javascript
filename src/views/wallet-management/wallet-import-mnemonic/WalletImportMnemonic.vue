@@ -176,6 +176,8 @@
 
         setUserDefault(name, account, netType) {
             const that = this
+            const walletList = this.$store.state.app.walletList
+            const style = 'walletItem_bg_' + walletList.length % 3
             walletInterface.getWallet({
                 name: name,
                 networkType: netType,
@@ -192,7 +194,8 @@
                     wallet: Wallet.result.wallet,
                     password: Wallet.result.password,
                     mnemonic: this.form.mnemonic,
-                    balance: 0
+                    balance: 0,
+                    style
                 }
                 that.$store.commit('SET_WALLET', storeWallet)
                 const encryptObj = Crypto.encrypt(Wallet.result.privateKey, that.form['password'])

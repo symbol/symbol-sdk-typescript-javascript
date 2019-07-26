@@ -98,14 +98,14 @@
         </TabPane>
       </Tabs>
     </div>
-    <div class="mosaicList scroll">
+    <div class="mosaicList ">
       <div class="mosaicListHeader clear">
         <div class="headerTit left">{{$t('mosaic_list')}}</div>
 <!--        <div class="listPages right">-->
 <!--          <Page :total="100" size="small" show-total/>-->
 <!--        </div>-->
       </div>
-      <div class="mosaicListBody">
+      <div class="mosaicListBody scroll">
         <div class="listTit">
           <Row>
             <Col span="1">&nbsp;</Col>

@@ -39,13 +39,13 @@ import {NetworkType} from "nem2-sdk";
             {{$t('This_password_is_a_private_key_password_and_will_be_used_when_you_pay')}}
           </div>
           <div class="gray_content">
-            <input class="absolute" v-model="form.password" type="text" :placeholder="$t('please_set_your_password')">
+            <input class="absolute" v-model="form.password" type="password" :placeholder="$t('please_set_your_password')">
           </div>
         </li>
         <li>
           {{$t('confirm_password')}}
           <div class="gray_content">
-            <input class="absolute" v-model="form.checkPW" type="text"
+            <input class="absolute" v-model="form.checkPW" type="password"
                    :placeholder="$t('please_enter_your_wallet_password_again')">
           </div>
         </li>
@@ -146,6 +146,8 @@ import {NetworkType} from "nem2-sdk";
 
         async setUserDefault(name, account, netType) {
             const that = this
+            const walletList = this.$store.state.app.walletList
+            const style = 'walletItem_bg_' + walletList.length % 3
             await walletInterface.getWallet({
                 name: name,
                 networkType: netType,
@@ -162,7 +164,8 @@ import {NetworkType} from "nem2-sdk";
                     wallet: Wallet.result.wallet,
                     password: Wallet.result.password,
                     mnemonic: '',
-                    balance: 0
+                    balance: 0,
+                    style
                 }
                 that.$store.commit('SET_WALLET', storeWallet)
                 const encryptObj = Crypto.encrypt(Wallet.result.privateKey, that.form['password'])

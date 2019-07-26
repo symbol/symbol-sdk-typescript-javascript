@@ -104,12 +104,12 @@
                 }
                 const enTxt = Crypto.decrypt(saveData)
                 if(enTxt !== new UInt64(u).toHex()){
-                    this.$Message.error('密码输入错误! ');
+                    this.$Message.error(this['$t']('password_error'));
                     return false
                 }
                 return true
             }catch (e) {
-                this.$Message.error('密码输入错误! ');
+                this.$Message.error(this['$t']('password_error'));
                 return false
             }
         }

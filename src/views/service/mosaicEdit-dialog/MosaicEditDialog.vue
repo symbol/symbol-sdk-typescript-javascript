@@ -22,7 +22,7 @@
             <FormItem :label="$t('existing_supply')">
               <p class="mosaicTxt">{{mosaic.delta}}</p>
             </FormItem>
-            <FormItem :label="$t('change_type')">
+            <FormItem class="update_type" :label="$t('change_type')">
               <RadioGroup v-model="mosaic.supplyType">
                 <Radio :label="$t('increase')"></Radio>
                 <Radio :label="$t('cut_back')"></Radio>
