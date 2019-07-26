@@ -105,14 +105,17 @@
                 const enTxt = Crypto.decrypt(saveData)
                 if(enTxt !== new UInt64(u).toHex()){
                     this.$Message.error('密码输入错误! ');
+                    return false
                 }
+                return true
             }catch (e) {
                 this.$Message.error('密码输入错误! ');
+                return false
             }
         }
 
         jumpToDashBoard(){
-            this.checkLock()
+            if(!this.checkLock()) return
             this.$store.state.app.unClick = false
             this.$router.push({
                 name:'dashBoard'

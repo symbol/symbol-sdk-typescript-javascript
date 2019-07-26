@@ -79,7 +79,7 @@ import {NetworkType} from "nem2-sdk";
               <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">
             </div>
-            <div class="no_data" v-if="confirmedTransactionList.length == 0 && isLoadingConfirmedTx">
+            <div class="no_data" v-if="confirmedTransactionList.length == 0">
               {{$t('no_confirmed_transactions')}}
             </div>
           </div>
@@ -206,6 +206,9 @@ import {NetworkType} from "nem2-sdk";
         confirmedTransactionList = []
         unconfirmedTransactionList = []
 
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
 
         showDialog(transaction) {
             this.isShowDialog = true
@@ -336,9 +339,9 @@ import {NetworkType} from "nem2-sdk";
         }
 
         initData() {
-            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
-            this.accountPublicKey = this.$store.state.account.accountPublicKey
-            this.accountAddress = this.$store.state.account.accountAddress
+            this.accountPrivateKey = this.getWallet.privateKey
+            this.accountPublicKey = this.getWallet.publicKey
+            this.accountAddress = this.getWallet.address
             this.node = this.$store.state.account.node
             this.currentXem = this.$store.state.account.currentXem
         }

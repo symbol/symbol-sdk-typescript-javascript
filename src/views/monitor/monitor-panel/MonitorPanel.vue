@@ -83,8 +83,7 @@
                 <span class="namege_img">
                     <img @click="toggleShowMosaic(key,value)" class="small_icon pointer"
                          :src="value.show?monitorSeleted:monitorUnselected">
-                    <img v-if="index == 0" class="mosaicIcon"
-                         src="../../../assets/images/monitor/monitorMosaicIcon.png">
+                    <img v-if="index == 0" class="mosaicIcon" src="../../../assets/images/monitor/monitorMosaicIcon.png">
                     <img v-else class="mosaicIcon" src="../../../assets/images/monitor/mosaicDefault.png">
                 </span>
                 <span class="mosaic_name">{{value.name}}</span>
@@ -95,7 +94,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
     <div class="monitor_panel_right_container">
@@ -184,6 +182,10 @@
         isShowAccountAlias = false
         mosaic: string;
 
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
+
         switchPanel(index) {
             if (this.navigatorList[index].disabled) {
                 return
@@ -256,10 +258,10 @@
         }
 
         initData() {
-            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
-            this.accountPublicKey = this.$store.state.account.accountPublicKey
-            this.accountAddress = this.$store.state.account.accountAddress
-            this.address = this.$store.state.account.accountAddress
+            this.accountPrivateKey = this.getWallet.privateKey
+            this.accountPublicKey = this.getWallet.publicKey
+            this.accountAddress = this.getWallet.address
+            this.address = this.getWallet.address
             this.node = this.$store.state.account.node
             this.currentXem = this.$store.state.account.currentXem
             this.currentXEM2 = this.$store.state.account.currentXEM2
@@ -285,9 +287,10 @@
                         }
                     })
 
+                },()=>{
+                    that.XEMamount = 0
+                    console.log('error getXEMAmount ')
                 })
-            }).catch(() => {
-                console.log('error getXEMAmount ')
             })
         }
 
@@ -319,10 +322,10 @@
             }).then((namespaceResult) => {
                 namespaceResult.result.namespaceList.subscribe((namespaceInfo) => {
                     that.isShowAccountAlias = false
+                },()=>{
+                    console.log('no alias in this account')
+                    that.isShowAccountAlias = false
                 })
-            }).catch(() => {
-                console.log('no alias in this account')
-                that.isShowAccountAlias = false
             })
         }
 
@@ -333,7 +336,7 @@
                 const result = response.data.data[0].open
                 that.currentPrice = result
             }).catch(function (error) {
-                console.log('error ', error);
+                console.log('error ',error);
                 that.getMarketOpenPrice()
             });
         }
@@ -390,10 +393,20 @@
                     that.localMosaicMap = mosaicMap
                     that.mosaicMap = mosaicMap
                     that.isLoadingMosaic = false
+                },()=>{
+                    let defaultMosaic = {
+                        amount: 0,
+                        name: 'nem.xem',
+                        hex: that.currentXEM2,
+                        show: true
+                    }
+                    let mosaicMap = {}
+                    mosaicMap[defaultMosaic.hex] = defaultMosaic
+                    that.localMosaicMap = mosaicMap
+                    that.mosaicMap = mosaicMap
+                    that.isLoadingMosaic = false
+                    console.log('monitor panel error getMosaicList')
                 })
-
-            }).catch(() => {
-                console.log('monitor panel error getMosaicList')
             })
         }
 
@@ -429,7 +442,7 @@
                     }
                 }
                 that.mosaicMap = searchResult
-            }).catch(() => {
+            }).catch(()=>{
                 console.log('monitor paenl searchMosaic error')
             })
         }
@@ -468,20 +481,30 @@
                         that.localMosaicMap = mosaicMap
                         that.mosaicMap = mosaicMap
                         that.saveMosaicRecordInLocal()
+                    },()=>{
+                        let defaultMosaic = {
+                            amount: 0,
+                            name: 'nem.xem',
+                            hex: that.currentXEM2,
+                            show: true
+                        }
+                        let mosaicMap = {}
+                        mosaicMap[defaultMosaic.hex] = defaultMosaic
+                        that.localMosaicMap = mosaicMap
+                        that.mosaicMap = mosaicMap
+                        that.saveMosaicRecordInLocal()
+                        console.log('monitor paenl realLocalStorage error')
                     })
-                }).catch(() => {
-                    console.log('monitor paenl realLocalStorage error')
                 })
             } else {
                 this.getMosaicList()
             }
         }
 
-        setLeftSwitchIcon() {
+        setLeftSwitchIcon(){
             this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
 
         }
-
         created() {
             this.setLeftSwitchIcon()
             this.initLeftNavigator()

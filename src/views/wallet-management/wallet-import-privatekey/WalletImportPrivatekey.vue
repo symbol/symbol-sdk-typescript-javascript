@@ -20,7 +20,7 @@ import {NetworkType} from "nem2-sdk";
         <li>
           {{$t('choose_network')}}
           <div class="gray_content">
-            <Select v-model="networkType" :placeholder="$t('choose_network')">
+            <Select v-model="form.networkType" :placeholder="$t('choose_network')">
               <Option v-for="item in NetworkTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </div>
@@ -28,7 +28,7 @@ import {NetworkType} from "nem2-sdk";
         <li>
           {{$t('set_the_wallet_name')}}
           <div class="gray_content">
-            <input class="absolute" type="text"
+            <input class="absolute" type="text" v-model="form.walletName"
                    :placeholder="$t('set_the_wallet_name')">
           </div>
         </li>
@@ -39,13 +39,13 @@ import {NetworkType} from "nem2-sdk";
             {{$t('This_password_is_a_private_key_password_and_will_be_used_when_you_pay')}}
           </div>
           <div class="gray_content">
-            <input class="absolute" v-model="form.password" type="password" :placeholder="$t('please_set_your_password')">
+            <input class="absolute" v-model="form.password" type="text" :placeholder="$t('please_set_your_password')">
           </div>
         </li>
         <li>
           {{$t('confirm_password')}}
           <div class="gray_content">
-            <input class="absolute" v-model="form.checkPW" type="password"
+            <input class="absolute" v-model="form.checkPW" type="text"
                    :placeholder="$t('please_enter_your_wallet_password_again')">
           </div>
         </li>
@@ -71,6 +71,8 @@ import {NetworkType} from "nem2-sdk";
     export default class WalletImportPrivatekey extends Vue {
         form = {
             privateKey: '',
+            networkType: '',
+            walletName: '',
             password: '',
             checkPW: '',
         }
@@ -94,20 +96,29 @@ import {NetworkType} from "nem2-sdk";
         ]
 
         importWallet() {
-            this.checkImport()
+            if (!this.checkPrivateKey()) return
+            if (!this.checkImport()) return
             this.loginWallet(this.account)
         }
 
         checkImport() {
-            if (!this.checkPrivateKey()) return
+            if (!this.form.networkType || this.form.networkType == '') {
+                this.$Message.error(this.$t('walletCreateNetTypeRemind'));
+                return false
+            }
+            if (!this.form.walletName || this.form.walletName == '') {
+                this.$Message.error(this.$t('walletCreateWalletNameRemind'));
+                return false
+            }
             if (!this.form.password || this.form.password == '') {
                 this.$Message.error(this['$t']('Set_password_input_error'));
-                return
+                return false
             }
             if (this.form.password !== this.form.checkPW) {
                 this.$Message.error(this['$t']('Two_passwords_are_inconsistent'));
-                return
+                return false
             }
+            return true
         }
 
         checkPrivateKey() {
@@ -118,8 +129,10 @@ import {NetworkType} from "nem2-sdk";
                 }
                 const account = Account.createFromPrivateKey(this.form.privateKey, NetworkType.MIJIN_TEST)
                 this.account = account
+                return true
             } catch (e) {
                 this.$Message.error(this['$t']('Mnemonic_input_error'));
+                return false
             }
 
         }

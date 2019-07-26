@@ -69,6 +69,7 @@
             list.unshift(wallet)
             this.walletList = list
             this.$store.commit('SET_WALLET_LIST',list)
+            this.$router.replace({path:'/monitorPanel'})
             this.toMethod = false
         }
 

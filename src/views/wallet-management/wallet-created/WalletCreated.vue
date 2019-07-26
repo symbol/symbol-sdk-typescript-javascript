@@ -26,7 +26,7 @@
       <p class="pageTxt">{{$t('Please_select_each_phrase_to_make_sure_the_mnemonic_is_correct')}}</p>
       <p class="pageRemind">
         {{$t('If_you_have_a_record_to_back_up_your_own_supporting_words_be_sure_to_verify_it_with_the_left_program_to_ensure_that_there_are_no_errors_in_the_auxiliary_words_Once_you_are_mistaken_you_may_never_be_able_to_get_it_back_You_pay_attention_to_and_understand_the_risks_involved_If_you_dont_want_to_back_up_or_verify_now')}}{{$t('click')}}<span
-              class="tails">SKIP</span>
+              class="tails" @click="skipInput(2)"> SKIP</span>
         {{$t('Skip_this_action_but_please_confirm_your_risk_If_you_need_to_back_up_the_mnemonic_again_you_can_find_it_in_the_Wallet_Details_Export_mnemonic')}}
       </p>
       <div class="mnemonicInputDiv">
@@ -231,6 +231,10 @@
             return hexParts.join('');
         }
 
+        skipInput (index) {
+            this.tags = index
+        }
+
         createAccount () {
             const mnemonic = new MnemonicPassPhrase(this.mnemonic.join(' '));
             const bip32Seed = mnemonic.toSeed();
@@ -283,7 +287,7 @@
             } catch (e) {
                 localData = []
             }
-            const saveData = {
+            let saveData = {
                 name: walletName,
                 ciphertext: keyObj.ciphertext,
                 iv: keyObj.iv,
@@ -291,6 +295,7 @@
                 address: address,
                 balance: balance
             }
+            saveData = Object.assign(saveData, this.storeWallet)
             for (let i in localData) {
                 if (localData[i].address === address) {
                     localData[i] = saveData

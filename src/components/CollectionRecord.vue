@@ -89,6 +89,9 @@
         currentPrice = 0
         transactionHash = ''
 
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
 
         searchByasset() {
             // let {transactionHash, accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
@@ -170,9 +173,9 @@
         }
 
         initData() {
-            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
-            this.accountPublicKey = this.$store.state.account.accountPublicKey
-            this.accountAddress = this.$store.state.account.accountAddress
+            this.accountPrivateKey = this.getWallet.privateKey
+            this.accountPublicKey = this.getWallet.publicKey
+            this.accountAddress = this.getWallet.address
             this.node = this.$store.state.account.node
             this.currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
         }

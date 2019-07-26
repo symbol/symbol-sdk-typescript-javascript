@@ -20,7 +20,7 @@
         <div class="stepItem1" v-if="stepIndex == 0">
           <Form :model="wallet">
             <FormItem>
-              <Input v-model="wallet.password" required :placeholder="$t('please_enter_your_wallet_password')"></Input>
+              <Input v-model="wallet.password" type="password" required :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
               <Button type="success" @click="exportMnemonic">{{$t('next')}}
@@ -59,7 +59,7 @@
         </div>
         <div class="stepItem3" v-if="stepIndex == 2">
           <p class="tit">{{$t('please_accurately_copy_the_safety_backup_mnemonic')}}</p>
-          <p class="mnemonicWords">level hello omit donor device vivid maximum rail merit zone alter oven</p>
+          <p class="mnemonicWords">{{mnemonic}}</p>
           <Button type="success" @click="exportMnemonic">{{$t('next')}}
             <Icon type="ios-arrow-round-forward"/>
           </Button>
@@ -67,8 +67,10 @@
         <div class="stepItem4" v-if="stepIndex == 3">
           <p class="tit">
             {{$t('please_click_on_the_mnemonic_in_order_to_confirm_that_you_are_backing_up_correctly')}}</p>
-          <div class="sureMnemonicWords"></div>
-          <p class="mnemonicWords">level hello omit donor device vivid maximum rail merit zone alter oven</p>
+          <div class="sureMnemonicWords" ref="mnemonicWordDiv"></div>
+          <p class="mnemonicWords">
+            <span v-for="(item, index) in mnemonicRandomArr" @click="sureWord(index)" :key="index">{{item}}</span>
+          </p>
           <Button type="success" @click="exportMnemonic">{{$t('next')}}
             <Icon type="ios-arrow-round-forward"/>
           </Button>
@@ -78,7 +80,7 @@
             <img src="@/assets/images/wallet-management/exportSuccess.png">
           </div>
           <p class="backupTxt">{{$t('the_mnemonic_order_is_correct_and_the_backup_is_successful')}}</p>
-          <Button type="success" @click="exportMnemonic">{{$t('complete:')}}</Button>
+          <Button type="success" @click="exportMnemonic">{{$t('complete')}}</Button>
         </div>
       </div>
     </Modal>
@@ -86,6 +88,7 @@
 </template>
 
 <script lang="ts">
+    import {Crypto} from  'nem2-sdk'
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
     import './MnemonicDialog.less';
 
@@ -93,15 +96,21 @@
         components: {},
     })
     export default class mnemonicDialog extends Vue {
+        @Prop()
+        showMnemonicDialog: boolean
+
         stepIndex = 0
         show = false
         wallet = {
             password: '',
             mnemonicWords: ''
         }
+        mnemonic = ''
+        mnemonicRandomArr = []
 
-        @Prop()
-        showMnemonicDialog: boolean
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
 
         mnemonicDialogCancel() {
             this.$emit('closeMnemonicDialog')
@@ -113,7 +122,19 @@
         exportMnemonic() {
             switch (this.stepIndex) {
                 case 0 :
+                    if(!this.checkInput()) return
+                    let saveData = {
+                        ciphertext: this.getWallet.ciphertext,
+                        iv: this.getWallet.iv,
+                        key:this.wallet.password
+                    }
+                    const enTxt = Crypto.decrypt(saveData)
+                    if(enTxt.toString().toUpperCase() !== this.getWallet.privateKey.toUpperCase()){
+                        this.$Message.error('密码输入错误! ');
+                        return false
+                    }
                     this.stepIndex = 1
+                    this.wallet.password = ''
                     break;
                 case 1 :
                     this.stepIndex = 2
@@ -122,6 +143,7 @@
                     this.stepIndex = 3
                     break;
                 case 3 :
+                    if(!this.checkMnemonic()) return
                     this.stepIndex = 4
                     break;
                 case 4 :
@@ -129,10 +151,77 @@
                     break;
             }
         }
+        checkInput () {
+            if (!this.wallet.password || this.wallet.password == '') {
+                this.$Message.error(this.$t('please_set_your_wallet_password'));
+                return false
+            }
+            return true
+        }
+        checkRandomArr (arr,mnemonic) {
+            const randomNum = this.randomNum(mnemonic)
+            if(arr.includes(randomNum)){
+                return this.checkRandomArr(arr,mnemonic)
+            }else {
+                return randomNum
+            }
+        }
+
+        randomNum (mnemonic) {
+            return Math.floor(Math.random()*(mnemonic.length))
+        }
+        mnemonicRandom () {
+            const mnemonic = this.mnemonic.split(' ');
+            let numberArr = [];
+            let randomWord =[];
+            for(let i=0;i<mnemonic.length;i++){
+                const randomNum = this.checkRandomArr(numberArr,mnemonic)
+                numberArr.push(randomNum)
+                randomWord.push(mnemonic[randomNum])
+            }
+            this.mnemonicRandomArr = randomWord
+        }
+
+        sureWord (index) {
+            const word = this.mnemonicRandomArr[index]
+            const wordSpan = document.createElement('span');
+            wordSpan.innerText = word;
+            wordSpan.onclick = () => {
+                this.$refs['mnemonicWordDiv']['removeChild'](wordSpan)
+            }
+            this.$refs['mnemonicWordDiv']['append'](wordSpan)
+        }
+
+        checkMnemonic () {
+            console.log(1)
+            const mnemonicDiv = this.$refs['mnemonicWordDiv'];
+            const mnemonicDivChild = mnemonicDiv['getElementsByTagName']('span');
+            let childWord = []
+            for(let i in mnemonicDivChild){
+                if( typeof mnemonicDivChild[i] !== "object") continue;
+                childWord.push(mnemonicDivChild[i]['innerText'])
+            }
+            console.log(childWord)
+            console.log(this.mnemonic.split(' '))
+            if (JSON.stringify(childWord) != JSON.stringify(this.mnemonic.split(' '))) {
+                if (childWord.length < 1) {
+                    this.$Message.warning(this['$t']('Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct'));
+                } else {
+                    this.$Message.warning(this['$t']('Mnemonic_inconsistency'));
+                }
+                return false
+            }
+            return true
+        }
 
         @Watch('showMnemonicDialog')
         onShowMnemonicDialogChange() {
             this.show = this.showMnemonicDialog
+        }
+
+        created () {
+            this.mnemonic = this.getWallet.mnemonic
+            this.mnemonicRandom()
         }
     }
 </script>

@@ -51,54 +51,58 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import {localRead, localSave} from '../../../utils/util'
-    import {NetworkType} from 'nem2-sdk'
+    import {NetworkType} from  'nem2-sdk'
     import './WalletSwitch.less'
-
     @Component
     export default class WalletSwitchWrap extends Vue {
         netType = [
             {
-                value: NetworkType.MIJIN_TEST,
-                label: 'MIJIN_TEST'
-            }, {
-                value: NetworkType.MAIN_NET,
-                label: 'MAIN_NET'
-            }, {
-                value: NetworkType.TEST_NET,
-                label: 'TEST_NET'
-            }, {
-                value: NetworkType.MIJIN,
-                label: 'MIJIN'
+                value:NetworkType.MIJIN_TEST,
+                label:'MIJIN_TEST'
+            },{
+                value:NetworkType.MAIN_NET,
+                label:'MAIN_NET'
+            },{
+                value:NetworkType.TEST_NET,
+                label:'TEST_NET'
+            },{
+                value:NetworkType.MIJIN,
+                label:'MIJIN'
             },
         ]
         walletList = []
         currentNetType = this.netType[0].value
 
-        get getWalletList() {
+        get getWalletList () {
             return this.$store.state.app.walletList
         }
 
-        chooseWallet(walletIndex) {
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
+
+        chooseWallet (walletIndex) {
 
             let list = this.getWalletList
             const storeWallet = this.walletList[walletIndex]
             list.splice(walletIndex, 1)
             list.unshift(storeWallet)
             this.$store.commit('SET_WALLET', storeWallet)
-            list.map((item, index) => {
-                if (index === 0) {
+            list.map((item,index)=>{
+                if(index === 0){
                     item.active = true
-                } else {
+                }else {
                     item.active = false
                 }
             })
             this.localKey(storeWallet.name, walletIndex, storeWallet.address, storeWallet.networkType, storeWallet.balance)
             this.walletList = list
+            this.$store.commit('SET_WALLET_LIST', list)
         }
 
-        localKey(walletName, index, address, netType, balance = 0) {
+        localKey (walletName, index, address, netType, balance = 0) {
             let localData: any[] = []
             let isExist: boolean = false
             try {
@@ -106,7 +110,7 @@
             } catch (e) {
                 localData = []
             }
-            const saveData = {
+            let saveData = {
                 name: walletName,
                 ciphertext: localData[index].ciphertext,
                 iv: localData[index].iv,
@@ -114,6 +118,8 @@
                 address: address,
                 balance: balance
             }
+            saveData = Object.assign(saveData, this.getWallet)
+            delete saveData['active']
             for (let i in localData) {
                 if (localData[i].address === address) {
                     localData[i] = saveData
@@ -124,17 +130,17 @@
             localSave('wallets', JSON.stringify(localData))
         }
 
-        delWallet(index, current) {
+        delWallet (index, current) {
             let list = this.walletList;
-            list.splice(index, 1)
-            if (list.length < 1) {
+            list.splice(index,1)
+            if(list.length < 1){
                 this.$emit('noHasWallet')
-            } else {
-                if (current) {
+            }else {
+                if(current){
                     this.$store.commit('SET_WALLET', this.walletList[0])
                 }
             }
-            this.$store.commit('SET_WALLET_LIST', list)
+            this.$store.commit('SET_WALLET_LIST',list)
             this.$Notice.success({
                 title: this['$t']('Wallet_management') + '',
                 desc: this['$t']('Delete_wallet_successfully') + '',
@@ -144,8 +150,8 @@
 
         }
 
-        copyObj(obj) {
-            const newObj: any = Object.prototype.toString.call(obj) == '[object Array]' ? [] : {};
+        copyObj (obj) {
+            const newObj:any = Object.prototype.toString.call(obj) == '[object Array]' ? [] : {};
             for (const key in obj) {
                 const value = obj[key];
                 if (value && 'object' == typeof value) {
@@ -158,35 +164,41 @@
             return newObj;
         }
 
-        initWalletList() {
+        initWalletList () {
             const list = this.copyObj(this.getWalletList)
-            list.map((item, index) => {
-                if (index === 0) {
+            list.map((item,index)=>{
+                if(index === 0){
                     item.active = true
-                } else {
+                }else {
                     item.active = false
                 }
             })
-            for (let i in list) {
-                this.$set(this.walletList, i, list[i])
+            for(let i in list){
+                this.$set(this.walletList,i,list[i])
             }
-            if (this.walletList.length > 0) {
+            if(this.walletList.length > 0){
                 this.$emit('hasWallet')
-                this.$store.commit('SET_HAS_WALLET', true)
-            } else {
-                this.$store.commit('SET_HAS_WALLET', false)
+                this.$store.commit('SET_HAS_WALLET',true)
+            }else {
+                this.$store.commit('SET_HAS_WALLET',false)
             }
         }
 
-        toImport() {
+        toImport () {
             this.$emit('toImport')
         }
 
-        toCreate() {
+        toCreate () {
             this.$emit('toCreate')
         }
 
-        created() {
+        @Watch('getWallet')
+        onGetWalletChange(){
+            this.initWalletList()
+        }
+
+        created () {
+            this.$store.commit('SET_WALLET', this.getWalletList[0])
             this.initWalletList()
         }
     }

@@ -233,10 +233,17 @@
       .sureMnemonicWords{
         width: 680px;
         height:80px;
+        word-break: break-word;
         background:#FAFAFA;
         border:1px solid #CCCCCC;
         border-radius:10px;
+        padding: 10px 20px;
         margin: 0 auto 20px;
+        span{
+          margin-right: 10px;
+          margin-bottom: 10px;
+          cursor: pointer;
+        }
       }
       .mnemonicWords{
         font-size:16px;
@@ -245,6 +252,10 @@
         color:#222222;
         line-height:20px;
         cursor: pointer;
+        span{
+          display: inline-block;
+          margin-right: 10px;
+        }
       }
       button{
         display: block;
