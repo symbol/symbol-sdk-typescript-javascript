@@ -169,7 +169,7 @@
 
         loginWallet(account) {
             const that = this
-            const walletName: any = 'wallet';
+            const walletName: any = this.form.walletName;
             const netType: NetworkType = account.address.networkType
             that.setUserDefault(walletName, account, netType)
         }
