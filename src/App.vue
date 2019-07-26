@@ -16,7 +16,8 @@
             const that = this
             for(let i in walletList){
                 walletList[i].iv = walletList[i].iv.data
-                walletList[i].style = 'walletItem_bg_' + (i % 3)
+                let style = 'walletItem_bg_' + String(Number(i) % 3)
+                walletList[i].style = style
                 await that.getMosaicList(walletList[i]).then((data) => {
                     walletList[i] = data
                 })

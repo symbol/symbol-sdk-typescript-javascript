@@ -101,7 +101,7 @@ import {NetworkType} from "nem2-sdk";
         }
 
         checkImport() {
-            if (!this.form.networkType || this.form.networkType == '') {
+            if (this.form.networkType == 0) {
                 this.$Message.error(this.$t('walletCreateNetTypeRemind'));
                 return false
             }
