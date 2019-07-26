@@ -11,26 +11,19 @@
 
     @Component
     export default class App extends Vue {
-        initData() {
-            let walletList = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
-            // for (let i in walletList) {
-            //     walletList[i].iv = walletList[i].iv.data
-            //     walletList[i].style = 'walletItem_bg_2' + i % 3
-            //
-            // }
+        async initData() {
+            let walletList:any = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
             const that = this
-            walletList = walletList.map((item, index) => {
-                item.iv = item.iv.data
-                item.style = 'walletItem_bg_' + index % 3
-                // console.log(item)
-                // await that.getMosaicList(item).then((data) => {
-                //     item = data
-                // })
-                return item
-            })
+            for(let i in walletList){
+                walletList[i].iv = walletList[i].iv.data
+                let style = 'walletItem_bg_' + String(Number(i) % 3)
+                walletList[i].style = style
+                await that.getMosaicList(walletList[i]).then((data) => {
+                    walletList[i] = data
+                })
+            }
             this.$store.state.account.wallet = walletList[0]
             this.$store.state.app.walletList = walletList
-            console.log(walletList)
             this.$store.state.app.isInLoginPage = true
 
             if (this.$store.state.app.walletList.length == 0) {
@@ -45,7 +38,6 @@
         }
 
         async getMosaicList(listItem) {
-            const that = this
             let walletItem = listItem
             let node = this.$store.state.account.node
             let currentXEM2 = this.$store.state.account.currentXEM2
@@ -63,7 +55,6 @@
                         }
                     })
                 }, () => {
-                    // console.log(walletItem,".............")
                     walletItem.balance = 0
                 })
             })

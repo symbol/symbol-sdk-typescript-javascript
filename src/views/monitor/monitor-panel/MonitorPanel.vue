@@ -350,11 +350,17 @@
             }).then(async accountInfoResult => {
                 await accountInfoResult.result.accountInfo.subscribe((accountInfo) => {
                     let mosaicList = accountInfo.mosaics
+                    let getWallet = this.getWallet
+                    let walletList = this.$store.state.app.walletList
                     mosaicList = mosaicList.map((item) => {
                         item.hex = item.id.toHex()
                         if (item.id.toHex() == that.currentXEM2 || item.id.toHex() == that.currentXEM1) {
                             item.name = that.$store.state.account.currentXem
                             item.amount = item.amount.compact() / 1000000
+                            getWallet.balance = item.amount
+                            this.$store.state.account.wallet = getWallet
+                            walletList[0] = getWallet
+                            this.$store.state.app.walletList = walletList
                         } else {
                             item.name = item.id.toHex()
                             item.amount = item.amount.compact()

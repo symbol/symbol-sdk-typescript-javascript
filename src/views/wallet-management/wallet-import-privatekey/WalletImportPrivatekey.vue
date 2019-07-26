@@ -65,13 +65,14 @@ import {NetworkType} from "nem2-sdk";
     import {Account, NetworkType, Crypto} from "nem2-sdk"
     import {localRead, localSave} from '../../../utils/util'
     import {walletInterface} from "../../../interface/sdkWallet"
+    import {accountInterface} from "../../../interface/sdkAccount";
     // import "../wallet-import-privatekey/WalletImportPrivatekey.less"
 
     @Component
     export default class WalletImportPrivatekey extends Vue {
         form = {
             privateKey: '',
-            networkType: '',
+            networkType: 0,
             walletName: '',
             password: '',
             checkPW: '',
@@ -79,20 +80,18 @@ import {NetworkType} from "nem2-sdk";
         account = {}
         NetworkTypeList = [
             {
-                value: 'MIJIN_TEST',
-                label: 'MIJIN_TEST'
+                value:NetworkType.MIJIN_TEST,
+                label:'MIJIN_TEST'
+            },{
+                value:NetworkType.MAIN_NET,
+                label:'MAIN_NET'
+            },{
+                value:NetworkType.TEST_NET,
+                label:'TEST_NET'
+            },{
+                value:NetworkType.MIJIN,
+                label:'MIJIN'
             },
-            {
-                value: 'TEST_NET',
-                label: 'TEST_NET'
-            }, {
-                value: 'MAIN_NET',
-                label: 'MAIN_NET'
-            },
-            {
-                value: 'MIJIN',
-                label: 'MIJIN'
-            }
         ]
 
         importWallet() {
@@ -102,7 +101,7 @@ import {NetworkType} from "nem2-sdk";
         }
 
         checkImport() {
-            if (!this.form.networkType || this.form.networkType == '') {
+            if (this.form.networkType == 0) {
                 this.$Message.error(this.$t('walletCreateNetTypeRemind'));
                 return false
             }
@@ -140,7 +139,7 @@ import {NetworkType} from "nem2-sdk";
         async loginWallet(account) {
             const that = this
             const walletName: any = this.form.walletName;
-            const netType: NetworkType = account.address.networkType
+            const netType: NetworkType = this.form.networkType;
             await that.setUserDefault(walletName, account, netType)
         }
 
@@ -152,8 +151,8 @@ import {NetworkType} from "nem2-sdk";
                 name: name,
                 networkType: netType,
                 privateKey: account.privateKey
-            }).then((Wallet: any) => {
-                const storeWallet = {
+            }).then(async (Wallet: any) => {
+                let storeWallet = {
                     name: Wallet.result.wallet.name,
                     address: Wallet.result.wallet.address['address'],
                     networkType: Wallet.result.wallet.address['networkType'],
