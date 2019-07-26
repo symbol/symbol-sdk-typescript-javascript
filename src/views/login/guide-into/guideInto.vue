@@ -2,14 +2,12 @@
   <div class="guideIntoWrap scroll">
     <h1 class="pageTit">{{$t('start_the_NEM_tour')}}</h1>
     <div class="methodDiv">
-      <div class="importDiv">
-        <div class="importIcon">
-          <img src="../../../assets/images/login/guide-into/guideIntoImport.png">
-        </div>
-        <p class="importTit">{{$t('existing_wallet')}}</p>
-        <p class="importTxt">{{$t('import_text')}}</p>
-        <div class="button pointer" @click="jumpToOtherPage('walletImportKeystore')">{{$t('import_wallet')}}</div>
-      </div>
+
+
+
+
+
+
       <div class=" createDiv
         ">
         <div class="createIcon">
@@ -22,6 +20,19 @@
           <div/>
         </div>
       </div>
+
+
+      <div class="importDiv">
+        <div class="importIcon">
+          <img src="../../../assets/images/login/guide-into/guideIntoImport.png">
+        </div>
+        <p class="importTit">{{$t('existing_wallet')}}</p>
+        <p class="importTxt">{{$t('import_text')}}</p>
+        <div class="button pointer" @click="jumpToOtherPage('walletImportKeystore')">{{$t('import_wallet')}}</div>
+      </div>
+
+
+
     </div>
   </div>
 </template>

@@ -6,6 +6,11 @@
 body,
 html {
   height: 100%;
+  //TODO
+  //-webkit-user-select: none;
+  //-moz-user-select: none;
+  //-ms-user-select: none;
+  //user-select: none;
 }
 
 input {
@@ -56,13 +61,14 @@ input::placeholder {
 }
 
 .un_click {
-  cursor:  not-allowed;
+  cursor: not-allowed;
 }
+
 
 .white_wrap {
   width: 100%;
   height: 100%;
-  background:rgba(0,0,0,.3);
+  background: rgba(0, 0, 0, .3);
   opacity: .6;
   position: absolute;
   z-index: 999;
@@ -71,7 +77,9 @@ input::placeholder {
   text-align: center;
   line-height: 500px;
   top: 0;
+  z-index: 99999 !important;
 }
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -106,8 +114,8 @@ textarea {
   border: none;
   outline: none;
   resize: none !important;
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .pointer {

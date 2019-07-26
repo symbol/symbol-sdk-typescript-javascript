@@ -16,6 +16,23 @@ import {NetworkType} from "nem2-sdk";
                       :placeholder="$t('Paste_the_private_key_string_in_the_input_box')"/>
           </div>
         </li>
+
+        <li>
+          {{$t('choose_network')}}
+          <div class="gray_content">
+            <Select v-model="networkType" :placeholder="$t('choose_network')">
+              <Option v-for="item in NetworkTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </div>
+        </li>
+        <li>
+          {{$t('set_the_wallet_name')}}
+          <div class="gray_content">
+            <input class="absolute" type="password"
+                   :placeholder="$t('set_the_wallet_name')">
+          </div>
+        </li>
+
         <li>
           {{$t('set_password')}}
           <div class="tips">
@@ -58,6 +75,23 @@ import {NetworkType} from "nem2-sdk";
             checkPW: '',
         }
         account = {}
+        NetworkTypeList = [
+            {
+                value: 'MIJIN_TEST',
+                label: 'MIJIN_TEST'
+            },
+            {
+                value: 'TEST_NET',
+                label: 'TEST_NET'
+            }, {
+                value: 'MAIN_NET',
+                label: 'MAIN_NET'
+            },
+            {
+                value: 'MIJIN',
+                label: 'MIJIN'
+            }
+        ]
 
         importWallet() {
             this.checkImport()

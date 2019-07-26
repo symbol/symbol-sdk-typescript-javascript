@@ -4,7 +4,7 @@
       <li>
         {{$t('switch_language')}}
         <div class="gray_content">
-          <Select v-model="language">
+          <Select v-model="language" :placeholder="$t('switch_language')">
             <Option v-for="item in languageList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
@@ -42,12 +42,12 @@
         languageList = []
         coinList = [
             {
-                value: 'XEM',
-                label: 'XEM'
+                value: 'CNY',
+                label: 'CNY'
             },
             {
-                value: 'ETC',
-                label: 'ETC'
+                value: 'USDT',
+                label: 'USDT'
             }
         ]
 

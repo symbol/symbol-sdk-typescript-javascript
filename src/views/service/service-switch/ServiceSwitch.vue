@@ -35,6 +35,14 @@
   export default class serviceSwitch extends Vue {
     serviceFnList = [
       {
+        name: 'mosaic',
+        to: '/mosaic',
+        iconDefault: mosaic1Icon,
+        iconActive: mosaic2Icon,
+        introduce: 'NEM_Mosaic_is_a_smart_asset_with_rich_attributes_and_features_To_create_a_mosaic_you_must_provision_the_root_namespace_for_your_account',
+        active: false
+      },
+      {
         name: 'multi_signature',
         to: '/onDev',
         iconDefault: multisign1Icon,
@@ -47,13 +55,6 @@
         iconDefault: namespace1Icon,
         iconActive: namespace2Icon,
         introduce: 'a_namespace_is_a_domain_name_that_stores_mosaics_Each_namespace_is_unique_within_a_blockchain_and_mosaics_can_be_defined_and_authenticated_on_a_multi_level_sub_namespace',
-        active: false
-      }, {
-        name: 'mosaic',
-        to: '/mosaic',
-        iconDefault: mosaic1Icon,
-        iconActive: mosaic2Icon,
-        introduce: 'NEM_Mosaic_is_a_smart_asset_with_rich_attributes_and_features_To_create_a_mosaic_you_must_provision_the_root_namespace_for_your_account',
         active: false
       },
       // {

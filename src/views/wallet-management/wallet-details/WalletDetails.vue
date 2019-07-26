@@ -85,7 +85,7 @@
                 </div>
                 <div class="noData" v-if="aliasList.length<=0">
                     <i><img src="@/assets/images/wallet-management/no_data.png"></i>
-                    <p>{{$t('No_alias_yet')}}</p>
+                    <p>{{$t('not_yet_open')}}</p>
                 </div>
             </div>
         </div>

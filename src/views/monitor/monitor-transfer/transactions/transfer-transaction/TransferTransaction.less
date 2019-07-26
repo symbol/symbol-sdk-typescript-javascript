@@ -8,13 +8,13 @@
     font-size: 16px;
     font-weight: 400;
     color: rgba(102, 102, 102, 1);
-    margin-right: 40px;
+    margin-right: 20px;
   }
 
   .value {
-    width: 580px;
+    width: 560px;
     overflow: hidden;
-    height: 60px;
+    height: 45px;
     border: 1px solid rgba(204, 204, 204, 1);
 
   }
@@ -26,19 +26,23 @@
   }
 
   input {
-    width: 520px;
+    width: 540px;
     border: none;
     outline: none;
-    padding-left: 39px;
+    padding-left: 20px;
     padding-right: 15px;
     font-size: 16px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    line-height: 45px;
+  }
+  input::placeholder{
+    color:rgba(204,204,204,1);
   }
 
   .address {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     height: 60px;
 
     .value {
@@ -59,19 +63,24 @@
   }
 
   .asset {
-  }
+    .type {
+      width: 240px;
+      display: inline-block;
+    }
+    .amount {
+      width: 300px;
+      display: inline-block;
+      margin-left: 20px;
 
-  .amount {
-    margin-top: 40px;
+    }
   }
-
   .remark {
-    margin-top: 40px;
+    margin-top: 20px;
 
     .textarea_container {
       height: 120px;
       justify-content: center;
-      padding: 23px 39px;
+      padding: 23px 20px;
 
       textarea {
         border: none;
@@ -82,7 +91,6 @@
       textarea::placeholder {
         font-size: 14px;
         font-weight: 400;
-        color: rgba(153, 153, 153, 1);
       }
     }
   }
@@ -91,7 +99,7 @@
   textarea::placeholder {
     font-size: 14px;
     font-weight: 400;
-    color: rgba(153, 153, 153, 1);
+    color:rgba(204,204,204,1);
   }
 
   .fee {
@@ -109,7 +117,7 @@
     margin-left: 115px;
     display: inline-block;
     padding-top: 20px;
-    color: rgba(246, 92, 92, 1);
+    color:rgba(153,153,153,1);
   }
 
   .send_button {

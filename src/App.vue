@@ -13,6 +13,11 @@
         initData() {
             this.$store.state.app.walletList = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
             this.$store.state.app.isInLoginPage = true
+                    //   this.$router.push({
+                    //     name: 'servicePanel'
+                    // })
+
+
             if(this.$store.state.app.walletList.length == 0){
                 this.$router.push({
                     name: 'login'

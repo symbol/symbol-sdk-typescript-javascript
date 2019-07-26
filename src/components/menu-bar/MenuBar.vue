@@ -30,7 +30,7 @@
         </div>
         <div class="app_controller clear">
           <div :class="[isNodeHealthy?'point_healthy':'point_unhealthy']">
-            <Poptip placement="bottom">
+            <Poptip placement="bottom-end">
               <i class="pointer point" @click="toggleNodeList"></i>
               <div slot="title" class="title">{{$t('current_point')}}：{{$store.state.account.node}}</div>
               <div slot="content">

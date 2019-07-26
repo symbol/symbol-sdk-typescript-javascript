@@ -34,18 +34,19 @@
                   <Checkbox v-model="formItem.supplyMutable">{{$t('variable_upply')}}</Checkbox>
                 </FormItem>
               </Col>
-              <Col span="14">
+              <Col span="14" class="longer_content">
                 <h6>{{$t('other_information')}}</h6>
                 <FormItem :label="$t('duration')">
                   <Input v-model="formItem.duration" required
                          :placeholder="$t('enter_the_number_of_blocks_integer')"></Input>
                   <p class="remindTxt">{{$t('enter_the_number_of_blocks')}}</p>
-                  <p class="tails">{{$t('validity_period')}}：{{durationIntoDate}}</p>
+<!--                  <p class="tails">{{$t('validity_period')}}：{{durationIntoDate}}</p>-->
+                  <p class="tails">{{durationIntoDate}}</p>
                 </FormItem>
                 <FormItem :label="$t('fee')">
                   <Input v-model="formItem.fee" required placeholder="0.05"></Input>
                   <p class="remindTxt">
-                    {{$t('the_default_is')}}：0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</p>
+                  {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</p>
                   <p class="tails">XEM</p>
                 </FormItem>
               </Col>

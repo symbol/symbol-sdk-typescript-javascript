@@ -37,11 +37,11 @@
         </div>
 
         <div class="comment">
-          <span class="comment_title"><span class="comment_title_text">评论 </span>({{totalComment}})</span>
+          <span class="comment_title"><span class="comment_title_text">{{$t('comment')}}  </span> ({{totalComment}})</span>
 
           <div class="input_container">
             <textarea v-model="commentContent" name="" id=""></textarea>
-            <span class="textarea_text">{{$t('remaining')}}：{{remainingWords}}{{$t('word')}}</span>
+            <span class="textarea_text">{{$t('remaining')}}：{{remainingWords}} {{$t('word')}}</span>
           </div>
 
           <div @click="sendComment" class="send_comment pointer">

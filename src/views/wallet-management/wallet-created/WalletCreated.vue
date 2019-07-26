@@ -66,6 +66,7 @@
         </Row>
       </div>
       <div class="btns">
+
         <Button class="next" type="success" @click="toWalletPage()">{{$t('complete')}}</Button>
       </div>
     </div>

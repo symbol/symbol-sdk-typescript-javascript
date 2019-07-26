@@ -31,8 +31,12 @@
           </FormItem>
           <FormItem>
             <div class="clear">
-              <Button class="prev left" type="default" @click="toBack">{{$t('back')}}</Button>
-              <Button class="next right" type="success" @click="createWallet">{{$t('next')}}</Button>
+<!--              <Button class="prev left" type="default" @click="toBack">{{$t('back')}}/....</Button>-->
+<!--              <Button class="next right" type="success" @click="createWallet">{{$t('next')}}</Button>-->
+
+
+              <Button  class="prev" type="default" @click="toBack">{{$t('back')}}</Button>
+              <Button  class="right" type="success" @click="createWallet">{{$t('next')}}</Button>
             </div>
           </FormItem>
         </Form>

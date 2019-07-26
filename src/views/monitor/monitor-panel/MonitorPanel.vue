@@ -21,7 +21,7 @@
         <div v-if="isShowAccountInfo">
           <Spin v-if="isLoadingMosaic" size="large" fix class="absolute"></Spin>
           <Tabs size="small" v-if="!isShowManageMosaicIcon">
-            <TabPane :label="$t('mosaic')" name="name1">
+            <TabPane :label="$t('assets')" name="name1">
               <img @click="manageMosaicList()" class="asset_list pointer"
                    src="../../../assets/images/monitor/monitorAssetList.png">
               <!--        all       -->
