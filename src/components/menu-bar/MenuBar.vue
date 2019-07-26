@@ -25,9 +25,9 @@
       <div class="controller">
         <div class="window_controller">
           <div>
-            <!--            <span class="pointer" @click="minWindow"></span>-->
-            <!--            <span class="pointer" @click="maxWindow"></span>-->
-            <!--            <span class="pointer" @click="closeWindow"></span>-->
+                        <span class="pointer" @click="minWindow"></span>
+                        <span class="pointer" @click="maxWindow"></span>
+                        <span class="pointer" @click="closeWindow"></span>
           </div>
         </div>
         <div class="app_controller clear">
