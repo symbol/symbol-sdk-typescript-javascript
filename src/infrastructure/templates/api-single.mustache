@@ -219,12 +219,9 @@ export class {{classname}} {
                     body = ObjectSerializer.deserialize(body, "{{{returnType}}}");
                     {{/returnType}}
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve(body);
+                        resolve({ response, body });
                     } else {
-                        reject({
-                            statusCode: response.statusCode,
-                            statusMessage: response.statusMessage
-                        });
+                        reject({ response, body });
                     }
                 }
             });
