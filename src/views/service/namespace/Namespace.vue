@@ -1,13 +1,13 @@
 <template>
   <div class="namespaceWrap clear">
-    <div class="white_wrap">{{$t('not_yet_open')}}</div>
+    <!--    <div class="white_wrap">{{$t('not_yet_open')}}</div>-->
     <div class="left createDiv">
       <Tabs type="card" :animated="false" :value="currentTab">
         <TabPane :label="$t('ordinary_account')" name="ordinary">
           <hr>
           <Form :model="formItem">
             <FormItem :label="$t('parent_namespace')">
-              <Select v-model="formItem.rootName" required>
+              <Select v-model="formItem.rootName" required placeholder="">
                 <Option :value="item.value" v-for="(item,index) in rootNameList" :key="index">{{item.label}}</Option>
               </Select>
               <Input v-model="formItem.rootName" style="visibility: hidden;width:0;height: 0;overflow: hidden" required
@@ -17,13 +17,15 @@
               <Input v-model="formItem.subName" required :placeholder="$t('input_space_name')"></Input>
             </FormItem>
             <FormItem :label="$t('duration')">
-              <Input v-model="formItem.duration" required :placeholder="$t('enter_the_number_of_blocks_integer')"></Input>
+              <Input v-model="formItem.duration" required
+                     :placeholder="$t('enter_the_number_of_blocks_integer')"></Input>
               <p class="remindTxt">{{$t('the_duration_is_calculated_in_blocks_one_block_is_12_seconds')}}</p>
               <p class="tails">{{$t('validity_period')}}：0{{$t('time_day')}}</p>
             </FormItem>
             <FormItem :label="$t('fe')">
               <Input v-model="formItem.fee" required placeholder="0.05"></Input>
-              <p class="remindTxt">{{$t('the_default_is')}}：0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</p>
+              <p class="remindTxt">
+                {{$t('the_default_is')}}：0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</p>
               <p class="tails">XEM</p>
             </FormItem>
             <FormItem>
@@ -31,34 +33,34 @@
             </FormItem>
           </Form>
         </TabPane>
-        <TabPane :label="$t('multi_sign_account')" name="multiple">
-          <hr>
-          <Form :model="formItem">
-            <FormItem :label="$t('parent_namespace')">
-              <Select v-model="formItem.rootName" required>
-                <Option :value="item.value" v-for="(item,index) in rootNameList" :key="index">{{item.label}}</Option>
-              </Select>
-              <Input v-model="formItem.rootName" style="visibility: hidden;width:0;height: 0;overflow: hidden" required
-                     :placeholder="$t('new_root_namespace')"></Input>
-            </FormItem>
-            <FormItem :label="$t('subspace')">
-              <Input v-model="formItem.subName" required :placeholder="$t('input_space_name')"></Input>
-            </FormItem>
-            <FormItem :label="$t('duration')">
-              <Input v-model="formItem.duration" required :placeholder="$t('enter_the_number_of_blocks_integer')"></Input>
-              <p class="remindTxt">{{$t('the_duration_is_calculated_in_blocks_one_block_is_12_seconds')}}</p>
-              <p class="tails">{{$t('validity_period')}}：0{{$t('time_day')}}</p>
-            </FormItem>
-            <FormItem :label="$t('fee')">
-              <Input v-model="formItem.fee" type="number" required placeholder="0.05"></Input>
-              <p class="remindTxt">{{$t('the_default_is')}}：0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</p>
-              <p class="tails">XEM</p>
-            </FormItem>
-            <FormItem>
-              <Button type="success" @click="createNamespace">{{$t('create')}}</Button>
-            </FormItem>
-          </Form>
-        </TabPane>
+        <!--        <TabPane :label="$t('multi_sign_account')" name="multiple">-->
+        <!--          <hr>-->
+        <!--          <Form :model="formItem">-->
+        <!--            <FormItem :label="$t('parent_namespace')">-->
+        <!--              <Select v-model="formItem.rootName" required>-->
+        <!--                <Option :value="item.value" v-for="(item,index) in rootNameList" :key="index">{{item.label}}</Option>-->
+        <!--              </Select>-->
+        <!--              <Input v-model="formItem.rootName" style="visibility: hidden;width:0;height: 0;overflow: hidden" required-->
+        <!--                     :placeholder="$t('new_root_namespace')"></Input>-->
+        <!--            </FormItem>-->
+        <!--            <FormItem :label="$t('subspace')">-->
+        <!--              <Input v-model="formItem.subName" required :placeholder="$t('input_space_name')"></Input>-->
+        <!--            </FormItem>-->
+        <!--            <FormItem :label="$t('duration')">-->
+        <!--              <Input v-model="formItem.duration" required :placeholder="$t('enter_the_number_of_blocks_integer')"></Input>-->
+        <!--              <p class="remindTxt">{{$t('the_duration_is_calculated_in_blocks_one_block_is_12_seconds')}}</p>-->
+        <!--              <p class="tails">{{$t('validity_period')}}：0{{$t('time_day')}}</p>-->
+        <!--            </FormItem>-->
+        <!--            <FormItem :label="$t('fee')">-->
+        <!--              <Input v-model="formItem.fee" type="number" required placeholder="0.05"></Input>-->
+        <!--              <p class="remindTxt">{{$t('the_default_is')}}：0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</p>-->
+        <!--              <p class="tails">XEM</p>-->
+        <!--            </FormItem>-->
+        <!--            <FormItem>-->
+        <!--              <Button type="success" @click="createNamespace">{{$t('create')}}</Button>-->
+        <!--            </FormItem>-->
+        <!--          </Form>-->
+        <!--        </TabPane>-->
       </Tabs>
     </div>
     <div class="left namespaceList">
@@ -118,7 +120,12 @@
             fee: 0.05
         }
         currentTab: number = 0
-        rootNameList: any[] = []
+        rootNameList: any[] = [
+            {
+                label: '',
+                value: ''
+            }
+        ]
         showCheckPWDialog = false
         showNamespaceEditDialog = false
 
@@ -146,7 +153,7 @@
         }
 
         createNamespace() {
-            this.showCheckDialog()
+            // this.showCheckDialog()
         }
 
     }

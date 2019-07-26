@@ -34,6 +34,9 @@
           <div :class="[isNodeHealthy?'point_healthy':'point_unhealthy']">
             <Poptip placement="bottom-end">
               <i class="pointer point" @click="toggleNodeList"></i>
+              <span class="network_type_text">
+                {{ $store.state.account.wallet.networkType == 144 ? 'MIJIN_TEST':''}}
+              </span>
               <div slot="title" class="title">{{$t('current_point')}}：{{$store.state.account.node}}</div>
               <div slot="content">
                 <div @click="selectPoint(index)" class="point_item pointer" v-for="(p,index) in nodetList">

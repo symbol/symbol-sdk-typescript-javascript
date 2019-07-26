@@ -7,7 +7,7 @@
           <div class="walletInfo">
             <p>
               <span class="tit">{{$t('Wallet_type')}}</span>
-              <span class="walletType">{{$t('Public_wallet')}}</span>
+              <span class="walletType">private account</span>
             </p>
             <p>
               <span class="tit">{{$t('Wallet_name')}}</span>

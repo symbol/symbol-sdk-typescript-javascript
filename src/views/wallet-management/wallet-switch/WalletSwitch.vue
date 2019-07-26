@@ -77,7 +77,13 @@
         currentNetType = this.netType[0].value
 
         get getWalletList() {
-            return this.$store.state.app.walletList
+            let walletList = this.$store.state.app.walletList
+            walletList =  walletList.map((item,index)=>{
+                item.style = 'walletItem_bg_' + index % 3
+                return item
+            })
+
+            return walletList
         }
 
         get getWallet() {

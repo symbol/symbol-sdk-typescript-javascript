@@ -124,6 +124,12 @@ var routers = [
                         // @ts-ignore
                         component: function () { return import('@/views/service/multisig/Multisig.vue'); }
                     },
+                    {
+                        path: '/apostille',
+                        name: 'apostille',
+                        // @ts-ignore
+                        component: function () { return import('@/views/service/apostille/Apostille.vue'); }
+                    },
                 ]
             },
             {
