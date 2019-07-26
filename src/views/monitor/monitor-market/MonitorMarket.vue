@@ -361,9 +361,9 @@
                 console.log(error);
             });
 
-            recentTransactionList.sort((a, b) => {
-                return a.ts > b.ts ? -1 : 1
-            })
+            // recentTransactionList.sort((a, b) => {
+            //     return a.ts > b.ts ? -1 : 1
+            // })
             if (recentTransactionList.length == 0) {
                 this.noTransactionRecord = true
             } else {

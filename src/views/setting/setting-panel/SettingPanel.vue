@@ -1,9 +1,9 @@
 <template>
   <div class="setting_wrap">
-    <div class="white_wrap">{{$t('not_yet_open')}}</div>
+<!--    <div class="white_wrap">{{$t('not_yet_open')}}</div>-->
     <div class="setting_container scroll radius">
       <div class="setting_head">
-        {{$t('setting')}}
+<!--        {{$t('setting')}}-->
       </div>
       <div class="seeting_main_container">
         <div class="left_navigator left">

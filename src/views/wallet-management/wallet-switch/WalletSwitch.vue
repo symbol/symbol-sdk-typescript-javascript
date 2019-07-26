@@ -3,18 +3,10 @@
     <div class="walletSwitchHead">
       <p class="tit">{{$t('Wallet_management')}}</p>
     </div>
-    <div class="walletMethod">
-      <Row>
-        <Col span="12">
-          <div class="createBtn" @click="toCreate">{{$t('create')}}</div>
-        </Col>
-        <Col span="12">
-          <div class="importBtn" @click="toImport">{{$t('import')}}</div>
-        </Col>
-      </Row>
-    </div>
+
     <div class="walletList">
-      <div :class="['walletItem', item.active ? 'active':'']" @click="chooseWallet(index)"
+      <div :class="['walletItem', item.active ? 'active':'','walletItem_bg_'+index,'radius']"
+           @click="chooseWallet(index)"
            v-for="(item, index) in walletList" :key="index">
         <Row>
           <Col span="15">
@@ -28,8 +20,8 @@
               <p class="walletTypeTxt">{{$t('Public_account')}}</p>
               <div class="options">
                 <Poptip placement="bottom">
-                  <img src="../../../assets/images/wallet-management/moreActive.png" v-if="item.active">
-                  <img src="../../../assets/images/wallet-management/more.png" v-else>
+                  <img src="../../../assets/images/wallet-management/moreActive.png" >
+<!--                  <img src="../../../assets/images/wallet-management/more.png" v-else>-->
                   <div slot="content">
                     <p class="optionItem" @click.stop="delWallet(index, item.active)">
                       <i><img src="../../../assets/images/wallet-management/delete.png"></i>
@@ -44,49 +36,61 @@
 
       </div>
     </div>
+
+    <div class="walletMethod">
+      <Row>
+        <Col span="12">
+          <div class="createBtn" @click="toCreate">{{$t('create')}}</div>
+        </Col>
+        <Col span="12">
+          <div class="importBtn" @click="toImport">{{$t('import')}}</div>
+        </Col>
+      </Row>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import {localRead, localSave} from '../../../utils/util'
-    import {NetworkType} from  'nem2-sdk'
+    import {NetworkType} from 'nem2-sdk'
     import './WalletSwitch.less'
+
     @Component
     export default class WalletSwitchWrap extends Vue {
         netType = [
             {
-                value:NetworkType.MIJIN_TEST,
-                label:'MIJIN_TEST'
-            },{
-                value:NetworkType.MAIN_NET,
-                label:'MAIN_NET'
-            },{
-                value:NetworkType.TEST_NET,
-                label:'TEST_NET'
-            },{
-                value:NetworkType.MIJIN,
-                label:'MIJIN'
+                value: NetworkType.MIJIN_TEST,
+                label: 'MIJIN_TEST'
+            }, {
+                value: NetworkType.MAIN_NET,
+                label: 'MAIN_NET'
+            }, {
+                value: NetworkType.TEST_NET,
+                label: 'TEST_NET'
+            }, {
+                value: NetworkType.MIJIN,
+                label: 'MIJIN'
             },
         ]
         walletList = []
         currentNetType = this.netType[0].value
 
-        get getWalletList () {
+        get getWalletList() {
             return this.$store.state.app.walletList
         }
 
-        chooseWallet (walletIndex) {
+        chooseWallet(walletIndex) {
 
             let list = this.getWalletList
             const storeWallet = this.walletList[walletIndex]
             list.splice(walletIndex, 1)
             list.unshift(storeWallet)
             this.$store.commit('SET_WALLET', storeWallet)
-            list.map((item,index)=>{
-                if(index === 0){
+            list.map((item, index) => {
+                if (index === 0) {
                     item.active = true
-                }else {
+                } else {
                     item.active = false
                 }
             })
@@ -94,7 +98,7 @@
             this.walletList = list
         }
 
-        localKey (walletName, index, address, netType, balance = 0) {
+        localKey(walletName, index, address, netType, balance = 0) {
             let localData: any[] = []
             let isExist: boolean = false
             try {
@@ -120,17 +124,17 @@
             localSave('wallets', JSON.stringify(localData))
         }
 
-        delWallet (index, current) {
+        delWallet(index, current) {
             let list = this.walletList;
-            list.splice(index,1)
-            if(list.length < 1){
+            list.splice(index, 1)
+            if (list.length < 1) {
                 this.$emit('noHasWallet')
-            }else {
-                if(current){
+            } else {
+                if (current) {
                     this.$store.commit('SET_WALLET', this.walletList[0])
                 }
             }
-            this.$store.commit('SET_WALLET_LIST',list)
+            this.$store.commit('SET_WALLET_LIST', list)
             this.$Notice.success({
                 title: this['$t']('Wallet_management') + '',
                 desc: this['$t']('Delete_wallet_successfully') + '',
@@ -140,8 +144,8 @@
 
         }
 
-        copyObj (obj) {
-            const newObj:any = Object.prototype.toString.call(obj) == '[object Array]' ? [] : {};
+        copyObj(obj) {
+            const newObj: any = Object.prototype.toString.call(obj) == '[object Array]' ? [] : {};
             for (const key in obj) {
                 const value = obj[key];
                 if (value && 'object' == typeof value) {
@@ -154,35 +158,35 @@
             return newObj;
         }
 
-        initWalletList () {
+        initWalletList() {
             const list = this.copyObj(this.getWalletList)
-            list.map((item,index)=>{
-                if(index === 0){
+            list.map((item, index) => {
+                if (index === 0) {
                     item.active = true
-                }else {
+                } else {
                     item.active = false
                 }
             })
-            for(let i in list){
-                this.$set(this.walletList,i,list[i])
+            for (let i in list) {
+                this.$set(this.walletList, i, list[i])
             }
-            if(this.walletList.length > 0){
+            if (this.walletList.length > 0) {
                 this.$emit('hasWallet')
-                this.$store.commit('SET_HAS_WALLET',true)
-            }else {
-                this.$store.commit('SET_HAS_WALLET',false)
+                this.$store.commit('SET_HAS_WALLET', true)
+            } else {
+                this.$store.commit('SET_HAS_WALLET', false)
             }
         }
 
-        toImport () {
+        toImport() {
             this.$emit('toImport')
         }
 
-        toCreate () {
+        toCreate() {
             this.$emit('toCreate')
         }
 
-        created () {
+        created() {
             this.initWalletList()
         }
     }

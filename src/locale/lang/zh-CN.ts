@@ -133,6 +133,7 @@ export const zh_CN = {
 
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: '欢迎回到CATAPULT测试版',
+    welcome_to_the_CATAPULT_beta: '欢迎使用CATAPULT测试版',
     this_is_a_distributed_desktop_wallet_based_on_CATAPULT_I_wish_you_a_pleasant_trip: '这是一个基于CATAPULT的分布式桌面钱包 祝你旅途愉快',
     send_and_receive_XEM_almost_instantly_in_just_1_minute: '只需1分钟的时间，几乎立即发送和接收XEM !',
     provides_an_editable_chain_on_protocol_in_a_multi_signature_account_which_is_the_best_way_to_store_funds_and_achieve_a_common_account: '多重签名账户中提供可编辑的链上协议，是存储资金，实现共有账户的最佳实现方式。',
@@ -186,7 +187,7 @@ export const zh_CN = {
     switch_language: '切换语言',
     currency_setting: '货币设置',
     account_name: '账户名',
-    the_default_is_Number: '默认为Number',
+    the_default_is_Number: '默认为Nember',
     confirm: '确认',
 
 

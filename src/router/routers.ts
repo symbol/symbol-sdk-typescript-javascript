@@ -8,8 +8,7 @@ const routers = [
             {
                 path: '/monitorPanel',
                 name: 'monitorPanel',
-                meta: {
-                },
+                meta: {},
                 // @ts-ignore
                 component: () => import('@/views/monitor/monitor-panel/MonitorPanel.vue'),
                 children: [
@@ -51,8 +50,7 @@ const routers = [
             {
                 path: '/walletPanel',
                 name: 'walletPanel',
-                meta: {
-                },
+                meta: {},
                 // @ts-ignore
                 component: () => import('@/views/wallet-management/wallet-panel/WalletPanel.vue'),
                 children: [
@@ -98,36 +96,10 @@ const routers = [
                 ]
             },
             {
-                path: '/communityPanel',
-                name: 'communityPanel',
-                meta: {
-                },
-                // @ts-ignore
-                component: () => import('@/views/community/community-panel/CommunityPanel.vue'),
-                children: [
-                    {
-                        path: '/communityPanel',
-                        name: 'communityPanel',
-                        // @ts-ignore
-                        component: () => import('@/views/community/information/Information.vue')
-                    }, {
-                        path: '/information',
-                        name: 'information',
-                        // @ts-ignore
-                        component: () => import('@/views/community/information/Information.vue')
-                    }, {
-                        path: '/vote',
-                        name: 'vote',
-                        // @ts-ignore
-                        component: () => import('@/views/community/vote/Vote.vue')
-                    },
-                ]
-            },
-            {
                 path: '/servicePanel',
                 name: 'servicePanel',
                 meta: {
-                //     disabled: true,
+                    //     disabled: true,
                 },
                 // @ts-ignore
                 component: () => import('@/views/service/service-panel/ServicePanel.vue'),
@@ -155,11 +127,37 @@ const routers = [
                     },
                 ]
             },
+
+            {
+                path: '/communityPanel',
+                name: 'communityPanel',
+                meta: {},
+                // @ts-ignore
+                component: () => import('@/views/community/community-panel/CommunityPanel.vue'),
+                children: [
+                    {
+                        path: '/communityPanel',
+                        name: 'communityPanel',
+                        // @ts-ignore
+                        component: () => import('@/views/community/information/Information.vue')
+                    }, {
+                        path: '/information',
+                        name: 'information',
+                        // @ts-ignore
+                        component: () => import('@/views/community/information/Information.vue')
+                    }, {
+                        path: '/vote',
+                        name: 'vote',
+                        // @ts-ignore
+                        component: () => import('@/views/community/vote/Vote.vue')
+                    },
+                ]
+            },
             {
                 path: '/settingPanel',
                 name: 'settingPanel',
                 meta: {
-                //     disabled: true,
+                    //     disabled: true,
                 },
                 // @ts-ignore
                 component: () => import('@/views/setting/setting-panel/SettingPanel.vue'),

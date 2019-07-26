@@ -83,7 +83,8 @@
                 <span class="namege_img">
                     <img @click="toggleShowMosaic(key,value)" class="small_icon pointer"
                          :src="value.show?monitorSeleted:monitorUnselected">
-                    <img v-if="index == 0" class="mosaicIcon" src="../../../assets/images/monitor/monitorMosaicIcon.png">
+                    <img v-if="index == 0" class="mosaicIcon"
+                         src="../../../assets/images/monitor/monitorMosaicIcon.png">
                     <img v-else class="mosaicIcon" src="../../../assets/images/monitor/mosaicDefault.png">
                 </span>
                 <span class="mosaic_name">{{value.name}}</span>
@@ -94,6 +95,7 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
     <div class="monitor_panel_right_container">
@@ -284,7 +286,7 @@
                     })
 
                 })
-            }).catch(()=>{
+            }).catch(() => {
                 console.log('error getXEMAmount ')
             })
         }
@@ -331,7 +333,7 @@
                 const result = response.data.data[0].open
                 that.currentPrice = result
             }).catch(function (error) {
-                console.log('error ',error);
+                console.log('error ', error);
                 that.getMarketOpenPrice()
             });
         }
@@ -390,7 +392,7 @@
                     that.isLoadingMosaic = false
                 })
 
-            }).catch(()=>{
+            }).catch(() => {
                 console.log('monitor panel error getMosaicList')
             })
         }
@@ -427,7 +429,7 @@
                     }
                 }
                 that.mosaicMap = searchResult
-            }).catch(()=>{
+            }).catch(() => {
                 console.log('monitor paenl searchMosaic error')
             })
         }
@@ -467,7 +469,7 @@
                         that.mosaicMap = mosaicMap
                         that.saveMosaicRecordInLocal()
                     })
-                }).catch(()=>{
+                }).catch(() => {
                     console.log('monitor paenl realLocalStorage error')
                 })
             } else {
@@ -475,10 +477,11 @@
             }
         }
 
-        setLeftSwitchIcon(){
+        setLeftSwitchIcon() {
             this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
 
         }
+
         created() {
             this.setLeftSwitchIcon()
             this.initLeftNavigator()

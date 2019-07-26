@@ -31,7 +31,7 @@
         walletList = []
         navList = [
             {name: 'news', to: '/information', active: true},
-            {name: 'vote', to: '/vote', active: false, disabled: true},
+            {name: 'vote', to: '/vote', active: false, },
         ]
 
         get nowWalletList() {

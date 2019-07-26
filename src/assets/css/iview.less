@@ -64,6 +64,18 @@
     }
   }
 
+  .mosaicListWrap {
+    height: calc(100% - 20px);
+
+    .ivu-tabs {
+      height: 100%;
+
+      .ivu-tabs-content {
+        height: 100% !important;
+      }
+    }
+  }
+
 
 }
 
@@ -352,7 +364,9 @@
     border-color: #20B5AC !important;
     background-color: #20B5AC !important;
   }
-
+.ivu-radio {
+  margin-right: 20px;
+}
   .ivu-radio-checked .ivu-radio-inner {
     border-color: #20B5AC !important;
     width: 25px !important;
@@ -547,7 +561,7 @@
   }
 
   .ivu-select-selected-value {
-    margin-left: 22px;
+    margin-left: 12px;
   }
 }
 
@@ -566,10 +580,12 @@
   .ivu-select-selection {
     border: none;
     padding-left: 20px !important;
-    box-shadow :none !important;
+    box-shadow: none !important;
     position: absolute;
     z-index: 9999;
     margin: 1px;
   }
 
 }
+
+

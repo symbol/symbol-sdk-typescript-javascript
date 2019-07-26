@@ -23,6 +23,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    //padding: 8px 0;
+    line-height: 45px;
   }
 
   input {
@@ -35,7 +37,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    line-height: 45px;
   }
   input::placeholder{
     color:rgba(204,204,204,1);
@@ -51,7 +52,6 @@
         width: 60px;
         height: 60px;
         background-color: #4DC2BF;
-        line-height: 60px;
         color: white;
         font-size: 20px;
         font-weight: 400;
@@ -78,9 +78,10 @@
     margin-top: 20px;
 
     .textarea_container {
-      height: 120px;
+      height: 80px;
       justify-content: center;
-      padding: 23px 20px;
+      padding: 15px 20px;
+      line-height: 20px;
 
       textarea {
         border: none;

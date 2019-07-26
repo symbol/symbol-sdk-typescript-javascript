@@ -2,7 +2,7 @@
   <div class="relogin_container radius scroll">
     <div class="top_slogan">
       <div><img src="../../../assets/images/login/relogin/reloginNemLogo.png" alt=""></div>
-      <div class="top">{{$t('welcome_back_to_the_CATAPULT_beta')}}</div>
+      <div class="top">{{$t('welcome_to_the_CATAPULT_beta')}}</div>
       <div class="bottom">{{$t('this_is_a_distributed_desktop_wallet_based_on_CATAPULT_I_wish_you_a_pleasant_trip')}}
       </div>
     </div>

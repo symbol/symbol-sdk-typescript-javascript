@@ -28,7 +28,7 @@ import {NetworkType} from "nem2-sdk";
         <li>
           {{$t('set_the_wallet_name')}}
           <div class="gray_content">
-            <input class="absolute" type="password"
+            <input class="absolute" type="text"
                    :placeholder="$t('set_the_wallet_name')">
           </div>
         </li>
@@ -39,13 +39,13 @@ import {NetworkType} from "nem2-sdk";
             {{$t('This_password_is_a_private_key_password_and_will_be_used_when_you_pay')}}
           </div>
           <div class="gray_content">
-            <input class="absolute" v-model="form.password" type="text" :placeholder="$t('please_set_your_password')">
+            <input class="absolute" v-model="form.password" type="password" :placeholder="$t('please_set_your_password')">
           </div>
         </li>
         <li>
           {{$t('confirm_password')}}
           <div class="gray_content">
-            <input class="absolute" v-model="form.checkPW" type="text"
+            <input class="absolute" v-model="form.checkPW" type="password"
                    :placeholder="$t('please_enter_your_wallet_password_again')">
           </div>
         </li>

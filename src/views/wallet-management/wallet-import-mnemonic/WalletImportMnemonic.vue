@@ -24,7 +24,7 @@
         <li>
           {{$t('set_the_wallet_name')}}
           <div class="gray_content">
-            <input class="absolute" type="password"
+            <input class="absolute" type="text"
                    :placeholder="$t('set_the_wallet_name')">
           </div>
         </li>
