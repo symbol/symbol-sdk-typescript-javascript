@@ -139,7 +139,7 @@ import {NetworkType} from "nem2-sdk";
 
         async loginWallet(account) {
             const that = this
-            const walletName: any = 'wallet';
+            const walletName: any = this.form.walletName;
             const netType: NetworkType = account.address.networkType
             await that.setUserDefault(walletName, account, netType)
         }
