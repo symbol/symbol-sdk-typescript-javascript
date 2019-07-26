@@ -64,7 +64,7 @@
             {{$t('Do_not_transmit_through_network_tools_once_acquired_by_hackers_will_cause_irreparable_asset_losses_It_is_recommended_that_the_offline_device_be_transmitted_by_scanning_the_QR_code')}}</p>
           <p class="tit">{{$t('password_management_tool_save')}}</p>
           <p class="txt">{{$t('it_is_recommended_to_use_password_management_tool_management')}}</p>
-          <div class="privateKeyCode">79375884ce4e01f82e3128f4a9aadbdeab6e1 c4ef7718fca93aa1fOec38ab4b2</div>
+          <div class="privateKeyCode">{{wallet.privatekey }}</div>
           <Button type="success" @click="exportPrivatekey">{{$t('display_private_key_QR_code')}}</Button>
         </div>
         <div class="stepItem4" v-if="stepIndex == 3">
@@ -92,6 +92,7 @@
 
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
+    import {Crypto} from 'nem2-sdk'
     import {createQRCode} from '@/utils/tools'
     import './PrivatekeyDialog.less';
 
@@ -99,6 +100,9 @@
         components: {},
     })
     export default class privatekeyDialog extends Vue {
+        @Prop()
+        showPrivatekeyDialog: boolean
+
         stepIndex = 0
         show = false
         QRCode = ''
@@ -107,8 +111,9 @@
             privatekey: ''
         }
 
-        @Prop()
-        showPrivatekeyDialog: boolean
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
 
         privatekeyDialogCancel() {
             this.$emit('closePrivatekeyDialog')
@@ -120,9 +125,24 @@
         exportPrivatekey() {
             switch (this.stepIndex) {
                 case 0 :
+                    if(!this.checkInput()) return
+                    let saveData = {
+                        ciphertext: this.getWallet.ciphertext,
+                        iv: this.getWallet.iv,
+                        key:this.wallet.password
+                    }
+                    const enTxt = Crypto.decrypt(saveData)
+                    if(enTxt.toString().toUpperCase() !== this.getWallet.privateKey.toUpperCase()){
+                        this.$Message.error('密码输入错误! ');
+                        return false
+                    }
+                    this.stepIndex = 1
+                    this.wallet.password = ''
                     this.stepIndex = 1
                     break;
                 case 1 :
+                    this.wallet.privatekey = this.getWallet.privateKey
+                    this.createQRCode()
                     this.stepIndex = 2
                     break;
                 case 2 :
@@ -130,7 +150,13 @@
                     break;
             }
         }
-
+        checkInput () {
+            if (!this.wallet.password || this.wallet.password == '') {
+                this.$Message.error(this.$t('please_set_your_wallet_password'));
+                return false
+            }
+            return true
+        }
         toPrevPage() {
             this.stepIndex = 2
         }
@@ -138,16 +164,14 @@
         saveQRCode() {
 
         }
-
+        createQRCode () {
+            createQRCode(this.getWallet.privateKey).then((data) => {
+                this.QRCode = data.url
+            })
+        }
         @Watch('showPrivatekeyDialog')
         onShowPrivatekeyDialogChange() {
             this.show = this.showPrivatekeyDialog
-        }
-
-        created() {
-            createQRCode('TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN').then((data) => {
-                this.QRCode = data.url
-            })
         }
     }
 </script>

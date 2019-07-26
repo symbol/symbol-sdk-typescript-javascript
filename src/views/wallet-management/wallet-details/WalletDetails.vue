@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import {createQRCode, copyTxt} from '@/utils/tools'
     import MnemonicDialog from '@/views/wallet-management/mnemonic-dialog/MnemonicDialog.vue'
     import PrivatekeyDialog from '@/views/wallet-management/privatekey-dialog/PrivatekeyDialog.vue'
@@ -121,7 +121,15 @@
             return this.$store.state.account.wallet
         }
 
+        get getAddress () {
+            return this.getWallet.address
+        }
+
         changeMnemonicDialog () {
+            if(!this.getWallet.mnemonic){
+                this.$Message.warning('当前钱包没有记录助记词！');
+                return
+            }
             this.showMnemonicDialog = true
         }
         closeMnemonicDialog () {
@@ -158,7 +166,12 @@
         }
 
         init() {
-            this.setQRCode(this.getWallet.address)
+            this.setQRCode(this.getAddress)
+        }
+
+        @Watch('getAddress')
+        onGetAddressChange(){
+            this.init()
         }
 
         created () {

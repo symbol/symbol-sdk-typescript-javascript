@@ -54,22 +54,23 @@
         checkInput () {
             if(!this.lockPW.password || this.lockPW.password === ''){
                 this.$Message.error(this.$t('createLockPWRemind'));
-                return
+                return false
             }
             if(this.lockPW.password !== this.lockPW.checkPW){
                 this.$Message.error(this.$t('createLockCheckPWRemind'));
-                return
+                return false
             }
             if(!this.lockPW.remindTxt || this.lockPW.remindTxt === ''){
                 this.$Message.error(this.$t('createLockPWTxtRemind'));
-                return
+                return false
             }
+            return true
         }
 
         jumpToOtherPage(path) {
             if(path === '/walletPanel'){
                 const u = [50,50]
-                this.checkInput()
+                if(!this.checkInput()) return
                 const encryptObj = Crypto.encrypt(new UInt64(u).toHex(), this.lockPW.password)
                 let saveData = {
                     ciphertext: encryptObj.ciphertext,

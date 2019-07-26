@@ -16,7 +16,7 @@
         <li>
           {{$t('choose_network')}}
           <div class="gray_content">
-            <Select v-model="networkType" :placeholder="$t('choose_network')">
+            <Select v-model="form.networkType" :placeholder="$t('choose_network')">
               <Option v-for="item in NetworkTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </div>
@@ -24,8 +24,8 @@
         <li>
           {{$t('set_the_wallet_name')}}
           <div class="gray_content">
-            <input class="absolute" type="password"
-                   :placeholder="$t('set_the_wallet_name')">
+            <input class="absolute" type="password" v-model="form.walletName"
+                   :placeholder="$t('set_the_wallet_name')" >
           </div>
         </li>
         <li>
@@ -69,6 +69,8 @@
     export default class WalletImportMnemonic extends Vue {
         form = {
             mnemonic: '',
+            networkType: '',
+            walletName: '',
             password: '',
             checkPW: '',
         }
@@ -92,20 +94,29 @@
         account = {}
 
         importWallet() {
-            // !this.checkImport()
+            if (!this.checkMnemonic()) return
+            if (!this.checkImport()) return
             this.loginWallet(this.account)
         }
 
         checkImport() {
-            if (!this.checkMnemonic()) return
+            if (!this.form.networkType || this.form.networkType == '') {
+                this.$Message.error(this.$t('walletCreateNetTypeRemind'));
+                return false
+            }
+            if (!this.form.walletName || this.form.walletName == '') {
+                this.$Message.error(this.$t('walletCreateWalletNameRemind'));
+                return false
+            }
             if (!this.form.password || this.form.password == '') {
                 this.$Message.error(this.$t('Set_password_input_error'));
-                return
+                return false
             }
             if (this.form.password !== this.form.checkPW) {
                 this.$Message.error(this.$t('Two_passwords_are_inconsistent'))
-                return
+                return false
             }
+            return true
         }
 
         checkMnemonic() {
@@ -117,8 +128,10 @@
                 const account = this.createAccount(this.form.mnemonic)
                 this.$store.commit('SET_ACCOUNT', account);
                 this.account = account
+                return true
             } catch (e) {
                 this.$Message.error(this.$t('Mnemonic_input_error'));
+                return false
             }
 
         }

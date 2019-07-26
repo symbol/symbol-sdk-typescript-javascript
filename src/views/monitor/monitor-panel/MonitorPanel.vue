@@ -182,6 +182,10 @@
         isShowAccountAlias = false
         mosaic: string;
 
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
+
         switchPanel(index) {
             if (this.navigatorList[index].disabled) {
                 return
@@ -254,10 +258,10 @@
         }
 
         initData() {
-            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
-            this.accountPublicKey = this.$store.state.account.accountPublicKey
-            this.accountAddress = this.$store.state.account.accountAddress
-            this.address = this.$store.state.account.accountAddress
+            this.accountPrivateKey = this.getWallet.privateKey
+            this.accountPublicKey = this.getWallet.publicKey
+            this.accountAddress = this.getWallet.address
+            this.address = this.getWallet.address
             this.node = this.$store.state.account.node
             this.currentXem = this.$store.state.account.currentXem
             this.currentXEM2 = this.$store.state.account.currentXEM2
@@ -283,9 +287,10 @@
                         }
                     })
 
+                },()=>{
+                    that.XEMamount = 0
+                    console.log('error getXEMAmount ')
                 })
-            }).catch(()=>{
-                console.log('error getXEMAmount ')
             })
         }
 
@@ -317,10 +322,10 @@
             }).then((namespaceResult) => {
                 namespaceResult.result.namespaceList.subscribe((namespaceInfo) => {
                     that.isShowAccountAlias = false
+                },()=>{
+                    console.log('no alias in this account')
+                    that.isShowAccountAlias = false
                 })
-            }).catch(() => {
-                console.log('no alias in this account')
-                that.isShowAccountAlias = false
             })
         }
 
@@ -388,10 +393,20 @@
                     that.localMosaicMap = mosaicMap
                     that.mosaicMap = mosaicMap
                     that.isLoadingMosaic = false
+                },()=>{
+                    let defaultMosaic = {
+                        amount: 0,
+                        name: 'nem.xem',
+                        hex: that.currentXEM2,
+                        show: true
+                    }
+                    let mosaicMap = {}
+                    mosaicMap[defaultMosaic.hex] = defaultMosaic
+                    that.localMosaicMap = mosaicMap
+                    that.mosaicMap = mosaicMap
+                    that.isLoadingMosaic = false
+                    console.log('monitor panel error getMosaicList')
                 })
-
-            }).catch(()=>{
-                console.log('monitor panel error getMosaicList')
             })
         }
 
@@ -466,9 +481,20 @@
                         that.localMosaicMap = mosaicMap
                         that.mosaicMap = mosaicMap
                         that.saveMosaicRecordInLocal()
+                    },()=>{
+                        let defaultMosaic = {
+                            amount: 0,
+                            name: 'nem.xem',
+                            hex: that.currentXEM2,
+                            show: true
+                        }
+                        let mosaicMap = {}
+                        mosaicMap[defaultMosaic.hex] = defaultMosaic
+                        that.localMosaicMap = mosaicMap
+                        that.mosaicMap = mosaicMap
+                        that.saveMosaicRecordInLocal()
+                        console.log('monitor paenl realLocalStorage error')
                     })
-                }).catch(()=>{
-                    console.log('monitor paenl realLocalStorage error')
                 })
             } else {
                 this.getMosaicList()

@@ -55,9 +55,9 @@
               <i-option v-for="item in languageList" :value="item.value">{{ item.label }}</i-option>
             </i-select>
           </div>
-          <div class="switch_wallet" v-if="walletList.length > 0">
+          <div class="switch_wallet" v-if="showSelectWallet&&walletList.length > 0">
             <img class="select_wallet_icon" src="../../assets/images/window/windowWalletSelect.png" alt="">
-            <i-select @on-change="switchWallet" :model="currentWallet" :placeholder="walletList[0].name">
+            <i-select @on-change="switchWallet" v-model="currentWallet" :placeholder="walletList[0].name">
               <i-option v-for="item in walletList" :value="item.address">{{ item.name }}</i-option>
             </i-select>
           </div>
@@ -108,16 +108,19 @@
         currentLanguage: any = false
         languageList = []
         currentWallet = ''
+        showSelectWallet = true
         monitorSeleted = monitorSeleted
         monitorUnselected = monitorUnselected
         currentNode = ''
         isNodeHealthy = true
-
         accountPrivateKey = ''
         accountPublicKey = ''
         accountAddress = ''
-        walletList: any[] = []
+        walletList = []
 
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
 
         closeWindow() {
             const ipcRenderer = window['electron']['ipcRenderer'];
@@ -173,7 +176,6 @@
                 params: {},
                 name: routerIcon[index].name
             })
-            console.log('jump to ' + routerIcon[index].name)
             this.$store.commit('SET_CURRENT_PANEL_INDEX', index)
         }
 
@@ -190,15 +192,15 @@
         switchWallet(address) {
             const {walletList} = this
             const that = this
-            walletList.every((item) => {
+            let list = walletList
+            walletList.map((item,index) => {
                 if (item.address == address) {
                     that.$store.state.account.wallet = item
-                    return false
+                    list.splice(index, 1)
+                    list.unshift(item)
                 }
-                return true
             })
-
-
+            this.$store.commit('SET_WALLET_LIST', list)
         }
 
         initData() {
@@ -226,9 +228,9 @@
         }
 
         accountQuit() {
-            this.$router.push({
-                name: 'walletPanel'
-            })
+            this.$store.state.app.isInLoginPage = true
+            this.$store.state.app.currentPanelIndex = 0
+            this.$router.replace({path: "/reLogin"})
         }
 
         async getGenerateHash(node) {
@@ -244,6 +246,11 @@
             }).catch(() => {
                 console.log('generationHash  null')
             })
+        }
+
+        @Watch('getWallet')
+        onGetWalletChange(){
+            this.currentWallet = this.getWallet.address
         }
 
         created() {

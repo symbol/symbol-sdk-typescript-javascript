@@ -11,12 +11,13 @@
     @Component
     export default class App extends Vue {
         initData() {
-            this.$store.state.app.walletList = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
+            let walletList = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
+            for(let i in walletList){
+                walletList[i].iv= walletList[i].iv.data
+            }
+            this.$store.state.account.wallet = walletList[0]
+            this.$store.state.app.walletList = walletList
             this.$store.state.app.isInLoginPage = true
-                    //   this.$router.push({
-                    //     name: 'servicePanel'
-                    // })
-
 
             if(this.$store.state.app.walletList.length == 0){
                 this.$router.push({

@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import {localRead, localSave} from '../../../utils/util'
     import {NetworkType} from  'nem2-sdk'
     import './WalletSwitch.less'
@@ -76,6 +76,10 @@
             return this.$store.state.app.walletList
         }
 
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
+
         chooseWallet (walletIndex) {
 
             let list = this.getWalletList
@@ -92,6 +96,7 @@
             })
             this.localKey(storeWallet.name, walletIndex, storeWallet.address, storeWallet.networkType, storeWallet.balance)
             this.walletList = list
+            this.$store.commit('SET_WALLET_LIST', list)
         }
 
         localKey (walletName, index, address, netType, balance = 0) {
@@ -102,7 +107,7 @@
             } catch (e) {
                 localData = []
             }
-            const saveData = {
+            let saveData = {
                 name: walletName,
                 ciphertext: localData[index].ciphertext,
                 iv: localData[index].iv,
@@ -110,6 +115,8 @@
                 address: address,
                 balance: balance
             }
+            saveData = Object.assign(saveData, this.getWallet)
+            delete saveData['active']
             for (let i in localData) {
                 if (localData[i].address === address) {
                     localData[i] = saveData
@@ -182,7 +189,13 @@
             this.$emit('toCreate')
         }
 
+        @Watch('getWallet')
+        onGetWalletChange(){
+            this.initWalletList()
+        }
+
         created () {
+            this.$store.commit('SET_WALLET', this.getWalletList[0])
             this.initWalletList()
         }
     }

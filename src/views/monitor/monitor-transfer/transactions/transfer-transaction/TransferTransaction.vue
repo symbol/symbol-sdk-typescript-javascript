@@ -104,6 +104,9 @@
         isShowSubAlias = false
         mosaicList = []
 
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
 
         initForm() {
             this.fee = '0.05000'
@@ -224,36 +227,7 @@
 
 
                     // get nem.xem
-                    let currentXEMHex = ''
-                    mosaicInterface.getMosaicByNamespace({
-                        namespace: currentXem
-                    }).then((result: any) => {
-                        currentXEMHex = result.result.mosaicId.toHex()
-                        let isCrrentXEMExists = true
-                        let spliceIndex = -1
-                        isCrrentXEMExists = mosaicIdList.every((item, index) => {
-
-                            if (item.value == currentXEM1) {
-                                spliceIndex = index
-                                return false
-                            }
-                            if (item.value == currentXEM2) {
-                                spliceIndex = index
-                                return false
-                            }
-                            return true
-                        })
-                        if (!isCrrentXEMExists) {
-                            mosaicList.splice(spliceIndex, 1)
-                            mosaicList.push({
-                                label: currentXem,
-                                value: currentXEMHex
-                            })
-                        }
-                        that.mosaicList = mosaicList
-                        that.mosaic = currentXEMHex
-
-                    })
+                    this.getNamespace (currentXem, mosaicIdList , currentXEM1, currentXEM2, mosaicList)
 
 
                     // get cuurent xem   cat.currency
@@ -280,14 +254,51 @@
                     // })
 
 
+                },()=>{
+                    let mosaicIdList = [this.currentXem]
+                    let mosaicList = [{value:this.currentXem,label:this.currentXem}]
+                    this.getNamespace (currentXem, mosaicIdList , currentXEM1, currentXEM2, mosaicList)
                 })
             })
         }
 
+        getNamespace (currentXem, mosaicIdList , currentXEM1, currentXEM2, mosaicList) {
+            let currentXEMHex = ''
+            const that = this
+            mosaicInterface.getMosaicByNamespace({
+                namespace: currentXem
+            }).then((result: any) => {
+                currentXEMHex = result.result.mosaicId.toHex()
+                let isCrrentXEMExists = true
+                let spliceIndex = -1
+                isCrrentXEMExists = mosaicIdList.every((item, index) => {
+
+                    if (item.value == currentXEM1) {
+                        spliceIndex = index
+                        return false
+                    }
+                    if (item.value == currentXEM2) {
+                        spliceIndex = index
+                        return false
+                    }
+                    return true
+                })
+                if (!isCrrentXEMExists) {
+                    mosaicList.splice(spliceIndex, 1)
+                    mosaicList.push({
+                        label: currentXem,
+                        value: currentXEMHex
+                    })
+                }
+                that.mosaicList = mosaicList
+                that.mosaic = currentXEMHex
+
+            })
+        }
         initData() {
-            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
-            this.accountPublicKey = this.$store.state.account.accountPublicKey
-            this.accountAddress = this.$store.state.account.accountAddress
+            this.accountPrivateKey = this.getWallet.privateKey
+            this.accountPublicKey = this.getWallet.publicKey
+            this.accountAddress = this.getWallet.address
             this.node = this.$store.state.account.node
             this.currentXem = this.$store.state.account.currentXem
             this.generationHash = this.$store.state.account.generationHash

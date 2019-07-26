@@ -60,6 +60,10 @@
         ]
         currentPrice = 0
 
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
+
         showSearchDetail() {
             // this.isShowSearchDetail = true
         }
@@ -80,9 +84,9 @@
 
 
         initData() {
-            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
-            this.accountPublicKey = this.$store.state.account.accountPublicKey
-            this.accountAddress = this.$store.state.account.accountAddress
+            this.accountPrivateKey = this.getWallet.privateKey
+            this.accountPublicKey = this.getWallet.publicKey
+            this.accountAddress = this.getWallet.address
             this.node = this.$store.state.account.node
         }
 
