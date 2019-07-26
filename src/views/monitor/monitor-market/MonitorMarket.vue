@@ -22,9 +22,9 @@
         <div class="top_select_conditions">
           <span class="left">{{$t('whole_network_transaction')}}</span>
           <div class="right" v-show="!isShowSearchDetail">
-<!--            <span class="search_input" @click.stop="showSearchDetail">-->
-<!--              <img class="pointer" src="../../../assets/images/monitor/market/marketSearch.png" alt="">-->
-<!--            </span>-->
+            <!--            <span class="search_input" @click.stop="showSearchDetail">-->
+            <!--              <img class="pointer" src="../../../assets/images/monitor/market/marketSearch.png" alt="">-->
+            <!--            </span>-->
           </div>
           <div v-show="isShowSearchDetail" class="search_expand">
             <span class="search_container">
@@ -307,17 +307,14 @@
 
         async getRecentTransactionList() {
 
-            if (!isRefreshData('transactionsOverNetwork', 1000 * 60 * 3, 1)){
+            if (!isRefreshData('transactionsOverNetwork', 1000 * 60 * 3, 1)) {
                 const transactionsOverNetwork = JSON.parse(localRead('transactionsOverNetwork'))
                 this.recentTransactionList = transactionsOverNetwork.recentTransactionList
                 return
             }
             const that = this
             const xemUrl = this.$store.state.app.marketUrl + '/trade/xemusdt/50'
-            const btcUrl = this.$store.state.app.marketUrl + '/trade/btcusdt/50'
-            const ethUrl = this.$store.state.app.marketUrl + '/trade/ethbtc/50'
             let recentTransactionList = []
-
             await axios.get(xemUrl).then(function (response) {
                 let result = response.data.data
                 result.map((item) => {
@@ -332,38 +329,10 @@
             }).catch(function (error) {
                 console.log(error);
             });
-            await axios.get(btcUrl).then(function (response) {
-                let result = response.data.data
-                result.map((item) => {
-                    item.data.map((i) => {
-                        i.type = 'BTC'
-                        i.time = that.formatDate(i.ts)
-                        i.result = (i.amount * i.price).toFixed(2)
-                        recentTransactionList.push(i)
-                    })
-                    return item
-                })
-            }).catch(function (error) {
-                console.log(error);
-            });
-            await axios.get(ethUrl).then(function (response) {
-                let result = response.data.data
-                result.map((item) => {
-                    item.data.map((i) => {
-                        i.type = 'ETH'
-                        i.time = that.formatDate(i.ts)
-                        i.result = (i.amount * i.price).toFixed(2)
-                        recentTransactionList.push(i)
-                    })
-                    return item
-                })
-            }).catch(function (error) {
-                console.log(error);
-            });
 
-            // recentTransactionList.sort((a, b) => {
-            //     return a.ts > b.ts ? -1 : 1
-            // })
+            recentTransactionList.sort((a, b) => {
+                return a.ts > b.ts ? -1 : 1
+            })
             if (recentTransactionList.length == 0) {
                 this.noTransactionRecord = true
             } else {

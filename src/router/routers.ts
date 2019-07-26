@@ -125,6 +125,12 @@ const routers = [
                         // @ts-ignore
                         component: () => import('@/views/service/multisig/Multisig.vue')
                     },
+                    {
+                        path: '/apostille',
+                        name: 'apostille',
+                        // @ts-ignore
+                        component: () => import('@/views/service/apostille/Apostille.vue')
+                    },
                 ]
             },
 

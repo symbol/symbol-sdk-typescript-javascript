@@ -44,14 +44,14 @@
       },
       {
         name: 'multi_signature',
-        to: '/onDev',
+        to: '/multisig',
         iconDefault: multisign1Icon,
         iconActive: multisign2Icon,
         introduce: 'provides_an_editable_chain_on_protocol_in_a_multi_signature_account_which_is_the_best_way_to_store_funds_and_achieve_a_common_account',
         active: true
       }, {
         name: 'namespace',
-        to: '/onDev',
+        to: '/namespace',
         iconDefault: namespace1Icon,
         iconActive: namespace2Icon,
         introduce: 'a_namespace_is_a_domain_name_that_stores_mosaics_Each_namespace_is_unique_within_a_blockchain_and_mosaics_can_be_defined_and_authenticated_on_a_multi_level_sub_namespace',
@@ -67,7 +67,7 @@
       // },
       {
         name: 'apostille',
-        to: '/onDev',
+        to: '/apostille',
         iconDefault: apostille1Icon,
         iconActive: apostille2Icon,
         introduce: 'provides_an_editable_chain_on_protocol_in_a_multi_signature_account_which_is_the_best_way_to_store_funds_and_achieve_a_common_account',
