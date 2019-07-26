@@ -35,7 +35,7 @@
             <Poptip placement="bottom-end">
               <i class="pointer point" @click="toggleNodeList"></i>
               <span class="network_type_text">
-                {{ $store.state.account.wallet.networkType == 144 ? 'MIJIN_TEST':''}}
+                {{ $store.state.account.wallet && $store.state.account.wallet.networkType == 144 ? 'MIJIN_TEST':''}}
               </span>
               <div slot="title" class="title">{{$t('current_point')}}：{{$store.state.account.node}}</div>
               <div slot="content">
