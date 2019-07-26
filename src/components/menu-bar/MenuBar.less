@@ -3,17 +3,21 @@
   height: 100%;
   width: 100%;
   overflow: hidden;
+
   .point {
     -webkit-app-region: no-drag;
   }
+
   .title {
     font-size: 18px;
     text-align: center;
     padding: 10px;
-    min-width:300px ;
+    min-width: 300px;
   }
+
   .input_point {
     padding-top: 20px;
+
     input {
       border: none;
       width: 100%;
@@ -22,16 +26,19 @@
       margin-right: 20px;
       padding-bottom: 5px;
     }
-    input::placeholder{
+
+    input::placeholder {
       font-size: 16px;
     }
+
     .sure_button {
       padding: 2px 5px;
       font-size: 16px;
       background-color: #20B5AC;
-      color:white;
+      color: white;
     }
   }
+
   .point_item {
     margin: 10px 20px;
     display: flex;
@@ -41,6 +48,7 @@
     justify-items: center;
     align-items: center;
     text-align: left;
+
     img {
       width: 15px;
       height: 15px;
@@ -60,21 +68,25 @@
     -webkit-app-region: drag;
     width: 100%;
     height: 50px;
-    .nem_logo_wrap{
+
+    .nem_logo_wrap {
       width: 110px;
       height: 50px;
       float: left;
       overflow-y: hidden;
+
       .nem_logo {
         width: 100px;
         height: 50px;
         position: relative;
         box-shadow: 0 0 10px rgba(32, 181, 172, .4);
+
         img {
           height: 20px;
         }
       }
     }
+
     .controller {
       .window_controller {
         display: none;
@@ -133,6 +145,7 @@
           }
 
         }
+
         .point_unhealthy {
           i {
             display: inline-block;
@@ -142,25 +155,30 @@
             border-radius: 50%;
           }
         }
+
         .switch_language {
           -webkit-app-region: no-drag;
           position: relative;
+
           .ivu-select-placeholder {
             position: relative;
           }
         }
+
         .switch_wallet {
           -webkit-app-region: no-drag;
           display: flex;
           flex-direction: row;
           justify-content: space-between;
+
           .select_wallet_icon {
             width: 22px;
             height: 22px;
             position: relative;
             top: 5px;
           }
-          .ivu-select{
+
+          .ivu-select {
             font-size: 20px;
           }
         }
@@ -178,7 +196,7 @@
     background-color: white;
 
     .navigator_icon {
-      >div {
+      > div {
         width: 100px;
         height: 80px;
         padding: 35px 22px;
@@ -217,7 +235,7 @@
         }
       }
 
-      div:nth-of-type(4) {
+      div:nth-of-type(3) {
         //cursor:  not-allowed !important;
         //opacity: .2;
         span {
@@ -229,7 +247,7 @@
         }
       }
 
-      div:nth-of-type(3) {
+      div:nth-of-type(4) {
         span {
           background-image: url("../../assets/images/window/windowCommunity.png");
         }
@@ -262,13 +280,15 @@
       bottom: 60px;
       left: 50%;
       transform: translateX(-50%);
+
       img {
         width: 25px;
       }
+
       span {
-        font-size:12px;
-        font-weight:400;
-        color:#666666;
+        font-size: 12px;
+        font-weight: 400;
+        color: #666666;
         margin-top: 13px;
       }
     }
@@ -278,7 +298,6 @@
     width: 100%;
     height: 100%;
   }
-
 
 
 }

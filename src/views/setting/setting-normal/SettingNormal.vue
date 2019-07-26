@@ -13,8 +13,8 @@
       <li>
         {{$t('currency_setting')}}
         <div class="gray_content">
-          <Select v-model="coin">
-            <Option v-for="item in coinList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Select v-model="coin" :placeholder="$t('currency_setting')">
+            <Option v-for="item in coinList" :value="item.value"  :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
 
@@ -25,8 +25,7 @@
         <div class="gray_content">
           <input class="absolute" type="text" :placeholder="$t('please_enter_your_new_password_again')">
         </div>
-        <span class="confirm_button">{{$t('confirm')}}</span>
-
+        <span class="confirm_button un_click">{{$t('confirm')}}</span>
       </li>
     </ul>
   </div>

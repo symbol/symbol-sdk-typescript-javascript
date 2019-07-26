@@ -1,12 +1,12 @@
 <template>
   <div class="informationWrap">
     <div class="left left_article_list radius">
-      <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticla">
+      <div class="list_container hide_scroll" ref="listContainer" @scroll="automaticLoadingArticla">
         <div @click="switchArticle(index)" v-for="(a,index) in articleList"
              :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
           <div class="title overflow_ellipsis">{{a.title}}
           </div>
-          <div class="summary overflow_ellipsis">{{a.summary}}</div>
+<!--          <div class="summary overflow_ellipsis">{{a.summary}}</div>-->
           <div class="other_info">
             <span class="tag">{{$t('business')}}</span>
             <span class="from">{{a.author}}</span>
@@ -19,7 +19,7 @@
     </div>
     <div class="right_article_detail right radius">
       <div class="article_container scroll" ref="articleContainer" @scroll="automaticLoadingComment">
-        <div class="title content">
+        <div class="title content article_title">
           {{currentArticle.title}}
         </div>
         <div class="other_info content">
@@ -57,7 +57,6 @@
             <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">{{$t('no_more_data')}}
             </div>
             <div class="load_all_data" v-if="commentList.length === 0">{{$t('no_comment_yet')}}</div>
-
           </div>
 
         </div>
@@ -205,7 +204,7 @@
                 let articleList = that.articleList.concat(response.data.rows)
                 articleList.map((item) => {
                     item.summary = item.title
-                    item.content = item.content.replace(/src="/g, 'src="http://120.79.181.170/')
+                    // item.content = item.content.replace(/src="/g, 'src="http://120.79.181.170/')
                     return item
                 })
                 that.articleList = articleList

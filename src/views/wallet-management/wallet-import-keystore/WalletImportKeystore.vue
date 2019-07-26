@@ -24,7 +24,7 @@
             {{$t('keystore_describle_text')}}
           </div>
           <div class="gray_content">
-            <input class="absolute" type="text" :placeholder="$t('please_set_your_password')">
+            <input class="absolute" type="password" :placeholder="$t('please_set_your_password')">
           </div>
         </li>
       </ul>

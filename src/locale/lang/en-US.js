@@ -16,8 +16,8 @@ export var en_US = {
     english: 'English',
     chinese: 'Chinese',
     // community panel
-    news: 'news',
-    vote: 'vote',
+    news: 'News',
+    vote: 'Vote',
     //infomation
     no_more_data: 'No more datamore data',
     business: 'Business',
@@ -133,7 +133,8 @@ export var en_US = {
     aggregate_transfer: 'Aggregate',
     QR_code_generation_failed: 'QR code generation failed',
     //monitor-relogin
-    welcome_back_to_the_CATAPULT_beta: 'Welcome back to the CATAPULT beta',
+    welcome_back_to_the_CATAPULT_beta: 'WELCOME BACK TO THE CATAPULT BETA',
+    welcome_to_the_CATAPULT_beta: 'WELCOME TO USE THE CATAPULT BETA',
     this_is_a_distributed_desktop_wallet_based_on_CATAPULT_I_wish_you_a_pleasant_trip: 'This is a distributed desktop wallet based on CATAPULT ,I wish you a pleasant trip.',
     send_and_receive_XEM_almost_instantly_in_just_1_minute: 'Send and receive XEM almost instantly in just 1 minute !',
     provides_an_editable_chain_on_protocol_in_a_multi_signature_account_which_is_the_best_way_to_store_funds_and_achieve_a_common_account: 'Provides an editable chain on protocol in a multi signature account ,which is the best way to store funds and achieve a common account.',
@@ -177,7 +178,7 @@ export var en_US = {
     switch_language: 'Switch language',
     currency_setting: 'Currency setting',
     account_name: 'Account name',
-    the_default_is_Number: 'The default is Number',
+    the_default_is_Number: 'The default is Nember',
     confirm: 'Confirm',
     // on_dev
     not_yet_open: 'Not yet open',

@@ -24,7 +24,7 @@
         <li>
           {{$t('set_the_wallet_name')}}
           <div class="gray_content">
-            <input class="absolute" type="password" v-model="form.walletName"
+            <input class="absolute" type="text" v-model="form.walletName"
                    :placeholder="$t('set_the_wallet_name')" >
           </div>
         </li>

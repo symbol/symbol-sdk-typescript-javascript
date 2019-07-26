@@ -95,31 +95,6 @@ var routers = [
                 ]
             },
             {
-                path: '/communityPanel',
-                name: 'communityPanel',
-                meta: {},
-                // @ts-ignore
-                component: function () { return import('@/views/community/community-panel/CommunityPanel.vue'); },
-                children: [
-                    {
-                        path: '/communityPanel',
-                        name: 'communityPanel',
-                        // @ts-ignore
-                        component: function () { return import('@/views/community/information/Information.vue'); }
-                    }, {
-                        path: '/information',
-                        name: 'information',
-                        // @ts-ignore
-                        component: function () { return import('@/views/community/information/Information.vue'); }
-                    }, {
-                        path: '/vote',
-                        name: 'vote',
-                        // @ts-ignore
-                        component: function () { return import('@/views/community/vote/Vote.vue'); }
-                    },
-                ]
-            },
-            {
                 path: '/servicePanel',
                 name: 'servicePanel',
                 meta: {
@@ -148,6 +123,31 @@ var routers = [
                         name: 'multisig',
                         // @ts-ignore
                         component: function () { return import('@/views/service/multisig/Multisig.vue'); }
+                    },
+                ]
+            },
+            {
+                path: '/communityPanel',
+                name: 'communityPanel',
+                meta: {},
+                // @ts-ignore
+                component: function () { return import('@/views/community/community-panel/CommunityPanel.vue'); },
+                children: [
+                    {
+                        path: '/communityPanel',
+                        name: 'communityPanel',
+                        // @ts-ignore
+                        component: function () { return import('@/views/community/information/Information.vue'); }
+                    }, {
+                        path: '/information',
+                        name: 'information',
+                        // @ts-ignore
+                        component: function () { return import('@/views/community/information/Information.vue'); }
+                    }, {
+                        path: '/vote',
+                        name: 'vote',
+                        // @ts-ignore
+                        component: function () { return import('@/views/community/vote/Vote.vue'); }
                     },
                 ]
             },

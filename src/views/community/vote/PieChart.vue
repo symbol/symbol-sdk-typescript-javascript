@@ -24,8 +24,8 @@
                     radius: '50%',
                     center: ['50%', '50%'],
                     data: [
-                        {value: 335, name: '是'},
-                        {value: 310, name: '否'},
+                        {value: 335, name: 'yes'},
+                        {value: 310, name: 'no'},
                     ],
                     itemStyle: {
                         emphasis: {

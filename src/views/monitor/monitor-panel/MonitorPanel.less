@@ -13,7 +13,7 @@
 
   .monitor_panel_left_container {
     float: left;
-    margin-right: 20px;
+    //margin-right: 20px;
 
     .top_wallet_address {
       width: 420px;
@@ -79,19 +79,18 @@
       }
     }
     .bottom_account_info {
-      width: 420px;
       height: calc(100% - 255px);
       background-color: white;
+      width: 420px;
       margin-top: 15px;
       padding: 27px 28px;
       position: relative;
-      overflow: hidden;
-      .mosaicListWrap{
-        height: 100%;
-      }
+
+
+
       .mosaicList{
-        height: calc(100% - 65px);
-        overflow-y: auto;
+        height: 100% ;
+        overflow-y: scroll;
         margin-top: 15px;
       }
       .mosaicList::-webkit-scrollbar{
@@ -284,9 +283,10 @@
   }
 
   .monitor_panel_right_container {
-    float: right;
-    width: 1340px;
-    height: calc(100% - 60px);
+    float: left;
+    width: 1310px;
+    height: calc(100% - 5px);
+    margin-left: 15px;
 
     .bottom_router_view {
       height: 100%;
@@ -314,6 +314,8 @@
         color: #ccc;
         background-color: white;
         cursor:  not-allowed;
+        // TODO
+        height: 20px;
       }
 
       .active_navigator {

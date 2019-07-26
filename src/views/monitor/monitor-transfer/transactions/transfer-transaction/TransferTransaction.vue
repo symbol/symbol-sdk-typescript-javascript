@@ -34,8 +34,8 @@
     </div>
     <div class="remark flex_center">
       <span class="title">{{$t('remarks')}}</span>
-      <span class=" textarea_container flex_center value radius ">
-              <textarea v-model="remark" :placeholder="$t('please_enter_a_comment')"></textarea>
+      <span class=" textarea_container  flex_center value radius ">
+              <textarea class="hide_scroll" v-model="remark" :placeholder="$t('please_enter_a_comment')"></textarea>
             </span>
     </div>
     <div class="fee flex_center">

@@ -189,8 +189,8 @@
 </script>
 <style scoped lang="less">
   .right_record {
-    width: 410px;
-    height: 80%;
+    width: 415px;
+    height: 100%;
     float: right;
     background-color: white;
 

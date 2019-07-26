@@ -9,7 +9,7 @@
         </span>
       </div>
       <div class="bottom_transfer_info scroll ">
-        <div class="transfer  " v-if="transferTypeList[0].isSelect">
+        <div class="transfer" v-if="transferTypeList[0].isSelect">
           <TransferTransaction></TransferTransaction>
         </div>
 
