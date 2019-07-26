@@ -1,81 +1,96 @@
-.walletCreateWrap{
+.walletCreateWrap {
   box-sizing: border-box;
   height: 100%;
-  font-family:MicrosoftYaHei;
+  font-family: MicrosoftYaHei;
   background-color: #fff;
-  border-radius:8px;
+  border-radius: 4px;
   margin-top: 20px;
   overflow-y: auto;
-  .createDiv{
+
+  .createDiv {
     height: 100%;
-    border-radius:10px;
+    border-radius: 10px;
     position: relative;
-    .createForm{
+
+    .createForm {
       width: 680px;
-      padding: 35px 40px 20px;
-      .formTit{
-        font-size:28px;
+      padding: 59px 40px 20px 210px;
+      box-sizing: content-box;
+
+      .formTit {
+        font-size: 28px;
         line-height: 28px;
-        font-weight:bold;
-        color:#222222;
-        margin-bottom: 27px;
+        font-weight: bold;
+        color: #222222;
+        margin-bottom: 40px;
       }
-      .ivu-select-selection{
-        height:30px;
+
+      .ivu-select-selection {
+        height: 30px;
         line-height: 30px;
         border: 1px solid #CCCCCC !important;
-        .ivu-select-selected-value{
+
+        .ivu-select-selected-value {
           padding-right: 30px;
         }
-        .ivu-select-arrow{
+
+        .ivu-select-arrow {
           right: 20px;
         }
       }
-      .ivu-form-item{
+
+      .ivu-form-item {
         margin-bottom: 40px;
-        .formItemTxt{
+
+        .formItemTxt {
           width: 1080px;
-          font-size:16px;
+          font-size: 16px;
           line-height: 24px;
-          font-weight:400;
-          color:#999999;
+          font-weight: 400;
+          color: #999999;
           margin-bottom: 10px;
         }
       }
-      .ivu-form-item:last-of-type{
+
+      .ivu-form-item:last-of-type {
         margin-bottom: 0;
       }
-      .ivu-form-item-label{
+
+      .ivu-form-item-label {
         height: 16px;
-        font-size:18px;
+        font-size: 18px;
         line-height: 16px;
-        font-weight:400;
-        color:#222222;
+        font-weight: 400;
+        color: #222222;
         white-space: nowrap;
         padding-left: 18px;
         margin-left: 21px;
         position: relative;
         margin-bottom: 13px;
       }
-      .ivu-form-item-label:after{
+
+      .ivu-form-item-label:after {
         display: block;
         content: '';
-        width:8px;
-        height:8px;
-        background:#666666;
-        border-radius:50%;
+        width: 8px;
+        height: 8px;
+        background: #666666;
+        border-radius: 50%;
         overflow: hidden;
         position: absolute;
         top: 4px;
         left: 0;
       }
-      .ivu-form-item-content{
+
+      .ivu-form-item-content {
         margin-left: 21px;
         position: relative;
-        input{
+
+        input {
           padding-right: 50px;
         }
-        .icon{
+
+        .icon {
           display: block;
           width: 20px;
           height: 18px;
@@ -84,57 +99,69 @@
           top: 19px;
           z-index: 999;
           cursor: pointer;
-          img{
+
+          img {
             display: inline-block;
             width: 100%;
             height: 100%;
           }
         }
-        .ivu-select-selection{
-          height:60px;
-          line-height: 60px;
-          div{
-            height:60px;
-            line-height: 60px;
+
+        .ivu-select-selection {
+          height: 45px;
+          line-height: 45px;
+
+          div {
+            height: 45px;
+            line-height: 45px;
             padding-left: 35px;
-            span{
-              height:60px;
-              line-height: 60px;
+
+            span {
+              height: 45px;
+              line-height: 45px;
               color: #999999 !important;
             }
           }
-          .ivu-select-selection i::before{
+
+          .ivu-select-selection i::before {
             color: #999999 !important;
           }
         }
-        input{
-          height:60px;
+
+        input {
+          height: 45px;
           color: #999999;
-          border:1px solid rgba(204,204,204,1);
+          border: 1px solid rgba(204, 204, 204, 1);
           padding-left: 41px;
-          border-radius:8px;
+          border-radius: 4px;
         }
       }
-      button{
-        display: block;
-        width:200px;
-        height:60px;
+
+      button {
+        display: inline-block;
+        width: 200px;
+        height: 60px;
         line-height: 50px;
-        font-size:16px;
-        font-weight:400;
+        font-size: 16px;
+        font-weight: 400;
         text-align: center;
-        color:#fff;
-        background:#20B5AC;
+        color: #fff;
+        background: #20B5AC;
         border: none;
-        border-radius:30px;
+        border-radius: 30px;
+        position: relative;
       }
-      .prev{
-        color: #20B5AC;
-        background: #fff;
-        border:1px solid rgba(32,181,172,1);
+
+      .prev {
+        color: rgba(32, 181, 172, 1);
+        background-color: white;
+        border: 1px solid rgba(32, 181, 172, 1);
+        border-radius: 30px;
+        margin-left: 20px;
       }
-      .next{
-        border:1px solid rgba(32,181,172,1);
+
+      .next {
+        border: 1px solid rgba(32, 181, 172, 1);
       }
     }
   }

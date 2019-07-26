@@ -8,29 +8,29 @@
       <span class="title">{{$t('transfer_target')}}</span>
       <span class="value radius flex_center">
               <input type="text" v-model="address" :placeholder="$t('receive_address_or_alias')">
-              <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>
-               <div v-if="isShowSubAlias" class="selections">
-              <div class="pointer" style="text-align: center;color: #ccc">no alias</div>
-<!--              <div>@qq.ww.ee</div>-->
-<!--              <div>@qqqqw.eeeer.ttt</div>-->
-            </div>
+        <!--              <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>-->
+        <!--               <div v-if="isShowSubAlias" class="selections">-->
+        <!--            </div>-->
             </span>
     </div>
     <div class="asset flex_center">
       <span class="title">{{$t('asset_type')}}</span>
-      <span class="value radius flex_center">
-        <Select placeholder="XEM" v-model="mosaic" class="asset_type">
-          <Option v-for="item in mosaicList" :value="item.value" :key="item.value">
-            {{ item.label }}
-          </Option>
-         </Select>
+
+
+      <span>
+        <span class="type value radius flex_center">
+          <Select placeholder="XEM" v-model="mosaic" class="asset_type">
+            <Option v-for="item in mosaicList" :value="item.value" :key="item.value">
+              {{ item.label }}
+            </Option>
+           </Select>
+        </span>
+        <span class="amount value radius flex_center">
+           <input v-model="amount" :placeholder="$t('please_enter_the_transfer_amount')" type="text">
+         </span>
       </span>
-    </div>
-    <div class="amount flex_center">
-      <span class="title">{{$t('transfer_amount')}}</span>
-      <span class="value radius flex_center">
-              <input v-model="amount" :placeholder="$t('please_enter_the_transfer_amount')" type="text">
-            </span>
+
+
     </div>
     <div class="remark flex_center">
       <span class="title">{{$t('remarks')}}</span>
@@ -305,12 +305,12 @@
             }
         }
 
-        manageAlert(status){
+        manageAlert(status) {
             this.showAlert = true
             const that = this
-            setInterval(()=>{
+            setInterval(() => {
                 that.showAlert = false
-            },3000)
+            }, 3000)
         }
 
 

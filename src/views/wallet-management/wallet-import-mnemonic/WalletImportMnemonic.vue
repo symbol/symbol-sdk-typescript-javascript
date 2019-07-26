@@ -1,43 +1,59 @@
 <template>
-    <div>
-        <div class="mnemonic">
-            <div class="describle">{{$t('mnemonic_describle')}}</div>
-            <ul>
-                <li>
-                    {{$t('input_mnemonic')}}
-                    <div class="tips">
-                        {{$t('enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word')}}
-                    </div>
-                    <div class="gray_content textarea">
-                        <textarea class="absolute" v-model="form.mnemonic"/>
-                    </div>
-                </li>
-                <li>
-                    {{$t('set_password')}}
-                    <div class="tips">
-                        {{$t('mnemonic_describle_tips')}}
-                    </div>
-                    <div class="gray_content">
-                        <input class="absolute" type="password" v-model="form.password"
-                               :placeholder="$t('please_set_your_password')">
-                    </div>
-                </li>
-                <li>
-                    {{$t('confirm_password')}}
-                    <div class="gray_content">
-                        <input class="absolute" type="password" v-model="form.checkPW"
-                               :placeholder="$t('please_enter_your_wallet_password_again')">
-                    </div>
-                </li>
-            </ul>
+  <div>
+    <div class="mnemonic">
+      <div class="describle">{{$t('mnemonic_describle')}}</div>
+      <ul>
+        <li>
+          {{$t('input_mnemonic')}}
+          <div class="tips">
+            {{$t('enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word')}}
+          </div>
+          <div class="gray_content textarea">
+            <textarea class="absolute" v-model="form.mnemonic"/>
+          </div>
+        </li>
+
+        <li>
+          {{$t('choose_network')}}
+          <div class="gray_content">
+            <Select v-model="networkType" :placeholder="$t('choose_network')">
+              <Option v-for="item in NetworkTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </div>
+        </li>
+        <li>
+          {{$t('set_the_wallet_name')}}
+          <div class="gray_content">
+            <input class="absolute" type="password"
+                   :placeholder="$t('set_the_wallet_name')">
+          </div>
+        </li>
+        <li>
+          {{$t('set_password')}}
+          <div class="tips">
+            {{$t('mnemonic_describle_tips')}}
+          </div>
+          <div class="gray_content">
+            <input class="absolute" type="password" v-model="form.password"
+                   :placeholder="$t('please_set_your_password')">
+          </div>
+        </li>
+        <li>
+          {{$t('confirm_password')}}
+          <div class="gray_content">
+            <input class="absolute" type="password" v-model="form.checkPW"
+                   :placeholder="$t('please_enter_your_wallet_password_again')">
+          </div>
+        </li>
+      </ul>
 
 
-        </div>
-        <div class="bottom_button ">
-            <span class="back left" @click="toBack"> {{$t('back')}}</span>
-            <span class="import right" @click="importWallet">{{$t('import')}}</span>
-        </div>
     </div>
+    <div class="bottom_button ">
+      <span class="back left" @click="toBack"> {{$t('back')}}</span>
+      <span class="import right" @click="importWallet">{{$t('import')}}</span>
+    </div>
+  </div>
 
 </template>
 
@@ -56,15 +72,32 @@
             password: '',
             checkPW: '',
         }
+        NetworkTypeList = [
+            {
+                value: 'MIJIN_TEST',
+                label: 'MIJIN_TEST'
+            },
+            {
+                value: 'TEST_NET',
+                label: 'TEST_NET'
+            }, {
+                value: 'MAIN_NET',
+                label: 'MAIN_NET'
+            },
+            {
+                value: 'MIJIN',
+                label: 'MIJIN'
+            }
+        ]
         account = {}
 
         importWallet() {
-            !this.checkImport()
+            // !this.checkImport()
             this.loginWallet(this.account)
         }
 
         checkImport() {
-            if(!this.checkMnemonic()) return
+            if (!this.checkMnemonic()) return
             if (!this.form.password || this.form.password == '') {
                 this.$Message.error(this.$t('Set_password_input_error'));
                 return
@@ -77,7 +110,7 @@
 
         checkMnemonic() {
             try {
-                if(!this.form.mnemonic || this.form.mnemonic === ''){
+                if (!this.form.mnemonic || this.form.mnemonic === '') {
                     this.$Message.error(this.$t('Mnemonic_input_error'));
                     return false
                 }
@@ -128,7 +161,7 @@
             that.setUserDefault(walletName, account, netType)
         }
 
-       setUserDefault  (name, account, netType) {
+        setUserDefault(name, account, netType) {
             const that = this
             walletInterface.getWallet({
                 name: name,
@@ -150,12 +183,12 @@
                 }
                 that.$store.commit('SET_WALLET', storeWallet)
                 const encryptObj = Crypto.encrypt(Wallet.result.privateKey, that.form['password'])
-                that.localKey(name, encryptObj, Wallet.result.wallet.address.address,netType)
+                that.localKey(name, encryptObj, Wallet.result.wallet.address.address, netType)
                 this.toWalletDetails()
             })
         }
 
-        localKey (walletName, keyObj, address, netType, balance = 0) {
+        localKey(walletName, keyObj, address, netType, balance = 0) {
             let localData: any[] = []
             let isExist: boolean = false
             try {
@@ -172,7 +205,7 @@
                 balance: balance
             }
             const account = this.$store.state.account.wallet;
-            saveData = Object.assign(saveData,account)
+            saveData = Object.assign(saveData, account)
             this.$store.commit('SET_WALLET', saveData)
             for (let i in localData) {
                 if (localData[i].address === address) {
@@ -184,12 +217,12 @@
             localSave('wallets', JSON.stringify(localData))
         }
 
-        toWalletDetails () {
+        toWalletDetails() {
             this.$Notice.success({
                 title: '' + this['$t']('Import_mnemonic_operations'),
                 desc: this['$t']('Imported_wallet_successfully') + ''
             });
-            this.$store.commit('SET_HAS_WALLET',true)
+            this.$store.commit('SET_HAS_WALLET', true)
             this.$emit('toWalletDetails')
         }
 
@@ -199,5 +232,5 @@
     }
 </script>
 <style scoped lang="less">
-    @import "WalletImportMnemonic";
+  @import "WalletImportMnemonic";
 </style>

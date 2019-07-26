@@ -23,6 +23,7 @@
     import {Component, Vue} from 'vue-property-decorator';
     import './CommunityPanel.less';
 
+
     @Component({
         components: {},
     })

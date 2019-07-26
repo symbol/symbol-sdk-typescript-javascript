@@ -13,7 +13,7 @@
     }
 
     .ivu-tabs-bar {
-      height: 150px;
+      height: 120px;
       line-height: 120px;
       border-bottom: none;
       margin-bottom: 0;
@@ -91,7 +91,7 @@
     }
 
     .ivu-col-span-14 {
-      padding-left: 140px;
+      padding-left: 79px;
       position: relative;
 
       .ivu-form-item {
@@ -102,7 +102,7 @@
         line-height: 18px;
         font-size: 14px;
         font-weight: 400;
-        color: #F65C5C;
+        color: #999999;
         margin-top: 9px;
         margin-left: 135px;
       }
@@ -123,7 +123,8 @@
       position: relative;
 
       .ivu-input-wrapper {
-        width: calc(100% - 135px);
+        width: 350px;
+        height: 45px;
       }
 
       .ivu-checkbox-checked .ivu-checkbox-inner {
@@ -181,11 +182,11 @@
       }
 
       input, textarea {
-        height: 60px;
+        height: 45px;
         font-size: 14px;
         color: #999999;
         border: 1px solid rgba(204, 204, 204, 1);
-        padding-left: 40px;
+        padding-left: 20px;
         border-radius: 8px;
       }
 
@@ -199,8 +200,8 @@
         font-weight: 400;
         color: #222222;
         position: absolute;
-        right: 20px;
-        top: 15px;
+        right: 100px;
+        top: 10px;
       }
     }
 
@@ -216,7 +217,9 @@
       background:rgba(32,181,172,1);
       border: none;
       border-radius: 30px;
-      margin-top: 39px;
+      position: relative;
+      top: 0px;
+      left: 990px;
     }
 
     button.active {
@@ -237,8 +240,10 @@
       .headerTit {
         height: 20px;
         font-size: 20px;
-        font-weight: 400;
+        font-weight: bold;
         color: #222222;
+        margin-bottom: 19px;
+
       }
 
       .listPages {
@@ -380,7 +385,10 @@
 
     img {
       position: absolute;
-      right: 20px;
+      right: 40px;
+      opacity: .5;
+      width: 12px;
+      height: 7px;
     }
 
     img:first-of-type {
@@ -389,7 +397,7 @@
     }
 
     img:last-of-type {
-      bottom: 15px;
+      bottom: 10px;
     }
   }
 }
@@ -398,4 +406,10 @@ button {
   position: absolute;
   bottom: 0;
   right: 20px;
+}
+
+.longer_content {
+  .ivu-input-wrapper {
+    width: 420px !important;
+  }
 }

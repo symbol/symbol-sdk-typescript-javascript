@@ -17,13 +17,13 @@
       <div :class="['walletItem', item.active ? 'active':'']" @click="chooseWallet(index)"
            v-for="(item, index) in walletList" :key="index">
         <Row>
-          <Col span="17">
+          <Col span="15">
             <div>
               <p class="walletName">{{item.name}}</p>
               <p class="walletAmount">{{item.balance}}&nbsp;<span class="tails">XEM</span></p>
             </div>
           </Col>
-          <Col span="7">
+          <Col span="9">
             <div @click.stop>
               <p class="walletTypeTxt">{{$t('Public_account')}}</p>
               <div class="options">
