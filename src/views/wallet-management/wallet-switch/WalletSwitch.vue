@@ -3,18 +3,10 @@
     <div class="walletSwitchHead">
       <p class="tit">{{$t('Wallet_management')}}</p>
     </div>
-    <div class="walletMethod">
-      <Row>
-        <Col span="12">
-          <div class="createBtn" @click="toCreate">{{$t('create')}}</div>
-        </Col>
-        <Col span="12">
-          <div class="importBtn" @click="toImport">{{$t('import')}}</div>
-        </Col>
-      </Row>
-    </div>
+
     <div class="walletList">
-      <div :class="['walletItem', item.active ? 'active':'']" @click="chooseWallet(index)"
+      <div :class="['walletItem', item.active ? 'active':'','walletItem_bg_'+index,'radius']"
+           @click="chooseWallet(index)"
            v-for="(item, index) in walletList" :key="index">
         <Row>
           <Col span="15">
@@ -28,8 +20,8 @@
               <p class="walletTypeTxt">{{$t('Public_account')}}</p>
               <div class="options">
                 <Poptip placement="bottom">
-                  <img src="../../../assets/images/wallet-management/moreActive.png" v-if="item.active">
-                  <img src="../../../assets/images/wallet-management/more.png" v-else>
+                  <img src="../../../assets/images/wallet-management/moreActive.png" >
+<!--                  <img src="../../../assets/images/wallet-management/more.png" v-else>-->
                   <div slot="content">
                     <p class="optionItem" @click.stop="delWallet(index, item.active)">
                       <i><img src="../../../assets/images/wallet-management/delete.png"></i>
@@ -43,6 +35,17 @@
         </Row>
 
       </div>
+    </div>
+
+    <div class="walletMethod">
+      <Row>
+        <Col span="12">
+          <div class="createBtn" @click="toCreate">{{$t('create')}}</div>
+        </Col>
+        <Col span="12">
+          <div class="importBtn" @click="toImport">{{$t('import')}}</div>
+        </Col>
+      </Row>
     </div>
   </div>
 </template>
