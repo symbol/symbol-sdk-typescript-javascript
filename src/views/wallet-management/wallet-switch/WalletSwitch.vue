@@ -101,6 +101,7 @@
             this.localKey(storeWallet.name, walletIndex, storeWallet.address, storeWallet.networkType, storeWallet.balance)
             this.walletList = list
             this.$store.commit('SET_WALLET_LIST', list)
+            localSave('wallets', JSON.stringify(list))
         }
 
         localKey(walletName, index, address, netType, balance = 0) {
@@ -142,6 +143,7 @@
                 }
             }
             this.$store.commit('SET_WALLET_LIST', list)
+            localSave('wallets', JSON.stringify(list))
             this.$Notice.success({
                 title: this['$t']('Wallet_management') + '',
                 desc: this['$t']('Delete_wallet_successfully') + '',
