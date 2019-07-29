@@ -91,6 +91,7 @@
     import {Crypto} from  'nem2-sdk'
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
     import './MnemonicDialog.less';
+    import Message from "@/message/Message";
 
     @Component({
         components: {},
@@ -130,7 +131,7 @@
                     }
                     const enTxt = Crypto.decrypt(saveData)
                     if(enTxt.toString().toUpperCase() !== this.getWallet.privateKey.toUpperCase()){
-                        this.$Message.error('密码输入错误! ');
+                        this.$Message.error(Message.WRONG_PASSWORD_ERROR);
                         return false
                     }
                     this.stepIndex = 1
@@ -153,7 +154,7 @@
         }
         checkInput () {
             if (!this.wallet.password || this.wallet.password == '') {
-                this.$Message.error(this.$t('please_set_your_wallet_password'));
+                this.$Message.error(Message.PLEASE_SET_WALLET_PASSWORD_INFO);
                 return false
             }
             return true
@@ -205,9 +206,9 @@
             console.log(this.mnemonic.split(' '))
             if (JSON.stringify(childWord) != JSON.stringify(this.mnemonic.split(' '))) {
                 if (childWord.length < 1) {
-                    this.$Message.warning(this['$t']('Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct'));
+                    this.$Message.warning(Message.PLEASE_ENTER_MNEMONIC_INFO);
                 } else {
-                    this.$Message.warning(this['$t']('Mnemonic_inconsistency'));
+                    this.$Message.warning(Message.MNEMONIC_INCONSISTENCY_ERROR);
                 }
                 return false
             }

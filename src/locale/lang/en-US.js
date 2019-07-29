@@ -116,7 +116,7 @@ export var en_US = {
     divisibility_can_not_less_than_0: 'Divisibilit can not less than 0',
     duration_can_not_less_than_0: 'Duration can not less than 0',
     fee_can_not_less_than_0: 'Max fee can not less than 0',
-    duration_can_not_less_than_10_years: 'Duration can not more than 10 years',
+    duration_can_not_more_than_10_years: 'Duration can not more than 10 years',
     // monitor-receipt
     set_amount: 'Set amount',
     asset_type: 'Asset',

@@ -3,11 +3,6 @@
     <h1 class="pageTit">{{$t('start_the_NEM_tour')}}</h1>
     <div class="methodDiv">
 
-
-
-
-
-
       <div class=" createDiv
         ">
         <div class="createIcon">
@@ -20,7 +15,6 @@
           <div/>
         </div>
       </div>
-
 
       <div class="importDiv">
         <div class="importIcon">

@@ -39,7 +39,8 @@ import {NetworkType} from "nem2-sdk";
             {{$t('This_password_is_a_private_key_password_and_will_be_used_when_you_pay')}}
           </div>
           <div class="gray_content">
-            <input class="absolute" v-model="form.password" type="password" :placeholder="$t('please_set_your_password')">
+            <input class="absolute" v-model="form.password" type="password"
+                   :placeholder="$t('please_set_your_password')">
           </div>
         </li>
         <li>
@@ -66,6 +67,7 @@ import {NetworkType} from "nem2-sdk";
     import {localRead, localSave} from '../../../utils/util'
     import {walletInterface} from "../../../interface/sdkWallet"
     import {accountInterface} from "../../../interface/sdkAccount";
+    import Message from "@/message/Message";
     // import "../wallet-import-privatekey/WalletImportPrivatekey.less"
 
     @Component
@@ -80,17 +82,17 @@ import {NetworkType} from "nem2-sdk";
         account = {}
         NetworkTypeList = [
             {
-                value:NetworkType.MIJIN_TEST,
-                label:'MIJIN_TEST'
-            },{
-                value:NetworkType.MAIN_NET,
-                label:'MAIN_NET'
-            },{
-                value:NetworkType.TEST_NET,
-                label:'TEST_NET'
-            },{
-                value:NetworkType.MIJIN,
-                label:'MIJIN'
+                value: NetworkType.MIJIN_TEST,
+                label: 'MIJIN_TEST'
+            }, {
+                value: NetworkType.MAIN_NET,
+                label: 'MAIN_NET'
+            }, {
+                value: NetworkType.TEST_NET,
+                label: 'TEST_NET'
+            }, {
+                value: NetworkType.MIJIN,
+                label: 'MIJIN'
             },
         ]
 
@@ -102,19 +104,19 @@ import {NetworkType} from "nem2-sdk";
 
         checkImport() {
             if (this.form.networkType == 0) {
-                this.$Message.error(this.$t('walletCreateNetTypeRemind'));
+                this.$Message.error(Message.PLEASE_SWITCH_NETWORK);
                 return false
             }
             if (!this.form.walletName || this.form.walletName == '') {
-                this.$Message.error(this.$t('walletCreateWalletNameRemind'));
+                this.$Message.error(Message.WALLET_NAME_INPUT_ERROR);
                 return false
             }
             if (!this.form.password || this.form.password == '') {
-                this.$Message.error(this['$t']('Set_password_input_error'));
+                this.$Message.error(Message.PASSWORD_SETTING_INPUT_ERROR);
                 return false
             }
             if (this.form.password !== this.form.checkPW) {
-                this.$Message.error(this['$t']('Two_passwords_are_inconsistent'));
+                this.$Message.error(Message.INCONSISTENT_PASSWORD_ERROR);
                 return false
             }
             return true
@@ -123,14 +125,14 @@ import {NetworkType} from "nem2-sdk";
         checkPrivateKey() {
             try {
                 if (!this.form.privateKey || this.form.privateKey === '') {
-                    this.$Message.error('Set_password_input_error');
+                    this.$Message.error(Message.PASSWORD_SETTING_INPUT_ERROR);
                     return false
                 }
                 const account = Account.createFromPrivateKey(this.form.privateKey, NetworkType.MIJIN_TEST)
                 this.account = account
                 return true
             } catch (e) {
-                this.$Message.error(this['$t']('Set_password_input_error'));
+                this.$Message.error(Message.PASSWORD_SETTING_INPUT_ERROR);
                 return false
             }
 
@@ -218,5 +220,5 @@ import {NetworkType} from "nem2-sdk";
     }
 </script>
 <style scoped lang="less">
-@import "WalletImportPrivatekey.less";
+  @import "WalletImportPrivatekey.less";
 </style>

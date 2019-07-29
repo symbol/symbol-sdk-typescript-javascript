@@ -104,6 +104,7 @@
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
     import {createQRCode, copyTxt} from '@/utils/tools'
     import './KeystoreDialog.less';
+    import Message from "@/message/Message";
     @Component({
         components: {},
     })
@@ -143,7 +144,7 @@
         }
         copyKeystore () {
             copyTxt(this.wallet.keystore).then((data)=>{
-                this.$Message.success(this['$t']('successful_copy'));
+                this.$Message.success(Message.COPY_SUCCESS);
             })
         }
         saveQRCode () {

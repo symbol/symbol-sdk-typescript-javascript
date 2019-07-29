@@ -50,6 +50,7 @@
     import './WalletCreate.less'
     import {NetworkType} from "nem2-sdk";
     import {MnemonicPassPhrase} from 'nem2-hd-wallets';
+    import Message from "@/message/Message";
 
 
     @Component({
@@ -80,19 +81,19 @@
 
         checkInput () {
             if (!this.formItem.currentNetType || this.formItem.currentNetType == '') {
-                this.$Message.error(this.$t('walletCreateNetTypeRemind'));
+                this.$Message.error(Message.PLEASE_SWITCH_NETWORK);
                 return false
             }
             if (!this.formItem.walletName || this.formItem.walletName == '') {
-                this.$Message.error(this.$t('walletCreateWalletNameRemind'));
+                this.$Message.error(Message.WALLET_NAME_INPUT_ERROR);
                 return false
             }
             if (!this.formItem.password || this.formItem.password == '') {
-                this.$Message.error(this.$t('walletCreatePasswordRemind'));
+                this.$Message.error(Message.PASSWORD_SETTING_INPUT_ERROR);
                 return false
             }
             if (this.formItem.password !== this.formItem.checkPW) {
-                this.$Message.error(this.$t('walletCreateCheckPWRemind'));
+                this.$Message.error(Message.INCONSISTENT_PASSWORD_ERROR);
                 return false
             }
             return true

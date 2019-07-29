@@ -204,7 +204,7 @@ export var zh_CN = {
     divisibility_can_not_less_than_0: '可分性不可小于零',
     duration_can_not_less_than_0: '持续时间不可小于零',
     fee_can_not_less_than_0: '费用不可小于零',
-    duration_can_not_less_than_10_years: '持续时间不可大于10年',
+    duration_can_not_more_than_10_years: '持续时间不可大于10年',
     // edit dialog
     modify_supply: '修改供应量',
     binding_alias: '绑定别名',

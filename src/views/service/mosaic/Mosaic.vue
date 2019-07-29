@@ -172,6 +172,7 @@
     import MosaicAliasDialog from '../mosaicAlias-dialog/MosaicAliasDialog.vue'
     import {MosaicId, MosaicNonce, PublicAccount, NetworkType, Account} from 'nem2-sdk'
     import {accountInterface} from '@/interface/sdkAccount';
+    import Message from "@/message/Message";
 
     @Component({
         components: {
@@ -256,7 +257,7 @@
         checkEnd(flag) {
             if (!flag) {
                 this.$Message.destroy()
-                this.$Message.error(this['$t']('password_error'))
+                this.$Message.error(Message.WRONG_PASSWORD_ERROR)
                 return
             }
             if (this.isMultisigAccount) {
@@ -295,7 +296,7 @@
                     // get announce status
                     announceResult.result.announceStatus.subscribe((announceInfo: any) => {
                         console.log(signature)
-                        that.$Message.success('success')
+                        that.$Message.success(Message.SUCCESS)
                         that.initForm()
                     })
                 })
@@ -310,19 +311,19 @@
         checkForm() {
             const {supply, divisibility, duration, fee} = this.formItem
             if (supply < 0) {
-                this.$Message.error(this['$t']('supply_can_not_less_than_0'))
+                this.$Message.error(Message.SUPPLY_LESS_THAN_0_ERROR)
                 return false
             }
             if (divisibility < 0) {
-                this.$Message.error(this['$t']('divisibility_can_not_less_than_0'))
+                this.$Message.error(Message.DIVISIBILITY_LESS_THAN_0_ERROR)
                 return false
             }
             if (duration <= 0) {
-                this.$Message.error(this['$t']('duration_can_not_less_than_0'))
+                this.$Message.error(Message.DURATION_LESS_THAN_0_ERROR)
                 return false
             }
             if (fee < 0) {
-                this.$Message.error(this['$t']('fee_can_not_less_than_0'))
+                this.$Message.error(Message.FEE_LESS_THAN_0_ERROR)
                 return false
             }
             return true
@@ -370,7 +371,7 @@
                 return
             }
             if (duration * 12 >= 60 * 60 * 24 * 3650) {
-                this.$Message.error(this['$t']('duration_can_not_less_than_10_years'))
+                this.$Message.error(Message.DURATION_MORE_THAN_10_YEARS_ERROR)
                 this.formItem.duration = 0
             }
             this.durationIntoDate = formatSeconds(duration * 12)

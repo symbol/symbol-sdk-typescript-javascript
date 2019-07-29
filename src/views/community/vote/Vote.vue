@@ -194,7 +194,7 @@
         ]
         selectionList = ['1', '2']
         currentVoteList = []
-        voteList = [
+        voteList =  [
             {
                 initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
                 vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',

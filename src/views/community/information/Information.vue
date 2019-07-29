@@ -72,6 +72,7 @@
     import axios from 'axios'
     import {formatDate} from '../../../utils/util.js'
     import CheckPWDialog from '../../../components/checkPW-dialog/CheckPWDialog.vue'
+    import Message from "@/message/Message";
 
     @Component({
         components: {
@@ -123,14 +124,13 @@
         }
 
         async sendComment() {
-
             this.showCheckPWDialog = true
 
             const that = this
             const comment = this.commentContent
             const cid = this.currentArticle.cid
-            const address = 'address stest'
-            const nickName = 'account test'
+            const address = this.$store.state.account.address
+            const nickName = this.$store.state.account.name
             const gtmCreate = new Date()
 
             const url = `${this.$store.state.app.apiUrl}/rest/blog/comment/save?cid=${cid}&comment=${comment}&address=${address}&nickName=${nickName}&gtmCreate=${gtmCreate}`
@@ -141,7 +141,7 @@
                     desc: 'success',
                     render: h => {
                         // @ts-ignore
-                        return h('span', [that['$t']('successful_operation')])
+                        return h('span', [Message.OPERATION_SUCCESS])
                     }
                 });
             }).catch(() => {
@@ -150,7 +150,7 @@
                     desc: 'failure',
                     render: h => {
                         // @ts-ignore
-                        return h('span', [that['$t']('operatio_failed')])
+                        return h('span', [Message.OPERATION_FAILED_ERROR])
                     }
                 });
             })
@@ -204,7 +204,6 @@
                 let articleList = that.articleList.concat(response.data.rows)
                 articleList.map((item) => {
                     item.summary = item.title
-                    // item.content = item.content.replace(/src="/g, 'src="http://120.79.181.170/')
                     return item
                 })
                 that.articleList = articleList

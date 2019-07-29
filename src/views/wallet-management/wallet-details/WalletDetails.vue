@@ -107,6 +107,7 @@
     import PrivatekeyDialog from '@/views/wallet-management/privatekey-dialog/PrivatekeyDialog.vue'
     import KeystoreDialog from '@/views/wallet-management/keystore-dialog/KeystoreDialog.vue'
     import './WalletDetails.less';
+    import Message from "@/message/Message";
 
     @Component({
         components: {
@@ -132,7 +133,7 @@
 
         changeMnemonicDialog() {
             if (!this.getWallet.mnemonic) {
-                this.$Message.warning(this.$t('no_mnemonic'));
+                this.$Message.warning(Message.NO_MNEMONIC_INFO);
                 return
             }
             this.showMnemonicDialog = true
@@ -166,7 +167,7 @@
 
         copy(txt) {
             copyTxt(txt).then(() => {
-                this.$Message.success(this['$t']('successful_copy'));
+                this.$Message.success(Message.COPY_SUCCESS);
             })
         }
 

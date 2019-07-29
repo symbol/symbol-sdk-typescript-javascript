@@ -95,6 +95,7 @@
     import {Crypto} from 'nem2-sdk'
     import {createQRCode} from '@/utils/tools'
     import './PrivatekeyDialog.less';
+    import Message from "@/message/Message";
 
     @Component({
         components: {},
@@ -133,7 +134,7 @@
                     }
                     const enTxt = Crypto.decrypt(saveData)
                     if(enTxt.toString().toUpperCase() !== this.getWallet.privateKey.toUpperCase()){
-                        this.$Message.error('密码输入错误! ');
+                        this.$Message.error(Message.WRONG_PASSWORD_ERROR);
                         return false
                     }
                     this.stepIndex = 1
@@ -152,7 +153,7 @@
         }
         checkInput () {
             if (!this.wallet.password || this.wallet.password == '') {
-                this.$Message.error(this.$t('please_set_your_wallet_password'));
+                this.$Message.error(Message.PLEASE_SET_WALLET_PASSWORD_INFO);
                 return false
             }
             return true
