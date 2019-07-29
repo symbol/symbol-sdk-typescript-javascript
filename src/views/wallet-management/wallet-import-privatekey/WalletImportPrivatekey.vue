@@ -123,14 +123,14 @@ import {NetworkType} from "nem2-sdk";
         checkPrivateKey() {
             try {
                 if (!this.form.privateKey || this.form.privateKey === '') {
-                    this.$Message.error('Mnemonic_input_error');
+                    this.$Message.error('Set_password_input_error');
                     return false
                 }
                 const account = Account.createFromPrivateKey(this.form.privateKey, NetworkType.MIJIN_TEST)
                 this.account = account
                 return true
             } catch (e) {
-                this.$Message.error(this['$t']('Mnemonic_input_error'));
+                this.$Message.error(this['$t']('Set_password_input_error'));
                 return false
             }
 

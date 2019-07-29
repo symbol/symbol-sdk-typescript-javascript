@@ -218,11 +218,11 @@ import {NetworkType} from "nem2-sdk";
                     value: transaction.isReceipt ? 'gathering' : 'payment'
                 },
                 {
-                    key: 'from',
+                    key: 'transfer_target',
                     value: transaction.oppositeAddress
                 },
                 {
-                    key: 'aims',
+                    key: 'Wallet',
                     value: transaction.target
                 },
                 {

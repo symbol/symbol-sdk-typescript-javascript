@@ -17,7 +17,8 @@
           </Col>
           <Col span="9">
             <div @click.stop>
-              <p class="walletTypeTxt">{{$t('Public_account')}}</p>
+<!--              TODO-->
+              <p class="walletTypeTxt">Private account </p>
               <div class="options">
                 <Poptip placement="bottom">
                   <img src="../../../assets/images/wallet-management/moreActive.png">

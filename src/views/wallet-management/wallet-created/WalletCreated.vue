@@ -232,6 +232,8 @@
         }
 
         skipInput (index) {
+            const account = this.createAccount()
+            this.loginWallet(account)
             this.tags = index
         }
 

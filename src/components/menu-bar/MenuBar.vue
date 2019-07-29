@@ -24,17 +24,17 @@
       </div>
       <div class="controller">
         <div class="window_controller">
-          <div>
-                        <span class="pointer" @click="minWindow"></span>
-                        <span class="pointer" @click="maxWindow"></span>
-                        <span class="pointer" @click="closeWindow"></span>
-          </div>
+          <!--          <div>-->
+          <!--                        <span class="pointer" @click="minWindow"></span>-->
+          <!--                        <span class="pointer" @click="maxWindow"></span>-->
+          <!--                        <span class="pointer" @click="closeWindow"></span>-->
+          <!--          </div>-->
         </div>
         <div class="app_controller clear">
           <div :class="[isNodeHealthy?'point_healthy':'point_unhealthy']">
             <Poptip placement="bottom-end">
               <i class="pointer point" @click="toggleNodeList"></i>
-              <span class="network_type_text">
+              <span class="network_type_text" v-if="$store.state.account.wallet">
                 {{ $store.state.account.wallet.networkType == 144 ? 'MIJIN_TEST':''}}
               </span>
               <div slot="title" class="title">{{$t('current_point')}}：{{$store.state.account.node}}</div>
@@ -121,7 +121,7 @@
         accountAddress = ''
         walletList = []
 
-        get getWallet () {
+        get getWallet() {
             return this.$store.state.account.wallet
         }
 
@@ -196,7 +196,7 @@
             const {walletList} = this
             const that = this
             let list = walletList
-            walletList.map((item,index) => {
+            walletList.map((item, index) => {
                 if (item.address == address) {
                     that.$store.state.account.wallet = item
                     list.splice(index, 1)
@@ -252,7 +252,7 @@
         }
 
         @Watch('getWallet')
-        onGetWalletChange(){
+        onGetWalletChange() {
             this.currentWallet = this.getWallet.address
         }
 
