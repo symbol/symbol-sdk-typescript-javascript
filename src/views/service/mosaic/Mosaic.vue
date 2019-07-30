@@ -20,7 +20,7 @@
 
                 </FormItem>
                 <FormItem class="form_item_content" :label="$t('severability')">
-                  <Input v-model="formItem.divisibility" required
+                  <Input v-model="formItem.divisibility" :maxlength="1" required
                          :placeholder="$t('please_enter_separability') + '（0~6）'"></Input>
                   <div class="number_controller">
                     <img @click="addSeverabilityAmount " class="pointer"
@@ -183,7 +183,7 @@
     export default class Mosaic extends Vue {
         formItem: any = {
             supply: 500,
-            divisibility: 1,
+            divisibility: 6,
             transferable: true,
             supplyMutable: true,
             duration: 0,
@@ -196,7 +196,6 @@
         showMosaicEditDialog = false
         showMosaicAliasDialog = false
         isMultisigAccount = false
-        accountPrivateKey = ''
         accountPublicKey = ''
         accountAddress = ''
         node = ''
@@ -205,6 +204,10 @@
         currentXEM2: string
         currentXEM1: string
         mosaicMapInfo:any = {}
+
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
 
         addSeverabilityAmount() {
             this.formItem.divisibility = Number(this.formItem.divisibility) + 1
@@ -253,8 +256,8 @@
             this.showMosaicEditDialog = false
         }
 
-        checkEnd(flag) {
-            if (!flag) {
+        checkEnd(key) {
+            if (!key) {
                 this.$Message.destroy()
                 this.$Message.error(this['$t']('password_error'))
                 return
@@ -262,16 +265,16 @@
             if (this.isMultisigAccount) {
                 this.createByMultisig()
             } else {
-                this.createBySelf()
+                this.createBySelf(key)
             }
 
         }
 
 
-        createBySelf() {
-            let {accountPrivateKey, accountPublicKey, accountAddress, node, generationHash} = this
+        createBySelf(privateKey) {
+            let {accountPublicKey, accountAddress, node, generationHash} = this
             const {supply, divisibility, transferable, supplyMutable, duration, fee} = this.formItem
-            const account = Account.createFromPrivateKey(accountPrivateKey, NetworkType.MIJIN_TEST)
+            const account = Account.createFromPrivateKey(privateKey, NetworkType.MIJIN_TEST)
             const that = this
 
             const nonce = MosaicNonce.createRandom()
@@ -331,11 +334,11 @@
         initForm() {
             this.formItem = {
                 supply: 500,
-                divisibility: 1,
+                divisibility: 6,
                 transferable: true,
                 supplyMutable: true,
                 duration: 1000,
-                fee: 0.05
+                fee: 0
             }
         }
 
@@ -348,9 +351,8 @@
 
 
         initData() {
-            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
-            this.accountPublicKey = this.$store.state.account.accountPublicKey
-            this.accountAddress = this.$store.state.account.accountAddress
+            this.accountPublicKey = this.getWallet.publicKey
+            this.accountAddress = this.getWallet.address
             this.node = this.$store.state.account.node
             this.generationHash = this.$store.state.account.generationHash
             this.$store.state.app.isInLoginPage = false
@@ -379,7 +381,7 @@
 
         async getMosaicList() {
             const that = this
-            let {accountPrivateKey, accountPublicKey, accountAddress, node, currentXem} = this
+            let {accountPublicKey, accountAddress, node, currentXem} = this
             await accountInterface.getAccountInfo({
                 node,
                 address: accountAddress

@@ -130,6 +130,7 @@
             this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
         }
         initData(){
+            if(this.$route.params['create']) return
             this.$store.state.app.isInLoginPage = false
         }
 

@@ -38,30 +38,51 @@
 
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
+    import {Crypto} from 'nem2-sdk'
     import './CheckPWDialog.less';
+    import {walletInterface} from "../../interface/sdkWallet";
     @Component({
         components: {},
     })
     export default class CheckPWDialog extends Vue{
+        @Prop()
+        showCheckPWDialog:boolean
+
         stepIndex = 0
         show = false
         wallet = {
             password:''
         }
 
-        @Prop()
-        showCheckPWDialog:boolean
+        get getWallet() {
+            return this.$store.state.account.wallet
+        }
 
         checkPWDialogCancel () {
             this.$emit('closeCheckPWDialog')
         }
         checkPWed () {
-            this.show = false
-            this.checkPWDialogCancel()
-            this.$emit('checkEnd',true)
+            let saveData = {
+                ciphertext: this.getWallet.ciphertext,
+                iv: this.getWallet.iv.data?this.getWallet.iv.data:this.getWallet.iv,
+                key:this.wallet.password
+            }
+            const DeTxt = Crypto.decrypt(saveData)
+            walletInterface.getWallet({
+                name: this.getWallet.name,
+                networkType: this.getWallet.networkType,
+                privateKey: DeTxt.length === 64 ? DeTxt : ''
+            }).then(async (Wallet: any) => {
+                this.show = false
+                this.checkPWDialogCancel()
+                this.$emit('checkEnd',DeTxt)
+            }).catch(()=>{
+                this.$Message.error(this.$t('password_error'));
+            })
         }
         @Watch('showCheckPWDialog')
         onShowCheckPWDialogChange(){
+            this.wallet.password = ''
             this.show = this.showCheckPWDialog
         }
     }

@@ -90,7 +90,9 @@
 <script lang="ts">
     import {Crypto} from  'nem2-sdk'
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
+    import {hexCharCodeToStr} from '../../../utils/tools'
     import './MnemonicDialog.less';
+    import {walletInterface} from "../../../interface/sdkWallet";
 
     @Component({
         components: {},
@@ -113,6 +115,10 @@
         }
 
         mnemonicDialogCancel() {
+            this.wallet = {
+                password: '',
+                mnemonicWords: ''
+            }
             this.$emit('closeMnemonicDialog')
             setTimeout(() => {
                 this.stepIndex = 0
@@ -125,16 +131,28 @@
                     if(!this.checkInput()) return
                     let saveData = {
                         ciphertext: this.getWallet.ciphertext,
-                        iv: this.getWallet.iv,
+                        iv: this.getWallet.iv.data?this.getWallet.iv.data : this.getWallet.iv,
                         key:this.wallet.password
                     }
-                    const enTxt = Crypto.decrypt(saveData)
-                    if(enTxt.toString().toUpperCase() !== this.getWallet.privateKey.toUpperCase()){
-                        this.$Message.error('密码输入错误! ');
-                        return false
-                    }
-                    this.stepIndex = 1
-                    this.wallet.password = ''
+                    const DeTxt = Crypto.decrypt(saveData)
+                    walletInterface.getWallet({
+                        name: this.getWallet.name,
+                        networkType: this.getWallet.networkType,
+                        privateKey: DeTxt.length === 64 ? DeTxt : ''
+                    }).then(async (Wallet: any) => {
+                        let mnemonicData = {
+                            ciphertext: this.getWallet['mnemonicEnCodeObj'].ciphertext,
+                            iv: this.getWallet['mnemonicEnCodeObj'].iv.data?this.getWallet['mnemonicEnCodeObj'].iv.data : this.getWallet['mnemonicEnCodeObj'].iv,
+                            key:this.wallet.password
+                        }
+                        const DeMnemonic = Crypto.decrypt(mnemonicData)
+                        this.mnemonic = hexCharCodeToStr(DeMnemonic)
+                        this.mnemonicRandom()
+                        this.stepIndex = 1
+                        this.wallet.password = ''
+                    }).catch(()=>{
+                        this.$Message.error(this.$t('password_error'));
+                    })
                     break;
                 case 1 :
                     this.stepIndex = 2
@@ -193,7 +211,6 @@
         }
 
         checkMnemonic () {
-            console.log(1)
             const mnemonicDiv = this.$refs['mnemonicWordDiv'];
             const mnemonicDivChild = mnemonicDiv['getElementsByTagName']('span');
             let childWord = []
@@ -201,8 +218,6 @@
                 if( typeof mnemonicDivChild[i] !== "object") continue;
                 childWord.push(mnemonicDivChild[i]['innerText'])
             }
-            console.log(childWord)
-            console.log(this.mnemonic.split(' '))
             if (JSON.stringify(childWord) != JSON.stringify(this.mnemonic.split(' '))) {
                 if (childWord.length < 1) {
                     this.$Message.warning(this['$t']('Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct'));
@@ -217,11 +232,6 @@
         @Watch('showMnemonicDialog')
         onShowMnemonicDialogChange() {
             this.show = this.showMnemonicDialog
-        }
-
-        created () {
-            this.mnemonic = this.getWallet.mnemonic
-            this.mnemonicRandom()
         }
     }
 </script>

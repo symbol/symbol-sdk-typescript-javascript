@@ -95,6 +95,7 @@
     import {Crypto} from 'nem2-sdk'
     import {createQRCode} from '@/utils/tools'
     import './PrivatekeyDialog.less';
+    import {walletInterface} from "../../../interface/sdkWallet";
 
     @Component({
         components: {},
@@ -116,6 +117,10 @@
         }
 
         privatekeyDialogCancel() {
+            this.wallet = {
+                password: '',
+                privatekey: ''
+            }
             this.$emit('closePrivatekeyDialog')
             setTimeout(() => {
                 this.stepIndex = 0
@@ -126,22 +131,27 @@
             switch (this.stepIndex) {
                 case 0 :
                     if(!this.checkInput()) return
+                    console.log(Object.prototype.toString.call(this.getWallet.iv))
                     let saveData = {
                         ciphertext: this.getWallet.ciphertext,
-                        iv: this.getWallet.iv,
+                        iv: this.getWallet.iv.data?this.getWallet.iv.data : this.getWallet.iv,
                         key:this.wallet.password
                     }
-                    const enTxt = Crypto.decrypt(saveData)
-                    if(enTxt.toString().toUpperCase() !== this.getWallet.privateKey.toUpperCase()){
-                        this.$Message.error('密码输入错误! ');
-                        return false
-                    }
-                    this.stepIndex = 1
-                    this.wallet.password = ''
-                    this.stepIndex = 1
+                    const DeTxt = Crypto.decrypt(saveData)
+                    walletInterface.getWallet({
+                        name: this.getWallet.name,
+                        networkType: this.getWallet.networkType,
+                        privateKey: DeTxt.length === 64 ? DeTxt : ''
+                    }).then(async (Wallet: any) => {
+                        this.stepIndex = 1
+                        this.wallet.password = ''
+                        this.stepIndex = 1
+                        this.wallet.privatekey = DeTxt
+                    }).catch(()=>{
+                        this.$Message.error(this.$t('password_error'));
+                    })
                     break;
                 case 1 :
-                    this.wallet.privatekey = this.getWallet.privateKey
                     this.createQRCode()
                     this.stepIndex = 2
                     break;
@@ -165,7 +175,7 @@
 
         }
         createQRCode () {
-            createQRCode(this.getWallet.privateKey).then((data) => {
+            createQRCode(this.wallet.privatekey).then((data) => {
                 this.QRCode = data.url
             })
         }

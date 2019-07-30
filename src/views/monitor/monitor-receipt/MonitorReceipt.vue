@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import {createQRCode, copyTxt} from '@/utils/tools'
     import CollectionRecord from '@/components/CollectionRecord.vue'
 
@@ -94,11 +94,14 @@
             }
         ]
 
-        accountPrivateKey = ''
         accountPublicKey = ''
         accountAddress = ''
         node = ''
         currentXem = ''
+
+        get getWallet() {
+            return this.$store.state.account.wallet
+        }
 
         hideSetAmountDetail() {
             this.isShowDialog = false
@@ -163,9 +166,8 @@
 
 
         initData() {
-            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
-            this.accountPublicKey = this.$store.state.account.accountPublicKey
-            this.accountAddress = this.$store.state.account.accountAddress
+            this.accountPublicKey = this.getWallet.publicKey
+            this.accountAddress = this.getWallet.address
             this.node = this.$store.state.account.node
             this.currentXem = this.$store.state.account.currentXem
         }
@@ -176,6 +178,11 @@
             })
         }
 
+        @Watch('getWallet')
+        onGetWalletChange() {
+            this.initData()
+            this.createQRCode()
+        }
 
         created() {
             this.initData()

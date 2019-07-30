@@ -116,10 +116,19 @@
 
         jumpToDashBoard(){
             if(!this.checkLock()) return
-            this.$store.state.app.unClick = false
-            this.$router.push({
-                name:'dashBoard'
-            })
+            if(this.$store.state.app.walletList.length == 0){
+                this.$router.push({
+                    name:'walletPanel',
+                    params:{
+                        create: 'true'
+                    }
+                })
+            }else {
+                this.$store.state.app.isInLoginPage = false
+                this.$router.push({
+                    name:'dashBoard'
+                })
+            }
         }
     }
 </script>

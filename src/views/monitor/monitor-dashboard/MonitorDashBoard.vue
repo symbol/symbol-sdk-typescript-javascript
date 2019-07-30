@@ -117,7 +117,7 @@ import {NetworkType} from "nem2-sdk";
         localRead,
         formatTransactions
     } from '@/utils/util.js'
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import LineChart from '@/components/LineChart.vue'
     import axios from 'axios'
     import {transactionInterface} from '@/interface/sdkTransaction'
@@ -346,6 +346,14 @@ import {NetworkType} from "nem2-sdk";
             this.currentXem = this.$store.state.account.currentXem
         }
 
+        @Watch('getWallet')
+        onGetWalletChange(){
+            this.initData()
+            this.getUnconfirmedTransactions()
+            this.getConfirmedTransactions()
+            this.getMarketOpenPrice()
+            this.getPointInfo()
+        }
 
         created() {
             this.initData()

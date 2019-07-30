@@ -7,7 +7,7 @@
           <div class="walletInfo">
             <p>
               <span class="tit">{{$t('Wallet_type')}}</span>
-              <span class="walletType">private account</span>
+              <span class="walletType">{{getWallet.isMultisig ? $t('Public_account'):$t('Private_account')}}</span>
             </p>
             <p>
               <span class="tit">{{$t('Wallet_name')}}</span>
@@ -131,7 +131,7 @@
         }
 
         changeMnemonicDialog() {
-            if (!this.getWallet.mnemonic) {
+            if (!this.getWallet['mnemonicEnCodeObj']['ciphertext']) {
                 this.$Message.warning(this.$t('no_mnemonic'));
                 return
             }

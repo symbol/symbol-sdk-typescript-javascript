@@ -26,7 +26,7 @@
         <div class="window_controller">
           <div>
                         <span class="pointer" @click="minWindow"></span>
-                        <span class="pointer" @click="maxWindow"></span>
+                        <span class="pointer"></span>
                         <span class="pointer" @click="closeWindow"></span>
           </div>
         </div>
@@ -125,6 +125,10 @@
             return this.$store.state.account.wallet
         }
 
+        get getWalletList () {
+            return this.$store.state.app.walletList || []
+        }
+
         closeWindow() {
             const ipcRenderer = window['electron']['ipcRenderer'];
             ipcRenderer.send('app', 'quit')
@@ -172,7 +176,6 @@
             if (this.$store.state.app.isInLoginPage) {
                 return
             }
-            console.log('routers', routers)
             const routerIcon = routers[0].children
 
             this.$router.push({
@@ -206,30 +209,6 @@
             this.$store.commit('SET_WALLET_LIST', list)
         }
 
-        initData() {
-            this.languageList = this.$store.state.app.languageList
-            this.currentLanguage = localRead('local')
-            this.$store.state.app.local = {
-                abbr: this.currentLanguage,
-                language: this.$store.state.app.localMap[this.currentLanguage]
-            }
-            this.currentNode = this.$store.state.account.node
-            this.walletList = this.$store.state.app.walletList
-        }
-
-        @Watch('currentNode')
-        onCurrentNode() {
-            const {currentNode} = this
-            this.$store.state.account.node = currentNode
-            const that = this
-            axios.get(currentNode + '/chain/height').then(function (response) {
-                that.isNodeHealthy = true
-                that.getGenerateHash(currentNode)
-            }).catch(function (error) {
-                that.isNodeHealthy = false
-            });
-        }
-
         accountQuit() {
             this.$store.state.app.isInLoginPage = true
             this.$store.state.app.currentPanelIndex = 0
@@ -251,8 +230,33 @@
             })
         }
 
+        initData() {
+            this.languageList = this.$store.state.app.languageList
+            this.currentLanguage = localRead('local')
+            this.$store.state.app.local = {
+                abbr: this.currentLanguage,
+                language: this.$store.state.app.localMap[this.currentLanguage]
+            }
+            this.currentNode = this.$store.state.account.node
+            this.walletList = this.getWalletList
+        }
+
+        @Watch('currentNode')
+        onCurrentNode() {
+            const {currentNode} = this
+            this.$store.state.account.node = currentNode
+            const that = this
+            axios.get(currentNode + '/chain/height').then(function (response) {
+                that.isNodeHealthy = true
+                that.getGenerateHash(currentNode)
+            }).catch(function (error) {
+                that.isNodeHealthy = false
+            });
+        }
+
         @Watch('getWallet')
         onGetWalletChange(){
+            this.walletList = this.getWalletList
             this.currentWallet = this.getWallet.address
         }
 

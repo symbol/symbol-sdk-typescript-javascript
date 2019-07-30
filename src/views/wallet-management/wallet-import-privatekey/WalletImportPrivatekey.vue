@@ -162,18 +162,67 @@ import {NetworkType} from "nem2-sdk";
                     mosaics: [],
                     wallet: Wallet.result.wallet,
                     password: Wallet.result.password,
-                    mnemonic: '',
                     balance: 0,
                     style
                 }
+                await that.getMosaicList(storeWallet).then((data) => {
+                    storeWallet = data
+                })
+                await that.getMultisigAccount(storeWallet).then((data) => {
+                    storeWallet = data
+                })
                 that.$store.commit('SET_WALLET', storeWallet)
                 const encryptObj = Crypto.encrypt(Wallet.result.privateKey, that.form['password'])
-                that.localKey(name, encryptObj, Wallet.result.wallet.address.address, netType)
+                that.localKey(storeWallet, encryptObj, {})
                 this.toWalletDetails()
             })
         }
 
-        localKey(walletName, keyObj, address, netType, balance = 0) {
+        async getMosaicList(listItem) {
+            let walletItem = listItem
+            let node = this.$store.state.account.node
+            let currentXEM2 = this.$store.state.account.currentXEM2
+            let currentXEM1 = this.$store.state.account.currentXEM1
+            await accountInterface.getAccountInfo({
+                node,
+                address: walletItem.address
+            }).then(async accountInfoResult => {
+                await accountInfoResult.result.accountInfo.subscribe((accountInfo) => {
+                    let mosaicList = accountInfo.mosaics
+                    mosaicList.map((item) => {
+                        item.hex = item.id.toHex()
+                        if (item.id.toHex() == currentXEM2 || item.id.toHex() == currentXEM1) {
+                            walletItem.balance = item.amount.compact() / 1000000
+                        }
+                    })
+                    walletItem.mosaics = mosaicList
+                }, () => {
+                    walletItem.balance = 0
+                })
+            })
+            return walletItem
+        }
+
+        async getMultisigAccount (listItem) {
+            let walletItem = listItem
+            let node = this.$store.state.account.node
+            await accountInterface.getMultisigAccountInfo({
+                node: node,
+                address: walletItem.address
+            }).then((multisigAccountInfo)=>{
+                if(typeof (multisigAccountInfo.result.multisigAccountInfo) == 'object'){
+                    multisigAccountInfo.result.multisigAccountInfo['subscribe']((accountInfo)=>{
+                        walletItem.isMultisig = true
+                    },()=>{
+                        console.log('not multisigAccount')
+                        walletItem.isMultisig = false
+                    })
+                }
+            })
+            return walletItem
+        }
+
+        localKey(wallet, keyObj, mnemonicEnCodeObj) {
             let localData: any[] = []
             let isExist: boolean = false
             try {
@@ -182,18 +231,19 @@ import {NetworkType} from "nem2-sdk";
                 localData = []
             }
             let saveData = {
-                name: walletName,
+                name: wallet.name,
                 ciphertext: keyObj.ciphertext,
                 iv: keyObj.iv,
-                networkType: Number(netType),
-                address: address,
-                balance: balance
+                networkType: wallet.networkType,
+                address: wallet.address,
+                publicKey: wallet.publicKey,
+                mnemonicEnCodeObj: mnemonicEnCodeObj
             }
-            const account = this.$store.state.account.wallet;
-            saveData = Object.assign(saveData, account)
-            this.$store.commit('SET_WALLET', saveData)
+            let account = this.$store.state.account.wallet;
+            account = Object.assign(account, saveData)
+            this.$store.commit('SET_WALLET', account)
             for (let i in localData) {
-                if (localData[i].address === address) {
+                if (localData[i].address === wallet.address) {
                     localData[i] = saveData
                     isExist = true
                 }

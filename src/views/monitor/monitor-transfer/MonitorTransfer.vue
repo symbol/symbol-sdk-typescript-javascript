@@ -35,7 +35,6 @@
         }
     })
     export default class Transfer extends Vue {
-        accountPrivateKey = ''
         accountPublicKey = ''
         accountAddress = ''
         node = ''
@@ -68,7 +67,9 @@
             // this.isShowSearchDetail = true
         }
 
+        hideSearchDetail() {
 
+        }
         swicthTransferType(index) {
             const list: any = this.transferTypeList
             if (list[index].disabled) {
@@ -84,7 +85,6 @@
 
 
         initData() {
-            this.accountPrivateKey = this.getWallet.privateKey
             this.accountPublicKey = this.getWallet.publicKey
             this.accountAddress = this.getWallet.address
             this.node = this.$store.state.account.node

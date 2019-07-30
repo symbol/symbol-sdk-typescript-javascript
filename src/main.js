@@ -12,6 +12,15 @@ import i18n from '@/locale';
 Vue.use(iView);
 Vue.use(rem);
 Vue.config.productionTip = false;
+resize();
+function resize() {
+    if (window['electron']) {
+        var devInnerWidth = 1920;
+        var scaleFactor = window['electron'].screen.getPrimaryDisplay().scaleFactor;
+        var zoomFactor = window.innerWidth / devInnerWidth;
+        window['electron'].webFrame.setZoomFactor(zoomFactor);
+    }
+}
 export default new Vue({
     el: '#app',
     router: router,

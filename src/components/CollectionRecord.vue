@@ -180,6 +180,11 @@
             this.currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
         }
 
+        @Watch('getWallet')
+        onGetWalletChange(){
+            this.initData()
+            this.getConfirmedTransactions()
+        }
 
         created() {
             this.initData()

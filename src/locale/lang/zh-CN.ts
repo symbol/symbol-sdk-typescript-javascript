@@ -427,6 +427,7 @@ export const zh_CN = {
     Import_private_key_operation: '导入私钥操作',
     Wallet_management: '钱包管理',
     Public_account: '公共账户',
+    Private_account: '私有账户',
     delete: '删除',
     Delete_wallet_successfully: '删除钱包成功',
     createLockPWRemind:'密码设置错误',
