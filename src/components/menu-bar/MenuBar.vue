@@ -59,7 +59,7 @@
             </i-select>
           </div>
           <div class="switch_wallet" v-if="showSelectWallet&&walletList.length > 0">
-            <img class="select_wallet_icon" :src="monitorSeleted" alt="">
+            <img class="select_wallet_icon" src="../../assets/images/window/windowWalletSelect.png" alt="">
             <i-select @on-change="switchWallet" v-model="currentWallet" :placeholder="walletList[0].name">
               <i-option v-for="item in walletList" :value="item.address">{{ item.name }}</i-option>
             </i-select>
