@@ -507,4 +507,10 @@ export const en_US = {
     apostille_result: 'Apostille result',
     Delete_records_locally: 'Delete records locally',
     Notarized_data_backup: 'Notarized data backup',
+
+
+    // todo
+    first_floor:'first floor',
+    second_floor:'second floor',
+    third_floor:'third floor'
 }

@@ -426,7 +426,6 @@ export var zh_CN = {
     Edit_co_signers_and_signature_thresholds: '编辑共签人及签名阀值',
     Choose_a_co_signer: '选择共签人',
     Add_delete_co_signers_this_action_will_be_displayed_in_the_action_log_click_delete_to_cancel: '添加/删除共签人，此处操作会在操作记录中显示，点击删除可撤销',
-    // TODO
     Create_namespace: '创建命名空间',
     Namespace_list: '命名空间列表',
     New_root_space: '新的根空间',
@@ -472,5 +471,9 @@ export var zh_CN = {
     apostille_result: '公证结果',
     Delete_records_locally: '本地删除记录',
     Notarized_data_backup: '公证数据备份',
+    // todo
+    first_floor: '第一层',
+    second_floor: '第二层',
+    third_floor: '第三层'
 };
 //# sourceMappingURL=zh-CN.js.map

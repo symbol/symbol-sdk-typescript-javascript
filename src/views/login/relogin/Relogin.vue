@@ -81,7 +81,7 @@
                 text: 'use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates'
             }
         ]
-        currentText = ''
+        currentText:any = ''
 
 
         changeText(text) {
@@ -90,7 +90,7 @@
 
         created() {
             this.$store.state.app.unClick = true
-            this.currentText = this.$t(this.iconList[0].text)
+            this.currentText = this['$t'](this.iconList[0].text)
         }
 
         checkLock(){

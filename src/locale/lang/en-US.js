@@ -66,7 +66,7 @@ export var en_US = {
     transaction_type: 'Type',
     the_amount: 'Amount',
     date: 'Date',
-    block_height: 'Block height',
+    block_height: 'Height',
     average_block_time: 'Average',
     point: 'Point',
     number_of_transactions: 'Transactions',
@@ -470,5 +470,9 @@ export var en_US = {
     apostille_result: 'Apostille result',
     Delete_records_locally: 'Delete records locally',
     Notarized_data_backup: 'Notarized data backup',
+    // todo
+    first_floor: 'first floor',
+    second_floor: 'second floor',
+    third_floor: 'third floor'
 };
 //# sourceMappingURL=en-US.js.map
