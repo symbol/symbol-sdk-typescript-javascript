@@ -1,5 +1,5 @@
-.namespaceEditDialogWrap{
-  .namespaceEditDialogHeader{
+.mosaicAliasDialogWrap{
+  .mosaicAliasDialogHeader{
     height: 74px;
     line-height: 74px;
     font-size:28px;
@@ -23,26 +23,25 @@
       padding: 0;
     }
   }
-  .namespaceEditDialogBody{
-    padding:  60px 0;
+  .mosaicAliasDialogBody{
+    padding:  40px 0;
     .stepItem1{
       width: 680px;
       margin: 0 auto;
-      .namespaceTxt{
-        height:60px;
+      .mosaicTxt{
+        height: 60px;
         line-height: 60px;
         font-size:16px;
         font-weight:400;
         color:#222222;
       }
       .ivu-form-item{
+        height: 60px;
+        line-height: 60px;
         margin-bottom: 40px;
       }
-      .ivu-form-item:first-of-type{
-        margin-bottom: 15px;
-      }
       .ivu-form-item-label{
-        width: 105px;
+        width: 115px;
         height: 16px;
         font-size:16px;
         line-height: 16px;
@@ -51,10 +50,22 @@
         margin-top: 12px;
       }
       .ivu-form-item-content{
-        margin-left: 124px;
+        margin-left: 170px;
         position: relative;
         input{
           padding-right: 50px;
+        }
+        .selectAliasNameIcon{
+          width: 60px;
+          height: 60px;
+          position: absolute;
+          right: 0;
+          top: 0;
+          z-index: 999;
+          cursor: pointer;
+          background-image: url("../../../../../../assets/images/service/moreAlias.png");
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
         }
         .icon{
           display: block;
@@ -74,6 +85,10 @@
         .ivu-select-selection{
           height:60px;
           line-height: 60px;
+          .ivu-icon{
+            padding-right: 60px;
+            transform-origin: 10px;
+          }
           div{
             height:60px;
             line-height: 60px;
@@ -109,6 +124,12 @@
           top: 15px;
         }
       }
+      .ivu-form-item:last-of-type{
+        margin-top:  50px;
+        .ivu-form-item-content{
+          margin-left: 0;
+        }
+      }
       button{
         display: block;
         width:200px;
@@ -121,9 +142,13 @@
         background:#20B5AC;
         border: none;
         border-radius:30px;
-        margin: 40px auto 0;
-        position: relative;
+        margin: 0 auto 0;
       }
     }
+  }
+}
+.button_update {
+  .ivu-form-item-content{
+    margin-top: 40px;
   }
 }

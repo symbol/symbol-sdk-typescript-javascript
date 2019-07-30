@@ -128,6 +128,7 @@
     import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
     import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
     import monitorMosaicIcon from '@/assets/images/monitor/monitorMosaicIcon.png'
+    import Message from "@/message/Message";
 
     @Component
     export default class DashBoard extends Vue {
@@ -219,7 +220,7 @@
         copyAddress() {
             const that = this
             copyTxt(this.address).then(() => {
-                that.$Message.success(that['$t']('successful_copy'))
+                that.$Message.success(Message.COPY_SUCCESS)
             })
         }
 
@@ -446,7 +447,7 @@
             const {mosaicName, mosaicMap} = this
             const {currentXEM1, currentXEM2} = this.$store.state.account
             if (this.mosaicName == '') {
-                this.showErrorMessage(this['$t']('mosaic_name_can_not_be_null'))
+                this.showErrorMessage(Message.MOSAIC_NAME_NULL_ERROR)
                 return
             }
             let searchResult = {}

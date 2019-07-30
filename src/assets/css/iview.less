@@ -82,6 +82,23 @@
 .monitor_panel_container,
 .vote_container {
 
+  .ivu-checkbox-inner {
+    width: 25px !important;
+    height: 25px !important;
+
+  }
+
+  .ivu-checkbox-checked .ivu-checkbox-inner {
+    border: 5px solid #20B5AC !important;
+  }
+
+  .ivu-checkbox-checked .ivu-checkbox-inner:after {
+    width: 12px;
+    height: 20px;
+    top: -5px;
+    left: 1px;
+  }
+
   .switch_wallet {
     .ivu-select-placeholder,
     .ivu-select-selected-value {
@@ -360,17 +377,60 @@
 
 .vote_container {
 
+  .ivu-select-selection {
+    width: 100px;
+    height: 44px !important;
+    padding: 8px 0;
+    border-radius: 5px;
+    border: 1px solid rgba(153, 153, 153, 1);
+  }
+
+  .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
+  .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+    font-size: 20px !important;
+    color: #999999 !important;
+    padding-left: 20px !important;
+  }
+
+  .ivu-select-selection i::before {
+    color: #999 !important;
+  }
+  .ivu-checkbox {
+    margin-right: 15px !important;
+  }
+
+  .bottom_vote_list .right_article_detail .selection .ivu-checkbox-group .ivu-checkbox-wrapper {
+    color: #999999 !important;
+    font-size: 24px !important;
+  }
+
+  .bottom_vote_list .right_article_detail .selection .ivu-checkbox-group .ivu-checkbox-wrapper-checked {
+    color: #333333 !important;
+  }
   .ivu-checkbox-checked .ivu-checkbox-inner {
     border-color: #20B5AC !important;
     background-color: #20B5AC !important;
+
   }
-.ivu-radio {
-  margin-right: 20px;
-}
+
+  .bottom_vote_list .right_article_detail .selection .ivu-radio-group .ivu-radio-wrapper {
+    color: #999999 !important;
+    font-size: 24px !important;
+  }
+
+  .bottom_vote_list .right_article_detail .selection .ivu-radio-group .ivu-radio-wrapper-checked {
+    color: #222 !important;
+  }
+
+  .ivu-radio {
+    margin-right: 20px;
+  }
+
   .ivu-radio-checked .ivu-radio-inner {
     border-color: #20B5AC !important;
     width: 25px !important;
     height: 25px !important;
+    color: #333333 !important;
   }
 
   .ivu-radio-inner {
@@ -547,7 +607,6 @@
 
 }
 
-
 .ivu-notice {
   width: 680px !important;
 }
@@ -588,4 +647,73 @@
 
 }
 
+// multisig manage
+.form_item {
+  .ivu-select-single .ivu-select-selection {
+    height: 45px !important;
+  }
 
+  .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
+  .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+    height: 45px !important;
+    line-height: 45px !important;
+    padding-left: 20px;
+  }
+
+  i::before {
+    color: rgba(32, 181, 172, 1) !important;
+  }
+}
+
+// multisig manage
+.switch_container {
+  .ivu-tooltip-light .ivu-tooltip-inner {
+    color: #20B5AC !important;
+  }
+}
+
+//namespace_transaction
+.namespace_transaction {
+  .form_item {
+    .ivu-select-placeholder {
+      color: #CCCCCC !important;
+    }
+
+    i::before {
+      color: #999999 !important;
+    }
+  }
+}
+
+// service namespace_list_container
+.namespace_list_container {
+  .ivu-poptip-popper {
+    top: -38px !important;
+  }
+
+  .ivu-poptip-inner {
+    width: 120px;
+  }
+
+}
+
+.mosaic_transaction_container {
+  .ivu-checkbox-checked .ivu-checkbox-inner {
+    border-color: #20B5AC;
+    background-color: #20B5AC;
+  }
+
+}
+
+
+.apostille_create_container {
+  .ivu-select {
+    width:620px;
+    .ivu-select-selection {
+      padding: 8px 0;
+      height: 45px !important;
+      border:1px solid rgba(204,204,204,1) !important;
+      padding-left: 15px;
+    }
+  }
+}

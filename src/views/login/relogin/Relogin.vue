@@ -46,6 +46,7 @@
     import reloginNamespace from '../../../assets/images/login/relogin/reloginNamespace.png'
     import reloginSend from '../../../assets/images/login/relogin/reloginSend.png'
     import reloginWidgets from '../../../assets/images/login/relogin/reloginWidgets.png'
+    import Message from "@/message/Message";
 
 
     @Component
@@ -80,7 +81,7 @@
                 text: 'use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates'
             }
         ]
-        currentText = ''
+        currentText:any = ''
 
 
         changeText(text) {
@@ -89,7 +90,7 @@
 
         created() {
             this.$store.state.app.unClick = true
-            this.currentText = this.iconList[0].text
+            this.currentText = this['$t'](this.iconList[0].text)
         }
 
         checkLock(){
@@ -104,12 +105,12 @@
                 }
                 const enTxt = Crypto.decrypt(saveData)
                 if(enTxt !== new UInt64(u).toHex()){
-                    this.$Message.error(this['$t']('password_error'));
+                    this.$Message.error(Message.WRONG_PASSWORD_ERROR);
                     return false
                 }
                 return true
             }catch (e) {
-                this.$Message.error(this['$t']('password_error'));
+                this.$Message.error(Message.WRONG_PASSWORD_ERROR);
                 return false
             }
         }

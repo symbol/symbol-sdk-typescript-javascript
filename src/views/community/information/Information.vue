@@ -1,12 +1,16 @@
 <template>
   <div class="informationWrap">
     <div class="left left_article_list radius">
-      <div class="list_container hide_scroll" ref="listContainer" @scroll="automaticLoadingArticla">
+
+      <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
+
+
+      <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticla">
         <div @click="switchArticle(index)" v-for="(a,index) in articleList"
              :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
-          <div class="title overflow_ellipsis">{{a.title}}
+          <div class="title">{{a.title}}
           </div>
-<!--          <div class="summary overflow_ellipsis">{{a.summary}}</div>-->
+          <!--          <div class="summary overflow_ellipsis">{{a.summary}}</div>-->
           <div class="other_info">
             <span class="tag">{{$t('business')}}</span>
             <span class="from">{{a.author}}</span>
@@ -18,7 +22,10 @@
 
     </div>
     <div class="right_article_detail right radius">
-      <div class="article_container scroll" ref="articleContainer" @scroll="automaticLoadingComment">
+      <div class="article_container " ref="articleContainer" @scroll="automaticLoadingComment">
+
+        <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
+
         <div class="title content article_title">
           {{currentArticle.title}}
         </div>
@@ -33,32 +40,34 @@
           {{currentArticle.gtmCreate}}
         </span>
         </div>
-        <div v-html="currentArticle.content" class="artile_content content">
-        </div>
 
-        <div class="comment">
-          <span class="comment_title"><span class="comment_title_text">{{$t('comment')}}  </span> ({{totalComment}})</span>
-
-          <div class="input_container">
-            <textarea v-model="commentContent" name="" id=""></textarea>
-            <span class="textarea_text">{{$t('remaining')}}：{{remainingWords}} {{$t('word')}}</span>
+        <div class="artile_content scroll content">
+          <div v-html="currentArticle.content">
           </div>
+          <div class="comment">
+          <span class="comment_title"><span
+                  class="comment_title_text">{{$t('comment')}}  </span> ({{totalComment}})</span>
 
-          <div @click="sendComment" class="send_comment pointer">
-            {{$t('publish')}}
-          </div>
-
-          <div class="comment_item_content">
-            <div v-for="(c,index) in commentList" class="comment_item">
-              <div class="account_name">{{c.nickName == ''? $t('anonymous_user'):c.nickName}}</div>
-              <div class="comment_content">{{c.comment}}</div>
-              <div class="comment_time">{{c.gtmCreate}}</div>
+            <div class="input_container">
+              <textarea v-model="commentContent" name="" id=""></textarea>
+              <span class="textarea_text">{{$t('remaining')}}：{{remainingWords}} {{$t('word')}}</span>
             </div>
-            <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">{{$t('no_more_data')}}
-            </div>
-            <div class="load_all_data" v-if="commentList.length === 0">{{$t('no_comment_yet')}}</div>
-          </div>
 
+            <div @click="sendComment" class="send_comment pointer">
+              {{$t('publish')}}
+            </div>
+
+            <div class="comment_item_content">
+              <div v-for="(c,index) in commentList" class="comment_item">
+                <div class="account_name">{{c.nickName == ''? $t('anonymous_user'):c.nickName}}</div>
+                <div class="comment_content">{{c.comment}}</div>
+                <div class="comment_time">{{c.gtmCreate}}</div>
+              </div>
+              <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">{{$t('no_more_data')}}
+              </div>
+              <div class="load_all_data" v-if="commentList.length === 0">{{$t('no_comment_yet')}}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -72,6 +81,7 @@
     import axios from 'axios'
     import {formatDate} from '../../../utils/util.js'
     import CheckPWDialog from '../../../components/checkPW-dialog/CheckPWDialog.vue'
+    import Message from "@/message/Message";
 
     @Component({
         components: {
@@ -79,6 +89,7 @@
         }
     })
     export default class information extends Vue {
+        isLoadingConfirmedTx = true
         showCheckPWDialog = false
         articleList = []
         currentArticle: any = {
@@ -123,14 +134,13 @@
         }
 
         async sendComment() {
-
             this.showCheckPWDialog = true
 
             const that = this
             const comment = this.commentContent
             const cid = this.currentArticle.cid
-            const address = 'address stest'
-            const nickName = 'account test'
+            const address = this.$store.state.account.address
+            const nickName = this.$store.state.account.name
             const gtmCreate = new Date()
 
             const url = `${this.$store.state.app.apiUrl}/rest/blog/comment/save?cid=${cid}&comment=${comment}&address=${address}&nickName=${nickName}&gtmCreate=${gtmCreate}`
@@ -141,7 +151,7 @@
                     desc: 'success',
                     render: h => {
                         // @ts-ignore
-                        return h('span', [that['$t']('successful_operation')])
+                        return h('span', [Message.OPERATION_SUCCESS])
                     }
                 });
             }).catch(() => {
@@ -150,7 +160,7 @@
                     desc: 'failure',
                     render: h => {
                         // @ts-ignore
-                        return h('span', [that['$t']('operatio_failed')])
+                        return h('span', [Message.OPERATION_FAILED_ERROR])
                     }
                 });
             })
@@ -204,7 +214,6 @@
                 let articleList = that.articleList.concat(response.data.rows)
                 articleList.map((item) => {
                     item.summary = item.title
-                    // item.content = item.content.replace(/src="/g, 'src="http://120.79.181.170/')
                     return item
                 })
                 that.articleList = articleList
@@ -212,6 +221,7 @@
                     that.loadAllData = true
                 }
             })
+            this.isLoadingConfirmedTx = false
             this.addArticleStartIndex()
         }
 

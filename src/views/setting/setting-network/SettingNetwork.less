@@ -4,7 +4,7 @@
     font-size: 18px;
     font-weight: 400;
     position: relative;
-    color:rgba(153,153,153,1);
+    color: rgba(153, 153, 153, 1);
   }
 
   li::before {
@@ -16,6 +16,7 @@
     height: 12px;
     top: 5px;
     border-radius: 6px;
+
   }
 
   .right_set_point {
@@ -24,6 +25,40 @@
       font-size: 18px;
       font-weight: 400;
       color: rgba(34, 34, 34, 1);
+    }
+  }
+
+  .left_point_list {
+    .create_node {
+      color: #20B5AC;
+      margin: 40px 30px;
+      font-size:16px;
+      font-weight:400;
+      color:rgba(32,181,172,1);
+      img {
+        width: 18px;
+        height: 18px;
+        margin-right: 15px;
+      }
+    }
+    li {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      span {
+        display: inline-block;
+        height: 18px;
+        width: 18px;
+        background-size: contain;
+        margin-left: 20px;
+        background-repeat: no-repeat;
+        position: relative;
+        bottom: 2px;
+        background-image: url('../../../assets/images/setting/settingDeleteNode.png');
+      }
+      span:hover{
+        background-image: url('../../../assets/images/setting/settingDeleteNodeHover.png');
+      }
     }
   }
 
@@ -73,15 +108,17 @@
 
     .cancel_button {
       color: rgba(34, 34, 34, 1);
-      border:1px solid rgba(34,34,34,1);
+      border: 1px solid rgba(34, 34, 34, 1);
 
     }
   }
+
   .selected_point {
-    font-size:18px;
-    font-weight:bold;
-    color:rgba(34,34,34,1);
+    font-size: 18px;
+    font-weight: bold;
+    color: rgba(34, 34, 34, 1);
   }
+
 
   .green_point::before {
     background-color: #20B5AC;
@@ -98,4 +135,6 @@
   .yellow_point::before {
     background: rgba(246, 195, 67, 1);
   }
+
+
 }

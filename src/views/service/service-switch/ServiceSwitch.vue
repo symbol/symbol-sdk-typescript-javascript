@@ -1,5 +1,5 @@
 <template>
-  <div class="serviceSwitchWrap">
+  <div class="serviceSwitchWrap radius">
     <div class="serviceSwitchHead">
       <p class="tit">{{$t('service')}}</p>
     </div>

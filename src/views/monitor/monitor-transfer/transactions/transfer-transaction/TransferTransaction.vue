@@ -77,6 +77,7 @@
     import {transactionInterface} from '@/interface/sdkTransaction'
     import {blockchainInterface} from '@/interface/sdkBlockchain'
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
+    import Message from "@/message/Message";
 
 
     @Component({
@@ -148,8 +149,8 @@
                     // get announce status
                     announceResult.result.announceStatus.subscribe((announceInfo: any) => {
                         console.log(signature)
-                        that.$Message.success('success')
-                        that.manageAlert('success')
+                        that.$Message.success(Message.SUCCESS)
+                        that.manageAlert(Message.SUCCESS)
                         that.initForm()
                     })
                 })
@@ -160,15 +161,15 @@
         checkForm() {
             const {address, mosaic, amount, remark, fee} = this
             if (address.length < 40) {
-                this.showErrorMessage(this['$t']('address_format_error'))
+                this.showErrorMessage(Message.ADDRESS_FORMAT_ERROR)
                 return false
             }
             if (amount < 0) {
-                this.showErrorMessage(this['$t']('amount_can_not_be_less_than_0'))
+                this.showErrorMessage(Message.AMOUNT_LESS_THAN_0_ERROR)
                 return false
             }
             if (fee < 0) {
-                this.showErrorMessage(this['$t']('fee_can_not_be_less_than_0'))
+                this.showErrorMessage(Message.FEE_LESS_THAN_0_ERROR)
                 return false
             }
             return true
@@ -321,7 +322,7 @@
             if (key) {
                 this.sendTransaction(key)
             } else {
-                this.$Message.error('password_error')
+                this.$Message.error(Message.WRONG_PASSWORD_ERROR)
             }
         }
 

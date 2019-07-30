@@ -52,6 +52,7 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {createQRCode, copyTxt} from '@/utils/tools'
     import CollectionRecord from '@/components/CollectionRecord.vue'
+    import Message from "@/message/Message";
 
     @Component({
         components: {
@@ -122,7 +123,7 @@
                 if (codeObj.created) {
                     this.QRCode = codeObj.url
                 } else {
-                    that.$Message.error(that['$t']('QR_code_generation_failed'))
+                    that.$Message.error(Message.QR_GENERATION_ERROR)
                 }
             })
         }
@@ -160,7 +161,7 @@
         copyAddress() {
             const that = this
             copyTxt(this.accountAddress).then(() => {
-                that.$Message.success(that['$t']('successful_copy'))
+                that.$Message.success(Message.COPY_SUCCESS)
             })
         }
 

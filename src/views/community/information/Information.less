@@ -1,20 +1,25 @@
 .informationWrap {
   width: 1760px;
-  height: 100%;
+  height: calc(100% + 80px);
   border-radius: 8px;
+  background-color: white;
 
   .left_article_list {
-    height: calc(100% - 75px);
+    height: calc(100% - 125px);
     position: absolute;
-    top: 75px;
+    top: 125px;
     padding: 20px 10px;
     left: 0;
     background-color: white;
-    width: 700px;
+    width: 750px;
 
     .list_container {
       height: 100%;
       padding: 20px 10px;
+      padding-right: 15px;
+      width: 700px;
+
+
       .load_all_data {
         text-align: center;
         color: #ccc;
@@ -22,38 +27,41 @@
     }
 
     .article_summary_item {
-      margin-left: 10px;
-      padding: 15px 43px;
+      margin-left: 40px;
+      padding: 15px 32px;
       margin-bottom: 15px;
-      width: 620px;
-      height: 90px;
+      width: 580px;
+      height: 140px;
       background: rgba(255, 255, 255, 1);
       border: 1px solid rgba(221, 221, 221, 1);
-      border-radius: 4px;
+      border-radius: 8px;
       position: relative;
+      color: #333;
 
+      // todo 溢出
       .title {
-        font-size:18px;
-        font-weight: bold;
-        color: rgba(34, 34, 34, 1);
+        font-size: 24px;
+        font-weight: 500;
         line-height: 30px;
-      }
+        display: inline-block;
+        height: 60px;
+        width: 540px;
 
-      .summary {
-        font-size: 16px;
-        font-weight: 400;
-        color: rgba(102, 102, 102, 1);
-        margin-top: 10px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
       }
 
       .other_info {
         margin-top: 12px;
-        font-size: 14px;
+        font-size: 20px;
         font-weight: 400;
         color: #999999;
 
+
         .tag {
-          color: #20B5AC;
+          color: #26B4B0;
         }
 
         .from {
@@ -63,19 +71,35 @@
     }
 
     .article_summary_item:hover {
-      box-shadow: 0px 0px 10px rgba(32, 181, 172, 0.2);
+      //box-shadow: 0px 0px 10px rgba(32, 181, 172, 0.2);
+      border-color: rgba(38, 180, 176, 1);
     }
 
-    .selected::before {
-      width: 10px;
-      height: 88px;
-      background-color: #20B5AC;
+    .selected {
+      background: rgba(38, 180, 176, 1);
+      color: white;
+      border: 1px solid rgba(38, 180, 176, 1);
+
+      .tag {
+        color: #FFE18B !important;
+      }
+
+      .other_info {
+        color: white;
+      }
+    }
+
+    .selected::after {
+      width: 0;
+      height: 0;
       display: block;
       position: absolute;
       content: '';
-      left: 0px;
-      bottom: 0;
-      border-radius: 4px 0 0 4px;
+      right: -45px;
+      bottom: 53px;
+      border: 10px solid transparent;
+      border-width: 15px 30px;
+      border-left: 15px solid #20B5AC;
     }
   }
 
@@ -83,8 +107,8 @@
     position: absolute;
     right: 65px;
     top: 0;
-    padding: 59px 20px 59px 60px;
-    width: 1040px;
+    padding: 59px 20px 59px 40px;
+    width: 1020px;
     height: 100%;
     background: white;
 
@@ -98,7 +122,6 @@
         margin-right: 40px;
       }
     }
-
 
 
     .title {
@@ -146,7 +169,9 @@
       color: rgba(34, 34, 34, 1);
       line-height: 32px;
       margin-top: 10px;
+      padding-right: 50px;
       position: relative;
+      height: calc(100% - 20px);
 
       pre {
         white-space: pre-wrap;
@@ -154,17 +179,17 @@
       }
     }
 
-    .artile_content::after {
-      position: absolute;
-      display: block;
-      content: '';
-      background: rgba(238, 238, 238, 1);
-      height: 2px;
-      width: 960px;
-      right:-450px;
-      margin-right: 50%;
-      bottom: -46px;
-    }
+    //.artile_content::after {
+    //  position: absolute;
+    //  display: block;
+    //  content: '';
+    //  background: rgba(238, 238, 238, 1);
+    //  height: 2px;
+    //  width: 960px;
+    //  right: -450px;
+    //  margin-right: 50%;
+    //  bottom: -46px;
+    //}
 
     .comment {
       padding: 77px 33px;
@@ -194,8 +219,8 @@
 
       .input_container {
         position: relative;
-        width: 890px;
-        height: 111px;
+        width: 790px;
+        height: 130px;
         background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(204, 204, 204, 1);
         border-radius: 4px;
@@ -208,8 +233,10 @@
 
         .textarea_text {
           position: absolute;
+          font-size: 18px;
           right: 20px;
-          bottom: 10px;
+          bottom: 0;
+          color: #ccc;
         }
       }
 
@@ -227,6 +254,7 @@
 
       .comment_item_content {
         margin-top: 90px;
+
         .load_all_data {
           text-align: center;
           color: #ccc;
@@ -264,5 +292,5 @@
 
 
 .article_title {
-  font-size:35px !important;
+  font-size: 35px !important;
 }

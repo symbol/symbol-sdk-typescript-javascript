@@ -65,6 +65,7 @@
     import {strToHexCharCode} from '../../../utils/tools'
     import {walletInterface} from "../../../interface/sdkWallet"
     import {accountInterface} from "../../../interface/sdkAccount";
+    import Message from "@/message/Message";
 
 
     @Component
@@ -101,19 +102,19 @@
 
         checkImport() {
             if (this.form.networkType == 0) {
-                this.$Message.error(this.$t('walletCreateNetTypeRemind'));
+                this.$Message.error(Message.PLEASE_SWITCH_NETWORK);
                 return false
             }
             if (!this.form.walletName || this.form.walletName == '') {
-                this.$Message.error(this.$t('walletCreateWalletNameRemind'));
+                this.$Message.error(Message.WALLET_NAME_INPUT_ERROR);
                 return false
             }
             if (!this.form.password || this.form.password == '') {
-                this.$Message.error(this.$t('Set_password_input_error'));
+                this.$Message.error(Message.PASSWORD_SETTING_INPUT_ERROR);
                 return false
             }
             if (this.form.password !== this.form.checkPW) {
-                this.$Message.error(this.$t('Two_passwords_are_inconsistent'))
+                this.$Message.error(Message.INCONSISTENT_PASSWORD_ERROR)
                 return false
             }
             return true
@@ -122,7 +123,7 @@
         checkMnemonic() {
             try {
                 if (!this.form.mnemonic || this.form.mnemonic === '' || this.form.mnemonic.split(' ').length != 12) {
-                    this.$Message.error(this.$t('Mnemonic_input_error'));
+                    this.$Message.error(Message.MNENOMIC_INPUT_ERROR);
                     return false
                 }
                 const account = this.createAccount(this.form.mnemonic)
@@ -130,7 +131,7 @@
                 this.account = account
                 return true
             } catch (e) {
-                this.$Message.error(this.$t('Mnemonic_input_error'));
+                this.$Message.error(Message.MNENOMIC_INPUT_ERROR);
                 return false
             }
 

@@ -1,8 +1,51 @@
-img {
-  width: 1310px;
-}
-.apostille {
+.apostille_container {
   height: 100%;
-  position: relative;
-  background-color: white;
+
+  .top_navigator {
+    width: 1310px;
+    height: 60px;
+    background-color: white;
+
+    .button_list_item {
+      color: rgba(204, 204, 204, 1);
+
+      .name {
+        display: inline-block;
+        margin: 0 35px;
+        line-height: 60px;
+        font-size: 16px;
+        font-weight: 400;
+        min-width: 100px;
+        text-align: center;
+      }
+
+      .name.active {
+        font-size: 20px;
+        position: relative;
+        font-weight: bold;
+        color: rgba(77, 194, 191, 1);
+      }
+
+      .name.active::after {
+        display: block;
+        position: absolute;
+        width: 30px;
+        height: 4px;
+        background: rgba(77, 194, 191, 1);
+        content: '';
+        left: -15px;
+        margin-left: 50%;
+        bottom: 0;
+      }
+    }
+  }
+
+  .sub_function_container {
+    position: relative;
+    background-color: white;
+    width: 1310px;
+    height: calc(100% - 80px);
+    margin-top: 20px;
+
+  }
 }

@@ -12,7 +12,7 @@
           </li>
         </ul>
       </div>
-      <div class="contentPanel">
+      <div class="contentPanel radius">
         <router-view/>
       </div>
     </div>
@@ -31,7 +31,7 @@
         walletList = []
         navList = [
             {name: 'news', to: '/information', active: true},
-            {name: 'vote', to: '/vote', active: false, },
+            {name: 'vote', to: '/vote', active: false,},
         ]
 
         get nowWalletList() {
@@ -45,9 +45,9 @@
             for (let i in this.navList) {
                 if (this.navList[i].to == item.to) {
                     this.navList[i].active = true
-                } else {
-                    this.navList[i].active = false
+                    continue
                 }
+                this.navList[i].active = false
             }
             this.$router.push({path: item.to})
         }

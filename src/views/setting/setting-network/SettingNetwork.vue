@@ -1,14 +1,6 @@
 <template>
   <div class="network_content">
-    <div class="left_point_list left">
-      <ul>
-        <li @click="selectPoint(index)" v-for="(p,index) in pointList"
-            :class="['green_point',' pointer',pointerColorList[index%4],p.isSelected?'selected_point':'']">
-          {{p.name}}
-        </li>
-      </ul>
 
-    </div>
     <div class="right_set_point left">
       <ul>
         <li>
@@ -43,10 +35,22 @@
         </li>
       </ul>
       <div class="bottom_button">
-<!--        //TODO-->
+        <!--        //TODO-->
         <span class="save_button un_click">{{$t('save')}}</span>
         <span class="cancel_button pointer">{{$t('canel')}}</span>
       </div>
+    </div>
+
+    <div class="left_point_list left">
+      <ul>
+        <li class="create_node pointer"><img src="../../../assets/images/setting/settingCreateNode.png" alt="">{{$t('create_node')}}</li>
+        <li @click="selectPoint(index)" v-for="(p,index) in pointList"
+            :class="['green_point',' pointer',pointerColorList[index%4],p.isSelected?'selected_point':'']">
+          {{p.name}}
+          <span v-if="index !== 0"></span>
+        </li>
+      </ul>
+
     </div>
 
 
@@ -60,33 +64,33 @@
     export default class SettingNetwork extends Vue {
         pointList = [
             {
-                name: 'NEM私有网络1',
+                name: 'NEM_PRIVATE_1',
                 rpcUrl: 'Https://12.10.0.10',
                 chainId: 1,
                 symbol: 'XEM',
                 exploerUrl: 'https://nodeexplorer.com/',
-                isSelected:true
+                isSelected: true
             }, {
-                name: 'NEM主网络',
+                name: 'NEM_MAIN',
                 rpcUrl: 'Https://12.10.0.10',
                 chainId: 2,
                 symbol: 'XEM',
                 exploerUrl: 'https://nodeexplorer.com/',
-                isSelected:false
+                isSelected: false
             },
             {
-                name: 'NEM主网络',
+                name: 'NEM_MAIN_NET',
                 rpcUrl: 'Https://12.10.0.10',
                 chainId: 2,
                 symbol: 'XEM',
                 exploerUrl: 'https://nodeexplorer.com/',
-                isSelected:false
+                isSelected: false
             }
         ]
         currentPoint = {}
         pointerColorList = ['green_point', 'pink_point', 'purple_point', 'yellow_point']
 
-        selectPoint (index) {
+        selectPoint(index) {
 
             let list = this.pointList
             list.map((item) => {
@@ -97,6 +101,7 @@
             this.currentPoint = list[index]
             this.pointList = list
         }
+
         created() {
             this.currentPoint = this.pointList[0]
         }

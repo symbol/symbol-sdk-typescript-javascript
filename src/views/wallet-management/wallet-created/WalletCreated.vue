@@ -81,6 +81,7 @@
     import {localRead, localSave} from '../../../utils/util';
     import {strToHexCharCode} from '../../../utils/tools';
     import {walletInterface} from "../../../interface/sdkWallet";
+    import Message from "@/message/Message";
 
     @Component({
         components: {},
@@ -181,9 +182,9 @@
             }
             if (JSON.stringify(childWord) != JSON.stringify(this.mnemonic)) {
                 if (childWord.length < 1) {
-                    this.$Message.warning(this['$t']('Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct'));
+                    this.$Message.warning(Message.PLEASE_ENTER_MNEMONIC_INFO);
                 } else {
-                    this.$Message.warning(this['$t']('Mnemonic_inconsistency'));
+                    this.$Message.warning(Message.MNEMONIC_INCONSISTENCY_ERROR);
                 }
                 return false
             }

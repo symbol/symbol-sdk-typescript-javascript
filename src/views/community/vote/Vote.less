@@ -24,22 +24,24 @@
     position: absolute;
 
     .transaction_btn {
-      width: 120px;
-      height: 40px;
-      border-radius: 8px;
+      width: 124px;
+      height: 44px;
+      background: white;
+      border-radius: 5px;
+      border: 1px solid rgba(153, 153, 153, 1);
       display: inline-block;
-      line-height: 40px;
+      line-height: 44px;
       text-align: center;
-      margin-left: 20px;
-      margin-top: 40px;
-      border: 1px solid rgba(32, 181, 172, 1);
-      background-color: transparent;
-      color: rgba(32, 181, 172, 1);
+      margin-left: 40px;
+      margin-top: 70px;
+      color: #999999;
     }
 
     .selected_button {
-      background: rgba(32, 181, 172, 1);
+      background: rgba(229, 138, 30, 1);
+      border-radius: 5px;
       color: white;
+      border: 1px solid rgba(229, 138, 30, 1);
     }
 
     .disabled_button {
@@ -50,13 +52,13 @@
 
     .vote_filter {
       float: right;
-      margin-top: 40px;
+      margin-top: 70px;
     }
   }
 
   .show_exists_vote_list {
-    height: calc(100% - 150px);
-    margin-top: 120px;
+    height: calc(100% - 200px);
+    margin-top: 170px;
   }
 
   .bottom_vote_list {
@@ -66,51 +68,49 @@
       height: 100%;
       overflow-y: auto;
       position: relative;
-      padding-right: 30px;
+      padding-right: 65px;
 
       .left_info {
         width: 400px;
+
         .title {
-          font-size: 18px;
+          font-size: 24px;
           font-weight: bold;
         }
       }
 
-      .right_duration_flag {
-        line-height: 70px;
-      }
 
       .article_summary_item {
-        margin-left: 10px;
-        padding: 15px 43px;
+        margin-left: 40px;
+        padding: 15px 32px;
         margin-bottom: 15px;
-        width: 620px;
-        height: 100px;
+        width: 580px;
+        height: 140px;
         background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(221, 221, 221, 1);
-        border-radius: 4px;
+        border-radius: 8px;
         position: relative;
+        color: #333;
 
         .title {
-          font-size: 20px;
-          font-weight: bold;
-          color: rgba(34, 34, 34, 1);
+          font-size: 24px;
+          font-weight: 500;
           line-height: 30px;
-        }
+          display: inline-block;
+          height: 60px;
+          width: 500px;
 
-        .summary {
-          font-size: 16px;
-          font-weight: 400;
-          color: rgba(102, 102, 102, 1);
-          margin-top: 10px;
-        }
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
 
+        }
         .other_info {
           margin-top: 10px;
-          font-size: 14px;
+          font-size: 20px;
           font-weight: 400;
           color: #999999;
-
           .tag {
             color: #20B5AC;
           }
@@ -118,23 +118,45 @@
           .from {
             margin: 0 15px;
           }
+
+          .time_tag {
+            margin-left: 30px;
+          }
+        }
+        .article_summary_item:hover {
+          box-shadow: 0px 0px 10px rgba(32, 181, 172, 0.2);
+        }
+
+      }
+      .selected {
+        background: rgba(38, 180, 176, 1);
+        color: white;
+        border: 1px solid rgba(38, 180, 176, 1);
+
+        .tag {
+          color: #FFE18B !important;
+        }
+
+        .other_info {
+          color: white;
+        }
+        .time_tag {
+          margin-left: 30px;
+          color: #FFE18B;
         }
       }
 
-      .article_summary_item:hover {
-        box-shadow: 0px 0px 10px rgba(32, 181, 172, 0.2);
-      }
-
-      .selected::before {
-        width: 10px;
-        height: 98px;
-        background-color: #20B5AC;
+      .selected::after {
+        width: 0;
+        height: 0;
         display: block;
         position: absolute;
         content: '';
-        left: 0px;
-        bottom: 0;
-        border-radius: 4px 0 0 4px;
+        right: -45px;
+        bottom: 53px;
+        border: 10px solid transparent;
+        border-width: 15px 30px;
+        border-left: 15px solid #20B5AC;
       }
     }
 
@@ -164,8 +186,7 @@
         //color: white;
         background-color: #ccc;
         color: #999;
-        margin: 0 auto;
-        margin-top: 200px;
+        margin: 100px  auto 0 auto;
       }
 
       .initor {
@@ -175,15 +196,18 @@
       }
 
       .title {
-        font-size: 35px;
+        font-size: 30px;
         font-weight: bold;
-        color: rgba(34, 34, 34, 1);
+        color: #333333;
         line-height: 36px;
         margin-top: 20px;
       }
 
+      .letter_spacing {
+        color: #999999;
+      }
       .date {
-        font-size: 16px;
+        font-size: 24px;
         font-weight: 400;
         line-height: 30px;
         margin-top: 20px;
@@ -192,9 +216,9 @@
       .content {
         font-size: 20px;
         font-weight: 400;
-        color: rgba(102, 102, 102, 1);
+        color: #666666;
         line-height: 30px;
-        margin-top: 20px;
+        margin-top:50px;
       }
 
       .selection {
@@ -230,19 +254,15 @@
     height: 100%;
     box-sizing: border-box;
     width: 1760px;
-    overflow-y: auto;
-    overflow-x: hidden;
     background-color: white;
     position: absolute;
-    //padding-top: 124px;
-    overflow: hidden;
     top: 0;
 
     .vote_creating_content {
       width: 1090px;
       position: absolute;
       top: 124px;
-      left: 200px;
+      left: 400px;
 
 
       .vote_title {
@@ -354,7 +374,12 @@
     }
 
     .vote_selections {
+      .title {
+        position: relative;
+        top: 15px;
+      }
       .list_cloumn {
+        width: 950px;
         display: flex;
         align-content: center;
         align-items: center;
@@ -364,16 +389,17 @@
 
         .value {
           margin: 0;
+          width: 950px;
+          display: flex;
+          align-items: center;
         }
-      }
+        .button_content {
+          width: 100px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
 
-      .title {
-        position: relative;
-        top: 35px;
-      }
-
-      .button_content {
-        width: 120px;
       }
 
       span {
@@ -385,8 +411,7 @@
       }
 
       img {
-        width: 32px;
-        height: 32px;
+        width: 20px;
         position: relative;
         margin: 0 14px;
       }
@@ -424,6 +449,12 @@
 
 }
 
+
+input::placeholder,
+textarea::placeholder {
+  color: #999999;
+}
+
 .blue {
   color: rgba(32, 181, 172, 1);
 }
@@ -433,5 +464,11 @@
 }
 
 .orange {
-  color: #F16328;
+  color: #E58A1E;
+}
+.yellow {
+    color: #FFE18B;
+}
+.gray {
+
 }
