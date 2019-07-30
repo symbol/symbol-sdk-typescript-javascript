@@ -90,7 +90,7 @@
 
         created() {
             this.$store.state.app.unClick = true
-            this.currentText = this.iconList[0].text
+            this.currentText = this.$t(this.iconList[0].text)
         }
 
         checkLock(){

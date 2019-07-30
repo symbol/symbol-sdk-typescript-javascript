@@ -12,7 +12,7 @@
           </li>
         </ul>
       </div>
-      <div class="contentPanel">
+      <div class="contentPanel radius">
         <router-view/>
       </div>
     </div>

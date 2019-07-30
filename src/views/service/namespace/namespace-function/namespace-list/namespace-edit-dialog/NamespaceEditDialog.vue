@@ -14,7 +14,7 @@
         <div class="stepItem1">
           <Form :model="namespace">
             <FormItem :label="$t('space_name')">
-              <p class="namespaceTxt">{{namespace.name}}</p>
+              <p class="namespaceTxt">{{currentNamespaceName}}</p>
             </FormItem>
             <FormItem :label="$t('duration')">
               <Input v-model="namespace.duration" required
@@ -42,10 +42,10 @@
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
     import './NamespaceEditDialog.less';
+    import Message from "@/message/Message";
 
-    @Component({
-        components: {},
-    })
+
+    @Component
     export default class namespaceEditDialog extends Vue {
         stepIndex = 0
         show = false
@@ -59,6 +59,11 @@
         @Prop()
         showNamespaceEditDialog: boolean
 
+
+        @Prop()
+        currentNamespaceName: any
+
+
         namespaceEditDialogCancel() {
             this.$emit('closeNamespaceEditDialog')
         }
@@ -67,7 +72,7 @@
             this.show = false
             this.namespaceEditDialogCancel()
             // @ts-ignore
-            this.$Notice.success({title: this['$t']('namespace_operation'), desc: this['$t']('update_completed')});
+            this.$Notice.success({title: Message.OPERATION_SUCCESS, desc: Message.UPDATE_SUCCESS});
         }
 
         @Watch('showNamespaceEditDialog')

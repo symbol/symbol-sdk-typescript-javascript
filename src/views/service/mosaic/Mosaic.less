@@ -1,416 +1,51 @@
 .mosaicWrap {
-  width: 1310px;
   height: 100%;
 
-  .createDiv {
-    width: 100%;
-    height: 524px;
-    background-color: #fff;
-    border-radius: 8px;
+  .top_navigator {
+    width: 1310px;
+    height: 60px;
+    background-color: white;
 
-    .ivu-tabs {
-      height: 100%;
-    }
+    .button_list_item {
+      color: rgba(204, 204, 204, 1);
 
-    .ivu-tabs-bar {
-      height: 120px;
-      line-height: 120px;
-      border-bottom: none;
-      margin-bottom: 0;
-
-      .ivu-tabs-nav-container {
-        height: 120px;
-        line-height: 120px;
-        overflow: inherit;
-      }
-
-      .ivu-tabs-nav {
-        padding-left: 30px;
-
-        .ivu-tabs-tab {
-          width: 120px;
-          height: 40px;
-          line-height: 40px;
-          text-align: center;
-          font-size: 16px;
-          font-weight: 400;
-          color: #20B5AC;
-          background-color: #fff;
-          border: 1px solid #20B5AC;
-          border-radius: 8px;
-          padding: 0;
-          margin-right: 20px;
-        }
-
-        .ivu-tabs-tab-active {
-          background: #20B5AC;
-          color: #fff !important;
-          border: 1px solid #20B5AC;
-        }
-      }
-    }
-
-    .ivu-tabs-content {
-      position: relative;
-
-      hr {
-        height: 1Px;
-        background: #EEEEEE;
-        border: none;
-      }
-
-      h6 {
-        font-size: 20px;
-        font-weight: bold;
-        color: #222222;
-        margin-bottom: 19px;
-      }
-
-      .ivu-select-placeholder {
-        font-size: 14px;
-        color: #999999;
-      }
-
-      .remind {
-        width: 100%;
-        word-wrap: break-word;
-        font-size: 14px;
-        font-weight: 400;
-        color: #F65C5C;
-        padding-left: 119px;
-        margin: 29px 0;
-      }
-
-      .ivu-form {
-        margin: 30px 40px 0;
-      }
-    }
-
-    .ivu-form-item {
-      margin-bottom: 40px;
-    }
-
-    .ivu-col-span-14 {
-      padding-left: 79px;
-      position: relative;
-
-      .ivu-form-item {
-        margin-bottom: 16px;
-      }
-
-      .remindTxt {
-        line-height: 18px;
-        font-size: 14px;
-        font-weight: 400;
-        color: #999999;
-        margin-top: 9px;
-        margin-left: 135px;
-      }
-    }
-
-    .ivu-form-item-label {
-      width: 105px;
-      height: 16px;
-      font-size: 16px;
-      line-height: 16px;
-      font-weight: 400;
-      color: #666666;
-      margin-top: 12px;
-      margin-right: 30px;
-    }
-
-    .ivu-form-item-content {
-      position: relative;
-
-      .ivu-input-wrapper {
-        width: 350px;
-        height: 45px;
-      }
-
-      .ivu-checkbox-checked .ivu-checkbox-inner {
-        background-color: #20B5AC;
-        border-color: #20B5AC;
-      }
-
-      .ivu-checkbox-wrapper {
-        margin-right: 41px;
+      .name {
+        display: inline-block;
+        margin: 0 35px;
+        line-height: 60px;
         font-size: 16px;
         font-weight: 400;
-        color: #222222;
+        min-width: 100px;
+        text-align: center;
       }
 
-      input {
-        padding-right: 50px;
+      .name.active {
+        font-size: 20px;
+        position: relative;
+        font-weight: bold;
+        color: rgba(77, 194, 191, 1);
       }
 
-      .icon {
+      .name.active::after {
         display: block;
-        width: 20px;
-        height: 18px;
         position: absolute;
-        right: 20px;
-        top: 19px;
-        z-index: 999;
-        cursor: pointer;
-
-        img {
-          display: inline-block;
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      .ivu-select-selection {
-        height: 60px;
-        line-height: 60px;
-
-        div {
-          height: 60px;
-          line-height: 60px;
-          padding-left: 35px;
-
-          span {
-            height: 60px;
-            line-height: 60px;
-            color: #999999 !important;
-          }
-        }
-
-        .ivu-select-selection i::before {
-          color: #999999 !important;
-        }
-      }
-
-      input, textarea {
-        height: 45px;
-        font-size: 14px;
-        color: #999999;
-        border: 1px solid rgba(204, 204, 204, 1);
-        padding-left: 20px;
-        border-radius: 8px;
-      }
-
-      textarea {
-        height: 120px;
-        padding: 24px 40px;
-      }
-
-      .tails {
-        font-size: 16px;
-        font-weight: 400;
-        color: #222222;
-        position: absolute;
-        right: 100px;
-        top: 10px;
-      }
-    }
-
-    button {
-      display: block;
-      width: 200px;
-      height: 60px;
-      line-height: 50px;
-      font-size: 16px;
-      font-weight: 400;
-      text-align: center;
-      color: white;
-      background: rgba(32, 181, 172, 1);
-      border: none;
-      border-radius: 30px;
-      position: relative;
-      top: 0px;
-      left: 990px;
-    }
-
-    button.active {
-      color: #fff;
-      background: #20B5AC;
-    }
-  }
-
-  .mosaicList {
-    width: 100%;
-    height: calc(100% - 537px);
-    background: #FFFFFF;
-    border-radius: 8px;
-    padding: 30px;
-    margin-top: 15px;
-
-    .mosaicListHeader {
-      .headerTit {
-        height: 20px;
-        font-size: 20px;
-        font-weight: bold;
-        color: #222222;
-        margin-bottom: 19px;
-
-      }
-
-      .listPages {
-        height: 20px;
-        font-size: 12px;
-        font-weight: 400;
-        color: #666666;
-        margin-right: 60px;
-      }
-
-      .ivu-page-item-active.ivu-page-item {
-        background-color: #20B5AC;
-        border-radius: 50%;
-
-        a {
-          color: #fff;
-        }
-      }
-    }
-
-    .mosaicListBody {
-      padding: 5px 0 10px;
-      height: calc(100% - 20px);
-
-      .listTit {
-        height: 32px;
-        font-size: 14px;
-        font-weight: 400;
-        color: #999999;
-
-        .ivu-col {
-          white-space: nowrap;
-          padding-left: 10px;
-        }
-      }
-
-      .listItem {
-        height: 60px;
-        line-height: 60px;
-        color: #222222;
-        font-size: 14px;
-        font-weight: 400;
-        background: #F7FBFC;
-        border-radius: 4px;
-
-        .ivu-col {
-          white-space: nowrap;
-          padding-left: 11px;
-
-          .color1 {
-            color: #999999;
-          }
-
-          .color2 {
-            color: #F65C5C;
-          }
-
-          .listFnDiv {
-            font-size: 14px;
-
-            .ivu-poptip-rel {
-              height: 60px;
-              line-height: 60px;
-
-              .moreFn {
-                display: inline-block;
-                width: 20px;
-                height: 5px;
-                padding: 10px 10px;
-                background-image: url("../../../assets/images/service/moreFn.png");
-                background-size: 100% 20%;
-                background-repeat: no-repeat;
-                background-position-y: 10px;
-                transform: translateY(5px);
-                cursor: pointer;
-              }
-            }
-
-            .ivu-poptip-popper {
-              // @ts-ignore
-              min-width: -webkit-fill-available;
-            }
-
-            .ivu-poptip-body-content {
-              overflow: inherit;
-
-              .updateFn {
-                .fnItem {
-                  margin-bottom: 8px;
-                  cursor: pointer;
-                }
-
-                .fnItem:first-of-type {
-                  margin-top: 3px;
-                }
-
-                .fnItem:last-of-type {
-                  margin-bottom: 3px;
-                }
-
-                i {
-                  display: inline-block;
-                  width: 18px;
-                  height: 16px;
-                  margin-right: 13px;
-                  vertical-align: middle;
-
-                  img {
-                    display: inline-block;
-                    width: 100%;
-                    height: 100%;
-                  }
-                }
-
-                span {
-                  display: inline-block;
-                  font-size: 14px;
-                  font-weight: 400;
-                  color: #666666;
-                  vertical-align: middle;
-                }
-
-                .tails {
-                  color: #20B5AC;
-                }
-              }
-            }
-          }
-        }
+        width: 30px;
+        height: 4px;
+        background: rgba(77, 194, 191, 1);
+        content: '';
+        left: -15px;
+        margin-left: 50%;
+        bottom: 0;
       }
     }
   }
-}
 
+  .sub_function_container {
+    position: relative;
+    background-color: white;
+    width: 1310px;
+    height: calc(100% - 80px);
+    margin-top: 20px;
 
-.form_item_content {
-  position: relative;
-
-  .number_controller {
-
-    img {
-      position: absolute;
-      right: 40px;
-      opacity: .5;
-      width: 12px;
-      height: 7px;
-    }
-
-    img:first-of-type {
-      transform: rotateX(180deg);
-      top: 15px;
-    }
-
-    img:last-of-type {
-      bottom: 10px;
-    }
-  }
-}
-
-button {
-  position: absolute;
-  bottom: 0;
-  right: 20px;
-}
-
-.longer_content {
-  .ivu-input-wrapper {
-    width: 420px !important;
   }
 }

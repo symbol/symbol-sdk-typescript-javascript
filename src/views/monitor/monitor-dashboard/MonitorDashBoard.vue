@@ -1,4 +1,3 @@
-import {NetworkType} from "nem2-sdk";
 <template>
   <div class="dash_board_container">
     <Modal
@@ -18,6 +17,14 @@ import {NetworkType} from "nem2-sdk";
       </div>
     </Modal>
 
+    <div class="right_net_status radius">
+      <div class="network_item radius" v-for="n in networkStatusList">
+        <img :src="n.icon" alt="">
+        <span class="descript">{{$t(n.descript)}}:{{n.data}}</span>
+<!--        <span class="data"></span>-->
+      </div>
+    </div>
+
     <div class="top_network_info">
       <div class="left_echart radius">
         <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
@@ -27,14 +34,7 @@ import {NetworkType} from "nem2-sdk";
         </span>
         <LineChart></LineChart>
       </div>
-      <div class="right_net_status radius">
-        <div class="panel_name">{{$t('network_status')}}</div>
-        <div class="network_item radius" v-for="n in networkStatusList">
-          <img :src="n.icon" alt="">
-          <span class="descript">{{$t(n.descript)}}</span>
-          <span class="data">{{n.data}}</span>
-        </div>
-      </div>
+
     </div>
 
     <div class="bottom_transactions radius scroll" ref="bottomTransactions">

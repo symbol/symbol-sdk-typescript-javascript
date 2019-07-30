@@ -25,9 +25,9 @@
       <div class="controller">
         <div class="window_controller">
           <div>
-                        <span class="pointer" @click="minWindow"></span>
-                        <span class="pointer" @click="maxWindow"></span>
-                        <span class="pointer" @click="closeWindow"></span>
+            <span class="pointer" @click="minWindow"></span>
+            <span class="pointer" @click="maxWindow"></span>
+            <span class="pointer" @click="closeWindow"></span>
           </div>
         </div>
         <div class="app_controller clear">
@@ -46,7 +46,7 @@
 
                 <div class="input_point point_item">
                   <input v-model="inputNodeValue" type="text" :placeholder="$t('please_enter_a_custom_nod_address')">
-                  <span @click="changePointByInput" class="sure_button radius pointer">{{$t('confirm')}}</span>
+                  <span @click="changePointByInput" class="sure_button radius pointer">+</span>
                 </div>
 
               </div>
@@ -80,8 +80,8 @@
     import {localSave, localRead} from '../../utils/util.js'
     import routers from '../../router/routers'
     import axios from 'axios'
-    import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
-    import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
+    import monitorSeleted from '@/assets/images/window/windowSelected.png'
+    import monitorUnselected from '@/assets/images/window/windowUnselected.png'
     import {blockchainInterface} from '@/interface/sdkBlockchain.js';
 
     @Component
@@ -152,6 +152,11 @@
         }
 
         changePointByInput() {
+            let list = this.nodetList
+            list = list.map((item) => {
+                item.isSelected = false
+                return item
+            })
             let inputValue = this.inputNodeValue
             if (inputValue == '') {
                 this.$Message.destroy()

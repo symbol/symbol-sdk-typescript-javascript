@@ -43,9 +43,11 @@
 
     <div class="left_point_list left">
       <ul>
+        <li class="create_node pointer"><img src="../../../assets/images/setting/settingCreateNode.png" alt="">{{$t('create_node')}}</li>
         <li @click="selectPoint(index)" v-for="(p,index) in pointList"
             :class="['green_point',' pointer',pointerColorList[index%4],p.isSelected?'selected_point':'']">
           {{p.name}}
+          <span v-if="index !== 0"></span>
         </li>
       </ul>
 

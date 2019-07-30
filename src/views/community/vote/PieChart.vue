@@ -14,25 +14,27 @@
         option = {
             tooltip: {
                 trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
+                formatter: "{a} <br/>{b} : {c} ({d}%)",
             },
-            color:['#91C7AE','#61a0a8'],
+            color:['#EC5447','#F1C850'],
             series: [
                 {
                     name: 'vote',
                     type: 'pie',
-                    radius: '50%',
-                    center: ['50%', '50%'],
+                    // radius: '50%',
+                    // center: ['50%', '50%'],
                     data: [
-                        {value: 335, name: 'yes'},
-                        {value: 310, name: 'no'},
+                        {value: 100, name: 'A 335 25%'},
+                        {value: 300, name: 'B 300 75%'},
                     ],
                     itemStyle: {
                         emphasis: {
                             shadowBlur: 10,
                             shadowOffsetX: 0,
                             shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
+                        },
+                        borderWidth:2,
+                        borderColor:'#fff',
                     }
                 }
             ]
@@ -62,14 +64,14 @@
   .pie_chart_container {
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 350px;
   }
 
   .pie {
     width: 100%;
     height: 300px;
     position: absolute;
-    top: 50px;
+    top: 30px;
     left: 0;
   }
 
