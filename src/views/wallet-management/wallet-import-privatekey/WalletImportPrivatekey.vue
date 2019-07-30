@@ -145,11 +145,11 @@ import {NetworkType} from "nem2-sdk";
             await that.setUserDefault(walletName, account, netType)
         }
 
-        async setUserDefault(name, account, netType) {
+        setUserDefault(name, account, netType) {
             const that = this
             const walletList = this.$store.state.app.walletList
             const style = 'walletItem_bg_' + walletList.length % 3
-            await walletInterface.getWallet({
+            walletInterface.getWallet({
                 name: name,
                 networkType: netType,
                 privateKey: account.privateKey

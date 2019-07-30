@@ -79,7 +79,6 @@
         showCheckPWDialog = false
         showMosaicEditDialog = false
         showMosaicAliasDialog = false
-        accountPrivateKey = ''
         accountPublicKey = ''
         accountAddress = ''
         node = ''
@@ -89,6 +88,9 @@
         currentXEM1: string
         mosaicMapInfo: any = {}
 
+        get getWallet() {
+            return this.$store.state.account.wallet
+        }
 
         showCheckDialog() {
             this.showCheckPWDialog = true
@@ -123,9 +125,8 @@
 
 
         initData() {
-            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
-            this.accountPublicKey = this.$store.state.account.accountPublicKey
-            this.accountAddress = this.$store.state.account.accountAddress
+            this.accountPublicKey = this.getWallet.publicKey
+            this.accountAddress = this.getWallet.address
             this.node = this.$store.state.account.node
             this.generationHash = this.$store.state.account.generationHash
             this.$store.state.app.isInLoginPage = false
@@ -138,7 +139,7 @@
 
         async getMosaicList() {
             const that = this
-            let {accountPrivateKey, accountPublicKey, accountAddress, node, currentXem} = this
+            let {accountPublicKey, accountAddress, node, currentXem} = this
             await accountInterface.getAccountInfo({
                 node,
                 address: accountAddress
@@ -148,7 +149,6 @@
                     const mosaicIdList = mosaicList.map((item) => {
                         return item.id
                     })
-                    console.log(mosaicIdList)
                     mosaicInterface.getMosaics({
                         node,
                         mosaicIdList
@@ -176,13 +176,19 @@
                             that.isLoadingConfirmedTx = false
                         })
                     })
+                },() => {
+                    that.mosaicMapInfo = []
+                    that.isLoadingConfirmedTx = false
+                    console.log('monitor panel error getMosaicList')
                 })
-
-            }).catch(() => {
-                console.log('monitor panel error getMosaicList')
             })
         }
 
+        @Watch('getWallet')
+        onGetWalletChange() {
+            this.initData()
+            this.getMosaicList()
+        }
 
         created() {
             this.initData()

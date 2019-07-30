@@ -34,8 +34,8 @@
           <div :class="[isNodeHealthy?'point_healthy':'point_unhealthy']">
             <Poptip placement="bottom-end">
               <i class="pointer point" @click="toggleNodeList"></i>
-              <span class="network_type_text">
-                {{ $store.state.account.wallet && $store.state.account.wallet.networkType == 144 ? 'MIJIN_TEST':''}}
+              <span class="network_type_text" v-if="$store.state.account.wallet">
+                {{ $store.state.account.wallet.networkType == 144 ? 'MIJIN_TEST':''}}
               </span>
               <div slot="title" class="title">{{$t('current_point')}}：{{$store.state.account.node}}</div>
               <div slot="content">
@@ -46,7 +46,7 @@
 
                 <div class="input_point point_item">
                   <input v-model="inputNodeValue" type="text" :placeholder="$t('please_enter_a_custom_nod_address')">
-                  <span @click="changePointByInput" class="sure_button radius pointer">{{$t('confirm')}}</span>
+                  <span @click="changePointByInput" class="sure_button radius pointer">+</span>
                 </div>
 
               </div>
@@ -59,7 +59,7 @@
             </i-select>
           </div>
           <div class="switch_wallet" v-if="showSelectWallet&&walletList.length > 0">
-            <img class="select_wallet_icon" src="../../assets/images/window/windowWalletSelect.png" alt="">
+            <img class="select_wallet_icon" :src="monitorSeleted" alt="">
             <i-select @on-change="switchWallet" v-model="currentWallet" :placeholder="walletList[0].name">
               <i-option v-for="item in walletList" :value="item.address">{{ item.name }}</i-option>
             </i-select>
@@ -80,8 +80,8 @@
     import {localSave, localRead} from '../../utils/util.js'
     import routers from '../../router/routers'
     import axios from 'axios'
-    import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
-    import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
+    import monitorSeleted from '@/assets/images/window/windowSelected.png'
+    import monitorUnselected from '@/assets/images/window/windowUnselected.png'
     import {blockchainInterface} from '@/interface/sdkBlockchain.js';
 
     @Component
