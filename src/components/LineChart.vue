@@ -158,7 +158,6 @@
             this.dom = echarts.init(this.$refs.dom);
             let {dataList} = this
             let xAxisData = []
-
             if (dataList.length == 0) {
                 return
             }
