@@ -23,7 +23,7 @@
  * 0x80 + type	The restriction is interpreted as a blocking operation.
  */
 
-export enum RestrictionType {
+export enum AccountRestrictionType {
     AllowAddress = 0x01,
     AllowMosaic = 0x02,
     AllowTransaction = 0x04,

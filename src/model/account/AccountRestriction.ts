@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { RestrictionType } from './RestrictionType';
+import { AccountRestrictionType } from './AccountRestrictionType';
 /**
  * Account restriction structure describes restriction information.
  */
@@ -29,7 +29,7 @@ export class AccountRestriction {
             /**
              * Account restriction type
              */
-            public readonly restrictionType: RestrictionType,
+            public readonly restrictionType: AccountRestrictionType,
             /**
              * Restriction values.
              */

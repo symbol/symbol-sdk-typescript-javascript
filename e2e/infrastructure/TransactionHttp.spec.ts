@@ -25,8 +25,8 @@ import { NamespaceHttp } from '../../src/infrastructure/infrastructure';
 import {Listener} from '../../src/infrastructure/Listener';
 import {TransactionHttp} from '../../src/infrastructure/TransactionHttp';
 import {Account} from '../../src/model/account/Account';
+import { AccountRestrictionType } from '../../src/model/account/AccountRestrictionType';
 import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
-import { RestrictionType } from '../../src/model/account/RestrictionType';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
@@ -404,7 +404,7 @@ describe('TransactionHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.BlockAddress,
+                AccountRestrictionType.BlockAddress,
                 [addressRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -441,7 +441,7 @@ describe('TransactionHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.BlockAddress,
+                AccountRestrictionType.BlockAddress,
                 [addressRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -479,7 +479,7 @@ describe('TransactionHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.BlockMosaic,
+                AccountRestrictionType.BlockMosaic,
                 [mosaicRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -516,7 +516,7 @@ describe('TransactionHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.BlockMosaic,
+                AccountRestrictionType.BlockMosaic,
                 [mosaicRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -554,7 +554,7 @@ describe('TransactionHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.BlockTransaction,
+                AccountRestrictionType.BlockTransaction,
                 [operationRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -591,7 +591,7 @@ describe('TransactionHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.BlockTransaction,
+                AccountRestrictionType.BlockTransaction,
                 [operationRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
