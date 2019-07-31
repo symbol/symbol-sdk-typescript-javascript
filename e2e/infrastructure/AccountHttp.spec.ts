@@ -23,7 +23,6 @@ import { AccountRestrictionType } from '../../src/model/account/AccountRestricti
 import {Address} from '../../src/model/account/Address';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
-import { RestrictionType } from '../../src/model/account/RestrictionType';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
@@ -427,7 +426,11 @@ describe('AccountHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
+<<<<<<< HEAD
                 AccountRestrictionType.BlockIncomingAddress,
+=======
+                AccountRestrictionType.BlockAddress,
+>>>>>>> Renamed RestrictionType to AccountRestrictionType
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
