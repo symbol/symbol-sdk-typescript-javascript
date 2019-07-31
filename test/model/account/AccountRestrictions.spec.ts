@@ -17,7 +17,7 @@
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import {Address} from '../../../src/model/account/Address';
-import { AccountRestrictions, RestrictionModificationType, RestrictionType, AccountRestriction } from '../../../src/model/model';
+import { AccountRestriction, AccountRestrictions, AccountRestrictionType, RestrictionModificationType } from '../../../src/model/model';
 
 describe('AccountRestrictions', () => {
 
@@ -25,7 +25,7 @@ describe('AccountRestrictions', () => {
         const accountRestrictionsDTO = {
             address: Address.createFromEncoded('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142'),
             restrictions: [{
-                restrictionType: RestrictionType.AllowAddress,
+                restrictionType: AccountRestrictionType.AllowAddress,
                 values: [{modificationType: RestrictionModificationType.Add,
                           value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
                          }],

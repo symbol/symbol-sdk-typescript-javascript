@@ -16,9 +16,9 @@
 
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
+import { AccountRestrictionType } from '../../../src/model/account/AccountRestrictionType';
 import {Address} from '../../../src/model/account/Address';
 import { RestrictionModificationType } from '../../../src/model/account/RestrictionModificationType';
-import { RestrictionType } from '../../../src/model/account/RestrictionType';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import { AccountRestrictionModification } from '../../../src/model/transaction/AccountRestrictionModification';
@@ -74,7 +74,7 @@ describe('AccountRestrictionTransaction', () => {
             );
             const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.AllowAddress,
+                AccountRestrictionType.AllowAddress,
                 [addressRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -90,7 +90,7 @@ describe('AccountRestrictionTransaction', () => {
             );
             const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.AllowMosaic,
+                AccountRestrictionType.AllowMosaic,
                 [mosaicRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -105,7 +105,7 @@ describe('AccountRestrictionTransaction', () => {
             );
             const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.AllowTransaction,
+                AccountRestrictionType.AllowTransaction,
                 [operationRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -121,7 +121,7 @@ describe('AccountRestrictionTransaction', () => {
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            RestrictionType.AllowAddress,
+            AccountRestrictionType.AllowAddress,
             [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -138,7 +138,7 @@ describe('AccountRestrictionTransaction', () => {
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            RestrictionType.AllowAddress,
+            AccountRestrictionType.AllowAddress,
             [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
             new UInt64([1, 0]),
@@ -157,7 +157,7 @@ describe('AccountRestrictionTransaction', () => {
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            RestrictionType.AllowAddress,
+            AccountRestrictionType.AllowAddress,
             [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -182,7 +182,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(() => {
             AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.Sentinel,
+                AccountRestrictionType.Sentinel,
                 [addressRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -199,7 +199,7 @@ describe('AccountRestrictionTransaction', () => {
         );
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            RestrictionType.AllowMosaic,
+            AccountRestrictionType.AllowMosaic,
             [mosaicRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -224,7 +224,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(() => {
             AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.Sentinel,
+                AccountRestrictionType.Sentinel,
                 [mosaicRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -241,7 +241,7 @@ describe('AccountRestrictionTransaction', () => {
         );
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            RestrictionType.AllowTransaction,
+            AccountRestrictionType.AllowTransaction,
             [operationRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
