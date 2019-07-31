@@ -16,8 +16,8 @@
 
 import { Builder } from '../../infrastructure/builders/AccountRestrictionsMosaicTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { AccountRestrictionType } from '../account/AccountRestrictionType';
 import { PublicAccount } from '../account/PublicAccount';
-import { RestrictionType } from '../account/RestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountRestrictionModification } from './AccountRestrictionModification';
@@ -39,7 +39,7 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
      * @returns {AccountAddressRestrictionModificationTransaction}
      */
     public static create(deadline: Deadline,
-                         restrictionType: RestrictionType,
+                         restrictionType: AccountRestrictionType,
                          modifications: Array<AccountRestrictionModification<number[]>>,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountMosaicRestrictionModificationTransaction {
@@ -66,7 +66,7 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
                 version: number,
                 deadline: Deadline,
                 maxFee: UInt64,
-                public readonly restrictionType: RestrictionType,
+                public readonly restrictionType: AccountRestrictionType,
                 public readonly modifications: Array<AccountRestrictionModification<number[]>>,
                 signature?: string,
                 signer?: PublicAccount,

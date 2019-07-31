@@ -19,10 +19,10 @@ import {assert, expect} from 'chai';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import { Account } from '../../src/model/account/Account';
+import { AccountRestrictionType } from '../../src/model/account/AccountRestrictionType';
 import {Address} from '../../src/model/account/Address';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
 import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
-import { RestrictionType } from '../../src/model/account/RestrictionType';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
@@ -200,7 +200,7 @@ describe('AccountHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.BlockAddress,
+                AccountRestrictionType.BlockAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -426,7 +426,7 @@ describe('AccountHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                RestrictionType.BlockAddress,
+                AccountRestrictionType.BlockAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
