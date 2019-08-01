@@ -26,7 +26,7 @@
         <div class="window_controller">
           <div>
             <span class="pointer" @click="minWindow"></span>
-            <span class="pointer" style="opacity: 0.2;cursor: not-allowed"></span>
+            <span class="pointer"></span>
             <span class="pointer" @click="closeWindow"></span>
           </div>
         </div>
