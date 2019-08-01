@@ -207,8 +207,8 @@
 
         async getArticleByPage() {
             if (this.loadAllData) {
-                return
-            }
+            return
+          }
             const languageNumber = this.switchLanguege()
             const that = this
             const {startPage} = this

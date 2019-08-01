@@ -399,7 +399,6 @@
             this.getConfirmedTransactions()
             this.getPointInfo()
 
-            this.test()
         }
     }
 </script>
