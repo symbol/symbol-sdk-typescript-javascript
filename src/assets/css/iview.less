@@ -3,7 +3,6 @@
   .ivu-select-visible .ivu-select-selection {
     box-shadow: none;
   }
-
   .switch_wallet {
     .ivu-select-placeholder,
     .ivu-select-selected-value {
@@ -16,6 +15,10 @@
     .ivu-select-selection i::before {
       position: relative;
       top: 1px;
+    }
+    .ivu-select-dropdown {
+      min-width: 100px !important;
+      //left: -20px !important;
     }
   }
 
@@ -50,6 +53,22 @@
       color: #222 !important;
       font-size: 20px;
       content: "\F33D";
+    }
+  }
+}
+
+.relogin_container {
+  .switch_language {
+    .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
+    .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+      position: relative;
+      top: 2px !important;
+      right: 1px !important;
+    }
+    .ivu-select-selection {
+      background: none !important;
+      border:none !important;
+      color: black;
     }
   }
 }
@@ -106,21 +125,7 @@
     left: 1px;
   }
 
-  .switch_wallet {
-    .ivu-select-placeholder,
-    .ivu-select-selected-value {
-      font-size: 20px !important;
-      color: #222;
-    }
-  }
 
-  .switch_language {
-    .ivu-select-placeholder {
-      position: relative;
-      top: 1px !important;
-      right: 1px !important;
-    }
-  }
 
   .ivu-tabs-nav .ivu-tabs-tab:hover {
     color: #20B5AC !important;
@@ -394,7 +399,7 @@
 
   .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
   .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
-    font-size: 20px !important;
+    font-size: 16px !important;
     color: #999999 !important;
     padding-left: 20px !important;
   }
@@ -696,6 +701,7 @@
 .namespace_list_container {
   .ivu-poptip-popper {
     top: -38px !important;
+
   }
 
   .ivu-poptip-inner {

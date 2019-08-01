@@ -509,9 +509,25 @@ export const zh_CN = {
     Delete_records_locally: '本地删除记录',
     Notarized_data_backup: '公证数据备份',
 
-    first_floor:'第一层',
-    second_floor:'第二层',
-    third_floor:'第三层',
+    first_floor: '第一层',
+    second_floor: '第二层',
+    third_floor: '第三层',
 
-    Harvester:'收获者'
+    Harvester: '收获者',
+
+    // login
+    WELCOME_TO_CATAPULT_NANO_WALLET: '欢迎使用CATAPULT-NANO-Wallet测试版',
+    This_is_a_distributed_desktop_wallet_based_on_catapult_come_and_explore_the_wonderful_journey_of_catapult: '这是一个基于CATAPULT的分布式桌面钱包 祝你旅途愉快',
+    CREATE_LOCK_PASSWORD: '创建 LOCK PASSWORD',
+    This_password_is_used_for_desktop_wallet_locking: '本密码用于桌面钱包的锁定',
+    Set_the_password: '设置密码',
+    Confirm_the_password: '确认密码',
+    Set_the_password_prompts: '设置密码提示',
+    skip: '跳过',
+
+    //
+    forget_password:'忘记密码',
+    passowrd_prompt:'密码提示',
+    XEM_market_trend_nearly_24_hours:'XEM行情走势（近24小时）'
+
 }

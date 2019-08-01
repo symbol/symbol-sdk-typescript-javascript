@@ -1,8 +1,9 @@
 import {Account} from 'nem2-sdk'
+
 declare interface account {
     account: Account,
     wallet: any,
-    mosaic:any[]
+    mosaic: any[]
 }
 
 export default {
@@ -12,24 +13,24 @@ export default {
         accountAddress: 'SCA7ZS-2B7DEE-BGU3TH-SILYHC-RUR32Y-YE55ZB-LYA2',
         node: 'http://192.168.0.105:3000',
         currentXem: 'nem.xem',
-        currentXEM1:'77a1969932d987d7',
-        currentXEM2:'d525ad41d95fcf29',
-        account:{},
-        wallet:{},
-        mosaic:[],
-        generationHash:''
+        currentXEM1: '77a1969932d987d7',
+        currentXEM2: 'd525ad41d95fcf29',
+        account: {},
+        wallet: {},
+        mosaic: [],
+        generationHash: ''
     },
     getters: {
-        Address(state){
+        Address(state) {
             return state.account.address;
         },
-        PublicAccount(state){
+        PublicAccount(state) {
             return state.account.publicAccount;
         },
-        privateKey(state){
+        privateKey(state) {
             return state.account.privateKey;
         },
-        publicKey(state){
+        publicKey(state) {
             return state.account.publicKey;
         }
     },

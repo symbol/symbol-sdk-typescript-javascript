@@ -13,12 +13,12 @@
                 <WalletDetails></WalletDetails>
             </div>
         </div>
-        <div class="noWalletPanel" v-if="!toMethod&&walletList.length === 0">
-            <div class="noWallet">
-                <GuideInto @toCreate="toCreate" @toImport="toImport"></GuideInto>
-            </div>
-        </div>
-        <div class="walletMethods" v-if="toMethod">
+<!--        <div class="noWalletPanel" v-if="!toMethod&&walletList.length === 0">-->
+<!--            <div class="noWallet">-->
+<!--                <GuideInto @toCreate="toCreate" @toImport="toImport"></GuideInto>-->
+<!--            </div>-->
+<!--        </div>-->
+        <div class="walletMethods">
             <WalletFn :tabIndex="tabIndex" @backToGuideInto="backToGuideInto" @toWalletDetails="toWalletDetails"></WalletFn>
         </div>
     </div>
@@ -111,6 +111,7 @@
 
         noHasWallet () {
             this.walletList = []
+            this.toCreate()
             this.$store.commit('SET_HAS_WALLET',false)
         }
 
@@ -120,10 +121,11 @@
 
         setDefaultPage(){
             const name = this.$route.params.name
+            console.log(this.$route.params)
             if(name == 'walletImportKeystore'){
                 this.toImport()
             }else if(name == 'walletCreate'){
-                this. toCreate()
+                this.toCreate()
             }
         }
         setLeftSwitchIcon(){
