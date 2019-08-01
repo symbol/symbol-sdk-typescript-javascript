@@ -16,7 +16,6 @@
         </div>
       </div>
     </Modal>
-
     <div class="right_net_status radius">
       <div class="network_item radius" v-for="n in networkStatusList">
         <img :src="n.icon" alt="">
