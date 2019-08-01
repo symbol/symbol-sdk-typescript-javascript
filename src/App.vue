@@ -8,14 +8,18 @@
     import {Component, Vue} from 'vue-property-decorator';
     import {localRead} from './utils/util'
     import {accountInterface} from './interface/sdkAccount';
-    import {PublicAccount} from "nem2-sdk";
+    import {wsInterface} from './interface/sdkListener'
+    import {PublicAccount, Listener} from "nem2-sdk";
+    import 'animate.css'
 
     @Component
     export default class App extends Vue {
+        node: any;
+
         async initApp() {
-            let walletList:any = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
+            let walletList: any = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
             const that = this
-            for(let i in walletList){
+            for (let i in walletList) {
                 walletList[i].iv = walletList[i].iv.data
                 let style = 'walletItem_bg_' + String(Number(i) % 3)
                 walletList[i].style = style
@@ -67,17 +71,17 @@
             return walletItem
         }
 
-        async getMultisigAccount (listItem) {
+        async getMultisigAccount(listItem) {
             let walletItem = listItem
             let node = this.$store.state.account.node
             await accountInterface.getMultisigAccountInfo({
                 node: node,
                 address: walletItem.address
-            }).then((multisigAccountInfo)=>{
-                if(typeof (multisigAccountInfo.result.multisigAccountInfo) == 'object'){
-                    multisigAccountInfo.result.multisigAccountInfo['subscribe']((accountInfo)=>{
+            }).then((multisigAccountInfo) => {
+                if (typeof (multisigAccountInfo.result.multisigAccountInfo) == 'object') {
+                    multisigAccountInfo.result.multisigAccountInfo['subscribe']((accountInfo) => {
                         walletItem.isMultisig = true
-                    },()=>{
+                    }, () => {
                         console.log('not multisigAccount')
                         walletItem.isMultisig = false
                     })
@@ -86,12 +90,25 @@
             return walletItem
         }
 
+        initData() {
+            this.node = this.$store.state.account.node
+        }
+
+
+        chainListner() {
+            const {node} = this
+            // todo
+            const listener = new Listener('ws://192.168.0.105:3000', WebSocket)
+            wsInterface.newBlock({
+                listener,
+                pointer: this
+            })
+        }
+
         created() {
+            this.initData()
             this.initApp()
-            // if (window['electron']) {
-            //     const ipcRenderer = window['electron']['ipcRenderer']
-            //     ipcRenderer.send('app', 'max')
-            // }
+            this.chainListner()
         }
     }
 </script>

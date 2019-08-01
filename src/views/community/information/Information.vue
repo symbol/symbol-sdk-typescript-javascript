@@ -3,6 +3,8 @@
     <div class="left left_article_list radius">
 
       <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
+      <div v-if="isLoadingConfirmedTx" style="background-color: white;width: 100%;height: 100%;position: absolute;z-index: 0"></div>
+
 
 
       <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticla">
@@ -25,6 +27,7 @@
       <div class="article_container " ref="articleContainer" @scroll="automaticLoadingComment">
 
         <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
+        <div  v-if="isLoadingConfirmedTx" style="background-color: white;width: 100%;height: 100%;position: absolute;z-index: 1"></div>
 
         <div class="title content article_title">
           {{currentArticle.title}}

@@ -136,7 +136,7 @@
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import axios from 'axios'
-    import LineChart from '../../../components/LineChart.vue'
+    import LineChart from '../../../components/LineChartByDay.vue'
     import {
         isRefreshData,
         localSave,

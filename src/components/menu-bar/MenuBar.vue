@@ -25,9 +25,9 @@
       <div class="controller">
         <div class="window_controller">
           <div>
-                        <span class="pointer" @click="minWindow"></span>
-                        <span class="pointer"></span>
-                        <span class="pointer" @click="closeWindow"></span>
+            <span class="pointer" @click="minWindow"></span>
+            <span class="pointer"></span>
+            <span class="pointer" @click="closeWindow"></span>
           </div>
         </div>
         <div class="app_controller clear">
@@ -90,10 +90,16 @@
         inputNodeValue = ''
         nodetList = [
             {
-                value: 'http://3.0.78.183:3000',
+                value: 'http://192.168.0.105:3000',
                 name: 'my-8',
                 url: '3.0.78.183',
                 isSelected: true,
+            },
+            {
+                value: 'http://3.0.78.183:3000',
+                name: 'my-8',
+                url: '3.0.78.183',
+                isSelected: false,
             }, {
                 value: 'http://13.114.200.132:3000',
                 name: 'jp-5',
@@ -121,11 +127,11 @@
         accountAddress = ''
         walletList = []
 
-        get getWallet () {
+        get getWallet() {
             return this.$store.state.account.wallet
         }
 
-        get getWalletList () {
+        get getWalletList() {
             return this.$store.state.app.walletList || []
         }
 
@@ -199,7 +205,7 @@
             const {walletList} = this
             const that = this
             let list = walletList
-            walletList.map((item,index) => {
+            walletList.map((item, index) => {
                 if (item.address == address) {
                     that.$store.state.account.wallet = item
                     list.splice(index, 1)
@@ -255,7 +261,7 @@
         }
 
         @Watch('getWallet')
-        onGetWalletChange(){
+        onGetWalletChange() {
             this.walletList = this.getWalletList
             this.currentWallet = this.getWallet.address
         }

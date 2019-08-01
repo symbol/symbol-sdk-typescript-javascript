@@ -11,7 +11,7 @@
     import echarts from 'echarts';
     import {formatDate} from '../utils/util.js'
     import axios from 'axios'
-    import {localSave, localRead, isRefreshData} from '@/utils/util'
+    import {localSave, localRead, isRefreshData, addZero} from '@/utils/util'
 
     @Component
     export default class LineChart extends Vue {
@@ -93,7 +93,7 @@
                         interval: 6,
                         formatter(timestamp) {
                             let date: any = new Date(Number(timestamp))
-                            date = (date.getMonth() + 1) + '-' + (date.getDate())
+                            date = (date.getMonth() + 1) + '-' + (date.getDate()) + (date.getHours()) + ':' + (date.getMinutes())
                             return date
                         }
                     },
@@ -112,7 +112,7 @@
                         interval: 6,
                         formatter(timestamp) {
                             let date: any = new Date(Number(timestamp))
-                            date = (date.getMonth() + 1) + '-' + (date.getDate())
+                            date = addZero(date.getHours()) + ':' + addZero(date.getMinutes())
                             return date
                         }
                     },
@@ -164,7 +164,7 @@
             ],
             dataZoom: {
 
-                type:"inside",
+                type: "inside",
                 // show: true,
                 xAxisIndex: [0, 1],
                 // y: '90%',
@@ -273,7 +273,7 @@
             })
             const low = xemDataList[0].open
             const open = xemDataList[xemDataList.length - 1].open
-            const min = (low - (open - low) /10).toFixed(3)
+            const min = (low - (open - low) ).toFixed(3)
 
             xemDataList.sort((a, b) => {
                 return a.id > b.id ? 1 : -1
@@ -336,7 +336,7 @@
         async getBtcChartData() {
             const that = this
             //btc
-            const btcUrl = this.$store.state.app.marketUrl + '/kline/btcusdt/60min/168'
+            const btcUrl = this.$store.state.app.marketUrl + '/kline/btcusdt/15min/96'
             await axios.get(btcUrl).then(function (response) {
                 let dataList = []
                 response.data.data.forEach((item, index) => {
@@ -344,12 +344,12 @@
                 })
 
                 that.btcDataList = dataList
-                let marketPriceDataObject = localRead('marketPriceDataObject') ? JSON.parse(localRead('marketPriceDataObject')) : {}
-                marketPriceDataObject.btc = {
+                let marketPriceDataByDayObject = localRead('marketPriceDataByDayObject') ? JSON.parse(localRead('marketPriceDataByDayObject')) : {}
+                marketPriceDataByDayObject.btc = {
                     dataList: dataList,
                 }
-                marketPriceDataObject.timestamp = new Date().getTime()
-                localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
+                marketPriceDataByDayObject.timestamp = new Date().getTime()
+                localSave('marketPriceDataByDayObject', JSON.stringify(marketPriceDataByDayObject))
 
             }).catch(function (error) {
                 console.log(error);
@@ -361,7 +361,7 @@
         async getXemChartData() {
             const that = this
             //60min/168
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/60min/168'
+            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/15min/96'
             await axios.get(url).then(function (response) {
                 let dataList = []
                 response.data.data.forEach((item, index) => {
@@ -371,13 +371,13 @@
                 that.xemDataList = dataList
 
 
-                let marketPriceDataObject = localRead('marketPriceDataObject') ? JSON.parse(localRead('marketPriceDataObject')) : {}
-                marketPriceDataObject.xem = {
+                let marketPriceDataByDayObject = localRead('marketPriceDataByDayObject') ? JSON.parse(localRead('marketPriceDataByDayObject')) : {}
+                marketPriceDataByDayObject.xem = {
                     dataList: dataList,
                     timestamp: new Date().getTime()
                 }
-                marketPriceDataObject.timestamp = new Date().getTime()
-                localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
+                marketPriceDataByDayObject.timestamp = new Date().getTime()
+                localSave('marketPriceDataByDayObject', JSON.stringify(marketPriceDataByDayObject))
 
             }).catch(function (error) {
                 console.log(error);
@@ -392,11 +392,11 @@
         }
 
         async refreshData() {
-            if (isRefreshData('marketPriceDataObject', 1000 * 60 * 60, new Date().getMinutes())) {
+            if (isRefreshData('marketPriceDataByDayObject', 1000 * 60 * 60, new Date().getMinutes())) {
                 await this.getChartData()
             } else {
-                this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
-                this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
+                this.btcDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).btc.dataList
+                this.xemDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).xem.dataList
             }
         }
 

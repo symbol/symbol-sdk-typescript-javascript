@@ -5,8 +5,8 @@ declare interface appInfo {
     hasWallet: boolean,
     isInLoginPage: boolean,
     languageList: Array<any>,
-    currentPanelIndex:number,
-    mnemonic:string
+    currentPanelIndex: number,
+    mnemonic: string
 }
 
 export default {
@@ -14,7 +14,7 @@ export default {
         apiUrl: 'http://120.79.181.170',
         marketUrl: 'http://app.nemcn.io/rest/market',
         local: false,
-        currentPanelIndex:0,
+        currentPanelIndex: 0,
         localMap: {
             'zh-CN': '中文',
             'en-US': 'English'
@@ -32,11 +32,22 @@ export default {
         walletList: [],
         hasWallet: false,
         isInLoginPage: true,
-        mnemonic:''
+        mnemonic: '',
+        chainStatus:{
+            currentHeight: 0,
+            currentGenerateTime: 12,
+            numTransactions: 0,
+            currentBlockInfo: {},
+            preBlockInfo: {},
+            signerPublicKey:'',
+            nodeAmount:4
+        }
+
+
     },
     getters: {},
     mutations: {
-        SET_CURRENT_PANEL_INDEX(state: appInfo, index:any){
+        SET_CURRENT_PANEL_INDEX(state: appInfo, index: any) {
             state.currentPanelIndex = index
         },
         SET_WALLET_LIST(state: appInfo, walletList: any[]): void {

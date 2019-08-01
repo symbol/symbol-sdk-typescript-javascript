@@ -16,15 +16,6 @@
         </div>
       </div>
     </Modal>
-
-    <div class="right_net_status radius">
-      <div class="network_item radius" v-for="n in networkStatusList">
-        <img :src="n.icon" alt="">
-        <span class="descript">{{$t(n.descript)}}:{{n.data}}</span>
-<!--        <span class="data"></span>-->
-      </div>
-    </div>
-
     <div class="top_network_info">
       <div class="left_echart radius">
         <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
@@ -34,14 +25,19 @@
         </span>
         <LineChart></LineChart>
       </div>
+      <div class="right_net_status radius">
+        <div class="panel_name">{{$t('network_status')}}</div>
 
+
+        <div class="network_item radius" v-for="n in networkStatusList">
+          <img :src="n.icon" alt="">
+          <span class="descript">{{$t(n.descript)}}</span>
+          <span :class="['data','overflow_ellipsis', updateAnimation]" >{{$store.state.app.chainStatus[n.variable]}}</span>
+        </div>
+      </div>
     </div>
 
     <div class="bottom_transactions radius scroll" ref="bottomTransactions">
-      <!--      <div class="splite_page">-->
-      <!--        <span>{{$t('total')}}：{{currentDataAmount}} {{$t('data')}}</span>-->
-      <!--        <Page :total="currentDataAmount" class="page_content"/>-->
-      <!--      </div>-->
 
 
       <div class="label_page">
@@ -88,7 +84,8 @@
         <div class="unconfirmed_transactions" v-if="!showConfirmedTransactions">
           <Spin v-if="isLoadingUnconfirmedTx" size="large" fix class="absolute"></Spin>
           <div class="table_body hide_scroll" ref="unconfirmedTableBody">
-            <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in unconfirmedTransactionList" :key="index">
+            <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in unconfirmedTransactionList"
+                 :key="index">
               <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
               <span class="account">{{u.oppositeAddress}}</span>
               <span class="transfer_type">{{u.isReceipt ? $t('gathering'):$t('payment')}}</span>
@@ -122,11 +119,11 @@
     import axios from 'axios'
     import {transactionInterface} from '@/interface/sdkTransaction'
     import {blockchainInterface} from '@/interface/sdkBlockchain'
-    import dashboardBlockHeight from '../../../assets/images/monitor/dash-board/dashboardBlockHeight.png'
-    import dashboardBlockTime from '../../../assets/images/monitor/dash-board/dashboardBlockTime.png'
-    import dashboardPointAmount from '../../../assets/images/monitor/dash-board/dashboardPointAmount.png'
-    import dashboardTransactionAmount from '../../../assets/images/monitor/dash-board/dashboardTransactionAmount.png'
-
+    import dashboardBlockHeight from '@/assets/images/monitor/dash-board/dashboardBlockHeight.png'
+    import dashboardBlockTime from '@/assets/images/monitor/dash-board/dashboardBlockTime.png'
+    import dashboardPointAmount from '@/assets/images/monitor/dash-board/dashboardPointAmount.png'
+    import dashboardTransactionAmount from '@/assets/images/monitor/dash-board/dashboardTransactionAmount.png'
+    import dashboardPublickey from '@/assets/images/monitor/dash-board/dashboardPublickey.png'
 
     @Component({
         components: {
@@ -147,19 +144,28 @@
                 icon: dashboardBlockHeight,
                 descript: 'block_height',
                 data: 1978365,
+                variable: 'currentHeight'
 
             }, {
                 icon: dashboardBlockTime,
                 descript: 'average_block_time',
                 data: 12,
+                variable: 'currentGenerateTime'
             }, {
                 icon: dashboardPointAmount,
                 descript: 'point',
                 data: 4,
+                variable: 'nodeAmount'
             }, {
                 icon: dashboardTransactionAmount,
                 descript: 'number_of_transactions',
                 data: 0,
+                variable: 'numTransactions'
+            }, {
+                icon: dashboardPublickey,
+                descript: 'Harvester',
+                data: 0,
+                variable: 'signerPublicKey'
             }
         ]
         showConfirmedTransactions = true
@@ -197,7 +203,6 @@
                 value: 'message test this'
             }
         ]
-
         accountPrivateKey = ''
         accountPublicKey = ''
         accountAddress = ''
@@ -206,7 +211,10 @@
         confirmedTransactionList = []
         unconfirmedTransactionList = []
 
-        get getWallet () {
+
+
+
+        get getWallet() {
             return this.$store.state.account.wallet
         }
 
@@ -218,11 +226,11 @@
                     value: transaction.isReceipt ? 'gathering' : 'payment'
                 },
                 {
-                    key: 'transfer_target',
+                    key: 'from',
                     value: transaction.oppositeAddress
                 },
                 {
-                    key: 'Wallet',
+                    key: 'aims',
                     value: transaction.target
                 },
                 {
@@ -252,6 +260,7 @@
         async getMarketOpenPrice() {
             if (!isRefreshData('openPriceOneMinute', 1000 * 60, new Date().getSeconds())) {
                 const openPriceOneMinute = JSON.parse(localRead('openPriceOneMinute'))
+                console.log(openPriceOneMinute)
                 this.currentPrice = openPriceOneMinute.openPrice * this.xemNum
                 return
             }
@@ -279,18 +288,23 @@
         getPointInfo() {
             const that = this
             const node = this.$store.state.account.node
+            const {currentBlockInfo, preBlockInfo} = this.$store.state.app.chainStatus
             blockchainInterface.getBlockchainHeight({
                 node
             }).then((result) => {
                 result.result.blockchainHeight.subscribe((res) => {
                     const height = Number.parseInt(res.toHex(), 16)
-                    that.networkStatusList[0].data = height
+                    that.$store.state.app.chainStatus.currentHeight = height
                     blockchainInterface.getBlockByHeight({
                         node,
                         height: height
                     }).then((blockInfo) => {
                         blockInfo.result.Block.subscribe((block) => {
-                            that.networkStatusList[3].data = block.numTransactions
+                            that.$store.state.app.chainStatus.numTransactions = block.numTransactions ? block.numTransactions : 0   //num
+                            that.$store.state.app.chainStatus.signerPublicKey = block.signer.publicKey
+                            that.$store.state.app.chainStatus.currentHeight = block.height.compact()    //height
+                            that.$store.state.app.chainStatus.currentBlockInfo = block
+                            that.$store.state.app.chainStatus.currentGenerateTime = 12
                         })
                     })
                 })
@@ -347,7 +361,7 @@
         }
 
         @Watch('getWallet')
-        onGetWalletChange(){
+        onGetWalletChange() {
             this.initData()
             this.getUnconfirmedTransactions()
             this.getConfirmedTransactions()
@@ -355,12 +369,37 @@
             this.getPointInfo()
         }
 
+        // testData = 0
+        // testCss = 'showUpdate'
+        // test(){
+        //     setInterval(()=>{
+        //         this.testData ++
+        //     },2000)
+        // }
+
+        updateAnimation = ''
+        get currentHeight () {
+            return this.$store.state.app.chainStatus.currentHeight
+        }
+
+        @Watch('currentHeight')
+        onChainStatus() {
+            console.log('status change............',this.currentHeight)
+            this.updateAnimation = 'showUpdate'
+
+            setTimeout(()=>{
+                this.updateAnimation = ' '
+            },1000)
+        }
+
         created() {
             this.initData()
+            this.getMarketOpenPrice()
             this.getUnconfirmedTransactions()
             this.getConfirmedTransactions()
-            this.getMarketOpenPrice()
             this.getPointInfo()
+
+            this.test()
         }
     }
 </script>

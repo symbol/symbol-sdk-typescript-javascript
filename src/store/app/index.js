@@ -21,7 +21,16 @@ export default {
         walletList: [],
         hasWallet: false,
         isInLoginPage: true,
-        mnemonic: ''
+        mnemonic: '',
+        chainStatus: {
+            currentHeight: 0,
+            currentGenerateTime: 12,
+            numTransactions: 0,
+            currentBlockInfo: {},
+            preBlockInfo: {},
+            signerPublicKey: '',
+            nodeAmount: 4
+        }
     },
     getters: {},
     mutations: {

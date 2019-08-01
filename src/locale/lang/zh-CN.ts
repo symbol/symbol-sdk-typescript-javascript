@@ -71,7 +71,7 @@ export const zh_CN = {
     the_amount: '量',
     date: '日期',
     block_height: '块高',
-    average_block_time: '平均产块时间',
+    average_block_time: '产块时间',
     point: '节点',
     number_of_transactions: '交易数',
     transfer_type: '转账类型',
@@ -509,8 +509,9 @@ export const zh_CN = {
     Delete_records_locally: '本地删除记录',
     Notarized_data_backup: '公证数据备份',
 
-    // todo
     first_floor:'第一层',
     second_floor:'第二层',
-    third_floor:'第三层'
+    third_floor:'第三层',
+
+    Harvester:'收获者'
 }

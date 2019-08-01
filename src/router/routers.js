@@ -198,19 +198,22 @@ var routers = [
                 path: '/login',
                 name: 'login',
                 // @ts-ignore
-                component: function () { return import('@/views/login/welcome-page/welcomePage.vue'); },
+                // component: () => import('@/views/login/welcome-page/welcomePage.vue'),
+                component: function () { return import('@/views/login/new-login/NewLogin.vue'); },
             },
             {
                 path: '/reLogin',
                 name: 'reLogin',
                 // @ts-ignore
-                component: function () { return import('@/views/login/relogin/Relogin.vue'); },
+                // component: () => import('@/views/login/relogin/Relogin.vue'),
+                component: function () { return import('@/views/login/new-relogin/NewRelogin.vue'); },
             },
             {
                 path: '/welcomePage',
                 name: 'welcomePage',
                 component: function () {
-                    return import('@/views/login/welcome-page/welcomePage.vue');
+                    // component: () => import('@/views/login/welcome-page/welcomePage.vue'),
+                    component: (function () { return import('@/views/login/new-login/NewLogin.vue'); });
                 },
             },
             {

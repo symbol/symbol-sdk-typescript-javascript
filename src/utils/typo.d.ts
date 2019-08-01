@@ -7,5 +7,6 @@ declare module '*.bmp'
 declare module '*.tiff'
 declare module '*.js'
 declare module '*.vue'
+declare module '*.mp4'
 
 

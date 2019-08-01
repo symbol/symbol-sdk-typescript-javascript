@@ -40,10 +40,10 @@
     <div class="walletMethod">
       <Row>
         <Col span="12">
-          <div class="createBtn" @click="toCreate">{{$t('create')}}</div>
+          <div class="createBtn pointer" @click="toCreate">{{$t('create')}}</div>
         </Col>
         <Col span="12">
-          <div class="importBtn" @click="toImport">{{$t('import')}}</div>
+          <div class="importBtn pointer" @click="toImport">{{$t('import')}}</div>
         </Col>
       </Row>
     </div>

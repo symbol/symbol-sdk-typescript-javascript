@@ -13,7 +13,7 @@
             </div>
             <div class="input_container">
               <input type="text"
-                     :placeholder="$t('Please_enter_the_label_and_enter_the_password_before_filling_in_the_label')">
+                     :placeholder="$t('Please_enter_the_label_before_filling_in_the_label')">
             </div>
           </div>
 

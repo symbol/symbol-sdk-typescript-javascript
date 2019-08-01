@@ -30,7 +30,7 @@
       </ul>
     </div>
     <div class="buttonDiv clear">
-      <Button @click="jumpToOtherPage('/welcomePage')" class="prev left">{{$t('return_to_the_welcome_page')}}</Button>
+      <Button @click="jumpToOtherPage('/login')" class="prev left">{{$t('return_to_the_welcome_page')}}</Button>
       <Button @click="jumpToOtherPage('/walletPanel')" class="next right">{{$t('next')}}</Button>
     </div>
   </div>

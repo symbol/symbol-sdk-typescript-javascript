@@ -10,19 +10,27 @@
       <div class="first_floor">
         <span class="text">{{$t('first_floor')}}</span>
         <span class="circle">
-          <span class="inner_circle"></span>
+          <span class="inner_circle">
+          <span>addr</span>
+          </span>
         </span>
       </div>
       <div class="second_floor">
         <span class="text">{{$t('second_floor')}}</span>
         <span class="circle">
-          <span class="inner_circle"></span>
+          <span class="inner_circle">
+                        <span>addr</span>
+
+          </span>
         </span>
       </div>
       <div class="third_floor">
         <span class="text">{{$t('third_floor')}}</span>
         <span class="circle">
-          <span class="inner_circle"></span>
+          <span class="inner_circle">
+                        <span>addr</span>
+
+          </span>
         </span>
       </div>
     </div>

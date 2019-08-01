@@ -43,7 +43,7 @@ export const en_US = {
     description: 'Description',
     about_voting_content_description: 'About voting content description',
     option: 'Option',
-    multiple_selection: 'Multiple selection',
+    multiple_selection: 'Multiple',
     radio: 'Radio',
     enter_the_date_for_example: 'Enter the date ,for example：',
     fee: 'Fee',
@@ -455,7 +455,7 @@ export const en_US = {
     Operation_list: 'Operation list',
     address: 'Address',
     add: 'Add',
-    please_add_publickey: 'please add publickey',
+    please_add_publickey: 'Please add publickey',
     Edit_co_signers_and_signature_thresholds: 'Edit co-signers and signature thresholds',
     Choose_a_co_signer: 'Choose a co-signer',
     Add_delete_co_signers_this_action_will_be_displayed_in_the_action_log_click_delete_to_cancel: 'Add/delete co-signers, this action will be displayed in the action log, click delete to cancel',
@@ -471,7 +471,7 @@ export const en_US = {
     namespace_tips_key_3: '3. The namespace can be defined as up to three layers.',
     namespace_tips_value_1: 'a, b, c, ..., z, 0, 1, 2, ..., 9, _ , -',
     namespace_tips_value_2: 'nem, user, account, org, com, biz, net, edu, mil, gov and info.',
-    undefined: 'undefined',
+    undefined: 'Undefined',
     namespace_duration_tip_1: 'The duration is calculated in blocks, one block is 12 seconds, one block = 1XEM, and the maximum validity period is 365 days.',
     rent: 'Rent',
     Update_namespace_prompts: 'Update namespace prompts',
@@ -509,9 +509,9 @@ export const en_US = {
     Delete_records_locally: 'Delete records locally',
     Notarized_data_backup: 'Notarized data backup',
 
+    first_floor:'First floor',
+    second_floor:'Second floor',
+    third_floor:'Third floor',
 
-    // todo
-    first_floor:'first floor',
-    second_floor:'second floor',
-    third_floor:'third floor'
+    Harvester:'Harvester'
 }

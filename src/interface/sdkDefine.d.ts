@@ -1,7 +1,7 @@
 import {
     Address, AliasActionType, Deadline, MosaicId, NamespaceId, NamespaceType,
     NetworkType, UInt64, Password, SimpleWallet, PublicAccount, Account, AccountInfo,
-    Transaction, SignedTransaction, MultisigAccountInfo, MultisigAccountGraphInfo
+    Transaction, SignedTransaction, MultisigAccountInfo, MultisigAccountGraphInfo,Listener
 } from 'nem2-sdk'
 
 declare namespace SdkV0 {
@@ -249,8 +249,8 @@ declare namespace SdkV0 {
             divisibility: number,
             duration: number,
             netWorkType: number,
-            supply:number,
-            publicAccount:PublicAccount,
+            supply: number,
+            publicAccount: PublicAccount,
             maxFee?: number
         }) => Rst<{
             mosaicDefinitionTransaction: object
@@ -393,6 +393,14 @@ declare namespace SdkV0 {
             listener: any
         }) => Rst<{
             ws: any
+        }>;
+        newBlock: (
+            params: {
+                listener: Listener,
+                pointer:any
+            }
+        ) => Rst<{
+            blockInfo: any
         }>;
     }
 
