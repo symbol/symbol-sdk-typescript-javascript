@@ -165,8 +165,7 @@
             {
                 name: 'remote',
                 isSelect: false,
-                path: 'receipt',
-                disabled: true
+                path: 'remote',
             },
             {
                 name: 'market',
