@@ -1,5 +1,6 @@
 <template>
   <div class="walletCreatedWrap">
+
     <div class="createdDiv1" v-if="tags == 0">
       <p class="pageTit">{{$t('backup_mnemonic')}}</p>
       <p class="pageTxt">{{$t('Backup_mnemonics_can_effectively_back_up_and_restore_your_account')}}</p>
@@ -23,10 +24,13 @@
     </div>
     <div class="createdDiv2" v-if="tags == 1">
       <p class="pageTit">{{$t('Confirm_mnemonic')}}</p>
+
+      <div @click="skipInput(2)" class="skip_button pointer" >{{$t('skip')}}</div>
+
       <p class="pageTxt">{{$t('Please_select_each_phrase_to_make_sure_the_mnemonic_is_correct')}}</p>
       <p class="pageRemind">
         {{$t('If_you_have_a_record_to_back_up_your_own_supporting_words_be_sure_to_verify_it_with_the_left_program_to_ensure_that_there_are_no_errors_in_the_auxiliary_words_Once_you_are_mistaken_you_may_never_be_able_to_get_it_back_You_pay_attention_to_and_understand_the_risks_involved_If_you_dont_want_to_back_up_or_verify_now')}}{{$t('click')}}<span
-              class="tails" @click="skipInput(2)"> SKIP</span>
+              class="tails pointer" @click="skipInput(2)"> SKIP</span>
         {{$t('Skip_this_action_but_please_confirm_your_risk_If_you_need_to_back_up_the_mnemonic_again_you_can_find_it_in_the_Wallet_Details_Export_mnemonic')}}
       </p>
       <div class="mnemonicInputDiv">
@@ -41,6 +45,7 @@
         <Button class="next right" type="success" @click="changeTabs(2)">{{$t('next')}}</Button>
       </div>
     </div>
+
     <div class="createdDiv3" v-if="tags == 2">
       <p class="pageTit">{{$t('Congratulations_on_creating_a_wallet')}}</p>
       <p class="pageTxt">{{$t('You_passed_the_test_please_be_sure_to_keep_your_mnemonic_safe')}}</p>

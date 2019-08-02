@@ -17,40 +17,44 @@
       </div>
     </Modal>
     <div class="top_network_info">
-    <div class="left_echart radius">
-      <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
-      <span class="right">
+      <div class="left_echart radius">
+        <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
+        <span class="right">
           <span>{{$t('The_total_market_capitalization')}}（USD）</span>
           <span class="black">{{currentPrice}}</span>
         </span>
-      <LineChart></LineChart>
-    </div>
-    <div class="right_net_status radius">
-      <div class="panel_name">{{$t('network_status')}}</div>
+        <LineChart></LineChart>
+      </div>
+      <div class="right_net_status radius">
+        <div class="panel_name">{{$t('network_status')}}</div>
 
-
-      <div class="network_item radius" v-for="n in networkStatusList">
-        <img :src="n.icon" alt="">
-        <span class="descript">{{$t(n.descript)}}</span>
-        <span :class="['data','overflow_ellipsis', updateAnimation]" >{{$store.state.app.chainStatus[n.variable]}}</span>
+        <div class="network_item radius" v-for="(n,index) in networkStatusList">
+          <img :src="n.icon" alt="">
+          <span class="descript">{{$t(n.descript)}}</span>
+          <span :class="['data','overflow_ellipsis', updateAnimation]">
+            <numberGrow v-if="index !== 4" :value="$store.state.app.chainStatus[n.variable]"></numberGrow>
+            <span v-else>...{{$store.state.app.chainStatus[n.variable].substr(-5,5)}}</span>
+          </span>
+        </div>
       </div>
     </div>
-  </div>
 
     <div class="bottom_transactions radius scroll" ref="bottomTransactions">
 
 
       <div class="label_page">
         <span @click="switchTransactionPanel(true)"
-              :class="['pointer',showConfirmedTransactions?'selected':'','page_title']">{{$t('confirmed_transaction')}}
-          <span class="transacrion_num">
+              :class="['pointer',showConfirmedTransactions?'selected':'','page_title']">
+          {{$t('confirmed_transaction')}}
+          <span v-if="showConfirmedTransactions"  class="transacrion_num">
             <span>{{confirmedDataAmount}}</span>
           </span>
         </span>
         <span class="line">|</span>
         <span @click="switchTransactionPanel(false)"
-              :class="['pointer',showConfirmedTransactions?'':'selected','page_title']">{{$t('unconfirmed_transaction')}}
-          <span class="transacrion_num">
+              :class="['pointer',showConfirmedTransactions?'':'selected','page_title']">
+          {{$t('unconfirmed_transaction')}}
+          <span v-if="!showConfirmedTransactions" class="transacrion_num">
             <span>{{unconfirmedDataAmount}}</span>
           </span>
         </span>
@@ -94,7 +98,8 @@
               <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">
             </div>
-            <div class="no_data" v-if="unconfirmedTransactionList.length == 0">{{$t('no_unconfirmed_transactions')}}
+            <div class="no_data" v-if="unconfirmedTransactionList.length == 0">
+              {{$t('no_unconfirmed_transactions')}}
             </div>
           </div>
         </div>
@@ -124,10 +129,12 @@
     import dashboardPointAmount from '@/assets/images/monitor/dash-board/dashboardPointAmount.png'
     import dashboardTransactionAmount from '@/assets/images/monitor/dash-board/dashboardTransactionAmount.png'
     import dashboardPublickey from '@/assets/images/monitor/dash-board/dashboardPublickey.png'
+    import numberGrow from '@/components/NumberGrow.vue'
 
     @Component({
         components: {
-            LineChart
+            LineChart,
+            numberGrow
         }
     })
     export default class DashBoard extends Vue {
@@ -210,7 +217,6 @@
         currentXem = ''
         confirmedTransactionList = []
         unconfirmedTransactionList = []
-
 
 
         get getWallet() {
@@ -368,27 +374,19 @@
             this.getPointInfo()
         }
 
-        // testData = 0
-        // testCss = 'showUpdate'
-        // test(){
-        //     setInterval(()=>{
-        //         this.testData ++
-        //     },2000)
-        // }
-
         updateAnimation = ''
-        get currentHeight () {
+
+        get currentHeight() {
             return this.$store.state.app.chainStatus.currentHeight
         }
 
         @Watch('currentHeight')
         onChainStatus() {
-            console.log('status change............',this.currentHeight)
-            this.updateAnimation = 'showUpdate'
-
-            setTimeout(()=>{
-                this.updateAnimation = ' '
-            },1000)
+            console.log('status change............', this.$store.state.app.chainStatus.numTransactions)
+            this.updateAnimation = 'appear'
+            setTimeout(() => {
+                this.updateAnimation = 'appear'
+            }, 500)
         }
 
         created() {

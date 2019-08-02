@@ -1,0 +1,85 @@
+<template>
+  <div class="relogin_container radius scroll">
+    <video muted="muted" src="../../../assets/images/login/cloudsVideo.mp4" loop="loop" autoplay="true"></video>
+
+    <div class="switch_language">
+      <i-select @on-change="switchLanguage" :model="currentLanguage"
+                :placeholder="currentLanguage ? $store.state.app.localMap[currentLanguage] : '中文'">
+        <i-option v-for="item in languageList" :value="item.value">{{ item.label }}</i-option>
+      </i-select>
+    </div>
+
+    <div class="fix_contnet">
+      <GetStart @showIndexView="showIndexView" v-if="indexShowList[0]"></GetStart>
+      <CreateLock  @showIndexView="showIndexView" v-if="indexShowList[1]"></CreateLock>
+      <InputLock @showIndexView="showIndexView" v-if="indexShowList[2]"></InputLock>
+    </div>
+
+  </div>
+</template>
+
+<script lang="ts">
+    import {Component, Vue} from 'vue-property-decorator';
+    import GetStart from './login-view/get-start/GetStart.vue'
+    import CreateLock from './login-view/create-lock/CreateLock.vue'
+    import InputLock from './login-view/input-lock/InputLock.vue'
+    import {localSave, localRead} from '@/utils/util.js'
+
+    @Component({
+        components: {
+            GetStart,
+            CreateLock,
+            InputLock
+        }
+    })
+    export default class MonitorRelogin extends Vue {
+
+        indexShowList = [true, false, false]
+        isShowDialog = true
+        currentLanguage: any = false
+        languageList = []
+
+        switchLanguage(language) {
+            this.$store.state.app.local = {
+                abbr: language,
+                language: this.$store.state.app.localMap[language]
+            }
+            // @ts-ignore
+            this.$i18n.locale = language
+            localSave('local', language)
+        }
+
+        get getWalletList() {
+            return this.$store.state.app.walletList || []
+        }
+
+
+        initData() {
+            this.languageList = this.$store.state.app.languageList
+            this.currentLanguage = localRead('local')
+            this.$store.state.app.local = {
+                abbr: this.currentLanguage,
+                language: this.$store.state.app.localMap[this.currentLanguage]
+            }
+        }
+
+        showIndexView(index) {
+            let list = this.indexShowList
+            list = [false, false, false]
+            list[index] = true
+            this.indexShowList = list
+        }
+
+        created() {
+            this.$store.state.app.isInLoginPage = true
+            this.initData()
+
+            if(this.$route.params.index){
+                this.showIndexView(this.$route.params.index)
+            }
+        }
+    }
+</script>
+<style scoped lang="less">
+  @import "Login.less";
+</style>

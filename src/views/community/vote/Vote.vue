@@ -20,9 +20,6 @@
     <div class="show_exists_vote_list" v-show="voteActionList[0].isSelect">
       <div class="bottom_vote_list">
         <div class="left  scroll left_article_list">
-
-
-
           <div @click="switchVote(index)" v-for="(v,index) in currentVoteList"
                :class="['article_summary_item',v.isSelect?'selected':'','pointer']">
             <div class="left left_info">
@@ -104,7 +101,6 @@
              </span>
           </div>
         </span>
-
         </div>
 
         <div class="vote_vote_type">
