@@ -355,8 +355,7 @@
                 localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
 
             }).catch(function (error) {
-                console.log(error);
-                that.getBtcChartData()
+                // that.getBtcChartData()
             });
 
         }
@@ -383,8 +382,7 @@
                 localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
 
             }).catch(function (error) {
-                console.log(error);
-                that.getXemChartData()
+                // that.getXemChartData()
             });
             this.refresh()
         }
@@ -397,7 +395,7 @@
         }
 
         async refreshData() {
-            if (isRefreshData('marketPriceDataObject', 1000 * 60 * 60, new Date().getMinutes())) {
+            if (isRefreshData('marketPriceDataObject', 1000 * 60 * 15, new Date().getMinutes())) {
                 await this.getChartData()
             } else {
                 this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList

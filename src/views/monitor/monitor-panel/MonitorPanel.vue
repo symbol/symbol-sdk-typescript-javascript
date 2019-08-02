@@ -301,7 +301,6 @@
 
                 }, () => {
                     that.XEMamount = 0
-                    console.log('error getXEMAmount ')
                 })
             })
         }
@@ -335,7 +334,6 @@
                 namespaceResult.result.namespaceList.subscribe((namespaceInfo) => {
                     that.isShowAccountAlias = false
                 }, () => {
-                    console.log('no alias in this account')
                     that.isShowAccountAlias = false
                 })
             })
@@ -348,8 +346,7 @@
                 const result = response.data.data[0].open
                 that.currentPrice = result
             }).catch(function (error) {
-                console.log('error ', error);
-                that.getMarketOpenPrice()
+                // that.getMarketOpenPrice()
             });
         }
 
@@ -438,7 +435,6 @@
                     that.localMosaicMap = mosaicMap
                     that.mosaicMap = mosaicMap
                     that.isLoadingMosaic = false
-                    console.log('monitor panel error getMosaicList')
                 })
             })
         }
@@ -476,7 +472,6 @@
                 }
                 that.mosaicMap = searchResult
             }).catch(() => {
-                console.log('monitor paenl searchMosaic error')
             })
         }
 

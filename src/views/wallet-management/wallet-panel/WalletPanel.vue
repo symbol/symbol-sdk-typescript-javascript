@@ -25,13 +25,13 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
     import WalletSwitch from '@/views/wallet-management/wallet-switch/WalletSwitch.vue';
     import WalletDetails from '@/views/wallet-management/wallet-details/WalletDetails.vue';
     import WalletFn from '@/views/wallet-management/wallet-fn/WalletFn.vue';
     import GuideInto from '@/views/login/guide-into/guideInto.vue';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {localSave, localRead} from '@/utils/util'
     import './WalletPanel.less';
-
     @Component({
         components: {
             WalletSwitch,
@@ -130,6 +130,11 @@
         }
         setLeftSwitchIcon(){
             this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
+            let list = JSON.parse(localRead('wallets'))
+            if (list.length < 1) {
+                this.$store.state.app.isInLoginPage = true
+            }
+
         }
         initData(){
             if(this.$route.params['create']) return

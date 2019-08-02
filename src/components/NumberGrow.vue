@@ -24,8 +24,6 @@
     },
     methods: {
       numberGrow (ele) {
-
-
         let _this = this
         let step = (_this.value * 10) / (_this.time * 1000)
         let current = 0

@@ -180,6 +180,7 @@
         }
 
         switchPanel(index) {
+            console.log(this.$store.state.app.isInLoginPage)
             if (this.$store.state.app.isInLoginPage) {
                 return
             }
@@ -238,7 +239,6 @@
                     that.$store.state.account.generationHash = blockInfo.generationHash
                 })
             }).catch(() => {
-                console.log('generationHash  null')
             })
         }
 
