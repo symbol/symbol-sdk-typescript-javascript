@@ -51,7 +51,7 @@
     import {NetworkType} from "nem2-sdk";
     import {MnemonicPassPhrase} from 'nem2-hd-wallets';
     import Message from "@/message/Message";
-
+    import {localSave, localRead} from '@/utils/util'
 
     @Component({
         components: {},
@@ -111,6 +111,12 @@
         }
         toBack () {
             this.$emit('closeCreate')
+        }
+        created(){
+            let list = JSON.parse(localRead('wallets'))
+            if (list.length < 1) {
+                this.$store.state.app.isInLoginPage = true
+            }
         }
     }
 </script>

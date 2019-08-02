@@ -42,7 +42,7 @@ var routers = [
                         path: '/remote',
                         name: 'remote',
                         // @ts-ignore
-                        component: function () { return import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'); }
+                        component: function () { return import('@/views/monitor/monitor-remote/MonitorRemote.vue'); }
                     },
                 ]
             },
@@ -199,15 +199,15 @@ var routers = [
                 name: 'login',
                 // @ts-ignore
                 // component: () => import('@/views/login/welcome-page/welcomePage.vue'),
-                component: function () { return import('@/views/login/new-login/NewLogin.vue'); },
+                component: function () { return import('@/views/login/login/Login.vue'); },
             },
-            {
-                path: '/reLogin',
-                name: 'reLogin',
-                // @ts-ignore
-                // component: () => import('@/views/login/relogin/Relogin.vue'),
-                component: function () { return import('@/views/login/new-relogin/NewRelogin.vue'); },
-            },
+            // {
+            //     path: '/reLogin',
+            //     name: 'reLogin',
+            //     // @ts-ignore
+            //     // component: () => import('@/views/login/relogin/Relogin.vue'),
+            //     component: () => import('@/views/login/new-relogin/NewRelogin.vue'),
+            // },
             {
                 path: '/welcomePage',
                 name: 'welcomePage',

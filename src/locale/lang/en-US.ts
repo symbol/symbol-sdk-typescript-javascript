@@ -71,7 +71,7 @@ export const en_US = {
     the_amount: 'Amount',
     date: 'Date',
     block_height: 'Height',
-    average_block_time: 'Average',
+    average_block_time: 'Generation',
     point: 'Point',
     number_of_transactions: 'Transactions',
     transfer_type: 'Transfer type',
@@ -509,9 +509,28 @@ export const en_US = {
     Delete_records_locally: 'Delete records locally',
     Notarized_data_backup: 'Notarized data backup',
 
-    first_floor:'First floor',
-    second_floor:'Second floor',
-    third_floor:'Third floor',
+    first_floor: 'First floor',
+    second_floor: 'Second floor',
+    third_floor: 'Third floor',
 
-    Harvester:'Harvester'
+    Harvester: 'Harvester',
+
+    // login
+    WELCOME_TO_CATAPULT_NANO_WALLET: 'WELCOME TO CATAPULT-NANO-WALLET',
+    This_is_a_distributed_desktop_wallet_based_on_catapult_come_and_explore_the_wonderful_journey_of_catapult: 'This is a distributed desktop wallet based on catapult. come and explore the wonderful journey of catapult.',
+    CREATE_LOCK_PASSWORD: 'CREATE LOCK PASSWORD',
+    This_password_is_used_for_desktop_wallet_locking: 'This password is used for desktop wallet locking',
+    Set_the_password: 'Set the password',
+    Confirm_the_password: 'Confirm the password',
+    Set_the_password_prompts: 'Set the password prompts',
+    skip: 'Skip',
+    finished:'Finished',
+
+    //
+    forget_password:'Forget password',
+    passowrd_prompt:'Passowrd prompt',
+    XEM_market_trend_nearly_24_hours:'XEM market trend nearly 24 hours'
+
+
+
 }

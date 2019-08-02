@@ -61,17 +61,15 @@
                 }
             },
             grid: [
-                //0降雨
                 {
                     height: '55%',
-                    y: '15%',
+                    y: '10%',
                     width: '88%'
                 },
-                //1水位流量
                 {
                     width: '88%',
                     height: '20%',
-                    y: '70%'
+                    y: '65%'
                 }
             ],
 
@@ -131,7 +129,7 @@
                     },
                     splitLine: {
                         lineStyle: {
-                            color: 'rgba(238,238,238,1)'
+                            color: 'rgba(238,238,238,.5)'
                         }
                     },
                     axisLabel: {
@@ -151,7 +149,7 @@
                     },
                     splitLine: {
                         lineStyle: {
-                            color: 'rgba(238,238,238,1)'
+                            color: 'rgba(238,238,238,.5)'
                         }
                     },
                     axisLabel: {
@@ -336,7 +334,7 @@
         async getBtcChartData() {
             const that = this
             //btc
-            const btcUrl = this.$store.state.app.marketUrl + '/kline/btcusdt/15min/96'
+            const btcUrl = this.$store.state.app.marketUrl + '/kline/btcusdt/15min/168'
             await axios.get(btcUrl).then(function (response) {
                 let dataList = []
                 response.data.data.forEach((item, index) => {
@@ -361,7 +359,7 @@
         async getXemChartData() {
             const that = this
             //60min/168
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/15min/96'
+            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/15min/168'
             await axios.get(url).then(function (response) {
                 let dataList = []
                 response.data.data.forEach((item, index) => {
@@ -413,11 +411,10 @@
   }
 
   .line {
-    width: calc(100% - 60px);
+    width: 100%;
     height: 400px;
     position: absolute;
     top: 20px;
-    left: 30px;
+    left: 0px;
   }
-
 </style>

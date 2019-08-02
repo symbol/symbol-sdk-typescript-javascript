@@ -61,17 +61,15 @@
                 }
             },
             grid: [
-                //0降雨
                 {
                     height: '55%',
-                    y: '15%',
-                    width: '88%'
+                    y: '10%',
+                    width: '89%'
                 },
-                //1水位流量
                 {
-                    width: '88%',
+                    width: '89%',
                     height: '20%',
-                    y: '70%'
+                    y: '65%'
                 }
             ],
 
@@ -131,7 +129,7 @@
                     },
                     splitLine: {
                         lineStyle: {
-                            color: 'rgba(238,238,238,1)'
+                            color: 'rgba(238,238,238,.5)'
                         }
                     },
                     axisLabel: {
@@ -151,7 +149,7 @@
                     },
                     splitLine: {
                         lineStyle: {
-                            color: 'rgba(238,238,238,1)'
+                            color: 'rgba(238,238,238,.5)'
                         }
                     },
                     axisLabel: {
@@ -164,7 +162,7 @@
             ],
             dataZoom: {
 
-                type:"inside",
+                type: "inside",
                 // show: true,
                 xAxisIndex: [0, 1],
                 // y: '90%',
@@ -249,12 +247,14 @@
 
         mounted() {
             this.refresh()
+
         }
 
 
         refresh() {
             this.refreshXem()
             this.refreshBtc()
+
         }
 
         refreshXem() {
@@ -273,7 +273,7 @@
             })
             const low = xemDataList[0].open
             const open = xemDataList[xemDataList.length - 1].open
-            const min = (low - (open - low) /10).toFixed(3)
+            const min = (low - (open - low) / 10).toFixed(3)
 
             xemDataList.sort((a, b) => {
                 return a.id > b.id ? 1 : -1
@@ -294,6 +294,7 @@
 
             this.option.series[2].data = amountList
             this.option.xAxis[1].data = xAxisData
+
 
             this.dom.setOption(this.option)
 
@@ -328,6 +329,8 @@
                 return item.open
             })
             this.option.series[1].data = btcDataList
+
+
             this.dom.setOption(this.option)
 
             window.onresize = this.dom.resize
@@ -352,8 +355,7 @@
                 localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
 
             }).catch(function (error) {
-                console.log(error);
-                that.getBtcChartData()
+                // that.getBtcChartData()
             });
 
         }
@@ -380,8 +382,7 @@
                 localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
 
             }).catch(function (error) {
-                console.log(error);
-                that.getXemChartData()
+                // that.getXemChartData()
             });
             this.refresh()
         }
@@ -389,10 +390,12 @@
         getChartData() {
             this.getXemChartData()
             this.getBtcChartData()
+
+
         }
 
         async refreshData() {
-            if (isRefreshData('marketPriceDataObject', 1000 * 60 * 60, new Date().getMinutes())) {
+            if (isRefreshData('marketPriceDataObject', 1000 * 60 * 15, new Date().getMinutes())) {
                 await this.getChartData()
             } else {
                 this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
@@ -413,11 +416,11 @@
   }
 
   .line {
-    width: calc(100% - 60px);
+    width: calc(100% - 20px);
     height: 400px;
     position: absolute;
     top: 20px;
-    left: 30px;
+    left: 0px;
   }
 
 </style>

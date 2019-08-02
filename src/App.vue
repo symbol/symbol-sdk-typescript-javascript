@@ -34,15 +34,15 @@
             this.$store.state.app.walletList = walletList
             this.$store.state.app.isInLoginPage = true
 
-            if (!localRead('lock')) {
+            // if (!localRead('lock')) {
                 this.$router.push({
                     name: 'login'
                 })
-            } else {
-                this.$router.push({
-                    name: 'reLogin'
-                })
-            }
+            // } else {
+            //     this.$router.push({
+            //         name: 'reLogin'
+            //     })
+            // }
         }
 
         async getAccountInfo(listItem) {

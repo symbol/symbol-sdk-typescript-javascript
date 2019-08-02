@@ -24,7 +24,7 @@
         font-size: 14px;
         font-weight: 400;
         color: rgba(153, 153, 153, 1);
-        padding-right: 30px;
+        padding-right: 28px;
       }
 
       .black {
@@ -55,7 +55,7 @@
         justify-content: space-between;
         align-content: center;
         align-items: center;
-        padding: 5px 22px;
+        padding: 18px 22px;
         border: 1px solid rgba(238, 238, 238, 1);
         margin: 8px 0;
 
@@ -71,17 +71,16 @@
 
         .data {
           display: inline-block;
-          width: 70px;
+          width: 120px;
           text-align: right;
           font-size: 16px;
           font-weight: 400;
           color: rgba(34, 34, 34, 1);
-          line-height: 60px;
+          line-height: 20px;
         }
 
         img {
           width: 36px;
-          height: 36px;
         }
       }
     }
@@ -125,7 +124,7 @@
           position: absolute;
           min-width: 16px;
           height: 16px;
-          background: rgba(153, 153, 153, 1);
+          background: #20B5AC;
           font-size: 12px;
           font-weight: 400;
           color: white;
@@ -323,7 +322,12 @@
   margin-top: 100px;
 }
 
-.showUpdate {
-  animation: bounce 1s infinite;
-  -webkit-animation:bounce 1s ; /* Safari 和 Chrome */
+.disappear {
+  animation: fadeOutDown .5s infinite;
+  -webkit-animation: fadeOutDown .5s; /* Safari 和 Chrome */
 }
+.appear {
+  animation: fadeOutUp .5s infinite;
+  -webkit-animation: fadeOutUp .5s; /* Safari 和 Chrome */
+}
+

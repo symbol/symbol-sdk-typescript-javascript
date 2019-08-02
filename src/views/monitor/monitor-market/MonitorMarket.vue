@@ -3,7 +3,7 @@
 
     <div class="top_network_info">
       <div class="left_echart radius">
-        <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
+        <span class="trend">{{$t('XEM_market_trend_nearly_24_hours')}}</span>
         <span class="price_info right">
           <span class="price_item">
             <span>{{$t('highest_price')}}</span><span class="black">${{highestPrice}}</span>

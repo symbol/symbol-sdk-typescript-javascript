@@ -41,6 +41,7 @@
     import {Crypto} from 'nem2-sdk'
     import './CheckPWDialog.less';
     import {walletInterface} from "../../interface/sdkWallet";
+    import Message from "@/message/Message";
     @Component({
         components: {},
     })
@@ -77,7 +78,7 @@
                 this.checkPWDialogCancel()
                 this.$emit('checkEnd',DeTxt)
             }).catch(()=>{
-                this.$Message.error(this.$t('password_error'));
+                this.$Message.error(this.$t(Message.WRONG_PASSWORD_ERROR));
             })
         }
         @Watch('showCheckPWDialog')

@@ -78,11 +78,12 @@
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator/lib/vue-property-decorator'
     import {localSave, localRead} from '../../utils/util.js'
-    import routers from '../../router/routers'
+    import routers from '@/router/routers'
     import axios from 'axios'
     import monitorSeleted from '@/assets/images/window/windowSelected.png'
     import monitorUnselected from '@/assets/images/window/windowUnselected.png'
     import {blockchainInterface} from '@/interface/sdkBlockchain.js';
+    import Message from "@/message/Message";
 
     @Component
     export default class Home extends Vue {
@@ -165,7 +166,7 @@
             let inputValue = this.inputNodeValue
             if (inputValue == '') {
                 this.$Message.destroy()
-                this.$Message.error(this['$t']('point_null_error'))
+                this.$Message.error(this['$t'](Message.NODE_NULL_ERROR))
                 return
             }
             if (inputValue.indexOf(':') == -1) {
@@ -179,6 +180,7 @@
         }
 
         switchPanel(index) {
+            console.log(this.$store.state.app.isInLoginPage)
             if (this.$store.state.app.isInLoginPage) {
                 return
             }
@@ -218,7 +220,12 @@
         accountQuit() {
             this.$store.state.app.isInLoginPage = true
             this.$store.state.app.currentPanelIndex = 0
-            this.$router.replace({path: "/reLogin"})
+            this.$router.push({
+                name: "login",
+                params: {
+                    index: '2'
+                }
+            })
         }
 
         async getGenerateHash(node) {
@@ -232,7 +239,6 @@
                     that.$store.state.account.generationHash = blockInfo.generationHash
                 })
             }).catch(() => {
-                console.log('generationHash  null')
             })
         }
 
