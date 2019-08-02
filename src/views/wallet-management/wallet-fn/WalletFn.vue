@@ -81,8 +81,8 @@
             }
             this.Index = index
         }
-
-        created () {
+        @Watch('tabIndexNumber')
+        onTabIndexNumberChange() {
             this.Index = this.tabIndexNumber
             this.goToPage(this.navList[this.tabIndexNumber], this.Index)
         }

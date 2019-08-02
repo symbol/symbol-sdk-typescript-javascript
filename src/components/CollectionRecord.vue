@@ -363,6 +363,7 @@
         }
 
         img {
+          display: inline-block;
           width: 32px;
           height: 32px;
         }

@@ -73,7 +73,7 @@ import {NetworkType} from "nem2-sdk";
     @Component
     export default class WalletImportPrivatekey extends Vue {
         form = {
-            privateKey: 'F96F0A9313B91AAB3FB02B380A4040DAB5961DE28A3B2743E83001CE2997117C',
+            privateKey: '15A3734FBECB93BF927F2375E6C64A037D1012E55E579E4EB1C00D6EF2362547',
             networkType: 0,
             walletName: '',
             password: '',
