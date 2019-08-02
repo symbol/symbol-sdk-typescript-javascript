@@ -42,7 +42,7 @@ var routers = [
                         path: '/remote',
                         name: 'remote',
                         // @ts-ignore
-                        component: function () { return import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'); }
+                        component: function () { return import('@/views/monitor/monitor-remote/MonitorRemote.vue'); }
                     },
                 ]
             },

@@ -42,7 +42,7 @@ const routers = [
                         path: '/remote',
                         name: 'remote',
                         // @ts-ignore
-                        component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
+                        component: () => import('@/views/monitor/monitor-remote/MonitorRemote.vue')
                     },
 
                 ]
