@@ -1,5 +1,5 @@
 <template>
-  <div class="line_chart_container">
+  <div class="line_chart_container" @mouseout="mouseoutLine">
     <Spin size="large" class="absolute" fix v-if="spinShow"></Spin>
     <div class="line" id="id" ref="dom"></div>
   </div>
@@ -33,7 +33,8 @@
             tooltip: {
                 trigger: 'axis',
                 backgroundColor: 'white',
-
+                alwaysShowContent: true,
+                padding: 0,
                 formatter: (params: any) => {
                     let currentParam = {}
                     params.forEach((item: any) => {
@@ -50,7 +51,7 @@
                         riseRange = ((value - preData) / preData).toFixed(3)
                     }
                     const date = formatDate(params.name)
-                    const template = `<div>
+                    const template = `<div style="box-shadow: 0 0 5px #e0e0e0; padding: 5px">
                                     <div style="color: #999;">${date}</div>
                                     <div style="display: flex;justify-content: center;justify-items: center">
                                       <span style="color: #666666;margin-right: 5px">$${value}</span>
@@ -297,7 +298,6 @@
 
 
             this.dom.setOption(this.option)
-
             window.onresize = this.dom.resize
         }
 
@@ -332,7 +332,12 @@
 
 
             this.dom.setOption(this.option)
+            this.dom.dispatchAction({
+                type: 'showTip',
+                seriesIndex:0,
+                dataIndex:btcDataList.length - 1,
 
+            })
             window.onresize = this.dom.resize
         }
 
@@ -401,6 +406,15 @@
                 this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
                 this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
             }
+        }
+
+        mouseoutLine () {
+            this.dom.dispatchAction({
+                type: 'showTip',
+                seriesIndex:0,
+                dataIndex:this.option.series[1].data.length - 1,
+
+            })
         }
 
         async created() {

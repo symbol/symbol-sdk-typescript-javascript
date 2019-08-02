@@ -11,7 +11,7 @@
         </div>
 
         <div class="split"></div>
-        <div class="XEM_amount"><span>XEM</span><span class="amount">{{XEMamount}}</span></div>
+        <div class="XEM_amount"><span>XEM</span><span class="amount">{{XEMamount.toFixed(2)}}</span></div>
         <div class="exchange">${{(XEMamount*currentPrice).toFixed(2)}}</div>
 
         <div class="account_alias" v-show="isShowAccountAlias">
@@ -382,7 +382,8 @@
                                 } else {
                                     mosaicItem.name = item.mosaicId.toHex()
                                 }
-                                mosaicItem.amount = mosaicItem.amount.compact() / Math.pow(10, item.divisibility)
+                                mosaicItem.amount = mosaicItem.amount.compact()
+                                // mosaicItem.amount = mosaicItem.amount.compact() / Math.pow(10, item.divisibility)
                                 mosaicItem.show = true
                                 return mosaicItem
                             })

@@ -64,9 +64,12 @@
         }
 
         showIndexView(index) {
-            let list = this.indexShowList
-            list = [false, false, false]
-            list[index] = true
+            let list = [false, false, false]
+            if(index !=0 &&localRead('lock')){
+                list[2] = true
+            }else {
+                list[index] = true
+            }
             this.indexShowList = list
         }
 

@@ -68,9 +68,9 @@
       </div>
     </div>
 
-    <div class="right_content">
-      <router-view/>
-    </div>
+	<transition name="fade" mode="out-in">
++      <router-view/>
++   </transition>
 
   </div>
 </template>
@@ -258,6 +258,10 @@
             const {currentNode} = this
             this.$store.state.account.node = currentNode
             const that = this
+			const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('cat.currency'))
+            linkedMosaic.subscribe((mosaic)=>{
+                this.$store.state.account.currentXEM1 = mosaic.toHex();
+            })
             axios.get(currentNode + '/chain/height').then(function (response) {
                 that.isNodeHealthy = true
                 that.getGenerateHash(currentNode)

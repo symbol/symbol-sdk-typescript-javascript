@@ -225,6 +225,7 @@
 
         showDialog(transaction) {
             this.isShowDialog = true
+            console.log(transaction)
             this.transactionDetails = [
                 {
                     key: 'transfer_type',
@@ -236,7 +237,7 @@
                 },
                 {
                     key: 'aims',
-                    value: transaction.target
+                    value: transaction.recipientAddress
                 },
                 {
                     key: 'the_amount',

@@ -19,7 +19,7 @@
 
       <span>
         <span class="type value radius flex_center">
-          <Select placeholder="XEM" v-model="mosaic" class="asset_type">
+          <Select placeholder="" v-model="mosaic" class="asset_type">
             <Option v-for="item in mosaicList" :value="item.value" :key="item.value">
               {{ item.label }}
             </Option>
@@ -98,7 +98,7 @@
         mosaic: any = ''
         amount: any = '0'
         remark = ''
-        fee: any = '0'
+        fee: any = '100000000'
         generationHash = ''
 
         isShowSubAlias = false
@@ -109,7 +109,7 @@
         }
 
         initForm() {
-            this.fee = '0'
+            this.fee = '100000000'
             this.remark = ''
             this.address = ''
             this.mosaic = ''
@@ -131,7 +131,8 @@
             const account = Account.createFromPrivateKey(key, NetworkType.MIJIN_TEST)
             //--test data
             // create tx
-            const mosaics = mosaic ? [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(amount))] : []
+            // const mosaics = mosaic ? [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(amount))] : []
+            console.log(mosaic)
             const transferTransaction = transactionInterface.transferTransaction({
                 network: NetworkType.MIJIN_TEST,
                 MaxFee: fee,
@@ -143,6 +144,7 @@
                 // sign tx
                 const transaction = transactionResult.result.transferTransaction
                 // const transaction = tx
+                console.log(transaction)
                 const signature = account.sign(transaction, generationHash)
                 // send tx
                 transactionInterface.announce({signature, node}).then((announceResult) => {
@@ -195,7 +197,12 @@
                     // set mosaicList
                     mosaicList = mosaicIdList.map((item) => {
                         item.value = item.toHex()
-                        item.label = item.toHex()
+                        if (item.value == currentXEM1 || item.value == currentXEM2) {
+                            item.label = 'nem.xem'
+                        }else {
+                            item.label = item.toHex()
+                        }
+
                         return item
                     })
                     let isCrrentXEMExists = mosaicList.every((item) => {
@@ -210,6 +217,7 @@
                             label:'nem.xem'
                         })
                     }
+                    that.mosaicList = mosaicList
                     // get namespace
                     // mosaicInterface.getMosaicsNames({
                     //     node,
@@ -238,7 +246,7 @@
 
 
                     // get nem.xem
-                    this.getNamespace (currentXem, mosaicIdList , currentXEM1, currentXEM2, mosaicList)
+                    // this.getNamespace (currentXem, mosaicIdList , currentXEM1, currentXEM2, mosaicList)
 
 
                     // get cuurent xem   cat.currency
@@ -266,9 +274,13 @@
 
 
                 },()=>{
-                    let mosaicIdList = [this.currentXem]
-                    let mosaicList = [{value:this.currentXem,label:this.currentXem}]
-                    this.getNamespace (currentXem, mosaicIdList , currentXEM1, currentXEM2, mosaicList)
+                    let mosaicList = []
+                    mosaicList.unshift({
+                        value: currentXEM1,
+                        label:'nem.xem'
+                    })
+                    that.mosaicList = mosaicList
+                    // this.getNamespace (currentXem, mosaicIdList , currentXEM1, currentXEM2, mosaicList)
                 })
             })
         }
@@ -279,7 +291,6 @@
             mosaicInterface.getMosaicByNamespace({
                 namespace: currentXem
             }).then((result: any) => {
-                currentXEMHex = result.result.mosaicId.toHex()
                 let isCrrentXEMExists = true
                 let spliceIndex = -1
                 isCrrentXEMExists = mosaicIdList.every((item, index) => {
@@ -294,16 +305,15 @@
                     }
                     return true
                 })
-                if (!isCrrentXEMExists) {
-                    mosaicList.splice(spliceIndex, 1)
-                    mosaicList.push({
-                        label: currentXem,
-                        value: currentXEMHex
-                    })
-                }
+                // if (!isCrrentXEMExists) {
+                //     mosaicList.splice(spliceIndex, 1)
+                //     mosaicList.push({
+                //         label: currentXem,
+                //         value: currentXEMHex
+                //     })
+                // }
                 that.mosaicList = mosaicList
                 that.mosaic = currentXEMHex
-
             })
         }
         initData() {

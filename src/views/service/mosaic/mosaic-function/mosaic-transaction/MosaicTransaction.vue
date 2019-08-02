@@ -83,7 +83,7 @@
         </div>
       </div>
     </div>
-    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"></CheckPWDialog>
+    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"  @checkEnd="checkEnd"></CheckPWDialog>
 
 
   </div>
@@ -134,7 +134,6 @@
         showMosaicEditDialog = false
         showMosaicAliasDialog = false
         isMultisigAccount = false
-        accountPrivateKey = ''
         accountPublicKey = ''
         accountAddress = ''
         node = ''
@@ -160,6 +159,10 @@
             supplyMutable: true,
             duration: 0,
             fee: 0.05
+        }
+
+        get getWallet () {
+            return this.$store.state.account.wallet
         }
 
         addSeverabilityAmount() {
@@ -223,24 +226,24 @@
             this.showMosaicEditDialog = false
         }
 
-        checkEnd(flag) {
-            if (!flag) {
+        checkEnd(key) {
+            if (!key) {
                 this.$Message.destroy()
                 this.$Message.error(this.$t(Message.WRONG_PASSWORD_ERROR))
                 return
             }
             if (this.isMultisigAccount) {
-                this.createByMultisig()
+                this.createByMultisig(key)
             } else {
-                this.createBySelf()
+                this.createBySelf(key)
             }
         }
 
 
-        createBySelf() {
-            let {accountPrivateKey, accountPublicKey, accountAddress, node, generationHash} = this
+        createBySelf(key) {
+            let {accountPublicKey, accountAddress, node, generationHash} = this
             const {supply, divisibility, transferable, supplyMutable, duration, fee} = this.formItem
-            const account = Account.createFromPrivateKey(accountPrivateKey, NetworkType.MIJIN_TEST)
+            const account = Account.createFromPrivateKey(key, NetworkType.MIJIN_TEST)
             const that = this
 
             const nonce = MosaicNonce.createRandom()
@@ -268,11 +271,13 @@
                         that.initForm()
                     })
                 })
+            }).catch((e)=>{
+                console.log(e)
             })
         }
 
 
-        createByMultisig() {
+        createByMultisig(key) {
 
         }
 
@@ -299,17 +304,16 @@
 
         initForm() {
             this.formItem = {
-                supply: 500,
+                supply: 500000000,
                 divisibility: 1,
                 transferable: true,
                 supplyMutable: true,
                 duration: 1000,
-                fee: 0.05
+                fee: 100000000
             }
         }
 
         createMosaic(isMultisigAccount) {
-            console.log(this.formItem)
             this.isMultisigAccount = isMultisigAccount
             if (this.checkForm()) {
                 this.showCheckDialog()
@@ -318,9 +322,8 @@
 
 
         initData() {
-            this.accountPrivateKey = this.$store.state.account.accountPrivateKey
-            this.accountPublicKey = this.$store.state.account.accountPublicKey
-            this.accountAddress = this.$store.state.account.accountAddress
+            this.accountPublicKey = this.getWallet.publicKey
+            this.accountAddress = this.getWallet.address
             this.node = this.$store.state.account.node
             this.generationHash = this.$store.state.account.generationHash
             this.$store.state.app.isInLoginPage = false

@@ -307,7 +307,20 @@
 
 }
 
-.network_type_text {
-  font-size: 12px;
+.fade-enter-active {
+  transition: all .2s ease;
+  -webkit-transition: all .2s ease;
+}
+.fade-leave-active {
+  transition: all .3s ease;
+  -webkit-transition: all .3s ease;
+}
+.fade-enter{
+  transform: translateX(50px);
+  -webkit-transform: translateX(50px);
+  opacity: 0;
+}
+.fade-leave-active {
+  opacity: 0;
 }
 

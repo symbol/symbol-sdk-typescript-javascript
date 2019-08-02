@@ -129,7 +129,8 @@ export const formatTransactions = function (transactionList, accountPublicKey) {
   transactionList.map((item) => {
     if (item.type == TransactionType.TRANSFER) {
       item.isReceipt = item.recipient.address == accountPublicKey ? true : false
-      item.oppositeAddress = item.recipient.address == accountPublicKey ? item.signer.address : item.recipient.address
+      item.oppositeAddress = item.signer.address.address
+      item.recipientAddress = item.recipient.address
       item.target = 'my wallet name'
       item.time = formatNemDeadline(item.deadline)
       item.mosaic = item.mosaics.length == 0 ? false : item.mosaics[0]

@@ -19,7 +19,7 @@
         <div class="stepItem1" v-if="stepIndex == 0">
           <Form :model="wallet">
             <FormItem>
-              <Input v-model="wallet.password" required :placeholder="$t('please_enter_your_wallet_password')"></Input>
+              <Input v-model="wallet.password" type="password" required :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
               <Button type="success" @click="exportPrivatekey">{{$t('next')}}
@@ -146,7 +146,7 @@
                         this.stepIndex = 1
                         this.wallet.password = ''
                         this.stepIndex = 1
-                        this.wallet.privatekey = DeTxt
+                        this.wallet.privatekey = DeTxt.toString().toUpperCase()
                     }).catch(()=>{
                         this.$Message.error(this.$t('password_error'));
                     })
