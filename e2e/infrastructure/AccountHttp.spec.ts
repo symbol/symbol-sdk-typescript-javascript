@@ -201,7 +201,7 @@ describe('AccountHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.BlockAddress,
+                AccountRestrictionType.BlockIncomingAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -427,7 +427,7 @@ describe('AccountHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.BlockAddress,
+                AccountRestrictionType.BlockIncomingAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );

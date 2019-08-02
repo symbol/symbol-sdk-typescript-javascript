@@ -41,7 +41,10 @@ export class AccountRestrictionTransaction {
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountAddressRestrictionModificationTransaction {
-        if (![AccountRestrictionType.AllowAddress, AccountRestrictionType.BlockAddress].includes(restrictionType)) {
+        if (![AccountRestrictionType.AllowIncomingAddress,
+              AccountRestrictionType.AllowOutgoingAddress,
+              AccountRestrictionType.BlockOutgoingAddress,
+              AccountRestrictionType.BlockIncomingAddress].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
         return AccountAddressRestrictionModificationTransaction.create(
@@ -69,7 +72,7 @@ export class AccountRestrictionTransaction {
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountMosaicRestrictionModificationTransaction {
-        if (![AccountRestrictionType.AllowMosaic, AccountRestrictionType.BlockMosaic].includes(restrictionType)) {
+        if (![AccountRestrictionType.AllowMosaic,AccountRestrictionType.BlockMosaic].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
         return AccountMosaicRestrictionModificationTransaction.create(
@@ -97,7 +100,10 @@ export class AccountRestrictionTransaction {
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountOperationRestrictionModificationTransaction {
-        if (![AccountRestrictionType.AllowTransaction, AccountRestrictionType.BlockTransaction].includes(restrictionType)) {
+        if (![AccountRestrictionType.AllowIncomingTransactionType,
+              AccountRestrictionType.AllowOutgoingTransactionType,
+              AccountRestrictionType.BlockOutgoingTransactionType,
+              AccountRestrictionType.BlockOutgoingTransactionType].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
         return AccountOperationRestrictionModificationTransaction.create(

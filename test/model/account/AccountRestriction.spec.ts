@@ -23,7 +23,7 @@ describe('AccountRestriction', () => {
 
     it('should createComplete an AccountRestriction object', () => {
         const accountRestrictionDTO = {
-            restrictionType: AccountRestrictionType.AllowAddress,
+            restrictionType: AccountRestrictionType.AllowIncomingAddress,
             values: ['906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB'],
         };
 
