@@ -34,16 +34,20 @@ export class DtoMapping {
             new AccountRestrictions(Address.createFromEncoded(accountRestrictions.accountRestrictions.address),
                 accountRestrictions.accountRestrictions.restrictions.map((prop) => {
                         switch (prop.restrictionType) {
-                            case AccountRestrictionType.AllowAddress:
-                            case AccountRestrictionType.BlockAddress:
+                            case AccountRestrictionType.AllowIncomingAddress:
+                            case AccountRestrictionType.BlockIncomingAddress:
+                            case AccountRestrictionType.AllowOutgoingAddress:
+                            case AccountRestrictionType.BlockOutgoingAddress:
                                 return new AccountRestriction(prop.restrictionType,
                                                             prop.values.map((value) => Address.createFromEncoded(value)));
                             case AccountRestrictionType.AllowMosaic:
                             case AccountRestrictionType.BlockMosaic:
                                 return new AccountRestriction(prop.restrictionType,
                                                             prop.values.map((value) => new MosaicId(value)));
-                            case AccountRestrictionType.AllowTransaction:
-                            case AccountRestrictionType.BlockTransaction:
+                            case AccountRestrictionType.AllowIncomingTransactionType:
+                            case AccountRestrictionType.AllowOutgoingTransactionType:
+                            case AccountRestrictionType.BlockIncomingTransactionType:
+                            case AccountRestrictionType.BlockOutgoingTransactionType:
                                 return new AccountRestriction(prop.restrictionType, prop.values);
                             default:
                                 throw new Error(`Invalid restriction type: ${prop.restrictionType}`);

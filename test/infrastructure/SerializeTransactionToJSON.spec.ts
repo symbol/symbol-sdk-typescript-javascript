@@ -83,7 +83,7 @@ describe('SerializeTransactionToJSON', () => {
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowAddress,
+            AccountRestrictionType.AllowIncomingAddress,
             [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -91,7 +91,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = addressRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS);
-        expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowAddress);
+        expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingAddress);
         expect(json.transaction.modifications.length).to.be.equal(1);
     });
 
@@ -123,7 +123,7 @@ describe('SerializeTransactionToJSON', () => {
         );
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowTransaction,
+            AccountRestrictionType.AllowIncomingTransactionType,
             [operationRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -131,7 +131,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = operationRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION);
-        expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowTransaction);
+        expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingTransactionType);
         expect(json.transaction.modifications.length).to.be.equal(1);
     });
 
