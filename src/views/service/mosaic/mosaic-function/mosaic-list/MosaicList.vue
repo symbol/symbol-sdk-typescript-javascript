@@ -14,9 +14,8 @@
         </Row>
       </div>
       <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
-
       <div class="no_data" v-if="mosaicMapInfo.length == 0">{{$t('no_data')}}</div>
-      <div class="listItem" v-for="(value,key,index) in mosaicMapInfo">
+      <div class="listItem" v-if="key !== 'length'" v-for="(value,key,index) in mosaicMapInfo">
         <Row>
           <Col span="1">&nbsp;</Col>
           <Col span="5">{{value.hex}}</Col>
@@ -155,6 +154,7 @@
                     }).then((mosacListResult: any) => {
                         mosacListResult.result.mosaicsInfos.subscribe((mosaicListInfo: any) => {
                             let mosaicMapInfo: any = {}
+                            mosaicMapInfo.length = 0
                             mosaicListInfo.forEach((item) => {
                                 if (item.owner.publicKey !== accountPublicKey) {
                                     return
@@ -165,6 +165,7 @@
                                 item._divisibility = item.properties.divisibility
                                 item.transferable = item.properties.transferable
                                 item._duration = item.properties.duration.compact()
+                                mosaicMapInfo.length += 1
                                 if (item.mosaicId.id.toHex() == that.currentXEM2 || item.mosaicId.id.toHex() == that.currentXEM2) {
                                     item.name = currentXem
                                     mosaicMapInfo[item.name] = item

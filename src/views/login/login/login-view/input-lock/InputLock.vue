@@ -22,7 +22,8 @@
     </div>
 
     <div class="password_prompt">
-      {{$t('forget_password')}}？<span @click="showPrompt" class="pointer click_to_show_prompt">{{$t('passowrd_prompt')}}</span>
+      {{$t('forget_password')}}？<span @click="showPrompt"
+                                      class="pointer click_to_show_prompt">{{$t('passowrd_prompt')}}</span>
     </div>
 
   </div>
@@ -66,12 +67,12 @@
                 }
                 const enTxt = Crypto.decrypt(saveData)
                 if (enTxt !== new UInt64(u).toHex()) {
-                    this.$Message.error(Message.WRONG_PASSWORD_ERROR);
+                    this.$Message.error(this.$t(Message.WRONG_PASSWORD_ERROR));
                     return false
                 }
                 return true
             } catch (e) {
-                this.$Message.error(Message.WRONG_PASSWORD_ERROR);
+                this.$Message.error(this.$t(Message.WRONG_PASSWORD_ERROR));
                 return false
             }
         }
@@ -98,6 +99,7 @@
         created() {
             this.$store.state.app.isInLoginPage = true
             this.lockPromptText = JSON.parse(localRead('lock')).remindTxt
+
         }
     }
 </script>

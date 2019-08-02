@@ -124,6 +124,7 @@
             console.log(this.$route.params)
             if(name == 'walletImportKeystore'){
                 this.toImport()
+                return
             }else if(name == 'walletCreate'){
                 this.toCreate()
             }

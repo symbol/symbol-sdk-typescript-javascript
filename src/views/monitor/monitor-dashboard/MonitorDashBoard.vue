@@ -71,10 +71,11 @@
           <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
           <div class="table_body hide_scroll" ref="confirmedTableBody">
             <div class="table_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">
-              <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
+              <img class="mosaic_action" v-if="c.isReceipt" src="../../../assets/images/monitor/dash-board/dashboardMosaicOut.png" alt="">
+              <img class="mosaic_action" v-else src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
               <span class="account">{{c.oppositeAddress}}</span>
               <span class="transfer_type">{{c.isReceipt ? $t('gathering'):$t('payment')}}</span>
-              <span class="amount" v-if="c.mosaic">{{c.isReceipt ? '+':'-'}}{{c.mosaic.amount.compact()}}</span>
+              <span class="amount" v-if="c.mosaic">{{c.isReceipt ? '-':'+'}}{{c.mosaic.amount.compact()}}</span>
               <span class="date">{{c.time}}</span>
               <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">
@@ -90,10 +91,11 @@
           <div class="table_body hide_scroll" ref="unconfirmedTableBody">
             <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in unconfirmedTransactionList"
                  :key="index">
-              <img class="mosaic_action" src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
+              <img class="mosaic_action" v-if="u.isReceipt" src="../../../assets/images/monitor/dash-board/dashboardMosaicOut.png" alt="">
+              <img class="mosaic_action" v-else src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
               <span class="account">{{u.oppositeAddress}}</span>
               <span class="transfer_type">{{u.isReceipt ? $t('gathering'):$t('payment')}}</span>
-              <span class="amount">{{u.isReceipt ? '+':'-'}}{{u.mosaic.amount.compact()}}</span>
+              <span class="amount">{{u.isReceipt ? '-':'+'}}{{u.mosaic.amount.compact()}}</span>
               <span class="date">{{u.time}}</span>
               <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">
@@ -146,6 +148,15 @@
         confirmedDataAmount = 0
         xemNum: number = 8999999999
         currentPrice: any = 0
+        showConfirmedTransactions = true
+        accountPrivateKey = ''
+        accountPublicKey = ''
+        accountAddress = ''
+        node = ''
+        currentXem = ''
+        confirmedTransactionList = []
+        unconfirmedTransactionList = []
+        updateAnimation = ''
         networkStatusList = [
             {
                 icon: dashboardBlockHeight,
@@ -175,7 +186,6 @@
                 variable: 'signerPublicKey'
             }
         ]
-        showConfirmedTransactions = true
         transactionDetails = [
             {
                 key: 'transfer_type',
@@ -210,13 +220,7 @@
                 value: 'message test this'
             }
         ]
-        accountPrivateKey = ''
-        accountPublicKey = ''
-        accountAddress = ''
-        node = ''
-        currentXem = ''
-        confirmedTransactionList = []
-        unconfirmedTransactionList = []
+
 
 
         get getWallet() {
@@ -265,7 +269,6 @@
         async getMarketOpenPrice() {
             if (!isRefreshData('openPriceOneMinute', 1000 * 60, new Date().getSeconds())) {
                 const openPriceOneMinute = JSON.parse(localRead('openPriceOneMinute'))
-                console.log(openPriceOneMinute)
                 this.currentPrice = openPriceOneMinute.openPrice * this.xemNum
                 return
             }
@@ -287,7 +290,6 @@
         switchTransactionPanel(flag) {
             this.showConfirmedTransactions = flag
             this.currentDataAmount = flag ? this.confirmedDataAmount : this.unconfirmedDataAmount
-            console.log(this.currentDataAmount)
         }
 
         getPointInfo() {
@@ -374,7 +376,7 @@
             this.getPointInfo()
         }
 
-        updateAnimation = ''
+
 
         get currentHeight() {
             return this.$store.state.app.chainStatus.currentHeight
@@ -382,7 +384,6 @@
 
         @Watch('currentHeight')
         onChainStatus() {
-            console.log('status change............', this.$store.state.app.chainStatus.numTransactions)
             this.updateAnimation = 'appear'
             setTimeout(() => {
                 this.updateAnimation = 'appear'

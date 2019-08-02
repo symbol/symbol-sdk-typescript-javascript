@@ -130,6 +130,12 @@ var routers = [
                         // @ts-ignore
                         component: function () { return import('@/views/service/apostille/Apostille.vue'); }
                     },
+                    {
+                        path: '/servicePanel',
+                        name: 'servicePanel',
+                        // @ts-ignore
+                        component: function () { return import('@/views/service/namespace/Namespace.vue'); }
+                    },
                 ]
             },
             {

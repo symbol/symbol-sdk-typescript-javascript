@@ -3,9 +3,8 @@
     <div class="walletSwitchHead">
       <p class="tit">{{$t('Wallet_management')}}</p>
     </div>
-
     <div class="walletList">
-      <div :class="['walletItem',item.style, item.active ? 'active':'','radius']"
+      <div :class="['walletItem',item.style, item.active &&walletList.length > 1 ? 'active':'','radius']"
            @click="chooseWallet(index)"
            v-for="(item, index) in walletList" :key="index">
         <Row>
@@ -21,7 +20,6 @@
               <div class="options">
                 <Poptip placement="bottom">
                   <img src="../../../assets/images/wallet-management/moreActive.png">
-                  <!--                  <img src="../../../assets/images/wallet-management/more.png" v-else>-->
                   <div slot="content">
                     <p class="optionItem" @click.stop="delWallet(index, item.active)">
                       <i><img src="../../../assets/images/wallet-management/delete.png"></i>
@@ -33,7 +31,6 @@
             </div>
           </Col>
         </Row>
-
       </div>
     </div>
 

@@ -11,7 +11,7 @@
 
     <div class="fix_contnet">
       <GetStart @showIndexView="showIndexView" v-if="indexShowList[0]"></GetStart>
-      <CreateLock  @showIndexView="showIndexView" v-if="indexShowList[1]"></CreateLock>
+      <CreateLock @showIndexView="showIndexView" v-if="indexShowList[1]"></CreateLock>
       <InputLock @showIndexView="showIndexView" v-if="indexShowList[2]"></InputLock>
     </div>
 
@@ -74,8 +74,15 @@
             this.$store.state.app.isInLoginPage = true
             this.initData()
 
-            if(this.$route.params.index){
+            if (this.$route.params.index) {
                 this.showIndexView(this.$route.params.index)
+                return
+            }
+
+            const walletList = JSON.parse(localRead('wallets'))
+            if (walletList.length >= 1) {
+                this.showIndexView(2)
+                return
             }
         }
     }

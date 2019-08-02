@@ -6,7 +6,6 @@
       <div v-if="isLoadingConfirmedTx" style="background-color: white;width: 100%;height: 100%;position: absolute;z-index: 0"></div>
 
 
-
       <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticla">
         <div @click="switchArticle(index)" v-for="(a,index) in articleList"
              :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
@@ -27,7 +26,7 @@
       <div class="article_container " ref="articleContainer" @scroll="automaticLoadingComment">
 
         <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
-        <div  v-if="isLoadingConfirmedTx" style="background-color: white;width: 100%;height: 100%;position: absolute;z-index: 1"></div>
+        <div  v-if="isLoadingConfirmedTx" style="background-color: white;width: 90%;height: 100%;position: absolute;z-index: 1"></div>
 
         <div class="title content article_title">
           {{currentArticle.title}}
@@ -226,6 +225,7 @@
             })
             this.isLoadingConfirmedTx = false
             this.addArticleStartIndex()
+            this.articleList[0].isSelect = true
         }
 
         async getCommentByPage() {

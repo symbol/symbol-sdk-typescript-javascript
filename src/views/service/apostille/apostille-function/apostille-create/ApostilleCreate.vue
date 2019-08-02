@@ -13,6 +13,7 @@
             </div>
             <div class="input_container">
               <input type="text"
+                     v-model="tag"
                      :placeholder="$t('Please_enter_the_label_before_filling_in_the_label')">
             </div>
           </div>
@@ -23,7 +24,7 @@
               {{$t('hash_algorithm')}}
             </div>
             <div class="input_container">
-              <Select v-model="hashAlgorithm" class="select">
+              <Select v-model="hashAlgorithm" class="select" :placeholder="$t('hash_algorithm')">
                 <Option v-for="item in hashAlgorithmList" :value="item.value" :key="item.value">{{ item.label }}
                 </Option>
               </Select>
@@ -47,11 +48,11 @@
 
             <div v-if="isImportFile" class="import_file">
 
-              <div>
+              <div v-if="tag == ''">
                 <img src="../../../../../assets/images/service/apostille/apostilleLock.png" alt="">
                 <span>{{$t('Please_enter_the_label_before_filling_in_the_label')}}</span>
               </div>
-              <div>
+              <div v-else>
                 <img src="../../../../../assets/images/service/apostille/apostilleImportFile.png" alt="">
                 <span>{{$t('Drag_and_drop_files_to_this_point_click_or_browse')}}</span>
               </div>
@@ -69,7 +70,6 @@
                 {{$t('add')}}
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -91,7 +91,13 @@
           </div>
 
           <div class="table_item_list scroll">
-            <div class="table_item" v-for="i in 7">
+
+            <div v-if="transationList.length == 0" class="noData" >
+              <i><img src="@/assets/images/wallet-management/no_data.png"></i>
+              <p>{{$t('not_yet_open')}}</p>
+            </div>
+
+            <div class="table_item" v-for="i in transationList">
               <span class="file_name">index.txt</span>
               <span class="tag">text</span>
               <span class="sink">NAXEBTXH4YXDZMSUYROEKNGIKF4SJV2OEWZJAXBQ</span>
@@ -120,18 +126,11 @@
     export default class ApostilleCreate extends Vue {
         hashAlgorithm = ''
         isImportFile = true
+        tag = ''
+        transationList = []
         hashAlgorithmList = [
             {
                 value: 'SHA-256',
-                label: 'SHA-256'
-            }, {
-                value: 'SHA-253',
-                label: 'SHA-255'
-            }, {
-                value: 'xxx',
-                label: 'SHA-256'
-            }, {
-                value: 'ttt',
                 label: 'SHA-256'
             }
         ]

@@ -34,12 +34,20 @@
                   <span v-if='v.voteStatus == 3' :class="v.isSelect?'yellow':''">{{$t('finished')}}</span>
                 </span>
               </div>
+
             </div>
           </div>
+
         </div>
 
         <div class="right_article_detail radius  right">
+          <div v-if="0 == 0" class="noData">
+            <i><img src="../../../assets/images/wallet-management/no_data.png"></i>
+            <p>{{$t('not_yet_open')}}</p>
+          </div>
           <div class="right_container scroll">
+
+
             <!--            <div class="initor">-->
             <!--              <span class="blue">{{$t('initiation_address')}}</span>-->
             <!--              <span>  f65sf5s5af65as6df5sa5f6s5f6s5af65sa6f5s6af5s6a5f6f</span>-->
@@ -48,24 +56,24 @@
             <!--              <span class="blue">{{$t('voting_address')}}</span>-->
             <!--              <span>ad5as4d5a4d5as4d5as5d45asd54sa5d45as4d5as4d5a</span>-->
             <!--            </div>-->
-            <div class="title">{{currentVote.title}}</div>
-            <div class="date letter_spacing"><span class="orange"> {{$t('deadline')}} </span>:
-              <span>2019/7/10 16:33</span></div>
-            <div class="content">{{currentVote.title}}</div>
-            <div class="selection">
-              <RadioGroup v-model="sigleSelection" v-if="!currentVote.isMultiple">
-                <Radio v-for="(i,index) in currentVote.selctions" :label="alphabet[index] + ' : '+i.name"></Radio>
-              </RadioGroup>
-              <CheckboxGroup v-model="multiSelectionList" v-else>
-                <Checkbox v-for="(i,index) in currentVote.selctions" :label="alphabet[index] + ' : '+i.name"></Checkbox>
-              </CheckboxGroup>
-            </div>
-            <div class="pie_chart">
-              <PieChart :currentVote="currentVote"></PieChart>
-            </div>
-            <div @click="sendVote" class="click_to_vote un_click">
-              {{$t('confirm_vote')}}
-            </div>
+            <!--            <div class="title">{{currentVote.title}}</div>-->
+            <!--            <div class="date letter_spacing"><span class="orange"> {{$t('deadline')}} </span>:-->
+            <!--              <span>2019/7/10 16:33</span></div>-->
+            <!--            <div class="content">{{currentVote.title}}</div>-->
+            <!--            <div class="selection">-->
+            <!--              <RadioGroup v-model="sigleSelection" v-if="!currentVote.isMultiple">-->
+            <!--                <Radio v-for="(i,index) in currentVote.selctions" :label="alphabet[index] + ' : '+i.name"></Radio>-->
+            <!--              </RadioGroup>-->
+            <!--              <CheckboxGroup v-model="multiSelectionList" v-else>-->
+            <!--                <Checkbox v-for="(i,index) in currentVote.selctions" :label="alphabet[index] + ' : '+i.name"></Checkbox>-->
+            <!--              </CheckboxGroup>-->
+            <!--            </div>-->
+            <!--            <div class="pie_chart">-->
+            <!--              <PieChart :currentVote="currentVote"></PieChart>-->
+            <!--            </div>-->
+            <!--            <div @click="sendVote" class="click_to_vote un_click">-->
+            <!--              {{$t('confirm_vote')}}-->
+            <!--            </div>-->
           </div>
         </div>
       </div>
@@ -199,322 +207,28 @@
         ]
         currentVoteList = []
         voteList = [
-            {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: true,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: true,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            }, {
-                initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
-                title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                deadline: '2019-05-21 14:00',
-                startTimestamp: '1537333994',
-                endTimestamp: '1571462284',
-                content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-                isMultiple: false,
-                voteStatus: 3,
-                selctions: [
-                    {
-                        name: 'yes',
-                        value: 99
-                    }, {
-                        name: 'no',
-                        value: 59
-                    },
-                ],
-                isSelect: false,
-                max: 2,
-            },
+            // {
+            //     initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
+            //     vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
+            //     title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
+            //     deadline: '2019-05-21 14:00',
+            //     startTimestamp: '1537333994',
+            //     endTimestamp: '1571462284',
+            //     content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
+            //     isMultiple: true,
+            //     voteStatus: 3,
+            //     selctions: [
+            //         {
+            //             name: 'yes',
+            //             value: 99
+            //         }, {
+            //             name: 'no',
+            //             value: 59
+            //         },
+            //     ],
+            //     isSelect: true,
+            //     max: 2,
+            // }
 
         ]
         currentMonth = ''
@@ -600,7 +314,7 @@
         }
 
         created() {
-            this.currentVote = this.voteList[0]
+            // this.currentVote = this.voteList[0]
             this.currentVoteFilter = this.voteFilterList[0].value
             this.currentTimestamp = Number((new Date()).valueOf() / 1000).toFixed(0)
             this.currentVoteList = this.voteList

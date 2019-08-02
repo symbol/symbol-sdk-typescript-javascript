@@ -264,7 +264,7 @@ export var zh_CN = {
     keystore_describle_text: '此密码为KeyStore加密密码，在你支付的时候会被使用，如果需要修改此密码，请进入钱包管理中心',
     keystore_describle_import: '从你的电脑中，选择加载KY文件或者在下方输入框中粘贴KeyStore字符串',
     //create lock pw
-    new_password: '新密码（至少8个字符）',
+    new_password: '新密码',
     Please_enter_the_name_of_the_wallet: '请输入钱包名',
     please_enter_the_set_password: '请输入设置的密码',
     set_password_hint: '设置密码提示',
@@ -383,7 +383,7 @@ export var zh_CN = {
     Alias_settings: '别名设置',
     Filter_management: '过滤器管理',
     Subaddress_management: '子地址管理',
-    Modify_the_private_key_wallet_password: '修改私钥钱包密码',
+    Modify_the_private_key_wallet_password: '修改钱包密码',
     status: '状态',
     operating: '操作',
     binded: '已绑定',
@@ -472,6 +472,7 @@ export var zh_CN = {
     apostille_result: '公证结果',
     Delete_records_locally: '本地删除记录',
     Notarized_data_backup: '公证数据备份',
+    //multisig
     first_floor: '第一层',
     second_floor: '第二层',
     third_floor: '第三层',
@@ -485,9 +486,15 @@ export var zh_CN = {
     Confirm_the_password: '确认密码',
     Set_the_password_prompts: '设置密码提示',
     skip: '跳过',
-    //
     forget_password: '忘记密码',
     passowrd_prompt: '密码提示',
-    XEM_market_trend_nearly_24_hours: 'XEM行情走势（近24小时）'
+    XEM_market_trend_nearly_24_hours: 'XEM行情走势（近24小时）',
+    This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe: '1、钱包账户里的所有交易都会使用此密码， 请记住你的密码并妥善保管。',
+    The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_the_security_of_your_wallet: '2、密码设置要求，不低于六位数字，建议 越复杂越好，有利于你钱包的安全性！',
+    // todo
+    add_address: '添加账户地址',
+    add_mosaic: '添加马赛克',
+    add_entity_type: '添加交易类型',
+    Any_information_cannot_be_empty: '任意信息不能为空'
 };
 //# sourceMappingURL=zh-CN.js.map

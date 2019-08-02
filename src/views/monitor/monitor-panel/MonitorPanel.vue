@@ -94,7 +94,13 @@
                   <div>{{value.amount}}</div>
                 </span>
               </div>
+              <div class="complete_container">
+                <div class="complete" @click="showMosaicMap">{{$t('complete')}}</div>
+
+              </div>
+
             </div>
+
           </div>
         </div>
       </div>
@@ -521,7 +527,6 @@
                         that.localMosaicMap = mosaicMap
                         that.mosaicMap = mosaicMap
                         that.saveMosaicRecordInLocal()
-                        console.log('monitor paenl realLocalStorage error')
                     })
                 })
             } else {

@@ -1,272 +1,222 @@
-.walletDetailsWrap{
+.walletDetailsWrap {
   box-sizing: border-box;
   width: 1310px;
   height: 100%;
-  .Information{
-    font-size:16px;
+
+  .Information {
+    font-size: 16px;
     background-color: #fff;
     padding: 25px 76px 25px 25px;
-    border-radius:8px;
     margin-bottom: 15px;
-    h6{
-      font-size:16px;
-      font-weight:400;
-      color:#222222;
+
+    h6 {
+      font-size: 16px;
+      font-weight: 400;
+      color: #222222;
       margin-bottom: 32px;
     }
-    .walletInfo{
-      p{
+
+    .walletInfo {
+      p {
         padding-left: 25px;
         margin-bottom: 23px;
       }
-      p:last-of-type{
+
+      p:last-of-type {
         margin-bottom: 0;
       }
-      .tit{
+
+      .tit {
         display: inline-block;
-        width:68px;
-        height:14px;
+        width: 68px;
+        height: 14px;
         text-align: left;
-        font-size:14px;
-        font-weight:400;
+        font-size: 14px;
+        font-weight: 400;
         white-space: nowrap;
-        color:rgba(102,102,102,1);
+        color: rgba(102, 102, 102, 1);
         margin-right: 30px;
       }
-      .walletName{
-        font-size:14px;
-        font-weight:400;
-        color:rgba(34,34,34,1);
+
+      .walletName {
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
         vertical-align: middle;
       }
-      .walletAddress{
-        font-size:14px;
-        font-weight:400;
-        color:rgba(34,34,34,1);
+
+      .walletAddress {
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
         vertical-align: middle;
       }
-      .walletPublicKey{
-        font-size:14px;
-        font-weight:400;
-        color:rgba(34,34,34,1);
+
+      .walletPublicKey {
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
         vertical-align: middle;
       }
-      .walletType{
-        font-size:14px;
-        font-weight:400;
-        color:#20B5AC;
+
+      .walletType {
+        font-size: 14px;
+        font-weight: 400;
+        color: #20B5AC;
       }
-      i{
+
+      i {
         display: inline-block;
         width: 24px;
         height: 24px;
         margin-left: 18px;
         vertical-align: middle;
         cursor: pointer;
-        img{
+
+        img {
           display: inline-block;
           width: 100%;
           height: 100%;
         }
       }
-      .updateWalletName{
+
+      .updateWalletName {
         width: 18px;
         height: 20px;
       }
     }
-    .addressQRCode{
+
+    .addressQRCode {
       width: 140px;
       height: 140px;
-      margin:53px auto 5px;
-      img{
+      margin: 53px auto 5px;
+
+      img {
         display: inline-block;
         width: 100%;
         height: 100%;
       }
     }
-    .codeTit{
-      font-size:16px;
+
+    .codeTit {
+      font-size: 16px;
       text-align: center;
-      font-weight:400;
-      color:#666666;
+      font-weight: 400;
+      color: #666666;
     }
   }
-  .fnAndBackup{
+
+  .fnAndBackup {
     background-color: #fff;
     padding: 25px 30px 29px;
-    border-radius:8px;
     margin-bottom: 15px;
-    h6{
-      font-size:16px;
-      font-weight:400;
-      color:#222222;
+
+    h6 {
+      font-size: 16px;
+      font-weight: 400;
+      color: #222222;
       margin-bottom: 25px;
     }
-    .backupDiv{
+
+    .backupDiv {
       padding-left: 30px;
-      .Mnemonic,.privateKey,.Keystore,.Other{
+
+      .Mnemonic, .privateKey, .Keystore, .Other {
         height: 53px;
         line-height: 53px;
         margin-right: 100px;
         cursor: pointer;
-        i{
+
+        i {
           display: inline-block;
           width: 48px;
           height: 42px;
           margin-right: 0px;
           vertical-align: middle;
-          img{
+
+          img {
             display: inline-block;
             width: 30px;
             position: relative;
             left: 10px;
           }
         }
-        span{
+
+        span {
           display: inline-block;
           line-height: 53px;
-          font-size:14px;
-          font-weight:400;
-          color:#666666;
+          font-size: 14px;
+          font-weight: 400;
+          color: #666666;
         }
       }
     }
   }
-  .accountFn{
+
+  .accountFn {
     background-color: #fff;
-    padding:5px 0 25px;
-    border-radius:8px;
+    padding: 5px 0 25px;
+    height: calc(100% - 458px);
     overflow: hidden;
-    .accountFnNav{
+
+    .accountFnNav {
       width: 100%;
       height: 60px;
       line-height: 60px;
-      border-radius:8px;
+      border-radius: 8px;
       background-color: #fff;
       position: relative;
-      .navList{
+      margin-bottom: 20px;
+
+      .navList {
         height: 100%;
-        li{
+
+        li {
           width: 169px;
           height: 100%;
           line-height: 60px;
-          font-size:14px;
+          font-size: 14px;
           text-align: center;
-          font-weight:400;
-          color:#666666;
+          font-weight: 400;
+          color: #666666;
           position: relative;
           cursor: pointer;
         }
-        li:before{
+
+        li:before {
           display: block;
           content: '';
-          width:1Px;
-          height:14px;
-          background:#CCCCCC;
+          width: 1Px;
+          height: 14px;
+          background: #CCCCCC;
           position: absolute;
           left: 0;
           top: 23px;
         }
-        li:first-of-type:before{
+
+        li:first-of-type:before {
           display: none;
         }
-        .active{
-          font-size:16px;
-          font-weight:bold;
-          color:#20B5AC;
+
+        .active {
+          font-size: 16px;
+          font-weight: bold;
+          color: #20B5AC;
         }
-        .active:after{
+
+        .active:after {
           display: block;
           content: '';
-          width:30px;
-          height:4Px;
-          background:#4DC2BF;
+          width: 30px;
+          height: 4Px;
+          background: #4DC2BF;
           position: absolute;
           bottom: 0;
           left: 50%;
-          transform: translateX( -50%);
+          transform: translateX(-50%);
         }
       }
     }
-    .aliasTable{
-      padding: 0 20px;
-      .tableTit{
-        height: 52px;
-        line-height: 52px;
-        font-size:14px;
-        font-weight:400;
-        color:#999999;
-        .ivu-col{
-          padding-left: 60px;
-        }
-      }
-      .tableCell{
-        height: 60px;
-        line-height: 60px;
-        font-size:14px;
-        font-weight:400;
-        color:#222222;
-        background-color: #F7FBFC;
-        margin-bottom: 5px;
-        .ivu-col{
-          padding-left: 60px;
-        }
-        .tableFn{
-          height: 30px;
-          line-height: 30px;
-          margin-top: 15px;
-          span{
-            display: inline-block;
-            width:60px;
-            height:30px;
-            text-align: center;
-            font-size:14px;
-            font-weight:400;
-            color:#666666;
-            background:#DDDDDD;
-            border-radius:4px;
-            margin-right: 20px;
-          }
-          .bind.active{
-            color: #fff;
-            background:#20B5AC;
-          }
-          .unbind.active{
-            color: #fff;
-            background:#F65C5C;
-          }
-          .updateTime.active{
-            color: #fff;
-            background:#F16328;
-          }
-        }
-      }
-      .noData{
-        width: 76px;
-        text-align: center;
-        margin: 80px auto 0;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        i{
-          display: block;
-          width: 76px;
-          height: 78px;
-          margin-bottom: 10px;
-          img{
-            display: block;
-            width: 100%;
-            height: 100%;
-          }
-        }
-        p{
-          font-size:14px;
-          font-weight:400;
-          color:#CCCCCC;
-          white-space: nowrap;
-        }
-      }
-    }
+
   }
 }

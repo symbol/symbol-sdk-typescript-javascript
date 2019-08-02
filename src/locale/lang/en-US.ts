@@ -72,7 +72,7 @@ export const en_US = {
     date: 'Date',
     block_height: 'Height',
     average_block_time: 'Generation',
-    point: 'Point',
+    point: 'Node',
     number_of_transactions: 'Transactions',
     transfer_type: 'Transfer type',
     gathering: 'Gathering',
@@ -171,7 +171,7 @@ export const en_US = {
     about_us: 'About us',
 
     //setting-lock
-    old_password: 'Old password',
+    old_password: 'Pre',
     please_enter_the_original_password: 'Please enter the original password',
     set_password: 'Set password',
     this_password_is_used_to_lock_the_desktop_wallet_Once_lost_you_will_lose_the_right_to_enter_the_desktop_wallet: 'This password is used to lock the desktop wallet .Once lost you will lose the right to enter the desktop wallet.',
@@ -283,7 +283,7 @@ export const en_US = {
     keystore_describle_text: 'This password is the KeyStore encryption password, which will be used when you pay. If you need to modify this password, please enter the wallet management center.',
     keystore_describle_import: 'From your computer, choose to load the KY file or paste the KeyStore string in the input box below.',
     //create lock pw
-    new_password: 'New password (at least 8 characters)',
+    new_password: 'New',
     Please_enter_the_name_of_the_wallet: 'Please enter the name of the wallet',
     please_enter_the_set_password: 'Please enter the set password',
     set_password_hint: 'Set password hint',
@@ -521,16 +521,25 @@ export const en_US = {
     CREATE_LOCK_PASSWORD: 'CREATE LOCK PASSWORD',
     This_password_is_used_for_desktop_wallet_locking: 'This password is used for desktop wallet locking',
     Set_the_password: 'Set the password',
-    Confirm_the_password: 'Confirm the password',
+    Confirm_the_password: 'Confirm',
     Set_the_password_prompts: 'Set the password prompts',
     skip: 'Skip',
-    finished:'Finished',
+    finished: 'Finished',
 
     //
-    forget_password:'Forget password',
-    passowrd_prompt:'Passowrd prompt',
-    XEM_market_trend_nearly_24_hours:'XEM market trend nearly 24 hours'
+    forget_password: 'Forget password',
+    passowrd_prompt: 'Passowrd prompt',
+    XEM_market_trend_nearly_24_hours: 'XEM market trend nearly 24 hours',
 
+
+    This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe: '1、This password will be used for all transactions in your wallet account. Please remember your password and keep it safe.',
+    The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_the_security_of_your_wallet: '2、The password setting requirement is not less than six digits. The more complicated the recommendation, the better the security of your wallet!',
+
+    // todo
+    add_address: 'Add address',
+    add_mosaic: 'Add mosaic',
+    add_entity_type: 'Add entity type',
+    Any_information_cannot_be_empty: 'Any information cannot be empty'
 
 
 }
