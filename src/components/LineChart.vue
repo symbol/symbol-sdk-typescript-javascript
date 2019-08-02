@@ -18,12 +18,14 @@
         dom: any = {};
         spinShow = true
         option = {
-            legend: {
-                data: ['xem', 'btc', 'amount'],
-                show: true,
-                x: 'right',
-                y: '-5px'
-            },
+            legend: [
+                {
+                    data: ['xem', 'btc', 'amount'],
+                    show: true,
+                    x: 'right',
+                    y: '-5px'
+                }
+            ],
             axisPointer: {
                 link: {xAxisIndex: 'all'},
                 label: {

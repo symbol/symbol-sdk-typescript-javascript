@@ -131,6 +131,12 @@ const routers = [
                         // @ts-ignore
                         component: () => import('@/views/service/apostille/Apostille.vue')
                     },
+                    {
+                        path: '/servicePanel',
+                        name: 'servicePanel',
+                        // @ts-ignore
+                        component: () => import('@/views/service/namespace/Namespace.vue')
+                    },
                 ]
             },
 

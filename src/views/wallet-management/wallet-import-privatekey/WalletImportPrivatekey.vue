@@ -73,7 +73,7 @@ import {NetworkType} from "nem2-sdk";
     @Component
     export default class WalletImportPrivatekey extends Vue {
         form = {
-            privateKey: '',
+            privateKey: 'F96F0A9313B91AAB3FB02B380A4040DAB5961DE28A3B2743E83001CE2997117C',
             networkType: 0,
             walletName: '',
             password: '',
@@ -104,19 +104,19 @@ import {NetworkType} from "nem2-sdk";
 
         checkImport() {
             if (this.form.networkType == 0) {
-                this.$Message.error(Message.PLEASE_SWITCH_NETWORK);
+                this.$Message.error(this.$t(Message.PLEASE_SWITCH_NETWORK))
                 return false
             }
             if (!this.form.walletName || this.form.walletName == '') {
-                this.$Message.error(Message.WALLET_NAME_INPUT_ERROR);
+                this.$Message.error(this.$t(Message.WALLET_NAME_INPUT_ERROR))
                 return false
             }
             if (!this.form.password || this.form.password == '') {
-                this.$Message.error(Message.PASSWORD_SETTING_INPUT_ERROR);
+                this.$Message.error(this.$t(Message.PASSWORD_SETTING_INPUT_ERROR))
                 return false
             }
             if (this.form.password !== this.form.checkPW) {
-                this.$Message.error(Message.INCONSISTENT_PASSWORD_ERROR);
+                this.$Message.error(this.$t(Message.INCONSISTENT_PASSWORD_ERROR))
                 return false
             }
             return true
@@ -125,14 +125,14 @@ import {NetworkType} from "nem2-sdk";
         checkPrivateKey() {
             try {
                 if (!this.form.privateKey || this.form.privateKey === '') {
-                    this.$Message.error(Message.PASSWORD_SETTING_INPUT_ERROR);
+                    this.$Message.error(this.$t(Message.PASSWORD_SETTING_INPUT_ERROR))
                     return false
                 }
                 const account = Account.createFromPrivateKey(this.form.privateKey, NetworkType.MIJIN_TEST)
                 this.account = account
                 return true
             } catch (e) {
-                this.$Message.error(Message.PASSWORD_SETTING_INPUT_ERROR);
+                this.$Message.error(this.$t(Message.PASSWORD_SETTING_INPUT_ERROR))
                 return false
             }
 
@@ -216,7 +216,6 @@ import {NetworkType} from "nem2-sdk";
                     multisigAccountInfo.result.multisigAccountInfo['subscribe']((accountInfo)=>{
                         walletItem.isMultisig = true
                     },()=>{
-                        console.log('not multisigAccount')
                         walletItem.isMultisig = false
                     })
                 }

@@ -35,9 +35,9 @@
             this.$store.state.app.isInLoginPage = true
 
             // if (!localRead('lock')) {
-                this.$router.push({
-                    name: 'login'
-                })
+            this.$router.push({
+                name: 'login'
+            })
             // } else {
             //     this.$router.push({
             //         name: 'reLogin'
@@ -82,7 +82,6 @@
                     multisigAccountInfo.result.multisigAccountInfo['subscribe']((accountInfo) => {
                         walletItem.isMultisig = true
                     }, () => {
-                        console.log('not multisigAccount')
                         walletItem.isMultisig = false
                     })
                 }
@@ -96,9 +95,8 @@
 
 
         chainListner() {
-            const {node} = this
-            // todo
-            const listener = new Listener('ws://192.168.0.105:3000', WebSocket)
+            const node = this.node.replace('http', 'ws')
+            const listener = new Listener(node, WebSocket)
             wsInterface.newBlock({
                 listener,
                 pointer: this

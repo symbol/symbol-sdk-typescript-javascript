@@ -75,7 +75,7 @@
           <div class="right">
             <span class="title">{{$t('quantity')}}</span>
             <span class="value">
-              <input v-model.number="purchaseAmount" type="number">
+              <input v-model.number="purchaseAmount" type="text">
             </span>
             <span class="update_arrow">
               <img @click="addPurchaseAmount " class="pointer"

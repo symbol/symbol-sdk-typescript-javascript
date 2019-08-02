@@ -124,6 +124,29 @@ export var zh_CN = {
     crosschain_transfer: '跨链转账',
     aggregate_transfer: '聚合转账',
     QR_code_generation_failed: '二维码生成失败',
+    //monitor-remote
+    Remote_title_recipt: '累积委托收益量',
+    Remote_state: '当前状态',
+    Remote_pubulic_pik: '远程公钥',
+    Remote_question: '相关问题',
+    Remote_ques1: '1、怎么获得收益？',
+    remote_ques1_rep: '帐户开启委托收获，就是将其重要性分数将转移到远程帐户。远程帐户继承了原始帐户的重要性，实现在线远程“挖矿”，收集收获的奖励。',
+    remote_ques2: '2、收益是怎么？',
+    remote_ques2_rep: '远程账户继承了原始账户的重要性，创建新块收获的奖励称为收益。',
+    remote_rep_list: '收益列表',
+    remote_list_col1: '收获块的hash',
+    remote_list_col2: '收获块的高度',
+    remote_list_col3: '收获费用',
+    remote_list_col4: '时间',
+    remote_no_data: '暂无数据',
+    remote_repaly: '委托收获',
+    remote_modal_pul: '远程公钥',
+    remote_modal_price: '费用',
+    reomte_modal_pass: '密码',
+    remote_modal_comfire: '确认',
+    remote_modal_cancel: '取消',
+    remote_modal_place1: '请输入或粘贴远程公钥',
+    remote_modal_place2: '请输入钱包密码',
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: '欢迎回到CATAPULT测试版',
     welcome_to_the_CATAPULT_beta: '欢迎使用CATAPULT测试版',
@@ -264,7 +287,7 @@ export var zh_CN = {
     keystore_describle_text: '此密码为KeyStore加密密码，在你支付的时候会被使用，如果需要修改此密码，请进入钱包管理中心',
     keystore_describle_import: '从你的电脑中，选择加载KY文件或者在下方输入框中粘贴KeyStore字符串',
     //create lock pw
-    new_password: '新密码（至少8个字符）',
+    new_password: '新密码',
     Please_enter_the_name_of_the_wallet: '请输入钱包名',
     please_enter_the_set_password: '请输入设置的密码',
     set_password_hint: '设置密码提示',
@@ -383,7 +406,7 @@ export var zh_CN = {
     Alias_settings: '别名设置',
     Filter_management: '过滤器管理',
     Subaddress_management: '子地址管理',
-    Modify_the_private_key_wallet_password: '修改私钥钱包密码',
+    Modify_the_private_key_wallet_password: '修改钱包密码',
     status: '状态',
     operating: '操作',
     binded: '已绑定',
@@ -472,6 +495,7 @@ export var zh_CN = {
     apostille_result: '公证结果',
     Delete_records_locally: '本地删除记录',
     Notarized_data_backup: '公证数据备份',
+    //multisig
     first_floor: '第一层',
     second_floor: '第二层',
     third_floor: '第三层',
@@ -485,9 +509,15 @@ export var zh_CN = {
     Confirm_the_password: '确认密码',
     Set_the_password_prompts: '设置密码提示',
     skip: '跳过',
-    //
     forget_password: '忘记密码',
     passowrd_prompt: '密码提示',
-    XEM_market_trend_nearly_24_hours: 'XEM行情走势（近24小时）'
+    XEM_market_trend_nearly_24_hours: 'XEM行情走势（近24小时）',
+    This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe: '1、钱包账户里的所有交易都会使用此密码， 请记住你的密码并妥善保管。',
+    The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_the_security_of_your_wallet: '2、密码设置要求，不低于六位数字，建议 越复杂越好，有利于你钱包的安全性！',
+    // todo
+    add_address: '添加账户地址',
+    add_mosaic: '添加马赛克',
+    add_entity_type: '添加交易类型',
+    Any_information_cannot_be_empty: '任意信息不能为空'
 };
 //# sourceMappingURL=zh-CN.js.map

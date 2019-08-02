@@ -22,7 +22,7 @@
       <li>
         {{$t('account_name')}}
         <div class="tips">{{$t('the_default_is_Number')}}</div>
-        <div class="gray_content">
+        <div class="gray_content input">
           <input class="absolute" type="text" :placeholder="$t('please_enter_your_new_password_again')">
         </div>
         <span class="confirm_button un_click">{{$t('confirm')}}</span>
@@ -41,13 +41,9 @@
         languageList = []
         coinList = [
             {
-                value: 'CNY',
-                label: 'CNY'
+                value: 'no data',
+                label: 'no data'
             },
-            {
-                value: 'USDT',
-                label: 'USDT'
-            }
         ]
 
         created() {

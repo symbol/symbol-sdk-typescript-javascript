@@ -4,7 +4,7 @@
     <div class="edit_form">
       <div class="form_item">
         <div class="title">{{$t('Public_account')}}</div>
-        <Select v-model="multisigPublickey" class="select">
+        <Select v-model="multisigPublickey" class="select" :placeholder="$t('publickey')">
           <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </div>
@@ -21,7 +21,7 @@
               </Tooltip>
             </span>
             <div class="sub_list radius" v-if="showSubAddressList">
-              <div class="sub_list_item" v-for="i in 3">wedaweawe-ewaeaweaw-eaweaweaw-eawe</div>
+              <div class="sub_list_item" v-for="i in 1"> no data</div>
 
             </div>
           </span>
@@ -117,16 +117,8 @@
         showCheckPWDialog = false
         cityList = [
             {
-                value: 'TCTEXC-5TGXD7f-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                label: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
-            },
-            {
-                value: 'TCTEXC-f5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                label: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
-            },
-            {
-                value: 'TCTEXC-5TGXD7-OQCHBB-fMNU3LS-2GFCB4-2KD75D-5VCN',
-                label: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
+                value: 'no data',
+                label: 'no data'
             }
         ]
         multisigPublickey = ''
@@ -144,7 +136,6 @@
         }
 
         addAddress(flag) {
-            console.log('.........')
             this.addressList.push({
                 address: this.currentAddress,
                 type: flag

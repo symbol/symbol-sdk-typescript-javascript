@@ -1,116 +1,121 @@
-.mosaicListBody {
-  padding: 41px 30px;
-  height: calc(100% - 20px);
-  position: relative;
-  .no_data {
-    font-size: 20px;
-    color: #ccc;
-    text-align: center;
-    margin-top: 100px;
-  }
+.mosaicList {
+  height: 100%;
 
-  .listTit {
-    height: 52px;
-    font-size: 14px;
-    line-height: 52px;
-    font-weight: 400;
-    color: #999999;
+  .mosaicListBody {
+    padding: 41px 30px;
+    height: calc(100% - 20px);
+    position: relative;
 
-    .ivu-col {
-      white-space: nowrap;
-      padding-left: 10px;
+    .no_data {
+      font-size: 20px;
+      color: #ccc;
+      text-align: center;
+      margin-top: 100px;
     }
-  }
 
-  .listItem {
-    height: 60px;
-    line-height: 60px;
-    margin: 5px 0;
-    color: #222222;
-    font-size: 14px;
-    font-weight: 400;
-    background: #F7FBFC;
-    border-radius: 4px;
+    .listTit {
+      height: 52px;
+      font-size: 14px;
+      line-height: 52px;
+      font-weight: 400;
+      color: #999999;
 
-    .ivu-col {
-      white-space: nowrap;
-      padding-left: 11px;
-
-      .color1 {
-        color: #999999;
+      .ivu-col {
+        white-space: nowrap;
+        padding-left: 10px;
       }
+    }
 
-      .color2 {
-        color: #F65C5C;
-      }
+    .listItem {
+      height: 60px;
+      line-height: 60px;
+      margin: 5px 0;
+      color: #222222;
+      font-size: 14px;
+      font-weight: 400;
+      background: #F7FBFC;
+      border-radius: 4px;
 
-      .listFnDiv {
-        font-size: 14px;
+      .ivu-col {
+        white-space: nowrap;
+        padding-left: 11px;
 
-        .ivu-poptip-rel {
-          height: 60px;
-          line-height: 60px;
-
-          .moreFn {
-            display: inline-block;
-            width: 20px;
-            height: 5px;
-            padding: 10px 10px;
-            background-image: url("../../../../../assets/images/service/moreFn.png");
-            background-size: 100% 20%;
-            background-repeat: no-repeat;
-            background-position-y: 10px;
-            transform: translateY(5px);
-            cursor: pointer;
-          }
+        .color1 {
+          color: #999999;
         }
 
-        .ivu-poptip-popper {
-          // @ts-ignore
-          min-width: -webkit-fill-available;
+        .color2 {
+          color: #F65C5C;
         }
 
-        .ivu-poptip-body-content {
-          overflow: inherit;
+        .listFnDiv {
+          font-size: 14px;
 
-          .updateFn {
-            .fnItem {
-              margin-bottom: 8px;
+          .ivu-poptip-rel {
+            height: 60px;
+            line-height: 60px;
+
+            .moreFn {
+              display: inline-block;
+              width: 20px;
+              height: 5px;
+              padding: 10px 10px;
+              background-image: url("../../../../../assets/images/service/moreFn.png");
+              background-size: 100% 20%;
+              background-repeat: no-repeat;
+              background-position-y: 10px;
+              transform: translateY(5px);
               cursor: pointer;
             }
+          }
 
-            .fnItem:first-of-type {
-              margin-top: 3px;
-            }
+          .ivu-poptip-popper {
+            // @ts-ignore
+            min-width: -webkit-fill-available;
+          }
 
-            .fnItem:last-of-type {
-              margin-bottom: 3px;
-            }
+          .ivu-poptip-body-content {
+            overflow: inherit;
 
-            i {
-              display: inline-block;
-              width: 18px;
-              height: 16px;
-              margin-right: 13px;
-              vertical-align: middle;
-
-              img {
-                display: inline-block;
-                width: 100%;
-                height: 100%;
+            .updateFn {
+              .fnItem {
+                margin-bottom: 8px;
+                cursor: pointer;
               }
-            }
 
-            span {
-              display: inline-block;
-              font-size: 14px;
-              font-weight: 400;
-              color: #666666;
-              vertical-align: middle;
-            }
+              .fnItem:first-of-type {
+                margin-top: 3px;
+              }
 
-            .tails {
-              color: #20B5AC;
+              .fnItem:last-of-type {
+                margin-bottom: 3px;
+              }
+
+              i {
+                display: inline-block;
+                width: 18px;
+                height: 16px;
+                margin-right: 13px;
+                vertical-align: middle;
+
+                img {
+                  display: inline-block;
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+
+              span {
+                display: inline-block;
+                font-size: 14px;
+                font-weight: 400;
+                color: #666666;
+                vertical-align: middle;
+              }
+
+              .tails {
+                color: #20B5AC;
+              }
             }
           }
         }

@@ -31,9 +31,16 @@
             </Poptip>
           </span>
         </div>
+
+        <div v-if="namespaceList.length == 0" class="noData" >
+          <i><img src="@/assets/images/wallet-management/no_data.png"></i>
+          <p>{{$t('not_yet_open')}}</p>
+        </div>
+
       </div>
     </div>
-    <NamespaceEditDialog :currentNamespaceName="currentNamespaceName"  :showNamespaceEditDialog="showNamespaceEditDialog" @closeNamespaceEditDialog   = 'closeNamespaceEditDialog'></NamespaceEditDialog>
+    <NamespaceEditDialog :currentNamespaceName="currentNamespaceName" :showNamespaceEditDialog="showNamespaceEditDialog"
+                         @closeNamespaceEditDialog='closeNamespaceEditDialog'></NamespaceEditDialog>
   </div>
 </template>
 
@@ -42,33 +49,21 @@
     import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
 
     @Component({
-        components:{
+        components: {
             NamespaceEditDialog
         }
     })
     export default class NamespaceList extends Vue {
         showNamespaceEditDialog = false
         currentNamespaceName = ''
-        namespaceList = [
-            {
-                name: 'nem.xem123',
-                duration: '123321',
-            },
-            {
-                name: 'nem.xem321',
-                duration: '123321',
-            },
-            {
-                name: 'nem.xem123',
-                duration: '123321',
-            }
-        ]
+        namespaceList = []
 
         showEditDialog(namespaceName) {
             this.currentNamespaceName = namespaceName
             this.showNamespaceEditDialog = true
         }
-        closeNamespaceEditDialog(){
+
+        closeNamespaceEditDialog() {
             this.showNamespaceEditDialog = false
         }
 

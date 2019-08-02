@@ -1,6 +1,6 @@
 <template>
   <div class="walletDetailsWrap" ref="walletDetailsWrap">
-    <div class="Information">
+    <div class="Information radius">
       <Row>
         <Col span="18">
           <h6>{{$t('Basic_information')}}</h6>
@@ -12,7 +12,7 @@
             <p>
               <span class="tit">{{$t('Wallet_name')}}</span>
               <span class="walletName">{{getWallet.name}}</span>
-              <i class="updateWalletName"><img src="@/assets/images/wallet-management/editIcon.png"></i>
+<!--              <i class="updateWalletName"><img src="@/assets/images/wallet-management/editIcon.png"></i>-->
             </p>
             <p>
               <span class="tit">{{$t('Wallet_address')}}</span>
@@ -36,7 +36,7 @@
         </Col>
       </Row>
     </div>
-    <div class="fnAndBackup">
+    <div class="fnAndBackup radius">
       <h6>{{$t('Function_and_backup')}}</h6>
       <div class="backupDiv clear">
         <div class="Mnemonic left" @click="changeMnemonicDialog">
@@ -53,43 +53,24 @@
         </div>
       </div>
     </div>
-    <div class="accountFn" ref="accountFn">
+    <div class="accountFn radius" ref="accountFn">
       <div class="accountFnNav">
         <ul class="navList clear">
-          <li class="active left">{{$t('Alias_settings')}}</li>
-          <li class="left">{{$t('Filter_management')}}</li>
-          <li class="left">{{$t('Subaddress_management')}}</li>
-          <li class="left">{{$t('Modify_the_private_key_wallet_password')}}</li>
+          <li :class="['left',functionShowList[0]?'active':''] " @click="showFunctionIndex(0)">
+            {{$t('Alias_settings')}}
+          </li>
+          <li :class="['left',functionShowList[1]?'active':''] " @click="showFunctionIndex(1)">
+            {{$t('Filter_management')}}
+          </li>
+          <!--          <li class="left">{{$t('Subaddress_management')}}</li>-->
+          <li :class="['left',functionShowList[2]?'active':''] " @click="showFunctionIndex(2)">
+            {{$t('Modify_the_private_key_wallet_password')}}
+          </li>
         </ul>
       </div>
-      <div class="aliasTable">
-        <div class="tableTit">
-          <Row>
-            <Col span="7">{{$t('namespace')}}</Col>
-            <Col span="6">{{$t('validity_period')}}</Col>
-            <Col span="4">{{$t('status')}}</Col>
-            <Col span="7">{{$t('operating')}}</Col>
-          </Row>
-        </div>
-        <div class="tableCell" v-for="(item,index) in aliasList" :key="index" v-if="aliasList.length>0">
-          <Row>
-            <Col span="7">girme</Col>
-            <Col span="6">2019-11-05</Col>
-            <Col span="4">{{$t('binded')}}</Col>
-            <Col span="7">
-              <div class="tableFn">
-                <span class="bind">{{$t('bind')}}</span>
-                <span class="unbind active">{{$t('unbind')}}</span>
-                <span class="updateTime">{{$t('update')}}</span>
-              </div>
-            </Col>
-          </Row>
-        </div>
-        <div class="noData" v-if="aliasList.length<=0">
-          <i><img src="@/assets/images/wallet-management/no_data.png"></i>
-          <p>{{$t('not_yet_open')}}</p>
-        </div>
-      </div>
+      <WalletAlias v-if="functionShowList[0]"></WalletAlias>
+      <WalletFilter v-if="functionShowList[1]"></WalletFilter>
+      <WalletUpdatePassword v-if="functionShowList[2]"></WalletUpdatePassword>
     </div>
     <MnemonicDialog :showMnemonicDialog="showMnemonicDialog"
                     @closeMnemonicDialog="closeMnemonicDialog"></MnemonicDialog>
@@ -101,18 +82,23 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Vue, Watch} from 'vue-property-decorator'
     import {createQRCode, copyTxt} from '@/utils/tools'
     import MnemonicDialog from '@/views/wallet-management/mnemonic-dialog/MnemonicDialog.vue'
     import PrivatekeyDialog from '@/views/wallet-management/privatekey-dialog/PrivatekeyDialog.vue'
     import KeystoreDialog from '@/views/wallet-management/keystore-dialog/KeystoreDialog.vue'
-    import './WalletDetails.less';
+    import WalletAlias from './wallet-function/wallet-alias/WalletAlias.vue'
+    import WalletFilter from './wallet-function/wallet-filter/WalletFilter.vue'
+    import WalletUpdatePassword from './wallet-function/wallet-update-password/WalletUpdatePassword.vue'
 
     @Component({
         components: {
             MnemonicDialog,
             PrivatekeyDialog,
-            KeystoreDialog
+            KeystoreDialog,
+            WalletAlias,
+            WalletFilter,
+            WalletUpdatePassword
         },
     })
     export default class WalletDetails extends Vue {
@@ -121,6 +107,7 @@
         showKeystoreDialog: boolean = false
         QRCode: string = ''
         aliasList = []
+        functionShowList = [true, false, false]
 
         get getWallet() {
             return this.$store.state.account.wallet
@@ -128,6 +115,11 @@
 
         get getAddress() {
             return this.getWallet.address
+        }
+
+        showFunctionIndex(index) {
+            this.functionShowList = [false, false, false]
+            this.functionShowList[index] = true
         }
 
         changeMnemonicDialog() {
@@ -170,10 +162,10 @@
             })
         }
 
-        onresize() {
-            const height = this.$refs['walletDetailsWrap']['clientHeight'] - (this.$refs['accountFn']['offsetTop'] - this.$refs['walletDetailsWrap']['offsetTop'])
-            this.$refs['accountFn']['style']['height'] = height + 'px'
-        }
+        // onresize() {
+        //     const height = this.$refs['walletDetailsWrap']['clientHeight'] - (this.$refs['accountFn']['offsetTop'] - this.$refs['walletDetailsWrap']['offsetTop'])
+        //     this.$refs['accountFn']['style']['height'] = height + 'px'
+        // }
 
         init() {
             this.setQRCode(this.getAddress)
@@ -184,22 +176,22 @@
             this.init()
         }
 
+        // mounted() {
+        //     const that = this
+        //     window.addEventListener('resize', function () {
+        //         if (that.$refs['walletDetailsWrap'] && that.$route.name == 'walletDetails') {
+        //             // that.onresize()
+        //         }
+        //     })
+        //     // that.onresize()
+        // }
+
         created() {
             this.init()
-        }
-
-        mounted() {
-            const that = this
-            window.addEventListener('resize', function () {
-                if (that.$refs['walletDetailsWrap'] && that.$route.name == 'walletDetails') {
-                    that.onresize()
-                }
-            })
-            that.onresize()
         }
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+  @import "WalletDetails.less";
 </style>

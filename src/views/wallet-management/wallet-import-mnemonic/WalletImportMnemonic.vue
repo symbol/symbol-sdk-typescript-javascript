@@ -247,7 +247,6 @@
                     multisigAccountInfo.result.multisigAccountInfo['subscribe']((accountInfo)=>{
                         walletItem.isMultisig = true
                     },()=>{
-                        console.log('not multisigAccount')
                         walletItem.isMultisig = false
                     })
                 }

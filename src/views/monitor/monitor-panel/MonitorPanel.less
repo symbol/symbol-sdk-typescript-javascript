@@ -13,14 +13,15 @@
 
   .monitor_panel_left_container {
     float: left;
+    width: 440px;
     //margin-right: 20px;
 
     .top_wallet_address {
-      width: 420px;
+      width: 100%;
       height: 240px;
       padding: 22px 20px 0 21px;
       position: relative;
-      background-size: contain;
+      background-size: cover;
       background-image: url("../../../assets/images/monitor/dash-board/dashboardWalletBackground.png");
 
       .wallet_address {
@@ -30,10 +31,10 @@
         justify-content: space-between;
         .address {
           color: rgba(255, 255, 255, 1);
-          font-size: 12px;
+          font-size: 14px;
           font-weight: 400;
           display: inline-block;
-          width: 350px;
+          width: 360px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -45,8 +46,9 @@
       }
 
       .split {
-        width: 100%;
+        width: 90%;
         left: 0;
+        margin-left: 5%;
         border: 1px solid rgba(56, 85, 111, .5);
         opacity: 0.18;
         position: absolute;
@@ -81,7 +83,7 @@
     .bottom_account_info {
       height: calc(100% - 255px);
       background-color: white;
-      width: 420px;
+      width: 100%;
       margin-top: 15px;
       padding: 27px 28px;
       position: relative;
@@ -92,7 +94,31 @@
         height: 100% ;
         overflow-y: scroll;
         margin-top: 15px;
+        .complete_container {
+          width: 100%;
+          height: 80px;
+          background-color: white;
+          position: absolute;
+          left: 0;
+          bottom: 0;
+        }
+        .complete {
+          width:150px;
+          height:44px;
+          border-radius:22px;
+          border:1px solid rgba(38,180,176,1);
+          text-align: center;
+          line-height: 44px;
+          font-size:16px;
+          font-weight:400;
+          color:rgba(38,180,176,1);
+          position: absolute;
+          margin-left: 50%;
+          left: -75px;
+        }
       }
+
+
       .mosaicList::-webkit-scrollbar{
         display: none;
       }
@@ -108,8 +134,10 @@
 
         img {
           margin-right: 19px;
-          width: 12px;
-          height: 20px;
+          width: 8px;
+          height: 16px;
+          position: relative;
+          bottom: 2px;
         }
       }
       .searchMosaic {
@@ -212,7 +240,7 @@
           top: 3px;
           left: 40px;
           width: 180px;
-          font-size: 18px;
+          font-size: 20px;
           font-weight: 400;
           color: rgba(34, 34, 34, 1);
           overflow: hidden;
@@ -224,7 +252,7 @@
           text-align: right;
 
           div:first-of-type {
-            font-size: 14px;
+            font-size: 18px;
             font-weight: 400;
             color: rgba(34, 34, 34, 1);
           }
