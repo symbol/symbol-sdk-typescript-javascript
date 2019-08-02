@@ -166,8 +166,7 @@
             {
                 name: 'remote',
                 isSelect: false,
-                path: 'receipt',
-                disabled: true
+                path: 'remote'
             }
         ]
         isShowAccountInfo = true;

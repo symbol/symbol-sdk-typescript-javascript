@@ -131,6 +131,10 @@ export const zh_CN = {
     aggregate_transfer: '聚合转账',
     QR_code_generation_failed: '二维码生成失败',
 
+
+
+
+
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: '欢迎回到CATAPULT测试版',
     welcome_to_the_CATAPULT_beta: '欢迎使用CATAPULT测试版',
