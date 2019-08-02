@@ -131,9 +131,29 @@ export const zh_CN = {
     aggregate_transfer: '聚合转账',
     QR_code_generation_failed: '二维码生成失败',
 
-
-
-
+    //monitor-remote
+    Remote_title_recipt:'累积委托收益量',
+    Remote_state:'当前状态',
+    Remote_pubulic_pik:'远程公钥',
+    Remote_question:'相关问题',
+    Remote_ques1:'1、怎么获得收益？',
+    remote_ques1_rep:'帐户开启委托收获，就是将其重要性分数将转移到远程帐户。远程帐户继承了原始帐户的重要性，实现在线远程“挖矿”，收集收获的奖励。',
+    remote_ques2:'2、收益是怎么？',
+    remote_ques2_rep:'远程账户继承了原始账户的重要性，创建新块收获的奖励称为收益。',
+    remote_rep_list:'收益列表',
+    remote_list_col1:'收获块的hash',
+    remote_list_col2:'收获块的高度',
+    remote_list_col3:'收获费用',
+    remote_list_col4:'时间',
+    remote_no_data:'暂无数据',
+    remote_repaly:'委托收获',
+    remote_modal_pul:'远程公钥',
+    remote_modal_price:'费用',
+    reomte_modal_pass:'密码',
+    remote_modal_comfire:'确认',
+    remote_modal_cancel:'取消',
+    remote_modal_place1:'请输入或粘贴远程公钥',
+    remote_modal_place2:'请输入钱包密码',
 
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: '欢迎回到CATAPULT测试版',
