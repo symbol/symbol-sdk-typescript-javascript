@@ -404,7 +404,7 @@ describe('TransactionHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.BlockAddress,
+                AccountRestrictionType.BlockIncomingAddress,
                 [addressRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -441,7 +441,7 @@ describe('TransactionHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.BlockAddress,
+                AccountRestrictionType.BlockIncomingAddress,
                 [addressRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -554,7 +554,7 @@ describe('TransactionHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.BlockTransaction,
+                AccountRestrictionType.BlockIncomingTransactionType,
                 [operationRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -591,7 +591,7 @@ describe('TransactionHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.BlockTransaction,
+                AccountRestrictionType.BlockIncomingTransactionType,
                 [operationRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );

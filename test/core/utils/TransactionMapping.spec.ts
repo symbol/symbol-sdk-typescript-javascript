@@ -79,7 +79,7 @@ describe('TransactionMapping - createFromPayload', () => {
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowAddress,
+            AccountRestrictionType.AllowIncomingAddress,
             [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -89,7 +89,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const transaction = TransactionMapping
             .createFromPayload(signedTransaction.payload) as AccountAddressRestrictionModificationTransaction;
 
-        expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowAddress);
+        expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingAddress);
         expect(transaction.modifications[0].modificationType).to.be.equal(RestrictionModificationType.Add);
         expect(transaction.modifications[0].value).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
     });
@@ -125,7 +125,7 @@ describe('TransactionMapping - createFromPayload', () => {
         );
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowTransaction,
+            AccountRestrictionType.AllowIncomingTransactionType,
             [operationRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -134,7 +134,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping
             .createFromPayload(signedTransaction.payload) as AccountAddressRestrictionModificationTransaction;
-        expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowTransaction);
+        expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingTransactionType);
         expect(transaction.modifications[0].value).to.be.equal(operation);
         expect(transaction.modifications[0].modificationType).to.be.equal(RestrictionModificationType.Add);
     });
@@ -666,7 +666,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowAddress,
+            AccountRestrictionType.AllowIncomingAddress,
             [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -675,7 +675,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             TransactionMapping.createFromDTO(addressRestrictionTransaction.toJSON()) as AccountAddressRestrictionModificationTransaction;
 
         expect(transaction.modifications[0].value).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
-        expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowAddress);
+        expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingAddress);
         expect(transaction.modifications[0].modificationType).to.be.equal(RestrictionModificationType.Add);
     });
 
@@ -708,7 +708,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowTransaction,
+            AccountRestrictionType.AllowIncomingTransactionType,
             [operationRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -717,7 +717,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             TransactionMapping.createFromDTO(operationRestrictionTransaction.toJSON()) as AccountMosaicRestrictionModificationTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION);
-        expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowTransaction);
+        expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingTransactionType);
         expect(transaction.modifications.length).to.be.equal(1);
     });
 

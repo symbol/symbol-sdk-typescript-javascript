@@ -1,7 +1,7 @@
 /*
  * Copyright 2019 NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License"),
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -16,19 +16,82 @@
 
 /**
  * Account restriction type
- * 0x01	The restriction type is an address.
- * 0x02	The restriction type is mosaic id.
- * 0x03	The restriction type is a transaction type.
- * 0x04	restriction type sentinel.
- * 0x80 + type	The restriction is interpreted as a blocking operation.
+ * 0x01	Account restriction type is an address.
+ * 0x02	Account restriction type is a mosaic id.
+ * 0x04	Account restriction type is a transaction type.
+ * 0x05	restriction type sentinel.
+ * 0x40 Account restriction is interpreted as outgoing restriction.
+ * 0x80 Account restriction is interpreted as blocking operation.
  */
 
-export enum AccountRestrictionType {
-    AllowAddress = 0x01,
-    AllowMosaic = 0x02,
-    AllowTransaction = 0x04,
+ // !!This enum will be deprecated once catbuffer code applied.
+enum AccountRestrictionTypeEnum {
+    Address = 0x01,
+    Mosaic = 0x02,
+    TransactionType = 0x04,
     Sentinel = 0x05,
-    BlockAddress = (0x80 + 0x01),
-    BlockMosaic = (0x80 + 0x02),
-    BlockTransaction = (0x80 + 0x04),
+    Outgoing = 0x40,
+    Block = 0x80,
+}
+
+export enum AccountRestrictionType {
+    /**
+     * Allow only incoming transactions from a given address.
+     */
+    AllowIncomingAddress = AccountRestrictionTypeEnum.Address,
+
+    /**
+     * Allow only incoming transactions containing a a given mosaic identifier.
+     */
+    AllowMosaic = AccountRestrictionTypeEnum.Mosaic,
+
+    /**
+     * Allow only outgoing transactions with a given transaction type.
+     */
+    AllowIncomingTransactionType = AccountRestrictionTypeEnum.TransactionType,
+
+    /**
+     * Allow only outgoing transactions to a given address.
+     */
+    AllowOutgoingAddress = (AccountRestrictionTypeEnum.Address + AccountRestrictionTypeEnum.Outgoing),
+
+    /**
+     * Allow only outgoing transactions with a given transaction type.
+     */
+    AllowOutgoingTransactionType = (AccountRestrictionTypeEnum.TransactionType +
+                                                           AccountRestrictionTypeEnum.Outgoing),
+
+    /**
+     * Block incoming transactions from a given address.
+     */
+    BlockIncomingAddress = (AccountRestrictionTypeEnum.Address + AccountRestrictionTypeEnum.Block),
+
+    /**
+     * Block incoming transactions containing a given mosaic identifier.
+     */
+    BlockMosaic = (AccountRestrictionTypeEnum.Mosaic + AccountRestrictionTypeEnum.Block),
+
+    /**
+     * Block incoming transactions with a given transaction type.
+     */
+    BlockIncomingTransactionType = (AccountRestrictionTypeEnum.TransactionType +
+                                                           AccountRestrictionTypeEnum.Block),
+
+    /**
+     * Block outgoing transactions from a given address.
+     */
+    BlockOutgoingAddress = (AccountRestrictionTypeEnum.Address +
+                                                   AccountRestrictionTypeEnum.Block + 
+                                                   AccountRestrictionTypeEnum.Outgoing),
+    /**
+     * Block outgoing transactions with a given transaction type.
+     */
+    BlockOutgoingTransactionType = (AccountRestrictionTypeEnum.TransactionType +
+                                                           AccountRestrictionTypeEnum.Block +
+                                                           AccountRestrictionTypeEnum.Outgoing),
+
+    /**
+     * Account restriction sentinel.
+     */
+    Sentinel = AccountRestrictionTypeEnum.Sentinel,
 }

@@ -74,7 +74,7 @@ describe('AccountRestrictionTransaction', () => {
             );
             const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.AllowAddress,
+                AccountRestrictionType.AllowIncomingAddress,
                 [addressRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -105,7 +105,7 @@ describe('AccountRestrictionTransaction', () => {
             );
             const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.AllowTransaction,
+                AccountRestrictionType.AllowIncomingTransactionType,
                 [operationRestrictionFilter],
                 NetworkType.MIJIN_TEST,
             );
@@ -121,7 +121,7 @@ describe('AccountRestrictionTransaction', () => {
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowAddress,
+            AccountRestrictionType.AllowIncomingAddress,
             [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -138,7 +138,7 @@ describe('AccountRestrictionTransaction', () => {
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowAddress,
+            AccountRestrictionType.AllowIncomingAddress,
             [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
             new UInt64([1, 0]),
@@ -157,7 +157,7 @@ describe('AccountRestrictionTransaction', () => {
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowAddress,
+            AccountRestrictionType.AllowIncomingAddress,
             [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -241,7 +241,7 @@ describe('AccountRestrictionTransaction', () => {
         );
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            AccountRestrictionType.AllowTransaction,
+            AccountRestrictionType.AllowIncomingTransactionType,
             [operationRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
