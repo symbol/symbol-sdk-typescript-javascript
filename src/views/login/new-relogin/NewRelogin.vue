@@ -23,10 +23,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import {localRead} from '../../../utils/util'
+    import {Component, Vue} from 'vue-property-decorator'
+    import Message from "@/message/Message"
     import {Crypto, UInt64} from 'nem2-sdk'
-    import Message from "@/message/Message";
+    import {localRead} from '@/utils/util'
 
     @Component
     export default class MonitorRelogin extends Vue {

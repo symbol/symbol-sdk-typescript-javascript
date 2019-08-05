@@ -97,7 +97,7 @@
         showCheckPWDialog = false
 
         confirmInput() {
-            this.showCheckPWDialog = true
+            // this.showCheckPWDialog = true
         }
 
         addAddress() {

@@ -32,8 +32,8 @@
 
     </div>
     <div class="bottom_button ">
-      <span class="back left" @click="toBack"> {{$t('back')}}</span>
-      <span class="import right">{{$t('import')}}</span>
+      <span class="back left pointer" @click="toBack"> {{$t('back')}}</span>
+      <span class="import right" @click="checkForm">{{$t('import')}}</span>
     </div>
   </div>
 
@@ -46,20 +46,20 @@
     export default class WalletImportKeystore extends Vue {
 
         fileList = [{
-            value: 'XEM',
-            label: 'XEM'
-        },
-            {
-                value: 'ETC',
-                label: 'ETC'
-            }]
+            value: 'no data',
+            label: 'no data'
+        }]
         file = ''
 
-        toBack () {
+
+        checkForm() {
+
+        }
+        toBack() {
             this.$emit('closeImport')
         }
     }
 </script>
 <style scoped lang="less">
-@import "WalletImportKeystore.less";
+  @import "WalletImportKeystore.less";
 </style>

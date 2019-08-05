@@ -516,10 +516,10 @@ export var zh_CN = {
     XEM_market_trend_nearly_24_hours: 'XEM行情走势（近24小时）',
     This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe: '1、钱包账户里的所有交易都会使用此密码， 请记住你的密码并妥善保管。',
     The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_the_security_of_your_wallet: '2、密码设置要求，不低于六位数字，建议 越复杂越好，有利于你钱包的安全性！',
-    // todo
     add_address: '添加账户地址',
     add_mosaic: '添加马赛克',
     add_entity_type: '添加交易类型',
-    Any_information_cannot_be_empty: '任意信息不能为空'
+    Any_information_cannot_be_empty: '任意信息不能为空',
+    success: '成功',
 };
 //# sourceMappingURL=zh-CN.js.map

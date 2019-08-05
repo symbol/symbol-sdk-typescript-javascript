@@ -112,17 +112,9 @@
         multisigPublickey = ''
         cityList = [
             {
-                value: 'TCTEXC-235TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                label: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
+                value: 'no data',
+                label: 'no data'
             },
-            {
-                value: 'TCTEXC-325TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                label: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
-            },
-            {
-                value: 'TCTEXC-23325TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                label: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
-            }
         ]
 
         typeList = [
@@ -224,7 +216,7 @@
             this.showCheckPWDialog = false
         }
         createTransaction(){
-            this.showCheckPWDialog = true
+            // this.showCheckPWDialog = true
         }
 
         changeXEMRentFee() {

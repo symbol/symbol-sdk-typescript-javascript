@@ -12,7 +12,7 @@
             <p>
               <span class="tit">{{$t('Wallet_name')}}</span>
               <span class="walletName">{{getWallet.name}}</span>
-<!--              <i class="updateWalletName"><img src="@/assets/images/wallet-management/editIcon.png"></i>-->
+              <!--              <i class="updateWalletName"><img src="@/assets/images/wallet-management/editIcon.png"></i>-->
             </p>
             <p>
               <span class="tit">{{$t('Wallet_address')}}</span>
@@ -124,7 +124,9 @@
 
         changeMnemonicDialog() {
             if (!this.getWallet['mnemonicEnCodeObj']['ciphertext']) {
-                this.$Message.warning(this.$t('no_mnemonic'));
+                this.$Notice.warning({
+                    title: this.$t('no_mnemonic') + ''
+                })
                 return
             }
             this.showMnemonicDialog = true
@@ -158,14 +160,11 @@
 
         copy(txt) {
             copyTxt(txt).then(() => {
-                this.$Message.success(this['$t']('successful_copy'));
+                this.$Notice.success({
+                    title: this['$t']('successful_copy') + ''
+                });
             })
         }
-
-        // onresize() {
-        //     const height = this.$refs['walletDetailsWrap']['clientHeight'] - (this.$refs['accountFn']['offsetTop'] - this.$refs['walletDetailsWrap']['offsetTop'])
-        //     this.$refs['accountFn']['style']['height'] = height + 'px'
-        // }
 
         init() {
             this.setQRCode(this.getAddress)
@@ -175,16 +174,6 @@
         onGetAddressChange() {
             this.init()
         }
-
-        // mounted() {
-        //     const that = this
-        //     window.addEventListener('resize', function () {
-        //         if (that.$refs['walletDetailsWrap'] && that.$route.name == 'walletDetails') {
-        //             // that.onresize()
-        //         }
-        //     })
-        //     // that.onresize()
-        // }
 
         created() {
             this.init()

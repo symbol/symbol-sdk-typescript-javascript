@@ -9,7 +9,7 @@
         <span class="title">{{$t('asset_type')}}</span>
         <span class="value radius flex_center">
               <Select placeholder="XEM" v-model="assetType" class="asset_type">
-              <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Option v-for="item in mosaicList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             </span>
       </div>
@@ -62,19 +62,16 @@
     export default class MonitorReceipt extends Vue {
         QRCode: string = ''
         isShowDialog = false
-        assetAmount = 0
         transactionHash = ''
-        cityList = [
+        mosaicList = [
             {
                 value: 'xem',
                 label: 'xem'
-            },
-            {
-                value: 'etc',
-                label: 'etc'
             }
         ]
+
         assetType = ''
+        assetAmount = 0
         transferTypeList = [
             {
                 name: 'ordinary_transfer',
@@ -107,7 +104,29 @@
         hideSetAmountDetail() {
             this.isShowDialog = false
         }
+
+        checkForm() {
+            let {assetAmount} = this
+            assetAmount = Number(assetAmount)
+            if (!assetAmount || assetAmount < 0) {
+                this.showErrorMessage(this.$t(Message.AMOUNT_LESS_THAN_0_ERROR))
+                return false
+            }
+        }
+
+        showErrorMessage(message) {
+            this.$Notice.destroy()
+            this.$Notice.error({
+                title: message
+            })
+        }
+
         genaerateQR() {
+
+            if (!this.checkForm()) {
+                return
+            }
+
             const that = this
             this.isShowDialog = false
             const QRCodeData = {
@@ -122,9 +141,9 @@
             codeObj.then((codeObj) => {
                 if (codeObj.created) {
                     this.QRCode = codeObj.url
-                } else {
-                    that.$Message.error(Message.QR_GENERATION_ERROR)
+                    return
                 }
+                that.$Notice.error({title: this.$t(Message.QR_GENERATION_ERROR) + ''})
             })
         }
 
@@ -161,7 +180,11 @@
         copyAddress() {
             const that = this
             copyTxt(this.accountAddress).then(() => {
-                that.$Message.success(Message.COPY_SUCCESS)
+                that.$Notice.success(
+                    {
+                        title: this.$t(Message.COPY_SUCCESS) + ''
+                    }
+                )
             })
         }
 

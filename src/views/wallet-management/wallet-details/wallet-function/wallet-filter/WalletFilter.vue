@@ -23,7 +23,9 @@
         </div>
         <div class="input_content">
           <div class="title">{{$t('password')}}</div>
-          <div class="input_area"><input type="password" :placeholder="$t('please_enter_your_wallet_password')"></div>
+          <div class="input_area">
+            <input type="password" :placeholder="$t('please_enter_your_wallet_password')">
+          </div>
         </div>
       </div>
 
@@ -32,7 +34,8 @@
       <div class="address_dialog" v-if="filterTypeList[1]">
         <div class="input_content">
           <div class="title">{{$t('mosaic')}}</div>
-          <div class="input_area"><input type="text" value="2145d5sd4da231f">
+          <div class="input_area">
+            <input type="text" value="2145d5sd4da231f">
           </div>
         </div>
         <div class="input_content">
@@ -44,7 +47,9 @@
         </div>
         <div class="input_content">
           <div class="title">{{$t('password')}}</div>
-          <div class="input_area"><input type="password" :placeholder="$t('please_enter_your_wallet_password')"></div>
+          <div class="input_area">
+            <input type="password" :placeholder="$t('please_enter_your_wallet_password')">
+          </div>
         </div>
       </div>
 
@@ -52,7 +57,8 @@
       <div class="address_dialog" v-if="filterTypeList[2]">
         <div class="input_content">
           <div class="title">{{$t('transaction_type')}}</div>
-          <div class="input_area"><input type="text" value="transfer transaction">
+          <div class="input_area">
+            <input type="text" value="transfer transaction">
           </div>
         </div>
         <div class="input_content">
@@ -64,13 +70,15 @@
         </div>
         <div class="input_content">
           <div class="title">{{$t('password')}}</div>
-          <div class="input_area"><input type="password" :placeholder="$t('please_enter_your_wallet_password')"></div>
+          <div class="input_area">
+            <input type="password" :placeholder="$t('please_enter_your_wallet_password')">
+          </div>
         </div>
       </div>
 
       <div class="button_content">
         <span class="cancel pointer" @click="isShowDialog=false">{{$t('canel')}}</span>
-        <span class="bind pointer" @click="isShowDialog=false">{{$t('bind')}}</span>
+        <span class="cancel un_click" @click="isShowDialog=true">{{$t('bind')}}</span>
       </div>
     </Modal>
 
@@ -100,7 +108,9 @@
         <div class="tableCell" v-for="(item,index) in aliasList" :key="index" v-if="aliasList.length>0">
           <Row>
             <Col span="21">TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN</Col>
-            <Col span="1"><span v-show="isShowDeleteIcon" class="delete_icon pointer"></span></Col>
+            <Col span="1">
+              <span v-show="isShowDeleteIcon" class="delete_icon pointer"></span>
+            </Col>
           </Row>
         </div>
       </div>
@@ -109,19 +119,14 @@
         <div class="tableCell" v-for="(item,index) in aliasList" :key="index" v-if="aliasList.length>0">
           <Row>
             <Col span="21">77a1969932d987d7</Col>
-            <Col span="1"><span v-show="isShowDeleteIcon" class="delete_icon pointer"></span></Col>
+            <Col span="1">
+              <span v-show="isShowDeleteIcon" class="delete_icon pointer"></span>
+            </Col>
           </Row>
         </div>
       </div>
 
       <div class="entity_type_list" v-if="filterTypeList[2]">
-<!--        <div class="tableCell">-->
-<!--          <Row>-->
-<!--            <Col span="21"></Col>-->
-<!--            <Col span="1"><span v-show="isShowDeleteIcon" class="delete_icon pointer"></span></Col>-->
-<!--          </Row>-->
-<!--        </div>-->
-
       </div>
     </div>
 

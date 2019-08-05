@@ -7,11 +7,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {localSave, localRead, isRefreshData, addZero, formatDate} from '@/utils/util'
+    import {Component, Vue} from 'vue-property-decorator';
     import echarts from 'echarts';
-    import {formatDate} from '../utils/util.js'
     import axios from 'axios'
-    import {localSave, localRead, isRefreshData, addZero} from '@/utils/util'
 
     @Component
     export default class LineChart extends Vue {
@@ -77,7 +76,7 @@
 
             xAxis: [
                 {
-                    show: false,//隐藏了x轴
+                    show: false,//hide axis
                     gridIndex: 0,
                     type: 'category',
                     data: [],
@@ -164,8 +163,8 @@
             dataZoom: {
 
                 type: "inside",
-                // show: true,
                 xAxisIndex: [0, 1],
+                // show: true,
                 // y: '90%',
                 // width:'100%',
             },
@@ -173,8 +172,8 @@
             series: [
                 // xem
                 {
-                    xAxisIndex: 0,//对应前面x的索引位置（第二个）
-                    yAxisIndex: 0,//对应前面y的索引位置（第一个）
+                    xAxisIndex: 0,
+                    yAxisIndex: 0,
                     name: 'xem',
                     data: [],
                     type: 'line',
@@ -203,8 +202,8 @@
                 // btc
                 {
                     smooth: true,
-                    xAxisIndex: 0,//对应前面x的索引位置（第二个）
-                    yAxisIndex: 0,//对应前面y的索引位置（第一个）
+                    xAxisIndex: 0,
+                    yAxisIndex: 0,
                     name: 'btc',
                     data: [],
                     type: 'line',
@@ -233,8 +232,8 @@
                 },
                 // todo
                 {
-                    xAxisIndex: 1,//对应前面x的索引位置（第二个）
-                    yAxisIndex: 1,//对应前面y的索引位置（第一个）
+                    xAxisIndex: 1,
+                    yAxisIndex: 1,
                     name: 'amount',
                     type: 'bar',
                     color: ['#20B5AC'],
@@ -272,7 +271,7 @@
             })
             const low = xemDataList[0].open
             const open = xemDataList[xemDataList.length - 1].open
-            const min = (low - (open - low) ).toFixed(3)
+            const min = (low - (open - low)).toFixed(3)
 
             xemDataList.sort((a, b) => {
                 return a.id > b.id ? 1 : -1
@@ -321,7 +320,6 @@
             btcDataList = btcDataList.map(item => {
                 let i: any = {}
                 xAxisData.push(item.id * 1000)
-                // console.log(item.open)
                 item.open = item.open / rate.toFixed(0)
                 return item.open
             })
@@ -329,8 +327,8 @@
             this.dom.setOption(this.option)
             this.dom.dispatchAction({
                 type: 'showTip',
-                seriesIndex:0,
-                dataIndex:btcDataList.length - 1,
+                seriesIndex: 0,
+                dataIndex: btcDataList.length - 1,
 
             })
             window.onresize = this.dom.resize
@@ -402,14 +400,16 @@
                 this.xemDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).xem.dataList
             }
         }
-        mouseoutLine () {
+
+        mouseoutLine() {
             this.dom.dispatchAction({
                 type: 'showTip',
-                seriesIndex:0,
-                dataIndex:this.option.series[1].data.length - 1,
+                seriesIndex: 0,
+                dataIndex: this.option.series[1].data.length - 1,
 
             })
         }
+
         async created() {
             await this.refreshData()
         }
@@ -427,6 +427,6 @@
     height: 400px;
     position: absolute;
     top: 20px;
-    left: 0px;
+    left: 0;
   }
 </style>

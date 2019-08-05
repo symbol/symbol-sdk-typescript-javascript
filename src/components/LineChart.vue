@@ -7,11 +7,10 @@
 </template>
 
 <script lang="ts">
+    import {localSave, localRead, isRefreshData,formatDate} from '@/utils/util'
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import echarts from 'echarts';
-    import {formatDate} from '../utils/util.js'
     import axios from 'axios'
-    import {localSave, localRead, isRefreshData} from '@/utils/util'
 
     @Component
     export default class LineChart extends Vue {
@@ -79,7 +78,7 @@
 
             xAxis: [
                 {
-                    show: false,//隐藏了x轴
+                    show: false,//hide x axis
                     gridIndex: 0,
                     type: 'category',
                     data: [],
@@ -164,10 +163,9 @@
                 },
             ],
             dataZoom: {
-
                 type: "inside",
-                // show: true,
                 xAxisIndex: [0, 1],
+                // show: true,
                 // y: '90%',
                 // width:'100%',
             },
@@ -175,8 +173,8 @@
             series: [
                 // xem
                 {
-                    xAxisIndex: 0,//对应前面x的索引位置（第二个）
-                    yAxisIndex: 0,//对应前面y的索引位置（第一个）
+                    xAxisIndex: 0,
+                    yAxisIndex: 0,
                     name: 'xem',
                     data: [],
                     type: 'line',
@@ -205,8 +203,8 @@
                 // btc
                 {
                     smooth: true,
-                    xAxisIndex: 0,//对应前面x的索引位置（第二个）
-                    yAxisIndex: 0,//对应前面y的索引位置（第一个）
+                    xAxisIndex: 0,
+                    yAxisIndex: 0,
                     name: 'btc',
                     data: [],
                     type: 'line',
@@ -235,8 +233,8 @@
                 },
                 // todo
                 {
-                    xAxisIndex: 1,//对应前面x的索引位置（第二个）
-                    yAxisIndex: 1,//对应前面y的索引位置（第一个）
+                    xAxisIndex: 1,
+                    yAxisIndex: 1,
                     name: 'amount',
                     type: 'bar',
                     color: ['#20B5AC'],

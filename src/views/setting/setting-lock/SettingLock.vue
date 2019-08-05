@@ -21,8 +21,14 @@
         <div class="gray_content">
           <input class="absolute" type="text" :placeholder="$t('please_enter_your_new_password_again')">
         </div>
+        <span class="confirm_button un_click">{{$t('confirm')}}</span>
+
       </li>
+
     </ul>
+
+
+
   </div>
 </template>
 

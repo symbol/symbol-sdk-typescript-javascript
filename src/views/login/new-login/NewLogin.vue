@@ -31,7 +31,6 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
 
-
     @Component
     export default class MonitorRelogin extends Vue {
         showStartContent = false
@@ -40,9 +39,6 @@
 
         jumpToDashBoard() {
             this.showStartContent = false
-            // this.$router.push({
-            //     name: 'createLockPW'
-            // })
         }
 
         created() {

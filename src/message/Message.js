@@ -30,6 +30,6 @@ export default {
     MNENOMIC_INPUT_ERROR: 'Mnemonic_input_error',
     OPERATION_FAILED_ERROR: 'operation_failed',
     NODE_NULL_ERROR: 'point_null_error',
-    INPUT_EMPTY_ERROR: 'Any_information_cannot_be_empty'
+    INPUT_EMPTY_ERROR: 'Any_information_cannot_be_empty',
 };
 //# sourceMappingURL=Message.js.map

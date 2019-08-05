@@ -1,20 +1,19 @@
 <template>
   <div class="aliasTable">
-
     <Modal
             :title="$t('binding_alias')"
             v-model="isShowDialog"
             :transfer="true"
-            class-name="alias_bind_dialog">
+            class="alias_bind_dialog">
       <div class="input_content">
         <div class="title">{{$t('address')}}</div>
-        <div class="input_area"><input type="text" value="TCTEXC-5TGXD7-OQCHBB-MNU3LSTCTEXC-5TGXD7-OQCHBB-MNU3LS"></div>
+        <div class="input_area"><input type="text" v-model="formItem.address"></div>
       </div>
 
       <div class="input_content">
         <div class="title">{{$t('alias_selection')}}</div>
         <div class="input_area">
-          <i-select :model="currentAlias"
+          <i-select :model="formItem.alias"
                     :placeholder="$t('alias_selection')">
             <i-option v-for="item in namespaceList" :value="item.value">{{ item.label }}</i-option>
           </i-select>
@@ -24,23 +23,23 @@
       <div class="input_content">
         <div class="title">{{$t('fee')}}</div>
         <div class="input_area">
-          <input type="text" :placeholder="$t('alias_selection')">
+          <input type="text" v-model="formItem.fee" :placeholder="$t('alias_selection')">
           <span class="tip">XEM</span>
         </div>
       </div>
 
       <div class="input_content">
         <div class="title">{{$t('password')}}</div>
-        <div class="input_area"><input type="password" :placeholder="$t('please_enter_your_wallet_password')"></div>
+        <div class="input_area">
+          <input type="password" v-model="formItem.password" :placeholder="$t('please_enter_your_wallet_password')">
+        </div>
       </div>
-
 
       <div class="button_content">
         <span class="cancel pointer" @click="isShowDialog=false">{{$t('canel')}}</span>
-        <span class="bind pointer" @click="isShowDialog=false">{{$t('bind')}}</span>
+        <span class="cancel un_click" @click="isShowDialog=true">{{$t('bind')}}</span>
       </div>
     </Modal>
-
 
     <div class="tableTit">
       <Row>
@@ -81,7 +80,12 @@
         aliasList = []
         isShowDeleteIcon = false
         isShowDialog = false
-        currentAlias: any = false
+        formItem = {
+            address:'',
+            alias:'',
+            fee:'',
+            password:''
+        }
         namespaceList = [
             {
                 label: 'no data',

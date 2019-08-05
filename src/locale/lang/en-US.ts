@@ -142,28 +142,28 @@ export const en_US = {
     QR_code_generation_failed: 'QR code generation failed',
 
     //monitor-remote
-    Remote_title_recipt:'Cumulative entrusted income',
-    Remote_state:'Current state',
-    Remote_pubulic_pik:'Remote public key',
-    Remote_question:'Related issues',
-    Remote_ques1:'1.How to get a profit?',
-    remote_ques1_rep:'The account opening delegate harvest is to transfer its importance score to the remote account. The remote account inherits the importance of the original account, enables online remote "mining", and collects the rewards of the harvest.',
-    remote_ques2:'2.What are the benefits?',
-    remote_ques2_rep:'The remote account inherits the importance of the original account, and the award for creating a new block is called revenue. ',
-    remote_rep_list:'Income list',
-    remote_list_col1:'Hash of harvest block',
-    remote_list_col2:'Height of the harvesting block',
-    remote_list_col3:'Harvest cost',
-    remote_list_col4:'Time',
-    remote_no_data:'No data',
-    remote_repaly:'Entrusted harvest',
-    remote_modal_pul:'Remote public key',
-    remote_modal_price:'Cost',
-    reomte_modal_pass:'password',
-    remote_modal_comfire:'confirm',
-    remote_modal_cancel:'cancel',
-    remote_modal_place1:'Please enter or paste a remote public key',
-    remote_modal_place2:'Please enter your wallet password',
+    Remote_title_recipt: 'Cumulative entrusted income',
+    Remote_state: 'Current state',
+    Remote_pubulic_pik: 'Remote public key',
+    Remote_question: 'Related issues',
+    Remote_ques1: '1.How to get a profit?',
+    remote_ques1_rep: 'The account opening delegate harvest is to transfer its importance score to the remote account. The remote account inherits the importance of the original account, enables online remote "mining", and collects the rewards of the harvest.',
+    remote_ques2: '2.What are the benefits?',
+    remote_ques2_rep: 'The remote account inherits the importance of the original account, and the award for creating a new block is called revenue. ',
+    remote_rep_list: 'Income list',
+    remote_list_col1: 'Hash of harvest block',
+    remote_list_col2: 'Height of the harvesting block',
+    remote_list_col3: 'Harvest cost',
+    remote_list_col4: 'Time',
+    remote_no_data: 'No data',
+    remote_repaly: 'Entrusted harvest',
+    remote_modal_pul: 'Remote public key',
+    remote_modal_price: 'Cost',
+    reomte_modal_pass: 'password',
+    remote_modal_comfire: 'confirm',
+    remote_modal_cancel: 'cancel',
+    remote_modal_place1: 'Please enter or paste a remote public key',
+    remote_modal_place2: 'Please enter your wallet password',
 
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: 'WELCOME BACK TO THE CATAPULT BETA',
@@ -534,11 +534,9 @@ export const en_US = {
     apostille_result: 'Apostille result',
     Delete_records_locally: 'Delete records locally',
     Notarized_data_backup: 'Notarized data backup',
-
     first_floor: 'First floor',
     second_floor: 'Second floor',
     third_floor: 'Third floor',
-
     Harvester: 'Harvester',
 
     // login
@@ -551,21 +549,16 @@ export const en_US = {
     Set_the_password_prompts: 'Set the password prompts',
     skip: 'Skip',
     finished: 'Finished',
-
-    //
     forget_password: 'Forget password',
     passowrd_prompt: 'Passowrd prompt',
     XEM_market_trend_nearly_24_hours: 'XEM market trend nearly 24 hours',
-
-
     This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe: '1、This password will be used for all transactions in your wallet account. Please remember your password and keep it safe.',
     The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_the_security_of_your_wallet: '2、The password setting requirement is not less than six digits. The more complicated the recommendation, the better the security of your wallet!',
-
-    // todo
     add_address: 'Add address',
     add_mosaic: 'Add mosaic',
     add_entity_type: 'Add entity type',
-    Any_information_cannot_be_empty: 'Any information cannot be empty'
+    Any_information_cannot_be_empty: 'Any information cannot be empty',
+    success: 'Success',
 
 
 }

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" oncontextmenu="return false;" onselectstart="return false">
     <router-view/>
   </div>
 </template>
@@ -33,16 +33,9 @@
             this.$store.state.account.wallet = walletList[0]
             this.$store.state.app.walletList = walletList
             this.$store.state.app.isInLoginPage = true
-
-            // if (!localRead('lock')) {
             this.$router.push({
                 name: 'login'
             })
-            // } else {
-            //     this.$router.push({
-            //         name: 'reLogin'
-            //     })
-            // }
         }
 
         async getAccountInfo(listItem) {
@@ -91,6 +84,9 @@
 
         initData() {
             this.node = this.$store.state.account.node
+            this.$Notice.config({
+                duration: 3
+            });
         }
 
 
