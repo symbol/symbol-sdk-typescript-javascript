@@ -98,7 +98,7 @@
         mosaic: any = ''
         amount: any = '0'
         remark = ''
-        fee: any = '100000000'
+        fee: any = '10000000'
         generationHash = ''
 
         isShowSubAlias = false
@@ -109,7 +109,7 @@
         }
 
         initForm() {
-            this.fee = '100000000'
+            this.fee = '10000000'
             this.remark = ''
             this.address = ''
             this.mosaic = ''
@@ -126,15 +126,10 @@
         sendTransaction(key) {
             const that = this
             let { accountPublicKey, accountAddress, node, address, mosaic, amount, remark, fee, generationHash} = this
+            const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
 
-            //test data--
-            const account = Account.createFromPrivateKey(key, NetworkType.MIJIN_TEST)
-            //--test data
-            // create tx
-            // const mosaics = mosaic ? [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(amount))] : []
-            console.log(mosaic)
-            const transferTransaction = transactionInterface.transferTransaction({
-                network: NetworkType.MIJIN_TEST,
+            transactionInterface.transferTransaction({
+                network:  this.getWallet.networkType,
                 MaxFee: fee,
                 receive: address,
                 MessageType: 0,
@@ -294,12 +289,7 @@
                 let isCrrentXEMExists = true
                 let spliceIndex = -1
                 isCrrentXEMExists = mosaicIdList.every((item, index) => {
-
-                    if (item.value == currentXEM1) {
-                        spliceIndex = index
-                        return false
-                    }
-                    if (item.value == currentXEM2) {
+                    if (item.value == currentXEM1 || item.value == currentXEM2) {
                         spliceIndex = index
                         return false
                     }

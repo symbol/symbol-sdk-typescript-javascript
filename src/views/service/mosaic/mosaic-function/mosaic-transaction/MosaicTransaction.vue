@@ -10,7 +10,7 @@
       <div class="namespace_transaction">
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>
-          <span class="value" v-if="typeList[0].isSelected">TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN</span>
+          <span class="value" v-if="typeList[0].isSelected">{{formatAddress(getWallet.address)}}</span>
           <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="multisigPublickey"
                   class="select">
             <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -54,7 +54,7 @@
         <div class="form_item duration_item">
           <span class="key">{{$t('duration')}}</span>
           <span class="value">
-             <input v-model="formItem.duration" type="text" :placeholder="$t('undefined')">
+             <input v-model="formItem.duration" @input="durationChange" type="text" :placeholder="$t('undefined')">
             <span class="end_label">{{$t('duration')}}:{{durationIntoDate}}</span>
          </span>
           <div class="tips">
@@ -91,7 +91,7 @@
 
 <script lang="ts">
     import {mosaicInterface} from '@/interface/sdkMosaic.ts'
-    import {formatSeconds} from '@/utils/util.js'
+    import {formatSeconds, formatAddress} from '@/utils/util.js'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from '@/interface/sdkTransaction'
     import EditDialog from '../mosaicEdit-dialog/MosaicEditDialog.vue'
@@ -153,16 +153,20 @@
             }
         ]
         formItem: any = {
-            supply: 500,
-            divisibility: 1,
+            supply: 500000000,
+            divisibility: 6,
             transferable: true,
             supplyMutable: true,
-            duration: 0,
-            fee: 0.05
+            duration: 1000,
+            fee: 10000000
         }
 
         get getWallet () {
             return this.$store.state.account.wallet
+        }
+
+        formatAddress(address){
+            return formatAddress(address)
         }
 
         addSeverabilityAmount() {
@@ -239,7 +243,6 @@
             }
         }
 
-
         createBySelf(key) {
             let {accountPublicKey, accountAddress, node, generationHash} = this
             const {supply, divisibility, transferable, supplyMutable, duration, fee} = this.formItem
@@ -304,12 +307,12 @@
 
         initForm() {
             this.formItem = {
-                supply: 500000000,
+                supply: 0,
                 divisibility: 1,
                 transferable: true,
                 supplyMutable: true,
-                duration: 1000,
-                fee: 100000000
+                duration: 0,
+                fee: 0
             }
         }
 
@@ -330,11 +333,10 @@
             this.currentXEM2 = this.$store.state.account.currentXEM2
             this.currentXEM1 = this.$store.state.account.currentXEM1
             this.currentXem = this.$store.state.account.currentXem
-            this.initForm()
+            this.durationChange()
         }
 
-        @Watch('formItem.duration')
-        onDurationChange() {
+        durationChange() {
             const duration = Number(this.formItem.duration)
             if (Number.isNaN(duration)) {
                 this.formItem.duration = 0

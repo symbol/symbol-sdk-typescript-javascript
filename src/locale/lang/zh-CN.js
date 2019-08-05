@@ -250,8 +250,9 @@ export var zh_CN = {
     mosaic_operation: '马赛克操作',
     update_completed: '更新成功',
     // namespace
-    parent_namespace: '父命名空间',
+    parent_namespace: '根命名空间',
     new_root_namespace: '新的根命名空间',
+    select_root_namespace: '选择根命名空间',
     subspace: '子空间',
     input_space_name: '输入空间名',
     the_duration_is_calculated_in_blocks_one_block_is_12_seconds: '持续时间以块计算，一个块为12秒',
@@ -451,6 +452,7 @@ export var zh_CN = {
     Choose_a_co_signer: '选择共签人',
     Add_delete_co_signers_this_action_will_be_displayed_in_the_action_log_click_delete_to_cancel: '添加/删除共签人，此处操作会在操作记录中显示，点击删除可撤销',
     Create_namespace: '创建命名空间',
+    Create_subNamespace: '创建子命名空间',
     Namespace_list: '命名空间列表',
     New_root_space: '新的根空间',
     Subspace: '子空间',

@@ -270,6 +270,7 @@ export const en_US = {
     // namespace
     parent_namespace: 'Parent',
     new_root_namespace: 'New root namespace',
+    select_root_namespace: 'Choose root namespace',
     subspace: 'Subspace',
     input_space_name: 'Input space name',
     the_duration_is_calculated_in_blocks_one_block_is_12_seconds: 'The duration is calculated in blocks one block is 12 seconds.',
@@ -486,6 +487,7 @@ export const en_US = {
 
 
     Create_namespace: 'Create namespace',
+    Create_subNamespace: 'Create subNamespace',
     Namespace_list: 'Namespace list',
     New_root_space: 'New root space',
     Subspace: 'Subspace',

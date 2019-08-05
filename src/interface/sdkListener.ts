@@ -12,7 +12,24 @@ export const wsInterface: SdkV0.ws = {
             }
         }
     },
-
+    listenerTx: async (params) => {
+        const listener = params.listener;
+        listener.open().then(() => {
+            listener
+                [params.txType+'('+params.address+')']
+                .pipe(
+                    filter((transaction: any) => transaction.transactionInfo !== undefined)
+                )
+                .subscribe(transactionInfo => {
+                    params.fn(transactionInfo)
+                })
+        })
+        return {
+            result: {
+                ws: 'Ok'
+            }
+        }
+    },
     sendMultisigWs: async (params) => {
         const listener = params.listener
         const transactionHttp = new TransactionHttp(params.node)

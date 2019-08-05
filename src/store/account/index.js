@@ -10,6 +10,7 @@ export default {
         account: {},
         wallet: {},
         mosaic: [],
+        namespace: [],
         generationHash: ''
     },
     getters: {
@@ -35,6 +36,9 @@ export default {
         },
         SET_MOSAICS: function (state, mosaic) {
             state.mosaic = mosaic;
+        },
+        SET_NAMESPACE: function (state, namespace) {
+            state.namespace = namespace;
         },
     },
 };

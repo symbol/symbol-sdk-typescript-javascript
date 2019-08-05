@@ -140,6 +140,24 @@ export const formatTransactions = function (transactionList, accountPublicKey) {
   })
   return transferTransaction
 }
+export const formatAddress = function(address) {
+    let txt = ''
+    let formatAress = []
+    address.split('').map((item, index)=>{
+        if((index+1) % 6 === 0){
+            txt += item + '-'
+            formatAress.push(txt)
+            txt = ''
+        }else if(index === address.length - 1){
+            txt += item
+            formatAress.push(txt)
+        }else {
+            txt += item
+        }
+
+    })
+    return formatAress.join('')
+}
 
 export const getCurrentMonthFirst = function (date) {
 

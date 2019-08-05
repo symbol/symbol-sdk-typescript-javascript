@@ -56,7 +56,10 @@
     export default class NamespaceList extends Vue {
         showNamespaceEditDialog = false
         currentNamespaceName = ''
-        namespaceList = []
+
+        get namespaceList () {
+            return this.$store.state.account.namespace
+        }
 
         showEditDialog(namespaceName) {
             this.currentNamespaceName = namespaceName
@@ -66,7 +69,6 @@
         closeNamespaceEditDialog() {
             this.showNamespaceEditDialog = false
         }
-
     }
 </script>
 <style scoped lang="less">

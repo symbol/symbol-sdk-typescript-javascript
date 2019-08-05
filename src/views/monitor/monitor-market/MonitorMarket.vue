@@ -89,7 +89,7 @@
         <div v-show="purchaseAmount > 0" class="clear conversion ">
           <span>XEM
             <span class="bigger">{{Number(purchaseAmount).toFixed(2)}}</span>
-            ≈ ${{currentPrice * purchaseAmount}}</span>
+            ≈ ${{(currentPrice * purchaseAmount).toFixed(4)}}</span>
         </div>
         <div class="purchase_XEM right un_click ">
           <span>buy</span>
@@ -122,7 +122,7 @@
         </div>
         <div v-if="sellAmount > 0" class="clear conversion ">
           <span>XEM <span
-                  class="bigger">{{Number(sellAmount).toFixed(2)}}</span> ≈ ${{currentPrice * sellAmount}}</span>
+                  class="bigger">{{Number(sellAmount).toFixed(2)}}</span> ≈ ${{(currentPrice * sellAmount).toFixed(4)}}</span>
         </div>
         <div class="purchase_XEM right un_click">
           <span>sell</span>

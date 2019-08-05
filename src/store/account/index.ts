@@ -3,7 +3,8 @@ import {Account} from 'nem2-sdk'
 declare interface account {
     account: Account,
     wallet: any,
-    mosaic: any[]
+    mosaic: any[],
+    namespace: any[],
 }
 
 export default {
@@ -18,6 +19,7 @@ export default {
         account: {},
         wallet: {},
         mosaic: [],
+        namespace: [],
         generationHash: ''
     },
     getters: {
@@ -43,6 +45,9 @@ export default {
         },
         SET_MOSAICS(state: account, mosaic: any[]): void {
             state.mosaic = mosaic
+        },
+        SET_NAMESPACE(state: account, namespace: any[]): void {
+            state.namespace = namespace
         },
     },
 }

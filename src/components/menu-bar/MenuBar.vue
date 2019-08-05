@@ -84,7 +84,8 @@
     import monitorUnselected from '@/assets/images/window/windowUnselected.png'
     import {blockchainInterface} from '@/interface/sdkBlockchain.js';
     import Message from "@/message/Message";
-    import {NamespaceHttp, NamespaceId} from "nem2-sdk";
+    import {Listener, NamespaceHttp, NamespaceId} from "nem2-sdk";
+    import {wsInterface} from "../../interface/sdkListener";
 
     @Component
     export default class Home extends Vue {
@@ -128,6 +129,7 @@
         accountPublicKey = ''
         accountAddress = ''
         walletList = []
+        unconfirmedTxListener = null
 
         get getWallet() {
             return this.$store.state.account.wallet
@@ -135,6 +137,10 @@
 
         get getWalletList() {
             return this.$store.state.app.walletList || []
+        }
+
+        get node () {
+            return this.$store.state.account.node
         }
 
         closeWindow() {
@@ -243,6 +249,24 @@
             })
         }
 
+        unconfirmedListener(){
+            const node = this.node.replace('http', 'ws')
+            try {
+                this.unconfirmedTxListener.close()
+            }catch (e) {}
+            this.unconfirmedTxListener = new Listener(node, WebSocket)
+            wsInterface.listenerTx({
+                listener: this.unconfirmedTxListener,
+                txType:'unconfirmed',
+                address: this.getWallet.address,
+                fn: this.disposeUnconfirmed
+            })
+        }
+
+        disposeUnconfirmed (transactionInfo){
+            console.log(transactionInfo)
+        }
+
         initData() {
             this.languageList = this.$store.state.app.languageList
             this.currentLanguage = localRead('local')
@@ -259,7 +283,8 @@
             const {currentNode} = this
             this.$store.state.account.node = currentNode
             const that = this
-			const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('cat.currency'))
+            this.unconfirmedListener()
+			const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('nem.xem'))
             linkedMosaic.subscribe((mosaic)=>{
                 this.$store.state.account.currentXEM1 = mosaic.toHex();
             })
@@ -275,10 +300,12 @@
         onGetWalletChange() {
             this.walletList = this.getWalletList
             this.currentWallet = this.getWallet.address
+            this.unconfirmedListener()
         }
 
         created() {
             this.initData()
+            this.unconfirmedListener()
         }
     }
 </script>

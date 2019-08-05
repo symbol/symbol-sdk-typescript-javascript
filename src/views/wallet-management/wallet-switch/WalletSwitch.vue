@@ -181,6 +181,7 @@
                 //     item.style = 'walletItem_bg_' + Math.floor(Math.random()*3)
                 // }
             })
+            console.log(list)
             for (let i in list) {
                 this.$set(this.walletList, i, list[i])
             }

@@ -384,6 +384,14 @@ declare namespace SdkV0 {
         }) => Rst<{
             ws: any
         }>;
+        listenerTx: (params: {
+            listener: any
+            txType: any
+            address: Address
+            fn: any
+        }) => Rst<{
+            ws: any
+        }>;
         sendMultisigWs: (params: {
             address: Address,
             account: any,

@@ -11,7 +11,7 @@
         </div>
 
         <div class="split"></div>
-        <div class="XEM_amount"><span>XEM</span><span class="amount">{{XEMamount.toFixed(2)}}</span></div>
+        <div class="XEM_amount"><span>XEM</span><span class="amount">{{formatXEMamount(XEMamount.toString())}}</span></div>
         <div class="exchange">${{(XEMamount*currentPrice).toFixed(2)}}</div>
 
         <div class="account_alias" v-show="isShowAccountAlias">
@@ -235,6 +235,19 @@
             })
         }
 
+        formatXEMamount (XEMamount) {
+            if(XEMamount.includes('.')){
+                const decimal = XEMamount.split('.')[1]
+                if(decimal.length > 2){
+                    return Number(XEMamount).toFixed(2)
+                }else {
+                    return XEMamount
+                }
+            }else {
+                return XEMamount
+            }
+        }
+
         noticeComponent() {
             this.$Notice.destroy()
             this.$Notice.open({
@@ -381,15 +394,15 @@
                                 mosaicItem.hex = item.mosaicId.toHex()
                                 if (mosaicItem.hex == that.currentXEM2 || mosaicItem.hex == that.currentXEM1) {
                                     mosaicItem.name = that.$store.state.account.currentXem
-                                    getWallet.balance = item.amount
+                                    getWallet.balance = mosaicItem.amount.compact() / Math.pow(10, item.divisibility)
                                     this.$store.state.account.wallet = getWallet
                                     walletList[0] = getWallet
                                     this.$store.state.app.walletList = walletList
                                 } else {
                                     mosaicItem.name = item.mosaicId.toHex()
                                 }
-                                mosaicItem.amount = mosaicItem.amount.compact()
                                 // mosaicItem.amount = mosaicItem.amount.compact() / Math.pow(10, item.divisibility)
+                                mosaicItem.amount = mosaicItem.amount.compact()
                                 mosaicItem.show = true
                                 return mosaicItem
                             })
@@ -424,6 +437,7 @@
                                 }
 
                             })
+                            this.$store.commit('SET_MOSAICS', mosaicList)
                             that.localMosaicMap = mosaicMap
                             that.mosaicMap = mosaicMap
                             that.isLoadingMosaic = false
@@ -437,6 +451,7 @@
                         show: true
                     }
                     let mosaicMap = {}
+                    this.$store.commit('SET_MOSAICS', [defaultMosaic])
                     mosaicMap[defaultMosaic.hex] = defaultMosaic
                     that.localMosaicMap = mosaicMap
                     that.mosaicMap = mosaicMap
