@@ -13,7 +13,7 @@
           <span class="value" v-if="typeList[0].isSelected">TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN</span>
           <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="multisigPublickey"
                   class="select">
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in publickeyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
 
@@ -78,12 +78,13 @@
           </div>
         </div>
         <!-- TODO confirm  isMultisigAccount-->
-        <div class="create_button" @click="createMosaic(typeList[1].isSelected)">
+        <div class="create_button pointer" @click="createMosaic(typeList[1].isSelected)">
           {{$t('create')}}
         </div>
       </div>
     </div>
-    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"  @checkEnd="checkEnd"></CheckPWDialog>
+    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
+                   @checkEnd="checkEnd"></CheckPWDialog>
 
 
   </div>
@@ -94,10 +95,7 @@
     import {formatSeconds} from '@/utils/util.js'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from '@/interface/sdkTransaction'
-    import EditDialog from '../mosaicEdit-dialog/MosaicEditDialog.vue'
-    import MosaicAliasDialog from '../mosaicAlias-dialog/MosaicAliasDialog.vue'
     import {MosaicId, MosaicNonce, PublicAccount, NetworkType, Account} from 'nem2-sdk'
-    import {accountInterface} from '@/interface/sdkAccount';
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
     import Message from "@/message/Message";
 
@@ -113,24 +111,7 @@
         duration = 0
         durationIntoDate = 0
         multisigPublickey = ''
-        cityList = [
-            {
-                value: 'TCTEXC-235TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                label: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
-            },
-            {
-                value: 'TCTEXC-325TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                label: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
-            },
-            {
-                value: 'TCTEXC-23325TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
-                label: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
-            }
-        ]
-
-
         currentTab: number = 0
-        rootNameList: any[] = []
         showMosaicEditDialog = false
         showMosaicAliasDialog = false
         isMultisigAccount = false
@@ -142,7 +123,10 @@
         currentXEM2: string
         currentXEM1: string
         mosaicMapInfo: any = {}
-
+        publickeyList = [{
+            value: 'no data',
+            label: 'no data'
+        }]
         typeList = [
             {
                 name: 'ordinary_account',
@@ -161,7 +145,7 @@
             fee: 0.05
         }
 
-        get getWallet () {
+        get getWallet() {
             return this.$store.state.account.wallet
         }
 
@@ -228,8 +212,10 @@
 
         checkEnd(key) {
             if (!key) {
-                this.$Message.destroy()
-                this.$Message.error(this.$t(Message.WRONG_PASSWORD_ERROR))
+                this.$Notice.destroy()
+                this.$Notice.error({
+                    title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+                })
                 return
             }
             if (this.isMultisigAccount) {
@@ -238,7 +224,6 @@
                 this.createBySelf(key)
             }
         }
-
 
         createBySelf(key) {
             let {accountPublicKey, accountAddress, node, generationHash} = this
@@ -267,11 +252,13 @@
                     // get announce status
                     announceResult.result.announceStatus.subscribe((announceInfo: any) => {
                         console.log(signature)
-                        that.$Message.success(this.$t(Message.SUCCESS))
+                        that.$Notice.success({
+                            title: this.$t(Message.SUCCESS) + ''
+                        })
                         that.initForm()
                     })
                 })
-            }).catch((e)=>{
+            }).catch((e) => {
                 console.log(e)
             })
         }
@@ -282,21 +269,39 @@
         }
 
         checkForm() {
-            const {supply, divisibility, duration, fee} = this.formItem
-            if (supply < 0) {
-                this.$Message.error(this.$t(Message.SUPPLY_LESS_THAN_0_ERROR))
+            const {supply, divisibility, duration, fee, multisigPublickey} = this.formItem
+
+            // multisig check
+            if (this.isMultisigAccount && !multisigPublickey) {
+                this.$Notice.error({
+                    title: this.$t(Message.INPUT_EMPTY_ERROR) + ''
+                })
                 return false
             }
-            if (divisibility < 0) {
-                this.$Message.error(this.$t(Message.DIVISIBILITY_LESS_THAN_0_ERROR))
+
+            // common check
+            if (!Number(supply) || supply < 0) {
+                this.$Notice.error({
+                    title: this.$t(Message.SUPPLY_LESS_THAN_0_ERROR) + ''
+                })
                 return false
             }
-            if (duration <= 0) {
-                this.$Message.error(this.$t(Message.DURATION_LESS_THAN_0_ERROR))
+            if (!Number(divisibility) || divisibility < 0) {
+                this.$Notice.error({
+                    title: this.$t(Message.DIVISIBILITY_LESS_THAN_0_ERROR) + ''
+                })
                 return false
             }
-            if (fee < 0) {
-                this.$Message.error(this.$t(Message.FEE_LESS_THAN_0_ERROR))
+            if (!Number(duration) || duration <= 0) {
+                this.$Notice.error({
+                    title: this.$t(Message.DURATION_LESS_THAN_0_ERROR) + ''
+                })
+                return false
+            }
+            if (!Number(fee) || fee < 0) {
+                this.$Notice.error({
+                    title: this.$t(Message.FEE_LESS_THAN_0_ERROR) + ''
+                })
                 return false
             }
             return true
@@ -342,7 +347,9 @@
                 return
             }
             if (duration * 12 >= 60 * 60 * 24 * 3650) {
-                this.$Message.error(this.$t(Message.DURATION_MORE_THAN_10_YEARS_ERROR))
+                this.$Notice.error({
+                    title: this.$t(Message.DURATION_MORE_THAN_10_YEARS_ERROR) + ''
+                })
                 this.formItem.duration = 0
             }
             this.durationIntoDate = formatSeconds(duration * 12)

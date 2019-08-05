@@ -3,7 +3,8 @@
     <div class="left left_article_list radius">
 
       <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
-      <div v-if="isLoadingConfirmedTx" style="background-color: white;width: 100%;height: 100%;position: absolute;z-index: 0"></div>
+      <div v-if="isLoadingConfirmedTx"
+           style="background-color: white;width: 100%;height: 100%;position: absolute;z-index: 0"></div>
 
 
       <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticla">
@@ -11,7 +12,6 @@
              :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
           <div class="title">{{a.title}}
           </div>
-          <!--          <div class="summary overflow_ellipsis">{{a.summary}}</div>-->
           <div class="other_info">
             <span class="tag">{{$t('business')}}</span>
             <span class="from">{{a.author}}</span>
@@ -26,7 +26,8 @@
       <div class="article_container " ref="articleContainer" @scroll="automaticLoadingComment">
 
         <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
-        <div  v-if="isLoadingConfirmedTx" style="background-color: white;width: 90%;height: 100%;position: absolute;z-index: 1"></div>
+        <div v-if="isLoadingConfirmedTx"
+             style="background-color: white;width: 90%;height: 100%;position: absolute;z-index: 1"></div>
 
         <div class="title content article_title">
           {{currentArticle.title}}
@@ -55,7 +56,7 @@
               <span class="textarea_text">{{$t('remaining')}}：{{remainingWords}} {{$t('word')}}</span>
             </div>
 
-            <div @click="sendComment" class="send_comment pointer">
+            <div @click="checkForm" class="send_comment pointer">
               {{$t('publish')}}
             </div>
 
@@ -94,10 +95,6 @@
         isLoadingConfirmedTx = true
         showCheckPWDialog = false
         articleList = []
-        currentArticle: any = {
-            title: 'null',
-            content: 'null'
-        }
         totalComment = 0
         commentContent = ''
         startPage = 0
@@ -106,14 +103,20 @@
         commentList = []
         remainingWords = 300
         loadAllCommentData = false
-
+        currentArticle: any = {
+            title: 'null',
+            content: 'null'
+        }
 
         closeCheckPWDialog() {
             this.showCheckPWDialog = false
         }
 
         checkEnd(flag) {
-            console.log(flag)
+            if (flag) {
+                this.sendComment()
+
+            }
         }
 
         addArticleStartIndex() {
@@ -135,36 +138,31 @@
             this.articleList = list
         }
 
-        async sendComment() {
+        checkForm() {
+            const {commentContent} = this
+            if (!commentContent || commentContent.trim() == '') {
+                this.$Notice.error({
+                    title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
+                })
+                return false
+            }
             this.showCheckPWDialog = true
+        }
 
+        async sendComment() {
             const that = this
             const comment = this.commentContent
             const cid = this.currentArticle.cid
-            const address = this.$store.state.account.address
-            const nickName = this.$store.state.account.name
+            const address = this.$store.state.account.wallet.address
+            const nickName = this.$store.state.account.wallet.name
             const gtmCreate = new Date()
 
             const url = `${this.$store.state.app.apiUrl}/rest/blog/comment/save?cid=${cid}&comment=${comment}&address=${address}&nickName=${nickName}&gtmCreate=${gtmCreate}`
             await axios.get(url).then(function (response) {
                 console.log(response)
-                that.$Notice.success({
-                    title: 'success',
-                    desc: 'success',
-                    render: h => {
-                        // @ts-ignore
-                        return h('span', [Message.OPERATION_SUCCESS])
-                    }
-                });
+                that.$Notice.success({title: that.$t(Message.SUCCESS) + ''});
             }).catch(() => {
-                that.$Notice.error({
-                    title: 'failure',
-                    desc: 'failure',
-                    render: h => {
-                        // @ts-ignore
-                        return h('span', [Message.OPERATION_FAILED_ERROR])
-                    }
-                });
+                that.$Notice.error({title: that.$t(Message.OPERATION_FAILED_ERROR) + ''});
             })
             this.onCurrentArticleChange()
         }
@@ -206,8 +204,8 @@
 
         async getArticleByPage() {
             if (this.loadAllData) {
-            return
-          }
+                return
+            }
             const languageNumber = this.switchLanguege()
             const that = this
             const {startPage} = this

@@ -52,16 +52,23 @@
         }
 
         checkInput() {
+
             if (!this.lockPW.password || this.lockPW.password === '') {
-                this.$Message.error(this.$t(Message.PASSWORD_CREATE_ERROR));
+                this.$Notice.error({
+                    title: this.$t(Message.PASSWORD_CREATE_ERROR) + ''
+                });
                 return false
             }
             if (this.lockPW.password !== this.lockPW.checkPW) {
-                this.$Message.error(this.$t(Message.INCONSISTENT_PASSWORD_ERROR));
+                this.$Notice.error({
+                    title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + '',
+                });
                 return false
             }
             if (!this.lockPW.remindTxt || this.lockPW.remindTxt === '') {
-                this.$Message.error(this.$t(Message.PASSWORD_HIT_SETTING_ERROR));
+                this.$Notice.error({
+                    title: this.$t(Message.PASSWORD_HIT_SETTING_ERROR) + '',
+                });
                 return false
             }
             return true
@@ -75,7 +82,7 @@
             let saveData = {
                 ciphertext: encryptObj.ciphertext,
                 iv: encryptObj.iv,
-                remindTxt:this.lockPW.remindTxt
+                remindTxt: this.lockPW.remindTxt
             }
             localSave('lock', JSON.stringify(saveData))
             this.$emit('showIndexView', 2)

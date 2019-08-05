@@ -19,11 +19,11 @@
 </template>
 
 <script lang="ts">
+    import {localSave, localRead} from '@/utils/util.js'
     import {Component, Vue} from 'vue-property-decorator';
     import GetStart from './login-view/get-start/GetStart.vue'
-    import CreateLock from './login-view/create-lock/CreateLock.vue'
     import InputLock from './login-view/input-lock/InputLock.vue'
-    import {localSave, localRead} from '@/utils/util.js'
+    import CreateLock from './login-view/create-lock/CreateLock.vue'
 
     @Component({
         components: {

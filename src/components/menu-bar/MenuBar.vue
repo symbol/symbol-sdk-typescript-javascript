@@ -68,9 +68,11 @@
       </div>
     </div>
 
-	<transition name="fade" mode="out-in">
-+      <router-view/>
-+   </transition>
+    <transition name="fade" mode="out-in">
+      +
+      <router-view/>
+      +
+    </transition>
 
   </div>
 </template>
@@ -166,8 +168,10 @@
         changePointByInput() {
             let inputValue = this.inputNodeValue
             if (inputValue == '') {
-                this.$Message.destroy()
-                this.$Message.error(this['$t'](Message.NODE_NULL_ERROR))
+                this.$Notice.destroy()
+                this.$Notice.error({
+                    title: this.$t(Message.NODE_NULL_ERROR) + ''
+                })
                 return
             }
             if (inputValue.indexOf(':') == -1) {
@@ -259,8 +263,8 @@
             const {currentNode} = this
             this.$store.state.account.node = currentNode
             const that = this
-			const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('cat.currency'))
-            linkedMosaic.subscribe((mosaic)=>{
+            const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('cat.currency'))
+            linkedMosaic.subscribe((mosaic) => {
                 this.$store.state.account.currentXEM1 = mosaic.toHex();
             })
             axios.get(currentNode + '/chain/height').then(function (response) {

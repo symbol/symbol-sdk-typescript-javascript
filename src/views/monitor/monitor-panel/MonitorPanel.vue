@@ -30,8 +30,8 @@
                 <div class="mosaic_data" v-if="value.show" v-for="(value,key,index) in mosaicMap"
                      :key="index">
                 <span class="img_container">
-                    <img v-if="index == 0" src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
-                    <img v-else src="../../../assets/images/monitor/mosaicDefault.png" alt="">
+                    <img v-if="index == 0" src="@/assets/images/monitor/monitorMosaicIcon.png" alt="">
+                    <img v-else src="@/assets/images/monitor/mosaicDefault.png" alt="">
                 </span>
                   <span class="mosaic_name">{{value.name}}</span>
                   <span class="mosaic_value">
@@ -40,32 +40,6 @@
                 </div>
               </div>
             </TabPane>
-            <!--            <TabPane :label="$t('namespace')" name="name2">-->
-            <!--              <div class="namespace_data">-->
-            <!--                <div class="namespace_table_head">-->
-            <!--                  <span class="namespace">{{$t('namespace')}}</span>-->
-            <!--                  <span class="duration">{{$t('validity_period')}}</span>-->
-            <!--                </div>-->
-            <!--                <div class="namespace_item" v-for="i in 3">-->
-            <!--                  <span class="namespace">@123.456</span>-->
-            <!--                  <span class="duration">2019-02-09</span>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </TabPane>-->
-            <!--            <TabPane :label="$t('harvested_block')" name="name3">-->
-            <!--              <div class="harvesting_data">-->
-            <!--                <div class="harvesting_item " v-for="i in 3">-->
-            <!--                  <div class="clear top_info">-->
-            <!--                    <span class="left">{{$t('block')}}：4585464</span>-->
-            <!--                    <span class="right">fees:1.0546551xem</span>-->
-            <!--                  </div>-->
-            <!--                  <div class="bottom_info">-->
-            <!--                    <span class="left">include: 1 txs</span>-->
-            <!--                    <span class="right">2019-07-09 16:00</span>-->
-            <!--                  </div>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </TabPane>-->
           </Tabs>
 
           <!--        sevral      -->
@@ -96,11 +70,8 @@
               </div>
               <div class="complete_container">
                 <div class="complete" @click="showMosaicMap">{{$t('complete')}}</div>
-
               </div>
-
             </div>
-
           </div>
         </div>
       </div>
@@ -124,17 +95,17 @@
 </template>
 
 <script lang="ts">
+    import axios from 'axios'
+    import {copyTxt} from '@/utils/tools'
+    import Message from "@/message/Message"
+    import {localSave, localRead} from '@/utils/util'
     import {Address, MosaicId, UInt64} from 'nem2-sdk'
+    import {mosaicInterface} from '@/interface/sdkMosaic';
     import {accountInterface} from '@/interface/sdkAccount'
     import {Component, Vue, Watch} from 'vue-property-decorator'
-    import {mosaicInterface} from '@/interface/sdkMosaic';
-    import {copyTxt} from '@/utils/tools'
-    import {localSave, localRead} from '@/utils/util'
-    import axios from 'axios'
     import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
     import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
     import monitorMosaicIcon from '@/assets/images/monitor/monitorMosaicIcon.png'
-    import Message from "@/message/Message";
 
     @Component
     export default class DashBoard extends Vue {
@@ -227,52 +198,11 @@
             this.isShowManageMosaicIcon = !this.isShowManageMosaicIcon
         }
 
-
         copyAddress() {
             const that = this
             copyTxt(this.address).then(() => {
                 that.$Message.success(Message.COPY_SUCCESS)
             })
-        }
-
-        noticeComponent() {
-            this.$Notice.destroy()
-            this.$Notice.open({
-                duration: 999,
-                desc: 'The desc will hide when you set render.',
-                render: h => {
-                    return h('span',
-                        {
-                            style: {
-                                display: 'flex',
-                                justifyContent: 'center',
-                                justifyItems: 'center',
-                                alignItems: 'center',
-                                alignContent: 'center'
-                            },
-                        }
-                        , [
-                            h('img', {
-                                style: {
-                                    width: '30px',
-                                    marginRight: '20px'
-                                },
-                                attrs: {
-                                    src: monitorMosaicIcon
-                                }
-                            }),
-                            h('span', {
-                                    style: {
-                                        display: 'inline-block',
-                                        width: '530px',
-                                        lineHeight: '24px'
-                                    },
-                                },
-                                '公告：Nem发布了最新投票，你可以在https://forum.nem.io/t/2020/ele-ction查看更多'
-                            )
-                        ])
-                }
-            });
         }
 
         initData() {
@@ -303,7 +233,6 @@
                             that.XEMamount = item.amount.compact() / 1000000
                         }
                     })
-
                 }, () => {
                     that.XEMamount = 0
                 })
@@ -466,15 +395,19 @@
                 const mosaicHex = result.result.mosaicId.toHex()
                 if (mosaicMap[mosaicHex]) {
                     searchResult[mosaicHex] = mosaicMap[mosaicHex]
-                } else if (mosaicHex == currentXEM1 || currentXEM2 == mosaicHex) {
+                    that.mosaicMap = searchResult
+                    return
+                }
+                if (mosaicHex == currentXEM1 || currentXEM2 == mosaicHex) {
                     searchResult[mosaicHex] = mosaicMap[currentXEM1] ? mosaicMap[currentXEM1] : mosaicMap[currentXEM2]
-                } else {
-                    searchResult[mosaicHex] = {
-                        name: mosaicName,
-                        hex: mosaicHex,
-                        amount: 0,
-                        show: false
-                    }
+                    that.mosaicMap = searchResult
+                    return
+                }
+                searchResult[mosaicHex] = {
+                    name: mosaicName,
+                    hex: mosaicHex,
+                    amount: 0,
+                    show: false
                 }
                 that.mosaicMap = searchResult
             }).catch(() => {
@@ -551,8 +484,6 @@
         created() {
             this.setLeftSwitchIcon()
             this.initLeftNavigator()
-            // TODO
-            // this.noticeComponent()   tips
             this.initData()
             this.getXEMAmount()
             this.getAccountsName()

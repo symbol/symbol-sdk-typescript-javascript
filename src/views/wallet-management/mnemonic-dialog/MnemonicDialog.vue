@@ -20,7 +20,8 @@
         <div class="stepItem1" v-if="stepIndex == 0">
           <Form :model="wallet">
             <FormItem>
-              <Input v-model="wallet.password" type="password" required :placeholder="$t('please_enter_your_wallet_password')"></Input>
+              <Input v-model="wallet.password" type="password" required
+                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
               <Button type="success" @click="exportMnemonic">{{$t('next')}}
@@ -88,7 +89,7 @@
 </template>
 
 <script lang="ts">
-    import {Crypto} from  'nem2-sdk'
+    import {Crypto} from 'nem2-sdk'
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
     import {hexCharCodeToStr} from '../../../utils/tools'
     import './MnemonicDialog.less';
@@ -110,7 +111,7 @@
         mnemonic = ''
         mnemonicRandomArr = []
 
-        get getWallet () {
+        get getWallet() {
             return this.$store.state.account.wallet
         }
 
@@ -128,11 +129,11 @@
         exportMnemonic() {
             switch (this.stepIndex) {
                 case 0 :
-                    if(!this.checkInput()) return
+                    if (!this.checkInput()) return
                     let saveData = {
                         ciphertext: this.getWallet.ciphertext,
-                        iv: this.getWallet.iv.data?this.getWallet.iv.data : this.getWallet.iv,
-                        key:this.wallet.password
+                        iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
+                        key: this.wallet.password
                     }
                     const DeTxt = Crypto.decrypt(saveData)
                     walletInterface.getWallet({
@@ -142,16 +143,18 @@
                     }).then(async (Wallet: any) => {
                         let mnemonicData = {
                             ciphertext: this.getWallet['mnemonicEnCodeObj'].ciphertext,
-                            iv: this.getWallet['mnemonicEnCodeObj'].iv.data?this.getWallet['mnemonicEnCodeObj'].iv.data : this.getWallet['mnemonicEnCodeObj'].iv,
-                            key:this.wallet.password
+                            iv: this.getWallet['mnemonicEnCodeObj'].iv.data ? this.getWallet['mnemonicEnCodeObj'].iv.data : this.getWallet['mnemonicEnCodeObj'].iv,
+                            key: this.wallet.password
                         }
                         const DeMnemonic = Crypto.decrypt(mnemonicData)
                         this.mnemonic = hexCharCodeToStr(DeMnemonic)
                         this.mnemonicRandom()
                         this.stepIndex = 1
                         this.wallet.password = ''
-                    }).catch(()=>{
-                        this.$Message.error(this.$t('password_error'));
+                    }).catch(() => {
+                        this.$Notice.error({
+                            title: this.$t('password_error') + ''
+                        })
                     })
                     break;
                 case 1 :
@@ -161,7 +164,7 @@
                     this.stepIndex = 3
                     break;
                 case 3 :
-                    if(!this.checkMnemonic()) return
+                    if (!this.checkMnemonic()) return
                     this.stepIndex = 4
                     break;
                 case 4 :
@@ -169,38 +172,43 @@
                     break;
             }
         }
-        checkInput () {
+
+        checkInput() {
             if (!this.wallet.password || this.wallet.password == '') {
-                this.$Message.error(this.$t('please_set_your_wallet_password'));
+                this.$Notice.error({
+                    title: this.$t('please_set_your_wallet_password') + ''
+                })
                 return false
             }
             return true
         }
-        checkRandomArr (arr,mnemonic) {
+
+        checkRandomArr(arr, mnemonic) {
             const randomNum = this.randomNum(mnemonic)
-            if(arr.includes(randomNum)){
-                return this.checkRandomArr(arr,mnemonic)
-            }else {
+            if (arr.includes(randomNum)) {
+                return this.checkRandomArr(arr, mnemonic)
+            } else {
                 return randomNum
             }
         }
 
-        randomNum (mnemonic) {
-            return Math.floor(Math.random()*(mnemonic.length))
+        randomNum(mnemonic) {
+            return Math.floor(Math.random() * (mnemonic.length))
         }
-        mnemonicRandom () {
+
+        mnemonicRandom() {
             const mnemonic = this.mnemonic.split(' ');
             let numberArr = [];
-            let randomWord =[];
-            for(let i=0;i<mnemonic.length;i++){
-                const randomNum = this.checkRandomArr(numberArr,mnemonic)
+            let randomWord = [];
+            for (let i = 0; i < mnemonic.length; i++) {
+                const randomNum = this.checkRandomArr(numberArr, mnemonic)
                 numberArr.push(randomNum)
                 randomWord.push(mnemonic[randomNum])
             }
             this.mnemonicRandomArr = randomWord
         }
 
-        sureWord (index) {
+        sureWord(index) {
             const word = this.mnemonicRandomArr[index]
             const wordSpan = document.createElement('span');
             wordSpan.innerText = word;
@@ -210,20 +218,24 @@
             this.$refs['mnemonicWordDiv']['append'](wordSpan)
         }
 
-        checkMnemonic () {
+        checkMnemonic() {
             const mnemonicDiv = this.$refs['mnemonicWordDiv'];
             const mnemonicDivChild = mnemonicDiv['getElementsByTagName']('span');
             let childWord = []
-            for(let i in mnemonicDivChild){
-                if( typeof mnemonicDivChild[i] !== "object") continue;
+            for (let i in mnemonicDivChild) {
+                if (typeof mnemonicDivChild[i] !== "object") continue;
                 childWord.push(mnemonicDivChild[i]['innerText'])
             }
             if (JSON.stringify(childWord) != JSON.stringify(this.mnemonic.split(' '))) {
                 if (childWord.length < 1) {
-                    this.$Message.warning(this['$t']('Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct'));
-                } else {
-                    this.$Message.warning(this['$t']('Mnemonic_inconsistency'));
+                    this.$Notice.warning({
+                        title: this['$t']('Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct') + ''
+                    });
+                    return false
                 }
+                this.$Notice.warning({
+                    title: this['$t']('Mnemonic_inconsistency') + ''
+                });
                 return false
             }
             return true

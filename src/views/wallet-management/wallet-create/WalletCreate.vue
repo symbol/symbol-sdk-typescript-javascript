@@ -7,7 +7,7 @@
           <FormItem :label="$t('choose_network')">
             <p class="formItemTxt">
               {{$t('In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks')}}</p>
-            <Select :placeholder="$t('choose_network')"  v-model="formItem.currentNetType" required>
+            <Select :placeholder="$t('choose_network')" v-model="formItem.currentNetType" required>
               <Option :value="item.value" v-for="(item,index) in netType" :key="index">{{item.label}}</Option>
             </Select>
           </FormItem>
@@ -31,12 +31,12 @@
           </FormItem>
           <FormItem>
             <div class="clear">
-<!--              <Button class="prev left" type="default" @click="toBack">{{$t('back')}}/....</Button>-->
-<!--              <Button class="next right" type="success" @click="createWallet">{{$t('next')}}</Button>-->
+              <!--              <Button class="prev left" type="default" @click="toBack">{{$t('back')}}/....</Button>-->
+              <!--              <Button class="next right" type="success" @click="createWallet">{{$t('next')}}</Button>-->
 
 
-              <Button  class="prev" type="default" @click="toBack">{{$t('back')}}</Button>
-              <Button  class="right" type="success" @click="createWallet">{{$t('next')}}</Button>
+              <Button class="prev" type="default" @click="toBack">{{$t('back')}}</Button>
+              <Button class="right" type="success" @click="createWallet">{{$t('next')}}</Button>
             </div>
           </FormItem>
         </Form>
@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Vue } from 'vue-property-decorator';
+    import {Component, Vue} from 'vue-property-decorator';
     import './WalletCreate.less'
     import {NetworkType} from "nem2-sdk";
     import {MnemonicPassPhrase} from 'nem2-hd-wallets';
@@ -56,7 +56,7 @@
     @Component({
         components: {},
     })
-    export default class WalletCreate extends Vue{
+    export default class WalletCreate extends Vue {
         formItem = {
             currentNetType: '',
             walletName: '',
@@ -65,54 +65,56 @@
         }
         netType = [
             {
-                value:NetworkType.MIJIN_TEST,
-                label:'MIJIN_TEST'
-            },{
-                value:NetworkType.MAIN_NET,
-                label:'MAIN_NET'
-            },{
-                value:NetworkType.TEST_NET,
-                label:'TEST_NET'
-            },{
-                value:NetworkType.MIJIN,
-                label:'MIJIN'
+                value: NetworkType.MIJIN_TEST,
+                label: 'MIJIN_TEST'
+            }, {
+                value: NetworkType.MAIN_NET,
+                label: 'MAIN_NET'
+            }, {
+                value: NetworkType.TEST_NET,
+                label: 'TEST_NET'
+            }, {
+                value: NetworkType.MIJIN,
+                label: 'MIJIN'
             },
         ]
 
-        checkInput () {
+        checkInput() {
             if (!this.formItem.currentNetType || this.formItem.currentNetType == '') {
-                this.$Message.error(Message.PLEASE_SWITCH_NETWORK);
+                this.$Notice.error({title: this.$t(Message.PLEASE_SWITCH_NETWORK) + ''});
                 return false
             }
             if (!this.formItem.walletName || this.formItem.walletName == '') {
-                this.$Message.error(Message.WALLET_NAME_INPUT_ERROR);
+                this.$Notice.error({title: this.$t(Message.WALLET_NAME_INPUT_ERROR) + ''});
                 return false
             }
             if (!this.formItem.password || this.formItem.password == '') {
-                this.$Message.error(Message.PASSWORD_SETTING_INPUT_ERROR);
+                this.$Notice.error({title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''});
                 return false
             }
             if (this.formItem.password !== this.formItem.checkPW) {
-                this.$Message.error(Message.INCONSISTENT_PASSWORD_ERROR);
+                this.$Notice.error({title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''});
                 return false
             }
             return true
         }
 
-        createMnemonic () {
+        createMnemonic() {
             const mnemonic = MnemonicPassPhrase.createRandom('english', 128);
-            this.$store.commit('SET_MNEMONIC',mnemonic.plain)
+            this.$store.commit('SET_MNEMONIC', mnemonic.plain)
         }
 
-        createWallet () {
-            if(!this.checkInput()) return
+        createWallet() {
+            if (!this.checkInput()) return
             this.createMnemonic()
             this.$emit('isCreated', this.formItem)
         }
-        toBack () {
+
+        toBack() {
             this.$emit('closeCreate')
         }
-        created(){
+
+        created() {
             let list = JSON.parse(localRead('wallets'))
             if (list.length < 1) {
                 this.$store.state.app.isInLoginPage = true

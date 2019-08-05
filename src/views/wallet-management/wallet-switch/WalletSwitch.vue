@@ -147,8 +147,7 @@
             this.$store.commit('SET_WALLET', this.walletList[0])
             localSave('wallets', JSON.stringify(localData))
             this.$Notice.success({
-                title: this['$t']('Wallet_management') + '',
-                desc: this['$t']('Delete_wallet_successfully') + '',
+                title: this['$t']('Delete_wallet_successfully') + '',
             });
             document.body.click()
             this.initWalletList()

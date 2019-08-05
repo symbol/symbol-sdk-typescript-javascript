@@ -29,7 +29,7 @@
         showInputLockContent = false
 
         showIndexView() {
-           this.$emit('showIndexView',1)
+            this.$emit('showIndexView', 1)
         }
 
         created() {

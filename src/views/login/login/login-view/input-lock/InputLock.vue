@@ -14,7 +14,7 @@
 
     <div class="bottom_input">
       <input type="password" :placeholder="$t('lock_password')" v-model="form.password">
-      <img @click="jumpToDashBoard" src="../../../../../assets/images/login/loginJump.png" alt="">
+      <img @click="jumpToDashBoard" src="@/assets/images/login/loginJump.png" alt="">
     </div>
 
     <div class="password_prompt_text">
@@ -39,8 +39,6 @@
     export default class MonitorRelogin extends Vue {
 
         lockPromptText = ''
-
-
         form = {
             password: ''
         }
@@ -55,7 +53,20 @@
             this.$emit('showIndexView', 1)
         }
 
+        checkInput() {
+            const {form} = this
+            if (form.password == '') {
+                this.$Notice.error({title: this.$t(Message.INPUT_EMPTY_ERROR) + ''});
+                return false
+            }
+            return true
+        }
+
         checkLock() {
+            if (!this.checkInput()) {
+                return
+            }
+
             let lock = localRead('lock')
             try {
                 const u = [50, 50]
@@ -67,12 +78,12 @@
                 }
                 const enTxt = Crypto.decrypt(saveData)
                 if (enTxt !== new UInt64(u).toHex()) {
-                    this.$Message.error(this.$t(Message.WRONG_PASSWORD_ERROR));
+                    this.$Notice.error({title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''});
                     return false
                 }
                 return true
             } catch (e) {
-                this.$Message.error(this.$t(Message.WRONG_PASSWORD_ERROR));
+                this.$Notice.error({title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''});
                 return false
             }
         }

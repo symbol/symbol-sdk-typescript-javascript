@@ -19,7 +19,8 @@
         <div class="stepItem1" v-if="stepIndex == 0">
           <Form :model="wallet">
             <FormItem>
-              <Input v-model="wallet.password" type="password" required :placeholder="$t('please_enter_your_wallet_password')"></Input>
+              <Input v-model="wallet.password" type="password" required
+                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
               <Button type="success" @click="exportPrivatekey">{{$t('next')}}
@@ -112,7 +113,7 @@
             privatekey: ''
         }
 
-        get getWallet () {
+        get getWallet() {
             return this.$store.state.account.wallet
         }
 
@@ -130,12 +131,12 @@
         exportPrivatekey() {
             switch (this.stepIndex) {
                 case 0 :
-                    if(!this.checkInput()) return
+                    if (!this.checkInput()) return
                     console.log(Object.prototype.toString.call(this.getWallet.iv))
                     let saveData = {
                         ciphertext: this.getWallet.ciphertext,
-                        iv: this.getWallet.iv.data?this.getWallet.iv.data : this.getWallet.iv,
-                        key:this.wallet.password
+                        iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
+                        key: this.wallet.password
                     }
                     const DeTxt = Crypto.decrypt(saveData)
                     walletInterface.getWallet({
@@ -147,8 +148,10 @@
                         this.wallet.password = ''
                         this.stepIndex = 1
                         this.wallet.privatekey = DeTxt.toString().toUpperCase()
-                    }).catch(()=>{
-                        this.$Message.error(this.$t('password_error'));
+                    }).catch(() => {
+                        this.$Notice.error({
+                            title: this.$t('password_error') + ''
+                        })
                     })
                     break;
                 case 1 :
@@ -160,13 +163,17 @@
                     break;
             }
         }
-        checkInput () {
+
+        checkInput() {
             if (!this.wallet.password || this.wallet.password == '') {
-                this.$Message.error(this.$t('please_set_your_wallet_password'));
+                this.$Notice.error({
+                    title: '' + this.$t('please_set_your_wallet_password')
+                })
                 return false
             }
             return true
         }
+
         toPrevPage() {
             this.stepIndex = 2
         }
@@ -174,11 +181,13 @@
         saveQRCode() {
 
         }
-        createQRCode () {
+
+        createQRCode() {
             createQRCode(this.wallet.privatekey).then((data) => {
                 this.QRCode = data.url
             })
         }
+
         @Watch('showPrivatekeyDialog')
         onShowPrivatekeyDialogChange() {
             this.show = this.showPrivatekeyDialog

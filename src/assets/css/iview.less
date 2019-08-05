@@ -669,6 +669,7 @@
     position: absolute;
     z-index: 666;
   }
+
   .ivu-select-dropdown-list .ivu-select-item {
     background-color: white !important;
     z-index: 9999 !important;
@@ -748,127 +749,183 @@
     }
   }
 }
+
+
 .ivu-modal-wrap {
   z-index: 99999991 !important;
+}
 
-  .alias_bind_dialog {
-    .ivu-modal {
-      width: 500px !important;
-      height: 691px !important;
-      background: rgba(255, 255, 255, 1);
-      border-radius: 8px;
-    }
+.alias_bind_dialog {
+  .ivu-modal {
+    width: 500px !important;
+    height: 691px !important;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 8px;
+  }
 
-    .ivu-modal-content {
-      width: 500px !important;
-      height: 691px !important;
+  .ivu-modal-content {
+    width: 500px !important;
+    height: 691px !important;
 
-      .ivu-modal-body {
-        padding: 14px 55px 0 55px;
-      }
-    }
-
-    .ivu-btn {
-      display: none !important;
-    }
-
-    .ivu-modal-footer {
-      border-top: none !important;
-    }
-
-    .ivu-modal-header {
-      border: none !important;
-    }
-
-    .title {
-      color: #999999;
-      font-size: 20px;
-      margin: 10px 0 5px 0;
-    }
-
-    .input_area {
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid rgba(238, 238, 238, 1);
-
-      input {
-        width: 410px;
-        height: 50px;
-        border: none;
-
-      }
-
-      input::placeholder {
-        color: #CCCCCC;
-      }
-
-      .tip {
-        font-size: 16px;
-        font-weight: 400;
-        color: rgba(51, 51, 51, 1);
-        line-height: 16px;
-        margin-right: 10px;
-      }
-    }
-
-    .ivu-modal-header p, .ivu-modal-header-inner {
-      padding: 60px 40px 40px 40px;
-      font-size: 28px;
-      font-weight: 400;
-      color: #20B5AC;
-    }
-
-    .ivu-select-selection {
-      border: none !important;
-    }
-
-    .button_content {
-      float: right;
-      margin-top: 30px;
-
-      span {
-        display: inline-block;
-        width: 86px;
-        height: 44px;
-        background: rgba(38, 180, 176, 1);
-        line-height: 44px;
-        text-align: center;
-        color: white;
-
-      }
-
-      .cancel {
-        margin-right: 20px;
-        background: rgba(238, 238, 238, 1);
-        color: #989898;
-      }
+    .ivu-modal-body {
+      padding: 14px 55px 0 55px;
     }
   }
 
-  .filter_dialog.alias_bind_dialog {
-    .ivu-modal {
-      width: 500px !important;
-      height: 477px !important;
-      background: rgba(255, 255, 255, 1);
-      border-radius: 8px;
+  .ivu-btn {
+    display: none !important;
+  }
+
+  .ivu-modal-footer {
+    border-top: none !important;
+  }
+
+  .ivu-modal-header {
+    border: none !important;
+  }
+
+  .title {
+    color: #999999;
+    font-size: 20px;
+    margin: 10px 0 5px 0;
+  }
+
+  .input_area {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(238, 238, 238, 1);
+
+    input {
+      width: 410px;
+      height: 50px;
+      border: none;
+
     }
 
-    .ivu-modal-content {
-      width: 500px !important;
-      height: 527px !important;
+    input::placeholder {
+      color: #CCCCCC;
+    }
 
-      .ivu-modal-body {
-        padding: 14px 55px 0 55px;
-      }
+    .tip {
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(51, 51, 51, 1);
+      line-height: 16px;
+      margin-right: 10px;
+    }
+  }
+
+  .ivu-modal-header p, .ivu-modal-header-inner {
+    padding: 60px 40px 40px 40px;
+    font-size: 28px;
+    font-weight: 400;
+    color: #20B5AC;
+  }
+
+  .ivu-select-selection {
+    border: none !important;
+  }
+
+  .button_content {
+    float: right;
+    margin-top: 30px;
+
+    span {
+      display: inline-block;
+      width: 86px;
+      height: 44px;
+      background: rgba(38, 180, 176, 1);
+      line-height: 44px;
+      text-align: center;
+      color: white;
+
+    }
+
+    .cancel {
+      margin-right: 20px;
+      background: rgba(238, 238, 238, 1);
+      color: #989898;
     }
   }
 }
 
-.setting_container  {
-  .ivu-select{
+
+.filter_dialog.alias_bind_dialog {
+  .ivu-modal {
+    width: 500px !important;
+    height: 477px !important;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 8px;
+  }
+
+  .ivu-modal-content {
+    width: 500px !important;
+    height: 527px !important;
+
+    .ivu-modal-body {
+      padding: 14px 55px 0 55px;
+    }
+  }
+}
+
+
+.setting_container {
+  .ivu-select {
     height: 45px !important;
-    border: 1px solid #ccc;
+    //border: 1px solid #ccc;
     border-radius: 4px;
     padding: 8px 0;
   }
+}
+
+
+// $notice
+.ivu-notice {
+  position: fixed !important;
+  bottom: 50px !important;
+  top: auto !important;
+  width: 300px !important;
+
+  .ivu-notice-notice {
+    width: 100%;
+    height: auto;
+    background: black;
+    display: flex;
+    align-items: center;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: revert;
+
+    .ivu-notice-custom-content {
+      display: flex;
+      align-items: center;
+      align-content: center;
+
+      .ivu-notice-icon {
+        font-size: 40px;
+        position: relative !important;
+      }
+
+    }
+
+    .ivu-notice-title {
+      width: 180px;
+      height: auto;
+      color: white;
+      overflow: unset;
+      line-height: 24px !important;
+      font-size: 16px !important;
+      word-break: break-all;
+      white-space: unset;
+      //word-wrap: break-word;
+    }
+
+    .ivu-notice-notice-close {
+      i {
+        color: white;
+
+      }
+    }
+  }
+
 }

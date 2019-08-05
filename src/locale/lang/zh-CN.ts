@@ -501,13 +501,11 @@ export const zh_CN = {
     Update_namespace_prompts: '更新命名空间提示',
     namespace_list_tips_1: '1.只有根命名空间需要更新. 所有子空间命名空间将在根命名空间扩展后自动扩展;',
     namespace_list_tips_2: '2.根据租赁协议，与命名空间签订的合同最长可达一年,合同可以在其到期日之前或之后的一个月续约.如果命名空间没有及时扩展，则在其下创建的名称和马赛克的所有子空间都将丢失;',
-
 //mosaic transaction
     create_mosaic: '创建马赛克',
     no_data: '暂无数据',
     votes: '票',
     create_node: '创建网络',
-
     // apostille
     create_apostille: '创建公证',
     audit_apostille: '审核公证',
@@ -532,13 +530,11 @@ export const zh_CN = {
     apostille_result: '公证结果',
     Delete_records_locally: '本地删除记录',
     Notarized_data_backup: '公证数据备份',
-
     //multisig
     first_floor: '第一层',
     second_floor: '第二层',
     third_floor: '第三层',
     Harvester: '收获者',
-
     // login
     WELCOME_TO_CATAPULT_NANO_WALLET: '欢迎使用CATAPULT-NANO-Wallet测试版',
     This_is_a_distributed_desktop_wallet_based_on_catapult_come_and_explore_the_wonderful_journey_of_catapult: '这是一个基于CATAPULT的分布式桌面钱包 祝你旅途愉快',
@@ -553,11 +549,14 @@ export const zh_CN = {
     XEM_market_trend_nearly_24_hours: 'XEM行情走势（近24小时）',
     This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe: '1、钱包账户里的所有交易都会使用此密码， 请记住你的密码并妥善保管。',
     The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_the_security_of_your_wallet: '2、密码设置要求，不低于六位数字，建议 越复杂越好，有利于你钱包的安全性！',
-
-    // todo
     add_address: '添加账户地址',
     add_mosaic: '添加马赛克',
     add_entity_type: '添加交易类型',
-    Any_information_cannot_be_empty: '任意信息不能为空'
+    Any_information_cannot_be_empty: '任意信息不能为空',
+
+    success:'成功',
+
+    //input lock
+
 
 }

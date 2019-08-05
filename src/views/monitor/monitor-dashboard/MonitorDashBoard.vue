@@ -221,8 +221,6 @@
             }
         ]
 
-
-
         get getWallet() {
             return this.$store.state.account.wallet
         }
@@ -376,8 +374,6 @@
             this.getMarketOpenPrice()
             this.getPointInfo()
         }
-
-
 
         get currentHeight() {
             return this.$store.state.app.chainStatus.currentHeight

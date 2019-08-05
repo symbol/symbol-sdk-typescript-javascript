@@ -5,7 +5,7 @@
       <div class="form_item">
         <div class="title">{{$t('Public_account')}}</div>
         <Select v-model="multisigPublickey" class="select" :placeholder="$t('publickey')">
-          <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Option v-for="item in publickeyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </div>
 
@@ -115,7 +115,7 @@
         MultisigCosignatoryModificationType = MultisigCosignatoryModificationType
         showSubAddressList = false
         showCheckPWDialog = false
-        cityList = [
+        publickeyList = [
             {
                 value: 'no data',
                 label: 'no data'
@@ -132,7 +132,7 @@
             console.log(flag)
         }
         confirmInput() {
-            this.showCheckPWDialog = true
+            // this.showCheckPWDialog = true
         }
 
         addAddress(flag) {

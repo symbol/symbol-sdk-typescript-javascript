@@ -52,25 +52,35 @@
             const {prePassword, newPassword, repeatPassword} = this
 
             if (prePassword == '') {
-                this.$Message.error(this.$t(Message.INPUT_EMPTY_ERROR))
+                this.$Notice.error({
+                    title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
+                })
                 return false
             }
             if (newPassword == '') {
-                this.$Message.error(this.$t(Message.INPUT_EMPTY_ERROR))
+                this.$Notice.error({
+                    title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
+                })
                 return false
             }
             if (repeatPassword == '') {
-                this.$Message.error(this.$t(Message.INPUT_EMPTY_ERROR))
+                this.$Notice.error({
+                    title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
+                })
                 return false
             }
             if (newPassword !== repeatPassword) {
-                this.$Message.error(this.$t(Message.INCONSISTENT_PASSWORD_ERROR))
+                this.$Notice.error({
+                    title: '' + this.$t(Message.INCONSISTENT_PASSWORD_ERROR)
+                })
                 return false
             }
             return true
         }
 
         confirmUpdate() {
+            // TODO
+            return
             const {prePassword, newPassword, repeatPassword} = this
             if (!this.checkInfo()) {
                 return

@@ -1,4 +1,3 @@
-import {NetworkType} from "nem2-sdk";
 <template>
   <div>
     <div class="privatekey">
@@ -68,7 +67,6 @@ import {NetworkType} from "nem2-sdk";
     import {walletInterface} from "../../../interface/sdkWallet"
     import {accountInterface} from "../../../interface/sdkAccount";
     import Message from "@/message/Message";
-    // import "../wallet-import-privatekey/WalletImportPrivatekey.less"
 
     @Component
     export default class WalletImportPrivatekey extends Vue {
@@ -104,19 +102,27 @@ import {NetworkType} from "nem2-sdk";
 
         checkImport() {
             if (this.form.networkType == 0) {
-                this.$Message.error(this.$t(Message.PLEASE_SWITCH_NETWORK))
+                this.$Notice.error({
+                    title: this.$t(Message.PLEASE_SWITCH_NETWORK) + ''
+                })
                 return false
             }
             if (!this.form.walletName || this.form.walletName == '') {
-                this.$Message.error(this.$t(Message.WALLET_NAME_INPUT_ERROR))
+                this.$Notice.error({
+                    title: this.$t(Message.WALLET_NAME_INPUT_ERROR) + ''
+                })
                 return false
             }
             if (!this.form.password || this.form.password == '') {
-                this.$Message.error(this.$t(Message.PASSWORD_SETTING_INPUT_ERROR))
+                this.$Notice.error({
+                    title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
+                })
                 return false
             }
             if (this.form.password !== this.form.checkPW) {
-                this.$Message.error(this.$t(Message.INCONSISTENT_PASSWORD_ERROR))
+                this.$Notice.error({
+                    title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''
+                })
                 return false
             }
             return true
@@ -125,14 +131,18 @@ import {NetworkType} from "nem2-sdk";
         checkPrivateKey() {
             try {
                 if (!this.form.privateKey || this.form.privateKey === '') {
-                    this.$Message.error(this.$t(Message.PASSWORD_SETTING_INPUT_ERROR))
+                    this.$Notice.error({
+                        title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
+                    })
                     return false
                 }
                 const account = Account.createFromPrivateKey(this.form.privateKey, NetworkType.MIJIN_TEST)
                 this.account = account
                 return true
             } catch (e) {
-                this.$Message.error(this.$t(Message.PASSWORD_SETTING_INPUT_ERROR))
+                this.$Notice.error({
+                    title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
+                })
                 return false
             }
 
@@ -205,17 +215,17 @@ import {NetworkType} from "nem2-sdk";
             return walletItem
         }
 
-        async getMultisigAccount (listItem) {
+        async getMultisigAccount(listItem) {
             let walletItem = listItem
             let node = this.$store.state.account.node
             await accountInterface.getMultisigAccountInfo({
                 node: node,
                 address: walletItem.address
-            }).then((multisigAccountInfo)=>{
-                if(typeof (multisigAccountInfo.result.multisigAccountInfo) == 'object'){
-                    multisigAccountInfo.result.multisigAccountInfo['subscribe']((accountInfo)=>{
+            }).then((multisigAccountInfo) => {
+                if (typeof (multisigAccountInfo.result.multisigAccountInfo) == 'object') {
+                    multisigAccountInfo.result.multisigAccountInfo['subscribe']((accountInfo) => {
                         walletItem.isMultisig = true
-                    },()=>{
+                    }, () => {
                         walletItem.isMultisig = false
                     })
                 }
@@ -256,7 +266,6 @@ import {NetworkType} from "nem2-sdk";
         toWalletDetails() {
             this.$Notice.success({
                 title: this['$t']('Import_private_key_operation') + '',
-                desc: this['$t']('Imported_wallet_successfully') + '',
             });
             this.$store.commit('SET_HAS_WALLET', true)
             this.$emit('toWalletDetails')

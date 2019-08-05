@@ -25,7 +25,7 @@
           {{$t('set_the_wallet_name')}}
           <div class="gray_content">
             <input class="absolute" type="text" v-model="form.walletName"
-                   :placeholder="$t('set_the_wallet_name')" >
+                   :placeholder="$t('set_the_wallet_name')">
           </div>
         </li>
         <li>
@@ -79,17 +79,17 @@
         }
         NetworkTypeList = [
             {
-                value:NetworkType.MIJIN_TEST,
-                label:'MIJIN_TEST'
-            },{
-                value:NetworkType.MAIN_NET,
-                label:'MAIN_NET'
-            },{
-                value:NetworkType.TEST_NET,
-                label:'TEST_NET'
-            },{
-                value:NetworkType.MIJIN,
-                label:'MIJIN'
+                value: NetworkType.MIJIN_TEST,
+                label: 'MIJIN_TEST'
+            }, {
+                value: NetworkType.MAIN_NET,
+                label: 'MAIN_NET'
+            }, {
+                value: NetworkType.TEST_NET,
+                label: 'TEST_NET'
+            }, {
+                value: NetworkType.MIJIN,
+                label: 'MIJIN'
             },
         ]
         account = {}
@@ -102,19 +102,27 @@
 
         checkImport() {
             if (this.form.networkType == 0) {
-                this.$Message.error(this.$t(Message.PLEASE_SWITCH_NETWORK));
+                this.$Notice.error({
+                    title: this.$t(Message.PLEASE_SWITCH_NETWORK) + ''
+                })
                 return false
             }
             if (!this.form.walletName || this.form.walletName == '') {
-                this.$Message.error(this.$t(Message.WALLET_NAME_INPUT_ERROR))
+                this.$Notice.error({
+                    title: this.$t(Message.WALLET_NAME_INPUT_ERROR) + ''
+                })
                 return false
             }
             if (!this.form.password || this.form.password == '') {
-                this.$Message.error(this.$t(Message.PASSWORD_SETTING_INPUT_ERROR))
+                this.$Notice.error({
+                    title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
+                })
                 return false
             }
             if (this.form.password !== this.form.checkPW) {
-                this.$Message.error(this.$t(Message.INCONSISTENT_PASSWORD_ERROR))
+                this.$Notice.error({
+                    title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''
+                })
                 return false
             }
             return true
@@ -123,7 +131,9 @@
         checkMnemonic() {
             try {
                 if (!this.form.mnemonic || this.form.mnemonic === '' || this.form.mnemonic.split(' ').length != 12) {
-                    this.$Message.error(this.$t(Message.MNENOMIC_INPUT_ERROR))
+                    this.$Notice.error({
+                        title: this.$t(Message.MNENOMIC_INPUT_ERROR) + ''
+                    })
                     return false
                 }
                 const account = this.createAccount(this.form.mnemonic)
@@ -131,7 +141,9 @@
                 this.account = account
                 return true
             } catch (e) {
-                this.$Message.error(this.$t(Message.MNENOMIC_INPUT_ERROR))
+                this.$Notice.error({
+                    title: this.$t(Message.MNENOMIC_INPUT_ERROR) + ''
+                })
                 return false
             }
 
@@ -206,7 +218,7 @@
                 that.$store.commit('SET_WALLET', storeWallet)
                 const encryptObj = Crypto.encrypt(Wallet.result.privateKey, that.form['password'])
                 const mnemonicEnCodeObj = Crypto.encrypt(strToHexCharCode(this.form.mnemonic), that.form['password'])
-                that.localKey(storeWallet, encryptObj , mnemonicEnCodeObj)
+                that.localKey(storeWallet, encryptObj, mnemonicEnCodeObj)
                 this.toWalletDetails()
             })
         }
@@ -236,17 +248,17 @@
             return walletItem
         }
 
-        async getMultisigAccount (listItem) {
+        async getMultisigAccount(listItem) {
             let walletItem = listItem
             let node = this.$store.state.account.node
             await accountInterface.getMultisigAccountInfo({
                 node: node,
                 address: walletItem.address
-            }).then((multisigAccountInfo)=>{
-                if(typeof (multisigAccountInfo.result.multisigAccountInfo) == 'object'){
-                    multisigAccountInfo.result.multisigAccountInfo['subscribe']((accountInfo)=>{
+            }).then((multisigAccountInfo) => {
+                if (typeof (multisigAccountInfo.result.multisigAccountInfo) == 'object') {
+                    multisigAccountInfo.result.multisigAccountInfo['subscribe']((accountInfo) => {
                         walletItem.isMultisig = true
-                    },()=>{
+                    }, () => {
                         walletItem.isMultisig = false
                     })
                 }
@@ -286,8 +298,7 @@
 
         toWalletDetails() {
             this.$Notice.success({
-                title: '' + this['$t']('Import_mnemonic_operations'),
-                desc: this['$t']('Imported_wallet_successfully') + ''
+                title: this['$t']('Imported_wallet_successfully') + ''
             });
             this.$store.commit('SET_HAS_WALLET', true)
             this.$emit('toWalletDetails')

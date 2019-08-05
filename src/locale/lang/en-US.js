@@ -508,16 +508,15 @@ export var en_US = {
     Set_the_password_prompts: 'Set the password prompts',
     skip: 'Skip',
     finished: 'Finished',
-    //
     forget_password: 'Forget password',
     passowrd_prompt: 'Passowrd prompt',
     XEM_market_trend_nearly_24_hours: 'XEM market trend nearly 24 hours',
     This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe: '1、This password will be used for all transactions in your wallet account. Please remember your password and keep it safe.',
     The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_the_security_of_your_wallet: '2、The password setting requirement is not less than six digits. The more complicated the recommendation, the better the security of your wallet!',
-    // todo
     add_address: 'Add address',
     add_mosaic: 'Add mosaic',
     add_entity_type: 'Add entity type',
-    Any_information_cannot_be_empty: 'Any information cannot be empty'
+    Any_information_cannot_be_empty: 'Any information cannot be empty',
+    success: 'Success',
 };
 //# sourceMappingURL=en-US.js.map
