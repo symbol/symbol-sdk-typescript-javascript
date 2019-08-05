@@ -387,7 +387,83 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('AccountRestrictionTransaction - Address', () => {
+    describe('AccountRestrictionTransaction - Outgoing Address', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
+                RestrictionModificationType.Add,
+                account3.address,
+            );
+            const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
+                Deadline.create(),
+                AccountRestrictionType.BlockOutgoingAddress,
+                [addressRestrictionFilter],
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = addressModification.signWith(account, generationHash);
+
+            listener.confirmed(account.address).subscribe((transaction: AccountAddressRestrictionModificationTransaction) => {
+                expect(transaction.modifications, 'Modifications').not.to.be.undefined;
+                expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
+                expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
+                expect(transaction.restrictionType, 'RestrictionType').not.to.be.undefined;
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AccountRestrictionTransaction - Outgoing Address', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
+                RestrictionModificationType.Remove,
+                account3.address,
+            );
+            const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
+                Deadline.create(),
+                AccountRestrictionType.BlockOutgoingAddress,
+                [addressRestrictionFilter],
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [addressModification.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('AccountRestrictionTransaction - Incoming Address', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -425,7 +501,7 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('AccountRestrictionTransaction - Address', () => {
+    describe('AccountRestrictionTransaction - Incoming Address', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -537,7 +613,7 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('AccountRestrictionTransaction - Operation', () => {
+    describe('AccountRestrictionTransaction - Incoming Operation', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -575,7 +651,7 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('AccountRestrictionTransaction - Operation', () => {
+    describe('AccountRestrictionTransaction - Incoming Operation', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -612,6 +688,83 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
+
+    describe('AccountRestrictionTransaction - Outgoing Operation', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
+                RestrictionModificationType.Add,
+                TransactionType.LINK_ACCOUNT,
+            );
+            const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
+                Deadline.create(),
+                AccountRestrictionType.BlockOutgoingTransactionType,
+                [operationRestrictionFilter],
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = addressModification.signWith(account3, generationHash);
+
+            listener.confirmed(account3.address).subscribe((transaction: AccountOperationRestrictionModificationTransaction) => {
+                expect(transaction.modifications, 'Modifications').not.to.be.undefined;
+                expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
+                expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
+                expect(transaction.restrictionType, 'RestrictionType').not.to.be.undefined;
+                done();
+            });
+            listener.status(account3.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+    describe('AccountRestrictionTransaction - Outgoing Operation', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
+                RestrictionModificationType.Remove,
+                TransactionType.LINK_ACCOUNT,
+            );
+            const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
+                Deadline.create(),
+                AccountRestrictionType.BlockOutgoingTransactionType,
+                [operationRestrictionFilter],
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [addressModification.toAggregate(account3.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account3, generationHash);
+            listener.confirmed(account3.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account3.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
     describe('AccountLinkTransaction', () => {
         let listener: Listener;
         before (() => {
