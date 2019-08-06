@@ -291,7 +291,7 @@
             const {multisigPublickey} = this.formItem
             const {networkType} = this.$store.state.account.wallet
             const {node} = this.$store.state.account
-            let address = Address.createFromPublicKey(multisigPublickey, networkType).address
+            let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
             multisigInterface.getMultisigAccountInfo({
                 address,
                 node

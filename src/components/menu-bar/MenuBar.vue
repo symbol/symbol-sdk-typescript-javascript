@@ -245,7 +245,6 @@
 
         async getGenerateHash(node) {
             const that = this
-            let {accountPrivateKey, accountPublicKey, accountAddress} = this
             await blockchainInterface.getBlockByHeight({
                 height: 1,
                 node
@@ -286,7 +285,7 @@
                 list.push(transaction.transactionInfo.hash)
                 this.$store.state.account.UnconfirmedTx = list
                 this.$Notice.success({
-                    title: this.$t('Transaction_sending'),
+                    title: this.$t('Transaction_sending').toString(),
                     duration: 4,
                     // desc: 'hash：'+ transaction.transactionInfo.hash
                 });
@@ -298,7 +297,7 @@
                 list.push(transaction.transactionInfo.hash)
                 this.$store.state.account.ConfirmedTx = list
                 this.$Notice.success({
-                    title: this.$t('Transaction_Reception'),
+                    title: this.$t('Transaction_Reception').toString(),
                     duration: 4,
                     // desc: 'hash：'+ transaction.transactionInfo.hash
                 });

@@ -81,6 +81,11 @@
         TransferTransaction,
         PlainMessage,
         Address,
+        NamespaceId,
+        Id,
+        NamespaceMosaicIdGenerator,
+        MultisigCosignatoryModification,
+        PublicAccount,
         Deadline,
         Listener,
     } from 'nem2-sdk'
@@ -201,7 +206,7 @@
             const {multisigPublickey} = this
             const {networkType} = this.$store.state.account.wallet
             const {node} = this.$store.state.account
-            let address = Address.createFromPublicKey(multisigPublickey, networkType).address
+            let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
             multisigInterface.getMultisigAccountInfo({
                 address,
                 node
