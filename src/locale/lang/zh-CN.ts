@@ -47,7 +47,7 @@ export const zh_CN = {
     enter_the_date_for_example: '输入日期,例如：',
     fee: '费用',
     the_default_is: '默认为',
-    the_more_you_set_the_cost_the_higher_the_processing_priority: '设置的费用越多，处理优先级越高',
+    the_more_you_set_the_cost_the_higher_the_processing_priority: '设置的费用越多，处理优先级越高 (1000000gas = 1.0xem)',
     create: '创建',
     all: '全部',
     processing: '进行中',
@@ -269,9 +269,11 @@ export const zh_CN = {
     update_completed: '更新成功',
 
     // namespace
-    parent_namespace: '根命名空间',
+    parent_namespace: '父命名空间',
+    root_namespace: '根命名空间',
     new_root_namespace: '新的根命名空间',
     select_root_namespace: '选择根命名空间',
+    select_parent_namespace: '选择父命名空间',
     subspace: '子空间',
     input_space_name: '输入空间名',
     the_duration_is_calculated_in_blocks_one_block_is_12_seconds: '持续时间以块计算，一个块为12秒',
@@ -556,7 +558,9 @@ export const zh_CN = {
     add_entity_type: '添加交易类型',
     Any_information_cannot_be_empty: '任意信息不能为空',
 
-    success:'成功',
+    success:'操作成功',
+    Transaction_sending:'节点已接收事务',
+    Transaction_Reception:'节点已确认事务',
 
     //input lock
 

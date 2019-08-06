@@ -219,4 +219,15 @@ export const formatSeconds = function (second) {
   return result;
 
 }
-
+export const formatXEMamount = (XEMamount) => {
+    if(XEMamount.includes('.')){
+        const decimal = XEMamount.split('.')[1]
+        if(decimal.length > 2){
+            return Number(XEMamount).toFixed(2)
+        }else {
+            return XEMamount
+        }
+    }else {
+        return XEMamount
+    }
+}

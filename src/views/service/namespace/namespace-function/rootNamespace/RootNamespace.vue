@@ -19,7 +19,7 @@
 
 
                 <div class="form_item">
-                    <span class="key">{{$t('parent_namespace')}}</span>
+                    <span class="key">{{$t('root_namespace')}}</span>
                     <span class="value">
                        <input type="text"  v-model="form.rootNamespaceName" :placeholder="$t('New_root_space')">
                    </span>
@@ -58,7 +58,7 @@
                     <span class="key">{{$t('fee')}}</span>
                     <span class="value">
               <input type="text" v-model="form.maxFee" :placeholder="$t('undefined')">
-            <span class="end_label">XEM</span>
+            <span class="end_label">gas</span>
           </span>
                     <div class="tips">
                         {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -160,9 +160,10 @@
             transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
                 // get announce status
                 announceResult.result.announceStatus.subscribe((announceInfo: any) => {
-                    console.log(transaction)
                     that.$emit('createdNamespace')
-                    that.$Message.success(this.$t(Message.SUCCESS))
+                    that.$Notice.success({
+                        title: this.$t(Message.SUCCESS) + ''
+                    })
                     that.initForm()
                 })
             })

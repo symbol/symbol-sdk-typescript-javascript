@@ -20,6 +20,8 @@ export default {
         wallet: {},
         mosaic: [],
         namespace: [],
+        UnconfirmedTx: [],
+        ConfirmedTx: [],
         generationHash: ''
     },
     getters: {

@@ -225,9 +225,12 @@
             return this.$store.state.account.wallet
         }
 
+        get ConfirmedTxList () {
+            return this.$store.state.account.ConfirmedTx
+        }
+
         showDialog(transaction) {
             this.isShowDialog = true
-            console.log(transaction)
             this.transactionDetails = [
                 {
                     key: 'transfer_type',
@@ -373,6 +376,12 @@
             this.getConfirmedTransactions()
             this.getMarketOpenPrice()
             this.getPointInfo()
+        }
+
+        @Watch('ConfirmedTxList')
+        onConfirmedTxChange() {
+            this.getUnconfirmedTransactions()
+            this.getConfirmedTransactions()
         }
 
         get currentHeight() {

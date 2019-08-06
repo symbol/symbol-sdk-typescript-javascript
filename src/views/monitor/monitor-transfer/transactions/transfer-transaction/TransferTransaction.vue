@@ -42,7 +42,7 @@
       <span class="title">{{$t('fee')}}</span>
       <span class="value radius flex_center">
               <input v-model="fee" placeholder="0.050000" type="text">
-              <span class="uint">XEM</span>
+              <span class="uint">gas</span>
             </span>
     </div>
     <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
@@ -139,14 +139,14 @@
                 // sign tx
                 const transaction = transactionResult.result.transferTransaction
                 // const transaction = tx
-                console.log(transaction)
                 const signature = account.sign(transaction, generationHash)
                 // send tx
                 transactionInterface.announce({signature, node}).then((announceResult) => {
                     // get announce status
                     announceResult.result.announceStatus.subscribe((announceInfo: any) => {
-                        console.log(signature)
-                        that.$Message.success(Message.SUCCESS)
+                        that.$Notice.success({
+                            title: this.$t(Message.SUCCESS) + ''
+                        })
                         that.manageAlert(Message.SUCCESS)
                         that.initForm()
                     })
@@ -322,7 +322,9 @@
             if (key) {
                 this.sendTransaction(key)
             } else {
-                this.$Message.error(Message.WRONG_PASSWORD_ERROR)
+                this.$Notice.success({
+                    title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+                })
             }
         }
 

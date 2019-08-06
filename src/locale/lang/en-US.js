@@ -46,7 +46,7 @@ export var en_US = {
     enter_the_date_for_example: 'Enter the date ,for example：',
     fee: 'Fee',
     the_default_is: 'Default',
-    the_more_you_set_the_cost_the_higher_the_processing_priority: 'The more you cost ,the higher the processing priority.',
+    the_more_you_set_the_cost_the_higher_the_processing_priority: 'The more you cost ,the higher the processing priority. (1000000gas = 1.0xem)',
     create: 'Create',
     all: 'All',
     processing: 'Processing',
@@ -249,8 +249,10 @@ export var en_US = {
     update_completed: 'Update completed',
     // namespace
     parent_namespace: 'Parent',
+    root_namespace: 'Parent',
     new_root_namespace: 'New root namespace',
     select_root_namespace: 'Choose root namespace',
+    select_parent_namespace: 'Choose parent namespace',
     subspace: 'Subspace',
     input_space_name: 'Input space name',
     the_duration_is_calculated_in_blocks_one_block_is_12_seconds: 'The duration is calculated in blocks one block is 12 seconds.',
@@ -519,6 +521,8 @@ export var en_US = {
     add_mosaic: 'Add mosaic',
     add_entity_type: 'Add entity type',
     Any_information_cannot_be_empty: 'Any information cannot be empty',
-    success: 'Success',
+    success: 'Successful operation',
+    Transaction_sending: 'The node has received the transaction',
+    Transaction_Reception: 'Node confirmed transaction',
 };
 //# sourceMappingURL=en-US.js.map

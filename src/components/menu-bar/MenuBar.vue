@@ -84,7 +84,7 @@
     import monitorUnselected from '@/assets/images/window/windowUnselected.png'
     import {blockchainInterface} from '@/interface/sdkBlockchain.js';
     import Message from "@/message/Message";
-    import {Listener, NamespaceHttp, NamespaceId} from "nem2-sdk";
+    import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk";
     import {wsInterface} from "../../interface/sdkListener";
 
     @Component
@@ -130,6 +130,7 @@
         accountAddress = ''
         walletList = []
         unconfirmedTxListener = null
+        confirmedTxListener = null
 
         get getWallet() {
             return this.$store.state.account.wallet
@@ -141,6 +142,14 @@
 
         get node () {
             return this.$store.state.account.node
+        }
+
+        get UnconfirmedTxList () {
+            return this.$store.state.account.UnconfirmedTx
+        }
+
+        get ConfirmedTxList () {
+            return this.$store.state.account.ConfirmedTx
         }
 
         closeWindow() {
@@ -187,7 +196,6 @@
         }
 
         switchPanel(index) {
-            console.log(this.$store.state.app.isInLoginPage)
             if (this.$store.state.app.isInLoginPage) {
                 return
             }
@@ -245,26 +253,56 @@
                 await blockReasult.result.Block.subscribe((blockInfo) => {
                     that.$store.state.account.generationHash = blockInfo.generationHash
                 })
-            }).catch(() => {
             })
         }
 
         unconfirmedListener(){
             const node = this.node.replace('http', 'ws')
-            try {
-                this.unconfirmedTxListener.close()
-            }catch (e) {}
+            const that = this
+            this.unconfirmedTxListener && this.unconfirmedTxListener.close()
             this.unconfirmedTxListener = new Listener(node, WebSocket)
-            wsInterface.listenerTx({
+            wsInterface.listenerUnconfirmed({
                 listener: this.unconfirmedTxListener,
-                txType:'unconfirmed',
-                address: this.getWallet.address,
-                fn: this.disposeUnconfirmed
+                address: Address.createFromRawAddress(that.getWallet.address),
+                fn: that.disposeUnconfirmed
             })
         }
 
-        disposeUnconfirmed (transactionInfo){
-            console.log(transactionInfo)
+        confirmedListener(){
+            const node = this.node.replace('http', 'ws')
+            const that = this
+            this.confirmedTxListener && this.confirmedTxListener.close()
+            this.confirmedTxListener = new Listener(node, WebSocket)
+            wsInterface.listenerConfirmed({
+                listener: this.confirmedTxListener,
+                address: Address.createFromRawAddress(that.getWallet.address),
+                fn: that.disposeConfirmed
+            })
+        }
+
+        disposeUnconfirmed (transaction){
+            let list = this.UnconfirmedTxList
+            if(!list.includes(transaction.transactionInfo.hash)){
+                list.push(transaction.transactionInfo.hash)
+                this.$store.state.account.UnconfirmedTx = list
+                this.$Notice.success({
+                    title: this.$t('Transaction_sending'),
+                    duration: 4,
+                    // desc: 'hash：'+ transaction.transactionInfo.hash
+                });
+            }
+        }
+        disposeConfirmed (transaction){
+            let list = this.ConfirmedTxList
+            if(!list.includes(transaction.transactionInfo.hash)){
+                list.push(transaction.transactionInfo.hash)
+                this.$store.state.account.ConfirmedTx = list
+                this.$Notice.success({
+                    title: this.$t('Transaction_Reception'),
+                    duration: 4,
+                    // desc: 'hash：'+ transaction.transactionInfo.hash
+                });
+            }
         }
 
         initData() {
@@ -284,6 +322,7 @@
             this.$store.state.account.node = currentNode
             const that = this
             this.unconfirmedListener()
+            this.confirmedListener()
 			const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('nem.xem'))
             linkedMosaic.subscribe((mosaic)=>{
                 this.$store.state.account.currentXEM1 = mosaic.toHex();
@@ -301,11 +340,13 @@
             this.walletList = this.getWalletList
             this.currentWallet = this.getWallet.address
             this.unconfirmedListener()
+            this.confirmedListener()
         }
 
         created() {
             this.initData()
             this.unconfirmedListener()
+            this.confirmedListener()
         }
     }
 </script>

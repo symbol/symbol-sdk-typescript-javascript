@@ -384,9 +384,15 @@ declare namespace SdkV0 {
         }) => Rst<{
             ws: any
         }>;
-        listenerTx: (params: {
+        listenerUnconfirmed: (params: {
             listener: any
-            txType: any
+            address: Address
+            fn: any
+        }) => Rst<{
+            ws: any
+        }>;
+        listenerConfirmed: (params: {
+            listener: any
             address: Address
             fn: any
         }) => Rst<{

@@ -11,7 +11,7 @@
           <Col span="15">
             <div>
               <p class="walletName">{{item.name}}</p>
-              <p class="walletAmount">{{item.balance}}&nbsp;<span class="tails">XEM</span></p>
+              <p class="walletAmount">{{formatXEMamount(item.balance.toString())}}&nbsp;<span class="tails">XEM</span></p>
             </div>
           </Col>
           <Col span="9">
@@ -49,7 +49,7 @@
 
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
-    import {localRead, localSave} from '../../../utils/util'
+    import {localRead, localSave, formatXEMamount} from '../../../utils/util'
     import {NetworkType} from 'nem2-sdk'
     import './WalletSwitch.less'
 
@@ -154,6 +154,10 @@
 
         }
 
+        formatXEMamount(text){
+            return formatXEMamount(text)
+        }
+
         copyObj(obj) {
             const newObj: any = Object.prototype.toString.call(obj) == '[object Array]' ? [] : {};
             for (const key in obj) {
@@ -180,7 +184,6 @@
                 //     item.style = 'walletItem_bg_' + Math.floor(Math.random()*3)
                 // }
             })
-            console.log(list)
             for (let i in list) {
                 this.$set(this.walletList, i, list[i])
             }

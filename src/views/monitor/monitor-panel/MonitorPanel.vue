@@ -129,7 +129,7 @@
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {mosaicInterface} from '@/interface/sdkMosaic';
     import {copyTxt} from '@/utils/tools'
-    import {localSave, localRead} from '@/utils/util'
+    import {localSave, localRead, formatXEMamount} from '@/utils/util'
     import axios from 'axios'
     import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
     import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
@@ -235,18 +235,7 @@
             })
         }
 
-        formatXEMamount (XEMamount) {
-            if(XEMamount.includes('.')){
-                const decimal = XEMamount.split('.')[1]
-                if(decimal.length > 2){
-                    return Number(XEMamount).toFixed(2)
-                }else {
-                    return XEMamount
-                }
-            }else {
-                return XEMamount
-            }
-        }
+
 
         noticeComponent() {
             this.$Notice.destroy()
@@ -552,6 +541,10 @@
         setLeftSwitchIcon() {
             this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
 
+        }
+
+        formatXEMamount(text){
+            return formatXEMamount(text)
         }
 
         @Watch('getWallet')

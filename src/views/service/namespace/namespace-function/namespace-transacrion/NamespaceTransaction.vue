@@ -68,7 +68,7 @@
           <span class="key">{{$t('fee')}}</span>
           <span class="value">
               <input type="text" v-model="form.maxFee" :placeholder="$t('undefined')">
-            <span class="end_label">XEM</span>
+            <span class="end_label">gas</span>
           </span>
           <div class="tips">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}

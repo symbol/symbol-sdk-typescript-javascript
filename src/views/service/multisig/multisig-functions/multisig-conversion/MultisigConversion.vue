@@ -46,7 +46,7 @@
           </div>
           <div class="input_content">
             <input type="text" class="radius" placeholder="0.050000">
-            <span class="XEM_tag">XEM</span>
+            <span class="XEM_tag">gas</span>
           </div>
         </span>
       </div>

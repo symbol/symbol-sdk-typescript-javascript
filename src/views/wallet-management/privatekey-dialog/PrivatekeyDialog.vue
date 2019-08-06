@@ -132,7 +132,6 @@
             switch (this.stepIndex) {
                 case 0 :
                     if (!this.checkInput()) return
-                    console.log(Object.prototype.toString.call(this.getWallet.iv))
                     let saveData = {
                         ciphertext: this.getWallet.ciphertext,
                         iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,

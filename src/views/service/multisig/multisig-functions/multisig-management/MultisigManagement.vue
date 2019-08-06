@@ -63,7 +63,7 @@
         <div class="title">{{$t('fee')}}</div>
         <div class="manage_cosigner">
           <input type="text" placeholder="0.05000" class="radius">
-          <span class="xem_container">XEM</span>
+          <span class="xem_container">gas</span>
         </div>
         <div class="input_describe">
           {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
