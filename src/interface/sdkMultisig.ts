@@ -84,7 +84,6 @@ export const multisigInterface: SdkV0.multisig = {
         }
     },
 
-
     multisetCosignatoryModification: async (params) => {
         const {multisigPublickey, minApprovalDelta, minRemovalDelta, multisigCosignatoryModificationList, networkType, account, generationHash, node, listener, fee} = params
         const multisigPublicAccount = PublicAccount.createFromPublicKey(multisigPublickey, NetworkType.MIJIN_TEST)
@@ -211,7 +210,7 @@ export const multisigInterface: SdkV0.multisig = {
 
 
     completeCosignatoryModification: async (params) => {
-        const {multisigPublickey, minApprovalDelta, minRemovalDelta, networkType, account, generationHash, node, fee} = params
+        const {multisigPublickey, minApprovalDelta, minRemovalDelta, networkType, account, generationHash, node, fee,multisigCosignatoryModificationList} = params
         const multisigPublicAccount = PublicAccount.createFromPublicKey(
             multisigPublickey, networkType,
         );
@@ -219,7 +218,7 @@ export const multisigInterface: SdkV0.multisig = {
             Deadline.create(),
             Number(minApprovalDelta),
             Number(minRemovalDelta),
-            [],
+            multisigCosignatoryModificationList,
             networkType,
             UInt64.fromUint(fee)
         );
@@ -231,7 +230,7 @@ export const multisigInterface: SdkV0.multisig = {
             UInt64.fromUint(fee)
         );
         const signedTransaction = account.sign(aggregateTransaction, generationHash)
-        console.log(signedTransaction)
+        console.log(signedTransaction,'completeCosignatoryModification')
         const announceStatus = await new TransactionHttp(node).announce(signedTransaction);
 
         return {

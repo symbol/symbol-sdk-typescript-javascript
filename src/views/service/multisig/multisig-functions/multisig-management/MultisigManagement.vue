@@ -129,6 +129,7 @@
         currentAddress = ''
         currentMinApproval = 0
         currentCosignatoryList = []
+        hasAddCosigner = false
         publickeyList = [
             {
                 value: '',
@@ -171,6 +172,10 @@
             const {networkType} = this.$store.state.account.wallet
             const {generationHash, node} = this.$store.state.account
             const account = Account.createFromPrivateKey(privatekey, networkType)
+            const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
+                cosigner.type,
+                PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
+            ))
             multisigInterface.completeCosignatoryModification({
                 minApprovalDelta: minApproval,
                 minRemovalDelta: minRemoval,
@@ -179,7 +184,8 @@
                 generationHash: generationHash,
                 node: node,
                 fee: fee,
-                multisigPublickey: multisigPublickey
+                multisigPublickey: multisigPublickey,
+                multisigCosignatoryModificationList: multisigCosignatoryModificationList
             })
 
         }
@@ -211,14 +217,19 @@
 
 
         checkEnd(privatekey) {
+            const {hasAddCosigner} = this
+            const {cosignerList} = this.formItem
             if (this.currentMinApproval == 0) {
                 return
             }
-            if (this.currentMinApproval > 1 || this.currentCosignatoryList.length > 0) {
+            if (this.currentMinApproval > 1 || hasAddCosigner) {
+                console.log('bonded')
                 this.createBondedModifyTransaction(privatekey);
                 return
             }
+            console.log('complete')
             this.createCompleteModifyTransaction(privatekey);
+            return
 
         }
 
@@ -242,8 +253,11 @@
             if (cosignerList.length < 1) {
                 return true
             }
-
             const publickeyFlag = cosignerList.every((item) => {
+                if (item.type == MultisigCosignatoryModificationType.Add) {
+                    this.hasAddCosigner = true
+                }
+
                 if (item.publickey.trim().length !== 64) {
                     this.$Notice.error({title: this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + ''})
                     return false;
@@ -262,7 +276,6 @@
                 address,
                 node
             }).then((result) => {
-                console.log(result.result.multisigInfo)
                 that.publickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
                     item.value = item.publicKey
                     item.label = item.publicKey

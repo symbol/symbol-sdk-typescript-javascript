@@ -136,16 +136,16 @@ export var multisigInterface = {
         });
     }); },
     completeCosignatoryModification: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-        var multisigPublickey, minApprovalDelta, minRemovalDelta, networkType, account, generationHash, node, fee, multisigPublicAccount, modifyMultisigAccountTx, aggregateTransaction, signedTransaction, announceStatus;
+        var multisigPublickey, minApprovalDelta, minRemovalDelta, networkType, account, generationHash, node, fee, multisigCosignatoryModificationList, multisigPublicAccount, modifyMultisigAccountTx, aggregateTransaction, signedTransaction, announceStatus;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    multisigPublickey = params.multisigPublickey, minApprovalDelta = params.minApprovalDelta, minRemovalDelta = params.minRemovalDelta, networkType = params.networkType, account = params.account, generationHash = params.generationHash, node = params.node, fee = params.fee;
+                    multisigPublickey = params.multisigPublickey, minApprovalDelta = params.minApprovalDelta, minRemovalDelta = params.minRemovalDelta, networkType = params.networkType, account = params.account, generationHash = params.generationHash, node = params.node, fee = params.fee, multisigCosignatoryModificationList = params.multisigCosignatoryModificationList;
                     multisigPublicAccount = PublicAccount.createFromPublicKey(multisigPublickey, networkType);
-                    modifyMultisigAccountTx = ModifyMultisigAccountTransaction.create(Deadline.create(), Number(minApprovalDelta), Number(minRemovalDelta), [], networkType, UInt64.fromUint(fee));
+                    modifyMultisigAccountTx = ModifyMultisigAccountTransaction.create(Deadline.create(), Number(minApprovalDelta), Number(minRemovalDelta), multisigCosignatoryModificationList, networkType, UInt64.fromUint(fee));
                     aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(), [modifyMultisigAccountTx.toAggregate(multisigPublicAccount)], networkType, [], UInt64.fromUint(fee));
                     signedTransaction = account.sign(aggregateTransaction, generationHash);
-                    console.log(signedTransaction);
+                    console.log(signedTransaction, 'completeCosignatoryModification');
                     return [4 /*yield*/, new TransactionHttp(node).announce(signedTransaction)];
                 case 1:
                     announceStatus = _a.sent();

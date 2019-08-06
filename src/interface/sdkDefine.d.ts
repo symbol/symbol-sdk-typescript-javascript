@@ -476,7 +476,8 @@ declare namespace SdkV0 {
             generationHash: string,
             node: string
             fee: number,
-            multisigPublickey: string
+            multisigPublickey: string,
+            multisigCosignatoryModificationList:any
         }) => Rst<{
             result: any
         }>;
