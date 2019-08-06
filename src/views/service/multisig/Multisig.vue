@@ -11,7 +11,7 @@
       <MultisigMap v-show="buttonList[0].isSelected"></MultisigMap>
       <MultisigConversion v-show="buttonList[1].isSelected"></MultisigConversion>
       <MultisigManagement v-show="buttonList[2].isSelected"></MultisigManagement>
-      <MultisigCosign v-show="buttonList[3].isSelected"></MultisigCosign>
+      <!--<MultisigCosign v-show="buttonList[3].isSelected"></MultisigCosign>-->
     </div>
   </div>
 </template>
@@ -44,10 +44,10 @@
                 name: 'manage',
                 isSelected: false
             },
-            {
-                name: 'cosign',
-                isSelected: false
-            }
+            // {
+            //     name: 'cosign',
+            //     isSelected: false
+            // }
         ]
 
         switchButton(index) {
