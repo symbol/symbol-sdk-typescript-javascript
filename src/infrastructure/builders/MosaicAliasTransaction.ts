@@ -40,7 +40,7 @@ export class Builder {
     type: any;
     deadline: any;
     mosaicId: any;
-    actionType: any;
+    aliasAction: any;
     namespaceId: any;
     constructor() {
         this.maxFee = [0, 0];
@@ -67,8 +67,8 @@ export class Builder {
         return this;
     }
 
-    addActionType(actionType) {
-        this.actionType = actionType;
+    addAliasAction(aliasAction) {
+        this.aliasAction = aliasAction;
         return this;
     }
 
@@ -107,7 +107,7 @@ export class Builder {
         MosaicAliasTransactionBuffer.addType(builder, this.type);
         MosaicAliasTransactionBuffer.addFee(builder, feeVector);
         MosaicAliasTransactionBuffer.addDeadline(builder, deadlineVector);
-        MosaicAliasTransactionBuffer.addActionType(builder, this.actionType);
+        MosaicAliasTransactionBuffer.addAliasAction(builder, this.aliasAction);
         MosaicAliasTransactionBuffer.addNamespaceId(builder, namespaceIdVector);
         MosaicAliasTransactionBuffer.addMosaicId(builder, mosaicIdVector);
 

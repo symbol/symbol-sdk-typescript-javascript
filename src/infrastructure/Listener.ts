@@ -409,7 +409,7 @@ export class Listener {
     private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
         if (transaction instanceof ModifyMultisigAccountTransaction) {
             transaction.modifications.map((_: MultisigCosignatoryModification) => {
-                if (_.type === MultisigCosignatoryModificationType.Add && _.cosignatoryPublicAccount.address.equals(address)) {
+                if (_.modificiationType === MultisigCosignatoryModificationType.Add && _.cosignatoryPublicAccount.address.equals(address)) {
                     return true;
                 }
             });

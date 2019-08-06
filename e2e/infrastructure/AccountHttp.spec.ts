@@ -20,12 +20,12 @@ import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import { Account } from '../../src/model/account/Account';
 import {Address} from '../../src/model/account/Address';
+import {PublicAccount} from '../../src/model/account/PublicAccount';
 import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
 import { RestrictionType } from '../../src/model/account/RestrictionType';
-import {PublicAccount} from '../../src/model/account/PublicAccount';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
-import { AliasActionType } from '../../src/model/namespace/AliasActionType';
+import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
@@ -164,7 +164,7 @@ describe('AccountHttp', () => {
         it('Announce addressAliasTransaction', (done) => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Link,
+                AliasAction.Link,
                 namespaceId,
                 account.address,
                 NetworkType.MIJIN_TEST,
@@ -293,8 +293,8 @@ describe('AccountHttp', () => {
         });
     });
 
-    describe('getAccountRestrictions', () => {
-        it('should call getAccountRestrictions successfully', (done) => {
+    describe('getAccountRestrictionsFromAccounts', () => {
+        it('should call getAccountRestrictionsFromAccounts successfully', (done) => {
             setTimeout(() => {
                 accountHttp.getAccountRestrictionsFromAccounts([accountAddress]).subscribe((accountRestrictions) => {
                     deepEqual(accountRestrictions[0]!.accountRestrictions.address, accountAddress);
@@ -391,7 +391,7 @@ describe('AccountHttp', () => {
         it('Announce addressAliasTransaction', (done) => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Unlink,
+                AliasAction.Unlink,
                 namespaceId,
                 account.address,
                 NetworkType.MIJIN_TEST,

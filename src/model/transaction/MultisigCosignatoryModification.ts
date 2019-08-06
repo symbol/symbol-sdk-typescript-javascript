@@ -27,14 +27,14 @@ export class MultisigCosignatoryModification {
 
     /**
      * Constructor
-     * @param type
+     * @param modificiationType
      * @param cosignatoryPublicAccount
      */
     constructor(
                 /**
                  * Multi-signature modification type.
                  */
-                public readonly type: MultisigCosignatoryModificationType,
+                public readonly modificiationType: MultisigCosignatoryModificationType,
                 /**
                  * Cosignatory public account.
                  */
@@ -48,7 +48,7 @@ export class MultisigCosignatoryModification {
     toDTO() {
         return {
             cosignatoryPublicKey: this.cosignatoryPublicAccount.publicKey,
-            type: this.type,
+            modificiationType: this.modificiationType,
         };
     }
 }

@@ -124,7 +124,7 @@ const ValidateTransaction = {
             .to.be.equal(modifyMultisigAccountTransactionDTO.transaction.minRemovalDelta);
 
         deepEqual(modifyMultisigAccountTransaction.modifications[0], new MultisigCosignatoryModification(
-            modifyMultisigAccountTransactionDTO.transaction.modifications[0].type,
+            modifyMultisigAccountTransactionDTO.transaction.modifications[0].modificiationType,
             PublicAccount.createFromPublicKey(modifyMultisigAccountTransactionDTO.transaction.modifications[0].cosignatoryPublicKey,
                                               NetworkType.MIJIN_TEST),
             ),

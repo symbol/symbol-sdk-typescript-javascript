@@ -35,7 +35,7 @@ import {MosaicProperties} from '../../src/model/mosaic/MosaicProperties';
 import { MosaicRestrictionType } from '../../src/model/mosaic/MosaicRestrictionType';
 import {MosaicSupplyType} from '../../src/model/mosaic/MosaicSupplyType';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
-import { AliasActionType } from '../../src/model/namespace/AliasActionType';
+import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AccountAddressRestrictionModificationTransaction } from '../../src/model/transaction/AccountAddressRestrictionModificationTransaction';
 import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
@@ -755,7 +755,7 @@ describe('TransactionHttp', () => {
         it('standalone', (done) => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Link,
+                AliasAction.Link,
                 namespaceId,
                 account.address,
                 NetworkType.MIJIN_TEST,
@@ -764,7 +764,7 @@ describe('TransactionHttp', () => {
 
             listener.confirmed(account.address).subscribe((transaction: AddressAliasTransaction) => {
                 expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
-                expect(transaction.actionType, 'ActionType').not.to.be.undefined;
+                expect(transaction.aliasAction, 'AliasAction').not.to.be.undefined;
                 expect(transaction.address, 'Address').not.to.be.undefined;
                 done();
             });
@@ -788,7 +788,7 @@ describe('TransactionHttp', () => {
         it('aggregate', (done) => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Unlink,
+                AliasAction.Unlink,
                 namespaceId,
                 account.address,
                 NetworkType.MIJIN_TEST,
@@ -890,7 +890,7 @@ describe('TransactionHttp', () => {
         it('standalone', (done) => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Link,
+                AliasAction.Link,
                 namespaceId,
                 mosaicId,
                 NetworkType.MIJIN_TEST,
@@ -899,7 +899,7 @@ describe('TransactionHttp', () => {
 
             listener.confirmed(account.address).subscribe((transaction: MosaicAliasTransaction) => {
                 expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
-                expect(transaction.actionType, 'ActionType').not.to.be.undefined;
+                expect(transaction.aliasAction, 'AliasAction').not.to.be.undefined;
                 expect(transaction.mosaicId, 'MosaicId').not.to.be.undefined;
                 done();
             });
@@ -959,7 +959,7 @@ describe('TransactionHttp', () => {
         it('aggregate', (done) => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Unlink,
+                AliasAction.Unlink,
                 namespaceId,
                 mosaicId,
                 NetworkType.MIJIN_TEST,

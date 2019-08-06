@@ -45,11 +45,11 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.LINK_ACCOUNT:
             return {
                 remoteAccountKey: (transaction as AccountLinkTransaction).remoteAccountKey,
-                action: (transaction as AccountLinkTransaction).linkAction,
+                linkAction: (transaction as AccountLinkTransaction).linkAction,
             };
         case TransactionType.ADDRESS_ALIAS:
             return {
-                action: (transaction as AddressAliasTransaction).actionType,
+                aliasAction: (transaction as AddressAliasTransaction).aliasAction,
                 namespaceId: (transaction as AddressAliasTransaction).namespaceId.toDTO(),
                 address: (transaction as AddressAliasTransaction).address.toDTO(),
             };
@@ -103,7 +103,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.MOSAIC_ALIAS:
             return {
-                action: (transaction as MosaicAliasTransaction).actionType,
+                aliasAction: (transaction as MosaicAliasTransaction).aliasAction,
                 namespaceId: (transaction as MosaicAliasTransaction).namespaceId.toDTO(),
                 mosaicId: (transaction as MosaicAliasTransaction).mosaicId.toDTO(),
             };
