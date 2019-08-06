@@ -31,5 +31,11 @@ export default {
     OPERATION_FAILED_ERROR: 'operation_failed',
     NODE_NULL_ERROR: 'point_null_error',
     INPUT_EMPTY_ERROR: 'Any_information_cannot_be_empty',
+    CO_SIGNER_NULL_ERROR: 'co_signers_amount_less_than_0',
+    MIN_APPROVAL_LESS_THAN_0_ERROR: 'min_approval_amount_less_than_0',
+    MIN_REMOVAL_LESS_THAN_0_ERROR: 'min_removal_amount_less_than_0',
+    ILLEGAL_PUBLICKEY_ERROR: 'illegal_publickey_in_the_co_signed_list',
+    ILLEGAL_MIN_APPROVAL_ERROR: 'min_approval_amount_illegal',
+    ILLEGAL_MIN_REMOVAL_ERROR: 'min_removal_amount_illegal'
 };
 //# sourceMappingURL=Message.js.map

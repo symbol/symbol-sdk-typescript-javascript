@@ -14,8 +14,10 @@
         </div>
 
         <div class="multisig" v-if="transferTypeList[1].isSelect">
-          MULTISIG
+          <MultisigTransferTransaction></MultisigTransferTransaction>
         </div>
+
+
       </div>
 
     </div>
@@ -25,13 +27,15 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import TransferTransaction from './transactions/transfer-transaction/TransferTransaction.vue'
     import CollectionRecord from '@/components/CollectionRecord.vue'
+    import TransferTransaction from './transactions/transfer-transaction/TransferTransaction.vue'
+    import MultisigTransferTransaction from './transactions/multisig-transfer-transaction/MultisigTransferTransaction.vue'
 
     @Component({
         components: {
             TransferTransaction,
-            CollectionRecord
+            CollectionRecord,
+            MultisigTransferTransaction
         }
     })
     export default class Transfer extends Vue {
@@ -46,7 +50,7 @@
             }, {
                 name: 'Multisign_transfer',
                 isSelect: false,
-                disabled: true
+                disabled: false
             }, {
                 name: 'crosschain_transfer',
                 isSelect: false,

@@ -56,8 +56,8 @@ export const transactionInterface: SdkV0.transaction = {
 
 
   aggregateBondedTransaction: async (params) => {
-    const network = params.network;
-    const deadline = Deadline.create();
+    const network = params.network
+    const deadline = Deadline.create()
     const transactions = params.transactions;
     const aggregateBondedTransaction = await AggregateTransaction.createBonded(
       deadline,
@@ -164,4 +164,9 @@ export const transactionInterface: SdkV0.transaction = {
       }
     };
   },
+
+
+
+
+
 }

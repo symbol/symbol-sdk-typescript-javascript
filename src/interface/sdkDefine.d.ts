@@ -1,7 +1,23 @@
 import {
-    Address, AliasActionType, Deadline, MosaicId, NamespaceId, NamespaceType,
-    NetworkType, UInt64, Password, SimpleWallet, PublicAccount, Account, AccountInfo,
-    Transaction, SignedTransaction, MultisigAccountInfo, MultisigAccountGraphInfo,Listener
+    Address,
+    AliasActionType,
+    Deadline,
+    MosaicId,
+    NamespaceId,
+    NamespaceType,
+    NetworkType,
+    UInt64,
+    Password,
+    SimpleWallet,
+    PublicAccount,
+    Account,
+    AccountInfo,
+    Transaction,
+    SignedTransaction,
+    MultisigAccountInfo,
+    MultisigAccountGraphInfo,
+    Listener,
+    MultisigCosignatoryModification
 } from 'nem2-sdk'
 
 declare namespace SdkV0 {
@@ -411,7 +427,7 @@ declare namespace SdkV0 {
         newBlock: (
             params: {
                 listener: Listener,
-                pointer:any
+                pointer: any
             }
         ) => Rst<{
             blockInfo: any
@@ -419,6 +435,64 @@ declare namespace SdkV0 {
     }
 
     interface multisig {
+        covertToBeMultisig: (params: {
+            minApprovalDelta: number,
+            minRemovalDelta: number,
+            multisigCosignatoryModificationList: Array<MultisigCosignatoryModification>,
+            networkType: NetworkType,
+            account: Account,
+            generationHash: string,
+            node: string
+            listener: Listener
+            fee: number
+        }) => Rst<{
+            result: any
+        }>;
+        getMultisigAccountInfo: (params: {
+            address: string
+            node: string
+        }) => Rst<{
+            multisigInfo: any
+        }>;
+        multisetCosignatoryModification: (params: {
+            minApprovalDelta: number,
+            minRemovalDelta: number,
+            multisigCosignatoryModificationList: Array<MultisigCosignatoryModification>,
+            networkType: NetworkType,
+            account: Account,
+            generationHash: string,
+            node: string
+            listener: Listener
+            fee: number,
+            multisigPublickey:string
+        }) => Rst<{
+           result: any
+        }>;
+        completeCosignatoryModification: (params: {
+            minApprovalDelta: number,
+            minRemovalDelta: number,
+            networkType: NetworkType,
+            account: Account,
+            generationHash: string,
+            node: string
+            fee: number,
+            multisigPublickey:string
+        }) => Rst<{
+            result: any
+        }>;
+        completeTransaction: (params: {
+            networkType: NetworkType,
+            account: Account,
+            generationHash: string,
+            node: string
+            fee: number,
+            multisigPublickey:string,
+            transaction:any,
+            listener:Listener
+        }) => Rst<{
+            result: any
+        }>;
+
     }
 
     //   wsIsOpen:(params:{

@@ -141,7 +141,7 @@
           <span class="title">{{$t('fee')}}</span>
           <span class="value radius">
           <input placeholder="0.050000" type="text">
-          <span class="right">XEM</span>
+          <span class="right">gas</span>
         </span>
         </div>
         <div class="tips red right">

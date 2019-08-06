@@ -565,4 +565,12 @@ export const zh_CN = {
     //input lock
 
 
+    //todo
+    co_signers_amount_less_than_0:'共签人数不可小于1',
+    min_approval_amount_less_than_0:'Min approval 不可小于1',
+    min_removal_amount_less_than_0:'Min removal 不可小于1',
+    illegal_publickey_in_the_co_signed_list:'共签列表中存在不合法的账户公钥',
+    min_approval_amount_illegal:'Min approval 必须为数字',
+    min_removal_amount_illegal:'Min removal 必须为数字',
+
 }
