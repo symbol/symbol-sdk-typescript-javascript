@@ -12,11 +12,29 @@ export const wsInterface: SdkV0.ws = {
             }
         }
     },
-    listenerTx: async (params) => {
+    listenerUnconfirmed: async (params) => {
         const listener = params.listener;
         listener.open().then(() => {
             listener
-                [params.txType+'('+params.address+')']
+                .unconfirmedAdded(params.address)
+                .pipe(
+                    filter((transaction: any) => transaction.transactionInfo !== undefined)
+                )
+                .subscribe(transactionInfo => {
+                    params.fn(transactionInfo)
+                })
+        })
+        return {
+            result: {
+                ws: 'Ok'
+            }
+        }
+    },
+    listenerConfirmed: async (params) => {
+        const listener = params.listener;
+        listener.open().then(() => {
+            listener
+                .confirmed(params.address)
                 .pipe(
                     filter((transaction: any) => transaction.transactionInfo !== undefined)
                 )

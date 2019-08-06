@@ -120,8 +120,7 @@
         }
 
         setDefaultPage(){
-            const name = this.$route.params.name
-            console.log(this.$route.params)
+            const name = this.$route.params['name']
             if(name == 'walletImportKeystore'){
                 this.toImport()
                 return

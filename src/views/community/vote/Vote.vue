@@ -141,11 +141,11 @@
           <span class="title">{{$t('fee')}}</span>
           <span class="value radius">
           <input placeholder="0.050000" type="text">
-          <span class="right">XEM</span>
+          <span class="right">gas</span>
         </span>
         </div>
         <div class="tips red right">
-          {{$t('the_default_is')}}:0.05000XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+          {{$t('the_default_is')}}:50000gas，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
         </div>
 
         <div class="create_button">

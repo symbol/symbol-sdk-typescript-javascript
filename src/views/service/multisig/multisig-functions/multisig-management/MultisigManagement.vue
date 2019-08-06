@@ -64,8 +64,8 @@
       <div class="form_item input_fee">
         <div class="title">{{$t('fee')}}</div>
         <div class="manage_cosigner">
-          <input type="text" v-model="formItem.fee" placeholder="0.05000" class="radius">
-          <span class="xem_container">XEM</span>
+          <input type="text" v-model="formItem.fee" placeholder="50000" class="radius">
+          <span class="xem_container">gas</span>
         </div>
         <div class="input_describe">
           {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}

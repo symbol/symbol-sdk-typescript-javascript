@@ -17,7 +17,7 @@
       <div class="table_body">
         <div class="table_body_item radius" v-for="n in namespaceList">
           <span class="namesapce_name">{{n.name}}</span>
-          <span class="duration">{{n.duration}}</span>
+          <span class="duration">{{computeDuration(n.duration)}} ({{durationToTime(n.duration)}})</span>
           <!--        // TODO-->
           <span class="more">
             <Poptip class="poptip_container" placement="top-start">
@@ -46,7 +46,9 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
+    import {formatSeconds} from '@/utils/util.js'
     import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
+    import Message from "@/message/Message";
 
     @Component({
         components: {
@@ -61,6 +63,10 @@
             return this.$store.state.account.namespace
         }
 
+        get nowBlockHeihgt () {
+            return this.$store.state.app.chainStatus.currentHeight
+        }
+
         showEditDialog(namespaceName) {
             this.currentNamespaceName = namespaceName
             this.showNamespaceEditDialog = true
@@ -68,6 +74,25 @@
 
         closeNamespaceEditDialog() {
             this.showNamespaceEditDialog = false
+        }
+
+        computeDuration (duration) {
+            let expireTime = duration - this.nowBlockHeihgt > 0 ? duration - this.nowBlockHeihgt : 'Expired'
+            return expireTime
+        }
+
+        durationToTime(duration) {
+            const durationNum = Number(duration)
+            if (Number.isNaN(durationNum)) {
+                return duration
+            }
+            if (durationNum * 12 >= 60 * 60 * 24 * 3650) {
+                this.$Notice.error({
+                    title: this.$t(Message.DURATION_MORE_THAN_10_YEARS_ERROR) + ''
+                })
+            }
+            return formatSeconds(durationNum * 12)
+
         }
     }
 </script>

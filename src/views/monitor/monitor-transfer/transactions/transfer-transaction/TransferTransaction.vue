@@ -38,8 +38,8 @@
     <div class="fee flex_center">
       <span class="title">{{$t('fee')}}</span>
       <span class="value radius flex_center">
-              <input v-model="fee" placeholder="0.050000" type="text">
-              <span class="uint">XEM</span>
+              <input v-model="fee" placeholder="50000" type="text">
+              <span class="uint">gas</span>
             </span>
     </div>
     <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>

@@ -91,6 +91,10 @@
             return this.$store.state.account.wallet
         }
 
+        get ConfirmedTxList () {
+            return this.$store.state.account.ConfirmedTx
+        }
+
         showCheckDialog() {
             this.showCheckPWDialog = true
         }
@@ -188,6 +192,11 @@
         @Watch('getWallet')
         onGetWalletChange() {
             this.initData()
+            this.getMosaicList()
+        }
+
+        @Watch('ConfirmedTxList')
+        onConfirmedTxChange() {
             this.getMosaicList()
         }
 

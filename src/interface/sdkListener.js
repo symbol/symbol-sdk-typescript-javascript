@@ -15,12 +15,32 @@ export var wsInterface = {
                 }];
         });
     }); },
-    listenerTx: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+    listenerUnconfirmed: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var listener;
         return tslib_1.__generator(this, function (_a) {
             listener = params.listener;
             listener.open().then(function () {
-                listener[params.txType + '(' + params.address + ')']
+                listener
+                    .unconfirmedAdded(params.address)
+                    .pipe(filter(function (transaction) { return transaction.transactionInfo !== undefined; }))
+                    .subscribe(function (transactionInfo) {
+                    params.fn(transactionInfo);
+                });
+            });
+            return [2 /*return*/, {
+                    result: {
+                        ws: 'Ok'
+                    }
+                }];
+        });
+    }); },
+    listenerConfirmed: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        var listener;
+        return tslib_1.__generator(this, function (_a) {
+            listener = params.listener;
+            listener.open().then(function () {
+                listener
+                    .confirmed(params.address)
                     .pipe(filter(function (transaction) { return transaction.transactionInfo !== undefined; }))
                     .subscribe(function (transactionInfo) {
                     params.fn(transactionInfo);
