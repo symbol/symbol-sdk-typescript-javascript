@@ -521,7 +521,6 @@ export var zh_CN = {
     add_entity_type: '添加交易类型',
     Any_information_cannot_be_empty: '任意信息不能为空',
     success: '成功',
-    //todo
     co_signers_amount_less_than_0: '共签人数不可小于1',
     min_approval_amount_less_than_0: 'Min approval 不可小于1',
     min_removal_amount_less_than_0: 'Min removal 不可小于1',

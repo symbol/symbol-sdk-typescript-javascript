@@ -163,11 +163,11 @@
                 this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR))
                 return false
             }
-            if (!Number(amount) || Number(amount) < 0) {
+            if ((!Number(amount) && Number(amount) !== 0)|| Number(amount) < 0) {
                 this.showErrorMessage(this.$t(Message.AMOUNT_LESS_THAN_0_ERROR))
                 return false
             }
-            if (fee < 0) {
+            if ((!Number(fee) && Number(fee) !== 0)|| Number(fee) < 0) {
                 this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
                 return false
             }

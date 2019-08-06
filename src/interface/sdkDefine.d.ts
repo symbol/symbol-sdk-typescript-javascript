@@ -458,9 +458,9 @@ declare namespace SdkV0 {
             node: string
             listener: Listener
             fee: number,
-            multisigPublickey:string
+            multisigPublickey: string
         }) => Rst<{
-           result: any
+            result: any
         }>;
         completeCosignatoryModification: (params: {
             minApprovalDelta: number,
@@ -470,23 +470,34 @@ declare namespace SdkV0 {
             generationHash: string,
             node: string
             fee: number,
-            multisigPublickey:string
+            multisigPublickey: string
         }) => Rst<{
             result: any
         }>;
-        completeTransaction: (params: {
+        completeMultisigTransaction: (params: {
             networkType: NetworkType,
             account: Account,
             generationHash: string,
             node: string
             fee: number,
-            multisigPublickey:string,
-            transaction:any,
-            listener:Listener
+            multisigPublickey: string,
+            transaction: any,
+            listener: Listener
         }) => Rst<{
             result: any
         }>;
-
+        bondedMultisigTransaction: (params: {
+            networkType: NetworkType,
+            account: Account,
+            generationHash: string,
+            node: string
+            fee: number,
+            multisigPublickey: string,
+            transaction: any,
+            listener: Listener
+        }) => Rst<{
+            result: any
+        }>;
     }
 
     //   wsIsOpen:(params:{

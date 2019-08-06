@@ -66,6 +66,12 @@
 </template>
 
 <script lang="ts">
+    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
+    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {multisigInterface} from '@/interface/sdkMultisig'
+    import {accountInterface} from '@/interface/sdkAccount'
+    import {mosaicInterface} from '@/interface/sdkMosaic'
+    import Message from "@/message/Message";
     import {
         Account,
         Mosaic,
@@ -76,23 +82,8 @@
         PlainMessage,
         Address,
         Deadline,
-        NamespaceId,
-        Id,
-        NamespaceMosaicIdGenerator,
-        MultisigCosignatoryModification,
-        PublicAccount,
-        Deadline,
         Listener,
     } from 'nem2-sdk'
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import {accountInterface} from '@/interface/sdkAccount'
-    import {mosaicInterface} from '@/interface/sdkMosaic'
-    import {transactionInterface} from '@/interface/sdkTransaction'
-    import {blockchainInterface} from '@/interface/sdkBlockchain'
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
-    import Message from "@/message/Message";
-    import {multisigInterface} from '@/interface/sdkMultisig'
-
 
     @Component({
         components: {
@@ -139,13 +130,18 @@
         }
 
         sendTransaction(privatekey) {
+
+            if (this.currentMinApproval == 0) {
+                return
+            }
+
+
             const that = this
             const {networkType} = this.$store.state.account.wallet
             const {generationHash, node} = this.$store.state.account
             const account = Account.createFromPrivateKey(privatekey, networkType)
-            let {address, fee, mosaic, amount, remark,multisigPublickey} = this
+            let {address, fee, mosaic, amount, remark, multisigPublickey} = this
             const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-
             const transaction = TransferTransaction.create(
                 Deadline.create(),
                 Address.createFromRawAddress(address),
@@ -155,7 +151,20 @@
                 UInt64.fromUint(fee)
             )
 
-            multisigInterface.completeTransaction({
+            if (this.currentMinApproval > 1) {
+                multisigInterface.bondedMultisigTransaction({
+                    networkType: networkType,
+                    account: account,
+                    generationHash: generationHash,
+                    node: node,
+                    fee: fee,
+                    multisigPublickey: multisigPublickey,
+                    transaction: transaction,
+                    listener: listener
+                })
+                return
+            }
+            multisigInterface.completeMultisigTransaction({
                 networkType: networkType,
                 account: account,
                 generationHash: generationHash,
@@ -165,33 +174,6 @@
                 transaction: transaction,
                 listener: listener
             })
-
-            // transactionInterface.transferTransaction({
-            //     network: this.getWallet.networkType,
-            //     MaxFee: fee,
-            //     receive: address,
-            //     MessageType: 0,
-            //     mosaics: [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(amount))],
-            //     message: remark
-            // }).then((transactionResult) => {
-            //     // sign tx
-            //     const transaction = transactionResult.result.transferTransaction
-            //     // const transaction = tx
-            //     console.log(transaction)
-            //     const signature = account.sign(transaction, generationHash)
-            //     // send tx
-            //     transactionInterface.announce({signature, node}).then((announceResult) => {
-            //         // get announce status
-            //         announceResult.result.announceStatus.subscribe((announceInfo: any) => {
-            //             console.log(signature)
-            //             that.$Notice.success({
-            //                 title: this.$t(Message.SUCCESS) + ''
-            //             })
-            //             that.initForm()
-            //         })
-            //     })
-            //
-            // })
         }
 
 
@@ -242,11 +224,11 @@
                 this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR))
                 return false
             }
-            if (!Number(amount) || Number(amount) < 0) {
+            if ((!Number(amount) && Number(amount) !== 0)|| Number(amount) < 0) {
                 this.showErrorMessage(this.$t(Message.AMOUNT_LESS_THAN_0_ERROR))
                 return false
             }
-            if (fee < 0) {
+            if ((!Number(fee) && Number(fee) !== 0)|| Number(fee) < 0) {
                 this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
                 return false
             }

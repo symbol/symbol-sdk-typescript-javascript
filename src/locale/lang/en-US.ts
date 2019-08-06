@@ -559,6 +559,10 @@ export const en_US = {
     add_entity_type: 'Add entity type',
     Any_information_cannot_be_empty: 'Any information cannot be empty',
     success: 'Success',
-
-
+    co_signers_amount_less_than_0: 'The number of co-signers cannot be less than 1',
+    min_approval_amount_less_than_0: 'Min approval cannot be less than 1',
+    min_removal_amount_less_than_0: 'Min removal cannot be less than 1',
+    illegal_publickey_in_the_co_signed_list: 'There is an illegal account public key in the co-signed list',
+    min_approval_amount_illegal: 'Min approval must be a number',
+    min_removal_amount_illegal: 'Min removal must be a number',
 }
