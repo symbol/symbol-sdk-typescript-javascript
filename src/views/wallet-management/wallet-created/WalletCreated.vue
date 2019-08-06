@@ -187,9 +187,9 @@
             }
             if (JSON.stringify(childWord) != JSON.stringify(this.mnemonic)) {
                 if (childWord.length < 1) {
-                    this.$Message.warning(Message.PLEASE_ENTER_MNEMONIC_INFO);
+                    this.$Notice.warning({title:''+this.$t(Message.PLEASE_ENTER_MNEMONIC_INFO)})
                 } else {
-                    this.$Message.warning(Message.MNEMONIC_INCONSISTENCY_ERROR);
+                    this.$Notice.warning({title:''+this.$t(Message.MNEMONIC_INCONSISTENCY_ERROR)})
                 }
                 return false
             }

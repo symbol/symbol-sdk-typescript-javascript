@@ -1,22 +1,34 @@
 <template>
   <div class="transfer" @click="isShowSubAlias=false">
 
+
+    <div class="address flex_center">
+      <span class="title">{{$t('Public_account')}}</span>
+      <span class="value radius flex_center">
+              <Select placeholder="" v-model="multisigPublickey" :placeholder="$t('Public_account')" class="asset_type">
+            <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">
+              {{ item.label }}
+            </Option>
+           </Select>
+            </span>
+    </div>
+
+
     <div class="address flex_center">
       <span class="title">{{$t('transfer_target')}}</span>
       <span class="value radius flex_center">
               <input type="text" v-model="address" :placeholder="$t('receive_address_or_alias')">
-        <!--              <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>-->
-        <!--               <div v-if="isShowSubAlias" class="selections">-->
-        <!--            </div>-->
             </span>
     </div>
+
+
     <div class="asset flex_center">
       <span class="title">{{$t('asset_type')}}</span>
 
 
       <span>
         <span class="type value radius flex_center">
-          <Select placeholder="" v-model="mosaic" class="asset_type">
+          <Select v-model="mosaic" :placeholder="$t('asset_type')" class="asset_type">
             <Option v-for="item in mosaicList" :value="item.value" :key="item.value">
               {{ item.label }}
             </Option>
@@ -66,7 +78,11 @@
         Deadline,
         NamespaceId,
         Id,
-        NamespaceMosaicIdGenerator
+        NamespaceMosaicIdGenerator,
+        MultisigCosignatoryModification,
+        PublicAccount,
+        Deadline,
+        Listener,
     } from 'nem2-sdk'
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {accountInterface} from '@/interface/sdkAccount'
@@ -75,6 +91,7 @@
     import {blockchainInterface} from '@/interface/sdkBlockchain'
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
     import Message from "@/message/Message";
+    import {multisigInterface} from '@/interface/sdkMultisig'
 
 
     @Component({
@@ -85,21 +102,22 @@
     export default class TransferTransactionCompoent extends Vue {
         showCheckPWDialog = false
 
-
+        currentCosignatoryList = []
+        multisigPublickeyList = []
+        multisigPublickey = ''
         accountPublicKey = ''
         accountAddress = ''
         node = ''
         currentXem = ''
-
         address = 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC'
         mosaic: any = ''
         amount: any = '0'
         remark = ''
         fee: any = '10000000'
         generationHash = ''
-
         isShowSubAlias = false
         mosaicList = []
+        currentMinApproval = 0
 
         get getWallet() {
             return this.$store.state.account.wallet
@@ -120,38 +138,99 @@
             this.showCheckPWDialog = true
         }
 
-        sendTransaction(key) {
+        sendTransaction(privatekey) {
             const that = this
-            let {accountPublicKey, accountAddress, node, address, mosaic, amount, remark, fee, generationHash} = this
-            const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
+            const {networkType} = this.$store.state.account.wallet
+            const {generationHash, node} = this.$store.state.account
+            const account = Account.createFromPrivateKey(privatekey, networkType)
+            let {address, fee, mosaic, amount, remark,multisigPublickey} = this
+            const listener = new Listener(node.replace('http', 'ws'), WebSocket)
 
-            transactionInterface.transferTransaction({
-                network: this.getWallet.networkType,
-                MaxFee: fee,
-                receive: address,
-                MessageType: 0,
-                mosaics: [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(amount))],
-                message: remark
-            }).then((transactionResult) => {
-                // sign tx
-                const transaction = transactionResult.result.transferTransaction
-                // const transaction = tx
-                console.log(transaction)
-                const signature = account.sign(transaction, generationHash)
-                // send tx
-                transactionInterface.announce({signature, node}).then((announceResult) => {
-                    // get announce status
-                    announceResult.result.announceStatus.subscribe((announceInfo: any) => {
-                        console.log(signature)
-                        that.$Notice.success({
-                            title: this.$t(Message.SUCCESS) + ''
-                        })
-                        that.initForm()
-                    })
+            const transaction = TransferTransaction.create(
+                Deadline.create(),
+                Address.createFromRawAddress(address),
+                [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(amount))],
+                PlainMessage.create(remark),
+                networkType,
+                UInt64.fromUint(fee)
+            )
+
+            multisigInterface.completeTransaction({
+                networkType: networkType,
+                account: account,
+                generationHash: generationHash,
+                node: node,
+                fee: fee,
+                multisigPublickey: multisigPublickey,
+                transaction: transaction,
+                listener: listener
+            })
+
+            // transactionInterface.transferTransaction({
+            //     network: this.getWallet.networkType,
+            //     MaxFee: fee,
+            //     receive: address,
+            //     MessageType: 0,
+            //     mosaics: [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(amount))],
+            //     message: remark
+            // }).then((transactionResult) => {
+            //     // sign tx
+            //     const transaction = transactionResult.result.transferTransaction
+            //     // const transaction = tx
+            //     console.log(transaction)
+            //     const signature = account.sign(transaction, generationHash)
+            //     // send tx
+            //     transactionInterface.announce({signature, node}).then((announceResult) => {
+            //         // get announce status
+            //         announceResult.result.announceStatus.subscribe((announceInfo: any) => {
+            //             console.log(signature)
+            //             that.$Notice.success({
+            //                 title: this.$t(Message.SUCCESS) + ''
+            //             })
+            //             that.initForm()
+            //         })
+            //     })
+            //
+            // })
+        }
+
+
+        getMultisigAccountList() {
+            const that = this
+            const {address} = this.$store.state.account.wallet
+            const {node} = this.$store.state.account
+
+            multisigInterface.getMultisigAccountInfo({
+                address,
+                node
+            }).then((result) => {
+                console.log(result.result.multisigInfo)
+                that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
+                    item.value = item.publicKey
+                    item.label = item.publicKey
+                    return item
                 })
-
             })
         }
+
+        @Watch('multisigPublickey')
+        async onMultisigPublickeyChange() {
+            const that = this
+            const {multisigPublickey} = this
+            const {networkType} = this.$store.state.account.wallet
+            const {node} = this.$store.state.account
+            let address = Address.createFromPublicKey(multisigPublickey, networkType).address
+            multisigInterface.getMultisigAccountInfo({
+                address,
+                node
+            }).then((result) => {
+                const currentMultisigAccount = result.result.multisigInfo
+                that.currentMinApproval = currentMultisigAccount.minApproval
+                that.currentCosignatoryList = currentMultisigAccount.cosignatories
+            })
+
+        }
+
 
         checkForm() {
             const {address, mosaic, amount, remark, fee} = this
@@ -217,61 +296,6 @@
                         })
                     }
                     that.mosaicList = mosaicList
-                    // get namespace
-                    // mosaicInterface.getMosaicsNames({
-                    //     node,
-                    //     mosaicIds: m
-                    // }).then((mosaicsNamesResult: any) => {
-                    //     mosaicsNamesResult.result.mosaicsNamesInfos.subscribe((mosaicsNamesInfo) => {
-                    //         mosaicsNamesInfo.forEach(item => {
-                    //             item.value = item.mosaicId.toHex()
-                    //             // no namespace
-                    //             if (item.names.length == 0) {
-                    //                 item.label = item.value
-                    //                 mosaicList.push(item)
-                    //             } else {
-                    //                 // 1 or more namespace
-                    //                 item.names.forEach(nameItem => {
-                    //                     item.label = nameItem.name
-                    //                     mosaicList.push(item)
-                    //                 })
-                    //             }
-                    //         })
-                    //         that.mosaicList = mosaicList
-                    //     })
-                    // }).catch(()=>{
-                    //     console.log('no alias in namespace')
-                    // })
-
-
-                    // get nem.xem
-                    // this.getNamespace (currentXem, mosaicIdList , currentXEM1, currentXEM2, mosaicList)
-
-
-                    // get cuurent xem   cat.currency
-                    // let currentXEMHex = ''
-                    // cat.currecy error
-                    // mosaicInterface.getcurrentXEM({node}).then((result: any) => {
-                    //     let id = result.result.currentXEM.id.id
-                    //     const uintArray = [id.lower, id.higher]
-                    //     currentXEMHex = new Id(uintArray).toHex()
-                    //     let isCrrentXEMExists = true
-                    //     isCrrentXEMExists = mosaicIdList.every((item) => {
-                    //         if (item.value == currentXEMHex) {
-                    //             return false
-                    //         }
-                    //         return true
-                    //     })
-                    //     if (isCrrentXEMExists) {
-                    //         mosaicIdList.push({
-                    //             label: result.result.currentXEM.id.fullName,
-                    //             value: currentXEMHex
-                    //         })
-                    //     }
-                    //     that.mosaicList = mosaicIdList
-                    // })
-
-
                 }, () => {
                     let mosaicList = []
                     mosaicList.unshift({
@@ -279,7 +303,6 @@
                         label: 'nem.xem'
                     })
                     that.mosaicList = mosaicList
-                    // this.getNamespace (currentXem, mosaicIdList , currentXEM1, currentXEM2, mosaicList)
                 })
             })
         }
@@ -299,13 +322,6 @@
                     }
                     return true
                 })
-                // if (!isCrrentXEMExists) {
-                //     mosaicList.splice(spliceIndex, 1)
-                //     mosaicList.push({
-                //         label: currentXem,
-                //         value: currentXEMHex
-                //     })
-                // }
                 that.mosaicList = mosaicList
                 that.mosaic = currentXEMHex
             })
@@ -344,10 +360,11 @@
             // this.initForm()
             this.initData()
             this.getMosaicList()
+            this.getMultisigAccountList()
         }
 
     }
 </script>
 <style scoped lang="less">
-  @import "TransferTransaction.less";
+  @import "MultisigTransferTransaction.less";
 </style>

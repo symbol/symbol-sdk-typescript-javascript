@@ -123,14 +123,15 @@ export const formatNemDeadline = function (deadline) {
 }
 
 
-export const formatTransactions = function (transactionList, accountPublicKey) {
+export const formatTransactions = function (transactionList, accountAddress) {
   const that = this
   let transferTransaction = []
   transactionList.map((item) => {
     if (item.type == TransactionType.TRANSFER) {
-      item.isReceipt = item.recipient.address == accountPublicKey ? true : false
-      item.oppositeAddress = item.signer.address.address
+      item.isReceipt = item.recipient.address == accountAddress ? true : false
+      item.signerAddress = item.signer.address.address
       item.recipientAddress = item.recipient.address
+      item.oppositeAddress = item.isReceipt ? item.signerAddress : item.recipient.address
       item.target = 'my wallet name'
       item.time = formatNemDeadline(item.deadline)
       item.mosaic = item.mosaics.length == 0 ? false : item.mosaics[0]
@@ -140,23 +141,23 @@ export const formatTransactions = function (transactionList, accountPublicKey) {
   })
   return transferTransaction
 }
-export const formatAddress = function(address) {
-    let txt = ''
-    let formatAress = []
-    address.split('').map((item, index)=>{
-        if((index+1) % 6 === 0){
-            txt += item + '-'
-            formatAress.push(txt)
-            txt = ''
-        }else if(index === address.length - 1){
-            txt += item
-            formatAress.push(txt)
-        }else {
-            txt += item
-        }
+export const formatAddress = function (address) {
+  let txt = ''
+  let formatAress = []
+  address.split('').map((item, index) => {
+    if ((index + 1) % 6 === 0) {
+      txt += item + '-'
+      formatAress.push(txt)
+      txt = ''
+    } else if (index === address.length - 1) {
+      txt += item
+      formatAress.push(txt)
+    } else {
+      txt += item
+    }
 
-    })
-    return formatAress.join('')
+  })
+  return formatAress.join('')
 }
 
 export const getCurrentMonthFirst = function (date) {
@@ -203,15 +204,15 @@ export const formatSeconds = function (second) {
   }
   // let result = second + vueInstance.$t('time_second');
   let result = second + ' s '
-  if (m > 0 || h > 0 || d > 0 ) {
+  if (m > 0 || h > 0 || d > 0) {
     // result = m + vueInstance.$t('time_minute') + result;
     result = m + ' m ' + result;
   }
-  if ( h > 0 || d > 0 ) {
+  if (h > 0 || d > 0) {
     // result = h + vueInstance.$t('time_hour') + result;
     result = h + ' h ' + result;
   }
-  if (d > 0 ) {
+  if (d > 0) {
     // result = d + vueInstance.$t('time_day') + result;
     result = d + ' d ' + result;
   }

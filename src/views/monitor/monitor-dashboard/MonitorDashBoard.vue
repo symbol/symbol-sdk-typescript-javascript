@@ -46,7 +46,7 @@
         <span @click="switchTransactionPanel(true)"
               :class="['pointer',showConfirmedTransactions?'selected':'','page_title']">
           {{$t('confirmed_transaction')}}
-          <span v-if="showConfirmedTransactions"  class="transacrion_num">
+          <span v-if="showConfirmedTransactions" class="transacrion_num">
             <span>{{confirmedDataAmount}}</span>
           </span>
         </span>
@@ -71,13 +71,16 @@
           <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
           <div class="table_body hide_scroll" ref="confirmedTableBody">
             <div class="table_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">
-              <img class="mosaic_action" v-if="c.isReceipt" src="../../../assets/images/monitor/dash-board/dashboardMosaicOut.png" alt="">
-              <img class="mosaic_action" v-else src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
+              <img class="mosaic_action" v-if="!c.isReceipt"
+                   src="@/assets/images/monitor/dash-board/dashboardMosaicOut.png" alt="">
+              <img class="mosaic_action" v-else src="@/assets/images/monitor/dash-board/dashboardMosaicIn.png"
+                   alt="">
               <span class="account">{{c.oppositeAddress}}</span>
               <span class="transfer_type">{{c.isReceipt ? $t('gathering'):$t('payment')}}</span>
-              <span class="amount" v-if="c.mosaic">{{c.isReceipt ? '-':'+'}}{{c.mosaic.amount.compact()}}</span>
+              <span class="amount" v-if="c.mosaic">{{c.isReceipt ? '+':'-'}}{{c.mosaic.amount.compact()}}</span>
+              <span v-else class="amount"> 0</span>
               <span class="date">{{c.time}}</span>
-              <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
+              <img src="@/assets/images/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">
             </div>
             <div class="no_data" v-if="confirmedTransactionList.length == 0">
@@ -91,13 +94,15 @@
           <div class="table_body hide_scroll" ref="unconfirmedTableBody">
             <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in unconfirmedTransactionList"
                  :key="index">
-              <img class="mosaic_action" v-if="u.isReceipt" src="../../../assets/images/monitor/dash-board/dashboardMosaicOut.png" alt="">
-              <img class="mosaic_action" v-else src="../../../assets/images/monitor/dash-board/dashboardMosaicIn.png" alt="">
+              <img class="mosaic_action" v-if="u.isReceipt"
+                   src="@/assets/images/monitor/dash-board/dashboardMosaicOut.png" alt="">
+              <img class="mosaic_action" v-else src="@/assets/images/monitor/dash-board/dashboardMosaicIn.png"
+                   alt="">
               <span class="account">{{u.oppositeAddress}}</span>
               <span class="transfer_type">{{u.isReceipt ? $t('gathering'):$t('payment')}}</span>
               <span class="amount">{{u.isReceipt ? '-':'+'}}{{u.mosaic.amount.compact()}}</span>
               <span class="date">{{u.time}}</span>
-              <img src="../../../assets/images/monitor/dash-board/dashboardExpand.png"
+              <img src="@/assets/images/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">
             </div>
             <div class="no_data" v-if="unconfirmedTransactionList.length == 0">
@@ -235,7 +240,8 @@
                 },
                 {
                     key: 'from',
-                    value: transaction.oppositeAddress
+                    //todo
+                    value: transaction.signerAddress
                 },
                 {
                     key: 'aims',
@@ -330,7 +336,7 @@
                 }
             }).then((transactionsResult) => {
                 transactionsResult.result.transactions.subscribe((transactionsInfo) => {
-                    let transferTransaction = formatTransactions(transactionsInfo, accountPublicKey)
+                    let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
                     that.confirmedDataAmount = transferTransaction.length
                     that.confirmedTransactionList = transferTransaction
                     that.isLoadingConfirmedTx = false
@@ -350,7 +356,7 @@
                 }
             }).then((transactionsResult) => {
                 transactionsResult.result.unconfirmedTransactions.subscribe((unconfirmedtransactionsInfo) => {
-                    let transferTransaction = formatTransactions(unconfirmedtransactionsInfo, accountPublicKey)
+                    let transferTransaction = formatTransactions(unconfirmedtransactionsInfo, accountAddress)
                     that.unconfirmedDataAmount = transferTransaction.length
                     that.unconfirmedTransactionList = transferTransaction
                     that.isLoadingUnconfirmedTx = false

@@ -22,6 +22,7 @@
           </div>
           <div class="input_content">
             <input type="text" class="radius"
+                   v-model="formItem.minApproval"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')">
           </div>
         </span>
@@ -33,6 +34,7 @@
           </div>
           <div class="input_content">
             <input type="text" class="radius"
+                   v-model="formItem.minRemoval"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')">
           </div>
         </span>
@@ -45,7 +47,7 @@
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
           </div>
           <div class="input_content">
-            <input type="text" class="radius" placeholder="0.050000">
+            <input type="text" v-model="formItem.fee" class="radius" placeholder="0.050000">
             <span class="XEM_tag">XEM</span>
           </div>
         </span>
@@ -55,18 +57,19 @@
         <div class="head_title">{{$t('Operation_list')}}</div>
         <div class="list_container radius">
           <div class="list_head">
-            <span class="address_alias">{{$t('address')}}/{{$t('alias')}}</span>
+            <span class="address_alias">{{$t('publickey')}}/{{$t('alias')}}</span>
             <span class="action">{{$t('operating')}}</span>
             <span class="delate">{{$t('delete')}}</span>
           </div>
           <div class="list_body scroll">
-            <div class="please_add_address" v-if="addressList.length == 0">{{$t('please_add_publickey')}}</div>
+            <div class="please_add_address" v-if="formItem.publickeyList.length == 0">{{$t('please_add_publickey')}}
+            </div>
 
-            <div class="list_item radius" v-for="(i,index) in addressList">
+            <div class="list_item radius" v-for="(i,index) in formItem.publickeyList">
               <span class="address_alias">{{i}}</span>
               <span class="action">{{$t('add')}}</span>
               <img class="delate pointer" @click="deleteAdress(index)"
-                   src="../../../../../assets/images/service/multisig/multisigDelete.png" alt="">
+                   src="@/assets/images/service/multisig/multisigDelete.png" alt="">
             </div>
           </div>
         </div>
@@ -82,8 +85,14 @@
 </template>
 
 <script lang="ts">
+    import Message from '@/message/Message.ts'
     import {Component, Vue} from 'vue-property-decorator';
+    import {multisigInterface} from '@/interface/sdkMultisig.ts'
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
+    import {
+        NetworkType, Account, Listener, MultisigCosignatoryModification, MultisigCosignatoryModificationType,
+        PublicAccount
+    } from 'nem2-sdk';
 
     @Component({
         components: {
@@ -92,31 +101,100 @@
     })
     export default class MultisigConversion extends Vue {
 
-        addressList = []
         currentAddress = ''
         showCheckPWDialog = false
-
-        confirmInput() {
-            // this.showCheckPWDialog = true
+        formItem = {
+            publickeyList: [],
+            minApproval: 1,
+            minRemoval: 1,
+            fee: 10000000,
         }
 
+
         addAddress() {
-            this.addressList.push(this.currentAddress)
+            this.formItem.publickeyList.push(this.currentAddress)
             this.currentAddress = ''
+        }
+
+        deleteAdress(index) {
+            this.formItem.publickeyList.splice(index, 1)
+        }
+
+        confirmInput() {
+            // check input data
+            if (!this.checkForm()) {
+                return
+            }
+            console.log(this.formItem)
+            this.showCheckPWDialog = true
+        }
+
+
+        checkForm(): boolean {
+            const {publickeyList, minApproval, minRemoval, fee} = this.formItem
+            if (publickeyList.length < 1) {
+                this.$Notice.error({title: this.$t(Message.CO_SIGNER_NULL_ERROR) + ''})
+                return false
+            }
+
+            if (!Number(minApproval) || Number(minApproval) < 1) {
+                this.$Notice.error({title: this.$t(Message.MIN_APPROVAL_LESS_THAN_0_ERROR) + ''})
+                return false
+            }
+
+            if (!Number(minRemoval) || Number(minRemoval) < 1) {
+                this.$Notice.error({title: this.$t(Message.MIN_REMOVAL_LESS_THAN_0_ERROR) + ''})
+                return false
+            }
+
+            if (!Number(fee) || Number(fee) < 0) {
+                this.$Notice.error({title: this.$t(Message.FEE_LESS_THAN_0_ERROR) + ''})
+                return false
+            }
+
+            const publickeyFlag = publickeyList.every((item) => {
+                if (item.trim().length !== 64) {
+                    this.$Notice.error({title: this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + ''})
+                    return false;
+                }
+                return true;
+            });
+
+            return publickeyFlag
         }
 
         closeCheckPWDialog() {
             this.showCheckPWDialog = false
         }
 
-        checkEnd(flag) {
-            console.log(flag)
+        checkEnd(privatekey) {
+            this.sendMultisignConversionTransaction(privatekey)
         }
 
-        deleteAdress(index) {
-            this.addressList.splice(index, 1)
-        }
+        sendMultisignConversionTransaction(privatekey) {
+            const {publickeyList, minApproval, minRemoval, fee} = this.formItem
+            const {networkType} = this.$store.state.account.wallet
+            const {generationHash, node} = this.$store.state.account
+            const account = Account.createFromPrivateKey(privatekey, networkType)
+            const listener = new Listener(node.replace('http', 'ws'), WebSocket)
 
+            const multisigCosignatoryModificationList = publickeyList.map(cosigner => new MultisigCosignatoryModification(
+                MultisigCosignatoryModificationType.Add,
+                PublicAccount.createFromPublicKey(cosigner, networkType),
+            ))
+
+            multisigInterface.covertToBeMultisig({
+                minApprovalDelta: minApproval,
+                minRemovalDelta: minRemoval,
+                multisigCosignatoryModificationList: multisigCosignatoryModificationList,
+                networkType: networkType,
+                account: account,
+                generationHash: generationHash,
+                node: node,
+                listener: listener,
+                fee: fee
+            })
+        }
     }
 </script>
 <style scoped lang="less">

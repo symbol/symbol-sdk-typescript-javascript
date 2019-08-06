@@ -438,7 +438,7 @@ export var zh_CN = {
     Convert_to_multi_sign_account: '转化为多签账户',
     cosigner: '共签人',
     Add_co_signers_here_will_be_displayed_in_the_action_list_click_delete_to_cancel_the_operation: '添加共签人，此处操作会在操作清单中显示，点击删除可撤销操作',
-    Wallet_account_address_or_alias: '钱包地址或别名',
+    Wallet_account_address_or_alias: '账户公钥或别名',
     min_approval: '最小签名数',
     The_number_of_signatures_required_to_add_someone_from_a_multi_sign_or_complete_this_multi_tap_transaction: '从多签中添加某人或完成此多签交易所需的签名数',
     Please_set_the_minimum_number_of_signatures_number_of_co_signers: '请设置最小签名数<=共签人数',
@@ -521,5 +521,12 @@ export var zh_CN = {
     add_entity_type: '添加交易类型',
     Any_information_cannot_be_empty: '任意信息不能为空',
     success: '成功',
+    //todo
+    co_signers_amount_less_than_0: '共签人数不可小于1',
+    min_approval_amount_less_than_0: 'Min approval 不可小于1',
+    min_removal_amount_less_than_0: 'Min removal 不可小于1',
+    illegal_publickey_in_the_co_signed_list: '共签列表中存在不合法的账户公钥',
+    min_approval_amount_illegal: 'Min approval 必须为数字',
+    min_removal_amount_illegal: 'Min removal 必须为数字',
 };
 //# sourceMappingURL=zh-CN.js.map

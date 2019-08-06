@@ -437,7 +437,7 @@ export var en_US = {
     Convert_to_multi_sign_account: 'Convert to multi-sign account',
     cosigner: 'Cosigner',
     Add_co_signers_here_will_be_displayed_in_the_action_list_click_delete_to_cancel_the_operation: 'Add co-signers, here will be displayed in the action list, click delete to cancel the operation',
-    Wallet_account_address_or_alias: 'Wallet address or alias',
+    Wallet_account_address_or_alias: 'Account publickey or alias',
     min_approval: 'Min approval',
     The_number_of_signatures_required_to_add_someone_from_a_multi_sign_or_complete_this_multi_tap_transaction: 'Min signatures to add cosigner or complete transaction',
     Please_set_the_minimum_number_of_signatures_number_of_co_signers: 'Minimum of signatures <= co-signers',

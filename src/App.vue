@@ -1,5 +1,6 @@
 <template>
-  <div id="app" oncontextmenu="return false;" onselectstart="return false">
+  <!--  <div id="app" oncontextmenu="return false;" onselectstart="return false">-->
+  <div id="app">
     <router-view/>
   </div>
 </template>

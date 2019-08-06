@@ -11,6 +11,7 @@
       <MultisigMap v-show="buttonList[0].isSelected"></MultisigMap>
       <MultisigConversion v-show="buttonList[1].isSelected"></MultisigConversion>
       <MultisigManagement v-show="buttonList[2].isSelected"></MultisigManagement>
+      <MultisigCosign v-show="buttonList[3].isSelected"></MultisigCosign>
     </div>
   </div>
 </template>
@@ -20,12 +21,14 @@
     import MultisigMap from './multisig-functions/multisig-map/MultisigMap.vue'
     import MultisigConversion from './multisig-functions/multisig-conversion/MultisigConversion.vue'
     import MultisigManagement from './multisig-functions/multisig-management/MultisigManagement.vue'
+    import MultisigCosign from './multisig-functions/multisig-cosign/MultisigCosign.vue'
 
     @Component({
         components: {
             MultisigMap,
             MultisigConversion,
-            MultisigManagement
+            MultisigManagement,
+            MultisigCosign
         }
     })
     export default class Setting extends Vue {
@@ -39,6 +42,10 @@
                 isSelected: false
             }, {
                 name: 'manage',
+                isSelected: false
+            },
+            {
+                name: 'cosign',
                 isSelected: false
             }
         ]
