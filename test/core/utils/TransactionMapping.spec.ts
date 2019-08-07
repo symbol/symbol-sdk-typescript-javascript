@@ -37,7 +37,7 @@ import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceType } from '../../../src/model/namespace/NamespaceType';
 import { AccountAddressRestrictionModificationTransaction } from'../../../src/model/transaction/AccountAddressRestrictionModificationTransaction';
 import { AccountLinkTransaction } from '../../../src/model/transaction/AccountLinkTransaction';
-import { AccountMosaicRestrictionModificationTransaction } from '../../../src/model/transaction/AccountMosaicRestrictionModificationTransaction';
+import { AccountMosaicRestrictionTransaction } from '../../../src/model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountRestrictionModification } from '../../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../../src/model/transaction/AddressAliasTransaction';
@@ -87,7 +87,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping
-            .createFromPayload(signedTransaction.payload) as AccountAddressRestrictionModificationTransaction;
+            .createFromPayload(signedTransaction.payload) as AccountAddressRestrictionTransaction;
 
         expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingAddress);
         expect(transaction.modifications[0].modificationType).to.be.equal(RestrictionModificationType.Add);
@@ -672,7 +672,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
 
         const transaction =
-            TransactionMapping.createFromDTO(addressRestrictionTransaction.toJSON()) as AccountAddressRestrictionModificationTransaction;
+            TransactionMapping.createFromDTO(addressRestrictionTransaction.toJSON()) as AccountAddressRestrictionTransaction;
 
         expect(transaction.modifications[0].value).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingAddress);
@@ -693,7 +693,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
 
         const transaction =
-            TransactionMapping.createFromDTO(mosaicRestrictionTransaction.toJSON()) as AccountMosaicRestrictionModificationTransaction;
+            TransactionMapping.createFromDTO(mosaicRestrictionTransaction.toJSON()) as AccountMosaicRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC);
         expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowMosaic);
@@ -714,7 +714,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         );
 
         const transaction =
-            TransactionMapping.createFromDTO(operationRestrictionTransaction.toJSON()) as AccountMosaicRestrictionModificationTransaction;
+            TransactionMapping.createFromDTO(operationRestrictionTransaction.toJSON()) as AccountMosaicRestrictionTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION);
         expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingTransactionType);

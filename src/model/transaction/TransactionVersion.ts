@@ -116,13 +116,13 @@ export class TransactionVersion {
      * Account Restriction address transaction version
      * @type {number}
      */
-    public static readonly MODIFY_ACCOUNT_RESTRICTION_ADDRESS = 0x01;
+    public static readonly ACCOUNT_RESTRICTION_ADDRESS = 0x01;
 
     /**
      * Account Restriction mosaic transaction version
      * @type {number}
      */
-    public static readonly MODIFY_ACCOUNT_RESTRICTION_MOSAIC = 0x01;
+    public static readonly ACCOUNT_RESTRICTION_MOSAIC = 0x01;
 
     /**
      * Account Restriction operation transaction version

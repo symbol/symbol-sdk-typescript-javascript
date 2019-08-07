@@ -26,8 +26,15 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { AccountOperationRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
+import { AccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 
-export class AccountOperationRestrictionModificationTransaction extends Transaction {
+export class AccountOperationRestrictionTransaction extends Transaction {
 
     /**
      * Create a modify account operation restriction type transaction object
@@ -36,14 +43,14 @@ export class AccountOperationRestrictionModificationTransaction extends Transact
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {AccountOperationRestrictionModificationTransaction}
+     * @returns {AccountOperationRestrictionTransaction}
      */
     public static create(deadline: Deadline,
                          restrictionType: AccountRestrictionType,
                          modifications: Array<AccountRestrictionModification<TransactionType>>,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AccountOperationRestrictionModificationTransaction {
-        return new AccountOperationRestrictionModificationTransaction(networkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): AccountOperationRestrictionTransaction {
+        return new AccountOperationRestrictionTransaction(networkType,
             TransactionVersion.MODIFY_ACCOUNT_RESTRICTION_ENTITY_TYPE,
             deadline,
             maxFee,
@@ -71,15 +78,15 @@ export class AccountOperationRestrictionModificationTransaction extends Transact
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION,
+        super(TransactionType.ACCOUNT_RESTRICTION_OPERATION,
               networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
      * @override Transaction.size()
-     * @description get the byte size of a AccountOperationRestrictionModificationTransaction
+     * @description get the byte size of a AccountOperationRestrictionTransaction
      * @returns {number}
-     * @memberof AccountOperationRestrictionModificationTransaction
+     * @memberof AccountOperationRestrictionTransaction
      */
     public get size(): number {
         const byteSize = super.size;
@@ -110,4 +117,29 @@ export class AccountOperationRestrictionModificationTransaction extends Transact
             .build();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new AccountOperationRestrictionTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.ACCOUNT_RESTRICTION_OPERATION.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            this.restrictionType.valueOf(),
+            this.modifications.map((modification) => {
+                return new AccountOperationRestrictionModificationBuilder(
+                    modification.modificationType.valueOf(),
+                    modification.value.valueOf(),
+                );
+            }),
+        );
+        return transactionBuilder.serialize();
+    }
 }

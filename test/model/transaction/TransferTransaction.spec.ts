@@ -53,7 +53,7 @@ describe('TransferTransaction', () => {
             [],
             PlainMessage.create('test-message'),
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(transferTransaction.maxFee.higher).to.be.equal(0);
@@ -192,5 +192,31 @@ describe('TransferTransaction', () => {
             );
             expect(transaction.size).to.be.equal(158);
         });
+    });
+
+    it('should create TransferTransaction and sign using catbuffer', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [
+                NetworkCurrencyMosaic.createRelative(100),
+            ],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(transferTransaction.message.payload).to.be.equal('test-message');
+        expect(transferTransaction.mosaics.length).to.be.equal(1);
+        expect(transferTransaction.recipient).to.be.instanceof(Address);
+        expect((transferTransaction.recipient as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+
+        const signedTransaction = transferTransaction.signWithCatbuffer(account, generationHash);
+
+        expect(signedTransaction.payload.substring(
+            240,
+            signedTransaction.payload.length,
+        )).to.be.equal(
+            '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000100746573742D6D657373616765' +
+            '44B262C46CEABB8500E1F50500000000');
     });
 });

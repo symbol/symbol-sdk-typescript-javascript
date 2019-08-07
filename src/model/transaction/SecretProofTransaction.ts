@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-import { Convert as convert } from '../../core/format';
+import { Convert, Convert as convert, RawAddress } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/SecretProofTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SecretProofTransactionBuilder } from '../../infrastructure/catbuffer/SecretProofTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -114,6 +122,24 @@ export class SecretProofTransaction extends Transaction {
     }
 
     /**
+     * @description Get secret bytes
+     * @returns {Uint8Array}
+     * @memberof SecretLockTransaction
+     */
+    public getSecretByte(): Uint8Array {
+        return convert.hexToUint8(64 > this.secret.length ? this.secret + '0'.repeat(64 - this.secret.length) : this.secret);
+    }
+
+    /**
+     * @description Get proof bytes
+     * @returns {Uint8Array}
+     * @memberof SecretLockTransaction
+     */
+    public getProofByte(): Uint8Array {
+        return convert.hexToUint8(this.proof);
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */
@@ -130,4 +156,26 @@ export class SecretProofTransaction extends Transaction {
             .build();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new SecretProofTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.SECRET_PROOF.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            this.hashType.valueOf(),
+            new Hash256Dto(this.getSecretByte()),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+            this.getProofByte(),
+        );
+        return transactionBuilder.serialize();
+    }
 }

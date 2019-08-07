@@ -66,7 +66,7 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 148 for AccountAddressRestrictionModificationTransaction transaction byte size with 1 modification', () => {
+        it('should return 148 for AccountAddressRestrictionTransaction transaction byte size with 1 modification', () => {
             const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
             const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
                 RestrictionModificationType.Add,
@@ -82,7 +82,7 @@ describe('AccountRestrictionTransaction', () => {
             expect(addressRestrictionTransaction.size).to.be.equal(148);
         });
 
-        it('should return 131 for AccountMosaicRestrictionModificationTransaction transaction byte size with 1 modification', () => {
+        it('should return 131 for AccountMosaicRestrictionTransaction transaction byte size with 1 modification', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
                 RestrictionModificationType.Add,
@@ -97,7 +97,7 @@ describe('AccountRestrictionTransaction', () => {
             expect(mosaicRestrictionTransaction.size).to.be.equal(131);
         });
 
-        it('should return 125 for AccountOperationRestrictionModificationTransaction transaction byte size with 1 modification', () => {
+        it('should return 125 for AccountOperationRestrictionTransaction transaction byte size with 1 modification', () => {
             const operation = TransactionType.ADDRESS_ALIAS;
             const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
                 RestrictionModificationType.Add,
@@ -162,7 +162,7 @@ describe('AccountRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
+        const signedTransaction = addressRestrictionTransaction.signWithCatbuffer(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -213,7 +213,7 @@ describe('AccountRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicRestrictionTransaction.signWith(account, generationHash);
+        const signedTransaction = mosaicRestrictionTransaction.signWithCatbuffer(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -266,7 +266,7 @@ describe('AccountRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
+        const signedTransaction = operationRestrictionTransaction.signWithCatbuffer(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
