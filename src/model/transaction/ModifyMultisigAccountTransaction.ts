@@ -32,6 +32,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { EmbeddedMultisigAccountModificationTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMultisigAccountModificationTransactionBuilder';
 
 /**
  * Modify multisig account transactions are part of the NEM's multisig account system.
@@ -154,6 +155,29 @@ export class ModifyMultisigAccountTransaction extends Transaction {
             TransactionType.MODIFY_MULTISIG_ACCOUNT.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            this.minRemovalDelta,
+            this.minApprovalDelta,
+            this.modifications.map((modification) => {
+                return new CosignatoryModificationBuilder(
+                    modification.type.valueOf(),
+                    new KeyDto(Convert.hexToUint8(modification.cosignatoryPublicAccount.publicKey)),
+                );
+            }),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedMultisigAccountModificationTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MODIFY_MULTISIG_ACCOUNT.valueOf(),
             this.minRemovalDelta,
             this.minApprovalDelta,
             this.modifications.map((modification) => {

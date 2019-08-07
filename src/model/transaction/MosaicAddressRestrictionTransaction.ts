@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
+import { RawAddress } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/MosaicAddressRestrictionTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedMosaicAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicAddressRestrictionTransactionBuilder';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { MosaicAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/MosaicAddressRestrictionTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
+import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -155,6 +164,42 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        throw new Error('Not implemented');
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new MosaicAddressRestrictionTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_ADDRESS_RESTRICTION.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
+            this.restrictionKey.toDTO(),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.targetAddress.plain())),
+            this.previousRestrictionValue.toDTO(),
+            this.newRestrictionValue.toDTO(),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedMosaicAddressRestrictionTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_ADDRESS_RESTRICTION.valueOf(),
+            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
+            this.restrictionKey.toDTO(),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.targetAddress.plain())),
+            this.previousRestrictionValue.toDTO(),
+            this.newRestrictionValue.toDTO(),
+        );
+        return transactionBuilder.serialize();
     }
 }

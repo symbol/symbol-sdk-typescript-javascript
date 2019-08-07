@@ -19,6 +19,7 @@ import { Builder } from '../../infrastructure/builders/AccountLinkTransaction';
 import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
 import { AccountLinkTransactionBuilder } from '../../infrastructure/catbuffer/AccountLinkTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedAccountLinkTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountLinkTransactionBuilder';
 import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
@@ -133,6 +134,23 @@ export class AccountLinkTransaction extends Transaction {
             TransactionType.LINK_ACCOUNT.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            new KeyDto(Convert.hexToUint8(this.remoteAccountKey)),
+            this.linkAction.valueOf(),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedAccountLinkTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.LINK_ACCOUNT.valueOf(),
             new KeyDto(Convert.hexToUint8(this.remoteAccountKey)),
             this.linkAction.valueOf(),
         );

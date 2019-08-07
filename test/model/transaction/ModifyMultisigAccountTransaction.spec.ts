@@ -70,7 +70,7 @@ describe('ModifyMultisigAccountTransaction', () => {
                         NetworkType.MIJIN_TEST),
                 )],
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(modifyMultisigAccountTransaction.maxFee.higher).to.be.equal(0);

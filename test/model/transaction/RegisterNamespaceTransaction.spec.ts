@@ -66,7 +66,7 @@ describe('RegisterNamespaceTransaction', () => {
         expect(registerNamespaceTransaction.duration!.lower).to.be.equal(1000);
         expect(registerNamespaceTransaction.duration!.higher).to.be.equal(0);
 
-        const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
+        const signedTransaction = registerNamespaceTransaction.signWithCatbuffer(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -83,7 +83,7 @@ describe('RegisterNamespaceTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
+        const signedTransaction = registerNamespaceTransaction.signWithCatbuffer(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
