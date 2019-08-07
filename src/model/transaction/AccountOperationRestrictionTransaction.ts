@@ -32,6 +32,13 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { AccountOperationRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
+import { AccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 
 export class AccountOperationRestrictionTransaction extends Transaction {
 
