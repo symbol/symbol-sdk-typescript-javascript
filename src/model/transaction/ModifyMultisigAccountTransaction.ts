@@ -31,6 +31,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { EmbeddedMultisigAccountModificationTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMultisigAccountModificationTransactionBuilder';
 
 /**
  * Modify multisig account transactions are part of the NEM's multisig account system.

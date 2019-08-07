@@ -124,6 +124,11 @@ export abstract class Transaction {
 
     /**
      * @internal
+     */
+    protected abstract generateEmbeddedBytes(): Uint8Array;
+
+    /**
+     * @internal
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account - The account to sign the transaction
      * @param generationHash - Network generation hash hex

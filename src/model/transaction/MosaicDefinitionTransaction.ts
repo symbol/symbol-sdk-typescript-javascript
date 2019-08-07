@@ -37,19 +37,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { MosaicDefinitionTransactionBuilder } from '../../infrastructure/catbuffer/MosaicDefinitionTransactionBuilder';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { MosaicNonceDto } from '../../infrastructure/catbuffer/MosaicNonceDto';
-import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
-import { MosaicFlagsDto } from '../../infrastructure/catbuffer/MosaicFlagsDto';
-import { MosaicFlags } from '../mosaic/MosaicFlag';
-import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
-import { Convert } from '../../core/format';
-import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 
 /**
  * Before a mosaic can be created or transferred, a corresponding definition of the mosaic has to be created and published to the network.
@@ -209,6 +196,27 @@ export class MosaicDefinitionTransaction extends Transaction {
             this.mosaicProperties.divisibility,
             new BlockDurationDto(this.mosaicProperties.duration ?
                     this.mosaicProperties.duration.toDTO() : UInt64.fromUint(0).toDTO()),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedMosaicDefinitionTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_DEFINITION.valueOf(),
+            new MosaicNonceDto(this.getMosaicNonceIntValue()),
+            new MosaicIdDto(this.mosaicId.id.toDTO()),
+            this.getMosaicFlagValue(),
+            this.mosaicProperties.divisibility,
+            new BlockDurationDto(this.mosaicProperties.duration ?
+                    this.mosaicProperties.duration.toDTO() : []),
         );
         return transactionBuilder.serialize();
     }
