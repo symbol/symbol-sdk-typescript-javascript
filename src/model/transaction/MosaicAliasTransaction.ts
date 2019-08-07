@@ -17,6 +17,7 @@
 import { Builder } from '../../infrastructure/builders/MosaicAliasTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedMosaicAliasTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicAliasTransactionBuilder';
 import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { MosaicAliasTransactionBuilder } from '../../infrastructure/catbuffer/MosaicAliasTransactionBuilder';
@@ -145,6 +146,24 @@ export class MosaicAliasTransaction extends Transaction {
             TransactionType.MOSAIC_ALIAS.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            this.actionType.valueOf(),
+            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            new MosaicIdDto(this.mosaicId.id.toDTO()),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedMosaicAliasTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_ALIAS.valueOf(),
             this.actionType.valueOf(),
             new NamespaceIdDto(this.namespaceId.id.toDTO()),
             new MosaicIdDto(this.mosaicId.id.toDTO()),

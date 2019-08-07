@@ -17,6 +17,7 @@
 import { Builder } from '../../infrastructure/builders/MosaicSupplyChangeTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedMosaicSupplyChangeTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicSupplyChangeTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { MosaicSupplyChangeTransactionBuilder } from '../../infrastructure/catbuffer/MosaicSupplyChangeTransactionBuilder';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
@@ -146,6 +147,24 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             TransactionType.MOSAIC_SUPPLY_CHANGE.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
+            this.direction.valueOf(),
+            new AmountDto(this.delta.toDTO()),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedMosaicSupplyChangeTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_SUPPLY_CHANGE.valueOf(),
             new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
             this.direction.valueOf(),
             new AmountDto(this.delta.toDTO()),

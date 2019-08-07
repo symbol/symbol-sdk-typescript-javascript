@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+import { RawAddress } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/AddressAliasTransaction';
 import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
 import { AddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/AddressAliasTransactionBuilder';
 import { AddressDto } from '../../infrastructure/catbuffer/AddressDto';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedAddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAddressAliasTransactionBuilder';
 import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
@@ -35,7 +37,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { RawAddress } from '../../core/format';
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -150,6 +151,24 @@ export class AddressAliasTransaction extends Transaction {
             TransactionType.ADDRESS_ALIAS.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            this.actionType.valueOf(),
+            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            new AddressDto(RawAddress.stringToAddress(this.address.plain())),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedAddressAliasTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.ADDRESS_ALIAS.valueOf(),
             this.actionType.valueOf(),
             new NamespaceIdDto(this.namespaceId.id.toDTO()),
             new AddressDto(RawAddress.stringToAddress(this.address.plain())),

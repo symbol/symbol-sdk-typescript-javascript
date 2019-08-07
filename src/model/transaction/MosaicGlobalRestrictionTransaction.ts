@@ -16,6 +16,13 @@
 
 import { Builder } from '../../infrastructure/builders/MosaicGlobalRestrictionTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedMosaicGlobalRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicGlobalRestrictionTransactionBuilder';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { MosaicGlobalRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/MosaicGlobalRestrictionTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -178,6 +185,46 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        throw new Error('Not implemented');
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new MosaicGlobalRestrictionTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_GLOBAL_RESTRICTION.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
+            new UnresolvedMosaicIdDto(this.referenceMosaicId.id.toDTO()),
+            this.restrictionKey.toDTO(),
+            this.previousRestrictionValue.toDTO(),
+            this.previousRestrictionType.valueOf(),
+            this.newRestrictionValue.toDTO(),
+            this.newRestrictionType.valueOf(),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedMosaicGlobalRestrictionTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_GLOBAL_RESTRICTION.valueOf(),
+            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
+            new UnresolvedMosaicIdDto(this.referenceMosaicId.id.toDTO()),
+            this.restrictionKey.toDTO(),
+            this.previousRestrictionValue.toDTO(),
+            this.previousRestrictionType.valueOf(),
+            this.newRestrictionValue.toDTO(),
+            this.newRestrictionType.valueOf(),
+        );
+        return transactionBuilder.serialize();
     }
 }

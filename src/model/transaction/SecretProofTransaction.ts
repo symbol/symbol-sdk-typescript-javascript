@@ -18,6 +18,7 @@ import { Convert, Convert as convert, RawAddress } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/SecretProofTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedSecretProofTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretProofTransactionBuilder';
 import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
@@ -171,6 +172,25 @@ export class SecretProofTransaction extends Transaction {
             TransactionType.SECRET_PROOF.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            this.hashType.valueOf(),
+            new Hash256Dto(this.getSecretByte()),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+            this.getProofByte(),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedSecretProofTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.SECRET_PROOF.valueOf(),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
             new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),

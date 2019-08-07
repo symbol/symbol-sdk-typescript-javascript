@@ -19,6 +19,7 @@ import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTra
 import { AccountMosaicRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountMosaicRestrictionModificationBuilder';
 import { AccountMosaicRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountMosaicRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedAccountMosaicRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountMosaicRestrictionTransactionBuilder';
 import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
@@ -133,6 +134,28 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             TransactionType.ACCOUNT_RESTRICTION_MOSAIC.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            this.restrictionType.valueOf(),
+            this.modifications.map((modification) => {
+                return new AccountMosaicRestrictionModificationBuilder(
+                    modification.modificationType.valueOf(),
+                    new UnresolvedMosaicIdDto(modification.value),
+                );
+            }),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedAccountMosaicRestrictionTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.ACCOUNT_RESTRICTION_MOSAIC.valueOf(),
             this.restrictionType.valueOf(),
             this.modifications.map((modification) => {
                 return new AccountMosaicRestrictionModificationBuilder(
