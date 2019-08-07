@@ -44,15 +44,15 @@
       </div>
     </div>
 
-    <CollectionRecord></CollectionRecord>
+    <CollectionRecord :transactionType="1"></CollectionRecord>
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import {createQRCode, copyTxt} from '@/utils/tools'
-    import CollectionRecord from '@/components/CollectionRecord.vue'
     import Message from "@/message/Message";
+    import {createQRCode, copyTxt} from '@/utils/tools'
+    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import CollectionRecord from '@/components/CollectionRecord.vue'
 
     @Component({
         components: {

@@ -1,42 +1,45 @@
 <template>
-  <div class="multisig_management_container">
-    <div class="container_head_title">{{$t('Edit_co_signers_and_signature_thresholds')}}</div>
-    <div class="edit_form">
-      <div class="form_item">
-        <div class="title">{{$t('Public_account')}}</div>
-        <Select v-model="formItem.multisigPublickey" class="select" :placeholder="$t('publickey')">
-          <Option v-for="item in publickeyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-      </div>
 
-      <div class="form_item input_cosigner">
-        <div class="title">{{$t('cosigner')}}</div>
-        <div class="manage_cosigner">
+  <div>
+
+    <div class="multisig_management_container" @click="showSubpublickeyList = false">
+      <div class="container_head_title">{{$t('Edit_co_signers_and_signature_thresholds')}}</div>
+      <div class="edit_form">
+        <div class="form_item">
+          <div class="title">{{$t('Public_account')}}</div>
+          <Select v-model="formItem.multisigPublickey" class="select" :placeholder="$t('publickey')">
+            <Option v-for="item in publickeyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </div>
+
+        <div class="form_item input_cosigner">
+          <div class="title">{{$t('cosigner')}}</div>
+          <div class="manage_cosigner">
           <span class="input_container">
-            <input type="text" v-model="currentAddress" :placeholder="$t('Wallet_account_address_or_alias')"
+            <input type="text" v-model="currentPublickey" :placeholder="$t('Wallet_account_address_or_alias')"
                    class="radius">
-            <span class="switch_container pointer" @click="showSubpublickeyList = !showSubpublickeyList">
+            <span class="switch_container pointer" @click.stop="showSubpublickeyList = !showSubpublickeyList">
               <Tooltip :content="$t('Choose_a_co_signer')" theme="light">
                 <span class="switch_cosigner"></span>
               </Tooltip>
             </span>
             <div class="sub_list radius" v-if="showSubpublickeyList">
-              <div class="sub_list_item" v-for="i in 1"> no data</div>
-
+              <div @click="currentPublickey = i.value" class="sub_list_item pointer" v-for="i in existsCosignerList">{{i.value}}</div>
             </div>
           </span>
-          <span @click="addCosigner(MultisigCosignatoryModificationType.Add)" class="add_button radius pointer">+</span>
-          <span @click="addCosigner(MultisigCosignatoryModificationType.Remove)"
-                class="delete_button radius pointer">-</span>
+            <span @click="addCosigner(MultisigCosignatoryModificationType.Add)"
+                  class="add_button radius pointer">+</span>
+            <span @click="addCosigner(MultisigCosignatoryModificationType.Remove)"
+                  class="delete_button radius pointer">-</span>
+          </div>
+          <div class="input_describe">
+            {{$t('Add_delete_co_signers_this_action_will_be_displayed_in_the_action_log_click_delete_to_cancel')}}
+          </div>
         </div>
-        <div class="input_describe">
-          {{$t('Add_delete_co_signers_this_action_will_be_displayed_in_the_action_log_click_delete_to_cancel')}}
-        </div>
-      </div>
 
-      <div class="property_amount">
+        <div class="property_amount">
         <span class="form_item input_min_approval">
-          <div class="title">{{$t('min_approval')}}</div>
+          <div class="title">{{$t('min_approval_delta')}} ( {{$t('currrent')}} min approval : {{currentMinApproval }} )</div>
           <div class="manage_cosigner">
             <input type="text" v-model="formItem.minApproval"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')"
@@ -47,8 +50,8 @@
           </div>
         </span>
 
-        <span class="form_item input_min_delete">
-          <div class="title">{{$t('min_removal')}}</div>
+          <span class="form_item input_min_delete">
+          <div class="title">{{$t('min_removal_delta')}} ( {{$t('currrent')}}  min removal : {{currentMinRemoval }} )</div>
           <div class="manage_cosigner">
             <input type="text" v-model="formItem.minRemoval"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')"
@@ -58,49 +61,56 @@
             {{$t('The_number_of_signatures_required_to_remove_someone_from_multiple_sign_ups')}}
           </div>
         </span>
-      </div>
-
-
-      <div class="form_item input_fee">
-        <div class="title">{{$t('fee')}}</div>
-        <div class="manage_cosigner">
-          <input type="text" v-model="formItem.fee" placeholder="50000" class="radius">
-          <span class="xem_container">gas</span>
         </div>
-        <div class="input_describe">
-          {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-        </div>
-      </div>
-    </div>
 
-    <div class="cosigner_list">
-      <div class="head_title">{{$t('Operation_list')}}</div>
-      <div class="list_container radius">
-        <div class="list_head">
-          <span class="address_alias">{{$t('address')}}/{{$t('alias')}}</span>
-          <span class="action">{{$t('operating')}}</span>
-          <span class="delate">{{$t('delete')}}</span>
-        </div>
-        <div class="list_body scroll">
-          <div class="please_add_address" v-if="formItem.cosignerList.length == 0">{{$t('please_add_publickey')}}</div>
 
-          <div class="list_item radius" v-for="(i,index) in formItem.cosignerList">
-            <span class="address_alias">{{i.publickey}}</span>
-            <span class="action">{{i.type == MultisigCosignatoryModificationType.Add ? $t('add'):$t('cut_back')}}</span>
-            <img class="delate pointer" @click="removeCosigner(index)"
-                 src="@/assets/images/service/multisig/multisigDelete.png" alt="">
+        <div class="form_item input_fee">
+          <div class="title">{{$t('fee')}}</div>
+          <div class="manage_cosigner">
+            <input type="text" v-model="formItem.fee" placeholder="50000" class="radius">
+            <span class="xem_container">gas</span>
+          </div>
+          <div class="input_describe">
+            {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
           </div>
         </div>
       </div>
-    </div>
 
-    <div @click="confirmInput" class="send_button pointer">
-      {{$t('send')}}
-    </div>
+      <div class="cosigner_list">
+        <div class="head_title">{{$t('Operation_list')}}</div>
+        <div class="list_container radius">
+          <div class="list_head">
+            <span class="address_alias">{{$t('address')}}/{{$t('alias')}}</span>
+            <span class="action">{{$t('operating')}}</span>
+            <span class="delate">{{$t('delete')}}</span>
+          </div>
+          <div class="list_body scroll">
+            <div class="please_add_address" v-if="formItem.cosignerList.length == 0">{{$t('please_add_publickey')}}
+            </div>
 
-    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
-                   @checkEnd="checkEnd"></CheckPWDialog>
+            <div class="list_item radius" v-for="(i,index) in formItem.cosignerList">
+              <span class="address_alias">{{i.publickey}}</span>
+              <span class="action">{{i.type == MultisigCosignatoryModificationType.Add ? $t('add'):$t('cut_back')}}</span>
+              <img class="delate pointer" @click="removeCosigner(index)"
+                   src="@/assets/images/service/multisig/multisigDelete.png" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div @click="confirmInput" class="send_button pointer" v-if="isShowPanel">
+        {{$t('send')}}
+      </div>
+
+      <div class=" no_multisign pointer" v-else>
+        {{$t('There_are_no_more_accounts_under_this_account')}}
+      </div>
+
+      <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
+                     @checkEnd="checkEnd"></CheckPWDialog>
+    </div>
   </div>
+
 </template>
 
 <script lang="ts">
@@ -126,16 +136,17 @@
         MultisigCosignatoryModificationType = MultisigCosignatoryModificationType
         showSubpublickeyList = false
         showCheckPWDialog = false
-        currentAddress = ''
+        currentPublickey = ''
         currentMinApproval = 0
+        currentMinRemoval = 0
         currentCosignatoryList = []
         hasAddCosigner = false
-        publickeyList = [
-            {
-                value: '',
-                label: 'no data'
-            }
-        ]
+        existsCosignerList = [{}]
+        isShowPanel = true
+        publickeyList = [{
+            label:'no data',
+            value:'no data'
+        }]
 
         formItem = {
             minApproval: 0,
@@ -148,9 +159,10 @@
 
         addCosigner(flag) {
             this.formItem.cosignerList.push({
-                publickey: this.currentAddress,
+                publickey: this.currentPublickey,
                 type: flag
             })
+            this.currentPublickey = ''
         }
 
         removeCosigner(index) {
@@ -236,14 +248,9 @@
         checkForm(): boolean {
             const {multisigPublickey, cosignerList, fee, minApproval, minRemoval} = this.formItem
 
-            if (!Number(minApproval) && minApproval !== 0) {
-                this.$Notice.error({title: this.$t(Message.ILLEGAL_MIN_APPROVAL_ERROR) + ''})
-                return false
-            }
-
-            if (!Number(minRemoval) && Number(minRemoval) !== 0) {
-                this.$Notice.error({title: this.$t(Message.ILLEGAL_MIN_REMOVAL_ERROR) + ''})
-                return false
+            if (multisigPublickey.length !== 64) {
+                this.$Notice.error({title: this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + ''})
+                return false;
             }
 
             if ((!Number(fee) || Number(fee) < 0) && fee !== 0) {
@@ -276,6 +283,10 @@
                 address,
                 node
             }).then((result) => {
+                if (result.result.multisigInfo.multisigAccounts.length == 0) {
+                    that.isShowPanel = false
+                    return
+                }
                 that.publickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
                     item.value = item.publicKey
                     item.label = item.publicKey
@@ -297,8 +308,13 @@
                 node
             }).then((result) => {
                 const currentMultisigAccount = result.result.multisigInfo
-                console.log(currentMultisigAccount.minApproval)
+                that.existsCosignerList = currentMultisigAccount.cosignatories.map((item) => {
+                    item.value = item.publicKey
+                    item.label = item.publicKey
+                    return item
+                })
                 that.currentMinApproval = currentMultisigAccount.minApproval
+                that.currentMinRemoval = currentMultisigAccount.minRemoval
                 that.currentCosignatoryList = currentMultisigAccount.cosignatories
             })
 

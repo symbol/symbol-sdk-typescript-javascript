@@ -1,5 +1,6 @@
 <template>
   <div class="mosaicAliasDialogWrap">
+
     <Modal
             v-model="show"
             class-name="vertical-center-modal"
@@ -17,7 +18,7 @@
               <p class="mosaicTxt">{{mosaic.id}}</p>
             </FormItem>
             <FormItem :label="$t('alias_selection')">
-              <Select v-model="mosaic.aliasName" required>
+              <Select v-model="mosaic.aliasName" required :placeholder="$t(alias_selection)">
                 <Option :value="item.value" v-for="(item,index) in aliasNameList" :key="index">{{item.label}}</Option>
               </Select>
               <div class="selectAliasNameIcon"></div>

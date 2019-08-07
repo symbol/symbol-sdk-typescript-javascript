@@ -1,7 +1,6 @@
 <template>
   <div class="transfer" @click="isShowSubAlias=false">
 
-
     <div class="address flex_center">
       <span class="title">{{$t('Public_account')}}</span>
       <span class="value radius flex_center">
@@ -55,10 +54,12 @@
             </span>
     </div>
     <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
-    <div @click="checkInfo" class="send_button pointer">
+    <div @click="checkInfo" v-if="isShowPanel" class="send_button pointer">
       {{$t('send')}}
     </div>
-
+    <div class=" no_multisign pointer" v-else>
+      {{$t('There_are_no_more_accounts_under_this_account')}}
+    </div>
 
     <CheckPWDialog @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"
                    :showCheckPWDialog="showCheckPWDialog"></CheckPWDialog>
@@ -97,9 +98,12 @@
     })
     export default class TransferTransactionCompoent extends Vue {
         showCheckPWDialog = false
-
+        isShowPanel = true
         currentCosignatoryList = []
-        multisigPublickeyList = []
+        multisigPublickeyList = [{
+            label:'no data',
+            value:'no data'
+        }]
         multisigPublickey = ''
         accountPublicKey = ''
         accountAddress = ''
@@ -191,7 +195,10 @@
                 address,
                 node
             }).then((result) => {
-                console.log(result.result.multisigInfo)
+                if (result.result.multisigInfo.multisigAccounts.length == 0) {
+                    that.isShowPanel = false
+                    return
+                }
                 that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
                     item.value = item.publicKey
                     item.label = item.publicKey
@@ -344,7 +351,6 @@
         }
 
         created() {
-            // this.initForm()
             this.initData()
             this.getMosaicList()
             this.getMultisigAccountList()

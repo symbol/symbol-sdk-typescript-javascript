@@ -24,9 +24,9 @@
             <input v-model="formItem.supply" type="text" :placeholder="$t('undefined')">
             <span class="number_controller">
                 <img @click="addSupplyAmount " class="pointer"
-                     src="../../../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+                     src="@/assets/images/monitor/market/marketAmountUpdateArrow.png"/>
                 <img @click="cutSupplyAmount" class="pointer"
-                     src="../../../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+                     src="@/assets/images/monitor/market/marketAmountUpdateArrow.png"/>
             </span>
            </span>
         </div>
@@ -37,9 +37,9 @@
             <input v-model="formItem.divisibility" type="text" :placeholder="$t('undefined')">
             <span class="number_controller">
               <img @click="addSeverabilityAmount " class="pointer"
-                   src="../../../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+                   src="@/assets/images/monitor/market/marketAmountUpdateArrow.png"/>
               <img @click="cutSeverabilityAmount" class="pointer"
-                   src="../../../../../assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+                   src="@/assets/images/monitor/market/marketAmountUpdateArrow.png"/>
             </span>
            </span>
         </div>

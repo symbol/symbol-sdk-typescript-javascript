@@ -34,8 +34,10 @@ export default {
     CO_SIGNER_NULL_ERROR: 'co_signers_amount_less_than_0',
     MIN_APPROVAL_LESS_THAN_0_ERROR: 'min_approval_amount_less_than_0',
     MIN_REMOVAL_LESS_THAN_0_ERROR: 'min_removal_amount_less_than_0',
-    ILLEGAL_PUBLICKEY_ERROR: 'illegal_publickey_in_the_co_signed_list',
+    ILLEGAL_PUBLICKEY_ERROR: 'illegal_publickey',
     ILLEGAL_MIN_APPROVAL_ERROR: 'min_approval_amount_illegal',
-    ILLEGAL_MIN_REMOVAL_ERROR: 'min_removal_amount_illegal'
+    ILLEGAL_MIN_REMOVAL_ERROR: 'min_removal_amount_illegal',
+    MOSAIC_ID_FORMAT_ERROR: 'mosaic_id_format_error',
+    ALIAS_NAME_FORMAT_ERROR: 'alias_name_format_error'
 };
 //# sourceMappingURL=Message.js.map

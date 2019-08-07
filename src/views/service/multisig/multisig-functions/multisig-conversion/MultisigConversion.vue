@@ -1,20 +1,24 @@
 <template>
-  <div class="multisig_convert_container">
-    <div class="multisig_convert_head">{{$t('Convert_to_multi_sign_account')}}</div>
-    <div class="convert_form">
-      <div class="multisig_add gray_content">
-        <div class="title">{{$t('cosigner')}}</div>
-        <div class="title_describe">
-          {{$t('Add_co_signers_here_will_be_displayed_in_the_action_list_click_delete_to_cancel_the_operation')}}
+  <div>
+    <!--    <div v-if="isMultisig" class="is_multisig">-->
+    <!--      {{$t('This_account_is_already_a_multi_sign_account')}}-->
+    <!--    </div>-->
+    <div class="multisig_convert_container">
+      <div class="multisig_convert_head">{{$t('Convert_to_multi_sign_account')}}</div>
+      <div class="convert_form">
+        <div class="multisig_add gray_content">
+          <div class="title">{{$t('cosigner')}}</div>
+          <div class="title_describe">
+            {{$t('Add_co_signers_here_will_be_displayed_in_the_action_list_click_delete_to_cancel_the_operation')}}
+          </div>
+          <div class="input_content">
+            <input v-model="currentAddress" type="text" class="radius"
+                   :placeholder="$t('Wallet_account_address_or_alias')">
+            <span @click="addAddress" class="add_button radius pointer">+</span>
+          </div>
         </div>
-        <div class="input_content">
-          <input v-model="currentAddress" type="text" class="radius"
-                 :placeholder="$t('Wallet_account_address_or_alias')">
-          <span @click="addAddress" class="add_button radius pointer">+</span>
-        </div>
-      </div>
 
-      <div class="multisig_property_amount">
+        <div class="multisig_property_amount">
         <span class="gray_content">
           <div class="title">{{$t('min_approval')}}</div>
           <div class="title_describe">
@@ -27,7 +31,7 @@
           </div>
         </span>
 
-        <span class="gray_content">
+          <span class="gray_content">
           <div class="title">{{$t('min_removal')}}</div>
           <div class="title_describe">
             {{$t('The_number_of_signatures_required_to_remove_someone_from_multiple_sign_ups')}}
@@ -38,9 +42,9 @@
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')">
           </div>
         </span>
-      </div>
+        </div>
 
-      <div class="multisig_property_fee">
+        <div class="multisig_property_fee">
         <span class="gray_content">
           <div class="title">{{$t('fee')}}</div>
           <div class="title_describe">
@@ -51,42 +55,49 @@
             <span class="XEM_tag">gas</span>
           </div>
         </span>
-      </div>
+        </div>
 
-      <div class="cosigner_list">
-        <div class="head_title">{{$t('Operation_list')}}</div>
-        <div class="list_container radius">
-          <div class="list_head">
-            <span class="address_alias">{{$t('publickey')}}/{{$t('alias')}}</span>
-            <span class="action">{{$t('operating')}}</span>
-            <span class="delate">{{$t('delete')}}</span>
-          </div>
-          <div class="list_body scroll">
-            <div class="please_add_address" v-if="formItem.publickeyList.length == 0">{{$t('please_add_publickey')}}
+        <div class="cosigner_list">
+          <div class="head_title">{{$t('Operation_list')}}</div>
+          <div class="list_container radius">
+            <div class="list_head">
+              <span class="address_alias">{{$t('publickey')}}/{{$t('alias')}}</span>
+              <span class="action">{{$t('operating')}}</span>
+              <span class="delate">{{$t('delete')}}</span>
             </div>
+            <div class="list_body scroll">
+              <div class="please_add_address" v-if="formItem.publickeyList.length == 0">{{$t('please_add_publickey')}}
+              </div>
 
-            <div class="list_item radius" v-for="(i,index) in formItem.publickeyList">
-              <span class="address_alias">{{i}}</span>
-              <span class="action">{{$t('add')}}</span>
-              <img class="delate pointer" @click="deleteAdress(index)"
-                   src="@/assets/images/service/multisig/multisigDelete.png" alt="">
+              <div class="list_item radius" v-for="(i,index) in formItem.publickeyList">
+                <span class="address_alias">{{i}}</span>
+                <span class="action">{{$t('add')}}</span>
+                <img class="delate pointer" @click="deleteAdress(index)"
+                     src="@/assets/images/service/multisig/multisigDelete.png" alt="">
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div @click="confirmInput" class="confirm_button pointer" v-if="!isMultisig">
+        {{$t('send')}}
+      </div>
+      <div class=" is_multisign pointer" v-else>
+        {{$t('This_account_is_already_a_multi_sign_account')}}
+      </div>
+
+      <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
+                     @checkEnd="checkEnd"></CheckPWDialog>
     </div>
 
-    <div @click="confirmInput" class="confirm_button pointer">
-      {{$t('send')}}
-    </div>
-    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
-                   @checkEnd="checkEnd"></CheckPWDialog>
   </div>
+
 </template>
 
 <script lang="ts">
     import Message from '@/message/Message.ts'
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import {multisigInterface} from '@/interface/sdkMultisig.ts'
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
     import {
@@ -103,6 +114,7 @@
 
         currentAddress = ''
         showCheckPWDialog = false
+        isMultisig = false
         formItem = {
             publickeyList: [],
             minApproval: 1,
@@ -171,13 +183,27 @@
             this.sendMultisignConversionTransaction(privatekey)
         }
 
+        getMultisigAccountList() {
+            const that = this
+            const {address} = this.$store.state.account.wallet
+            const {node} = this.$store.state.account
+
+            multisigInterface.getMultisigAccountInfo({
+                address,
+                node
+            }).then((result) => {
+                if (result.result.multisigInfo.cosignatories.length !== 0) {
+                    that.isMultisig = true
+                }
+            })
+        }
+
         sendMultisignConversionTransaction(privatekey) {
             const {publickeyList, minApproval, minRemoval, fee} = this.formItem
             const {networkType} = this.$store.state.account.wallet
             const {generationHash, node} = this.$store.state.account
             const account = Account.createFromPrivateKey(privatekey, networkType)
             const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-
             const multisigCosignatoryModificationList = publickeyList.map(cosigner => new MultisigCosignatoryModification(
                 MultisigCosignatoryModificationType.Add,
                 PublicAccount.createFromPublicKey(cosigner, networkType),
@@ -194,6 +220,12 @@
                 listener: listener,
                 fee: fee
             })
+        }
+
+
+
+        created() {
+            this.getMultisigAccountList()
         }
     }
 </script>

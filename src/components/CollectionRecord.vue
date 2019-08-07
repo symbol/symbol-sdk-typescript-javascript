@@ -32,8 +32,7 @@
     </div>
     <div class="bottom_transfer_record_list scroll">
       <Spin v-if="isLoadingTransactionRecord" size="large" fix></Spin>
-      <div class="transaction_record_item"
-           v-for="c in confirmedTransactionList">
+      <div class="transaction_record_item" v-for="c in confirmedTransactionList">
         <img src="../assets/images/monitor/transaction/transacrionAssetIcon.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
@@ -42,10 +41,11 @@
           </div>
           <div class="right right_components">
             <div class="top">{{c.mosaic?c.mosaic.amount.compact():0}}</div>
-            <div class="bottom">USD
+            <div class="bottom" v-if="c.mosaic">USD
               {{c.mosaic && c.mosaic.id.toHex() == $store.state.account.currentXEM1 || c.mosaic.id.toHex() ==
               $store.state.account.currentXEM2?c.mosaic.amount.compact() * currentPrice:0}}
             </div>
+            <div v-else> 0</div>
           </div>
         </div>
       </div>
@@ -68,7 +68,7 @@
         getCurrentMonthLast,
     } from '@/utils/util.js'
     import {transactionInterface} from '@/interface/sdkTransaction';
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
     import transacrionAssetIcon from '../assets/images/monitor/transaction/transacrionAssetIcon.png'
     import axios from 'axios'
 
@@ -89,25 +89,15 @@
         currentPrice = 0
         transactionHash = ''
 
-        get getWallet () {
-            return this.$store.state.account.wallet
-        }
+        @Prop({
+            default: () => {
+                return 0
+            }
+        })
+        transactionType
 
-        searchByasset() {
-            // let {transactionHash, accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
-            // if (transactionHash.length < 64) {
-            //     this.$Message.destroy()
-            //     this.$Message.error(this['$t']('transaction_hash_error'))
-            //     return
-            // }
-            // const that = this
-            // console.log(transactionHash)
-            // const url = `${node}/transaction/${transactionHash}`
-            // axios.get(url).then(function (response) {
-            //     let result = response.data.transaction
-            // }).catch(() => {
-            //     console.log('no this transaction')
-            // })
+        get getWallet() {
+            return this.$store.state.account.wallet
         }
 
         async getMarketOpenPrice() {
@@ -122,9 +112,6 @@
             });
         }
 
-        showSearchDetail() {
-            // this.isShowSearchDetail = true
-        }
 
         hideSearchDetail() {
             this.isShowSearchDetail = false
@@ -153,7 +140,7 @@
 
         getConfirmedTransactions() {
             const that = this
-            let {accountPrivateKey, accountPublicKey, accountAddress, node} = this
+            let {accountPrivateKey, accountPublicKey, accountAddress, node, transactionType} = this
             const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
             transactionInterface.transactions({
                 publicAccount,
@@ -163,11 +150,33 @@
                 }
             }).then((transactionsResult) => {
                 transactionsResult.result.transactions.subscribe((transactionsInfo) => {
-                    let transferTransaction = formatTransactions(transactionsInfo, accountPublicKey)
-                    that.confirmedTransactionList = transferTransaction
-                    this.localConfirmedTransactions = transferTransaction
+                    let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
+                    let list = []
+// get transaction by choose recript tx or send
+                    if (that.transactionType == 1) {
+                        transferTransaction.forEach((item) => {
+                            if (item.isReceipt) {
+                                list.push(item)
+                            }
+                        })
+                        that.confirmedTransactionList = list
+                        this.localConfirmedTransactions = list
+                        that.onCurrentMonthChange()
+                        that.isLoadingTransactionRecord = false
+                        return
+                    }
+
+                    transferTransaction.forEach((item) => {
+                        if (!item.isReceipt) {
+                            list.push(item)
+                        }
+                    })
+                    that.confirmedTransactionList = list
+                    this.localConfirmedTransactions = list
                     that.onCurrentMonthChange()
                     that.isLoadingTransactionRecord = false
+                    return
+
                 })
             })
         }
@@ -181,7 +190,7 @@
         }
 
         @Watch('getWallet')
-        onGetWalletChange(){
+        onGetWalletChange() {
             this.initData()
             this.getConfirmedTransactions()
         }
@@ -365,7 +374,6 @@
         img {
           display: block;
           width: 32px;
-          height: 32px;
         }
 
         .top {

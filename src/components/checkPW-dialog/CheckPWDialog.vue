@@ -39,10 +39,12 @@
 -->
 
 <script lang="ts">
-    import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
+    import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+    import {walletInterface} from "@/interface/sdkWallet"
+    import Message from "@/message/Message"
     import {Crypto} from 'nem2-sdk'
-    import {walletInterface} from "@/interface/sdkWallet";
-    import Message from "@/message/Message";
+    import "./CheckPWDialog.less"
+
 
     @Component({
         components: {},
@@ -96,5 +98,4 @@
 </script>
 
 <style scoped>
-  @import "CheckPWDialog.less";
 </style>

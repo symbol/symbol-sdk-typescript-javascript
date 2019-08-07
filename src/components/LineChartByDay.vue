@@ -256,7 +256,7 @@
         }
 
         refreshXem() {
-            this.dom = echarts.init(this.$refs.dom);
+            this.dom = echarts.init(this.$refs.dom)
             let {xemDataList, btcDataList} = this
 
 
