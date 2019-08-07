@@ -114,6 +114,16 @@ export abstract class Transaction {
 
     /**
      * @internal
+     */
+    protected abstract buildTransaction(): VerifiableTransaction;
+
+    /**
+     * @internal
+     */
+    protected abstract generateBytes(): Uint8Array;
+
+    /**
+     * @internal
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account - The account to sign the transaction
      * @param generationHash - Network generation hash hex
@@ -142,8 +152,60 @@ export abstract class Transaction {
     }
 
     /**
-     * Converts the transaction into AggregateTransaction compatible
-     * @returns {Array.<*>} AggregateTransaction bytes
+     * @internal
+     * Serialize and sign transaction creating a new SignedTransaction
+     * @param account - The account to sign the transaction
+     * @param generationHash - Network generation hash hex
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {SignedTransaction}
+     */
+    public signWithCatbuffer(account: Account, generationHash: string, signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
+        const generationHashBytes = Array.from(Convert.hexToUint8(generationHash));
+        const byteBuffer = Array.from(this.generateBytes());
+        const signingBytes = generationHashBytes.concat(byteBuffer.slice(4 + 64 + 32));
+        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey, signSchema);
+        const signature = Array.from(KeyPair.sign(account, new Uint8Array(signingBytes), signSchema));
+        const signedTransactionBuffer = byteBuffer
+            .splice(0, 4)
+            .concat(signature)
+            .concat(Array.from(keyPairEncoded.publicKey))
+            .concat(byteBuffer
+                .splice(64 + 32, byteBuffer.length));
+        const payload = Convert.uint8ToHex(signedTransactionBuffer);
+        return new SignedTransaction(
+            payload,
+            this.createTransactionHash(payload, generationHashBytes),
+            account.publicKey,
+            this.type,
+            this.networkType);
+    }
+
+    /**
+     * Generate transaction hash hex
+     * @param {string} transactionPayload HexString Payload
+     * @param {Array<number>} generationHashBuffer Network generation hash byte
+     * @returns {string} Returns Transaction Payload hash
+     */
+    public createTransactionHash(transactionPayload: string, generationHashBuffer: number[]): string {
+        const byteBuffer = Array.from(Convert.hexToUint8(transactionPayload));
+        const signingBytes = byteBuffer
+            .slice(4, 36)
+            .concat(byteBuffer
+                .slice(4 + 64, 4 + 64 + 32))
+            .concat(generationHashBuffer)
+            .concat(byteBuffer
+                .splice(4 + 64 + 32, byteBuffer.length));
+
+        const hash = new Uint8Array(32);
+
+        SHA3Hasher.func(hash, signingBytes, 32);
+
+        return Convert.uint8ToHex(hash);
+    }
+
+    /**
+     * @internal
+     * @returns {Array<number>}
      */
     public aggregateTransaction(): number[] {
         const signer = Convert.hexToUint8(this.signer!.publicKey);
