@@ -110,7 +110,7 @@ describe('ModifyMultisigAccountTransaction', () => {
         expect(modifyMultisigAccountTransaction.modifications[1].cosignatoryPublicAccount.publicKey)
             .to.be.equal('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
 
-        const signedTransaction = modifyMultisigAccountTransaction.signWith(account, generationHash);
+        const signedTransaction = modifyMultisigAccountTransaction.signWithCatbuffer(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,

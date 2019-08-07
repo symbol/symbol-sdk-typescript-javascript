@@ -182,4 +182,11 @@ export class RegisterNamespaceTransaction extends Transaction {
         return registerNamespacetransaction.build();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        throw new Error('Not implemented');
+    }
 }

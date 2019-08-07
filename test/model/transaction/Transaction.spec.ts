@@ -238,4 +238,8 @@ class FakeTransaction extends Transaction {
     protected buildTransaction(): VerifiableTransaction {
         throw new Error('Method not implemented.');
     }
+
+    protected generateBytes(): Uint8Array {
+        throw new Error('Not implemented');
+    }
 }

@@ -13,9 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert as convert } from '../../core/format';
+import { Convert as convert, RawAddress } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/SecretLockTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SecretLockTransactionBuilder } from '../../infrastructure/catbuffer/SecretLockTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
+import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
+import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -135,6 +146,15 @@ export class SecretLockTransaction extends Transaction {
     }
 
     /**
+     * @description Get secret bytes
+     * @returns {Uint8Array}
+     * @memberof SecretLockTransaction
+     */
+    public getSecretByte(): Uint8Array {
+        return convert.hexToUint8(64 > this.secret.length ? this.secret + '0'.repeat(64 - this.secret.length) : this.secret);
+    }
+
+    /**
      * @internal
      * @returns {VerifiableTransaction}
      */
@@ -153,4 +173,28 @@ export class SecretLockTransaction extends Transaction {
             .build();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new SecretLockTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.SECRET_LOCK.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
+                                                   new AmountDto(this.mosaic.amount.toDTO())),
+            new BlockDurationDto(this.duration.toDTO()),
+            this.hashType.valueOf(),
+            new Hash256Dto(this.getSecretByte()),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+        );
+        return transactionBuilder.serialize();
+    }
 }

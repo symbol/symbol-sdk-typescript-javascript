@@ -25,10 +25,10 @@ import { MosaicNonce } from '../../model/mosaic/MosaicNonce';
 import { MosaicProperties } from '../../model/mosaic/MosaicProperties';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { NamespaceType } from '../../model/namespace/NamespaceType';
-import { AccountAddressRestrictionModificationTransaction } from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
+import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
-import { AccountMosaicRestrictionModificationTransaction } from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
-import { AccountOperationRestrictionModificationTransaction } from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
+import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
+import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
 import { AccountRestrictionModification } from '../../model/transaction/AccountRestrictionModification';
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
@@ -100,9 +100,9 @@ export const CreateTransactionFromPayload = (transactionBinary: string): Transac
  */
 const CreateTransaction = (type: number, transactionData: string, networkType: NetworkType, deadline: number[]): Transaction => {
     switch (type) {
-        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS:
-        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION:
-        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC:
+        case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+        case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+        case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
             const propertyTypeLength = 2;
 
             const modificationCountOffset = propertyTypeLength;
@@ -114,8 +114,8 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
             const modificationArray = modifications.match(/.{1,52}/g);
 
             switch (type) {
-                case TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS:
-                    const t =  AccountAddressRestrictionModificationTransaction.create(
+                case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
+                    const t =  AccountAddressRestrictionTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
                         modificationArray ? modificationArray.map((modification) => new AccountRestrictionModification(
@@ -125,8 +125,8 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                         networkType,
                     );
                     return t;
-                case TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC:
-                    return AccountMosaicRestrictionModificationTransaction.create(
+                case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
+                    return AccountMosaicRestrictionTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
                         modificationArray ? modificationArray.map((modification) => new AccountRestrictionModification(
@@ -135,8 +135,8 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
                         )) : [],
                         networkType,
                     );
-                case TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION:
-                    return AccountOperationRestrictionModificationTransaction.create(
+                case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
+                    return AccountOperationRestrictionTransaction.create(
                         Deadline.createFromDTO(deadline),
                         parseInt(convert.uint8ToHex(convert.hexToUint8(propertyType).reverse()), 16),
                         modificationArray ? modificationArray.map((modification) => new AccountRestrictionModification(

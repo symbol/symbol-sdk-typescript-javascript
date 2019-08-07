@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
+import { Convert } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/AccountLinkTransaction';
 import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
+import { AccountLinkTransactionBuilder } from '../../infrastructure/catbuffer/AccountLinkTransactionBuilder';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -111,4 +118,24 @@ export class AccountLinkTransaction extends Transaction {
             .build();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new AccountLinkTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.LINK_ACCOUNT.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new KeyDto(Convert.hexToUint8(this.remoteAccountKey)),
+            this.linkAction.valueOf(),
+        );
+        return transactionBuilder.serialize();
+    }
 }
