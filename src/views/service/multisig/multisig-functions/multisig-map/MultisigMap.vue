@@ -8,7 +8,8 @@
 
     <div class="map_container">
 
-      <img src="../../../../../assets/images/service/test/fake.png" alt="">
+      <TopographicMap></TopographicMap>
+<!--      <img src="../../../../../assets/images/service/test/fake.png" alt="">-->
 <!--      <div class="first_floor">-->
 <!--        <span class="text">{{$t('first_floor')}}</span>-->
 <!--        <span class="circle">-->
@@ -41,8 +42,12 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-
-    @Component
+    import TopographicMap from './TopographicMap.vue'
+    @Component({
+        components:{
+            TopographicMap
+        }
+    })
     export default class MultisigMap extends Vue {
 
 

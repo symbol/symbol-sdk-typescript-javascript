@@ -8,10 +8,10 @@
     </div>
 
     <div class="sub_function_container scroll">
-      <MultisigMap v-show="buttonList[0].isSelected"></MultisigMap>
-      <MultisigConversion v-show="buttonList[1].isSelected"></MultisigConversion>
-      <MultisigManagement v-show="buttonList[2].isSelected"></MultisigManagement>
-<!--      <MultisigCosign v-show="buttonList[3].isSelected"></MultisigCosign>-->
+      <MultisigMap v-if="buttonList[0].isSelected"></MultisigMap>
+      <MultisigConversion v-if="buttonList[1].isSelected"></MultisigConversion>
+      <MultisigManagement v-if="buttonList[2].isSelected"></MultisigManagement>
+<!--      <MultisigCosign v-if="buttonList[3].isSelected"></MultisigCosign>-->
     </div>
   </div>
 </template>

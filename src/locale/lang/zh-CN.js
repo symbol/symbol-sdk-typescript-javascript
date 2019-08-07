@@ -532,8 +532,15 @@ export var zh_CN = {
     co_signers_amount_less_than_0: '共签人数不可小于1',
     min_approval_amount_less_than_0: 'Min approval 不可小于1',
     min_removal_amount_less_than_0: 'Min removal 不可小于1',
-    illegal_publickey_in_the_co_signed_list: '共签列表中存在不合法的账户公钥',
+    illegal_publickey: '存在不合法的账户公钥',
     min_approval_amount_illegal: 'Min approval 必须为数字',
     min_removal_amount_illegal: 'Min removal 必须为数字',
+    currrent: '当前',
+    min_removal_delta: '最小剔除人数的变化量',
+    min_approval_delta: '最小同意人数的变化量',
+    There_are_no_more_accounts_under_this_account: '此账户下暂无多签账户',
+    This_account_is_already_a_multi_sign_account: '此账户已经是一个多签账户',
+    mosaic_id_format_error: '马赛克id格式错误',
+    alias_name_format_error: '别名格式错误'
 };
 //# sourceMappingURL=zh-CN.js.map

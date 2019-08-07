@@ -348,23 +348,19 @@ declare namespace SdkV0 {
             namespaceId: NamespaceId,
             mosaicId: MosaicId,
             networkType: NetworkType,
+            node: string,
+            account: Account,
+            generationHash: string,
             maxFee?: number
         }) => Rst<{
-            aliasMosaicTransaction: {
-                networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                actionType: AliasActionType,
-                namespaceId: NamespaceId,
-                mosaicId: MosaicId
-            }
+            aliasMosaicTransaction: any
         }>;
         addressAliasTransaction: (params: {
             actionType: AliasActionType,
             namespaceId: NamespaceId,
             address: Address,
             networkType: NetworkType,
+
             maxFee?: number
         }) => Rst<{
             aliasAddressTransaction: {
@@ -477,7 +473,7 @@ declare namespace SdkV0 {
             node: string
             fee: number,
             multisigPublickey: string,
-            multisigCosignatoryModificationList:any
+            multisigCosignatoryModificationList: any
         }) => Rst<{
             result: any
         }>;

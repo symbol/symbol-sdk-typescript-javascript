@@ -16,12 +16,9 @@
         <div class="multisig" v-if="transferTypeList[1].isSelect">
           <MultisigTransferTransaction></MultisigTransferTransaction>
         </div>
-
-
       </div>
-
     </div>
-    <CollectionRecord></CollectionRecord>
+    <CollectionRecord :transactionType="0"></CollectionRecord>
   </div>
 </template>
 
