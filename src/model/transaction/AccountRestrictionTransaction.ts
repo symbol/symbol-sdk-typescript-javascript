@@ -17,9 +17,9 @@
 import { RestrictionType } from '../account/RestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
-import { AccountAddressRestrictionModificationTransaction } from './AccountAddressRestrictionModificationTransaction';
-import { AccountMosaicRestrictionModificationTransaction } from './AccountMosaicRestrictionModificationTransaction';
-import { AccountOperationRestrictionModificationTransaction } from './AccountOperationRestrictionModificationTransaction';
+import { AccountAddressRestrictionTransaction } from './AccountAddressRestrictionTransaction';
+import { AccountMosaicRestrictionTransaction } from './AccountMosaicRestrictionTransaction';
+import { AccountOperationRestrictionTransaction } from './AccountOperationRestrictionTransaction';
 import { AccountRestrictionModification } from './AccountRestrictionModification';
 import { Deadline } from './Deadline';
 import { TransactionType } from './TransactionType';
@@ -32,7 +32,7 @@ export class AccountRestrictionTransaction {
      * @param modification - array of address modifications
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {AccountAddressRestrictionModificationTransaction}
+     * @returns {AccountAddressRestrictionTransaction}
      */
     public static createAddressRestrictionModificationTransaction(
         deadline: Deadline,
@@ -40,11 +40,11 @@ export class AccountRestrictionTransaction {
         modifications: Array<AccountRestrictionModification<string>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
-    ): AccountAddressRestrictionModificationTransaction {
+    ): AccountAddressRestrictionTransaction {
         if (![RestrictionType.AllowAddress, RestrictionType.BlockAddress].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
-        return AccountAddressRestrictionModificationTransaction.create(
+        return AccountAddressRestrictionTransaction.create(
             deadline,
             restrictionType,
             modifications,
@@ -60,7 +60,7 @@ export class AccountRestrictionTransaction {
      * @param modification - array of mosaic modifications
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {AccountMosaicRestrictionModificationTransaction}
+     * @returns {AccountMosaicRestrictionTransaction}
      */
     public static createMosaicRestrictionModificationTransaction(
         deadline: Deadline,
@@ -68,11 +68,11 @@ export class AccountRestrictionTransaction {
         modifications: Array<AccountRestrictionModification<number[]>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
-    ): AccountMosaicRestrictionModificationTransaction {
+    ): AccountMosaicRestrictionTransaction {
         if (![RestrictionType.AllowMosaic, RestrictionType.BlockMosaic].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
-        return AccountMosaicRestrictionModificationTransaction.create(
+        return AccountMosaicRestrictionTransaction.create(
             deadline,
             restrictionType,
             modifications,
@@ -96,11 +96,11 @@ export class AccountRestrictionTransaction {
         modifications: Array<AccountRestrictionModification<TransactionType>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
-    ): AccountOperationRestrictionModificationTransaction {
+    ): AccountOperationRestrictionTransaction {
         if (![RestrictionType.AllowTransaction, RestrictionType.BlockTransaction].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
-        return AccountOperationRestrictionModificationTransaction.create(
+        return AccountOperationRestrictionTransaction.create(
             deadline,
             restrictionType,
             modifications,

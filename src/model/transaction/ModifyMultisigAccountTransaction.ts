@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
+import { Convert } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/MultisigModificationTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { CosignatoryModificationBuilder } from '../../infrastructure/catbuffer/CosignatoryModificationBuilder';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { MultisigAccountModificationTransactionBuilder } from '../../infrastructure/catbuffer/MultisigAccountModificationTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
@@ -112,7 +119,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
         // each modification contains :
         // - 1 byte for modificationType
         // - 32 bytes for cosignatoryPublicKey
-        const byteModifications = 33 * this.modifications.length
+        const byteModifications = 33 * this.modifications.length;
 
         return byteSize + byteRemovalDelta + byteApprovalDelta + byteNumModifications + byteModifications;
     }
@@ -132,4 +139,30 @@ export class ModifyMultisigAccountTransaction extends Transaction {
             .build();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new MultisigAccountModificationTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MODIFY_MULTISIG_ACCOUNT.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            this.minRemovalDelta,
+            this.minApprovalDelta,
+            this.modifications.map((modification) => {
+                return new CosignatoryModificationBuilder(
+                    modification.type.valueOf(),
+                    new KeyDto(Convert.hexToUint8(modification.cosignatoryPublicAccount.publicKey)),
+                );
+            }),
+        );
+        return transactionBuilder.serialize();
+    }
 }

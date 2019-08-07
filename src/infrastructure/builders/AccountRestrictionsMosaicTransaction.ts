@@ -45,7 +45,7 @@ export class Builder {
     modifications: any;
     constructor() {
         this.maxFee = [0, 0];
-        this.type = TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC;
+        this.type = TransactionType.ACCOUNT_RESTRICTION_MOSAIC;
     }
 
     addFee(maxFee) {

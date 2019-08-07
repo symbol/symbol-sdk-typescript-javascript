@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-import { Convert as convert } from '../../core/format';
+import { Convert, Convert as convert } from '../../core/format';
+import { RawAddress } from '../../core/format/RawAddress';
 import { Builder } from '../../infrastructure/builders/TransferTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { TransferTransactionBuilder } from '../../infrastructure/catbuffer/TransferTransactionBuilder';
+import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
+import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
+import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -110,6 +121,30 @@ export class TransferTransaction extends Transaction {
     }
 
     /**
+     * Return sorted mosaic arrays
+     * @internal
+     * @returns {Mosaic[]}
+     */
+    public sortMosaics(): Mosaic[] {
+        const sortedMosaics = this.mosaics.sort((a, b) => {
+            if (Number(a.id[1]) > b.id[1]) { return 1; } else if (a.id[1] < b.id[1]) { return -1; }
+            return 0;
+        });
+        return sortedMosaics;
+    }
+
+    /**
+     * Return message buffer
+     * @internal
+     * @returns {Uint8Array}
+     */
+    public getMessageBuffer(): Uint8Array {
+        const payloadBuffer = Convert.hexToUint8(Convert.utf8ToHex(this.message.payload));
+        const typeBuffer = GeneratorUtils.uintToBuffer(this.message.type, 1);
+        return GeneratorUtils.concatTypedArrays(typeBuffer, payloadBuffer);
+    }
+
+    /**
      * @override Transaction.size()
      * @description get the byte size of a TransferTransaction
      * @returns {number}
@@ -146,4 +181,28 @@ export class TransferTransaction extends Transaction {
             .build();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new TransferTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.TRANSFER.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientToString())),
+            this.getMessageBuffer(),
+            this.sortMosaics().map((mosaic) => {
+                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
+                                                   new AmountDto(mosaic.amount.toDTO()));
+            }),
+        );
+        return transactionBuilder.serialize();
+    }
 }

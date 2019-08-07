@@ -16,6 +16,14 @@
 
 import { Builder } from '../../infrastructure/builders/AddressAliasTransaction';
 import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
+import { AddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/AddressAliasTransactionBuilder';
+import { AddressDto } from '../../infrastructure/catbuffer/AddressDto';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -27,6 +35,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { RawAddress } from '../../core/format';
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -126,4 +135,25 @@ export class AddressAliasTransaction extends Transaction {
             .build();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new AddressAliasTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.ADDRESS_ALIAS.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            this.actionType.valueOf(),
+            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            new AddressDto(RawAddress.stringToAddress(this.address.plain())),
+        );
+        return transactionBuilder.serialize();
+    }
 }

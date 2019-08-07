@@ -203,4 +203,12 @@ export class AggregateTransaction extends Transaction {
 
         return byteSize + byteTransactionsSize + byteTransactions;
     }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        throw new Error('Not implemented');
+    }
 }
