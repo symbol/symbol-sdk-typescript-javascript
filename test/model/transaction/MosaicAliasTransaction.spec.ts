@@ -56,7 +56,7 @@ describe('MosaicAliasTransaction', () => {
             namespaceId,
             mosaicId,
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(mosaicAliasTransaction.maxFee.higher).to.be.equal(0);
@@ -80,7 +80,7 @@ describe('MosaicAliasTransaction', () => {
         expect(mosaicAliasTransaction.mosaicId.id.lower).to.be.equal(2262289484);
         expect(mosaicAliasTransaction.mosaicId.id.higher).to.be.equal(3405110546);
 
-        const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
+        const signedTransaction = mosaicAliasTransaction.signWithCatbuffer(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,

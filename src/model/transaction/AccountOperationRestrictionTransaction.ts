@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/AccountRestrictionsMosaicTransaction';
+import { Builder } from '../../infrastructure/builders/AccountRestrictionsEntityTypeTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { PublicAccount } from '../account/PublicAccount';
 import { RestrictionType } from '../account/RestrictionType';
@@ -26,25 +26,32 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { AccountOperationRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
+import { AccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 
-export class AccountMosaicRestrictionModificationTransaction extends Transaction {
+export class AccountOperationRestrictionTransaction extends Transaction {
 
     /**
-     * Create a modify account mosaic restriction transaction object
+     * Create a modify account operation restriction type transaction object
      * @param deadline - The deadline to include the transaction.
      * @param restrictionType - The account restriction type.
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {AccountAddressRestrictionModificationTransaction}
+     * @returns {AccountOperationRestrictionTransaction}
      */
     public static create(deadline: Deadline,
                          restrictionType: RestrictionType,
-                         modifications: Array<AccountRestrictionModification<number[]>>,
+                         modifications: Array<AccountRestrictionModification<TransactionType>>,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AccountMosaicRestrictionModificationTransaction {
-        return new AccountMosaicRestrictionModificationTransaction(networkType,
-            TransactionVersion.MODIFY_ACCOUNT_RESTRICTION_MOSAIC,
+                         maxFee: UInt64 = new UInt64([0, 0])): AccountOperationRestrictionTransaction {
+        return new AccountOperationRestrictionTransaction(networkType,
+            TransactionVersion.MODIFY_ACCOUNT_RESTRICTION_ENTITY_TYPE,
             deadline,
             maxFee,
             restrictionType,
@@ -67,19 +74,19 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
                 deadline: Deadline,
                 maxFee: UInt64,
                 public readonly restrictionType: RestrictionType,
-                public readonly modifications: Array<AccountRestrictionModification<number[]>>,
+                public readonly modifications: Array<AccountRestrictionModification<TransactionType>>,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC,
+        super(TransactionType.ACCOUNT_RESTRICTION_OPERATION,
               networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
      * @override Transaction.size()
-     * @description get the byte size of a AccountMosaicRestrictionModificationTransaction
+     * @description get the byte size of a AccountOperationRestrictionTransaction
      * @returns {number}
-     * @memberof AccountMosaicRestrictionModificationTransaction
+     * @memberof AccountOperationRestrictionTransaction
      */
     public get size(): number {
         const byteSize = super.size;
@@ -90,8 +97,8 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
 
         // each modification contains :
         // - 1 byte for modificationType
-        // - 8 bytes for the modification value (mosaicId)
-        const byteModifications = 9 * this.modifications.length;
+        // - 2 bytes for the modification value (transaction type)
+        const byteModifications = 3 * this.modifications.length;
 
         return byteSize + byteRestrictionType + byteModificationCount + byteModifications;
     }
@@ -110,4 +117,29 @@ export class AccountMosaicRestrictionModificationTransaction extends Transaction
             .build();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new AccountOperationRestrictionTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.ACCOUNT_RESTRICTION_OPERATION.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            this.restrictionType.valueOf(),
+            this.modifications.map((modification) => {
+                return new AccountOperationRestrictionModificationBuilder(
+                    modification.modificationType.valueOf(),
+                    modification.value.valueOf(),
+                );
+            }),
+        );
+        return transactionBuilder.serialize();
+    }
 }

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { AccountAddressRestrictionModificationTransaction } from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
+import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
-import { AccountMosaicRestrictionModificationTransaction } from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
-import { AccountOperationRestrictionModificationTransaction } from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
+import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
+import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
@@ -70,26 +70,26 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 duration: (transaction as LockFundsTransaction).duration.toDTO(),
                 hash: (transaction as LockFundsTransaction).hash,
             };
-        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS:
+        case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
             return {
-                restrictionType: (transaction as AccountAddressRestrictionModificationTransaction).restrictionType,
-                modifications: (transaction as AccountAddressRestrictionModificationTransaction).
+                restrictionType: (transaction as AccountAddressRestrictionTransaction).restrictionType,
+                modifications: (transaction as AccountAddressRestrictionTransaction).
                     modifications.map((modification) => {
                         return modification.toDTO();
                     }),
             };
-        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION:
+        case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
             return {
-                restrictionType: (transaction as AccountOperationRestrictionModificationTransaction).restrictionType,
-                modifications: (transaction as AccountOperationRestrictionModificationTransaction).
+                restrictionType: (transaction as AccountOperationRestrictionTransaction).restrictionType,
+                modifications: (transaction as AccountOperationRestrictionTransaction).
                     modifications.map((modification) => {
                         return modification.toDTO();
                     }),
             };
-        case TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC:
+        case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
             return {
-                restrictionType: (transaction as AccountMosaicRestrictionModificationTransaction).restrictionType,
-                modifications: (transaction as AccountMosaicRestrictionModificationTransaction).modifications.map((modification) => {
+                restrictionType: (transaction as AccountMosaicRestrictionTransaction).restrictionType,
+                modifications: (transaction as AccountMosaicRestrictionTransaction).modifications.map((modification) => {
                         return modification.toDTO();
                     }),
             };

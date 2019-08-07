@@ -42,7 +42,6 @@ describe('MultisigCosignatoryModification', () => {
         expect(multisigCosignatoryModification.type).to.be.equal(MultisigCosignatoryModificationType.Add);
     });
 
-
     it('should create Remove MultisigCosignatoryModification', () => {
         const multisigCosignatoryModification = new MultisigCosignatoryModification(
             MultisigCosignatoryModificationType.Remove,

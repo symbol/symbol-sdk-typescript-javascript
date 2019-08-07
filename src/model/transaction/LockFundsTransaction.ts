@@ -137,4 +137,11 @@ export class LockFundsTransaction extends Transaction {
             .build();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        throw new Error('Not implemented');
+    }
 }

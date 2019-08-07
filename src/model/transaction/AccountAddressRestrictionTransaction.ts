@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/AccountRestrictionsEntityTypeTransaction';
+import { RawAddress } from '../../core/format';
+import { Builder } from '../../infrastructure/builders/AccountRestrictionsAddressTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { AccountAddressRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionModificationBuilder';
+import { AccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionTransactionBuilder';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { RestrictionType } from '../account/RestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -27,24 +36,24 @@ import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
 
-export class AccountOperationRestrictionModificationTransaction extends Transaction {
+export class AccountAddressRestrictionTransaction extends Transaction {
 
     /**
-     * Create a modify account operation restriction type transaction object
+     * Create a modify account address restriction transaction object
      * @param deadline - The deadline to include the transaction.
      * @param restrictionType - The account restriction type.
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {AccountOperationRestrictionModificationTransaction}
+     * @returns {AccountAddressRestrictionTransaction}
      */
     public static create(deadline: Deadline,
                          restrictionType: RestrictionType,
-                         modifications: Array<AccountRestrictionModification<TransactionType>>,
+                         modifications: Array<AccountRestrictionModification<string>>,
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): AccountOperationRestrictionModificationTransaction {
-        return new AccountOperationRestrictionModificationTransaction(networkType,
-            TransactionVersion.MODIFY_ACCOUNT_RESTRICTION_ENTITY_TYPE,
+                         maxFee: UInt64 = new UInt64([0, 0])): AccountAddressRestrictionTransaction {
+        return new AccountAddressRestrictionTransaction(networkType,
+            TransactionVersion.ACCOUNT_RESTRICTION_ADDRESS,
             deadline,
             maxFee,
             restrictionType,
@@ -67,19 +76,19 @@ export class AccountOperationRestrictionModificationTransaction extends Transact
                 deadline: Deadline,
                 maxFee: UInt64,
                 public readonly restrictionType: RestrictionType,
-                public readonly modifications: Array<AccountRestrictionModification<TransactionType>>,
+                public readonly modifications: Array<AccountRestrictionModification<string>>,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
-        super(TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION,
+        super(TransactionType.ACCOUNT_RESTRICTION_ADDRESS,
               networkType, version, deadline, maxFee, signature, signer, transactionInfo);
     }
 
     /**
      * @override Transaction.size()
-     * @description get the byte size of a AccountOperationRestrictionModificationTransaction
+     * @description get the byte size of a AccountAddressRestrictionTransaction
      * @returns {number}
-     * @memberof AccountOperationRestrictionModificationTransaction
+     * @memberof AccountAddressRestrictionTransaction
      */
     public get size(): number {
         const byteSize = super.size;
@@ -90,8 +99,8 @@ export class AccountOperationRestrictionModificationTransaction extends Transact
 
         // each modification contains :
         // - 1 byte for modificationType
-        // - 2 bytes for the modification value (transaction type)
-        const byteModifications = 3 * this.modifications.length;
+        // - 25 bytes for the modification value (address)
+        const byteModifications = 26 * this.modifications.length;
 
         return byteSize + byteRestrictionType + byteModificationCount + byteModifications;
     }
@@ -110,4 +119,29 @@ export class AccountOperationRestrictionModificationTransaction extends Transact
             .build();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new AccountAddressRestrictionTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.ACCOUNT_RESTRICTION_ADDRESS.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            this.restrictionType.valueOf(),
+            this.modifications.map((modification) => {
+                return new AccountAddressRestrictionModificationBuilder(
+                    modification.modificationType.valueOf(),
+                    new UnresolvedAddressDto(RawAddress.stringToAddress(modification.value)),
+                );
+            }),
+        );
+        return transactionBuilder.serialize();
+    }
 }
