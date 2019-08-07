@@ -54,7 +54,7 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         expect(mosaicGlobalRestrictionTransaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.EQ);
         expect(mosaicGlobalRestrictionTransaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
 
-        const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
+        const signedTransaction = mosaicGlobalRestrictionTransaction.signWithCatbuffer(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,

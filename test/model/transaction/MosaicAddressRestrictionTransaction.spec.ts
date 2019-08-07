@@ -47,7 +47,7 @@ describe('MosaicAddressRestrictionTransaction', () => {
         expect(mosaicAddressRestrictionTransaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(8).toHex());
         expect(mosaicAddressRestrictionTransaction.targetAddress.plain()).to.be.equal(account.address.plain());
 
-        const signedTransaction = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
+        const signedTransaction = mosaicAddressRestrictionTransaction.signWithCatbuffer(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,

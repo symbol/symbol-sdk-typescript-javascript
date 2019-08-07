@@ -18,6 +18,7 @@ import { Builder } from '../../infrastructure/builders/SecretLockTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
+import { EmbeddedSecretLockTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretLockTransactionBuilder';
 import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
@@ -188,6 +189,27 @@ export class SecretLockTransaction extends Transaction {
             TransactionType.SECRET_LOCK.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
+                                                   new AmountDto(this.mosaic.amount.toDTO())),
+            new BlockDurationDto(this.duration.toDTO()),
+            this.hashType.valueOf(),
+            new Hash256Dto(this.getSecretByte()),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedSecretLockTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.SECRET_LOCK.valueOf(),
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
                                                    new AmountDto(this.mosaic.amount.toDTO())),
             new BlockDurationDto(this.duration.toDTO()),
