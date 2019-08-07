@@ -66,7 +66,7 @@ describe('AccountLinkTransaction', () => {
         expect(accountLinkTransaction.linkAction).to.be.equal(1);
         expect(accountLinkTransaction.remoteAccountKey).to.be.equal(account.publicKey);
 
-        const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
+        const signedTransaction = accountLinkTransaction.signWithCatbuffer(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,

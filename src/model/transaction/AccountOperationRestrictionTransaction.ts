@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-import { SignSchema } from '../../core/crypto/SignSchema';
-import { Convert } from '../../core/format';
-import { AccountOperationRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
-import { AccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { EmbeddedAccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountOperationRestrictionTransactionBuilder';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { AccountRestrictionType } from '../account/AccountRestrictionType';
+import { Builder } from '../../infrastructure/builders/AccountRestrictionsEntityTypeTransaction';
+import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { PublicAccount } from '../account/PublicAccount';
+import { RestrictionType } from '../account/RestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountRestrictionModification } from './AccountRestrictionModification';
 import { Deadline } from './Deadline';
-import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { AccountOperationRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
+import { AccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 
 export class AccountOperationRestrictionTransaction extends Transaction {
 
@@ -47,7 +46,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      * @returns {AccountOperationRestrictionTransaction}
      */
     public static create(deadline: Deadline,
-                         restrictionType: AccountRestrictionType,
+                         restrictionType: RestrictionType,
                          modifications: Array<AccountRestrictionModification<TransactionType>>,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountOperationRestrictionTransaction {
@@ -74,43 +73,13 @@ export class AccountOperationRestrictionTransaction extends Transaction {
                 version: number,
                 deadline: Deadline,
                 maxFee: UInt64,
-                public readonly restrictionType: AccountRestrictionType,
+                public readonly restrictionType: RestrictionType,
                 public readonly modifications: Array<AccountRestrictionModification<TransactionType>>,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.ACCOUNT_RESTRICTION_OPERATION,
               networkType, version, deadline, maxFee, signature, signer, transactionInfo);
-    }
-
-    /**
-     * Create a transaction object from payload
-     * @param {string} payload Binary payload
-     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
-     * @returns {Transaction | InnerTransaction}
-     */
-    public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false,
-                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
-        const builder = isEmbedded ? EmbeddedAccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
-            AccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signer = Convert.uint8ToHex(builder.getSigner().key);
-        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
-        const transaction = AccountOperationRestrictionTransaction.create(
-            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
-                (builder as AccountOperationRestrictionTransactionBuilder).getDeadline().timestamp),
-            builder.getRestrictionType().valueOf(),
-            builder.getModifications().map((modification) => {
-                return AccountRestrictionModification.createForOperation(
-                    modification.modificationAction.valueOf(),
-                    modification.value.valueOf(),
-                );
-            }),
-            networkType,
-            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountOperationRestrictionTransactionBuilder).fee.amount),
-        );
-        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
     }
 
     /**
@@ -136,6 +105,20 @@ export class AccountOperationRestrictionTransaction extends Transaction {
 
     /**
      * @internal
+     * @returns {VerifiableTransaction}
+     */
+    protected buildTransaction(): VerifiableTransaction {
+        return new Builder()
+            .addDeadline(this.deadline.toDTO())
+            .addFee(this.maxFee.toDTO())
+            .addVersion(this.versionToDTO())
+            .addRestrictionType(this.restrictionType)
+            .addModifications(this.modifications.map((modification) => modification.toDTO()))
+            .build();
+    }
+
+    /**
+     * @internal
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
@@ -149,26 +132,6 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             TransactionType.ACCOUNT_RESTRICTION_OPERATION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.restrictionType.valueOf(),
-            this.modifications.map((modification) => {
-                return new AccountOperationRestrictionModificationBuilder(
-                    modification.modificationType.valueOf(),
-                    modification.value.valueOf(),
-                );
-            }),
-        );
-        return transactionBuilder.serialize();
-    }
-
-    /**
-     * @internal
-     * @returns {Uint8Array}
-     */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedAccountOperationRestrictionTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
-            this.versionToDTO(),
-            TransactionType.ACCOUNT_RESTRICTION_OPERATION.valueOf(),
             this.restrictionType.valueOf(),
             this.modifications.map((modification) => {
                 return new AccountOperationRestrictionModificationBuilder(
