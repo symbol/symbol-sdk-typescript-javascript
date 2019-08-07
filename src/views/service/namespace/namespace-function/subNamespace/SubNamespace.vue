@@ -87,7 +87,7 @@
         form = {
             rootNamespaceName: '',
             subNamespaceName:'',
-            maxFee:10000000
+            maxFee:50000
         }
         durationIntoDate = 0
         multisigPublickey = ''
@@ -181,7 +181,7 @@
             this.form = {
                 rootNamespaceName: '',
                 subNamespaceName:'',
-                maxFee:0
+                maxFee:50000
             }
         }
 

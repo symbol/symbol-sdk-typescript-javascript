@@ -48,10 +48,11 @@
         <div class="check_box">
           <Checkbox class="check_box_item" v-model="formItem.transferable">{{$t('transmittable')}}</Checkbox>
           <Checkbox class="check_box_item" v-model="formItem.supplyMutable">{{$t('variable_upply')}}</Checkbox>
+          <Checkbox class="check_box_item" v-model="formItem.permanent">{{$t('duration_permanent')}}</Checkbox>
         </div>
 
 
-        <div class="form_item duration_item">
+        <div class="form_item duration_item" v-if="!formItem.permanent">
           <span class="key">{{$t('duration')}}</span>
           <span class="value">
              <input v-model="formItem.duration" @input="durationChange" type="text" :placeholder="$t('undefined')">
@@ -62,7 +63,7 @@
           </div>
         </div>
 
-        <div class="form_item XEM_rent_fee">
+        <div class="form_item XEM_rent_fee" v-if="false">
           <span class="key">{{$t('rent')}}</span>
           <span class="value">{{Number(formItem.duration)}}XEM</span>
         </div>
@@ -141,8 +142,9 @@
             divisibility: 6,
             transferable: true,
             supplyMutable: true,
+            permanent: false,
             duration: 1000,
-            fee: 10000000
+            fee: 50000
         }
 
         get getWallet() {
@@ -244,8 +246,8 @@
                 supplyMutable: supplyMutable,
                 transferable: transferable,
                 divisibility: Number(divisibility),
-                duration: Number(duration),
-                netWorkType: NetworkType.MIJIN_TEST,
+                duration: this.formItem.permanent ? undefined : Number(duration),
+                netWorkType:  this.getWallet.networkType,
                 maxFee: Number(fee),
                 publicAccount: account.publicAccount
             }).then((result: any) => {
@@ -313,12 +315,13 @@
 
         initForm() {
             this.formItem = {
-                supply: 0,
-                divisibility: 1,
+                supply: 500000000,
+                divisibility: 6,
                 transferable: true,
                 supplyMutable: true,
-                duration: 0,
-                fee: 0
+                permanent: false,
+                duration: 1000,
+                fee: 50000
             }
         }
 

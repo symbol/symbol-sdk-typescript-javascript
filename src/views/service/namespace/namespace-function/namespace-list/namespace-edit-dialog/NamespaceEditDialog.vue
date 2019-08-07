@@ -14,16 +14,22 @@
         <div class="stepItem1">
           <Form :model="namespace">
             <FormItem :label="$t('space_name')">
-              <p class="namespaceTxt">{{currentNamespaceName}}</p>
+              <p class="namespaceTxt">{{currentNamespace.name}}</p>
             </FormItem>
             <FormItem :label="$t('duration')">
-              <Input v-model="namespace.duration" required
+              <Input v-model="namespace.duration"
+                     number
+                     required
+                     @input="changeXEMRentFee"
                      :placeholder="$t('enter_the_number_of_blocks_integer')"></Input>
-              <p class="tails">{{$t('validity_period')}}：0{{$t('time_day')}}</p>
+              <p class="tails">{{$t('validity_period')}}：{{durationIntoDate}}</p>
             </FormItem>
             <FormItem :label="$t('fee')">
-              <Input v-model="namespace.fee" required placeholder="0.05"></Input>
-              <p class="tails">XEM</p>
+              <Input v-model="namespace.fee" number required placeholder=""></Input>
+              <p class="tails">gas</p>
+              <div class="tips">
+                {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+              </div>
             </FormItem>
             <FormItem :label="$t('password')">
               <Input v-model="namespace.password" type="password" required
@@ -41,8 +47,13 @@
 
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
+    import {formatSeconds, formatAddress} from '@/utils/util.js'
     import './NamespaceEditDialog.less';
-    import Message from "@/message/Message";
+    import {Account, Crypto} from 'nem2-sdk'
+    import {walletInterface} from "../../../../../../interface/sdkWallet";
+    import Message from "../../../../../../message/Message";
+    import {aliasInterface} from "../../../../../../interface/sdkNamespace";
+    import {transactionInterface} from "../../../../../../interface/sdkTransaction";
 
 
     @Component
@@ -50,29 +61,149 @@
         stepIndex = 0
         show = false
         namespace = {
-            name: 'asdwa',
-            duration: '',
-            fee: '',
+            name: '',
+            duration: 0,
+            fee: 50000,
             password: ''
         }
+        durationIntoDate = 0
 
         @Prop()
         showNamespaceEditDialog: boolean
 
 
         @Prop()
-        currentNamespaceName: any
+        currentNamespace: any
 
+        get getWallet () {
+            return this.$store.state.account.wallet
+        }
+
+        get generationHash () {
+            return this.$store.state.account.generationHash
+        }
+
+        get node () {
+            return this.$store.state.account.node
+        }
 
         namespaceEditDialogCancel() {
+            this.initForm()
             this.$emit('closeNamespaceEditDialog')
         }
 
         updateNamespace() {
+            this.checkNamespaceForm()
+        }
+
+        changeXEMRentFee() {
+            const duration = Number(this.namespace.duration)
+            if (Number.isNaN(duration)) {
+                this.namespace.duration = 0
+                this.durationIntoDate = 0
+                return
+            }
+            if (duration * 12 >= 60 * 60 * 24 * 365) {
+                this.$Message.error(Message.DURATION_MORE_THAN_1_YEARS_ERROR)
+                this.namespace.duration = 0
+            }
+            this.durationIntoDate = formatSeconds(duration * 12)
+        }
+        checkInfo() {
+            const {namespace} = this
+
+            if (namespace.fee === 0) {
+                this.$Notice.error({
+                    title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
+                })
+                return false
+            }
+            if (namespace.duration === 0) {
+                this.$Notice.error({
+                    title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
+                })
+                return false
+            }
+            if (namespace.password === '') {
+                this.$Notice.error({
+                    title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
+                })
+                return false
+            }
+            return true
+        }
+        checkNamespaceForm() {
+            if (!this.checkInfo()) {
+                return
+            }
+            this.decryptKey()
+        }
+        decryptKey () {
+            let encryptObj = {
+                ciphertext: this.getWallet.ciphertext,
+                iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
+                key: this.namespace.password
+            }
+            this.checkPrivateKey(Crypto.decrypt(encryptObj))
+        }
+        checkPrivateKey (DeTxt) {
+            const that = this
+            walletInterface.getWallet({
+                name: this.getWallet.name,
+                networkType: this.getWallet.networkType,
+                privateKey: DeTxt.length === 64 ? DeTxt : ''
+            }).then(async (Wallet: any) => {
+                this.updateMosaic(DeTxt)
+            }).catch(() => {
+                that.$Notice.error({
+                    title: this.$t('password_error') + ''
+                })
+            })
+        }
+        async updateMosaic (key) {
+            const that =this
+            let transaction
+            const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
+            await this.createRootNamespace().then((rootNamespaceTransaction)=>{
+                transaction = rootNamespaceTransaction
+                const signature = account.sign(transaction, this.generationHash)
+                transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
+                    // get announce status
+                    announceResult.result.announceStatus.subscribe((announceInfo: any) => {
+                        that.$Notice.success({
+                            title: this.$t(Message.SUCCESS) + ''
+                        })
+                        that.initForm()
+                        that.updatedNamespace()
+                    })
+                })
+            })
+        }
+
+        createRootNamespace(){
+            return aliasInterface.createdRootNamespace({
+                namespaceName: this.currentNamespace.name,
+                duration: this.namespace.duration,
+                networkType: this.getWallet.networkType,
+                maxFee: this.namespace.fee
+            }).then((transaction)=>{
+                return transaction.result.rootNamespaceTransaction
+            })
+        }
+
+        updatedNamespace () {
             this.show = false
             this.namespaceEditDialogCancel()
-            // @ts-ignore
-            this.$Notice.success({title: Message.OPERATION_SUCCESS, desc: Message.UPDATE_SUCCESS});
+        }
+
+        initForm () {
+            this.namespace = {
+                name: '',
+                duration: 0,
+                fee: 50000,
+                password: ''
+            }
+            this.durationIntoDate = 0
         }
 
         @Watch('showNamespaceEditDialog')

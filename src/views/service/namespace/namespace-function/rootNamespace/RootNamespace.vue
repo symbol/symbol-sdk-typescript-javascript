@@ -49,7 +49,7 @@
                     </div>
                 </div>
 
-                <div class="form_item XEM_rent_fee">
+                <div class="form_item XEM_rent_fee" v-if="false">
                     <span class="key">{{$t('rent')}}</span>
                     <span class="value">{{Number(form.duration)}}XEM</span>
                 </div>
@@ -94,7 +94,7 @@
         form = {
             duration: 1000,
             rootNamespaceName: '',
-            maxFee:10000000
+            maxFee:50000
         }
         durationIntoDate = 0
         multisigPublickey = ''
@@ -182,9 +182,9 @@
 
         initForm () {
             this.form = {
-                duration: 0,
+                duration: 1000,
                 rootNamespaceName: '',
-                maxFee:0
+                maxFee:50000
             }
         }
 

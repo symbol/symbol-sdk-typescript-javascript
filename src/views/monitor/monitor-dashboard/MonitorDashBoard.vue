@@ -77,6 +77,7 @@
                    alt="">
               <span class="account">{{c.oppositeAddress}}</span>
               <span class="transfer_type">{{c.isReceipt ? $t('gathering'):$t('payment')}}</span>
+              <span class="mosaicId">{{c.mosaic?c.mosaic.id.toHex().toUpperCase():null}}</span>
               <span class="amount" v-if="c.mosaic">{{c.isReceipt ? '+':'-'}}{{c.mosaic.amount.compact()}}</span>
               <span v-else class="amount"> 0</span>
               <span class="date">{{c.time}}</span>
@@ -249,6 +250,10 @@
                 {
                     key: 'aims',
                     value: transaction.recipientAddress
+                },
+                {
+                    key: 'mosaic',
+                    value: transaction.mosaic?transaction.mosaic.id.toHex().toUpperCase():null
                 },
                 {
                     key: 'the_amount',

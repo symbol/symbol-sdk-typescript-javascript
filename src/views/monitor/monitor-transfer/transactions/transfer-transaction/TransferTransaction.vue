@@ -95,7 +95,7 @@
         mosaic: any = ''
         amount: any = '0'
         remark = ''
-        fee: any = '10000000'
+        fee: any = '50000'
         generationHash = ''
 
         isShowSubAlias = false
@@ -106,7 +106,7 @@
         }
 
         initForm() {
-            this.fee = '10000000'
+            this.fee = '50000'
             this.remark = ''
             this.address = ''
             this.mosaic = ''

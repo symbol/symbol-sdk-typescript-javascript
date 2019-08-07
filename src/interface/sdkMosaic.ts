@@ -76,7 +76,7 @@ export const mosaicInterface: SdkV0.mosaic = {
                 supplyMutable: supplyMutable,
                 transferable: transferable,
                 divisibility: divisibility,
-                duration: UInt64.fromUint(duration)
+                duration: duration ? UInt64.fromUint(duration): undefined
             }),
             netWorkType,
             maxFee ? UInt64.fromUint(maxFee) : undefined
@@ -137,7 +137,7 @@ export const mosaicInterface: SdkV0.mosaic = {
     },
 
     getMosaicsNames: async (params) => {
-        const mosaicsNamesInfos = new MosaicHttp(params.node).getMosaicsNames(params.mosaicIds)
+        const mosaicsNamesInfos =await new MosaicHttp(params.node).getMosaicsNames(params.mosaicIds)
         return {
             result: {
                 mosaicsNamesInfos: mosaicsNamesInfos

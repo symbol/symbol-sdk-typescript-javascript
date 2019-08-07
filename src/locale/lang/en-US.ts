@@ -233,6 +233,7 @@ export const en_US = {
     please_enter_separability: 'Please enter separability',
     transmittable: 'Transmittable',
     variable_upply: 'Variable upply',
+    duration_permanent: 'Whether it is permanent',
     other_information: 'Information',
     duration: 'Duration',
     enter_the_number_of_blocks_integer: 'Enter the number of blocks (integer)',
@@ -241,9 +242,12 @@ export const en_US = {
     mosaic_list: 'Mosaic list',
     mosaic_ID: 'Mosaic ID',
     available_quantity: 'Supply',
+    mosaic_divisibility: 'Divisibility',
     transportability: 'Transportability',
     variable_supply: 'Supply',
-    effective_time: 'Duration',
+    effective_time: 'Duration(block)',
+    overdue: 'Overdue',
+    forever: 'Forever',
     alias: 'Alias',
 
     // edit dialog

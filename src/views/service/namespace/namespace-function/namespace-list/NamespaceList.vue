@@ -11,7 +11,7 @@
         <span class="namesapce_name">{{$t('space_name')}}</span>
         <span class="duration">{{$t('duration')}}</span>
         <!--        // TODO-->
-        <img src="../../../../../assets/images/service/moreFn.png">
+        <!--<img src="../../../../../assets/images/service/moreFn.png">-->
       </div>
 
       <div class="table_body">
@@ -19,11 +19,11 @@
           <span class="namesapce_name">{{n.name}}</span>
           <span class="duration">{{computeDuration(n.duration)}} ({{durationToTime(n.duration)}})</span>
           <!--        // TODO-->
-          <span class="more">
+          <span class="more" v-if="n.levels === 1">
             <Poptip class="poptip_container" placement="top-start">
               <i class="moreFn"></i>
               <div slot="content" max-width="50" class="refresh_sub_container">
-                <span class="fnItem pointer" @click="showEditDialog(n.name)">
+                <span class="fnItem pointer" @click="showEditDialog(n)">
                   <img src="../../../../../assets/images/service/namespace/namespaceRefresh.png">
                   <span>{{$t('update')}}</span>
                 </span>
@@ -39,7 +39,7 @@
 
       </div>
     </div>
-    <NamespaceEditDialog :currentNamespaceName="currentNamespaceName" :showNamespaceEditDialog="showNamespaceEditDialog"
+    <NamespaceEditDialog :currentNamespace="currentNamespace" :showNamespaceEditDialog="showNamespaceEditDialog"
                          @closeNamespaceEditDialog='closeNamespaceEditDialog'></NamespaceEditDialog>
   </div>
 </template>
@@ -57,7 +57,7 @@
     })
     export default class NamespaceList extends Vue {
         showNamespaceEditDialog = false
-        currentNamespaceName = ''
+        currentNamespace = ''
 
         get namespaceList () {
             return this.$store.state.account.namespace
@@ -68,7 +68,7 @@
         }
 
         showEditDialog(namespaceName) {
-            this.currentNamespaceName = namespaceName
+            this.currentNamespace = namespaceName
             this.showNamespaceEditDialog = true
         }
 
@@ -83,14 +83,6 @@
 
         durationToTime(duration) {
             const durationNum = Number(duration)
-            if (Number.isNaN(durationNum)) {
-                return duration
-            }
-            if (durationNum * 12 >= 60 * 60 * 24 * 3650) {
-                this.$Notice.error({
-                    title: this.$t(Message.DURATION_MORE_THAN_10_YEARS_ERROR) + ''
-                })
-            }
             return formatSeconds(durationNum * 12)
 
         }

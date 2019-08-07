@@ -17,7 +17,7 @@ import {
     MultisigAccountInfo,
     MultisigAccountGraphInfo,
     Listener,
-    MultisigCosignatoryModification
+    MultisigCosignatoryModification, MosaicSupplyChangeTransaction
 } from 'nem2-sdk'
 
 declare namespace SdkV0 {
@@ -263,7 +263,7 @@ declare namespace SdkV0 {
             supplyMutable: boolean,
             transferable: boolean,
             divisibility: number,
-            duration: number,
+            duration: number | undefined,
             netWorkType: number,
             supply: number,
             publicAccount: PublicAccount,
@@ -278,7 +278,7 @@ declare namespace SdkV0 {
             netWorkType: number,
             maxFee?: number
         }) => Rst<{
-            mosaicSupplyChangeTransaction: object
+            mosaicSupplyChangeTransaction: MosaicSupplyChangeTransaction
         }>;
         getMosaics: (params: {
             node: string,

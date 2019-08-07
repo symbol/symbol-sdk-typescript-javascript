@@ -84,6 +84,7 @@
                         .sort((a,b)=>{
                             return a['namespaceInfo']['depth'] - b['namespaceInfo']['depth']
                         }).map((item, index)=>{
+                            console.log(item)
                         if(!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())){
                             namespace[item.namespaceInfo.id.toHex()] = item.namespaceName
                         }else {
@@ -97,6 +98,7 @@
                         const newObj ={
                             value: namespaceName,
                             label: namespaceName,
+                            alias: item.namespaceInfo.alias,
                             levels: item.namespaceInfo.levels.length,
                             name: namespaceName,
                             duration: item.namespaceInfo.endHeight.compact(),
@@ -109,6 +111,11 @@
 
         @Watch('ConfirmedTxList')
         onConfirmedTxChange() {
+            this.getMyNamespaces()
+        }
+
+        @Watch('getWallet')
+        onGetWalletChange() {
             this.getMyNamespaces()
         }
 

@@ -38,6 +38,7 @@
                   <div>{{value.amount}}</div>
                 </span>
                 </div>
+                <div class="mosaic_data"></div>
               </div>
             </TabPane>
             <!--            <TabPane :label="$t('namespace')" name="name2">-->
@@ -98,7 +99,7 @@
                 <div class="complete" @click="showMosaicMap">{{$t('complete')}}</div>
 
               </div>
-
+              <div class="mosaic_data"></div>
             </div>
 
           </div>

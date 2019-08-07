@@ -1,71 +1,67 @@
 <template>
-  <div class="mosaicAliasDialogWrap">
-    <Modal
-            v-model="show"
-            class-name="vertical-center-modal"
-            :footer-hide="true"
-            :width="1000"
-            :transfer="false"
-            @on-cancel="mosaicAliasDialogCancel">
-      <div slot="header" class="mosaicAliasDialogHeader">
-        <span class="title">{{$t('binding_alias')}}</span>
-      </div>
-      <div class="mosaicAliasDialogBody">
-        <div class="stepItem1">
-          <Form :model="mosaic">
-            <FormItem :label="$t('mosaic_ID')">
-              <p class="mosaicTxt">{{mosaic.hex}}</p>
-            </FormItem>
-            <FormItem :label="$t('alias_selection')">
-              <Select v-model="mosaic.aliasName" required>
-                <Option :value="item.value" v-for="(item,index) in aliasNameList" :key="index">{{item.label}}</Option>
-              </Select>
-            </FormItem>
-            <FormItem :label="$t('fee')">
-              <Input v-model="mosaic.fee" number required placeholder=""></Input>
-              <p class="tails">gas</p>
-                <div class="tips">
-                    {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+    <div class="mosaicUnAliasDialogWrap">
+        <Modal
+                v-model="show"
+                class-name="vertical-center-modal"
+                :footer-hide="true"
+                :width="1000"
+                :transfer="false"
+                @on-cancel="mosaicAliasDialogCancel">
+            <div slot="header" class="mosaicAliasDialogHeader">
+                <span class="title">{{$t('unbind')}}</span>
+            </div>
+            <div class="mosaicAliasDialogBody">
+                <div class="stepItem1">
+                    <Form :model="mosaic">
+                        <FormItem :label="$t('mosaic_ID')">
+                            <p class="mosaicTxt">{{mosaic.hex}}</p>
+                        </FormItem>
+                        <FormItem :label="$t('binding_alias')">
+                            <p class="mosaicTxt">{{mosaic.name}}</p>
+                        </FormItem>
+                        <FormItem :label="$t('fee')">
+                            <Input v-model="mosaic.fee" number required placeholder=""></Input>
+                            <p class="tails">gas</p>
+                            <div class="tips">
+                                {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+                            </div>
+                        </FormItem>
+                        <FormItem :label="$t('password')">
+                            <Input v-model="mosaic.password" type="password" required
+                                   :placeholder="$t('please_enter_your_wallet_password')"></Input>
+                        </FormItem>
+                        <FormItem class="button_update">
+                            <Button type="success" @click="updateMosaicAlias">{{$t('unbind')}}</Button>
+                        </FormItem>
+                    </Form>
                 </div>
-            </FormItem>
-            <FormItem :label="$t('password')">
-              <Input v-model="mosaic.password" type="password" required
-                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
-            </FormItem>
-            <FormItem class="button_update">
-              <Button type="success" @click="updateMosaicAlias">{{$t('bind')}}</Button>
-            </FormItem>
-          </Form>
-        </div>
-      </div>
-    </Modal>
-  </div>
+            </div>
+        </Modal>
+    </div>
 </template>
 
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
-    import './MosaicAliasDialog.less';
+    import './mosaicUnAliasDialog.less';
     import Message from "../../../../../../message/Message";
     import {walletInterface} from "../../../../../../interface/sdkWallet";
     import {transactionInterface} from "../../../../../../interface/sdkTransaction";
     import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk";
     import {aliasInterface} from "../../../../../../interface/sdkNamespace";
-    import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias";
 
     @Component({
         components: {},
     })
-    export default class mosaicAliasDialog extends Vue {
+    export default class mosaicUnAliasDialog extends Vue {
         show = false
         mosaic = {
-            aliasName: '',
             fee: 50000,
             password: ''
         }
         aliasNameList: any[] = []
 
         @Prop()
-        showMosaicAliasDialog: boolean
+        showMosaicUnAliasDialog: boolean
         @Prop()
         itemMosaic: any
 
@@ -81,13 +77,9 @@
             return this.$store.state.account.node
         }
 
-        get namespaceList () {
-            return this.$store.state.account.namespace
-        }
-
         mosaicAliasDialogCancel() {
             this.initForm()
-            this.$emit('closeMosaicAliasDialog')
+            this.$emit('closeMosaicUnAliasDialog')
         }
         updateMosaicAlias () {
             this.checkNamespaceForm()
@@ -96,12 +88,6 @@
             const {mosaic} = this
 
             if (mosaic.fee === 0) {
-                this.$Notice.error({
-                    title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-                })
-                return false
-            }
-            if (mosaic.aliasName === '') {
                 this.$Notice.error({
                     title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
                 })
@@ -149,8 +135,8 @@
             let transaction
             const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
             aliasInterface.mosaicAliasTransaction({
-                actionType:AliasActionType.Link,
-                namespaceId: new NamespaceId(that.mosaic.aliasName),
+                actionType:AliasActionType.Unlink,
+                namespaceId: new NamespaceId(that.mosaic['name']),
                 mosaicId: new MosaicId(that.mosaic['hex']),
                 networkType: this.getWallet.networkType,
                 maxFee:that.mosaic.fee
@@ -179,30 +165,16 @@
 
         initForm () {
             this.mosaic = {
-                aliasName: '',
                 fee: 50000,
                 password: ''
             }
         }
-        initData () {
-            let list = []
-            this.namespaceList.map((item, index)=>{
-                if(item.alias instanceof EmptyAlias){
-                    list.push(item)
-                }
-            })
-            this.aliasNameList = list
-        }
 
-        @Watch('showMosaicAliasDialog')
+        @Watch('showMosaicUnAliasDialog')
         onShowMosaicAliasDialogChange() {
-            this.show = this.showMosaicAliasDialog
+            this.show = this.showMosaicUnAliasDialog
             Object.assign(this.mosaic, this.itemMosaic)
-            this.initData()
-        }
-        @Watch('namespaceList')
-        onNamespaceListChange(){
-            this.initData()
+            console.log(this.mosaic)
         }
     }
 </script>

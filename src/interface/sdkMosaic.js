@@ -79,7 +79,7 @@ export var mosaicInterface = {
                 supplyMutable: supplyMutable,
                 transferable: transferable,
                 divisibility: divisibility,
-                duration: UInt64.fromUint(duration)
+                duration: duration ? UInt64.fromUint(duration) : undefined
             }), netWorkType, maxFee ? UInt64.fromUint(maxFee) : undefined);
             mosaicSupplyChangeTx = MosaicSupplyChangeTransaction.create(Deadline.create(), mosaicDefinitionTx.mosaicId, MosaicSupplyType.Increase, UInt64.fromUint(supply), netWorkType);
             mosaicDefinitionTransaction = AggregateTransaction.createComplete(Deadline.create(), [
@@ -123,12 +123,16 @@ export var mosaicInterface = {
     getMosaicsNames: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var mosaicsNamesInfos;
         return tslib_1.__generator(this, function (_a) {
-            mosaicsNamesInfos = new MosaicHttp(params.node).getMosaicsNames(params.mosaicIds);
-            return [2 /*return*/, {
-                    result: {
-                        mosaicsNamesInfos: mosaicsNamesInfos
-                    }
-                }];
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new MosaicHttp(params.node).getMosaicsNames(params.mosaicIds)];
+                case 1:
+                    mosaicsNamesInfos = _a.sent();
+                    return [2 /*return*/, {
+                            result: {
+                                mosaicsNamesInfos: mosaicsNamesInfos
+                            }
+                        }];
+            }
         });
     }); },
 };
