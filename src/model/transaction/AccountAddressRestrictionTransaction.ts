@@ -20,6 +20,7 @@ import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTra
 import { AccountAddressRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionModificationBuilder';
 import { AccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedAccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountAddressRestrictionTransactionBuilder';
 import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
@@ -134,6 +135,28 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             TransactionType.ACCOUNT_RESTRICTION_ADDRESS.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            this.restrictionType.valueOf(),
+            this.modifications.map((modification) => {
+                return new AccountAddressRestrictionModificationBuilder(
+                    modification.modificationType.valueOf(),
+                    new UnresolvedAddressDto(RawAddress.stringToAddress(modification.value)),
+                );
+            }),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedAccountAddressRestrictionTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.ACCOUNT_RESTRICTION_ADDRESS.valueOf(),
             this.restrictionType.valueOf(),
             this.modifications.map((modification) => {
                 return new AccountAddressRestrictionModificationBuilder(

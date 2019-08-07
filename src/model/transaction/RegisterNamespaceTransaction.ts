@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-import { Convert as convert } from '../../core/format';
+import { Convert, Convert as convert } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/NamespaceCreationTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
+import { EmbeddedNamespaceRegistrationTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedNamespaceRegistrationTransactionBuilder';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
+import { NamespaceRegistrationTransactionBuilder } from '../../infrastructure/catbuffer/NamespaceRegistrationTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -187,6 +195,67 @@ export class RegisterNamespaceTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        throw new Error('Not implemented');
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+        let transactionBuilder: NamespaceRegistrationTransactionBuilder;
+        if (this.namespaceType === NamespaceType.RootNamespace) {
+            transactionBuilder = new NamespaceRegistrationTransactionBuilder(
+                new SignatureDto(signatureBuffer),
+                new KeyDto(signerBuffer),
+                this.versionToDTO(),
+                TransactionType.REGISTER_NAMESPACE.valueOf(),
+                new AmountDto(this.maxFee.toDTO()),
+                new TimestampDto(this.deadline.toDTO()),
+                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
+                new BlockDurationDto(this.duration!.toDTO()),
+                undefined,
+            );
+        } else {
+            transactionBuilder = new NamespaceRegistrationTransactionBuilder(
+                new SignatureDto(signatureBuffer),
+                new KeyDto(signerBuffer),
+                this.versionToDTO(),
+                TransactionType.REGISTER_NAMESPACE.valueOf(),
+                new AmountDto(this.maxFee.toDTO()),
+                new TimestampDto(this.deadline.toDTO()),
+                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
+                undefined,
+                new NamespaceIdDto(this.parentId!.id.toDTO()),
+            );
+        }
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        let transactionBuilder: EmbeddedNamespaceRegistrationTransactionBuilder;
+        if (this.namespaceType === NamespaceType.RootNamespace) {
+            transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
+                new KeyDto(signerBuffer),
+                this.versionToDTO(),
+                TransactionType.SECRET_LOCK.valueOf(),
+                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
+                new BlockDurationDto(this.duration!.toDTO()),
+                undefined,
+            );
+        } else {
+            transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
+                new KeyDto(signerBuffer),
+                this.versionToDTO(),
+                TransactionType.SECRET_LOCK.valueOf(),
+                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
+                undefined,
+                new NamespaceIdDto(this.parentId!.id.toDTO()),
+            );
+        }
+        return transactionBuilder.serialize();
     }
 }
