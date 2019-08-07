@@ -16,6 +16,13 @@
 
 import { Builder } from '../../infrastructure/builders/AccountRestrictionsEntityTypeTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { AccountOperationRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
+import { AccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedAccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountOperationRestrictionTransactionBuilder';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { RestrictionType } from '../account/RestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -26,13 +33,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { AccountOperationRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
-import { AccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 
 export class AccountOperationRestrictionTransaction extends Transaction {
 
@@ -132,6 +132,28 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             TransactionType.ACCOUNT_RESTRICTION_OPERATION.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
+            this.restrictionType.valueOf(),
+            this.modifications.map((modification) => {
+                return new AccountOperationRestrictionModificationBuilder(
+                    modification.modificationType.valueOf(),
+                    modification.value.valueOf(),
+                );
+            }),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+
+        const transactionBuilder = new EmbeddedAccountOperationRestrictionTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.ACCOUNT_RESTRICTION_OPERATION.valueOf(),
             this.restrictionType.valueOf(),
             this.modifications.map((modification) => {
                 return new AccountOperationRestrictionModificationBuilder(

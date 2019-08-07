@@ -263,4 +263,24 @@ export class TransferTransaction extends Transaction {
         );
         return transactionBuilder.serialize();
     }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const transactionBuilder = new EmbeddedTransferTransactionBuilder(
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.TRANSFER.valueOf(),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientToString())),
+            this.getMessageBuffer(),
+            this.sortMosaics().map((mosaic) => {
+                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
+                                                   new AmountDto(mosaic.amount.toDTO()));
+            }),
+        );
+        return transactionBuilder.serialize();
+    }
 }
