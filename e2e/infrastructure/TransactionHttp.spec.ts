@@ -486,7 +486,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe((transaction: AccountAddressRestrictionModificationTransaction) => {
+            listener.confirmed(account.address).subscribe((transaction: AccountAddressRestrictionTransaction) => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
                 expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
@@ -712,7 +712,7 @@ describe('TransactionHttp', () => {
             );
             const signedTransaction = addressModification.signWith(account3, generationHash);
 
-            listener.confirmed(account3.address).subscribe((transaction: AccountOperationRestrictionModificationTransaction) => {
+            listener.confirmed(account3.address).subscribe((transaction: AccountOperationRestrictionTransaction) => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
                 expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;

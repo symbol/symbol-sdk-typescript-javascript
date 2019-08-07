@@ -18,7 +18,6 @@ import { Convert, Convert as convert } from '../../core/format';
 import { RawAddress } from '../../core/format/RawAddress';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedTransferTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransferTransactionBuilder';
-import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';

@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import { Convert, RawAddress } from '../../core/format';
+import { RawAddress } from '../../core/format';
+import { Builder } from '../../infrastructure/builders/AccountRestrictionsAddressTransaction';
+import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AccountAddressRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionModificationBuilder';
 import { AccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { EmbeddedAccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountAddressRestrictionTransactionBuilder';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
-import { AccountRestrictionType } from '../account/AccountRestrictionType';
 import { PublicAccount } from '../account/PublicAccount';
+import { RestrictionType } from '../account/RestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountRestrictionModification } from './AccountRestrictionModification';
@@ -46,7 +48,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @returns {AccountAddressRestrictionTransaction}
      */
     public static create(deadline: Deadline,
-                         restrictionType: AccountRestrictionType,
+                         restrictionType: RestrictionType,
                          modifications: Array<AccountRestrictionModification<string>>,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountAddressRestrictionTransaction {
@@ -73,7 +75,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
                 version: number,
                 deadline: Deadline,
                 maxFee: UInt64,
-                public readonly restrictionType: AccountRestrictionType,
+                public readonly restrictionType: RestrictionType,
                 public readonly modifications: Array<AccountRestrictionModification<string>>,
                 signature?: string,
                 signer?: PublicAccount,
@@ -105,6 +107,20 @@ export class AccountAddressRestrictionTransaction extends Transaction {
 
     /**
      * @internal
+     * @returns {VerifiableTransaction}
+     */
+    protected buildTransaction(): VerifiableTransaction {
+        return new Builder()
+            .addDeadline(this.deadline.toDTO())
+            .addFee(this.maxFee.toDTO())
+            .addVersion(this.versionToDTO())
+            .addRestrictionType(this.restrictionType)
+            .addModifications(this.modifications.map((modification) => modification.toDTO()))
+            .build();
+    }
+
+    /**
+     * @internal
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
@@ -118,26 +134,6 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             TransactionType.ACCOUNT_RESTRICTION_ADDRESS.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.restrictionType.valueOf(),
-            this.modifications.map((modification) => {
-                return new AccountAddressRestrictionModificationBuilder(
-                    modification.modificationType.valueOf(),
-                    new UnresolvedAddressDto(RawAddress.stringToAddress(modification.value)),
-                );
-            }),
-        );
-        return transactionBuilder.serialize();
-    }
-
-    /**
-     * @internal
-     * @returns {Uint8Array}
-     */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedAccountAddressRestrictionTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
-            this.versionToDTO(),
-            TransactionType.ACCOUNT_RESTRICTION_ADDRESS.valueOf(),
             this.restrictionType.valueOf(),
             this.modifications.map((modification) => {
                 return new AccountAddressRestrictionModificationBuilder(
