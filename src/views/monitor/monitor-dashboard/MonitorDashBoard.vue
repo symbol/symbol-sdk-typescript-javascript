@@ -16,6 +16,7 @@
         </div>
       </div>
     </Modal>
+
     <div class="top_network_info">
       <div class="left_echart radius">
         <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
@@ -40,13 +41,16 @@
     </div>
 
     <div class="bottom_transactions radius scroll" ref="bottomTransactions">
-
+      <div class="splite_page">
+        <span>{{$t('total')}}：{{currentDataAmount}} {{$t('data')}}</span>
+        <Page @on-change="changePage" :total="currentDataAmount" class="page_content"/>
+      </div>
 
       <div class="label_page">
         <span @click="switchTransactionPanel(true)"
               :class="['pointer',showConfirmedTransactions?'selected':'','page_title']">
           {{$t('confirmed_transaction')}}
-          <span v-if="showConfirmedTransactions" class="transacrion_num">
+          <span :class="[showConfirmedTransactions?'':'gray','transacrion_num']" class="">
             <span>{{confirmedDataAmount}}</span>
           </span>
         </span>
@@ -54,7 +58,7 @@
         <span @click="switchTransactionPanel(false)"
               :class="['pointer',showConfirmedTransactions?'':'selected','page_title']">
           {{$t('unconfirmed_transaction')}}
-          <span v-if="!showConfirmedTransactions" class="transacrion_num">
+          <span :class="[showConfirmedTransactions?'gray':'','transacrion_num']">
             <span>{{unconfirmedDataAmount}}</span>
           </span>
         </span>
@@ -70,7 +74,9 @@
         <div class="confirmed_transactions" v-if="showConfirmedTransactions">
           <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
           <div class="table_body hide_scroll" ref="confirmedTableBody">
-            <div class="table_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">
+
+            <!--            <div class="table_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">-->
+            <div class="table_item pointer" @click="showDialog(c)" v-for="c in currentTransactionList">
               <img class="mosaic_action" v-if="!c.isReceipt"
                    src="@/assets/images/monitor/dash-board/dashboardMosaicOut.png" alt="">
               <img class="mosaic_action" v-else src="@/assets/images/monitor/dash-board/dashboardMosaicIn.png"
@@ -146,23 +152,24 @@
         }
     })
     export default class DashBoard extends Vue {
-        isLoadingConfirmedTx = true
-        isLoadingUnconfirmedTx = false
-        isShowDialog = false
-        currentDataAmount = 0
-        unconfirmedDataAmount = 0
-        confirmedDataAmount = 0
-        xemNum: number = 8999999999
-        currentPrice: any = 0
-        showConfirmedTransactions = true
-        accountPrivateKey = ''
-        accountPublicKey = ''
-        accountAddress = ''
         node = ''
         currentXem = ''
-        confirmedTransactionList = []
-        unconfirmedTransactionList = []
+        accountAddress = ''
         updateAnimation = ''
+        isShowDialog = false
+        accountPublicKey = ''
+        currentDataAmount = 0
+        currentPrice: any = 0
+        accountPrivateKey = ''
+        confirmedDataAmount = 0
+        unconfirmedDataAmount = 0
+        currentTransactionList = []
+        xemNum: number = 8999999999
+        isLoadingConfirmedTx = true
+        confirmedTransactionList = []
+        isLoadingUnconfirmedTx = false
+        unconfirmedTransactionList = []
+        showConfirmedTransactions = true
         networkStatusList = [
             {
                 icon: dashboardBlockHeight,
@@ -231,7 +238,7 @@
             return this.$store.state.account.wallet
         }
 
-        get ConfirmedTxList () {
+        get ConfirmedTxList() {
             return this.$store.state.account.ConfirmedTx
         }
 
@@ -244,7 +251,6 @@
                 },
                 {
                     key: 'from',
-                    //todo
                     value: transaction.signerAddress
                 },
                 {
@@ -253,7 +259,7 @@
                 },
                 {
                     key: 'mosaic',
-                    value: transaction.mosaic?transaction.mosaic.id.toHex().toUpperCase():null
+                    value: transaction.mosaic ? transaction.mosaic.id.toHex().toUpperCase() : null
                 },
                 {
                     key: 'the_amount',
@@ -303,6 +309,7 @@
         switchTransactionPanel(flag) {
             this.showConfirmedTransactions = flag
             this.currentDataAmount = flag ? this.confirmedDataAmount : this.unconfirmedDataAmount
+            this.changePage(1)
         }
 
         getPointInfo() {
@@ -345,7 +352,9 @@
             }).then((transactionsResult) => {
                 transactionsResult.result.transactions.subscribe((transactionsInfo) => {
                     let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
+                    that.changeCurrentTransactionList(transferTransaction.slice(0, 10))
                     that.confirmedDataAmount = transferTransaction.length
+                    that.currentDataAmount = transferTransaction.length
                     that.confirmedTransactionList = transferTransaction
                     that.isLoadingConfirmedTx = false
                 })
@@ -365,6 +374,8 @@
             }).then((transactionsResult) => {
                 transactionsResult.result.unconfirmedTransactions.subscribe((unconfirmedtransactionsInfo) => {
                     let transferTransaction = formatTransactions(unconfirmedtransactionsInfo, accountAddress)
+                    that.changeCurrentTransactionList(transferTransaction.slice(0, 10))
+                    that.currentDataAmount = transferTransaction.length
                     that.unconfirmedDataAmount = transferTransaction.length
                     that.unconfirmedTransactionList = transferTransaction
                     that.isLoadingUnconfirmedTx = false
@@ -378,6 +389,23 @@
             this.accountAddress = this.getWallet.address
             this.node = this.$store.state.account.node
             this.currentXem = this.$store.state.account.currentXem
+        }
+
+        changeCurrentTransactionList(list: Array<any>) {
+            this.currentTransactionList = list
+        }
+
+        changePage(page) {
+            const pageSize = 10
+            const {showConfirmedTransactions} = this
+            const start = (page - 1) * pageSize
+            const end = page * pageSize
+            if (showConfirmedTransactions) {
+                //confirmed
+                this.changeCurrentTransactionList(this.confirmedTransactionList.slice(start, end))
+                return
+            }
+            this.changeCurrentTransactionList(this.unconfirmedTransactionList.slice(start, end))
         }
 
         @Watch('getWallet')
@@ -410,8 +438,8 @@
         created() {
             this.initData()
             this.getMarketOpenPrice()
-            this.getUnconfirmedTransactions()
             this.getConfirmedTransactions()
+            this.getUnconfirmedTransactions()
             this.getPointInfo()
 
         }

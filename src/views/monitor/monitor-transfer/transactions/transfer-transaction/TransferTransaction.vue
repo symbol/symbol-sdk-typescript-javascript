@@ -58,23 +58,14 @@
         Account,
         Mosaic,
         MosaicId,
-        NetworkType,
         UInt64,
-        TransferTransaction,
-        PlainMessage,
-        Address,
-        Deadline,
-        NamespaceId,
-        Id,
-        NamespaceMosaicIdGenerator
     } from 'nem2-sdk'
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import {accountInterface} from '@/interface/sdkAccount'
+    import Message from "@/message/Message"
     import {mosaicInterface} from '@/interface/sdkMosaic'
+    import {accountInterface} from '@/interface/sdkAccount'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from '@/interface/sdkTransaction'
-    import {blockchainInterface} from '@/interface/sdkBlockchain'
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
-    import Message from "@/message/Message";
 
 
     @Component({
@@ -83,23 +74,19 @@
         }
     })
     export default class TransferTransactionCompoent extends Vue {
-        showCheckPWDialog = false
-
-
-        accountPublicKey = ''
-        accountAddress = ''
         node = ''
+        remark = ''
         currentXem = ''
-
-        address = 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC'
+        mosaicList = []
         mosaic: any = ''
         amount: any = '0'
-        remark = ''
         fee: any = '50000'
         generationHash = ''
-
+        accountAddress = ''
+        accountPublicKey = ''
         isShowSubAlias = false
-        mosaicList = []
+        showCheckPWDialog = false
+        address = 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC'
 
         get getWallet() {
             return this.$store.state.account.wallet
@@ -192,16 +179,15 @@
             }).then(async accountInfoResult => {
                 await accountInfoResult.result.accountInfo.subscribe((accountInfo) => {
                     let mosaicList = []
-                    mosaicIdList = accountInfo.mosaics.map(item => item.id)
                     // set mosaicList
-                    mosaicList = mosaicIdList.map((item) => {
-                        item.value = item.toHex()
+                    mosaicList = accountInfo.mosaics.map((item) => {
+                        item._amount = item.amount.compact()
+                        item.value = item.id.toHex()
                         if (item.value == currentXEM1 || item.value == currentXEM2) {
-                            item.label = 'nem.xem'
+                            item.label = 'nem.xem' + ' (' + item._amount + ')'
                         } else {
-                            item.label = item.toHex()
+                            item.label = item.id.toHex() + ' (' + item._amount + ')'
                         }
-
                         return item
                     })
                     let isCrrentXEMExists = mosaicList.every((item) => {
@@ -217,61 +203,6 @@
                         })
                     }
                     that.mosaicList = mosaicList
-                    // get namespace
-                    // mosaicInterface.getMosaicsNames({
-                    //     node,
-                    //     mosaicIds: m
-                    // }).then((mosaicsNamesResult: any) => {
-                    //     mosaicsNamesResult.result.mosaicsNamesInfos.subscribe((mosaicsNamesInfo) => {
-                    //         mosaicsNamesInfo.forEach(item => {
-                    //             item.value = item.mosaicId.toHex()
-                    //             // no namespace
-                    //             if (item.names.length == 0) {
-                    //                 item.label = item.value
-                    //                 mosaicList.push(item)
-                    //             } else {
-                    //                 // 1 or more namespace
-                    //                 item.names.forEach(nameItem => {
-                    //                     item.label = nameItem.name
-                    //                     mosaicList.push(item)
-                    //                 })
-                    //             }
-                    //         })
-                    //         that.mosaicList = mosaicList
-                    //     })
-                    // }).catch(()=>{
-                    //     console.log('no alias in namespace')
-                    // })
-
-
-                    // get nem.xem
-                    // this.getNamespace (currentXem, mosaicIdList , currentXEM1, currentXEM2, mosaicList)
-
-
-                    // get cuurent xem   cat.currency
-                    // let currentXEMHex = ''
-                    // cat.currecy error
-                    // mosaicInterface.getcurrentXEM({node}).then((result: any) => {
-                    //     let id = result.result.currentXEM.id.id
-                    //     const uintArray = [id.lower, id.higher]
-                    //     currentXEMHex = new Id(uintArray).toHex()
-                    //     let isCrrentXEMExists = true
-                    //     isCrrentXEMExists = mosaicIdList.every((item) => {
-                    //         if (item.value == currentXEMHex) {
-                    //             return false
-                    //         }
-                    //         return true
-                    //     })
-                    //     if (isCrrentXEMExists) {
-                    //         mosaicIdList.push({
-                    //             label: result.result.currentXEM.id.fullName,
-                    //             value: currentXEMHex
-                    //         })
-                    //     }
-                    //     that.mosaicList = mosaicIdList
-                    // })
-
-
                 }, () => {
                     let mosaicList = []
                     mosaicList.unshift({
@@ -279,7 +210,6 @@
                         label: 'nem.xem'
                     })
                     that.mosaicList = mosaicList
-                    // this.getNamespace (currentXem, mosaicIdList , currentXEM1, currentXEM2, mosaicList)
                 })
             })
         }
@@ -299,13 +229,6 @@
                     }
                     return true
                 })
-                // if (!isCrrentXEMExists) {
-                //     mosaicList.splice(spliceIndex, 1)
-                //     mosaicList.push({
-                //         label: currentXem,
-                //         value: currentXEMHex
-                //     })
-                // }
                 that.mosaicList = mosaicList
                 that.mosaic = currentXEMHex
             })

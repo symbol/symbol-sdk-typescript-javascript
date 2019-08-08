@@ -3,7 +3,6 @@
     <div class="communityPanel">
       <div class="communityPanelNav left">
         <ul class="navList clear">
-
           <li :class="[item.active?'active':'','left',item.disabled?'disabled':'']"
               v-for="(item,index) in navList"
               :key="index"

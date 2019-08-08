@@ -1,10 +1,7 @@
 <template>
   <div class="aliasTable">
-    <Modal
-            :title="$t('binding_alias')"
-            v-model="isShowDialog"
-            :transfer="true"
-            class="alias_bind_dialog">
+    <Modal :title="$t('binding_alias')" v-model="isShowDialog" :transfer="true" class="alias_bind_dialog">
+
       <div class="input_content">
         <div class="title">{{$t('address')}}</div>
         <div class="input_area"><input type="text" v-model="formItem.address"></div>
@@ -13,9 +10,8 @@
       <div class="input_content">
         <div class="title">{{$t('alias_selection')}}</div>
         <div class="input_area">
-          <i-select :model="formItem.alias"
-                    :placeholder="$t('alias_selection')">
-            <i-option v-for="item in namespaceList" :value="item.value">{{ item.label }}</i-option>
+          <i-select :model="formItem.alias" :placeholder="$t('alias_selection')">
+            <i-option v-for="item in aliasActionTypeList" :value="item.value">{{ item.label }}</i-option>
           </i-select>
         </div>
       </div>
@@ -73,25 +69,55 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import Message from "@/message/Message"
+    import {Component, Vue} from 'vue-property-decorator'
 
     @Component
     export default class WalletAlias extends Vue {
-        aliasList = []
-        isShowDeleteIcon = false
         isShowDialog = false
+        isShowDeleteIcon = false
         formItem = {
-            address:'',
-            alias:'',
-            fee:'',
-            password:''
+            address: '',
+            alias: '',
+            fee: '',
+            password: ''
         }
-        namespaceList = [
+        aliasList = []
+        aliasActionTypeList = [
             {
                 label: 'no data',
                 value: 'no data'
-            },
+            }
         ]
+
+        checkForm(): boolean {
+            const {address, alias, fee, password} = this.formItem
+            if (address.length < 40) {
+                this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
+                return false
+            }
+            if (alias || alias.trim()) {
+                this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
+                return false
+            }
+            if (password || password.trim()) {
+                this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
+                return false
+            }
+            if ((!Number(fee) && Number(fee) !== 0) || Number(fee) < 0) {
+                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
+                return false
+            }
+            return true
+        }
+
+        showErrorMessage(message) {
+            this.$Notice.destroy()
+            this.$Notice.error({
+                title: message
+            })
+        }
+
 
     }
 </script>

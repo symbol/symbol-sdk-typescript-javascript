@@ -467,7 +467,7 @@ export var zh_CN = {
     namespace_tips_key_2: '2.命名空间的首个字符必须使用英文字母，不被允许的命名空间包含字符串有：',
     namespace_tips_key_3: '3.命名空间最多可以被定义为三层',
     namespace_tips_value_1: 'a, b, c, ..., z, 0, 1, 2, ..., 9, _ , -',
-    namespace_tips_value_2: 'nem, user, account, org, com, biz, net, edu, mil, gov and info.',
+    namespace_tips_value_2: 'nem, user, account, org, com, biz, net, edu, mil, gov , info.',
     undefined: '未定义',
     namespace_duration_tip_1: '持续时间以块计算，一个块为12秒，一个块=1XEM，最大有效期为365天',
     rent: '租金',
@@ -539,8 +539,22 @@ export var zh_CN = {
     min_removal_delta: '最小剔除人数的变化量',
     min_approval_delta: '最小同意人数的变化量',
     There_are_no_more_accounts_under_this_account: '此账户下暂无多签账户',
+    There_are_no_more_accounts_under_this_account_or_cosigner: '此账户下暂无多签账户或共签人',
     This_account_is_already_a_multi_sign_account: '此账户已经是一个多签账户',
     mosaic_id_format_error: '马赛克id格式错误',
-    alias_name_format_error: '别名格式错误'
+    alias_name_format_error: '别名格式错误',
+    max_approval_amount_more_than_10: 'Min approval 不可大于10',
+    max_removal_amount_more_than_10: 'Min removal 不可大于10',
+    bonded_fee: 'bonded 费用',
+    lock_fee: 'lock 费用',
+    inner_fee: '内部交易费用',
+    //todo
+    The_value_of_duration_cannot_be_less_than_1: 'Duration 的值不能小于1',
+    Namespace_cannot_be_a_null_or_empty_string: 'Namespace 不能为空值或空字符串',
+    The_root_namespace_cannot_be_longer_than_16: 'Root namespace 长度不能大于16',
+    The_sub_namespace_cannot_be_longer_than_16: 'Sub namespace 长度不能大于64',
+    Namespace_must_start_with_a_letter: 'Namespace 必须以字母开头',
+    Namespace_can_only_contain_numbers_letters_and_other: 'Namespace 只能包含数字，字母，_和-',
+    Namespace_cannot_use_forbidden_words: 'Namespace 不能使用禁止的单词',
 };
 //# sourceMappingURL=zh-CN.js.map

@@ -3,12 +3,11 @@
   background-color: white;
   position: absolute;
   top: 75px;
-  width: 700px;
+  width: 1765px;
   padding-left: 20px;
-
   .fake_content {
     position: absolute;
-    width: 1780px;
+    width: 1765px;
     height: 60px;
     background-color: white;
     border-radius: 4px;
@@ -18,7 +17,7 @@
 
   .top_button {
     height: 120px;
-    width: 630px;
+    width: 700px;
     z-index: 9999;
     position: absolute;
 
@@ -256,12 +255,14 @@
   }
 
   .create_vote {
-    height: 100%;
+    height: calc(100% + 30px);
     box-sizing: border-box;
     width: 1760px;
     background-color: white;
     position: absolute;
-    top: 0;
+    top: -30px;
+    left: 0;
+    overflow: hidden;
 
     .vote_creating_content {
       width: 1090px;
@@ -388,6 +389,7 @@
         position: relative;
         top: 5px;
       }
+
       .list_cloumn {
         width: 950px;
         display: flex;
@@ -483,6 +485,6 @@ textarea::placeholder {
 }
 
 .noData {
-  margin-top: 600px;
-  margin-left: 100px;
+  position: absolute;
+  top: 400px;
 }

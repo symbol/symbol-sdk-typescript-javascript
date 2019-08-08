@@ -41,7 +41,7 @@
         <span class="form_item input_min_approval">
           <div class="title">{{$t('min_approval_delta')}} ( {{$t('currrent')}} min approval : {{currentMinApproval }} )</div>
           <div class="manage_cosigner">
-            <input type="text" v-model="formItem.minApproval"
+            <input type="text" v-model="formItem.minApprovalDelta"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')"
                    class="radius">
           </div>
@@ -53,7 +53,7 @@
           <span class="form_item input_min_delete">
           <div class="title">{{$t('min_removal_delta')}} ( {{$t('currrent')}}  min removal : {{currentMinRemoval }} )</div>
           <div class="manage_cosigner">
-            <input type="text" v-model="formItem.minRemoval"
+            <input type="text" v-model="formItem.minRemovalDelta"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')"
                    class="radius">
           </div>
@@ -65,16 +65,46 @@
 
 
         <div class="form_item input_fee">
-          <div class="title">{{$t('fee')}}</div>
+          <div class="title">{{$t('inner_fee')}}</div>
           <div class="manage_cosigner">
-            <input type="text" v-model="formItem.fee" placeholder="50000" class="radius">
+            <input type="text" v-model="formItem.innerFee" placeholder="50000" class="radius">
             <span class="xem_container">gas</span>
+            <span class="xem_amount">{{formItem.innerFee / 1000000}} xem </span>
           </div>
           <div class="input_describe">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
           </div>
         </div>
+
+
+        <div v-if="currentMinApproval > 1">
+          <div class="form_item input_fee">
+            <div class="title">{{$t('bonded_fee')}}</div>
+            <div class="manage_cosigner">
+              <input type="text" v-model="formItem.bondedFee" placeholder="50000" class="radius">
+              <span class="xem_container">gas</span>
+              <span class="xem_amount">{{formItem.bondedFee / 1000000}} xem </span>
+            </div>
+            <div class="input_describe">
+              {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+            </div>
+          </div>
+
+
+          <div class="form_item input_fee">
+            <div class="title">{{$t('lock_fee')}}</div>
+            <div class="manage_cosigner">
+              <input type="text" v-model="formItem.lockFee" placeholder="50000" class="radius">
+              <span class="xem_container">gas</span>
+              <span class="xem_amount">{{formItem.lockFee / 1000000}} xem </span>
+            </div>
+            <div class="input_describe">
+              {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+            </div>
+          </div>
+        </div>
       </div>
+
 
       <div class="cosigner_list">
         <div class="head_title">{{$t('Operation_list')}}</div>
@@ -122,10 +152,14 @@
         PublicAccount,
         Account,
         Listener,
-        Address
+        Address,
+        Deadline,
+        ModifyMultisigAccountTransaction,
+        UInt64
     } from 'nem2-sdk'
     import {multisigInterface} from '@/interface/sdkMultisig.ts'
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
+    import {transactionInterface} from '@/interface/sdkTransaction';
 
     @Component({
         components: {
@@ -144,14 +178,16 @@
         existsCosignerList = [{}]
         isShowPanel = true
         publickeyList = [{
-            label:'no data',
-            value:'no data'
+            label: 'no data',
+            value: 'no data'
         }]
 
         formItem = {
-            minApproval: 0,
-            minRemoval: 0,
-            fee: 10000000,
+            minApprovalDelta: 0,
+            minRemovalDelta: 0,
+            bondedFee: 10000000,
+            lockFee: 10000000,
+            innerFee: 10000000,
             cosignerList: [],
             multisigPublickey: ''
         }
@@ -180,7 +216,8 @@
 
 
         createCompleteModifyTransaction(privatekey) {
-            const {multisigPublickey, cosignerList, fee, minApproval, minRemoval} = this.formItem
+            // todo 需要改 fee
+            const {multisigPublickey, cosignerList, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
             const {networkType} = this.$store.state.account.wallet
             const {generationHash, node} = this.$store.state.account
             const account = Account.createFromPrivateKey(privatekey, networkType)
@@ -189,21 +226,20 @@
                 PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
             ))
             multisigInterface.completeCosignatoryModification({
-                minApprovalDelta: minApproval,
-                minRemovalDelta: minRemoval,
+                minApprovalDelta: minApprovalDelta,
+                minRemovalDelta: minRemovalDelta,
                 networkType: networkType,
                 account: account,
                 generationHash: generationHash,
                 node: node,
-                fee: fee,
+                fee: innerFee,
                 multisigPublickey: multisigPublickey,
                 multisigCosignatoryModificationList: multisigCosignatoryModificationList
             })
-
         }
 
         createBondedModifyTransaction(privatekey) {
-            const {multisigPublickey, cosignerList, fee, minApproval, minRemoval} = this.formItem
+            const {multisigPublickey, cosignerList, bondedFee, lockFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
             const {networkType} = this.$store.state.account.wallet
             const {generationHash, node} = this.$store.state.account
             const account = Account.createFromPrivateKey(privatekey, networkType)
@@ -212,18 +248,31 @@
                 PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
             ))
             const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-
-            multisigInterface.multisetCosignatoryModification({
-                minApprovalDelta: minApproval,
-                minRemovalDelta: minRemoval,
-                multisigCosignatoryModificationList: multisigCosignatoryModificationList,
+            const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                Number(minApprovalDelta),
+                Number(minRemovalDelta),
+                multisigCosignatoryModificationList,
+                networkType,
+                UInt64.fromUint(innerFee)
+            );
+            multisigInterface.bondedMultisigTransaction({
                 networkType: networkType,
                 account: account,
-                generationHash: generationHash,
-                node: node,
-                listener: listener,
-                fee: fee,
-                multisigPublickey: multisigPublickey
+                fee: bondedFee,
+                multisigPublickey: account.publicKey,
+                transaction: modifyMultisigAccountTransaction,
+            }).then((result) => {
+                const aggregateTransaction = result.result.aggregateTransaction
+                transactionInterface.announceBondedWithLock({
+                    aggregateTransaction,
+                    account,
+                    listener,
+                    node,
+                    generationHash,
+                    networkType,
+                    fee: lockFee
+                })
             })
         }
 
@@ -245,18 +294,58 @@
 
         }
 
+
+        showErrorMessage(message: string) {
+            this.$Notice.destroy()
+            this.$Notice.error({
+                title: message
+            })
+        }
+
         checkForm(): boolean {
-            const {multisigPublickey, cosignerList, fee, minApproval, minRemoval} = this.formItem
+            const {multisigPublickey, cosignerList, bondedFee, lockFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
+            const {currentMinApproval, currentMinRemoval} = this
+
+            if ((!Number(minRemovalDelta) && Number(minRemovalDelta) !== 0) || Number(minRemovalDelta) + currentMinRemoval < 1) {
+                this.showErrorMessage(this.$t(Message.MIN_REMOVAL_LESS_THAN_0_ERROR) + '')
+                return false
+            }
+
+            if ((!Number(minApprovalDelta) && Number(minApprovalDelta) !== 0) || Number(minApprovalDelta) + currentMinApproval < 1) {
+                this.showErrorMessage(this.$t(Message.MIN_APPROVAL_LESS_THAN_0_ERROR) + '')
+                return false
+            }
+
+            if (Number(minApprovalDelta) + currentMinApproval > 10) {
+                this.showErrorMessage(this.$t(Message.MAX_APPROVAL_MORE_THAN_10_ERROR) + '')
+                return false
+            }
+
+            if (Number(minRemovalDelta) + currentMinRemoval > 10) {
+                this.showErrorMessage(this.$t(Message.MAX_REMOVAL_MORE_THAN_10_ERROR) + '')
+                return false
+            }
 
             if (multisigPublickey.length !== 64) {
                 this.$Notice.error({title: this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + ''})
                 return false;
             }
 
-            if ((!Number(fee) || Number(fee) < 0) && fee !== 0) {
-                this.$Notice.error({title: this.$t(Message.FEE_LESS_THAN_0_ERROR) + ''})
+            if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
+                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
                 return false
             }
+
+            if ((!Number(bondedFee) && Number(bondedFee) !== 0) || Number(bondedFee) < 0) {
+                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
+                return false
+            }
+
+            if ((!Number(lockFee) && Number(lockFee) !== 0) || Number(lockFee) < 0) {
+                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
+                return false
+            }
+
             if (cosignerList.length < 1) {
                 return true
             }

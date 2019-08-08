@@ -1,14 +1,12 @@
 <template>
   <div class="setting_wrap">
-<!--    <div class="white_wrap">{{$t('not_yet_open')}}</div>-->
     <div class="setting_container scroll radius">
       <div class="setting_head">
-<!--        {{$t('setting')}}-->
       </div>
       <div class="seeting_main_container">
         <div class="left_navigator left">
           <div class="navigator_item pointer" @click="jumpToView(n,index)" v-for="(n,index) in navagatorList">
-            <span :class="n.isSelected ? 'selected_title':''">{{$t(n.title)}}</span>
+            <span :class="[n.isSelected ? 'selected_title':'',n.disabled?'disabled':'']">{{$t(n.title)}}</span>
           </div>
         </div>
         <div class="right_view right">
@@ -41,7 +39,8 @@
             }, {
                 title: 'network_settings',
                 name: 'settingNetwork',
-                isSelected: false
+                isSelected: false,
+                disabled: true
             }, {
                 title: 'about',
                 name: 'settingAbout',
@@ -51,6 +50,7 @@
         currentHeadText = ''
 
         jumpToView(n, index) {
+            if (this.navagatorList[index].disabled) return
             let list = this.navagatorList
             list.map((item) => {
                 item.isSelected = false

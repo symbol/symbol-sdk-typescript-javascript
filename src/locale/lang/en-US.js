@@ -468,7 +468,7 @@ export var en_US = {
     namespace_tips_key_2: '2. The first character of the namespace must use English letters. The namespaces that are not allowed include strings:',
     namespace_tips_key_3: '3. The namespace can be defined as up to three layers.',
     namespace_tips_value_1: 'a, b, c, ..., z, 0, 1, 2, ..., 9, _ , -',
-    namespace_tips_value_2: 'nem, user, account, org, com, biz, net, edu, mil, gov and info.',
+    namespace_tips_value_2: 'nem, user, account, org, com, biz, net, edu, mil, gov , info.',
     undefined: 'Undefined',
     namespace_duration_tip_1: 'The duration is calculated in blocks, one block is 12 seconds, one block = 1XEM, and the maximum validity period is 365 days.',
     rent: 'Rent',
@@ -538,8 +538,21 @@ export var en_US = {
     min_removal_amount_illegal: 'Min removal must be a number',
     currrent: 'currrent',
     There_are_no_more_accounts_under_this_account: 'There are no more multisig under this account.',
+    There_are_no_more_accounts_under_this_account_or_cosigner: 'There are no more multisig or cosigner under this account.',
     This_account_is_already_a_multi_sign_account: 'This account is already a multi-sign account',
     mosaic_id_format_error: 'Mosaic id format error',
-    alias_name_format_error: 'alias name format error'
+    alias_name_format_error: 'alias name format error',
+    max_approval_amount_more_than_10: 'Max approval cannot be more than 10',
+    max_removal_amount_more_than_10: 'Max removal  cannot be more than 10',
+    bonded_fee: 'bonded fee',
+    lock_fee: 'lock fee',
+    inner_fee: 'inner fee',
+    The_value_of_duration_cannot_be_less_than_1: 'The value of duration cannot be less than 1',
+    Namespace_cannot_be_a_null_or_empty_string: 'Namespace cannot be a null or empty string',
+    The_root_namespace_cannot_be_longer_than_16: 'The root namespace cannot be longer than 16',
+    The_sub_namespace_cannot_be_longer_than_16: 'The sub namespace cannot be longer than 64',
+    Namespace_must_start_with_a_letter: 'Namespace must start with a letter',
+    Namespace_can_only_contain_numbers_letters_and_other: 'Namespace can only contain numbers, letters, _ and -',
+    Namespace_cannot_use_forbidden_words: 'Namespace cannot use forbidden words'
 };
 //# sourceMappingURL=en-US.js.map

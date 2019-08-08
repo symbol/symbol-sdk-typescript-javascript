@@ -10,11 +10,14 @@
               v-for="(t,index) in voteActionList">
         {{$t(t.name)}}
         </span>
-      <Select v-show="voteActionList[0].isSelect" class="vote_filter" v-model="currentVoteFilter" style="width:100px">
-        <Option class="pointer" v-for="(item,index) in voteFilterList" :value="item.value" :key="index">
-          {{ $t(item.label)}}
-        </Option>
-      </Select>
+      <div v-show="false">
+        <Select v-show="voteActionList[0]" class="vote_filter" v-model="currentVoteFilter" style="width:100px">
+          <Option class="pointer" v-for="(item,index) in voteFilterList" :value="item.value" :key="index">
+            {{ $t(item.label)}}
+          </Option>
+        </Select>
+      </div>
+
     </div>
 
     <div class="show_exists_vote_list" v-show="voteActionList[0].isSelect">

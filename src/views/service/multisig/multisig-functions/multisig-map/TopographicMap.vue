@@ -1,5 +1,6 @@
 <template>
   <div class="topo_graph_container">
+    <div v-if="notMultisigNorCosigner" class="not_Multisig_Nor_Cosigner">{{$t('There_are_no_more_accounts_under_this_account_or_cosigner')}}</div>
     <div class="topo" id="id" ref="dom"></div>
   </div>
 
@@ -19,6 +20,7 @@
     export default class LineChart extends Vue {
         dom: any = {};
         spinShow = true
+        notMultisigNorCosigner = true
         option = {
             tooltip: {
                 alwaysShowContent: true,
@@ -79,6 +81,10 @@
         async refresh() {
             const that = this
             await this.getMultisigInfo()
+            if (this.notMultisigNorCosigner) {
+                return
+            }
+
             this.dom = echarts.init(this.$refs.dom)
             await this.dom.on('click', function (params) {
                 that.copyAddress(params)
@@ -104,7 +110,6 @@
         async getMultisigInfo() {
             const that = this
             const {address, publicAccount} = this.$store.state.account.wallet
-            console.log(this.$store.state.account)
             const {node} = this.$store.state.account
 
             let cosignerList = []
@@ -157,9 +162,9 @@
                 })
 
                 allAccountList = [...multisigList, selfNode, ...cosignerList]
+                that.notMultisigNorCosigner = allAccountList.length == 1 ? true : false
                 that.option.series[0].data = allAccountList
                 that.option.series[0].links = links
-                console.log(that.option.series[0].data)
             })
         }
 
@@ -173,7 +178,6 @@
     width: 100%;
     height: 100%;
     position: relative;
-    background-color: gray;
   }
 
   .topo {
@@ -184,5 +188,10 @@
     left: 0;
   }
 
+  .not_Multisig_Nor_Cosigner {
+    font-size: 30px;
+    background-color: transparent;
+
+  }
 
 </style>
