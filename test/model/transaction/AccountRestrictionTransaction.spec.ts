@@ -162,7 +162,7 @@ describe('AccountRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = addressRestrictionTransaction.signWithCatbuffer(account, generationHash);
+        const signedTransaction = addressRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -204,7 +204,7 @@ describe('AccountRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = mosaicRestrictionTransaction.signWithCatbuffer(account, generationHash);
+        const signedTransaction = mosaicRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
@@ -246,7 +246,7 @@ describe('AccountRestrictionTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTransaction = operationRestrictionTransaction.signWithCatbuffer(account, generationHash);
+        const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,

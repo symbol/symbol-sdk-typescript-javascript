@@ -93,7 +93,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(mosaicDefinitionTransaction.mosaicProperties.transferable).to.be.equal(true);
         expect(mosaicDefinitionTransaction.mosaicProperties.restrictable).to.be.equal(true);
 
-        const signedTransaction = mosaicDefinitionTransaction.signWithCatbuffer(account, generationHash);
+        const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
