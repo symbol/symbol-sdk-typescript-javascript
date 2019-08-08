@@ -123,17 +123,6 @@ export class AggregateTransaction extends Transaction {
     }
 
     /**
-     * @description add inner transactions to current list
-     * @param {InnerTransaction[]} transaction
-     * @returns {AggregateTransaction}
-     * @memberof AggregateTransaction
-     */
-    public addTransactions(transactions: InnerTransaction[]): AggregateTransaction {
-        const innerTransactions = this.innerTransactions.concat(transactions);
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {innerTransactions});
-    }
-
-    /**
      * @internal
      * Sign transaction with cosignatories creating a new SignedTransaction
      * @param initiatorAccount - Initiator account

@@ -241,12 +241,4 @@ class FakeTransaction extends Transaction {
     protected generateEmbeddedBytes(): Uint8Array {
         throw new Error('Not implemented');
     }
-
-    protected generateBytes(): Uint8Array {
-        throw new Error('Not implemented');
-    }
-
-    protected generateEmbeddedBytes(): Uint8Array {
-        throw new Error('Not implemented');
-    }
 }
