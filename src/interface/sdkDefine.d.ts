@@ -20,6 +20,7 @@ import {
     MultisigCosignatoryModification,
     MosaicSupplyChangeTransaction,
     AggregateTransaction,
+    // @ts-ignore
 } from 'nem2-sdk'
 
 
@@ -467,57 +468,19 @@ declare namespace SdkV0 {
     }
 
     interface multisig {
-        // covertToBeMultisig: (params: {
-        //     minApprovalDelta: number,
-        //     minRemovalDelta: number,
-        //     multisigCosignatoryModificationList: Array<MultisigCosignatoryModification>,
-        //     networkType: NetworkType,
-        //     account: Account,
-        //     fee: number
-        // }) => Rst<{
-        //     aggregateTransaction: AggregateTransaction
-        // }>;
-        // multisetCosignatoryModification: (params: {
-        //     minApprovalDelta: number,
-        //     minRemovalDelta: number,
-        //     multisigCosignatoryModificationList: Array<MultisigCosignatoryModification>,
-        //     networkType: NetworkType,
-        //     account: Account,
-        //     fee: number,
-        //     multisigPublickey: string
-        // }) => Rst<{
-        //     aggregateTransaction: AggregateTransaction
-        // }>;
         getMultisigAccountInfo: (params: {
             address: string
             node: string
         }) => Rst<{
             multisigInfo: any
         }>;
-        completeCosignatoryModification: (params: {
-            minApprovalDelta: number,
-            minRemovalDelta: number,
-            networkType: NetworkType,
-            account: Account,
-            generationHash: string,
-            node: string
-            fee: number,
-            multisigPublickey: string,
-            multisigCosignatoryModificationList: any
-        }) => Rst<{
-            result: any
-        }>;
         completeMultisigTransaction: (params: {
             networkType: NetworkType,
-            account: Account,
-            generationHash: string,
-            node: string
             fee: number,
             multisigPublickey: string,
             transaction: any,
-            listener: Listener
         }) => Rst<{
-            result: any
+            aggregateTransaction: AggregateTransaction
         }>;
         bondedMultisigTransaction: (params: {
             networkType: NetworkType,

@@ -1,6 +1,13 @@
 import {
-    Deadline, NamespaceId, RegisterNamespaceTransaction, UInt64,
-    MosaicAliasTransaction, AddressAliasTransaction, NamespaceHttp, TransactionHttp
+    Deadline,
+    NamespaceId,
+    RegisterNamespaceTransaction,
+    UInt64,
+    MosaicAliasTransaction,
+    AddressAliasTransaction,
+    NamespaceHttp,
+    TransactionHttp
+    // @ts-ignore
 } from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
 
@@ -56,27 +63,27 @@ export const aliasInterface: SdkV0.alias = {
         }
     },
 
-  mosaicAliasTransaction:async (params)=>{
-    const deadline = Deadline.create();
-    const actionType = params.actionType;
-    const namespaceId = params.namespaceId;
-    const mosaicId = params.mosaicId;
-    const networkType = params.networkType;
-    const maxFee = params.maxFee;
-    const aliasMosaicTransaction = MosaicAliasTransaction.create(
-      deadline,
-      actionType,
-      namespaceId,
-      mosaicId,
-      networkType,
-      maxFee?UInt64.fromUint(maxFee):undefined
-    )
-    return{
-      result:{
-        aliasMosaicTransaction:aliasMosaicTransaction
-      }
-    }
-  },
+    mosaicAliasTransaction: async (params) => {
+        const deadline = Deadline.create();
+        const actionType = params.actionType;
+        const namespaceId = params.namespaceId;
+        const mosaicId = params.mosaicId;
+        const networkType = params.networkType;
+        const maxFee = params.maxFee;
+        const aliasMosaicTransaction = MosaicAliasTransaction.create(
+            deadline,
+            actionType,
+            namespaceId,
+            mosaicId,
+            networkType,
+            maxFee ? UInt64.fromUint(maxFee) : undefined
+        )
+        return {
+            result: {
+                aliasMosaicTransaction: aliasMosaicTransaction
+            }
+        }
+    },
 
     addressAliasTransaction: async (params) => {
         const deadline = Deadline.create();

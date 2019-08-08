@@ -178,7 +178,6 @@
         }
 
         sendTransaction(privatekey) {
-            // todo 合并代码后修改
             if (this.currentMinApproval == 0) {
                 return
             }
@@ -218,15 +217,20 @@
                 })
                 return
             }
+
             multisigInterface.completeMultisigTransaction({
                 networkType: networkType,
-                account: account,
-                generationHash: generationHash,
-                node: node,
                 fee: innerFee,
                 multisigPublickey: multisigPublickey,
                 transaction: transaction,
-                listener: listener
+            }).then((result)=>{
+                const aggregateTransaction = result.result.aggregateTransaction
+                transactionInterface._announce({
+                    transaction: aggregateTransaction,
+                    account,
+                    node,
+                    generationHash
+                })
             })
         }
 

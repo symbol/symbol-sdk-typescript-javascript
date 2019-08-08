@@ -32,6 +32,7 @@ export var transactionInterface = {
                     return [4 /*yield*/, new TransactionHttp(node).announce(signedTransaction)];
                 case 1:
                     announceStatus = _a.sent();
+                    console.log(signedTransaction);
                     return [2 /*return*/, {
                             result: {
                                 announceStatus: announceStatus

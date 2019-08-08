@@ -19,11 +19,11 @@ export const transactionInterface: SdkV0.transaction = {
     },
 
     // todo
-
     _announce: async (params) => {
         const {transaction, node, account, generationHash} = params
         const signedTransaction = account.sign(transaction, generationHash);
         const announceStatus = await new TransactionHttp(node).announce(signedTransaction);
+        console.log(signedTransaction)
         return {
             result: {
                 announceStatus: announceStatus
