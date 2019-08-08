@@ -499,7 +499,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountLinkTransaction;
 
-        expect(transaction.linkAction).to.be.equal(0);
+        expect(transaction.linkAction).to.be.equal(1);
         expect(transaction.remoteAccountKey).to.be.equal(account.publicKey);
     });
 

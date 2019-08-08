@@ -167,7 +167,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('0101009050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+        )).to.be.equal('0101019050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
 
     });
 
@@ -209,7 +209,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('0201004CCCD78612DDF5CA');
+        )).to.be.equal('0201014CCCD78612DDF5CA');
 
     });
 
@@ -251,7 +251,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('0401004E42');
+        )).to.be.equal('0401014E42');
 
     });
 });
