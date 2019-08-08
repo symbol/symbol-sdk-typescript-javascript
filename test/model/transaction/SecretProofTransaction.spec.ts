@@ -203,7 +203,7 @@ describe('SecretProofTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        const signedTx = secretProofTransaction.signWithCatbuffer(account, generationHash);
+        const signedTx = secretProofTransaction.signWith(account, generationHash);
         expect(signedTx.payload.substring(
             240,
             signedTx.payload.length,

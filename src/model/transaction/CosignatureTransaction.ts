@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import { SignSchema } from '../../core/crypto';
+import { KeyPair, SignSchema } from '../../core/crypto';
 import { Convert } from '../../core/format/Convert';
-import {CosignatureTransaction as CosignaturetransactionLibrary} from '../../infrastructure/builders/CosignatureTransaction';
-import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
 import {Account} from '../account/Account';
 import {AggregateTransaction} from './AggregateTransaction';
 import {CosignatureSignedTransaction} from './CosignatureSignedTransaction';
+import { Transaction } from './Transaction';
 
 /**
  * Cosignature transaction is used to sign an aggregate transactions with missing cosignatures.
@@ -41,9 +40,9 @@ export class CosignatureTransaction {
      * @param transactionToCosign - Transaction to cosign.
      * @returns {CosignatureTransaction}
      */
-    public static create(transactionToCosign: AggregateTransaction) {
+    public static create(transactionToCosign: AggregateTransaction): CosignatureTransaction {
         if (transactionToCosign.isUnannounced()) {
-            throw new Error('transaction to cosign should be announced first');
+            throw new Error('Transaction to cosign should be announced first');
         }
         return new CosignatureTransaction(transactionToCosign);
     }
@@ -64,12 +63,14 @@ export class CosignatureTransaction {
         /**
          * For aggregated complete transaction, cosignatories are gathered off chain announced.
          */
-        const transactionHash = VerifiableTransaction.createTransactionHash(payload, Array.from(Convert.hexToUint8(generationHash)));
-        const aggregateSignatureTransaction = new CosignaturetransactionLibrary(transactionHash);
-        const signedTransactionRaw = aggregateSignatureTransaction.signCosignatoriesTransaction(account, signSchema);
-        return new CosignatureSignedTransaction(signedTransactionRaw.parentHash,
-            signedTransactionRaw.signature,
-            signedTransactionRaw.signer);
+        const transactionHash = Transaction.createTransactionHash(payload, Array.from(Convert.hexToUint8(generationHash)));
+        const hashBytes = Convert.hexToUint8(transactionHash);
+        const signature = KeyPair.sign(account, new Uint8Array(hashBytes), signSchema);
+        return new CosignatureSignedTransaction(
+            Convert.uint8ToHex(hashBytes),
+            Convert.uint8ToHex(signature),
+            account.publicKey,
+        );
     }
 
     /**
@@ -80,10 +81,16 @@ export class CosignatureTransaction {
      * @returns {CosignatureSignedTransaction}
      */
     public signWith(account: Account, signSchema: SignSchema = SignSchema.SHA3): CosignatureSignedTransaction {
-        const aggregateSignatureTransaction = new CosignaturetransactionLibrary(this.transactionToCosign.transactionInfo!.hash);
-        const signedTransactionRaw = aggregateSignatureTransaction.signCosignatoriesTransaction(account, signSchema);
-        return new CosignatureSignedTransaction(signedTransactionRaw.parentHash,
-            signedTransactionRaw.signature,
-            signedTransactionRaw.signer);
+        if (!this.transactionToCosign.transactionInfo!.hash) {
+            throw new Error('Transaction to cosign should be announced first');
+        }
+        const hash = this.transactionToCosign.transactionInfo!.hash;
+        const hashBytes = Convert.hexToUint8(hash ? hash : '');
+        const signature = KeyPair.sign(account, new Uint8Array(hashBytes), signSchema);
+        return new CosignatureSignedTransaction(
+            hash ? hash : '',
+            Convert.uint8ToHex(signature),
+            account.publicKey,
+        );
     }
 }

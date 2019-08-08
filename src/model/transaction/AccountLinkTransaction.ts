@@ -15,8 +15,6 @@
  */
 
 import { Convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/AccountLinkTransaction';
-import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
 import { AccountLinkTransactionBuilder } from '../../infrastructure/catbuffer/AccountLinkTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedAccountLinkTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountLinkTransactionBuilder';
@@ -103,20 +101,6 @@ export class AccountLinkTransaction extends Transaction {
         const byteLinkAction = 1;
 
         return byteSize + bytePublicKey + byteLinkAction;
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addRemoteAccountKey(this.remoteAccountKey)
-            .addLinkAction(this.linkAction)
-            .build();
     }
 
     /**

@@ -15,8 +15,6 @@
  */
 
 import { Convert, Convert as convert, RawAddress } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/SecretProofTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedSecretProofTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretProofTransactionBuilder';
 import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
@@ -138,23 +136,6 @@ export class SecretProofTransaction extends Transaction {
      */
     public getProofByte(): Uint8Array {
         return convert.hexToUint8(this.proof);
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addType(this.type)
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addHashAlgorithm(this.hashType)
-            .addSecret(this.secret)
-            .addRecipient(this.recipient.plain())
-            .addProof(this.proof)
-            .build();
     }
 
     /**

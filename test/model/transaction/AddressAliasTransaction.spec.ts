@@ -80,12 +80,12 @@ describe('AddressAliasTransaction', () => {
         expect(addressAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
         expect(addressAliasTransaction.address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
 
-        const signedTransaction = addressAliasTransaction.signWithCatbuffer(account, generationHash);
+        const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('002AD8FC018D9A49E19050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+        )).to.be.equal('012AD8FC018D9A49E19050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
 
     });
 

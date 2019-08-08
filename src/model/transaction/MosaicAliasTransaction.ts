@@ -15,8 +15,6 @@
  */
 
 import { Convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/MosaicAliasTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedMosaicAliasTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicAliasTransactionBuilder';
 import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
@@ -115,21 +113,6 @@ export class MosaicAliasTransaction extends Transaction {
         const byteMosaicId = 8;
 
         return byteSize + byteType + byteNamespaceId + byteMosaicId;
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addActionType(this.actionType)
-            .addNamespaceId(this.namespaceId.id.toDTO())
-            .addMosaicId(this.mosaicId.id.toDTO())
-            .build();
     }
 
     /**

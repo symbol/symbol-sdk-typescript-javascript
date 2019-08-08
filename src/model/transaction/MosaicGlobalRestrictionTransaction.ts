@@ -15,8 +15,6 @@
  */
 
 import { Convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/MosaicGlobalRestrictionTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedMosaicGlobalRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicGlobalRestrictionTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
@@ -160,25 +158,6 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
         return byteSize + byteNonce + byteMosaicId + byteRestrictionKey + byteReferenceMosaicId +
                bytePreviousRestrictionValue + byteNewRestrictionValue + byteNewRestrictionType +
                bytePreviousRestrictionType;
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addMosaicId(this.mosaicId.id.toDTO())
-            .addReferenceMosaicId(this.referenceMosaicId.id.toDTO())
-            .addRestrictionKey(this.restrictionKey.toDTO())
-            .addPreviousRestrictionValue(this.previousRestrictionValue.toDTO())
-            .addPreviousRestrictionType(this.previousRestrictionType)
-            .addNewRestrictionValue(this.newRestrictionValue.toDTO())
-            .addNewRestrictionType(this.newRestrictionType)
-            .build();
     }
 
     /**
