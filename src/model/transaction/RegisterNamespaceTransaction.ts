@@ -15,8 +15,6 @@
  */
 
 import { Convert, Convert as convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/NamespaceCreationTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
 import { EmbeddedNamespaceRegistrationTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedNamespaceRegistrationTransactionBuilder';
@@ -170,28 +168,6 @@ export class RegisterNamespaceTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        let registerNamespacetransaction = new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addNamespaceType(this.namespaceType)
-            .addNamespaceId(this.namespaceId.id.toDTO())
-            .addNamespaceName(this.namespaceName);
-
-        if (this.namespaceType === NamespaceType.RootNamespace) {
-            registerNamespacetransaction = registerNamespacetransaction.addDuration(this.duration!.toDTO());
-        } else {
-            registerNamespacetransaction = registerNamespacetransaction.addParentId(this.parentId!.id.toDTO());
-        }
-
-        return registerNamespacetransaction.build();
-    }
-
-    /**
-     * @internal
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
@@ -238,7 +214,7 @@ export class RegisterNamespaceTransaction extends Transaction {
             transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
                 new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
                 this.versionToDTO(),
-                TransactionType.SECRET_LOCK.valueOf(),
+                TransactionType.REGISTER_NAMESPACE.valueOf(),
                 new NamespaceIdDto(this.namespaceId.id.toDTO()),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
                 new BlockDurationDto(this.duration!.toDTO()),
@@ -248,7 +224,7 @@ export class RegisterNamespaceTransaction extends Transaction {
             transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
                 new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
                 this.versionToDTO(),
-                TransactionType.SECRET_LOCK.valueOf(),
+                TransactionType.REGISTER_NAMESPACE.valueOf(),
                 new NamespaceIdDto(this.namespaceId.id.toDTO()),
                 Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
                 undefined,

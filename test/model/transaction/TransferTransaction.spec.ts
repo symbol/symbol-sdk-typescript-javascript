@@ -210,7 +210,7 @@ describe('TransferTransaction', () => {
         expect(transferTransaction.recipient).to.be.instanceof(Address);
         expect((transferTransaction.recipient as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
 
-        const signedTransaction = transferTransaction.signWithCatbuffer(account, generationHash);
+        const signedTransaction = transferTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,

@@ -15,13 +15,10 @@
  */
 
 import { Convert, RawAddress } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/AccountRestrictionsAddressTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AccountAddressRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionModificationBuilder';
 import { AccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedAccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountAddressRestrictionTransactionBuilder';
-import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
@@ -104,20 +101,6 @@ export class AccountAddressRestrictionTransaction extends Transaction {
         const byteModifications = 26 * this.modifications.length;
 
         return byteSize + byteRestrictionType + byteModificationCount + byteModifications;
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addRestrictionType(this.restrictionType)
-            .addModifications(this.modifications.map((modification) => modification.toDTO()))
-            .build();
     }
 
     /**

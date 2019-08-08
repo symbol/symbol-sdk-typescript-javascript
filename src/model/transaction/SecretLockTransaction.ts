@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 import { Convert as convert, RawAddress } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/SecretLockTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
 import { EmbeddedSecretLockTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretLockTransactionBuilder';
@@ -153,25 +151,6 @@ export class SecretLockTransaction extends Transaction {
      */
     public getSecretByte(): Uint8Array {
         return convert.hexToUint8(64 > this.secret.length ? this.secret + '0'.repeat(64 - this.secret.length) : this.secret);
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addType(this.type)
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addMosaicId(this.mosaic.id.id.toDTO())
-            .addMosaicAmount(this.mosaic.amount.toDTO())
-            .addDuration(this.duration.toDTO())
-            .addHashAlgorithm(this.hashType)
-            .addSecret(this.secret)
-            .addRecipient(this.recipient.plain())
-            .build();
     }
 
     /**

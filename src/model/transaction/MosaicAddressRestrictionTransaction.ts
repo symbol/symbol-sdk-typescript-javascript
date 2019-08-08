@@ -15,8 +15,6 @@
  */
 
 import { Convert, RawAddress } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/MosaicAddressRestrictionTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedMosaicAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicAddressRestrictionTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
@@ -140,23 +138,6 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
 
         return byteSize + byteNonce + byteMosaicId + byteRestrictionKey +
                byteTargetAddress + bytePreviousRestrictionValue + byteNewRestrictionValue;
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addMosaicId(this.mosaicId.id.toDTO())
-            .addRestrictionKey(this.restrictionKey.toDTO())
-            .addTargetAddress(this.targetAddress.plain())
-            .addPreviousRestrictionValue(this.previousRestrictionValue.toDTO())
-            .addNewRestrictionValue(this.newRestrictionValue.toDTO())
-            .build();
     }
 
     /**

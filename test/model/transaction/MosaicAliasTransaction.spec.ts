@@ -80,12 +80,12 @@ describe('MosaicAliasTransaction', () => {
         expect(mosaicAliasTransaction.mosaicId.id.lower).to.be.equal(2262289484);
         expect(mosaicAliasTransaction.mosaicId.id.higher).to.be.equal(3405110546);
 
-        const signedTransaction = mosaicAliasTransaction.signWithCatbuffer(account, generationHash);
+        const signedTransaction = mosaicAliasTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('002AD8FC018D9A49E14CCCD78612DDF5CA');
+        )).to.be.equal('012AD8FC018D9A49E14CCCD78612DDF5CA');
 
     });
 

@@ -16,8 +16,6 @@
 
 import { Convert, Convert as convert } from '../../core/format';
 import { RawAddress } from '../../core/format/RawAddress';
-import { Builder } from '../../infrastructure/builders/TransferTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedTransferTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransferTransactionBuilder';
 import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
@@ -146,6 +144,22 @@ export class TransferTransaction extends Transaction {
     }
 
     /**
+     * Return unresolved address bytes of the recipient
+     * @internal
+     * @returns {string}
+     */
+    public getRecipientBytes(): Uint8Array {
+        const recipient = this.recipientToString();
+        if (/^[0-9a-fA-F]{16}$/.test(recipient)) {
+            // received hexadecimal notation of namespaceId (alias)
+            return RawAddress.aliasToRecipient(convert.hexToUint8(recipient));
+        } else {
+            // received recipient address
+            return RawAddress.stringToAddress(recipient);
+        }
+    }
+
+    /**
      * @override Transaction.size()
      * @description get the byte size of a TransferTransaction
      * @returns {number}
@@ -169,21 +183,6 @@ export class TransferTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addRecipient(this.recipientToString())
-            .addMosaics(this.mosaics.map((mosaic) => mosaic.toDTO()))
-            .addMessage(this.message)
-            .build();
-    }
-
-    /**
-     * @internal
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
@@ -197,7 +196,7 @@ export class TransferTransaction extends Transaction {
             TransactionType.TRANSFER.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientToString())),
+            new UnresolvedAddressDto(this.getRecipientBytes()),
             this.getMessageBuffer(),
             this.sortMosaics().map((mosaic) => {
                 return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
