@@ -15,8 +15,16 @@
  */
 
 import { SignSchema } from '../../core/crypto';
-import { Builder } from '../../infrastructure/builders/AggregateTransaction';
+import { Convert } from '../../core/format';
 import { AggregateTransaction as AggregatedTransactionCore} from '../../infrastructure/builders/AggregateTransaction';
+import { Builder } from '../../infrastructure/builders/AggregateTransaction';
+import { AggregateTransactionBuilder } from '../../infrastructure/catbuffer/AggregateTransactionBuilder';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { CosignatureBuilder } from '../../infrastructure/catbuffer/CosignatureBuilder';
+import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -220,7 +228,40 @@ export class AggregateTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
-        throw new Error('Not implemented');
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        let transactions = Uint8Array.from([]);
+        this.innerTransactions.forEach((transaction) => {
+            const transactionByte = transaction.toAggregateTransactionBytes();
+            transactions = GeneratorUtils.concatTypedArrays(transactions, transactionByte);
+        });
+
+        const cosignatures = Uint8Array.from([]);
+        this.cosignatures.forEach((cosignature) => {
+            const signerBytes = Convert.hexToUint8(cosignature.signer.publicKey);
+            const signatureBytes = Convert.hexToUint8(cosignature.signature);
+            const cosignatureBytes = new CosignatureBuilder(
+                new KeyDto(signerBytes),
+                new SignatureDto(signatureBytes),
+            ).serialize();
+            transactions = GeneratorUtils.concatTypedArrays(cosignatures, cosignatureBytes);
+        });
+
+        console.log('cosignatures', Convert.uint8ToHex(cosignatures));
+        console.log('transactions', Convert.uint8ToHex(transactions));
+
+        const transactionBuilder = new AggregateTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            this.type.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            transactions,
+            cosignatures,
+        );
+        return transactionBuilder.serialize();
     }
 
     /**
@@ -228,6 +269,6 @@ export class AggregateTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        throw new Error('Not implemented');
+        throw new Error('Method not implemented');
     }
 }

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { Convert } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/AccountRestrictionsEntityTypeTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AccountOperationRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
@@ -148,10 +149,8 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-
         const transactionBuilder = new EmbeddedAccountOperationRestrictionTransactionBuilder(
-            new KeyDto(signerBuffer),
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.ACCOUNT_RESTRICTION_OPERATION.valueOf(),
             this.restrictionType.valueOf(),

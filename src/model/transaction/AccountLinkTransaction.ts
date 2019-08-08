@@ -145,10 +145,8 @@ export class AccountLinkTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-
         const transactionBuilder = new EmbeddedAccountLinkTransactionBuilder(
-            new KeyDto(signerBuffer),
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.LINK_ACCOUNT.valueOf(),
             new KeyDto(Convert.hexToUint8(this.remoteAccountKey)),
