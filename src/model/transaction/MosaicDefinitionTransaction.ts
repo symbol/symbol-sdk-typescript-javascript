@@ -205,10 +205,8 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-
         const transactionBuilder = new EmbeddedMosaicDefinitionTransactionBuilder(
-            new KeyDto(signerBuffer),
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.MOSAIC_DEFINITION.valueOf(),
             new MosaicNonceDto(this.getMosaicNonceIntValue()),

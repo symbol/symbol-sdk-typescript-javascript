@@ -267,6 +267,6 @@ export class AggregateTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        throw new Error('Not implemented');
+        throw new Error('Method not implemented');
     }
 }

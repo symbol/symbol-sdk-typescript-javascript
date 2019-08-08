@@ -106,7 +106,7 @@ describe('AggregateTransaction', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+        const signedTransaction = aggregateTransaction.signWithCatbuffer(account, generationHash);
 
         expect(signedTransaction.payload.substring(0, 8)).to.be.equal('CD000000');
         expect(signedTransaction.payload.substring(240, 256)).to.be.equal('5100000051000000');
