@@ -233,11 +233,10 @@ export class RegisterNamespaceTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
         let transactionBuilder: EmbeddedNamespaceRegistrationTransactionBuilder;
         if (this.namespaceType === NamespaceType.RootNamespace) {
             transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
-                new KeyDto(signerBuffer),
+                new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
                 this.versionToDTO(),
                 TransactionType.SECRET_LOCK.valueOf(),
                 new NamespaceIdDto(this.namespaceId.id.toDTO()),
@@ -247,7 +246,7 @@ export class RegisterNamespaceTransaction extends Transaction {
             );
         } else {
             transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
-                new KeyDto(signerBuffer),
+                new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
                 this.versionToDTO(),
                 TransactionType.SECRET_LOCK.valueOf(),
                 new NamespaceIdDto(this.namespaceId.id.toDTO()),

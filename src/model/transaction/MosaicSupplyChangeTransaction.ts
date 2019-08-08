@@ -33,6 +33,7 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
+import { Convert } from '../../core/format';
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -159,10 +160,8 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-
         const transactionBuilder = new EmbeddedMosaicSupplyChangeTransactionBuilder(
-            new KeyDto(signerBuffer),
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.MOSAIC_SUPPLY_CHANGE.valueOf(),
             new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),

@@ -19,14 +19,10 @@
 *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
 **/
 
-import { AddressAliasTransactionBodyBuilder } from './AddressAliasTransactionBodyBuilder';
-import { AddressDto } from './AddressDto';
-import { AliasActionDto } from './AliasActionDto';
 import { AmountDto } from './AmountDto';
 import { EntityTypeDto } from './EntityTypeDto';
 import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
-import { NamespaceIdDto } from './NamespaceIdDto';
 import { SignatureDto } from './SignatureDto';
 import { TimestampDto } from './TimestampDto';
 import { TransactionBuilder } from './TransactionBuilder';
@@ -129,7 +125,7 @@ export class AggregateTransactionBuilder extends TransactionBuilder {
         newArray = GeneratorUtils.concatTypedArrays(newArray, payloadSizeBytes);
         const transactionBytes = this.transactions;
         newArray = GeneratorUtils.concatTypedArrays(newArray, transactionBytes);
-        const cosignaturesBytes = this.transactions;
+        const cosignaturesBytes = this.cosignatures;
         newArray = GeneratorUtils.concatTypedArrays(newArray, cosignaturesBytes);
         return newArray;
     }

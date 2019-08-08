@@ -204,10 +204,8 @@ export class SecretLockTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-
         const transactionBuilder = new EmbeddedSecretLockTransactionBuilder(
-            new KeyDto(signerBuffer),
+            new KeyDto(convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.SECRET_LOCK.valueOf(),
             new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
