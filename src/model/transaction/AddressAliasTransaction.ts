@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { RawAddress } from '../../core/format';
+import { Convert, RawAddress } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/AddressAliasTransaction';
 import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
 import { AddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/AddressAliasTransactionBuilder';
@@ -163,10 +163,8 @@ export class AddressAliasTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-
         const transactionBuilder = new EmbeddedAddressAliasTransactionBuilder(
-            new KeyDto(signerBuffer),
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.ADDRESS_ALIAS.valueOf(),
             this.actionType.valueOf(),

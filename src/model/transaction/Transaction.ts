@@ -187,6 +187,15 @@ export abstract class Transaction {
     }
 
     /**
+     * Takes a transaction and formats bytes to be included in an aggregate transaction.
+     *
+     * @return transaction with signer serialized to be part of an aggregate transaction
+     */
+    public toAggregateTransactionBytes() {
+        return this.generateEmbeddedBytes();
+    }
+
+    /**
      * Transaction pending to be included in a block
      * @returns {boolean}
      */

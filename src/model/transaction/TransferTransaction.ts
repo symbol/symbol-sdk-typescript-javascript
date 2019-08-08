@@ -212,9 +212,8 @@ export class TransferTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
         const transactionBuilder = new EmbeddedTransferTransactionBuilder(
-            new KeyDto(signerBuffer),
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.TRANSFER.valueOf(),
             new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientToString())),
