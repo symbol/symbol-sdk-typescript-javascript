@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/MosaicSupplyChangeTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedMosaicSupplyChangeTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicSupplyChangeTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
@@ -33,7 +32,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { Convert } from '../../core/format';
 
 /**
  * In case a mosaic has the flag 'supplyMutable' set to true, the creator of the mosaic can change the supply,
@@ -116,21 +114,6 @@ export class MosaicSupplyChangeTransaction extends Transaction {
         const byteDelta = 8;
 
         return byteSize + byteMosaicId + byteDirection + byteDelta;
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addMosaicId(this.mosaicId.id.toDTO())
-            .addDirection(this.direction)
-            .addDelta(this.delta.toDTO())
-            .build();
     }
 
     /**

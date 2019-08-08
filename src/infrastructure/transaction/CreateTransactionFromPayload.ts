@@ -190,27 +190,21 @@ const CreateTransaction = (type: number, transactionData: string, networkType: N
         case TransactionType.MOSAIC_DEFINITION:
             const mosaicDefMosaicNonceLength = 8;
             const mosaicDefMosaicIdLength    = 16;
-            const mosaicDefPropsNumLength    = 2;
             const mosaicDefPropsFlagsLength  = 2;
             const mosaicDefDivisibilityLength = 2;
-            const mosaicDefDurationIndLength = 2;
             const mosaicDefDurationLength    = 16;
 
             const mosaicIdOffset     = mosaicDefMosaicNonceLength;
-            const propsOffset        = mosaicIdOffset + mosaicDefMosaicIdLength;
-            const flagsOffset        = propsOffset + mosaicDefPropsNumLength;
+            const flagsOffset        = mosaicIdOffset + mosaicDefMosaicIdLength;
             const divisibilityOffset = flagsOffset + mosaicDefPropsFlagsLength;
-            const durationIndOffset  = divisibilityOffset + mosaicDefDivisibilityLength;
-            const durationOffset     = durationIndOffset + mosaicDefDurationIndLength;
+            const durationOffset     = divisibilityOffset + mosaicDefDivisibilityLength;
 
             // read bytes
             const mosaicNonce = transactionData.substring(0, mosaicDefMosaicNonceLength);
-            const mosaicId = transactionData.substring(mosaicIdOffset, propsOffset);
-            const props = transactionData.substring(propsOffset, flagsOffset);
+            const mosaicId = transactionData.substring(mosaicIdOffset, flagsOffset);
             const flags = parseInt(convert.uint8ToHex(convert.hexToUint8(
                 transactionData.substring(flagsOffset, divisibilityOffset)).reverse()), 16);
-            const divisibility = transactionData.substring(divisibilityOffset, durationIndOffset);
-            const durationInd = transactionData.substring(durationIndOffset, durationOffset);
+            const divisibility = transactionData.substring(divisibilityOffset, durationOffset);
             const duration = transactionData.substring(durationOffset);
 
             const regexArray = mosaicNonce.match(/.{1,2}/g);

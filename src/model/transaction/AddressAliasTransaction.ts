@@ -15,8 +15,6 @@
  */
 
 import { Convert, RawAddress } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/AddressAliasTransaction';
-import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
 import { AddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/AddressAliasTransactionBuilder';
 import { AddressDto } from '../../infrastructure/catbuffer/AddressDto';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -119,21 +117,6 @@ export class AddressAliasTransaction extends Transaction {
         const byteAddress = 25;
 
         return byteSize + byteActionType + byteNamespaceId + byteAddress;
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addAliasAction(this.aliasAction)
-            .addNamespaceId(this.namespaceId.id.toDTO())
-            .addAddress(this.address.plain())
-            .build();
     }
 
     /**

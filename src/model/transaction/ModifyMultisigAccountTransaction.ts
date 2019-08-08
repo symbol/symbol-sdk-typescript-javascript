@@ -15,10 +15,9 @@
  */
 
 import { Convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/MultisigModificationTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { CosignatoryModificationBuilder } from '../../infrastructure/catbuffer/CosignatoryModificationBuilder';
+import { EmbeddedMultisigAccountModificationTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMultisigAccountModificationTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { MultisigAccountModificationTransactionBuilder } from '../../infrastructure/catbuffer/MultisigAccountModificationTransactionBuilder';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
@@ -32,7 +31,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { EmbeddedMultisigAccountModificationTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMultisigAccountModificationTransactionBuilder';
 
 /**
  * Modify multisig account transactions are part of the NEM's multisig account system.
@@ -123,21 +121,6 @@ export class ModifyMultisigAccountTransaction extends Transaction {
         const byteModifications = 33 * this.modifications.length;
 
         return byteSize + byteRemovalDelta + byteApprovalDelta + byteNumModifications + byteModifications;
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addMinApprovalDelta(this.minApprovalDelta)
-            .addMinRemovalDelta(this.minRemovalDelta)
-            .addModifications(this.modifications.map((modification) => modification.toDTO()))
-            .build();
     }
 
     /**

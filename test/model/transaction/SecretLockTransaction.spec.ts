@@ -101,7 +101,7 @@ describe('SecretLockTransaction', () => {
             recipient,
             NetworkType.MIJIN_TEST,
         );
-        const signedTx = secretLockTransaction.signWithCatbuffer(account, generationHash);
+        const signedTx = secretLockTransaction.signWith(account, generationHash);
         expect(signedTx.payload.substring(
             240,
             signedTx.payload.length,

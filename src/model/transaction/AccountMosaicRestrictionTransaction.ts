@@ -15,8 +15,6 @@
  */
 
 import { Convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/AccountRestrictionsMosaicTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AccountMosaicRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountMosaicRestrictionModificationBuilder';
 import { AccountMosaicRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountMosaicRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -103,20 +101,6 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
         const byteModifications = 9 * this.modifications.length;
 
         return byteSize + byteRestrictionType + byteModificationCount + byteModifications;
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addRestrictionType(this.restrictionType)
-            .addModifications(this.modifications.map((modification) => modification.toDTO()))
-            .build();
     }
 
     /**
