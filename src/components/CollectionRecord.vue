@@ -1,11 +1,30 @@
 <template>
   <div class="right_record radius">
+
+    <Modal
+            :title="$t('transaction_detail')"
+            v-model="isShowDialog"
+            :transfer="false"
+            class-name="dash_board_dialog">
+      <div class="transfer_type">
+        <span class="title">{{$t(transactionDetails[0].key)}}</span>
+        <span class="value">{{$t(transactionDetails[0].value)}}</span>
+      </div>
+      <div>
+        <div v-if="index !== 0" v-for="(t,index) in transactionDetails" class="other_info">
+          <span class="title">{{$t(t.key)}}</span>
+          <span class="value">{{t.value}}</span>
+        </div>
+      </div>
+    </Modal>
+
+
     <div class="top_title">
-      <span>{{$t('collection_record')}}</span>
+      <span>{{transactionType == 1 ?$t('collection_record'):$t('transfer_record')}}</span>
       <div class="right" v-show="!isShowSearchDetail">
             <span class="select_date pointer">
               <div class="month_value">
-                <img src="../assets/images/monitor/market/marketCalendar.png" alt="">
+                <img src="@/assets/images/monitor/market/marketCalendar.png" alt="">
               <span>{{currentMonth}}</span>
               </div>
               <div class="date_selector">
@@ -32,7 +51,7 @@
     </div>
     <div class="bottom_transfer_record_list scroll">
       <Spin v-if="isLoadingTransactionRecord" size="large" fix></Spin>
-      <div class="transaction_record_item" v-for="c in confirmedTransactionList">
+      <div class="transaction_record_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">
         <img src="../assets/images/monitor/transaction/transacrionAssetIcon.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
@@ -74,20 +93,55 @@
 
     @Component
     export default class CollectionRecord extends Vue {
-        transacrionAssetIcon = transacrionAssetIcon
-        isLoadingTransactionRecord = true
-        currentMonth = ''
-        isShowSearchDetail = false
-        accountPrivateKey = ''
-        accountPublicKey = ''
-        accountAddress = ''
         node = ''
+        currentPrice = 0
+        currentMonth = ''
+        accountAddress = ''
+        transactionHash = ''
+        isShowDialog = false
+        accountPublicKey = ''
+        accountPrivateKey = ''
+        isShowSearchDetail = false
+        currentMonthLast: number = 0
         confirmedTransactionList = []
         currentMonthFirst: number = 0
-        currentMonthLast: number = 0
         localConfirmedTransactions = []
-        currentPrice = 0
-        transactionHash = ''
+        isLoadingTransactionRecord = true
+        transacrionAssetIcon = transacrionAssetIcon
+        transactionDetails = [
+            {
+                key: 'transfer_type',
+                value: 'gathering'
+            },
+            {
+                key: 'from',
+                value: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
+            },
+            {
+                key: 'aims',
+                value: 'Test wallet'
+            },
+            {
+                key: 'the_amount',
+                value: '10.000000XEM'
+            },
+            {
+                key: 'fee',
+                value: '0.050000000XEM'
+            },
+            {
+                key: 'block',
+                value: '1951249'
+            },
+            {
+                key: 'hash',
+                value: '9BBCAECDD5E2D04317DE9873DC99255A9F8A33FA5BB570D1353F65CB31A44151'
+            },
+            {
+                key: 'message',
+                value: 'message test this'
+            }
+        ]
 
         @Prop({
             default: () => {
@@ -136,6 +190,49 @@
                     that.confirmedTransactionList.push(item)
                 }
             })
+        }
+
+        showDialog(transaction) {
+            this.isShowDialog = true
+            this.transactionDetails = [
+                {
+                    key: 'transfer_type',
+                    value: transaction.isReceipt ? 'gathering' : 'payment'
+                },
+                {
+                    key: 'from',
+                    //todo
+                    value: transaction.signerAddress
+                },
+                {
+                    key: 'aims',
+                    value: transaction.recipientAddress
+                },
+                {
+                    key: 'mosaic',
+                    value: transaction.mosaic ? transaction.mosaic.id.toHex().toUpperCase() : null
+                },
+                {
+                    key: 'the_amount',
+                    value: transaction.mosaic ? transaction.mosaic.amount.compact() : 0
+                },
+                {
+                    key: 'fee',
+                    value: transaction.maxFee.compact()
+                },
+                {
+                    key: 'block',
+                    value: transaction.transactionInfo.height.compact()
+                },
+                {
+                    key: 'hash',
+                    value: transaction.transactionInfo.hash
+                },
+                {
+                    key: 'message',
+                    value: transaction.message.payload
+                }
+            ]
         }
 
         getConfirmedTransactions() {
@@ -388,6 +485,51 @@
           font-size: 12px;
           font-weight: 400;
           color: rgba(153, 153, 153, 1);
+        }
+      }
+
+    }
+
+
+    .dash_board_dialog {
+      .value {
+        border: none;
+      }
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .title {
+        display: inline-block;
+        width: 100px;
+        margin-right: 60px;
+        font-weight: 400;
+        color: rgba(153, 153, 153, 1);
+        text-align: right;
+
+      }
+
+      span {
+        margin-top: 8px;
+        font-size: 16px;
+      }
+
+      .value {
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
+      }
+
+      .other_info:nth-of-type(odd) {
+        margin-top: 20px;
+      }
+
+      .transfer_type {
+        .value {
+          font-size: 20px;
+          font-weight: bold;
+          color: rgba(241, 95, 35, 1);
         }
       }
 

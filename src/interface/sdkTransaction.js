@@ -1,6 +1,7 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-import { TransactionHttp, AccountHttp, TransferTransaction, Deadline, Address, UInt64, Message, AggregateTransaction, TransactionType } from 'nem2-sdk';
+import { TransactionHttp, AccountHttp, TransferTransaction, Deadline, Address, UInt64, Message, AggregateTransaction, TransactionType, HashLockTransaction, Mosaic, MosaicId } from 'nem2-sdk';
+import { filter, mergeMap } from "rxjs/operators";
 export var transactionInterface = {
     announce: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var signature, node, announceStatus;
@@ -20,6 +21,26 @@ export var transactionInterface = {
             }
         });
     }); },
+    // todo
+    _announce: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        var transaction, node, account, generationHash, signedTransaction, announceStatus;
+        return tslib_1.__generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    transaction = params.transaction, node = params.node, account = params.account, generationHash = params.generationHash;
+                    signedTransaction = account.sign(transaction, generationHash);
+                    return [4 /*yield*/, new TransactionHttp(node).announce(signedTransaction)];
+                case 1:
+                    announceStatus = _a.sent();
+                    return [2 /*return*/, {
+                            result: {
+                                announceStatus: announceStatus
+                            }
+                        }];
+            }
+        });
+    }); },
+    // Account Restriction
     transferTransaction: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var network, transactionType, deadline, MaxFee, receive, mosaics, MessageType, message, transferTransaction;
         return tslib_1.__generator(this, function (_a) {
@@ -232,6 +253,35 @@ export var transactionInterface = {
                             }
                         }];
             }
+        });
+    }); },
+    announceBondedWithLock: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        var aggregateTransaction, account, listener, node, generationHash, networkType, fee, transactionHttp, signedTransaction, hashLockTransaction, hashLockTransactionSigned;
+        return tslib_1.__generator(this, function (_a) {
+            aggregateTransaction = params.aggregateTransaction, account = params.account, listener = params.listener, node = params.node, generationHash = params.generationHash, networkType = params.networkType, fee = params.fee;
+            transactionHttp = new TransactionHttp(node);
+            signedTransaction = account.sign(aggregateTransaction, generationHash);
+            hashLockTransaction = HashLockTransaction.create(Deadline.create(), 
+            // todo repalce mosaic id
+            new Mosaic(new MosaicId([853116887, 2007078553]), UInt64.fromUint(10000000)), UInt64.fromUint(480), signedTransaction, networkType, UInt64.fromUint(fee));
+            hashLockTransactionSigned = account.sign(hashLockTransaction, generationHash);
+            listener.open().then(function () {
+                transactionHttp
+                    .announce(hashLockTransactionSigned)
+                    .subscribe(function (x) { return console.log(x); }, function (err) { return console.error(err); });
+                listener
+                    .confirmed(account.address)
+                    .pipe(filter(function (transaction) { return transaction.transactionInfo !== undefined
+                    && transaction.transactionInfo.hash === hashLockTransactionSigned.hash; }), mergeMap(function (ignored) { return transactionHttp.announceAggregateBonded(signedTransaction); }))
+                    .subscribe(function (announcedAggregateBonded) { return console.log(announcedAggregateBonded); }, function (err) { return console.error(err); });
+            });
+            console.log(hashLockTransactionSigned);
+            console.log(signedTransaction);
+            return [2 /*return*/, {
+                    result: {
+                        aggregateBondedTx: ''
+                    }
+                }];
         });
     }); },
 };

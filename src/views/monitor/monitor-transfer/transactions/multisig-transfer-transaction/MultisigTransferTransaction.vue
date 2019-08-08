@@ -4,56 +4,82 @@
     <div class="address flex_center">
       <span class="title">{{$t('Public_account')}}</span>
       <span class="value radius flex_center">
-              <Select placeholder="" v-model="multisigPublickey" :placeholder="$t('Public_account')" class="asset_type">
-            <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">
-              {{ item.label }}
-            </Option>
-           </Select>
-            </span>
+        <Select placeholder="" v-model="formItem.multisigPublickey" :placeholder="$t('Public_account')"
+                class="asset_type">
+         <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+       </Select>
+      </span>
     </div>
 
 
     <div class="address flex_center">
       <span class="title">{{$t('transfer_target')}}</span>
       <span class="value radius flex_center">
-              <input type="text" v-model="address" :placeholder="$t('receive_address_or_alias')">
-            </span>
+        <input type="text" v-model="formItem.address" :placeholder="$t('receive_address_or_alias')">
+      </span>
     </div>
 
 
     <div class="asset flex_center">
       <span class="title">{{$t('asset_type')}}</span>
-
-
       <span>
         <span class="type value radius flex_center">
-          <Select v-model="mosaic" :placeholder="$t('asset_type')" class="asset_type">
+          <Select v-model="formItem.mosaic" :placeholder="$t('asset_type')" class="asset_type">
             <Option v-for="item in mosaicList" :value="item.value" :key="item.value">
               {{ item.label }}
             </Option>
            </Select>
         </span>
         <span class="amount value radius flex_center">
-           <input v-model="amount" :placeholder="$t('please_enter_the_transfer_amount')" type="text">
+           <input v-model="formItem.amount" :placeholder="$t('please_enter_the_transfer_amount')" type="text">
          </span>
       </span>
-
-
     </div>
+
     <div class="remark flex_center">
       <span class="title">{{$t('remarks')}}</span>
       <span class=" textarea_container  flex_center value radius ">
-              <textarea class="hide_scroll" v-model="remark" :placeholder="$t('please_enter_a_comment')"></textarea>
+              <textarea class="hide_scroll" v-model="formItem.remark"
+                        :placeholder="$t('please_enter_a_comment')"></textarea>
             </span>
     </div>
     <div class="fee flex_center">
-      <span class="title">{{$t('fee')}}</span>
+      <span class="title">{{$t('inner_fee')}}</span>
       <span class="value radius flex_center">
-              <input v-model="fee" placeholder="50000" type="text">
+              <input v-model="formItem.innerFee" placeholder="50000" type="text">
               <span class="uint">gas</span>
             </span>
+
     </div>
     <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
+    <span class="xem_tips">{{formItem.innerFee / 1000000}} xem </span>
+
+    <div v-if="currentMinApproval > 1">
+      <div class="fee flex_center">
+        <span class="title">{{$t('bonded_fee')}}</span>
+        <span class="value radius flex_center">
+              <input v-model="formItem.bondedFee" placeholder="50000" type="text">
+              <span class="uint">gas</span>
+            </span>
+
+      </div>
+      <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
+      <span class="xem_tips">{{formItem.bondedFee / 1000000}} xem </span>
+
+      <div class="fee flex_center">
+        <span class="title">{{$t('lock_fee')}}</span>
+        <span class="value radius flex_center">
+              <input v-model="formItem.lockFee" placeholder="50000" type="text">
+              <span class="uint">gas</span>
+            </span>
+
+      </div>
+      <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
+      <span class="xem_tips">{{formItem.lockFee / 1000000}} xem </span>
+
+    </div>
+
+
     <div @click="checkInfo" v-if="isShowPanel" class="send_button pointer">
       {{$t('send')}}
     </div>
@@ -90,6 +116,7 @@
         Deadline,
         Listener,
     } from 'nem2-sdk'
+    import {transactionInterface} from '@/interface/sdkTransaction';
 
     @Component({
         components: {
@@ -97,38 +124,50 @@
         }
     })
     export default class TransferTransactionCompoent extends Vue {
-        showCheckPWDialog = false
-        isShowPanel = true
-        currentCosignatoryList = []
-        multisigPublickeyList = [{
-            label:'no data',
-            value:'no data'
-        }]
-        multisigPublickey = ''
-        accountPublicKey = ''
-        accountAddress = ''
         node = ''
         currentXem = ''
-        address = 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC'
-        mosaic: any = ''
-        amount: any = '0'
-        remark = ''
-        fee: any = '10000000'
+        isShowPanel = true
+        accountAddress = ''
         generationHash = ''
-        isShowSubAlias = false
-        mosaicList = []
+        accountPublicKey = ''
         currentMinApproval = 0
+        isShowSubAlias = false
+        showCheckPWDialog = false
+        currentCosignatoryList = []
+        mosaicList = [{
+            label: 'no data',
+            value: 'no data'
+        }]
+        multisigPublickeyList = [{
+            label: 'no data',
+            value: 'no data'
+        }]
+        formItem = {
+            address: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
+            mosaic: '',
+            amount: 0,
+            remark: '',
+            multisigPublickey: '',
+            bondedFee: 10000000,
+            lockFee: 10000000,
+            innerFee: 10000000,
+        }
 
         get getWallet() {
             return this.$store.state.account.wallet
         }
 
         initForm() {
-            this.fee = '10000000'
-            this.remark = ''
-            this.address = ''
-            this.mosaic = ''
-            this.amount = '0'
+            this.formItem = {
+                address: '',
+                mosaic: '',
+                amount: 0,
+                remark: '',
+                multisigPublickey: '',
+                bondedFee: 10000000,
+                lockFee: 10000000,
+                innerFee: 10000000,
+            }
         }
 
         checkInfo() {
@@ -139,17 +178,15 @@
         }
 
         sendTransaction(privatekey) {
-
+            // todo 合并代码后修改
             if (this.currentMinApproval == 0) {
                 return
             }
-
-
             const that = this
             const {networkType} = this.$store.state.account.wallet
             const {generationHash, node} = this.$store.state.account
             const account = Account.createFromPrivateKey(privatekey, networkType)
-            let {address, fee, mosaic, amount, remark, multisigPublickey} = this
+            let {address, bondedFee, lockFee, innerFee, mosaic, amount, remark, multisigPublickey} = this.formItem
             const listener = new Listener(node.replace('http', 'ws'), WebSocket)
             const transaction = TransferTransaction.create(
                 Deadline.create(),
@@ -157,19 +194,27 @@
                 [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(amount))],
                 PlainMessage.create(remark),
                 networkType,
-                UInt64.fromUint(fee)
+                UInt64.fromUint(innerFee)
             )
 
             if (this.currentMinApproval > 1) {
                 multisigInterface.bondedMultisigTransaction({
                     networkType: networkType,
                     account: account,
-                    generationHash: generationHash,
-                    node: node,
-                    fee: fee,
+                    fee: bondedFee,
                     multisigPublickey: multisigPublickey,
                     transaction: transaction,
-                    listener: listener
+                }).then((result) => {
+                    const aggregateTransaction = result.result.aggregateTransaction
+                    transactionInterface.announceBondedWithLock({
+                        aggregateTransaction,
+                        account,
+                        listener,
+                        node,
+                        generationHash,
+                        networkType,
+                        fee: lockFee
+                    })
                 })
                 return
             }
@@ -178,13 +223,12 @@
                 account: account,
                 generationHash: generationHash,
                 node: node,
-                fee: fee,
+                fee: innerFee,
                 multisigPublickey: multisigPublickey,
                 transaction: transaction,
                 listener: listener
             })
         }
-
 
         getMultisigAccountList() {
             const that = this
@@ -207,13 +251,15 @@
             })
         }
 
-        @Watch('multisigPublickey')
+        @Watch('formItem.multisigPublickey')
         async onMultisigPublickeyChange() {
             const that = this
-            const {multisigPublickey} = this
-            const {networkType} = this.$store.state.account.wallet
+            const {multisigPublickey} = this.formItem
             const {node} = this.$store.state.account
+            const {networkType} = this.$store.state.account.wallet
             let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
+            await this.getMosaicList(address)
+
             multisigInterface.getMultisigAccountInfo({
                 address,
                 node
@@ -227,7 +273,11 @@
 
 
         checkForm() {
-            const {address, mosaic, amount, remark, fee} = this
+            const {address, mosaic, amount, remark, bondedFee, lockFee, innerFee, multisigPublickey} = this.formItem
+            if (multisigPublickey.length !== 64) {
+                this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR))
+                return false
+            }
             if (address.length < 40) {
                 this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
                 return false
@@ -236,11 +286,21 @@
                 this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR))
                 return false
             }
-            if ((!Number(amount) && Number(amount) !== 0)|| Number(amount) < 0) {
+            if ((!Number(amount) && Number(amount) !== 0) || Number(amount) < 0) {
                 this.showErrorMessage(this.$t(Message.AMOUNT_LESS_THAN_0_ERROR))
                 return false
             }
-            if ((!Number(fee) && Number(fee) !== 0)|| Number(fee) < 0) {
+
+            if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
+                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
+                return false
+            }
+
+            if ((!Number(bondedFee) && Number(bondedFee) !== 0) || Number(bondedFee) < 0) {
+                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
+                return false
+            }
+            if ((!Number(lockFee) && Number(lockFee) !== 0) || Number(lockFee) < 0) {
                 this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
                 return false
             }
@@ -254,9 +314,9 @@
             })
         }
 
-        async getMosaicList() {
+        async getMosaicList(accountAddress) {
             const that = this
-            let {accountPublicKey, currentXem, accountAddress, node, address, mosaic, amount, remark, fee} = this
+            const {node, currentXem} = this
             const {currentXEM1, currentXEM2} = this.$store.state.account
             let mosaicIdList = []
             await accountInterface.getAccountInfo({
@@ -265,16 +325,15 @@
             }).then(async accountInfoResult => {
                 await accountInfoResult.result.accountInfo.subscribe((accountInfo) => {
                     let mosaicList = []
-                    mosaicIdList = accountInfo.mosaics.map(item => item.id)
                     // set mosaicList
-                    mosaicList = mosaicIdList.map((item) => {
-                        item.value = item.toHex()
+                    mosaicList = accountInfo.mosaics.map((item) => {
+                        item._amount = item.amount.compact()
+                        item.value = item.id.toHex()
                         if (item.value == currentXEM1 || item.value == currentXEM2) {
-                            item.label = 'nem.xem'
+                            item.label = 'nem.xem' + ' (' + item._amount + ')'
                         } else {
-                            item.label = item.toHex()
+                            item.label = item.id.toHex() + ' (' + item._amount + ')'
                         }
-
                         return item
                     })
                     let isCrrentXEMExists = mosaicList.every((item) => {
@@ -301,26 +360,6 @@
             })
         }
 
-        getNamespace(currentXem, mosaicIdList, currentXEM1, currentXEM2, mosaicList) {
-            let currentXEMHex = ''
-            const that = this
-            mosaicInterface.getMosaicByNamespace({
-                namespace: currentXem
-            }).then((result: any) => {
-                let isCrrentXEMExists = true
-                let spliceIndex = -1
-                isCrrentXEMExists = mosaicIdList.every((item, index) => {
-                    if (item.value == currentXEM1 || item.value == currentXEM2) {
-                        spliceIndex = index
-                        return false
-                    }
-                    return true
-                })
-                that.mosaicList = mosaicList
-                that.mosaic = currentXEMHex
-            })
-        }
-
         initData() {
             this.accountPublicKey = this.getWallet.publicKey
             this.accountAddress = this.getWallet.address
@@ -336,23 +375,19 @@
         checkEnd(key) {
             if (key) {
                 this.sendTransaction(key)
-            } else {
-                this.$Notice.error({
-                    title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-                })
+                return
             }
+            this.showErrorMessage(this.$t(Message.WRONG_PASSWORD_ERROR) + '')
         }
 
 
         @Watch('getWallet')
         onGetWalletChange() {
             this.initData()
-            this.getMosaicList()
         }
 
         created() {
             this.initData()
-            this.getMosaicList()
             this.getMultisigAccountList()
         }
 

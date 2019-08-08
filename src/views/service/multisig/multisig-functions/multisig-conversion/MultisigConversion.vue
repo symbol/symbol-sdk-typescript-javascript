@@ -46,13 +46,43 @@
 
         <div class="multisig_property_fee">
         <span class="gray_content">
-          <div class="title">{{$t('fee')}}</div>
+          <div class="title">{{$t('inner_fee')}}</div>
           <div class="title_describe">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
           </div>
           <div class="input_content">
-            <input type="text" v-model="formItem.fee" class="radius" placeholder="0.050000">
-            <span class="XEM_tag">gas</span>
+            <input type="text" v-model="formItem.innerFee" class="radius" placeholder="0.050000">
+            <span class="XEM_tag">gas </span>
+            <span class="xem_amount">{{formItem.innerFee / 1000000}} xem </span>
+          </div>
+        </span>
+        </div>
+
+        <div class="multisig_property_fee">
+        <span class="gray_content">
+          <div class="title">{{$t('bonded_fee')}}</div>
+          <div class="title_describe">
+            {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+          </div>
+          <div class="input_content">
+            <input type="text" v-model="formItem.bondedFee" class="radius" placeholder="0.050000">
+            <span class="XEM_tag">gas </span>
+            <span class="xem_amount">{{formItem.bondedFee / 1000000}} xem </span>
+          </div>
+        </span>
+        </div>
+
+
+        <div class="multisig_property_fee">
+        <span class="gray_content">
+          <div class="title">{{$t('lock_fee')}}</div>
+          <div class="title_describe">
+            {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+          </div>
+          <div class="input_content">
+            <input type="text" v-model="formItem.lockFee" class="radius" placeholder="0.050000">
+            <span class="XEM_tag">gas </span>
+            <span class="xem_amount">{{formItem.lockFee / 1000000}} xem </span>
           </div>
         </span>
         </div>
@@ -99,10 +129,16 @@
     import Message from '@/message/Message.ts'
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {multisigInterface} from '@/interface/sdkMultisig.ts'
+    import {transactionInterface} from '@/interface/sdkTransaction.ts'
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
     import {
-        NetworkType, Account, Listener, MultisigCosignatoryModification, MultisigCosignatoryModificationType,
-        PublicAccount
+        NetworkType,
+        Account,
+        Listener,
+        MultisigCosignatoryModification,
+        MultisigCosignatoryModificationType,
+        PublicAccount,
+        ModifyMultisigAccountTransaction, Deadline, UInt64
     } from 'nem2-sdk';
 
     @Component({
@@ -119,7 +155,9 @@
             publickeyList: [],
             minApproval: 1,
             minRemoval: 1,
-            fee: 10000000,
+            bondedFee: 10000000,
+            lockFee: 10000000,
+            innerFee: 10000000
         }
 
 
@@ -141,37 +179,62 @@
             this.showCheckPWDialog = true
         }
 
+        showErrorMessage(message: string) {
+            this.$Notice.destroy()
+            this.$Notice.error({
+                title: message
+            })
+        }
 
         checkForm(): boolean {
-            const {publickeyList, minApproval, minRemoval, fee} = this.formItem
+            const {publickeyList, minApproval, minRemoval, bondedFee, lockFee, innerFee} = this.formItem
+
             if (publickeyList.length < 1) {
-                this.$Notice.error({title: this.$t(Message.CO_SIGNER_NULL_ERROR) + ''})
+                this.showErrorMessage(this.$t(Message.CO_SIGNER_NULL_ERROR) + '')
                 return false
             }
 
-            if (!Number(minApproval) || Number(minApproval) < 1) {
-                this.$Notice.error({title: this.$t(Message.MIN_APPROVAL_LESS_THAN_0_ERROR) + ''})
+            if ((!Number(minApproval) && Number(minApproval) !== 0) || Number(minApproval) < 1) {
+                this.showErrorMessage(this.$t(Message.MIN_APPROVAL_LESS_THAN_0_ERROR) + '')
                 return false
             }
 
-            if (!Number(minRemoval) || Number(minRemoval) < 1) {
-                this.$Notice.error({title: this.$t(Message.MIN_REMOVAL_LESS_THAN_0_ERROR) + ''})
+            if ((!Number(minRemoval) && Number(minRemoval) !== 0) || Number(minRemoval) < 1) {
+                this.showErrorMessage(this.$t(Message.MIN_REMOVAL_LESS_THAN_0_ERROR) + '')
                 return false
             }
 
-            if (!Number(fee) || Number(fee) < 0) {
-                this.$Notice.error({title: this.$t(Message.FEE_LESS_THAN_0_ERROR) + ''})
+            if (Number(minApproval) > 10) {
+                this.showErrorMessage(this.$t(Message.MAX_APPROVAL_MORE_THAN_10_ERROR) + '')
+                return false
+            }
+
+            if (Number(minRemoval) > 10) {
+                this.showErrorMessage(this.$t(Message.MAX_REMOVAL_MORE_THAN_10_ERROR) + '')
+                return false
+            }
+            if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
+                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
+                return false
+            }
+
+            if ((!Number(bondedFee) && Number(bondedFee) !== 0) || Number(bondedFee) < 0) {
+                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
+                return false
+            }
+
+            if ((!Number(lockFee) && Number(lockFee) !== 0) || Number(lockFee) < 0) {
+                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
                 return false
             }
 
             const publickeyFlag = publickeyList.every((item) => {
                 if (item.trim().length !== 64) {
-                    this.$Notice.error({title: this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + ''})
+                    this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + '')
                     return false;
                 }
                 return true;
             });
-
             return publickeyFlag
         }
 
@@ -199,7 +262,7 @@
         }
 
         sendMultisignConversionTransaction(privatekey) {
-            const {publickeyList, minApproval, minRemoval, fee} = this.formItem
+            const {publickeyList, minApproval, minRemoval, lockFee, bondedFee, innerFee} = this.formItem
             const {networkType} = this.$store.state.account.wallet
             const {generationHash, node} = this.$store.state.account
             const account = Account.createFromPrivateKey(privatekey, networkType)
@@ -209,19 +272,33 @@
                 PublicAccount.createFromPublicKey(cosigner, networkType),
             ))
 
-            multisigInterface.covertToBeMultisig({
-                minApprovalDelta: minApproval,
-                minRemovalDelta: minRemoval,
-                multisigCosignatoryModificationList: multisigCosignatoryModificationList,
+            const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                minApproval,
+                minRemoval,
+                multisigCosignatoryModificationList,
+                networkType,
+                UInt64.fromUint(innerFee)
+            );
+            multisigInterface.bondedMultisigTransaction({
                 networkType: networkType,
                 account: account,
-                generationHash: generationHash,
-                node: node,
-                listener: listener,
-                fee: fee
+                fee: bondedFee,
+                multisigPublickey: account.publicKey,
+                transaction: modifyMultisigAccountTransaction,
+            }).then((result) => {
+                const aggregateTransaction = result.result.aggregateTransaction
+                transactionInterface.announceBondedWithLock({
+                    aggregateTransaction,
+                    account,
+                    listener,
+                    node,
+                    generationHash,
+                    networkType,
+                    fee: lockFee
+                })
             })
         }
-
 
 
         created() {

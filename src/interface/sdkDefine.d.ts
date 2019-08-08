@@ -17,8 +17,11 @@ import {
     MultisigAccountInfo,
     MultisigAccountGraphInfo,
     Listener,
-    MultisigCosignatoryModification, MosaicSupplyChangeTransaction
+    MultisigCosignatoryModification,
+    MosaicSupplyChangeTransaction,
+    AggregateTransaction,
 } from 'nem2-sdk'
+
 
 declare namespace SdkV0 {
 
@@ -159,6 +162,24 @@ declare namespace SdkV0 {
         }) => Rst<{
             announceStatus: any
         }>;
+        _announce: (params: {
+            transaction: Transaction,
+            node: string,
+            account: Account,
+            generationHash: string
+
+        }) => Rst<{
+            announceStatus: any
+        }>;
+        // accountAddressRestrictionModificationTransaction: (params: {
+        //     restrictionType: RestrictionType,
+        //     modifications: Array<AccountRestrictionModification<string>>,
+        //     networkType: NetworkType,
+        //     maxFee: number,
+        //
+        // }) => Rst<{
+        //     announceStatus: any
+        // }>;
         transferTransaction: (params: {
             network: number,
             MaxFee: number,
@@ -235,6 +256,18 @@ declare namespace SdkV0 {
         }) => Rst<{
             aggregateBondedTx: any
         }>;
+        announceBondedWithLock: (params: {
+            aggregateTransaction: AggregateTransaction,
+            account: Account,
+            listener: Listener,
+            node: string,
+            generationHash: string,
+            networkType,
+            fee
+        }) => Rst<{
+            aggregateBondedTx: any
+        }>;
+
     }
 
     interface mosaic {
@@ -434,38 +467,32 @@ declare namespace SdkV0 {
     }
 
     interface multisig {
-        covertToBeMultisig: (params: {
-            minApprovalDelta: number,
-            minRemovalDelta: number,
-            multisigCosignatoryModificationList: Array<MultisigCosignatoryModification>,
-            networkType: NetworkType,
-            account: Account,
-            generationHash: string,
-            node: string
-            listener: Listener
-            fee: number
-        }) => Rst<{
-            result: any
-        }>;
+        // covertToBeMultisig: (params: {
+        //     minApprovalDelta: number,
+        //     minRemovalDelta: number,
+        //     multisigCosignatoryModificationList: Array<MultisigCosignatoryModification>,
+        //     networkType: NetworkType,
+        //     account: Account,
+        //     fee: number
+        // }) => Rst<{
+        //     aggregateTransaction: AggregateTransaction
+        // }>;
+        // multisetCosignatoryModification: (params: {
+        //     minApprovalDelta: number,
+        //     minRemovalDelta: number,
+        //     multisigCosignatoryModificationList: Array<MultisigCosignatoryModification>,
+        //     networkType: NetworkType,
+        //     account: Account,
+        //     fee: number,
+        //     multisigPublickey: string
+        // }) => Rst<{
+        //     aggregateTransaction: AggregateTransaction
+        // }>;
         getMultisigAccountInfo: (params: {
             address: string
             node: string
         }) => Rst<{
             multisigInfo: any
-        }>;
-        multisetCosignatoryModification: (params: {
-            minApprovalDelta: number,
-            minRemovalDelta: number,
-            multisigCosignatoryModificationList: Array<MultisigCosignatoryModification>,
-            networkType: NetworkType,
-            account: Account,
-            generationHash: string,
-            node: string
-            listener: Listener
-            fee: number,
-            multisigPublickey: string
-        }) => Rst<{
-            result: any
         }>;
         completeCosignatoryModification: (params: {
             minApprovalDelta: number,
@@ -495,14 +522,11 @@ declare namespace SdkV0 {
         bondedMultisigTransaction: (params: {
             networkType: NetworkType,
             account: Account,
-            generationHash: string,
-            node: string
             fee: number,
             multisigPublickey: string,
             transaction: any,
-            listener: Listener
         }) => Rst<{
-            result: any
+            aggregateTransaction: AggregateTransaction
         }>;
     }
 

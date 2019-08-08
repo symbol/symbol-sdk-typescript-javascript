@@ -18,60 +18,57 @@ export const multisigInterface: SdkV0.multisig = {
     /*
     multisign coversion
     * */
-    covertToBeMultisig: async (params) => {
-        const {minApprovalDelta, minRemovalDelta, multisigCosignatoryModificationList, networkType, account, generationHash, node, listener, fee} = params
-        const transactionHttp = new TransactionHttp(node);
+    // covertToBeMultisig: async (params) => {
+    //     const {minApprovalDelta, minRemovalDelta, multisigCosignatoryModificationList, networkType, account, fee} = params
+    //
+    //     const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+    //         Deadline.create(),
+    //         minApprovalDelta,
+    //         minRemovalDelta,
+    //         multisigCosignatoryModificationList,
+    //         networkType,
+    //         UInt64.fromUint(fee)
+    //     );
+    //     const aggregateTransaction = AggregateTransaction.createBonded(
+    //         Deadline.create(),
+    //         [modifyMultisigAccountTransaction.toAggregate(account.publicAccount)],
+    //         networkType,
+    //         [],
+    //         UInt64.fromUint(fee)
+    //     );
+    //
+    //     return {
+    //         result: {
+    //             aggregateTransaction: aggregateTransaction
+    //         }
+    //     };
+    // },
 
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
-            Deadline.create(),
-            minApprovalDelta,
-            minRemovalDelta,
-            multisigCosignatoryModificationList,
-            networkType,
-            UInt64.fromUint(fee)
-        );
-        const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(),
-            [modifyMultisigAccountTransaction.toAggregate(account.publicAccount)],
-            networkType,
-            [],
-            UInt64.fromUint(fee)
-        );
-        const signedTransaction = account.sign(aggregateTransaction, generationHash);
-        const hashLockTransaction = HashLockTransaction.create(
-            Deadline.create(),
-            // todo repalce mosaic id
-            new Mosaic(new MosaicId([853116887, 2007078553]), UInt64.fromUint(10000000)),
-            UInt64.fromUint(480),
-            signedTransaction,
-            networkType,
-            UInt64.fromUint(fee)
-        );
-        const hashLockTransactionSigned = account.sign(hashLockTransaction, generationHash);
-
-        console.log('hashLockTransactionSigned', hashLockTransactionSigned)
-        console.log('signedTransaction', signedTransaction)
-        listener.open().then(() => {
-            transactionHttp
-                .announce(hashLockTransactionSigned)
-                .subscribe(x => console.log(x), err => console.error(err));
-            listener
-                .confirmed(account.address)
-                .pipe(
-                    filter((transaction) => transaction.transactionInfo !== undefined
-                        && transaction.transactionInfo.hash === hashLockTransactionSigned.hash),
-                    mergeMap(ignored => transactionHttp.announceAggregateBonded(signedTransaction)),
-                )
-                .subscribe(announcedAggregateBonded => console.log(announcedAggregateBonded),
-                    err => console.error(err));
-        });
-
-        return {
-            result: {
-                result: ''
-            }
-        };
-    },
+    // multisetCosignatoryModification: async (params) => {
+    //     const {multisigPublickey, minApprovalDelta, minRemovalDelta, multisigCosignatoryModificationList, networkType, account, fee} = params
+    //     const multisigPublicAccount = PublicAccount.createFromPublicKey(multisigPublickey, NetworkType.MIJIN_TEST)
+    //     const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+    //         Deadline.create(),
+    //         Number(minApprovalDelta),
+    //         Number(minRemovalDelta),
+    //         multisigCosignatoryModificationList,
+    //         networkType,
+    //     );
+    //     const aggregateTransaction = AggregateTransaction.createBonded(
+    //         Deadline.create(),
+    //         [modifyMultisigAccountTransaction.toAggregate(multisigPublicAccount)],
+    //         networkType,
+    //         [],
+    //         UInt64.fromUint(fee)
+    //     );
+    //
+    //     return {
+    //         result: {
+    //             aggregateTransaction: aggregateTransaction
+    //         }
+    //     }
+    //
+    // },
 
     getMultisigAccountInfo: async (params) => {
         const {address, node} = params
@@ -84,66 +81,8 @@ export const multisigInterface: SdkV0.multisig = {
         }
     },
 
-    multisetCosignatoryModification: async (params) => {
-        const {multisigPublickey, minApprovalDelta, minRemovalDelta, multisigCosignatoryModificationList, networkType, account, generationHash, node, listener, fee} = params
-        const multisigPublicAccount = PublicAccount.createFromPublicKey(multisigPublickey, NetworkType.MIJIN_TEST)
-        const transactionHttp = new TransactionHttp(node)
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
-            Deadline.create(),
-            Number(minApprovalDelta),
-            Number(minRemovalDelta),
-            multisigCosignatoryModificationList,
-            networkType,
-        );
-        const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(),
-            [modifyMultisigAccountTransaction.toAggregate(multisigPublicAccount)],
-            networkType,
-            [],
-            UInt64.fromUint(fee)
-        );
-        const signedTransaction = account.sign(
-            aggregateTransaction,
-            generationHash,
-        );
-        const hashLockTransaction = HashLockTransaction.create(
-            Deadline.create(),
-            // todo repalce mosaic id
-            new Mosaic(new MosaicId([853116887, 2007078553]), UInt64.fromUint(10000000)),
-            UInt64.fromUint(480),
-            signedTransaction,
-            networkType,
-            UInt64.fromUint(fee)
-        );
-        const hashLockTransactionSigned = account.sign(hashLockTransaction, generationHash);
-        console.log('hashLockTransactionSigned', hashLockTransactionSigned)
-        console.log('signedTransaction', signedTransaction)
-        listener.open().then(() => {
-            transactionHttp
-                .announce(hashLockTransactionSigned)
-                .subscribe(x => console.log(x), err => console.error(err));
-            listener
-                .confirmed(account.address)
-                .pipe(
-                    filter((transaction) => transaction.transactionInfo !== undefined
-                        && transaction.transactionInfo.hash === hashLockTransactionSigned.hash),
-                    mergeMap(ignored => transactionHttp.announceAggregateBonded(signedTransaction)),
-                )
-                .subscribe(announcedAggregateBonded => console.log(announcedAggregateBonded),
-                    err => console.error(err));
-        });
-        return {
-            result: {
-                result: ''
-            }
-        }
-
-    },
-
     bondedMultisigTransaction: async (params) => {
-        const {transaction, multisigPublickey, networkType, account, generationHash, node, listener, fee} = params
-        const transactionHttp = new TransactionHttp(node);
-
+        const {transaction, multisigPublickey, networkType, account, fee} = params
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
             [transaction.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))],
@@ -151,38 +90,9 @@ export const multisigInterface: SdkV0.multisig = {
             [],
             UInt64.fromUint(fee)
         );
-        const signedTransaction = account.sign(aggregateTransaction, generationHash);
-        const hashLockTransaction = HashLockTransaction.create(
-            Deadline.create(),
-            // todo repalce mosaic id
-            new Mosaic(new MosaicId([853116887, 2007078553]), UInt64.fromUint(10000000)),
-            UInt64.fromUint(480),
-            signedTransaction,
-            networkType,
-            UInt64.fromUint(fee)
-        );
-        const hashLockTransactionSigned = account.sign(hashLockTransaction, generationHash);
-
-        console.log('hashLockTransactionSigned', hashLockTransactionSigned)
-        console.log('signedTransaction', signedTransaction)
-        listener.open().then(() => {
-            transactionHttp
-                .announce(hashLockTransactionSigned)
-                .subscribe(x => console.log(x), err => console.error(err));
-            listener
-                .confirmed(account.address)
-                .pipe(
-                    filter((transaction) => transaction.transactionInfo !== undefined
-                        && transaction.transactionInfo.hash === hashLockTransactionSigned.hash),
-                    mergeMap(ignored => transactionHttp.announceAggregateBonded(signedTransaction)),
-                )
-                .subscribe(announcedAggregateBonded => console.log(announcedAggregateBonded),
-                    err => console.error(err));
-        });
-        console.log(signedTransaction)
         return {
             result: {
-                result: ''
+                aggregateTransaction:aggregateTransaction
             }
         }
     },
@@ -198,6 +108,7 @@ export const multisigInterface: SdkV0.multisig = {
             [],
             UInt64.fromUint(fee)
         );
+        // todo 代码合并后修改
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         console.log(signedTransaction)
         transactionHttp.announce(signedTransaction).subscribe(x => console.log(x), err => console.error(err));
@@ -210,7 +121,7 @@ export const multisigInterface: SdkV0.multisig = {
 
 
     completeCosignatoryModification: async (params) => {
-        const {multisigPublickey, minApprovalDelta, minRemovalDelta, networkType, account, generationHash, node, fee,multisigCosignatoryModificationList} = params
+        const {multisigPublickey, minApprovalDelta, minRemovalDelta, networkType, account, generationHash, node, fee, multisigCosignatoryModificationList} = params
         const multisigPublicAccount = PublicAccount.createFromPublicKey(
             multisigPublickey, networkType,
         );
@@ -229,8 +140,10 @@ export const multisigInterface: SdkV0.multisig = {
             [],
             UInt64.fromUint(fee)
         );
+
+        // todo 代码合并后修改
         const signedTransaction = account.sign(aggregateTransaction, generationHash)
-        console.log(signedTransaction,'completeCosignatoryModification')
+        console.log(signedTransaction, 'completeCosignatoryModification')
         const announceStatus = await new TransactionHttp(node).announce(signedTransaction);
 
         return {

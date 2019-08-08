@@ -11,20 +11,21 @@
       <div class="address_dialog" v-if="filterTypeList[0]">
         <div class="input_content">
           <div class="title">{{$t('address')}}</div>
-          <div class="input_area"><input type="text" value="TCTEXC-5TGXD7-OQCHBB-MNU3LSTCTEXC-5TGXD7-OQCHBB-MNU3LS">
+          <div class="input_area">
+            <input type="text" :placeholder="$t('address')" v-model="formItem.address">
           </div>
         </div>
         <div class="input_content">
           <div class="title">{{$t('fee')}}</div>
           <div class="input_area">
-            <input type="text" :placeholder="$t('alias_selection')">
+            <input type="text" v-model="formItem.fee" :placeholder="$t('alias_selection')">
             <span class="tip">XEM</span>
           </div>
         </div>
         <div class="input_content">
           <div class="title">{{$t('password')}}</div>
           <div class="input_area">
-            <input type="password" :placeholder="$t('please_enter_your_wallet_password')">
+            <input type="password" v-model="formItem.password" :placeholder="$t('please_enter_your_wallet_password')">
           </div>
         </div>
       </div>
@@ -35,20 +36,20 @@
         <div class="input_content">
           <div class="title">{{$t('mosaic')}}</div>
           <div class="input_area">
-            <input type="text" value="2145d5sd4da231f">
+            <input v-model="formItem.mosaic" type="text" :placeholder="$t('mosaic')">
           </div>
         </div>
         <div class="input_content">
           <div class="title">{{$t('fee')}}</div>
           <div class="input_area">
-            <input type="text" :placeholder="$t('alias_selection')">
+            <input type="text" v-model="formItem.fee" :placeholder="$t('alias_selection')">
             <span class="tip">XEM</span>
           </div>
         </div>
         <div class="input_content">
           <div class="title">{{$t('password')}}</div>
           <div class="input_area">
-            <input type="password" :placeholder="$t('please_enter_your_wallet_password')">
+            <input type="password" v-model="formItem.password" :placeholder="$t('please_enter_your_wallet_password')">
           </div>
         </div>
       </div>
@@ -58,27 +59,27 @@
         <div class="input_content">
           <div class="title">{{$t('transaction_type')}}</div>
           <div class="input_area">
-            <input type="text" value="transfer transaction">
+            <input type="text" v-model="formItem.entityType" value="transfer transaction">
           </div>
         </div>
         <div class="input_content">
           <div class="title">{{$t('fee')}}</div>
           <div class="input_area">
-            <input type="text" :placeholder="$t('alias_selection')">
+            <input type="text" v-model="formItem.fee" :placeholder="$t('alias_selection')">
             <span class="tip">XEM</span>
           </div>
         </div>
         <div class="input_content">
           <div class="title">{{$t('password')}}</div>
           <div class="input_area">
-            <input type="password" :placeholder="$t('please_enter_your_wallet_password')">
+            <input type="password" v-model="formItem.password" :placeholder="$t('please_enter_your_wallet_password')">
           </div>
         </div>
       </div>
 
       <div class="button_content">
         <span class="cancel pointer" @click="isShowDialog=false">{{$t('canel')}}</span>
-        <span class="cancel un_click" @click="isShowDialog=true">{{$t('bind')}}</span>
+        <span class="cancel confirm " @click="confirmInput">{{$t('confirm')}}</span>
       </div>
     </Modal>
 
@@ -138,17 +139,25 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue} from 'vue-property-decorator'
+    import Message from "@/message/Message"
 
     @Component
     export default class WalletFilter extends Vue {
         aliasList = []
-        filterTypeList = [true, false, false]
+        isShowDialog = true
         isShowDeleteIcon = false
-        isShowDialog = false
         currentAlias: any = false
         currentTitle = 'add_address'
+        filterTypeList = [true, false, false]
         titleList = ['add_address', 'add_mosaic', 'add_entity_type']
+        formItem = {
+            address: '',
+            fee: 0,
+            password: '',
+            mosaic: '',
+            entityType: -1
+        }
         namespaceList = [
             {
                 label: 'no data',
@@ -157,11 +166,55 @@
         ]
 
         showFilterTypeListIndex(index) {
-            console.log(index)
             this.currentTitle = this.titleList[index]
             this.filterTypeList = [false, false, false]
             this.filterTypeList[index] = true
         }
+
+        checkForm(): boolean {
+            const {fee, password, address, mosaic, entityType} = this.formItem
+            const {filterTypeList} = this
+            if (password || password.trim()) {
+                this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
+                return false
+            }
+
+            if ((!Number(fee) && Number(fee) !== 0) || Number(fee) < 0) {
+                this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
+                return false
+            }
+
+            if (filterTypeList[0] && address.length < 40) {
+                this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
+                return false
+            }
+
+
+            if (filterTypeList[1] && mosaic) {
+                this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR))
+                return false
+            }
+
+            if (filterTypeList[2] && entityType) {
+                this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR))
+                return false
+            }
+
+            return true
+        }
+
+        showErrorMessage(message) {
+            this.$Notice.destroy()
+            this.$Notice.error({
+                title: message
+            })
+        }
+
+        confirmInput() {
+            if (!this.checkForm()) return
+
+        }
+
     }
 </script>
 <style scoped lang="less">

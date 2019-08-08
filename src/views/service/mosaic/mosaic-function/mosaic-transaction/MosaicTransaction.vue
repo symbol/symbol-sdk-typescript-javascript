@@ -253,7 +253,6 @@
             }).then((result: any) => {
                 const mosaicDefinitionTransaction = result.result.mosaicDefinitionTransaction
                 const signature = account.sign(mosaicDefinitionTransaction, generationHash)
-
                 transactionInterface.announce({signature, node}).then((announceResult) => {
                     // get announce status
                     announceResult.result.announceStatus.subscribe((announceInfo: any) => {

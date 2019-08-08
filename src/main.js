@@ -12,10 +12,10 @@ import i18n from '@/locale';
 Vue.use(iView);
 Vue.use(rem);
 Vue.config.productionTip = false;
-// resize()
+resize();
 function resize() {
     if (window['electron']) {
-        var devInnerWidth = 1920;
+        var devInnerWidth = 1689;
         var scaleFactor = window['electron'].screen.getPrimaryDisplay().scaleFactor;
         var zoomFactor = window.innerWidth / devInnerWidth;
         window['electron'].webFrame.setZoomFactor(zoomFactor);
