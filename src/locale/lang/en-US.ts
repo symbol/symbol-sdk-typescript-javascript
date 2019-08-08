@@ -195,7 +195,7 @@ export const en_US = {
     about_us: 'About us',
 
     //setting-lock
-    old_password: 'Pre',
+    old_password: 'Pre password',
     please_enter_the_original_password: 'Please enter the original password',
     set_password: 'Set password',
     this_password_is_used_to_lock_the_desktop_wallet_Once_lost_you_will_lose_the_right_to_enter_the_desktop_wallet: 'This password is used to lock the desktop wallet .Once lost you will lose the right to enter the desktop wallet.',
@@ -314,7 +314,7 @@ export const en_US = {
     keystore_describle_text: 'This password is the KeyStore encryption password, which will be used when you pay. If you need to modify this password, please enter the wallet management center.',
     keystore_describle_import: 'From your computer, choose to load the KY file or paste the KeyStore string in the input box below.',
     //create lock pw
-    new_password: 'New',
+    new_password: 'New password',
     Please_enter_the_name_of_the_wallet: 'Please enter the name of the wallet',
     please_enter_the_set_password: 'Please enter the set password',
     set_password_hint: 'Set password hint',

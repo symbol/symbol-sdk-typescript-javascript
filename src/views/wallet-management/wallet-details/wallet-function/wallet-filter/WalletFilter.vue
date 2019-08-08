@@ -145,7 +145,7 @@
     @Component
     export default class WalletFilter extends Vue {
         aliasList = []
-        isShowDialog = true
+        isShowDialog = false
         isShowDeleteIcon = false
         currentAlias: any = false
         currentTitle = 'add_address'
