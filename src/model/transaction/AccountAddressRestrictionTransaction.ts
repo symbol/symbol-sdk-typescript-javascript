@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { RawAddress } from '../../core/format';
+import { Convert, RawAddress } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/AccountRestrictionsAddressTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AccountAddressRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionModificationBuilder';
@@ -151,10 +151,8 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-
         const transactionBuilder = new EmbeddedAccountAddressRestrictionTransactionBuilder(
-            new KeyDto(signerBuffer),
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.ACCOUNT_RESTRICTION_ADDRESS.valueOf(),
             this.restrictionType.valueOf(),

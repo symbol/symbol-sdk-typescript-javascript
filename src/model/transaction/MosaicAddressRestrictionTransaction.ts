@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { RawAddress } from '../../core/format';
+import { Convert, RawAddress } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/MosaicAddressRestrictionTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -188,10 +188,8 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-
         const transactionBuilder = new EmbeddedMosaicAddressRestrictionTransactionBuilder(
-            new KeyDto(signerBuffer),
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.MOSAIC_ADDRESS_RESTRICTION.valueOf(),
             new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
