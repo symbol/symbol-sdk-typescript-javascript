@@ -232,8 +232,8 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('0190554101020200B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC240' +
-            '0B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
+        )).to.be.equal('0190554101020201B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC2401B1B5581FC81A69' +
+            '70DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
     });
 
     it('should createComplete an AggregateTransaction object with different cosignatories', () => {
