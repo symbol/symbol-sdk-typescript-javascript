@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+import { Convert } from '../../core/format';
 import { Builder } from '../../infrastructure/builders/AccountRestrictionsMosaicTransaction';
 import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AccountMosaicRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountMosaicRestrictionModificationBuilder';
 import { AccountMosaicRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountMosaicRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedAccountMosaicRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountMosaicRestrictionTransactionBuilder';
-import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
@@ -150,10 +150,8 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     protected generateEmbeddedBytes(): Uint8Array {
-        const signerBuffer = new Uint8Array(32);
-
         const transactionBuilder = new EmbeddedAccountMosaicRestrictionTransactionBuilder(
-            new KeyDto(signerBuffer),
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.ACCOUNT_RESTRICTION_MOSAIC.valueOf(),
             this.restrictionType.valueOf(),
