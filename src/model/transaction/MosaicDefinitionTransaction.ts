@@ -233,23 +233,4 @@ export class MosaicDefinitionTransaction extends Transaction {
         );
         return transactionBuilder.serialize();
     }
-
-    /**
-     * @internal
-     * @returns {Uint8Array}
-     */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedMosaicDefinitionTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
-            this.versionToDTO(),
-            TransactionType.MOSAIC_DEFINITION.valueOf(),
-            new MosaicNonceDto(this.getMosaicNonceIntValue()),
-            new MosaicIdDto(this.mosaicId.id.toDTO()),
-            this.getMosaicFlagValue(),
-            this.mosaicProperties.divisibility,
-            new BlockDurationDto(this.mosaicProperties.duration ?
-                    this.mosaicProperties.duration.toDTO() : []),
-        );
-        return transactionBuilder.serialize();
-    }
 }

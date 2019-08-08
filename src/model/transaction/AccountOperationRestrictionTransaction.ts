@@ -15,8 +15,6 @@
  */
 
 import { Convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/AccountRestrictionsEntityTypeTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AccountOperationRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
 import { AccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -102,20 +100,6 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         const byteModifications = 3 * this.modifications.length;
 
         return byteSize + byteRestrictionType + byteModificationCount + byteModifications;
-    }
-
-    /**
-     * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addRestrictionType(this.restrictionType)
-            .addModifications(this.modifications.map((modification) => modification.toDTO()))
-            .build();
     }
 
     /**
