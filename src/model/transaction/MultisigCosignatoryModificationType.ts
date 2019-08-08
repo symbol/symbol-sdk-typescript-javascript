@@ -20,6 +20,6 @@
  * 1: Remove cosignatory.
  */
 export enum MultisigCosignatoryModificationType {
-    Add = 0,
-    Remove = 1,
+    Add = 0x01,
+    Remove = 0x00,
 }

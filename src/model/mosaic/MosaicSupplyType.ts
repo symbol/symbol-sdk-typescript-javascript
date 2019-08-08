@@ -20,6 +20,6 @@
  * 1: Decrease in supply.
  */
 export enum MosaicSupplyType {
-    Decrease = 0,
-    Increase = 1,
+    Decrease = 0x00,
+    Increase = 0x01,
 }
