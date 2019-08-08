@@ -1,6 +1,22 @@
+// @ts-ignore
+// @ts-ignore
 import {
-    MosaicDefinitionTransaction, Deadline, MosaicNonce, MosaicId, NamespaceMosaicIdGenerator,Id,Mosaic,AggregateTransaction,
-    MosaicProperties, UInt64, MosaicSupplyChangeTransaction, MosaicHttp, Convert, NetworkCurrencyMosaic,MosaicSupplyType
+    MosaicDefinitionTransaction,
+    Deadline,
+    MosaicNonce,
+    MosaicId,
+    NamespaceMosaicIdGenerator,
+    Id,
+    Mosaic,
+    AggregateTransaction,
+    MosaicProperties,
+    UInt64,
+    MosaicSupplyChangeTransaction,
+    MosaicHttp,
+    Convert,
+    NetworkCurrencyMosaic,
+    MosaicSupplyType
+    // @ts-ignore
 } from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
 
@@ -76,7 +92,7 @@ export const mosaicInterface: SdkV0.mosaic = {
                 supplyMutable: supplyMutable,
                 transferable: transferable,
                 divisibility: divisibility,
-                duration: duration ? UInt64.fromUint(duration): undefined
+                duration: duration ? UInt64.fromUint(duration) : undefined
             }),
             netWorkType,
             maxFee ? UInt64.fromUint(maxFee) : undefined
@@ -137,7 +153,7 @@ export const mosaicInterface: SdkV0.mosaic = {
     },
 
     getMosaicsNames: async (params) => {
-        const mosaicsNamesInfos =await new MosaicHttp(params.node).getMosaicsNames(params.mosaicIds)
+        const mosaicsNamesInfos = await new MosaicHttp(params.node).getMosaicsNames(params.mosaicIds)
         return {
             result: {
                 mosaicsNamesInfos: mosaicsNamesInfos

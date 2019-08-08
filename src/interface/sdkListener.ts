@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Listener, TransactionHttp} from 'nem2-sdk'
 import {SdkV0} from './sdkDefine'
 // @ts-ignore

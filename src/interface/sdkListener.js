@@ -1,5 +1,6 @@
 var _this = this;
 import * as tslib_1 from "tslib";
+// @ts-ignore
 import { TransactionHttp } from 'nem2-sdk';
 // @ts-ignore
 import { filter, mergeMap } from 'rxjs/operators';

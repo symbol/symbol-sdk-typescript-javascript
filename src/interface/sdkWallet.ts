@@ -1,52 +1,51 @@
-import {Password, SimpleWallet, Account,PublicAccount,AccountHttp} from 'nem2-sdk'
+// @ts-ignore
+import {Password, SimpleWallet, Account, PublicAccount, AccountHttp} from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
-
-
-const generator = require('generate-password');
+import generator from 'generate-password';
 
 export const walletInterface: SdkV0.wallet = {
 
-  loginWallet: async (params) => {
-    const name = params.name;
-    const privateKey = params.privateKey;
-    const networkType = params.networkType;
-    const password = new Password(generator.generate({length: 50, numbers: true, symbols: true,}));
-    const wallet = await SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType);
-    const account = Account.createFromPrivateKey(privateKey,networkType)
-    const publicAccount = PublicAccount.createFromPublicKey(account.publicKey,networkType)
-    let mosaics:any = []
-    if(params.node){
-      const accountHttp = new AccountHttp(params.node)
-      const accountInfo = await accountHttp.getAccountInfo(account.address).toPromise()
-      mosaics = accountInfo.mosaics
-    }
-    return {
-      result: {
-        wallet: wallet,
-        password: password,
-        publicAccount: publicAccount,
-        account: account,
-        mosaics: mosaics
-      }
-    };
-  },
+    loginWallet: async (params) => {
+        const name = params.name;
+        const privateKey = params.privateKey;
+        const networkType = params.networkType;
+        const password = new Password(generator.generate({length: 50, numbers: true, symbols: true,}));
+        const wallet = await SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType);
+        const account = Account.createFromPrivateKey(privateKey, networkType)
+        const publicAccount = PublicAccount.createFromPublicKey(account.publicKey, networkType)
+        let mosaics: any = []
+        if (params.node) {
+            const accountHttp = new AccountHttp(params.node)
+            const accountInfo = await accountHttp.getAccountInfo(account.address).toPromise()
+            mosaics = accountInfo.mosaics
+        }
+        return {
+            result: {
+                wallet: wallet,
+                password: password,
+                publicAccount: publicAccount,
+                account: account,
+                mosaics: mosaics
+            }
+        };
+    },
 
-  createWallet: async (params) => {
-    const name = params.name;
-    const networkType = params.networkType;
-    const privateKey = Account.generateNewAccount(networkType).privateKey;
-    const password = new Password(generator.generate({length: 50, numbers: true, symbols: true,}));
-    const wallet = await SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType);
-    return {
-      result: {
-        wallet: wallet,
-        privateKey: privateKey,
-        password: password
-      }
-    };
-  },
+    createWallet: async (params) => {
+        const name = params.name;
+        const networkType = params.networkType;
+        const privateKey = Account.generateNewAccount(networkType).privateKey;
+        const password = new Password(generator.generate({length: 50, numbers: true, symbols: true,}));
+        const wallet = await SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType);
+        return {
+            result: {
+                wallet: wallet,
+                privateKey: privateKey,
+                password: password
+            }
+        };
+    },
 
-    getWallet: async (params) =>{
+    getWallet: async (params) => {
         const name = params.name;
         const privateKey = params.privateKey;
         const networkType = params.networkType;
@@ -61,14 +60,14 @@ export const walletInterface: SdkV0.wallet = {
         };
     },
 
-  getKeys: async (params) => {
-    const password = params.password;
-    const wallet = params.wallet;
-    const account = await wallet.open(password);
-    return {
-      result: {
-        account: account
-      }
-    };
-  },
+    getKeys: async (params) => {
+        const password = params.password;
+        const wallet = params.wallet;
+        const account = await wallet.open(password);
+        return {
+            result: {
+                account: account
+            }
+        };
+    },
 }

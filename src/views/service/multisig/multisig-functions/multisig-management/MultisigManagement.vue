@@ -160,6 +160,7 @@
     import {multisigInterface} from '@/interface/sdkMultisig.ts'
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
     import {transactionInterface} from '@/interface/sdkTransaction';
+    import {accountInterface} from '@/interface/sdkAccount'
 
     @Component({
         components: {
@@ -216,7 +217,6 @@
 
 
         createCompleteModifyTransaction(privatekey) {
-            // todo 需要改 fee
             const {multisigPublickey, cosignerList, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
             const {networkType} = this.$store.state.account.wallet
             const {generationHash, node} = this.$store.state.account
@@ -225,16 +225,29 @@
                 cosigner.type,
                 PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
             ))
-            multisigInterface.completeCosignatoryModification({
-                minApprovalDelta: minApprovalDelta,
-                minRemovalDelta: minRemovalDelta,
+
+
+            const modifyMultisigAccountTx = ModifyMultisigAccountTransaction.create(
+                Deadline.create(),
+                Number(minApprovalDelta),
+                Number(minRemovalDelta),
+                multisigCosignatoryModificationList,
+                networkType,
+                UInt64.fromUint(innerFee)
+            );
+            multisigInterface.completeMultisigTransaction({
                 networkType: networkType,
-                account: account,
-                generationHash: generationHash,
-                node: node,
                 fee: innerFee,
                 multisigPublickey: multisigPublickey,
-                multisigCosignatoryModificationList: multisigCosignatoryModificationList
+                transaction: modifyMultisigAccountTx,
+            }).then((result) => {
+                const aggregateTransaction = result.result.aggregateTransaction
+                transactionInterface._announce({
+                    transaction: aggregateTransaction,
+                    account,
+                    node,
+                    generationHash
+                })
             })
         }
 

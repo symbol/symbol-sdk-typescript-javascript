@@ -1,5 +1,6 @@
-import {AccountHttp, Address, EncryptedMessage} from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
+// @ts-ignore
+import {AccountHttp, Address, EncryptedMessage} from 'nem2-sdk'
 
 export const accountInterface: SdkV0.account = {
     getAccountsNames: async (params) => {
