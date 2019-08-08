@@ -4,7 +4,7 @@
       <li>
         {{$t('switch_language')}}
         <div class="gray_content">
-          <Select v-model="language" :placeholder="$t('switch_language')">
+          <Select v-model="language" @on-change="switchLanguage" :placeholder="$t('switch_language')">
             <Option v-for="item in languageList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
@@ -33,21 +33,33 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
+    import {localSave, localRead} from '@/utils/util.js'
 
     @Component
     export default class SettingNormal extends Vue {
         language = ''
-        coin = ''
+        coin = 'USD'
         languageList = []
         coinList = [
             {
-                value: 'no data',
-                label: 'no data'
+                value: 'USD',
+                label: 'USD'
             },
         ]
 
+        switchLanguage(language) {
+            this.$store.state.app.local = {
+                abbr: language,
+                language: this.$store.state.app.localMap[language]
+            }
+            // @ts-ignore
+            this.$i18n.locale = language
+            localSave('local', language)
+        }
+
         created() {
             this.languageList = this.$store.state.app.languageList
+            this.language = this.$i18n.locale
         }
 
     }

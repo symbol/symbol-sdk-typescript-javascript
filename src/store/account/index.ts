@@ -22,6 +22,7 @@ export default {
         namespace: [],
         UnconfirmedTx: [],
         ConfirmedTx: [],
+        errorTx: [],
         generationHash: ''
     },
     getters: {

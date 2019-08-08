@@ -25,9 +25,9 @@ export const accountInterface: SdkV0.account = {
     },
 
     sign: async (params) => {
-        const wallet = params.wallet
+        const account = params.account
         const transaction = params.transaction
-        const signature = await wallet.open(params.password).sign(transaction, params.generationHash)
+        const signature = await account.sign(transaction, params.generationHash)
         return {
             result: {
                 signature: signature

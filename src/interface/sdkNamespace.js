@@ -1,6 +1,6 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-import { Deadline, NamespaceId, RegisterNamespaceTransaction, UInt64, MosaicAliasTransaction, AddressAliasTransaction, NamespaceHttp, TransactionHttp } from 'nem2-sdk';
+import { Deadline, NamespaceId, RegisterNamespaceTransaction, UInt64, MosaicAliasTransaction, AddressAliasTransaction, NamespaceHttp } from 'nem2-sdk';
 export var aliasInterface = {
     createNamespaceId: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var name, namespaceId;
@@ -47,24 +47,20 @@ export var aliasInterface = {
         });
     }); },
     mosaicAliasTransaction: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-        var deadline, actionType, namespaceId, mosaicId, networkType, maxFee, account, generationHash, node, aliasMosaicTransaction, signedTransaction, announceStatus;
+        var deadline, actionType, namespaceId, mosaicId, networkType, maxFee, aliasMosaicTransaction;
         return tslib_1.__generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    deadline = Deadline.create();
-                    actionType = params.actionType, namespaceId = params.namespaceId, mosaicId = params.mosaicId, networkType = params.networkType, maxFee = params.maxFee, account = params.account, generationHash = params.generationHash, node = params.node;
-                    aliasMosaicTransaction = MosaicAliasTransaction.create(deadline, actionType, namespaceId, mosaicId, networkType, maxFee ? UInt64.fromUint(maxFee) : undefined);
-                    signedTransaction = account.sign(aliasMosaicTransaction, generationHash);
-                    return [4 /*yield*/, new TransactionHttp(node).announce(signedTransaction)];
-                case 1:
-                    announceStatus = _a.sent();
-                    console.log(signedTransaction, 'aliasMosaicTransaction');
-                    return [2 /*return*/, {
-                            result: {
-                                aliasMosaicTransaction: ''
-                            }
-                        }];
-            }
+            deadline = Deadline.create();
+            actionType = params.actionType;
+            namespaceId = params.namespaceId;
+            mosaicId = params.mosaicId;
+            networkType = params.networkType;
+            maxFee = params.maxFee;
+            aliasMosaicTransaction = MosaicAliasTransaction.create(deadline, actionType, namespaceId, mosaicId, networkType, maxFee ? UInt64.fromUint(maxFee) : undefined);
+            return [2 /*return*/, {
+                    result: {
+                        aliasMosaicTransaction: aliasMosaicTransaction
+                    }
+                }];
         });
     }); },
     addressAliasTransaction: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {

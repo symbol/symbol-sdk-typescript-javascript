@@ -12,7 +12,7 @@ import i18n from '@/locale';
 Vue.use(iView);
 Vue.use(rem);
 Vue.config.productionTip = false;
-resize();
+// resize()
 function resize() {
     if (window['electron']) {
         var devInnerWidth = 1920;

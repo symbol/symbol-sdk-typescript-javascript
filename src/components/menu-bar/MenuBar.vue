@@ -131,6 +131,7 @@
         walletList = []
         unconfirmedTxListener = null
         confirmedTxListener = null
+        txStatusListener = null
 
         get getWallet() {
             return this.$store.state.account.wallet
@@ -150,6 +151,9 @@
 
         get ConfirmedTxList () {
             return this.$store.state.account.ConfirmedTx
+        }
+        get errorTxList () {
+            return this.$store.state.account.errorTx
         }
 
         closeWindow() {
@@ -278,6 +282,17 @@
                 fn: that.disposeConfirmed
             })
         }
+        txErrorListener(){
+            const node = this.node.replace('http', 'ws')
+            const that = this
+            this.txStatusListener && this.txStatusListener.close()
+            this.txStatusListener = new Listener(node, WebSocket)
+            wsInterface.listenerTxStatus({
+                listener: this.txStatusListener,
+                address: Address.createFromRawAddress(that.getWallet.address),
+                fn: that.disposeTxStatus
+            })
+        }
 
         disposeUnconfirmed (transaction){
             let list = this.UnconfirmedTxList
@@ -303,6 +318,18 @@
                 });
             }
         }
+        disposeTxStatus (transaction){
+            let list = this.errorTxList
+            if(!list.includes(transaction.hash)){
+                list.push(transaction.hash)
+                this.$store.state.account.errorTx = list
+                this.$Notice.error({
+                    title: transaction.status.split('_').join(' '),
+                    duration: 10,
+                    // desc: 'hash：'+ transaction.transactionInfo.hash
+                });
+            }
+        }
 
         initData() {
             this.languageList = this.$store.state.app.languageList
@@ -322,6 +349,7 @@
             const that = this
             this.unconfirmedListener()
             this.confirmedListener()
+            this.txErrorListener()
 			const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('nem.xem'))
             linkedMosaic.subscribe((mosaic)=>{
                 this.$store.state.account.currentXEM1 = mosaic.toHex();
@@ -340,12 +368,14 @@
             this.currentWallet = this.getWallet.address
             this.unconfirmedListener()
             this.confirmedListener()
+            this.txErrorListener()
         }
 
         created() {
             this.initData()
             this.unconfirmedListener()
             this.confirmedListener()
+            this.txErrorListener()
         }
     }
 </script>

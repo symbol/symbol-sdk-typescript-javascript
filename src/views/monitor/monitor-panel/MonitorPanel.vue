@@ -136,6 +136,7 @@
     import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
     import monitorMosaicIcon from '@/assets/images/monitor/monitorMosaicIcon.png'
     import Message from "@/message/Message";
+    import {aliasInterface} from "../../../interface/sdkNamespace";
 
     @Component
     export default class DashBoard extends Vue {
@@ -203,6 +204,14 @@
 
         get getWalletList() {
             return this.$store.state.app.walletList || []
+        }
+
+        get namespaceList () {
+            return this.$store.state.account.namespace
+        }
+
+        get ConfirmedTxList () {
+            return this.$store.state.account.ConfirmedTx
         }
 
         switchPanel(index) {
@@ -294,7 +303,7 @@
 
         getXEMAmount() {
             const that = this
-            const {accountPublicKey, currentXem, accountAddress, node, address} = this
+            const {accountAddress, node} = this
             accountInterface.getAccountInfo({
                 node,
                 address: accountAddress
@@ -306,10 +315,44 @@
                             that.XEMamount = item.amount.compact() / 1000000
                         }
                     })
-
                 }, () => {
                     that.XEMamount = 0
                 })
+            })
+        }
+
+        async getMyNamespaces () {
+            await aliasInterface.getNamespacesFromAccount({
+                address: Address.createFromRawAddress(this.getWallet.address),
+                url: this.node
+            }).then((namespacesFromAccount)=>{
+                let list = []
+                let namespace = {}
+                namespacesFromAccount.result.namespaceList
+                    .sort((a,b)=>{
+                        return a['namespaceInfo']['depth'] - b['namespaceInfo']['depth']
+                    }).map((item, index)=>{
+                    if(!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())){
+                        namespace[item.namespaceInfo.id.toHex()] = item.namespaceName
+                    }else {
+                        return
+                    }
+                    let namespaceName = ''
+                    item.namespaceInfo.levels.map((item, index)=>{
+                        namespaceName += namespace[item.id.toHex()] +'.'
+                    })
+                    namespaceName = namespaceName.slice(0, namespaceName.length - 1)
+                    const newObj ={
+                        value: namespaceName,
+                        label: namespaceName,
+                        alias: item.namespaceInfo.alias,
+                        levels: item.namespaceInfo.levels.length,
+                        name: namespaceName,
+                        duration: item.namespaceInfo.endHeight.compact(),
+                    }
+                    list.push(newObj)
+                })
+                this.$store.commit('SET_NAMESPACE', list)
             })
         }
 
@@ -334,7 +377,7 @@
 
         getAccountsName() {
             const that = this
-            const {accountPublicKey, currentXem, accountAddress, node, address} = this
+            const {accountAddress, node} = this
             accountInterface.getAccountsNames({
                 node,
                 addressList: [Address.createFromRawAddress(accountAddress)]
@@ -360,7 +403,7 @@
 
         async getMosaicList() {
             const that = this
-            let {accountPublicKey, currentXem, accountAddress, node, address, mosaic} = this
+            let {accountAddress, node} = this
             await accountInterface.getAccountInfo({
                 node,
                 address: accountAddress
@@ -396,7 +439,6 @@
                                 mosaicItem.show = true
                                 return mosaicItem
                             })
-
                             // get nem.xem
                             let isCrrentXEMExists = false
                             isCrrentXEMExists = mosaicList.every((item) => {
@@ -425,8 +467,8 @@
                                     hex: item.hex,
                                     show: true
                                 }
-
                             })
+
                             this.$store.commit('SET_MOSAICS', mosaicList)
                             that.localMosaicMap = mosaicMap
                             that.mosaicMap = mosaicMap
@@ -493,7 +535,7 @@
 
         async realLocalStorage() {
             const that = this
-            let {accountPublicKey, currentXem, accountAddress, node, address, mosaic} = this
+            let {accountAddress, node} = this
             let mosaicMap = localRead(this.accountAddress)
             if (mosaicMap) {
                 mosaicMap = JSON.parse(mosaicMap)
@@ -555,6 +597,15 @@
             this.getAccountsName()
             this.getMarketOpenPrice()
             this.realLocalStorage()
+            this.getMyNamespaces()
+        }
+
+        @Watch('ConfirmedTxList')
+        onConfirmedTxChange() {
+            this.getXEMAmount()
+            this.getAccountsName()
+            this.realLocalStorage()
+            this.getMyNamespaces()
         }
 
         created() {
@@ -567,6 +618,7 @@
             this.getAccountsName()
             this.getMarketOpenPrice()
             this.realLocalStorage()
+            this.getMyNamespaces()
         }
 
     }

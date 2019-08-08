@@ -361,7 +361,7 @@ export var en_US = {
     keep_it_in_a_safe_place_on_the_isolated_network_private_key: 'Keep it in a safe place on the isolated network. Do not share and store private key in a networked environment, such as emails, photo albums, social applications, etc.',
     please_accurately_copy_the_secure_backup_private_key: 'Please accurately copy the secure backup private key',
     display_private_key_QR_code: 'Display QR code',
-    display_private_key: 'Display privatekey',
+    display_private_key: 'Privatekey',
     // wallet create
     choose_network: 'Choose network',
     In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks: 'In the \'nem2 ecosystem, you can build your own home wallet, or private network wallet, or test the network.',

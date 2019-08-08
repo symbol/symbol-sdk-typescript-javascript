@@ -389,7 +389,7 @@ export const en_US = {
     keep_it_in_a_safe_place_on_the_isolated_network_private_key: 'Keep it in a safe place on the isolated network. Do not share and store private key in a networked environment, such as emails, photo albums, social applications, etc.',
     please_accurately_copy_the_secure_backup_private_key: 'Please accurately copy the secure backup private key',
     display_private_key_QR_code: 'Display QR code',
-    display_private_key: 'Display privatekey',
+    display_private_key: 'Privatekey',
 
     // wallet create
     choose_network: 'Choose network',

@@ -39,13 +39,13 @@ export var accountInterface = {
         });
     }); },
     sign: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-        var wallet, transaction, signature;
+        var account, transaction, signature;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    wallet = params.wallet;
+                    account = params.account;
                     transaction = params.transaction;
-                    return [4 /*yield*/, wallet.open(params.password).sign(transaction, params.generationHash)];
+                    return [4 /*yield*/, account.sign(transaction, params.generationHash)];
                 case 1:
                     signature = _a.sent();
                     return [2 /*return*/, {

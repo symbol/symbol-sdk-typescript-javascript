@@ -16,7 +16,7 @@
 
       <span>
         <span class="type value radius flex_center">
-          <Select placeholder="" v-model="mosaic" class="asset_type">
+          <Select :placeholder="$t('asset_type')" v-model="mosaic" class="asset_type">
             <Option v-for="item in mosaicList" :value="item.value" :key="item.value">
               {{ item.label }}
             </Option>

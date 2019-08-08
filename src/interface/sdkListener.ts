@@ -48,6 +48,21 @@ export const wsInterface: SdkV0.ws = {
             }
         }
     },
+    listenerTxStatus: async (params) => {
+        const listener = params.listener;
+        listener.open().then(() => {
+            listener
+                .status(params.address)
+                .subscribe(transactionInfo => {
+                    params.fn(transactionInfo)
+                })
+        })
+        return {
+            result: {
+                ws: 'Ok'
+            }
+        }
+    },
     sendMultisigWs: async (params) => {
         const listener = params.listener
         const transactionHttp = new TransactionHttp(params.node)

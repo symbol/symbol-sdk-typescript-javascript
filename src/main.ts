@@ -17,7 +17,7 @@ Vue.config.productionTip = false
 resize()
 function resize() {
     if(window['electron']){
-        var devInnerWidth= 1920
+        var devInnerWidth= 1689
         var scaleFactor = window['electron'].screen.getPrimaryDisplay().scaleFactor;
         var zoomFactor =  window.innerWidth/devInnerWidth;
         window['electron'].webFrame.setZoomFactor(zoomFactor);

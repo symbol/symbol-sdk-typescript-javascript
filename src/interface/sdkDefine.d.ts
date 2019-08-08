@@ -83,10 +83,9 @@ declare namespace SdkV0 {
         }>;
 
         sign: (params: {
-            wallet: SimpleWallet,
+            account: Account,
             transaction: Transaction,
-            generationHash: any,
-            password: Password
+            generationHash: any
         }) => Rst<{
             signature: SignedTransaction
         }>;
@@ -348,9 +347,6 @@ declare namespace SdkV0 {
             namespaceId: NamespaceId,
             mosaicId: MosaicId,
             networkType: NetworkType,
-            node: string,
-            account: Account,
-            generationHash: string,
             maxFee?: number
         }) => Rst<{
             aliasMosaicTransaction: any
@@ -404,6 +400,13 @@ declare namespace SdkV0 {
             ws: any
         }>;
         listenerConfirmed: (params: {
+            listener: any
+            address: Address
+            fn: any
+        }) => Rst<{
+            ws: any
+        }>;
+        listenerTxStatus: (params: {
             listener: any
             address: Address
             fn: any

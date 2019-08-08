@@ -56,27 +56,27 @@ export const aliasInterface: SdkV0.alias = {
         }
     },
 
-    mosaicAliasTransaction: async (params) => {
-        const deadline = Deadline.create()
-        const {actionType, namespaceId, mosaicId, networkType, maxFee, account, generationHash, node} = params
-        const aliasMosaicTransaction = MosaicAliasTransaction.create(
-            deadline,
-            actionType,
-            namespaceId,
-            mosaicId,
-            networkType,
-            maxFee ? UInt64.fromUint(maxFee) : undefined
-        )
-        const signedTransaction = account.sign(aliasMosaicTransaction, generationHash)
-        const announceStatus = await new TransactionHttp(node).announce(signedTransaction);
-        console.log(signedTransaction, 'aliasMosaicTransaction')
-
-        return {
-            result: {
-                aliasMosaicTransaction: ''
-            }
-        }
-    },
+  mosaicAliasTransaction:async (params)=>{
+    const deadline = Deadline.create();
+    const actionType = params.actionType;
+    const namespaceId = params.namespaceId;
+    const mosaicId = params.mosaicId;
+    const networkType = params.networkType;
+    const maxFee = params.maxFee;
+    const aliasMosaicTransaction = MosaicAliasTransaction.create(
+      deadline,
+      actionType,
+      namespaceId,
+      mosaicId,
+      networkType,
+      maxFee?UInt64.fromUint(maxFee):undefined
+    )
+    return{
+      result:{
+        aliasMosaicTransaction:aliasMosaicTransaction
+      }
+    }
+  },
 
     addressAliasTransaction: async (params) => {
         const deadline = Deadline.create();
