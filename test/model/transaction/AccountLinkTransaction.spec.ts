@@ -48,7 +48,7 @@ describe('AccountLinkTransaction', () => {
             account.publicKey,
             LinkAction.Link,
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(accountLinkTransaction.maxFee.higher).to.be.equal(0);
@@ -63,7 +63,7 @@ describe('AccountLinkTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(accountLinkTransaction.linkAction).to.be.equal(0);
+        expect(accountLinkTransaction.linkAction).to.be.equal(1);
         expect(accountLinkTransaction.remoteAccountKey).to.be.equal(account.publicKey);
 
         const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
@@ -71,7 +71,7 @@ describe('AccountLinkTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE00');
+        )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE01');
     });
 
     it('should create an AccountLinkTransaction object with unlink action', () => {
@@ -82,7 +82,7 @@ describe('AccountLinkTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(accountLinkTransaction.linkAction).to.be.equal(1);
+        expect(accountLinkTransaction.linkAction).to.be.equal(0);
         expect(accountLinkTransaction.remoteAccountKey).to.be.equal(account.publicKey);
 
         const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
@@ -90,7 +90,7 @@ describe('AccountLinkTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE01');
+        )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE00');
     });
 
     describe('size', () => {
