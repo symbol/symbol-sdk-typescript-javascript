@@ -106,7 +106,7 @@ describe('AggregateTransaction', () => {
             NetworkType.MIJIN_TEST,
             []);
 
-        const signedTransaction = aggregateTransaction.signWithCatbuffer(account, generationHash);
+        const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(0, 8)).to.be.equal('CD000000');
         expect(signedTransaction.payload.substring(240, 256)).to.be.equal('5100000051000000');
@@ -166,12 +166,12 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('BC000000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('4000000040000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('BA000000');
+        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('3E0000003E000000');
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('01904D41E6DE84B8010000000000000001070302E803000000000000');
+        )).to.be.equal('01904D41E6DE84B801000000000000000703E803000000000000');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicSupplyChangeTransaction', () => {

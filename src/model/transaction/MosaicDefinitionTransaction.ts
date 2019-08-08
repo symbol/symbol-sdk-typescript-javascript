@@ -15,8 +15,6 @@
  */
 
 import { Convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/MosaicCreationTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
 import { EmbeddedMosaicDefinitionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicDefinitionTransactionBuilder';
@@ -160,35 +158,6 @@ export class MosaicDefinitionTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        let mosaicDefinitionTransaction = new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addDivisibility(this.mosaicProperties.divisibility)
-            .addDuration(this.mosaicProperties.duration ? this.mosaicProperties.duration.toDTO() : [])
-            .addNonce(this.nonce.toDTO())
-            .addMosaicId(this.mosaicId.id.toDTO());
-
-        if (this.mosaicProperties.supplyMutable === true) {
-            mosaicDefinitionTransaction = mosaicDefinitionTransaction.addSupplyMutable();
-        }
-
-        if (this.mosaicProperties.transferable === true) {
-            mosaicDefinitionTransaction = mosaicDefinitionTransaction.addTransferability();
-        }
-
-        if (this.mosaicProperties.restrictable === true) {
-            mosaicDefinitionTransaction = mosaicDefinitionTransaction.addRestrictable();
-        }
-
-        return mosaicDefinitionTransaction.build();
-    }
-
-    /**
-     * @internal
      * @returns {Uint8Array}
      */
     protected generateBytes(): Uint8Array {
@@ -207,7 +176,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             this.getMosaicFlagValue(),
             this.mosaicProperties.divisibility,
             new BlockDurationDto(this.mosaicProperties.duration ?
-                    this.mosaicProperties.duration.toDTO() : []),
+                    this.mosaicProperties.duration.toDTO() : UInt64.fromUint(0).toDTO()),
         );
         return transactionBuilder.serialize();
     }
@@ -226,7 +195,7 @@ export class MosaicDefinitionTransaction extends Transaction {
             this.getMosaicFlagValue(),
             this.mosaicProperties.divisibility,
             new BlockDurationDto(this.mosaicProperties.duration ?
-                    this.mosaicProperties.duration.toDTO() : []),
+                    this.mosaicProperties.duration.toDTO() : UInt64.fromUint(0).toDTO()),
         );
         return transactionBuilder.serialize();
     }

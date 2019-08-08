@@ -15,8 +15,6 @@
  */
 
 import { Convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/HashLockTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
 import { EmbeddedHashLockTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedHashLockTransactionBuilder';
@@ -129,23 +127,6 @@ export class LockFundsTransaction extends Transaction {
         const byteHash = 32;
 
         return byteSize + byteMosaicId + byteAmount + byteDuration + byteHash;
-    }
-
-    /**
-     * @internal
-     * @return {VerifiableTransaction}
-     */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addType(this.type)
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addMosaicId(this.mosaic.id.id.toDTO())
-            .addMosaicAmount(this.mosaic.amount.toDTO())
-            .addDuration(this.duration.toDTO())
-            .addHash(this.hash)
-            .build();
     }
 
     /**
