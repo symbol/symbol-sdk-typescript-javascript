@@ -80,7 +80,7 @@ describe('AddressAliasTransaction', () => {
         expect(addressAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
         expect(addressAliasTransaction.address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
 
-        const signedTransaction = addressAliasTransaction.signWithCatbuffer(account, generationHash);
+        const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
         expect(signedTransaction.payload.substring(
             240,
