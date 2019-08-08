@@ -49,18 +49,18 @@
       <div class="label_page">
         <span @click="switchTransactionPanel(true)"
               :class="['pointer',showConfirmedTransactions?'selected':'','page_title']">
-          {{$t('confirmed_transaction')}}
-          <span :class="[showConfirmedTransactions?'':'gray','transacrion_num']" class="">
-            <span>{{confirmedDataAmount}}</span>
-          </span>
+          {{$t('confirmed_transaction')}} ({{confirmedDataAmount}})
+          <!--<span :class="[showConfirmedTransactions?'':'gray','transacrion_num']" class="">-->
+            <!--<span>{{confirmedDataAmount}}</span>-->
+          <!--</span>-->
         </span>
         <span class="line">|</span>
         <span @click="switchTransactionPanel(false)"
               :class="['pointer',showConfirmedTransactions?'':'selected','page_title']">
-          {{$t('unconfirmed_transaction')}}
-          <span :class="[showConfirmedTransactions?'gray':'','transacrion_num']">
-            <span>{{unconfirmedDataAmount}}</span>
-          </span>
+          {{$t('unconfirmed_transaction')}} ({{unconfirmedDataAmount}})
+          <!--<span :class="[showConfirmedTransactions?'gray':'','transacrion_num']">-->
+            <!--<span>{{unconfirmedDataAmount}}</span>-->
+          <!--</span>-->
         </span>
       </div>
 
