@@ -230,7 +230,6 @@
                         data: []
                     }
                 },
-                // todo
                 {
                     xAxisIndex: 1,
                     yAxisIndex: 1,

@@ -201,7 +201,6 @@
                 },
                 {
                     key: 'from',
-                    //todo
                     value: transaction.signerAddress
                 },
                 {

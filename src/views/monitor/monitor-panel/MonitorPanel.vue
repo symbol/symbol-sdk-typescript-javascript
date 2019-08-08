@@ -611,8 +611,6 @@
         created() {
             this.setLeftSwitchIcon()
             this.initLeftNavigator()
-            // TODO
-            // this.noticeComponent()   tips
             this.initData()
             this.getXEMAmount()
             this.getAccountsName()

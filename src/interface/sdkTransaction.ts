@@ -18,7 +18,6 @@ export const transactionInterface: SdkV0.transaction = {
         };
     },
 
-    // todo
     _announce: async (params) => {
         const {transaction, node, account, generationHash} = params
         const signedTransaction = account.sign(transaction, generationHash);
@@ -218,6 +217,5 @@ export const transactionInterface: SdkV0.transaction = {
                 aggregateBondedTx: ''
             }
         }
-
     },
 }

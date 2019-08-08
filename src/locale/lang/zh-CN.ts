@@ -584,7 +584,6 @@ export const zh_CN = {
     lock_fee:'lock 费用',
     inner_fee:'内部交易费用',
 
-    //todo
     The_value_of_duration_cannot_be_less_than_1:'Duration 的值不能小于1',
     Namespace_cannot_be_a_null_or_empty_string:'Namespace 不能为空值或空字符串',
     The_root_namespace_cannot_be_longer_than_16:'Root namespace 长度不能大于16',

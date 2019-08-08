@@ -231,7 +231,6 @@
                         data: []
                     }
                 },
-                // todo
                 {
                     xAxisIndex: 1,
                     yAxisIndex: 1,
@@ -401,6 +400,7 @@
 
         async refreshData() {
             if (isRefreshData('marketPriceDataObject', 1000 * 60 * 15, new Date().getMinutes())) {
+                console.log()
                 await this.getChartData()
             } else {
                 this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList

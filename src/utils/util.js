@@ -181,7 +181,7 @@ export const isRefreshData = function (localstorageName, refreshTime, borderline
   const currentTime = new Date()
   const currentTimestamp = currentTime.getTime()
   const marketPriceDataList = JSON.parse(localRead(localstorageName))
-  const timeDifference = currentTimestamp - marketPriceDataList
+  const timeDifference = Number(currentTimestamp )- Number(marketPriceDataList.timestamp)
   if (refreshTime < timeDifference || borderlineTime == 0) {
     return true
   }
