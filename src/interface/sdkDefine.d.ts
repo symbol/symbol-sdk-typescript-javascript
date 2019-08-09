@@ -480,7 +480,7 @@ declare namespace SdkV0 {
             networkType: NetworkType,
             fee: number,
             multisigPublickey: string,
-            transaction: any,
+            transaction: Array<Transaction>,
         }) => Rst<{
             aggregateTransaction: AggregateTransaction
         }>;
@@ -489,7 +489,7 @@ declare namespace SdkV0 {
             account: Account,
             fee: number,
             multisigPublickey: string,
-            transaction: any,
+            transaction: Array<Transaction>,
         }) => Rst<{
             aggregateTransaction: AggregateTransaction
         }>;

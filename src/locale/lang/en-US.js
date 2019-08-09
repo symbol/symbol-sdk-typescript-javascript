@@ -544,7 +544,7 @@ export var en_US = {
     alias_name_format_error: 'alias name format error',
     max_approval_amount_more_than_10: 'Max approval cannot be more than 10',
     max_removal_amount_more_than_10: 'Max removal  cannot be more than 10',
-    bonded_fee: 'bonded fee',
+    bonded_fee: 'aggregate fee',
     lock_fee: 'lock fee',
     inner_fee: 'inner fee',
     The_value_of_duration_cannot_be_less_than_1: 'The value of duration cannot be less than 1',

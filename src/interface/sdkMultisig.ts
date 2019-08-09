@@ -34,10 +34,14 @@ export const multisigInterface: SdkV0.multisig = {
     },
 
     bondedMultisigTransaction: async (params) => {
-        const {transaction, multisigPublickey, networkType, account, fee} = params
+        let {transaction, multisigPublickey, networkType, account, fee} = params
+        transaction = transaction.map((item) => {
+            item.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))
+            return item
+        })
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
-            [transaction.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))],
+            transaction,
             networkType,
             [],
             UInt64.fromUint(fee)
@@ -50,11 +54,14 @@ export const multisigInterface: SdkV0.multisig = {
     },
 
     completeMultisigTransaction: async (params) => {
-        const {transaction, multisigPublickey, networkType, fee} = params
-
+        let {transaction, multisigPublickey, networkType, fee} = params
+        transaction = transaction.map((item) => {
+            item = item.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))
+            return item
+        })
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
-            [transaction.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))],
+            transaction,
             networkType,
             [],
             UInt64.fromUint(fee)

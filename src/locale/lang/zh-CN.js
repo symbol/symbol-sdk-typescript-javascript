@@ -15,10 +15,8 @@ export var zh_CN = {
     year_ago: '年前',
     english: '英语',
     chinese: '中文',
-    // community panel
     news: '资讯',
     vote: '投票',
-    //infomation
     no_more_data: '无更多数据',
     business: '商业',
     service: '服务',
@@ -30,7 +28,6 @@ export var zh_CN = {
     no_comment_yet: '暂无评论',
     successful_operation: '操作成功',
     operation_failed: '操作失败',
-    // vote
     initiation_address: '发起地址',
     voting_address: '投票地址',
     deadline: '截止时间',
@@ -53,11 +50,9 @@ export var zh_CN = {
     finished: '已结束',
     choose_to_vote: '选择投票',
     create_a_vote: '创建投票',
-    //  pie chart
     number_of_voters: '投票人数',
     yes: '是',
     no: '否',
-    //monitor-dashboard
     transaction_details: '事务详情',
     XEM_market_trend_nearly_7_days: 'XEM行情走势（近7天）',
     The_total_market_capitalization: '市场总值',
@@ -94,7 +89,6 @@ export var zh_CN = {
     no_such_currency_transaction_record_yet: '暂无任何该货币交易记录',
     price: '价格',
     quantity: '数量',
-    //monitpr-panel
     wallet_balance: '钱包余额',
     asset_setting: '资产设置',
     search_for_asset_name: '搜索资产名',
@@ -545,9 +539,9 @@ export var zh_CN = {
     alias_name_format_error: '别名格式错误',
     max_approval_amount_more_than_10: 'Min approval 不可大于10',
     max_removal_amount_more_than_10: 'Min removal 不可大于10',
-    bonded_fee: 'bonded 费用',
-    lock_fee: 'lock 费用',
-    inner_fee: '内部交易费用',
+    bonded_fee: '聚合交易的费用',
+    lock_fee: '锁定交易的费用',
+    inner_fee: '内部交易的费用',
     The_value_of_duration_cannot_be_less_than_1: 'Duration 的值不能小于1',
     Namespace_cannot_be_a_null_or_empty_string: 'Namespace 不能为空值或空字符串',
     The_root_namespace_cannot_be_longer_than_16: 'Root namespace 长度不能大于16',

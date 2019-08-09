@@ -1,74 +1,98 @@
-.mosaicEditDialogWrap{
+.mosaicEditDialogWrap {
   padding-bottom: 20px;
-  .mosaicEditDialogHeader{
+
+  .mosaicEditDialogHeader {
     height: 74px;
     line-height: 74px;
-    font-size:28px;
-    font-weight:400;
-    color:#222222;
-    .title{
+    font-size: 28px;
+    font-weight: 400;
+    color: #222222;
+
+    .title {
       padding-left: 64px;
     }
   }
-  .ivu-modal-content{
-    .ivu-modal-close{
-      top: 30px ;
-      right: 40px ;
-      .ivu-icon-ios-close{
+
+  .ivu-modal-content {
+    .ivu-modal-close {
+      top: 30px;
+      right: 40px;
+
+      .ivu-icon-ios-close {
         font-size: 40px;
         color: #666666;
         font-weight: 400;
       }
     }
-    .ivu-modal-body{
+
+    .ivu-modal-body {
       padding: 0;
     }
   }
-  .mosaicEditDialogBody{
-    padding:  40px 0;
-    .stepItem1{
+
+  .mosaicEditDialogBody {
+    padding: 40px 0;
+
+    .stepItem1 {
       width: 680px;
       margin: 0 auto;
-      .mosaicTxt{
+
+      .mosaicTxt {
         height: 60px;
         line-height: 60px;
-        font-size:16px;
-        font-weight:400;
-        color:#222222;
+        font-size: 16px;
+        font-weight: 400;
+        color: #222222;
       }
-      .ivu-form-item{
+
+      .ivu-form-item {
         height: 60px;
         line-height: 60px;
         margin-bottom: 0;
-        .ivu-radio-group-item{
+        .ivu-radio-group-item {
           margin-right: 60px;
         }
       }
-      .ivu-form-item:nth-of-type(2),.ivu-form-item:nth-of-type(3){
-        margin-top: -20px;
+      .ivu-form-item {
+        position: relative;
+        top: -70px;
       }
-      .ivu-form-item:nth-of-type(6){
-        margin-bottom: 20px;
+      .ivu-form-item:nth-of-type(1) {
+        position: relative;
+        top: -30px;
       }
-      .ivu-form-item:nth-of-type(7){
-        margin-bottom: 40px;
+      .ivu-form-item:nth-of-type(2) {
+        position: relative;
+        top: -40px;
       }
-      .ivu-form-item-label{
-        width: 115px;
+
+      .ivu-form-item:nth-of-type(3) {
+        position: relative;
+        top: -60px;
+      }
+
+      .ivu-form-item:nth-of-type(7) {
+        margin-bottom: 60px;
+      }
+
+      .ivu-form-item-label {
         height: 16px;
-        font-size:16px;
+        font-size: 16px;
         line-height: 16px;
-        font-weight:400;
-        color:#666666;
+        font-weight: 400;
+        color: #666666;
         margin-top: 12px;
       }
-      .ivu-form-item-content{
-        margin-left: 170px;
+
+      .ivu-form-item-content {
+        margin-left: 240px;
         position: relative;
-        input{
+
+        input {
           padding-right: 50px;
         }
-        .icon{
+
+        .icon {
           display: block;
           width: 20px;
           height: 18px;
@@ -77,80 +101,92 @@
           top: 19px;
           z-index: 999;
           cursor: pointer;
-          img{
+
+          img {
             display: inline-block;
             width: 100%;
             height: 100%;
           }
         }
-        .ivu-select-selection{
-          height:60px;
+
+        .ivu-select-selection {
+          height: 60px;
           line-height: 60px;
-          div{
-            height:60px;
+
+          div {
+            height: 60px;
             line-height: 60px;
             padding-left: 35px;
-            span{
-              height:60px;
+
+            span {
+              height: 60px;
               line-height: 60px;
               color: #999999 !important;
             }
           }
-          .ivu-select-selection i::before{
+
+          .ivu-select-selection i::before {
             color: #999999 !important;
           }
         }
-        input,textarea{
-          height:60px;
-          font-size:14px;
+
+        input, textarea {
+          height: 60px;
+          font-size: 14px;
           color: #999999;
-          border:1px solid rgba(204,204,204,1);
+          border: 1px solid rgba(204, 204, 204, 1);
           padding-left: 40px;
-          border-radius:8px;
+          border-radius: 8px;
         }
-        textarea{
-          height:120px;
+
+        textarea {
+          height: 120px;
           padding: 24px 40px;
         }
-        .tails{
-          font-size:16px;
-          font-weight:400;
-          color:#222222;
+
+        .tails {
+          font-size: 16px;
+          font-weight: 400;
+          color: #222222;
           position: absolute;
           right: 20px;
           top: 15px;
         }
       }
-      .ivu-form-item:last-of-type{
-        margin-top:  50px;
-        .ivu-form-item-content{
+
+      .ivu-form-item:last-of-type {
+        padding: 25px 0;
+
+        .ivu-form-item-content {
           margin-left: 0;
         }
       }
 
       .tips {
-        width: 558px;
+        width: 450px;
         font-size: 12px;
         font-weight: 400;
         color: rgba(153, 153, 153, 1);
         line-height: 18px;
         margin-top: 10px;
+
         .red {
           color: #F65C5C;
         }
       }
-      button{
+
+      button {
         display: block;
-        width:200px;
-        height:60px;
+        width: 200px;
+        height: 60px;
         line-height: 50px;
-        font-size:16px;
-        font-weight:400;
+        font-size: 16px;
+        font-weight: 400;
         text-align: center;
-        color:#fff;
-        background:#20B5AC;
+        color: #fff;
+        background: #20B5AC;
         border: none;
-        border-radius:30px;
+        border-radius: 30px;
         margin: 0 auto 20px;
       }
     }
@@ -158,7 +194,7 @@
 }
 
 .button_update {
-  .ivu-form-item-content{
+  .ivu-form-item-content {
     margin-top: 0;
   }
 }

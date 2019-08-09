@@ -1,6 +1,5 @@
-import i18n from '../locale/index'
 import Vue from 'vue'
-
+import i18n from '../locale/index'
 const vueInstance = new Vue({i18n})
 
 export default {

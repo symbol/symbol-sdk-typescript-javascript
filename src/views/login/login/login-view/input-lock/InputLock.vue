@@ -1,7 +1,7 @@
 <template>
-  <div class="text_container">
+  <div class="text_container" @keyup.enter="jumpToDashBoard()">
     <div class="top">
-      <img src="../../../../../assets/images/login/loginNewLogo.png" alt="">
+      <img src="@/assets/images/login/loginNewLogo.png" alt="">
     </div>
 
     <div class="middle_text">
@@ -22,8 +22,7 @@
     </div>
 
     <div class="password_prompt">
-      {{$t('forget_password')}}？<span @click="showPrompt"
-                                      class="pointer click_to_show_prompt">{{$t('passowrd_prompt')}}</span>
+      {{$t('forget_password')}}？<span @click="showPrompt" class="pointer click_to_show_prompt">{{$t('passowrd_prompt')}}</span>
     </div>
 
   </div>

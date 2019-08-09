@@ -202,7 +202,7 @@
                     account: account,
                     fee: bondedFee,
                     multisigPublickey: multisigPublickey,
-                    transaction: transaction,
+                    transaction: [transaction],
                 }).then((result) => {
                     const aggregateTransaction = result.result.aggregateTransaction
                     transactionInterface.announceBondedWithLock({
@@ -222,7 +222,7 @@
                 networkType: networkType,
                 fee: innerFee,
                 multisigPublickey: multisigPublickey,
-                transaction: transaction,
+                transaction: [transaction],
             }).then((result)=>{
                 const aggregateTransaction = result.result.aggregateTransaction
                 transactionInterface._announce({

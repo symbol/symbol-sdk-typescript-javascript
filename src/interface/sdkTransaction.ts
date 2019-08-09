@@ -33,6 +33,7 @@ export const transactionInterface: SdkV0.transaction = {
 
     _announce: async (params) => {
         const {transaction, node, account, generationHash} = params
+        console.log(account, transaction)
         const signedTransaction = account.sign(transaction, generationHash);
         const announceStatus = await new TransactionHttp(node).announce(signedTransaction);
         console.log(signedTransaction)
@@ -45,7 +46,7 @@ export const transactionInterface: SdkV0.transaction = {
 
     // todo Account Restriction  after updating sdk
     accountAddressRestrictionModificationTransaction: async (params) => {
-      const {propertyType,accountPropertyTransaction,networkType,fee} = params
+        const {propertyType, accountPropertyTransaction, networkType, fee} = params
         const modifyAccountPropertyAddressTransaction = ModifyAccountPropertyAddressTransaction.create(
             Deadline.create(),
             propertyType,
@@ -59,7 +60,6 @@ export const transactionInterface: SdkV0.transaction = {
             }
         };
     },
-
 
 
     transferTransaction: async (params) => {

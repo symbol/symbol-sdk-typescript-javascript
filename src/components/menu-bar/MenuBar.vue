@@ -68,9 +68,11 @@
       </div>
     </div>
 
-	<transition name="fade" mode="out-in">
-+      <router-view/>
-+   </transition>
+    <transition name="fade" mode="out-in">
+      +
+      <router-view/>
+      +
+    </transition>
 
   </div>
 </template>
@@ -89,8 +91,25 @@
 
     @Component
     export default class Home extends Vue {
-        isShowNodeList = false
+        walletList = []
+        currentNode = ''
+        languageList = []
+        currentWallet = ''
+        accountAddress = ''
         inputNodeValue = ''
+        isShowDialog = true
+        isNodeHealthy = true
+        accountPublicKey = ''
+        accountPrivateKey = ''
+        isShowNodeList = false
+        txStatusListener = null
+        showSelectWallet = true
+        confirmedTxListener = null
+        unconfirmedTxListener = null
+        currentLanguage: any = false
+        monitorSeleted = monitorSeleted
+        monitorUnselected = monitorUnselected
+        activePanelList = [false, false, false, false, false]
         nodetList = [
             {
                 value: 'http://192.168.0.105:3000',
@@ -115,44 +134,35 @@
                 isSelected: true,
             }
         ]
-        isShowDialog = true
-        activePanelList = [false, false, false, false, false]
-        currentLanguage: any = false
-        languageList = []
-        currentWallet = ''
-        showSelectWallet = true
-        monitorSeleted = monitorSeleted
-        monitorUnselected = monitorUnselected
-        currentNode = ''
-        isNodeHealthy = true
-        accountPrivateKey = ''
-        accountPublicKey = ''
-        accountAddress = ''
-        walletList = []
-        unconfirmedTxListener = null
-        confirmedTxListener = null
-        txStatusListener = null
-
         get getWallet() {
-            return this.$store.state.account.wallet
+            if (this.$store.state.account.wallet && this.$store.state.account.wallet.address) {
+                return this.$store.state.account.wallet
+            }
+            const wallets = localRead('wallets')
+            if (wallets) {
+                this.$store.state.account.wallet = JSON.parse(wallets)[0]
+                return JSON.parse(wallets)[0]
+            }
+            return []
         }
 
         get getWalletList() {
             return this.$store.state.app.walletList || []
         }
 
-        get node () {
+        get node() {
             return this.$store.state.account.node
         }
 
-        get UnconfirmedTxList () {
+        get UnconfirmedTxList() {
             return this.$store.state.account.UnconfirmedTx
         }
 
-        get ConfirmedTxList () {
+        get ConfirmedTxList() {
             return this.$store.state.account.ConfirmedTx
         }
-        get errorTxList () {
+
+        get errorTxList() {
             return this.$store.state.account.errorTx
         }
 
@@ -259,7 +269,10 @@
             })
         }
 
-        unconfirmedListener(){
+        unconfirmedListener() {
+            if (!this.getWallet.address) {
+                return
+            }
             const node = this.node.replace('http', 'ws')
             const that = this
             this.unconfirmedTxListener && this.unconfirmedTxListener.close()
@@ -271,7 +284,10 @@
             })
         }
 
-        confirmedListener(){
+        confirmedListener() {
+            if (!this.getWallet.address) {
+                return
+            }
             const node = this.node.replace('http', 'ws')
             const that = this
             this.confirmedTxListener && this.confirmedTxListener.close()
@@ -282,7 +298,11 @@
                 fn: that.disposeConfirmed
             })
         }
-        txErrorListener(){
+
+        txErrorListener() {
+            if (!this.getWallet.address) {
+                return
+            }
             const node = this.node.replace('http', 'ws')
             const that = this
             this.txStatusListener && this.txStatusListener.close()
@@ -294,9 +314,9 @@
             })
         }
 
-        disposeUnconfirmed (transaction){
+        disposeUnconfirmed(transaction) {
             let list = this.UnconfirmedTxList
-            if(!list.includes(transaction.transactionInfo.hash)){
+            if (!list.includes(transaction.transactionInfo.hash)) {
                 list.push(transaction.transactionInfo.hash)
                 this.$store.state.account.UnconfirmedTx = list
                 this.$Notice.success({
@@ -306,9 +326,10 @@
                 });
             }
         }
-        disposeConfirmed (transaction){
+
+        disposeConfirmed(transaction) {
             let list = this.ConfirmedTxList
-            if(!list.includes(transaction.transactionInfo.hash)){
+            if (!list.includes(transaction.transactionInfo.hash)) {
                 list.push(transaction.transactionInfo.hash)
                 this.$store.state.account.ConfirmedTx = list
                 this.$Notice.success({
@@ -318,9 +339,10 @@
                 });
             }
         }
-        disposeTxStatus (transaction){
+
+        disposeTxStatus(transaction) {
             let list = this.errorTxList
-            if(!list.includes(transaction.hash)){
+            if (!list.includes(transaction.hash)) {
                 list.push(transaction.hash)
                 this.$store.state.account.errorTx = list
                 this.$Notice.error({
@@ -350,8 +372,8 @@
             this.unconfirmedListener()
             this.confirmedListener()
             this.txErrorListener()
-			const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('nem.xem'))
-            linkedMosaic.subscribe((mosaic)=>{
+            const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('nem.xem'))
+            linkedMosaic.subscribe((mosaic) => {
                 this.$store.state.account.currentXEM1 = mosaic.toHex();
             })
             axios.get(currentNode + '/chain/height').then(function (response) {
@@ -372,6 +394,7 @@
         }
 
         created() {
+
             this.initData()
             this.unconfirmedListener()
             this.confirmedListener()

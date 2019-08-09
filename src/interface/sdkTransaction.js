@@ -27,6 +27,7 @@ export var transactionInterface = {
             switch (_a.label) {
                 case 0:
                     transaction = params.transaction, node = params.node, account = params.account, generationHash = params.generationHash;
+                    console.log(account, transaction);
                     signedTransaction = account.sign(transaction, generationHash);
                     return [4 /*yield*/, new TransactionHttp(node).announce(signedTransaction)];
                 case 1:
@@ -40,7 +41,7 @@ export var transactionInterface = {
             }
         });
     }); },
-    // Account Restriction
+    // todo Account Restriction  after updating sdk
     accountAddressRestrictionModificationTransaction: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var propertyType, accountPropertyTransaction, networkType, fee, modifyAccountPropertyAddressTransaction;
         return tslib_1.__generator(this, function (_a) {

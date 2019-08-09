@@ -50,17 +50,11 @@
         <span @click="switchTransactionPanel(true)"
               :class="['pointer',showConfirmedTransactions?'selected':'','page_title']">
           {{$t('confirmed_transaction')}} ({{confirmedDataAmount}})
-          <!--<span :class="[showConfirmedTransactions?'':'gray','transacrion_num']" class="">-->
-            <!--<span>{{confirmedDataAmount}}</span>-->
-          <!--</span>-->
         </span>
         <span class="line">|</span>
         <span @click="switchTransactionPanel(false)"
               :class="['pointer',showConfirmedTransactions?'':'selected','page_title']">
           {{$t('unconfirmed_transaction')}} ({{unconfirmedDataAmount}})
-          <!--<span :class="[showConfirmedTransactions?'gray':'','transacrion_num']">-->
-            <!--<span>{{unconfirmedDataAmount}}</span>-->
-          <!--</span>-->
         </span>
       </div>
 
@@ -74,8 +68,6 @@
         <div class="confirmed_transactions" v-if="showConfirmedTransactions">
           <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
           <div class="table_body hide_scroll" ref="confirmedTableBody">
-
-            <!--            <div class="table_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">-->
             <div class="table_item pointer" @click="showDialog(c)" v-for="c in currentTransactionList">
               <img class="mosaic_action" v-if="!c.isReceipt"
                    src="@/assets/images/monitor/dash-board/dashboardMosaicOut.png" alt="">
@@ -123,27 +115,20 @@
 </template>
 
 <script lang="ts">
-    import {
-        PublicAccount,
-        NetworkType,
-    } from 'nem2-sdk';
-    import {
-        isRefreshData,
-        localSave,
-        localRead,
-        formatTransactions
-    } from '@/utils/util.js'
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import LineChart from '@/components/LineChart.vue'
+
     import axios from 'axios'
-    import {transactionInterface} from '@/interface/sdkTransaction'
+    import LineChart from '@/components/LineChart.vue'
+    import {PublicAccount, NetworkType} from 'nem2-sdk'
+    import numberGrow from '@/components/NumberGrow.vue'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
     import {blockchainInterface} from '@/interface/sdkBlockchain'
-    import dashboardBlockHeight from '@/assets/images/monitor/dash-board/dashboardBlockHeight.png'
+    import {transactionInterface} from '@/interface/sdkTransaction'
+    import {isRefreshData, localSave, localRead, formatTransactions} from '@/utils/util.js'
+    import dashboardPublickey from '@/assets/images/monitor/dash-board/dashboardPublickey.png'
     import dashboardBlockTime from '@/assets/images/monitor/dash-board/dashboardBlockTime.png'
+    import dashboardBlockHeight from '@/assets/images/monitor/dash-board/dashboardBlockHeight.png'
     import dashboardPointAmount from '@/assets/images/monitor/dash-board/dashboardPointAmount.png'
     import dashboardTransactionAmount from '@/assets/images/monitor/dash-board/dashboardTransactionAmount.png'
-    import dashboardPublickey from '@/assets/images/monitor/dash-board/dashboardPublickey.png'
-    import numberGrow from '@/components/NumberGrow.vue'
 
     @Component({
         components: {

@@ -26,7 +26,11 @@ export var multisigInterface = {
         var transaction, multisigPublickey, networkType, account, fee, aggregateTransaction;
         return tslib_1.__generator(this, function (_a) {
             transaction = params.transaction, multisigPublickey = params.multisigPublickey, networkType = params.networkType, account = params.account, fee = params.fee;
-            aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), [transaction.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))], networkType, [], UInt64.fromUint(fee));
+            transaction = transaction.map(function (item) {
+                item.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType));
+                return item;
+            });
+            aggregateTransaction = AggregateTransaction.createBonded(Deadline.create(), transaction, networkType, [], UInt64.fromUint(fee));
             return [2 /*return*/, {
                     result: {
                         aggregateTransaction: aggregateTransaction
@@ -38,7 +42,11 @@ export var multisigInterface = {
         var transaction, multisigPublickey, networkType, fee, aggregateTransaction;
         return tslib_1.__generator(this, function (_a) {
             transaction = params.transaction, multisigPublickey = params.multisigPublickey, networkType = params.networkType, fee = params.fee;
-            aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(), [transaction.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))], networkType, [], UInt64.fromUint(fee));
+            transaction = transaction.map(function (item) {
+                item = item.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType));
+                return item;
+            });
+            aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(), transaction, networkType, [], UInt64.fromUint(fee));
             return [2 /*return*/, {
                     result: {
                         aggregateTransaction: aggregateTransaction

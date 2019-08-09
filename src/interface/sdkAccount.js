@@ -1,6 +1,5 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-// @ts-ignore
 import { AccountHttp, Address, EncryptedMessage } from 'nem2-sdk';
 export var accountInterface = {
     getAccountsNames: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
@@ -28,7 +27,7 @@ export var accountInterface = {
                 case 0:
                     address = Address.createFromRawAddress(params.address);
                     node = params.node;
-                    return [4 /*yield*/, new AccountHttp(node).getAccountInfo(address)];
+                    return [4 /*yield*/, new AccountHttp(node).getAccountInfo(address).toPromise().catch(function (e) { return console.log(e); })];
                 case 1:
                     accountInfo = _a.sent();
                     return [2 /*return*/, {
@@ -68,13 +67,13 @@ export var accountInterface = {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, new AccountHttp(node).getMultisigAccountInfo(address)];
+                    return [4 /*yield*/, new AccountHttp(node).getMultisigAccountInfo(address).toPromise().catch(function (e) { return console.log(e, 'no multisign info in this account'); })];
                 case 2:
                     multisigAccountInfo = _a.sent();
                     return [3 /*break*/, 4];
                 case 3:
                     e_1 = _a.sent();
-                    multisigAccountInfo = 'no multisig';
+                    console.log(e_1);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/, {
                         result: {
