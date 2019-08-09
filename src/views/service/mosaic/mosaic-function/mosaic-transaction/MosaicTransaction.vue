@@ -169,6 +169,7 @@
         currentXEM1: string
         currentMinApproval = -1
         mosaicMapInfo: any = {}
+        transactionDetail = {}
         multisigPublickeyList = [{
             value: 'no data',
             label: 'no data'
@@ -251,6 +252,8 @@
         }
 
         showCheckDialog() {
+            const {supply, divisibility, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
+            // TODO mosaic transaction detail
             this.showCheckPWDialog = true
         }
 
@@ -399,8 +402,6 @@
                     generationHash
                 })
             })
-
-
         }
 
         checkForm() {
