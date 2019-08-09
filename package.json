@@ -29,6 +29,8 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@types/request": "^2.47.1",
+    "@types/query-string": "^6.1.0",
     "@types/jest": "^23.1.4",
     "@types/node": "^9.4.6",
     "@types/node-uuid": "0.0.28",

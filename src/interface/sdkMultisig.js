@@ -1,8 +1,6 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-import { Deadline, UInt64, PublicAccount, AggregateTransaction, AccountHttp, Address
-// @ts-ignore
- } from 'nem2-sdk';
+import { Deadline, UInt64, PublicAccount, AggregateTransaction, AccountHttp, Address } from 'nem2-sdk';
 export var multisigInterface = {
     getMultisigAccountInfo: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var address, node, accountHttp, multisigInfo;

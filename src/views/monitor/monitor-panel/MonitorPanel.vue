@@ -1,88 +1,63 @@
 <template>
-  <div class="monitor_panel_container">
-    <div class="monitor_panel_left_container" ref="monitorPanelLeftContainer">
-      <div class="top_wallet_address radius">
-        <div class="wallet_address">
+    <div class="monitor_panel_container">
+        <div class="monitor_panel_left_container" ref="monitorPanelLeftContainer">
+            <div class="top_wallet_address radius">
+                <div class="wallet_address">
           <span class="address">
             {{address}}
           </span>
-          <img class="pointer" @click="copyAddress"
-               src="../../../assets/images/monitor/monitorCopyAddress.png" alt="">
-        </div>
+                    <img class="pointer" @click="copyAddress"
+                         src="../../../assets/images/monitor/monitorCopyAddress.png" alt="">
+                </div>
 
-        <div class="split"></div>
-        <div class="XEM_amount"><span>XEM</span><span class="amount">{{formatXEMamount(XEMamount.toString())}}</span></div>
-        <div class="exchange">${{(XEMamount*currentPrice).toFixed(2)}}</div>
+                <div class="split"></div>
+                <div class="XEM_amount"><span>XEM</span><span
+                        class="amount">{{formatXEMamount(XEMamount.toString())}}</span></div>
+                <div class="exchange">${{(XEMamount*currentPrice).toFixed(2)}}</div>
 
-        <div class="account_alias" v-show="isShowAccountAlias">
-          {{$t('alias')}}：wallet.name
-        </div>
-      </div>
-      <div class="bottom_account_info radius" ref="bottomAccountInfo">
-        <div v-if="isShowAccountInfo" class="mosaicListWrap">
-          <Spin v-if="isLoadingMosaic" size="large" fix class="absolute"></Spin>
-          <Tabs size="small" v-if="!isShowManageMosaicIcon">
-            <TabPane :label="$t('assets')" name="name1">
-              <img @click="manageMosaicList()" class="asset_list pointer"
-                   src="../../../assets/images/monitor/monitorAssetList.png">
-              <!--        all       -->
-              <div class="mosaicList">
-                <div class="mosaic_data" v-if="value.show" v-for="(value,key,index) in mosaicMap"
-                     :key="index">
+                <div class="account_alias" v-show="isShowAccountAlias">
+                    {{$t('alias')}}：wallet.name
+                </div>
+            </div>
+            <div class="bottom_account_info radius" ref="bottomAccountInfo">
+                <div v-if="isShowAccountInfo" class="mosaicListWrap">
+                    <Spin v-if="isLoadingMosaic" size="large" fix class="absolute"></Spin>
+                    <Tabs size="small" v-if="!isShowManageMosaicIcon">
+                        <TabPane :label="$t('assets')" name="name1">
+                            <img @click="manageMosaicList()" class="asset_list pointer"
+                                 src="../../../assets/images/monitor/monitorAssetList.png">
+                            <!--        all       -->
+                            <div class="mosaicList">
+                                <div class="mosaic_data" v-if="value.show" v-for="(value,key,index) in mosaicMap"
+                                     :key="index">
                 <span class="img_container">
                     <img v-if="index == 0" src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
                     <img v-else src="../../../assets/images/monitor/mosaicDefault.png" alt="">
                 </span>
-                  <span class="mosaic_name">{{value.name}}</span>
-                  <span class="mosaic_value">
+                                    <span class="mosaic_name">{{value.name}}</span>
+                                    <span class="mosaic_value">
                   <div>{{value.amount}}</div>
                 </span>
-                </div>
-                <div class="mosaic_data"></div>
-              </div>
-            </TabPane>
-            <!--            <TabPane :label="$t('namespace')" name="name2">-->
-            <!--              <div class="namespace_data">-->
-            <!--                <div class="namespace_table_head">-->
-            <!--                  <span class="namespace">{{$t('namespace')}}</span>-->
-            <!--                  <span class="duration">{{$t('validity_period')}}</span>-->
-            <!--                </div>-->
-            <!--                <div class="namespace_item" v-for="i in 3">-->
-            <!--                  <span class="namespace">@123.456</span>-->
-            <!--                  <span class="duration">2019-02-09</span>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </TabPane>-->
-            <!--            <TabPane :label="$t('harvested_block')" name="name3">-->
-            <!--              <div class="harvesting_data">-->
-            <!--                <div class="harvesting_item " v-for="i in 3">-->
-            <!--                  <div class="clear top_info">-->
-            <!--                    <span class="left">{{$t('block')}}：4585464</span>-->
-            <!--                    <span class="right">fees:1.0546551xem</span>-->
-            <!--                  </div>-->
-            <!--                  <div class="bottom_info">-->
-            <!--                    <span class="left">include: 1 txs</span>-->
-            <!--                    <span class="right">2019-07-09 16:00</span>-->
-            <!--                  </div>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </TabPane>-->
-          </Tabs>
+                                </div>
+                                <div class="mosaic_data"></div>
+                            </div>
+                        </TabPane>
+                    </Tabs>
 
-          <!--        sevral      -->
-          <div v-if="isShowManageMosaicIcon" class="searchMosaic">
-            <div class="asset_setting_tit pointer" @click="showMosaicMap">
-              <img src="../../../assets/images/monitor/monitorLeftArrow.png" alt="">
-              <span>{{$t('asset_setting')}}</span>
-            </div>
-            <div class="input_outter">
-              <img src="../../../assets/images/monitor/monitorSearchIcon.png" alt="">
-              <input v-model="mosaicName" type="text" :placeholder="$t('search_for_asset_name')">
-              <span class="search pointer" @click="searchMosaic">{{$t('search')}}</span>
+                    <!--        sevral      -->
+                    <div v-if="isShowManageMosaicIcon" class="searchMosaic">
+                        <div class="asset_setting_tit pointer" @click="showMosaicMap">
+                            <img src="../../../assets/images/monitor/monitorLeftArrow.png" alt="">
+                            <span>{{$t('asset_setting')}}</span>
+                        </div>
+                        <div class="input_outter">
+                            <img src="../../../assets/images/monitor/monitorSearchIcon.png" alt="">
+                            <input v-model="mosaicName" type="text" :placeholder="$t('search_for_asset_name')">
+                            <span class="search pointer" @click="searchMosaic">{{$t('search')}}</span>
 
-            </div>
-            <div class="mosaicList">
-              <div class="mosaic_data" v-for="(value,key,index) in mosaicMap" :key="index">
+                        </div>
+                        <div class="mosaicList">
+                            <div class="mosaic_data" v-for="(value,key,index) in mosaicMap" :key="index">
                 <span class="namege_img">
                     <img @click="toggleShowMosaic(key,value)" class="small_icon pointer"
                          :src="value.show?monitorSeleted:monitorUnselected">
@@ -90,38 +65,38 @@
                          src="../../../assets/images/monitor/monitorMosaicIcon.png">
                     <img v-else class="mosaicIcon" src="../../../assets/images/monitor/mosaicDefault.png">
                 </span>
-                <span class="mosaic_name">{{value.name}}</span>
-                <span class="mosaic_value">
+                                <span class="mosaic_name">{{value.name}}</span>
+                                <span class="mosaic_value">
                   <div>{{value.amount}}</div>
                 </span>
-              </div>
-              <div class="complete_container">
-                <div class="complete" @click="showMosaicMap">{{$t('complete')}}</div>
+                            </div>
+                            <div class="complete_container">
+                                <div class="complete" @click="showMosaicMap">{{$t('complete')}}</div>
 
-              </div>
-              <div class="mosaic_data"></div>
+                            </div>
+                            <div class="mosaic_data"></div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
-
-          </div>
         </div>
-      </div>
-    </div>
-    <div class="monitor_panel_right_container">
-      <div class="top_navidator radius">
+        <div class="monitor_panel_right_container">
+            <div class="top_navidator radius">
         <span :class="[n.isSelect?'active_navigator':'','outter_container',n.disabled?'disabled':'pointer']"
               @click="switchPanel(index)"
               v-for="(n,index) in navigatorList">
           <span class="inner_container absolute">{{$t(n.name)}}</span>
           <span class="line">|</span>
         </span>
-      </div>
-      <div class="bottom_router_view">
-        <router-view/>
-      </div>
-      <div class="transaction_status radius">
-      </div>
+            </div>
+            <div class="bottom_router_view">
+                <router-view/>
+            </div>
+            <div class="transaction_status radius">
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -137,6 +112,8 @@
     import monitorMosaicIcon from '@/assets/images/monitor/monitorMosaicIcon.png'
     import Message from "@/message/Message";
     import {aliasInterface} from "../../../interface/sdkNamespace";
+    import {market} from "@/interface/restLogic";
+    import {KlineQuery} from "@/query/klineQuery";
 
     @Component
     export default class DashBoard extends Vue {
@@ -206,11 +183,11 @@
             return this.$store.state.app.walletList || []
         }
 
-        get namespaceList () {
+        get namespaceList() {
             return this.$store.state.account.namespace
         }
 
-        get ConfirmedTxList () {
+        get confirmedTxList() {
             return this.$store.state.account.ConfirmedTx
         }
 
@@ -243,48 +220,6 @@
             copyTxt(this.address).then(() => {
                 that.$Message.success(Message.COPY_SUCCESS)
             })
-        }
-
-
-
-        noticeComponent() {
-            this.$Notice.destroy()
-            this.$Notice.open({
-                duration: 999,
-                desc: 'The desc will hide when you set render.',
-                render: h => {
-                    return h('span',
-                        {
-                            style: {
-                                display: 'flex',
-                                justifyContent: 'center',
-                                justifyItems: 'center',
-                                alignItems: 'center',
-                                alignContent: 'center'
-                            },
-                        }
-                        , [
-                            h('img', {
-                                style: {
-                                    width: '30px',
-                                    marginRight: '20px'
-                                },
-                                attrs: {
-                                    src: monitorMosaicIcon
-                                }
-                            }),
-                            h('span', {
-                                    style: {
-                                        display: 'inline-block',
-                                        width: '530px',
-                                        lineHeight: '24px'
-                                    },
-                                },
-                                '公告：Nem发布了最新投票，你可以在https://forum.nem.io/t/2020/ele-ction查看更多'
-                            )
-                        ])
-                }
-            });
         }
 
         initData() {
@@ -321,28 +256,28 @@
             })
         }
 
-        async getMyNamespaces () {
+        async getMyNamespaces() {
             await aliasInterface.getNamespacesFromAccount({
                 address: Address.createFromRawAddress(this.getWallet.address),
                 url: this.node
-            }).then((namespacesFromAccount)=>{
+            }).then((namespacesFromAccount) => {
                 let list = []
                 let namespace = {}
                 namespacesFromAccount.result.namespaceList
-                    .sort((a,b)=>{
+                    .sort((a, b) => {
                         return a['namespaceInfo']['depth'] - b['namespaceInfo']['depth']
-                    }).map((item, index)=>{
-                    if(!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())){
+                    }).map((item, index) => {
+                    if (!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())) {
                         namespace[item.namespaceInfo.id.toHex()] = item.namespaceName
-                    }else {
+                    } else {
                         return
                     }
                     let namespaceName = ''
-                    item.namespaceInfo.levels.map((item, index)=>{
-                        namespaceName += namespace[item.id.toHex()] +'.'
+                    item.namespaceInfo.levels.map((item, index) => {
+                        namespaceName += namespace[item.id.toHex()] + '.'
                     })
                     namespaceName = namespaceName.slice(0, namespaceName.length - 1)
-                    const newObj ={
+                    const newObj = {
                         value: namespaceName,
                         label: namespaceName,
                         alias: item.namespaceInfo.alias,
@@ -392,13 +327,10 @@
 
         async getMarketOpenPrice() {
             const that = this
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
-            await axios.get(url).then(function (response) {
-                const result = response.data.data[0].open
-                that.currentPrice = result
-            }).catch(function (error) {
-                // that.getMarketOpenPrice()
-            });
+            const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"});
+            const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+            const result = rstQuery.data[0].close
+            that.currentPrice = result
         }
 
         async getMosaicList() {
@@ -586,7 +518,7 @@
 
         }
 
-        formatXEMamount(text){
+        formatXEMamount(text) {
             return formatXEMamount(text)
         }
 
@@ -600,7 +532,7 @@
             this.getMyNamespaces()
         }
 
-        @Watch('ConfirmedTxList')
+        @Watch('confirmedTxList')
         onConfirmedTxChange() {
             this.getXEMAmount()
             this.getAccountsName()
@@ -623,5 +555,5 @@
 </script>
 
 <style scoped lang="less">
-  @import "MonitorPanel.less";
+    @import "MonitorPanel.less";
 </style>

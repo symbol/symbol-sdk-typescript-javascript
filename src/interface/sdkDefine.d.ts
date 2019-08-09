@@ -11,16 +11,12 @@ import {
     SimpleWallet,
     PublicAccount,
     Account,
-    AccountInfo,
     Transaction,
     SignedTransaction,
     MultisigAccountInfo,
-    MultisigAccountGraphInfo,
     Listener,
-    MultisigCosignatoryModification,
     MosaicSupplyChangeTransaction,
     AggregateTransaction,
-    // @ts-ignore
 } from 'nem2-sdk'
 
 
@@ -492,23 +488,5 @@ declare namespace SdkV0 {
             aggregateTransaction: AggregateTransaction
         }>;
     }
-
-    //   wsIsOpen:(params:{
-    //     webSocket:any
-    //   })=>Rst<{
-    //     wsIsOpen:boolean
-    //   }>
-    //   wsClose:(params:{
-    //     webSocket:any
-    //   })=>Rst<{
-    //     wsClose:boolean
-    //   }>
-    //   wsUnconfirmedRemoved:(params:{
-    //     webSocket:any,
-    //     address:Address
-    //   })=>Rst<{
-    //     Observable:any
-    //   }>
-    // }
 }
 

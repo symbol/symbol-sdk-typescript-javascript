@@ -1,81 +1,83 @@
 <template>
-  <div class="informationWrap">
-    <div class="left left_article_list radius">
+    <div class="informationWrap">
+        <div class="left left_article_list radius">
 
-      <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
-      <div v-if="isLoadingConfirmedTx" style="background-color: white;width: 100%;height: 100%;position: absolute;z-index: 0"></div>
+            <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
+            <div v-if="isLoadingConfirmedTx"
+                 style="background-color: white;width: 100%;height: 100%;position: absolute;z-index: 0"></div>
 
 
-      <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticla">
-        <div @click="switchArticle(index)" v-for="(a,index) in articleList"
-             :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
-          <div class="title">{{a.title}}
-          </div>
-          <div class="other_info">
-            <span class="tag">{{$t('business')}}</span>
-            <span class="from">{{a.author}}</span>
-            <span class="date">{{a.gtmCreate}}</span>
-          </div>
+            <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticla">
+                <div @click="switchArticle(index)" v-for="(a,index) in articleList"
+                     :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
+                    <div class="title">{{a.title}}
+                    </div>
+                    <div class="other_info">
+                        <span class="tag">{{$t('business')}}</span>
+                        <span class="from">{{a.author}}</span>
+                        <span class="date">{{a.gtmCreate}}</span>
+                    </div>
+                </div>
+                <div class="load_all_data" v-if="loadAllData">{{$t('no_more_data')}}</div>
+            </div>
+
         </div>
-        <div class="load_all_data" v-if="loadAllData">{{$t('no_more_data')}}</div>
-      </div>
+        <div class="right_article_detail right radius">
+            <div class="article_container " ref="articleContainer" @scroll="automaticLoadingComment">
 
-    </div>
-    <div class="right_article_detail right radius">
-      <div class="article_container " ref="articleContainer" @scroll="automaticLoadingComment">
+                <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute spin"></Spin>
+                <div v-if="isLoadingConfirmedTx"
+                     style="background-color: white;width: 90%;height: 500px;position: absolute;z-index: 1"></div>
 
-        <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute spin"></Spin>
-        <div v-if="isLoadingConfirmedTx"
-             style="background-color: white;width: 90%;height: 500px;position: absolute;z-index: 1"></div>
-
-        <div class="title content article_title">
-          {{currentArticle.title}}
-        </div>
-        <div class="other_info content">
+                <div class="title content article_title">
+                    {{currentArticle.title}}
+                </div>
+                <div class="other_info content">
         <span class="tag">
           {{$t('business')}}/{{$t('service')}}
         </span>
-          <span class="from">
+                    <span class="from">
           {{currentArticle.author}}
         </span>
-          <span class="date">
+                    <span class="date">
           {{currentArticle.gtmCreate}}
         </span>
-        </div>
+                </div>
 
-        <div class="artile_content scroll content">
-          <div v-html="currentArticle.content">
-          </div>
-          <div class="comment">
+                <div class="artile_content scroll content">
+                    <div v-html="currentArticle.content">
+                    </div>
+                    <div class="comment">
           <span class="comment_title"><span
                   class="comment_title_text">{{$t('comment')}}  </span> ({{totalComment}})</span>
 
-            <div class="input_container">
-              <textarea v-model="commentContent" name="" id=""></textarea>
-              <span class="textarea_text">{{$t('remaining')}}：{{remainingWords}} {{$t('word')}}</span>
-            </div>
+                        <div class="input_container">
+                            <textarea v-model="commentContent" name="" id=""></textarea>
+                            <span class="textarea_text">{{$t('remaining')}}：{{remainingWords}} {{$t('word')}}</span>
+                        </div>
 
-            <div @click="checkForm" class="send_comment pointer">
-              {{$t('publish')}}
-            </div>
+                        <div @click="checkForm" class="send_comment pointer">
+                            {{$t('publish')}}
+                        </div>
 
-            <div class="comment_item_content">
-              <div v-for="(c,index) in commentList" class="comment_item">
-                <div class="account_name">{{c.nickName == ''? $t('anonymous_user'):c.nickName}}</div>
-                <div class="comment_content">{{c.comment}}</div>
-                <div class="comment_time">{{c.gtmCreate}}</div>
-              </div>
-              <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">{{$t('no_more_data')}}
-              </div>
-              <div class="load_all_data" v-if="commentList.length === 0">{{$t('no_comment_yet')}}</div>
+                        <div class="comment_item_content">
+                            <div v-for="(c,index) in commentList" class="comment_item">
+                                <div class="account_name">{{c.nickName == ''? $t('anonymous_user'):c.nickName}}</div>
+                                <div class="comment_content">{{c.comment}}</div>
+                                <div class="comment_time">{{c.gtmCreate}}</div>
+                            </div>
+                            <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">
+                                {{$t('no_more_data')}}
+                            </div>
+                            <div class="load_all_data" v-if="commentList.length === 0">{{$t('no_comment_yet')}}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+        <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
+                       @checkEnd="checkEnd"></CheckPWDialog>
     </div>
-    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
-                   @checkEnd="checkEnd"></CheckPWDialog>
-  </div>
 </template>
 
 <script lang="ts">
@@ -84,6 +86,7 @@
     import {formatDate} from '../../../utils/util.js'
     import CheckPWDialog from '../../../components/checkPW-dialog/CheckPWDialog.vue'
     import Message from "@/message/Message";
+    import {blog} from "@/interface/restLogic";
 
     @Component({
         components: {
@@ -155,14 +158,18 @@
             const address = this.$store.state.account.wallet.address
             const nickName = this.$store.state.account.wallet.name
             const gtmCreate = new Date()
-
-            const url = `${this.$store.state.app.apiUrl}/rest/blog/comment/save?cid=${cid}&comment=${comment}&address=${address}&nickName=${nickName}&gtmCreate=${gtmCreate}`
-            await axios.get(url).then(function (response) {
-                console.log(response)
+            try {
+                await blog.commentSave({
+                    cid: cid,
+                    comment: comment,
+                    address: address,
+                    nickName: nickName,
+                    gtmCreate: gtmCreate.toDateString()
+                });
                 that.$Notice.success({title: that.$t(Message.SUCCESS) + ''});
-            }).catch(() => {
+            } catch (e) {
                 that.$Notice.error({title: that.$t(Message.OPERATION_FAILED_ERROR) + ''});
-            })
+            }
             this.onCurrentArticleChange()
         }
 
@@ -208,18 +215,23 @@
             const languageNumber = this.switchLanguege()
             const that = this
             const {startPage} = this
-            const url = `${this.$store.state.app.apiUrl}/rest/blog/list?limit=10&offset=${startPage}&language=${languageNumber}`
-            await axios.get(url).then(function (response) {
-                let articleList = that.articleList.concat(response.data.rows)
-                articleList.map((item) => {
-                    item.summary = item.title
-                    return item
-                })
-                that.articleList = articleList
-                if (response.data.total <= that.articleList.length) {
-                    that.loadAllData = true
-                }
+            const rstStr = await blog.list({
+                offset: startPage.toString(),
+                limit: "10",
+                language: languageNumber.toString()
+            });
+            const rstQuery = JSON.parse(rstStr.rst);
+
+            let articleList = that.articleList.concat(rstQuery.rows)
+            articleList.map((item) => {
+                item.summary = item.title
+                return item
             })
+            that.articleList = articleList
+            if (rstQuery.total <= that.articleList.length) {
+                that.loadAllData = true
+            }
+
             this.isLoadingConfirmedTx = false
             this.addArticleStartIndex()
             this.articleList[0].isSelect = true
@@ -232,14 +244,13 @@
             const that = this
             const cid = this.currentArticle.cid
             const offset = this.commentStartPage
-            const url = `${this.$store.state.app.apiUrl}/rest/blog/comment/list?cid=${cid}&limit=10&offset=${offset}`
-            await axios.get(url).then(function (response) {
-                that.commentList.push(...response.data.rows)
-                that.totalComment = response.data.total
-                if (response.data.total <= that.commentList.length) {
-                    that.loadAllCommentData = true
-                }
-            })
+            const rstStr = await blog.commentList({cid: cid, limit: "10", offset: offset.toString()});
+            const rstQuery = JSON.parse(rstStr.rst);
+            that.commentList.push(...rstQuery.rows)
+            that.totalComment = rstQuery.total
+            if (rstQuery.total <= that.commentList.length) {
+                that.loadAllCommentData = true
+            }
             this.addCommentStartIndex()
         }
 
@@ -275,5 +286,5 @@
 </script>
 
 <style lang="less" scoped>
-  @import "Information.less";
+    @import "Information.less";
 </style>

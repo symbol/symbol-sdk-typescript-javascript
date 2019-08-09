@@ -1,7 +1,5 @@
-// @ts-ignore
-import {Listener, TransactionHttp} from 'nem2-sdk'
+import {TransactionHttp} from 'nem2-sdk'
 import {SdkV0} from './sdkDefine'
-// @ts-ignore
 import {filter, mergeMap} from 'rxjs/operators'
 
 export const wsInterface: SdkV0.ws = {
@@ -96,10 +94,8 @@ export const wsInterface: SdkV0.ws = {
                 .newBlock()
                 .subscribe(
                     (block) => {
-                        // console.log(block)
+
                         const {currentBlockInfo, preBlockInfo} = pointer.$store.state.app.chainStatus
-                        // console.log(pointer.$store.state.app.chainStatus)
-                        // console.log(block.timestamp.compact())
                         pointer.$store.state.app.chainStatus.preBlockInfo = currentBlockInfo   //pre
                         pointer.$store.state.app.chainStatus.numTransactions = block.numTransactions ? block.numTransactions : 0   //num
                         pointer.$store.state.app.chainStatus.signerPublicKey = block.signer.publicKey

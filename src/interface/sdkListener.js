@@ -1,8 +1,6 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-// @ts-ignore
 import { TransactionHttp } from 'nem2-sdk';
-// @ts-ignore
 import { filter, mergeMap } from 'rxjs/operators';
 export var wsInterface = {
     openWs: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
@@ -103,10 +101,7 @@ export var wsInterface = {
                 listener
                     .newBlock()
                     .subscribe(function (block) {
-                    // console.log(block)
                     var _a = pointer.$store.state.app.chainStatus, currentBlockInfo = _a.currentBlockInfo, preBlockInfo = _a.preBlockInfo;
-                    // console.log(pointer.$store.state.app.chainStatus)
-                    // console.log(block.timestamp.compact())
                     pointer.$store.state.app.chainStatus.preBlockInfo = currentBlockInfo; //pre
                     pointer.$store.state.app.chainStatus.numTransactions = block.numTransactions ? block.numTransactions : 0; //num
                     pointer.$store.state.app.chainStatus.signerPublicKey = block.signer.publicKey;

@@ -1,6 +1,6 @@
 import {
     TransactionHttp, AccountHttp, TransferTransaction, Deadline, Address, UInt64,
-    Message, AggregateTransaction, TransactionType, Account, Listener, HashLockTransaction, Mosaic, MosaicId
+    Message, AggregateTransaction, TransactionType, HashLockTransaction, Mosaic, MosaicId
 } from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
 import {filter, mergeMap} from "rxjs/operators";
@@ -30,12 +30,8 @@ export const transactionInterface: SdkV0.transaction = {
         };
     },
 
-    // Account Restriction
-
-
     transferTransaction: async (params) => {
         const network = params.network;
-        const transactionType = TransactionType.TRANSFER;
         const deadline = Deadline.create();
         const MaxFee = UInt64.fromUint(params.MaxFee);
         const receive = Address.createFromRawAddress(params.receive);
@@ -70,7 +66,6 @@ export const transactionInterface: SdkV0.transaction = {
         };
     },
 
-
     aggregateBondedTransaction: async (params) => {
         const network = params.network
         const deadline = Deadline.create()
@@ -86,7 +81,6 @@ export const transactionInterface: SdkV0.transaction = {
             }
         };
     },
-
 
     getTransaction: async (params) => {
         const id = params.transactionId;
@@ -210,8 +204,6 @@ export const transactionInterface: SdkV0.transaction = {
                 .subscribe(announcedAggregateBonded => console.log(announcedAggregateBonded),
                     err => console.error(err));
         });
-        console.log(hashLockTransactionSigned)
-        console.log(signedTransaction)
         return {
             result: {
                 aggregateBondedTx: ''

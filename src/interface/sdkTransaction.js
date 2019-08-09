@@ -1,6 +1,6 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-import { TransactionHttp, AccountHttp, TransferTransaction, Deadline, Address, UInt64, Message, AggregateTransaction, TransactionType, HashLockTransaction, Mosaic, MosaicId } from 'nem2-sdk';
+import { TransactionHttp, AccountHttp, TransferTransaction, Deadline, Address, UInt64, Message, AggregateTransaction, HashLockTransaction, Mosaic, MosaicId } from 'nem2-sdk';
 import { filter, mergeMap } from "rxjs/operators";
 export var transactionInterface = {
     announce: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
@@ -21,7 +21,6 @@ export var transactionInterface = {
             }
         });
     }); },
-    // todo
     _announce: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var transaction, node, account, generationHash, signedTransaction, announceStatus;
         return tslib_1.__generator(this, function (_a) {
@@ -41,14 +40,12 @@ export var transactionInterface = {
             }
         });
     }); },
-    // Account Restriction
     transferTransaction: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-        var network, transactionType, deadline, MaxFee, receive, mosaics, MessageType, message, transferTransaction;
+        var network, deadline, MaxFee, receive, mosaics, MessageType, message, transferTransaction;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     network = params.network;
-                    transactionType = TransactionType.TRANSFER;
                     deadline = Deadline.create();
                     MaxFee = UInt64.fromUint(params.MaxFee);
                     receive = Address.createFromRawAddress(params.receive);
@@ -276,8 +273,6 @@ export var transactionInterface = {
                     && transaction.transactionInfo.hash === hashLockTransactionSigned.hash; }), mergeMap(function (ignored) { return transactionHttp.announceAggregateBonded(signedTransaction); }))
                     .subscribe(function (announcedAggregateBonded) { return console.log(announcedAggregateBonded); }, function (err) { return console.error(err); });
             });
-            console.log(hashLockTransactionSigned);
-            console.log(signedTransaction);
             return [2 /*return*/, {
                     result: {
                         aggregateBondedTx: ''
