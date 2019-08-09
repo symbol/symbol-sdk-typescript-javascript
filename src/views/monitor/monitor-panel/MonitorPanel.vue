@@ -107,10 +107,17 @@
     import {mosaicInterface} from '@/interface/sdkMosaic'
     import {accountInterface} from '@/interface/sdkAccount'
     import {Component, Vue, Watch} from 'vue-property-decorator'
-    import {aliasInterface} from "../../../interface/sdkNamespace"
+    import {mosaicInterface} from '@/interface/sdkMosaic';
+    import {copyTxt} from '@/utils/tools'
     import {localSave, localRead, formatXEMamount} from '@/utils/util'
+    import axios from 'axios'
     import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
     import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
+    import monitorMosaicIcon from '@/assets/images/monitor/monitorMosaicIcon.png'
+    import Message from "@/message/Message";
+    import {aliasInterface} from "../../../interface/sdkNamespace";
+    import {market} from "@/interface/restLogic";
+    import {KlineQuery} from "@/query/klineQuery";
 
     @Component
     export default class DashBoard extends Vue {
@@ -184,6 +191,7 @@
         }
 
         get ConfirmedTxList() {
+        get confirmedTxList() {
             return this.$store.state.account.ConfirmedTx
         }
 
@@ -322,13 +330,10 @@
 
         async getMarketOpenPrice() {
             const that = this
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
-            await axios.get(url).then(function (response) {
-                const result = response.data.data[0].open
-                that.currentPrice = result
-            }).catch(function (error) {
-                // that.getMarketOpenPrice()
-            });
+            const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"});
+            const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+            const result = rstQuery.data[0].close
+            that.currentPrice = result
         }
 
         async getMosaicList() {
@@ -539,7 +544,7 @@
             this.getMyNamespaces()
         }
 
-        @Watch('ConfirmedTxList')
+        @Watch('confirmedTxList')
         onConfirmedTxChange() {
             this.getXEMAmount()
             this.getAccountsName()

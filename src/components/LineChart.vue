@@ -8,9 +8,10 @@
 
 <script lang="ts">
     import {localSave, localRead, isRefreshData, formatDate} from '@/utils/util'
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Vue} from 'vue-property-decorator';
     import echarts from 'echarts';
-    import axios from 'axios'
+    import {KlineQuery} from "@/query/klineQuery";
+    import {market} from "@/interface/restLogic";
 
     @Component
     export default class LineChart extends Vue {
@@ -209,12 +210,14 @@
                     data: [],
                     type: 'line',
                     symbol: 'circle',
+                    // smooth: true,
                     symbolSize: function (parmas) {
                         return 7;
                     },
                     showSymbol: false,
                     itemStyle: {
                         normal: {
+                            // color: 'transparent',
                             color: '#f7a800',
                             lineStyle: {
                                 color: '#f7a800',
@@ -326,78 +329,69 @@
                 type: 'showTip',
                 seriesIndex: 0,
                 dataIndex: btcDataList.length - 1,
+                seriesIndex: 0,
+                dataIndex: btcDataList.length - 1,
+
             })
             window.onresize = this.dom.resize
         }
 
-        async getBtcChartData() {
+        async setCharData(coin: string, period: string, size: string) {
             const that = this
-            //btc
-            const btcUrl = this.$store.state.app.marketUrl + '/kline/btcusdt/60min/168'
-            await axios.get(btcUrl).then(function (response) {
-                let dataList = []
-                response.data.data.forEach((item, index) => {
-                    index % 4 == 0 ? dataList.push(item) : dataList;
-                })
-                that.btcDataList = dataList
-                let marketPriceDataObject = localRead('marketPriceDataObject') ? JSON.parse(localRead('marketPriceDataObject')) : {}
-                marketPriceDataObject.btc = {
-                    dataList: dataList,
-                }
-                marketPriceDataObject.timestamp = new Date().getTime()
-                localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
-            }).catch(function (error) {
-                // that.getBtcChartData()
-            });
-            this.refresh()
-        }
+            const rstStr = await market.kline({period: period, symbol: coin + "usdt", size: size});
+            const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+            let dataList = []
+            rstQuery.data.forEach((item, index) => {
+                index % 4 == 0 ? dataList.push(item) : dataList;
+            })
+            let marketPriceDataObject = localRead('marketPriceDataObject') ? JSON.parse(localRead('marketPriceDataObject')) : {}
 
-        async getXemChartData() {
-            const that = this
-            //60min/168
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/60min/168'
-            await axios.get(url).then(function (response) {
-                let dataList = []
-                response.data.data.forEach((item, index) => {
-                    index % 4 == 0 ? dataList.push(item) : dataList;
-                })
+            if (coin == 'xem') {
                 that.xemDataList = dataList
-                let marketPriceDataObject = localRead('marketPriceDataObject') ? JSON.parse(localRead('marketPriceDataObject')) : {}
                 marketPriceDataObject.xem = {
                     dataList: dataList,
                     timestamp: new Date().getTime()
                 }
-                marketPriceDataObject.timestamp = new Date().getTime()
-                localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
-            }).catch(function (error) {
-                // that.getXemChartData()
-            });
+            }
+            if (coin == 'btc') {
+                that.btcDataList = dataList
+                marketPriceDataObject.btc = {
+                    dataList: dataList,
+                    timestamp: new Date().getTime()
+                }
+            }
+
+            marketPriceDataObject.timestamp = new Date().getTime()
+            localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
             this.refresh()
         }
 
-        getChartData() {
-            this.getXemChartData()
-            this.getBtcChartData()
+
+        async getChartData() {
+            await this.setCharData("xem", "60min", "168");
+            await this.setCharData("btc", "60min", "168");
+            this.refresh()
         }
 
         async refreshData() {
-            if (isRefreshData('marketPriceDataObject', 1000 * 60 * 15, new Date().getMinutes())) {
-                await this.getChartData()
-                return
-            }
-            const marketPriceDataObject = localRead('marketPriceDataObject')
-            this.btcDataList = (JSON.parse(marketPriceDataObject)).btc ? (JSON.parse(marketPriceDataObject)).btc.dataList : []
-            this.xemDataList = (JSON.parse(marketPriceDataObject)).xem ? (JSON.parse(marketPriceDataObject)).xem.dataList : []
-            if (this.btcDataList.length == 0 || this.xemDataList.length == 0) {
+            try {
+                if (isRefreshData('marketPriceDataObject', 1000 * 60 * 15, new Date().getMinutes())) {
+                    await this.getChartData()
+                    return
+                }
+                this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
+                this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
+            }catch (e) {
                 await this.getChartData()
             }
         }
 
-        mouseoutLine() {
+        mouseoutLine () {
             this.dom.dispatchAction({
                 type: 'showTip',
-                seriesIndex: 0,
-                dataIndex: this.option.series[1].data.length - 1,
+                seriesIndex:0,
+                dataIndex:this.option.series[1].data.length - 1,
+
             })
         }
 

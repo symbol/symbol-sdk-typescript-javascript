@@ -494,23 +494,5 @@ declare namespace SdkV0 {
             aggregateTransaction: AggregateTransaction
         }>;
     }
-
-    //   wsIsOpen:(params:{
-    //     webSocket:any
-    //   })=>Rst<{
-    //     wsIsOpen:boolean
-    //   }>
-    //   wsClose:(params:{
-    //     webSocket:any
-    //   })=>Rst<{
-    //     wsClose:boolean
-    //   }>
-    //   wsUnconfirmedRemoved:(params:{
-    //     webSocket:any,
-    //     address:Address
-    //   })=>Rst<{
-    //     Observable:any
-    //   }>
-    // }
 }
 

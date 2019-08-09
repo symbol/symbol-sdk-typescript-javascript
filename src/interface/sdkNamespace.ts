@@ -6,8 +6,6 @@ import {
     MosaicAliasTransaction,
     AddressAliasTransaction,
     NamespaceHttp,
-    TransactionHttp
-    // @ts-ignore
 } from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
 

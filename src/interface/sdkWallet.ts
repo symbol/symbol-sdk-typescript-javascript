@@ -1,4 +1,3 @@
-// @ts-ignore
 import {Password, SimpleWallet, Account, PublicAccount, AccountHttp} from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
 import generator from 'generate-password';

@@ -1,10 +1,6 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-// @ts-ignore
-// @ts-ignore
-import { MosaicDefinitionTransaction, Deadline, MosaicNonce, MosaicId, NamespaceMosaicIdGenerator, AggregateTransaction, MosaicProperties, UInt64, MosaicSupplyChangeTransaction, MosaicHttp, Convert, NetworkCurrencyMosaic, MosaicSupplyType
-// @ts-ignore
- } from 'nem2-sdk';
+import { MosaicDefinitionTransaction, Deadline, MosaicNonce, MosaicId, NamespaceMosaicIdGenerator, AggregateTransaction, MosaicProperties, UInt64, MosaicSupplyChangeTransaction, MosaicHttp, Convert, NetworkCurrencyMosaic, MosaicSupplyType } from 'nem2-sdk';
 export var mosaicInterface = {
     getMosaicByNamespace: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var currentXem, uintArray, mosaicId;

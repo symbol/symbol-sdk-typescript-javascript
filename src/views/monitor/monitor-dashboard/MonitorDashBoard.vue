@@ -115,20 +115,29 @@
 </template>
 
 <script lang="ts">
-
-    import axios from 'axios'
+    import {
+        PublicAccount,
+        NetworkType,
+    } from 'nem2-sdk';
+    import {
+        isRefreshData,
+        localSave,
+        localRead,
+        formatTransactions
+    } from '@/utils/util.js'
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import LineChart from '@/components/LineChart.vue'
-    import {PublicAccount, NetworkType} from 'nem2-sdk'
-    import numberGrow from '@/components/NumberGrow.vue'
-    import {Component, Vue, Watch} from 'vue-property-decorator'
-    import {blockchainInterface} from '@/interface/sdkBlockchain'
+    import axios from 'axios'
     import {transactionInterface} from '@/interface/sdkTransaction'
-    import {isRefreshData, localSave, localRead, formatTransactions} from '@/utils/util.js'
-    import dashboardPublickey from '@/assets/images/monitor/dash-board/dashboardPublickey.png'
-    import dashboardBlockTime from '@/assets/images/monitor/dash-board/dashboardBlockTime.png'
+    import {blockchainInterface} from '@/interface/sdkBlockchain'
     import dashboardBlockHeight from '@/assets/images/monitor/dash-board/dashboardBlockHeight.png'
+    import dashboardBlockTime from '@/assets/images/monitor/dash-board/dashboardBlockTime.png'
     import dashboardPointAmount from '@/assets/images/monitor/dash-board/dashboardPointAmount.png'
     import dashboardTransactionAmount from '@/assets/images/monitor/dash-board/dashboardTransactionAmount.png'
+    import dashboardPublickey from '@/assets/images/monitor/dash-board/dashboardPublickey.png'
+    import numberGrow from '@/components/NumberGrow.vue'
+    import {market} from "@/interface/restLogic";
+    import {KlineQuery} from "@/query/klineQuery";
 
     @Component({
         components: {
@@ -277,18 +286,16 @@
                 return
             }
             const that = this
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
-            await axios.get(url).then(function (response) {
-                const result = response.data.data[0].open
-                that.currentPrice = result * that.xemNum
-                const openPriceOneMinute = {
-                    timestamp: new Date().getTime(),
-                    openPrice: result
-                }
-                localSave('openPriceOneMinute', JSON.stringify(openPriceOneMinute))
-            }).catch(function (error) {
-                console.log(error);
-            });
+            const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"});
+            const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+            const result = rstQuery.data[0].close
+            that.currentPrice = result * that.xemNum
+            const openPriceOneMinute = {
+                timestamp: new Date().getTime(),
+                openPrice: result
+            }
+            localSave('openPriceOneMinute', JSON.stringify(openPriceOneMinute))
+
         }
 
         switchTransactionPanel(flag) {

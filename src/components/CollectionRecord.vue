@@ -89,7 +89,8 @@
     import {transactionInterface} from '@/interface/sdkTransaction';
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
     import transacrionAssetIcon from '../assets/images/monitor/transaction/transacrionAssetIcon.png'
-    import axios from 'axios'
+    import {market} from "@/interface/restLogic";
+    import {KlineQuery} from "@/query/klineQuery";
 
     @Component
     export default class CollectionRecord extends Vue {
@@ -156,14 +157,9 @@
 
         async getMarketOpenPrice() {
             const that = this
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
-            await axios.get(url).then(function (response) {
-                const result = response.data.data[0]
-                that.currentPrice = result.open
-                console.log(that.currentPrice)
-            }).catch(function (error) {
-                console.log(error);
-            });
+            const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"});
+            const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+            that.currentPrice = rstQuery.data[0].close
         }
 
 

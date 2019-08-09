@@ -1,13 +1,9 @@
-// @ts-ignore
-// @ts-ignore
 import {
     MosaicDefinitionTransaction,
     Deadline,
     MosaicNonce,
     MosaicId,
     NamespaceMosaicIdGenerator,
-    Id,
-    Mosaic,
     AggregateTransaction,
     MosaicProperties,
     UInt64,
@@ -16,7 +12,6 @@ import {
     Convert,
     NetworkCurrencyMosaic,
     MosaicSupplyType
-    // @ts-ignore
 } from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
 

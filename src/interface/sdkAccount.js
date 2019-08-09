@@ -1,6 +1,5 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-// @ts-ignore
 import { AccountHttp, Address, EncryptedMessage } from 'nem2-sdk';
 export var accountInterface = {
     getAccountsNames: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
