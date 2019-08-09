@@ -9,7 +9,7 @@ export var aliasInterface = {
             namespaceId = new NamespaceId(name);
             return [2 /*return*/, {
                     result: {
-                        namespaceId: namespaceId
+                        namespacetransactionId: namespaceId
                     }
                 }];
         });

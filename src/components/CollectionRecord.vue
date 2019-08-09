@@ -32,10 +32,10 @@
                             style="width: 70px"></DatePicker>
               </div>
             </span>
-        <span class="search_input un_click" @click.stop="showSearchDetail">
-              <img src="../assets/images/monitor/market/marketSearch.png" alt="">
-              <span>{{$t('search')}}</span>
-            </span>
+<!--        <span class="search_input un_click" @click.stop="showSearchDetail">-->
+<!--              <img src="../assets/images/monitor/market/marketSearch.png" alt="">-->
+<!--              <span>{{$t('search')}}</span>-->
+<!--            </span>-->
       </div>
 
       <div v-show="isShowSearchDetail" class="search_expand">
@@ -336,8 +336,8 @@
           .month_value {
             display: inline-block;
             position: relative;
-            left: 30px;
-            bottom: 3px;
+            left: 70px;
+            bottom: 0px;
 
             img {
               position: relative;

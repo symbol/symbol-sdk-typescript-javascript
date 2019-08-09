@@ -427,7 +427,6 @@
                     })
                     return false
                 }
-
             }
             // common check
             if (!Number(supply) || supply < 0) {

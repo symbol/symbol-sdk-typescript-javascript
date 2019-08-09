@@ -553,6 +553,7 @@ export var en_US = {
     The_sub_namespace_cannot_be_longer_than_16: 'The sub namespace cannot be longer than 64',
     Namespace_must_start_with_a_letter: 'Namespace must start with a letter',
     Namespace_can_only_contain_numbers_letters_and_other: 'Namespace can only contain numbers, letters, _ and -',
-    Namespace_cannot_use_forbidden_words: 'Namespace cannot use forbidden words'
+    Namespace_cannot_use_forbidden_words: 'Namespace cannot use forbidden words',
+    clear_cache: 'clear cache'
 };
 //# sourceMappingURL=en-US.js.map

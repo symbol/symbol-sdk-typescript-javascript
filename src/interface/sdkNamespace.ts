@@ -14,11 +14,11 @@ import {SdkV0} from "./sdkDefine";
 export const aliasInterface: SdkV0.alias = {
 
     createNamespaceId: async (params) => {
-        const name = params.name;
+        const name = params.name
         const namespaceId = new NamespaceId(name);
         return {
             result: {
-                namespaceId: namespaceId
+                namespacetransactionId: namespaceId
             }
         }
     },

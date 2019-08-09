@@ -1,4 +1,5 @@
 import {SdkV0} from "./sdkDefine";
+// @ts-ignore
 import {AccountHttp, Address, EncryptedMessage} from 'nem2-sdk'
 
 export const accountInterface: SdkV0.account = {
@@ -16,7 +17,7 @@ export const accountInterface: SdkV0.account = {
     getAccountInfo: async (params) => {
         const address = Address.createFromRawAddress(params.address)
         const node: string = params.node
-        const accountInfo = await new AccountHttp(node).getAccountInfo(address).toPromise().catch(e=>console.log(e))
+        const accountInfo = await new AccountHttp(node).getAccountInfo(address)
         return {
             result: {
                 accountInfo: accountInfo
@@ -40,7 +41,7 @@ export const accountInterface: SdkV0.account = {
         const node: string = params.node
         let multisigAccountInfo: any = {}
         try {
-            multisigAccountInfo = await new AccountHttp(node).getMultisigAccountInfo(address).toPromise().catch(e => console.log(e,'no multisign info in this account'))
+            multisigAccountInfo = await new AccountHttp(node).getMultisigAccountInfo(address)
         } catch (e) {
             console.log(e)
         }

@@ -539,9 +539,9 @@ export var zh_CN = {
     alias_name_format_error: '别名格式错误',
     max_approval_amount_more_than_10: 'Min approval 不可大于10',
     max_removal_amount_more_than_10: 'Min removal 不可大于10',
-    bonded_fee: '聚合交易的费用',
-    lock_fee: '锁定交易的费用',
-    inner_fee: '内部交易的费用',
+    bonded_fee: '聚合费用',
+    lock_fee: '锁定费用',
+    inner_fee: '内部费用',
     The_value_of_duration_cannot_be_less_than_1: 'Duration 的值不能小于1',
     Namespace_cannot_be_a_null_or_empty_string: 'Namespace 不能为空值或空字符串',
     The_root_namespace_cannot_be_longer_than_16: 'Root namespace 长度不能大于16',
@@ -549,5 +549,6 @@ export var zh_CN = {
     Namespace_must_start_with_a_letter: 'Namespace 必须以字母开头',
     Namespace_can_only_contain_numbers_letters_and_other: 'Namespace 只能包含数字，字母，_和-',
     Namespace_cannot_use_forbidden_words: 'Namespace 不能使用禁止的单词',
+    clear_cache: '清除缓存'
 };
 //# sourceMappingURL=zh-CN.js.map

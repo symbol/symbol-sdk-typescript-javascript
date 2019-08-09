@@ -12,7 +12,7 @@
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>
           <span class="value" v-if="typeList[0].isSelected">{{formatAddress(getWallet.address)}}</span>
-          <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="multisigPublickey"
+          <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="form.multisigPublickey"
                   class="select">
             <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">{{ item.label }}
             </Option>
@@ -55,14 +55,51 @@
           <span class="value">{{Number(form.duration)}}XEM</span>
         </div>
 
-        <div class="form_item">
+        <div class="form_item" v-if="typeList[0].isSelected">
           <span class="key">{{$t('fee')}}</span>
           <span class="value">
-              <input type="text" v-model="form.maxFee" :placeholder="$t('undefined')">
+              <input type="text" v-model="form.innerFee" :placeholder="$t('undefined')">
             <span class="end_label">gas</span>
           </span>
           <div class="tips">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+          </div>
+        </div>
+
+        <!--        multisign fee-->
+        <div v-else="typeList[1].isSelected">
+
+          <div class="form_item">
+            <span class="key">{{$t('inner_fee')}}</span>
+            <span class="value">
+              <input type="text" v-model="form.innerFee" :placeholder="$t('undefined')">
+            <span class="end_label">gas</span>
+          </span>
+            <div class="tips">
+              {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+            </div>
+          </div>
+
+          <div class="form_item">
+            <span class="key">{{$t('bonded_fee')}}</span>
+            <span class="value">
+              <input type="text" v-model="form.aggregateFee" :placeholder="$t('undefined')">
+            <span class="end_label">gas</span>
+          </span>
+            <div class="tips">
+              {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+            </div>
+          </div>
+
+          <div class="form_item">
+            <span class="key">{{$t('lock_fee')}}</span>
+            <span class="value">
+              <input type="text" v-model="form.lockFee" :placeholder="$t('undefined')">
+            <span class="end_label">gas</span>
+          </span>
+            <div class="tips">
+              {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+            </div>
           </div>
         </div>
 
@@ -78,14 +115,15 @@
 </template>
 
 <script lang="ts">
-    import {Account} from "nem2-sdk"
+    import {Account, Address} from "nem2-sdk"
     import Message from "@/message/Message"
-    import {Component, Vue} from 'vue-property-decorator'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
     import {aliasInterface} from "@/interface/sdkNamespace"
     import {formatSeconds, formatAddress} from '@/utils/util.js'
     import BandedNamespaceList from '@/message/BandedNamespace.ts'
     import {transactionInterface} from "@/interface/sdkTransaction"
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
+    import {multisigInterface} from '@/interface/sdkMultisig';
 
     @Component({
         components: {
@@ -93,13 +131,16 @@
         }
     })
     export default class rootNamespace extends Vue {
-        showCheckPWDialog = false
         durationIntoDate = 0
+        currentMinApproval = -1
+        showCheckPWDialog = false
         form = {
             duration: 1000,
             rootNamespaceName: '',
             multisigPublickey: '',
-            maxFee: 50000
+            innerFee: 50000,
+            aggregateFee: 50000,
+            lockFee: 50000
         }
         multisigPublickeyList = [
             {
@@ -107,7 +148,6 @@
                 label: 'no data '
             },
         ]
-
         typeList = [
             {
                 name: 'ordinary_account',
@@ -130,6 +170,17 @@
             return this.$store.state.account.node
         }
 
+        initForm() {
+            this.form = {
+                multisigPublickey: '',
+                duration: 1000,
+                rootNamespaceName: '',
+                innerFee: 50000,
+                aggregateFee: 50000,
+                lockFee: 50000
+            }
+        }
+
         formatAddress(address) {
             return formatAddress(address)
         }
@@ -144,11 +195,10 @@
             this.typeList = list
         }
 
-        async checkEnd(key) {
+        async createBySelf(privatekey) {
             let transaction;
             const that = this;
-            const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
-
+            const account = Account.createFromPrivateKey(privatekey, this.getWallet.networkType);
             await this.createRootNamespace().then((rootNamespaceTransaction) => {
                 transaction = rootNamespaceTransaction
             })
@@ -163,33 +213,60 @@
             })
         }
 
+        createByMultisig(privatekey) {
+            const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
+            // TODO ADD MULTISIG
+
+            this.showErrorMessage('not open yet')
+            console.log(privatekey)
+        }
+
+        async checkEnd(privatekey) {
+            if (this.typeList[0].isSelected) {
+                this.createBySelf(privatekey)
+            } else {
+                this.createByMultisig(privatekey)
+            }
+        }
+
         createRootNamespace() {
             return aliasInterface.createdRootNamespace({
                 namespaceName: this.form.rootNamespaceName,
                 duration: this.form.duration,
                 networkType: this.getWallet.networkType,
-                maxFee: this.form.maxFee
+                maxFee: this.form.innerFee
             }).then((transaction) => {
                 return transaction.result.rootNamespaceTransaction
             })
         }
 
-        initForm() {
-            this.form = {
-                multisigPublickey: '',
-                duration: 1000,
-                rootNamespaceName: '',
-                maxFee: 50000
-            }
-        }
 
         closeCheckPWDialog() {
             this.showCheckPWDialog = false
         }
 
         checkForm(): boolean {
-            const {duration, rootNamespaceName, maxFee, multisigPublickey} = this.form
+            const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
 
+            // check multisig
+            if (this.typeList[1].isSelected) {
+                if (!multisigPublickey) {
+                    this.$Notice.error({
+                        title: this.$t(Message.INPUT_EMPTY_ERROR) + ''
+                    })
+                    return false
+                }
+                if ((!Number(aggregateFee) && Number(aggregateFee) !== 0) || Number(aggregateFee) < 0) {
+                    this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
+                    return false
+                }
+                if ((!Number(lockFee) && Number(lockFee) !== 0) || Number(lockFee) < 0) {
+                    this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
+                    return false
+                }
+            }
+
+            //check common
             if (!Number(duration) || Number(duration) < 0) {
                 this.showErrorMessage(this.$t(Message.DURATION_VALUE_LESS_THAN_1_ERROR))
                 return false
@@ -216,19 +293,52 @@
                 return false
             }
 
-            if ((!Number(maxFee) && Number(maxFee) !== 0) || Number(maxFee) < 0) {
+            if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
                 this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
                 return false
             }
             //BandedNamespaceList
-            const flag = BandedNamespaceList.every((item)=>{
-                if(item == rootNamespaceName){
+            const flag = BandedNamespaceList.every((item) => {
+                if (item == rootNamespaceName) {
                     this.showErrorMessage(this.$t(Message.NAMESPACE_USE_BANDED_WORD_ERROR))
                     return false
                 }
                 return true
             })
             return flag
+        }
+
+
+        getMultisigAccountList() {
+            const that = this
+            const {address} = this.$store.state.account.wallet
+            const {node} = this.$store.state.account
+            multisigInterface.getMultisigAccountInfo({
+                address,
+                node
+            }).then((result) => {
+                that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
+                    item.value = item.publicKey
+                    item.label = item.publicKey
+                    return item
+                })
+            })
+        }
+
+        @Watch('formItem.multisigPublickey')
+        async onMultisigPublickeyChange() {
+            const that = this
+            const {multisigPublickey} = this.form
+            const {node} = this.$store.state.account
+            const {networkType} = this.$store.state.account.wallet
+            let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
+            multisigInterface.getMultisigAccountInfo({
+                address,
+                node
+            }).then((result) => {
+                const currentMultisigAccount = result.result.multisigInfo
+                that.currentMinApproval = currentMultisigAccount.minApproval
+            })
         }
 
         showErrorMessage(message) {
@@ -239,7 +349,7 @@
         }
 
         createTransaction() {
-            if(!this.checkForm()) return
+            if (!this.checkForm()) return
             this.showCheckPWDialog = true
         }
 
@@ -263,6 +373,7 @@
 
         created() {
             this.initData()
+            this.getMultisigAccountList()
         }
     }
 </script>

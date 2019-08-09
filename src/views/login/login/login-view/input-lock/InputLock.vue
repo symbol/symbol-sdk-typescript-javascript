@@ -22,7 +22,9 @@
     </div>
 
     <div class="password_prompt">
-      {{$t('forget_password')}}？<span @click="showPrompt" class="pointer click_to_show_prompt">{{$t('passowrd_prompt')}}</span>
+      {{$t('forget_password')}}？<span @click="showPrompt"
+                                      class="pointer click_to_show_prompt">{{$t('passowrd_prompt')}}</span>
+      <span class="clear_cache pointer" @click="clearCache" v-show="isShowPrompt">{{$t('clear_cache')}}</span>
     </div>
 
   </div>
@@ -31,7 +33,7 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator'
     import {Crypto, UInt64} from 'nem2-sdk'
-    import {localRead} from '@/utils/util'
+    import {localRead, localRemove} from '@/utils/util'
     import Message from "@/message/Message";
 
     @Component
@@ -104,6 +106,13 @@
                 name: 'dashBoard'
             })
 
+        }
+
+        clearCache() {
+            // localRead remove
+            // localRemove('lock')
+            // localRemove('wallets')
+            // localRemove('loglevel:webpack-dev-server')
         }
 
         created() {
