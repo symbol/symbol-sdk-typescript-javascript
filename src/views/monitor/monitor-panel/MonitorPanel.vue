@@ -100,17 +100,12 @@
 </template>
 
 <script lang="ts">
-    import axios from 'axios'
     import {copyTxt} from '@/utils/tools'
-    import Message from "@/message/Message"
     import {Address, MosaicId, UInt64} from 'nem2-sdk'
-    import {mosaicInterface} from '@/interface/sdkMosaic'
     import {accountInterface} from '@/interface/sdkAccount'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {mosaicInterface} from '@/interface/sdkMosaic';
-    import {copyTxt} from '@/utils/tools'
     import {localSave, localRead, formatXEMamount} from '@/utils/util'
-    import axios from 'axios'
     import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
     import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
     import monitorMosaicIcon from '@/assets/images/monitor/monitorMosaicIcon.png'

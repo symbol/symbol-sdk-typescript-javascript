@@ -85,7 +85,7 @@
     import {blockchainInterface} from '@/interface/sdkBlockchain.js';
     import Message from "@/message/Message";
     import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk";
-    import {wsInterface} from "../../interface/sdkListener";
+    import {wsInterface} from "@/interface/sdkListener";
 
     @Component
     export default class Home extends Vue {

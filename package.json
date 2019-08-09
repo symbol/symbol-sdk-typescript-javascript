@@ -29,11 +29,11 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@types/request": "^2.47.1",
-    "@types/query-string": "^6.1.0",
     "@types/jest": "^23.1.4",
-    "@types/node": "^9.4.6",
+    "@types/node": "^9.6.50",
     "@types/node-uuid": "0.0.28",
+    "@types/query-string": "^6.1.0",
+    "@types/request": "^2.47.1",
     "@vue/cli-plugin-babel": "^3.9.0",
     "@vue/cli-plugin-typescript": "^3.9.0",
     "@vue/cli-plugin-unit-jest": "^3.9.0",
