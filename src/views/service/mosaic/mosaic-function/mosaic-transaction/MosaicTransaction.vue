@@ -11,9 +11,10 @@
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>
           <span class="value" v-if="typeList[0].isSelected">{{formatAddress(getWallet.address)}}</span>
-          <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="multisigPublickey"
+          <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="formItem.multisigPublickey"
                   class="select">
-            <Option v-for="item in publickeyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">{{ item.label }}
+            </Option>
           </Select>
         </div>
 
@@ -68,17 +69,53 @@
           <span class="value">{{Number(formItem.duration)}}XEM</span>
         </div>
 
-        <div class="form_item">
+        <div class="form_item" v-if="typeList[0].isSelected">
           <span class="key">{{$t('fee')}}</span>
           <span class="value">
-              <input type="text" v-model="formItem.fee" :placeholder="$t('undefined')">
+              <input type="text" v-model="formItem.innerFee" :placeholder="$t('undefined')">
             <span class="end_label">gas</span>
           </span>
           <div class="tips">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
           </div>
         </div>
+
         <!-- TODO confirm  isMultisigAccount-->
+        <div v-else>
+          <div class="form_item">
+            <span class="key">{{$t('inner_fee')}}</span>
+            <span class="value">
+              <input type="text" v-model="formItem.innerFee" :placeholder="$t('undefined')">
+            <span class="end_label">gas</span>
+          </span>
+            <div class="tips">
+              {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+            </div>
+          </div>
+
+          <div class="form_item">
+            <span class="key">{{$t('bonded_fee')}}</span>
+            <span class="value">
+              <input type="text" v-model="formItem.aggregateFee" :placeholder="$t('undefined')">
+            <span class="end_label">gas</span>
+          </span>
+            <div class="tips">
+              {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+            </div>
+          </div>
+          <div class="form_item">
+            <span class="key">{{$t('lock_fee')}}</span>
+            <span class="value">
+              <input type="text" v-model="formItem.lockFee" :placeholder="$t('undefined')">
+            <span class="end_label">gas</span>
+          </span>
+            <div class="tips">
+              {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+            </div>
+          </div>
+        </div>
+
+
         <div class="create_button pointer" @click="createMosaic(typeList[1].isSelected)">
           {{$t('create')}}
         </div>
@@ -96,9 +133,17 @@
     import {formatSeconds, formatAddress} from '@/utils/util.js'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from '@/interface/sdkTransaction'
-    import {MosaicId, MosaicNonce, PublicAccount, NetworkType, Account} from 'nem2-sdk'
+    import {
+        MosaicId, MosaicNonce, PublicAccount, NetworkType, Account, Address, Listener, MosaicDefinitionTransaction,
+        MosaicProperties,
+        Deadline,
+        UInt64,
+        MosaicSupplyChangeTransaction,
+        MosaicSupplyType
+    } from 'nem2-sdk'
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
     import Message from "@/message/Message";
+    import {multisigInterface} from '@/interface/sdkMultisig';
 
 
     @Component({
@@ -111,7 +156,6 @@
         showCheckPWDialog = false
         duration = 0
         durationIntoDate = 0
-        multisigPublickey = ''
         currentTab: number = 0
         showMosaicEditDialog = false
         showMosaicAliasDialog = false
@@ -123,8 +167,9 @@
         currentXem = ''
         currentXEM2: string
         currentXEM1: string
+        currentMinApproval = -1
         mosaicMapInfo: any = {}
-        publickeyList = [{
+        multisigPublickeyList = [{
             value: 'no data',
             label: 'no data'
         }]
@@ -144,14 +189,33 @@
             supplyMutable: true,
             permanent: false,
             duration: 1000,
-            fee: 50000
+            innerFee: 50000,
+            aggregateFee: 50000,
+            lockFee: 50000,
+            multisigPublickey: ''
+
         }
 
         get getWallet() {
             return this.$store.state.account.wallet
         }
 
-        formatAddress(address){
+        initForm() {
+            this.formItem = {
+                supply: 500000000,
+                divisibility: 6,
+                transferable: true,
+                supplyMutable: true,
+                permanent: false,
+                duration: 1000,
+                innerFee: 50000,
+                aggregateFee: 50000,
+                lockFee: 50000,
+                multisigPublickey: ''
+            }
+        }
+
+        formatAddress(address) {
             return formatAddress(address)
         }
 
@@ -233,10 +297,9 @@
 
         createBySelf(key) {
             let {accountPublicKey, accountAddress, node, generationHash} = this
-            const {supply, divisibility, transferable, supplyMutable, duration, fee} = this.formItem
+            const {supply, divisibility, transferable, supplyMutable, duration, innerFee} = this.formItem
             const account = Account.createFromPrivateKey(key, NetworkType.MIJIN_TEST)
             const that = this
-
             const nonce = MosaicNonce.createRandom()
             const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST))
             mosaicInterface.createMosaic({
@@ -247,8 +310,8 @@
                 transferable: transferable,
                 divisibility: Number(divisibility),
                 duration: this.formItem.permanent ? undefined : Number(duration),
-                netWorkType:  this.getWallet.networkType,
-                maxFee: Number(fee),
+                netWorkType: this.getWallet.networkType,
+                maxFee: Number(innerFee),
                 publicAccount: account.publicAccount
             }).then((result: any) => {
                 const mosaicDefinitionTransaction = result.result.mosaicDefinitionTransaction
@@ -270,20 +333,101 @@
 
 
         createByMultisig(key) {
+            let {accountPublicKey, accountAddress} = this
+            const {networkType} = this.$store.state.account.wallet
+            const {generationHash, node} = this.$store.state.account
+            const listener = new Listener(node.replace('http', 'ws'), WebSocket)
+            const {supply, divisibility, transferable, supplyMutable, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
+            const account = Account.createFromPrivateKey(key, NetworkType.MIJIN_TEST)
+            const that = this
+            const nonce = MosaicNonce.createRandom()
+            const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(multisigPublickey, NetworkType.MIJIN_TEST))
+            const mosaicDefinitionTx = MosaicDefinitionTransaction.create(
+                Deadline.create(),
+                nonce,
+                mosaicId,
+                MosaicProperties.create({
+                    supplyMutable: supplyMutable,
+                    transferable: transferable,
+                    divisibility: divisibility,
+                    duration: duration ? UInt64.fromUint(duration) : undefined
+                }),
+                networkType,
+                innerFee ? UInt64.fromUint(innerFee) : undefined
+            )
+
+            const mosaicSupplyChangeTx = MosaicSupplyChangeTransaction.create(
+                Deadline.create(),
+                mosaicDefinitionTx.mosaicId,
+                MosaicSupplyType.Increase,
+                UInt64.fromUint(supply),
+                networkType
+            )
+
+            if (that.currentMinApproval > 1) {
+                multisigInterface.bondedMultisigTransaction({
+                    networkType: networkType,
+                    account: account,
+                    fee: aggregateFee,
+                    multisigPublickey: multisigPublickey,
+                    transaction: [mosaicDefinitionTx, mosaicSupplyChangeTx],
+                }).then((result) => {
+                    const aggregateTransaction = result.result.aggregateTransaction
+                    transactionInterface.announceBondedWithLock({
+                        aggregateTransaction,
+                        account,
+                        listener,
+                        node,
+                        generationHash,
+                        networkType,
+                        fee: lockFee
+                    })
+                })
+                return
+            }
+            multisigInterface.completeMultisigTransaction({
+                networkType: networkType,
+                fee: aggregateFee,
+                multisigPublickey: multisigPublickey,
+                transaction: [mosaicDefinitionTx, mosaicSupplyChangeTx],
+            }).then((result) => {
+                const aggregateTransaction = result.result.aggregateTransaction
+                transactionInterface._announce({
+                    transaction: aggregateTransaction,
+                    account,
+                    node,
+                    generationHash
+                })
+            })
+
 
         }
 
         checkForm() {
-            const {supply, divisibility, duration, fee, multisigPublickey} = this.formItem
-
+            const {supply, divisibility, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
             // multisig check
-            if (this.isMultisigAccount && !multisigPublickey) {
-                this.$Notice.error({
-                    title: this.$t(Message.INPUT_EMPTY_ERROR) + ''
-                })
-                return false
-            }
+            if (this.isMultisigAccount) {
+                if (!multisigPublickey) {
+                    this.$Notice.error({
+                        title: this.$t(Message.INPUT_EMPTY_ERROR) + ''
+                    })
+                    return false
+                }
 
+                if (!Number(aggregateFee) || aggregateFee < 0) {
+                    this.$Notice.error({
+                        title: this.$t(Message.FEE_LESS_THAN_0_ERROR) + ''
+                    })
+                    return false
+                }
+
+                if (!Number(lockFee) || lockFee < 0) {
+                    this.$Notice.error({
+                        title: this.$t(Message.FEE_LESS_THAN_0_ERROR) + ''
+                    })
+                    return false
+                }
+            }
             // common check
             if (!Number(supply) || supply < 0) {
                 this.$Notice.error({
@@ -303,7 +447,7 @@
                 })
                 return false
             }
-            if (!Number(fee) || fee < 0) {
+            if (!Number(innerFee) || innerFee < 0) {
                 this.$Notice.error({
                     title: this.$t(Message.FEE_LESS_THAN_0_ERROR) + ''
                 })
@@ -312,23 +456,48 @@
             return true
         }
 
-        initForm() {
-            this.formItem = {
-                supply: 500000000,
-                divisibility: 6,
-                transferable: true,
-                supplyMutable: true,
-                permanent: false,
-                duration: 1000,
-                fee: 50000
-            }
-        }
 
         createMosaic(isMultisigAccount) {
             this.isMultisigAccount = isMultisigAccount
-            if (this.checkForm()) {
-                this.showCheckDialog()
-            }
+            if (!this.checkForm()) return
+            this.showCheckDialog()
+        }
+
+
+        getMultisigAccountList() {
+            const that = this
+            const {address} = this.$store.state.account.wallet
+            const {node} = this.$store.state.account
+
+            multisigInterface.getMultisigAccountInfo({
+                address,
+                node
+            }).then((result) => {
+                that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
+                    item.value = item.publicKey
+                    item.label = item.publicKey
+                    return item
+                })
+
+            })
+        }
+
+        @Watch('formItem.multisigPublickey')
+        async onMultisigPublickeyChange() {
+            const that = this
+            const {multisigPublickey} = this.formItem
+            const {node} = this.$store.state.account
+            const {networkType} = this.$store.state.account.wallet
+            let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
+
+            multisigInterface.getMultisigAccountInfo({
+                address,
+                node
+            }).then((result) => {
+                const currentMultisigAccount = result.result.multisigInfo
+                that.currentMinApproval = currentMultisigAccount.minApproval
+            })
+
         }
 
 
@@ -363,6 +532,7 @@
 
         created() {
             this.initData()
+            this.getMultisigAccountList()
         }
     }
 </script>

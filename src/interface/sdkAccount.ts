@@ -1,5 +1,4 @@
 import {SdkV0} from "./sdkDefine";
-// @ts-ignore
 import {AccountHttp, Address, EncryptedMessage} from 'nem2-sdk'
 
 export const accountInterface: SdkV0.account = {
@@ -43,7 +42,7 @@ export const accountInterface: SdkV0.account = {
         try {
             multisigAccountInfo = await new AccountHttp(node).getMultisigAccountInfo(address)
         } catch (e) {
-            multisigAccountInfo = 'no multisig'
+            console.log(e)
         }
 
         return {

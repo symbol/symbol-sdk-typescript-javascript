@@ -8,16 +8,17 @@ var routers = [
             {
                 path: '/monitorPanel',
                 name: 'monitorPanel',
+                redirect: '/dashBoard',
                 meta: {},
                 // @ts-ignore
                 component: function () { return import('@/views/monitor/monitor-panel/MonitorPanel.vue'); },
                 children: [
-                    {
-                        path: '/monitorPanel',
-                        name: 'monitorPanel',
-                        // @ts-ignore
-                        component: function () { return import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'); }
-                    },
+                    // {
+                    //     path: '/monitorPanel',
+                    //     name: 'monitorPanel',
+                    //     // @ts-ignore
+                    //     component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
+                    // },
                     {
                         path: '/dashBoard',
                         name: 'dashBoard',
@@ -49,16 +50,18 @@ var routers = [
             {
                 path: '/walletPanel',
                 name: 'walletPanel',
+                redirect: '/walletCreate',
                 meta: {},
                 // @ts-ignore
                 component: function () { return import('@/views/wallet-management/wallet-panel/WalletPanel.vue'); },
                 children: [
+                    // {
+                    //     path: '/walletDetails',
+                    //     name: 'walletDetails',
+                    //     // @ts-ignore
+                    //     component: () => import('@/views/wallet-management/wallet-details/WalletDetails.vue')
+                    // },
                     {
-                        path: '/walletDetails',
-                        name: 'walletDetails',
-                        // @ts-ignore
-                        component: function () { return import('@/views/wallet-management/wallet-details/WalletDetails.vue'); }
-                    }, {
                         path: '/walletCreate',
                         name: 'walletCreate',
                         // @ts-ignore
@@ -97,6 +100,7 @@ var routers = [
             {
                 path: '/servicePanel',
                 name: 'servicePanel',
+                redirect: '/namespace',
                 meta: {
                 //     disabled: true,
                 },
@@ -130,27 +134,23 @@ var routers = [
                         // @ts-ignore
                         component: function () { return import('@/views/service/apostille/Apostille.vue'); }
                     },
-                    {
-                        path: '/servicePanel',
-                        name: 'servicePanel',
-                        // @ts-ignore
-                        component: function () { return import('@/views/service/namespace/Namespace.vue'); }
-                    },
                 ]
             },
             {
                 path: '/communityPanel',
                 name: 'communityPanel',
+                redirect: '/information',
                 meta: {},
                 // @ts-ignore
                 component: function () { return import('@/views/community/community-panel/CommunityPanel.vue'); },
                 children: [
+                    // {
+                    //     path: '/communityPanel',
+                    //     name: 'communityPanel',
+                    //     // @ts-ignore
+                    //     component: () => import('@/views/community/information/Information.vue')
+                    // },
                     {
-                        path: '/communityPanel',
-                        name: 'communityPanel',
-                        // @ts-ignore
-                        component: function () { return import('@/views/community/information/Information.vue'); }
-                    }, {
                         path: '/information',
                         name: 'information',
                         // @ts-ignore
@@ -166,6 +166,7 @@ var routers = [
             {
                 path: '/settingPanel',
                 name: 'settingPanel',
+                redirect: '/settingNormal',
                 meta: {
                 //     disabled: true,
                 },
@@ -177,7 +178,8 @@ var routers = [
                         name: 'settingAbout',
                         // @ts-ignore
                         component: function () { return import('@/views/setting/setting-about/SettingAbout.vue'); }
-                    }, {
+                    },
+                    {
                         path: '/settingLock',
                         name: 'settingLock',
                         // @ts-ignore
@@ -192,11 +194,6 @@ var routers = [
                         name: 'settingNormal',
                         // @ts-ignore
                         component: function () { return import('@/views/setting/setting-normal/SettingNormal.vue'); }
-                    }, {
-                        path: '/settingPanel',
-                        name: 'settingPanel',
-                        // @ts-ignore
-                        component: function () { return import('@/views/setting/setting-normal/SettingNormal.vue'); }
                     },
                 ]
             },
@@ -207,18 +204,10 @@ var routers = [
                 // component: () => import('@/views/login/welcome-page/welcomePage.vue'),
                 component: function () { return import('@/views/login/login/Login.vue'); },
             },
-            // {
-            //     path: '/reLogin',
-            //     name: 'reLogin',
-            //     // @ts-ignore
-            //     // component: () => import('@/views/login/relogin/Relogin.vue'),
-            //     component: () => import('@/views/login/new-relogin/NewRelogin.vue'),
-            // },
             {
                 path: '/welcomePage',
                 name: 'welcomePage',
                 component: function () {
-                    // component: () => import('@/views/login/welcome-page/welcomePage.vue'),
                     component: (function () { return import('@/views/login/new-login/NewLogin.vue'); });
                 },
             },

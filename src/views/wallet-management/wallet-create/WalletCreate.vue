@@ -22,19 +22,13 @@
               {{$t('This_is_very_important_to_encrypt_your_private_key_Your_private_key_will_be_encrypted_and_stored_on_your_local_computer_Be_sure_to_back_up_your_private_key_separately_so_that_you_can_recover_it_if_you_forget_it_The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_which_is_beneficial_to_the_security_of_your_private_key')}}</p>
             <Input v-model="formItem.password" type="password" required
                    :placeholder="$t('please_set_your_wallet_password')"></Input>
-            <!--<i class="icon"><img src="@/assets/images/wallet-management/psd_hidden.png"></i>-->
           </FormItem>
           <FormItem :label="$t('repeat_the_password')">
             <Input v-model="formItem.checkPW" type="password" required
                    :placeholder="$t('please_enter_your_password_again')"></Input>
-            <!--<i class="icon"><img src="@/assets/images/wallet-management/psd_hidden.png"></i>-->
           </FormItem>
           <FormItem>
             <div class="clear">
-              <!--              <Button class="prev left" type="default" @click="toBack">{{$t('back')}}/....</Button>-->
-              <!--              <Button class="next right" type="success" @click="createWallet">{{$t('next')}}</Button>-->
-
-
               <Button class="prev" type="default" @click="toBack">{{$t('back')}}</Button>
               <Button class="right" type="success" @click="createWallet">{{$t('next')}}</Button>
             </div>
@@ -115,7 +109,8 @@
         }
 
         created() {
-            let list = JSON.parse(localRead('wallets'))
+            const wallets = localRead('wallets')
+            let list = wallets ? JSON.parse(wallets) : []
             if (list.length < 1) {
                 this.$store.state.app.isInLoginPage = true
             }

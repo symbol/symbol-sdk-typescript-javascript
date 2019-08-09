@@ -1,6 +1,19 @@
 import {
-    TransactionHttp, AccountHttp, TransferTransaction, Deadline, Address, UInt64,
-    Message, AggregateTransaction, TransactionType, Account, Listener, HashLockTransaction, Mosaic, MosaicId
+    TransactionHttp,
+    AccountHttp,
+    TransferTransaction,
+    Deadline,
+    Address,
+    UInt64,
+    Message,
+    AggregateTransaction,
+    TransactionType,
+    Account,
+    Listener,
+    HashLockTransaction,
+    Mosaic,
+    MosaicId,
+    ModifyAccountPropertyAddressTransaction
 } from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
 import {filter, mergeMap} from "rxjs/operators";
@@ -20,6 +33,7 @@ export const transactionInterface: SdkV0.transaction = {
 
     _announce: async (params) => {
         const {transaction, node, account, generationHash} = params
+        console.log(account, transaction)
         const signedTransaction = account.sign(transaction, generationHash);
         const announceStatus = await new TransactionHttp(node).announce(signedTransaction);
         console.log(signedTransaction)
@@ -30,7 +44,22 @@ export const transactionInterface: SdkV0.transaction = {
         };
     },
 
-    // Account Restriction
+    // todo Account Restriction  after updating sdk
+    accountAddressRestrictionModificationTransaction: async (params) => {
+        const {propertyType, accountPropertyTransaction, networkType, fee} = params
+        const modifyAccountPropertyAddressTransaction = ModifyAccountPropertyAddressTransaction.create(
+            Deadline.create(),
+            propertyType,
+            accountPropertyTransaction,
+            networkType,
+            UInt64.fromUint(fee)
+        )
+        return {
+            result: {
+                modifyAccountPropertyAddressTransaction: modifyAccountPropertyAddressTransaction
+            }
+        };
+    },
 
 
     transferTransaction: async (params) => {

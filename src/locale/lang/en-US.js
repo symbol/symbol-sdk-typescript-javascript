@@ -544,7 +544,7 @@ export var en_US = {
     alias_name_format_error: 'alias name format error',
     max_approval_amount_more_than_10: 'Max approval cannot be more than 10',
     max_removal_amount_more_than_10: 'Max removal  cannot be more than 10',
-    bonded_fee: 'bonded fee',
+    bonded_fee: 'aggregate fee',
     lock_fee: 'lock fee',
     inner_fee: 'inner fee',
     The_value_of_duration_cannot_be_less_than_1: 'The value of duration cannot be less than 1',
@@ -553,6 +553,9 @@ export var en_US = {
     The_sub_namespace_cannot_be_longer_than_16: 'The sub namespace cannot be longer than 64',
     Namespace_must_start_with_a_letter: 'Namespace must start with a letter',
     Namespace_can_only_contain_numbers_letters_and_other: 'Namespace can only contain numbers, letters, _ and -',
-    Namespace_cannot_use_forbidden_words: 'Namespace cannot use forbidden words'
+    Namespace_cannot_use_forbidden_words: 'Namespace cannot use forbidden words',
+    clear_cache: 'Clear cache',
+    We_will_clear_your_cache_reset_account_password_please_make_sure_your_wallet_is_safely_backed_up: 'We will clear your cache reset account password, please make sure your wallet is safely backed up',
+    confirm_infomation: 'Confirm infomation'
 };
 //# sourceMappingURL=en-US.js.map

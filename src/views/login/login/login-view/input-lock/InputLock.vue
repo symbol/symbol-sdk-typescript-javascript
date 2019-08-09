@@ -1,7 +1,24 @@
 <template>
-  <div class="text_container">
+  <div class="text_container" @keyup.enter="jumpToDashBoard()">
+    <Modal
+            v-model="isShowClearCache"
+            title=""
+            class="clear_cache_panel"
+            :transfer="true"
+            @on-ok="ok"
+            @on-cancel="cancel">
+
+      <div class="title">{{$t('clear_cache')}}</div>
+      <img src="@/assets/images/login/loginWarningIcon.png" alt="">
+      <div class="tip">
+        {{$t('We_will_clear_your_cache_reset_account_password_please_make_sure_your_wallet_is_safely_backed_up')}}
+      </div>
+      <div class="confirm">{{$t('confirm')}}</div>
+    </Modal>
+
+
     <div class="top">
-      <img src="../../../../../assets/images/login/loginNewLogo.png" alt="">
+      <img src="@/assets/images/login/loginNewLogo.png" alt="">
     </div>
 
     <div class="middle_text">
@@ -24,20 +41,23 @@
     <div class="password_prompt">
       {{$t('forget_password')}}？<span @click="showPrompt"
                                       class="pointer click_to_show_prompt">{{$t('passowrd_prompt')}}</span>
+      <span class="clear_cache pointer"
+            v-show="isShowPrompt">{{$t('clear_cache')}}</span>
     </div>
 
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator'
+    import "./InputLock.less"
     import {Crypto, UInt64} from 'nem2-sdk'
+    import Message from "@/message/Message"
+    import {Component, Vue} from 'vue-property-decorator'
     import {localRead} from '@/utils/util'
-    import Message from "@/message/Message";
 
     @Component
     export default class MonitorRelogin extends Vue {
-
+        isShowClearCache = false
         lockPromptText = ''
         form = {
             password: ''
@@ -107,6 +127,13 @@
 
         }
 
+        clearCache() {
+            // localRead remove
+            // localRemove('lock')
+            // localRemove('wallets')
+            // localRemove('loglevel:webpack-dev-server')
+        }
+
         created() {
             this.$store.state.app.isInLoginPage = true
             this.lockPromptText = JSON.parse(localRead('lock')).remindTxt
@@ -115,5 +142,5 @@
     }
 </script>
 <style scoped lang="less">
-  @import "InputLock.less";
+
 </style>

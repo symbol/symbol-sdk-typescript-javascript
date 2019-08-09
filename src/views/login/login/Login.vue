@@ -1,6 +1,6 @@
 <template>
   <div class="relogin_container radius scroll">
-    <video muted="muted" src="../../../assets/images/login/cloudsVideo.mp4" loop="loop" autoplay="true"></video>
+    <video muted="muted" src="@/assets/images/login/cloudsVideo.mp4" loop="loop" autoplay="true"></video>
 
     <div class="switch_language">
       <i-select @on-change="switchLanguage" :model="currentLanguage"
@@ -65,9 +65,9 @@
 
         showIndexView(index) {
             let list = [false, false, false]
-            if(index !=0 &&localRead('lock')){
+            if (index != 0 && localRead('lock')) {
                 list[2] = true
-            }else {
+            } else {
                 list[index] = true
             }
             this.indexShowList = list
@@ -82,7 +82,8 @@
                 return
             }
 
-            const walletList = JSON.parse(localRead('wallets'))
+            const wallets = localRead('wallets')
+            const walletList = wallets ? JSON.parse(wallets) : []
             if (walletList.length >= 1) {
                 this.showIndexView(2)
                 return

@@ -1,6 +1,5 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-// @ts-ignore
 import { Password, SimpleWallet, Account, PublicAccount, AccountHttp } from 'nem2-sdk';
 import generator from 'generate-password';
 export var walletInterface = {

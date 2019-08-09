@@ -258,7 +258,7 @@
                 if (result.result.multisigInfo.cosignatories.length !== 0) {
                     that.isMultisig = true
                 }
-            })
+            }).catch(e=>console.log(e))
         }
 
         sendMultisignConversionTransaction(privatekey) {
@@ -285,7 +285,7 @@
                 account: account,
                 fee: bondedFee,
                 multisigPublickey: account.publicKey,
-                transaction: modifyMultisigAccountTransaction,
+                transaction: [modifyMultisigAccountTransaction],
             }).then((result) => {
                 const aggregateTransaction = result.result.aggregateTransaction
                 transactionInterface.announceBondedWithLock({

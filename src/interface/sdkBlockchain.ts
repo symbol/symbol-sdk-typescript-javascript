@@ -1,5 +1,4 @@
 import {SdkV0} from './sdkDefine'
-// @ts-ignore
 import { BlockHttp, ChainHttp } from 'nem2-sdk'
 
 export const blockchainInterface:SdkV0.blockchain = {

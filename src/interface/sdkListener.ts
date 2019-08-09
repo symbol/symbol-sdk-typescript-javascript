@@ -1,12 +1,12 @@
-// @ts-ignore
-import {Listener, TransactionHttp} from 'nem2-sdk'
 import {SdkV0} from './sdkDefine'
-// @ts-ignore
 import {filter, mergeMap} from 'rxjs/operators'
+import {Listener, TransactionHttp} from 'nem2-sdk'
 
 export const wsInterface: SdkV0.ws = {
     openWs: async (params) => {
-        const Observable = params.listener.open();
+        const Observable = params.listener.open().catch((e) => {
+            console.log(e)
+        });
         return {
             result: {
                 ws: Observable
@@ -24,6 +24,10 @@ export const wsInterface: SdkV0.ws = {
                 .subscribe(transactionInfo => {
                     params.fn(transactionInfo)
                 })
+        }, err => {
+            console.log(err)
+        }).catch((e) => {
+            console.log(e)
         })
         return {
             result: {
@@ -42,6 +46,10 @@ export const wsInterface: SdkV0.ws = {
                 .subscribe(transactionInfo => {
                     params.fn(transactionInfo)
                 })
+        }, err => {
+            console.log(err)
+        }).catch((e) => {
+            console.log(e)
         })
         return {
             result: {
@@ -57,6 +65,10 @@ export const wsInterface: SdkV0.ws = {
                 .subscribe(transactionInfo => {
                     params.fn(transactionInfo)
                 })
+        }, err => {
+            console.log(err)
+        }).catch((e) => {
+            console.log(e)
         })
         return {
             result: {
@@ -80,6 +92,8 @@ export const wsInterface: SdkV0.ws = {
                 .subscribe(announcedAggregateBonded => {
                     },
                     err => console.error(err))
+        }).catch((e) => {
+            console.log(e)
         })
         return {
             result: {
@@ -117,6 +131,8 @@ export const wsInterface: SdkV0.ws = {
                         console.log(err)
                     }
                 );
+        }).catch((e) => {
+            console.log(e)
         })
 
         return {

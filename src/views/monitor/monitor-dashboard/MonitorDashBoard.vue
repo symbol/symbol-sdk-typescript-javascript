@@ -50,17 +50,11 @@
         <span @click="switchTransactionPanel(true)"
               :class="['pointer',showConfirmedTransactions?'selected':'','page_title']">
           {{$t('confirmed_transaction')}} ({{confirmedDataAmount}})
-          <!--<span :class="[showConfirmedTransactions?'':'gray','transacrion_num']" class="">-->
-            <!--<span>{{confirmedDataAmount}}</span>-->
-          <!--</span>-->
         </span>
         <span class="line">|</span>
         <span @click="switchTransactionPanel(false)"
               :class="['pointer',showConfirmedTransactions?'':'selected','page_title']">
           {{$t('unconfirmed_transaction')}} ({{unconfirmedDataAmount}})
-          <!--<span :class="[showConfirmedTransactions?'gray':'','transacrion_num']">-->
-            <!--<span>{{unconfirmedDataAmount}}</span>-->
-          <!--</span>-->
         </span>
       </div>
 
@@ -74,8 +68,6 @@
         <div class="confirmed_transactions" v-if="showConfirmedTransactions">
           <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
           <div class="table_body hide_scroll" ref="confirmedTableBody">
-
-            <!--            <div class="table_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">-->
             <div class="table_item pointer" @click="showDialog(c)" v-for="c in currentTransactionList">
               <img class="mosaic_action" v-if="!c.isReceipt"
                    src="@/assets/images/monitor/dash-board/dashboardMosaicOut.png" alt="">
@@ -144,6 +136,8 @@
     import dashboardTransactionAmount from '@/assets/images/monitor/dash-board/dashboardTransactionAmount.png'
     import dashboardPublickey from '@/assets/images/monitor/dash-board/dashboardPublickey.png'
     import numberGrow from '@/components/NumberGrow.vue'
+    import {market} from "@/interface/restLogic";
+    import {KlineQuery} from "@/query/klineQuery";
 
     @Component({
         components: {
@@ -292,18 +286,16 @@
                 return
             }
             const that = this
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
-            await axios.get(url).then(function (response) {
-                const result = response.data.data[0].open
-                that.currentPrice = result * that.xemNum
-                const openPriceOneMinute = {
-                    timestamp: new Date().getTime(),
-                    openPrice: result
-                }
-                localSave('openPriceOneMinute', JSON.stringify(openPriceOneMinute))
-            }).catch(function (error) {
-                console.log(error);
-            });
+            const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"});
+            const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+            const result = rstQuery.data[0].close
+            that.currentPrice = result * that.xemNum
+            const openPriceOneMinute = {
+                timestamp: new Date().getTime(),
+                openPrice: result
+            }
+            localSave('openPriceOneMinute', JSON.stringify(openPriceOneMinute))
+
         }
 
         switchTransactionPanel(flag) {

@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
     import TopographicMap from './TopographicMap.vue'
+    import {Component, Vue} from 'vue-property-decorator';
     @Component({
         components:{
             TopographicMap

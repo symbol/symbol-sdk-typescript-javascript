@@ -8,16 +8,17 @@ const routers = [
             {
                 path: '/monitorPanel',
                 name: 'monitorPanel',
+                redirect: '/dashBoard',
                 meta: {},
                 // @ts-ignore
                 component: () => import('@/views/monitor/monitor-panel/MonitorPanel.vue'),
                 children: [
-                    {
-                        path: '/monitorPanel',
-                        name: 'monitorPanel',
-                        // @ts-ignore
-                        component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
-                    },
+                    // {
+                    //     path: '/monitorPanel',
+                    //     name: 'monitorPanel',
+                    //     // @ts-ignore
+                    //     component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
+                    // },
                     {
                         path: '/dashBoard',
                         name: 'dashBoard',
@@ -50,16 +51,18 @@ const routers = [
             {
                 path: '/walletPanel',
                 name: 'walletPanel',
+                redirect: '/walletCreate',
                 meta: {},
                 // @ts-ignore
                 component: () => import('@/views/wallet-management/wallet-panel/WalletPanel.vue'),
                 children: [
+                    // {
+                    //     path: '/walletDetails',
+                    //     name: 'walletDetails',
+                    //     // @ts-ignore
+                    //     component: () => import('@/views/wallet-management/wallet-details/WalletDetails.vue')
+                    // },
                     {
-                        path: '/walletDetails',
-                        name: 'walletDetails',
-                        // @ts-ignore
-                        component: () => import('@/views/wallet-management/wallet-details/WalletDetails.vue')
-                    }, {
                         path: '/walletCreate',
                         name: 'walletCreate',
                         // @ts-ignore
@@ -98,6 +101,7 @@ const routers = [
             {
                 path: '/servicePanel',
                 name: 'servicePanel',
+                redirect: '/namespace',
                 meta: {
                     //     disabled: true,
                 },
@@ -131,28 +135,30 @@ const routers = [
                         // @ts-ignore
                         component: () => import('@/views/service/apostille/Apostille.vue')
                     },
-                    {
-                        path: '/servicePanel',
-                        name: 'servicePanel',
-                        // @ts-ignore
-                        component: () => import('@/views/service/namespace/Namespace.vue')
-                    },
+                    // {
+                    //     path: '/servicePanel',
+                    //     name: 'servicePanel',
+                    //     // @ts-ignore
+                    //     component: () => import('@/views/service/namespace/Namespace.vue')
+                    // },
                 ]
             },
 
             {
                 path: '/communityPanel',
                 name: 'communityPanel',
+                redirect: '/information',
                 meta: {},
                 // @ts-ignore
                 component: () => import('@/views/community/community-panel/CommunityPanel.vue'),
                 children: [
+                    // {
+                    //     path: '/communityPanel',
+                    //     name: 'communityPanel',
+                    //     // @ts-ignore
+                    //     component: () => import('@/views/community/information/Information.vue')
+                    // },
                     {
-                        path: '/communityPanel',
-                        name: 'communityPanel',
-                        // @ts-ignore
-                        component: () => import('@/views/community/information/Information.vue')
-                    }, {
                         path: '/information',
                         name: 'information',
                         // @ts-ignore
@@ -168,6 +174,7 @@ const routers = [
             {
                 path: '/settingPanel',
                 name: 'settingPanel',
+                redirect: '/settingNormal',
                 meta: {
                     //     disabled: true,
                 },
@@ -179,7 +186,8 @@ const routers = [
                         name: 'settingAbout',
                         // @ts-ignore
                         component: () => import('@/views/setting/setting-about/SettingAbout.vue')
-                    }, {
+                    },
+                    {
                         path: '/settingLock',
                         name: 'settingLock',
                         // @ts-ignore
@@ -194,12 +202,13 @@ const routers = [
                         name: 'settingNormal',
                         // @ts-ignore
                         component: () => import('@/views/setting/setting-normal/SettingNormal.vue')
-                    }, {
-                        path: '/settingPanel',
-                        name: 'settingPanel',
-                        // @ts-ignore
-                        component: () => import('@/views/setting/setting-normal/SettingNormal.vue')
                     },
+                    // {
+                    //     path: '/settingPanel',
+                    //     name: 'settingPanel',
+                    //     // @ts-ignore
+                    //     component: () => import('@/views/setting/setting-normal/SettingNormal.vue')
+                    // },
                 ]
             },
             {
@@ -209,18 +218,11 @@ const routers = [
                 // component: () => import('@/views/login/welcome-page/welcomePage.vue'),
                 component: () => import('@/views/login/login/Login.vue'),
             },
-            // {
-            //     path: '/reLogin',
-            //     name: 'reLogin',
-            //     // @ts-ignore
-            //     // component: () => import('@/views/login/relogin/Relogin.vue'),
-            //     component: () => import('@/views/login/new-relogin/NewRelogin.vue'),
-            // },
+
             {
                 path: '/welcomePage',
                 name: 'welcomePage',
                 component: function () {
-                    // component: () => import('@/views/login/welcome-page/welcomePage.vue'),
                     component: () => import('@/views/login/new-login/NewLogin.vue')
                 },
             },

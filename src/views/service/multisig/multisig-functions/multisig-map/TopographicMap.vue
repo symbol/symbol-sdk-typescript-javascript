@@ -1,6 +1,8 @@
 <template>
   <div class="topo_graph_container">
-    <div v-if="notMultisigNorCosigner" class="not_Multisig_Nor_Cosigner">{{$t('There_are_no_more_accounts_under_this_account_or_cosigner')}}</div>
+    <div v-if="notMultisigNorCosigner" class="not_Multisig_Nor_Cosigner">
+      {{$t('There_are_no_more_accounts_under_this_account_or_cosigner')}}
+    </div>
     <div class="topo" id="id" ref="dom"></div>
   </div>
 
@@ -165,7 +167,7 @@
                 that.notMultisigNorCosigner = allAccountList.length == 1 ? true : false
                 that.option.series[0].data = allAccountList
                 that.option.series[0].links = links
-            })
+            }).catch(e => console.log(e))
         }
 
         async created() {

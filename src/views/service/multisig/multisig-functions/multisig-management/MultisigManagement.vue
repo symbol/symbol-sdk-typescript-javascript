@@ -146,6 +146,9 @@
 <script lang="ts">
     import Message from '@/message/Message.ts'
     import {Component, Vue, Watch} from 'vue-property-decorator'
+    import {multisigInterface} from '@/interface/sdkMultisig.ts'
+    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
+    import {transactionInterface} from '@/interface/sdkTransaction';
     import {
         MultisigCosignatoryModificationType,
         MultisigCosignatoryModification,
@@ -157,11 +160,6 @@
         ModifyMultisigAccountTransaction,
         UInt64
     } from 'nem2-sdk'
-    import {multisigInterface} from '@/interface/sdkMultisig.ts'
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
-    import {transactionInterface} from '@/interface/sdkTransaction';
-    import {accountInterface} from '@/interface/sdkAccount'
-
     @Component({
         components: {
             CheckPWDialog
@@ -239,7 +237,7 @@
                 networkType: networkType,
                 fee: innerFee,
                 multisigPublickey: multisigPublickey,
-                transaction: modifyMultisigAccountTx,
+                transaction: [modifyMultisigAccountTx],
             }).then((result) => {
                 const aggregateTransaction = result.result.aggregateTransaction
                 transactionInterface._announce({
@@ -274,7 +272,7 @@
                 account: account,
                 fee: bondedFee,
                 multisigPublickey: account.publicKey,
-                transaction: modifyMultisigAccountTransaction,
+                transaction: [modifyMultisigAccountTransaction],
             }).then((result) => {
                 const aggregateTransaction = result.result.aggregateTransaction
                 transactionInterface.announceBondedWithLock({
@@ -394,7 +392,7 @@
                     item.label = item.publicKey
                     return item
                 })
-            })
+            }).catch(e=>console.log(e))
         }
 
         @Watch('formItem.multisigPublickey')

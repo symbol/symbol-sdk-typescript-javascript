@@ -1,6 +1,6 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-import { Deadline, NamespaceId, RegisterNamespaceTransaction, UInt64, MosaicAliasTransaction, AddressAliasTransaction, NamespaceHttp } from 'nem2-sdk';
+import { Deadline, NamespaceId, RegisterNamespaceTransaction, UInt64, MosaicAliasTransaction, AddressAliasTransaction, NamespaceHttp, } from 'nem2-sdk';
 export var aliasInterface = {
     createNamespaceId: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var name, namespaceId;
@@ -9,7 +9,7 @@ export var aliasInterface = {
             namespaceId = new NamespaceId(name);
             return [2 /*return*/, {
                     result: {
-                        namespaceId: namespaceId
+                        namespacetransactionId: namespaceId
                     }
                 }];
         });

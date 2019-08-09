@@ -214,14 +214,14 @@
             }
 
             //BandedNamespaceList
-            const flag = BandedNamespaceList.every((item) => {
-                if (item == rootNamespaceName) {
+            const subflag = BandedNamespaceList.every((item) => {
+                if (item == subNamespaceName) {
                     this.showErrorMessage(this.$t(Message.NAMESPACE_USE_BANDED_WORD_ERROR))
                     return false
                 }
                 return true
             })
-            return flag
+            return subflag
         }
 
         createSubNamespace() {
@@ -239,7 +239,7 @@
             this.form = {
                 rootNamespaceName: '',
                 subNamespaceName: '',
-                multisigPublickey:'',
+                multisigPublickey: '',
                 maxFee: 50000
             }
         }
@@ -249,7 +249,7 @@
         }
 
         createTransaction() {
-            if(!this.checkForm()) return
+            if (!this.checkForm()) return
             this.showCheckPWDialog = true
         }
 

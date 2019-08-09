@@ -20,7 +20,9 @@ import {
     MultisigCosignatoryModification,
     MosaicSupplyChangeTransaction,
     AggregateTransaction,
-    // @ts-ignore
+    AccountPropertyTransaction,
+    PropertyType,
+    ModifyAccountPropertyAddressTransaction
 } from 'nem2-sdk'
 
 
@@ -172,15 +174,15 @@ declare namespace SdkV0 {
         }) => Rst<{
             announceStatus: any
         }>;
-        // accountAddressRestrictionModificationTransaction: (params: {
-        //     restrictionType: RestrictionType,
-        //     modifications: Array<AccountRestrictionModification<string>>,
-        //     networkType: NetworkType,
-        //     maxFee: number,
-        //
-        // }) => Rst<{
-        //     announceStatus: any
-        // }>;
+        // todo after sdk updated
+        accountAddressRestrictionModificationTransaction: (params: {
+            propertyType: PropertyType,
+            accountPropertyTransaction: any,
+            networkType: NetworkType,
+            fee: number,
+        }) => Rst<{
+            modifyAccountPropertyAddressTransaction: ModifyAccountPropertyAddressTransaction
+        }>;
         transferTransaction: (params: {
             network: number,
             MaxFee: number,
@@ -341,7 +343,7 @@ declare namespace SdkV0 {
         createNamespaceId: (params: {
             name: string | number[]
         }) => Rst<{
-            namespaceId: NamespaceId
+            namespacetransactionId: NamespaceId
         }>;
         createdRootNamespace: (params: {
             namespaceName: string,
@@ -349,16 +351,7 @@ declare namespace SdkV0 {
             networkType: NetworkType,
             maxFee?: number
         }) => Rst<{
-            rootNamespaceTransaction: {
-                networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                namespaceType: NamespaceType,
-                namespaceName: string,
-                namespaceId: NamespaceId,
-                duration: UInt64 | undefined
-            }
+            rootNamespaceTransaction:Transaction
         }>;
         createdSubNamespace: (params: {
             namespaceName: string,
@@ -366,15 +359,7 @@ declare namespace SdkV0 {
             networkType: NetworkType,
             maxFee?: number
         }) => Rst<{
-            subNamespaceTransaction: {
-                networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                namespaceType: NamespaceType,
-                namespaceName: string,
-                namespaceId: NamespaceId
-            }
+            subNamespaceTransaction: Transaction
         }>;
         mosaicAliasTransaction: (params: {
             actionType: AliasActionType,
@@ -478,7 +463,7 @@ declare namespace SdkV0 {
             networkType: NetworkType,
             fee: number,
             multisigPublickey: string,
-            transaction: any,
+            transaction: Array<Transaction>,
         }) => Rst<{
             aggregateTransaction: AggregateTransaction
         }>;
@@ -487,28 +472,10 @@ declare namespace SdkV0 {
             account: Account,
             fee: number,
             multisigPublickey: string,
-            transaction: any,
+            transaction: Array<Transaction>,
         }) => Rst<{
             aggregateTransaction: AggregateTransaction
         }>;
     }
-
-    //   wsIsOpen:(params:{
-    //     webSocket:any
-    //   })=>Rst<{
-    //     wsIsOpen:boolean
-    //   }>
-    //   wsClose:(params:{
-    //     webSocket:any
-    //   })=>Rst<{
-    //     wsClose:boolean
-    //   }>
-    //   wsUnconfirmedRemoved:(params:{
-    //     webSocket:any,
-    //     address:Address
-    //   })=>Rst<{
-    //     Observable:any
-    //   }>
-    // }
 }
 

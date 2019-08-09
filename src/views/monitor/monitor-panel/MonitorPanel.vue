@@ -11,7 +11,8 @@
         </div>
 
         <div class="split"></div>
-        <div class="XEM_amount"><span>XEM</span><span class="amount">{{formatXEMamount(XEMamount.toString())}}</span></div>
+        <div class="XEM_amount"><span>XEM</span><span class="amount">{{formatXEMamount(XEMamount.toString())}}</span>
+        </div>
         <div class="exchange">${{(XEMamount*currentPrice).toFixed(2)}}</div>
 
         <div class="account_alias" v-show="isShowAccountAlias">
@@ -35,38 +36,12 @@
                 </span>
                   <span class="mosaic_name">{{value.name}}</span>
                   <span class="mosaic_value">
-                  <div>{{value.amount}}</div>
+                  <div>{{value.amount.lower?value.amount.compact():value.amount}}</div>
                 </span>
                 </div>
                 <div class="mosaic_data"></div>
               </div>
             </TabPane>
-            <!--            <TabPane :label="$t('namespace')" name="name2">-->
-            <!--              <div class="namespace_data">-->
-            <!--                <div class="namespace_table_head">-->
-            <!--                  <span class="namespace">{{$t('namespace')}}</span>-->
-            <!--                  <span class="duration">{{$t('validity_period')}}</span>-->
-            <!--                </div>-->
-            <!--                <div class="namespace_item" v-for="i in 3">-->
-            <!--                  <span class="namespace">@123.456</span>-->
-            <!--                  <span class="duration">2019-02-09</span>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </TabPane>-->
-            <!--            <TabPane :label="$t('harvested_block')" name="name3">-->
-            <!--              <div class="harvesting_data">-->
-            <!--                <div class="harvesting_item " v-for="i in 3">-->
-            <!--                  <div class="clear top_info">-->
-            <!--                    <span class="left">{{$t('block')}}：4585464</span>-->
-            <!--                    <span class="right">fees:1.0546551xem</span>-->
-            <!--                  </div>-->
-            <!--                  <div class="bottom_info">-->
-            <!--                    <span class="left">include: 1 txs</span>-->
-            <!--                    <span class="right">2019-07-09 16:00</span>-->
-            <!--                  </div>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </TabPane>-->
           </Tabs>
 
           <!--        sevral      -->
@@ -125,7 +100,11 @@
 </template>
 
 <script lang="ts">
+    import axios from 'axios'
+    import {copyTxt} from '@/utils/tools'
+    import Message from "@/message/Message"
     import {Address, MosaicId, UInt64} from 'nem2-sdk'
+    import {mosaicInterface} from '@/interface/sdkMosaic'
     import {accountInterface} from '@/interface/sdkAccount'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {mosaicInterface} from '@/interface/sdkMosaic';
@@ -137,22 +116,26 @@
     import monitorMosaicIcon from '@/assets/images/monitor/monitorMosaicIcon.png'
     import Message from "@/message/Message";
     import {aliasInterface} from "../../../interface/sdkNamespace";
+    import {market} from "@/interface/restLogic";
+    import {KlineQuery} from "@/query/klineQuery";
 
     @Component
     export default class DashBoard extends Vue {
-        accountPublicKey = ''
-        accountAddress = ''
         node = ''
-        XEMamount = 0
-        currentPrice = 0
-        currentXem = ''
         address = ''
+        XEMamount = 0
+        mosaicName = ''
+        currentXem = ''
+        currentPrice = 0
         currentXEM1 = ''
         currentXEM2 = ''
-        monitorUnselected = monitorUnselected
-        monitorSeleted = monitorSeleted
-        mosaicName = ''
+        accountAddress = ''
+        accountPublicKey = ''
         isLoadingMosaic = true
+        isShowAccountInfo = true;
+        isShowManageMosaicIcon = false
+        monitorSeleted = monitorSeleted
+        monitorUnselected = monitorUnselected
         navigatorList: any = [
             {
                 name: 'dash_board',
@@ -180,11 +163,8 @@
                 isSelect: false,
                 path: 'market'
             },
-
-
         ]
-        isShowAccountInfo = true;
-        isShowManageMosaicIcon = false
+
         mosaicMap: any = {
             aabby: {
                 name: 'XEM',
@@ -206,11 +186,11 @@
             return this.$store.state.app.walletList || []
         }
 
-        get namespaceList () {
+        get namespaceList() {
             return this.$store.state.account.namespace
         }
 
-        get ConfirmedTxList () {
+        get confirmedTxList() {
             return this.$store.state.account.ConfirmedTx
         }
 
@@ -237,54 +217,11 @@
             this.isShowManageMosaicIcon = !this.isShowManageMosaicIcon
         }
 
-
         copyAddress() {
             const that = this
             copyTxt(this.address).then(() => {
                 that.$Message.success(Message.COPY_SUCCESS)
             })
-        }
-
-
-
-        noticeComponent() {
-            this.$Notice.destroy()
-            this.$Notice.open({
-                duration: 999,
-                desc: 'The desc will hide when you set render.',
-                render: h => {
-                    return h('span',
-                        {
-                            style: {
-                                display: 'flex',
-                                justifyContent: 'center',
-                                justifyItems: 'center',
-                                alignItems: 'center',
-                                alignContent: 'center'
-                            },
-                        }
-                        , [
-                            h('img', {
-                                style: {
-                                    width: '30px',
-                                    marginRight: '20px'
-                                },
-                                attrs: {
-                                    src: monitorMosaicIcon
-                                }
-                            }),
-                            h('span', {
-                                    style: {
-                                        display: 'inline-block',
-                                        width: '530px',
-                                        lineHeight: '24px'
-                                    },
-                                },
-                                '公告：Nem发布了最新投票，你可以在https://forum.nem.io/t/2020/ele-ction查看更多'
-                            )
-                        ])
-                }
-            });
         }
 
         initData() {
@@ -321,28 +258,28 @@
             })
         }
 
-        async getMyNamespaces () {
+        async getMyNamespaces() {
             await aliasInterface.getNamespacesFromAccount({
                 address: Address.createFromRawAddress(this.getWallet.address),
                 url: this.node
-            }).then((namespacesFromAccount)=>{
+            }).then((namespacesFromAccount) => {
                 let list = []
                 let namespace = {}
                 namespacesFromAccount.result.namespaceList
-                    .sort((a,b)=>{
+                    .sort((a, b) => {
                         return a['namespaceInfo']['depth'] - b['namespaceInfo']['depth']
-                    }).map((item, index)=>{
-                    if(!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())){
+                    }).map((item, index) => {
+                    if (!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())) {
                         namespace[item.namespaceInfo.id.toHex()] = item.namespaceName
-                    }else {
+                    } else {
                         return
                     }
                     let namespaceName = ''
-                    item.namespaceInfo.levels.map((item, index)=>{
-                        namespaceName += namespace[item.id.toHex()] +'.'
+                    item.namespaceInfo.levels.map((item, index) => {
+                        namespaceName += namespace[item.id.toHex()] + '.'
                     })
                     namespaceName = namespaceName.slice(0, namespaceName.length - 1)
-                    const newObj ={
+                    const newObj = {
                         value: namespaceName,
                         label: namespaceName,
                         alias: item.namespaceInfo.alias,
@@ -392,13 +329,10 @@
 
         async getMarketOpenPrice() {
             const that = this
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
-            await axios.get(url).then(function (response) {
-                const result = response.data.data[0].open
-                that.currentPrice = result
-            }).catch(function (error) {
-                // that.getMarketOpenPrice()
-            });
+            const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"});
+            const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+            const result = rstQuery.data[0].close
+            that.currentPrice = result
         }
 
         async getMosaicList() {
@@ -434,7 +368,6 @@
                                 } else {
                                     mosaicItem.name = item.mosaicId.toHex()
                                 }
-                                // mosaicItem.amount = mosaicItem.amount.compact() / Math.pow(10, item.divisibility)
                                 mosaicItem.amount = mosaicItem.amount.compact()
                                 mosaicItem.show = true
                                 return mosaicItem
@@ -448,6 +381,7 @@
                                 return true
                             })
 
+
                             if (isCrrentXEMExists) {
                                 let xemHexId = this.$store.state.account.currentXEM1
                                 mosaicList.unshift({
@@ -458,9 +392,14 @@
                                     show: true
                                 })
                             }
+
                             let mosaicMap = {}
+                            mosaicList = mosaicList.reverse()
                             mosaicList.forEach((item) => {
                                 const hex = item.hex
+                                if (item.name == 'nem.xem') {
+                                    that.XEMamount = item.amount / 1000000
+                                }
                                 mosaicMap[hex] = {
                                     amount: item.amount,
                                     name: item.name,
@@ -513,15 +452,19 @@
                 const mosaicHex = result.result.mosaicId.toHex()
                 if (mosaicMap[mosaicHex]) {
                     searchResult[mosaicHex] = mosaicMap[mosaicHex]
-                } else if (mosaicHex == currentXEM1 || currentXEM2 == mosaicHex) {
+                    that.mosaicMap = searchResult
+                    return
+                }
+                if (mosaicHex == currentXEM1 || currentXEM2 == mosaicHex) {
                     searchResult[mosaicHex] = mosaicMap[currentXEM1] ? mosaicMap[currentXEM1] : mosaicMap[currentXEM2]
-                } else {
-                    searchResult[mosaicHex] = {
-                        name: mosaicName,
-                        hex: mosaicHex,
-                        amount: 0,
-                        show: false
-                    }
+                    that.mosaicMap = searchResult
+                    return
+                }
+                searchResult[mosaicHex] = {
+                    name: mosaicName,
+                    hex: mosaicHex,
+                    amount: 0,
+                    show: false
                 }
                 that.mosaicMap = searchResult
             }).catch(() => {
@@ -553,11 +496,11 @@
                             if (mosaicMap[mosaicHex]) {
                                 // refresh amount
                                 mosaicMap[mosaicHex].amount = mosaicAmount
-                            } else {
-                                // add new mosaic into record
-                                mosaicMap[mosaicHex] = item
-                                mosaicMap[mosaicHex].show = true
+                                return
                             }
+                            // add new mosaic into record
+                            mosaicMap[mosaicHex] = item
+                            mosaicMap[mosaicHex].show = true
                         })
                         that.localMosaicMap = mosaicMap
                         that.mosaicMap = mosaicMap
@@ -586,7 +529,7 @@
 
         }
 
-        formatXEMamount(text){
+        formatXEMamount(text) {
             return formatXEMamount(text)
         }
 
@@ -600,7 +543,7 @@
             this.getMyNamespaces()
         }
 
-        @Watch('ConfirmedTxList')
+        @Watch('confirmedTxList')
         onConfirmedTxChange() {
             this.getXEMAmount()
             this.getAccountsName()

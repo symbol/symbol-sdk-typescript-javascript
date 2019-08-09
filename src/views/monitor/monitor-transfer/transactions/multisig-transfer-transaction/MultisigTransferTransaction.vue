@@ -46,33 +46,31 @@
     <div class="fee flex_center">
       <span class="title">{{$t('inner_fee')}}</span>
       <span class="value radius flex_center">
-              <input v-model="formItem.innerFee" placeholder="50000" type="text">
+              <input v-model="formItem.aggregateFee" placeholder="50000" type="text">
               <span class="uint">gas</span>
             </span>
 
     </div>
     <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
-    <span class="xem_tips">{{formItem.innerFee / 1000000}} xem </span>
-
-    <div v-if="currentMinApproval > 1">
-      <div class="fee flex_center">
-        <span class="title">{{$t('bonded_fee')}}</span>
-        <span class="value radius flex_center">
+    <span class="xem_tips">{{formItem.aggregateFee / 1000000}} xem </span>
+    <div class="fee flex_center">
+      <span class="title">{{$t('bonded_fee')}}</span>
+      <span class="value radius flex_center">
               <input v-model="formItem.bondedFee" placeholder="50000" type="text">
               <span class="uint">gas</span>
             </span>
 
-      </div>
-      <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
-      <span class="xem_tips">{{formItem.bondedFee / 1000000}} xem </span>
+    </div>
+    <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
+    <span class="xem_tips">{{formItem.bondedFee / 1000000}} xem </span>
 
+    <div v-if="currentMinApproval > 1">
       <div class="fee flex_center">
         <span class="title">{{$t('lock_fee')}}</span>
         <span class="value radius flex_center">
               <input v-model="formItem.lockFee" placeholder="50000" type="text">
               <span class="uint">gas</span>
             </span>
-
       </div>
       <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
       <span class="xem_tips">{{formItem.lockFee / 1000000}} xem </span>
@@ -87,7 +85,7 @@
       {{$t('There_are_no_more_accounts_under_this_account')}}
     </div>
 
-    <CheckPWDialog @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"
+    <CheckPWDialog :transactionDetail='transactionDetail' @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"
                    :showCheckPWDialog="showCheckPWDialog"></CheckPWDialog>
   </div>
 </template>
@@ -97,7 +95,6 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {multisigInterface} from '@/interface/sdkMultisig'
     import {accountInterface} from '@/interface/sdkAccount'
-    import {mosaicInterface} from '@/interface/sdkMosaic'
     import Message from "@/message/Message";
     import {
         Account,
@@ -130,6 +127,7 @@
         accountAddress = ''
         generationHash = ''
         accountPublicKey = ''
+        transactionDetail = {}
         currentMinApproval = 0
         isShowSubAlias = false
         showCheckPWDialog = false
@@ -150,7 +148,7 @@
             multisigPublickey: '',
             bondedFee: 10000000,
             lockFee: 10000000,
-            innerFee: 10000000,
+            aggregateFee: 10000000,
         }
 
         get getWallet() {
@@ -166,13 +164,28 @@
                 multisigPublickey: '',
                 bondedFee: 10000000,
                 lockFee: 10000000,
-                innerFee: 10000000,
+                aggregateFee: 10000000,
             }
         }
 
         checkInfo() {
             if (!this.checkForm()) {
                 return
+            }
+            this.showDialog()
+
+        }
+
+        showDialog() {
+            const {address, mosaic, amount, remark, bondedFee, lockFee, aggregateFee, multisigPublickey} = this.formItem
+            this.transactionDetail = {
+                "transaction_type": 'Multisign_transfer',
+                "Public_account": multisigPublickey,
+                "transfer_target": address,
+                "asset_type": mosaic,
+                "quantity": amount,
+                "fee": bondedFee + lockFee + aggregateFee + 'gas',
+                "remarks": remark
             }
             this.showCheckPWDialog = true
         }
@@ -185,7 +198,7 @@
             const {networkType} = this.$store.state.account.wallet
             const {generationHash, node} = this.$store.state.account
             const account = Account.createFromPrivateKey(privatekey, networkType)
-            let {address, bondedFee, lockFee, innerFee, mosaic, amount, remark, multisigPublickey} = this.formItem
+            let {address, bondedFee, lockFee, aggregateFee, mosaic, amount, remark, multisigPublickey} = this.formItem
             const listener = new Listener(node.replace('http', 'ws'), WebSocket)
             const transaction = TransferTransaction.create(
                 Deadline.create(),
@@ -193,7 +206,7 @@
                 [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(amount))],
                 PlainMessage.create(remark),
                 networkType,
-                UInt64.fromUint(innerFee)
+                UInt64.fromUint(aggregateFee)
             )
 
             if (this.currentMinApproval > 1) {
@@ -202,7 +215,7 @@
                     account: account,
                     fee: bondedFee,
                     multisigPublickey: multisigPublickey,
-                    transaction: transaction,
+                    transaction: [transaction],
                 }).then((result) => {
                     const aggregateTransaction = result.result.aggregateTransaction
                     transactionInterface.announceBondedWithLock({
@@ -217,13 +230,12 @@
                 })
                 return
             }
-
             multisigInterface.completeMultisigTransaction({
                 networkType: networkType,
-                fee: innerFee,
+                fee: aggregateFee,
                 multisigPublickey: multisigPublickey,
-                transaction: transaction,
-            }).then((result)=>{
+                transaction: [transaction],
+            }).then((result) => {
                 const aggregateTransaction = result.result.aggregateTransaction
                 transactionInterface._announce({
                     transaction: aggregateTransaction,
@@ -272,12 +284,13 @@
                 that.currentMinApproval = currentMultisigAccount.minApproval
                 that.currentCosignatoryList = currentMultisigAccount.cosignatories
             })
-
         }
 
 
         checkForm() {
-            const {address, mosaic, amount, remark, bondedFee, lockFee, innerFee, multisigPublickey} = this.formItem
+            const {address, mosaic, amount, remark, bondedFee, lockFee, aggregateFee, multisigPublickey} = this.formItem
+
+            // multisig check
             if (multisigPublickey.length !== 64) {
                 this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR))
                 return false
@@ -295,7 +308,7 @@
                 return false
             }
 
-            if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
+            if ((!Number(aggregateFee) && Number(aggregateFee) !== 0) || Number(aggregateFee) < 0) {
                 this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
                 return false
             }

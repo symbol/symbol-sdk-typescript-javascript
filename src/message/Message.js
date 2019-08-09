@@ -1,5 +1,5 @@
-import i18n from '../locale/index';
 import Vue from 'vue';
+import i18n from '../locale/index';
 var vueInstance = new Vue({ i18n: i18n });
 export default {
     COPY_SUCCESS: 'successful_copy',

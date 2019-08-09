@@ -87,7 +87,8 @@
     import {transactionInterface} from '@/interface/sdkTransaction';
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
     import transacrionAssetIcon from '../assets/images/monitor/transaction/txConfirmed.png'
-    import axios from 'axios'
+    import {market} from "@/interface/restLogic";
+    import {KlineQuery} from "@/query/klineQuery";
 
     @Component
     export default class CollectionRecord extends Vue {
