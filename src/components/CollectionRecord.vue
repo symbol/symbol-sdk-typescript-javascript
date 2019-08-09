@@ -52,19 +52,17 @@
     <div class="bottom_transfer_record_list scroll">
       <Spin v-if="isLoadingTransactionRecord" size="large" fix></Spin>
       <div class="transaction_record_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">
-        <img src="../assets/images/monitor/transaction/transacrionAssetIcon.png" alt="">
+        <img src="../assets/images/monitor/transaction/txConfirmed.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
-            <div class="top">{{c.oppositeAddress}}</div>
-            <div class="bottom"> {{c.time}}</div>
+            <div class="top">{{c.mosaic.id ? c.mosaic.id.id.toHex().toUpperCase().slice(0,8)+'...': "&nbsp;"}}</div>
+            <div class="bottom"> {{c.time.slice(0, c.time.length - 3)}}</div>
           </div>
-          <div class="right right_components">
+          <div class="right">
             <div class="top">{{c.mosaic?c.mosaic.amount.compact():0}}</div>
-            <div class="bottom" v-if="c.mosaic">USD
-              {{c.mosaic && c.mosaic.id.toHex() == $store.state.account.currentXEM1 || c.mosaic.id.toHex() ==
-              $store.state.account.currentXEM2?c.mosaic.amount.compact() * currentPrice:0}}
+            <div class="bottom">
+              {{c.transactionInfo && c.transactionInfo.height.compact()}}
             </div>
-            <div v-else> 0</div>
           </div>
         </div>
       </div>
@@ -88,7 +86,7 @@
     } from '@/utils/util.js'
     import {transactionInterface} from '@/interface/sdkTransaction';
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-    import transacrionAssetIcon from '../assets/images/monitor/transaction/transacrionAssetIcon.png'
+    import transacrionAssetIcon from '../assets/images/monitor/transaction/txConfirmed.png'
     import axios from 'axios'
 
     @Component
@@ -237,7 +235,7 @@
         getConfirmedTransactions() {
             const that = this
             let {accountPrivateKey, accountPublicKey, accountAddress, node, transactionType} = this
-            const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
+            const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
             transactionInterface.transactions({
                 publicAccount,
                 node,
@@ -288,6 +286,12 @@
         @Watch('getWallet')
         onGetWalletChange() {
             this.initData()
+            this.getConfirmedTransactions()
+        }
+
+        @Watch('ConfirmedTxList')
+        onConfirmedTxChange() {
+            this.isLoadingTransactionRecord = true
             this.getConfirmedTransactions()
         }
 
@@ -422,7 +426,7 @@
     }
 
     .bottom_transfer_record_list {
-      padding: 34px 42px;
+      padding: 34px 36px;
       height: calc(100% - 130px);
       position: relative;
 
@@ -432,7 +436,7 @@
       }
 
       .transaction_record_item {
-        padding: 14px 0;
+        padding: 26px 0;
         border-bottom: 1px solid rgba(238, 238, 238, 1);
         display: flex;
         flex-direction: row;
@@ -452,8 +456,9 @@
             width: 50%;
 
             div {
-              overflow: hidden;
-              text-overflow: ellipsis;
+              /*overflow: hidden;*/
+              /*text-overflow: ellipsis;*/
+              /*white-space: nowrap;*/
               white-space: nowrap;
             }
           }
@@ -469,21 +474,25 @@
 
         img {
           display: block;
-          width: 32px;
+          width: 28px;
+          height: 28px;
         }
 
         .top {
-          font-size: 14px;
+          font-size: 16px;
+          line-height: 16px;
           font-weight: 400;
           color: rgba(34, 34, 34, 1);
           display: block;
+          margin-bottom: 15px;
         }
 
         .bottom {
           display: block;
-          font-size: 12px;
+          line-height: 14px;
+          font-size: 14px;
           font-weight: 400;
-          color: rgba(153, 153, 153, 1);
+          color: #999999;
         }
       }
 

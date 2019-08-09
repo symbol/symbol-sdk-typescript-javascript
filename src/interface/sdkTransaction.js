@@ -21,7 +21,6 @@ export var transactionInterface = {
             }
         });
     }); },
-    // todo
     _announce: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var transaction, node, account, generationHash, signedTransaction, announceStatus;
         return tslib_1.__generator(this, function (_a) {

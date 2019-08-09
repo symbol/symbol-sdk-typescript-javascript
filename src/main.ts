@@ -6,6 +6,7 @@ import store from '@/store/index'
 import rem from '@/utils/rem'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+import {sessionSave, sessionRead} from '@/utils/util.js'
 // @ts-ignore
 import i18n from '@/locale'
 
@@ -14,12 +15,20 @@ Vue.use(iView);
 Vue.use(rem);
 
 Vue.config.productionTip = false
-resize()
-function resize() {
+resetFontSize()
+
+function resetFontSize() {
     if(window['electron']){
-        var devInnerWidth= 1689
-        var scaleFactor = window['electron'].screen.getPrimaryDisplay().scaleFactor;
-        var zoomFactor =  window.innerWidth/devInnerWidth;
+        const devInnerWidth= 1689
+        const winWidth = window.innerWidth
+        const scaleFactor = window['electron'].screen.getPrimaryDisplay().scaleFactor;
+        let zoomFactor =  winWidth/devInnerWidth;
+        if(winWidth > devInnerWidth && winWidth < 1920){
+            zoomFactor =  1
+        }else if(winWidth >= 1920){
+            zoomFactor =  winWidth/1920;
+        }
+        sessionSave('zoomFactor',zoomFactor)
         window['electron'].webFrame.setZoomFactor(zoomFactor);
     }
 }

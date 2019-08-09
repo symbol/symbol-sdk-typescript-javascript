@@ -23,7 +23,6 @@
     import WalletCreated from '@/views/wallet-management/wallet-created/WalletCreated.vue';
     import WalletImport from '@/views/wallet-management/wallet-import/WalletImport.vue';
     // @ts-ignore
-    import delBtn from '@/assets/images/wallet-management/delete.png'
     import './WalletFn.less';
 
     @Component({
@@ -37,9 +36,8 @@
         @Prop()
         tabIndex:any
 
-        delBtn = delBtn
         navList = [
-            {name:'create',to:'/walletCreate',active:false},
+            {name:'create',to:'/walletCreate',active:true},
             {name:'import',to:'/walletImportKeystore',active:false},
         ]
         Index = 0
