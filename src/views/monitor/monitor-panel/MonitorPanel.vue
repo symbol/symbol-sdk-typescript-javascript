@@ -34,7 +34,7 @@
                     <img v-if="index == 0" src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
                     <img v-else src="../../../assets/images/monitor/mosaicDefault.png" alt="">
                 </span>
-                  <span class="mosaic_name">{{value.name}}</span>
+                  <span class="mosaic_name">{{value.name || value.hex}}</span>
                   <span class="mosaic_value">
                   <div>{{value.amount.lower?value.amount.compact():value.amount}}</div>
                 </span>

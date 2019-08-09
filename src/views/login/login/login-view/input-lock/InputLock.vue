@@ -4,9 +4,7 @@
             v-model="isShowClearCache"
             title=""
             class="clear_cache_panel"
-            :transfer="true"
-            @on-ok="ok"
-            @on-cancel="cancel">
+            :transfer="true">
 
       <div class="title">{{$t('clear_cache')}}</div>
       <img src="@/assets/images/login/loginWarningIcon.png" alt="">
