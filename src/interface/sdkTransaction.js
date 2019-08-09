@@ -1,6 +1,6 @@
 var _this = this;
 import * as tslib_1 from "tslib";
-import { TransactionHttp, AccountHttp, TransferTransaction, Deadline, Address, UInt64, Message, AggregateTransaction, TransactionType, HashLockTransaction, Mosaic, MosaicId } from 'nem2-sdk';
+import { TransactionHttp, AccountHttp, TransferTransaction, Deadline, Address, UInt64, Message, AggregateTransaction, TransactionType, HashLockTransaction, Mosaic, MosaicId, ModifyAccountPropertyAddressTransaction } from 'nem2-sdk';
 import { filter, mergeMap } from "rxjs/operators";
 export var transactionInterface = {
     announce: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
@@ -21,7 +21,6 @@ export var transactionInterface = {
             }
         });
     }); },
-    // todo
     _announce: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var transaction, node, account, generationHash, signedTransaction, announceStatus;
         return tslib_1.__generator(this, function (_a) {
@@ -42,6 +41,18 @@ export var transactionInterface = {
         });
     }); },
     // Account Restriction
+    accountAddressRestrictionModificationTransaction: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        var propertyType, accountPropertyTransaction, networkType, fee, modifyAccountPropertyAddressTransaction;
+        return tslib_1.__generator(this, function (_a) {
+            propertyType = params.propertyType, accountPropertyTransaction = params.accountPropertyTransaction, networkType = params.networkType, fee = params.fee;
+            modifyAccountPropertyAddressTransaction = ModifyAccountPropertyAddressTransaction.create(Deadline.create(), propertyType, accountPropertyTransaction, networkType, UInt64.fromUint(fee));
+            return [2 /*return*/, {
+                    result: {
+                        modifyAccountPropertyAddressTransaction: modifyAccountPropertyAddressTransaction
+                    }
+                }];
+        });
+    }); },
     transferTransaction: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var network, transactionType, deadline, MaxFee, receive, mosaics, MessageType, message, transferTransaction;
         return tslib_1.__generator(this, function (_a) {

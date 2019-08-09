@@ -79,7 +79,7 @@
 
       <div class="button_content">
         <span class="cancel pointer" @click="isShowDialog=false">{{$t('canel')}}</span>
-        <span class="cancel confirm " @click="confirmInput">{{$t('confirm')}}</span>
+        <span class=" confirm " @click="confirmInput">{{$t('confirm')}}</span>
       </div>
     </Modal>
 

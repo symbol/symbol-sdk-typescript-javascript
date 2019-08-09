@@ -20,7 +20,9 @@ import {
     MultisigCosignatoryModification,
     MosaicSupplyChangeTransaction,
     AggregateTransaction,
-    // @ts-ignore
+    AccountPropertyTransaction,
+    PropertyType,
+    ModifyAccountPropertyAddressTransaction
 } from 'nem2-sdk'
 
 
@@ -172,15 +174,15 @@ declare namespace SdkV0 {
         }) => Rst<{
             announceStatus: any
         }>;
-        // accountAddressRestrictionModificationTransaction: (params: {
-        //     restrictionType: RestrictionType,
-        //     modifications: Array<AccountRestrictionModification<string>>,
-        //     networkType: NetworkType,
-        //     maxFee: number,
-        //
-        // }) => Rst<{
-        //     announceStatus: any
-        // }>;
+        // todo after sdk updated
+        accountAddressRestrictionModificationTransaction: (params: {
+            propertyType: PropertyType,
+            accountPropertyTransaction: any,
+            networkType: NetworkType,
+            fee: number,
+        }) => Rst<{
+            modifyAccountPropertyAddressTransaction: ModifyAccountPropertyAddressTransaction
+        }>;
         transferTransaction: (params: {
             network: number,
             MaxFee: number,
@@ -341,7 +343,7 @@ declare namespace SdkV0 {
         createNamespaceId: (params: {
             name: string | number[]
         }) => Rst<{
-            namespaceId: NamespaceId
+            namespacetransactionId: NamespaceId
         }>;
         createdRootNamespace: (params: {
             namespaceName: string,
