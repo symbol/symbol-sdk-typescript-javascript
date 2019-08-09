@@ -580,5 +580,7 @@ export const zh_CN = {
     Namespace_must_start_with_a_letter :'Namespace 必须以字母开头',
     Namespace_can_only_contain_numbers_letters_and_other:'Namespace 只能包含数字，字母，_和-',
     Namespace_cannot_use_forbidden_words :'Namespace 不能使用禁止的单词',
-    clear_cache: '清除缓存'
+    clear_cache: '重置账户',
+    We_will_clear_your_cache_reset_account_password_please_make_sure_your_wallet_is_safely_backed_up:'我们将清除你的缓存重置账号密码，请确保你的钱包已经安全备份',
+    confirm_infomation:'信息确认'
 }

@@ -351,16 +351,7 @@ declare namespace SdkV0 {
             networkType: NetworkType,
             maxFee?: number
         }) => Rst<{
-            rootNamespaceTransaction: {
-                networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                namespaceType: NamespaceType,
-                namespaceName: string,
-                namespaceId: NamespaceId,
-                duration: UInt64 | undefined
-            }
+            rootNamespaceTransaction:Transaction
         }>;
         createdSubNamespace: (params: {
             namespaceName: string,
@@ -368,15 +359,7 @@ declare namespace SdkV0 {
             networkType: NetworkType,
             maxFee?: number
         }) => Rst<{
-            subNamespaceTransaction: {
-                networkType: NetworkType,
-                version: number,
-                deadline: Deadline,
-                maxFee: UInt64,
-                namespaceType: NamespaceType,
-                namespaceName: string,
-                namespaceId: NamespaceId
-            }
+            subNamespaceTransaction: Transaction
         }>;
         mosaicAliasTransaction: (params: {
             actionType: AliasActionType,

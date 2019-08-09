@@ -32,10 +32,10 @@
                             style="width: 70px"></DatePicker>
               </div>
             </span>
-<!--        <span class="search_input un_click" @click.stop="showSearchDetail">-->
-<!--              <img src="../assets/images/monitor/market/marketSearch.png" alt="">-->
-<!--              <span>{{$t('search')}}</span>-->
-<!--            </span>-->
+        <!--        <span class="search_input un_click" @click.stop="showSearchDetail">-->
+        <!--              <img src="../assets/images/monitor/market/marketSearch.png" alt="">-->
+        <!--              <span>{{$t('search')}}</span>-->
+        <!--            </span>-->
       </div>
 
       <div v-show="isShowSearchDetail" class="search_expand">
@@ -244,7 +244,7 @@
                 transactionsResult.result.transactions.subscribe((transactionsInfo) => {
                     let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
                     let list = []
-// get transaction by choose recript tx or send
+                    // get transaction by choose recript tx or send
                     if (that.transactionType == 1) {
                         transferTransaction.forEach((item) => {
                             if (item.isReceipt) {

@@ -554,6 +554,8 @@ export var en_US = {
     Namespace_must_start_with_a_letter: 'Namespace must start with a letter',
     Namespace_can_only_contain_numbers_letters_and_other: 'Namespace can only contain numbers, letters, _ and -',
     Namespace_cannot_use_forbidden_words: 'Namespace cannot use forbidden words',
-    clear_cache: 'clear cache'
+    clear_cache: 'Clear cache',
+    We_will_clear_your_cache_reset_account_password_please_make_sure_your_wallet_is_safely_backed_up: 'We will clear your cache reset account password, please make sure your wallet is safely backed up',
+    confirm_infomation: 'Confirm infomation'
 };
 //# sourceMappingURL=en-US.js.map

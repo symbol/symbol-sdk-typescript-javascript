@@ -103,7 +103,7 @@
           </div>
         </div>
 
-        <div class="create_button" @click="createTransaction">
+        <div class="create_button pointer" @click="createTransaction">
           {{$t('create')}}
         </div>
       </div>
@@ -115,7 +115,7 @@
 </template>
 
 <script lang="ts">
-    import {Account, Address} from "nem2-sdk"
+    import {Account, Address, Listener} from "nem2-sdk"
     import Message from "@/message/Message"
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {aliasInterface} from "@/interface/sdkNamespace"
@@ -214,10 +214,55 @@
         }
 
         createByMultisig(privatekey) {
+            const that = this
             const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
-            // TODO ADD MULTISIG
-
-            this.showErrorMessage('not open yet')
+            const {networkType} = this.getWallet
+            const account = Account.createFromPrivateKey(privatekey, networkType)
+            const {generationHash, node} = this.$store.state.account
+            const listener = new Listener(node.replace('http', 'ws'), WebSocket)
+            aliasInterface.createdRootNamespace({
+                namespaceName: rootNamespaceName,
+                duration: duration,
+                networkType: networkType,
+                maxFee: innerFee
+            }).then((transaction) => {
+                const rootNamespaceTransaction = transaction.result.rootNamespaceTransaction
+                if (that.currentMinApproval > 1) {
+                    multisigInterface.bondedMultisigTransaction({
+                        networkType: networkType,
+                        account: account,
+                        fee: aggregateFee,
+                        multisigPublickey: multisigPublickey,
+                        transaction: [rootNamespaceTransaction],
+                    }).then((result) => {
+                        const aggregateTransaction = result.result.aggregateTransaction
+                        transactionInterface.announceBondedWithLock({
+                            aggregateTransaction,
+                            account,
+                            listener,
+                            node,
+                            generationHash,
+                            networkType,
+                            fee: lockFee
+                        })
+                    })
+                    return
+                }
+                multisigInterface.completeMultisigTransaction({
+                    networkType: networkType,
+                    fee: aggregateFee,
+                    multisigPublickey: multisigPublickey,
+                    transaction: [rootNamespaceTransaction],
+                }).then((result) => {
+                    const aggregateTransaction = result.result.aggregateTransaction
+                    transactionInterface._announce({
+                        transaction: aggregateTransaction,
+                        account,
+                        node,
+                        generationHash
+                    })
+                })
+            })
             console.log(privatekey)
         }
 

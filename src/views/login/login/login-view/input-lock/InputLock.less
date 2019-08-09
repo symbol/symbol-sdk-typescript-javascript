@@ -83,9 +83,66 @@
   .clear_cache {
     display: inline-block;
     padding: 10px 15px;
-    background-color: #20B5AC;
-    color: white;
-    position: relative;
-    left: 50px;
+    color: #1455a6;
   }
+}
+
+.clear_cache_panel {
+  .ivu-modal {
+    width: 840px !important;
+    height: 720px;
+  }
+
+  .ivu-modal-footer {
+    border: none;
+
+
+    button {
+      display: none;
+    }
+  }
+
+  .ivu-modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+      color: rgba(33, 31, 51, 1);
+      line-height: 30px;
+      margin: 79px 0 127px 0;
+    }
+
+    img {
+      width: 151px;
+      height: 151px;
+      margin-bottom: 51px;
+    }
+
+    .tip {
+      font-size: 20px;
+      font-weight: bold;
+      color: rgba(34, 34, 34, 1);
+      line-height: 30px;
+      width: 416px;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .confirm {
+      width: 161px;
+      height: 50px;
+      background: rgba(32, 181, 172, 1);
+      border-radius: 25px;
+      box-shadow: 0 0 20px rgba(32, 181, 172, 1);
+      color: white;
+      line-height: 50px;
+      text-align: center;
+      margin: 93px 0;
+    }
+  }
+
 }

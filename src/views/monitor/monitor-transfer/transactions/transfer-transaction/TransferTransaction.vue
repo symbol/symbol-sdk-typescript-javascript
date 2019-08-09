@@ -48,7 +48,7 @@
     </div>
 
 
-    <CheckPWDialog @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"
+    <CheckPWDialog :transactionDetail='transactionDetail' @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"
                    :showCheckPWDialog="showCheckPWDialog"></CheckPWDialog>
   </div>
 </template>
@@ -84,6 +84,7 @@
         generationHash = ''
         accountAddress = ''
         accountPublicKey = ''
+        transactionDetail = {}
         isShowSubAlias = false
         showCheckPWDialog = false
         address = 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC'
@@ -103,6 +104,19 @@
         checkInfo() {
             if (!this.checkForm()) {
                 return
+            }
+            this.showDialog()
+        }
+
+        showDialog() {
+            const {address, mosaic, amount, remark, fee} = this
+            this.transactionDetail = {
+                "transaction_type": 'ordinary_transfer',
+                "transfer_target": address,
+                "asset_type": mosaic,
+                "quantity": amount,
+                "fee": fee + 'gas',
+                "remarks": remark
             }
             this.showCheckPWDialog = true
         }
@@ -150,11 +164,11 @@
                 this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR))
                 return false
             }
-            if ((!Number(amount) && Number(amount) !== 0)|| Number(amount) < 0) {
+            if ((!Number(amount) && Number(amount) !== 0) || Number(amount) < 0) {
                 this.showErrorMessage(this.$t(Message.AMOUNT_LESS_THAN_0_ERROR))
                 return false
             }
-            if ((!Number(fee) && Number(fee) !== 0)|| Number(fee) < 0) {
+            if ((!Number(fee) && Number(fee) !== 0) || Number(fee) < 0) {
                 this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
                 return false
             }

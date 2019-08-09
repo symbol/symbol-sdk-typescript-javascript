@@ -190,7 +190,6 @@
             return this.$store.state.account.namespace
         }
 
-        get ConfirmedTxList() {
         get confirmedTxList() {
             return this.$store.state.account.ConfirmedTx
         }

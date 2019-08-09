@@ -4,19 +4,34 @@
             v-model="show"
             class-name="vertical-center-modal"
             :footer-hide="true"
-            :width="1000"
             :transfer="false"
             @on-cancel="checkPWDialogCancel">
       <div slot="header" class="checkPWDialogHeader">
-        <span class="title">{{$t('confirm_password')}}</span>
+        <span class="title">{{$t('confirm_infomation')}}</span>
       </div>
       <div class="checkPWDialogBody">
         <div class="stepItem1">
-          <div class="checkPWImg">
-            <img src="@/assets/images/window/checkPW.png">
+
+
+          <div v-if="!transactionDetail">
+            <div class="checkPWImg">
+              <img src="@/assets/images/window/checkPW.png">
+            </div>
+            <p class="checkRemind">
+              {{$t('please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe')}}</p>
           </div>
-          <p class="checkRemind">
-            {{$t('please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe')}}</p>
+
+
+          <div class="info_container" v-else>
+            <div class="info_container_item" v-for="(value,key,index) in transactionDetail">
+              <span class="key">{{$t(key)}}</span>
+              <span v-if="index == 0" class="value orange">{{$t(value)}}</span>
+              <span v-else class="value">{{value}}</span>
+            </div>
+
+          </div>
+
+
           <Form :model="wallet">
             <FormItem>
               <Input v-model="wallet.password" type="password" required
@@ -50,14 +65,17 @@
         components: {},
     })
     export default class CheckPWDialog extends Vue {
-        @Prop()
-        showCheckPWDialog: boolean
-
         stepIndex = 0
         show = false
         wallet = {
             password: ''
         }
+
+        @Prop()
+        showCheckPWDialog: boolean
+
+        @Prop({default: ''})
+        transactionDetail: any
 
         get getWallet() {
             return this.$store.state.account.wallet
@@ -94,6 +112,11 @@
             this.wallet.password = ''
             this.show = this.showCheckPWDialog
         }
+
+        // @Watch('transactionDetail')
+        // onTransactionDetailChange(){
+        //
+        // }
     }
 </script>
 

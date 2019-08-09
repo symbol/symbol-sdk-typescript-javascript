@@ -85,7 +85,7 @@
       {{$t('There_are_no_more_accounts_under_this_account')}}
     </div>
 
-    <CheckPWDialog @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"
+    <CheckPWDialog :transactionDetail='transactionDetail' @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"
                    :showCheckPWDialog="showCheckPWDialog"></CheckPWDialog>
   </div>
 </template>
@@ -95,7 +95,6 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {multisigInterface} from '@/interface/sdkMultisig'
     import {accountInterface} from '@/interface/sdkAccount'
-    import {mosaicInterface} from '@/interface/sdkMosaic'
     import Message from "@/message/Message";
     import {
         Account,
@@ -128,6 +127,7 @@
         accountAddress = ''
         generationHash = ''
         accountPublicKey = ''
+        transactionDetail = {}
         currentMinApproval = 0
         isShowSubAlias = false
         showCheckPWDialog = false
@@ -171,6 +171,21 @@
         checkInfo() {
             if (!this.checkForm()) {
                 return
+            }
+            this.showDialog()
+
+        }
+
+        showDialog() {
+            const {address, mosaic, amount, remark, bondedFee, lockFee, aggregateFee, multisigPublickey} = this.formItem
+            this.transactionDetail = {
+                "transaction_type": 'Multisign_transfer',
+                "Public_account": multisigPublickey,
+                "transfer_target": address,
+                "asset_type": mosaic,
+                "quantity": amount,
+                "fee": bondedFee + lockFee + aggregateFee + 'gas',
+                "remarks": remark
             }
             this.showCheckPWDialog = true
         }
