@@ -99,7 +99,7 @@
                    alt="">
               <span class="account">{{u.oppositeAddress}}</span>
               <span class="transfer_type">{{u.isReceipt ? $t('gathering'):$t('payment')}}</span>
-              <span class="amount">{{u.isReceipt ? '-':'+'}}{{u.mosaic.amount.compact()}}</span>
+              <span class="amount">{{u.isReceipt ? '+':'-'}}{{u.mosaic.amount.compact()}}</span>
               <span class="date">{{u.time}}</span>
               <img src="@/assets/images/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">

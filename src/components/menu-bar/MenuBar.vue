@@ -68,11 +68,9 @@
       </div>
     </div>
 
-    <transition name="fade" mode="out-in">
-      +
-      <router-view/>
-      +
-    </transition>
+	<transition name="fade" mode="out-in">
++      <router-view/>
++   </transition>
 
   </div>
 </template>
@@ -91,25 +89,8 @@
 
     @Component
     export default class Home extends Vue {
-        walletList = []
-        currentNode = ''
-        languageList = []
-        currentWallet = ''
-        accountAddress = ''
-        inputNodeValue = ''
-        isShowDialog = true
-        isNodeHealthy = true
-        accountPublicKey = ''
-        accountPrivateKey = ''
         isShowNodeList = false
-        txStatusListener = null
-        showSelectWallet = true
-        confirmedTxListener = null
-        unconfirmedTxListener = null
-        currentLanguage: any = false
-        monitorSeleted = monitorSeleted
-        monitorUnselected = monitorUnselected
-        activePanelList = [false, false, false, false, false]
+        inputNodeValue = ''
         nodetList = [
             {
                 value: 'http://192.168.0.105:3000',
@@ -134,35 +115,44 @@
                 isSelected: true,
             }
         ]
+        isShowDialog = true
+        activePanelList = [false, false, false, false, false]
+        currentLanguage: any = false
+        languageList = []
+        currentWallet = ''
+        showSelectWallet = true
+        monitorSeleted = monitorSeleted
+        monitorUnselected = monitorUnselected
+        currentNode = ''
+        isNodeHealthy = true
+        accountPrivateKey = ''
+        accountPublicKey = ''
+        accountAddress = ''
+        walletList = []
+        unconfirmedTxListener = null
+        confirmedTxListener = null
+        txStatusListener = null
+
         get getWallet() {
-            if (this.$store.state.account.wallet && this.$store.state.account.wallet.address) {
-                return this.$store.state.account.wallet
-            }
-            const wallets = localRead('wallets')
-            if (wallets) {
-                this.$store.state.account.wallet = JSON.parse(wallets)[0]
-                return JSON.parse(wallets)[0]
-            }
-            return []
+            return this.$store.state.account.wallet
         }
 
         get getWalletList() {
             return this.$store.state.app.walletList || []
         }
 
-        get node() {
+        get node () {
             return this.$store.state.account.node
         }
 
-        get UnconfirmedTxList() {
+        get UnconfirmedTxList () {
             return this.$store.state.account.UnconfirmedTx
         }
 
-        get ConfirmedTxList() {
+        get ConfirmedTxList () {
             return this.$store.state.account.ConfirmedTx
         }
-
-        get errorTxList() {
+        get errorTxList () {
             return this.$store.state.account.errorTx
         }
 
@@ -180,7 +170,30 @@
             const ipcRenderer = window['electron']['ipcRenderer'];
             ipcRenderer.send('app', 'min')
         }
-
+		ReceiveMain () {
+            const electron = window['electron'];
+            const mainWindow =electron.remote.getCurrentWindow()
+            const that = this
+            mainWindow.on('resize',() => {
+                that.resetFontSize()
+            })
+        }
+        resetFontSize() {
+            if(window['electron']){
+                const locaZomm = sessionRead('zoomFactor') || 1
+                const devInnerWidth= 1689
+                const winWidth = window.innerWidth * locaZomm
+                const scaleFactor = window['electron'].screen.getPrimaryDisplay().scaleFactor;
+                let zoomFactor =  winWidth/devInnerWidth;
+                if(winWidth > devInnerWidth && winWidth < 1920){
+                    zoomFactor =  1
+                }else if(winWidth >= 1920){
+                    zoomFactor =  winWidth/1920;
+                }
+                sessionSave('zoomFactor',zoomFactor)
+                window['electron'].webFrame.setZoomFactor(zoomFactor);
+            }
+        }
         selectPoint(index) {
             let list = this.nodetList
             list = list.map((item) => {
@@ -269,10 +282,7 @@
             })
         }
 
-        unconfirmedListener() {
-            if (!this.getWallet.address) {
-                return
-            }
+        unconfirmedListener(){
             const node = this.node.replace('http', 'ws')
             const that = this
             this.unconfirmedTxListener && this.unconfirmedTxListener.close()
@@ -284,10 +294,7 @@
             })
         }
 
-        confirmedListener() {
-            if (!this.getWallet.address) {
-                return
-            }
+        confirmedListener(){
             const node = this.node.replace('http', 'ws')
             const that = this
             this.confirmedTxListener && this.confirmedTxListener.close()
@@ -298,11 +305,7 @@
                 fn: that.disposeConfirmed
             })
         }
-
-        txErrorListener() {
-            if (!this.getWallet.address) {
-                return
-            }
+        txErrorListener(){
             const node = this.node.replace('http', 'ws')
             const that = this
             this.txStatusListener && this.txStatusListener.close()
@@ -314,9 +317,9 @@
             })
         }
 
-        disposeUnconfirmed(transaction) {
+        disposeUnconfirmed (transaction){
             let list = this.UnconfirmedTxList
-            if (!list.includes(transaction.transactionInfo.hash)) {
+            if(!list.includes(transaction.transactionInfo.hash)){
                 list.push(transaction.transactionInfo.hash)
                 this.$store.state.account.UnconfirmedTx = list
                 this.$Notice.success({
@@ -326,10 +329,9 @@
                 });
             }
         }
-
-        disposeConfirmed(transaction) {
+        disposeConfirmed (transaction){
             let list = this.ConfirmedTxList
-            if (!list.includes(transaction.transactionInfo.hash)) {
+            if(!list.includes(transaction.transactionInfo.hash)){
                 list.push(transaction.transactionInfo.hash)
                 this.$store.state.account.ConfirmedTx = list
                 this.$Notice.success({
@@ -339,10 +341,9 @@
                 });
             }
         }
-
-        disposeTxStatus(transaction) {
+        disposeTxStatus (transaction){
             let list = this.errorTxList
-            if (!list.includes(transaction.hash)) {
+            if(!list.includes(transaction.hash)){
                 list.push(transaction.hash)
                 this.$store.state.account.errorTx = list
                 this.$Notice.error({
@@ -372,8 +373,8 @@
             this.unconfirmedListener()
             this.confirmedListener()
             this.txErrorListener()
-            const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('nem.xem'))
-            linkedMosaic.subscribe((mosaic) => {
+			const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('nem.xem'))
+            linkedMosaic.subscribe((mosaic)=>{
                 this.$store.state.account.currentXEM1 = mosaic.toHex();
             })
             axios.get(currentNode + '/chain/height').then(function (response) {
@@ -394,7 +395,7 @@
         }
 
         created() {
-
+			this.ReceiveMain()
             this.initData()
             this.unconfirmedListener()
             this.confirmedListener()

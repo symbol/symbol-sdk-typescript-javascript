@@ -25,7 +25,7 @@
           <Col span="2">{{value.transferable}}</Col>
           <Col span="2">{{value.supplyMutable}}</Col>
           <Col span="3">{{computeDuration(value) <=0 ? $t('overdue') : (computeDuration(value) === 'Forever'?  $t('forever') : computeDuration(value))}}</Col>
-          <Col span="3">null</Col>
+          <Col span="3">{{value.name?value.name:'null'}}</Col>
           <Col span="2">
             <div class="listFnDiv" v-if="computeDuration(value) > 0 || computeDuration(value) === 'Forever'">
               <Poptip placement="bottom">
@@ -39,7 +39,7 @@
                     <i><img src="../../../../../assets/images/service/setAlias.png"></i>
                     <span>{{$t('binding_alias')}}</span>
                   </p>
-                  <p class="fnItem" @click="showUnAliasDialog(value)">
+                  <p class="fnItem" @click="showUnAliasDialog(value)" v-if="value.name">
                     <i><img src="../../../../../assets/images/service/clearAlias.png"></i>
                     <span>{{$t('unbind')}}</span>
                   </p>
@@ -203,7 +203,7 @@
                                 if (item.mosaicId.id.toHex() == that.currentXEM1 || item.mosaicId.id.toHex() == that.currentXEM2) {
                                     item.name = currentXem
                                 }else {
-                                    item.name = item.mosaicId.id.toHex()
+                                    item.name = ''
                                 }
                                 mosaicMapInfo[item.hex] = item
                             })

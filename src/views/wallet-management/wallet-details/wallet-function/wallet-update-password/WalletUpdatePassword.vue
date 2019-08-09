@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div class="right_tips left">
+    <div :class="['right_tips','left',$i18n.locale === 'en-US'?'en':'']">
 
       <div class="tip_title">{{$t('tips')}}：</div>
       <div class="tip_content">

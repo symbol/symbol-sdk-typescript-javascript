@@ -103,7 +103,7 @@
             <span class="value radius">
               <input v-model="s.value" type="text"/>
                <span class="button_content">
-                  <img src="../../../assets/images/community/vote/voteAddLine.png" class="pointer"
+                  <img src="../../../assets/images/community/vote/voteAddLine.png"  :class="['pointer',index === 0?'alone':'']"
                        @click="addSelection()"
                        alt="">
                   <img src="../../../assets/images/community/vote/voteDeleteLine.png" class="pointer" v-if="index !== 0"
