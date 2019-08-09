@@ -329,8 +329,6 @@
                 type: 'showTip',
                 seriesIndex: 0,
                 dataIndex: btcDataList.length - 1,
-                seriesIndex: 0,
-                dataIndex: btcDataList.length - 1,
 
             })
             window.onresize = this.dom.resize

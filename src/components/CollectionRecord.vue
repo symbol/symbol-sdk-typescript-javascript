@@ -89,6 +89,7 @@
     import transacrionAssetIcon from '../assets/images/monitor/transaction/txConfirmed.png'
     import {market} from "@/interface/restLogic";
     import {KlineQuery} from "@/query/klineQuery";
+    import axios from 'axios'
 
     @Component
     export default class CollectionRecord extends Vue {
