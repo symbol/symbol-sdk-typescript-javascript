@@ -39,6 +39,7 @@ npm run build
 ## How to build  Windows or Mac application
 **Windows tools**
 - https://github.com/NemTechCN/NEM2-Desk-Win
+
 **Mac tools**
 - https://github.com/NemTechCN/NEM2-Desk-Mac
 
