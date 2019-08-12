@@ -48,7 +48,7 @@ npm run build
 
 ## The installation package
 - **nem2-wallet-cn-win**:[nem2_desk_wallet_cn-win](https://github.com/NemTechCN/NEM2-Desk-Win/blob/master/dist/NEM2-Wallet-Setup.exe)
-- **nem2-wallet-cn-mac**:[nem2_desk_wallet_cn-mac](https://github.com/NemTechCN/NEM2-Desk-Mac/dist/nem2-wallet-0.1.5.dmg)
+- **nem2-wallet-cn-mac**:[nem2_desk_wallet_cn-mac](https://github.com/NemTechCN/NEM2-Desk-Mac/blob/master/dist/nem2-wallet-0.1.5.dmg)
 
 ## Other products links
 
