@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message} from "../../../../config"
     import {formatDate} from '@/help/help.ts'
     // import {formatDate} from '@/utils/util.js'
     import {blog} from "@/interface/restLogic"

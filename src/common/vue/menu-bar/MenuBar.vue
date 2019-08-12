@@ -12,14 +12,14 @@
 
       <div @click="accountQuit" class="quit_account pointer"
            v-if=" !$store.state.app.isInLoginPage && $store.state.app.walletList.length !==0">
-        <img src="../../assets/images/window/windowAccoutQuit.png" alt="">
+        <img src="../../img/window/windowAccoutQuit.png" alt="">
         <span>Number</span>
       </div>
     </div>
     <div class="top_window">
       <div class="nem_logo_wrap">
         <div class="nem_logo">
-          <img class="absolute" src="../../assets/images/window/windowNemLogo.png" alt="">
+          <img class="absolute" src="../../img/window/windowNemLogo.png" alt="">
         </div>
       </div>
       <div class="controller">
@@ -59,7 +59,7 @@
             </i-select>
           </div>
           <div class="switch_wallet" v-if="showSelectWallet&&walletList.length > 0">
-            <img class="select_wallet_icon" src="../../assets/images/window/windowWalletSelect.png" alt="">
+            <img class="select_wallet_icon" src="../../img/window/windowWalletSelect.png" alt="">
             <i-select @on-change="switchWallet" v-model="currentWallet" :placeholder="walletList[0].name">
               <i-option v-for="item in walletList" :value="item.address">{{ item.name }}</i-option>
             </i-select>
@@ -77,16 +77,15 @@
 
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator/lib/vue-property-decorator'
-    import {localSave, localRead} from '../../utils/util.js'
     import routers from '@/router/routers'
     import axios from 'axios'
-    import monitorSeleted from '@/assets/images/window/windowSelected.png'
-    import monitorUnselected from '@/assets/images/window/windowUnselected.png'
+    import monitorSeleted from '@/common/img/window/windowSelected.png'
+    import monitorUnselected from '@/common/img/window/windowUnselected.png'
     import {blockchainInterface} from '@/interface/sdkBlockchain.js';
-    import Message from "@/message/Message";
+    import {Message} from "../../../../config";
     import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk";
-    import {wsInterface} from "../../interface/sdkListener";
-    import {sessionRead, sessionSave} from "../../help/help";
+    import {wsInterface} from "@/interface/sdkListener";
+    import {sessionRead, sessionSave, localSave, localRead} from "@/help/help";
 
     @Component
     export default class Home extends Vue {
@@ -172,18 +171,20 @@
             ipcRenderer.send('app', 'min')
         }
         ReceiveMain () {
-            const electron = window['electron'];
-            const mainWindow =electron.remote.getCurrentWindow()
-            const that = this
-            mainWindow.on('resize',() => {
-                that.resetFontSize()
-            })
+            if(window['electron']){
+                const electron = window['electron'];
+                const mainWindow =electron.remote.getCurrentWindow()
+                const that = this
+                mainWindow.on('resize',() => {
+                    that.resetFontSize()
+                })
+            }
         }
         resetFontSize() {
             if(window['electron']){
                 const locaZomm = sessionRead('zoomFactor') || 1
                 const devInnerWidth= 1689
-                const winWidth = window.innerWidth * locaZomm
+                const winWidth = window.innerWidth * Number(locaZomm)
                 const scaleFactor = window['electron'].screen.getPrimaryDisplay().scaleFactor;
                 let zoomFactor =  winWidth/devInnerWidth;
                 if(winWidth > devInnerWidth && winWidth < 1920){

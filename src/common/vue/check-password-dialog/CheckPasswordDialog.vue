@@ -56,7 +56,7 @@
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
     import {walletInterface} from "@/interface/sdkWallet"
-    import {Message} from "config/index"
+    import {Message} from "../../../../config"
     import {Crypto} from 'nem2-sdk'
     import "./CheckPasswordDialog.less"
 

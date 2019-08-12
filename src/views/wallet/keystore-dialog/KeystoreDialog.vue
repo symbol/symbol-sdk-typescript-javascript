@@ -110,7 +110,7 @@
 
 <script lang="ts">
     import './KeystoreDialog.less'
-    import {Message} from "config/index"
+    import {Message} from "../../../../config"
     import {createQRCode, copyTxt} from '@/help/help'
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 

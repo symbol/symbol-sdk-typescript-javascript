@@ -39,7 +39,7 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import {Crypto, UInt64} from 'nem2-sdk'
-   import {Message} from "config/index"
+   import {Message} from "../../../../config"
     // import {localSave} from '@/utils/util'
     import {localSave} from '@/help/help.ts'
 
