@@ -60,7 +60,7 @@
     import { Account, Mosaic, MosaicId, UInt64} from 'nem2-sdk'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from '@/interface/sdkTransaction'
-    import CheckPWDialog from '@/common/vue/checkPW-dialog/CheckPWDialog.vue'
+    import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
 
     @Component({

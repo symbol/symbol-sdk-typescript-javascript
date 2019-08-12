@@ -100,7 +100,7 @@ const routers = [
                         path: '/onDev',
                         name: 'onDev',
                         // @ts-ignore
-                        component: () => import('@/views/other/onDev/onDev.vue')
+                        component: () => import('@/views/other/onDev/OnDev.vue')
                     }, {
                         path: '/namespace',
                         name: 'namespace',
@@ -204,7 +204,7 @@ const routers = [
                 path: '/guideInto',
                 name: 'guideInto',
                 // @ts-ignore
-                component: () => import('@/views/login/guide-into/guideInto.vue'),
+                component: () => import('@/views/login/guide-into/GuideInto.vue'),
             }
         ]
     },

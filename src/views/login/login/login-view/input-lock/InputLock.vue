@@ -51,17 +51,18 @@
     import {Message} from "config/index"
     import {Crypto, UInt64} from 'nem2-sdk'
     import {localRead} from '@/help/help.ts'
+    import {InputLockConstructor} from './InputLockConstructor'
     import {Component, Vue} from 'vue-property-decorator'
 
     @Component
-    export default class MonitorRelogin extends Vue {
-        lockPromptText = ''
-        isShowPrompt = false
-        currentText: any = ''
-        isShowClearCache = false
-        form = {
-            password: ''
-        }
+    export default class InputLock extends InputLockConstructor {
+        // lockPromptText = ''
+        // isShowPrompt = false
+        // currentText: any = ''
+        // isShowClearCache = false
+        // form = {
+        //     password: ''
+        // }
 
         showPrompt() {
             this.isShowPrompt = true
@@ -85,7 +86,7 @@
                 return
             }
 
-            let lock:any = localRead('lock')
+            let lock: any = localRead('lock')
             try {
                 const u = [50, 50]
                 lock = JSON.parse(lock)
@@ -133,6 +134,8 @@
         }
 
         created() {
+            // TODO SPLIT DATA
+            console.log(this)
             this.$store.state.app.isInLoginPage = true
             this.lockPromptText = JSON.parse(localRead('lock')).remindTxt
 

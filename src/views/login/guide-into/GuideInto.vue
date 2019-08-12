@@ -48,5 +48,5 @@
 </script>
 
 <style scoped lang="less">
-  @import "guideInto.less";
+  @import "GuideInto.less";
 </style>

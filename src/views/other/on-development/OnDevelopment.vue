@@ -6,11 +6,9 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import './onDev.less';
+    import './OnDev.less';
 
-    @Component({
-        components: {}
-    })
+    @Component
     export default class onDev extends Vue {
 
     }

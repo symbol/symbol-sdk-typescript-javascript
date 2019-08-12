@@ -99,7 +99,7 @@ var routers = [
                         path: '/onDev',
                         name: 'onDev',
                         // @ts-ignore
-                        component: function () { return import('@/views/other/onDev/onDev.vue'); }
+                        component: function () { return import('@/views/other/onDev/OnDev.vue'); }
                     }, {
                         path: '/namespace',
                         name: 'namespace',
@@ -201,7 +201,7 @@ var routers = [
                 path: '/guideInto',
                 name: 'guideInto',
                 // @ts-ignore
-                component: function () { return import('@/views/login/guide-into/guideInto.vue'); },
+                component: function () { return import('@/views/login/guide-into/GuideInto.vue'); },
             }
         ]
     },

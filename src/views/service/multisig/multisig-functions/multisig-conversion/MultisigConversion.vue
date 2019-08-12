@@ -130,7 +130,7 @@
     import {Component, Vue} from 'vue-property-decorator'
     import {multisigInterface} from '@/interface/sdkMultisig.ts'
     import {transactionInterface} from '@/interface/sdkTransaction.ts'
-    import CheckPWDialog from '@/common/vue/checkPW-dialog/CheckPWDialog.vue'
+    import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
     import {
         Account,
         Listener,

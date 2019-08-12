@@ -97,7 +97,7 @@
     import {aliasInterface} from "@/interface/sdkNamespace"
     import {formatSeconds, formatAddress} from '@/help/help.ts'
     import {transactionInterface} from "@/interface/sdkTransaction"
-    import CheckPWDialog from '@/common/vue/checkPW-dialog/CheckPWDialog.vue'
+    import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
     @Component({
         components: {
