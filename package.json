@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "tsc && vue-cli-service serve",
-    "build": "rm -rf www/ && tsc && vue-cli-service build",
+    "build": "tsc && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
