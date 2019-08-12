@@ -36,16 +36,15 @@ npm run dev
 npm run build 
 ```
 
-## Build for Windows and Mac
-**Windows tools**
-- https://github.com/NemTechCN/NEM2-Desk-Win
+## How to build  Windows or Mac application
+- [NEM2-Desk-Wallet-Tools]( https://github.com/NemTechCN/NEM2-Desk-Wallet-Tools)
 
-**Mac tools**
-- https://github.com/NemTechCN/NEM2-Desk-Mac
+## The program use-instructions
+- TODO:
 
-## Installation packages
-- **nem2-wallet-cn-win**:[nem2_desk_wallet_cn-win](https://github.com/NemTechCN/NEM2-Desk-Win/blob/master/dist/NEM2-Wallet-Setup.exe)
-- **nem2-wallet-cn-mac**:[nem2_desk_wallet_cn-mac](https://github.com/NemTechCN/NEM2-Desk-Mac/blob/master/dist/nem2-wallet-0.1.5.dmg)
+## The installation package
+- **nem2-wallet-cn-win**:[nem2_desk_wallet_cn-win](https://github.com/NemTechCN/NEM2-Desk-Wallet-Tools/blob/master/dist/NEM2-Wallet-Setup.exe)
+- **nem2-wallet-cn-mac**:[nem2_desk_wallet_cn-mac](https://github.com/NemTechCN/NEM2-Desk-Wallet-Tools/blob/master/dist/nem2-wallet-0.1.5.dmg)
 
 ## Other products links
 
