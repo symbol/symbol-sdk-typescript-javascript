@@ -56,7 +56,6 @@
         currentNamespace = ''
 
         get namespaceList () {
-            console.log(this.$store.state.account.namespace)
             return this.$store.state.account.namespace
         }
 
