@@ -115,14 +115,13 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message, bandedNamespace as BandedNamespaceList} from "../../../../../../config"
     import {Account, Address, Listener} from "nem2-sdk"
     import {aliasInterface} from "@/interface/sdkNamespace"
     import {multisigInterface} from '@/interface/sdkMultisig'
     import {formatSeconds, formatAddress} from '@/help/help.ts'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from "@/interface/sdkTransaction"
-    import {bandedNamespace as BandedNamespaceList} from 'config/index'
     import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
     @Component({

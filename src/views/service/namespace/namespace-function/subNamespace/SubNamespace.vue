@@ -72,7 +72,7 @@
 
 <script lang="ts">
     import {Account} from "nem2-sdk"
-    import {Message} from "config/index"
+    import {Message, bandedNamespace as BandedNamespaceList} from "../../../../../../config"
     import {formatAddress} from '@/help/help'
     import {Component, Vue} from 'vue-property-decorator'
     import {aliasInterface} from "@/interface/sdkNamespace"

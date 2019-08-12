@@ -34,7 +34,7 @@
 
 <script lang="ts">
     import {UInt64} from 'nem2-sdk'
-    import {Message} from "config/index"
+    import {Message} from "../../../../config"
     import {localRead, localSave} from '@/help/help'
     import {Component, Vue} from 'vue-property-decorator'
     import {decryptKey, encryptKey} from "@/help/appUtil"
