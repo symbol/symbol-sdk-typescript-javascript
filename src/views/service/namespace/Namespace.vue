@@ -10,7 +10,6 @@
     <div class="sub_function_container scroll radius">
 
       <div class="right_panel">
-        <!--<NamespaceTransaction v-if="buttonList[0].isSelected"></NamespaceTransaction>-->
         <RootNamespace v-if="buttonList[0].isSelected" @createdNamespace="getMyNamespaces"></RootNamespace>
         <SubNamespace v-if="buttonList[1].isSelected" @createdNamespace="getMyNamespaces"></SubNamespace>
         <NamespaceList v-if="buttonList[2].isSelected"></NamespaceList>
@@ -22,7 +21,7 @@
 </template>
 
 <script lang="ts">
-    import {Address, UInt64} from "nem2-sdk"
+    import {Address} from "nem2-sdk"
     import {aliasInterface} from "@/interface/sdkNamespace"
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import SubNamespace from './namespace-function/subNamespace/SubNamespace.vue'

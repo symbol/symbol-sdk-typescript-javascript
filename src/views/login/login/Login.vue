@@ -82,6 +82,7 @@
 
             const wallets = localRead('wallets')
             const walletList = wallets ? JSON.parse(wallets) : []
+            const local = localRead('local') ? localRead('local') :''
             if (walletList.length >= 1) {
                 this.showIndexView(2)
                 return

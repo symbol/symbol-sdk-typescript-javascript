@@ -37,15 +37,12 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Message} from "config/index"
     import {Crypto, UInt64} from 'nem2-sdk'
-   import {Message} from "config/index"
-    // import {localSave} from '@/utils/util'
     import {localSave} from '@/help/help.ts'
+    import {Component, Vue} from 'vue-property-decorator';
 
-    @Component({
-        components: {}
-    })
+    @Component
     export default class createLockPW extends Vue {
         lockPW = {
             password: '',

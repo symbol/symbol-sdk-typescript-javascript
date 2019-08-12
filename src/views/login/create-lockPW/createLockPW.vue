@@ -8,13 +8,15 @@
         <li>
           {{$t('new_password')}}
           <div class="gray_content">
-            <input class="absolute" v-model="lockPW.password" type="password"  :placeholder="$t('please_enter_the_original_password')">
+            <input class="absolute" v-model="lockPW.password" type="password"
+                   :placeholder="$t('please_enter_the_original_password')">
           </div>
         </li>
         <li>
           {{$t('confirm_password')}}
           <div class="gray_content">
-            <input class="absolute" type="password"  v-model="lockPW.checkPW" :placeholder="$t('please_enter_a_new_password')">
+            <input class="absolute" type="password" v-model="lockPW.checkPW"
+                   :placeholder="$t('please_enter_a_new_password')">
           </div>
         </li>
         <li>
@@ -24,7 +26,8 @@
             {{$t('password_hints_great_help_when_you_forget_your_password')}}
           </div>
           <div class="gray_content">
-            <input class="absolute" type="text" v-model="lockPW.remindTxt" :placeholder="$t('please_set_a_password_prompt')">
+            <input class="absolute" type="text" v-model="lockPW.remindTxt"
+                   :placeholder="$t('please_set_a_password_prompt')">
           </div>
         </li>
       </ul>
@@ -37,11 +40,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Message} from "config/index"
     import {Crypto, UInt64} from 'nem2-sdk'
-   import {Message} from "config/index"
-    // import {localSave} from '@/utils/util'
     import {localSave} from '@/help/help.ts'
+    import {Component, Vue} from 'vue-property-decorator';
 
     @Component({
         components: {}
@@ -53,16 +55,16 @@
             remindTxt: ''
         }
 
-        checkInput () {
-            if(!this.lockPW.password || this.lockPW.password === ''){
+        checkInput() {
+            if (!this.lockPW.password || this.lockPW.password === '') {
                 this.$Message.error(Message.PASSWORD_CREATE_ERROR);
                 return false
             }
-            if(this.lockPW.password !== this.lockPW.checkPW){
+            if (this.lockPW.password !== this.lockPW.checkPW) {
                 this.$Message.error(Message.INCONSISTENT_PASSWORD_ERROR);
                 return false
             }
-            if(!this.lockPW.remindTxt || this.lockPW.remindTxt === ''){
+            if (!this.lockPW.remindTxt || this.lockPW.remindTxt === '') {
                 this.$Message.error(Message.PASSWORD_HIT_SETTING_ERROR);
                 return false
             }
@@ -70,9 +72,9 @@
         }
 
         jumpToOtherPage(path) {
-            if(path === '/walletPanel'){
-                const u = [50,50]
-                if(!this.checkInput()) return
+            if (path === '/walletPanel') {
+                const u = [50, 50]
+                if (!this.checkInput()) return
                 const encryptObj = Crypto.encrypt(new UInt64(u).toHex(), this.lockPW.password)
                 let saveData = {
                     ciphertext: encryptObj.ciphertext,

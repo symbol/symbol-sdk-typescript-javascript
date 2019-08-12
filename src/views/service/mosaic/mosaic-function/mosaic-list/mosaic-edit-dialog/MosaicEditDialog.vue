@@ -68,11 +68,9 @@
     import {mosaicInterface} from "@/interface/sdkMosaic"
     import {transactionInterface} from "@/interface/sdkTransaction"
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-    import {Account, Crypto, MosaicSupplyChangeTransaction} from 'nem2-sdk'
+    import {Account, Crypto} from 'nem2-sdk'
 
-    @Component({
-        components: {},
-    })
+    @Component
     export default class mosaicEditDialog extends Vue {
         show = false
         changedSupply = 0

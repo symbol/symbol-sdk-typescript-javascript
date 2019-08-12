@@ -52,9 +52,7 @@
     import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
     import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
 
-    @Component({
-        components: {},
-    })
+    @Component
     export default class mosaicAliasDialog extends Vue {
         show = false
         mosaic = {

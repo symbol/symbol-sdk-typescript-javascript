@@ -18,7 +18,6 @@
             </div>
           </div>
 
-
           <div class="gray_item">
             <div class="title">
               {{$t('hash_algorithm')}}

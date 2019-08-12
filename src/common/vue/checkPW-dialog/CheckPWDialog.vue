@@ -47,9 +47,9 @@
 </template>
 
 <!--
-    @Prop: showCheckPWDialog  是否显示弹窗
-    @return: closeCheckPWDialog()  弹窗关闭事件
-             checkEnd(boolean)  返回事件 确认密码是否正确
+    @Prop: showCheckPWDialog
+    @return: closeCheckPWDialog()
+             checkEnd(boolean)
 -->
 
 <script lang="ts">

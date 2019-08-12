@@ -5,7 +5,7 @@
             class-name="vertical-center-modal"
             :footer-hide="true"
             :transfer="false"
-            @on-cancel="checkPWDialogCancel">
+            @on-cancel="checkPasswordDialogCancel">
       <div slot="header" class="checkPWDialogHeader">
         <span class="title">{{$t('confirm_infomation')}}</span>
       </div>
@@ -37,7 +37,7 @@
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
-              <Button type="success" @click="checkPWed"> {{$t('confirm')}}</Button>
+              <Button type="success" @click="checkPassword"> {{$t('confirm')}}</Button>
             </FormItem>
           </Form>
         </div>
@@ -46,24 +46,22 @@
   </div>
 </template>
 
-<!--
-    @Prop: showCheckPWDialog
-    @return: closeCheckPWDialog()
-             checkEnd(boolean)
--->
-
 
 <script lang="ts">
-    import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-    import {walletInterface} from "@/interface/sdkWallet"
-    import {Message} from "config/index"
     import {Crypto} from 'nem2-sdk'
     import "./CheckPasswordDialog.less"
+    import {Message} from "config/index"
+    import {walletInterface} from "@/interface/sdkWallet"
+    import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+
+    /**
+     @Prop: showCheckPWDialog
+     @return: closeCheckPWDialog()
+     @return: checkEnd(privatekey:string)
+     */
 
 
-    @Component({
-        components: {},
-    })
+    @Component
     export default class CheckPWDialog extends Vue {
         stepIndex = 0
         show = false
@@ -81,11 +79,11 @@
             return this.$store.state.account.wallet
         }
 
-        checkPWDialogCancel() {
+        checkPasswordDialogCancel() {
             this.$emit('closeCheckPWDialog')
         }
 
-        checkPWed() {
+        checkPassword() {
             let saveData = {
                 ciphertext: this.getWallet.ciphertext,
                 iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
@@ -98,7 +96,7 @@
                 privateKey: DeTxt.length === 64 ? DeTxt : ''
             }).then(async (Wallet: any) => {
                 this.show = false
-                this.checkPWDialogCancel()
+                this.checkPasswordDialogCancel()
                 this.$emit('checkEnd', DeTxt)
             }).catch(() => {
                 this.$Notice.error({
@@ -113,10 +111,6 @@
             this.show = this.showCheckPWDialog
         }
 
-        // @Watch('transactionDetail')
-        // onTransactionDetailChange(){
-        //
-        // }
     }
 </script>
 

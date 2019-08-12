@@ -32,7 +32,8 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import {
-        Account, AccountHttp,
+        Account,
+        AccountHttp,
         NetworkType,
         PublicAccount,
         TransactionHttp,

@@ -23,10 +23,9 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "../../../../config/index"
-    // import {localRead} from '@/utils/util'
-    import {localRead} from '@/help/help.ts'
+    import {Message} from "config/index"
     import {Crypto, UInt64} from 'nem2-sdk'
+    import {localRead} from '@/help/help.ts'
     import {Component, Vue} from 'vue-property-decorator'
 
     @Component

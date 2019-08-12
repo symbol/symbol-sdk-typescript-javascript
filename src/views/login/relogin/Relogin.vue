@@ -32,7 +32,7 @@
       <div class="bottom_content">
         <div class="top_password">
           <input type="password" v-model="form.password" placeholder="Lock Password">
-          <img src="../../../common/img/login/relogin/reloginDoubt.png" alt="">
+          <img src="@/common/img/login/relogin/reloginDoubt.png" alt="">
         </div>
         <div @click="jumpToDashBoard" class="bottom_button pointer"> LOG IN</div>
       </div>
@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "../../../../config/index"
+    import {Message} from "config/index"
     import {Crypto, UInt64} from 'nem2-sdk'
     import {localRead} from '@/help/help.ts'
     import {Component, Vue} from 'vue-property-decorator'

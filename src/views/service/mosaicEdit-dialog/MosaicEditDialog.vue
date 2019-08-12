@@ -55,8 +55,8 @@
 </template>
 
 <script lang="ts">
-    import './MosaicEditDialog.less';
-    import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
+    import './MosaicEditDialog.less'
+    import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
     @Component
     export default class mosaicEditDialog extends Vue {

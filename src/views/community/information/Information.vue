@@ -83,7 +83,6 @@
 <script lang="ts">
     import {Message} from "config/index"
     import {formatDate} from '@/help/help.ts'
-    // import {formatDate} from '@/utils/util.js'
     import {blog} from "@/interface/restLogic"
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'

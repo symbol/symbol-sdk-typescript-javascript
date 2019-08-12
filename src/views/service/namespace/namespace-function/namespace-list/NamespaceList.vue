@@ -42,7 +42,6 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index";
     import {formatSeconds} from '@/help/help.ts'
     import {Component, Vue} from 'vue-property-decorator'
     import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'

@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!--    <div v-if="isMultisig" class="is_multisig">-->
-    <!--      {{$t('This_account_is_already_a_multi_sign_account')}}-->
-    <!--    </div>-->
     <div class="multisig_convert_container">
       <div class="multisig_convert_head">{{$t('Convert_to_multi_sign_account')}}</div>
       <div class="convert_form">

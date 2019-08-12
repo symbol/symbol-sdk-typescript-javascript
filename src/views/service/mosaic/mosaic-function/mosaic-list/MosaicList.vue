@@ -58,8 +58,6 @@
 
 <script lang="ts">
     import {MosaicId} from "nem2-sdk"
-    import {Message} from "config/index"
-    import {formatSeconds} from '@/help/help.ts'
     import {mosaicInterface} from '@/interface/sdkMosaic.ts'
     import {accountInterface} from '@/interface/sdkAccount.ts'
     import {Component, Vue, Watch} from 'vue-property-decorator'

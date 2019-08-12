@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-    import echarts from 'echarts';
+    import echarts from 'echarts'
     import {copyTxt} from '@/help/help.ts'
    import {Message} from "config/index"
     import {Component, Vue} from 'vue-property-decorator'

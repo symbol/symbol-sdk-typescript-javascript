@@ -76,8 +76,8 @@
     import {formatAddress} from '@/help/help'
     import {Component, Vue} from 'vue-property-decorator'
     import {aliasInterface} from "@/interface/sdkNamespace"
-    import {bandedNamespace as BandedNamespaceList} from 'config/index'
     import {transactionInterface} from "@/interface/sdkTransaction"
+    import {bandedNamespace as BandedNamespaceList} from 'config/index'
     import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
     @Component({

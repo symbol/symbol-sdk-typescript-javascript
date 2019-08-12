@@ -49,9 +49,7 @@
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
     import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
 
-    @Component({
-        components: {},
-    })
+    @Component
     export default class mosaicUnAliasDialog extends Vue {
         show = false
         aliasNameList: any[] = []

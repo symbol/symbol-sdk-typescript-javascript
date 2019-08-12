@@ -2,9 +2,7 @@
   <div class="guideIntoWrap scroll">
     <h1 class="pageTit">{{$t('start_the_NEM_tour')}}</h1>
     <div class="methodDiv">
-
-      <div class=" createDiv
-        ">
+      <div class=" createDiv">
         <div class="createIcon">
           <img src="@/common/img/login/guide-into/guideIntoCreate.png">
         </div>
@@ -24,9 +22,6 @@
         <p class="importTxt">{{$t('import_text')}}</p>
         <div class="button pointer" @click="jumpToOtherPage('walletImportKeystore')">{{$t('import_wallet')}}</div>
       </div>
-
-
-
     </div>
   </div>
 </template>
@@ -34,7 +29,7 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
 
-    @Component({})
+    @Component
     export default class guideIntoWrap extends Vue {
         jumpToOtherPage(name) {
             this.$store.state.app.isInLoginPage = false
