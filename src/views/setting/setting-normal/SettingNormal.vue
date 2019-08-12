@@ -23,7 +23,7 @@
         {{$t('account_name')}}
         <div class="tips">{{$t('the_default_is_Number')}}</div>
         <div class="gray_content input">
-          <input class="absolute" type="text" :placeholder="$t('please_enter_your_new_password_again')">
+          <input class="absolute" type="text" :placeholder="$t('please_input_new_account_name')">
         </div>
         <span class="confirm_button un_click">{{$t('confirm')}}</span>
       </li>
@@ -32,8 +32,8 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import {localSave, localRead} from '@/utils/util.js'
+    import {localSave} from '@/help/help'
+    import {Component, Vue} from 'vue-property-decorator'
 
     @Component
     export default class SettingNormal extends Vue {

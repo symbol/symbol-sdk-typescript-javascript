@@ -115,15 +115,15 @@
 </template>
 
 <script lang="ts">
+    import {Message} from "config/index"
     import {Account, Address, Listener} from "nem2-sdk"
-    import Message from "@/message/Message"
-    import {Component, Vue, Watch} from 'vue-property-decorator'
     import {aliasInterface} from "@/interface/sdkNamespace"
-    import {formatSeconds, formatAddress} from '@/utils/util.js'
-    import BandedNamespaceList from '@/message/BandedNamespace.ts'
+    import {multisigInterface} from '@/interface/sdkMultisig'
+    import {formatSeconds, formatAddress} from '@/help/help.ts'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from "@/interface/sdkTransaction"
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
-    import {multisigInterface} from '@/interface/sdkMultisig';
+    import {bandedNamespace as BandedNamespaceList} from 'config/index'
+    import CheckPWDialog from '@/common/vue/checkPW-dialog/CheckPWDialog.vue'
 
     @Component({
         components: {
@@ -409,7 +409,7 @@
                 this.$Message.error(Message.DURATION_MORE_THAN_1_YEARS_ERROR)
                 this.form.duration = 0
             }
-            this.durationIntoDate = formatSeconds(duration * 12)
+            this.durationIntoDate = Number(formatSeconds(duration * 12))
         }
 
         initData() {

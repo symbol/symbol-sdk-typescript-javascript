@@ -24,9 +24,9 @@
             <FormItem :label="$t('fee')">
               <Input v-model="mosaic.fee" number required placeholder=""></Input>
               <p class="tails">gas</p>
-                <div class="tips">
-                    {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-                </div>
+              <div class="tips">
+                {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+              </div>
             </FormItem>
             <FormItem :label="$t('password')">
               <Input v-model="mosaic.password" type="password" required
@@ -43,14 +43,14 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
-    import './MosaicAliasDialog.less';
-    import Message from "../../../../../../message/Message";
-    import {walletInterface} from "../../../../../../interface/sdkWallet";
-    import {transactionInterface} from "../../../../../../interface/sdkTransaction";
-    import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk";
-    import {aliasInterface} from "../../../../../../interface/sdkNamespace";
-    import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias";
+    import './MosaicAliasDialog.less'
+    import {Message} from "config/index"
+    import {walletInterface} from "@/interface/sdkWallet"
+    import {aliasInterface} from "@/interface/sdkNamespace"
+    import {transactionInterface} from "@/interface/sdkTransaction"
+    import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+    import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
+    import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
 
     @Component({
         components: {},
@@ -69,19 +69,19 @@
         @Prop()
         itemMosaic: any
 
-        get getWallet () {
+        get getWallet() {
             return this.$store.state.account.wallet
         }
 
-        get generationHash () {
+        get generationHash() {
             return this.$store.state.account.generationHash
         }
 
-        get node () {
+        get node() {
             return this.$store.state.account.node
         }
 
-        get namespaceList () {
+        get namespaceList() {
             return this.$store.state.account.namespace
         }
 
@@ -89,9 +89,11 @@
             this.initForm()
             this.$emit('closeMosaicAliasDialog')
         }
-        updateMosaicAlias () {
+
+        updateMosaicAlias() {
             this.checkNamespaceForm()
         }
+
         checkInfo() {
             const {mosaic} = this
 
@@ -122,7 +124,8 @@
             }
             this.decryptKey()
         }
-        decryptKey () {
+
+        decryptKey() {
             let encryptObj = {
                 ciphertext: this.getWallet.ciphertext,
                 iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
@@ -130,7 +133,8 @@
             }
             this.checkPrivateKey(Crypto.decrypt(encryptObj))
         }
-        checkPrivateKey (DeTxt) {
+
+        checkPrivateKey(DeTxt) {
             const that = this
             walletInterface.getWallet({
                 name: this.getWallet.name,
@@ -144,17 +148,18 @@
                 })
             })
         }
-        async updateMosaic (key) {
-            const that =this
+
+        async updateMosaic(key) {
+            const that = this
             let transaction
             const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
             aliasInterface.mosaicAliasTransaction({
-                actionType:AliasActionType.Link,
+                actionType: AliasActionType.Link,
                 namespaceId: new NamespaceId(that.mosaic.aliasName),
                 mosaicId: new MosaicId(that.mosaic['hex']),
                 networkType: this.getWallet.networkType,
-                maxFee:that.mosaic.fee
-            }).then((aliasTransaction)=>{
+                maxFee: that.mosaic.fee
+            }).then((aliasTransaction) => {
                 let transaction
                 transaction = aliasTransaction.result.aliasMosaicTransaction
                 const signature = account.sign(transaction, this.generationHash)
@@ -172,22 +177,24 @@
             })
 
         }
+
         updatedMosaicAlias() {
             this.show = false
             this.mosaicAliasDialogCancel()
         }
 
-        initForm () {
+        initForm() {
             this.mosaic = {
                 aliasName: '',
                 fee: 50000,
                 password: ''
             }
         }
-        initData () {
+
+        initData() {
             let list = []
-            this.namespaceList.map((item, index)=>{
-                if(item.alias instanceof EmptyAlias){
+            this.namespaceList.map((item, index) => {
+                if (item.alias instanceof EmptyAlias) {
                     list.push(item)
                 }
             })
@@ -200,8 +207,9 @@
             Object.assign(this.mosaic, this.itemMosaic)
             this.initData()
         }
+
         @Watch('namespaceList')
-        onNamespaceListChange(){
+        onNamespaceListChange() {
             this.initData()
         }
     }

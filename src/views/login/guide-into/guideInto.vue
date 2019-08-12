@@ -6,7 +6,7 @@
       <div class=" createDiv
         ">
         <div class="createIcon">
-          <img src="../../../assets/images/login/guide-into/guideIntoCreate.png">
+          <img src="@/common/img/login/guide-into/guideIntoCreate.png">
         </div>
         <p class="createTit">{{$t('create_now')}}</p>
         <p class="createTxt">{{$t('this_will_create_a_new_wallet_and_a_new_torrent_file')}}</p>
@@ -18,7 +18,7 @@
 
       <div class="importDiv">
         <div class="importIcon">
-          <img src="../../../assets/images/login/guide-into/guideIntoImport.png">
+          <img src="@/common/img/login/guide-into/guideIntoImport.png">
         </div>
         <p class="importTit">{{$t('existing_wallet')}}</p>
         <p class="importTxt">{{$t('import_text')}}</p>

@@ -103,7 +103,7 @@
                 <span class="address_alias">{{i}}</span>
                 <span class="action">{{$t('add')}}</span>
                 <img class="delate pointer" @click="deleteAdress(index)"
-                     src="@/assets/images/service/multisig/multisigDelete.png" alt="">
+                     src="@/common/img/service/multisig/multisigDelete.png" alt="">
               </div>
             </div>
           </div>
@@ -126,13 +126,12 @@
 </template>
 
 <script lang="ts">
-    import Message from '@/message/Message.ts'
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Message} from "config/index"
+    import {Component, Vue} from 'vue-property-decorator'
     import {multisigInterface} from '@/interface/sdkMultisig.ts'
     import {transactionInterface} from '@/interface/sdkTransaction.ts'
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
+    import CheckPWDialog from '@/common/vue/checkPW-dialog/CheckPWDialog.vue'
     import {
-        NetworkType,
         Account,
         Listener,
         MultisigCosignatoryModification,

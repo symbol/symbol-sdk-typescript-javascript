@@ -79,6 +79,7 @@ export const zh_CN = {
     transaction_detail: '交易详情',
     no_unconfirmed_transactions: '暂无未确认交易',
     no_confirmed_transactions: '暂无已确认交易',
+    //monitor-market
     highest_price: '最高价格',
     lowest_price: '最低价格',
     average_price: '平均价格',
@@ -102,6 +103,8 @@ export const zh_CN = {
     validity_period: '有效期',
     harvested_block: '收获的块',
     successful_copy: '复制成功',
+
+    // monitor-receipt
     set_amount: '设置金额',
     asset_type: '资产类型',
     transfer_amount: '转账金额',
@@ -116,6 +119,8 @@ export const zh_CN = {
     crosschain_transfer: '跨链转账',
     aggregate_transfer: '聚合转账',
     QR_code_generation_failed: '二维码生成失败',
+
+    //monitor-remote
     Remote_title_recipt: '累积委托收益量',
     Remote_state: '当前状态',
     Remote_pubulic_pik: '远程公钥',
@@ -138,6 +143,8 @@ export const zh_CN = {
     remote_modal_cancel: '取消',
     remote_modal_place1: '请输入或粘贴远程公钥',
     remote_modal_place2: '请输入钱包密码',
+
+    //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: '欢迎回到CATAPULT测试版',
     welcome_to_the_CATAPULT_beta: '欢迎使用CATAPULT测试版',
     this_is_a_distributed_desktop_wallet_based_on_CATAPULT_I_wish_you_a_pleasant_trip: '这是一个基于CATAPULT的分布式桌面钱包 祝你旅途愉快',
@@ -149,6 +156,8 @@ export const zh_CN = {
     use_the_NEM_Apostille_service_to_create_blockchain_notarized_timestamps_to_track_and_audit_file_authentication_status: '使用NEM Apostille服务创建区块链公证时间戳,跟踪和审计文件认证状态。',
     assign_tags_to_addresses_to_easily_track_contacts: '将标签分配给地址以轻松跟踪联系人',
     use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates: 'Use Changelly and ShapeShift widgets to buy XEM at the best rates!',
+
+//   monitor-transfer
     transfer_target: '转账目标',
     send: '发送',
     transfer_record: '转账记录',
@@ -157,9 +166,14 @@ export const zh_CN = {
     please_enter_a_comment: '请输入备注信息',
     password_error: '密码错误',
     transaction_hash_error: '交易哈希错误',
+
+
+    //setting-about
     privacy_policy: '隐私政策',
     terms_of_use: '使用条款',
     about_us: '关于我们',
+
+    //setting-lock
     old_password: '原密码',
     please_enter_the_original_password: '请输入原始密码',
     set_password: '设置密码',
@@ -167,8 +181,12 @@ export const zh_CN = {
     please_enter_a_new_password: '请输入新的密码',
     confirm_password: '确认密码',
     please_enter_your_new_password_again: '请再次输入新的密码',
+
+    // setting network
     save: '保存',
     canel: '取消',
+
+    //setting-panel
     general_settings: '常规设置',
     lock_password: '锁密码',
     network_settings: '网络设置',
@@ -178,12 +196,18 @@ export const zh_CN = {
     amount_can_not_be_less_than_0: '马赛克交易数量不可小于0',
     fee_can_not_be_less_than_0: 'fee不可小于0',
     mosaic_name_can_not_be_null: '马赛克名称不能为空',
+    //setting-normal
     switch_language: '切换语言',
     currency_setting: '货币设置',
     account_name: '账户名',
     the_default_is_Number: '默认为Nember',
     confirm: '确认',
+
+
+    // on_dev
     not_yet_open: '暂未开放',
+
+    //service mosaic
     ordinary_account: '普通账户',
     basic_attribute: '基本属性',
     supply: '供应量',
@@ -196,6 +220,7 @@ export const zh_CN = {
     other_information: '其他信息',
     duration: '持续时间',
     enter_the_number_of_blocks_integer: '输入块数（整数）',
+    ////////////////////////////////////////////////////////////////////////////
     enter_the_number_of_blocks: '输入持续租用马赛克的块数（整数）,1个块=1XEM',
     multi_sign_account: '多签账户',
     mosaic_list: '马赛克列表',
@@ -214,6 +239,8 @@ export const zh_CN = {
     fee_can_not_less_than_0: '费用不可小于零',
     duration_can_not_more_than_10_years: '持续时间不可大于10年',
     duration_can_not_more_than_1_years: '持续时间不可大于1年',
+
+    // edit dialog
     modify_supply: '修改供应量',
     binding_alias: '绑定别名',
     unbind: '取消绑定',
@@ -233,6 +260,8 @@ export const zh_CN = {
     update: '更新',
     mosaic_operation: '马赛克操作',
     update_completed: '更新成功',
+
+    // namespace
     parent_namespace: '父命名空间',
     root_namespace: '根命名空间',
     new_root_namespace: '新的根命名空间',
@@ -245,10 +274,15 @@ export const zh_CN = {
     space_name: '空间名',
     update_namespace: '更新命名空间',
     namespace_operation: '命名空间操作',
+
+    //switch
     multi_signature: '多重签名',
     apostille: '公证',
     address_book: '地址簿',
     instant_xchanges: 'Instant Exchanges',
+
+
+    //import
     mnemonic: '助记词',
     privatekey: '私钥',
     keystore: 'keystore',
@@ -270,6 +304,9 @@ export const zh_CN = {
     keystore_text: 'keystore文本',
     keystore_describle_text: '此密码为KeyStore加密密码，在你支付的时候会被使用，如果需要修改此密码，请进入钱包管理中心',
     keystore_describle_import: '从你的电脑中，选择加载KY文件或者在下方输入框中粘贴KeyStore字符串',
+
+
+    //create lock pw
     new_password: '新密码',
     Please_enter_the_name_of_the_wallet: '请输入钱包名',
     please_enter_the_set_password: '请输入设置的密码',
@@ -279,6 +316,8 @@ export const zh_CN = {
     create_a_Lock_password: '创建Lock密码',
     lock_pass_text: '本密码用于桌面钱包的锁定，一旦丢失，你将失去进入桌面钱包的权利； 因此你需要对你的资产账户的记助词或私钥进行备份，以便恢复。',
     lock_pass_text_2: '本密码是进入桌面钱包的依据，没有转账的权利，转帐需要你的私钥密码才能完成。',
+
+    //welcome page
     return_to_the_welcome_page: '返回欢迎页',
     next: '下一步',
     start_the_NEM_tour: '开始NEM之旅',
@@ -289,13 +328,20 @@ export const zh_CN = {
     this_will_create_a_new_wallet_and_a_new_torrent_file: '这将会创建一个新的钱包和新的种子文件',
     create_wallet: '创建钱包',
     hash: 'hash',
+
+    //menu bar
     wallet_name: '账户名',
     switch_point: '选择节点',
     current_point: '当前节点',
     please_enter_a_custom_nod_address: '请输入自定义节点地址',
     point_null_error: '节点数据不可为空',
+    //check pw dialog
     please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe: '请输入钱包密码，以确保为本人操作，保证你的钱包安全',
+
+    // wallet import keystore
     please_choose: '请选择',
+
+// wallet detail
     export: '导出',
     input_password: '输入密码',
     backup_prompt: '备份提示',
@@ -313,6 +359,8 @@ export const zh_CN = {
     copy: '复制',
     Display_Keystore_QR_code: '显示Keystore二维码',
     Show_Keystore: '显示Keystore',
+
+    //export dialog
     export_mnemonic: '导出助记词',
     backup_mnemonic: '备份助记词',
     confirm_backup: '确认备份',
@@ -323,6 +371,8 @@ export const zh_CN = {
     please_accurately_copy_the_safety_backup_mnemonic: '请准确抄写安全备份助记词',
     please_click_on_the_mnemonic_in_order_to_confirm_that_you_are_backing_up_correctly: '请按顺序点击助记词，以确认您正确备份',
     the_mnemonic_order_is_correct_and_the_backup_is_successful: '助记词顺序正确，备份成功',
+
+    // privatekey
     export_private_key: '导出私钥',
     backup_private_key: '备份私钥',
     Obtaining_a_private_key_equals_ownership_of_the_wallet_asset: '获得私钥等于拥有钱包资产所有权',
@@ -331,6 +381,8 @@ export const zh_CN = {
     please_accurately_copy_the_secure_backup_private_key: '请准确抄写安全备份私钥',
     display_private_key_QR_code: '显示私钥二维码',
     display_private_key: '显示私钥',
+
+    // wallet create
     choose_network: '选择网络',
     In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks: 'nem2 的生态系统中，你可以构建自己的主网钱包，或者私用网络钱包，或者测试网络',
     set_the_wallet_name: '设置钱包名',
@@ -344,6 +396,7 @@ export const zh_CN = {
     walletCreateWalletNameRemind: '设置钱包名输入错误! ',
     walletCreatePasswordRemind: '设置密码输入错误! ',
     walletCreateCheckPWRemind: '两次密码不一致! ',
+    //Backup mnemonic  created
     Backup_mnemonics_can_effectively_back_up_and_restore_your_account: '备份助记词能有效备份和恢复你的账户',
     tips: '提示',
     Do_not_reveal_the_mnemonic_you_backed_up_Anyone_with_a_mnemonic_can_always_own_the_wallet: '不要透露你备份的助记词，任何有了助记词的人就可以永远拥有该钱包',
@@ -365,6 +418,8 @@ export const zh_CN = {
     Nemwallet_can_not_recover_your_mnemonic: 'Nemwallet无法恢复您的助记词',
     Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct: '请输入助记词，确保助记词是正确的',
     Mnemonic_inconsistency: '助记词不一致',
+
+    //wallet details
     Basic_information: '基本信息',
     Wallet_type: '钱包类型',
     Public_wallet: '公共钱包',
@@ -399,7 +454,10 @@ export const zh_CN = {
     createLockPWRemind: '密码设置错误',
     createLockCheckPWRemind: '两次密码不一致',
     createLockPWTxtRemind: '设置密码提示错误',
+
     no_mnemonic: '暂无助记词',
+
+    //multisig
     map: '多签地图',
     convert: '转化为多签',
     manage: '编辑多签',
@@ -409,7 +467,7 @@ export const zh_CN = {
     Convert_to_multi_sign_account: '转化为多签账户',
     cosigner: '共签人',
     Add_co_signers_here_will_be_displayed_in_the_action_list_click_delete_to_cancel_the_operation: '添加共签人，此处操作会在操作清单中显示，点击删除可撤销操作',
-    Wallet_account_address_or_alias: '钱包地址或别名',
+    Wallet_account_address_or_alias: '钱包公钥或别名',
     min_approval: '最小签名数',
     The_number_of_signatures_required_to_add_someone_from_a_multi_sign_or_complete_this_multi_tap_transaction: '从多签中添加某人或完成此多签交易所需的签名数',
     Please_set_the_minimum_number_of_signatures_number_of_co_signers: '请设置最小签名数<=共签人数',
@@ -422,6 +480,7 @@ export const zh_CN = {
     Edit_co_signers_and_signature_thresholds: '编辑共签人及签名阀值',
     Choose_a_co_signer: '选择共签人',
     Add_delete_co_signers_this_action_will_be_displayed_in_the_action_log_click_delete_to_cancel: '添加/删除共签人，此处操作会在操作记录中显示，点击删除可撤销',
+
     Create_namespace: '创建命名空间',
     Create_subNamespace: '创建子命名空间',
     Namespace_list: '命名空间列表',
@@ -439,10 +498,12 @@ export const zh_CN = {
     Update_namespace_prompts: '更新命名空间提示',
     namespace_list_tips_1: '1.只有根命名空间需要更新. 所有子空间命名空间将在根命名空间扩展后自动扩展;',
     namespace_list_tips_2: '2.根据租赁协议，与命名空间签订的合同最长可达一年,合同可以在其到期日之前或之后的一个月续约.如果命名空间没有及时扩展，则在其下创建的名称和马赛克的所有子空间都将丢失;',
+//mosaic transaction
     create_mosaic: '创建马赛克',
     no_data: '暂无数据',
     votes: '票',
     create_node: '创建网络',
+    // apostille
     create_apostille: '创建公证',
     audit_apostille: '审核公证',
     apostille_history: '公证历史',
@@ -466,10 +527,12 @@ export const zh_CN = {
     apostille_result: '公证结果',
     Delete_records_locally: '本地删除记录',
     Notarized_data_backup: '公证数据备份',
+    //multisig
     first_floor: '第一层',
     second_floor: '第二层',
     third_floor: '第三层',
     Harvester: '收获者',
+    // login
     WELCOME_TO_CATAPULT_NANO_WALLET: '欢迎使用CATAPULT-NANO-Wallet测试版',
     This_is_a_distributed_desktop_wallet_based_on_catapult_come_and_explore_the_wonderful_journey_of_catapult: '这是一个基于CATAPULT的分布式桌面钱包 祝你旅途愉快',
     CREATE_LOCK_PASSWORD: '创建 LOCK PASSWORD',
@@ -499,23 +562,26 @@ export const zh_CN = {
     currrent: '当前',
     min_removal_delta: '最小剔除人数的变化量',
     min_approval_delta: '最小同意人数的变化量',
-    There_are_no_more_accounts_under_this_account: '此账户下暂无多签账户',
-    There_are_no_more_accounts_under_this_account_or_cosigner: '此账户下暂无多签账户或共签人',
-    This_account_is_already_a_multi_sign_account: '此账户已经是一个多签账户',
-    mosaic_id_format_error: '马赛克id格式错误',
-    alias_name_format_error: '别名格式错误',
+    There_are_no_more_accounts_under_this_account:'此账户下暂无多签账户',
+    There_are_no_more_accounts_under_this_account_or_cosigner:'此账户下暂无多签账户或共签人',
+    This_account_is_already_a_multi_sign_account:'此账户已经是一个多签账户',
+    mosaic_id_format_error:'马赛克id格式错误',
+    alias_name_format_error:'别名格式错误',
     max_approval_amount_more_than_10: 'Min approval 不可大于10',
     max_removal_amount_more_than_10: 'Min removal 不可大于10',
-    bonded_fee: 'bonded 费用',
-    lock_fee: 'lock 费用',
-    inner_fee: '内部交易费用',
-    The_value_of_duration_cannot_be_less_than_1: 'Duration 的值不能小于1',
-    Namespace_cannot_be_a_null_or_empty_string: 'Namespace 不能为空值或空字符串',
-    The_root_namespace_cannot_be_longer_than_16: 'Root namespace 长度不能大于16',
-    The_sub_namespace_cannot_be_longer_than_16: 'Sub namespace 长度不能大于64',
-    Namespace_must_start_with_a_letter: 'Namespace 必须以字母开头',
-    Namespace_can_only_contain_numbers_letters_and_other: 'Namespace 只能包含数字，字母，_和-',
-    Namespace_cannot_use_forbidden_words: 'Namespace 不能使用禁止的单词',
-    clear_cache: '清除缓存'
+    bonded_fee:'聚合费用',
+    lock_fee:'锁定费用',
+    inner_fee:'内部费用',
 
+    The_value_of_duration_cannot_be_less_than_1:'Duration 的值不能小于1',
+    Namespace_cannot_be_a_null_or_empty_string:'Namespace 不能为空值或空字符串',
+    The_root_namespace_cannot_be_longer_than_16:'Root namespace 长度不能大于16',
+    The_sub_namespace_cannot_be_longer_than_16:'Sub namespace 长度不能大于64',
+    Namespace_must_start_with_a_letter :'Namespace 必须以字母开头',
+    Namespace_can_only_contain_numbers_letters_and_other:'Namespace 只能包含数字，字母，_和-',
+    Namespace_cannot_use_forbidden_words :'Namespace 不能使用禁止的单词',
+    clear_cache: '重置账户',
+    We_will_clear_your_cache_reset_account_password_please_make_sure_your_wallet_is_safely_backed_up:'我们将清除你的缓存重置账号密码，请确保你的钱包已经安全备份',
+    confirm_infomation:'信息确认',
+    please_input_new_account_name:'输入新的账户名'
 }

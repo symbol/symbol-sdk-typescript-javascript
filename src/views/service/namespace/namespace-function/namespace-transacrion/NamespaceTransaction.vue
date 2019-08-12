@@ -13,7 +13,7 @@
           <span class="value" v-if="typeList[0].isSelected">{{formatAddress(getWallet.address)}}</span>
           <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="multisigPublickey"
                   class="select">
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in rootNamespaceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
 
@@ -21,9 +21,11 @@
         <div class="form_item">
           <span class="key">{{$t('parent_namespace')}}</span>
           <span class="value">
-              <input type="text"  v-model="form.rootNamespaceName" :placeholder="$t('New_root_space')">
-              <Select :placeholder="$t('New_root_space')" v-if="isSelectNamespace" v-model="form.rootNamespaceName" class="select">
-                  <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <input type="text" v-model="form.rootNamespaceName" :placeholder="$t('New_root_space')">
+              <Select :placeholder="$t('New_root_space')" v-if="isSelectNamespace" v-model="form.rootNamespaceName"
+                      class="select">
+                  <Option v-for="item in rootNamespaceList" :value="item.value"
+                          :key="item.value">{{ item.label }}</Option>
               </Select>
           </span>
         </div>
@@ -31,7 +33,7 @@
         <div class="form_item">
           <span class="key">{{$t('Subspace')}}</span>
           <span class="value">
-              <input type="text"  v-model="form.subNamespaceName" :placeholder="$t('Input_space_name')">
+              <input type="text" v-model="form.subNamespaceName" :placeholder="$t('Input_space_name')">
           </span>
           <div class="tips">
             <div>
@@ -51,7 +53,9 @@
         <div class="form_item duration_item">
           <span class="key">{{$t('duration')}}</span>
           <span class="value">
-             <input v-model="form.duration" :disabled="isSelectNamespace" :class="[isSelectNamespace?'disabledInput':'']"  type="text" @input="changeXEMRentFee" :placeholder="$t('undefined')">
+             <input v-model="form.duration" :disabled="isSelectNamespace"
+                    :class="[isSelectNamespace?'disabledInput':'']" type="text" @input="changeXEMRentFee"
+                    :placeholder="$t('undefined')">
             <span class="end_label">{{$t('duration')}}:{{durationIntoDate}}</span>
          </span>
           <div class="tips">
@@ -80,37 +84,39 @@
         </div>
       </div>
     </div>
-    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog" @checkEnd="checkEnd"></CheckPWDialog>
+    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
+                   @checkEnd="checkEnd"></CheckPWDialog>
 
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import {formatSeconds, formatAddress} from '@/utils/util.js'
-    import Message from "@/message/Message";
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
-    import {aliasInterface} from "../../../../../interface/sdkNamespace";
-    import {transactionInterface} from "../../../../../interface/sdkTransaction";
-    import {Account} from "nem2-sdk";
+    import {Account} from "nem2-sdk"
+    import {Message} from "config/index"
+    import {Component, Vue} from 'vue-property-decorator'
+    import {aliasInterface} from "@/interface/sdkNamespace"
+    import {formatSeconds, formatAddress} from '@/help/help.ts'
+    import {transactionInterface} from "@/interface/sdkTransaction"
+    import CheckPWDialog from '@/common/vue/checkPW-dialog/CheckPWDialog.vue'
 
     @Component({
-        components:{
+        components: {
             CheckPWDialog
         }
     })
     export default class NamespaceTransaction extends Vue {
+        durationIntoDate = 0
+        multisigPublickey = ''
         showCheckPWDialog = false
         isSelectNamespace = false
         form = {
             duration: 1000,
             rootNamespaceName: '',
-            subNamespaceName:'',
-            maxFee:10000000
+            subNamespaceName: '',
+            maxFee: 10000000
         }
-        durationIntoDate = 0
-        multisigPublickey = ''
-        cityList = [
+
+        rootNamespaceList = [
             {
                 value: 'no data',
                 label: 'no data'
@@ -127,21 +133,22 @@
             }
         ]
 
-        get getWallet () {
+        get getWallet() {
             return this.$store.state.account.wallet
         }
 
-        get generationHash () {
+        get generationHash() {
             return this.$store.state.account.generationHash
         }
 
-        get node () {
+        get node() {
             return this.$store.state.account.node
         }
 
-        formatAddress(address){
+        formatAddress(address) {
             return formatAddress(address)
         }
+
         switchType(index) {
             let list = this.typeList
             list = list.map((item) => {
@@ -152,17 +159,17 @@
             this.typeList = list
         }
 
-        async checkEnd(key){
+        async checkEnd(key) {
             let transaction;
             const that = this;
             const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
 
-            if(this.form.subNamespaceName != ''){
-                await this.createSubNamespace(key).then((subNamespaceTransaction)=>{
+            if (this.form.subNamespaceName != '') {
+                await this.createSubNamespace(key).then((subNamespaceTransaction) => {
                     transaction = subNamespaceTransaction
                 })
-            }else {
-                await this.createRootNamespace(key).then((rootNamespaceTransaction)=>{
+            } else {
+                await this.createRootNamespace(key).then((rootNamespaceTransaction) => {
                     transaction = rootNamespaceTransaction
                 })
             }
@@ -177,45 +184,46 @@
             })
         }
 
-        createRootNamespace(key){
+        createRootNamespace(key) {
             return aliasInterface.createdRootNamespace({
                 namespaceName: this.form.rootNamespaceName,
                 duration: this.form.duration,
                 networkType: this.getWallet.networkType,
                 maxFee: this.form.maxFee
-            }).then((transaction)=>{
+            }).then((transaction) => {
                 return transaction.result.rootNamespaceTransaction
             })
         }
 
-        createSubNamespace(key){
+        createSubNamespace(key) {
             return aliasInterface.createdSubNamespace({
                 parentNamespace: this.form.rootNamespaceName,
                 namespaceName: this.form.subNamespaceName,
                 networkType: this.getWallet.networkType,
                 maxFee: this.form.maxFee
-            }).then((transaction)=>{
+            }).then((transaction) => {
                 return transaction.result.subNamespaceTransaction
             })
         }
 
-        initForm () {
+        initForm() {
             this.form = {
                 duration: 0,
                 rootNamespaceName: '',
-                subNamespaceName:'',
-                maxFee:0
+                subNamespaceName: '',
+                maxFee: 0
             }
         }
 
-        showSelectNamespace () {
+        showSelectNamespace() {
             this.isSelectNamespace = true
         }
 
-        closeCheckPWDialog () {
+        closeCheckPWDialog() {
             this.showCheckPWDialog = false
         }
-        createTransaction(){
+
+        createTransaction() {
             // this.showCheckPWDialog = true
         }
 
@@ -230,14 +238,14 @@
                 this.$Message.error(Message.DURATION_MORE_THAN_1_YEARS_ERROR)
                 this.form.duration = 0
             }
-            this.durationIntoDate = formatSeconds(duration * 12)
+            this.durationIntoDate = Number(formatSeconds(duration * 12))
         }
 
-        initData () {
+        initData() {
             this.changeXEMRentFee()
         }
 
-        created () {
+        created() {
             this.initData()
         }
     }

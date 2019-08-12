@@ -41,24 +41,24 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
-    import './mosaicUnAliasDialog.less';
-    import Message from "../../../../../../message/Message";
-    import {walletInterface} from "../../../../../../interface/sdkWallet";
-    import {transactionInterface} from "../../../../../../interface/sdkTransaction";
-    import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk";
-    import {aliasInterface} from "../../../../../../interface/sdkNamespace";
+    import './mosaicUnAliasDialog.less'
+    import {Message} from "config/index"
+    import {walletInterface} from "@/interface/sdkWallet"
+    import {aliasInterface} from "@/interface/sdkNamespace"
+    import {transactionInterface} from "@/interface/sdkTransaction"
+    import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+    import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
 
     @Component({
         components: {},
     })
     export default class mosaicUnAliasDialog extends Vue {
         show = false
+        aliasNameList: any[] = []
         mosaic = {
             fee: 50000,
             password: ''
         }
-        aliasNameList: any[] = []
 
         @Prop()
         showMosaicUnAliasDialog: boolean

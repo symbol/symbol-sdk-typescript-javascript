@@ -1,92 +1,92 @@
 <template>
-    <div class="informationWrap">
-        <div class="left left_article_list radius">
+  <div class="informationWrap">
+    <div class="left left_article_list radius">
 
-            <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
-            <div v-if="isLoadingConfirmedTx"
-                 style="background-color: white;width: 100%;height: 100%;position: absolute;z-index: 0"></div>
+      <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
+      <div v-if="isLoadingConfirmedTx"
+           style="background-color: white;width: 100%;height: 100%;position: absolute;z-index: 0"></div>
 
 
-            <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticla">
-                <div @click="switchArticle(index)" v-for="(a,index) in articleList"
-                     :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
-                    <div class="title">{{a.title}}
-                    </div>
-                    <div class="other_info">
-                        <span class="tag">{{$t('business')}}</span>
-                        <span class="from">{{a.author}}</span>
-                        <span class="date">{{a.gtmCreate}}</span>
-                    </div>
-                </div>
-                <div class="load_all_data" v-if="loadAllData">{{$t('no_more_data')}}</div>
-            </div>
-
+      <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticla">
+        <div @click="switchArticle(index)" v-for="(a,index) in articleList"
+             :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
+          <div class="title">{{a.title}}
+          </div>
+          <div class="other_info">
+            <span class="tag">{{$t('business')}}</span>
+            <span class="from">{{a.author}}</span>
+            <span class="date">{{a.gtmCreate}}</span>
+          </div>
         </div>
-        <div class="right_article_detail right radius">
-            <div class="article_container " ref="articleContainer" @scroll="automaticLoadingComment">
+        <div class="load_all_data" v-if="loadAllData">{{$t('no_more_data')}}</div>
+      </div>
 
-                <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute spin"></Spin>
-                <div v-if="isLoadingConfirmedTx"
-                     style="background-color: white;width: 90%;height: 500px;position: absolute;z-index: 1"></div>
+    </div>
+    <div class="right_article_detail right radius">
+      <div class="article_container " ref="articleContainer" @scroll="automaticLoadingComment">
 
-                <div class="title content article_title">
-                    {{currentArticle.title}}
-                </div>
-                <div class="other_info content">
+        <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute spin"></Spin>
+        <div v-if="isLoadingConfirmedTx"
+             style="background-color: white;width: 90%;height: 500px;position: absolute;z-index: 1"></div>
+
+        <div class="title content article_title">
+          {{currentArticle.title}}
+        </div>
+        <div class="other_info content">
         <span class="tag">
           {{$t('business')}}/{{$t('service')}}
         </span>
-                    <span class="from">
+          <span class="from">
           {{currentArticle.author}}
         </span>
-                    <span class="date">
+          <span class="date">
           {{currentArticle.gtmCreate}}
         </span>
-                </div>
+        </div>
 
-                <div class="artile_content scroll content">
-                    <div v-html="currentArticle.content">
-                    </div>
-                    <div class="comment">
+        <div class="artile_content scroll content">
+          <div v-html="currentArticle.content">
+          </div>
+          <div class="comment">
           <span class="comment_title"><span
                   class="comment_title_text">{{$t('comment')}}  </span> ({{totalComment}})</span>
 
-                        <div class="input_container">
-                            <textarea v-model="commentContent" name="" id=""></textarea>
-                            <span class="textarea_text">{{$t('remaining')}}：{{remainingWords}} {{$t('word')}}</span>
-                        </div>
-
-                        <div @click="checkForm" class="send_comment pointer">
-                            {{$t('publish')}}
-                        </div>
-
-                        <div class="comment_item_content">
-                            <div v-for="(c,index) in commentList" class="comment_item">
-                                <div class="account_name">{{c.nickName == ''? $t('anonymous_user'):c.nickName}}</div>
-                                <div class="comment_content">{{c.comment}}</div>
-                                <div class="comment_time">{{c.gtmCreate}}</div>
-                            </div>
-                            <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">
-                                {{$t('no_more_data')}}
-                            </div>
-                            <div class="load_all_data" v-if="commentList.length === 0">{{$t('no_comment_yet')}}</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="input_container">
+              <textarea v-model="commentContent" name="" id=""></textarea>
+              <span class="textarea_text">{{$t('remaining')}}：{{remainingWords}} {{$t('word')}}</span>
             </div>
+
+            <div @click="checkForm" class="send_comment pointer">
+              {{$t('publish')}}
+            </div>
+
+            <div class="comment_item_content">
+              <div v-for="(c,index) in commentList" class="comment_item">
+                <div class="account_name">{{c.nickName == ''? $t('anonymous_user'):c.nickName}}</div>
+                <div class="comment_content">{{c.comment}}</div>
+                <div class="comment_time">{{c.gtmCreate}}</div>
+              </div>
+              <div class="load_all_data" v-if="loadAllCommentData && commentList.length !== 0">
+                {{$t('no_more_data')}}
+              </div>
+              <div class="load_all_data" v-if="commentList.length === 0">{{$t('no_comment_yet')}}</div>
+            </div>
+          </div>
         </div>
-        <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
-                       @checkEnd="checkEnd"></CheckPWDialog>
+      </div>
     </div>
+    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
+                   @checkEnd="checkEnd"></CheckPWDialog>
+  </div>
 </template>
 
 <script lang="ts">
+    import {Message} from "config/index"
+    import {formatDate} from '@/help/help.ts'
+    // import {formatDate} from '@/utils/util.js'
+    import {blog} from "@/interface/restLogic"
     import {Component, Vue, Watch} from 'vue-property-decorator'
-    import axios from 'axios'
-    import {formatDate} from '../../../utils/util.js'
-    import CheckPWDialog from '../../../components/checkPW-dialog/CheckPWDialog.vue'
-    import Message from "@/message/Message";
-    import {blog} from "@/interface/restLogic";
+    import CheckPWDialog from '@/common/vue/checkPW-dialog/CheckPWDialog.vue'
 
     @Component({
         components: {
@@ -94,17 +94,17 @@
         }
     })
     export default class information extends Vue {
-        isLoadingConfirmedTx = true
-        showCheckPWDialog = false
+        startPage = 0
         articleList = []
+        commentList = []
         totalComment = 0
         commentContent = ''
-        startPage = 0
-        commentStartPage = 0
         loadAllData = false
-        commentList = []
         remainingWords = 300
+        commentStartPage = 0
+        showCheckPWDialog = false
         loadAllCommentData = false
+        isLoadingConfirmedTx = true
         currentArticle: any = {
             title: 'null',
             content: 'null'
@@ -117,7 +117,6 @@
         checkEnd(flag) {
             if (flag) {
                 this.sendComment()
-
             }
         }
 
@@ -127,6 +126,10 @@
 
         addCommentStartIndex() {
             this.commentStartPage += 10
+        }
+
+        formatDate(timestamp) {
+            return formatDate(timestamp)
         }
 
         switchArticle(index) {
@@ -171,10 +174,6 @@
                 that.$Notice.error({title: that.$t(Message.OPERATION_FAILED_ERROR) + ''});
             }
             this.onCurrentArticleChange()
-        }
-
-        formatDate(timestamp) {
-            return formatDate(timestamp)
         }
 
         switchLanguege() {
@@ -231,7 +230,6 @@
             if (rstQuery.total <= that.articleList.length) {
                 that.loadAllData = true
             }
-
             this.isLoadingConfirmedTx = false
             this.addArticleStartIndex()
             this.articleList[0].isSelect = true
@@ -286,5 +284,5 @@
 </script>
 
 <style lang="less" scoped>
-    @import "Information.less";
+  @import "Information.less";
 </style>

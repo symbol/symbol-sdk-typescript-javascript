@@ -1,7 +1,7 @@
 <template>
   <div class="text_container">
     <div class="top">
-      <img src="../../../../../assets/images/login/loginNewLogo.png" alt="">
+      <img src="@/common/img/login/loginNewLogo.png" alt="">
     </div>
 
     <div class="middle_text">
@@ -13,13 +13,13 @@
     </div>
 
     <div @click="showIndexView" class="bottom_input pointer">
-      GET START
+      <span>GET START</span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Component, Vue} from 'vue-property-decorator'
 
 
     @Component

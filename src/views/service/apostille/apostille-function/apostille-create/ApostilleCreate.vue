@@ -49,11 +49,11 @@
             <div v-if="isImportFile" class="import_file">
 
               <div v-if="tag == ''">
-                <img src="../../../../../assets/images/service/apostille/apostilleLock.png" alt="">
+                <img src="@/common/img/service/apostille/apostilleLock.png" alt="">
                 <span>{{$t('Please_enter_the_label_before_filling_in_the_label')}}</span>
               </div>
               <div v-else>
-                <img src="../../../../../assets/images/service/apostille/apostilleImportFile.png" alt="">
+                <img src="@/common/img/service/apostille/apostilleImportFile.png" alt="">
                 <span>{{$t('Drag_and_drop_files_to_this_point_click_or_browse')}}</span>
               </div>
             </div>
@@ -93,7 +93,7 @@
           <div class="table_item_list scroll">
 
             <div v-if="transationList.length == 0" class="noData" >
-              <i><img src="@/assets/images/wallet-management/no_data.png"></i>
+              <i><img src="@/common/img/wallet/no_data.png"></i>
               <p>{{$t('not_yet_open')}}</p>
             </div>
 
@@ -104,7 +104,7 @@
               <span class="hash">fe4e54598370789440e2fffc688c1dd92e254dd9e1f56594f02160dd3b13d40cb3fec81f04639525db23c034770f5509ec35a83f6e84c8f930bbf63ed327b506449dfadb02</span>
               <span class="fee">0.2</span>
               <span class="delete">
-                <img src="../../../../../assets/images/service/apostille/apostilleDelete.png" alt="">
+                <img src="@/common/img/service/apostille/apostilleDelete.png" alt="">
               </span>
             </div>
           </div>
@@ -124,10 +124,10 @@
 
     @Component
     export default class ApostilleCreate extends Vue {
-        hashAlgorithm = ''
-        isImportFile = true
         tag = ''
+        hashAlgorithm = ''
         transationList = []
+        isImportFile = true
         hashAlgorithmList = [
             {
                 value: 'SHA-256',

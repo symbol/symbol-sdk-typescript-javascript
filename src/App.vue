@@ -1,22 +1,20 @@
 <template>
-  <!--  <div id="app" oncontextmenu="return false;" onselectstart="return false">-->
   <div id="app">
     <router-view/>
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import {localRead} from './utils/util'
-    import {accountInterface} from './interface/sdkAccount';
-    import {wsInterface} from './interface/sdkListener'
-    import {PublicAccount, Listener} from "nem2-sdk";
     import 'animate.css'
+    import {localRead} from './help/help'
+    import {PublicAccount, Listener} from "nem2-sdk"
+    import {wsInterface} from './interface/sdkListener'
+    import {Component, Vue} from 'vue-property-decorator'
+    import {accountInterface} from './interface/sdkAccount'
 
     @Component
     export default class App extends Vue {
-        node: any;
-
+        node: any
         async initApp() {
             let walletList: any = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
             const that = this
@@ -109,6 +107,6 @@
 </script>
 
 <style lang="less">
-  @import "./assets/css/common.less";
-  @import "./assets/css/iview.less";
+  @import "./common/css/common.less";
+  @import "./common/css/iview.less";
 </style>

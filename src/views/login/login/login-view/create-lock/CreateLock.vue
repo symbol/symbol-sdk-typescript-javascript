@@ -1,6 +1,6 @@
 <template>
   <div class="createLockWrap scroll">
-    <img class="close pointer" @click="hideIndexView" src="../../../../../assets/images/login/loginClose.png" alt="">
+    <img class="close pointer" @click="hideIndexView" src="@/common/img/login/loginClose.png" alt="">
     <div class="pageTit">{{$t('CREATE_LOCK_PASSWORD')}}</div>
     <div class="pageRemind">{{$t('This_password_is_used_for_desktop_wallet_locking')}}</div>
 
@@ -10,7 +10,7 @@
           <div class="gray_content">
             <input v-model="lockPW.password" type="password"
                    :placeholder="$t('Set_the_password')">
-            <img src="../../../../../assets/images/login/loginLock.png" alt="">
+            <img src="@/common/img/login/loginLock.png" alt="">
           </div>
         </li>
         <li>
@@ -24,7 +24,7 @@
           <div class="gray_content">
             <input type="text" v-model="lockPW.remindTxt"
                    :placeholder="$t('Set_the_password_prompts')">
-            <img src="../../../../../assets/images/login/loginBell.png" alt="">
+            <img src="@/common/img/login/loginBell.png" alt="">
           </div>
         </li>
       </ul>
@@ -38,12 +38,11 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import {Crypto, UInt64} from 'nem2-sdk'
-    import {localSave} from '../../../../../utils/util'
-    import Message from '@/message/Message'
+    import {localSave} from '@/help/help.ts'
+    // import {localSave} from '../../../../../utils/util'
+   import {Message} from "config/index"
 
-    @Component({
-        components: {}
-    })
+    @Component
     export default class createLockPW extends Vue {
         lockPW = {
             password: '',

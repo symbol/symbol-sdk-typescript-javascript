@@ -32,7 +32,11 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
     import {
-        Account, AccountHttp, NetworkType, PublicAccount, TransactionHttp, CosignatureTransaction,
+        Account, AccountHttp,
+        NetworkType,
+        PublicAccount,
+        TransactionHttp,
+        CosignatureTransaction,
         AggregateTransaction
     } from "nem2-sdk";
 

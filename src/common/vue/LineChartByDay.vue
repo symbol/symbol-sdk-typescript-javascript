@@ -7,10 +7,11 @@
 </template>
 
 <script lang="ts">
-    import {localSave, localRead, isRefreshData, addZero, formatDate} from '@/utils/util'
-    import {Component, Vue} from 'vue-property-decorator';
-    import echarts from 'echarts';
-    import axios from 'axios'
+    import echarts from 'echarts'
+    import {market} from "@/interface/restLogic"
+    import {KlineQuery} from "@/query/klineQuery"
+    import {Component, Vue} from 'vue-property-decorator'
+    import {localSave, localRead, isRefreshData, addZero, formatDate} from '@/help/help'
 
     @Component
     export default class LineChart extends Vue {
@@ -164,9 +165,6 @@
 
                 type: "inside",
                 xAxisIndex: [0, 1],
-                // show: true,
-                // y: '90%',
-                // width:'100%',
             },
 
             series: [
@@ -298,7 +296,7 @@
 
         refreshBtc() {
             this.dom = echarts.init(this.$refs.dom);
-            let {xemDataList, btcDataList, xemMin} = this
+            let {btcDataList, xemMin} = this
             let xAxisData = []
 
             if (btcDataList.length == 0) {
@@ -333,70 +331,50 @@
             window.onresize = this.dom.resize
         }
 
-        async getBtcChartData() {
+        async setCharData(coin: string, period: string, size: string) {
             const that = this
-            //btc
-            const btcUrl = this.$store.state.app.marketUrl + '/kline/btcusdt/15min/168'
-            await axios.get(btcUrl).then(function (response) {
-                let dataList = []
-                response.data.data.forEach((item, index) => {
-                    index % 4 == 0 ? dataList.push(item) : dataList;
-                })
-
-                that.btcDataList = dataList
-                let marketPriceDataByDayObject = localRead('marketPriceDataByDayObject') ? JSON.parse(localRead('marketPriceDataByDayObject')) : {}
-                marketPriceDataByDayObject.btc = {
-                    dataList: dataList,
-                }
-                marketPriceDataByDayObject.timestamp = new Date().getTime()
-                localSave('marketPriceDataByDayObject', JSON.stringify(marketPriceDataByDayObject))
-
-            }).catch(function (error) {
-                console.log(error);
-                that.getBtcChartData()
-            });
-
-        }
-
-        async getXemChartData() {
-            const that = this
-            //60min/168
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/15min/168'
-            await axios.get(url).then(function (response) {
-                let dataList = []
-                response.data.data.forEach((item, index) => {
-                    index % 4 == 0 ? dataList.push(item) : dataList;
-                })
-
+            const rstStr = await market.kline({period: period, symbol: coin + "usdt", size: size});
+            const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+            let dataList = []
+            rstQuery.data.forEach((item, index) => {
+                index % 4 == 0 ? dataList.push(item) : dataList;
+            })
+            let marketPriceDataObject = localRead('marketPriceDataByDayObject') ? JSON.parse(localRead('marketPriceDataByDayObject')) : {}
+            marketPriceDataObject.timestamp = new Date().getTime()
+            if (coin == 'xem') {
                 that.xemDataList = dataList
-
-
-                let marketPriceDataByDayObject = localRead('marketPriceDataByDayObject') ? JSON.parse(localRead('marketPriceDataByDayObject')) : {}
-                marketPriceDataByDayObject.xem = {
+                marketPriceDataObject.xem = {
                     dataList: dataList,
-                    timestamp: new Date().getTime()
                 }
-                marketPriceDataByDayObject.timestamp = new Date().getTime()
-                localSave('marketPriceDataByDayObject', JSON.stringify(marketPriceDataByDayObject))
+            }
+            if (coin == 'btc') {
+                that.btcDataList = dataList
+                marketPriceDataObject.btc = {
+                    dataList: dataList,
+                }
+            }
 
-            }).catch(function (error) {
-                console.log(error);
-                that.getXemChartData()
-            });
+            marketPriceDataObject.timestamp = new Date().getTime()
+            localSave('marketPriceDataByDayObject', JSON.stringify(marketPriceDataObject))
             this.refresh()
         }
 
-        getChartData() {
-            this.getXemChartData()
-            this.getBtcChartData()
+        async getChartData() {
+            await this.setCharData("xem", "15min", "168");
+            await this.setCharData("btc", "15min", "168");
+            this.refresh()
         }
 
         async refreshData() {
-            if (isRefreshData('marketPriceDataByDayObject', 1000 * 60 * 60, new Date().getMinutes())) {
-                await this.getChartData()
-            } else {
+            try {
+                if (isRefreshData('marketPriceDataByDayObject', 1000 * 60 * 60, new Date().getMinutes())) {
+                    await this.getChartData()
+                    return
+                }
                 this.btcDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).btc.dataList
                 this.xemDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).xem.dataList
+            } catch (e) {
+                await this.getChartData()
             }
         }
 
@@ -409,8 +387,8 @@
             })
         }
 
-        async created() {
-            await this.refreshData()
+        created() {
+            this.refreshData()
         }
     }
 </script>

@@ -21,7 +21,7 @@
               <i class="moreFn"></i>
               <div slot="content" max-width="50" class="refresh_sub_container">
                 <span class="fnItem pointer" @click="showEditDialog(n)">
-                  <img src="../../../../../assets/images/service/namespace/namespaceRefresh.png">
+                  <img src="@/common/img/service/namespace/namespaceRefresh.png">
                   <span>{{$t('update')}}</span>
                 </span>
               </div>
@@ -30,7 +30,7 @@
         </div>
 
         <div v-if="namespaceList.length == 0" class="noData" >
-          <i><img src="@/assets/images/wallet-management/no_data.png"></i>
+          <i><img src="@/common/img/wallet/no_data.png"></i>
           <p>{{$t('not_yet_open')}}</p>
         </div>
 
@@ -42,10 +42,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import {formatSeconds} from '@/utils/util.js'
+    import {Message} from "config/index";
+    import {formatSeconds} from '@/help/help.ts'
+    import {Component, Vue} from 'vue-property-decorator'
     import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
-    import Message from "@/message/Message";
 
     @Component({
         components: {

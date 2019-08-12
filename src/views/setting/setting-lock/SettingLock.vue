@@ -33,10 +33,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
     import {Crypto, UInt64} from 'nem2-sdk'
-    import {localRead, localSave} from '@/utils/util'
-    import Message from '@/message/Message'
+   import {Message} from "config/index"
+    import {localRead, localSave} from '@/help/help'
+    import {Component, Vue} from 'vue-property-decorator'
 
     @Component
     export default class SettingLock extends Vue {
@@ -108,7 +108,7 @@
             return Crypto.encrypt(new UInt64(this.lockKey).toHex(), this.newPassword)
         }
         decryptKey () {
-            let lock = localRead('lock')
+            let lock:any = localRead('lock')
             try {
                 const u = [50, 50]
                 lock = JSON.parse(lock)

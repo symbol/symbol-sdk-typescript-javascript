@@ -70,8 +70,8 @@
           <div class="table_body hide_scroll" ref="confirmedTableBody">
             <div class="table_item pointer" @click="showDialog(c)" v-for="c in currentTransactionList">
               <img class="mosaic_action" v-if="!c.isReceipt"
-                   src="@/assets/images/monitor/dash-board/dashboardMosaicOut.png" alt="">
-              <img class="mosaic_action" v-else src="@/assets/images/monitor/dash-board/dashboardMosaicIn.png"
+                   src="@/common/img/monitor/dash-board/dashboardMosaicOut.png" alt="">
+              <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
                    alt="">
               <span class="account">{{c.oppositeAddress}}</span>
               <span class="transfer_type">{{c.isReceipt ? $t('gathering'):$t('payment')}}</span>
@@ -79,7 +79,7 @@
               <span class="amount" v-if="c.mosaic">{{c.isReceipt ? '+':'-'}}{{c.mosaic.amount.compact()}}</span>
               <span v-else class="amount"> 0</span>
               <span class="date">{{c.time}}</span>
-              <img src="@/assets/images/monitor/dash-board/dashboardExpand.png"
+              <img src="@/common/img/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">
             </div>
             <div class="no_data" v-if="confirmedTransactionList.length == 0">
@@ -94,14 +94,14 @@
             <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in unconfirmedTransactionList"
                  :key="index">
               <img class="mosaic_action" v-if="u.isReceipt"
-                   src="@/assets/images/monitor/dash-board/dashboardMosaicOut.png" alt="">
-              <img class="mosaic_action" v-else src="@/assets/images/monitor/dash-board/dashboardMosaicIn.png"
+                   src="@/common/img/monitor/dash-board/dashboardMosaicOut.png" alt="">
+              <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
                    alt="">
               <span class="account">{{u.oppositeAddress}}</span>
               <span class="transfer_type">{{u.isReceipt ? $t('gathering'):$t('payment')}}</span>
               <span class="amount">{{u.isReceipt ? '+':'-'}}{{u.mosaic.amount.compact()}}</span>
               <span class="date">{{u.time}}</span>
-              <img src="@/assets/images/monitor/dash-board/dashboardExpand.png"
+              <img src="@/common/img/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">
             </div>
             <div class="no_data" v-if="unconfirmedTransactionList.length == 0">
@@ -115,29 +115,21 @@
 </template>
 
 <script lang="ts">
-    import {
-        PublicAccount,
-        NetworkType,
-    } from 'nem2-sdk';
-    import {
-        isRefreshData,
-        localSave,
-        localRead,
-        formatTransactions
-    } from '@/utils/util.js'
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import LineChart from '@/components/LineChart.vue'
-    import axios from 'axios'
-    import {transactionInterface} from '@/interface/sdkTransaction'
+    import {market} from "@/interface/restLogic"
+    import {KlineQuery} from "@/query/klineQuery"
+    import LineChart from '@/common/vue/LineChart.vue'
+    import {PublicAccount, NetworkType} from 'nem2-sdk'
+    import numberGrow from '@/common/vue/NumberGrow.vue'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
     import {blockchainInterface} from '@/interface/sdkBlockchain'
-    import dashboardBlockHeight from '@/assets/images/monitor/dash-board/dashboardBlockHeight.png'
-    import dashboardBlockTime from '@/assets/images/monitor/dash-board/dashboardBlockTime.png'
-    import dashboardPointAmount from '@/assets/images/monitor/dash-board/dashboardPointAmount.png'
-    import dashboardTransactionAmount from '@/assets/images/monitor/dash-board/dashboardTransactionAmount.png'
-    import dashboardPublickey from '@/assets/images/monitor/dash-board/dashboardPublickey.png'
-    import numberGrow from '@/components/NumberGrow.vue'
-    import {market} from "@/interface/restLogic";
-    import {KlineQuery} from "@/query/klineQuery";
+    import {transactionInterface} from '@/interface/sdkTransaction'
+    import {isRefreshData, localSave, localRead, formatTransactions} from '@/help/help.ts'
+    import dashboardBlockTime from '@/common/img/monitor/dash-board/dashboardBlockTime.png'
+    import dashboardPublickey from '@/common/img/monitor/dash-board/dashboardPublickey.png'
+    import dashboardBlockHeight from '@/common/img/monitor/dash-board/dashboardBlockHeight.png'
+    import dashboardPointAmount from '@/common/img/monitor/dash-board/dashboardPointAmount.png'
+    import dashboardTransactionAmount from '@/common/img/monitor/dash-board/dashboardTransactionAmount.png'
+
 
     @Component({
         components: {

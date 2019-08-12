@@ -32,15 +32,15 @@
                 <i class="moreFn"></i>
                 <div slot="content" class="updateFn">
                   <p class="fnItem" @click="showEditDialog(value)" v-if="value.supplyMutable">
-                    <i><img src="../../../../../assets/images/service/updateMsaioc.png"></i>
+                    <i><img src="@/common/img/service/updateMsaioc.png"></i>
                     <span class="">{{$t('modify_supply')}}</span>
                   </p>
                   <p class="fnItem" @click="showAliasDialog(value)">
-                    <i><img src="../../../../../assets/images/service/setAlias.png"></i>
+                    <i><img src="@/common/img/service/setAlias.png"></i>
                     <span>{{$t('binding_alias')}}</span>
                   </p>
                   <p class="fnItem" @click="showUnAliasDialog(value)" v-if="value.name">
-                    <i><img src="../../../../../assets/images/service/clearAlias.png"></i>
+                    <i><img src="@/common/img/service/clearAlias.png"></i>
                     <span>{{$t('unbind')}}</span>
                   </p>
                 </div>
@@ -57,16 +57,15 @@
 </template>
 
 <script lang="ts">
-    import {transactionInterface} from '@/interface/sdkTransaction'
-    import {Component, Vue, Watch} from 'vue-property-decorator'
+    import {MosaicId} from "nem2-sdk"
+    import {Message} from "config/index"
+    import {formatSeconds} from '@/help/help.ts'
     import {mosaicInterface} from '@/interface/sdkMosaic.ts'
-    import {accountInterface} from '@/interface/sdkAccount.ts';
-    import {formatSeconds} from '@/utils/util.js'
+    import {accountInterface} from '@/interface/sdkAccount.ts'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
+    import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
     import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
     import MosaicUnAliasDialog from './mosaic-unAlias-dialog/mosaicUnAliasDialog.vue'
-    import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
-    import Message from "@/message/Message";
-    import {MosaicId} from "nem2-sdk";
 
     @Component({
         components:{

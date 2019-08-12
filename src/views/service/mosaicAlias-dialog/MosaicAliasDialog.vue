@@ -42,8 +42,8 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
     import './MosaicAliasDialog.less';
+    import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
 
     @Component({
         components: {},

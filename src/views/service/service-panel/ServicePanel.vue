@@ -11,9 +11,9 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import ServiceSwitch from '@/views/service/service-switch/ServiceSwitch.vue';
-    import './ServicePanel.less';
+    import './ServicePanel.less'
+    import {Component, Vue} from 'vue-property-decorator'
+    import ServiceSwitch from '@/views/service/service-switch/ServiceSwitch.vue'
 
     @Component({
         components: {

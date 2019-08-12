@@ -22,13 +22,12 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import NamespaceTransaction from './namespace-function/namespace-transacrion/NamespaceTransaction.vue'
-    import RootNamespace from './namespace-function/rootNamespace/RootNamespace.vue'
+    import {Address, UInt64} from "nem2-sdk"
+    import {aliasInterface} from "@/interface/sdkNamespace"
+    import {Component, Vue, Watch} from 'vue-property-decorator'
     import SubNamespace from './namespace-function/subNamespace/SubNamespace.vue'
+    import RootNamespace from './namespace-function/rootNamespace/RootNamespace.vue'
     import NamespaceList from './namespace-function/namespace-list/NamespaceList.vue'
-    import {aliasInterface} from "../../../interface/sdkNamespace";
-    import {Address, UInt64} from "nem2-sdk";
 
     @Component({
         components: {

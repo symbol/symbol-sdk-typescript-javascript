@@ -21,8 +21,6 @@
                 {
                     name: 'vote',
                     type: 'pie',
-                    // radius: '50%',
-                    // center: ['50%', '50%'],
                     data: [
                         {value: 100, name: 'A 335 25%'},
                         {value: 300, name: 'B 300 75%'},

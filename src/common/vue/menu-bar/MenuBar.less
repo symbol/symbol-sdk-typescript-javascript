@@ -114,15 +114,15 @@
         }
 
         span:first-of-type {
-          background-image: url("../../assets/images/window/windowMin.png");
+          background-image: url("../../../common/img/window/windowMin.png");
         }
 
         span:nth-of-type(2) {
-          background-image: url("../../assets/images/window/windowMax.png");
+          background-image: url("../../../common/img/window/windowMax.png");
         }
 
         span:nth-of-type(3) {
-          background-image: url("../../assets/images/window/windowClose.png");
+          background-image: url("../../../common/img/window/windowClose.png");
         }
       }
 
@@ -140,6 +140,7 @@
 
         .point_healthy {
           cursor: pointer;
+
           i {
             display: inline-block;
             width: 14px;
@@ -147,10 +148,12 @@
             background-color: #18b566;
             border-radius: 50%;
           }
-          .point{
+
+          .point {
             vertical-align: middle;
           }
-          .network_type_text{
+
+          .network_type_text {
             font-size: 14px;
             vertical-align: middle;
           }
@@ -159,6 +162,7 @@
         .point_unhealthy {
           cursor: pointer;
           -webkit-app-region: no-drag;
+
           i {
             display: inline-block;
             width: 14px;
@@ -230,56 +234,52 @@
 
       div:nth-of-type(1) {
         span {
-          background-image: url("../../assets/images/window/windowDashboard.png");
+          background-image: url("../../../common/img/window/windowDashboard.png");
         }
 
         .active_icon {
-          background-image: url("../../assets/images/window/windowDashboardActive.png");
+          background-image: url("../../../common/img/window/windowDashboardActive.png");
         }
       }
 
       div:nth-of-type(2) {
         span {
-          background-image: url("../../assets/images/window/windowWallet.png");
+          background-image: url("../../../common/img/window/windowWallet.png");
         }
 
         .active_icon {
-          background-image: url("../../assets/images/window/windowWalletActive.png");
+          background-image: url("../../../common/img/window/windowWalletActive.png");
         }
       }
 
       div:nth-of-type(3) {
-        //cursor:  not-allowed !important;
-        //opacity: .2;
         span {
-          background-image: url("../../assets/images/window/windowService.png");
+          background-image: url("../../../common/img/window/windowService.png");
         }
 
         .active_icon {
-          background-image: url("../../assets/images/window/windowServiceActive.png");
+          background-image: url("../../../common/img/window/windowServiceActive.png");
         }
       }
 
       div:nth-of-type(4) {
         span {
-          background-image: url("../../assets/images/window/windowCommunity.png");
+          background-image: url("../../../common/img/window/windowCommunity.png");
         }
 
         .active_icon {
-          background-image: url("../../assets/images/window/windowCommunityActive.png");
+          background-image: url("../../../common/img/window/windowCommunityActive.png");
         }
       }
 
       div:nth-of-type(5) {
-        //cursor:  not-allowed !important;
-        //opacity: .2;
         span {
-          background-image: url("../../assets/images/window/windowSetting.png");
+          background-image: url("../../../common/img/window/windowSetting.png");
 
         }
 
         .active_icon {
-          background-image: url("../../assets/images/window/windowSettingActive.png");
+          background-image: url("../../../common/img/window/windowSettingActive.png");
         }
       }
 
@@ -319,15 +319,18 @@
   transition: all .2s ease;
   -webkit-transition: all .2s ease;
 }
+
 .fade-leave-active {
   transition: all .3s ease;
   -webkit-transition: all .3s ease;
 }
-.fade-enter{
+
+.fade-enter {
   transform: translateX(50px);
   -webkit-transform: translateX(50px);
   opacity: 0;
 }
+
 .fade-leave-active {
   opacity: 0;
 }

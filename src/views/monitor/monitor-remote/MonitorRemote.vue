@@ -11,9 +11,6 @@
           <div class="div_cer">
             <span>{{$t('Remote_state')}}:&nbsp&nbsp</span>
             <span>Unlink</span>
-            <!--                        <i-switch @on-change="change" class="switch_class_left" v-model="switchState">-->
-
-            <!--                        </i-switch>-->
             <div class="switch-container switch_class_left" v-on:click="switchChan">
               <input type="checkbox" id="user-switch" v-model="switchMark">
               <label for="user-switch"></label>
@@ -76,7 +73,7 @@
             <Col span="4" class="col_height">{{item.price}}</Col>
             <Col span="7" class="col_height">
               {{item.time}}
-<!--              <img src="../../../assets/images/monitor/remote_slices.png">-->
+<!--              <img src="@/common/img/monitor/remote_slices.png">-->
             </Col>
           </Row>
         </div>
@@ -129,10 +126,10 @@
 
     @Component({})
     export default class MonitorRemote extends Vue {
-        switchMark = false
         modal1 = false
-        switchState = false
         modalMark = false
+        switchMark = false
+        switchState = false
         tableColumns = [
 
         ]

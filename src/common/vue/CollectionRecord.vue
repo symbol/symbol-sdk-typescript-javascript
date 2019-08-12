@@ -24,7 +24,7 @@
       <div class="right" v-show="!isShowSearchDetail">
             <span class="select_date pointer">
               <div class="month_value">
-                <img src="@/assets/images/monitor/market/marketCalendar.png" alt="">
+                <img src="@/common/img/monitor/market/marketCalendar.png" alt="">
               <span>{{currentMonth}}</span>
               </div>
               <div class="date_selector">
@@ -33,14 +33,14 @@
               </div>
             </span>
         <span class="search_input un_click" @click.stop="showSearchDetail">
-              <img src="../assets/images/monitor/market/marketSearch.png" alt="">
+              <img src="@/common/img/monitor/market/marketSearch.png" alt="">
               <span>{{$t('search')}}</span>
             </span>
       </div>
 
       <div v-show="isShowSearchDetail" class="search_expand">
             <span class="search_container">
-              <img src="../assets/images/monitor/market/marketSearch.png" alt="">
+              <img src="@/common/img/monitor/market/marketSearch.png" alt="">
               <input @click.stop type="text" class="absolute" v-model="transactionHash"
                      :placeholder="$t('enter_asset_type_alias_or_address_search')">
             </span>
@@ -52,19 +52,17 @@
     <div class="bottom_transfer_record_list scroll">
       <Spin v-if="isLoadingTransactionRecord" size="large" fix></Spin>
       <div class="transaction_record_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">
-        <img src="../assets/images/monitor/transaction/transacrionAssetIcon.png" alt="">
+        <img src="@/common/img/monitor/transaction/txConfirmed.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
-            <div class="top">{{c.oppositeAddress}}</div>
-            <div class="bottom"> {{c.time}}</div>
+            <div class="top">{{c.mosaic.id ? c.mosaic.id.id.toHex().toUpperCase().slice(0,8)+'...': "&nbsp;"}}</div>
+            <div class="bottom"> {{c.time.slice(0, c.time.length - 3)}}</div>
           </div>
-          <div class="right right_components">
+          <div class="right">
             <div class="top">{{c.mosaic?c.mosaic.amount.compact():0}}</div>
-            <div class="bottom" v-if="c.mosaic">USD
-              {{c.mosaic && c.mosaic.id.toHex() == $store.state.account.currentXEM1 || c.mosaic.id.toHex() ==
-              $store.state.account.currentXEM2?c.mosaic.amount.compact() * currentPrice:0}}
+            <div class="bottom">
+              {{c.transactionInfo && c.transactionInfo.height.compact()}}
             </div>
-            <div v-else> 0</div>
           </div>
         </div>
       </div>
@@ -77,19 +75,11 @@
 </template>
 
 <script lang="ts">
-    import {
-        PublicAccount,
-        NetworkType
-    } from 'nem2-sdk';
-    import {
-        formatTransactions,
-        getCurrentMonthFirst,
-        getCurrentMonthLast,
-    } from '@/utils/util.js'
-    import {transactionInterface} from '@/interface/sdkTransaction';
-    import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-    import transacrionAssetIcon from '../assets/images/monitor/transaction/transacrionAssetIcon.png'
-    import axios from 'axios'
+    import {PublicAccount, NetworkType} from 'nem2-sdk'
+    import {transactionInterface} from '@/interface/sdkTransaction'
+    import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+    import transacrionAssetIcon from '@/common/img/monitor/transaction/txConfirmed.png'
+    import {formatTransactions, getCurrentMonthFirst, getCurrentMonthLast,} from '@/help/help'
 
     @Component
     export default class CollectionRecord extends Vue {
@@ -102,7 +92,7 @@
         accountPublicKey = ''
         accountPrivateKey = ''
         isShowSearchDetail = false
-        currentMonthLast: number = 0
+        currentMonthLast: any = 0
         confirmedTransactionList = []
         currentMonthFirst: number = 0
         localConfirmedTransactions = []
@@ -153,19 +143,6 @@
         get getWallet() {
             return this.$store.state.account.wallet
         }
-
-        async getMarketOpenPrice() {
-            const that = this
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/1min/1'
-            await axios.get(url).then(function (response) {
-                const result = response.data.data[0]
-                that.currentPrice = result.open
-                console.log(that.currentPrice)
-            }).catch(function (error) {
-                console.log(error);
-            });
-        }
-
 
         hideSearchDetail() {
             this.isShowSearchDetail = false
@@ -237,7 +214,7 @@
         getConfirmedTransactions() {
             const that = this
             let {accountPrivateKey, accountPublicKey, accountAddress, node, transactionType} = this
-            const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
+            const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
             transactionInterface.transactions({
                 publicAccount,
                 node,
@@ -288,6 +265,12 @@
         @Watch('getWallet')
         onGetWalletChange() {
             this.initData()
+            this.getConfirmedTransactions()
+        }
+
+        @Watch('ConfirmedTxList')
+        onConfirmedTxChange() {
+            this.isLoadingTransactionRecord = true
             this.getConfirmedTransactions()
         }
 
@@ -422,7 +405,7 @@
     }
 
     .bottom_transfer_record_list {
-      padding: 34px 42px;
+      padding: 34px 36px;
       height: calc(100% - 130px);
       position: relative;
 
@@ -432,7 +415,7 @@
       }
 
       .transaction_record_item {
-        padding: 14px 0;
+        padding: 26px 0;
         border-bottom: 1px solid rgba(238, 238, 238, 1);
         display: flex;
         flex-direction: row;
@@ -452,8 +435,9 @@
             width: 50%;
 
             div {
-              overflow: hidden;
-              text-overflow: ellipsis;
+              /*overflow: hidden;*/
+              /*text-overflow: ellipsis;*/
+              /*white-space: nowrap;*/
               white-space: nowrap;
             }
           }
@@ -469,21 +453,25 @@
 
         img {
           display: block;
-          width: 32px;
+          width: 28px;
+          height: 28px;
         }
 
         .top {
-          font-size: 14px;
+          font-size: 16px;
+          line-height: 16px;
           font-weight: 400;
           color: rgba(34, 34, 34, 1);
           display: block;
+          margin-bottom: 15px;
         }
 
         .bottom {
           display: block;
-          font-size: 12px;
+          line-height: 14px;
+          font-size: 14px;
           font-weight: 400;
-          color: rgba(153, 153, 153, 1);
+          color: #999999;
         }
       }
 

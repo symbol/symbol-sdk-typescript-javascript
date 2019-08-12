@@ -13,7 +13,8 @@
           <span class="value" v-if="typeList[0].isSelected">{{formatAddress(getWallet.address)}}</span>
           <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="multisigPublickey"
                   class="select">
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">{{ item.label }}
+            </Option>
           </Select>
         </div>
 
@@ -58,7 +59,7 @@
           </div>
         </div>
 
-        <div class="create_button" @click="createTransaction">
+        <div v-if="typeList[0].isSelected" class="create_button" @click="createTransaction">
           {{$t('create')}}
         </div>
       </div>
@@ -71,13 +72,13 @@
 
 <script lang="ts">
     import {Account} from "nem2-sdk"
-    import Message from "@/message/Message"
-    import {formatAddress} from '@/utils/util.js'
+    import {Message} from "config/index"
+    import {formatAddress} from '@/help/help'
     import {Component, Vue} from 'vue-property-decorator'
     import {aliasInterface} from "@/interface/sdkNamespace"
-    import BandedNamespaceList from '@/message/BandedNamespace.ts'
+    import {bandedNamespace as BandedNamespaceList} from 'config/index'
     import {transactionInterface} from "@/interface/sdkTransaction"
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
+    import CheckPWDialog from '@/common/vue/checkPW-dialog/CheckPWDialog.vue'
 
     @Component({
         components: {
@@ -94,7 +95,7 @@
         }
         durationIntoDate = 0
         multisigPublickey = ''
-        cityList = [
+        multisigPublickeyList = [
             {
                 value: 'no data',
                 label: 'no data'
