@@ -389,7 +389,6 @@
                 type: 'showTip',
                 seriesIndex: 0,
                 dataIndex: this.option.series[1].data.length - 1,
-
             })
         }
 
