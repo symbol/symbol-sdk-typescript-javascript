@@ -75,7 +75,7 @@
 </template>
 
 <script lang="ts">
-    import {PublicAccount, NetworkType} from 'nem2-sdk'
+    import {PublicAccount} from 'nem2-sdk'
     import {transactionInterface} from '@/interface/sdkTransaction'
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
     import transacrionAssetIcon from '@/common/img/monitor/transaction/txConfirmed.png'
