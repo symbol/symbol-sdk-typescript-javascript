@@ -52,6 +52,7 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {localRead, localSave, formatXEMamount} from '../../../utils/util'
     import {NetworkType} from 'nem2-sdk'
+    import {saveLocalWallet} from '@/help/appUtil'
     import './WalletSwitch.less'
 
     @Component
@@ -91,7 +92,6 @@
             localData.splice(walletIndex, 1)
             list.unshift(storeWallet)
             localData.unshift(localWallet)
-            this.$store.commit('SET_WALLET', storeWallet)
             list.map((item, index) => {
                 if (index === 0) {
                     item.active = true
@@ -99,39 +99,10 @@
                     item.active = false
                 }
             })
-            this.localKey(storeWallet, walletIndex)
+            const account = saveLocalWallet(storeWallet, null, walletIndex)
+            this.$store.commit('SET_WALLET', account)
             this.walletList = list
             this.$store.commit('SET_WALLET_LIST', list)
-            localSave('wallets', JSON.stringify(localData))
-        }
-
-        localKey(wallet, index) {
-            let localData: any[] = []
-            let isExist: boolean = false
-            try {
-                localData = JSON.parse(localRead('wallets'))
-            } catch (e) {
-                localData = []
-            }
-            let saveData = {
-                name: wallet.name,
-                ciphertext: localData[index].ciphertext,
-                iv: localData[index].iv,
-                networkType: wallet.networkType,
-                address: wallet.address,
-                publicKey: wallet.publicKey,
-                mnemonicEnCodeObj: wallet.mnemonicEnCodeObj
-            }
-            let account = this.getWallet
-            account = Object.assign(account, saveData)
-            this.$store.commit('SET_WALLET', account)
-            for (let i in localData) {
-                if (localData[i].address === wallet.address) {
-                    localData[i] = saveData
-                    isExist = true
-                }
-            }
-            if (!isExist) localData.unshift(saveData)
             localSave('wallets', JSON.stringify(localData))
         }
 
@@ -159,22 +130,8 @@
             return formatXEMamount(text)
         }
 
-        copyObj(obj) {
-            const newObj: any = Object.prototype.toString.call(obj) == '[object Array]' ? [] : {};
-            for (const key in obj) {
-                const value = obj[key];
-                if (value && 'object' == typeof value) {
-                    //递归clone
-                    newObj[key] = this.copyObj(value);
-                } else {
-                    newObj[key] = value;
-                }
-            }
-            return newObj;
-        }
-
         initWalletList() {
-            const list = this.copyObj(this.getWalletList)
+            const list = this.getWalletList
             list.map((item, index) => {
                 if (index === 0) {
                     item.active = true

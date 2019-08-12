@@ -12,6 +12,7 @@
     import {wsInterface} from './interface/sdkListener'
     import {PublicAccount, Listener} from "nem2-sdk";
     import 'animate.css'
+    import fs from 'fs'
 
     @Component
     export default class App extends Vue {
@@ -99,8 +100,16 @@
                 pointer: this
             })
         }
-
+        checkInstall () {
+            if(fs.readdirSync){
+                const root = fs.readdirSync('./')
+                console.log(root)
+            }else {
+                console.log('web')
+            }
+        }
         created() {
+            this.checkInstall()
             this.initData()
             this.initApp()
             this.chainListner()

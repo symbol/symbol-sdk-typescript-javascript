@@ -144,6 +144,7 @@
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
     import Message from "@/message/Message";
     import {multisigInterface} from '@/interface/sdkMultisig';
+    import {multisigAccountInfo} from "../../../../../help/appUtil";
 
 
     @Component({
@@ -468,17 +469,11 @@
             const that = this
             const {address} = this.$store.state.account.wallet
             const {node} = this.$store.state.account
-
-            multisigInterface.getMultisigAccountInfo({
-                address,
-                node
-            }).then((result) => {
-                that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
-                    item.value = item.publicKey
-                    item.label = item.publicKey
-                    return item
-                })
-
+            const multisigInfo = multisigAccountInfo(address, node)
+            that.multisigPublickeyList = multisigInfo['multisigAccounts'].map((item) => {
+                item.value = item.publicKey
+                item.label = item.publicKey
+                return item
             })
         }
 
@@ -489,14 +484,8 @@
             const {node} = this.$store.state.account
             const {networkType} = this.$store.state.account.wallet
             let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
-
-            multisigInterface.getMultisigAccountInfo({
-                address,
-                node
-            }).then((result) => {
-                const currentMultisigAccount = result.result.multisigInfo
-                that.currentMinApproval = currentMultisigAccount.minApproval
-            })
+            const multisigInfo = multisigAccountInfo(address, node)
+            that.currentMinApproval = multisigInfo['minApproval']
 
         }
 

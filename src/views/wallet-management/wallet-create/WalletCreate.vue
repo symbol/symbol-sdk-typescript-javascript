@@ -46,6 +46,7 @@
     import {MnemonicPassPhrase} from 'nem2-hd-wallets';
     import Message from "@/message/Message";
     import {localSave, localRead} from '@/utils/util'
+    import {createMnemonic} from "../../../help/mnemonicUtil";
 
     @Component({
         components: {},
@@ -94,8 +95,8 @@
         }
 
         createMnemonic() {
-            const mnemonic = MnemonicPassPhrase.createRandom('english', 128);
-            this.$store.commit('SET_MNEMONIC', mnemonic.plain)
+            const mnemonic = createMnemonic();
+            this.$store.commit('SET_MNEMONIC', mnemonic)
         }
 
         createWallet() {

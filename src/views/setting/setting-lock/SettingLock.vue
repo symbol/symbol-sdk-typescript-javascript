@@ -37,6 +37,7 @@
     import {Crypto, UInt64} from 'nem2-sdk'
     import {localRead, localSave} from '@/utils/util'
     import Message from '@/message/Message'
+    import {decryptKey, encryptKey} from "../../../help/appUtil";
 
     @Component
     export default class SettingLock extends Vue {
@@ -92,7 +93,7 @@
             this.decryptKey()
         }
         updatePW () {
-            let encryptObj = this.encryptKey()
+            let encryptObj = encryptKey(new UInt64(this.lockKey).toHex(), this.newPassword)
             let saveData = {
                 ciphertext: encryptObj.ciphertext,
                 iv: encryptObj.iv,
@@ -104,20 +105,12 @@
             })
         }
 
-        encryptKey () {
-            return Crypto.encrypt(new UInt64(this.lockKey).toHex(), this.newPassword)
-        }
         decryptKey () {
             let lock = localRead('lock')
             try {
                 const u = [50, 50]
                 lock = JSON.parse(lock)
-                let saveData = {
-                    ciphertext: lock.ciphertext,
-                    iv: lock.iv.data,
-                    key: this.prePassword
-                }
-                const enTxt = Crypto.decrypt(saveData)
+                const enTxt = decryptKey(lock, this.prePassword)
                 if (enTxt !== new UInt64(u).toHex()) {
                     this.$Notice.error({title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''});
                 }else {

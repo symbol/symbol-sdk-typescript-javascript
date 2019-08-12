@@ -4,7 +4,7 @@
       <div class="left WalletSwitch">
         <WalletSwitch
                 @noHasWallet="noHasWallet"
-                @hasWallet="hasWallet"
+                @hasWallet="setWalletList"
                 @toCreate="toCreate"
                 @toImport="toImport"
         ></WalletSwitch>
@@ -86,22 +86,8 @@
             this.toMethod = false
         }
 
-        copyObj(obj) {
-            const newObj: any = Object.prototype.toString.call(obj) == '[object Array]' ? [] : {};
-
-            for (const key in obj) {
-                const value = obj[key];
-                if (value && 'object' == typeof value) {
-                    newObj[key] = this.copyObj(value);
-                } else {
-                    newObj[key] = value;
-                }
-            }
-            return newObj;
-        }
-
         setWalletList() {
-            let list = this.copyObj(this.nowWalletList)
+            let list = this.nowWalletList
             for (let i in list) {
                 this.$set(this.walletList, i, list[i])
             }
@@ -114,10 +100,6 @@
             this.walletList = []
             this.toCreate()
             this.$store.commit('SET_HAS_WALLET', false)
-        }
-
-        hasWallet() {
-            this.setWalletList()
         }
 
         setDefaultPage() {

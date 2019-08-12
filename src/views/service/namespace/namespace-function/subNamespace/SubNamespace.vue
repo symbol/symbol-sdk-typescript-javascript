@@ -78,6 +78,7 @@
     import BandedNamespaceList from '@/message/BandedNamespace.ts'
     import {transactionInterface} from "@/interface/sdkTransaction"
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
+    import {createSubNamespace} from "../../../../../help/appUtil";
 
     @Component({
         components: {
@@ -145,8 +146,9 @@
             let transaction;
             const that = this;
             const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
-
-            await this.createSubNamespace().then((subNamespaceTransaction) => {
+            const {rootNamespaceName, subNamespaceName, maxFee} = this.form
+            await createSubNamespace(rootNamespaceName, subNamespaceName, this.getWallet.networkType, maxFee)
+                .then((subNamespaceTransaction) => {
                 transaction = subNamespaceTransaction
             })
             const signature = account.sign(transaction, this.generationHash)
@@ -222,17 +224,6 @@
                 return true
             })
             return subflag
-        }
-
-        createSubNamespace() {
-            return aliasInterface.createdSubNamespace({
-                parentNamespace: this.form.rootNamespaceName,
-                namespaceName: this.form.subNamespaceName,
-                networkType: this.getWallet.networkType,
-                maxFee: this.form.maxFee
-            }).then((transaction) => {
-                return transaction.result.subNamespaceTransaction
-            })
         }
 
         initForm() {

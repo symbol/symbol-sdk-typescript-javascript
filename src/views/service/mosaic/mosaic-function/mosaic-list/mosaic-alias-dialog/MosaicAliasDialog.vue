@@ -51,6 +51,7 @@
     import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk";
     import {aliasInterface} from "../../../../../../interface/sdkNamespace";
     import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias";
+    import {decryptKey} from "../../../../../../help/appUtil";
 
     @Component({
         components: {},
@@ -123,12 +124,7 @@
             this.decryptKey()
         }
         decryptKey () {
-            let encryptObj = {
-                ciphertext: this.getWallet.ciphertext,
-                iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-                key: this.mosaic.password
-            }
-            this.checkPrivateKey(Crypto.decrypt(encryptObj))
+            this.checkPrivateKey(decryptKey(this.getWallet, this.mosaic.password))
         }
         checkPrivateKey (DeTxt) {
             const that = this

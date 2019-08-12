@@ -54,6 +54,7 @@
     import Message from "../../../../../../message/Message";
     import {aliasInterface} from "../../../../../../interface/sdkNamespace";
     import {transactionInterface} from "../../../../../../interface/sdkTransaction";
+    import {createRootNamespace, decryptKey} from "../../../../../../help/appUtil";
 
 
     @Component
@@ -136,16 +137,9 @@
             if (!this.checkInfo()) {
                 return
             }
-            this.decryptKey()
+            this.checkPrivateKey(decryptKey(this.getWallet, this.namespace.password))
         }
-        decryptKey () {
-            let encryptObj = {
-                ciphertext: this.getWallet.ciphertext,
-                iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-                key: this.namespace.password
-            }
-            this.checkPrivateKey(Crypto.decrypt(encryptObj))
-        }
+
         checkPrivateKey (DeTxt) {
             const that = this
             walletInterface.getWallet({
@@ -164,7 +158,8 @@
             const that =this
             let transaction
             const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
-            await this.createRootNamespace().then((rootNamespaceTransaction)=>{
+            await createRootNamespace(this.currentNamespace.name, this.namespace.duration,
+                this.getWallet.networkType, this.namespace.fee).then((rootNamespaceTransaction)=>{
                 transaction = rootNamespaceTransaction
                 const signature = account.sign(transaction, this.generationHash)
                 transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
@@ -177,17 +172,6 @@
                         that.updatedNamespace()
                     })
                 })
-            })
-        }
-
-        createRootNamespace(){
-            return aliasInterface.createdRootNamespace({
-                namespaceName: this.currentNamespace.name,
-                duration: this.namespace.duration,
-                networkType: this.getWallet.networkType,
-                maxFee: this.namespace.fee
-            }).then((transaction)=>{
-                return transaction.result.rootNamespaceTransaction
             })
         }
 

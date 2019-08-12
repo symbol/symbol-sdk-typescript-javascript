@@ -124,6 +124,7 @@
     import {transactionInterface} from "@/interface/sdkTransaction"
     import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
     import {multisigInterface} from '@/interface/sdkMultisig';
+    import {createRootNamespace} from "../../../../../help/appUtil";
 
     @Component({
         components: {
@@ -198,8 +199,10 @@
         async createBySelf(privatekey) {
             let transaction;
             const that = this;
+            const {duration, rootNamespaceName, innerFee} = this.form
             const account = Account.createFromPrivateKey(privatekey, this.getWallet.networkType);
-            await this.createRootNamespace().then((rootNamespaceTransaction) => {
+            await createRootNamespace(rootNamespaceName, duration, this.getWallet.networkType, innerFee)
+                .then((rootNamespaceTransaction) => {
                 transaction = rootNamespaceTransaction
             })
             const signature = account.sign(transaction, this.generationHash)
@@ -213,20 +216,16 @@
             })
         }
 
-        createByMultisig(privatekey) {
+        async createByMultisig(privatekey) {
             const that = this
             const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
             const {networkType} = this.getWallet
             const account = Account.createFromPrivateKey(privatekey, networkType)
             const {generationHash, node} = this.$store.state.account
             const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-            aliasInterface.createdRootNamespace({
-                namespaceName: rootNamespaceName,
-                duration: duration,
-                networkType: networkType,
-                maxFee: innerFee
-            }).then((transaction) => {
-                const rootNamespaceTransaction = transaction.result.rootNamespaceTransaction
+
+            await createRootNamespace(rootNamespaceName, duration, this.getWallet.networkType, innerFee)
+                .then((rootNamespaceTransaction) => {
                 if (that.currentMinApproval > 1) {
                     multisigInterface.bondedMultisigTransaction({
                         networkType: networkType,
@@ -263,7 +262,6 @@
                     })
                 })
             })
-            console.log(privatekey)
         }
 
         async checkEnd(privatekey) {
@@ -273,18 +271,6 @@
                 this.createByMultisig(privatekey)
             }
         }
-
-        createRootNamespace() {
-            return aliasInterface.createdRootNamespace({
-                namespaceName: this.form.rootNamespaceName,
-                duration: this.form.duration,
-                networkType: this.getWallet.networkType,
-                maxFee: this.form.innerFee
-            }).then((transaction) => {
-                return transaction.result.rootNamespaceTransaction
-            })
-        }
-
 
         closeCheckPWDialog() {
             this.showCheckPWDialog = false

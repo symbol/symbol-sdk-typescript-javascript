@@ -39,10 +39,10 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import {Crypto} from 'nem2-sdk'
     import {localRead, localSave} from '@/utils/util'
     import Message from '@/message/Message'
     import {walletInterface} from "../../../../../interface/sdkWallet";
+    import {decryptKey, encryptKey, saveLocalWallet} from "../../../../../help/appUtil";
 
     @Component
     export default class WalletUpdatePassword extends Vue {
@@ -51,6 +51,7 @@
         repeatPassword = ''
         privateKey = ''
         btnState = false
+
         get getWallet () {
             return this.$store.state.account.wallet
         }
@@ -97,10 +98,11 @@
             if (!this.btnState || !this.checkInfo()) {
                 return
             }
-            this.decryptKey()
+            const privateKey = decryptKey(this.getWallet, this.prePassword)
+            this.checkPrivateKey(privateKey)
         }
         updatePW () {
-            let encryptObj = this.encryptKey()
+            let encryptObj = encryptKey(this.privateKey, this.newPassword)
             let wallet = this.getWallet
             let walletList = this.$store.state.app.walletList;
             wallet.ciphertext = encryptObj['ciphertext']
@@ -108,24 +110,14 @@
             walletList[0] = wallet
             this.$store.commit('SET_WALLET', wallet)
             this.$store.commit('SET_WALLET_LIST', walletList)
-            this.localKey(wallet, encryptObj, wallet.mnemonicEnCodeObj)
+            const account = saveLocalWallet(wallet, encryptObj, null, wallet.mnemonicEnCodeObj)
+            this.$store.commit('SET_WALLET', account)
             this.init()
             this.$Notice.success({
                 title: this.$t(Message.SUCCESS) + ''
             })
         }
 
-        encryptKey () {
-            return Crypto.encrypt(this.privateKey, this.newPassword)
-        }
-        decryptKey () {
-            let encryptObj = {
-                ciphertext: this.getWallet.ciphertext,
-                iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-                key: this.prePassword
-            }
-            this.checkPrivateKey(Crypto.decrypt(encryptObj))
-        }
         checkPrivateKey (DeTxt) {
             const that = this
             walletInterface.getWallet({
@@ -141,32 +133,7 @@
                 })
             })
         }
-        localKey(wallet, keyObj, mnemonicEnCodeObj) {
-            let localData: any[] = []
-            let isExist: boolean = false
-            try {
-                localData = JSON.parse(localRead('wallets'))
-            } catch (e) {
-                localData = []
-            }
-            let saveData = {
-                name: wallet.name,
-                ciphertext: keyObj.ciphertext,
-                iv: keyObj.iv,
-                networkType: wallet.networkType,
-                address: wallet.address,
-                publicKey: wallet.publicKey,
-                mnemonicEnCodeObj: mnemonicEnCodeObj
-            }
-            for (let i in localData) {
-                if (localData[i].address === wallet.address) {
-                    localData[i] = saveData
-                    isExist = true
-                }
-            }
-            if (!isExist) localData.unshift(saveData)
-            localSave('wallets', JSON.stringify(localData))
-        }
+
         init(){
             this.prePassword = ''
             this.newPassword = ''
