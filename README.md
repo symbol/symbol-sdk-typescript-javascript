@@ -40,11 +40,11 @@ npm run build
 - [NEM2-Desk-Wallet-Tools]( https://github.com/NemTechCN/NEM2-Desk-Wallet-Tools)
 
 ## The program use-instructions
-- TODO:
+- TODO
+   
+<br/>
 
-## Other products links
-
-**NEM2 mobile wallet test installation package**
-
-- [WDragon-Android](https://github.com/NemTechCN/APK)
+*<small>Other products links</small>*   
+*<small> NEM2 mobile wallet test installation package :</small>*
+*<small>[WDragon-Android](https://github.com/NemTechCN/APK)</small>*
 
