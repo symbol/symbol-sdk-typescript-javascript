@@ -4,7 +4,8 @@
       <li>
         {{$t('old_password')}}
         <div class="gray_content">
-          <input class="absolute" type="password" v-model="prePassword" @input="changeBtnState" :placeholder="$t('please_enter_the_original_password')">
+          <input class="absolute" type="password" v-model="prePassword" @input="changeBtnState"
+                 :placeholder="$t('please_enter_the_original_password')">
         </div>
       </li>
       <li>
@@ -13,13 +14,15 @@
           {{$t('this_password_is_used_to_lock_the_desktop_wallet_Once_lost_you_will_lose_the_right_to_enter_the_desktop_wallet')}}
         </div>
         <div class="gray_content">
-          <input class="absolute" type="password" v-model="newPassword" :placeholder="$t('please_enter_a_new_password')">
+          <input class="absolute" type="password" v-model="newPassword"
+                 :placeholder="$t('please_enter_a_new_password')">
         </div>
       </li>
       <li>
         {{$t('confirm_password')}}
         <div class="gray_content">
-          <input class="absolute" type="password"  v-model="repeatPassword" :placeholder="$t('please_enter_your_new_password_again')">
+          <input class="absolute" type="password" v-model="repeatPassword"
+                 :placeholder="$t('please_enter_your_new_password_again')">
         </div>
         <span :class="[btnState?'sure_button':'confirm_button']" @click="confirmUpdate">{{$t('confirm')}}</span>
 
@@ -28,13 +31,12 @@
     </ul>
 
 
-
   </div>
 </template>
 
 <script lang="ts">
     import {UInt64} from 'nem2-sdk'
-    import {Message} from "../../../../config"
+    import {Message} from "config/index"
     import {localRead, localSave} from '@/help/help'
     import {Component, Vue} from 'vue-property-decorator'
     import {decryptKey, encryptKey} from "@/help/appUtil"
@@ -46,17 +48,19 @@
         repeatPassword = ''
         lockKey = [50, 50]
         btnState = false
-        get getWallet () {
+
+        get getWallet() {
             return this.$store.state.account.wallet
         }
 
-        changeBtnState () {
-            if(this.prePassword == ''){
+        changeBtnState() {
+            if (this.prePassword == '') {
                 this.btnState = false
-            }else {
+            } else {
                 this.btnState = true
             }
         }
+
         checkInfo() {
             const {prePassword, newPassword, repeatPassword} = this
 
@@ -86,13 +90,15 @@
             }
             return true
         }
+
         confirmUpdate() {
             if (!this.btnState || !this.checkInfo()) {
                 return
             }
             this.decryptKey()
         }
-        updatePW () {
+
+        updatePW() {
             let encryptObj = encryptKey(new UInt64(this.lockKey).toHex(), this.newPassword)
             let saveData = {
                 ciphertext: encryptObj.ciphertext,
@@ -105,27 +111,29 @@
             })
         }
 
-        decryptKey () {
-            let lock:any = localRead('lock')
+        decryptKey() {
+            let lock: any = localRead('lock')
             try {
                 const u = [50, 50]
                 lock = JSON.parse(lock)
                 const enTxt = decryptKey(lock, this.prePassword)
                 if (enTxt !== new UInt64(u).toHex()) {
                     this.$Notice.error({title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''});
-                }else {
+                } else {
                     this.updatePW()
                 }
             } catch (e) {
                 this.$Notice.error({title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''});
             }
         }
-        init(){
+
+        init() {
             this.prePassword = ''
             this.newPassword = ''
             this.repeatPassword = ''
         }
-        created () {
+
+        created() {
             this.init()
         }
     }

@@ -13,7 +13,7 @@ module.exports = {
   // webpack
   // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
   chainWebpack: (config) => {
-    //修改文件引入自定义路径
+    //edit path alias
     config.resolve.alias
         .set('config', path.resolve(__dirname, './config'),)
   },
