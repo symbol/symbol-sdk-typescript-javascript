@@ -170,7 +170,7 @@
             const ipcRenderer = window['electron']['ipcRenderer'];
             ipcRenderer.send('app', 'min')
         }
-        ReceiveMain () {
+        windowSizeChange () {
             if(window['electron']){
                 const electron = window['electron'];
                 const mainWindow =electron.remote.getCurrentWindow()
@@ -397,7 +397,7 @@
         }
 
         created() {
-            this.ReceiveMain()
+            this.windowSizeChange()
             this.initData()
             this.unconfirmedListener()
             this.confirmedListener()
