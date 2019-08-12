@@ -3,7 +3,6 @@
     <Spin size="large" class="absolute" fix v-if="spinShow"></Spin>
     <div class="line" id="id" ref="dom"></div>
   </div>
-
 </template>
 
 <script lang="ts">
