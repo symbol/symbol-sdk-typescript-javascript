@@ -225,7 +225,7 @@
                 transactionsResult.result.transactions.subscribe((transactionsInfo) => {
                     let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
                     let list = []
-// get transaction by choose recript tx or send
+                    // get transaction by choose recript tx or send
                     if (that.transactionType == 1) {
                         transferTransaction.forEach((item) => {
                             if (item.isReceipt) {
