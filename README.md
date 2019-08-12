@@ -36,7 +36,7 @@ npm run dev
 npm run build 
 ```
 
-## Bild for Windows and Mac
+## Build for Windows and Mac
 **Windows tools**
 - https://github.com/NemTechCN/NEM2-Desk-Win
 
