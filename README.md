@@ -42,10 +42,6 @@ npm run build
 ## The program use-instructions
 - TODO:
 
-## The installation package
-- **nem2-wallet-cn-win**:[nem2_desk_wallet_cn-win](https://github.com/NemTechCN/NEM2-Desk-Wallet-Tools/blob/master/dist/NEM2-Wallet-Setup.exe)
-- **nem2-wallet-cn-mac**:[nem2_desk_wallet_cn-mac](https://github.com/NemTechCN/NEM2-Desk-Wallet-Tools/blob/master/dist/nem2-wallet-0.1.5.dmg)
-
 ## Other products links
 
 **NEM2 mobile wallet test installation package**
