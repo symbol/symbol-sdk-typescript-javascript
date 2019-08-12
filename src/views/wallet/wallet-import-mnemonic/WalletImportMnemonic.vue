@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {NetworkType, Crypto} from "nem2-sdk"
     import {Component, Vue} from 'vue-property-decorator'
     import {walletInterface} from "@/interface/sdkWallet"

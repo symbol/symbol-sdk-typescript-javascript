@@ -43,7 +43,7 @@
     import './WalletCreate.less'
     import {NetworkType} from "nem2-sdk"
     import {localRead} from '@/help/help'
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {MnemonicPassPhrase} from 'nem2-hd-wallets'
     import {Component, Vue} from 'vue-property-decorator'
 

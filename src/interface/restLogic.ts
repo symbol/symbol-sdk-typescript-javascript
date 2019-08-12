@@ -1,5 +1,5 @@
-import {WebClient} from "@/help/webHelp";
-import {AppConfig} from "config/config";
+import {WebClient} from "@/help/webHelp"
+import {AppConfig} from "@/config"
 
 export const market: restV0.market = {
 

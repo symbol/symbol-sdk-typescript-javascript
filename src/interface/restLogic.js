@@ -1,7 +1,7 @@
 var _this = this;
 import * as tslib_1 from "tslib";
 import { WebClient } from "@/help/webHelp";
-import { AppConfig } from "config/config";
+import { AppConfig } from "@/config";
 export var market = {
     kline: function (params) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
         var symbol, period, size, resStr;

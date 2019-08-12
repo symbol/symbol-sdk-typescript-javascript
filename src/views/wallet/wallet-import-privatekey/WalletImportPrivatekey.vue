@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {localRead, localSave} from '@/help/help'
     import {Component, Vue} from 'vue-property-decorator'
     import {Account, NetworkType, Crypto} from "nem2-sdk"

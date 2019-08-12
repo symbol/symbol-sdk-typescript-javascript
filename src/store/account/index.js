@@ -3,7 +3,7 @@ export default {
         accountPrivateKey: '',
         accountPublicKey: '',
         accountAddress: '',
-        node: 'http://47.107.245.217:3000',
+        node: 'http://13.114.200.132:3000',
         currentXem: 'nem.xem',
         currentXEM1: '77a1969932d987d7',
         // currentXEM1: '37EF2403A20729DF',

@@ -42,7 +42,7 @@
 
 <script lang="ts">
     import './mosaicUnAliasDialog.less'
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {walletInterface} from "@/interface/sdkWallet"
     import {aliasInterface} from "@/interface/sdkNamespace"
     import {transactionInterface} from "@/interface/sdkTransaction"

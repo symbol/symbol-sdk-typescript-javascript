@@ -47,7 +47,7 @@
 
 <script lang="ts">
     import './NamespaceEditDialog.less'
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {Account, Crypto} from 'nem2-sdk'
     import {walletInterface} from "@/interface/sdkWallet"
     import {aliasInterface} from "@/interface/sdkNamespace"

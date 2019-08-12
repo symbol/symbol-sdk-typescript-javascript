@@ -139,7 +139,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {Component, Vue} from 'vue-property-decorator'
 
     @Component

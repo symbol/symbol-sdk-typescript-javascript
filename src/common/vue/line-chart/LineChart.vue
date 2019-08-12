@@ -3,7 +3,6 @@
     <Spin size="large" class="absolute" fix v-if="spinShow"></Spin>
     <div class="line" id="id" ref="dom"></div>
   </div>
-
 </template>
 
 <script lang="ts">
@@ -389,7 +388,6 @@
                 type: 'showTip',
                 seriesIndex: 0,
                 dataIndex: this.option.series[1].data.length - 1,
-
             })
         }
 
@@ -400,5 +398,4 @@
 </script>
 <style scoped lang="less">
   @import "LineChart.less";
-
 </style>

@@ -75,7 +75,7 @@
 </template>
 
 <script lang="ts">
-    import {PublicAccount, NetworkType} from 'nem2-sdk'
+    import {PublicAccount} from 'nem2-sdk'
     import {transactionInterface} from '@/interface/sdkTransaction'
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
     import transacrionAssetIcon from '@/common/img/monitor/transaction/txConfirmed.png'
@@ -225,7 +225,7 @@
                 transactionsResult.result.transactions.subscribe((transactionsInfo) => {
                     let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
                     let list = []
-// get transaction by choose recript tx or send
+                    // get transaction by choose recript tx or send
                     if (that.transactionType == 1) {
                         transferTransaction.forEach((item) => {
                             if (item.isReceipt) {

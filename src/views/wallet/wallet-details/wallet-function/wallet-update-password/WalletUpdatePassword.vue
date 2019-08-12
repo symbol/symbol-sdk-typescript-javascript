@@ -39,7 +39,7 @@
 
 <script lang="ts">
     import {Crypto} from 'nem2-sdk'
-   import {Message} from "config/index"
+   import {Message} from "@/config/index"
     import {localRead, localSave} from '@/help/help'
     import {Component, Vue} from 'vue-property-decorator'
     import {walletInterface} from "@/interface/sdkWallet"

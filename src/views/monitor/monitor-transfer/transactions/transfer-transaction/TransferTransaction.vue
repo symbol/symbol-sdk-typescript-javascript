@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {mosaicInterface} from '@/interface/sdkMosaic'
     import {accountInterface} from '@/interface/sdkAccount'
     import { Account, Mosaic, MosaicId, UInt64} from 'nem2-sdk'

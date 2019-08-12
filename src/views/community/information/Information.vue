@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {formatDate} from '@/help/help.ts'
     import {blog} from "@/interface/restLogic"
     import {Component, Vue, Watch} from 'vue-property-decorator'

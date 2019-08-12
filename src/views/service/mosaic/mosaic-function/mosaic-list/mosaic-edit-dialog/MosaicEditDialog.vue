@@ -63,7 +63,7 @@
 
 <script lang="ts">
     import './MosaicEditDialog.less'
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {walletInterface} from "@/interface/sdkWallet"
     import {mosaicInterface} from "@/interface/sdkMosaic"
     import {transactionInterface} from "@/interface/sdkTransaction"
