@@ -115,7 +115,7 @@
 </template>
 
 <script lang="ts">
-    import {Message, bandedNamespace as BandedNamespaceList} from "../../../../../../config"
+    import {Message, bandedNamespace as BandedNamespaceList} from "config/index"
     import {Account, Address, Listener} from "nem2-sdk"
     import {aliasInterface} from "@/interface/sdkNamespace"
     import {multisigInterface} from '@/interface/sdkMultisig'

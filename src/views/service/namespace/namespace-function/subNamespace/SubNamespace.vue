@@ -72,12 +72,11 @@
 
 <script lang="ts">
     import {Account} from "nem2-sdk"
-    import {Message, bandedNamespace as BandedNamespaceList} from "../../../../../../config"
+    import {Message, bandedNamespace as BandedNamespaceList} from "config/index"
     import {formatAddress} from '@/help/help'
     import {Component, Vue} from 'vue-property-decorator'
     import {aliasInterface} from "@/interface/sdkNamespace"
     import {transactionInterface} from "@/interface/sdkTransaction"
-    import {bandedNamespace as BandedNamespaceList} from 'config/index'
     import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
     import {createSubNamespace} from "@/help/appUtil";
 

@@ -82,7 +82,7 @@
     import monitorSeleted from '@/common/img/window/windowSelected.png'
     import monitorUnselected from '@/common/img/window/windowUnselected.png'
     import {blockchainInterface} from '@/interface/sdkBlockchain.js';
-    import {Message} from "../../../../config";
+    import {Message} from "config/index";
     import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk";
     import {wsInterface} from "@/interface/sdkListener";
     import {sessionRead, sessionSave, localSave, localRead} from "@/help/help";
