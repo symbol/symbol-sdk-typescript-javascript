@@ -124,6 +124,7 @@
     import {transactionInterface} from "@/interface/sdkTransaction"
     import {bandedNamespace as BandedNamespaceList} from 'config/index'
     import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+    import {createRootNamespace, multisigAccountInfo} from "@/help/appUtil";
 
     @Component({
         components: {
@@ -198,10 +199,12 @@
         async createBySelf(privatekey) {
             let transaction;
             const that = this;
+            const {duration, rootNamespaceName, innerFee} = this.form
             const account = Account.createFromPrivateKey(privatekey, this.getWallet.networkType);
-            await this.createRootNamespace().then((rootNamespaceTransaction) => {
-                transaction = rootNamespaceTransaction
-            })
+            await createRootNamespace(rootNamespaceName, duration, this.getWallet.networkType, innerFee)
+                .then((rootNamespaceTransaction) => {
+                    transaction = rootNamespaceTransaction
+                })
             const signature = account.sign(transaction, this.generationHash)
             transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
                 // get announce status
@@ -213,57 +216,52 @@
             })
         }
 
-        createByMultisig(privatekey) {
+        async createByMultisig(privatekey) {
             const that = this
             const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
             const {networkType} = this.getWallet
             const account = Account.createFromPrivateKey(privatekey, networkType)
             const {generationHash, node} = this.$store.state.account
             const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-            aliasInterface.createdRootNamespace({
-                namespaceName: rootNamespaceName,
-                duration: duration,
-                networkType: networkType,
-                maxFee: innerFee
-            }).then((transaction) => {
-                const rootNamespaceTransaction = transaction.result.rootNamespaceTransaction
-                if (that.currentMinApproval > 1) {
-                    multisigInterface.bondedMultisigTransaction({
+
+            await createRootNamespace(rootNamespaceName, duration, this.getWallet.networkType, innerFee)
+                .then((rootNamespaceTransaction) => {
+                    if (that.currentMinApproval > 1) {
+                        multisigInterface.bondedMultisigTransaction({
+                            networkType: networkType,
+                            account: account,
+                            fee: aggregateFee,
+                            multisigPublickey: multisigPublickey,
+                            transaction: [rootNamespaceTransaction],
+                        }).then((result) => {
+                            const aggregateTransaction = result.result.aggregateTransaction
+                            transactionInterface.announceBondedWithLock({
+                                aggregateTransaction,
+                                account,
+                                listener,
+                                node,
+                                generationHash,
+                                networkType,
+                                fee: lockFee
+                            })
+                        })
+                        return
+                    }
+                    multisigInterface.completeMultisigTransaction({
                         networkType: networkType,
-                        account: account,
                         fee: aggregateFee,
                         multisigPublickey: multisigPublickey,
                         transaction: [rootNamespaceTransaction],
                     }).then((result) => {
                         const aggregateTransaction = result.result.aggregateTransaction
-                        transactionInterface.announceBondedWithLock({
-                            aggregateTransaction,
+                        transactionInterface._announce({
+                            transaction: aggregateTransaction,
                             account,
-                            listener,
                             node,
-                            generationHash,
-                            networkType,
-                            fee: lockFee
+                            generationHash
                         })
                     })
-                    return
-                }
-                multisigInterface.completeMultisigTransaction({
-                    networkType: networkType,
-                    fee: aggregateFee,
-                    multisigPublickey: multisigPublickey,
-                    transaction: [rootNamespaceTransaction],
-                }).then((result) => {
-                    const aggregateTransaction = result.result.aggregateTransaction
-                    transactionInterface._announce({
-                        transaction: aggregateTransaction,
-                        account,
-                        node,
-                        generationHash
-                    })
                 })
-            })
-            console.log(privatekey)
         }
 
         async checkEnd(privatekey) {
@@ -273,18 +271,6 @@
                 this.createByMultisig(privatekey)
             }
         }
-
-        createRootNamespace() {
-            return aliasInterface.createdRootNamespace({
-                namespaceName: this.form.rootNamespaceName,
-                duration: this.form.duration,
-                networkType: this.getWallet.networkType,
-                maxFee: this.form.innerFee
-            }).then((transaction) => {
-                return transaction.result.rootNamespaceTransaction
-            })
-        }
-
 
         closeCheckPWDialog() {
             this.showCheckPWDialog = false
@@ -354,19 +340,15 @@
         }
 
 
-        getMultisigAccountList() {
+        async getMultisigAccountList() {
             const that = this
             const {address} = this.$store.state.account.wallet
             const {node} = this.$store.state.account
-            multisigInterface.getMultisigAccountInfo({
-                address,
-                node
-            }).then((result) => {
-                that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
-                    item.value = item.publicKey
-                    item.label = item.publicKey
-                    return item
-                })
+            const multisigInfo = await multisigAccountInfo(address, node)
+            multisigInfo['multisigAccounts'].map((item) => {
+                item.value = item.publicKey
+                item.label = item.publicKey
+                return item
             })
         }
 
@@ -377,13 +359,8 @@
             const {node} = this.$store.state.account
             const {networkType} = this.$store.state.account.wallet
             let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
-            multisigInterface.getMultisigAccountInfo({
-                address,
-                node
-            }).then((result) => {
-                const currentMultisigAccount = result.result.multisigInfo
-                that.currentMinApproval = currentMultisigAccount.minApproval
-            })
+            const multisigInfo = await multisigAccountInfo(address, node)
+            that.currentMinApproval = multisigInfo['minApproval']
         }
 
         showErrorMessage(message) {

@@ -1,11 +1,11 @@
 # nem2-desktop-wallet-cn
 
-:warning: **This program is currently still in development,This program is now only available for the NEM2 test network. It cannot be used for others. Pay attention to asset security.**
+:warning: **This program is currently in development, this program is now only available for the NEM2 test network. It cannot be used for others. Pay attention to asset security.**
 
 ## Important Notes
-This program is  a desktop wallet application based on NEM2-Catapult. It is developed with TypeScript-SDK , Vuejs , Electron and can be easily packaged into desktop applications such as Windows and Mac.
+This program is a desktop wallet application based on NEM2-Catapult. It is developed with the TypeScript-SDK, Vuejs, Electron and can be easily packaged into desktop applications for Windows and Mac.
 
-## Environment and Dependence
+## Environment and Dependencies
 **NEM2-Catapult**
 - catapult-server: [catapult-server-v0.6.0.1](https://github.com/nemtech/catapult-server/releases/tag/v0.6.0.1)
 - nem2-sdk-typescript-javascript: [nem2-sdk-typescript-javascript-v0.13.1](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.13.1)
@@ -22,16 +22,16 @@ This program is  a desktop wallet application based on NEM2-Catapult. It is deve
 **Electron**
 - Electron 5.0.6
 
-## How to build in the Browser
-1.Dependent environment
+## Build for the Browser
+1. Install the dependencies
 ```
 npm install 
 ```
-2.Run to the Browser
+2. Start the development server
 ```
 npm run dev 
 ```
-3.Generate an installation package
+3. Generate a production build
 ```
 npm run build 
 ```

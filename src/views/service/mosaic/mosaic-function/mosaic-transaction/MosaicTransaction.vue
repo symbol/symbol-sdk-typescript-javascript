@@ -136,6 +136,7 @@
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from '@/interface/sdkTransaction'
     import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+    import {multisigAccountInfo} from "../../../../../help/appUtil"
     import {
         MosaicId,
         MosaicNonce,
@@ -151,7 +152,6 @@
         MosaicSupplyChangeTransaction,
         MosaicSupplyType
     } from 'nem2-sdk'
-
 
     @Component({
         components: {
@@ -477,17 +477,11 @@
             const that = this
             const {address} = this.$store.state.account.wallet
             const {node} = this.$store.state.account
-
-            multisigInterface.getMultisigAccountInfo({
-                address,
-                node
-            }).then((result) => {
-                that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
-                    item.value = item.publicKey
-                    item.label = item.publicKey
-                    return item
-                })
-
+            const multisigInfo = multisigAccountInfo(address, node)
+            that.multisigPublickeyList = multisigInfo['multisigAccounts'].map((item) => {
+                item.value = item.publicKey
+                item.label = item.publicKey
+                return item
             })
         }
 
@@ -498,14 +492,8 @@
             const {node} = this.$store.state.account
             const {networkType} = this.$store.state.account.wallet
             let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
-
-            multisigInterface.getMultisigAccountInfo({
-                address,
-                node
-            }).then((result) => {
-                const currentMultisigAccount = result.result.multisigInfo
-                that.currentMinApproval = currentMultisigAccount.minApproval
-            })
+            const multisigInfo = multisigAccountInfo(address, node)
+            that.currentMinApproval = multisigInfo['minApproval']
 
         }
 

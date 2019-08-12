@@ -158,6 +158,7 @@
         ModifyMultisigAccountTransaction,
         UInt64
     } from 'nem2-sdk'
+    import {multisigAccountInfo} from "../../../../../help/appUtil";
     @Component({
         components: {
             CheckPWDialog
@@ -372,25 +373,20 @@
             return publickeyFlag
         }
 
-        getMultisigAccountList() {
+        async getMultisigAccountList() {
             const that = this
             const {address} = this.$store.state.account.wallet
             const {node} = this.$store.state.account
-
-            multisigInterface.getMultisigAccountInfo({
-                address,
-                node
-            }).then((result) => {
-                if (result.result.multisigInfo.multisigAccounts.length == 0) {
-                    that.isShowPanel = false
-                    return
-                }
-                that.publickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
-                    item.value = item.publicKey
-                    item.label = item.publicKey
-                    return item
-                })
-            }).catch(e=>console.log(e))
+            const multisigInfo =await multisigAccountInfo(address, node)
+            if (multisigInfo['multisigAccounts'].length == 0) {
+                that.isShowPanel = false
+                return
+            }
+            that.publickeyList = multisigInfo['multisigAccounts'].map((item) => {
+                item.value = item.publicKey
+                item.label = item.publicKey
+                return item
+            })
         }
 
         @Watch('formItem.multisigPublickey')
@@ -401,21 +397,15 @@
             const {networkType} = this.$store.state.account.wallet
             const {node} = this.$store.state.account
             let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
-            multisigInterface.getMultisigAccountInfo({
-                address,
-                node
-            }).then((result) => {
-                const currentMultisigAccount = result.result.multisigInfo
-                that.existsCosignerList = currentMultisigAccount.cosignatories.map((item) => {
-                    item.value = item.publicKey
-                    item.label = item.publicKey
-                    return item
-                })
-                that.currentMinApproval = currentMultisigAccount.minApproval
-                that.currentMinRemoval = currentMultisigAccount.minRemoval
-                that.currentCosignatoryList = currentMultisigAccount.cosignatories
+            const multisigInfo =await multisigAccountInfo(address, node)
+            that.existsCosignerList = multisigInfo['cosignatories'].map((item) => {
+                item.value = item.publicKey
+                item.label = item.publicKey
+                return item
             })
-
+            that.currentMinApproval = multisigInfo['minApproval']
+            that.currentMinRemoval = multisigInfo['minRemoval']
+            that.currentCosignatoryList = multisigInfo['cosignatories']
         }
 
         created() {

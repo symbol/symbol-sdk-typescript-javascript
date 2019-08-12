@@ -6,6 +6,7 @@
 
 <script lang="ts">
     import 'animate.css'
+    import fs from 'fs'
     import {localRead} from '@/help/help'
     import {PublicAccount, Listener} from "nem2-sdk"
     import {wsInterface} from '@/interface/sdkListener'
@@ -97,8 +98,16 @@
                 pointer: this
             })
         }
-
+        checkInstall () {
+            if(fs.readdirSync){
+                const root = fs.readdirSync('./')
+                console.log(root)
+            }else {
+                console.log('web')
+            }
+        }
         created() {
+            this.checkInstall()
             this.initData()
             this.initApp()
             this.chainListner()

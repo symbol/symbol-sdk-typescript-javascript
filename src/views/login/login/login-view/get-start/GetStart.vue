@@ -12,8 +12,8 @@
       {{$t('This_is_a_distributed_desktop_wallet_based_on_catapult_come_and_explore_the_wonderful_journey_of_catapult')}}
     </div>
 
-    <div @click="showIndexView" class="bottom_input pointer">
-      <span>GET START</span>
+    <div @click="showIndexView" class="getStart pointer">
+      GET START
     </div>
   </div>
 </template>

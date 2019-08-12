@@ -47,7 +47,8 @@
     import {aliasInterface} from "@/interface/sdkNamespace"
     import {transactionInterface} from "@/interface/sdkTransaction"
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-    import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
+    import {Account, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
+    import {decryptKey} from "@/help/appUtil"
 
     @Component({
         components: {},
@@ -109,12 +110,7 @@
             this.decryptKey()
         }
         decryptKey () {
-            let encryptObj = {
-                ciphertext: this.getWallet.ciphertext,
-                iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-                key: this.mosaic.password
-            }
-            this.checkPrivateKey(Crypto.decrypt(encryptObj))
+            this.checkPrivateKey(decryptKey(this.getWallet, this.mosaic.password))
         }
         checkPrivateKey (DeTxt) {
             const that = this
@@ -132,7 +128,6 @@
         }
         async updateMosaic (key) {
             const that =this
-            let transaction
             const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
             aliasInterface.mosaicAliasTransaction({
                 actionType:AliasActionType.Unlink,
@@ -174,7 +169,6 @@
         onShowMosaicAliasDialogChange() {
             this.show = this.showMosaicUnAliasDialog
             Object.assign(this.mosaic, this.itemMosaic)
-            console.log(this.mosaic)
         }
     }
 </script>
