@@ -1,0 +1,241 @@
+.right_record {
+  width: 415px;
+  height: 100%;
+  float: right;
+  background-color: white;
+
+  .top_title {
+    height: 120px;
+    border-bottom: 2px solid #eee;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    justify-items: center;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 400;
+    color: rgba(34, 34, 34, 1);
+
+    .right {
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(32, 181, 172, 1);
+      position: relative;
+      right: 20px;
+
+      .select_date {
+        position: relative;
+
+        .date_selector {
+          display: inline-block;
+          position: relative;
+          right: 20px;
+        }
+
+        .month_value {
+          display: inline-block;
+          position: relative;
+          left: 30px;
+          bottom: 3px;
+
+          img {
+            position: relative;
+            top: 2px;
+          }
+        }
+      }
+
+      .search_input {
+        position: relative;
+
+        span {
+          position: relative;
+          bottom: 2px;
+        }
+      }
+
+      .search_input::before {
+        content: '';
+        display: block;
+        width: 1px;
+        height: 16px;
+        background-color: #CCCCCC;
+        position: absolute;
+        left: -20px;
+        bottom: 4px;
+      }
+
+      img {
+        margin-right: 5px;
+        position: relative;
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    .search_expand {
+      position: relative;
+      top: 5px;
+
+      .search_container {
+        display: inline-block;
+        width: 308px;
+        height: 40px;
+        border: 1px solid rgba(32, 181, 172, 1);
+        border-radius: 20px;
+        margin-left: 19px;
+        position: relative;
+
+        img {
+          position: absolute;
+          left: 10px;
+          top: 10px;
+          width: 18px;
+          height: 18px;
+        }
+
+        input {
+          width: 240px;
+          outline: none;
+          border: none;
+          left: 10px;
+          background-color: transparent;
+        }
+
+        input::placeholder {
+          font-size: 12px;
+          color: #999999;
+        }
+      }
+
+      .search_btn {
+        display: inline-block;
+        margin-left: 15px;
+        font-weight: 400;
+        font-size: 16px;
+        color: rgba(32, 181, 172, 1);
+        position: relative;
+        bottom: 15px;
+      }
+    }
+  }
+
+  .bottom_transfer_record_list {
+    padding: 34px 36px;
+    height: calc(100% - 130px);
+    position: relative;
+
+    .no_data {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .transaction_record_item {
+      padding: 26px 0;
+      border-bottom: 1px solid rgba(238, 238, 238, 1);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .flex_content {
+        margin-left: 20px;
+        width: 300px;
+
+        .right_components {
+          padding-right: 40px;
+
+        }
+
+        .left_components,
+        .right_components {
+          width: 50%;
+
+          div {
+            /*overflow: hidden;*/
+            /*text-overflow: ellipsis;*/
+            /*white-space: nowrap;*/
+            white-space: nowrap;
+          }
+        }
+
+        .right_components {
+          width: 50%;
+        }
+
+        .right {
+          text-align: right;
+        }
+      }
+
+      img {
+        display: block;
+        width: 28px;
+        height: 28px;
+      }
+
+      .top {
+        font-size: 16px;
+        line-height: 16px;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
+        display: block;
+        margin-bottom: 15px;
+      }
+
+      .bottom {
+        display: block;
+        line-height: 14px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #999999;
+      }
+    }
+
+  }
+
+
+  .dash_board_dialog {
+    .value {
+      border: none;
+    }
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .title {
+      display: inline-block;
+      width: 100px;
+      margin-right: 60px;
+      font-weight: 400;
+      color: rgba(153, 153, 153, 1);
+      text-align: right;
+
+    }
+
+    span {
+      margin-top: 8px;
+      font-size: 16px;
+    }
+
+    .value {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(34, 34, 34, 1);
+    }
+
+    .other_info:nth-of-type(odd) {
+      margin-top: 20px;
+    }
+
+    .transfer_type {
+      .value {
+        font-size: 20px;
+        font-weight: bold;
+        color: rgba(241, 95, 35, 1);
+      }
+    }
+
+  }
+}

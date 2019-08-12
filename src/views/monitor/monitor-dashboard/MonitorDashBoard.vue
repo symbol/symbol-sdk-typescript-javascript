@@ -117,9 +117,9 @@
 <script lang="ts">
     import {market} from "@/interface/restLogic"
     import {KlineQuery} from "@/query/klineQuery"
-    import LineChart from '@/common/vue/LineChart.vue'
+    import LineChart from '@/common/vue/line-chart/LineChart.vue'
     import {PublicAccount, NetworkType} from 'nem2-sdk'
-    import numberGrow from '@/common/vue/NumberGrow.vue'
+    import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {blockchainInterface} from '@/interface/sdkBlockchain'
     import {transactionInterface} from '@/interface/sdkTransaction'

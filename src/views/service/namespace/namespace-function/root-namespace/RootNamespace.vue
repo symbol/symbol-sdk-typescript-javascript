@@ -422,5 +422,5 @@
     }
 </script>
 <style scoped lang="less">
-  @import "RootNamespace.less";
+  @import "./RootNamespace.less";
 </style>

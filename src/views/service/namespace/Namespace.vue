@@ -21,11 +21,9 @@
 </template>
 
 <script lang="ts">
-    import {Address} from "nem2-sdk"
-    import {aliasInterface} from "@/interface/sdkNamespace"
     import {Component, Vue, Watch} from 'vue-property-decorator'
-    import SubNamespace from './namespace-function/subNamespace/SubNamespace.vue'
-    import RootNamespace from './namespace-function/rootNamespace/RootNamespace.vue'
+    import SubNamespace from './namespace-function/sub-namespace/SubNamespace.vue'
+    import RootNamespace from './namespace-function/root-namespace/RootNamespace.vue'
     import NamespaceList from './namespace-function/namespace-list/NamespaceList.vue'
     import {getNamespaces} from "@/help/appUtil"
 
@@ -50,15 +48,15 @@
             }
         ]
 
-        get node (){
+        get node() {
             return this.$store.state.account.node
         }
 
-        get getWallet () {
+        get getWallet() {
             return this.$store.state.account.wallet
         }
 
-        get ConfirmedTxList () {
+        get ConfirmedTxList() {
             return this.$store.state.account.ConfirmedTx
         }
 
@@ -72,7 +70,7 @@
             this.buttonList = list
         }
 
-        async getMyNamespaces () {
+        async getMyNamespaces() {
             const list = await getNamespaces(this.getWallet.address, this.node)
             this.$store.commit('SET_NAMESPACE', list)
         }
@@ -87,7 +85,7 @@
             this.getMyNamespaces()
         }
 
-        created () {
+        created() {
             this.getMyNamespaces()
         }
     }

@@ -257,5 +257,5 @@
     }
 </script>
 <style scoped lang="less">
-  @import "SubNamespace.less";
+  @import "./SubNamespace.less";
 </style>

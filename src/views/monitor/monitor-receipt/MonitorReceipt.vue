@@ -52,7 +52,7 @@
     import {Message} from "config/index"
     import {createQRCode, copyTxt} from '@/help/help.ts'
     import {Component, Vue, Watch} from 'vue-property-decorator'
-    import CollectionRecord from '@/common/vue/CollectionRecord.vue'
+    import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 
     @Component({
         components: {

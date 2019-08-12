@@ -24,7 +24,7 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator'
-    import CollectionRecord from '@/common/vue/CollectionRecord.vue'
+    import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
     import TransferTransaction from './transactions/transfer-transaction/TransferTransaction.vue'
     import MultisigTransferTransaction from './transactions/multisig-transfer-transaction/MultisigTransferTransaction.vue'
 
