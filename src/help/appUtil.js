@@ -3,7 +3,9 @@ import * as tslib_1 from "tslib";
 import { localRead, localSave } from "@/help/help";
 import { walletInterface } from "@/interface/sdkWallet";
 import { accountInterface } from "@/interface/sdkAccount";
-import { Crypto } from 'nem2-sdk';
+import { Address, Crypto } from 'nem2-sdk';
+import { aliasInterface } from "@/interface/sdkNamespace";
+import { multisigInterface } from "@/interface/sdkMultisig";
 export var saveLocalWallet = function (wallet, encryptObj, index, mnemonicEnCodeObj) {
     var localData = [];
     var isExist = false;
@@ -144,6 +146,76 @@ export var setMultisigAccount = function (storeWallet, node) { return tslib_1.__
         }
     });
 }); };
+export var getNamespaces = function (address, node) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+    return tslib_1.__generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, aliasInterface.getNamespacesFromAccount({
+                    address: Address.createFromRawAddress(address),
+                    url: node
+                }).then(function (namespacesFromAccount) {
+                    var list = [];
+                    var namespace = {};
+                    namespacesFromAccount.result.namespaceList
+                        .sort(function (a, b) {
+                        return a['namespaceInfo']['depth'] - b['namespaceInfo']['depth'];
+                    }).map(function (item, index) {
+                        if (!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())) {
+                            namespace[item.namespaceInfo.id.toHex()] = item.namespaceName;
+                        }
+                        else {
+                            return;
+                        }
+                        var namespaceName = '';
+                        item.namespaceInfo.levels.map(function (item, index) {
+                            namespaceName += namespace[item.id.toHex()] + '.';
+                        });
+                        namespaceName = namespaceName.slice(0, namespaceName.length - 1);
+                        var newObj = {
+                            value: namespaceName,
+                            label: namespaceName,
+                            alias: item.namespaceInfo.alias,
+                            levels: item.namespaceInfo.levels.length,
+                            name: namespaceName,
+                            duration: item.namespaceInfo.endHeight.compact(),
+                        };
+                        list.push(newObj);
+                    });
+                    return list;
+                })];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
+export var createRootNamespace = function (namespaceName, duration, networkType, maxFee) {
+    return aliasInterface.createdRootNamespace({
+        namespaceName: namespaceName,
+        duration: duration,
+        networkType: networkType,
+        maxFee: maxFee
+    }).then(function (transaction) {
+        return transaction.result.rootNamespaceTransaction;
+    });
+};
+export var createSubNamespace = function (rootNamespaceName, subNamespaceName, networkType, maxFee) {
+    return aliasInterface.createdSubNamespace({
+        parentNamespace: rootNamespaceName,
+        namespaceName: subNamespaceName,
+        networkType: networkType,
+        maxFee: maxFee
+    }).then(function (transaction) {
+        return transaction.result.subNamespaceTransaction;
+    });
+};
+export var multisigAccountInfo = function (address, node) {
+    return multisigInterface.getMultisigAccountInfo({
+        address: address,
+        node: node
+    }).then(function (result) {
+        return result.result.multisigInfo;
+    });
+};
 export var encryptKey = function (data, password) {
     return Crypto.encrypt(data, password);
 };

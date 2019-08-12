@@ -141,7 +141,7 @@
     import {KlineQuery} from "@/query/klineQuery"
     import {market} from "@/interface/restLogic"
     import {Component, Vue} from 'vue-property-decorator'
-    import LineChart from '@/common/vue/LineChartByDay.vue'
+    import LineChart from '@/common/vue/line-chart-by-day/LineChartByDay.vue'
     import {isRefreshData, localSave, localRead, formatDate} from '@/help/help.ts'
 
     @Component({

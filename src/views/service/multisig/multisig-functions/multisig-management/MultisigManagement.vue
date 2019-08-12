@@ -158,7 +158,7 @@
         ModifyMultisigAccountTransaction,
         UInt64
     } from 'nem2-sdk'
-    import {multisigAccountInfo} from "../../../../../help/appUtil";
+    import {multisigAccountInfo} from "@/help/appUtil";
     @Component({
         components: {
             CheckPWDialog

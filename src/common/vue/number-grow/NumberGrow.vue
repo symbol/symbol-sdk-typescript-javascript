@@ -62,17 +62,5 @@
 </script>
 
 <style>
-  .number-grow-warp {
-    transform: translateZ(0);
-  }
-
-  /*.number-grow {*/
-  /*  font-family: Arial-BoldMT;*/
-  /*  font-size: 64px;*/
-  /*  color: #ffaf00;*/
-  /*  letter-spacing: 2.67px;*/
-  /*  margin:110px 0 20px;*/
-  /*  display: block;*/
-  /*  line-height:64px;*/
-  /*}*/
+@import "NumberGrow.less";
 </style>

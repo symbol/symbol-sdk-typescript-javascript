@@ -11,25 +11,19 @@
     import {market} from "@/interface/restLogic"
     import {KlineQuery} from "@/query/klineQuery"
     import {Component, Vue} from 'vue-property-decorator'
-    import {localSave, localRead, isRefreshData, formatDate} from '@/help/help'
+    import {localSave, localRead, isRefreshData, addZero, formatDate} from '@/help/help'
 
     @Component
     export default class LineChart extends Vue {
-        xemMin = 0
-        dom: any = {}
+        dom: any = {};
         spinShow = true
-        xemDataList = []
-        btcDataList = []
-        // TODO put option in configure.ts
         option = {
-            legend: [
-                {
-                    data: ['xem', 'btc', 'amount'],
-                    show: true,
-                    x: 'right',
-                    y: '-5px'
-                }
-            ],
+            legend: {
+                data: ['xem', 'btc', 'amount'],
+                show: true,
+                x: 'right',
+                y: '-5px',
+            },
             axisPointer: {
                 link: {xAxisIndex: 'all'},
                 label: {
@@ -71,10 +65,10 @@
                 {
                     height: '55%',
                     y: '10%',
-                    width: '89%'
+                    width: '88%',
                 },
                 {
-                    width: '89%',
+                    width: '88%',
                     height: '20%',
                     y: '65%'
                 }
@@ -83,7 +77,7 @@
 
             xAxis: [
                 {
-                    show: false,//hide x axis
+                    show: false,//hide axis
                     gridIndex: 0,
                     type: 'category',
                     data: [],
@@ -98,7 +92,7 @@
                         interval: 6,
                         formatter(timestamp) {
                             let date: any = new Date(Number(timestamp))
-                            date = (date.getMonth() + 1) + '-' + (date.getDate())
+                            date = (date.getMonth() + 1) + '-' + (date.getDate()) + (date.getHours()) + ':' + (date.getMinutes())
                             return date
                         }
                     },
@@ -117,7 +111,7 @@
                         interval: 6,
                         formatter(timestamp) {
                             let date: any = new Date(Number(timestamp))
-                            date = (date.getMonth() + 1) + '-' + (date.getDate())
+                            date = addZero(date.getHours()) + ':' + addZero(date.getMinutes())
                             return date
                         }
                     },
@@ -168,6 +162,7 @@
                 },
             ],
             dataZoom: {
+
                 type: "inside",
                 xAxisIndex: [0, 1],
             },
@@ -204,8 +199,6 @@
                 },
                 // btc
                 {
-                    animation: true,
-                    animationEasing: 'linear',
                     smooth: true,
                     xAxisIndex: 0,
                     yAxisIndex: 0,
@@ -245,7 +238,9 @@
                 },
             ],
         };
-
+        xemDataList = []
+        btcDataList = []
+        xemMin = 0
 
         mounted() {
             this.refresh()
@@ -258,8 +253,10 @@
         }
 
         refreshXem() {
-            this.dom = echarts.init(this.$refs.dom);
+            this.dom = echarts.init(this.$refs.dom)
             let {xemDataList, btcDataList} = this
+
+
             let xAxisData = []
 
             if (xemDataList.length == 0) {
@@ -271,7 +268,7 @@
             })
             const low = xemDataList[0].open
             const open = xemDataList[xemDataList.length - 1].open
-            const min = (low - (open - low) / 10).toFixed(3)
+            const min = (low - (open - low)).toFixed(3)
 
             xemDataList.sort((a, b) => {
                 return a.id > b.id ? 1 : -1
@@ -289,15 +286,17 @@
             this.option.series[0].data = xemDataList
             this.option.xAxis[0].data = xAxisData
             this.option.yAxis[0].min = min
+
             this.option.series[2].data = amountList
             this.option.xAxis[1].data = xAxisData
+
             this.dom.setOption(this.option)
             window.onresize = this.dom.resize
         }
 
         refreshBtc() {
             this.dom = echarts.init(this.$refs.dom);
-            let {xemDataList, btcDataList, xemMin} = this
+            let {btcDataList, xemMin} = this
             let xAxisData = []
 
             if (btcDataList.length == 0) {
@@ -318,13 +317,10 @@
             btcDataList = btcDataList.map(item => {
                 let i: any = {}
                 xAxisData.push(item.id * 1000)
-                // console.log(item.open)
                 item.open = item.open / rate.toFixed(0)
                 return item.open
             })
             this.option.series[1].data = btcDataList
-
-
             this.dom.setOption(this.option)
             this.dom.dispatchAction({
                 type: 'showTip',
@@ -343,43 +339,41 @@
             rstQuery.data.forEach((item, index) => {
                 index % 4 == 0 ? dataList.push(item) : dataList;
             })
-            let marketPriceDataObject = localRead('marketPriceDataObject') ? JSON.parse(localRead('marketPriceDataObject')) : {}
+            let marketPriceDataObject = localRead('marketPriceDataByDayObject') ? JSON.parse(localRead('marketPriceDataByDayObject')) : {}
             marketPriceDataObject.timestamp = new Date().getTime()
             if (coin == 'xem') {
                 that.xemDataList = dataList
                 marketPriceDataObject.xem = {
-                    dataList: dataList
+                    dataList: dataList,
                 }
             }
             if (coin == 'btc') {
                 that.btcDataList = dataList
                 marketPriceDataObject.btc = {
-                    dataList: dataList
+                    dataList: dataList,
                 }
             }
 
             marketPriceDataObject.timestamp = new Date().getTime()
-            localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
+            localSave('marketPriceDataByDayObject', JSON.stringify(marketPriceDataObject))
             this.refresh()
         }
 
-
         async getChartData() {
-            await this.setCharData("xem", "60min", "168");
-            await this.setCharData("btc", "60min", "168");
+            await this.setCharData("xem", "15min", "168");
+            await this.setCharData("btc", "15min", "168");
             this.refresh()
         }
 
         async refreshData() {
             try {
-                if (isRefreshData('marketPriceDataObject', 1000 * 60 * 15, new Date().getMinutes())) {
+                if (isRefreshData('marketPriceDataByDayObject', 1000 * 60 * 60, new Date().getMinutes())) {
                     await this.getChartData()
                     return
                 }
-                this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
-                this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
+                this.btcDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).btc.dataList
+                this.xemDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).xem.dataList
             } catch (e) {
-                console.log('refresh')
                 await this.getChartData()
             }
         }
@@ -393,24 +387,11 @@
             })
         }
 
-        async created() {
-            await this.refreshData()
+        created() {
+            this.refreshData()
         }
     }
 </script>
 <style scoped lang="less">
-  .line_chart_container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
-
-  .line {
-    width: calc(100% - 20px);
-    height: 400px;
-    position: absolute;
-    top: 20px;
-    left: 0px;
-  }
-
+ @import "LineChartByDay.less";
 </style>
