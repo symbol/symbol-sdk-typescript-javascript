@@ -1,9 +1,9 @@
-import {localRead, localSave} from "help";
-import {walletInterface} from "../interface/sdkWallet";
-import {accountInterface} from "../interface/sdkAccount";
+import {localRead, localSave} from "@/help/help";
+import {walletInterface} from "@/interface/sdkWallet";
+import {accountInterface} from "@/interface/sdkAccount";
 import {Address, Crypto} from 'nem2-sdk'
-import {aliasInterface} from "../interface/sdkNamespace";
-import {multisigInterface} from "../interface/sdkMultisig";
+import {aliasInterface} from "@/interface/sdkNamespace";
+import {multisigInterface} from "@/interface/sdkMultisig";
 
 export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) => {
     let localData: any[] = []

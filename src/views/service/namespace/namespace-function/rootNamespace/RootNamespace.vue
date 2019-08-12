@@ -115,16 +115,16 @@
 </template>
 
 <script lang="ts">
+    import {Message} from "config/index"
     import {Account, Address, Listener} from "nem2-sdk"
-    import Message from "@/message/Message"
-    import {Component, Vue, Watch} from 'vue-property-decorator'
     import {aliasInterface} from "@/interface/sdkNamespace"
-    import {formatSeconds, formatAddress} from '@/utils/util.js'
-    import BandedNamespaceList from '@/message/BandedNamespace.ts'
+    import {multisigInterface} from '@/interface/sdkMultisig'
+    import {formatSeconds, formatAddress} from '@/help/help.ts'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from "@/interface/sdkTransaction"
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
-    import {multisigInterface} from '@/interface/sdkMultisig';
-    import {createRootNamespace} from "../../../../../help/appUtil";
+    import {bandedNamespace as BandedNamespaceList} from 'config/index'
+    import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+    import {createRootNamespace, multisigAccountInfo} from "../../../../../help/appUtil";
 
     @Component({
         components: {
@@ -340,19 +340,15 @@
         }
 
 
-        getMultisigAccountList() {
+        async getMultisigAccountList() {
             const that = this
             const {address} = this.$store.state.account.wallet
             const {node} = this.$store.state.account
-            multisigInterface.getMultisigAccountInfo({
-                address,
-                node
-            }).then((result) => {
-                that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
+            const multisigInfo = await multisigAccountInfo(address, node)
+            multisigInfo['multisigAccounts'].map((item) => {
                     item.value = item.publicKey
                     item.label = item.publicKey
                     return item
-                })
             })
         }
 
@@ -363,13 +359,8 @@
             const {node} = this.$store.state.account
             const {networkType} = this.$store.state.account.wallet
             let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
-            multisigInterface.getMultisigAccountInfo({
-                address,
-                node
-            }).then((result) => {
-                const currentMultisigAccount = result.result.multisigInfo
-                that.currentMinApproval = currentMultisigAccount.minApproval
-            })
+            const multisigInfo = await multisigAccountInfo(address, node)
+            that.currentMinApproval = multisigInfo['minApproval']
         }
 
         showErrorMessage(message) {
@@ -395,7 +386,7 @@
                 this.$Message.error(Message.DURATION_MORE_THAN_1_YEARS_ERROR)
                 this.form.duration = 0
             }
-            this.durationIntoDate = formatSeconds(duration * 12)
+            this.durationIntoDate = Number(formatSeconds(duration * 12))
         }
 
         initData() {

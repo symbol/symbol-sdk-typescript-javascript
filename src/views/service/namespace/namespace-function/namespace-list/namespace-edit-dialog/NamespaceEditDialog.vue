@@ -46,28 +46,27 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
-    import {formatSeconds, formatAddress} from '@/utils/util.js'
-    import './NamespaceEditDialog.less';
+    import './NamespaceEditDialog.less'
+    import {Message} from "config/index"
     import {Account, Crypto} from 'nem2-sdk'
-    import {walletInterface} from "../../../../../../interface/sdkWallet";
-    import Message from "../../../../../../message/Message";
-    import {aliasInterface} from "../../../../../../interface/sdkNamespace";
-    import {transactionInterface} from "../../../../../../interface/sdkTransaction";
+    import {walletInterface} from "@/interface/sdkWallet"
+    import {aliasInterface} from "@/interface/sdkNamespace"
+    import {formatSeconds, formatAddress} from '@/help/help.ts'
+    import {transactionInterface} from "@/interface/sdkTransaction"
+    import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
     import {createRootNamespace, decryptKey} from "../../../../../../help/appUtil";
-
 
     @Component
     export default class namespaceEditDialog extends Vue {
-        stepIndex = 0
         show = false
+        stepIndex = 0
+        durationIntoDate = 0
         namespace = {
             name: '',
             duration: 0,
             fee: 50000,
             password: ''
         }
-        durationIntoDate = 0
 
         @Prop()
         showNamespaceEditDialog: boolean
@@ -108,7 +107,7 @@
                 this.$Message.error(Message.DURATION_MORE_THAN_1_YEARS_ERROR)
                 this.namespace.duration = 0
             }
-            this.durationIntoDate = formatSeconds(duration * 12)
+            this.durationIntoDate = Number(formatSeconds(duration * 12))
         }
         checkInfo() {
             const {namespace} = this

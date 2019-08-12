@@ -25,9 +25,9 @@
             <input v-model="formItem.supply" type="text" :placeholder="$t('undefined')">
             <span class="number_controller">
                 <img @click="addSupplyAmount " class="pointer"
-                     src="@/assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+                     src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
                 <img @click="cutSupplyAmount" class="pointer"
-                     src="@/assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+                     src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
             </span>
            </span>
         </div>
@@ -38,9 +38,9 @@
             <input v-model="formItem.divisibility" type="text" :placeholder="$t('undefined')">
             <span class="number_controller">
               <img @click="addSeverabilityAmount " class="pointer"
-                   src="@/assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+                   src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
               <img @click="cutSeverabilityAmount" class="pointer"
-                   src="@/assets/images/monitor/market/marketAmountUpdateArrow.png"/>
+                   src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
             </span>
            </span>
         </div>
@@ -130,22 +130,28 @@
 
 <script lang="ts">
     import {mosaicInterface} from '@/interface/sdkMosaic.ts'
-    import {formatSeconds, formatAddress} from '@/utils/util.js'
+    import {formatSeconds, formatAddress} from '@/help/help.ts'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from '@/interface/sdkTransaction'
+    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
+    import Message from "@/message/Message";
+    import {multisigInterface} from '@/interface/sdkMultisig';
+    import {multisigAccountInfo} from "../../../../../help/appUtil";
     import {
-        MosaicId, MosaicNonce, PublicAccount, NetworkType, Account, Address, Listener, MosaicDefinitionTransaction,
+        MosaicId,
+        MosaicNonce,
+        PublicAccount,
+        NetworkType,
+        Account,
+        Address,
+        Listener,
+        MosaicDefinitionTransaction,
         MosaicProperties,
         Deadline,
         UInt64,
         MosaicSupplyChangeTransaction,
         MosaicSupplyType
     } from 'nem2-sdk'
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
-    import Message from "@/message/Message";
-    import {multisigInterface} from '@/interface/sdkMultisig';
-    import {multisigAccountInfo} from "../../../../../help/appUtil";
-
 
     @Component({
         components: {
@@ -154,22 +160,24 @@
     })
     export default class MosaicTransaction extends Vue {
 
-        showCheckPWDialog = false
-        duration = 0
-        durationIntoDate = 0
-        currentTab: number = 0
-        showMosaicEditDialog = false
-        showMosaicAliasDialog = false
-        isMultisigAccount = false
-        accountPublicKey = ''
-        accountAddress = ''
         node = ''
-        generationHash = ''
+        duration = 0
         currentXem = ''
+        accountAddress = ''
+        generationHash = ''
         currentXEM2: string
         currentXEM1: string
+        durationIntoDate = 0
+        accountPublicKey = ''
+        currentTab: number = 0
         currentMinApproval = -1
         mosaicMapInfo: any = {}
+        transactionDetail = {}
+        showCheckPWDialog = false
+        isMultisigAccount = false
+        showMosaicEditDialog = false
+        showMosaicAliasDialog = false
+
         multisigPublickeyList = [{
             value: 'no data',
             label: 'no data'
@@ -252,6 +260,8 @@
         }
 
         showCheckDialog() {
+            const {supply, divisibility, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
+            // TODO mosaic transaction detail
             this.showCheckPWDialog = true
         }
 
@@ -400,8 +410,6 @@
                     generationHash
                 })
             })
-
-
         }
 
         checkForm() {
@@ -515,8 +523,7 @@
                 })
                 this.formItem.duration = 0
             }
-            this.durationIntoDate = formatSeconds(duration * 12)
-
+            this.durationIntoDate = Number(formatSeconds(duration * 12))
         }
 
         created() {

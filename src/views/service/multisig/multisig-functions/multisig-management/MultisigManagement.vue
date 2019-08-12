@@ -1,7 +1,5 @@
 <template>
-
   <div>
-
     <div class="multisig_management_container" @click="showSubpublickeyList = false">
       <div class="container_head_title">{{$t('Edit_co_signers_and_signature_thresholds')}}</div>
       <div class="edit_form">
@@ -122,7 +120,7 @@
               <span class="address_alias">{{i.publickey}}</span>
               <span class="action">{{i.type == MultisigCosignatoryModificationType.Add ? $t('add'):$t('cut_back')}}</span>
               <img class="delate pointer" @click="removeCosigner(index)"
-                   src="@/assets/images/service/multisig/multisigDelete.png" alt="">
+                   src="@/common/img/service/multisig/multisigDelete.png" alt="">
             </div>
           </div>
         </div>
@@ -144,11 +142,11 @@
 </template>
 
 <script lang="ts">
-    import Message from '@/message/Message.ts'
+    import {Message} from "config/index"
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {multisigInterface} from '@/interface/sdkMultisig.ts'
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
     import {transactionInterface} from '@/interface/sdkTransaction';
+    import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
     import {
         MultisigCosignatoryModificationType,
         MultisigCosignatoryModification,
@@ -167,16 +165,16 @@
         }
     })
     export default class MultisigManagement extends Vue {
-        MultisigCosignatoryModificationType = MultisigCosignatoryModificationType
-        showSubpublickeyList = false
-        showCheckPWDialog = false
-        currentPublickey = ''
-        currentMinApproval = 0
-        currentMinRemoval = 0
-        currentCosignatoryList = []
-        hasAddCosigner = false
-        existsCosignerList = [{}]
         isShowPanel = true
+        currentPublickey = ''
+        currentMinRemoval = 0
+        hasAddCosigner = false
+        currentMinApproval = 0
+        existsCosignerList = [{}]
+        showCheckPWDialog = false
+        currentCosignatoryList = []
+        showSubpublickeyList = false
+        MultisigCosignatoryModificationType = MultisigCosignatoryModificationType
         publickeyList = [{
             label: 'no data',
             value: 'no data'

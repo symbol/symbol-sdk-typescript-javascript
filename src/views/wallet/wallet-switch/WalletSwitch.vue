@@ -49,17 +49,11 @@
 </template>
 
 <script lang="ts">
-<<<<<<< HEAD:src/views/wallet-management/wallet-switch/WalletSwitch.vue
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import {localRead, localSave, formatXEMamount} from '../../../utils/util'
-    import {NetworkType} from 'nem2-sdk'
-    import {saveLocalWallet} from '@/help/appUtil'
-=======
->>>>>>> 67b9d70694798065d212e08886b68e7adc567a19:src/views/wallet/wallet-switch/WalletSwitch.vue
     import './WalletSwitch.less'
     import {NetworkType} from 'nem2-sdk'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {localRead, localSave, formatXEMamount} from '@/help/help'
+    import {saveLocalWallet} from '@/help/appUtil'
 
     @Component
     export default class WalletSwitchWrap extends Vue {
@@ -136,23 +130,6 @@
             return formatXEMamount(text)
         }
 
-<<<<<<< HEAD:src/views/wallet-management/wallet-switch/WalletSwitch.vue
-=======
-        copyObj(obj) {
-            const newObj: any = Object.prototype.toString.call(obj) == '[object Array]' ? [] : {};
-            for (const key in obj) {
-                const value = obj[key];
-                if (value && 'object' == typeof value) {
-                    //recursive clone
-                    newObj[key] = this.copyObj(value);
-                } else {
-                    newObj[key] = value;
-                }
-            }
-            return newObj;
-        }
-
->>>>>>> 67b9d70694798065d212e08886b68e7adc567a19:src/views/wallet/wallet-switch/WalletSwitch.vue
         initWalletList() {
             const list = this.getWalletList
             list.map((item, index) => {
