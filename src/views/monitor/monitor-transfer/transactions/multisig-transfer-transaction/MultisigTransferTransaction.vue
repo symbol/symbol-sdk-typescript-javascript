@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {accountInterface} from '@/interface/sdkAccount'
     import {multisigInterface} from '@/interface/sdkMultisig'
     import {Component, Vue, Watch} from 'vue-property-decorator'

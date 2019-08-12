@@ -100,7 +100,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {market} from "@/interface/restLogic"
     import {KlineQuery} from "@/query/klineQuery"
     import {Address, MosaicId, UInt64} from 'nem2-sdk'

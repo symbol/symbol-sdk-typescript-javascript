@@ -11,7 +11,7 @@
 <script lang="ts">
     import echarts from 'echarts'
     import {copyTxt} from '@/help/help.ts'
-   import {Message} from "config/index"
+   import {Message} from "@/config/index"
     import {Component, Vue} from 'vue-property-decorator'
     import {multisigInterface} from '@/interface/sdkMultisig'
     import multisignSelfIcon from '@/common/img/service/multisig/multisignSelfIcon.png'

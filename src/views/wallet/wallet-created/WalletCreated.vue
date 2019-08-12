@@ -80,7 +80,7 @@
 
 <script lang="ts">
     import './WalletCreated.less'
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {NetworkType, UInt64, Crypto} from "nem2-sdk"
     import {walletInterface} from "@/interface/sdkWallet"
     import {Component, Prop, Vue} from 'vue-property-decorator'

@@ -92,7 +92,7 @@
 
 <script lang="ts">
     import {Account} from "nem2-sdk"
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {Component, Vue} from 'vue-property-decorator'
     import {aliasInterface} from "@/interface/sdkNamespace"
     import {formatSeconds, formatAddress} from '@/help/help.ts'

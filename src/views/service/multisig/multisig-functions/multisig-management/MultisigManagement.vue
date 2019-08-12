@@ -142,7 +142,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {multisigInterface} from '@/interface/sdkMultisig.ts'
     import {transactionInterface} from '@/interface/sdkTransaction'

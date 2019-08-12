@@ -129,7 +129,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {mosaicInterface} from '@/interface/sdkMosaic.ts'
     import {multisigInterface} from '@/interface/sdkMultisig'
     import {formatSeconds, formatAddress} from '@/help/help.ts'

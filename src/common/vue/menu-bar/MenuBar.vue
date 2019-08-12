@@ -77,7 +77,7 @@
 
 <script lang="ts">
     import axios from 'axios'
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import routers from '@/router/routers'
     import {wsInterface} from "@/interface/sdkListener"
     import {blockchainInterface} from '@/interface/sdkBlockchain.js'

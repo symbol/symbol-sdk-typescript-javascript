@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {Crypto, UInt64} from 'nem2-sdk'
     import {localSave} from '@/help/help.ts'
     import {Component, Vue} from 'vue-property-decorator';

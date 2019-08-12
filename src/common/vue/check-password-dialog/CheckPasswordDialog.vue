@@ -50,7 +50,7 @@
 <script lang="ts">
     import {Crypto} from 'nem2-sdk'
     import "./CheckPasswordDialog.less"
-    import {Message} from "config/index"
+    import {Message} from "@/config/index"
     import {walletInterface} from "@/interface/sdkWallet"
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
