@@ -186,26 +186,12 @@ const routers = [
                 name: 'login',
                 component: () => import('@/views/login/login/Login.vue'),
             },
-
-            {
-                path: '/welcomePage',
-                name: 'welcomePage',
-                component: function () {
-                    component: () => import('@/views/login/new-login/NewLogin.vue')
-                },
-            },
             {
                 path: '/createLockPW',
                 name: 'createLockPW',
                 // @ts-ignore
                 component: () => import('@/views/login/create-lock-password/CreateLockPassword.vue'),
             },
-            {
-                path: '/guideInto',
-                name: 'guideInto',
-                // @ts-ignore
-                component: () => import('@/views/login/guide-into/GuideInto.vue'),
-            }
         ]
     },
 ]
