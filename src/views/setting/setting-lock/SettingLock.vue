@@ -33,11 +33,11 @@
 </template>
 
 <script lang="ts">
-    import {Crypto, UInt64} from 'nem2-sdk'
+    import {UInt64} from 'nem2-sdk'
     import {Message} from "config/index"
     import {localRead, localSave} from '@/help/help'
     import {Component, Vue} from 'vue-property-decorator'
-    import {decryptKey, encryptKey} from "../../../help/appUtil"
+    import {decryptKey, encryptKey} from "@/help/appUtil"
 
     @Component
     export default class SettingLock extends Vue {

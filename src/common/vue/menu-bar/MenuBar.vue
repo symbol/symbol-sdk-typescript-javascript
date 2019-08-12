@@ -12,14 +12,14 @@
 
       <div @click="accountQuit" class="quit_account pointer"
            v-if=" !$store.state.app.isInLoginPage && $store.state.app.walletList.length !==0">
-        <img src="@/common/img/window/windowAccoutQuit.png" alt="">
+        <img src="../../assets/images/window/windowAccoutQuit.png" alt="">
         <span>Number</span>
       </div>
     </div>
     <div class="top_window">
       <div class="nem_logo_wrap">
         <div class="nem_logo">
-          <img class="absolute" src="@/common/img/window/windowNemLogo.png" alt="">
+          <img class="absolute" src="../../assets/images/window/windowNemLogo.png" alt="">
         </div>
       </div>
       <div class="controller">
@@ -55,14 +55,13 @@
           <div class="switch_language">
             <i-select @on-change="switchLanguage" :model="currentLanguage"
                       :placeholder="currentLanguage ? $store.state.app.localMap[currentLanguage] : '中文'">
-              <i-option v-for="(item,index) in languageList" :key='index' :value="item.value">{{ item.label }}
-              </i-option>
+              <i-option v-for="item in languageList" :value="item.value">{{ item.label }}</i-option>
             </i-select>
           </div>
           <div class="switch_wallet" v-if="showSelectWallet&&walletList.length > 0">
-            <img class="select_wallet_icon" src="@/common/img/window/windowWalletSelect.png" alt="">
+            <img class="select_wallet_icon" src="../../assets/images/window/windowWalletSelect.png" alt="">
             <i-select @on-change="switchWallet" v-model="currentWallet" :placeholder="walletList[0].name">
-              <i-option :key="index" v-for="(item,index) in walletList" :value="item.address">{{ item.name }}</i-option>
+              <i-option v-for="item in walletList" :value="item.address">{{ item.name }}</i-option>
             </i-select>
           </div>
         </div>
@@ -70,48 +69,29 @@
     </div>
 
     <transition name="fade" mode="out-in">
-      +
       <router-view/>
-      +
     </transition>
 
   </div>
 </template>
 
 <script lang="ts">
-    import axios from 'axios'
-    import {Message} from "config/index"
-    import routers from '@/router/routers'
-    import {wsInterface} from "@/interface/sdkListener"
-    import {blockchainInterface} from '@/interface/sdkBlockchain.js'
-    import monitorSeleted from '@/common/img/window/windowSelected.png'
-    import monitorUnselected from '@/common/img/window/windowUnselected.png'
-    import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk"
-    import {localSave, localRead, sessionRead, sessionSave} from '@/help/help.js'
     import {Component, Vue, Watch} from 'vue-property-decorator/lib/vue-property-decorator'
+    import {localSave, localRead} from '../../utils/util.js'
+    import routers from '@/router/routers'
+    import axios from 'axios'
+    import monitorSeleted from '@/assets/images/window/windowSelected.png'
+    import monitorUnselected from '@/assets/images/window/windowUnselected.png'
+    import {blockchainInterface} from '@/interface/sdkBlockchain.js';
+    import Message from "@/message/Message";
+    import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk";
+    import {wsInterface} from "../../interface/sdkListener";
+    import {sessionRead, sessionSave} from "../../help/help";
 
     @Component
     export default class Home extends Vue {
-        walletList = []
-        currentNode = ''
-        languageList = []
-        currentWallet = ''
-        inputNodeValue = ''
-        accountAddress = ''
-        isShowDialog = true
-        isNodeHealthy = true
-        accountPublicKey = ''
-        accountPrivateKey = ''
         isShowNodeList = false
-        showSelectWallet = true
-        txStatusListener = null
-        confirmedTxListener = null
-        currentLanguage: any = false
-        unconfirmedTxListener = null
-        monitorSeleted = monitorSeleted
-        monitorUnselected = monitorUnselected
-        activePanelList = [false, false, false, false, false]
-
+        inputNodeValue = ''
         nodetList = [
             {
                 value: 'http://192.168.0.105:3000',
@@ -136,6 +116,23 @@
                 isSelected: true,
             }
         ]
+        isShowDialog = true
+        activePanelList = [false, false, false, false, false]
+        currentLanguage: any = false
+        languageList = []
+        currentWallet = ''
+        showSelectWallet = true
+        monitorSeleted = monitorSeleted
+        monitorUnselected = monitorUnselected
+        currentNode = ''
+        isNodeHealthy = true
+        accountPrivateKey = ''
+        accountPublicKey = ''
+        accountAddress = ''
+        walletList = []
+        unconfirmedTxListener = null
+        confirmedTxListener = null
+        txStatusListener = null
 
         get getWallet() {
             return this.$store.state.account.wallet
@@ -145,19 +142,18 @@
             return this.$store.state.app.walletList || []
         }
 
-        get node() {
+        get node () {
             return this.$store.state.account.node
         }
 
-        get UnconfirmedTxList() {
+        get UnconfirmedTxList () {
             return this.$store.state.account.UnconfirmedTx
         }
 
-        get ConfirmedTxList() {
+        get ConfirmedTxList () {
             return this.$store.state.account.ConfirmedTx
         }
-
-        get errorTxList() {
+        get errorTxList () {
             return this.$store.state.account.errorTx
         }
 
@@ -175,33 +171,30 @@
             const ipcRenderer = window['electron']['ipcRenderer'];
             ipcRenderer.send('app', 'min')
         }
-
-        ReceiveMain() {
+        ReceiveMain () {
             const electron = window['electron'];
-            const mainWindow = electron.remote.getCurrentWindow()
+            const mainWindow =electron.remote.getCurrentWindow()
             const that = this
-            mainWindow.on('resize', () => {
+            mainWindow.on('resize',() => {
                 that.resetFontSize()
             })
         }
-
         resetFontSize() {
-            if (window['electron']) {
+            if(window['electron']){
                 const locaZomm = sessionRead('zoomFactor') || 1
-                const devInnerWidth = 1689
+                const devInnerWidth= 1689
                 const winWidth = window.innerWidth * locaZomm
                 const scaleFactor = window['electron'].screen.getPrimaryDisplay().scaleFactor;
-                let zoomFactor = winWidth / devInnerWidth;
-                if (winWidth > devInnerWidth && winWidth < 1920) {
-                    zoomFactor = 1
-                } else if (winWidth >= 1920) {
-                    zoomFactor = winWidth / 1920;
+                let zoomFactor =  winWidth/devInnerWidth;
+                if(winWidth > devInnerWidth && winWidth < 1920){
+                    zoomFactor =  1
+                }else if(winWidth >= 1920){
+                    zoomFactor =  winWidth/1920;
                 }
-                sessionSave('zoomFactor', zoomFactor)
+                sessionSave('zoomFactor',zoomFactor)
                 window['electron'].webFrame.setZoomFactor(zoomFactor);
             }
         }
-
         selectPoint(index) {
             let list = this.nodetList
             list = list.map((item) => {
@@ -290,7 +283,7 @@
             })
         }
 
-        unconfirmedListener() {
+        unconfirmedListener(){
             const node = this.node.replace('http', 'ws')
             const that = this
             this.unconfirmedTxListener && this.unconfirmedTxListener.close()
@@ -302,7 +295,7 @@
             })
         }
 
-        confirmedListener() {
+        confirmedListener(){
             const node = this.node.replace('http', 'ws')
             const that = this
             this.confirmedTxListener && this.confirmedTxListener.close()
@@ -313,8 +306,7 @@
                 fn: that.disposeConfirmed
             })
         }
-
-        txErrorListener() {
+        txErrorListener(){
             const node = this.node.replace('http', 'ws')
             const that = this
             this.txStatusListener && this.txStatusListener.close()
@@ -326,9 +318,9 @@
             })
         }
 
-        disposeUnconfirmed(transaction) {
+        disposeUnconfirmed (transaction){
             let list = this.UnconfirmedTxList
-            if (!list.includes(transaction.transactionInfo.hash)) {
+            if(!list.includes(transaction.transactionInfo.hash)){
                 list.push(transaction.transactionInfo.hash)
                 this.$store.state.account.UnconfirmedTx = list
                 this.$Notice.success({
@@ -338,10 +330,9 @@
                 });
             }
         }
-
-        disposeConfirmed(transaction) {
+        disposeConfirmed (transaction){
             let list = this.ConfirmedTxList
-            if (!list.includes(transaction.transactionInfo.hash)) {
+            if(!list.includes(transaction.transactionInfo.hash)){
                 list.push(transaction.transactionInfo.hash)
                 this.$store.state.account.ConfirmedTx = list
                 this.$Notice.success({
@@ -351,10 +342,9 @@
                 });
             }
         }
-
-        disposeTxStatus(transaction) {
+        disposeTxStatus (transaction){
             let list = this.errorTxList
-            if (!list.includes(transaction.hash)) {
+            if(!list.includes(transaction.hash)){
                 list.push(transaction.hash)
                 this.$store.state.account.errorTx = list
                 this.$Notice.error({
@@ -385,7 +375,7 @@
             this.confirmedListener()
             this.txErrorListener()
             const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('nem.xem'))
-            linkedMosaic.subscribe((mosaic) => {
+            linkedMosaic.subscribe((mosaic)=>{
                 this.$store.state.account.currentXEM1 = mosaic.toHex();
             })
             axios.get(currentNode + '/chain/height').then(function (response) {
@@ -406,7 +396,7 @@
         }
 
         created() {
-            // this.ReceiveMain()
+            this.ReceiveMain()
             this.initData()
             this.unconfirmedListener()
             this.confirmedListener()

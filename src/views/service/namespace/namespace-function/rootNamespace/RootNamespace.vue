@@ -124,7 +124,7 @@
     import {transactionInterface} from "@/interface/sdkTransaction"
     import {bandedNamespace as BandedNamespaceList} from 'config/index'
     import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-    import {createRootNamespace, multisigAccountInfo} from "../../../../../help/appUtil";
+    import {createRootNamespace, multisigAccountInfo} from "@/help/appUtil";
 
     @Component({
         components: {
@@ -203,8 +203,8 @@
             const account = Account.createFromPrivateKey(privatekey, this.getWallet.networkType);
             await createRootNamespace(rootNamespaceName, duration, this.getWallet.networkType, innerFee)
                 .then((rootNamespaceTransaction) => {
-                transaction = rootNamespaceTransaction
-            })
+                    transaction = rootNamespaceTransaction
+                })
             const signature = account.sign(transaction, this.generationHash)
             transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
                 // get announce status
@@ -226,42 +226,42 @@
 
             await createRootNamespace(rootNamespaceName, duration, this.getWallet.networkType, innerFee)
                 .then((rootNamespaceTransaction) => {
-                if (that.currentMinApproval > 1) {
-                    multisigInterface.bondedMultisigTransaction({
+                    if (that.currentMinApproval > 1) {
+                        multisigInterface.bondedMultisigTransaction({
+                            networkType: networkType,
+                            account: account,
+                            fee: aggregateFee,
+                            multisigPublickey: multisigPublickey,
+                            transaction: [rootNamespaceTransaction],
+                        }).then((result) => {
+                            const aggregateTransaction = result.result.aggregateTransaction
+                            transactionInterface.announceBondedWithLock({
+                                aggregateTransaction,
+                                account,
+                                listener,
+                                node,
+                                generationHash,
+                                networkType,
+                                fee: lockFee
+                            })
+                        })
+                        return
+                    }
+                    multisigInterface.completeMultisigTransaction({
                         networkType: networkType,
-                        account: account,
                         fee: aggregateFee,
                         multisigPublickey: multisigPublickey,
                         transaction: [rootNamespaceTransaction],
                     }).then((result) => {
                         const aggregateTransaction = result.result.aggregateTransaction
-                        transactionInterface.announceBondedWithLock({
-                            aggregateTransaction,
+                        transactionInterface._announce({
+                            transaction: aggregateTransaction,
                             account,
-                            listener,
                             node,
-                            generationHash,
-                            networkType,
-                            fee: lockFee
+                            generationHash
                         })
                     })
-                    return
-                }
-                multisigInterface.completeMultisigTransaction({
-                    networkType: networkType,
-                    fee: aggregateFee,
-                    multisigPublickey: multisigPublickey,
-                    transaction: [rootNamespaceTransaction],
-                }).then((result) => {
-                    const aggregateTransaction = result.result.aggregateTransaction
-                    transactionInterface._announce({
-                        transaction: aggregateTransaction,
-                        account,
-                        node,
-                        generationHash
-                    })
                 })
-            })
         }
 
         async checkEnd(privatekey) {
@@ -346,9 +346,9 @@
             const {node} = this.$store.state.account
             const multisigInfo = await multisigAccountInfo(address, node)
             multisigInfo['multisigAccounts'].map((item) => {
-                    item.value = item.publicKey
-                    item.label = item.publicKey
-                    return item
+                item.value = item.publicKey
+                item.label = item.publicKey
+                return item
             })
         }
 

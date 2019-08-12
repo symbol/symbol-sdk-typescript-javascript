@@ -22,7 +22,8 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {aliasInterface} from "@/interface/sdkNamespace"
+    import {Component, Vue, Watch} from 'vue-property-decorator'
     import SubNamespace from './namespace-function/subNamespace/SubNamespace.vue'
     import RootNamespace from './namespace-function/rootNamespace/RootNamespace.vue'
     import NamespaceList from './namespace-function/namespace-list/NamespaceList.vue'

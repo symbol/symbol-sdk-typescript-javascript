@@ -129,14 +129,14 @@
 </template>
 
 <script lang="ts">
+    import {Message} from "config/index"
     import {mosaicInterface} from '@/interface/sdkMosaic.ts'
+    import {multisigInterface} from '@/interface/sdkMultisig'
     import {formatSeconds, formatAddress} from '@/help/help.ts'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from '@/interface/sdkTransaction'
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
-    import Message from "@/message/Message";
-    import {multisigInterface} from '@/interface/sdkMultisig';
-    import {multisigAccountInfo} from "../../../../../help/appUtil";
+    import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+    import {multisigAccountInfo} from "../../../../../help/appUtil"
     import {
         MosaicId,
         MosaicNonce,

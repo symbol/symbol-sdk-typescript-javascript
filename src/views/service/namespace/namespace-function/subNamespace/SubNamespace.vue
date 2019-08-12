@@ -79,7 +79,7 @@
     import {bandedNamespace as BandedNamespaceList} from 'config/index'
     import {transactionInterface} from "@/interface/sdkTransaction"
     import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-    import {createSubNamespace} from "../../../../../help/appUtil";
+    import {createSubNamespace} from "@/help/appUtil";
 
     @Component({
         components: {
@@ -150,8 +150,8 @@
             const {rootNamespaceName, subNamespaceName, maxFee} = this.form
             await createSubNamespace(rootNamespaceName, subNamespaceName, this.getWallet.networkType, maxFee)
                 .then((subNamespaceTransaction) => {
-                transaction = subNamespaceTransaction
-            })
+                    transaction = subNamespaceTransaction
+                })
             const signature = account.sign(transaction, this.generationHash)
             transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
                 // get announce status
