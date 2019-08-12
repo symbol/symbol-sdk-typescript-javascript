@@ -10,13 +10,13 @@
 
 <script lang="ts">
     import echarts from 'echarts';
-    import {copyTxt} from '@/utils/tools'
+    import {copyTxt} from '@/help/help.ts'
+   import {Message} from "config/index"
     import {Component, Vue} from 'vue-property-decorator'
     import {multisigInterface} from '@/interface/sdkMultisig'
-    import Message from '@/message/Message'
-    import multisignSelfIcon from '@/assets/images/service/multisig/multisignSelfIcon.png'
-    import multisignCosignerIcon from '@/assets/images/service/multisig/multisignCosignerIcon.png'
-    import multisignMultisignerIcon from '@/assets/images/service/multisig/multisignMultisignerIcon.png'
+    import multisignSelfIcon from '@/common/img/service/multisig/multisignSelfIcon.png'
+    import multisignCosignerIcon from '@/common/img/service/multisig/multisignCosignerIcon.png'
+    import multisignMultisignerIcon from '@/common/img/service/multisig/multisignMultisignerIcon.png'
 
     @Component
     export default class LineChart extends Vue {

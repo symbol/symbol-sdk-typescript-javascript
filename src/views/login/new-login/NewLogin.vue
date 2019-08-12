@@ -1,11 +1,11 @@
 <template>
   <div class="relogin_container radius scroll">
-    <video muted="muted" src="../../../assets/images/login/cloudsVideo.mp4" loop="loop" autoplay="true"></video>
+    <video muted="muted" src="@/common/img/login/cloudsVideo.mp4" loop="loop" autoplay="true"></video>
 
     <div class="get_start" v-if="showStartContent">
       <div class="text_container">
         <div class="top">
-          <img src="../../../assets/images/login/loginNewLogo.png" alt="">
+          <img src="@/common/img/login/loginNewLogo.png" alt="">
         </div>
 
         <div class="middle_text">

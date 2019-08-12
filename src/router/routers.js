@@ -3,7 +3,7 @@ var routers = [
         path: '/',
         name: 'home',
         // @ts-ignore
-        component: function () { return import('@/components/menu-bar/MenuBar.vue'); },
+        component: function () { return import('@/common/vue/menu-bar/MenuBar.vue'); },
         children: [
             {
                 path: '/monitorPanel',
@@ -13,12 +13,6 @@ var routers = [
                 // @ts-ignore
                 component: function () { return import('@/views/monitor/monitor-panel/MonitorPanel.vue'); },
                 children: [
-                    // {
-                    //     path: '/monitorPanel',
-                    //     name: 'monitorPanel',
-                    //     // @ts-ignore
-                    //     component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
-                    // },
                     {
                         path: '/dashBoard',
                         name: 'dashBoard',
@@ -53,45 +47,39 @@ var routers = [
                 redirect: '/walletCreate',
                 meta: {},
                 // @ts-ignore
-                component: function () { return import('@/views/wallet-management/wallet-panel/WalletPanel.vue'); },
+                component: function () { return import('@/views/wallet/wallet-panel/WalletPanel.vue'); },
                 children: [
-                    // {
-                    //     path: '/walletDetails',
-                    //     name: 'walletDetails',
-                    //     // @ts-ignore
-                    //     component: () => import('@/views/wallet-management/wallet-details/WalletDetails.vue')
-                    // },
                     {
                         path: '/walletCreate',
                         name: 'walletCreate',
                         // @ts-ignore
-                        component: function () { return import('@/views/wallet-management/wallet-create/WalletCreate.vue'); }
+                        component: function () { return import('@/views/wallet/wallet-create/WalletCreate.vue'); }
                     }, {
                         path: '/walletCreated',
                         name: 'walletCreated',
                         // @ts-ignore
-                        component: function () { return import('@/views/wallet-management/wallet-created/WalletCreated.vue'); }
+                        component: function () { return import('@/views/wallet/wallet-created/WalletCreated.vue'); }
                     }, {
                         path: 'walletImport',
                         name: 'walletImport',
                         // @ts-ignore
-                        component: function () { return import('@/views/wallet-management/wallet-import/WalletImport.vue'); },
+                        component: function () { return import('@/views/wallet/wallet-import/WalletImport.vue'); },
                         children: [
                             {
                                 path: '/walletImportKeystore',
                                 name: 'walletImportKeystore',
                                 // @ts-ignore
-                                component: function () { return import('@/views/wallet-management/wallet-import-keystore/WalletImportKeystore.vue'); },
+                                component: function () { return import('@/views/wallet/wallet-import-keystore/WalletImportKeystore.vue'); },
                             }, {
                                 path: '/walletImportMnemonic',
                                 name: 'walletImportMnemonic',
                                 // @ts-ignore
-                                component: function () { return import('@/views/wallet-management/wallet-import-mnemonic/WalletImportMnemonic.vue'); },
+                                component: function () { return import('@/views/wallet/wallet-import-mnemonic/WalletImportMnemonic.vue'); },
                             }, {
                                 path: '/walletImportPrivatekey',
                                 name: 'walletImportPrivatekey',
                                 // @ts-ignore
-                                component: function () { return import('@/views/wallet-management/wallet-import-privatekey/WalletImportPrivatekey.vue'); },
+                                component: function () { return import('@/views/wallet/wallet-import-privatekey/WalletImportPrivatekey.vue'); },
                             }
                         ]
                     },
@@ -111,7 +99,7 @@ var routers = [
                         path: '/onDev',
                         name: 'onDev',
                         // @ts-ignore
-                        component: function () { return import('@/views/other/onDev/onDev.vue'); }
+                        component: function () { return import('@/views/other/onDev/OnDev.vue'); }
                     }, {
                         path: '/namespace',
                         name: 'namespace',
@@ -144,12 +132,6 @@ var routers = [
                 // @ts-ignore
                 component: function () { return import('@/views/community/community-panel/CommunityPanel.vue'); },
                 children: [
-                    // {
-                    //     path: '/communityPanel',
-                    //     name: 'communityPanel',
-                    //     // @ts-ignore
-                    //     component: () => import('@/views/community/information/Information.vue')
-                    // },
                     {
                         path: '/information',
                         name: 'information',
@@ -200,8 +182,6 @@ var routers = [
             {
                 path: '/login',
                 name: 'login',
-                // @ts-ignore
-                // component: () => import('@/views/login/welcome-page/welcomePage.vue'),
                 component: function () { return import('@/views/login/login/Login.vue'); },
             },
             {
@@ -215,13 +195,13 @@ var routers = [
                 path: '/createLockPW',
                 name: 'createLockPW',
                 // @ts-ignore
-                component: function () { return import('@/views/login/create-lockPW/createLockPW.vue'); },
+                component: function () { return import('@/views/login/create-lock-password/CreateLockPassword.vue'); },
             },
             {
                 path: '/guideInto',
                 name: 'guideInto',
                 // @ts-ignore
-                component: function () { return import('@/views/login/guide-into/guideInto.vue'); },
+                component: function () { return import('@/views/login/guide-into/GuideInto.vue'); },
             }
         ]
     },

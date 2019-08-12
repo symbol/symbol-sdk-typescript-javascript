@@ -7,15 +7,20 @@
 </template>
 
 <script lang="ts">
-    import {localSave, localRead, isRefreshData,formatDate} from '@/utils/util'
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import echarts from 'echarts';
-    import axios from 'axios'
+    import echarts from 'echarts'
+    import {market} from "@/interface/restLogic"
+    import {KlineQuery} from "@/query/klineQuery"
+    import {Component, Vue} from 'vue-property-decorator'
+    import {localSave, localRead, isRefreshData, formatDate} from '@/help/help'
 
     @Component
     export default class LineChart extends Vue {
-        dom: any = {};
+        xemMin = 0
+        dom: any = {}
         spinShow = true
+        xemDataList = []
+        btcDataList = []
+        // TODO put option in configure.ts
         option = {
             legend: [
                 {
@@ -165,9 +170,6 @@
             dataZoom: {
                 type: "inside",
                 xAxisIndex: [0, 1],
-                // show: true,
-                // y: '90%',
-                // width:'100%',
             },
 
             series: [
@@ -202,6 +204,8 @@
                 },
                 // btc
                 {
+                    animation: true,
+                    animationEasing: 'linear',
                     smooth: true,
                     xAxisIndex: 0,
                     yAxisIndex: 0,
@@ -241,27 +245,21 @@
                 },
             ],
         };
-        xemDataList = []
-        btcDataList = []
-        xemMin = 0
+
 
         mounted() {
             this.refresh()
-
         }
 
 
         refresh() {
             this.refreshXem()
             this.refreshBtc()
-
         }
 
         refreshXem() {
             this.dom = echarts.init(this.$refs.dom);
             let {xemDataList, btcDataList} = this
-
-
             let xAxisData = []
 
             if (xemDataList.length == 0) {
@@ -291,11 +289,8 @@
             this.option.series[0].data = xemDataList
             this.option.xAxis[0].data = xAxisData
             this.option.yAxis[0].min = min
-
             this.option.series[2].data = amountList
             this.option.xAxis[1].data = xAxisData
-
-
             this.dom.setOption(this.option)
             window.onresize = this.dom.resize
         }
@@ -333,86 +328,67 @@
             this.dom.setOption(this.option)
             this.dom.dispatchAction({
                 type: 'showTip',
-                seriesIndex:0,
-                dataIndex:btcDataList.length - 1,
+                seriesIndex: 0,
+                dataIndex: btcDataList.length - 1,
 
             })
             window.onresize = this.dom.resize
         }
 
-        async getBtcChartData() {
+        async setCharData(coin: string, period: string, size: string) {
             const that = this
-            //btc
-            const btcUrl = this.$store.state.app.marketUrl + '/kline/btcusdt/60min/168'
-            await axios.get(btcUrl).then(function (response) {
-                let dataList = []
-                response.data.data.forEach((item, index) => {
-                    index % 4 == 0 ? dataList.push(item) : dataList;
-                })
-
-                that.btcDataList = dataList
-                let marketPriceDataObject = localRead('marketPriceDataObject') ? JSON.parse(localRead('marketPriceDataObject')) : {}
-                marketPriceDataObject.btc = {
-                    dataList: dataList,
-                }
-                marketPriceDataObject.timestamp = new Date().getTime()
-                localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
-
-            }).catch(function (error) {
-                // that.getBtcChartData()
-            });
-
-        }
-
-        async getXemChartData() {
-            const that = this
-            //60min/168
-            const url = this.$store.state.app.marketUrl + '/kline/xemusdt/60min/168'
-            await axios.get(url).then(function (response) {
-                let dataList = []
-                response.data.data.forEach((item, index) => {
-                    index % 4 == 0 ? dataList.push(item) : dataList;
-                })
-
+            const rstStr = await market.kline({period: period, symbol: coin + "usdt", size: size});
+            const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+            let dataList = []
+            rstQuery.data.forEach((item, index) => {
+                index % 4 == 0 ? dataList.push(item) : dataList;
+            })
+            let marketPriceDataObject = localRead('marketPriceDataObject') ? JSON.parse(localRead('marketPriceDataObject')) : {}
+            marketPriceDataObject.timestamp = new Date().getTime()
+            if (coin == 'xem') {
                 that.xemDataList = dataList
-
-
-                let marketPriceDataObject = localRead('marketPriceDataObject') ? JSON.parse(localRead('marketPriceDataObject')) : {}
                 marketPriceDataObject.xem = {
-                    dataList: dataList,
-                    timestamp: new Date().getTime()
+                    dataList: dataList
                 }
-                marketPriceDataObject.timestamp = new Date().getTime()
-                localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
+            }
+            if (coin == 'btc') {
+                that.btcDataList = dataList
+                marketPriceDataObject.btc = {
+                    dataList: dataList
+                }
+            }
 
-            }).catch(function (error) {
-                // that.getXemChartData()
-            });
+            marketPriceDataObject.timestamp = new Date().getTime()
+            localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
             this.refresh()
         }
 
-        getChartData() {
-            this.getXemChartData()
-            this.getBtcChartData()
 
-
+        async getChartData() {
+            await this.setCharData("xem", "60min", "168");
+            await this.setCharData("btc", "60min", "168");
+            this.refresh()
         }
 
         async refreshData() {
-            if (isRefreshData('marketPriceDataObject', 1000 * 60 * 15, new Date().getMinutes())) {
-                console.log()
-                await this.getChartData()
-            } else {
+            try {
+                if (isRefreshData('marketPriceDataObject', 1000 * 60 * 15, new Date().getMinutes())) {
+                    await this.getChartData()
+                    return
+                }
                 this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
                 this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
+            } catch (e) {
+                console.log('refresh')
+                await this.getChartData()
             }
         }
 
-        mouseoutLine () {
+        mouseoutLine() {
             this.dom.dispatchAction({
                 type: 'showTip',
-                seriesIndex:0,
-                dataIndex:this.option.series[1].data.length - 1,
+                seriesIndex: 0,
+                dataIndex: this.option.series[1].data.length - 1,
 
             })
         }

@@ -6,8 +6,8 @@
           <li :class="[item.active?'active':'','left',item.disabled?'disabled':'']"
               v-for="(item,index) in navList"
               :key="index"
-              @click="goToPage(item)"
-          >{{$t(item.name)}}
+              @click="goToPage(item)">
+            {{$t(item.name)}}
           </li>
         </ul>
       </div>
@@ -19,13 +19,11 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import './CommunityPanel.less';
+    import './CommunityPanel.less'
+    import {Component, Vue} from 'vue-property-decorator'
 
 
-    @Component({
-        components: {},
-    })
+    @Component
     export default class communityPanel extends Vue {
         walletList = []
         navList = [

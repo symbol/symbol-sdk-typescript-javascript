@@ -7,7 +7,7 @@
             {{address}}
           </span>
           <img class="pointer" @click="copyAddress"
-               src="../../../assets/images/monitor/monitorCopyAddress.png" alt="">
+               src="@/common/img/monitor/monitorCopyAddress.png" alt="">
         </div>
 
         <div class="split"></div>
@@ -25,14 +25,14 @@
           <Tabs size="small" v-if="!isShowManageMosaicIcon">
             <TabPane :label="$t('assets')" name="name1">
               <img @click="manageMosaicList()" class="asset_list pointer"
-                   src="../../../assets/images/monitor/monitorAssetList.png">
+                   src="@/common/img/monitor/monitorAssetList.png">
               <!--        all       -->
               <div class="mosaicList">
                 <div class="mosaic_data" v-if="value.show" v-for="(value,key,index) in mosaicMap"
                      :key="index">
                 <span class="img_container">
-                    <img v-if="index == 0" src="../../../assets/images/monitor/monitorMosaicIcon.png" alt="">
-                    <img v-else src="../../../assets/images/monitor/mosaicDefault.png" alt="">
+                    <img v-if="index == 0" src="@/common/img/monitor/monitorMosaicIcon.png" alt="">
+                    <img v-else src="@/common/img/monitor/mosaicDefault.png" alt="">
                 </span>
                   <span class="mosaic_name">{{value.name || value.hex}}</span>
                   <span class="mosaic_value">
@@ -47,11 +47,11 @@
           <!--        sevral      -->
           <div v-if="isShowManageMosaicIcon" class="searchMosaic">
             <div class="asset_setting_tit pointer" @click="showMosaicMap">
-              <img src="../../../assets/images/monitor/monitorLeftArrow.png" alt="">
+              <img src="@/common/img/monitor/monitorLeftArrow.png" alt="">
               <span>{{$t('asset_setting')}}</span>
             </div>
             <div class="input_outter">
-              <img src="../../../assets/images/monitor/monitorSearchIcon.png" alt="">
+              <img src="@/common/img/monitor/monitorSearchIcon.png" alt="">
               <input v-model="mosaicName" type="text" :placeholder="$t('search_for_asset_name')">
               <span class="search pointer" @click="searchMosaic">{{$t('search')}}</span>
 
@@ -62,8 +62,8 @@
                     <img @click="toggleShowMosaic(key,value)" class="small_icon pointer"
                          :src="value.show?monitorSeleted:monitorUnselected">
                     <img v-if="index == 0" class="mosaicIcon"
-                         src="../../../assets/images/monitor/monitorMosaicIcon.png">
-                    <img v-else class="mosaicIcon" src="../../../assets/images/monitor/mosaicDefault.png">
+                         src="@/common/img/monitor/monitorMosaicIcon.png">
+                    <img v-else class="mosaicIcon" src="@/common/img/monitor/mosaicDefault.png">
                 </span>
                 <span class="mosaic_name">{{value.name}}</span>
                 <span class="mosaic_value">
@@ -100,25 +100,24 @@
 </template>
 
 <script lang="ts">
-    import {copyTxt} from '@/utils/tools'
+    import {Message} from "config/index"
+    import {market} from "@/interface/restLogic"
+    import {KlineQuery} from "@/query/klineQuery"
     import {Address, MosaicId, UInt64} from 'nem2-sdk'
+    import {mosaicInterface} from '@/interface/sdkMosaic'
     import {accountInterface} from '@/interface/sdkAccount'
+    import {aliasInterface} from "@/interface/sdkNamespace"
     import {Component, Vue, Watch} from 'vue-property-decorator'
-    import {mosaicInterface} from '@/interface/sdkMosaic';
-    import {localSave, localRead, formatXEMamount} from '@/utils/util'
-    import monitorSeleted from '@/assets/images/monitor/monitorSeleted.png'
-    import monitorUnselected from '@/assets/images/monitor/monitorUnselected.png'
-    import monitorMosaicIcon from '@/assets/images/monitor/monitorMosaicIcon.png'
-    import Message from "@/message/Message";
-    import {aliasInterface} from "../../../interface/sdkNamespace";
-    import {market} from "@/interface/restLogic";
-    import {KlineQuery} from "@/query/klineQuery";
+    import monitorSeleted from '@/common/img/monitor/monitorSeleted.png'
+    import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
+    import {copyTxt,localSave, localRead, formatXEMamount} from '@/help/help.ts'
 
     @Component
     export default class DashBoard extends Vue {
         node = ''
         address = ''
         XEMamount = 0
+        mosaic: string
         mosaicName = ''
         currentXem = ''
         currentPrice = 0
@@ -127,7 +126,9 @@
         accountAddress = ''
         accountPublicKey = ''
         isLoadingMosaic = true
-        isShowAccountInfo = true;
+        localMosaicMap: any = {}
+        isShowAccountInfo = true
+        isShowAccountAlias = false
         isShowManageMosaicIcon = false
         monitorSeleted = monitorSeleted
         monitorUnselected = monitorUnselected
@@ -168,10 +169,6 @@
                 show: true
             }
         }
-
-        localMosaicMap: any = {}
-        isShowAccountAlias = false
-        mosaic: string;
 
         get getWallet() {
             return this.$store.state.account.wallet
@@ -474,7 +471,7 @@
         async realLocalStorage() {
             const that = this
             let {accountAddress, node} = this
-            let mosaicMap = localRead(this.accountAddress)
+            let mosaicMap:any = localRead(this.accountAddress)
             if (mosaicMap) {
                 mosaicMap = JSON.parse(mosaicMap)
                 // refresh mosaic amount
@@ -556,7 +553,6 @@
             this.realLocalStorage()
             this.getMyNamespaces()
         }
-
     }
 </script>
 

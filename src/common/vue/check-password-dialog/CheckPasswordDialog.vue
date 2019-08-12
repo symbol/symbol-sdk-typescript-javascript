@@ -4,19 +4,33 @@
             v-model="show"
             class-name="vertical-center-modal"
             :footer-hide="true"
-            :width="1000"
             :transfer="false"
             @on-cancel="checkPWDialogCancel">
       <div slot="header" class="checkPWDialogHeader">
-        <span class="title">{{$t('confirm_password')}}</span>
+        <span class="title">{{$t('confirm_infomation')}}</span>
       </div>
       <div class="checkPWDialogBody">
         <div class="stepItem1">
-          <div class="checkPWImg">
-            <img src="@/assets/images/window/checkPW.png">
+
+
+          <div v-if="!transactionDetail">
+            <div class="checkPWImg">
+              <img src="@/common/img/window/checkPW.png">
+            </div>
+            <p class="checkRemind">
+              {{$t('please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe')}}</p>
           </div>
-          <p class="checkRemind">
-            {{$t('please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe')}}</p>
+
+
+          <div class="info_container" v-else>
+            <div class="info_container_item" v-for="(value,key,index) in transactionDetail">
+              <span class="key">{{$t(key)}}</span>
+              <span v-if="index == 0" class="value orange">{{$t(value)}}</span>
+              <span v-else class="value">{{value}}</span>
+            </div>
+          </div>
+
+
           <Form :model="wallet">
             <FormItem>
               <Input v-model="wallet.password" type="password" required
@@ -33,31 +47,35 @@
 </template>
 
 <!--
-    @Prop: showCheckPWDialog  是否显示弹窗
-    @return: closeCheckPWDialog()  弹窗关闭事件
-             checkEnd(boolean)  返回事件 确认密码是否正确
+    @Prop: showCheckPWDialog
+    @return: closeCheckPWDialog()
+             checkEnd(boolean)
 -->
 
+
 <script lang="ts">
+    import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+    import {walletInterface} from "@/interface/sdkWallet"
+    import {Message} from "config/index"
     import {Crypto} from 'nem2-sdk'
     import "./CheckPasswordDialog.less"
-    import Message from "@/message/Message"
-    import {walletInterface} from "@/interface/sdkWallet"
-    import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 
     @Component({
         components: {},
     })
     export default class CheckPWDialog extends Vue {
-        @Prop()
-        showCheckPWDialog: boolean
-
         stepIndex = 0
         show = false
         wallet = {
             password: ''
         }
+
+        @Prop()
+        showCheckPWDialog: boolean
+
+        @Prop({default: ''})
+        transactionDetail: any
 
         get getWallet() {
             return this.$store.state.account.wallet
@@ -94,6 +112,11 @@
             this.wallet.password = ''
             this.show = this.showCheckPWDialog
         }
+
+        // @Watch('transactionDetail')
+        // onTransactionDetailChange(){
+        //
+        // }
     }
 </script>
 

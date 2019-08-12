@@ -1,9 +1,9 @@
 <template>
   <div class="relogin_container radius scroll">
-    <video muted="muted" src="../../../assets/images/login/cloudsVideo.mp4" loop="loop" autoplay="true"></video>
+    <video muted="muted" src="@/common/img/login/cloudsVideo.mp4" loop="loop" autoplay="true"></video>
     <div class="text_container">
       <div class="top">
-        <img src="../../../assets/images/login/loginNewLogo.png" alt="">
+        <img src="@/common/img/login/loginNewLogo.png" alt="">
       </div>
 
       <div class="middle_text">
@@ -16,17 +16,18 @@
 
       <div class="bottom_input">
         <input type="password" placeholder="Lock Password"  v-model="form.password" >
-        <img @click="jumpToDashBoard" src="../../../assets/images/login/loginJump.png" alt="">
+        <img @click="jumpToDashBoard" src="@/common/img/login/loginJump.png" alt="">
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator'
-    import Message from "@/message/Message"
+    import {Message} from "../../../../config/index"
+    // import {localRead} from '@/utils/util'
+    import {localRead} from '@/help/help.ts'
     import {Crypto, UInt64} from 'nem2-sdk'
-    import {localRead} from '@/utils/util'
+    import {Component, Vue} from 'vue-property-decorator'
 
     @Component
     export default class MonitorRelogin extends Vue {
@@ -40,7 +41,7 @@
         }
 
         checkLock() {
-            let lock = localRead('lock')
+            let lock:any = localRead('lock')
             try {
                 const u = [50, 50]
                 lock = JSON.parse(lock)

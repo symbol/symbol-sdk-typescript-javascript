@@ -1,6 +1,6 @@
 <template>
   <div class="relogin_container radius scroll">
-    <video muted="muted" src="@/assets/images/login/cloudsVideo.mp4" loop="loop" autoplay="true"></video>
+    <video muted="muted" src="@/common/img/login/cloudsVideo.mp4" loop="loop" autoplay="true"></video>
 
     <div class="switch_language">
       <i-select @on-change="switchLanguage" :model="currentLanguage"
@@ -14,13 +14,12 @@
       <CreateLock @showIndexView="showIndexView" v-if="indexShowList[1]"></CreateLock>
       <InputLock @showIndexView="showIndexView" v-if="indexShowList[2]"></InputLock>
     </div>
-
   </div>
 </template>
 
 <script lang="ts">
-    import {localSave, localRead} from '@/utils/util.js'
-    import {Component, Vue} from 'vue-property-decorator';
+    import {localSave, localRead} from '@/help/help'
+    import {Component, Vue} from 'vue-property-decorator'
     import GetStart from './login-view/get-start/GetStart.vue'
     import InputLock from './login-view/input-lock/InputLock.vue'
     import CreateLock from './login-view/create-lock/CreateLock.vue'
@@ -33,11 +32,10 @@
         }
     })
     export default class MonitorRelogin extends Vue {
-
-        indexShowList = [true, false, false]
+        languageList = []
         isShowDialog = true
         currentLanguage: any = false
-        languageList = []
+        indexShowList = [true, false, false]
 
         switchLanguage(language) {
             this.$store.state.app.local = {

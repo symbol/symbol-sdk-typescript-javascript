@@ -1,7 +1,7 @@
 <template>
   <div class="relogin_container radius scroll">
     <div class="top_slogan">
-      <div><img src="../../../assets/images/login/relogin/reloginNemLogo.png" alt=""></div>
+      <div><img src="@/common/img/login/relogin/reloginNemLogo.png" alt=""></div>
       <div class="top">{{$t('welcome_to_the_CATAPULT_beta')}}</div>
       <div class="bottom">{{$t('this_is_a_distributed_desktop_wallet_based_on_CATAPULT_I_wish_you_a_pleasant_trip')}}
       </div>
@@ -31,18 +31,19 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import reloginAddress from '../../../assets/images/login/relogin/reloginAddress.png'
-    import reloginApostille from '../../../assets/images/login/relogin/reloginApostille.png'
-    import reloginAsset from '../../../assets/images/login/relogin/reloginAsset.png'
-    import reloginFile from '../../../assets/images/login/relogin/reloginFile.png'
-    import reloginLink from '../../../assets/images/login/relogin/reloginLink.png'
-    import reloginNamespace from '../../../assets/images/login/relogin/reloginNamespace.png'
-    import reloginSend from '../../../assets/images/login/relogin/reloginSend.png'
-    import reloginWidgets from '../../../assets/images/login/relogin/reloginWidgets.png'
+    import reloginLink from '@/common/img/login/relogin/reloginLink.png'
+    import reloginSend from '@/common/img/login/relogin/reloginSend.png'
+    import reloginFile from '@/common/img/login/relogin/reloginFile.png'
+    import reloginAsset from '@/common/img/login/relogin/reloginAsset.png'
+    import reloginWidgets from '@/common/img/login/relogin/reloginWidgets.png'
+    import reloginAddress from '@/common/img/login/relogin/reloginAddress.png'
+    import reloginApostille from '@/common/img/login/relogin/reloginApostille.png'
+    import reloginNamespace from '@/common/img/login/relogin/reloginNamespace.png'
 
 
     @Component
     export default class MonitorRelogin extends Vue {
+        currentText = ''
         iconList = [
             {
                 icon: reloginSend,
@@ -70,8 +71,6 @@
                 text: 'use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates'
             }
         ]
-        currentText = ''
-
 
         changeText(text) {
             this.currentText = text
@@ -89,5 +88,5 @@
     }
 </script>
 <style scoped lang="less">
-  @import "welcomePage.less";
+  @import "WelcomePage.less";
 </style>

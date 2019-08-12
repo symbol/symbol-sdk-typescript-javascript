@@ -20,8 +20,8 @@
 <script lang="ts">
     import "./Mosaic.less";
     import {Component, Vue} from 'vue-property-decorator'
-    import MosaicTransaction from './mosaic-function/mosaic-transaction/MosaicTransaction.vue'
     import MosaicList from './mosaic-function/mosaic-list/MosaicList.vue'
+    import MosaicTransaction from './mosaic-function/mosaic-transaction/MosaicTransaction.vue'
 
     @Component({
         components: {

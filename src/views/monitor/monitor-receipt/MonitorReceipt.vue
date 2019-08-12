@@ -49,10 +49,10 @@
 </template>
 
 <script lang="ts">
-    import Message from "@/message/Message";
-    import {createQRCode, copyTxt} from '@/utils/tools'
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import CollectionRecord from '@/components/CollectionRecord.vue'
+    import {Message} from "config/index"
+    import {createQRCode, copyTxt} from '@/help/help.ts'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
+    import CollectionRecord from '@/common/vue/CollectionRecord.vue'
 
     @Component({
         components: {
@@ -60,9 +60,15 @@
         }
     })
     export default class MonitorReceipt extends Vue {
+        node = ''
+        assetType = ''
+        currentXem = ''
+        assetAmount = 0
+        accountAddress = ''
         QRCode: string = ''
-        isShowDialog = false
         transactionHash = ''
+        isShowDialog = false
+        accountPublicKey = ''
         mosaicList = [
             {
                 value: 'xem',
@@ -70,8 +76,7 @@
             }
         ]
 
-        assetType = ''
-        assetAmount = 0
+
         transferTypeList = [
             {
                 name: 'ordinary_transfer',
@@ -92,10 +97,7 @@
             }
         ]
 
-        accountPublicKey = ''
-        accountAddress = ''
-        node = ''
-        currentXem = ''
+
 
         get getWallet() {
             return this.$store.state.account.wallet
@@ -122,7 +124,6 @@
         }
 
         genaerateQR() {
-
             if (!this.checkForm()) {
                 return
             }
@@ -138,7 +139,7 @@
                 reason: '5454564d54as5d4a56d'
             }
             const codeObj = createQRCode(JSON.stringify(QRCodeData))
-            codeObj.then((codeObj) => {
+            codeObj.then((codeObj:any) => {
                 if (codeObj.created) {
                     this.QRCode = codeObj.url
                     return
@@ -187,8 +188,6 @@
                 )
             })
         }
-
-
         initData() {
             this.accountPublicKey = this.getWallet.publicKey
             this.accountAddress = this.getWallet.address
@@ -197,7 +196,7 @@
         }
 
         createQRCode() {
-            createQRCode(this.accountPublicKey).then((data) => {
+            createQRCode(this.accountPublicKey).then((data:{url}) => {
                 this.QRCode = data.url
             })
         }

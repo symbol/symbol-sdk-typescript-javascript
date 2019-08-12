@@ -54,18 +54,13 @@
 </template>
 
 <script lang="ts">
-    import {
-        Account,
-        Mosaic,
-        MosaicId,
-        UInt64,
-    } from 'nem2-sdk'
-    import Message from "@/message/Message"
+    import {Message} from "config/index"
     import {mosaicInterface} from '@/interface/sdkMosaic'
     import {accountInterface} from '@/interface/sdkAccount'
+    import { Account, Mosaic, MosaicId, UInt64} from 'nem2-sdk'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from '@/interface/sdkTransaction'
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
+    import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
 
     @Component({

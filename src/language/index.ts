@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import VueI18n from 'vue-i18n'
 import {zh_CN} from './zh-CN'
 import {en_US} from './en-US'
+import VueI18n from 'vue-i18n'
 
 Vue.use(VueI18n)
 // @ts-ignore

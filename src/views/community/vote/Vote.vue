@@ -28,7 +28,6 @@
             <div class="left left_info">
               <div class="title">{{v.title}}
               </div>
-              <!--              <div class="summary overflow_ellipsis">{{v.content}}</div>-->
               <div class="other_info">
                 <span class="date letter_spacing">{{$t('deadline')}} : 2019/7/10 12:02:02</span>
                 <span class="time_tag">
@@ -45,7 +44,7 @@
 
         <div class="right_article_detail radius  right">
           <div v-if="0 == 0" class="noData">
-            <i><img src="../../../assets/images/wallet-management/no_data.png"></i>
+            <i><img src="@/common/img/wallet/no_data.png"></i>
             <p>{{$t('not_yet_open')}}</p>
           </div>
           <div class="right_container scroll">
@@ -103,10 +102,10 @@
             <span class="value radius">
               <input v-model="s.value" type="text"/>
                <span class="button_content">
-                  <img src="../../../assets/images/community/vote/voteAddLine.png"  :class="['pointer',index === 0?'alone':'']"
+                  <img src="@/common/img/community/vote/voteAddLine.png" :class="['pointer',index === 0?'alone':'']"
                        @click="addSelection()"
                        alt="">
-                  <img src="../../../assets/images/community/vote/voteDeleteLine.png" class="pointer" v-if="index !== 0"
+                  <img src="@/common/img/community/vote/voteDeleteLine.png" class="pointer" v-if="index !== 0"
                        @click="deleteSelection(index)" alt="">
             </span>
              </span>
@@ -128,7 +127,7 @@
             <span class="select_date pointer">
               <div class="date_container pointer">
                 <div class="month_value pointer">
-                <img src="../../../assets/images/monitor/market/marketCalendar.png" alt="">
+                <img src="@/common/img/monitor/market/marketCalendar.png" alt="">
               </div>
               <div class="date_selector pointer">
                 <DatePicker class="pointer" @on-change="changeCurrentMonth" type="datetime" placeholder=""
@@ -164,9 +163,9 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import PieChart from './PieChart.vue';
-    import CheckPWDialog from '../../../components/checkPW-dialog/CheckPWDialog.vue'
+    import PieChart from './PieChart.vue'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
+    import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
     @Component({
             components: {
@@ -176,13 +175,18 @@
         }
     )
     export default class information extends Vue {
-        isLoadingConfirmedTx = true
-        alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        currentTimestamp: any = 0
-        showCheckPWDialog = false
-        currentVoteFilter = {}
         voteType = ''
         deadline = ''
+        currentVote = {}
+        currentMonth = ''
+        sigleSelection = ''
+        currentVoteList = []
+        currentVoteFilter = {}
+        multiSelectionList = []
+        currentTimestamp: any = 0
+        showCheckPWDialog = false
+        isLoadingConfirmedTx = true
+        alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
         voteFilterList = [
             {
                 value: 0,
@@ -208,7 +212,6 @@
                 value: '2'
             }
         ]
-        currentVoteList = []
         voteList = [
             // {
             //     initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
@@ -234,8 +237,7 @@
             // }
 
         ]
-        currentMonth = ''
-        currentVote = {}
+
         voteActionList = [
             {
                 name: 'choose_to_vote',
@@ -245,8 +247,7 @@
                 isSelect: false
             }
         ]
-        sigleSelection = ''
-        multiSelectionList = []
+
 
         swicthVoteAction(index) {
             const list: any = this.voteActionList
@@ -290,6 +291,7 @@
 
 
         closeCheckPWDialog() {
+            // TODO
             console.log('......closeCheckPWDialog')
         }
 

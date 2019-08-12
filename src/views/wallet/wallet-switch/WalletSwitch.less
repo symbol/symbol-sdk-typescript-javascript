@@ -1,0 +1,256 @@
+.walletSwitchWrap {
+  box-sizing: border-box;
+  width: 440px;
+  height: 100%;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 4px;
+  overflow-y: auto;
+
+  .walletSwitchHead {
+    height: 30px;
+    line-height: 30px;
+    position: relative;
+
+    .tit {
+      font-size: 20px;
+      font-weight: bold;
+      color: #222222;
+    }
+
+    .changeNetType {
+      height: 30px;
+      line-height: 30px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 999;
+
+      .ivu-select-selection {
+        height: 30px;
+        line-height: 30px;
+        border: 1px solid #CCCCCC !important;
+
+        .ivu-select-selected-value {
+          padding-right: 30px;
+        }
+      }
+    }
+  }
+
+  .walletMethod {
+    width: 360px;
+    height: 40px;
+    border-top: 1px solid rgba(230, 230, 230, 1);
+    padding: 30px 0;
+    margin: 45px auto 0;
+    //background: rgba(255, 255, 255, 1);
+
+    //div {
+    //  height: 20px;
+    //  line-height: 20px;
+    //  text-align: center;
+    //  font-size: 14px;
+    //  font-weight: 400;
+    //  color: #20B5AC;
+    //  cursor: pointer;
+    //}
+    .createBtn,
+    .importBtn {
+      border: 1px solid rgba(38, 180, 176, 1);
+      width: 110px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 16px;
+      text-align: center;
+      margin-left: 40px;
+      color: white;
+      background: rgba(38, 180, 176, 1);
+      box-shadow: 0px 2px 6px 0px rgba(34, 165, 161, 0.66);
+      border-radius: 20px;
+    }
+
+    .importBtn {
+      color: #20B5AC;
+      background-color: white;
+      box-shadow: none;
+    }
+  }
+
+  .walletList {
+    margin-top: 20px;
+
+    .walletItem {
+      width: 380px;
+      height: 100px;
+      color: white;
+      position: relative;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      padding: 16px 0 0 28px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      border-radius: 12px;
+
+      .walletName {
+        font-size: 14px;
+        font-weight: 400;
+        color: white;
+        white-space: nowrap;
+        margin-bottom: 18px;
+      }
+
+      .walletAmount {
+        font-size: 24px;
+        line-height: 24px;
+        font-weight: 400;
+        color: white;
+        white-space: nowrap;
+
+        .tails {
+          height: 24px;
+          line-height: 24px;
+          font-weight: 400;
+          font-size: 14px;
+          color: white;
+          margin-left: 10px;
+        }
+      }
+
+      .walletTypeTxt {
+        font-size: 12px;
+        font-weight: 400;
+        text-align: center;
+        color: white;
+        margin-bottom: 7px;
+        position: absolute;
+        right: 20px;
+        bottom: 40px;
+      }
+
+      .options {
+        width: 48px;
+        height: 48px;
+        line-height: 48px;
+        text-align: center;
+        margin: 0 auto;
+        margin-top: 30px;
+
+        img {
+          display: inline-block;
+          width: 20px;
+          height: 4px;
+        }
+
+        .ivu-poptip {
+          width: 100%;
+        }
+
+        .ivu-poptip .ivu-poptip-popper {
+          min-width: 0;
+
+          .ivu-poptip-body-content {
+            height: inherit;
+            overflow: inherit;
+          }
+        }
+
+        .ivu-poptip-rel {
+          width: 100%;
+          height: 30px !important;
+        }
+
+        .optionItem {
+          height: 22px;
+          line-height: 18px;
+          padding: 2px;
+
+          i {
+            display: inline-block;
+            width: 16px;
+            height: 18px;
+            margin-right: 9px;
+
+            img {
+              display: inline-block;
+              width: 100%;
+              height: 100%;
+            }
+          }
+
+          span {
+            display: inline-block;
+            height: 18px;
+            line-height: 18px;
+            font-size: 14px;
+            font-weight: 400;
+            color: #F65C5C;
+            position: relative;
+            top: -2px;
+          }
+        }
+      }
+    }
+
+    .walletItem.active {
+      color: #FFFFFF;
+      background-size: 100% 100%;
+      width: 390px;
+      height: 120px;
+      background-repeat: no-repeat;
+
+
+      .walletName {
+        color: #FFFFFF;
+        font-size: 20px;
+      }
+
+      .walletAmount {
+        color: #FFFFFF;
+        font-size: 30px;
+        margin-top: 26px;
+        .tails {
+          color: #FFFFFF;
+        }
+      }
+
+      .walletTypeTxt {
+        color: #FFFFFF;
+      }
+    }
+  }
+}
+
+
+.walletItem_bg_0 {
+  background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal1.png");
+
+}
+
+.walletItem_bg_0.active {
+  width: 410px !important;
+  position: relative;
+  box-shadow: 0px 0px 7px 0px rgba(20, 119, 149, 0.75);
+}
+
+
+.walletItem_bg_1 {
+  background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal2.png");
+}
+
+.walletItem_bg_1.active {
+  width: 410px !important;
+  position: relative;
+  box-shadow: 0px 0px 7px 0px rgba(227, 112, 49, 0.75);
+}
+
+
+.walletItem_bg_2 {
+  background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal3.png");
+}
+
+.walletItem_bg_2.active {
+  width: 410px !important;
+  position: relative;
+  box-shadow: 0px 0px 7px 0px rgba(51, 45, 36.75);
+}

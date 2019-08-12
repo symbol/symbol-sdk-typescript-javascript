@@ -16,7 +16,7 @@
     <div class="middle_audit">
       <div class="head_title">{{$t('audit_file')}}</div>
       <div class="audit_content radius">
-        <img src="../../../../../assets/images/service/apostille/apostilleImportFile.png" alt="">
+        <img src="@/common/img/service/apostille/apostilleImportFile.png" alt="">
         <span>{{$t('Drag_and_drop_files_to_this_point_click_or_browse')}}</span>
       </div>
     </div>
@@ -27,7 +27,7 @@
           {{$t('apostille_result')}}
         </span>
         <span class="delete_style">
-          <img src="../../../../../assets/images/service/apostille/apostilleDeleteGray.png" alt="">{{$t('Delete_records_locally')}}
+          <img src="@/common/img/service/apostille/apostilleDeleteGray.png" alt="">{{$t('Delete_records_locally')}}
         </span>
       </div>
 
@@ -44,7 +44,7 @@
 
 
           <div v-if="transationList.length == 0" class="noData" >
-            <i><img src="@/assets/images/wallet-management/no_data.png"></i>
+            <i><img src="@/common/img/wallet/no_data.png"></i>
             <p>{{$t('not_yet_open')}}</p>
           </div>
 

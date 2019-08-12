@@ -15,8 +15,10 @@ export var en_US = {
     year_ago: 'year ago',
     english: 'English',
     chinese: 'Chinese',
+    // community panel
     news: 'News',
     vote: 'Vote',
+    //infomation
     no_more_data: 'No more datamore data',
     business: 'Business',
     service: 'Service',
@@ -28,6 +30,7 @@ export var en_US = {
     no_comment_yet: 'No comment yetcomment yet',
     successful_operation: 'Successful operation',
     operation_failed: 'Operatio failed',
+    // vote
     over: 'Over',
     initiation_address: 'Initiation address',
     voting_address: 'Voting address',
@@ -50,9 +53,11 @@ export var en_US = {
     already_involved: 'Involved',
     choose_to_vote: 'Vote',
     create_a_vote: 'Create',
+    //  pie chart
     number_of_voters: 'Number of voters',
     yes: 'Yes',
     no: 'No',
+    //monitor-dashboard
     transaction_detail: 'Transaction detail',
     XEM_market_trend_nearly_7_days: 'XEM market trend nearly 7 days',
     The_total_market_capitalization: 'The total market capitalization',
@@ -78,6 +83,7 @@ export var en_US = {
     data: 'Data',
     no_unconfirmed_transactions: 'No unconfirmed transactions',
     no_confirmed_transactions: 'No confirmed transactions',
+    //monitor-market
     highest_price: 'Highest',
     lowest_price: 'Lowest',
     average_price: 'Average',
@@ -87,6 +93,7 @@ export var en_US = {
     no_such_currency_transaction_record_yet: 'No such currency transaction record yet',
     price: 'Price',
     quantity: 'Quantity',
+    //monitpr-panel
     wallet_balance: 'Balance',
     asset_setting: 'Asset setting',
     search_for_asset_name: 'Search for asset name',
@@ -111,6 +118,7 @@ export var en_US = {
     fee_can_not_less_than_0: 'Max fee can not less than 0',
     duration_can_not_more_than_10_years: 'Duration can not more than 10 years',
     duration_can_not_more_than_1_years: 'Duration can not more than 1 years',
+    // monitor-receipt
     set_amount: 'Set amount',
     asset_type: 'Asset',
     transfer_amount: 'Amount',
@@ -125,6 +133,7 @@ export var en_US = {
     crosschain_transfer: 'Crosschain',
     aggregate_transfer: 'Aggregate',
     QR_code_generation_failed: 'QR code generation failed',
+    //monitor-remote
     Remote_title_recipt: 'Cumulative entrusted income',
     Remote_state: 'Current state',
     Remote_pubulic_pik: 'Remote public key',
@@ -147,6 +156,7 @@ export var en_US = {
     remote_modal_cancel: 'cancel',
     remote_modal_place1: 'Please enter or paste a remote public key',
     remote_modal_place2: 'Please enter your wallet password',
+    //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: 'WELCOME BACK TO THE CATAPULT BETA',
     welcome_to_the_CATAPULT_beta: 'WELCOME TO USE THE CATAPULT BETA',
     this_is_a_distributed_desktop_wallet_based_on_CATAPULT_I_wish_you_a_pleasant_trip: 'This is a distributed desktop wallet based on CATAPULT ,I wish you a pleasant trip.',
@@ -158,6 +168,7 @@ export var en_US = {
     use_the_NEM_Apostille_service_to_create_blockchain_notarized_timestamps_to_track_and_audit_file_authentication_status: 'Use the NEM Apostille service to create blockchain notarized timestamps to track and audit file authentication status.',
     assign_tags_to_addresses_to_easily_track_contacts: 'Assign tags to addresses to easily track contacts.',
     use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates: 'Use Changelly and ShapeShift widgets to buy XEM at the best rates !',
+    //   monitor-transfer
     transfer_target: 'Target',
     send: 'Send',
     transfer_record: 'Transfer record',
@@ -166,9 +177,11 @@ export var en_US = {
     please_enter_a_comment: 'Please enter a comment',
     password_error: 'Password error',
     transaction_hash_error: 'Transaction hash error',
+    //setting-about
     privacy_policy: 'Privacy policy',
     terms_of_use: 'Terms of use',
     about_us: 'About us',
+    //setting-lock
     old_password: 'Pre password',
     please_enter_the_original_password: 'Please enter the original password',
     set_password: 'Set password',
@@ -176,19 +189,24 @@ export var en_US = {
     please_enter_a_new_password: 'Please enter a new password',
     confirm_password: 'Confirm password',
     please_enter_your_new_password_again: 'Please enter your new password again',
+    // setting network
     save: 'Save',
     canel: 'Canel',
+    //setting-panel
     general_settings: 'General settings',
     lock_password: 'Lock password',
     network_settings: 'Network settings',
     about: 'About',
     setting: 'Setting',
+    //setting-normal
     switch_language: 'Switch language',
     currency_setting: 'Currency setting',
     account_name: 'Account name',
     the_default_is_Number: 'The default is Nember',
     confirm: 'Confirm',
+    // on_dev
     not_yet_open: 'Not yet open',
+    //service mosaic
     ordinary_account: 'Ordinary',
     basic_attribute: 'Basic attribute',
     supply: 'Supply',
@@ -213,6 +231,7 @@ export var en_US = {
     overdue: 'Overdue',
     forever: 'Forever',
     alias: 'Alias',
+    // edit dialog
     modify_supply: 'Modify supply',
     binding_alias: 'Binding alias',
     unbind: 'Unbind',
@@ -232,6 +251,7 @@ export var en_US = {
     update: 'Update',
     mosaic_operation: 'Mosaic operation',
     update_completed: 'Update completed',
+    // namespace
     parent_namespace: 'Parent',
     root_namespace: 'Parent',
     new_root_namespace: 'New root namespace',
@@ -244,10 +264,12 @@ export var en_US = {
     space_name: 'Space name',
     update_namespace: 'Update namespace',
     namespace_operation: 'Namespace operation',
+    //switch
     multi_signature: 'Multi signature',
     apostille: 'Apostille',
     address_book: 'Address book',
     instant_xchanges: 'Instant xchangesExchanges',
+    //import
     mnemonic: 'Mnemonic',
     privatekey: 'Privatekey',
     keystore: 'Keystore',
@@ -269,6 +291,7 @@ export var en_US = {
     keystore_text: 'Keystore text content',
     keystore_describle_text: 'This password is the KeyStore encryption password, which will be used when you pay. If you need to modify this password, please enter the wallet management center.',
     keystore_describle_import: 'From your computer, choose to load the KY file or paste the KeyStore string in the input box below.',
+    //create lock pw
     new_password: 'New password',
     Please_enter_the_name_of_the_wallet: 'Please enter the name of the wallet',
     please_enter_the_set_password: 'Please enter the set password',
@@ -278,8 +301,10 @@ export var en_US = {
     create_a_Lock_password: 'Create a Lock password',
     lock_pass_text: 'This password is used to lock the desktop wallet. Once lost, you will lose the right to enter the desktop wallet; therefore, you need to back up the auxiliary or private key of your asset account for recovery. ',
     lock_pass_text_2: 'This password is the basis for entering the desktop wallet. There is no right to transfer funds. The transfer requires your private key password to complete.',
+    //welcome
     return_to_the_welcome_page: 'Return',
     next: 'Next',
+    //guide into
     start_the_NEM_tour: 'START THE NEM TOUR',
     existing_wallet: 'Existing wallet',
     import_text: 'Use private key, mnemonic or keystore to import wallet.',
@@ -288,13 +313,17 @@ export var en_US = {
     this_will_create_a_new_wallet_and_a_new_torrent_file: 'This will create a new wallet and a new torrent file',
     create_wallet: 'Create wallet',
     hash: 'Hash',
+    //menu bar
     wallet_name: 'Wallet name',
     switch_point: 'Switch point',
     current_point: 'Current point',
     please_enter_a_custom_nod_address: 'Please input point url',
     point_null_error: 'Point null error',
+    //check pw dialog
     please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe: 'Please enter your wallet password to ensure your own operation and keep your wallet safe.',
+    // wallet import keystore
     please_choose: 'Please choose',
+    //export keystore
     export: 'Export',
     input_password: 'Input password',
     backup_prompt: 'Backup prompt',
@@ -312,6 +341,7 @@ export var en_US = {
     copy: 'Copy',
     Display_Keystore_QR_code: 'Display QR code',
     Show_Keystore: 'Show Keystore',
+    //
     export_mnemonic: 'Export mnemonic',
     backup_mnemonic: 'Backup mnemonic',
     confirm_backup: 'Confirm backup',
@@ -323,6 +353,7 @@ export var en_US = {
     please_click_on_the_mnemonic_in_y_backup_mnemonic: 'Please accurately copy the safety backup mnemonic',
     please_click_on_the_mnemonic_in_order_to_confirm_that_you_are_backing_up_correctly: 'Please click on the mnemonic in order to confirm that you are backing up correctly.',
     the_mnemonic_order_is_correct_and_the_backup_is_successful: 'The mnemonic order is correct and the backup is successful.',
+    //private key
     export_private_key: 'Export private key',
     backup_private_key: 'Backup private key',
     Obtaining_a_private_key_equals_ownership_of_the_wallet_asset: 'Obtaining a private key equals ownership of the wallet asset',
@@ -331,6 +362,7 @@ export var en_US = {
     please_accurately_copy_the_secure_backup_private_key: 'Please accurately copy the secure backup private key',
     display_private_key_QR_code: 'Display QR code',
     display_private_key: 'Privatekey',
+    // wallet create
     choose_network: 'Choose network',
     In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks: 'In the \'nem2 ecosystem, you can build your own home wallet, or private network wallet, or test the network.',
     set_the_wallet_name: 'Set the wallet name',
@@ -343,6 +375,7 @@ export var en_US = {
     walletCreateWalletNameRemind: 'Wallet name input error! ',
     walletCreatePasswordRemind: 'Password input error! ',
     walletCreateCheckPWRemind: 'Two passwords are inconsistent! ',
+    //Backup mnemonic  created
     Backup_mnemonics_can_effectively_back_up_and_restore_your_account: 'Backup mnemonics can effectively back up and restore your account',
     tips: 'tips',
     Do_not_reveal_the_mnemonic_you_backed_up_Anyone_with_a_mnemonic_can_always_own_the_wallet: 'Don\'t reveal the mnemonic you backed up. Anyone with a mnemonic can always own the wallet.',
@@ -364,6 +397,7 @@ export var en_US = {
     Nemwallet_can_not_recover_your_mnemonic: 'Nemwallet can\'t recover your mnemonic',
     Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct: 'Please enter a mnemonic to ensure that the mnemonic is correct',
     Mnemonic_inconsistency: 'Mnemonic inconsistency',
+    //wallet details
     Basic_information: 'Basic information',
     Wallet_type: 'Type',
     Public_wallet: 'Public wallet',
@@ -399,6 +433,7 @@ export var en_US = {
     createLockCheckPWRemind: 'Two passwords are inconsistent',
     createLockPWTxtRemind: 'Password hint error',
     no_mnemonic: 'No mnemonic',
+    //multisig
     map: 'Map',
     convert: 'Convert',
     manage: 'Manage',
@@ -440,10 +475,12 @@ export var en_US = {
     Update_namespace_prompts: 'Update namespace prompts',
     namespace_list_tips_1: '1. Only the root namespace needs to be updated. All subspace namespaces will be automatically expanded after the root namespace is expanded;',
     namespace_list_tips_2: '2. According to the lease agreement, the contract with the namespace can be up to one year, and the contract can be renewed one month before or after its due date. If the namespace is not expanded in time, the name created under it and All subspaces of the mosaic will be lost;',
+    //mosaic transaction
     create_mosaic: 'Create mosaic',
     no_data: 'No data',
     votes: 'Votes',
     create_node: 'Create node',
+    // apostille
     create_apostille: 'Create apostille',
     audit_apostille: 'Audit apostille',
     apostille_history: 'Apostille history',
@@ -471,6 +508,7 @@ export var en_US = {
     second_floor: 'Second floor',
     third_floor: 'Third floor',
     Harvester: 'Harvester',
+    // login
     WELCOME_TO_CATAPULT_NANO_WALLET: 'WELCOME TO CATAPULT-NANO-WALLET',
     This_is_a_distributed_desktop_wallet_based_on_catapult_come_and_explore_the_wonderful_journey_of_catapult: 'This is a distributed desktop wallet based on catapult. come and explore the wonderful journey of catapult.',
     CREATE_LOCK_PASSWORD: 'CREATE LOCK PASSWORD',
@@ -506,7 +544,7 @@ export var en_US = {
     alias_name_format_error: 'alias name format error',
     max_approval_amount_more_than_10: 'Max approval cannot be more than 10',
     max_removal_amount_more_than_10: 'Max removal  cannot be more than 10',
-    bonded_fee: 'bonded fee',
+    bonded_fee: 'aggregate fee',
     lock_fee: 'lock fee',
     inner_fee: 'inner fee',
     The_value_of_duration_cannot_be_less_than_1: 'The value of duration cannot be less than 1',
@@ -516,6 +554,9 @@ export var en_US = {
     Namespace_must_start_with_a_letter: 'Namespace must start with a letter',
     Namespace_can_only_contain_numbers_letters_and_other: 'Namespace can only contain numbers, letters, _ and -',
     Namespace_cannot_use_forbidden_words: 'Namespace cannot use forbidden words',
-    clear_cache: 'clear cache'
+    clear_cache: 'Clear cache',
+    We_will_clear_your_cache_reset_account_password_please_make_sure_your_wallet_is_safely_backed_up: 'We will clear your cache reset account password, please make sure your wallet is safely backed up',
+    confirm_infomation: 'Confirm infomation',
+    please_input_new_account_name: 'please input new account name'
 };
 //# sourceMappingURL=en-US.js.map

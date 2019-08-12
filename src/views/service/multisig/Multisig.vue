@@ -19,9 +19,9 @@
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator'
     import MultisigMap from './multisig-functions/multisig-map/MultisigMap.vue'
+    import MultisigCosign from './multisig-functions/multisig-cosign/MultisigCosign.vue'
     import MultisigConversion from './multisig-functions/multisig-conversion/MultisigConversion.vue'
     import MultisigManagement from './multisig-functions/multisig-management/MultisigManagement.vue'
-    import MultisigCosign from './multisig-functions/multisig-cosign/MultisigCosign.vue'
 
     @Component({
         components: {
@@ -44,10 +44,6 @@
                 name: 'manage',
                 isSelected: false
             },
-            // {
-            //     name: 'cosign',
-            //     isSelected: false
-            // }
         ]
 
         switchButton(index) {

@@ -3,11 +3,11 @@
     <div class="bottom_table">
       <div class="table_main_head">
         <span>
-          <img src="../../../../../assets/images/service/apostille/apostilleDowload.png" alt="">
+          <img src="@/common/img/service/apostille/apostilleDowload.png" alt="">
           {{$t('Notarized_data_backup')}}
         </span>
         <span>
-          <img src="../../../../../assets/images/service/apostille/apostilleDelete.png" alt="">{{$t('Notarized_data_backup')}}
+          <img src="@/common/img/service/apostille/apostilleDelete.png" alt="">{{$t('Notarized_data_backup')}}
         </span>
       </div>
 
@@ -22,7 +22,7 @@
 
 
         <div v-if="transationList.length == 0" class="noData" >
-          <i><img src="@/assets/images/wallet-management/no_data.png"></i>
+          <i><img src="@/common/img/wallet/no_data.png"></i>
           <p>{{$t('not_yet_open')}}</p>
         </div>
 

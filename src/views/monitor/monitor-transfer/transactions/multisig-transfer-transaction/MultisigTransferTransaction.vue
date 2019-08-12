@@ -91,11 +91,12 @@
 </template>
 
 <script lang="ts">
-    import CheckPWDialog from '@/components/checkPW-dialog/CheckPWDialog.vue'
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import {multisigInterface} from '@/interface/sdkMultisig'
+    import {Message} from "config/index"
     import {accountInterface} from '@/interface/sdkAccount'
-    import Message from "@/message/Message";
+    import {multisigInterface} from '@/interface/sdkMultisig'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
+    import {transactionInterface} from '@/interface/sdkTransaction'
+    import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
     import {
         Account,
         Mosaic,
@@ -113,7 +114,6 @@
         Deadline,
         Listener,
     } from 'nem2-sdk'
-    import {transactionInterface} from '@/interface/sdkTransaction';
 
     @Component({
         components: {

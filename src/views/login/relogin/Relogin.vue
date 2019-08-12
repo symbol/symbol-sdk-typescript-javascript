@@ -1,13 +1,14 @@
 <template>
-  <div class="relogin_container radius scroll" style="position:relative" >
+  <div class="relogin_container radius scroll" style="position:relative">
 
     <div class="video-box" style="position: absolute;">
-      <video autoplay="autoplay" loop="loop" muted="muted" style="width:100%; height:100%; object-fit: contain" >
-        <source src="https://nem.io/wp-content/uploads/2017/08/022255374-flight-over-clouds.mp4" type="video/mp4"></video>
+      <video autoplay="autoplay" loop="loop" muted="muted" style="width:100%; height:100%; object-fit: contain">
+        <source src="https://nem.io/wp-content/uploads/2017/08/022255374-flight-over-clouds.mp4" type="video/mp4">
+      </video>
     </div>
 
     <div class="top_slogan" style="position: absolute;z-index: 100;">
-      <img src="../../../assets/images/login/relogin/reloginNemLogo.png" alt="">
+      <img src="@/common/img/login/relogin/reloginNemLogo.png" alt="">
       <span>
         <div class="top">{{$t('welcome_back_to_the_CATAPULT_beta')}}</div>
         <div class="bottom">{{$t('this_is_a_distributed_desktop_wallet_based_on_CATAPULT_I_wish_you_a_pleasant_trip')}}</div>
@@ -31,7 +32,7 @@
       <div class="bottom_content">
         <div class="top_password">
           <input type="password" v-model="form.password" placeholder="Lock Password">
-          <img src="../../../assets/images/login/relogin/reloginDoubt.png" alt="">
+          <img src="../../../common/img/login/relogin/reloginDoubt.png" alt="">
         </div>
         <div @click="jumpToDashBoard" class="bottom_button pointer"> LOG IN</div>
       </div>
@@ -42,24 +43,25 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import {localRead} from '../../../utils/util'
+    import {Message} from "../../../../config/index"
     import {Crypto, UInt64} from 'nem2-sdk'
-    import reloginAddress from '../../../assets/images/login/relogin/reloginAddress.png'
-    import reloginApostille from '../../../assets/images/login/relogin/reloginApostille.png'
-    import reloginAsset from '../../../assets/images/login/relogin/reloginAsset.png'
-    import reloginFile from '../../../assets/images/login/relogin/reloginFile.png'
-    import reloginLink from '../../../assets/images/login/relogin/reloginLink.png'
-    import reloginNamespace from '../../../assets/images/login/relogin/reloginNamespace.png'
-    import reloginSend from '../../../assets/images/login/relogin/reloginSend.png'
-    import reloginWidgets from '../../../assets/images/login/relogin/reloginWidgets.png'
-    import Message from "@/message/Message";
+    import {localRead} from '@/help/help.ts'
+    import {Component, Vue} from 'vue-property-decorator'
+    import reloginFile from '@/common/img/login/relogin/reloginFile.png'
+    import reloginLink from '@/common/img/login/relogin/reloginLink.png'
+    import reloginSend from '@/common/img/login/relogin/reloginSend.png'
+    import reloginAsset from '@/common/img/login/relogin/reloginAsset.png'
+    import reloginAddress from '@/common/img/login/relogin/reloginAddress.png'
+    import reloginWidgets from '@/common/img/login/relogin/reloginWidgets.png'
+    import reloginNamespace from '@/common/img/login/relogin/reloginNamespace.png'
+    import reloginApostille from '@/common/img/login/relogin/reloginApostille.png'
 
 
     @Component
     export default class MonitorRelogin extends Vue {
+        currentText: any = ''
         form = {
-            password:''
+            password: ''
         }
         iconList = [
             {
@@ -88,7 +90,6 @@
                 text: 'use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates'
             }
         ]
-        currentText:any = ''
 
 
         changeText(text) {
@@ -100,41 +101,41 @@
             this.currentText = this['$t'](this.iconList[0].text)
         }
 
-        checkLock(){
-            let lock = localRead('lock')
+        checkLock() {
+            let lock:any = localRead('lock')
             try {
-                const u = [50,50]
+                const u = [50, 50]
                 lock = JSON.parse(lock)
                 let saveData = {
                     ciphertext: lock.ciphertext,
                     iv: lock.iv.data,
-                    key:this.form.password
+                    key: this.form.password
                 }
                 const enTxt = Crypto.decrypt(saveData)
-                if(enTxt !== new UInt64(u).toHex()){
+                if (enTxt !== new UInt64(u).toHex()) {
                     this.$Message.error(Message.WRONG_PASSWORD_ERROR);
                     return false
                 }
                 return true
-            }catch (e) {
+            } catch (e) {
                 this.$Message.error(Message.WRONG_PASSWORD_ERROR);
                 return false
             }
         }
 
-        jumpToDashBoard(){
-            if(!this.checkLock()) return
-            if(this.$store.state.app.walletList.length == 0){
+        jumpToDashBoard() {
+            if (!this.checkLock()) return
+            if (this.$store.state.app.walletList.length == 0) {
                 this.$router.push({
-                    name:'walletPanel',
-                    params:{
+                    name: 'walletPanel',
+                    params: {
                         create: 'true'
                     }
                 })
-            }else {
+            } else {
                 this.$store.state.app.isInLoginPage = false
                 this.$router.push({
-                    name:'dashBoard'
+                    name: 'dashBoard'
                 })
             }
         }

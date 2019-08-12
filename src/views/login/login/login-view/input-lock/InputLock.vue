@@ -7,7 +7,7 @@
             :transfer="true">
 
       <div class="title">{{$t('clear_cache')}}</div>
-      <img src="@/assets/images/login/loginWarningIcon.png" alt="">
+      <img src="@/common/img/login/loginWarningIcon.png" alt="">
       <div class="tip">
         {{$t('We_will_clear_your_cache_reset_account_password_please_make_sure_your_wallet_is_safely_backed_up')}}
       </div>
@@ -16,7 +16,7 @@
 
 
     <div class="top">
-      <img src="@/assets/images/login/loginNewLogo.png" alt="">
+      <img src="@/common/img/login/loginNewLogo.png" alt="">
     </div>
 
     <div class="middle_text">
@@ -29,7 +29,7 @@
 
     <div class="bottom_input">
       <input type="password" :placeholder="$t('lock_password')" v-model="form.password">
-      <img @click="jumpToDashBoard" src="@/assets/images/login/loginJump.png" alt="">
+      <img @click="jumpToDashBoard" src="@/common/img/login/loginJump.png" alt="">
     </div>
 
     <div class="password_prompt_text">
@@ -48,20 +48,21 @@
 
 <script lang="ts">
     import "./InputLock.less"
+    import {Message} from "config/index"
     import {Crypto, UInt64} from 'nem2-sdk'
-    import Message from "@/message/Message"
+    import {localRead} from '@/help/help.ts'
+    import {InputLockConstructor} from './InputLockConstructor'
     import {Component, Vue} from 'vue-property-decorator'
-    import {localRead} from '@/utils/util'
 
     @Component
-    export default class MonitorRelogin extends Vue {
-        isShowClearCache = false
-        lockPromptText = ''
-        form = {
-            password: ''
-        }
-        currentText: any = ''
-        isShowPrompt = false
+    export default class InputLock extends InputLockConstructor {
+        // lockPromptText = ''
+        // isShowPrompt = false
+        // currentText: any = ''
+        // isShowClearCache = false
+        // form = {
+        //     password: ''
+        // }
 
         showPrompt() {
             this.isShowPrompt = true
@@ -85,7 +86,7 @@
                 return
             }
 
-            let lock = localRead('lock')
+            let lock: any = localRead('lock')
             try {
                 const u = [50, 50]
                 lock = JSON.parse(lock)
@@ -133,6 +134,8 @@
         }
 
         created() {
+            // TODO SPLIT DATA
+            console.log(this)
             this.$store.state.app.isInLoginPage = true
             this.lockPromptText = JSON.parse(localRead('lock')).remindTxt
 

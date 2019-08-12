@@ -2,10 +2,12 @@
   padding: 20px 20px 35px;
   height: 100%;
   position: relative;
-  .ivu-tabs-bar{
+
+  .ivu-tabs-bar {
     box-shadow: 0 5px 10px #666;
     //overflow-x: hidden;
   }
+
   .monitor_panel_right_container,
   .monitor_panel_left_container {
     height: 100%;
@@ -22,13 +24,14 @@
       padding: 22px 20px 0 21px;
       position: relative;
       background-size: cover;
-      background-image: url("../../../assets/images/monitor/dash-board/dashboardWalletBackground.png");
+      background-image: url("../../../common/img/monitor/dash-board/dashboardWalletBackground.png");
 
       .wallet_address {
         padding-bottom: 23px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         .address {
           color: rgba(255, 255, 255, 1);
           font-size: 14px;
@@ -39,9 +42,10 @@
           text-overflow: ellipsis;
           white-space: nowrap;
         }
+
         img {
-          width:18px;
-          height:18px;
+          width: 18px;
+          height: 18px;
         }
       }
 
@@ -71,15 +75,17 @@
         font-weight: 400;
         color: rgba(255, 255, 255, 1);
       }
+
       .account_alias {
         position: absolute;
         bottom: 20px;
         right: 19px;
-        font-size:12px;
-        font-weight:400;
-        color:rgba(255,255,255,1);
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
       }
     }
+
     .bottom_account_info {
       height: calc(100% - 255px);
       background-color: white;
@@ -89,11 +95,11 @@
       position: relative;
 
 
-
-      .mosaicList{
-        height: 100% ;
+      .mosaicList {
+        height: 100%;
         overflow-y: scroll;
         margin-top: 15px;
+
         .complete_container {
           width: 100%;
           height: 80px;
@@ -103,17 +109,18 @@
           left: 0;
           bottom: 0;
         }
+
         .complete {
-          width:150px;
-          height:44px;
-          border-radius:22px;
-          border:1px solid rgba(38,180,176,1);
+          width: 150px;
+          height: 44px;
+          border-radius: 22px;
+          border: 1px solid rgba(38, 180, 176, 1);
           text-align: center;
           line-height: 44px;
           cursor: pointer;
-          font-size:16px;
-          font-weight:400;
-          color:rgba(38,180,176,1);
+          font-size: 16px;
+          font-weight: 400;
+          color: rgba(38, 180, 176, 1);
           position: absolute;
           margin-left: 50%;
           left: -75px;
@@ -121,9 +128,10 @@
       }
 
 
-      .mosaicList::-webkit-scrollbar{
+      .mosaicList::-webkit-scrollbar {
         display: none;
       }
+
       .asset_setting_tit {
         display: flex;
         flex-direction: row;
@@ -142,22 +150,27 @@
           bottom: 2px;
         }
       }
+
       .searchMosaic {
         height: 100%;
-        .mosaicList{
+
+        .mosaicList {
           height: calc(100% - 100px);
           overflow-y: auto;
           margin-top: 10px;
         }
-        .mosaicList::-webkit-scrollbar{
+
+        .mosaicList::-webkit-scrollbar {
           display: none;
         }
+
         .mosaic_data {
-          .mosaic_name{
+          .mosaic_name {
             left: 70px;
           }
         }
       }
+
       .search {
         position: absolute;
         display: inline-block;
@@ -216,28 +229,33 @@
         align-items: center;
         border-bottom: 1px solid rgba(238, 238, 238, .5);
         position: relative;
+
         .namege_img {
           position: absolute;
           display: inline-block;
           top: 25px;
-          .mosaicIcon{
+
+          .mosaicIcon {
             display: inline-block;
             width: 28px;
             height: 28px;
             margin-left: 10px;
           }
         }
-        .img_container{
+
+        .img_container {
           display: inline-block;
           position: absolute;
           top: 20px;
           margin-right: 15px;
+
           img {
             display: inline-block;
             width: 28px;
             height: 28px;
           }
         }
+
         .mosaic_name {
           position: relative;
           top: 3px;
@@ -327,6 +345,7 @@
       background-color: white;
       height: 60px;
       color: #666;
+
       .outter_container {
         font-size: 18px;
         position: relative;
@@ -342,10 +361,11 @@
           color: transparent;
         }
       }
+
       .disabled {
         color: #ccc;
         background-color: white;
-        cursor:  not-allowed;
+        cursor: not-allowed;
         height: 20px;
       }
 

@@ -23,8 +23,8 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import CollectionRecord from '@/components/CollectionRecord.vue'
+    import {Component, Vue} from 'vue-property-decorator'
+    import CollectionRecord from '@/common/vue/CollectionRecord.vue'
     import TransferTransaction from './transactions/transfer-transaction/TransferTransaction.vue'
     import MultisigTransferTransaction from './transactions/multisig-transfer-transaction/MultisigTransferTransaction.vue'
 
