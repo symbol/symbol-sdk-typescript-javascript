@@ -399,5 +399,4 @@
 </script>
 <style scoped lang="less">
   @import "LineChart.less";
-
 </style>
