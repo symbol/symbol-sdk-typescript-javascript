@@ -2,8 +2,7 @@ import axios from 'axios'
 import routers from '@/router/routers'
 import {Message} from "@/config/index"
 import {wsInterface} from "@/interface/sdkListener"
-import {blockchainInterface} from '@/interface/sdkBlockchain.js'
-import {aliasInterface} from '@/interface/sdkNamespace'
+import {blockchainInterface} from '@/interface/sdkBlockchain'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
 import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk"
 import monitorUnselected from '@/common/img/window/windowUnselected.png'

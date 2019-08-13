@@ -1,4 +1,4 @@
-<template xmlns="http://www.w3.org/1999/html">
+<template >
   <div class="remote_board_container">
 
     <div class="top_network_info radius scroll" style="display: block;">
@@ -43,18 +43,9 @@
           </div>
         </div>
       </div>
-
     </div>
     <div class="bottom_transactions radius">
       <strong class="trend">{{$t('remote_rep_list')}}</strong>
-      <!--            <div class="table_border">-->
-      <!--                <i-table :data="tableData" :columns="tableColumns" size="small"></i-table>-->
-      <!--                <div style="margin: 10px;overflow: hidden">-->
-      <!--                    <div style="float: right;">-->
-      <!--                        <Page :total="100" :current="1" @on-change="changePage"></Page>-->
-      <!--                    </div>-->
-      <!--                </div>-->
-      <!--            </div>-->
       <div class="aliasTable">
         <div class="tableTit">
           <Row>
@@ -79,11 +70,12 @@
         </div>
 
         <div class="noData" v-if="aliasList.length<=0">
-          <p>{{$t('remote_no_data')}}</p>
+          <p>{{$t('not_yet_open')}}</p>
         </div>
       </div>
 
     </div>
+
     <div id="modal" class="modal" v-show="modalMark">
       <div class="modal-content">
         <div class="new_modal_div1">
@@ -94,24 +86,24 @@
           <span class="new_modal_span1">{{$t('remote_modal_pul')}}</span>
         </div>
         <div class="new_modal_div3">
-          <input class="new_modal_input" type="text" :placeholder="$t('remote_modal_place1')">
+          <input class="new_modal_input" v-model="formItem.remotePublickey" type="text" :placeholder="$t('remote_modal_place1')">
         </div>
         <div class="new_modal_div4">
           <span class="new_modal_span1">{{$t('remote_modal_price')}}</span>
         </div>
         <div class="new_modal_div3">
-          <input class="new_modal_input" type="text" placeholder="0">
+          <input class="new_modal_input" v-model="formItem.fee" type="text" placeholder="0">
         </div>
         <div class="new_modal_div4">
           <span class="new_modal_span1">{{$t('reomte_modal_pass')}}</span>
         </div>
         <div class="new_modal_div3">
-          <input class="new_modal_input" type="text" :placeholder="$t('remote_modal_place2')">
+          <input class="new_modal_input" v-model="formItem.password" type="text" :placeholder="$t('remote_modal_place2')">
         </div>
 
         <div class="new_model_btn">
           <span class="modal_btn_cancel pointer" @click="modalCancel">{{$t('remote_modal_cancel')}}</span>
-          <span class="modal_btn pointer" @click="modalCancel">{{$t('remote_modal_comfire')}}</span>
+          <span class="modal_btn pointer" @click="confirmInput">{{$t('remote_modal_comfire')}}</span>
         </div>
       </div>
     </div>
