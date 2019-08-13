@@ -34,7 +34,7 @@
                     <img v-if="index == 0" src="@/common/img/monitor/monitorMosaicIcon.png" alt="">
                     <img v-else src="@/common/img/monitor/mosaicDefault.png" alt="">
                 </span>
-                  <span class="mosaic_name">{{value.name || value.hex}}</span>
+                  <span class="mosaic_name">{{value.name?value.name:key}}</span>
                   <span class="mosaic_value">
                   <div>{{value.amount.lower?value.amount.compact():value.amount}}</div>
                 </span>
@@ -57,7 +57,7 @@
 
             </div>
             <div class="mosaicList">
-              <div class="mosaic_data" v-for="(value,key,index) in mosaicMap" :key="index">
+              <div class="mosaic_data" v-if="value.showInManage" v-for="(value,key,index) in mosaicMap" :key="index">
                 <span class="namege_img">
                     <img @click="toggleShowMosaic(key,value)" class="small_icon pointer"
                          :src="value.show?monitorSeleted:monitorUnselected">
@@ -65,18 +65,16 @@
                          src="@/common/img/monitor/monitorMosaicIcon.png">
                     <img v-else class="mosaicIcon" src="@/common/img/monitor/mosaicDefault.png">
                 </span>
-                <span class="mosaic_name">{{value.name}}</span>
+                <span class="mosaic_name">{{value.name?value.name:key}}</span>
                 <span class="mosaic_value">
                   <div>{{value.amount}}</div>
                 </span>
               </div>
               <div class="complete_container">
                 <div class="complete" @click="showMosaicMap">{{$t('complete')}}</div>
-
               </div>
               <div class="mosaic_data"></div>
             </div>
-
           </div>
         </div>
       </div>

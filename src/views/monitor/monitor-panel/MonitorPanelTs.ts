@@ -61,10 +61,11 @@ export class MonitorPanelTs extends Vue {
 
     mosaicMap: any = {
         aabby: {
-            name: 'XEM',
-            hex: 'aabby',
+            name: 'nem.xem',
+            hex: 'nem.xem',
             amount: 0.265874,
-            show: true
+            show: true,
+            showInManage: true
         }
     }
 
@@ -124,8 +125,6 @@ export class MonitorPanelTs extends Vue {
         this.currentXEM1 = this.$store.state.account.currentXEM1
         this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
         this.$store.state.app.isInLoginPage = false
-
-
     }
 
     getXEMAmount() {
@@ -245,7 +244,8 @@ export class MonitorPanelTs extends Vue {
                     node,
                     mosaicIdList: mosaicIds
                 }).then((mosaics) => {
-                    mosaics.result.mosaicsInfos['subscribe']((mosaicInfoList) => {
+                    mosaics.result.mosaicsInfos['subscribe'](async (mosaicInfoList) => {
+                        // console.log(mosaicInfoList)
                         mosaicList = mosaicInfoList.map((item) => {
                             let mosaicItem = mosaicList[mosaicHexIds.indexOf(item.mosaicId.toHex())]
                             mosaicItem.hex = item.mosaicId.toHex()
@@ -255,11 +255,16 @@ export class MonitorPanelTs extends Vue {
                                 this.$store.state.account.wallet = getWallet
                                 walletList[0] = getWallet
                                 this.$store.state.app.walletList = walletList
-                            } else {
-                                mosaicItem.name = item.mosaicId.toHex()
+                                mosaicItem.amount = mosaicItem.amount.compact()
+                                mosaicItem.show = true
+                                mosaicItem.showInManage = true
+                                return mosaicItem
+
                             }
+                            mosaicItem.name = item.mosaicId.toHex()
                             mosaicItem.amount = mosaicItem.amount.compact()
                             mosaicItem.show = true
+                            mosaicItem.showInManage = true
                             return mosaicItem
                         })
                         // get nem.xem
@@ -279,7 +284,8 @@ export class MonitorPanelTs extends Vue {
                                 hex: xemHexId,
                                 name: 'nem.xem',
                                 id: new MosaicId(xemHexId),
-                                show: true
+                                show: true,
+                                showInManage: true
                             })
                         }
 
@@ -294,7 +300,8 @@ export class MonitorPanelTs extends Vue {
                                 amount: item.amount,
                                 name: item.name,
                                 hex: item.hex,
-                                show: true
+                                show: true,
+                                showInManage: true
                             }
                         })
 
@@ -309,7 +316,8 @@ export class MonitorPanelTs extends Vue {
                     amount: 0,
                     name: 'nem.xem',
                     hex: that.currentXEM1,
-                    show: true
+                    show: true,
+                    showInManage: true
                 }
                 let mosaicMap = {}
                 this.$store.commit('SET_MOSAICS', [defaultMosaic])
@@ -354,7 +362,8 @@ export class MonitorPanelTs extends Vue {
                 name: mosaicName,
                 hex: mosaicHex,
                 amount: 0,
-                show: false
+                show: false,
+                showInManage: true
             }
             that.mosaicMap = searchResult
         }).catch(() => {
@@ -362,8 +371,8 @@ export class MonitorPanelTs extends Vue {
     }
 
     showErrorMessage(message) {
-        this.$Message.destroy()
-        this.$Message.error(message)
+        this.$Notice.destroy()
+        this.$Notice.error({title: this.$t(message) + ''})
     }
 
     async realLocalStorage() {
@@ -390,7 +399,9 @@ export class MonitorPanelTs extends Vue {
                         }
                         // add new mosaic into record
                         mosaicMap[mosaicHex] = item
+                        mosaicMap[mosaicHex].name = mosaicHex
                         mosaicMap[mosaicHex].show = true
+                        mosaicMap[mosaicHex].showInManage = true
                     })
                     that.localMosaicMap = mosaicMap
                     that.mosaicMap = mosaicMap
@@ -400,7 +411,8 @@ export class MonitorPanelTs extends Vue {
                         amount: 0,
                         name: 'nem.xem',
                         hex: that.currentXEM2,
-                        show: true
+                        show: true,
+                        showInManage: true
                     }
                     let mosaicMap = {}
                     mosaicMap[defaultMosaic.hex] = defaultMosaic
@@ -416,7 +428,6 @@ export class MonitorPanelTs extends Vue {
 
     setLeftSwitchIcon() {
         this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
-
     }
 
     formatXEMamount(text) {
@@ -439,6 +450,18 @@ export class MonitorPanelTs extends Vue {
         this.getAccountsName()
         this.realLocalStorage()
         this.getMyNamespaces()
+    }
+
+    @Watch('mosaicName')
+    onMosaicNameChange() {
+        const {mosaicMap, mosaicName} = this
+        for (const item in mosaicMap) {
+            if (item.indexOf(mosaicName) !== -1 || mosaicMap[item].name.indexOf(mosaicName) !== -1) {
+                mosaicMap[item].showInManage = true
+                continue
+            }
+            mosaicMap[item].showInManage = false
+        }
     }
 
     created() {

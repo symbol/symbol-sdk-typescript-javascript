@@ -1,7 +1,7 @@
 import {Account} from "nem2-sdk"
 import {Message} from "@/config/index"
 import {formatAddress} from '@/help/help'
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import {aliasInterface} from "@/interface/sdkNamespace"
 import {transactionInterface} from "@/interface/sdkTransaction"
 import {bandedNamespace as BandedNamespaceList} from '@/config/index'
@@ -13,6 +13,9 @@ import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialo
     }
 })
 export class SubNamespaceTs extends Vue {
+    durationIntoDate = 0
+    multisigPublickey = ''
+    isCompleteForm = false
     showCheckPWDialog = false
     form = {
         rootNamespaceName: '',
@@ -20,8 +23,6 @@ export class SubNamespaceTs extends Vue {
         multisigPublickey: '',
         maxFee: 50000
     }
-    durationIntoDate = 0
-    multisigPublickey = ''
     multisigPublickeyList = [
         {
             value: 'no data',
@@ -52,7 +53,11 @@ export class SubNamespaceTs extends Vue {
     }
 
     get namespaceList() {
-        return this.$store.state.account.namespace
+        return !this.$store.state.account.namespace || !this.$store.state.account.namespace.length ? [{
+            label: 'no data',
+            value: 'no data',
+            levels: '0'
+        }] : this.$store.state.account.namespace.length
     }
 
     formatAddress(address) {
@@ -180,5 +185,18 @@ export class SubNamespaceTs extends Vue {
         if (!this.checkForm()) return
         this.showCheckPWDialog = true
     }
+
+    @Watch('form', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {rootNamespaceName, maxFee, subNamespaceName, multisigPublickey} = this.form
+
+        // isCompleteForm
+        if (this.typeList[0].isSelected) {
+            this.isCompleteForm = maxFee + '' !== '' && rootNamespaceName !== '' && subNamespaceName !== ''
+            return
+        }
+        this.isCompleteForm = maxFee + '' !== '' && rootNamespaceName !== '' && subNamespaceName !== '' && multisigPublickey && multisigPublickey.length === 64
+    }
+
 
 }

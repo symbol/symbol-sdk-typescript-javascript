@@ -583,5 +583,8 @@ export const zh_CN = {
     clear_cache: '重置账户',
     We_will_clear_your_cache_reset_account_password_please_make_sure_your_wallet_is_safely_backed_up:'我们将清除你的缓存重置账号密码，请确保你的钱包已经安全备份',
     confirm_infomation:'信息确认',
-    please_input_new_account_name:'输入新的账户名'
+    please_input_new_account_name:'输入新的账户名',
+    Locking_passwords_as_a_form_of_program_protection:'锁定密码作为程序的保护验证形式。 一旦被遗忘，就不会有任何恢复。 请记住您的锁定密码。',
+    delete_wallet_tip:'删除钱包后将删除改钱包数据，请务必确保钱包已备份。 若无妥善备份，删除钱包后将无法找回钱包，请谨慎处理该操作。 同时，为了确保是本人操作，请输入钱包密码。',
+    delete_wallet:'删除钱包'
 }

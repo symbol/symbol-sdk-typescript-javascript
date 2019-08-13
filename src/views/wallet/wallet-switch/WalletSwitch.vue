@@ -22,7 +22,7 @@
                 <Poptip placement="bottom">
                   <img src="@/common/img/wallet/moreActive.png">
                   <div slot="content">
-                    <p class="optionItem" @click.stop="delWallet(index, item.active)">
+                    <p class="optionItem" @click.stop="toShowCheckPWDialog(index, item.active)">
                       <i><img src="@/common/img/wallet/delete.png"></i>
                       <span>{{$t('delete')}}</span>
                     </p>
@@ -45,6 +45,8 @@
         </Col>
       </Row>
     </div>
+    <DeleteWalletCheck :showCheckPWDialog="showCheckPWDialog" @checkEnd="checkEnd"
+                       @closeCheckPWDialog="closeCheckPWDialog"></DeleteWalletCheck>
   </div>
 </template>
 

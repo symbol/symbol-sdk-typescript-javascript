@@ -107,7 +107,7 @@
         </div>
       </div>
 
-      <div @click="confirmInput" class="confirm_button pointer" v-if="!isMultisig">
+      <div @click="confirmInput" :class="['confirm_button',' pointer',isCompleteForm?'':'not_allowed'] " v-if="!isMultisig">
         {{$t('send')}}
       </div>
       <div class=" is_multisign pointer" v-else>

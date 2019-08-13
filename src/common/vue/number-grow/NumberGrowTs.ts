@@ -9,7 +9,7 @@ export class NumberGrowTs extends Vue {
     @Prop({default: 0})
     value
 
-    numVal = 0
+    numValue = 0
     isAdd = true
 
 
@@ -45,7 +45,7 @@ export class NumberGrowTs extends Vue {
 
     @Watch('value')
     onValueChange() {
-        this.numVal = this.value
+        this.numValue = this.value
         this.isAdd = false
     }
 }
