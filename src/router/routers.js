@@ -99,7 +99,7 @@ var routers = [
                         path: '/onDev',
                         name: 'onDev',
                         // @ts-ignore
-                        component: function () { return import('@/views/other/onDev/OnDev.vue'); }
+                        component: function () { return import('@/views/other/on-development/OnDevelopment.vue'); }
                     }, {
                         path: '/namespace',
                         name: 'namespace',

@@ -40,25 +40,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {WalletImportKeystoreTs} from './WalletImportKeystoreTs'
 
-    @Component
-    export default class WalletImportKeystore extends Vue {
+    export default class WalletImportKeystore extends WalletImportKeystoreTs {
 
-        file = ''
-        fileList = [{
-            value: 'no data',
-            label: 'no data'
-        }]
-
-
-        checkForm() {
-            // TODO
-        }
-
-        toBack() {
-            this.$emit('closeImport')
-        }
     }
 </script>
 <style scoped lang="less">

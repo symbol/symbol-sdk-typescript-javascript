@@ -29,7 +29,7 @@
           </span>
         </div>
 
-        <div v-if="namespaceList.length == 0" class="noData" >
+        <div v-if="namespaceList.length == 0" class="noData">
           <i><img src="@/common/img/wallet/no_data.png"></i>
           <p>{{$t('not_yet_open')}}</p>
         </div>
@@ -42,46 +42,10 @@
 </template>
 
 <script lang="ts">
-    import {formatSeconds} from '@/help/help.ts'
-    import {Component, Vue} from 'vue-property-decorator'
-    import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
+    import {NamespaceListTs} from './NamespaceListTs'
 
-    @Component({
-        components: {
-            NamespaceEditDialog
-        }
-    })
-    export default class NamespaceList extends Vue {
-        showNamespaceEditDialog = false
-        currentNamespace = ''
+    export default class NamespaceList extends NamespaceListTs {
 
-        get namespaceList () {
-            return this.$store.state.account.namespace
-        }
-
-        get nowBlockHeihgt () {
-            return this.$store.state.app.chainStatus.currentHeight
-        }
-
-        showEditDialog(namespaceName) {
-            this.currentNamespace = namespaceName
-            this.showNamespaceEditDialog = true
-        }
-
-        closeNamespaceEditDialog() {
-            this.showNamespaceEditDialog = false
-        }
-
-        computeDuration (duration) {
-            let expireTime = duration - this.nowBlockHeihgt > 0 ? duration - this.nowBlockHeihgt : 'Expired'
-            return expireTime
-        }
-
-        durationToTime(duration) {
-            const durationNum = Number(duration)
-            return formatSeconds(durationNum * 12)
-
-        }
     }
 </script>
 <style scoped lang="less">

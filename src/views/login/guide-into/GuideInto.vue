@@ -27,18 +27,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {GuideIntoTs} from './GuideIntoTs'
 
-    @Component
-    export default class guideIntoWrap extends Vue {
-        jumpToOtherPage(name) {
-            this.$store.state.app.isInLoginPage = false
-            if(name === 'walletImportKeystore'){
-                this.$emit('toImport')
-            }else if(name === 'walletCreate'){
-                this.$emit('toCreate')
-            }
-        }
+    export default class GuideInto extends GuideIntoTs {
+
     }
 </script>
 

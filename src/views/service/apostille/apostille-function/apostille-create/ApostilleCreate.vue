@@ -91,7 +91,7 @@
 
           <div class="table_item_list scroll">
 
-            <div v-if="transationList.length == 0" class="noData" >
+            <div v-if="transationList.length == 0" class="noData">
               <i><img src="@/common/img/wallet/no_data.png"></i>
               <p>{{$t('not_yet_open')}}</p>
             </div>
@@ -119,20 +119,9 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {ApostilleCreateTs} from './ApostilleCreateTs'
 
-    @Component
-    export default class ApostilleCreate extends Vue {
-        tag = ''
-        hashAlgorithm = ''
-        transationList = []
-        isImportFile = true
-        hashAlgorithmList = [
-            {
-                value: 'SHA-256',
-                label: 'SHA-256'
-            }
-        ]
+    export default class InputLock extends ApostilleCreateTs {
 
     }
 </script>
