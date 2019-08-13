@@ -19,36 +19,10 @@
 
 <script lang="ts">
     import "./Mosaic.less";
-    import {Component, Vue} from 'vue-property-decorator'
-    import MosaicList from './mosaic-function/mosaic-list/MosaicList.vue'
-    import MosaicTransaction from './mosaic-function/mosaic-transaction/MosaicTransaction.vue'
+    import {MosaicTs} from './MosaicTs'
 
-    @Component({
-        components: {
-            MosaicTransaction,
-            MosaicList
-        }
-    })
-    export default class Mosaic extends Vue {
-        buttonList = [
-            {
-                name: 'create_mosaic',
-                isSelected: true
-            }, {
-                name: 'mosaic_list',
-                isSelected: false
-            }
-        ]
+    export default class Mosaic extends MosaicTs {
 
-        switchButton(index) {
-            let list = this.buttonList
-            list = list.map((item) => {
-                item.isSelected = false
-                return item
-            })
-            list[index].isSelected = true
-            this.buttonList = list
-        }
     }
 </script>
 

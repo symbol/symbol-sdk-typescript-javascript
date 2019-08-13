@@ -11,50 +11,15 @@
       <MultisigMap v-if="buttonList[0].isSelected"></MultisigMap>
       <MultisigConversion v-if="buttonList[1].isSelected"></MultisigConversion>
       <MultisigManagement v-if="buttonList[2].isSelected"></MultisigManagement>
-<!--      <MultisigCosign v-if="buttonList[3].isSelected"></MultisigCosign>-->
+      <!--      <MultisigCosign v-if="buttonList[3].isSelected"></MultisigCosign>-->
     </div>
   </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator'
-    import MultisigMap from './multisig-functions/multisig-map/MultisigMap.vue'
-    import MultisigCosign from './multisig-functions/multisig-cosign/MultisigCosign.vue'
-    import MultisigConversion from './multisig-functions/multisig-conversion/MultisigConversion.vue'
-    import MultisigManagement from './multisig-functions/multisig-management/MultisigManagement.vue'
+    import {MultisigTs} from './MultisigTs'
 
-    @Component({
-        components: {
-            MultisigMap,
-            MultisigConversion,
-            MultisigManagement,
-            MultisigCosign
-        }
-    })
-    export default class Setting extends Vue {
-
-        buttonList = [
-            {
-                name: 'map',
-                isSelected: true
-            }, {
-                name: 'convert',
-                isSelected: false
-            }, {
-                name: 'manage',
-                isSelected: false
-            },
-        ]
-
-        switchButton(index) {
-            let list = this.buttonList
-            list = list.map((item) => {
-                item.isSelected = false
-                return item
-            })
-            list[index].isSelected = true
-            this.buttonList = list
-        }
+    export default class Multisig extends MultisigTs {
 
     }
 </script>

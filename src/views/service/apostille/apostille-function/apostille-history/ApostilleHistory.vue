@@ -21,11 +21,10 @@
         </div>
 
 
-        <div v-if="transationList.length == 0" class="noData" >
+        <div v-if="transationList.length == 0" class="noData">
           <i><img src="@/common/img/wallet/no_data.png"></i>
           <p>{{$t('not_yet_open')}}</p>
         </div>
-
 
 
         <div class="table_item_list scroll">
@@ -44,12 +43,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {ApostilleHistoryTs} from './ApostilleHistoryTs'
 
-    @Component
-    export default class ApostilleHistory extends Vue {
+    export default class ApostilleHistory extends ApostilleHistoryTs {
 
-        transationList = []
     }
 </script>
 <style scoped lang="less">

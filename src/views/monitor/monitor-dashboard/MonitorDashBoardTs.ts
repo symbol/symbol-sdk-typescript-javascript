@@ -1,17 +1,17 @@
-import {Component, Vue, Watch} from 'vue-property-decorator'
-import dashboardBlockTime from '@/common/img/monitor/dash-board/dashboardBlockTime.png'
-import dashboardPublickey from '@/common/img/monitor/dash-board/dashboardPublickey.png'
-import dashboardBlockHeight from '@/common/img/monitor/dash-board/dashboardBlockHeight.png'
-import dashboardPointAmount from '@/common/img/monitor/dash-board/dashboardPointAmount.png'
-import dashboardTransactionAmount from '@/common/img/monitor/dash-board/dashboardTransactionAmount.png'
 import {market} from "@/interface/restLogic"
 import {KlineQuery} from "@/query/klineQuery"
 import {PublicAccount, NetworkType} from 'nem2-sdk'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import {blockchainInterface} from '@/interface/sdkBlockchain'
 import LineChart from '@/common/vue/line-chart/LineChart.vue'
 import {transactionInterface} from '@/interface/sdkTransaction'
 import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
 import {isRefreshData, localSave, localRead, formatTransactions} from '@/help/help.ts'
+import dashboardBlockTime from '@/common/img/monitor/dash-board/dashboardBlockTime.png'
+import dashboardPublickey from '@/common/img/monitor/dash-board/dashboardPublickey.png'
+import dashboardBlockHeight from '@/common/img/monitor/dash-board/dashboardBlockHeight.png'
+import dashboardPointAmount from '@/common/img/monitor/dash-board/dashboardPointAmount.png'
+import dashboardTransactionAmount from '@/common/img/monitor/dash-board/dashboardTransactionAmount.png'
 
 
 @Component({

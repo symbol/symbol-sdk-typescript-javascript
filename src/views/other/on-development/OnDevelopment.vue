@@ -5,11 +5,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import './OnDev.less';
+    import './OnDevelopment.less'
+    import {OnDevelopmentTs} from './OnDevelopmentTs'
 
-    @Component
-    export default class onDev extends Vue {
+    export default class OnDevelopment extends OnDevelopmentTs {
 
     }
 </script>

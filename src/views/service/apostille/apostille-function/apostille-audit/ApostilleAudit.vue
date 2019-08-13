@@ -23,7 +23,7 @@
 
     <div class="bottom_table">
       <div class="table_main_head">
-        <span >
+        <span>
           {{$t('apostille_result')}}
         </span>
         <span class="delete_style">
@@ -43,7 +43,7 @@
         <div class="table_item_list scroll">
 
 
-          <div v-if="transationList.length == 0" class="noData" >
+          <div v-if="transationList.length == 0" class="noData">
             <i><img src="@/common/img/wallet/no_data.png"></i>
             <p>{{$t('not_yet_open')}}</p>
           </div>
@@ -64,13 +64,12 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {ApostilleAuditTs} from './ApostilleAuditTs'
 
-    @Component
-    export default class ApostilleAudit extends Vue {
-        transationList = []
+    export default class ApostilleAudit extends ApostilleAuditTs {
 
     }
+
 </script>
 <style scoped lang="less">
   @import "ApostilleAudit.less";

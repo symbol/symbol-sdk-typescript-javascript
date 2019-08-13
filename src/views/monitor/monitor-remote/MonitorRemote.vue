@@ -73,7 +73,7 @@
             <Col span="4" class="col_height">{{item.price}}</Col>
             <Col span="7" class="col_height">
               {{item.time}}
-<!--              <img src="@/common/img/monitor/remote_slices.png">-->
+              <!--              <img src="@/common/img/monitor/remote_slices.png">-->
             </Col>
           </Row>
         </div>
@@ -121,39 +121,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {MonitorRemoteTs} from './MonitorRemoteTs'
 
+    export default class MonitorRemote extends MonitorRemoteTs {
 
-    @Component({})
-    export default class MonitorRemote extends Vue {
-        modal1 = false
-        modalMark = false
-        switchMark = false
-        switchState = false
-        tableColumns = [
-
-        ]
-        aliasList = [
-
-        ]
-
-        changePage() {
-
-        }
-
-        modalOk() {
-
-        }
-
-        modalCancel() {
-            this.modalMark = false
-        }
-
-        switchChan() {
-            if (this.switchMark == false) {
-                this.modalMark = true
-            }
-        }
     }
 </script>
 

@@ -14,7 +14,7 @@
         {{$t('currency_setting')}}
         <div class="gray_content">
           <Select v-model="coin" :placeholder="$t('currency_setting')">
-            <Option v-for="item in coinList" :value="item.value"  :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in coinList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
 
@@ -32,35 +32,9 @@
 </template>
 
 <script lang="ts">
-    import {localSave} from '@/help/help'
-    import {Component, Vue} from 'vue-property-decorator'
+    import {SettingNormalTs} from './SettingNormalTs'
 
-    @Component
-    export default class SettingNormal extends Vue {
-        language = ''
-        coin = 'USD'
-        languageList = []
-        coinList = [
-            {
-                value: 'USD',
-                label: 'USD'
-            },
-        ]
-
-        switchLanguage(language) {
-            this.$store.state.app.local = {
-                abbr: language,
-                language: this.$store.state.app.localMap[language]
-            }
-            // @ts-ignore
-            this.$i18n.locale = language
-            localSave('local', language)
-        }
-
-        created() {
-            this.languageList = this.$store.state.app.languageList
-            this.language = this.$i18n.locale
-        }
+    export default class SettingNormal extends SettingNormalTs {
 
     }
 </script>

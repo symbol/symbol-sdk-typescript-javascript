@@ -13,15 +13,9 @@
 </template>
 
 <script lang="ts">
-    import TopographicMap from './TopographicMap.vue'
-    import {Component, Vue} from 'vue-property-decorator';
-    @Component({
-        components:{
-            TopographicMap
-        }
-    })
-    export default class MultisigMap extends Vue {
+    import {MultisigMapTs} from './MultisigMapTs'
 
+    export default class MultisigMap extends MultisigMapTs {
 
     }
 </script>

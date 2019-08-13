@@ -9,11 +9,9 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {SettingAboutTs} from './SettingAboutTs'
 
-    @Component
-    export default class SettingAbout extends Vue {
-
+    export default class SettingAbout extends SettingAboutTs {
 
     }
 </script>
