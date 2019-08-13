@@ -3,11 +3,27 @@ node_js:
   - "10"
   - "9"
   - "8"
+cache:
+  directories:
+    - node_modules
 
-before_script:
+install:
   - npm install
 
 script:
-  - npm run dev
   - npm run build
+
+after_script:
+  - cd ./dist
+  - git init
+  - git config user.name "${U_NAME}"
+  - git config user.email "${U_EMAIL}"
+  - git add .
+  - git commit -m "Update tools"
+  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:${P_BRANCH}
+
+
+branches:
+  only:
+    - master
 
