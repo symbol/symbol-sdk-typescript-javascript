@@ -123,7 +123,7 @@
 <script lang="ts">
     import {MonitorRemoteTs} from './MonitorRemoteTs'
 
-    export class MonitorRemote extends MonitorRemoteTs {
+    export default class MonitorRemote extends MonitorRemoteTs {
 
     }
 </script>

@@ -5,21 +5,22 @@ import routers from './routers'
 Vue.use(Router)
 
 const router = new Router({
-    mode:'hash',
+    mode: 'hash',
+    // ts-ignore
     routes: routers
 })
 
-router.beforeEach((to, from, next)=>{
-    if(!to.name){
+router.beforeEach((to, from, next) => {
+    if (!to.name) {
         next({
             path: '/home'
         })
-    }else {
+    } else {
         next()
     }
 })
 
-router.afterEach((to, from)=>{
+router.afterEach((to, from) => {
 
 })
 
