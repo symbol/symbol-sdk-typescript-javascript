@@ -112,7 +112,7 @@ export var aliasInterface = {
                 case 1:
                     namespaceInfo = _a.sent();
                     namespaceIds = namespaceInfo.map(function (item, index, arr) {
-                        namespaces[item.id.toHex().toUpperCase()] = { namespaceInfo: item }; // 传出去的对象
+                        namespaces[item.id.toHex().toUpperCase()] = { namespaceInfo: item };
                         return item.id;
                     });
                     return [4 /*yield*/, namespaceHttp.getNamespacesName(namespaceIds).toPromise()];

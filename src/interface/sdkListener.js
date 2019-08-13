@@ -28,9 +28,9 @@ export var wsInterface = {
                     params.fn(transactionInfo);
                 });
             }, function (err) {
-                console.log(err);
+                // console.log(err)
             }).catch(function (e) {
-                console.log(e);
+                // console.log(e)
             });
             return [2 /*return*/, {
                     result: {
@@ -51,9 +51,9 @@ export var wsInterface = {
                     params.fn(transactionInfo);
                 });
             }, function (err) {
-                console.log(err);
+                // console.log(err)
             }).catch(function (e) {
-                console.log(e);
+                // console.log(e)
             });
             return [2 /*return*/, {
                     result: {
@@ -73,9 +73,9 @@ export var wsInterface = {
                     params.fn(transactionInfo);
                 });
             }, function (err) {
-                console.log(err);
+                // console.log(err)
             }).catch(function (e) {
-                console.log(e);
+                // console.log(e)
             });
             return [2 /*return*/, {
                     result: {
@@ -97,9 +97,9 @@ export var wsInterface = {
                     .pipe(filter(function (transaction) { return transaction.transactionInfo !== undefined
                     && transaction.transactionInfo.hash === params.signedLockTx.hash; }), mergeMap(function (ignored) { return transactionHttp.announceAggregateBonded(params.signedBondedTx); }))
                     .subscribe(function (announcedAggregateBonded) {
-                }, function (err) { return console.error(err); });
+                });
             }).catch(function (e) {
-                console.log(e);
+                // console.log(e)
             });
             return [2 /*return*/, {
                     result: {
@@ -133,10 +133,10 @@ export var wsInterface = {
                     }
                     pointer.$store.state.app.chainStatus.currentGenerateTime = 12;
                 }, function (err) {
-                    console.log(err);
+                    // console.log(err)
                 });
             }).catch(function (e) {
-                console.log(e);
+                // console.log(e)
             });
             return [2 /*return*/, {
                     result: {

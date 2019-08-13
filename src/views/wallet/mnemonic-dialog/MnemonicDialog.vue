@@ -25,10 +25,12 @@
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
-              <Button type="success" @click="exportMnemonic">{{$t('next')}}
-                <Icon type="ios-arrow-round-forward"/>
-              </Button>
-
+              <div class="buttons_container">
+                <Button type="success" @click="exportMnemonic">
+                  {{$t('next')}}
+                  <Icon class="next" type="ios-arrow-round-forward"/>
+                </Button>
+              </div>
             </FormItem>
           </Form>
         </div>
@@ -57,17 +59,37 @@
               </Col>
             </Row>
           </div>
-          <Button type="success" @click="exportMnemonic">{{$t('next')}}
-            <Icon type="ios-arrow-round-forward"/>
-          </Button>
+          <div class="buttons_container">
+            <Button type="success" @click="toPrePage()">
+              <Icon class="pre" type="ios-arrow-round-back"/>
+              {{$t('previous')}}
+            </Button>
+
+
+            <Button type="success" @click="exportMnemonic">
+              {{$t('next')}}
+              <Icon class="next" type="ios-arrow-round-forward"/>
+            </Button>
+
+          </div>
         </div>
 
         <div class="stepItem3" v-if="stepIndex == 2">
           <p class="tit">{{$t('please_accurately_copy_the_safety_backup_mnemonic')}}</p>
           <p class="mnemonicWords">{{mnemonic}}</p>
-          <Button type="success" @click="exportMnemonic">{{$t('next')}}
-            <Icon type="ios-arrow-round-forward"/>
-          </Button>
+          <div class="buttons_container">
+            <Button type="success" @click="toPrePage()">
+              <Icon class="pre" type="ios-arrow-round-back"/>
+              {{$t('previous')}}
+            </Button>
+
+
+            <Button type="success" @click="exportMnemonic">
+              {{$t('next')}}
+              <Icon class="next" type="ios-arrow-round-forward"/>
+            </Button>
+
+          </div>
         </div>
 
         <div class="stepItem4" v-if="stepIndex == 3">
@@ -77,9 +99,19 @@
           <p class="mnemonicWords">
             <span v-for="(item, index) in mnemonicRandomArr" @click="sureWord(index)" :key="index">{{item}}</span>
           </p>
-          <Button type="success" @click="exportMnemonic">{{$t('next')}}
-            <Icon type="ios-arrow-round-forward"/>
-          </Button>
+          <div class="buttons_container">
+            <Button type="success" @click="toPrePage()">
+              <Icon class="pre" type="ios-arrow-round-back"/>
+              {{$t('previous')}}
+            </Button>
+
+
+            <Button type="success" @click="exportMnemonic">
+              {{$t('next')}}
+              <Icon class="next" type="ios-arrow-round-forward"/>
+            </Button>
+
+          </div>
         </div>
 
         <div class="stepItem5" v-if="stepIndex == 4">
@@ -87,7 +119,19 @@
             <img src="@/common/img/wallet/exportSuccess.png">
           </div>
           <p class="backupTxt">{{$t('the_mnemonic_order_is_correct_and_the_backup_is_successful')}}</p>
-          <Button type="success" @click="exportMnemonic">{{$t('complete')}}</Button>
+          <div class="buttons_container">
+            <Button type="success" @click="toPrePage()">
+              <Icon class="pre" type="ios-arrow-round-back"/>
+              {{$t('previous')}}
+            </Button>
+
+
+            <Button type="success" @click="exportMnemonic">
+              {{$t('next')}}
+              <Icon class="next" type="ios-arrow-round-forward"/>
+            </Button>
+
+          </div>
         </div>
       </div>
     </Modal>

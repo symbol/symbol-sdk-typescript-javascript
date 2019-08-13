@@ -2,7 +2,7 @@
   <div class="createLockWrap scroll">
     <img class="close pointer" @click="hideIndexView" src="@/common/img/login/loginClose.png" alt="">
     <div class="pageTit">{{$t('CREATE_LOCK_PASSWORD')}}</div>
-    <div class="pageRemind">{{$t('This_password_is_used_for_desktop_wallet_locking')}}</div>
+    <div class="pageRemind">{{$t('Locking_passwords_as_a_form_of_program_protection')}}</div>
 
     <div class="formDiv">
       <ul>

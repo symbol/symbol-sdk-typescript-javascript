@@ -1,4 +1,3 @@
-
 import {Crypto} from 'nem2-sdk'
 import {hexCharCodeToStr} from '@/help/help'
 import {walletInterface} from "@/interface/sdkWallet"
@@ -89,6 +88,10 @@ export class MnemonicDialogTs extends Vue {
             return false
         }
         return true
+    }
+
+    toPrePage() {
+        this.stepIndex = this.stepIndex - 1
     }
 
     checkRandomArr(arr, mnemonic) {

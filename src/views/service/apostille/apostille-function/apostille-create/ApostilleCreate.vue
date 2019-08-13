@@ -47,7 +47,7 @@
 
             <div v-if="isImportFile" class="import_file">
 
-              <div v-if="tag == ''">
+              <div v-if="tag == ''" class="un_click">
                 <img src="@/common/img/service/apostille/apostilleLock.png" alt="">
                 <span>{{$t('Please_enter_the_label_before_filling_in_the_label')}}</span>
               </div>

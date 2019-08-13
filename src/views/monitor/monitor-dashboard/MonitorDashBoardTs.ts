@@ -225,6 +225,7 @@ export class MonitorDashBoardTs extends Vue {
                 that.currentDataAmount = transferTransaction.length
                 that.confirmedTransactionList = transferTransaction
                 that.isLoadingConfirmedTx = false
+                // console.log(transferTransaction)
             })
         })
     }
@@ -309,7 +310,6 @@ export class MonitorDashBoardTs extends Vue {
         this.getConfirmedTransactions()
         this.getUnconfirmedTransactions()
         this.getPointInfo()
-
     }
 
 }

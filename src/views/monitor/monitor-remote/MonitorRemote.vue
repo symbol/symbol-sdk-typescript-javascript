@@ -84,7 +84,6 @@
       </div>
 
     </div>
-
     <div id="modal" class="modal" v-show="modalMark">
       <div class="modal-content">
         <div class="new_modal_div1">

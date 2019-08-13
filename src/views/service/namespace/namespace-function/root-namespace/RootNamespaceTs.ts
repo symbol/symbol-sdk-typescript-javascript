@@ -16,6 +16,7 @@ export class RootNamespaceTs extends Vue {
     durationIntoDate = 0
     currentMinApproval = -1
     showCheckPWDialog = false
+    isCompleteForm = false
     form = {
         duration: 1000,
         rootNamespaceName: '',
@@ -68,6 +69,7 @@ export class RootNamespaceTs extends Vue {
     }
 
     switchAccountType(index) {
+        this.initForm()
         let list = this.typeList
         list = list.map((item) => {
             item.isSelected = false
@@ -252,10 +254,13 @@ export class RootNamespaceTs extends Vue {
         })
     }
 
-    @Watch('formItem.multisigPublickey')
+    @Watch('form.multisigPublickey')
     async onMultisigPublickeyChange() {
         const that = this
         const {multisigPublickey} = this.form
+        if(multisigPublickey.length !== 64){
+            return
+        }
         const {node} = this.$store.state.account
         const {networkType} = this.$store.state.account.wallet
         let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
@@ -266,6 +271,18 @@ export class RootNamespaceTs extends Vue {
             const currentMultisigAccount = result.result.multisigInfo
             that.currentMinApproval = currentMultisigAccount.minApproval
         })
+    }
+
+    @Watch('form', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
+
+        // isCompleteForm
+        if (this.typeList[0].isSelected) {
+            this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && innerFee + '' !== ''
+            return
+        }
+        this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && aggregateFee + '' !== '' && lockFee + '' !== '' && innerFee + '' !== '' && multisigPublickey && multisigPublickey.length === 64
     }
 
     showErrorMessage(message) {

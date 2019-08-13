@@ -3,6 +3,7 @@ import routers from '@/router/routers'
 import {Message} from "@/config/index"
 import {wsInterface} from "@/interface/sdkListener"
 import {blockchainInterface} from '@/interface/sdkBlockchain.js'
+import {aliasInterface} from '@/interface/sdkNamespace'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
 import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk"
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
@@ -29,12 +30,12 @@ export class MenuBarTs extends Vue {
             value: 'http://13.114.200.132:3000',
             name: 'jp-5',
             url: '13.114.200.132',
-            isSelected: false,
+            isSelected: true,
         }, {
             value: 'http://47.107.245.217:3000',
             name: 'cn-2',
             url: '47.107.245.217',
-            isSelected: true,
+            isSelected: false,
         }
     ]
     isShowDialog = true
@@ -285,6 +286,15 @@ export class MenuBarTs extends Vue {
         }
     }
 
+    // getCurrentXem() {
+    //     const {currentNode} = this
+    //     const that = this
+    //     const currentXEM = new NamespaceId('nem.xem')
+    //     const currentXEM2 = new NamespaceId('cat.currency')
+    //     this.$store.state.account.currentXEM1 = currentXEM.id.toHex()
+    //     console.log(currentXEM2.id.toHex())
+    // }
+
     initData() {
         this.languageList = this.$store.state.app.languageList
         this.currentLanguage = localRead('local')
@@ -331,5 +341,6 @@ export class MenuBarTs extends Vue {
         this.unconfirmedListener()
         this.confirmedListener()
         this.txErrorListener()
+        // this.getCurrentXem()
     }
 }
