@@ -396,8 +396,8 @@ export const en_US = {
     In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks: 'In the \'nem2 ecosystem, you can build your own home wallet, or private network wallet, or test the network.',
     set_the_wallet_name: 'Set the wallet name',
     The_name_of_the_wallet_can_be_convenient_for_you_to_use_you_can_distinguish_different_wallets_etc_for_better_management_after_entering_the_system_you_can_also_modify_the_wallet_details: 'The name of the wallet can be convenient for you to use, you can distinguish different wallets, etc., for better management; after entering the system, you can also modify the wallet details.',
-    This_is_very_important_to_encrypt_your_private_key_Your_private_key_will_be_encrypted_and_stored_on_your_local_computer_Be_sure_to_back_up_your_private_key_separately_so_that_you_can_recover_it_if_you_forget_it_The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_which_is_beneficial_to_the_security_of_your_private_key:
-        'This is very important to encrypt your private key. Be sure to back up your private key separately so that you can recover it if you forget it. ',
+    This_password_is_used_to_encrypt_your_private_key: 'This password is used to encrypt your private key. The more complicated it is, the better the encryption will be.',
+    password_hint: 'It should have between %{min} and %{max} characters. Allowed special characters are: %{specialChar}',
     please_set_your_wallet_password: 'Please set your wallet password',
     please_enter_your_password_again: 'Please enter your password again',
     repeat_the_password: 'Repeat the password',
