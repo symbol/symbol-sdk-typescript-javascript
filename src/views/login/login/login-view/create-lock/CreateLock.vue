@@ -6,12 +6,16 @@
 
     <div class="formDiv">
       <ul>
-        <li>
+        <li class="first-item">
           <div class="gray_content">
             <input v-model="lockPW.password" type="password"
                    :placeholder="$t('Set_the_password')">
             <img src="@/common/img/login/loginLock.png" alt="">
+
           </div>
+             <div class="tips">
+              {{$t('password_hint', {min: MIN_PASSWORD_LENGTH, max: MAX_PASSWORD_LENGTH, specialChar: ALLOWED_SPECIAL_CHAR})}}
+            </div>
         </li>
         <li>
 

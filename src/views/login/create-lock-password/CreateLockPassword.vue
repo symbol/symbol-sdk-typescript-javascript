@@ -27,7 +27,7 @@
           </div>
           <div class="gray_content">
             <input class="absolute" type="text" v-model="lockPW.remindTxt"
-                   :placeholder="$t('please_set_a_password_prompt')">
+                   :placeholder="$t('please_set_a_password_hint')">
           </div>
         </li>
       </ul>
