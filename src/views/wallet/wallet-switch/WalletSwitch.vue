@@ -53,7 +53,7 @@
     import {NetworkType} from 'nem2-sdk'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {localRead, localSave, formatXEMamount} from '@/help/help'
-    import {saveLocalWallet} from '@/help/appUtil'
+    import {saveLocalWallet} from '@/help/appHelp'
 
     @Component
     export default class WalletSwitchWrap extends Vue {

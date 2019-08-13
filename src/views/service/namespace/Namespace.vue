@@ -25,7 +25,7 @@
     import SubNamespace from './namespace-function/sub-namespace/SubNamespace.vue'
     import RootNamespace from './namespace-function/root-namespace/RootNamespace.vue'
     import NamespaceList from './namespace-function/namespace-list/NamespaceList.vue'
-    import {getNamespaces} from "@/help/appUtil"
+    import {getNamespaces} from "@/help/appHelp"
 
     @Component({
         components: {

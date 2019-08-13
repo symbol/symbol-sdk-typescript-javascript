@@ -227,4 +227,4 @@ export var decryptKey = function (wallet, password) {
     };
     return Crypto.decrypt(encryptObj);
 };
-//# sourceMappingURL=appUtil.js.map
+//# sourceMappingURL=appHelp.js.map

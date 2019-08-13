@@ -48,7 +48,7 @@
     import {transactionInterface} from "@/interface/sdkTransaction"
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
     import {Account, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
-    import {decryptKey} from "@/help/appUtil"
+    import {decryptKey} from "@/help/appHelp"
 
     @Component
     export default class mosaicUnAliasDialog extends Vue {

@@ -54,7 +54,7 @@
     import {formatSeconds, formatAddress} from '@/help/help.ts'
     import {transactionInterface} from "@/interface/sdkTransaction"
     import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-    import {createRootNamespace, decryptKey} from "@/help/appUtil";
+    import {createRootNamespace, decryptKey} from "@/help/appHelp";
 
     @Component
     export default class namespaceEditDialog extends Vue {

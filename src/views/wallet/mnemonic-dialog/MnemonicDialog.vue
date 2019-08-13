@@ -17,6 +17,7 @@
           <span :class="['stepItem',stepIndex == 2?'active':'']">{{$t('backup_mnemonic')}}</span>
           <span :class="['stepItem',stepIndex == 3?'active':'']">{{$t('confirm_backup')}}</span>
         </div>
+
         <div class="stepItem1" v-if="stepIndex == 0">
           <Form :model="wallet">
             <FormItem>
@@ -27,9 +28,11 @@
               <Button type="success" @click="exportMnemonic">{{$t('next')}}
                 <Icon type="ios-arrow-round-forward"/>
               </Button>
+
             </FormItem>
           </Form>
         </div>
+
         <div class="stepItem2" v-if="stepIndex == 1">
           <div class="step2Txt">
             <Row>
@@ -58,6 +61,7 @@
             <Icon type="ios-arrow-round-forward"/>
           </Button>
         </div>
+
         <div class="stepItem3" v-if="stepIndex == 2">
           <p class="tit">{{$t('please_accurately_copy_the_safety_backup_mnemonic')}}</p>
           <p class="mnemonicWords">{{mnemonic}}</p>
@@ -65,6 +69,7 @@
             <Icon type="ios-arrow-round-forward"/>
           </Button>
         </div>
+
         <div class="stepItem4" v-if="stepIndex == 3">
           <p class="tit">
             {{$t('please_click_on_the_mnemonic_in_order_to_confirm_that_you_are_backing_up_correctly')}}</p>
@@ -76,6 +81,7 @@
             <Icon type="ios-arrow-round-forward"/>
           </Button>
         </div>
+
         <div class="stepItem5" v-if="stepIndex == 4">
           <div class="backupImg">
             <img src="@/common/img/wallet/exportSuccess.png">

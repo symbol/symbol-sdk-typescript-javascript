@@ -3,11 +3,9 @@ export const apiUrl = process.env.NODE_ENV === 'production' ? 'http://120.79.181
 export const bandedNamespace = ['nem', 'user', 'account', 'org', 'com', 'biz', 'net', 'edu', 'mil', 'gov ', 'info']
 
 export const AppConfig = {
-
     apiUrl: 'http://120.79.181.170',
     marketUrl: 'http://app.nemcn.io',
 }
-
 
 //error message
 export const Message = {

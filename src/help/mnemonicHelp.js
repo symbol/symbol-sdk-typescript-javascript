@@ -50,4 +50,4 @@ function buf2hex(buffer) {
     // join all the hex values of the elements into a single string
     return hexParts.join('');
 }
-//# sourceMappingURL=mnemonicUtil.js.map
+//# sourceMappingURL=mnemonicHelp.js.map

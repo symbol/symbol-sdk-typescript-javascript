@@ -136,7 +136,7 @@
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import {transactionInterface} from '@/interface/sdkTransaction'
     import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-    import {multisigAccountInfo} from "@/help/appUtil"
+    import {multisigAccountInfo} from "@/help/appHelp"
     import {
         MosaicId,
         MosaicNonce,
