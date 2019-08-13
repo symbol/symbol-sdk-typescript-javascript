@@ -6,5 +6,5 @@ node_modules
 .idea
 .map
 /www
-/src/*.js.map
-/src/*.js
+src/**/*.map
+src/**/*.js
