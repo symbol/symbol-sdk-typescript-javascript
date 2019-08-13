@@ -108,11 +108,15 @@ export class MonitorRemoteTs extends Vue {
         const {remotePublickey, fee, password} = this.formItem
         // TODO COMLETE REMOTE TRANSACTION
         const {networkType} = this.getWallet
+        const {generationHash, node} = this.$store.state.account
         const account = Account.createFromPrivateKey(privatekey, networkType)
         const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(), remotePublickey, LinkAction.Link, NetworkType.MIJIN_TEST, UInt64.fromUint(fee))
-        // transactionInterface._announce({
-        //     transaction:accountLinkTransaction,
-        //     node:
-        // })
+        transactionInterface._announce({
+            transaction: accountLinkTransaction,
+            node,
+            account,
+            generationHash
+        })
+        this.modalCancel()
     }
 }
