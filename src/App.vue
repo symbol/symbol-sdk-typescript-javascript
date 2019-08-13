@@ -6,12 +6,12 @@
 
 <script lang="ts">
     import 'animate.css'
-    import fs from 'fs'
     import {localRead} from '@/help/help'
     import {PublicAccount, Listener} from "nem2-sdk"
     import {wsInterface} from '@/interface/sdkListener'
     import {Component, Vue} from 'vue-property-decorator'
     import {accountInterface} from '@/interface/sdkAccount'
+    import {checkInstall} from '@/help/electronHelp'
 
     @Component
     export default class App extends Vue {
@@ -98,16 +98,8 @@
                 pointer: this
             })
         }
-        checkInstall () {
-            if(fs.readdirSync){
-                const root = fs.readdirSync('./')
-                console.log(root)
-            }else {
-                console.log('web')
-            }
-        }
         created() {
-            this.checkInstall()
+            checkInstall()
             this.initData()
             this.initApp()
             this.chainListner()

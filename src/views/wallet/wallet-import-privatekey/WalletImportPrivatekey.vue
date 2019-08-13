@@ -72,7 +72,7 @@
     export default class WalletImportPrivatekey extends Vue {
         account = {}
         form = {
-            privateKey: 'FB628AF4276F696AD1FA85B7AB1E49CFD896E5EC85000E3179EEEA59717DD8DE',
+            privateKey: '5EEAB8B808370313BC41B0B2413A823AA6CB428CC08632C1EF7264A3CC127CD2',
             networkType: 0,
             walletName: '',
             password: '',

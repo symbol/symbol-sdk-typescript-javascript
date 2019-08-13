@@ -26,7 +26,7 @@
         <div class="window_controller">
           <div>
             <span class="pointer" @click="minWindow"></span>
-            <span class="pointer"></span>
+            <span class="pointer" @click="maxWindow"></span>
             <span class="pointer" @click="closeWindow"></span>
           </div>
         </div>
@@ -86,6 +86,7 @@
     import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk";
     import {wsInterface} from "@/interface/sdkListener";
     import {sessionRead, sessionSave, localSave, localRead} from "@/help/help";
+    import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/help/electronHelp'
 
     @Component
     export default class Home extends Vue {
@@ -157,45 +158,17 @@
         }
 
         closeWindow() {
-            const ipcRenderer = window['electron']['ipcRenderer'];
-            ipcRenderer.send('app', 'quit')
+            closeWindow()
         }
 
         maxWindow() {
-            const ipcRenderer = window['electron']['ipcRenderer'];
-            ipcRenderer.send('app', 'max')
+            maxWindow()
         }
 
         minWindow() {
-            const ipcRenderer = window['electron']['ipcRenderer'];
-            ipcRenderer.send('app', 'min')
+            minWindow()
         }
-        windowSizeChange () {
-            if(window['electron']){
-                const electron = window['electron'];
-                const mainWindow =electron.remote.getCurrentWindow()
-                const that = this
-                mainWindow.on('resize',() => {
-                    that.resetFontSize()
-                })
-            }
-        }
-        resetFontSize() {
-            if(window['electron']){
-                const locaZomm = sessionRead('zoomFactor') || 1
-                const devInnerWidth= 1689
-                const winWidth = window.innerWidth * Number(locaZomm)
-                const scaleFactor = window['electron'].screen.getPrimaryDisplay().scaleFactor;
-                let zoomFactor =  winWidth/devInnerWidth;
-                if(winWidth > devInnerWidth && winWidth < 1920){
-                    zoomFactor =  1
-                }else if(winWidth >= 1920){
-                    zoomFactor =  winWidth/1920;
-                }
-                sessionSave('zoomFactor',zoomFactor)
-                window['electron'].webFrame.setZoomFactor(zoomFactor);
-            }
-        }
+
         selectPoint(index) {
             let list = this.nodetList
             list = list.map((item) => {
@@ -397,7 +370,7 @@
         }
 
         created() {
-            this.windowSizeChange()
+            windowSizeChange()
             this.initData()
             this.unconfirmedListener()
             this.confirmedListener()
