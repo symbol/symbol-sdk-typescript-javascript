@@ -12,12 +12,11 @@ before_script:
 
 script:
   - npm run dev
-  - npm run build
 
 deploy:
+  api_key: $GITHUB_TOKEN
   provider: pages
   skip_cleanup: true
-  local_dir: www
   on:
     branch: master
 
