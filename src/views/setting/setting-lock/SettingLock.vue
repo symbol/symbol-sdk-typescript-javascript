@@ -39,7 +39,7 @@
     import {Message} from "@/config/index"
     import {localRead, localSave} from '@/help/help'
     import {Component, Vue} from 'vue-property-decorator'
-    import {decryptKey, encryptKey} from "@/help/appUtil"
+    import {decryptKey, encryptKey} from "@/help/appHelp"
 
     @Component
     export default class SettingLock extends Vue {

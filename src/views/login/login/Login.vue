@@ -5,7 +5,7 @@
     <div class="switch_language">
       <i-select @on-change="switchLanguage" :model="currentLanguage"
                 :placeholder="currentLanguage ? $store.state.app.localMap[currentLanguage] : '中文'">
-        <i-option v-for="item in languageList" :value="item.value">{{ item.label }}</i-option>
+        <i-option v-for="(item, index) in languageList" :value="item.value" :key="index">{{ item.label }}</i-option>
       </i-select>
     </div>
 
