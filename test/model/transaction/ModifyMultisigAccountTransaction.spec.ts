@@ -101,11 +101,11 @@ describe('ModifyMultisigAccountTransaction', () => {
             .to.be.equal(1);
         expect(modifyMultisigAccountTransaction.modifications.length)
             .to.be.equal(2);
-        expect(modifyMultisigAccountTransaction.modifications[0].type)
+        expect(modifyMultisigAccountTransaction.modifications[0].modificiationType)
             .to.be.equal(MultisigCosignatoryModificationType.Add);
         expect(modifyMultisigAccountTransaction.modifications[0].cosignatoryPublicAccount.publicKey)
             .to.be.equal('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24');
-        expect(modifyMultisigAccountTransaction.modifications[1].type)
+        expect(modifyMultisigAccountTransaction.modifications[1].modificiationType)
             .to.be.equal(MultisigCosignatoryModificationType.Add);
         expect(modifyMultisigAccountTransaction.modifications[1].cosignatoryPublicAccount.publicKey)
             .to.be.equal('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');

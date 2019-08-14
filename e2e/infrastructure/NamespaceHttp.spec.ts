@@ -21,7 +21,7 @@ import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
-import { AliasActionType } from '../../src/model/namespace/AliasActionType';
+import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -94,7 +94,7 @@ describe('NamespaceHttp', () => {
         it('standalone', (done) => {
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Link,
+                AliasAction.Link,
                 namespaceId,
                 account.address,
                 NetworkType.MIJIN_TEST,

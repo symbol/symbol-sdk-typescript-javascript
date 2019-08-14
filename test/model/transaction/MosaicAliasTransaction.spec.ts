@@ -18,7 +18,7 @@ import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {AliasActionType} from '../../../src/model/namespace/AliasActionType';
+import {AliasAction} from '../../../src/model/namespace/AliasAction';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicAliasTransaction} from '../../../src/model/transaction/MosaicAliasTransaction';
@@ -37,7 +37,7 @@ describe('MosaicAliasTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             mosaicId,
             NetworkType.MIJIN_TEST,
@@ -52,7 +52,7 @@ describe('MosaicAliasTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             mosaicId,
             NetworkType.MIJIN_TEST,
@@ -68,13 +68,13 @@ describe('MosaicAliasTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             mosaicId,
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicAliasTransaction.actionType).to.be.equal(AliasActionType.Link);
+        expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(mosaicAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);
         expect(mosaicAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
         expect(mosaicAliasTransaction.mosaicId.id.lower).to.be.equal(2262289484);
@@ -95,7 +95,7 @@ describe('MosaicAliasTransaction', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Link,
+                AliasAction.Link,
                 namespaceId,
                 mosaicId,
                 NetworkType.MIJIN_TEST,

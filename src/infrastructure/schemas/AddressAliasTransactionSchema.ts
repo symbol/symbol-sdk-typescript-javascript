@@ -38,7 +38,7 @@ export default new Schema([
     ushort('type'),
     array('fee', TypeSize.INT),
     array('deadline', TypeSize.INT),
-    ubyte('actionType'),
+    ubyte('aliasAction'),
     array('namespaceId', TypeSize.INT),
     array('address', TypeSize.BYTE)
 ]);

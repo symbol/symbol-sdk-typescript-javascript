@@ -41,7 +41,7 @@ export class Builder {
     deadline: any;
     address: any;
     namespaceId: any;
-    actionType: any;
+    aliasAction: any;
     constructor() {
         this.maxFee = [0, 0];
         this.type = TransactionType.ADDRESS_ALIAS;
@@ -67,8 +67,8 @@ export class Builder {
         return this;
     }
 
-    addActionType(actionType) {
-        this.actionType = actionType;
+    addAliasAction(aliasAction) {
+        this.aliasAction = aliasAction;
         return this;
     }
 
@@ -107,7 +107,7 @@ export class Builder {
         AddressAliasTransactionBuffer.addType(builder, this.type);
         AddressAliasTransactionBuffer.addFee(builder, feeVector);
         AddressAliasTransactionBuffer.addDeadline(builder, deadlineVector);
-        AddressAliasTransactionBuffer.addActionType(builder, this.actionType);
+        AddressAliasTransactionBuffer.addAliasAction(builder, this.aliasAction);
         AddressAliasTransactionBuffer.addNamespaceId(builder, namespaceIdVector);
         AddressAliasTransactionBuffer.addAddress(builder, addressVector);
 

@@ -29,7 +29,7 @@ describe('MultisigCosignatoryModification', () => {
         );
         expect(multisigCosignatoryModification.cosignatoryPublicAccount.publicKey)
             .to.be.equal('C52C211CF935C61D65F26B253AA260416F018C3D21E4D184A7671F403C849BBB');
-        expect(multisigCosignatoryModification.type).to.be.equal(MultisigCosignatoryModificationType.Add);
+        expect(multisigCosignatoryModification.modificiationType).to.be.equal(MultisigCosignatoryModificationType.Add);
     });
 
     it('should create Add MultisigCosignatoryModification and get toDTO correctly', () => {
@@ -39,9 +39,8 @@ describe('MultisigCosignatoryModification', () => {
         ).toDTO();
         expect(multisigCosignatoryModification.cosignatoryPublicKey)
             .to.be.equal('C52C211CF935C61D65F26B253AA260416F018C3D21E4D184A7671F403C849BBB');
-        expect(multisigCosignatoryModification.type).to.be.equal(MultisigCosignatoryModificationType.Add);
+        expect(multisigCosignatoryModification.modificiationType).to.be.equal(MultisigCosignatoryModificationType.Add);
     });
-
 
     it('should create Remove MultisigCosignatoryModification', () => {
         const multisigCosignatoryModification = new MultisigCosignatoryModification(
@@ -50,7 +49,7 @@ describe('MultisigCosignatoryModification', () => {
         );
         expect(multisigCosignatoryModification.cosignatoryPublicAccount.publicKey)
             .to.be.equal('C52C211CF935C61D65F26B253AA260416F018C3D21E4D184A7671F403C849BBB');
-        expect(multisigCosignatoryModification.type).to.be.equal(MultisigCosignatoryModificationType.Remove);
+        expect(multisigCosignatoryModification.modificiationType).to.be.equal(MultisigCosignatoryModificationType.Remove);
     });
 
     it('should create Remove MultisigCosignatoryModification and get toDTO correctly', () => {
@@ -60,6 +59,6 @@ describe('MultisigCosignatoryModification', () => {
         ).toDTO();
         expect(multisigCosignatoryModification.cosignatoryPublicKey)
             .to.be.equal('C52C211CF935C61D65F26B253AA260416F018C3D21E4D184A7671F403C849BBB');
-        expect(multisigCosignatoryModification.type).to.be.equal(MultisigCosignatoryModificationType.Remove);
+        expect(multisigCosignatoryModification.modificiationType).to.be.equal(MultisigCosignatoryModificationType.Remove);
     });
 });

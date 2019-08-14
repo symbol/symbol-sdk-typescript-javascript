@@ -28,7 +28,7 @@ import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { MosaicProperties } from '../../src/model/mosaic/MosaicProperties';
 import { MosaicSupplyType } from '../../src/model/mosaic/MosaicSupplyType';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
-import { AliasActionType } from '../../src/model/namespace/AliasActionType';
+import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
 import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
@@ -72,7 +72,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = accountLinkTransaction.toJSON();
 
         expect(json.transaction.remoteAccountKey).to.be.equal(account.publicKey);
-        expect(json.transaction.action).to.be.equal(LinkAction.Link);
+        expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
     it('should create AccountRestrictionAddressTransaction', () => {
@@ -140,7 +140,7 @@ describe('SerializeTransactionToJSON', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             address,
             NetworkType.MIJIN_TEST,
@@ -149,7 +149,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = addressAliasTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.ADDRESS_ALIAS);
-        expect(json.transaction.action).to.be.equal(AliasActionType.Link);
+        expect(json.transaction.aliasAction).to.be.equal(AliasAction.Link);
     });
 
     it('should create MosaicAliasTransaction', () => {
@@ -157,7 +157,7 @@ describe('SerializeTransactionToJSON', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             mosaicId,
             NetworkType.MIJIN_TEST,
@@ -165,7 +165,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicAliasTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_ALIAS);
-        expect(json.transaction.action).to.be.equal(AliasActionType.Link);
+        expect(json.transaction.aliasAction).to.be.equal(AliasAction.Link);
 
     });
 

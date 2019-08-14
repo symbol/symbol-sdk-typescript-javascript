@@ -190,7 +190,7 @@ Catapult.Buffers.AddressAliasTransactionBuffer.prototype.deadlineArray = functio
 /**
  * @returns {number}
  */
-Catapult.Buffers.AddressAliasTransactionBuffer.prototype.actionType = function() {
+Catapult.Buffers.AddressAliasTransactionBuffer.prototype.aliasAction = function() {
     var offset = this.bb.__offset(this.bb_pos, 18);
     return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
 };
@@ -394,10 +394,10 @@ Catapult.Buffers.AddressAliasTransactionBuffer.startDeadlineVector = function(bu
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} actionType
+ * @param {number} aliasAction
  */
-Catapult.Buffers.AddressAliasTransactionBuffer.addActionType = function(builder, actionType) {
-    builder.addFieldInt8(7, actionType, 0);
+Catapult.Buffers.AddressAliasTransactionBuffer.addAliasAction = function(builder, aliasAction) {
+    builder.addFieldInt8(7, aliasAction, 0);
 };
 
 /**

@@ -19,7 +19,7 @@ import {Account} from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {AliasActionType} from '../../../src/model/namespace/AliasActionType';
+import {AliasAction} from '../../../src/model/namespace/AliasAction';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 import {AddressAliasTransaction} from '../../../src/model/transaction/AddressAliasTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
@@ -38,7 +38,7 @@ describe('AddressAliasTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             address,
             NetworkType.MIJIN_TEST,
@@ -53,7 +53,7 @@ describe('AddressAliasTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             address,
             NetworkType.MIJIN_TEST,
@@ -69,13 +69,13 @@ describe('AddressAliasTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             address,
             NetworkType.MIJIN_TEST,
         );
 
-        expect(addressAliasTransaction.actionType).to.be.equal(AliasActionType.Link);
+        expect(addressAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(addressAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);
         expect(addressAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
         expect(addressAliasTransaction.address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
@@ -95,7 +95,7 @@ describe('AddressAliasTransaction', () => {
             const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
             const addressAliasTransaction = AddressAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Link,
+                AliasAction.Link,
                 namespaceId,
                 address,
                 NetworkType.MIJIN_TEST,

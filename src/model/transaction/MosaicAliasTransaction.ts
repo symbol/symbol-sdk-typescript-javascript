@@ -19,7 +19,7 @@ import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTra
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
-import { AliasActionType } from '../namespace/AliasActionType';
+import { AliasAction } from '../namespace/AliasAction';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -33,7 +33,7 @@ export class MosaicAliasTransaction extends Transaction {
     /**
      * Create a mosaic alias transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param actionType - The alias action type.
+     * @param aliasAction - The alias action type.
      * @param namespaceId - The namespace id.
      * @param mosaicId - The mosaic id.
      * @param networkType - The network type.
@@ -41,7 +41,7 @@ export class MosaicAliasTransaction extends Transaction {
      * @returns {MosaicAliasTransaction}
      */
     public static create(deadline: Deadline,
-                         actionType: AliasActionType,
+                         aliasAction: AliasAction,
                          namespaceId: NamespaceId,
                          mosaicId: MosaicId,
                          networkType: NetworkType,
@@ -50,7 +50,7 @@ export class MosaicAliasTransaction extends Transaction {
             TransactionVersion.MOSAIC_ALIAS,
             deadline,
             maxFee,
-            actionType,
+            aliasAction,
             namespaceId,
             mosaicId,
         );
@@ -61,7 +61,7 @@ export class MosaicAliasTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param actionType
+     * @param aliasAction
      * @param namespaceId
      * @param mosaicId
      * @param signature
@@ -75,7 +75,7 @@ export class MosaicAliasTransaction extends Transaction {
                 /**
                  * The alias action type.
                  */
-                public readonly actionType: AliasActionType,
+                public readonly aliasAction: AliasAction,
                 /**
                  * The namespace id that will be an alias.
                  */
@@ -116,7 +116,7 @@ export class MosaicAliasTransaction extends Transaction {
             .addDeadline(this.deadline.toDTO())
             .addFee(this.maxFee.toDTO())
             .addVersion(this.versionToDTO())
-            .addActionType(this.actionType)
+            .addAliasAction(this.aliasAction)
             .addNamespaceId(this.namespaceId.id.toDTO())
             .addMosaicId(this.mosaicId.id.toDTO())
             .build();

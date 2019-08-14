@@ -32,7 +32,7 @@ import { MosaicProperties } from '../../../src/model/mosaic/MosaicProperties';
 import { MosaicRestrictionType } from '../../../src/model/mosaic/MosaicRestrictionType';
 import { MosaicSupplyType } from '../../../src/model/mosaic/MosaicSupplyType';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
-import { AliasActionType } from '../../../src/model/namespace/AliasActionType';
+import { AliasAction } from '../../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceType } from '../../../src/model/namespace/NamespaceType';
 import { AccountAddressRestrictionModificationTransaction } from '../../../src/model/transaction/AccountAddressRestrictionModificationTransaction';
@@ -132,7 +132,8 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountAddressRestrictionModificationTransaction;
+        const transaction = TransactionMapping
+            .createFromPayload(signedTransaction.payload) as AccountAddressRestrictionModificationTransaction;
         expect(transaction.restrictionType).to.be.equal(RestrictionType.AllowTransaction);
         expect(transaction.modifications[0].value).to.be.equal(operation);
         expect(transaction.modifications[0].modificationType).to.be.equal(RestrictionModificationType.Add);
@@ -143,7 +144,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             address,
             NetworkType.MIJIN_TEST,
@@ -153,7 +154,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AddressAliasTransaction;
 
-        expect(transaction.actionType).to.be.equal(AliasActionType.Link);
+        expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(transaction.namespaceId.id.lower).to.be.equal(33347626);
         expect(transaction.namespaceId.id.higher).to.be.equal(3779697293);
         expect(transaction.address.plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
@@ -164,7 +165,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             mosaicId,
             NetworkType.MIJIN_TEST,
@@ -173,7 +174,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicAliasTransaction;
 
-        expect(mosaicAliasTransaction.actionType).to.be.equal(AliasActionType.Link);
+        expect(mosaicAliasTransaction.aliasAction).to.be.equal(AliasAction.Link);
         expect(mosaicAliasTransaction.namespaceId.id.lower).to.be.equal(33347626);
         expect(mosaicAliasTransaction.namespaceId.id.higher).to.be.equal(3779697293);
         expect(mosaicAliasTransaction.mosaicId.id.lower).to.be.equal(2262289484);
@@ -414,7 +415,7 @@ describe('TransactionMapping - createFromPayload', () => {
             .to.be.equal(2);
         expect(transaction.minRemovalDelta)
             .to.be.equal(1);
-        expect(transaction.modifications[0].type)
+        expect(transaction.modifications[0].modificiationType)
             .to.be.equal(MultisigCosignatoryModificationType.Add);
         expect(transaction.modifications[0].cosignatoryPublicAccount.publicKey)
             .to.be.equal('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24');
@@ -725,7 +726,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             address,
             NetworkType.MIJIN_TEST,
@@ -735,7 +736,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             TransactionMapping.createFromDTO(addressAliasTransaction.toJSON()) as AddressAliasTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.ADDRESS_ALIAS);
-        expect(transaction.actionType).to.be.equal(AliasActionType.Link);
+        expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
     });
 
     it('should create MosaicAliasTransaction', () => {
@@ -743,7 +744,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
-            AliasActionType.Link,
+            AliasAction.Link,
             namespaceId,
             mosaicId,
             NetworkType.MIJIN_TEST,
@@ -752,7 +753,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             TransactionMapping.createFromDTO(mosaicAliasTransaction.toJSON()) as MosaicAliasTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ALIAS);
-        expect(transaction.actionType).to.be.equal(AliasActionType.Link);
+        expect(transaction.aliasAction).to.be.equal(AliasAction.Link);
 
     });
 

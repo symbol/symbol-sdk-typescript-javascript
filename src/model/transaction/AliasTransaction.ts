@@ -17,7 +17,7 @@
 import { Address } from '../account/Address';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
-import { AliasActionType } from '../namespace/AliasActionType';
+import { AliasAction } from '../namespace/AliasAction';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { AddressAliasTransaction } from './AddressAliasTransaction';
@@ -38,7 +38,7 @@ export abstract class AliasTransaction extends Transaction {
      * @returns {AddressAliasTransaction}
      */
     public static createForAddress(deadline: Deadline,
-                                   aliasAction: AliasActionType,
+                                   aliasAction: AliasAction,
                                    namespaceId: NamespaceId,
                                    address: Address,
                                    networkType: NetworkType,
@@ -64,7 +64,7 @@ export abstract class AliasTransaction extends Transaction {
      * @returns {MosaicAliasTransaction}
      */
     public static createForMosaic(deadline: Deadline,
-                                  aliasAction: AliasActionType,
+                                  aliasAction: AliasAction,
                                   namespaceId: NamespaceId,
                                   mosaicId: MosaicId,
                                   networkType: NetworkType,

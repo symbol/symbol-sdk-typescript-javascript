@@ -21,7 +21,7 @@ import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { MosaicProperties } from '../../src/model/mosaic/MosaicProperties';
-import { AliasActionType } from '../../src/model/namespace/AliasActionType';
+import { AliasAction } from '../../src/model/namespace/AliasAction';
 import {NamespaceId} from '../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
@@ -132,7 +132,7 @@ describe('MosaicHttp', () => {
         it('Announce MosaicAliasTransaction', (done) => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Link,
+                AliasAction.Link,
                 namespaceId,
                 mosaicId,
                 NetworkType.MIJIN_TEST,
@@ -222,7 +222,7 @@ describe('MosaicHttp', () => {
         it('Announce MosaicAliasTransaction', (done) => {
             const mosaicAliasTransaction = MosaicAliasTransaction.create(
                 Deadline.create(),
-                AliasActionType.Unlink,
+                AliasAction.Unlink,
                 namespaceId,
                 mosaicId,
                 NetworkType.MIJIN_TEST,
