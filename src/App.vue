@@ -11,7 +11,7 @@
     import {wsInterface} from '@/interface/sdkListener'
     import {Component, Vue} from 'vue-property-decorator'
     import {accountInterface} from '@/interface/sdkAccount'
-    import {checkInstall} from '@/help/electronHelp'
+    // import {checkInstall} from '@/help/electronHelp'
 
     @Component
     export default class App extends Vue {
@@ -99,7 +99,7 @@
             })
         }
         created() {
-            checkInstall()
+            // checkInstall()
             this.initData()
             this.initApp()
             this.chainListner()
