@@ -4,7 +4,12 @@ import {localRead} from '@/help/help'
 import {Message} from "@/config/index"
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import {Component, Vue} from 'vue-property-decorator'
-
+import {
+    passwordValidator,
+    MIN_PASSWORD_LENGTH,
+    MAX_PASSWORD_LENGTH,
+    ALLOWED_SPECIAL_CHAR,
+} from '@/help/formValidationHelp'
 @Component
 export class WalletCreateTs extends Vue {
     formItem = {
@@ -13,6 +18,10 @@ export class WalletCreateTs extends Vue {
         password: '',
         checkPW: '',
     }
+    passwordValidator = passwordValidator
+    MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
+    MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
+    ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
     netType = [
         {
             value: NetworkType.MIJIN_TEST,
@@ -38,7 +47,7 @@ export class WalletCreateTs extends Vue {
             this.$Notice.error({title: this.$t(Message.WALLET_NAME_INPUT_ERROR) + ''});
             return false
         }
-        if (!this.formItem.password || this.formItem.password == '') {
+        if (!this.formItem.password || !passwordValidator(this.formItem.password)) {
             this.$Notice.error({title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''});
             return false
         }

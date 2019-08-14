@@ -125,6 +125,12 @@ declare namespace SdkV0 {
         }) => Rst<{
             decryptMessage: any
         }>;
+        getLinkedPublickey: (params: {
+            node: string,
+            address: string,
+        }) => Rst<{
+            linkedPublicKey: any
+        }>;
     }
 
     interface blockchain {
@@ -351,7 +357,7 @@ declare namespace SdkV0 {
             networkType: NetworkType,
             maxFee?: number
         }) => Rst<{
-            rootNamespaceTransaction:Transaction
+            rootNamespaceTransaction: Transaction
         }>;
         createdSubNamespace: (params: {
             namespaceName: string,
