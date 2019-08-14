@@ -1,6 +1,6 @@
 
 import {Message} from "@/config/index"
-import {createQRCode, copyTxt} from '@/help/help'
+import {copyTxt} from '@/help/help'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 @Component
@@ -61,8 +61,5 @@ export class KeystoreDialogTs extends Vue {
     }
 
     created() {
-        createQRCode('TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN').then((data: { url }) => {
-            this.QRCode = data.url
-        })
     }
 }
