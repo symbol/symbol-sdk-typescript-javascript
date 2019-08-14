@@ -134,7 +134,7 @@ export class AddressAliasTransaction extends Transaction {
             TransactionType.ADDRESS_ALIAS.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.actionType.valueOf(),
+            this.aliasAction.valueOf(),
             new NamespaceIdDto(this.namespaceId.id.toDTO()),
             new AddressDto(RawAddress.stringToAddress(this.address.plain())),
         );
@@ -150,7 +150,7 @@ export class AddressAliasTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.ADDRESS_ALIAS.valueOf(),
-            this.actionType.valueOf(),
+            this.aliasAction.valueOf(),
             new NamespaceIdDto(this.namespaceId.id.toDTO()),
             new AddressDto(RawAddress.stringToAddress(this.address.plain())),
         );
