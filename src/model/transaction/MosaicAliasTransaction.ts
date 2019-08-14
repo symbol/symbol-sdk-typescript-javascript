@@ -130,7 +130,7 @@ export class MosaicAliasTransaction extends Transaction {
             TransactionType.MOSAIC_ALIAS.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            this.actionType.valueOf(),
+            this.aliasAction.valueOf(),
             new NamespaceIdDto(this.namespaceId.id.toDTO()),
             new MosaicIdDto(this.mosaicId.id.toDTO()),
         );
@@ -146,7 +146,7 @@ export class MosaicAliasTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.MOSAIC_ALIAS.valueOf(),
-            this.actionType.valueOf(),
+            this.aliasAction.valueOf(),
             new NamespaceIdDto(this.namespaceId.id.toDTO()),
             new MosaicIdDto(this.mosaicId.id.toDTO()),
         );
