@@ -4,7 +4,7 @@ import {
     PublicAccount,
     AggregateTransaction,
     AccountHttp,
-    Address
+    Address, Account
 } from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
 
@@ -24,7 +24,7 @@ export const multisigInterface: SdkV0.multisig = {
     bondedMultisigTransaction: async (params) => {
         let {transaction, multisigPublickey, networkType, account, fee} = params
         transaction = transaction.map((item) => {
-            item.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))
+            item = item.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))
             return item
         })
         const aggregateTransaction = AggregateTransaction.createBonded(
