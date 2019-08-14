@@ -13,9 +13,10 @@
             <img src="@/common/img/login/loginLock.png" alt="">
 
           </div>
-             <div class="tips">
-              {{$t('password_hint', {min: MIN_PASSWORD_LENGTH, max: MAX_PASSWORD_LENGTH, specialChar: ALLOWED_SPECIAL_CHAR})}}
-            </div>
+          <div class="tips">
+            {{$t('password_hint', {min: MIN_PASSWORD_LENGTH, max: MAX_PASSWORD_LENGTH, specialChar:
+            ALLOWED_SPECIAL_CHAR})}}
+          </div>
         </li>
         <li>
 

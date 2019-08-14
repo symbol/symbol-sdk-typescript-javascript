@@ -211,7 +211,6 @@ export class MonitorPanelTs extends Vue {
                     mosaicIdList: mosaicIds
                 }).then((mosaics) => {
                     mosaics.result.mosaicsInfos['subscribe'](async (mosaicInfoList) => {
-                        // console.log(mosaicInfoList)
                         mosaicList = mosaicInfoList.map((item) => {
                             let mosaicItem = mosaicList[mosaicHexIds.indexOf(item.mosaicId.toHex())]
                             mosaicItem.hex = item.mosaicId.toHex()

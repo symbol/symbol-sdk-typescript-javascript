@@ -1,6 +1,5 @@
-<template >
+<template>
   <div class="remote_board_container">
-
     <div class="top_network_info radius scroll" style="display: block;">
       <div class="remote_total">
         <strong class="trend"> {{$t('Remote_title_recipt')}}</strong>
@@ -9,16 +8,14 @@
         </div>
         <div class="state_class">
           <div class="div_cer">
-            <span>{{$t('Remote_state')}}:&nbsp&nbsp</span>
-            <span>Unlink</span>
-            <div class="switch-container switch_class_left" v-on:click="switchChan">
-              <input type="checkbox" id="user-switch" v-model="switchMark">
-              <label for="user-switch"></label>
-            </div>
+            <span class="remote_public_key">{{$t('Remote_state')}}：</span>
+            <span>{{isLinked?'Linked':'Unlink'}}</span>
+            <i-switch v-model="isLinked" @on-change="toggleSwitch"/>
+
           </div>
           <div class="top_class_div">
-            <span>{{$t('Remote_pubulic_pik')}}:&nbsp&nbsp</span>
-            <span>null</span>
+            <span class="remote_public_key">{{$t('Remote_pubulic_pik')}}：</span>
+            <span>{{remotePublickey?remotePublickey:'no remote account'}}</span>
           </div>
         </div>
       </div>
@@ -56,62 +53,61 @@
             </Col>
           </Row>
         </div>
-        <div class="tableCell" style="position: relative;" v-for="(item,index) in aliasList" :key="index"
-             v-if="aliasList.length>0">
+        <div class="tableCell" style="position: relative;" v-for="(item,index) in harvestBlockList" :key="index"
+             v-if="harvestBlockList.length>0">
           <Row>
             <Col span="7" class="col_height">{{item.hash}}</Col>
             <Col span="6" class="col_height">{{item.height}}</Col>
             <Col span="4" class="col_height">{{item.price}}</Col>
             <Col span="7" class="col_height">
               {{item.time}}
-              <!--              <img src="@/common/img/monitor/remote_slices.png">-->
             </Col>
           </Row>
         </div>
-
-        <div class="noData" v-if="aliasList.length<=0">
+        <div class="noData" v-if="harvestBlockList.length<=0">
           <p>{{$t('not_yet_open')}}</p>
         </div>
       </div>
 
     </div>
 
-    <div id="modal" class="modal" v-show="modalMark">
-      <div class="modal-content">
-        <div class="new_modal_div1">
-          <span class="new_modal_title">{{$t('remote_repaly')}}</span>
-        </div>
 
-        <div class="new_modal_div2">
-          <span class="new_modal_span1">{{$t('remote_modal_pul')}}</span>
-        </div>
-        <div class="new_modal_div3">
-          <input class="new_modal_input" v-model="formItem.remotePublickey" type="text" :placeholder="$t('remote_modal_place1')">
-        </div>
-        <div class="new_modal_div4">
-          <span class="new_modal_span1">{{$t('remote_modal_price')}}</span>
-        </div>
-        <div class="new_modal_div3">
-          <input class="new_modal_input" v-model="formItem.fee" type="text" placeholder="0">
-        </div>
-        <div class="new_modal_div4">
-          <span class="new_modal_span1">{{$t('reomte_modal_pass')}}</span>
-        </div>
-        <div class="new_modal_div3">
-          <input class="new_modal_input" v-model="formItem.password" type="text" :placeholder="$t('remote_modal_place2')">
-        </div>
+    <Modal
+            :title="$t('remote_repaly')"
+            v-model="isShowDialog"
+            :transfer="false"
+            class-name="dash_board_dialog">
 
-        <div class="new_model_btn">
-          <span class="modal_btn_cancel pointer" @click="modalCancel">{{$t('remote_modal_cancel')}}</span>
-          <span class="modal_btn pointer" @click="confirmInput">{{$t('remote_modal_comfire')}}</span>
-        </div>
+
+      <div class="gray_input_content">
+        <span class="title">{{$t('remote_modal_pul')}}</span>
+        <input type="text" v-model="formItem.remotePublickey" :placeholder="$t('remote_modal_place1')">
       </div>
-    </div>
+
+      <div class="gray_input_content">
+        <span class="title">{{$t('fee')}}</span>
+        <input type="text" v-model="formItem.fee" :placeholder="$t('remote_modal_place1')">
+      </div>
+
+
+      <div class="gray_input_content">
+        <span class="title">{{$t('fee')}}</span>
+        <input type="text" v-model="formItem.password" :placeholder="$t('remote_modal_place1')">
+      </div>
+
+
+      <div class="new_model_btn">
+<!--        <span class="modal_btn_cancel radius pointer" @click="modalCancel">{{$t('remote_modal_cancel')}}</span>-->
+        <span class="modal_btn pointer radius" @click="confirmInput">{{$t('remote_modal_comfire')}}</span>
+      </div>
+    </Modal>
 
   </div>
+
 </template>
 
 <script lang="ts">
+    import "./MonitorRemote.less"
     import {MonitorRemoteTs} from './MonitorRemoteTs'
 
     export default class MonitorRemote extends MonitorRemoteTs {
@@ -120,5 +116,5 @@
 </script>
 
 <style scoped lang="less">
-  @import "MonitorRemote.less";
+
 </style>

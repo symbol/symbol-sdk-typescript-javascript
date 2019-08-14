@@ -64,28 +64,6 @@ export const getRelativeTime = timeStamp => {
     return resStr
 };
 
-export const createQRCode = (txt) => {
-    return new Promise((resolve) => {
-        QRCode.toDataURL(
-            txt,
-            {errorCorrectionLevel: 'H'},
-            (err, url) => {
-                if (err) {
-                    resolve({
-                        created: false,
-                        url: ''
-                    })
-                } else {
-                    resolve({
-                        created: true,
-                        url: url
-                    })
-                }
-            })
-    })
-};
-
-
 export const copyTxt = (txt) => {
     return new Promise((resolve) => {
         const input = document.createElement('input');

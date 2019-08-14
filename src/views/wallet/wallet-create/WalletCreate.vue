@@ -20,7 +20,7 @@
           <FormItem :label="$t('set_password')">
             <p class="formItemTxt">
               {{$t('This_password_is_used_to_encrypt_your_private_key')}}</p>
-              <p class="formItemTxt">
+            <p class="formItemTxt">
               {{$t('password_hint', {min: MIN_PASSWORD_LENGTH, max: MAX_PASSWORD_LENGTH, specialChar: ALLOWED_SPECIAL_CHAR})}}</p>
             <Input v-model="formItem.password" type="password" required
                    :placeholder="$t('please_set_your_wallet_password')" />

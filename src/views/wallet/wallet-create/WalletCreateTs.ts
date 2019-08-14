@@ -1,16 +1,16 @@
 
 import {NetworkType} from "nem2-sdk"
 import {localRead} from '@/help/help'
+import {Message} from "@/config/index"
+import {MnemonicPassPhrase} from 'nem2-hd-wallets'
+import {Component, Vue} from 'vue-property-decorator'
+import {createMnemonic} from "@/help/mnemonicHelp";
 import {
     passwordValidator,
     MIN_PASSWORD_LENGTH,
     MAX_PASSWORD_LENGTH,
     ALLOWED_SPECIAL_CHAR,
 } from '@/help/formValidationHelp'
-import {Message} from "@/config/index"
-import {MnemonicPassPhrase} from 'nem2-hd-wallets'
-import {Component, Vue} from 'vue-property-decorator'
-import {createMnemonic} from "@/help/mnemonicHelp";
 @Component
 export class WalletCreateTs extends Vue {
     formItem = {
@@ -19,7 +19,10 @@ export class WalletCreateTs extends Vue {
         password: '',
         checkPW: '',
     }
-
+    passwordValidator = passwordValidator
+    MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
+    MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
+    ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
     netType = [
         {
             value: NetworkType.MIJIN_TEST,
@@ -35,11 +38,6 @@ export class WalletCreateTs extends Vue {
             label: 'MIJIN'
         },
     ]
-
-    passwordValidator = passwordValidator
-    MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
-    MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
-    ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
 
     checkInput() {
         if (!this.formItem.currentNetType || this.formItem.currentNetType == '') {

@@ -78,8 +78,6 @@ export class InputLockTs extends Vue {
     }
 
     created() {
-        // TODO SPLIT DATA
-        console.log(this)
         this.$store.state.app.isInLoginPage = true
         this.lockPromptText = JSON.parse(localRead('lock')).remindTxt
 

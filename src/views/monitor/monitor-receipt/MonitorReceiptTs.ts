@@ -1,5 +1,6 @@
 import {Message} from "@/config/index"
-import {createQRCode, copyTxt} from '@/help/help.ts'
+import {QRCodeGenerator} from 'nem2-qr-library'
+import {copyTxt} from '@/help/help.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 
@@ -77,7 +78,6 @@ export class MonitorReceiptTs extends Vue {
             return
         }
 
-        const that = this
         this.isShowDialog = false
         const QRCodeData = {
             type: 1002,
@@ -87,14 +87,11 @@ export class MonitorReceiptTs extends Vue {
             amountId: '321d45sa4das4d5ad',
             reason: '5454564d54as5d4a56d'
         }
-        const codeObj = createQRCode(JSON.stringify(QRCodeData))
-        codeObj.then((codeObj:any) => {
-            if (codeObj.created) {
-                this.QRCode = codeObj.url
-                return
-            }
-            that.$Notice.error({title: this.$t(Message.QR_GENERATION_ERROR) + ''})
-        })
+        const {networkType} = this.getWallet
+        const {generationHash} = this.$store.state.account
+        this.QRCode = QRCodeGenerator
+            .createExportObject(QRCodeData, networkType, generationHash)
+            .toBase64()
     }
 
     downloadQR() {
@@ -145,9 +142,12 @@ export class MonitorReceiptTs extends Vue {
     }
 
     createQRCode() {
-        createQRCode(this.accountPublicKey).then((data:{url}) => {
-            this.QRCode = data.url
-        })
+        const QRCodeData = {publickKey: this.accountPublicKey}
+        const {networkType} = this.getWallet
+        const {generationHash} = this.$store.state.account
+        this.QRCode = QRCodeGenerator
+            .createExportObject(QRCodeData, networkType, generationHash)
+            .toBase64()
     }
 
     @Watch('getWallet')

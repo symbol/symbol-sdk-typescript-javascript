@@ -1,4 +1,5 @@
-import {createQRCode} from '@/help/help'
+import {Crypto} from 'nem2-sdk'
+import {QRCodeGenerator} from 'nem2-qr-library'
 import {walletInterface} from "@/interface/sdkWallet"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {decryptKey} from "@/help/appHelp";
@@ -35,7 +36,7 @@ export class PrivatekeyDialogTs extends Vue {
         switch (this.stepIndex) {
             case 0 :
                 if (!this.checkInput()) return
-                const DeTxt =decryptKey(this.getWallet, this.wallet.password)
+                const DeTxt = decryptKey(this.getWallet, this.wallet.password)
                 walletInterface.getWallet({
                     name: this.getWallet.name,
                     networkType: this.getWallet.networkType,
@@ -80,9 +81,12 @@ export class PrivatekeyDialogTs extends Vue {
     }
 
     createQRCode() {
-        createQRCode(this.wallet.privatekey).then((data:{url}) => {
-            this.QRCode = data.url
-        })
+        const {networkType} = this.getWallet
+        const {generationHash} = this.$store.state.account
+        const object = {privateKey: this.wallet.privatekey}
+        this.QRCode = QRCodeGenerator
+            .createExportObject(object, networkType, generationHash)
+            .toBase64()
     }
 
     @Watch('showPrivatekeyDialog')

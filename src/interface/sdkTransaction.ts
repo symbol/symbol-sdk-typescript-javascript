@@ -17,6 +17,7 @@ import {
 } from 'nem2-sdk'
 import {SdkV0} from "./sdkDefine";
 import {filter, mergeMap} from "rxjs/operators";
+import Vue from '../main'
 
 export const transactionInterface: SdkV0.transaction = {
 
@@ -215,10 +216,11 @@ export const transactionInterface: SdkV0.transaction = {
         const {aggregateTransaction, account, listener, node, generationHash, networkType, fee} = params
         const transactionHttp = new TransactionHttp(node);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
+        const mosaicHex = Vue.$store.state.account.currentXEM1
         const hashLockTransaction = HashLockTransaction.create(
             Deadline.create(),
             // todo repalce mosaic id
-            new Mosaic(new MosaicId([853116887, 2007078553]), UInt64.fromUint(10000000)),
+            new Mosaic(new MosaicId(mosaicHex), UInt64.fromUint(10000000)),
             UInt64.fromUint(480),
             signedTransaction,
             networkType,
