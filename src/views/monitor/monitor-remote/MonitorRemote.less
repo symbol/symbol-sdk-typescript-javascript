@@ -1,6 +1,16 @@
 .remote_board_container {
   height: calc(100% - 70px);
 
+  .ivu-switch {
+    margin-left: 20px;
+
+  }
+
+  .ivu-switch-checked {
+    border-color: #20B5AC;
+    background-color: #20B5AC;
+  }
+
   .top_network_info {
     margin: 15px 0;
     height: 380px;
@@ -17,7 +27,13 @@
     }
 
     .top_class_div {
-      margin-top: 21px
+      margin-top: 21px;
+      width: 1000px;
+    }
+
+    .remote_public_key {
+      display: inline-block;
+      min-width: 80px;
     }
 
     .question_class {
@@ -81,6 +97,8 @@
       color: rgba(153, 153, 153, 1);
       line-height: 16px;
       padding-left: 30px;
+      position: relative;
+      top: 50px;
     }
 
     .div_cer {
@@ -241,108 +259,6 @@
 
   }
 
-  .modal {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  .modal-content {
-    width: 27%;
-    height: 58%;
-    max-width: 700px;
-    max-height: 535px;
-    margin: 100px auto;
-    border-radius: 10px;
-    background-color: #fff;
-    overflow: auto;
-
-    .new_modal_div1 {
-      margin-top: 60px;
-      margin-left: 40px;
-    }
-
-    .new_modal_title {
-      width: 120px;
-      height: 42px;
-      font-size: 30px;
-      font-weight: 500;
-      color: rgba(38, 180, 176, 1);
-      line-height: 42px;
-    }
-
-    .new_modal_input {
-      border-color: #EEEEEE;
-      border-style: solid;
-      border-top-width: 0px;
-      border-right-width: 0px;
-      border-bottom-width: 1px;
-      border-left-width: 0px;
-      outline: none;
-      width: 410px;
-      font-size: 16px;
-    }
-
-    .new_modal_div3 {
-      margin-left: 55px;
-      margin-top: 19px;
-    }
-
-    .new_modal_div4 {
-      margin-top: 20px;
-      margin-left: 55px;
-    }
-
-    .modal_btn {
-      font-size: 20px;
-      color: white;
-      line-height: 44px;
-      text-align: center;
-      margin: 0 26px;
-      display: inline-block;
-      width: 86px;
-      height: 44px;
-      background-color: #26B4B0;
-    }
-
-    .modal_btn_cancel {
-      font-size: 20px;
-      color: #989898;
-      line-height: 44px;
-      text-align: center;
-      margin: 0 26px;
-      display: inline-block;
-      width: 86px;
-      height: 44px;
-      background-color: #EEEEEE;
-    }
-
-    .new_model_btn {
-      margin-right: 35px;
-      margin-top: 50px;
-      float: right;
-
-    }
-
-    .new_modal_span1 {
-      width: 80px;
-      height: 28px;
-      font-size: 20px;
-      font-weight: 400;
-      color: rgba(153, 153, 153, 1);
-      line-height: 28px;
-    }
-
-    .new_modal_div2 {
-      margin-top: 47px;
-      margin-left: 55px;
-    }
-
-  }
 
   .remote_dialog {
     width: 300px;
@@ -369,4 +285,53 @@
     margin-left: 35px;
 
   }
+
+  .ivu-modal-body {
+    margin-top: 50px;
+  }
+
+  .gray_input_content {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+
+    .title {
+      display: inline-block;
+      width: 100px;
+      text-align: left;
+    }
+
+    input {
+      width: 600px;
+      height: 45px;
+      border: 1px solid rgba(204, 204, 204, 1);
+      border-radius: 4px;
+      padding-left: 20px;
+      font-size: 14px;
+    }
+
+    input::placeholder {
+      color: #999;
+    }
+  }
+}
+
+.new_model_btn {
+  display: flex;
+  justify-content: center;
+}
+
+.modal_btn {
+  display: inline-block;
+  text-align: center;
+  line-height: 50px;
+  width: 160px;
+  height: 50px;
+  background: rgba(32, 181, 172, 1);
+  border-radius: 25px;
+  color: white;
+  font-size: 16px;
+  margin-right: 100px;
+  margin-top: 100px;
+
 }

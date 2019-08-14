@@ -30,7 +30,7 @@ export class MenuBarTs extends Vue {
             value: 'http://13.114.200.132:3000',
             name: 'jp-5',
             url: '13.114.200.132',
-            isSelected: true,
+            isSelected: false,
         }, {
             value: 'http://47.107.245.217:3000',
             name: 'cn-2',

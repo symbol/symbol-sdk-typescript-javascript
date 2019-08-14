@@ -596,8 +596,25 @@ export const en_US = {
     clear_cache: 'Clear cache',
     We_will_clear_your_cache_reset_account_password_please_make_sure_your_wallet_is_safely_backed_up: 'We will clear your cache reset account password, please make sure your wallet is safely backed up',
     confirm_infomation: 'Confirm infomation',
-    please_input_new_account_name:'Please input new account name',
-    Locking_passwords_as_a_form_of_program_protection:'Locking passwords as a form of program protection verification.Once forgotten, there will be no recovery. Please remember your Lock password.',
-    delete_wallet_tip:'After changing the wallet, the wallet data will be deleted. Make sure the wallet is backed up. If you do not properly back up, you will not be able to retrieve your wallet after deleting your wallet. Please handle this operation carefully. Also, in order to ensure that I am operating, please enter the wallet password.',
-    delete_wallet:'Delete wallet'
+    please_input_new_account_name: 'Please input new account name',
+    Locking_passwords_as_a_form_of_program_protection: 'Locking passwords as a form of program protection verification.Once forgotten, there will be no recovery. Please remember your Lock password.',
+    delete_wallet_tip: 'After changing the wallet, the wallet data will be deleted. Make sure the wallet is backed up. If you do not properly back up, you will not be able to retrieve your wallet after deleting your wallet. Please handle this operation carefully. Also, in order to ensure that I am operating, please enter the wallet password.',
+    delete_wallet: 'Delete wallet',
+
+
+    regist_namespace: 'Regist namespace',
+    address_alias: 'Address alias',
+    mosaic_alias: 'Mosaic alias',
+    mosaic_definition: 'Mosaic definition',
+    mosaic_supply_change: 'Mosaic supply',
+    modify_multisig_account: 'Modify multisig',
+    aggregate_complete: 'Complete',
+    aggregate_bonded: 'Bonded',
+    lock: 'Lock',
+    secret_lock: 'Secret lock',
+    scret_proof: 'Scret proof',
+    modify_account_property_address: 'Address filter',
+    modify_account_property_mosaic: 'Mosaic filter',
+    modify_account_property_entity_type: 'Entity filter',
+    link_account: 'Link account'
 }

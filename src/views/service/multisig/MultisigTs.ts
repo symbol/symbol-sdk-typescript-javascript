@@ -16,15 +16,15 @@ export class MultisigTs extends Vue {
 
     buttonList = [
         {
-            name: 'map',
-            isSelected: true
-        }, {
             name: 'convert',
             isSelected: false
         }, {
             name: 'manage',
             isSelected: false
-        },
+        }, {
+            name: 'map',
+            isSelected: true
+        }
     ]
 
     switchButton(index) {

@@ -6,13 +6,13 @@
             :transfer="false"
             class-name="dash_board_dialog">
       <div class="transfer_type">
-        <span class="title">{{$t(transactionDetails[0].key)}}</span>
-        <span class="value">{{$t(transactionDetails[0].value)}}</span>
+        <span class="title">{{$t('transfer_type')}}</span>
+        <span class="value">{{$t(transactionDetails.transfer_type)}}</span>
       </div>
       <div>
-        <div v-if="index !== 0" v-for="(t,index) in transactionDetails" class="other_info">
-          <span class="title">{{$t(t.key)}}</span>
-          <span class="value">{{t.value}}</span>
+        <div v-if="key !=='transfer_type'" v-for="(value,key,index) in transactionDetails" class="other_info">
+          <span class="title">{{$t(key)}}</span>
+          <span class="value">{{value}}</span>
         </div>
       </div>
     </Modal>
@@ -73,12 +73,12 @@
                    src="@/common/img/monitor/dash-board/dashboardMosaicOut.png" alt="">
               <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
                    alt="">
-              <span class="account">{{c.oppositeAddress}}</span>
-              <span class="transfer_type">{{c.isReceipt ? $t('gathering'):$t('payment')}}</span>
-              <span class="mosaicId">{{c.mosaic?c.mosaic.id.toHex().toUpperCase():null}}</span>
-              <span class="amount" v-if="c.mosaic">{{c.isReceipt ? '+':'-'}}{{c.mosaic.amount.compact()}}</span>
-              <span v-else class="amount"> 0</span>
-              <span class="date">{{c.time}}</span>
+              <span class="account overflow_ellipsis">{{c.infoFirst}}</span>
+              <span class="transfer_type overflow_ellipsis">{{$t(c.tag)}}</span>
+              <span class="mosaicId overflow_ellipsis">{{c.infoSecond?c.infoSecond:null}}</span>
+              <span class="amount overflow_ellipsis" v-if="c.infoThird">{{c.infoThird}}</span>
+              <span v-else class="amount overflow_ellipsis"> 0</span>
+              <span class="date overflow_ellipsis">{{c.time}}</span>
               <img src="@/common/img/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">
             </div>
@@ -93,14 +93,16 @@
           <div class="table_body hide_scroll" ref="unconfirmedTableBody">
             <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in unconfirmedTransactionList"
                  :key="index">
-              <img class="mosaic_action" v-if="u.isReceipt"
+              <img class="mosaic_action" v-if="!u.isReceipt"
                    src="@/common/img/monitor/dash-board/dashboardMosaicOut.png" alt="">
               <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
                    alt="">
-              <span class="account">{{u.oppositeAddress}}</span>
-              <span class="transfer_type">{{u.isReceipt ? $t('gathering'):$t('payment')}}</span>
-              <span class="amount">{{u.isReceipt ? '+':'-'}}{{u.mosaic.amount.compact()}}</span>
-              <span class="date">{{u.time}}</span>
+              <span class="account overflow_ellipsis">{{u.infoFirst}}</span>
+              <span class="transfer_type overflow_ellipsis">{{$t(u.tag)}}</span>
+              <span class="mosaicId overflow_ellipsis">{{u.infoSecond?u.infoSecond:null}}</span>
+              <span class="amount overflow_ellipsis" v-if="u.infoThird">{{u.infoThird}}</span>
+              <span v-else class="amount overflow_ellipsis"> 0</span>
+              <span class="date overflow_ellipsis">{{u.time}}</span>
               <img src="@/common/img/monitor/dash-board/dashboardExpand.png"
                    class="radius expand_mosaic_info">
             </div>

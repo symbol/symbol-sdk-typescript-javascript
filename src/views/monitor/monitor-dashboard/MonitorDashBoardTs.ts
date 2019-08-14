@@ -6,6 +6,7 @@ import {blockchainInterface} from '@/interface/sdkBlockchain'
 import LineChart from '@/common/vue/line-chart/LineChart.vue'
 import {transactionInterface} from '@/interface/sdkTransaction'
 import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
+import {transactionFormat} from '@/help/transactionFomatHelp'
 import {isRefreshData, localSave, localRead, formatTransactions} from '@/help/help.ts'
 import dashboardBlockTime from '@/common/img/monitor/dash-board/dashboardBlockTime.png'
 import dashboardPublickey from '@/common/img/monitor/dash-board/dashboardPublickey.png'
@@ -68,40 +69,7 @@ export class MonitorDashBoardTs extends Vue {
             variable: 'signerPublicKey'
         }
     ]
-    transactionDetails = [
-        {
-            key: 'transfer_type',
-            value: 'gathering'
-        },
-        {
-            key: 'from',
-            value: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
-        },
-        {
-            key: 'aims',
-            value: 'Test wallet'
-        },
-        {
-            key: 'the_amount',
-            value: '10.000000XEM'
-        },
-        {
-            key: 'fee',
-            value: '0.050000000XEM'
-        },
-        {
-            key: 'block',
-            value: '1951249'
-        },
-        {
-            key: 'hash',
-            value: '9BBCAECDD5E2D04317DE9873DC99255A9F8A33FA5BB570D1353F65CB31A44151'
-        },
-        {
-            key: 'message',
-            value: 'message test this'
-        }
-    ]
+    transactionDetails = {}
 
 
     get getWallet() {
@@ -114,44 +82,8 @@ export class MonitorDashBoardTs extends Vue {
 
     showDialog(transaction) {
         this.isShowDialog = true
-        this.transactionDetails = [
-            {
-                key: 'transfer_type',
-                value: transaction.isReceipt ? 'gathering' : 'payment'
-            },
-            {
-                key: 'from',
-                value: transaction.signerAddress
-            },
-            {
-                key: 'aims',
-                value: transaction.recipientAddress
-            },
-            {
-                key: 'mosaic',
-                value: transaction.mosaic ? transaction.mosaic.id.toHex().toUpperCase() : null
-            },
-            {
-                key: 'the_amount',
-                value: transaction.mosaic ? transaction.mosaic.amount.compact() : 0
-            },
-            {
-                key: 'fee',
-                value: transaction.maxFee.compact()
-            },
-            {
-                key: 'block',
-                value: transaction.transactionInfo.height.compact()
-            },
-            {
-                key: 'hash',
-                value: transaction.transactionInfo.hash
-            },
-            {
-                key: 'message',
-                value: transaction.message.payload
-            }
-        ]
+        console.log(transaction.dialogDetailMap)
+        this.transactionDetails = transaction.dialogDetailMap
     }
 
 
@@ -219,7 +151,8 @@ export class MonitorDashBoardTs extends Vue {
             }
         }).then((transactionsResult) => {
             transactionsResult.result.transactions.subscribe((transactionsInfo) => {
-                let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
+                let transferTransaction = transactionFormat(transactionsInfo, accountAddress)
+                // let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
                 that.changeCurrentTransactionList(transferTransaction.slice(0, 10))
                 that.confirmedDataAmount = transferTransaction.length
                 that.currentDataAmount = transferTransaction.length
