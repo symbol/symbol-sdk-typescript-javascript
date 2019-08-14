@@ -132,8 +132,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const signedTransaction = operationRestrictionTransaction.signWith(account, generationHash);
 
-        const transaction = TransactionMapping
-            .createFromPayload(signedTransaction.payload) as AccountAddressRestrictionModificationTransaction;
+        const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AccountAddressRestrictionTransaction;
         expect(transaction.restrictionType).to.be.equal(RestrictionType.AllowTransaction);
         expect(transaction.modifications[0].value).to.be.equal(operation);
         expect(transaction.modifications[0].modificationType).to.be.equal(RestrictionModificationType.Add);
