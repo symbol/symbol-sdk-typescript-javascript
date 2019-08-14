@@ -13,7 +13,7 @@
     </div>
 
     <div @click="showIndexView" class="getStart pointer">
-      GET START
+      GET STARTED
     </div>
   </div>
 </template>

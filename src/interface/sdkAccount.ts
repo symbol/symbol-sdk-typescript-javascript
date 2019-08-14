@@ -1,5 +1,7 @@
 import {SdkV0} from "./sdkDefine";
 import {AccountHttp, Address, EncryptedMessage} from 'nem2-sdk'
+import {WebClient} from "@/help/webHelp"
+import {AppConfig} from "@/config";
 
 export const accountInterface: SdkV0.account = {
     getAccountsNames: async (params) => {
@@ -85,5 +87,34 @@ export const accountInterface: SdkV0.account = {
                 decryptMessage: decryptMessage
             }
         }
+    },
+
+    getLinkedPublickey: async (params) => {
+        const {node, address} = params
+        const url = `${node}/account/${address}`
+        const resStr: any = await WebClient.request('', {
+            url: url,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+
+        if (JSON.parse(resStr) && JSON.parse(resStr).account && JSON.parse(resStr).account.linkedAccountKey) {
+            let linkedPublicKey = JSON.parse(resStr).account.linkedAccountKey
+            linkedPublicKey = Buffer.from(linkedPublicKey, 'base64').toString('hex').toUpperCase()
+            return {
+                result: {
+                    linkedPublicKey: linkedPublicKey
+                }
+            }
+        }
+
+        return {
+            result: {
+                linkedPublicKey: ''
+            }
+        }
+
     }
 }
