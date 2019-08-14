@@ -14,18 +14,20 @@
           <FormItem :label="$t('set_the_wallet_name')">
             <p class="formItemTxt">
               {{$t('The_name_of_the_wallet_can_be_convenient_for_you_to_use_you_can_distinguish_different_wallets_etc_for_better_management_after_entering_the_system_you_can_also_modify_the_wallet_details')}}</p>
-            <Input v-model="formItem.walletName" required
-                   :placeholder="$t('Please_enter_the_name_of_the_wallet')"></Input>
+            <Input v-model="formItem.walletName"
+                   :placeholder="$t('Please_enter_the_name_of_the_wallet')" />
           </FormItem>
           <FormItem :label="$t('set_password')">
             <p class="formItemTxt">
-              {{$t('This_is_very_important_to_encrypt_your_private_key_Your_private_key_will_be_encrypted_and_stored_on_your_local_computer_Be_sure_to_back_up_your_private_key_separately_so_that_you_can_recover_it_if_you_forget_it_The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_which_is_beneficial_to_the_security_of_your_private_key')}}</p>
+              {{$t('This_password_is_used_to_encrypt_your_private_key')}}</p>
+              <p class="formItemTxt">
+              {{$t('password_hint', {min: MIN_PASSWORD_LENGTH, max: MAX_PASSWORD_LENGTH, specialChar: ALLOWED_SPECIAL_CHAR})}}</p>
             <Input v-model="formItem.password" type="password" required
-                   :placeholder="$t('please_set_your_wallet_password')"></Input>
+                   :placeholder="$t('please_set_your_wallet_password')" />
           </FormItem>
           <FormItem :label="$t('repeat_the_password')">
             <Input v-model="formItem.checkPW" type="password" required
-                   :placeholder="$t('please_enter_your_password_again')"></Input>
+                   :placeholder="$t('please_enter_your_password_again')" />
           </FormItem>
           <FormItem>
             <div class="clear">

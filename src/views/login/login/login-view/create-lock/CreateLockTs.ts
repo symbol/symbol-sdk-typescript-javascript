@@ -1,5 +1,11 @@
 import {Message} from "@/config/index"
 import {Crypto, UInt64} from 'nem2-sdk'
+import {
+    passwordValidator,
+    MIN_PASSWORD_LENGTH,
+    MAX_PASSWORD_LENGTH,
+    ALLOWED_SPECIAL_CHAR,
+} from '@/help/formValidationHelp'
 import {localSave} from '@/help/help.ts'
 import {Component, Vue} from 'vue-property-decorator'
 
@@ -11,9 +17,13 @@ export class CreateLockTs extends Vue {
         remindTxt: ''
     }
 
-    checkInput() {
+    passwordValidator = passwordValidator
+    MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
+    MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
+    ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
 
-        if (!this.lockPW.password || this.lockPW.password === '') {
+    checkInput() {
+        if (!this.lockPW.password || !passwordValidator(this.lockPW.password)) {
             this.$Notice.error({
                 title: this.$t(Message.PASSWORD_CREATE_ERROR) + ''
             });
