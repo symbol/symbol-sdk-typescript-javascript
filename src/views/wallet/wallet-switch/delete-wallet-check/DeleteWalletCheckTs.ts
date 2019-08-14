@@ -11,6 +11,10 @@ export class DeleteWalletCheckTs extends Vue {
         password: ''
     }
 
+    @Prop({default: ''})
+    transactionDetail: any
+
+
     @Prop()
     showCheckPWDialog: boolean
 
