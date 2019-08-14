@@ -1,7 +1,7 @@
-import {Crypto} from 'nem2-sdk'
 import {createQRCode} from '@/help/help'
 import {walletInterface} from "@/interface/sdkWallet"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {decryptKey} from "@/help/appHelp";
 
 @Component
 export class PrivatekeyDialogTs extends Vue {
@@ -35,12 +35,7 @@ export class PrivatekeyDialogTs extends Vue {
         switch (this.stepIndex) {
             case 0 :
                 if (!this.checkInput()) return
-                let saveData = {
-                    ciphertext: this.getWallet.ciphertext,
-                    iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-                    key: this.wallet.password
-                }
-                const DeTxt = Crypto.decrypt(saveData)
+                const DeTxt =decryptKey(this.getWallet, this.wallet.password)
                 walletInterface.getWallet({
                     name: this.getWallet.name,
                     networkType: this.getWallet.networkType,

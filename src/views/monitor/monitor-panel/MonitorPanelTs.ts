@@ -9,6 +9,7 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import monitorSeleted from '@/common/img/monitor/monitorSeleted.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
 import {copyTxt, localSave, localRead, formatXEMamount} from '@/help/help.ts'
+import {getNamespaces, setWalletMosaic} from "@/help/appHelp";
 
 @Component
 export class MonitorPanelTs extends Vue {
@@ -129,57 +130,18 @@ export class MonitorPanelTs extends Vue {
 
     getXEMAmount() {
         const that = this
-        const {accountAddress, node} = this
-        accountInterface.getAccountInfo({
-            node,
-            address: accountAddress
-        }).then((accountResult: any) => {
-            accountResult.result.accountInfo.subscribe((accountInfo) => {
-                const mosaicList = accountInfo.mosaics
-                mosaicList.map((item) => {
-                    if (item.id.toHex() == that.currentXEM2 || item.id.toHex() == that.currentXEM1) {
-                        that.XEMamount = item.amount.compact() / 1000000
-                    }
-                })
-            }, () => {
-                that.XEMamount = 0
-            })
-        })
+        const {node, currentXEM1, currentXEM2} = this
+        setWalletMosaic(this.getWallet, node, currentXEM1, currentXEM2)
+            .then((wallet)=>{
+                that.XEMamount = wallet.balance
+    })
     }
 
-    async getMyNamespaces() {
-        await aliasInterface.getNamespacesFromAccount({
-            address: Address.createFromRawAddress(this.getWallet.address),
-            url: this.node
-        }).then((namespacesFromAccount) => {
-            let list = []
-            let namespace = {}
-            namespacesFromAccount.result.namespaceList
-                .sort((a, b) => {
-                    return a['namespaceInfo']['depth'] - b['namespaceInfo']['depth']
-                }).map((item, index) => {
-                if (!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())) {
-                    namespace[item.namespaceInfo.id.toHex()] = item.namespaceName
-                } else {
-                    return
-                }
-                let namespaceName = ''
-                item.namespaceInfo.levels.map((item, index) => {
-                    namespaceName += namespace[item.id.toHex()] + '.'
-                })
-                namespaceName = namespaceName.slice(0, namespaceName.length - 1)
-                const newObj = {
-                    value: namespaceName,
-                    label: namespaceName,
-                    alias: item.namespaceInfo.alias,
-                    levels: item.namespaceInfo.levels.length,
-                    name: namespaceName,
-                    duration: item.namespaceInfo.endHeight.compact(),
-                }
-                list.push(newObj)
+    getMyNamespaces() {
+        getNamespaces(this.getWallet.address, this.node)
+            .then((list)=>{
+                this.$store.commit('SET_NAMESPACE', list)
             })
-            this.$store.commit('SET_NAMESPACE', list)
-        })
     }
 
     showMosaicMap() {
@@ -209,7 +171,11 @@ export class MonitorPanelTs extends Vue {
             addressList: [Address.createFromRawAddress(accountAddress)]
         }).then((namespaceResult) => {
             namespaceResult.result.namespaceList.subscribe((namespaceInfo) => {
-                that.isShowAccountAlias = false
+                if(namespaceInfo[0].names.length > 0){
+                    that.isShowAccountAlias = true
+                }else {
+                    that.isShowAccountAlias = false
+                }
             }, () => {
                 that.isShowAccountAlias = false
             })

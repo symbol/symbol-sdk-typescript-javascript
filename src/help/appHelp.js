@@ -64,6 +64,8 @@ export var getAccountDefault = function (name, account, netType, node, currentXE
                                         password: Wallet.result.password,
                                         balance: 0
                                     };
+                                    if (!node)
+                                        return [2 /*return*/, storeWallet];
                                     return [4 /*yield*/, setWalletMosaic(storeWallet, node, currentXEM1, currentXEM2).then(function (data) {
                                             storeWallet = data;
                                         })];
@@ -86,7 +88,6 @@ export var getAccountDefault = function (name, account, netType, node, currentXE
 }); };
 export var setWalletMosaic = function (storeWallet, node, currentXEM1, currentXEM2) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
     var wallet;
-    var _this = this;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -94,28 +95,21 @@ export var setWalletMosaic = function (storeWallet, node, currentXEM1, currentXE
                 return [4 /*yield*/, accountInterface.getAccountInfo({
                         node: node,
                         address: wallet.address
-                    }).then(function (accountInfoResult) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                        return tslib_1.__generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, accountInfoResult.result.accountInfo.subscribe(function (accountInfo) {
-                                        var mosaicList = accountInfo.mosaics;
-                                        mosaicList.map(function (item) {
-                                            item.hex = item.id.toHex();
-                                            if (item.id.toHex() == currentXEM2 || item.id.toHex() == currentXEM1) {
-                                                wallet.balance = item.amount.compact() / 1000000;
-                                            }
-                                        });
-                                        wallet.mosaics = mosaicList;
-                                    }, function () {
-                                        wallet.balance = 0;
-                                        wallet.mosaics = [];
-                                    })];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
+                    }).then(function (accountInfoResult) {
+                        accountInfoResult.result.accountInfo.subscribe(function (accountInfo) {
+                            var mosaicList = accountInfo.mosaics;
+                            mosaicList.map(function (item) {
+                                item.hex = item.id.toHex();
+                                if (item.id.toHex() == currentXEM2 || item.id.toHex() == currentXEM1) {
+                                    wallet.balance = item.amount.compact() / 1000000;
+                                }
+                            });
+                            wallet.mosaics = mosaicList;
+                        }, function () {
+                            wallet.balance = 0;
+                            wallet.mosaics = [];
                         });
-                    }); })];
+                    })];
             case 1:
                 _a.sent();
                 return [2 /*return*/, wallet];
@@ -147,44 +141,46 @@ export var setMultisigAccount = function (storeWallet, node) { return tslib_1.__
     });
 }); };
 export var getNamespaces = function (address, node) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+    var list, namespace;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, aliasInterface.getNamespacesFromAccount({
-                    address: Address.createFromRawAddress(address),
-                    url: node
-                }).then(function (namespacesFromAccount) {
-                    var list = [];
-                    var namespace = {};
-                    namespacesFromAccount.result.namespaceList
-                        .sort(function (a, b) {
-                        return a['namespaceInfo']['depth'] - b['namespaceInfo']['depth'];
-                    }).map(function (item, index) {
-                        if (!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())) {
-                            namespace[item.namespaceInfo.id.toHex()] = item.namespaceName;
-                        }
-                        else {
-                            return;
-                        }
-                        var namespaceName = '';
-                        item.namespaceInfo.levels.map(function (item, index) {
-                            namespaceName += namespace[item.id.toHex()] + '.';
+            case 0:
+                list = [];
+                namespace = {};
+                return [4 /*yield*/, aliasInterface.getNamespacesFromAccount({
+                        address: Address.createFromRawAddress(address),
+                        url: node
+                    }).then(function (namespacesFromAccount) {
+                        namespacesFromAccount.result.namespaceList
+                            .sort(function (a, b) {
+                            return a['namespaceInfo']['depth'] - b['namespaceInfo']['depth'];
+                        }).map(function (item, index) {
+                            if (!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())) {
+                                namespace[item.namespaceInfo.id.toHex()] = item.namespaceName;
+                            }
+                            else {
+                                return;
+                            }
+                            var namespaceName = '';
+                            item.namespaceInfo.levels.map(function (item, index) {
+                                namespaceName += namespace[item.id.toHex()] + '.';
+                            });
+                            namespaceName = namespaceName.slice(0, namespaceName.length - 1);
+                            console.log(item.namespaceInfo.alias);
+                            var newObj = {
+                                value: namespaceName,
+                                label: namespaceName,
+                                alias: item.namespaceInfo.alias,
+                                levels: item.namespaceInfo.levels.length,
+                                name: namespaceName,
+                                duration: item.namespaceInfo.endHeight.compact(),
+                            };
+                            list.push(newObj);
                         });
-                        namespaceName = namespaceName.slice(0, namespaceName.length - 1);
-                        var newObj = {
-                            value: namespaceName,
-                            label: namespaceName,
-                            alias: item.namespaceInfo.alias,
-                            levels: item.namespaceInfo.levels.length,
-                            name: namespaceName,
-                            duration: item.namespaceInfo.endHeight.compact(),
-                        };
-                        list.push(newObj);
-                    });
-                    return list;
-                })];
+                    })];
             case 1:
                 _a.sent();
-                return [2 /*return*/];
+                return [2 /*return*/, list];
         }
     });
 }); };

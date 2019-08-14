@@ -2,6 +2,8 @@ import {Crypto} from 'nem2-sdk'
 import {hexCharCodeToStr} from '@/help/help'
 import {walletInterface} from "@/interface/sdkWallet"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {decryptKey} from "@/help/appHelp";
+import {randomMnemonicWord} from "@/help/mnemonicHelp";
 
 @Component({
     components: {},
@@ -37,25 +39,15 @@ export class MnemonicDialogTs extends Vue {
         switch (this.stepIndex) {
             case 0 :
                 if (!this.checkInput()) return
-                let saveData = {
-                    ciphertext: this.getWallet.ciphertext,
-                    iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-                    key: this.wallet.password
-                }
-                const DeTxt = Crypto.decrypt(saveData)
+                const DeTxt =decryptKey(this.getWallet, this.wallet.password)
                 walletInterface.getWallet({
                     name: this.getWallet.name,
                     networkType: this.getWallet.networkType,
                     privateKey: DeTxt.length === 64 ? DeTxt : ''
                 }).then(async (Wallet: any) => {
-                    let mnemonicData = {
-                        ciphertext: this.getWallet['mnemonicEnCodeObj'].ciphertext,
-                        iv: this.getWallet['mnemonicEnCodeObj'].iv.data ? this.getWallet['mnemonicEnCodeObj'].iv.data : this.getWallet['mnemonicEnCodeObj'].iv,
-                        key: this.wallet.password
-                    }
-                    const DeMnemonic = Crypto.decrypt(mnemonicData)
+                    const DeMnemonic =decryptKey(this.getWallet['mnemonicEnCodeObj'], this.wallet.password)
                     this.mnemonic = hexCharCodeToStr(DeMnemonic)
-                    this.mnemonicRandom()
+                    this.mnemonicRandomArr = randomMnemonicWord(this.mnemonic.split(' '))
                     this.stepIndex = 1
                     this.wallet.password = ''
                 }).catch(() => {
@@ -92,31 +84,6 @@ export class MnemonicDialogTs extends Vue {
 
     toPrePage() {
         this.stepIndex = this.stepIndex - 1
-    }
-
-    checkRandomArr(arr, mnemonic) {
-        const randomNum = this.randomNum(mnemonic)
-        if (arr.includes(randomNum)) {
-            return this.checkRandomArr(arr, mnemonic)
-        } else {
-            return randomNum
-        }
-    }
-
-    randomNum(mnemonic) {
-        return Math.floor(Math.random() * (mnemonic.length))
-    }
-
-    mnemonicRandom() {
-        const mnemonic = this.mnemonic.split(' ');
-        let numberArr = [];
-        let randomWord = [];
-        for (let i = 0; i < mnemonic.length; i++) {
-            const randomNum = this.checkRandomArr(numberArr, mnemonic)
-            numberArr.push(randomNum)
-            randomWord.push(mnemonic[randomNum])
-        }
-        this.mnemonicRandomArr = randomWord
     }
 
     sureWord(index) {

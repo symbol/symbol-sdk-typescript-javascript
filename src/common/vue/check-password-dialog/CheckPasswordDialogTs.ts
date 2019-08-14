@@ -2,6 +2,7 @@ import {Crypto} from 'nem2-sdk'
 import {Message} from "@/config/index"
 import {walletInterface} from "@/interface/sdkWallet"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {decryptKey} from "@/help/appHelp";
 
 @Component
 export class CheckPasswordDialogTs extends Vue {
@@ -26,12 +27,7 @@ export class CheckPasswordDialogTs extends Vue {
     }
 
     checkPassword() {
-        let saveData = {
-            ciphertext: this.getWallet.ciphertext,
-            iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-            key: this.wallet.password
-        }
-        const DeTxt = Crypto.decrypt(saveData)
+        const DeTxt = decryptKey(this.getWallet, this.wallet.password)
         walletInterface.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,

@@ -4,7 +4,7 @@ node_modules
 /tests
 .git
 .idea
-.map
+*.js.map
 /www
 src/**/*.map
 src/**/*.js

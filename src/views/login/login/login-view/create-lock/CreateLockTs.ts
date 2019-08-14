@@ -1,5 +1,5 @@
 import {Message} from "@/config/index"
-import {Crypto, UInt64} from 'nem2-sdk'
+import {UInt64} from 'nem2-sdk'
 import {
     passwordValidator,
     MIN_PASSWORD_LENGTH,
@@ -8,6 +8,7 @@ import {
 } from '@/help/formValidationHelp'
 import {localSave} from '@/help/help.ts'
 import {Component, Vue} from 'vue-property-decorator'
+import {encryptKey} from "@/help/appHelp";
 
 @Component
 export class CreateLockTs extends Vue {
@@ -45,10 +46,9 @@ export class CreateLockTs extends Vue {
     }
 
     showIndexView() {
-
         const u = [50, 50]
         if (!this.checkInput()) return
-        const encryptObj = Crypto.encrypt(new UInt64(u).toHex(), this.lockPW.password)
+        const encryptObj = encryptKey(new UInt64(u).toHex(), this.lockPW.password)
         let saveData = {
             ciphertext: encryptObj.ciphertext,
             iv: encryptObj.iv,
@@ -61,20 +61,4 @@ export class CreateLockTs extends Vue {
     hideIndexView() {
         this.$emit('showIndexView', 0)
     }
-
-    // jumpToOtherPage(path) {
-    //     if (path === '/walletPanel') {
-    //         const u = [50, 50]
-    //         if (!this.checkInput()) return
-    //         const encryptObj = Crypto.encrypt(new UInt64(u).toHex(), this.lockPW.password)
-    //         let saveData = {
-    //             ciphertext: encryptObj.ciphertext,
-    //             iv: encryptObj.iv,
-    //         }
-    //         localSave('lock', JSON.stringify(saveData))
-    //     }
-    //     this.$router.push({
-    //         path: path
-    //     })
-    // }
 }

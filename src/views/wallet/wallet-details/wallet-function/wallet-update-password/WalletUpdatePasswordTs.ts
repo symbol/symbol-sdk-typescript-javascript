@@ -1,8 +1,7 @@
-import {Crypto} from 'nem2-sdk'
 import {Message} from "@/config/index"
-import {localRead, localSave} from '@/help/help'
 import {Component, Vue} from 'vue-property-decorator'
 import {walletInterface} from "@/interface/sdkWallet"
+import {decryptKey, encryptKey, saveLocalWallet} from "@/help/appHelp";
 
 @Component
 export  class WalletUpdatePasswordTs extends Vue {
@@ -57,10 +56,10 @@ export  class WalletUpdatePasswordTs extends Vue {
         if (!this.btnState || !this.checkInfo()) {
             return
         }
-        this.decryptKey()
+        this.checkPrivateKey(decryptKey(this.getWallet, this.prePassword))
     }
     updatePW () {
-        let encryptObj = this.encryptKey()
+        let encryptObj = encryptKey(this.privateKey, this.newPassword)
         let wallet = this.getWallet
         let walletList = this.$store.state.app.walletList;
         wallet.ciphertext = encryptObj['ciphertext']
@@ -68,24 +67,13 @@ export  class WalletUpdatePasswordTs extends Vue {
         walletList[0] = wallet
         this.$store.commit('SET_WALLET', wallet)
         this.$store.commit('SET_WALLET_LIST', walletList)
-        this.localKey(wallet, encryptObj, wallet.mnemonicEnCodeObj)
+        saveLocalWallet(wallet, encryptObj, null, wallet.mnemonicEnCodeObj)
         this.init()
         this.$Notice.success({
             title: this.$t(Message.SUCCESS) + ''
         })
     }
 
-    encryptKey () {
-        return Crypto.encrypt(this.privateKey, this.newPassword)
-    }
-    decryptKey () {
-        let encryptObj = {
-            ciphertext: this.getWallet.ciphertext,
-            iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-            key: this.prePassword
-        }
-        this.checkPrivateKey(Crypto.decrypt(encryptObj))
-    }
     checkPrivateKey (DeTxt) {
         const that = this
         walletInterface.getWallet({
@@ -101,32 +89,7 @@ export  class WalletUpdatePasswordTs extends Vue {
             })
         })
     }
-    localKey(wallet, keyObj, mnemonicEnCodeObj) {
-        let localData: any[] = []
-        let isExist: boolean = false
-        try {
-            localData = JSON.parse(localRead('wallets'))
-        } catch (e) {
-            localData = []
-        }
-        let saveData = {
-            name: wallet.name,
-            ciphertext: keyObj.ciphertext,
-            iv: keyObj.iv,
-            networkType: wallet.networkType,
-            address: wallet.address,
-            publicKey: wallet.publicKey,
-            mnemonicEnCodeObj: mnemonicEnCodeObj
-        }
-        for (let i in localData) {
-            if (localData[i].address === wallet.address) {
-                localData[i] = saveData
-                isExist = true
-            }
-        }
-        if (!isExist) localData.unshift(saveData)
-        localSave('wallets', JSON.stringify(localData))
-    }
+
     init(){
         this.prePassword = ''
         this.newPassword = ''

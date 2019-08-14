@@ -2,7 +2,8 @@ import {Message} from "@/config"
 import {walletInterface} from "@/interface/sdkWallet"
 import {Component, Vue} from 'vue-property-decorator'
 import {transactionInterface} from '@/interface/sdkTransaction'
-import {AccountLinkTransaction, Crypto, UInt64, LinkAction, NetworkType, Deadline, Account} from "nem2-sdk"
+import {AccountLinkTransaction, UInt64, LinkAction, NetworkType, Deadline, Account} from "nem2-sdk"
+import {decryptKey} from "@/help/appHelp";
 
 
 @Component
@@ -81,12 +82,7 @@ export class MonitorRemoteTs extends Vue {
     }
 
     decryptKey() {
-        let encryptObj = {
-            ciphertext: this.getWallet.ciphertext,
-            iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-            key: this.formItem.password
-        }
-        this.checkPrivateKey(Crypto.decrypt(encryptObj))
+        this.checkPrivateKey(decryptKey(this.getWallet, this.formItem.password))
     }
 
     checkPrivateKey(DeTxt) {

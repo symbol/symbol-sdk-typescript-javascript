@@ -1,16 +1,24 @@
 <template>
   <div class="aliasTable">
-    <Modal :title="$t('binding_alias')" v-model="isShowDialog" :transfer="true" class="alias_bind_dialog">
+    <Modal :title="aliasListIndex >= 0?$t('unbind'): $t('binding_alias')"
+           v-model="isShowDialog"
+           :transfer="false"
+           @on-cancel="closeModel"
+           class="alias_bind_dialog">
 
       <div class="input_content">
         <div class="title">{{$t('address')}}</div>
-        <div class="input_area"><input type="text" v-model="formItem.address"></div>
+        <div class="input_area">
+          <p v-if="aliasListIndex >= 0" class="unLinkP">{{formItem.address}}</p>
+          <input type="text" v-model="formItem.address" v-else>
+        </div>
       </div>
 
       <div class="input_content">
         <div class="title">{{$t('alias_selection')}}</div>
         <div class="input_area">
-          <i-select :model="formItem.alias" :placeholder="$t('alias_selection')">
+          <p v-if="aliasListIndex >= 0" class="unLinkP">{{formItem.alias}}</p>
+          <i-select v-model="formItem.alias" v-else :placeholder="$t('alias_selection')">
             <i-option v-for="(item,index) in aliasActionTypeList" :key="index" :value="item.value">
               {{ item.label }}
             </i-option>
@@ -29,13 +37,13 @@
       <div class="input_content">
         <div class="title">{{$t('password')}}</div>
         <div class="input_area">
-          <input type="password" v-model="formItem.password" :placeholder="$t('please_enter_your_wallet_password')">
+          <input type="password" v-model="formItem.password"  @input="showBtn" :placeholder="$t('please_enter_your_wallet_password')">
         </div>
       </div>
 
       <div class="button_content">
-        <span class="cancel pointer" @click="isShowDialog=false">{{$t('canel')}}</span>
-        <span class="cancel un_click" @click="isShowDialog=true">{{$t('bind')}}</span>
+        <span class="cancel pointer" @click="closeModel">{{$t('canel')}}</span>
+        <span :class="['cancel', btnState?'checkBtn':'un_click']" @click="checkAliasForm()">{{aliasListIndex >= 0?$t('unbind'):$t('bind')}}</span>
       </div>
     </Modal>
 
@@ -54,11 +62,14 @@
     <div class="table_body">
       <div class="tableCell" v-for="(item,index) in aliasList" :key="index" v-if="aliasList.length>0">
         <Row>
-          <Col span="4">girme</Col>
-          <Col span="12">TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN</Col>
-          <Col span="5">45{{$t('time_day')}}</Col>
-          <Col span="3"><span v-show="isShowDeleteIcon" class="delete_icon pointer"></span></Col>
-
+          <Col span="4">{{item.name}}</Col>
+          <Col span="12">{{formatAddress(item.alias.address)}}</Col>
+          <Col span="5">{{computeDuration(item.duration) === 'Expired' ? $t('overdue') : computeDuration(item.duration)}}</Col>
+          <Col span="3">
+            <span v-show="isShowDeleteIcon"
+                  @click="showUnLink(index)"
+                  class="delete_icon pointer"></span>
+          </Col>
         </Row>
       </div>
     </div>
@@ -77,6 +88,6 @@
 
     }
 </script>
-<style scoped lang="less">
+<style  lang="less">
   @import "WalletAlias.less";
 </style>

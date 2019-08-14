@@ -114,7 +114,7 @@ export class MosaicListTs extends Vue {
         }).then(async accountInfoResult => {
             await accountInfoResult.result.accountInfo.subscribe(async (accountInfo) => {
                 let mosaicList = accountInfo.mosaics
-                const mosaicIdList = mosaicList.map((item) => {
+                let mosaicIdList = mosaicList.map((item) => {
                     return item.id
                 })
                 await mosaicInterface.getMosaics({
@@ -145,9 +145,12 @@ export class MosaicListTs extends Vue {
                             }
                             mosaicMapInfo[item.hex] = item
                         })
+                        mosaicIdList.map((item)=>{
+                            return new MosaicId(item)
+                        })
                         await mosaicInterface.getMosaicsNames({
                             node,
-                            mosaicIds: [new MosaicId('1674FC62BD449C16')]
+                            mosaicIds: mosaicIdList
                         }).then((mosacListResult: any) => {
                             mosacListResult.result.mosaicsNamesInfos.subscribe((mosaicsName: any) => {
                                 console.log(mosaicsName)

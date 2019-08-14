@@ -10,6 +10,7 @@ import {
 import {Message} from "@/config/index"
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import {Component, Vue} from 'vue-property-decorator'
+import {createMnemonic} from "@/help/mnemonicHelp";
 @Component
 export class WalletCreateTs extends Vue {
     formItem = {
@@ -60,14 +61,9 @@ export class WalletCreateTs extends Vue {
         return true
     }
 
-    createMnemonic() {
-        const mnemonic = MnemonicPassPhrase.createRandom('english', 128);
-        this.$store.commit('SET_MNEMONIC', mnemonic.plain)
-    }
-
     createWallet() {
         if (!this.checkInput()) return
-        this.createMnemonic()
+        this.$store.commit('SET_MNEMONIC', createMnemonic())
         this.$emit('isCreated', this.formItem)
     }
 

@@ -1,9 +1,10 @@
 import {localRead} from '@/help/help'
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import GuideInto from '@/views/login/guide-into/GuideInto.vue'
 import WalletFn from '@/views/wallet/wallet-fn/WalletFn.vue'
 import WalletSwitch from '@/views/wallet/wallet-switch/WalletSwitch.vue'
 import WalletDetails from '@/views/wallet/wallet-details/WalletDetails.vue'
+import {getNamespaces} from "@/help/appHelp";
 
 @Component({
     components: {
@@ -24,6 +25,18 @@ export class WalletPanelTs extends Vue {
 
     get reloadWalletPage() {
         return this.$store.state.app.reloadWalletPage
+    }
+
+    get node() {
+        return this.$store.state.account.node
+    }
+
+    get getWallet() {
+        return this.$store.state.account.wallet
+    }
+
+    get ConfirmedTxList() {
+        return this.$store.state.account.ConfirmedTx
     }
 
     toCreate() {
@@ -112,15 +125,31 @@ export class WalletPanelTs extends Vue {
 
     }
 
+    async getMyNamespaces() {
+        const list = await getNamespaces(this.getWallet.address, this.node)
+        this.$store.commit('SET_NAMESPACE', list)
+    }
+
     initData() {
         if (this.$route.params['create']) return
         this.$store.state.app.isInLoginPage = false
+    }
+
+    @Watch('ConfirmedTxList')
+    onConfirmedTxChange() {
+        this.getMyNamespaces()
+    }
+
+    @Watch('getWallet')
+    onGetWalletChange() {
+        this.getMyNamespaces()
     }
 
     created() {
         this.setLeftSwitchIcon()
         this.setDefaultPage()
         this.setWalletList()
+        this.getMyNamespaces()
         this.initData()
     }
 }

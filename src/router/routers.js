@@ -183,13 +183,7 @@ var routers = [
                 path: '/login',
                 name: 'login',
                 component: function () { return import('@/views/login/login/Login.vue'); },
-            },
-            {
-                path: '/createLockPW',
-                name: 'createLockPW',
-                // @ts-ignore
-                component: function () { return import('@/views/login/create-lock-password/CreateLockPassword.vue'); },
-            },
+            }
         ]
     },
 ];

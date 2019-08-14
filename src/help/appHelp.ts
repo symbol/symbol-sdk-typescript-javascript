@@ -35,7 +35,7 @@ export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) =
     return account
 }
 
-export const getAccountDefault = async (name, account, netType, node, currentXEM1, currentXEM2) => {
+export const getAccountDefault = async (name, account, netType, node?, currentXEM1?, currentXEM2?) => {
     let storeWallet = {}
     await walletInterface.getWallet({
         name: name,
@@ -54,6 +54,7 @@ export const getAccountDefault = async (name, account, netType, node, currentXEM
             password: Wallet.result.password,
             balance: 0
         }
+        if(!node) return storeWallet
         await setWalletMosaic(storeWallet, node, currentXEM1, currentXEM2).then((data) => {
             storeWallet = data
         })
@@ -69,8 +70,8 @@ export const setWalletMosaic = async(storeWallet, node, currentXEM1, currentXEM2
     await accountInterface.getAccountInfo({
         node,
         address: wallet.address
-    }).then(async accountInfoResult => {
-        await accountInfoResult.result.accountInfo.subscribe((accountInfo) => {
+    }).then(accountInfoResult => {
+        accountInfoResult.result.accountInfo.subscribe((accountInfo) => {
             let mosaicList = accountInfo.mosaics
             mosaicList.map((item) => {
                 item.hex = item.id.toHex()
@@ -105,12 +106,12 @@ export const setMultisigAccount = async(storeWallet, node) => {
 }
 
 export const getNamespaces = async (address, node) =>{
+    let list = []
+    let namespace = {}
     await aliasInterface.getNamespacesFromAccount({
         address: Address.createFromRawAddress(address),
         url: node
     }).then((namespacesFromAccount)=>{
-        let list = []
-        let namespace = {}
         namespacesFromAccount.result.namespaceList
             .sort((a,b)=>{
                 return a['namespaceInfo']['depth'] - b['namespaceInfo']['depth']
@@ -135,8 +136,8 @@ export const getNamespaces = async (address, node) =>{
             }
             list.push(newObj)
         })
-        return list
     })
+    return list
 }
 
 export const createRootNamespace = (namespaceName, duration, networkType, maxFee) => {
