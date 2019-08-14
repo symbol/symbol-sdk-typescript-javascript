@@ -115,8 +115,8 @@
           </div>
         </div>
 
-
-        <div class="create_button pointer" @click="createMosaic(typeList[1].isSelected)">
+        <div :class="['create_button' ,'pointer',isCompleteForm?'':'not_allowed']"
+             @click="createMosaic(typeList[1].isSelected)">
           {{$t('create')}}
         </div>
       </div>

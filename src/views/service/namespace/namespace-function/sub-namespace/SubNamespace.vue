@@ -59,7 +59,7 @@
           </div>
         </div>
 
-        <div v-if="typeList[0].isSelected" class="create_button" @click="createTransaction">
+        <div v-if="typeList[0].isSelected" :class="['create_button',isCompleteForm?'':'not_allowed']" @click="createTransaction">
           {{$t('create')}}
         </div>
       </div>

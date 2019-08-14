@@ -8,7 +8,6 @@ import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk"
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
 import {sessionRead, sessionSave, localSave, localRead} from "@/help/help"
 import {Component, Vue, Watch} from 'vue-property-decorator/lib/vue-property-decorator'
-import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/help/electronHelp'
 
 @Component
 export class MenuBarTs extends Vue {
@@ -30,12 +29,12 @@ export class MenuBarTs extends Vue {
             value: 'http://13.114.200.132:3000',
             name: 'jp-5',
             url: '13.114.200.132',
-            isSelected: false,
+            isSelected: true,
         }, {
             value: 'http://47.107.245.217:3000',
             name: 'cn-2',
             url: '47.107.245.217',
-            isSelected: true,
+            isSelected: false,
         }
     ]
     isShowDialog = true
@@ -81,15 +80,46 @@ export class MenuBarTs extends Vue {
     }
 
     closeWindow() {
-        closeWindow()
+        const ipcRenderer = window['electron']['ipcRenderer'];
+        ipcRenderer.send('app', 'quit')
     }
 
     maxWindow() {
-        maxWindow()
+        const ipcRenderer = window['electron']['ipcRenderer'];
+        ipcRenderer.send('app', 'max')
     }
 
     minWindow() {
-        minWindow()
+        const ipcRenderer = window['electron']['ipcRenderer'];
+        ipcRenderer.send('app', 'min')
+    }
+
+    windowSizeChange() {
+        if (window['electron']) {
+            const electron = window['electron'];
+            const mainWindow = electron.remote.getCurrentWindow()
+            const that = this
+            mainWindow.on('resize', () => {
+                that.resetFontSize()
+            })
+        }
+    }
+
+    resetFontSize() {
+        if (window['electron']) {
+            const locaZomm = sessionRead('zoomFactor') || 1
+            const devInnerWidth = 1689
+            const winWidth = window.innerWidth * Number(locaZomm)
+            const scaleFactor = window['electron'].screen.getPrimaryDisplay().scaleFactor;
+            let zoomFactor = winWidth / devInnerWidth;
+            if (winWidth > devInnerWidth && winWidth < 1920) {
+                zoomFactor = 1
+            } else if (winWidth >= 1920) {
+                zoomFactor = winWidth / 1920;
+            }
+            sessionSave('zoomFactor', zoomFactor)
+            window['electron'].webFrame.setZoomFactor(zoomFactor);
+        }
     }
 
     selectPoint(index) {
@@ -255,6 +285,15 @@ export class MenuBarTs extends Vue {
         }
     }
 
+    // getCurrentXem() {
+    //     const {currentNode} = this
+    //     const that = this
+    //     const currentXEM = new NamespaceId('nem.xem')
+    //     const currentXEM2 = new NamespaceId('cat.currency')
+    //     this.$store.state.account.currentXEM1 = currentXEM.id.toHex()
+    //     console.log(currentXEM2.id.toHex())
+    // }
+
     initData() {
         this.languageList = this.$store.state.app.languageList
         this.currentLanguage = localRead('local')
@@ -296,10 +335,11 @@ export class MenuBarTs extends Vue {
     }
 
     created() {
-        windowSizeChange()
+        this.windowSizeChange()
         this.initData()
         this.unconfirmedListener()
         this.confirmedListener()
         this.txErrorListener()
+        // this.getCurrentXem()
     }
 }

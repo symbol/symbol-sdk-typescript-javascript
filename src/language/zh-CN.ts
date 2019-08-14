@@ -312,7 +312,7 @@ export const zh_CN = {
     please_enter_the_set_password: '请输入设置的密码',
     set_password_hint: '设置密码提示',
     password_hints_great_help_when_you_forget_your_password: '密码提示，在忘记密码时有很大帮助',
-    please_set_a_password_prompt: '请设置密码提示',
+    please_set_a_password_hint: '请设置密码提示',
     create_a_Lock_password: '创建Lock密码',
     lock_pass_text: '本密码用于桌面钱包的锁定，一旦丢失，你将失去进入桌面钱包的权利； 因此你需要对你的资产账户的记助词或私钥进行备份，以便恢复。',
     lock_pass_text_2: '本密码是进入桌面钱包的依据，没有转账的权利，转帐需要你的私钥密码才能完成。',
@@ -387,8 +387,8 @@ export const zh_CN = {
     In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks: 'nem2 的生态系统中，你可以构建自己的主网钱包，或者私用网络钱包，或者测试网络',
     set_the_wallet_name: '设置钱包名',
     The_name_of_the_wallet_can_be_convenient_for_you_to_use_you_can_distinguish_different_wallets_etc_for_better_management_after_entering_the_system_you_can_also_modify_the_wallet_details: '钱包名能方便你在使用中，可以区别不同的钱包等，便于更好的管理；进入系统后，你也可以钱包详情中修改',
-    This_is_very_important_to_encrypt_your_private_key_Your_private_key_will_be_encrypted_and_stored_on_your_local_computer_Be_sure_to_back_up_your_private_key_separately_so_that_you_can_recover_it_if_you_forget_it_The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_which_is_beneficial_to_the_security_of_your_private_key: '这是非常重要的，用于加密你的私钥。你的私钥会被加密存储在你的本地电脑上，一定要单独备份自己的私钥，以便在你忘记此密码时可以恢复。\n' +
-        '密码设置要求，不低于六位数字，建议越复杂越好，有利于你的私钥的安全性。',
+    This_password_is_used_to_encrypt_your_private_key: 'This password is used to encrypt your private key. The more complicated it is, the better the encryption will be.',
+    password_hint: 'Between %{min} and %{max} characters. Allowed special characters: %{specialChar}',
     please_set_your_wallet_password: '请输入设置的密码',
     please_enter_your_password_again: '请再次输入你设置的密码',
     repeat_the_password: '重复密码',
@@ -583,5 +583,8 @@ export const zh_CN = {
     clear_cache: '重置账户',
     We_will_clear_your_cache_reset_account_password_please_make_sure_your_wallet_is_safely_backed_up:'我们将清除你的缓存重置账号密码，请确保你的钱包已经安全备份',
     confirm_infomation:'信息确认',
-    please_input_new_account_name:'输入新的账户名'
+    please_input_new_account_name:'输入新的账户名',
+    Locking_passwords_as_a_form_of_program_protection:'锁定密码作为程序的保护验证形式。 一旦被遗忘，就不会有任何恢复。 请记住您的锁定密码。',
+    delete_wallet_tip:'删除钱包后将删除改钱包数据，请务必确保钱包已备份。 若无妥善备份，删除钱包后将无法找回钱包，请谨慎处理该操作。 同时，为了确保是本人操作，请输入钱包密码。',
+    delete_wallet:'删除钱包'
 }

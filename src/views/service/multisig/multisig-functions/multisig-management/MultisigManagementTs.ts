@@ -25,8 +25,9 @@ export class MultisigManagementTs extends Vue {
     isShowPanel = true
     currentPublickey = ''
     currentMinRemoval = 0
-    hasAddCosigner = false
     currentMinApproval = 0
+    hasAddCosigner = false
+    isCompleteForm = false
     existsCosignerList = [{}]
     showCheckPWDialog = false
     currentCosignatoryList = []
@@ -49,8 +50,13 @@ export class MultisigManagementTs extends Vue {
 
 
     addCosigner(flag) {
+        const {currentPublickey} = this
+        if (!currentPublickey || !currentPublickey.trim()) {
+            this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
+            return
+        }
         this.formItem.cosignerList.push({
-            publickey: this.currentPublickey,
+            publickey: currentPublickey,
             type: flag
         })
         this.currentPublickey = ''
@@ -248,9 +254,11 @@ export class MultisigManagementTs extends Vue {
 
     @Watch('formItem.multisigPublickey')
     async onMultisigPublickeyChange() {
-        console.log(this.formItem.multisigPublickey)
         const that = this
         const {multisigPublickey} = this.formItem
+        if(multisigPublickey.length !== 64){
+            return
+        }
         const {networkType} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
         let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
@@ -264,6 +272,16 @@ export class MultisigManagementTs extends Vue {
         that.currentMinRemoval = multisigInfo['minRemoval']
         that.currentCosignatoryList = multisigInfo['cosignatories']
     }
+
+
+    @Watch('formItem', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {multisigPublickey, cosignerList, bondedFee, lockFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
+        // isCompleteForm
+        this.isCompleteForm = multisigPublickey.length === 64 && cosignerList.length !== 0 && bondedFee + '' !== '' && lockFee + '' !== '' && innerFee + '' !== '' && minApprovalDelta + '' !== '' && minRemovalDelta + '' !== ''
+        return
+    }
+
 
     created() {
         this.getMultisigAccountList()

@@ -46,6 +46,7 @@ export class MosaicTransactionTs extends Vue {
     isMultisigAccount = false
     showMosaicEditDialog = false
     showMosaicAliasDialog = false
+    isCompleteForm = false
 
     multisigPublickeyList = [{
         value: 'no data',
@@ -71,7 +72,6 @@ export class MosaicTransactionTs extends Vue {
         aggregateFee: 50000,
         lockFee: 50000,
         multisigPublickey: ''
-
     }
 
     get getWallet() {
@@ -115,6 +115,7 @@ export class MosaicTransactionTs extends Vue {
 
 
     switchType(index) {
+        this.initForm()
         let list = this.typeList
         list = list.map((item) => {
             item.isSelected = false
@@ -347,17 +348,24 @@ export class MosaicTransactionTs extends Vue {
         const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
         const multisigInfo = multisigAccountInfo(address, node)
-        that.multisigPublickeyList = multisigInfo['multisigAccounts'].map((item) => {
+        const multisigPublickeyList = multisigInfo['multisigAccounts'] ? multisigInfo['multisigAccounts'].map((item) => {
             item.value = item.publicKey
             item.label = item.publicKey
             return item
-        })
+        }) : [{label: 'no data', value: 'no data'}]
+        that.multisigPublickeyList = multisigPublickeyList
     }
 
     @Watch('formItem.multisigPublickey')
     async onMultisigPublickeyChange() {
         const that = this
         const {multisigPublickey} = this.formItem
+        if(multisigPublickey.length !== 64){
+            return
+        }
+        if (multisigPublickey.length !== 64) {
+            return
+        }
         const {node} = this.$store.state.account
         const {networkType} = this.$store.state.account.wallet
         let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
@@ -366,6 +374,16 @@ export class MosaicTransactionTs extends Vue {
 
     }
 
+    @Watch('formItem', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {supply, divisibility, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
+        // isCompleteForm
+        if (this.typeList[0].isSelected) {
+            this.isCompleteForm = supply !== '' && divisibility !== '' && duration !== '' && innerFee !== ''
+            return
+        }
+        this.isCompleteForm = supply !== '' && divisibility !== '' && duration !== '' && innerFee !== '' && aggregateFee !== '' && lockFee !== '' && multisigPublickey && multisigPublickey.length === 64
+    }
 
     initData() {
         this.accountPublicKey = this.getWallet.publicKey

@@ -108,7 +108,6 @@ export const aliasInterface: SdkV0.alias = {
     getLinkedMosaicId: async (params) => {
         const namespaceId = params.namespaceId;
         const url = params.url;
-
         const namespaceHttp = new NamespaceHttp(url)
         const mosaicId = await namespaceHttp.getLinkedMosaicId(namespaceId).toPromise()
         return {
@@ -125,7 +124,7 @@ export const aliasInterface: SdkV0.alias = {
         const namespaceHttp = new NamespaceHttp(url)
         let namespaceInfo = await namespaceHttp.getNamespacesFromAccount(address).toPromise()
         let namespaceIds = namespaceInfo.map((item, index, arr) => {
-            namespaces[item.id.toHex().toUpperCase()] = {namespaceInfo: item};   // 传出去的对象
+            namespaces[item.id.toHex().toUpperCase()] = {namespaceInfo: item};
             return item.id
         })
         const namespaceName = await namespaceHttp.getNamespacesName(namespaceIds).toPromise()

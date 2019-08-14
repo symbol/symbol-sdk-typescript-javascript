@@ -13,10 +13,12 @@ export const Message = {
     SUCCESS: 'success',
     OPERATION_SUCCESS: 'successful_operation',
     UPDATE_SUCCESS: 'update_completed',
+
     PLEASE_SET_WALLET_PASSWORD_INFO: 'please_set_your_wallet_password',
     PLEASE_ENTER_MNEMONIC_INFO: 'Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct',
     PLEASE_SWITCH_NETWORK: 'walletCreateNetTypeRemind',
     NO_MNEMONIC_INFO: 'no_mnemonic',
+
     WALLET_NAME_INPUT_ERROR: 'walletCreateWalletNameRemind',
     PASSWORD_CREATE_ERROR: 'createLockPWRemind',
     INCONSISTENT_PASSWORD_ERROR: 'createLockCheckPWRemind',

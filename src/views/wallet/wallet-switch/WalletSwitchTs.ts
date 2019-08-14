@@ -1,10 +1,20 @@
 import {NetworkType} from 'nem2-sdk'
+import {saveLocalWallet} from '@/help/appHelp'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {localRead, localSave, formatXEMamount} from '@/help/help'
-import {saveLocalWallet} from '@/help/appHelp'
+import DeleteWalletCheck from './delete-wallet-check/DeleteWalletCheck.vue'
 
-@Component
+@Component({
+    components: {
+        DeleteWalletCheck
+    }
+})
 export class WalletSwitchTs extends Vue {
+    walletList = []
+    currentNetType = {}
+    showCheckPWDialog = false
+    deleteIndex = -1
+    deletecurrent = -1
     netType = [
         {
             value: NetworkType.MIJIN_TEST,
@@ -20,8 +30,7 @@ export class WalletSwitchTs extends Vue {
             label: 'MIJIN'
         },
     ]
-    walletList = []
-    currentNetType = this.netType[0].value
+
 
     get getWalletList() {
         return this.$store.state.app.walletList
@@ -29,6 +38,21 @@ export class WalletSwitchTs extends Vue {
 
     get getWallet() {
         return this.$store.state.account.wallet
+    }
+
+    toShowCheckPWDialog(index, current) {
+        this.showCheckPWDialog = true
+        this.deleteIndex = index
+        this.deletecurrent = current
+    }
+
+    checkEnd() {
+        const {deleteIndex, deletecurrent} = this
+        this.delWallet(deleteIndex, deletecurrent)
+    }
+
+    closeCheckPWDialog() {
+        this.showCheckPWDialog = false
     }
 
     chooseWallet(walletIndex) {
@@ -53,6 +77,7 @@ export class WalletSwitchTs extends Vue {
         this.$store.commit('SET_WALLET_LIST', list)
         localSave('wallets', JSON.stringify(localData))
     }
+
 
     delWallet(index, current) {
         let list = this.walletList;
@@ -98,6 +123,10 @@ export class WalletSwitchTs extends Vue {
         }
     }
 
+    initData() {
+        this.currentNetType = this.netType[0].value
+    }
+
     toImport() {
         this.$emit('toImport')
     }
@@ -112,6 +141,7 @@ export class WalletSwitchTs extends Vue {
     }
 
     created() {
+        this.initData()
         this.$store.commit('SET_WALLET', this.getWalletList[0])
         this.initWalletList()
     }

@@ -25,9 +25,9 @@ export const wsInterface: SdkV0.ws = {
                     params.fn(transactionInfo)
                 })
         }, err => {
-            console.log(err)
+            // console.log(err)
         }).catch((e) => {
-            console.log(e)
+            // console.log(e)
         })
         return {
             result: {
@@ -47,9 +47,9 @@ export const wsInterface: SdkV0.ws = {
                     params.fn(transactionInfo)
                 })
         }, err => {
-            console.log(err)
+            // console.log(err)
         }).catch((e) => {
-            console.log(e)
+            // console.log(e)
         })
         return {
             result: {
@@ -66,9 +66,9 @@ export const wsInterface: SdkV0.ws = {
                     params.fn(transactionInfo)
                 })
         }, err => {
-            console.log(err)
+            // console.log(err)
         }).catch((e) => {
-            console.log(e)
+            // console.log(e)
         })
         return {
             result: {
@@ -91,9 +91,12 @@ export const wsInterface: SdkV0.ws = {
                 )
                 .subscribe(announcedAggregateBonded => {
                     },
-                    err => console.error(err))
+
+                        // err =>
+                        // console.error(err)
+                )
         }).catch((e) => {
-            console.log(e)
+            // console.log(e)
         })
         return {
             result: {
@@ -128,11 +131,11 @@ export const wsInterface: SdkV0.ws = {
                         pointer.$store.state.app.chainStatus.currentGenerateTime = 12
                     },
                     err => {
-                        console.log(err)
+                        // console.log(err)
                     }
                 );
         }).catch((e) => {
-            console.log(e)
+            // console.log(e)
         })
 
         return {

@@ -1,5 +1,5 @@
 import {Message} from "@/config/index"
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import {multisigInterface} from '@/interface/sdkMultisig.ts'
 import {transactionInterface} from '@/interface/sdkTransaction.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
@@ -20,8 +20,9 @@ import {
 export class MultisigConversionTs extends Vue {
 
     currentAddress = ''
-    showCheckPWDialog = false
     isMultisig = false
+    isCompleteForm = false
+    showCheckPWDialog = false
     formItem = {
         publickeyList: [],
         minApproval: 1,
@@ -33,7 +34,12 @@ export class MultisigConversionTs extends Vue {
 
 
     addAddress() {
-        this.formItem.publickeyList.push(this.currentAddress)
+        const {currentAddress} = this
+        if (!currentAddress || !currentAddress.trim()) {
+            this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
+            return
+        }
+        this.formItem.publickeyList.push(currentAddress)
         this.currentAddress = ''
     }
 
@@ -46,7 +52,6 @@ export class MultisigConversionTs extends Vue {
         if (!this.checkForm()) {
             return
         }
-        console.log(this.formItem)
         this.showCheckPWDialog = true
     }
 
@@ -129,7 +134,7 @@ export class MultisigConversionTs extends Vue {
             if (result.result.multisigInfo.cosignatories.length !== 0) {
                 that.isMultisig = true
             }
-        }).catch(e=>console.log(e))
+        }).catch(e => console.log(e))
     }
 
     sendMultisignConversionTransaction(privatekey) {
@@ -169,6 +174,14 @@ export class MultisigConversionTs extends Vue {
                 fee: lockFee
             })
         })
+    }
+
+    @Watch('formItem', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {publickeyList, minApproval, minRemoval, bondedFee, lockFee, innerFee} = this.formItem
+        // isCompleteForm
+        this.isCompleteForm = publickeyList.length !== 0 && minApproval + '' !== '' && minRemoval + '' !== '' && innerFee + '' !== '' && bondedFee + '' !== '' && lockFee + '' !== ''
+        return
     }
 
 

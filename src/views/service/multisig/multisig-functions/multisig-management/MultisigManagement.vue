@@ -126,7 +126,7 @@
         </div>
       </div>
 
-      <div @click="confirmInput" class="send_button pointer" v-if="isShowPanel">
+      <div @click="confirmInput" :class="['send_button',' pointer',isCompleteForm?'':'not_allowed']" v-if="isShowPanel">
         {{$t('send')}}
       </div>
 
