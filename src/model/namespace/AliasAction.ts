@@ -19,7 +19,7 @@
  * 0: Link an alias.
  * 1: Unlink an alias.
  */
-export enum AliasActionType {
+export enum AliasAction {
     Link = 0x01,
     Unlink = 0x00,
 }

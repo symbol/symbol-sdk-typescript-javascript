@@ -142,7 +142,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
             this.minApprovalDelta,
             this.modifications.map((modification) => {
                 return new CosignatoryModificationBuilder(
-                    modification.type.valueOf(),
+                    modification.modificiationType.valueOf(),
                     new KeyDto(Convert.hexToUint8(modification.cosignatoryPublicAccount.publicKey)),
                 );
             }),
@@ -163,7 +163,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
             this.minApprovalDelta,
             this.modifications.map((modification) => {
                 return new CosignatoryModificationBuilder(
-                    modification.type.valueOf(),
+                    modification.modificiationType.valueOf(),
                     new KeyDto(Convert.hexToUint8(modification.cosignatoryPublicAccount.publicKey)),
                 );
             }),
