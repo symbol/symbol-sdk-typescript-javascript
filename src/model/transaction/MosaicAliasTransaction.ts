@@ -179,20 +179,4 @@ export class MosaicAliasTransaction extends Transaction {
         );
         return transactionBuilder.serialize();
     }
-
-    /**
-     * @internal
-     * @returns {Uint8Array}
-     */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedMosaicAliasTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
-            this.versionToDTO(),
-            TransactionType.MOSAIC_ALIAS.valueOf(),
-            this.actionType.valueOf(),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
-            new MosaicIdDto(this.mosaicId.id.toDTO()),
-        );
-        return transactionBuilder.serialize();
-    }
 }

@@ -184,20 +184,4 @@ export class AddressAliasTransaction extends Transaction {
         );
         return transactionBuilder.serialize();
     }
-
-    /**
-     * @internal
-     * @returns {Uint8Array}
-     */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedAddressAliasTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
-            this.versionToDTO(),
-            TransactionType.ADDRESS_ALIAS.valueOf(),
-            this.actionType.valueOf(),
-            new NamespaceIdDto(this.namespaceId.id.toDTO()),
-            new AddressDto(RawAddress.stringToAddress(this.address.plain())),
-        );
-        return transactionBuilder.serialize();
-    }
 }

@@ -206,25 +206,4 @@ export class ModifyMultisigAccountTransaction extends Transaction {
         );
         return transactionBuilder.serialize();
     }
-
-    /**
-     * @internal
-     * @returns {Uint8Array}
-     */
-    protected generateEmbeddedBytes(): Uint8Array {
-        const transactionBuilder = new EmbeddedMultisigAccountModificationTransactionBuilder(
-            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
-            this.versionToDTO(),
-            TransactionType.MODIFY_MULTISIG_ACCOUNT.valueOf(),
-            this.minRemovalDelta,
-            this.minApprovalDelta,
-            this.modifications.map((modification) => {
-                return new CosignatoryModificationBuilder(
-                    modification.type.valueOf(),
-                    new KeyDto(Convert.hexToUint8(modification.cosignatoryPublicAccount.publicKey)),
-                );
-            }),
-        );
-        return transactionBuilder.serialize();
-    }
 }
