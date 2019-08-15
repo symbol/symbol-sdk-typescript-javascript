@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { SignSchema } from '../../core/crypto/SignSchema';
 import { Convert, Convert as convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
@@ -30,6 +31,7 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { NamespaceType } from '../namespace/NamespaceType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -143,6 +145,40 @@ export class RegisterNamespaceTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.REGISTER_NAMESPACE, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const namespaceType = builder.getRegistrationType().valueOf();
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = namespaceType === NamespaceType.RootNamespace ?
+            RegisterNamespaceTransaction.createRootNamespace(
+                isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                    (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
+            Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
+            new UInt64(builder.getDuration()!.blockDuration),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+        ) : RegisterNamespaceTransaction.createSubNamespace(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
+            Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
+            new NamespaceId(builder.getParentId()!.namespaceId),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
     }
 
     /**

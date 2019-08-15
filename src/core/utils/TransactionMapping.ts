@@ -16,7 +16,9 @@
 
 import { CreateTransactionFromDTO } from '../../infrastructure/transaction/CreateTransactionFromDTO';
 import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
+import { InnerTransaction } from '../../model/transaction/InnerTransaction';
 import { Transaction } from '../../model/transaction/Transaction';
+import { SignSchema } from '../crypto/SignSchema';
 
 export class TransactionMapping {
 
@@ -31,10 +33,14 @@ export class TransactionMapping {
 
     /**
      * Create transaction class from payload binary.
-     * @param {string} dataBytes The transaction json object.
-     * @returns {module: model/transaction/transaction} The transaction class.
+     * @param {string} payload The transaction binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction} The transaction class.
      */
-    public static createFromPayload(dataBytes: string): Transaction {
-        return CreateTransactionFromPayload(dataBytes);
+    public static createFromPayload(payload: string,
+                                    isEmbedded = false,
+                                    signSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        return CreateTransactionFromPayload(payload, isEmbedded, signSchema);
     }
 }

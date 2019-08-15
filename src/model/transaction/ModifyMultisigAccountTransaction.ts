@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { SignSchema } from '../../core/crypto/SignSchema';
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { CosignatoryModificationBuilder } from '../../infrastructure/catbuffer/CosignatoryModificationBuilder';
@@ -26,6 +27,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { MultisigCosignatoryModification } from './MultisigCosignatoryModification';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
@@ -99,6 +101,40 @@ export class ModifyMultisigAccountTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.MODIFY_MULTISIG_ACCOUNT, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedMultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            MultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = ModifyMultisigAccountTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as MultisigAccountModificationTransactionBuilder).getDeadline().timestamp),
+            builder.getMinApprovalDelta(),
+            builder.getMinRemovalDelta(),
+            builder.getModifications().map((modification) => {
+                return new MultisigCosignatoryModification(
+                    modification.modificationAction.valueOf(),
+                    PublicAccount.createFromPublicKey(
+                        Convert.uint8ToHex(modification.cosignatoryPublicKey.key),
+                        networkType,
+                    ),
+                );
+            }),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MultisigAccountModificationTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
     }
 
     /**

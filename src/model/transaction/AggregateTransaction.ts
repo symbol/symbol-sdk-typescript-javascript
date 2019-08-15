@@ -23,6 +23,7 @@ import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -122,6 +123,61 @@ export class AggregateTransaction extends Transaction {
         );
     }
 
+    /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {AggregateTransaction}
+     */
+    public static createFromPayload(payload: string, signSchema: SignSchema = SignSchema.SHA3): AggregateTransaction {
+        const builder = AggregateTransactionBuilder
+            .loadFromBinary(Convert.hexToUint8(payload));
+        const type = builder.getType().valueOf();
+        const innerTransactionHex = Convert.uint8ToHex(builder.getTransactions());
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const consignaturesHex = Convert.uint8ToHex(builder.getCosignatures());
+
+        /**
+         * Get inner transactions array
+         */
+        const embeddedTransactionArray: string[] = [];
+        let innerBinary = innerTransactionHex;
+        while (innerBinary.length) {
+            const payloadSize = parseInt(Convert.uint8ToHex(Convert.hexToUint8(innerBinary.substring(0, 8)).reverse()), 16) * 2;
+            const innerTransaction = innerBinary.substring(0, payloadSize);
+            embeddedTransactionArray.push(innerTransaction);
+            innerBinary = innerBinary.substring(payloadSize);
+        }
+
+        /**
+         * Get cosignatures
+         */
+        const consignatureArray = consignaturesHex.match(/.{1,192}/g);
+        const consignatures = consignatureArray ? consignatureArray.map((cosignature) =>
+                    new AggregateTransactionCosignature(
+                        cosignature.substring(64, 192),
+                        PublicAccount.createFromPublicKey(cosignature.substring(0, 64), networkType, signSchema),
+                )) : [];
+
+        return type === TransactionType.AGGREGATE_COMPLETE ?
+            AggregateTransaction.createComplete(
+                Deadline.createFromDTO(builder.deadline.timestamp),
+                embeddedTransactionArray.map((transactionRaw) => {
+                    return CreateTransactionFromPayload(transactionRaw, true, signSchema) as InnerTransaction;
+                }),
+                networkType,
+                consignatures,
+                new UInt64(builder.fee.amount),
+            ) : AggregateTransaction.createBonded(
+                Deadline.createFromDTO(builder.deadline.timestamp),
+                embeddedTransactionArray.map((transactionRaw) => {
+                    return CreateTransactionFromPayload(transactionRaw, true, signSchema) as InnerTransaction;
+                }),
+                networkType,
+                consignatures,
+                new UInt64(builder.fee.amount),
+            );
+    }
     /**
      * @internal
      * Sign transaction with cosignatories creating a new SignedTransaction
@@ -230,7 +286,7 @@ export class AggregateTransaction extends Transaction {
             transactions = GeneratorUtils.concatTypedArrays(transactions, transactionByte);
         });
 
-        const cosignatures = Uint8Array.from([]);
+        let cosignatures = Uint8Array.from([]);
         this.cosignatures.forEach((cosignature) => {
             const signerBytes = Convert.hexToUint8(cosignature.signer.publicKey);
             const signatureBytes = Convert.hexToUint8(cosignature.signature);
@@ -238,7 +294,7 @@ export class AggregateTransaction extends Transaction {
                 new KeyDto(signerBytes),
                 new SignatureDto(signatureBytes),
             ).serialize();
-            transactions = GeneratorUtils.concatTypedArrays(cosignatures, cosignatureBytes);
+            cosignatures = GeneratorUtils.concatTypedArrays(cosignatures, cosignatureBytes);
         });
 
         const transactionBuilder = new AggregateTransactionBuilder(
