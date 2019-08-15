@@ -12,13 +12,12 @@
       <div class="checkPWDialogBody">
         <div class="stepItem1">
 
-          <div v-if="!transactionDetail">
-            <div class="checkPWImg">
-              <img src="@/common/img/wallet/walletDeleteIcon.png">
-            </div>
-            <p class="checkRemind">
-              {{$t('delete_wallet_tip')}}</p>
+
+          <div class="checkPWImg">
+            <img src="@/common/img/wallet/walletDeleteIcon.png">
           </div>
+          <p class="checkRemind">
+            {{$t('delete_wallet_tip')}}</p>
 
           <Form :model="wallet">
             <FormItem>

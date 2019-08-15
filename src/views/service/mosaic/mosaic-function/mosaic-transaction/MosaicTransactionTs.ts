@@ -6,6 +6,7 @@ import {formatSeconds, formatAddress} from '@/help/help.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {transactionInterface} from '@/interface/sdkTransaction'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/help/appHelp'
 import {
     MosaicId,
     MosaicNonce,
@@ -214,7 +215,6 @@ export class MosaicTransactionTs extends Vue {
 
 
     createByMultisig(key) {
-        let {accountPublicKey, accountAddress} = this
         const {networkType} = this.$store.state.account.wallet
         const {generationHash, node} = this.$store.state.account
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
@@ -246,14 +246,13 @@ export class MosaicTransactionTs extends Vue {
         )
 
         if (that.currentMinApproval > 1) {
-            multisigInterface.bondedMultisigTransaction({
-                networkType: networkType,
-                account: account,
-                fee: aggregateFee,
-                multisigPublickey: multisigPublickey,
-                transaction: [mosaicDefinitionTx, mosaicSupplyChangeTx],
-            }).then((result) => {
-                const aggregateTransaction = result.result.aggregateTransaction
+            createBondedMultisigTransaction(
+                [mosaicDefinitionTx, mosaicSupplyChangeTx],
+                multisigPublickey,
+                networkType,
+                account,
+                aggregateFee
+            ).then((aggregateTransaction) => {
                 transactionInterface.announceBondedWithLock({
                     aggregateTransaction,
                     account,
@@ -266,13 +265,12 @@ export class MosaicTransactionTs extends Vue {
             })
             return
         }
-        multisigInterface.completeMultisigTransaction({
-            networkType: networkType,
-            fee: aggregateFee,
-            multisigPublickey: multisigPublickey,
-            transaction: [mosaicDefinitionTx, mosaicSupplyChangeTx],
-        }).then((result) => {
-            const aggregateTransaction = result.result.aggregateTransaction
+        createCompleteMultisigTransaction(
+            [mosaicDefinitionTx, mosaicSupplyChangeTx],
+            multisigPublickey,
+            networkType,
+            aggregateFee,
+        ).then((aggregateTransaction) => {
             transactionInterface._announce({
                 transaction: aggregateTransaction,
                 account,
@@ -360,7 +358,7 @@ export class MosaicTransactionTs extends Vue {
     async onMultisigPublickeyChange() {
         const that = this
         const {multisigPublickey} = this.formItem
-        if(multisigPublickey.length !== 64){
+        if (multisigPublickey.length !== 64) {
             return
         }
         if (multisigPublickey.length !== 64) {

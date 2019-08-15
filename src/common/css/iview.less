@@ -1,8 +1,8 @@
-.app_controller {
+.ivu-select-visible .ivu-select-selection {
+  box-shadow: none;
+}
 
-  .ivu-select-visible .ivu-select-selection {
-    box-shadow: none;
-  }
+.app_controller {
 
   .switch_wallet {
     .ivu-select-placeholder,
@@ -65,6 +65,8 @@
 
 .relogin_container {
   .switch_language {
+    z-index: 999;
+
     .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
     .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
       position: relative;
@@ -736,6 +738,7 @@
       color: #CCCCCC !important;
       font-size: 14px !important;
     }
+
     .ivu-select-selected-value {
       font-size: 14px !important;
     }
@@ -881,23 +884,6 @@
 }
 
 
-.filter_dialog.alias_bind_dialog {
-  .ivu-modal {
-    width: 500px !important;
-    height: 477px !important;
-    background: rgba(255, 255, 255, 1);
-    border-radius: 8px;
-  }
-
-  .ivu-modal-content {
-    width: 500px !important;
-    height: 527px !important;
-
-    .ivu-modal-body {
-      padding: 14px 55px 0 55px;
-    }
-  }
-}
 
 
 .setting_container {
@@ -913,9 +899,10 @@
 // $notice
 .ivu-notice {
   position: fixed !important;
-  bottom: 50px !important;
-  top: auto !important;
-  width: 300px !important;
+  top: 50px !important;
+  width: auto !important;
+  max-width: 500px !important;
+  z-index: 99999999 !important;
 
   .ivu-notice-notice {
     width: 100%;
@@ -940,7 +927,8 @@
     }
 
     .ivu-notice-title {
-      width: 180px;
+      max-width: 500px;
+      width: auto;
       height: auto;
       color: white;
       overflow: unset;

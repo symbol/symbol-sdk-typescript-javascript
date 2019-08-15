@@ -19,15 +19,17 @@
         <div class="stepItem1" v-if="stepIndex == 0">
           <Form :model="wallet">
             <FormItem>
-              <Input v-model="wallet.password" required :placeholder="$t('please_enter_your_wallet_password')"></Input>
+              <Input v-model="wallet.password" type="password" required
+                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
-              <Button type="success" class="disabled" @click="exportKeystore">{{$t('next')}}
+              <Button type="success" @click="exportKeystore">{{$t('next')}}
                 <Icon type="ios-arrow-round-forward"/>
               </Button>
             </FormItem>
           </Form>
         </div>
+
         <div class="stepItem2" v-if="stepIndex == 1">
           <div class="step2Txt">
             <Row>
@@ -58,6 +60,7 @@
             <Icon type="ios-arrow-round-forward"/>
           </Button>
         </div>
+
         <div class="stepItem3" v-if="stepIndex == 2">
           <Row>
             <Col span="15">
@@ -85,6 +88,7 @@
             </Col>
           </Row>
         </div>
+
         <div class="stepItem4" v-if="stepIndex == 3">
           <div class="QRCodeImg">
             <img :src="QRCode">

@@ -4,6 +4,7 @@ import {multisigInterface} from '@/interface/sdkMultisig'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {transactionInterface} from '@/interface/sdkTransaction'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/help/appHelp'
 import {
     Account,
     Mosaic,
@@ -111,14 +112,13 @@ export class MultisigTransferTransactionTs extends Vue {
         )
 
         if (this.currentMinApproval > 1) {
-            multisigInterface.bondedMultisigTransaction({
-                networkType: networkType,
-                account: account,
-                fee: bondedFee,
-                multisigPublickey: multisigPublickey,
-                transaction: [transaction],
-            }).then((result) => {
-                const aggregateTransaction = result.result.aggregateTransaction
+            createBondedMultisigTransaction(
+                [transaction],
+                multisigPublickey,
+                networkType,
+                account,
+                bondedFee
+            ).then((aggregateTransaction) => {
                 transactionInterface.announceBondedWithLock({
                     aggregateTransaction,
                     account,
@@ -131,13 +131,12 @@ export class MultisigTransferTransactionTs extends Vue {
             })
             return
         }
-        multisigInterface.completeMultisigTransaction({
-            networkType: networkType,
-            fee: aggregateFee,
-            multisigPublickey: multisigPublickey,
-            transaction: [transaction],
-        }).then((result) => {
-            const aggregateTransaction = result.result.aggregateTransaction
+        createCompleteMultisigTransaction(
+            [transaction],
+            multisigPublickey,
+            networkType,
+            aggregateFee
+        ).then((aggregateTransaction) => {
             transactionInterface._announce({
                 transaction: aggregateTransaction,
                 account,

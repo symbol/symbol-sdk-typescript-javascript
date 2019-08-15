@@ -1,9 +1,21 @@
-import {localRead, localSave} from "@/help/help";
-import {walletInterface} from "@/interface/sdkWallet";
-import {accountInterface} from "@/interface/sdkAccount";
-import {Address, Crypto} from 'nem2-sdk'
-import {aliasInterface} from "@/interface/sdkNamespace";
-import {multisigInterface} from "@/interface/sdkMultisig";
+import {localRead, localSave} from "@/help/help"
+import {filterInterface} from '@/interface/sdkFilter'
+import {walletInterface} from "@/interface/sdkWallet"
+import {accountInterface} from "@/interface/sdkAccount"
+import {aliasInterface} from "@/interface/sdkNamespace"
+import {multisigInterface} from "@/interface/sdkMultisig"
+import {
+    Account,
+    AccountPropertyModification,
+    Address,
+    Crypto,
+    NetworkType,
+    PropertyType,
+    Transaction,
+    UInt64,
+    PropertyModificationType,
+    MosaicId
+} from 'nem2-sdk'
 
 export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) => {
     let localData: any[] = []
@@ -15,8 +27,8 @@ export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) =
     }
     let saveData = {
         name: wallet.name,
-        ciphertext: encryptObj?  encryptObj.ciphertext : localData[index].ciphertext,
-        iv: encryptObj? encryptObj.iv : localData[index].iv,
+        ciphertext: encryptObj ? encryptObj.ciphertext : localData[index].ciphertext,
+        iv: encryptObj ? encryptObj.iv : localData[index].iv,
         networkType: wallet.networkType,
         address: wallet.address,
         publicKey: wallet.publicKey,
@@ -54,7 +66,7 @@ export const getAccountDefault = async (name, account, netType, node?, currentXE
             password: Wallet.result.password,
             balance: 0
         }
-        if(!node) return storeWallet
+        if (!node) return storeWallet
         await setWalletMosaic(storeWallet, node, currentXEM1, currentXEM2).then((data) => {
             storeWallet = data
         })
@@ -65,7 +77,7 @@ export const getAccountDefault = async (name, account, netType, node?, currentXE
     return storeWallet
 }
 
-export const setWalletMosaic = async(storeWallet, node, currentXEM1, currentXEM2) => {
+export const setWalletMosaic = async (storeWallet, node, currentXEM1, currentXEM2) => {
     let wallet = storeWallet
     await accountInterface.getAccountInfo({
         node,
@@ -88,7 +100,7 @@ export const setWalletMosaic = async(storeWallet, node, currentXEM1, currentXEM2
     return wallet
 }
 
-export const setMultisigAccount = async(storeWallet, node) => {
+export const setMultisigAccount = async (storeWallet, node) => {
     let wallet = storeWallet
     await accountInterface.getMultisigAccountInfo({
         node: node,
@@ -105,28 +117,28 @@ export const setMultisigAccount = async(storeWallet, node) => {
     return wallet
 }
 
-export const getNamespaces = async (address, node) =>{
+export const getNamespaces = async (address, node) => {
     let list = []
     let namespace = {}
     await aliasInterface.getNamespacesFromAccount({
         address: Address.createFromRawAddress(address),
         url: node
-    }).then((namespacesFromAccount)=>{
+    }).then((namespacesFromAccount) => {
         namespacesFromAccount.result.namespaceList
-            .sort((a,b)=>{
+            .sort((a, b) => {
                 return a['namespaceInfo']['depth'] - b['namespaceInfo']['depth']
-            }).map((item, index)=>{
-            if(!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())){
+            }).map((item, index) => {
+            if (!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())) {
                 namespace[item.namespaceInfo.id.toHex()] = item.namespaceName
-            }else {
+            } else {
                 return
             }
             let namespaceName = ''
-            item.namespaceInfo.levels.map((item, index)=>{
-                namespaceName += namespace[item.id.toHex()] +'.'
+            item.namespaceInfo.levels.map((item, index) => {
+                namespaceName += namespace[item.id.toHex()] + '.'
             })
             namespaceName = namespaceName.slice(0, namespaceName.length - 1)
-            const newObj ={
+            const newObj = {
                 value: namespaceName,
                 label: namespaceName,
                 alias: item.namespaceInfo.alias,
@@ -146,12 +158,12 @@ export const createRootNamespace = (namespaceName, duration, networkType, maxFee
         duration: duration,
         networkType: networkType,
         maxFee: maxFee
-    }).then((transaction)=>{
+    }).then((transaction) => {
         return transaction.result.rootNamespaceTransaction
     })
 }
 
-export const  createSubNamespace = (rootNamespaceName, subNamespaceName, networkType, maxFee) => {
+export const createSubNamespace = (rootNamespaceName, subNamespaceName, networkType, maxFee) => {
     return aliasInterface.createdSubNamespace({
         parentNamespace: rootNamespaceName,
         namespaceName: subNamespaceName,
@@ -174,11 +186,104 @@ export const encryptKey = (data, password) => {
     return Crypto.encrypt(data, password)
 }
 
-export const decryptKey = (wallet, password)=> {
+export const decryptKey = (wallet, password) => {
     let encryptObj = {
         ciphertext: wallet.ciphertext,
         iv: wallet.iv.data ? wallet.iv.data : wallet.iv,
         key: password
     }
     return Crypto.decrypt(encryptObj)
+}
+
+
+export const createBondedMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, account: Account, fee: number) => {
+    return multisigInterface.bondedMultisigTransaction({
+        transaction,
+        multisigPublickey,
+        networkType,
+        account,
+        fee
+    }).then((result) => {
+        return result.result.aggregateTransaction
+    })
+}
+
+export const createCompleteMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, fee: number) => {
+    return multisigInterface.completeMultisigTransaction({
+        transaction,
+        multisigPublickey,
+        networkType,
+        fee
+    }).then((result) => {
+        return result.result.aggregateTransaction
+    })
+}
+
+export const creatrModifyAccountPropertyTransaction = (propertyType: PropertyType, modifications: Array<any>, networkType: NetworkType, fee: number,) => {
+    //address
+    if (propertyType === PropertyType.BlockAddress || propertyType === PropertyType.AllowAddress) {
+        modifications = modifications.map((item) => {
+            return AccountPropertyModification.createForAddress(
+                // TODO AFTER SDK COMPLETE  add PropertyModificationType
+                PropertyModificationType.Remove,
+                Address.createFromRawAddress(item.value)
+            )
+        })
+        return filterInterface.creatrModifyAccountPropertyAddressTransaction({
+            propertyType,
+            modifications,
+            networkType,
+            fee
+        }).then((result) => {
+            return result.result.modifyAccountPropertyAddressTransaction
+        })
+    }
+    // entity type
+    if (propertyType === PropertyType.BlockTransaction || propertyType === PropertyType.AllowTransaction) {
+        modifications = modifications.map((item) => {
+            return AccountPropertyModification.createForEntityType(
+                // TODO AFTER SDK COMPLETE  add PropertyModificationType
+                PropertyModificationType.Remove,
+                item.value
+            )
+        })
+        return filterInterface.creatrModifyAccountPropertyEntityTypeTransaction({
+            propertyType,
+            modifications,
+            networkType,
+            fee
+        }).then((result) => {
+            return result.result.modifyAccountPropertyEntityTypeTransaction
+        })
+    }
+    // mosaic
+    if (propertyType === PropertyType.BlockMosaic || propertyType === PropertyType.AllowMosaic) {
+        modifications = modifications.map((item) => {
+            // TODO AFTER SDK COMPLETE  add PropertyModificationType
+            return AccountPropertyModification.createForMosaic(
+                PropertyModificationType.Remove,
+                new MosaicId(item.value)
+            )
+        })
+        return filterInterface.creatrModifyAccountPropertyMosaicTransaction({
+            propertyType,
+            modifications,
+            networkType,
+            fee
+        }).then((result) => {
+            return result.result.modifyAccountPropertyMosaicTransaction
+        })
+    }
+
+
+}
+
+export const getAccountProperties = (address: string, node: string) => {
+    // TODO sdk is not complete yet
+    // return accountInterface.getAccountProperties({
+    //     address,
+    //     node
+    // }).then((result) => {
+    //     return result.result.accountPropertiesInfo
+    // })
 }

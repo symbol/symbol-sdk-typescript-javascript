@@ -74,7 +74,7 @@ export const en_US = {
     average_block_time: 'Generation',
     point: 'Node',
     number_of_transactions: 'Transactions',
-    transfer_type: 'Transfer type',
+    transfer_type: 'Type',
     gathering: 'Gathering',
     payment: 'Payment',
     from: 'From',
@@ -151,9 +151,9 @@ export const en_US = {
     remote_ques2: '2.What are the benefits?',
     remote_ques2_rep: 'The remote account inherits the importance of the original account, and the award for creating a new block is called revenue. ',
     remote_rep_list: 'Income list',
-    remote_list_col1: 'Hash of harvest block',
-    remote_list_col2: 'Height of the harvesting block',
-    remote_list_col3: 'Harvest cost',
+    remote_list_col1: 'Hash',
+    remote_list_col2: 'Height',
+    remote_list_col3: 'Cost',
     remote_list_col4: 'Time',
     remote_no_data: 'No data',
     remote_repaly: 'Entrusted harvest',
@@ -616,5 +616,6 @@ export const en_US = {
     modify_account_property_address: 'Address filter',
     modify_account_property_mosaic: 'Mosaic filter',
     modify_account_property_entity_type: 'Entity filter',
-    link_account: 'Link account'
+    link_account: 'Link account',
+    please_choose_entity_type: 'please choose entity type'
 }

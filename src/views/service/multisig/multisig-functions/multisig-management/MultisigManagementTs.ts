@@ -2,6 +2,7 @@ import {Message} from "@/config/index"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {multisigInterface} from '@/interface/sdkMultisig.ts'
 import {transactionInterface} from '@/interface/sdkTransaction'
+import {createCompleteMultisigTransaction, createBondedMultisigTransaction} from '@/help/appHelp'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     MultisigCosignatoryModificationType,
@@ -14,7 +15,7 @@ import {
     ModifyMultisigAccountTransaction,
     UInt64
 } from 'nem2-sdk'
-import {multisigAccountInfo} from "@/help/appHelp";
+import {multisigAccountInfo} from "@/help/appHelp"
 
 @Component({
     components: {
@@ -85,8 +86,6 @@ export class MultisigManagementTs extends Vue {
             cosigner.type,
             PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
         ))
-
-
         const modifyMultisigAccountTx = ModifyMultisigAccountTransaction.create(
             Deadline.create(),
             Number(minApprovalDelta),
@@ -94,14 +93,13 @@ export class MultisigManagementTs extends Vue {
             multisigCosignatoryModificationList,
             networkType,
             UInt64.fromUint(innerFee)
-        );
-        multisigInterface.completeMultisigTransaction({
-            networkType: networkType,
-            fee: innerFee,
-            multisigPublickey: multisigPublickey,
-            transaction: [modifyMultisigAccountTx],
-        }).then((result) => {
-            const aggregateTransaction = result.result.aggregateTransaction
+        )
+        createCompleteMultisigTransaction(
+            [modifyMultisigAccountTx],
+            multisigPublickey,
+            networkType,
+            innerFee,
+        ).then((aggregateTransaction) => {
             transactionInterface._announce({
                 transaction: aggregateTransaction,
                 account,
@@ -129,14 +127,12 @@ export class MultisigManagementTs extends Vue {
             networkType,
             UInt64.fromUint(innerFee)
         );
-        multisigInterface.bondedMultisigTransaction({
-            networkType: networkType,
-            account: account,
-            fee: bondedFee,
-            multisigPublickey: account.publicKey,
-            transaction: [modifyMultisigAccountTransaction],
-        }).then((result) => {
-            const aggregateTransaction = result.result.aggregateTransaction
+        createBondedMultisigTransaction(
+            [modifyMultisigAccountTransaction],
+            account.publicKey,
+            networkType,
+            account, bondedFee
+        ).then((aggregateTransaction) => {
             transactionInterface.announceBondedWithLock({
                 aggregateTransaction,
                 account,
@@ -256,7 +252,7 @@ export class MultisigManagementTs extends Vue {
     async onMultisigPublickeyChange() {
         const that = this
         const {multisigPublickey} = this.formItem
-        if(multisigPublickey.length !== 64){
+        if (multisigPublickey.length !== 64) {
             return
         }
         const {networkType} = this.$store.state.account.wallet

@@ -7,14 +7,9 @@ import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 export class DeleteWalletCheckTs extends Vue {
     stepIndex = 0
     show = false
-    transactionDetail = false
     wallet = {
         password: ''
     }
-
-    @Prop({default: ''})
-    transactionDetail: any
-
 
     @Prop()
     showCheckPWDialog: boolean

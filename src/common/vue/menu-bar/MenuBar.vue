@@ -13,7 +13,8 @@
       <div @click="accountQuit" class="quit_account pointer"
            v-if=" !$store.state.app.isInLoginPage && $store.state.app.walletList.length !==0">
         <img src="../../img/window/windowAccoutQuit.png" alt="">
-        <span>Number</span>
+<!--        TODO  update name-->
+        <span>Nember</span>
       </div>
     </div>
     <div class="top_window">
