@@ -15,7 +15,10 @@
       <div class="table_body">
         <div class="table_body_item radius" v-for="n in namespaceList">
           <span class="namesapce_name">{{n.name}}</span>
-          <span class="duration">{{computeDuration(n.duration)}} ({{durationToTime(n.duration)}})</span>
+          <span class="duration">
+            {{computeDuration(n.duration) === 'Expired' ? $t('overdue') : computeDuration(n.duration)}}
+            ({{durationToTime(n.duration)}})
+          </span>
           <span class="more" v-if="n.levels === 1">
             <Poptip class="poptip_container" placement="top-start">
               <i class="moreFn"></i>

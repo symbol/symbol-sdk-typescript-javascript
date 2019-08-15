@@ -4,6 +4,7 @@ import {mosaicInterface} from "@/interface/sdkMosaic"
 import {transactionInterface} from "@/interface/sdkTransaction"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Account, Crypto} from 'nem2-sdk'
+import {decryptKey} from "@/help/appHelp";
 
 @Component
 export class MosaicEditDialogTs extends Vue {
@@ -104,12 +105,7 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     decryptKey() {
-        let encryptObj = {
-            ciphertext: this.getWallet.ciphertext,
-            iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-            key: this.mosaic.password
-        }
-        this.checkPrivateKey(Crypto.decrypt(encryptObj))
+        this.checkPrivateKey(decryptKey( this.getWallet, this.mosaic.password))
     }
 
     checkPrivateKey(DeTxt) {
@@ -137,7 +133,6 @@ export class MosaicEditDialogTs extends Vue {
             maxFee: this.mosaic.fee,
         }).then((changed) => {
             const transaction = changed.result.mosaicSupplyChangeTransaction
-            console.log(transaction)
             const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
             const signature = account.sign(transaction, this.generationHash)
 

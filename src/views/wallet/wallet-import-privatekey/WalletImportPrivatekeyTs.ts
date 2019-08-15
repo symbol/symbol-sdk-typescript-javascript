@@ -4,6 +4,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {Account, NetworkType, Crypto} from "nem2-sdk"
 import {walletInterface} from "@/interface/sdkWallet"
 import {accountInterface} from "@/interface/sdkAccount"
+import {encryptKey, getAccountDefault, saveLocalWallet} from "@/help/appHelp";
 
 @Component
 export class WalletImportPrivatekeyTs extends Vue {
@@ -30,6 +31,18 @@ export class WalletImportPrivatekeyTs extends Vue {
             label: 'MIJIN'
         },
     ]
+
+    get getNode () {
+        return this.$store.state.account.node
+    }
+
+    get currentXEM1(){
+        return this.$store.state.account.currentXEM1
+    }
+
+    get currentXEM2(){
+        return this.$store.state.account.currentXEM2
+    }
 
     importWallet() {
         if (!this.checkPrivateKey()) return
@@ -84,119 +97,21 @@ export class WalletImportPrivatekeyTs extends Vue {
         }
     }
 
-    async loginWallet(account) {
+    loginWallet(account) {
         const that = this
         const walletName: any = this.form.walletName;
         const netType: NetworkType = this.form.networkType;
-        await that.setUserDefault(walletName, account, netType)
-    }
-
-    setUserDefault(name, account, netType) {
-        const that = this
         const walletList = this.$store.state.app.walletList
         const style = 'walletItem_bg_' + walletList.length % 3
-        walletInterface.getWallet({
-            name: name,
-            networkType: netType,
-            privateKey: account.privateKey
-        }).then(async (Wallet: any) => {
-            let storeWallet = {
-                name: Wallet.result.wallet.name,
-                address: Wallet.result.wallet.address['address'],
-                networkType: Wallet.result.wallet.address['networkType'],
-                privateKey: Wallet.result.privateKey,
-                publicKey: account.publicKey,
-                publicAccount: account.publicAccount,
-                mosaics: [],
-                wallet: Wallet.result.wallet,
-                password: Wallet.result.password,
-                balance: 0,
-                style
-            }
-            await that.getMosaicList(storeWallet).then((data) => {
-                storeWallet = data
+        getAccountDefault(walletName, account, netType, this.getNode, this.currentXEM1, this.currentXEM2)
+            .then((wallet)=>{
+                let storeWallet = wallet
+                storeWallet['style'] = style
+                that.$store.commit('SET_WALLET', storeWallet)
+                const encryptObj = encryptKey(storeWallet['privateKey'], that.form['password'])
+                saveLocalWallet(storeWallet, encryptObj, null,{})
+                this.toWalletDetails()
             })
-            await that.getMultisigAccount(storeWallet).then((data) => {
-                storeWallet = data
-            })
-            that.$store.commit('SET_WALLET', storeWallet)
-            const encryptObj = Crypto.encrypt(Wallet.result.privateKey, that.form['password'])
-            that.localKey(storeWallet, encryptObj, {})
-            this.toWalletDetails()
-        })
-    }
-
-    async getMosaicList(listItem) {
-        let walletItem = listItem
-        let node = this.$store.state.account.node
-        let currentXEM2 = this.$store.state.account.currentXEM2
-        let currentXEM1 = this.$store.state.account.currentXEM1
-        await accountInterface.getAccountInfo({
-            node,
-            address: walletItem.address
-        }).then(async accountInfoResult => {
-            await accountInfoResult.result.accountInfo.subscribe((accountInfo) => {
-                let mosaicList = accountInfo.mosaics
-                mosaicList.map((item) => {
-                    item.hex = item.id.toHex()
-                    if (item.id.toHex() == currentXEM2 || item.id.toHex() == currentXEM1) {
-                        walletItem.balance = item.amount.compact() / 1000000
-                    }
-                })
-                walletItem.mosaics = mosaicList
-            }, () => {
-                walletItem.balance = 0
-            })
-        })
-        return walletItem
-    }
-
-    async getMultisigAccount(listItem) {
-        let walletItem = listItem
-        let node = this.$store.state.account.node
-        await accountInterface.getMultisigAccountInfo({
-            node: node,
-            address: walletItem.address
-        }).then((multisigAccountInfo) => {
-            if (typeof (multisigAccountInfo.result.multisigAccountInfo) == 'object') {
-                multisigAccountInfo.result.multisigAccountInfo['subscribe']((accountInfo) => {
-                    walletItem.isMultisig = true
-                }, () => {
-                    walletItem.isMultisig = false
-                })
-            }
-        })
-        return walletItem
-    }
-
-    localKey(wallet, keyObj, mnemonicEnCodeObj) {
-        let localData: any[] = []
-        let isExist: boolean = false
-        try {
-            localData = JSON.parse(localRead('wallets'))
-        } catch (e) {
-            localData = []
-        }
-        let saveData = {
-            name: wallet.name,
-            ciphertext: keyObj.ciphertext,
-            iv: keyObj.iv,
-            networkType: wallet.networkType,
-            address: wallet.address,
-            publicKey: wallet.publicKey,
-            mnemonicEnCodeObj: mnemonicEnCodeObj
-        }
-        let account = this.$store.state.account.wallet;
-        account = Object.assign(account, saveData)
-        this.$store.commit('SET_WALLET', account)
-        for (let i in localData) {
-            if (localData[i].address === wallet.address) {
-                localData[i] = saveData
-                isExist = true
-            }
-        }
-        if (!isExist) localData.unshift(saveData)
-        localSave('wallets', JSON.stringify(localData))
     }
 
     toWalletDetails() {

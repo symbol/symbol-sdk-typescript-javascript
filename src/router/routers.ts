@@ -185,13 +185,7 @@ const routers = [
                 path: '/login',
                 name: 'login',
                 component: () => import('@/views/login/login/Login.vue'),
-            },
-            {
-                path: '/createLockPW',
-                name: 'createLockPW',
-                // @ts-ignore
-                component: () => import('@/views/login/create-lock-password/CreateLockPassword.vue'),
-            },
+            }
         ]
     },
 ]

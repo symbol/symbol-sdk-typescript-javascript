@@ -1,7 +1,8 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {Message} from "@/config/index"
-import {Crypto, UInt64} from 'nem2-sdk'
+import {UInt64} from 'nem2-sdk'
 import {localRead} from '@/help/help.ts'
+import {decryptKey} from "@/help/appHelp";
 
 @Component
 export class InputLockTs extends Vue {
@@ -38,12 +39,7 @@ export class InputLockTs extends Vue {
         try {
             const u = [50, 50]
             lock = JSON.parse(lock)
-            let saveData = {
-                ciphertext: lock.ciphertext,
-                iv: lock.iv.data,
-                key: this.form.password
-            }
-            const enTxt = Crypto.decrypt(saveData)
+            const enTxt = decryptKey(lock, this.form.password)
             if (enTxt !== new UInt64(u).toHex()) {
                 this.$Notice.error({title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''});
                 return false

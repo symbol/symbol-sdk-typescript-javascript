@@ -123,9 +123,8 @@ export default class TransferTransactionTs extends Vue {
 
     async getMosaicList() {
         const that = this
-        let {accountPublicKey, currentXem, accountAddress, node, address, mosaic, amount, remark, fee} = this
+        let {accountAddress, node} = this
         const {currentXEM1, currentXEM2} = this.$store.state.account
-        let mosaicIdList = []
         await accountInterface.getAccountInfo({
             node,
             address: accountAddress

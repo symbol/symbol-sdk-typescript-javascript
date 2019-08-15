@@ -1,12 +1,12 @@
 import axios from 'axios'
 import routers from '@/router/routers'
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {wsInterface} from "@/interface/sdkListener"
 import {blockchainInterface} from '@/interface/sdkBlockchain'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
 import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk"
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
-import {sessionRead, sessionSave, localSave, localRead} from "@/help/help"
+import {localSave, localRead} from "@/help/help"
 import {Component, Vue, Watch} from 'vue-property-decorator/lib/vue-property-decorator'
 import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/help/electronHelp'
 
@@ -35,7 +35,7 @@ export class MenuBarTs extends Vue {
             value: 'http://47.107.245.217:3000',
             name: 'cn-2',
             url: '47.107.245.217',
-            isSelected: false,
+            isSelected: true,
         }
     ]
     isShowDialog = true
@@ -255,15 +255,6 @@ export class MenuBarTs extends Vue {
         }
     }
 
-    // getCurrentXem() {
-    //     const {currentNode} = this
-    //     const that = this
-    //     const currentXEM = new NamespaceId('nem.xem')
-    //     const currentXEM2 = new NamespaceId('cat.currency')
-    //     this.$store.state.account.currentXEM1 = currentXEM.id.toHex()
-    //     console.log(currentXEM2.id.toHex())
-    // }
-
     initData() {
         this.languageList = this.$store.state.app.languageList
         this.currentLanguage = localRead('local')
@@ -310,6 +301,5 @@ export class MenuBarTs extends Vue {
         this.unconfirmedListener()
         this.confirmedListener()
         this.txErrorListener()
-        // this.getCurrentXem()
     }
 }

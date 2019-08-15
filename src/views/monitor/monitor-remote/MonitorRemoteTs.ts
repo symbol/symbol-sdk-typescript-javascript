@@ -1,18 +1,19 @@
 import {Message} from "@/config"
 import {walletInterface} from "@/interface/sdkWallet"
 import {Component, Vue} from 'vue-property-decorator'
-import {accountInterface} from '@/interface/sdkAccount'
 import {transactionInterface} from '@/interface/sdkTransaction'
-import {Account, AccountLinkTransaction, Crypto, Deadline, LinkAction, NetworkType, UInt64} from "nem2-sdk"
+import {AccountLinkTransaction, UInt64, LinkAction, NetworkType, Deadline, Account} from "nem2-sdk"
+import {decryptKey} from "@/help/appHelp";
 
 
 @Component
 export class MonitorRemoteTs extends Vue {
-    isLinked = false
-    harvestBlockList = []
-    isLinkToRemote = false
-    isShowDialog = false
-    remotePublickey = ''
+    modal1 = false
+    modalMark = false
+    switchMark = false
+    switchState = false
+    tableColumns = []
+    aliasList = []
     formItem = {
         remotePublickey: '',
         fee: 0,
@@ -36,13 +37,18 @@ export class MonitorRemoteTs extends Vue {
 
     }
 
+    modalOk() {
+
+    }
+
     modalCancel() {
-        this.isShowDialog = false
+        this.modalMark = false
+        this.switchMark = false
     }
 
     switchChan() {
-        if (this.isLinked == false) {
-            this.isShowDialog = true
+        if (this.switchMark == false) {
+            this.modalMark = true
         }
     }
 
@@ -76,12 +82,7 @@ export class MonitorRemoteTs extends Vue {
     }
 
     decryptKey() {
-        let encryptObj = {
-            ciphertext: this.getWallet.ciphertext,
-            iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-            key: this.formItem.password
-        }
-        this.checkPrivateKey(Crypto.decrypt(encryptObj))
+        this.checkPrivateKey(decryptKey(this.getWallet, this.formItem.password))
     }
 
     checkPrivateKey(DeTxt) {
@@ -100,14 +101,12 @@ export class MonitorRemoteTs extends Vue {
     }
 
     sendTransaction(privatekey) {
-        const {isLinked} = this
         const {remotePublickey, fee, password} = this.formItem
         // TODO COMLETE REMOTE TRANSACTION
         const {networkType} = this.getWallet
         const {generationHash, node} = this.$store.state.account
         const account = Account.createFromPrivateKey(privatekey, networkType)
-        const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(), remotePublickey, isLinked ? LinkAction.Link : LinkAction.Unlink, NetworkType.MIJIN_TEST, UInt64.fromUint(fee)
-        )
+        const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(), remotePublickey, LinkAction.Link, NetworkType.MIJIN_TEST, UInt64.fromUint(fee))
         transactionInterface._announce({
             transaction: accountLinkTransaction,
             node,
@@ -115,32 +114,5 @@ export class MonitorRemoteTs extends Vue {
             generationHash
         })
         this.modalCancel()
-    }
-
-    toggleSwitch(status) {
-        this.isShowDialog = true
-    }
-
-    getLinkPublicKey() {
-        const that = this
-        const {address} = this.$store.state.account.wallet
-        const {node} = this.$store.state.account
-        accountInterface.getLinkedPublickey({
-            node,
-            address
-        }).then((result) => {
-            const linkedPublicKey = result.result.linkedPublicKey
-            that.remotePublickey = linkedPublicKey
-            if (Number(linkedPublicKey) != 0) {
-                // switch on
-                that.formItem.remotePublickey = linkedPublicKey
-                that.isLinked = true
-                return
-            }
-        })
-    }
-
-    created() {
-        this.getLinkPublicKey()
     }
 }

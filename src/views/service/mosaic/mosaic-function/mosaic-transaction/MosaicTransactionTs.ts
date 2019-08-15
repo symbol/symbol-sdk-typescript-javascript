@@ -177,12 +177,12 @@ export class MosaicTransactionTs extends Vue {
     }
 
     createBySelf(key) {
-        let {accountPublicKey, accountAddress, node, generationHash} = this
+        let {accountPublicKey, node, generationHash} = this
         const {supply, divisibility, transferable, supplyMutable, duration, innerFee} = this.formItem
-        const account = Account.createFromPrivateKey(key, NetworkType.MIJIN_TEST)
+        const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
         const that = this
         const nonce = MosaicNonce.createRandom()
-        const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST))
+        const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType))
         mosaicInterface.createMosaic({
             mosaicNonce: nonce,
             supply: supply,
@@ -219,10 +219,10 @@ export class MosaicTransactionTs extends Vue {
         const {generationHash, node} = this.$store.state.account
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         const {supply, divisibility, transferable, supplyMutable, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
-        const account = Account.createFromPrivateKey(key, NetworkType.MIJIN_TEST)
+        const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
         const that = this
         const nonce = MosaicNonce.createRandom()
-        const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(multisigPublickey, NetworkType.MIJIN_TEST))
+        const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(multisigPublickey, this.getWallet.networkType))
         const mosaicDefinitionTx = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
