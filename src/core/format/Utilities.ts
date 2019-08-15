@@ -168,8 +168,8 @@ export const decodeChar = (c) => {
 };
 
 export const decodeBlock = (input, inputOffset, output, outputOffset) => {
-    const bytes = new Uint8Array(this.Encoded_Block_Size);
-    for (let i = 0; i < this.Encoded_Block_Size; ++i) {
+    const bytes = new Uint8Array(Encoded_Block_Size);
+    for (let i = 0; i < Encoded_Block_Size; ++i) {
         bytes[i] = decodeChar(input[inputOffset + i]);
     }
 
