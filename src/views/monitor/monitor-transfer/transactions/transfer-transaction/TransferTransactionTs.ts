@@ -14,41 +14,45 @@ import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialo
 })
 export default class TransferTransactionTs extends Vue {
     node = ''
-    remark = ''
     currentXem = ''
     mosaicList = []
-    mosaic: any = ''
-    amount: any = '0'
-    fee: any = '50000'
     generationHash = ''
     accountAddress = ''
     accountPublicKey = ''
     transactionDetail = {}
     isShowSubAlias = false
     showCheckPWDialog = false
-    address = 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC'
+    isCompleteForm = false
+    formItem = {
+        fee: 50000,
+        remark: '',
+        address: '',
+        mosaic: '',
+        amount: 0,
+    }
 
     get getWallet() {
         return this.$store.state.account.wallet
     }
 
     initForm() {
-        this.fee = '50000'
-        this.remark = ''
-        this.address = ''
-        this.mosaic = ''
-        this.amount = '0'
+        this.formItem = {
+            fee: 50000,
+            remark: '',
+            address: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
+            mosaic: '',
+            amount: 0,
+        }
     }
 
     checkInfo() {
-        if (!this.checkForm()) {
-            return
-        }
+        if (!this.isCompleteForm) return
+        if (!this.checkForm()) return
         this.showDialog()
     }
 
     showDialog() {
-        const {address, mosaic, amount, remark, fee} = this
+        const {address, mosaic, amount, remark, fee} = this.formItem
         this.transactionDetail = {
             "transaction_type": 'ordinary_transfer',
             "transfer_target": address,
@@ -62,7 +66,8 @@ export default class TransferTransactionTs extends Vue {
 
     sendTransaction(key) {
         const that = this
-        let {accountPublicKey, accountAddress, node, address, mosaic, amount, remark, fee, generationHash} = this
+        let {node, generationHash} = this
+        let {address, mosaic, amount, remark, fee} = this.formItem
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
 
         transactionInterface.transferTransaction({
@@ -94,7 +99,7 @@ export default class TransferTransactionTs extends Vue {
     }
 
     checkForm() {
-        const {address, mosaic, amount, remark, fee} = this
+        const {address, mosaic, amount, remark, fee} = this.formItem
         if (address.length < 40) {
             this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
             return false
@@ -182,7 +187,7 @@ export default class TransferTransactionTs extends Vue {
                 return true
             })
             that.mosaicList = mosaicList
-            that.mosaic = currentXEMHex
+            that.formItem.mosaic = currentXEMHex
         })
     }
 
@@ -215,8 +220,15 @@ export default class TransferTransactionTs extends Vue {
         this.getMosaicList()
     }
 
+    @Watch('formItem', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {address, mosaic, amount, fee} = this.formItem
+        // isCompleteForm
+        this.isCompleteForm = address !== '' && mosaic !== '' && parseInt(amount.toString()) >= 0 && fee  > 0
+    }
+
     created() {
-        // this.initForm()
+        this.initForm()
         this.initData()
         this.getMosaicList()
     }

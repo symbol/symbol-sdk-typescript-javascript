@@ -60,12 +60,6 @@
             </Row>
           </div>
           <div class="buttons_container">
-            <Button type="success" @click="toPrePage()">
-              <Icon class="pre" type="ios-arrow-round-back"/>
-              {{$t('previous')}}
-            </Button>
-
-
             <Button type="success" @click="exportMnemonic">
               {{$t('next')}}
               <Icon class="next" type="ios-arrow-round-forward"/>
@@ -78,12 +72,6 @@
           <p class="tit">{{$t('please_accurately_copy_the_safety_backup_mnemonic')}}</p>
           <p class="mnemonicWords">{{mnemonic}}</p>
           <div class="buttons_container">
-            <Button type="success" @click="toPrePage()">
-              <Icon class="pre" type="ios-arrow-round-back"/>
-              {{$t('previous')}}
-            </Button>
-
-
             <Button type="success" @click="exportMnemonic">
               {{$t('next')}}
               <Icon class="next" type="ios-arrow-round-forward"/>
@@ -100,7 +88,7 @@
             <span v-for="(item, index) in mnemonicRandomArr" @click="sureWord(index)" :key="index">{{item}}</span>
           </p>
           <div class="buttons_container">
-            <Button type="success" @click="toPrePage()">
+            <Button type="success" class="preButton" @click="toPrePage()">
               <Icon class="pre" type="ios-arrow-round-back"/>
               {{$t('previous')}}
             </Button>

@@ -9,6 +9,7 @@ import {Account, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
 @Component
 export class MosaicUnAliasDialogTs extends Vue {
     show = false
+    isCompleteForm = false
     aliasNameList: any[] = []
     mosaic = {
         fee: 50000,
@@ -58,9 +59,8 @@ export class MosaicUnAliasDialogTs extends Vue {
     }
 
     checkNamespaceForm() {
-        if (!this.checkInfo()) {
-            return
-        }
+        if (!this.isCompleteForm) return
+        if (!this.checkInfo()) return
         this.decryptKey()
     }
     decryptKey () {
@@ -123,5 +123,12 @@ export class MosaicUnAliasDialogTs extends Vue {
     onShowMosaicAliasDialogChange() {
         this.show = this.showMosaicUnAliasDialog
         Object.assign(this.mosaic, this.itemMosaic)
+    }
+
+    @Watch('mosaic', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {fee, password} = this.mosaic
+        // isCompleteForm
+        this.isCompleteForm = fee > 0 && password !== ''
     }
 }

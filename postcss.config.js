@@ -7,7 +7,6 @@ module.exports = {
           // "propList": ["*",'!font-size'],
           "propList": ["*"],
           "selectorBlackList": ["mint-"],
-          // "minPixelValue": 15
       }
   }
 }

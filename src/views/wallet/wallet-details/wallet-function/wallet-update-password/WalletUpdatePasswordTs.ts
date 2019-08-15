@@ -1,25 +1,22 @@
 import {Message} from "@/config/index"
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import {walletInterface} from "@/interface/sdkWallet"
 import {decryptKey, encryptKey, saveLocalWallet} from "@/help/appHelp";
 
 @Component
 export  class WalletUpdatePasswordTs extends Vue {
+    formItem = {
+        prePassword: '',
+        newPassword: '',
+        repeatPassword: '',
+    }
     prePassword = ''
     newPassword = ''
     repeatPassword = ''
     privateKey = ''
-    btnState = false
+    isCompleteForm = false
     get getWallet () {
         return this.$store.state.account.wallet
-    }
-
-    changeBtnState () {
-        if(this.prePassword == ''){
-            this.btnState = false
-        }else {
-            this.btnState = true
-        }
     }
 
     checkInfo() {
@@ -53,9 +50,8 @@ export  class WalletUpdatePasswordTs extends Vue {
     }
 
     confirmUpdate() {
-        if (!this.btnState || !this.checkInfo()) {
-            return
-        }
+        if(!this.isCompleteForm) return
+        if(!this.checkInfo()) return
         this.checkPrivateKey(decryptKey(this.getWallet, this.prePassword))
     }
     updatePW () {
@@ -96,6 +92,14 @@ export  class WalletUpdatePasswordTs extends Vue {
         this.repeatPassword = ''
         this.privateKey = ''
     }
+
+    @Watch('formItem', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {prePassword, newPassword, repeatPassword} = this.formItem
+        // isCompleteForm
+        this.isCompleteForm = prePassword !== '' && newPassword !== '' && repeatPassword !== ''
+    }
+
     created () {
         this.init()
     }

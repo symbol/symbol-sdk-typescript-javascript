@@ -78,7 +78,7 @@
     </div>
 
 
-    <div @click="checkInfo" v-if="isShowPanel" class="send_button pointer">
+    <div @click="checkInfo" v-if="isShowPanel" :class="['send_button',isCompleteForm?'pointer':'not_allowed']">
       {{$t('send')}}
     </div>
     <div class=" no_multisign pointer" v-else>

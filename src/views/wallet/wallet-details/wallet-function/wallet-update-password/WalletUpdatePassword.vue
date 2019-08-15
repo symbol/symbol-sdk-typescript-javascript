@@ -5,22 +5,21 @@
 
       <div class="input_content">
         <span>{{$t('old_password')}}</span>
-        <input type="password" v-model="prePassword" @input="changeBtnState"
-               :placeholder="$t('please_enter_the_original_password')">
+        <input type="password" v-model="formItem.prePassword" :placeholder="$t('please_enter_the_original_password')">
       </div>
 
       <div class="input_content">
         <span>{{$t('new_password')}}</span>
-        <input type="password" v-model="newPassword" :placeholder="$t('please_enter_a_new_password')">
+        <input type="password" v-model="formItem.newPassword" :placeholder="$t('please_enter_a_new_password')">
       </div>
 
       <div class="input_content">
         <span>{{$t('Confirm_the_password')}}</span>
-        <input type="password" v-model="repeatPassword" :placeholder="$t('please_enter_your_new_password_again')">
+        <input type="password" v-model="formItem.repeatPassword" :placeholder="$t('please_enter_your_new_password_again')">
       </div>
 
 
-      <div :class="[btnState?'confirm_sure':'confirm_update', 'pointer']" @click="confirmUpdate">
+      <div :class="[isCompleteForm?'pointer':'not_allowed', 'confirmButton']" @click="confirmUpdate">
         {{$t('confirm')}}
       </div>
     </div>

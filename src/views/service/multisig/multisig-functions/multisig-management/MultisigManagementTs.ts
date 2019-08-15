@@ -71,6 +71,7 @@ export class MultisigManagementTs extends Vue {
     }
 
     confirmInput() {
+        if (!this.isCompleteForm) return
         if (!this.checkForm()) return
         this.showCheckPWDialog = true
     }
@@ -112,7 +113,7 @@ export class MultisigManagementTs extends Vue {
     }
 
     createBondedModifyTransaction(privatekey) {
-        const {multisigPublickey, cosignerList, bondedFee, lockFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
+        const {cosignerList, bondedFee, lockFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
         const {networkType} = this.$store.state.account.wallet
         const {generationHash, node} = this.$store.state.account
         const account = Account.createFromPrivateKey(privatekey, networkType)
@@ -273,15 +274,12 @@ export class MultisigManagementTs extends Vue {
         that.currentCosignatoryList = multisigInfo['cosignatories']
     }
 
-
     @Watch('formItem', {immediate: true, deep: true})
     onFormItemChange() {
         const {multisigPublickey, cosignerList, bondedFee, lockFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
         // isCompleteForm
         this.isCompleteForm = multisigPublickey.length === 64 && cosignerList.length !== 0 && bondedFee + '' !== '' && lockFee + '' !== '' && innerFee + '' !== '' && minApprovalDelta + '' !== '' && minRemovalDelta + '' !== ''
-        return
     }
-
 
     created() {
         this.getMultisigAccountList()

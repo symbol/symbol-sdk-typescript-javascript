@@ -9,6 +9,7 @@ import {decryptKey} from "@/help/appHelp";
 @Component
 export class MosaicEditDialogTs extends Vue {
     show = false
+    isCompleteForm = false
     changedSupply = 0
     totalSupply = 9000000000
     mosaic = {
@@ -98,9 +99,8 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     checkMosaicForm() {
-        if (!this.checkInfo()) {
-            return
-        }
+        if (!this.isCompleteForm) return
+        if (!this.checkInfo()) return
         this.decryptKey()
     }
 
@@ -135,7 +135,6 @@ export class MosaicEditDialogTs extends Vue {
             const transaction = changed.result.mosaicSupplyChangeTransaction
             const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
             const signature = account.sign(transaction, this.generationHash)
-
             transactionInterface.announce({signature, node: that.node}).then((announceResult) => {
                 // get announce status
                 announceResult.result.announceStatus.subscribe((announceInfo: any) => {
@@ -177,5 +176,13 @@ export class MosaicEditDialogTs extends Vue {
     @Watch('selectedMosaic')
     onSelectMosaicChange() {
         Object.assign(this.mosaic, this.selectedMosaic)
+    }
+
+    @Watch('mosaic', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {delta, fee, password} = this.mosaic
+        // isCompleteForm
+        console.log(delta, fee, password)
+        this.isCompleteForm = parseInt(delta.toString()) >= 0 && fee > 0 && password !== ''
     }
 }

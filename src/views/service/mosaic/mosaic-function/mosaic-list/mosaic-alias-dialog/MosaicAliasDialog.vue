@@ -33,7 +33,7 @@
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem class="button_update">
-              <Button type="success" @click="updateMosaicAlias">{{$t('bind')}}</Button>
+              <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="updateMosaicAlias">{{$t('bind')}}</Button>
             </FormItem>
           </Form>
         </div>

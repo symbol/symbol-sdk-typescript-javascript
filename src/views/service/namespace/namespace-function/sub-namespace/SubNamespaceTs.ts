@@ -182,6 +182,7 @@ export class SubNamespaceTs extends Vue {
     }
 
     createTransaction() {
+        if (!this.isCompleteForm) return
         if (!this.checkForm()) return
         this.showCheckPWDialog = true
     }

@@ -36,7 +36,7 @@ export class MosaicTransactionTs extends Vue {
     generationHash = ''
     currentXEM2: string
     currentXEM1: string
-    durationIntoDate = 0
+    durationIntoDate:any = 0
     accountPublicKey = ''
     currentTab: number = 0
     currentMinApproval = -1
@@ -337,6 +337,7 @@ export class MosaicTransactionTs extends Vue {
 
 
     createMosaic(isMultisigAccount) {
+        if(!this.isCompleteForm) return
         this.isMultisigAccount = isMultisigAccount
         if (!this.checkForm()) return
         this.showCheckDialog()
@@ -410,7 +411,7 @@ export class MosaicTransactionTs extends Vue {
             })
             this.formItem.duration = 0
         }
-        this.durationIntoDate = Number(formatSeconds(duration * 12))
+        this.durationIntoDate = formatSeconds(duration * 12)
     }
 
     created() {

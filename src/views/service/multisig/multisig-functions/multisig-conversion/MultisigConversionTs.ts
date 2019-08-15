@@ -49,9 +49,9 @@ export class MultisigConversionTs extends Vue {
 
     confirmInput() {
         // check input data
-        if (!this.checkForm()) {
-            return
-        }
+        if (!this.isCompleteForm) return
+        if (!this.checkForm()) return
+
         this.showCheckPWDialog = true
     }
 

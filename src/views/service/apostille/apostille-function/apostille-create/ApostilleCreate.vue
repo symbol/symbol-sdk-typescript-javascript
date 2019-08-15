@@ -60,12 +60,12 @@
 
             <div v-else class="create_document">
               <div>
-                <input :placeholder="$t('file_name')" class="top_file_name radius" type="text">
+                <input :placeholder="$t('file_name')" disabled class="top_file_name radius" style="cursor: not-allowed" type="text">
               </div>
               <div>
-                <textarea :placeholder="$t('please_input_text_to_apostille')"></textarea>
+                <textarea disabled style="cursor: not-allowed" :placeholder="$t('please_input_text_to_apostille')"></textarea>
               </div>
-              <div class="add">
+              <div class="add not_allowed">
                 {{$t('add')}}
               </div>
             </div>

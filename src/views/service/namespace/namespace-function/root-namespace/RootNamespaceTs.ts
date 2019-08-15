@@ -13,7 +13,7 @@ import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialo
     }
 })
 export class RootNamespaceTs extends Vue {
-    durationIntoDate = 0
+    durationIntoDate:any = 0
     currentMinApproval = -1
     showCheckPWDialog = false
     isCompleteForm = false
@@ -273,18 +273,6 @@ export class RootNamespaceTs extends Vue {
         })
     }
 
-    @Watch('form', {immediate: true, deep: true})
-    onFormItemChange() {
-        const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
-
-        // isCompleteForm
-        if (this.typeList[0].isSelected) {
-            this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && innerFee + '' !== ''
-            return
-        }
-        this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && aggregateFee + '' !== '' && lockFee + '' !== '' && innerFee + '' !== '' && multisigPublickey && multisigPublickey.length === 64
-    }
-
     showErrorMessage(message) {
         this.$Notice.destroy()
         this.$Notice.error({
@@ -293,6 +281,7 @@ export class RootNamespaceTs extends Vue {
     }
 
     createTransaction() {
+        if (!this.isCompleteForm) return
         if (!this.checkForm()) return
         this.showCheckPWDialog = true
     }
@@ -308,11 +297,23 @@ export class RootNamespaceTs extends Vue {
             this.$Message.error(Message.DURATION_MORE_THAN_1_YEARS_ERROR)
             this.form.duration = 0
         }
-        this.durationIntoDate = Number(formatSeconds(duration * 12))
+        this.durationIntoDate = formatSeconds(duration * 12)
     }
 
     initData() {
         this.changeXEMRentFee()
+    }
+
+    @Watch('form', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
+
+        // isCompleteForm
+        if (this.typeList[0].isSelected) {
+            this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && innerFee + '' !== ''
+            return
+        }
+        this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && aggregateFee + '' !== '' && lockFee + '' !== '' && innerFee + '' !== '' && multisigPublickey && multisigPublickey.length === 64
     }
 
     created() {

@@ -32,6 +32,7 @@ export class MultisigTransferTransactionTs extends Vue {
     currentMinApproval = 0
     isShowSubAlias = false
     showCheckPWDialog = false
+    isCompleteForm = false
     currentCosignatoryList = []
     mosaicList = [{
         label: 'no data',
@@ -70,9 +71,8 @@ export class MultisigTransferTransactionTs extends Vue {
     }
 
     checkInfo() {
-        if (!this.checkForm()) {
-            return
-        }
+        if(!this.isCompleteForm) return
+        if(!this.checkForm()) return
         this.showDialog()
 
     }
@@ -167,26 +167,6 @@ export class MultisigTransferTransactionTs extends Vue {
             })
         })
     }
-
-    @Watch('formItem.multisigPublickey')
-    async onMultisigPublickeyChange() {
-        const that = this
-        const {multisigPublickey} = this.formItem
-        const {node} = this.$store.state.account
-        const {networkType} = this.$store.state.account.wallet
-        let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
-        await this.getMosaicList(address)
-
-        multisigInterface.getMultisigAccountInfo({
-            address,
-            node
-        }).then((result) => {
-            const currentMultisigAccount = result.result.multisigInfo
-            that.currentMinApproval = currentMultisigAccount.minApproval
-            that.currentCosignatoryList = currentMultisigAccount.cosignatories
-        })
-    }
-
 
     checkForm() {
         const {address, mosaic, amount, remark, bondedFee, lockFee, aggregateFee, multisigPublickey} = this.formItem
@@ -304,6 +284,32 @@ export class MultisigTransferTransactionTs extends Vue {
         this.initData()
     }
 
+    @Watch('formItem.multisigPublickey')
+    async onMultisigPublickeyChange() {
+        const that = this
+        const {multisigPublickey} = this.formItem
+        const {node} = this.$store.state.account
+        const {networkType} = this.$store.state.account.wallet
+        let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
+        await this.getMosaicList(address)
+
+        multisigInterface.getMultisigAccountInfo({
+            address,
+            node
+        }).then((result) => {
+            const currentMultisigAccount = result.result.multisigInfo
+            that.currentMinApproval = currentMultisigAccount.minApproval
+            that.currentCosignatoryList = currentMultisigAccount.cosignatories
+        })
+    }
+
+    @Watch('formItem', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {address, mosaic, amount, bondedFee, lockFee, aggregateFee, multisigPublickey} = this.formItem
+        // isCompleteForm
+        this.isCompleteForm = address !== '' && mosaic !== '' && parseInt(amount.toString()) >= 0 && multisigPublickey !== '' &&
+            bondedFee > 0 && lockFee > 0 && aggregateFee  > 0
+    }
     created() {
         this.initData()
         this.getMultisigAccountList()

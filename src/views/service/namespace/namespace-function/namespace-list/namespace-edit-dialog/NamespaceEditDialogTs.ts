@@ -1,9 +1,8 @@
 import './NamespaceEditDialog.less'
 import {Message} from "@/config/index"
-import {Account, Crypto} from 'nem2-sdk'
+import {Account} from 'nem2-sdk'
 import {walletInterface} from "@/interface/sdkWallet"
-import {aliasInterface} from "@/interface/sdkNamespace"
-import {formatSeconds, formatAddress} from '@/help/help.ts'
+import {formatSeconds} from '@/help/help.ts'
 import {transactionInterface} from "@/interface/sdkTransaction"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {createRootNamespace, decryptKey} from "@/help/appHelp";
@@ -11,6 +10,7 @@ import {createRootNamespace, decryptKey} from "@/help/appHelp";
 @Component
 export class NamespaceEditDialogTs extends Vue {
     show = false
+    isCompleteForm = false
     stepIndex = 0
     durationIntoDate = 0
     namespace = {
@@ -85,9 +85,8 @@ export class NamespaceEditDialogTs extends Vue {
         return true
     }
     checkNamespaceForm() {
-        if (!this.checkInfo()) {
-            return
-        }
+        if (!this.isCompleteForm) return
+        if (!this.checkInfo()) return
         this.checkPrivateKey(decryptKey(this.getWallet, this.namespace.password))
     }
 
@@ -144,5 +143,12 @@ export class NamespaceEditDialogTs extends Vue {
     @Watch('showNamespaceEditDialog')
     onShowNamespaceEditDialogChange() {
         this.show = this.showNamespaceEditDialog
+    }
+
+    @Watch('namespace', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {name, duration,fee, password} = this.namespace
+        // isCompleteForm
+        this.isCompleteForm = name !== ''&& duration > 0 && fee > 0 && password !== ''
     }
 }

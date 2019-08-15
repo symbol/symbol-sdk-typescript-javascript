@@ -10,6 +10,7 @@ import {decryptKey} from "@/help/appHelp"
 @Component
 export class MosaicAliasDialogTs extends Vue {
     show = false
+    isCompleteForm = false
     mosaic = {
         aliasName: '',
         fee: 50000,
@@ -72,9 +73,8 @@ export class MosaicAliasDialogTs extends Vue {
     }
 
     checkNamespaceForm() {
-        if (!this.checkInfo()) {
-            return
-        }
+        if (!this.isCompleteForm) return
+        if (!this.checkInfo()) return
         this.decryptKey()
     }
 
@@ -159,5 +159,12 @@ export class MosaicAliasDialogTs extends Vue {
     @Watch('namespaceList')
     onNamespaceListChange() {
         this.initData()
+    }
+
+    @Watch('mosaic', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {aliasName, fee, password} = this.mosaic
+        // isCompleteForm
+        this.isCompleteForm = aliasName !== '' && fee > 0 && password !== ''
     }
 }

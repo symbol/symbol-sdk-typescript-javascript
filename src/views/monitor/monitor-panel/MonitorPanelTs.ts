@@ -112,7 +112,11 @@ export class MonitorPanelTs extends Vue {
     copyAddress() {
         const that = this
         copyTxt(this.address).then(() => {
-            that.$Message.success(Message.COPY_SUCCESS)
+            that.$Notice.success(
+                {
+                    title: this.$t(Message.COPY_SUCCESS).toString()
+                }
+            )
         })
     }
 

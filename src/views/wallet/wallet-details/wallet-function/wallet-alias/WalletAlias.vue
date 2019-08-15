@@ -15,7 +15,7 @@
       </div>
 
       <div class="input_content">
-        <div class="title">{{$t('alias_selection')}}</div>
+        <div class="title">{{$t('alias')}}</div>
         <div class="input_area">
           <p v-if="aliasListIndex >= 0" class="unLinkP">{{formItem.alias}}</p>
           <i-select v-model="formItem.alias" v-else :placeholder="$t('alias_selection')">
@@ -37,13 +37,13 @@
       <div class="input_content">
         <div class="title">{{$t('password')}}</div>
         <div class="input_area">
-          <input type="password" v-model="formItem.password"  @input="showBtn" :placeholder="$t('please_enter_your_wallet_password')">
+          <input type="password" v-model="formItem.password" :placeholder="$t('please_enter_your_wallet_password')">
         </div>
       </div>
 
       <div class="button_content">
         <span class="cancel pointer" @click="closeModel">{{$t('canel')}}</span>
-        <span :class="['cancel', btnState?'checkBtn':'un_click']" @click="checkAliasForm()">{{aliasListIndex >= 0?$t('unbind'):$t('bind')}}</span>
+        <span :class="['cancel', isCompleteForm?'pointer':'not_allowed']" @click="checkAliasForm()">{{aliasListIndex >= 0?$t('unbind'):$t('bind')}}</span>
       </div>
     </Modal>
 

@@ -103,7 +103,7 @@
           </div>
         </div>
 
-        <div :class="['create_button ','pointer',isCompleteForm?'':'not_allowed']" @click="createTransaction">
+        <div :class="['create_button ',isCompleteForm?'pointer':'not_allowed']" @click="createTransaction">
           {{$t('create')}}
         </div>
       </div>

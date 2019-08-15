@@ -13,7 +13,7 @@ export class WalletAliasTs extends Vue {
     isShowDialog = false
     isShowDeleteIcon = false
     showCheckPWDialog = false
-    btnState = false
+    isCompleteForm = false
     formItem = {
         address: '',
         alias: '',
@@ -57,7 +57,6 @@ export class WalletAliasTs extends Vue {
 
     closeModel () {
         this.isShowDialog = false
-        this.btnState = false
         this.aliasListIndex = -1
         this.formItem = {
             address: '',
@@ -95,7 +94,7 @@ export class WalletAliasTs extends Vue {
     }
 
     checkAliasForm() {
-        if(!this.btnState) return
+        if(!this.isCompleteForm) return
         if(!this.checkForm()) return
         if(this.aliasListIndex >= 0){
             this.addressAlias(decryptKey(this.getWallet, this.formItem.password), false)
@@ -144,9 +143,6 @@ export class WalletAliasTs extends Vue {
             })
         })
     }
-    showBtn () {
-        this.btnState = this.formItem.password !== ''
-    }
 
     formatAddress (address) {
         return formatAddress(address)
@@ -180,6 +176,13 @@ export class WalletAliasTs extends Vue {
     @Watch('namespaceList')
     onNamespaceListChange() {
         this.initData()
+    }
+
+    @Watch('formItem', {immediate: true, deep: true})
+    onFormItemChange() {
+        const {address, alias, password, fee} = this.formItem
+        // isCompleteForm
+        this.isCompleteForm = address !== '' && alias !== '' && password !== '' && fee  > 0
     }
 
     created () {
