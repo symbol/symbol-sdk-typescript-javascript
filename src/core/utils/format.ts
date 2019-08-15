@@ -1,6 +1,6 @@
 import {transactionTag} from '@/config'
-import {formatNemDeadline} from "@/help/help"
-import {MosaicId, Transaction, TransactionType} from 'nem2-sdk'
+import {formatNemDeadline} from "@/core/utils/utils"
+import {Transaction, TransactionType} from 'nem2-sdk'
 
 function formatTx(transaction: any, accountAddress: string) {
     const {type} = transaction

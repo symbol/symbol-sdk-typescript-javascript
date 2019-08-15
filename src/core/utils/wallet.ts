@@ -1,9 +1,9 @@
-import {localRead, localSave} from "@/help/help";
-import {walletInterface} from "@/interface/sdkWallet";
-import {accountInterface} from "@/interface/sdkAccount";
+import {localRead, localSave} from "@/core/utils/utils";
+import {walletApi} from "@/core/api/walletApi";
+import {accountApi} from "@/core/api/accountApi";
 import {Address, Crypto} from 'nem2-sdk'
-import {aliasInterface} from "@/interface/sdkNamespace";
-import {multisigInterface} from "@/interface/sdkMultisig";
+import {namespaceApi} from "@/core/api/namespaceApi";
+import {multisigApi} from "@/core/api/multisigApi";
 
 export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) => {
     let localData: any[] = []
@@ -37,7 +37,7 @@ export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) =
 
 export const getAccountDefault = async (name, account, netType, node?, currentXEM1?, currentXEM2?) => {
     let storeWallet = {}
-    await walletInterface.getWallet({
+    await walletApi.getWallet({
         name: name,
         networkType: netType,
         privateKey: account.privateKey
@@ -67,7 +67,7 @@ export const getAccountDefault = async (name, account, netType, node?, currentXE
 
 export const setWalletMosaic = async(storeWallet, node, currentXEM1, currentXEM2) => {
     let wallet = storeWallet
-    await accountInterface.getAccountInfo({
+    await accountApi.getAccountInfo({
         node,
         address: wallet.address
     }).then(accountInfoResult => {
@@ -90,7 +90,7 @@ export const setWalletMosaic = async(storeWallet, node, currentXEM1, currentXEM2
 
 export const setMultisigAccount = async(storeWallet, node) => {
     let wallet = storeWallet
-    await accountInterface.getMultisigAccountInfo({
+    await accountApi.getMultisigAccountInfo({
         node: node,
         address: wallet.address
     }).then((multisigAccountInfo) => {
@@ -108,7 +108,7 @@ export const setMultisigAccount = async(storeWallet, node) => {
 export const getNamespaces = async (address, node) =>{
     let list = []
     let namespace = {}
-    await aliasInterface.getNamespacesFromAccount({
+    await namespaceApi.getNamespacesFromAccount({
         address: Address.createFromRawAddress(address),
         url: node
     }).then((namespacesFromAccount)=>{
@@ -141,7 +141,7 @@ export const getNamespaces = async (address, node) =>{
 }
 
 export const createRootNamespace = (namespaceName, duration, networkType, maxFee) => {
-    return aliasInterface.createdRootNamespace({
+    return namespaceApi.createdRootNamespace({
         namespaceName: namespaceName,
         duration: duration,
         networkType: networkType,
@@ -152,7 +152,7 @@ export const createRootNamespace = (namespaceName, duration, networkType, maxFee
 }
 
 export const  createSubNamespace = (rootNamespaceName, subNamespaceName, networkType, maxFee) => {
-    return aliasInterface.createdSubNamespace({
+    return namespaceApi.createdSubNamespace({
         parentNamespace: rootNamespaceName,
         namespaceName: subNamespaceName,
         networkType: networkType,
@@ -162,7 +162,7 @@ export const  createSubNamespace = (rootNamespaceName, subNamespaceName, network
     })
 }
 export const multisigAccountInfo = (address, node) => {
-    return multisigInterface.getMultisigAccountInfo({
+    return multisigApi.getMultisigAccountInfo({
         address,
         node
     }).then((result) => {

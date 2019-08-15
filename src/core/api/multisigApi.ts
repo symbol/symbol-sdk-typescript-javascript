@@ -4,11 +4,11 @@ import {
     PublicAccount,
     AggregateTransaction,
     AccountHttp,
-    Address, Account
+    Address
 } from 'nem2-sdk'
-import {SdkV0} from "./sdkDefine";
+import {sdkApi} from "@/core/api/apis";
 
-export const multisigInterface: SdkV0.multisig = {
+export const multisigApi: sdkApi.multisig = {
 
     getMultisigAccountInfo: async (params) => {
         const {address, node} = params

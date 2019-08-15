@@ -1,14 +1,14 @@
 import axios from 'axios'
 import routers from '@/router/routers'
 import {Message} from "@/config"
-import {wsInterface} from "@/interface/sdkListener"
-import {blockchainInterface} from '@/interface/sdkBlockchain'
+import {listenerApi} from "@/core/api/listenerApi"
+import {blockchainApi} from '@/core/api/blockchainApi'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
 import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk"
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
-import {localSave, localRead} from "@/help/help"
+import {localSave, localRead} from "@/core/utils/utils"
 import {Component, Vue, Watch} from 'vue-property-decorator/lib/vue-property-decorator'
-import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/help/electronHelp'
+import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/core/utils/electron'
 
 @Component
 export class MenuBarTs extends Vue {
@@ -170,7 +170,7 @@ export class MenuBarTs extends Vue {
 
     async getGenerateHash(node) {
         const that = this
-        await blockchainInterface.getBlockByHeight({
+        await blockchainApi.getBlockByHeight({
             height: 1,
             node
         }).then(async (blockReasult: any) => {
@@ -185,7 +185,7 @@ export class MenuBarTs extends Vue {
         const that = this
         this.unconfirmedTxListener && this.unconfirmedTxListener.close()
         this.unconfirmedTxListener = new Listener(node, WebSocket)
-        wsInterface.listenerUnconfirmed({
+        listenerApi.listenerUnconfirmed({
             listener: this.unconfirmedTxListener,
             address: Address.createFromRawAddress(that.getWallet.address),
             fn: that.disposeUnconfirmed
@@ -197,7 +197,7 @@ export class MenuBarTs extends Vue {
         const that = this
         this.confirmedTxListener && this.confirmedTxListener.close()
         this.confirmedTxListener = new Listener(node, WebSocket)
-        wsInterface.listenerConfirmed({
+        listenerApi.listenerConfirmed({
             listener: this.confirmedTxListener,
             address: Address.createFromRawAddress(that.getWallet.address),
             fn: that.disposeConfirmed
@@ -209,7 +209,7 @@ export class MenuBarTs extends Vue {
         const that = this
         this.txStatusListener && this.txStatusListener.close()
         this.txStatusListener = new Listener(node, WebSocket)
-        wsInterface.listenerTxStatus({
+        listenerApi.listenerTxStatus({
             listener: this.txStatusListener,
             address: Address.createFromRawAddress(that.getWallet.address),
             fn: that.disposeTxStatus

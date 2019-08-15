@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import QRCode from 'qrcode'
-import i18n from '../language/index'
+import i18n from '../../language'
 import {AliasActionType, TransactionType} from 'nem2-sdk'
 
 const vueInstance = new Vue({i18n});

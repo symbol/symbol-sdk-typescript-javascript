@@ -5,10 +5,10 @@ import {
     MIN_PASSWORD_LENGTH,
     MAX_PASSWORD_LENGTH,
     ALLOWED_SPECIAL_CHAR,
-} from '@/help/formValidationHelp'
-import {localSave} from '@/help/help.ts'
+} from '@/core/utils/validation'
+import {localSave} from '@/core/utils/utils.js'
 import {Component, Vue} from 'vue-property-decorator'
-import {encryptKey} from "@/help/appHelp";
+import {encryptKey} from "@/core/utils/wallet";
 
 @Component
 export class CreateLockTs extends Vue {

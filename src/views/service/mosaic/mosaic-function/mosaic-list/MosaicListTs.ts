@@ -1,6 +1,6 @@
 import {MosaicId} from "nem2-sdk"
-import {mosaicInterface} from '@/interface/sdkMosaic.ts'
-import {accountInterface} from '@/interface/sdkAccount.ts'
+import {mosaicApi} from '@/core/api/mosaicApi.js'
+import {accountApi} from '@/core/api/accountApi.js'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
@@ -108,7 +108,7 @@ export class MosaicListTs extends Vue {
         const that = this
         let {accountPublicKey, accountAddress, node, currentXem} = this
 
-        await accountInterface.getAccountInfo({
+        await accountApi.getAccountInfo({
             node,
             address: accountAddress
         }).then(async accountInfoResult => {
@@ -117,7 +117,7 @@ export class MosaicListTs extends Vue {
                 let mosaicIdList = mosaicList.map((item) => {
                     return item.id
                 })
-                await mosaicInterface.getMosaics({
+                await mosaicApi.getMosaics({
                     node,
                     mosaicIdList
                 }).then((mosacListResult: any) => {
@@ -148,7 +148,7 @@ export class MosaicListTs extends Vue {
                         mosaicIdList.map((item)=>{
                             return new MosaicId(item)
                         })
-                        await mosaicInterface.getMosaicsNames({
+                        await mosaicApi.getMosaicsNames({
                             node,
                             mosaicIds: mosaicIdList
                         }).then((mosacListResult: any) => {

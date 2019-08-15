@@ -1,8 +1,8 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {Message} from "@/config/index"
 import {UInt64} from 'nem2-sdk'
-import {localRead} from '@/help/help.ts'
-import {decryptKey} from "@/help/appHelp";
+import {localRead} from '@/core/utils/utils.js'
+import {decryptKey} from "@/core/utils/wallet";
 
 @Component
 export class InputLockTs extends Vue {

@@ -7,9 +7,9 @@ import {
     AddressAliasTransaction,
     NamespaceHttp,
 } from 'nem2-sdk'
-import {SdkV0} from "./sdkDefine";
+import {sdkApi} from "@/core/api/apis";
 
-export const aliasInterface: SdkV0.alias = {
+export const namespaceApi: sdkApi.alias = {
 
     createNamespaceId: async (params) => {
         const name = params.name

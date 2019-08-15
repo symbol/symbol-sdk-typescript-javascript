@@ -1,8 +1,8 @@
 import {Message} from "@/config/index"
-import {decryptKey} from "@/help/appHelp"
-import {walletInterface} from "@/interface/sdkWallet"
-import {aliasInterface} from "@/interface/sdkNamespace"
-import {transactionInterface} from "@/interface/sdkTransaction"
+import {decryptKey} from "@/core/utils/wallet"
+import {walletApi} from "@/core/api/walletApi"
+import {namespaceApi} from "@/core/api/namespaceApi"
+import {transactionApi} from "@/core/api/transactionApi"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Account, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
 
@@ -68,7 +68,7 @@ export class MosaicUnAliasDialogTs extends Vue {
     }
     checkPrivateKey (DeTxt) {
         const that = this
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''
@@ -83,7 +83,7 @@ export class MosaicUnAliasDialogTs extends Vue {
     async updateMosaic (key) {
         const that =this
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
-        aliasInterface.mosaicAliasTransaction({
+        namespaceApi.mosaicAliasTransaction({
             actionType:AliasActionType.Unlink,
             namespaceId: new NamespaceId(that.mosaic['name']),
             mosaicId: new MosaicId(that.mosaic['hex']),
@@ -93,7 +93,7 @@ export class MosaicUnAliasDialogTs extends Vue {
             let transaction
             transaction = aliasTransaction.result.aliasMosaicTransaction
             const signature = account.sign(transaction, this.generationHash)
-            transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
+            transactionApi.announce({signature, node: this.node}).then((announceResult) => {
                 // get announce status
                 console.log(signature)
                 announceResult.result.announceStatus.subscribe((announceInfo: any) => {

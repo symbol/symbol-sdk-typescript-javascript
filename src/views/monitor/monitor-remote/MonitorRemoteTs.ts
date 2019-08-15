@@ -1,9 +1,9 @@
 import {Message} from "@/config"
-import {walletInterface} from "@/interface/sdkWallet"
+import {walletApi} from "@/core/api/walletApi"
 import {Component, Vue} from 'vue-property-decorator'
-import {transactionInterface} from '@/interface/sdkTransaction'
+import {transactionApi} from '@/core/api/transactionApi'
 import {AccountLinkTransaction, UInt64, LinkAction, NetworkType, Deadline, Account} from "nem2-sdk"
-import {decryptKey} from "@/help/appHelp";
+import {decryptKey} from "@/core/utils/wallet";
 
 
 @Component
@@ -87,7 +87,7 @@ export class MonitorRemoteTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''
@@ -107,7 +107,7 @@ export class MonitorRemoteTs extends Vue {
         const {generationHash, node} = this.$store.state.account
         const account = Account.createFromPrivateKey(privatekey, networkType)
         const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(), remotePublickey, LinkAction.Link, NetworkType.MIJIN_TEST, UInt64.fromUint(fee))
-        transactionInterface._announce({
+        transactionApi._announce({
             transaction: accountLinkTransaction,
             node,
             account,

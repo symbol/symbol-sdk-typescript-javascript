@@ -1,10 +1,10 @@
 import {Message} from "@/config/index"
-import {walletInterface} from "@/interface/sdkWallet"
-import {mosaicInterface} from "@/interface/sdkMosaic"
-import {transactionInterface} from "@/interface/sdkTransaction"
+import {walletApi} from "@/core/api/walletApi"
+import {mosaicApi} from "@/core/api/mosaicApi"
+import {transactionApi} from "@/core/api/transactionApi"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Account, Crypto} from 'nem2-sdk'
-import {decryptKey} from "@/help/appHelp";
+import {decryptKey} from "@/core/utils/wallet";
 
 @Component
 export class MosaicEditDialogTs extends Vue {
@@ -110,7 +110,7 @@ export class MosaicEditDialogTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''
@@ -125,7 +125,7 @@ export class MosaicEditDialogTs extends Vue {
 
     updateMosaic(key) {
         const that = this
-        mosaicInterface.mosaicSupplyChange({
+        mosaicApi.mosaicSupplyChange({
             mosaicId: this.mosaic['mosaicId'],
             delta: this.mosaic.changeDelta,
             netWorkType: this.getWallet.networkType,
@@ -136,7 +136,7 @@ export class MosaicEditDialogTs extends Vue {
             const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
             const signature = account.sign(transaction, this.generationHash)
 
-            transactionInterface.announce({signature, node: that.node}).then((announceResult) => {
+            transactionApi.announce({signature, node: that.node}).then((announceResult) => {
                 // get announce status
                 announceResult.result.announceStatus.subscribe((announceInfo: any) => {
                     console.log(signature)

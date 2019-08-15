@@ -1,8 +1,8 @@
-import {SdkV0} from './sdkDefine'
+import {sdkApi} from "@/core/api/apis";
 import {filter, mergeMap} from 'rxjs/operators'
-import {Listener, TransactionHttp} from 'nem2-sdk'
+import {TransactionHttp} from 'nem2-sdk'
 
-export const wsInterface: SdkV0.ws = {
+export const listenerApi: sdkApi.ws = {
     openWs: async (params) => {
         const Observable = params.listener.open().catch((e) => {
             console.log(e)

@@ -1,8 +1,8 @@
 import {Message} from "@/config/index"
-import {accountInterface} from '@/interface/sdkAccount'
-import {multisigInterface} from '@/interface/sdkMultisig'
+import {accountApi} from '@/core/api/accountApi'
+import {multisigApi} from '@/core/api/multisigApi'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {transactionInterface} from '@/interface/sdkTransaction'
+import {transactionApi} from '@/core/api/transactionApi'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     Account,
@@ -111,7 +111,7 @@ export class MultisigTransferTransactionTs extends Vue {
         )
 
         if (this.currentMinApproval > 1) {
-            multisigInterface.bondedMultisigTransaction({
+            multisigApi.bondedMultisigTransaction({
                 networkType: networkType,
                 account: account,
                 fee: bondedFee,
@@ -119,7 +119,7 @@ export class MultisigTransferTransactionTs extends Vue {
                 transaction: [transaction],
             }).then((result) => {
                 const aggregateTransaction = result.result.aggregateTransaction
-                transactionInterface.announceBondedWithLock({
+                transactionApi.announceBondedWithLock({
                     aggregateTransaction,
                     account,
                     listener,
@@ -131,14 +131,14 @@ export class MultisigTransferTransactionTs extends Vue {
             })
             return
         }
-        multisigInterface.completeMultisigTransaction({
+        multisigApi.completeMultisigTransaction({
             networkType: networkType,
             fee: aggregateFee,
             multisigPublickey: multisigPublickey,
             transaction: [transaction],
         }).then((result) => {
             const aggregateTransaction = result.result.aggregateTransaction
-            transactionInterface._announce({
+            transactionApi._announce({
                 transaction: aggregateTransaction,
                 account,
                 node,
@@ -152,7 +152,7 @@ export class MultisigTransferTransactionTs extends Vue {
         const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
 
-        multisigInterface.getMultisigAccountInfo({
+        multisigApi.getMultisigAccountInfo({
             address,
             node
         }).then((result) => {
@@ -177,7 +177,7 @@ export class MultisigTransferTransactionTs extends Vue {
         let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
         await this.getMosaicList(address)
 
-        multisigInterface.getMultisigAccountInfo({
+        multisigApi.getMultisigAccountInfo({
             address,
             node
         }).then((result) => {
@@ -191,7 +191,7 @@ export class MultisigTransferTransactionTs extends Vue {
     checkForm() {
         const {address, mosaic, amount, remark, bondedFee, lockFee, aggregateFee, multisigPublickey} = this.formItem
 
-        // multisig check
+        // multisigApi check
         if (multisigPublickey.length !== 64) {
             this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR))
             return false
@@ -237,7 +237,7 @@ export class MultisigTransferTransactionTs extends Vue {
         const {node, currentXem} = this
         const {currentXEM1, currentXEM2} = this.$store.state.account
         let mosaicIdList = []
-        await accountInterface.getAccountInfo({
+        await accountApi.getAccountInfo({
             node,
             address: accountAddress
         }).then(async accountInfoResult => {

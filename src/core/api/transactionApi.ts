@@ -8,18 +8,16 @@ import {
     Message,
     AggregateTransaction,
     TransactionType,
-    Account,
-    Listener,
     HashLockTransaction,
     Mosaic,
     MosaicId,
     ModifyAccountPropertyAddressTransaction
 } from 'nem2-sdk'
-import {SdkV0} from "./sdkDefine";
+import {sdkApi} from "@/core/api/apis";
 import {filter, mergeMap} from "rxjs/operators";
-import Vue from '../main'
+import Vue from '../../main'
 
-export const transactionInterface: SdkV0.transaction = {
+export const transactionApi: sdkApi.transaction = {
 
     announce: async (params) => {
         const signature = params.signature;
@@ -241,8 +239,6 @@ export const transactionInterface: SdkV0.transaction = {
                 .subscribe(announcedAggregateBonded => console.log(announcedAggregateBonded),
                     err => console.error(err));
         });
-        console.log(hashLockTransactionSigned)
-        console.log(signedTransaction)
         return {
             result: {
                 aggregateBondedTx: ''

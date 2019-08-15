@@ -1,32 +1,74 @@
 import {
-    Address,
-    AliasActionType,
-    Deadline,
-    MosaicId,
-    NamespaceId,
-    NamespaceType,
-    NetworkType,
-    UInt64,
-    Password,
-    SimpleWallet,
-    PublicAccount,
     Account,
-    AccountInfo,
-    Transaction,
-    SignedTransaction,
-    MultisigAccountInfo,
-    MultisigAccountGraphInfo,
+    Address,
+    AggregateTransaction, AliasActionType, Deadline,
     Listener,
-    MultisigCosignatoryModification,
+    ModifyAccountPropertyAddressTransaction, MosaicId,
     MosaicSupplyChangeTransaction,
-    AggregateTransaction,
-    AccountPropertyTransaction,
+    MultisigAccountInfo, NamespaceId,
+    NetworkType,
+    Password,
     PropertyType,
-    ModifyAccountPropertyAddressTransaction
-} from 'nem2-sdk'
+    PublicAccount,
+    SignedTransaction,
+    SimpleWallet,
+    Transaction, UInt64
+} from "nem2-sdk";
 
+declare namespace api {
 
-declare namespace SdkV0 {
+    interface market {
+        kline: (params: {
+            symbol: string,
+            period: string,
+            size: string,
+        }) => Promise<{
+            rst: any;
+        }>;
+
+        detail: (params: {
+            symbol: string
+        }) => Promise<{
+            rst: any;
+        }>;
+
+        trade: (params: {
+            symbol: string,
+            size: string,
+        }) => Promise<{
+            rst: any;
+        }>;
+    }
+
+    interface blog {
+        list: (params: {
+            limit: string,
+            offset: string,
+            language: string,
+        }) => Promise<{
+            rst: any;
+        }>;
+        commentSave: (params: {
+            cid: string
+            comment: string
+            address: string
+            nickName: string
+            gtmCreate: string
+        }) => Promise<{
+            rst: any;
+        }>;
+        commentList: (params: {
+            cid: string,
+            limit: string,
+            offset:string,
+        }) => Promise<{
+            rst: any;
+        }>;
+    }
+
+}
+
+declare namespace sdkApi {
 
     type Rst<TType> = Promise<{
         error?: {
@@ -484,4 +526,3 @@ declare namespace SdkV0 {
         }>;
     }
 }
-

@@ -1,12 +1,12 @@
 
 import {Message} from "@/config/index"
 import {NetworkType, UInt64, Crypto} from "nem2-sdk"
-import {walletInterface} from "@/interface/sdkWallet"
+import {walletApi} from "@/core/api/walletApi"
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {localRead, localSave,strToHexCharCode} from '@/help/help'
+import {localRead, localSave,strToHexCharCode} from '@/core/utils/utils'
 import {MnemonicPassPhrase, ExtendedKey, Wallet} from 'nem2-hd-wallets'
-import {createAccount, randomMnemonicWord} from "@/help/mnemonicHelp";
-import {encryptKey, getAccountDefault, saveLocalWallet} from "@/help/appHelp";
+import {createAccount, randomMnemonicWord} from "@/core/utils/hdWallet";
+import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet";
 
 @Component
 export class WalletCreatedTs extends Vue{

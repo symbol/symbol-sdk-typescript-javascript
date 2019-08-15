@@ -1,12 +1,12 @@
 import {Message} from "@/config/index"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias";
-import {aliasInterface} from "@/interface/sdkNamespace";
+import {namespaceApi} from "@/core/api/namespaceApi";
 import {Account, Address, AddressAlias, AliasActionType, MosaicId, NamespaceId} from "nem2-sdk";
-import {transactionInterface} from "@/interface/sdkTransaction";
-import {decryptKey} from "@/help/appHelp";
-import {walletInterface} from "@/interface/sdkWallet";
-import {formatAddress, formatSeconds} from "@/help/help";
+import {transactionApi} from "@/core/api/transactionApi";
+import {decryptKey} from "@/core/utils/wallet";
+import {walletApi} from "@/core/api/walletApi";
+import {formatAddress, formatSeconds} from "@/core/utils/utils";
 
 @Component
 export class WalletAliasTs extends Vue {
@@ -106,7 +106,7 @@ export class WalletAliasTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''
@@ -122,7 +122,7 @@ export class WalletAliasTs extends Vue {
     addressAlias (key, type) {
         const that = this
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
-        aliasInterface.addressAliasTransaction({
+        namespaceApi.addressAliasTransaction({
             actionType: type ? AliasActionType.Link : AliasActionType.Unlink,
             namespaceId: new NamespaceId(that.formItem.alias),
             address: Address.createFromRawAddress(that.formItem.address),
@@ -132,7 +132,7 @@ export class WalletAliasTs extends Vue {
             let transaction
             transaction = addressAliasTransaction.result.aliasAddressTransaction
             const signature = account.sign(transaction, this.generationHash)
-            transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
+            transactionApi.announce({signature, node: this.node}).then((announceResult) => {
                 // get announce status
                 console.log(signature)
                 announceResult.result.announceStatus.subscribe((announceInfo: any) => {

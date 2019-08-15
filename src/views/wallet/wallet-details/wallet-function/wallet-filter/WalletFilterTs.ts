@@ -1,7 +1,7 @@
 import {Message} from "@/config/index"
 import {Component, Vue} from 'vue-property-decorator'
 import {Crypto} from "nem2-sdk";
-import {walletInterface} from "@/interface/sdkWallet";
+import {walletApi} from "@/core/api/walletApi";
 
 @Component
 export class WalletFilterTs extends Vue {
@@ -124,7 +124,7 @@ export class WalletFilterTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''

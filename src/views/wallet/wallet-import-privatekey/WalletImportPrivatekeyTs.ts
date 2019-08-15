@@ -1,10 +1,10 @@
 import {Message} from "@/config/index"
-import {localRead, localSave} from '@/help/help'
+import {localRead, localSave} from '@/core/utils/utils'
 import {Component, Vue} from 'vue-property-decorator'
 import {Account, NetworkType, Crypto} from "nem2-sdk"
-import {walletInterface} from "@/interface/sdkWallet"
-import {accountInterface} from "@/interface/sdkAccount"
-import {encryptKey, getAccountDefault, saveLocalWallet} from "@/help/appHelp";
+import {walletApi} from "@/core/api/walletApi"
+import {accountApi} from "@/core/api/accountApi"
+import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet";
 
 @Component
 export class WalletImportPrivatekeyTs extends Vue {
