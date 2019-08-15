@@ -1,5 +1,5 @@
 import {market} from "@/core/api/logicApi"
-import {KlineQuery} from "@/query/klineQuery"
+import {KlineQuery} from "@/core/query/klineQuery"
 import {PublicAccount, NetworkType} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {blockchainApi} from '@/core/api/blockchainApi'

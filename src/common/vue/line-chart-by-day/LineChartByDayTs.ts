@@ -1,6 +1,6 @@
 import echarts from 'echarts'
 import {market} from "@/core/api/logicApi"
-import {KlineQuery} from "@/query/klineQuery"
+import {KlineQuery} from "@/core/query/klineQuery"
 import {Component, Vue} from 'vue-property-decorator'
 import {localSave, localRead, isRefreshData, addZero, formatDate} from '@/core/utils/utils'
 

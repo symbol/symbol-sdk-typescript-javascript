@@ -1,4 +1,4 @@
-import {KlineQuery} from "@/query/klineQuery"
+import {KlineQuery} from "@/core/query/klineQuery"
 import {market} from "@/core/api/logicApi"
 import {Component, Vue} from 'vue-property-decorator'
 import LineChart from '@/common/vue/line-chart-by-day/LineChartByDay.vue'

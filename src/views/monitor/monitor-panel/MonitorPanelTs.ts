@@ -1,6 +1,6 @@
 import {Message} from "@/config/index"
 import {market} from "@/core/api/logicApi"
-import {KlineQuery} from "@/query/klineQuery"
+import {KlineQuery} from "@/core/query/klineQuery"
 import {Address, MosaicId, UInt64} from 'nem2-sdk'
 import {mosaicApi} from '@/core/api/mosaicApi'
 import {accountApi} from '@/core/api/accountApi'
