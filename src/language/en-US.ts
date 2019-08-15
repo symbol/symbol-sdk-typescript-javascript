@@ -467,7 +467,7 @@ export const en_US = {
     no_mnemonic: 'No mnemonic',
 
 
-    //multisig
+    //multisigApi
     map: 'Map',
     convert: 'Convert',
     manage: 'Manage',
@@ -576,8 +576,8 @@ export const en_US = {
     min_approval_amount_illegal: 'Min approval must be a number',
     min_removal_amount_illegal: 'Min removal must be a number',
     currrent: 'Currrent',
-    There_are_no_more_accounts_under_this_account: 'There are no more multisig under this account.',
-    There_are_no_more_accounts_under_this_account_or_cosigner: 'There are no more multisig or cosigner under this account.',
+    There_are_no_more_accounts_under_this_account: 'There are no more multisigApi under this account.',
+    There_are_no_more_accounts_under_this_account_or_cosigner: 'There are no more multisigApi or cosigner under this account.',
     This_account_is_already_a_multi_sign_account: 'This account is already a multi-sign account',
     mosaic_id_format_error: 'Mosaic id format error',
     alias_name_format_error: 'alias name format error',
@@ -607,7 +607,7 @@ export const en_US = {
     mosaic_alias: 'Mosaic alias',
     mosaic_definition: 'Mosaic definition',
     mosaic_supply_change: 'Mosaic supply',
-    modify_multisig_account: 'Modify multisig',
+    modify_multisig_account: 'Modify multisigApi',
     aggregate_complete: 'Complete',
     aggregate_bonded: 'Bonded',
     lock: 'Lock',

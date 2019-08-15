@@ -49,7 +49,7 @@ export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) =
 
 export const getAccountDefault = async (name, account, netType, node?, currentXEM1?, currentXEM2?) => {
     let storeWallet = {}
-    await walletInterface.getWallet({
+    await walletApi.getWallet({
         name: name,
         networkType: netType,
         privateKey: account.privateKey
@@ -120,7 +120,7 @@ export const setMultisigAccount = async (storeWallet, node) => {
 export const getNamespaces = async (address, node) => {
     let list = []
     let namespace = {}
-    await aliasInterface.getNamespacesFromAccount({
+    await namespaceApi.getNamespacesFromAccount({
         address: Address.createFromRawAddress(address),
         url: node
     }).then((namespacesFromAccount) => {
@@ -153,7 +153,7 @@ export const getNamespaces = async (address, node) => {
 }
 
 export const createRootNamespace = (namespaceName, duration, networkType, maxFee) => {
-    return aliasInterface.createdRootNamespace({
+    return namespaceApi.createdRootNamespace({
         namespaceName: namespaceName,
         duration: duration,
         networkType: networkType,
@@ -174,7 +174,7 @@ export const createSubNamespace = (rootNamespaceName, subNamespaceName, networkT
     })
 }
 export const multisigAccountInfo = (address, node) => {
-    return multisigInterface.getMultisigAccountInfo({
+    return multisigApi.getMultisigAccountInfo({
         address,
         node
     }).then((result) => {

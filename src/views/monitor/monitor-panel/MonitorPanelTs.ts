@@ -1,15 +1,15 @@
 import {Message} from "@/config/index"
-import {market} from "@/interface/restLogic"
-import {KlineQuery} from "@/query/klineQuery"
+import {market} from "@/core/api/logicApi"
+import {KlineQuery} from "@/core/query/klineQuery"
 import {Address, MosaicId, UInt64} from 'nem2-sdk'
-import {mosaicInterface} from '@/interface/sdkMosaic'
-import {accountInterface} from '@/interface/sdkAccount'
-import {aliasInterface} from "@/interface/sdkNamespace"
+import {mosaicApi} from '@/core/api/mosaicApi'
+import {accountApi} from '@/core/api/accountApi'
+import {namespaceApi} from "@/core/api/namespaceApi"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import monitorSeleted from '@/common/img/monitor/monitorSeleted.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
-import {copyTxt, localSave, localRead, formatXEMamount} from '@/help/help.ts'
-import {getNamespaces, setWalletMosaic} from "@/help/appHelp";
+import {copyTxt, localSave, localRead, formatXEMamount} from '@/core/utils/utils.js'
+import {getNamespaces, setWalletMosaic} from "@/core/utils/wallet";
 
 @Component
 export class MonitorPanelTs extends Vue {
@@ -170,7 +170,7 @@ export class MonitorPanelTs extends Vue {
     getAccountsName() {
         const that = this
         const {accountAddress, node} = this
-        accountInterface.getAccountsNames({
+        accountApi.getAccountsNames({
             node,
             addressList: [Address.createFromRawAddress(accountAddress)]
         }).then((namespaceResult) => {
@@ -197,7 +197,7 @@ export class MonitorPanelTs extends Vue {
     async getMosaicList() {
         const that = this
         let {accountAddress, node} = this
-        await accountInterface.getAccountInfo({
+        await accountApi.getAccountInfo({
             node,
             address: accountAddress
         }).then(async accountInfoResult => {
@@ -210,7 +210,7 @@ export class MonitorPanelTs extends Vue {
                     mosaicHexIds[index] = item.id.toHex()
                     return item.id
                 })
-                await mosaicInterface.getMosaics({
+                await mosaicApi.getMosaics({
                     node,
                     mosaicIdList: mosaicIds
                 }).then((mosaics) => {
@@ -313,7 +313,7 @@ export class MonitorPanelTs extends Vue {
         }
         let searchResult = {}
 
-        mosaicInterface.getMosaicByNamespace({
+        mosaicApi.getMosaicByNamespace({
             namespace: mosaicName
         }).then((result: any) => {
             const mosaicHex = result.result.mosaicId.toHex()
@@ -352,7 +352,7 @@ export class MonitorPanelTs extends Vue {
             mosaicMap = JSON.parse(mosaicMap)
             // refresh mosaic amount
             const that = this
-            await accountInterface.getAccountInfo({
+            await accountApi.getAccountInfo({
                 node,
                 address: accountAddress
             }).then(async accountInfoResult => {

@@ -1,8 +1,8 @@
 import {Password, SimpleWallet, Account, PublicAccount, AccountHttp} from 'nem2-sdk'
-import {SdkV0} from "./sdkDefine";
+import {sdkApi} from "@/core/api/apis";
 import generator from 'generate-password';
 
-export const walletInterface: SdkV0.wallet = {
+export const walletApi: sdkApi.wallet = {
 
     loginWallet: async (params) => {
         const name = params.name;

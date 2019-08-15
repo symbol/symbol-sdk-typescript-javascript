@@ -4,6 +4,8 @@ import {walletInterface} from "@/interface/sdkWallet"
 import {Crypto, PropertyType, Account} from "nem2-sdk"
 import {transactionInterface} from "@/interface/sdkTransaction"
 import {creatrModifyAccountPropertyTransaction, getAccountProperties} from '@/help/appHelp'
+import {Crypto} from "nem2-sdk";
+import {walletApi} from "@/core/api/walletApi";
 
 @Component
 export class WalletFilterTs extends Vue {

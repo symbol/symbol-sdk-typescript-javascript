@@ -1,8 +1,7 @@
 import {Message} from "@/config/index"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {multisigInterface} from '@/interface/sdkMultisig.ts'
-import {transactionInterface} from '@/interface/sdkTransaction.ts'
-import {createBondedMultisigTransaction} from '@/help/appHelp'
+import {multisigApi} from '@/core/api/multisigApi.js'
+import {transactionApi} from '@/core/api/transactionApi.js'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     Account,
@@ -128,7 +127,7 @@ export class MultisigConversionTs extends Vue {
         const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
 
-        multisigInterface.getMultisigAccountInfo({
+        multisigApi.getMultisigAccountInfo({
             address,
             node
         }).then((result) => {

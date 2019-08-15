@@ -1,9 +1,9 @@
 import {Account, Address, Listener} from "nem2-sdk"
-import {aliasInterface} from "@/interface/sdkNamespace"
-import {multisigInterface} from '@/interface/sdkMultisig'
-import {formatSeconds, formatAddress} from '@/help/help.ts'
+import {namespaceApi} from "@/core/api/namespaceApi"
+import {multisigApi} from '@/core/api/multisigApi'
+import {formatSeconds, formatAddress} from '@/core/utils/utils.js'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {transactionInterface} from "@/interface/sdkTransaction"
+import {transactionApi} from "@/core/api/transactionApi"
 import {Message, bandedNamespace as BandedNamespaceList} from "@/config/index"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/help/appHelp'

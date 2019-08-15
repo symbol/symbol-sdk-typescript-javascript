@@ -1,6 +1,6 @@
 import {Crypto} from 'nem2-sdk'
 import {Message} from "@/config/index"
-import {walletInterface} from "@/interface/sdkWallet"
+import {walletApi} from "@/core/api/walletApi"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 @Component
@@ -29,7 +29,7 @@ export class DeleteWalletCheckTs extends Vue {
             key: this.wallet.password
         }
         const DeTxt = Crypto.decrypt(saveData)
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''

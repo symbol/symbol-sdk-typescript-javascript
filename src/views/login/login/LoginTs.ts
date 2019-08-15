@@ -1,4 +1,4 @@
-import {localSave, localRead} from '@/help/help'
+import {localSave, localRead} from '@/core/utils/utils'
 import {Component, Vue} from 'vue-property-decorator'
 import GetStart from './login-view/get-start/GetStart.vue'
 import InputLock from './login-view/input-lock/InputLock.vue'

@@ -1,8 +1,7 @@
 import {Message} from "@/config/index"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {multisigInterface} from '@/interface/sdkMultisig.ts'
-import {transactionInterface} from '@/interface/sdkTransaction'
-import {createCompleteMultisigTransaction, createBondedMultisigTransaction} from '@/help/appHelp'
+import {multisigApi} from '@/core/api/multisigApi.js'
+import {transactionApi} from '@/core/api/transactionApi'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     MultisigCosignatoryModificationType,
@@ -15,7 +14,7 @@ import {
     ModifyMultisigAccountTransaction,
     UInt64
 } from 'nem2-sdk'
-import {multisigAccountInfo} from "@/help/appHelp"
+import {multisigAccountInfo} from "@/core/utils/wallet";
 
 @Component({
     components: {

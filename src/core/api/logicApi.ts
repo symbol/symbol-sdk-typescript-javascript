@@ -1,7 +1,8 @@
-import {WebClient} from "@/help/webHelp"
+import {WebClient} from "@/core/utils/web"
 import {AppConfig} from "@/config"
+import {api} from "@/core/api/apis";
 
-export const market: restV0.market = {
+export const market: api.market = {
 
     kline: async (params) => {
         const symbol = params.symbol;
@@ -50,7 +51,7 @@ export const market: restV0.market = {
 
 }
 
-export const blog: restV0.blog = {
+export const blog: api.blog = {
 
     commentList: async (params) => {
         const cid = params.cid;

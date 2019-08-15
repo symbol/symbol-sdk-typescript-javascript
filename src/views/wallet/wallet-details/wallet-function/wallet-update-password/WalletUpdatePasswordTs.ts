@@ -1,4 +1,7 @@
 import {Message} from "@/config/index"
+import {Component, Vue} from 'vue-property-decorator'
+import {walletApi} from "@/core/api/walletApi"
+import {decryptKey, encryptKey, saveLocalWallet} from "@/core/utils/wallet";
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {walletInterface} from "@/interface/sdkWallet"
 import {decryptKey, encryptKey, saveLocalWallet} from "@/help/appHelp";
@@ -72,7 +75,7 @@ export  class WalletUpdatePasswordTs extends Vue {
 
     checkPrivateKey (DeTxt) {
         const that = this
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''

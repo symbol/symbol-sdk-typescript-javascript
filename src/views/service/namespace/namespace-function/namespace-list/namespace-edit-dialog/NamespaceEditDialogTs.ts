@@ -4,8 +4,13 @@ import {Account} from 'nem2-sdk'
 import {walletInterface} from "@/interface/sdkWallet"
 import {formatSeconds} from '@/help/help.ts'
 import {transactionInterface} from "@/interface/sdkTransaction"
+import {Account, Crypto} from 'nem2-sdk'
+import {walletApi} from "@/core/api/walletApi"
+import {namespaceApi} from "@/core/api/namespaceApi"
+import {formatSeconds, formatAddress} from '@/core/utils/utils.js'
+import {transactionApi} from "@/core/api/transactionApi"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {createRootNamespace, decryptKey} from "@/help/appHelp";
+import {createRootNamespace, decryptKey} from "@/core/utils/wallet";
 
 @Component
 export class NamespaceEditDialogTs extends Vue {
@@ -92,7 +97,7 @@ export class NamespaceEditDialogTs extends Vue {
 
     checkPrivateKey (DeTxt) {
         const that = this
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''
@@ -112,7 +117,7 @@ export class NamespaceEditDialogTs extends Vue {
             this.getWallet.networkType, this.namespace.fee).then((rootNamespaceTransaction)=>{
             transaction = rootNamespaceTransaction
             const signature = account.sign(transaction, this.generationHash)
-            transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
+            transactionApi.announce({signature, node: this.node}).then((announceResult) => {
                 // get announce status
                 announceResult.result.announceStatus.subscribe((announceInfo: any) => {
                     that.$Notice.success({

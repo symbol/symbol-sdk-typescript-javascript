@@ -1,4 +1,4 @@
-import {sessionRead, sessionSave} from "@/help/help";
+import {sessionRead, sessionSave} from "@/core/utils/utils";
 
 export const openFile = (fn) => {
     const electron = window['electron'];

@@ -1,9 +1,9 @@
 import {Message} from "@/config"
-import {walletInterface} from "@/interface/sdkWallet"
+import {walletApi} from "@/core/api/walletApi"
 import {Component, Vue} from 'vue-property-decorator'
-import {accountInterface} from '@/interface/sdkAccount'
-import {transactionInterface} from '@/interface/sdkTransaction'
-import {Account, AccountLinkTransaction, Crypto, Deadline, LinkAction, NetworkType, UInt64} from "nem2-sdk"
+import {transactionApi} from '@/core/api/transactionApi'
+import {AccountLinkTransaction, UInt64, LinkAction, NetworkType, Deadline, Account} from "nem2-sdk"
+import {decryptKey} from "@/core/utils/wallet";
 
 
 @Component
@@ -86,7 +86,7 @@ export class MonitorRemoteTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''
@@ -109,6 +109,8 @@ export class MonitorRemoteTs extends Vue {
         const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(), remotePublickey, isLinked ? LinkAction.Link : LinkAction.Unlink, NetworkType.MIJIN_TEST, UInt64.fromUint(fee)
         )
         transactionInterface._announce({
+        const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(), remotePublickey, LinkAction.Link, NetworkType.MIJIN_TEST, UInt64.fromUint(fee))
+        transactionApi._announce({
             transaction: accountLinkTransaction,
             node,
             account,
@@ -125,7 +127,7 @@ export class MonitorRemoteTs extends Vue {
         const that = this
         const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
-        accountInterface.getLinkedPublickey({
+            transactionApi.getLinkedPublickey({
             node,
             address
         }).then((result) => {

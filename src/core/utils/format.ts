@@ -1,6 +1,6 @@
 import {transactionTag} from '@/config'
-import {formatNemDeadline} from "@/help/help"
-import {MosaicId, Transaction, TransactionType, UInt64} from 'nem2-sdk'
+import {formatNemDeadline} from "@/core/utils/utils"
+import {Transaction, TransactionType} from 'nem2-sdk'
 
 function formatTx(transaction: any, accountAddress: string) {
     const {type} = transaction
@@ -77,7 +77,7 @@ function formatTx(transaction: any, accountAddress: string) {
             break;
 
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
-            transaction.tag = transactionTag.MOSAIC_SUPPLY_CHANGE
+            transaction.tag = transactionTag.MOSAIC_DEFINITION
             transaction.infoFirst = transaction.MosaicId.id.toHex();
             transaction.infoSecond = transaction.direction
             transaction.infoThird = transaction.delta.compact()
@@ -102,7 +102,7 @@ function formatTx(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.AGGREGATE_COMPLETE:
-            transaction.tag = transactionTag.AGGREGATE_COMPLETE
+            transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
             transaction.infoFirst = transaction.transactionInfo.hash;
             transaction.infoSecond = transaction.transactionInfo.height.compact()
             transaction.infoThird = '-' + transaction.maxFee.compact()
@@ -115,7 +115,7 @@ function formatTx(transaction: any, accountAddress: string) {
             break;
 
         case TransactionType.AGGREGATE_BONDED:
-            transaction.tag = transactionTag.AGGREGATE_BONDED
+            transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
             transaction.infoFirst = transaction.transactionInfo.hash;
             transaction.infoSecond = transaction.transactionInfo.height.compact()
             transaction.infoThird = '-' + transaction.maxFee.compact()
@@ -128,7 +128,7 @@ function formatTx(transaction: any, accountAddress: string) {
             break;
 
         case TransactionType.LOCK:
-            transaction.tag = transactionTag.LOCK
+            transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
             transaction.infoFirst = transaction.transactionInfo.hash;
             transaction.infoSecond = transaction.transactionInfo.height.compact()
             transaction.infoThird = '-' + transaction.maxFee.compact()
@@ -141,7 +141,7 @@ function formatTx(transaction: any, accountAddress: string) {
             break;
 
         case TransactionType.SECRET_LOCK:
-            transaction.tag = transactionTag.SECRET_LOCK
+            transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
             transaction.infoFirst = transaction.transactionInfo.hash;
             transaction.infoSecond = transaction.transactionInfo.height.compact()
             transaction.infoThird = '-' + transaction.maxFee.compact()
@@ -154,7 +154,7 @@ function formatTx(transaction: any, accountAddress: string) {
             break;
 
         case TransactionType.SECRET_PROOF:
-            transaction.tag = transactionTag.SECRET_PROOF
+            transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
             transaction.infoFirst = transaction.transactionInfo.hash;
             transaction.infoSecond = transaction.transactionInfo.height.compact()
             transaction.infoThird = '-' + transaction.maxFee.compact()
@@ -166,7 +166,7 @@ function formatTx(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
-            transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ADDRESS
+            transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
             transaction.infoFirst = transaction.transactionInfo.hash;
             transaction.infoSecond = transaction.transactionInfo.height.compact()
             transaction.infoThird = '-' + transaction.maxFee.compact()
@@ -178,7 +178,7 @@ function formatTx(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
-            transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_MOSAIC
+            transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
             transaction.infoFirst = transaction.transactionInfo.hash;
             transaction.infoSecond = transaction.transactionInfo.height.compact()
             transaction.infoThird = '-' + transaction.maxFee.compact()
@@ -190,7 +190,7 @@ function formatTx(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
-            transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE
+            transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
             transaction.infoFirst = transaction.transactionInfo.hash;
             transaction.infoSecond = transaction.transactionInfo.height.compact()
             transaction.infoThird = '-' + transaction.maxFee.compact()
@@ -202,7 +202,7 @@ function formatTx(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.LINK_ACCOUNT:
-            transaction.tag = transactionTag.LINK_ACCOUNT
+            transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
             transaction.infoFirst = transaction.transactionInfo.hash;
             transaction.infoSecond = transaction.transactionInfo.height.compact()
             transaction.infoThird = '-' + transaction.maxFee.compact()
@@ -219,7 +219,7 @@ function formatTx(transaction: any, accountAddress: string) {
 
 
 export const transactionFormat = (transactionList: Array<Transaction>, accountAddress: string) => {
-    console.log(transactionList)
+    console.log(transactionList, accountAddress)
     transactionList = transactionList.map((item) => {
         item = formatTx(item, accountAddress)
         return item
