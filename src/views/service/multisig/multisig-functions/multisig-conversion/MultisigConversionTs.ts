@@ -11,6 +11,7 @@ import {
     PublicAccount,
     ModifyMultisigAccountTransaction, Deadline, UInt64
 } from 'nem2-sdk';
+import {createBondedMultisigTransaction} from "@/core/utils/wallet";
 
 @Component({
     components: {
@@ -163,7 +164,7 @@ export class MultisigConversionTs extends Vue {
             account,
             bondedFee,
         ).then(aggregateTransaction=>{
-            transactionInterface.announceBondedWithLock({
+            transactionApi.announceBondedWithLock({
                 aggregateTransaction,
                 account,
                 listener,

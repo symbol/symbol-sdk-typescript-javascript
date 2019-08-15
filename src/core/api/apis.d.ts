@@ -1,29 +1,29 @@
 import {
     Account,
     Address,
-    AggregateTransaction, AliasActionType, Deadline,
-    Listener,
-    ModifyAccountPropertyAddressTransaction, MosaicId,
-    MosaicSupplyChangeTransaction,
-    MultisigAccountInfo, NamespaceId,
+    AliasActionType,
+    Deadline,
+    MosaicId,
+    NamespaceId,
     NetworkType,
     Password,
-    PropertyType,
     PublicAccount,
     SignedTransaction,
     MultisigAccountInfo,
-    MultisigAccountGraphInfo,
+
     Listener,
-    MultisigCosignatoryModification,
     MosaicSupplyChangeTransaction,
     AggregateTransaction,
-    AccountPropertyTransaction,
     PropertyType,
     ModifyAccountPropertyAddressTransaction,
     AccountPropertyModification,
     ModifyAccountPropertyMosaicTransaction, ModifyAccountPropertyEntityTypeTransaction
 } from 'nem2-sdk'
+import {SimpleWallet} from "nem2-sdk";
+import {Transaction} from "nem2-sdk";
+import {UInt64} from "nem2-sdk";
 
+declare namespace api {
     interface market {
         kline: (params: {
             symbol: string,
@@ -67,7 +67,7 @@ import {
         commentList: (params: {
             cid: string,
             limit: string,
-            offset:string,
+            offset: string,
         }) => Promise<{
             rst: any;
         }>;

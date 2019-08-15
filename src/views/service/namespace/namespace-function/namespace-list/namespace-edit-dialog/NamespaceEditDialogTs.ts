@@ -1,9 +1,5 @@
 import './NamespaceEditDialog.less'
 import {Message} from "@/config/index"
-import {Account} from 'nem2-sdk'
-import {walletInterface} from "@/interface/sdkWallet"
-import {formatSeconds} from '@/help/help.ts'
-import {transactionInterface} from "@/interface/sdkTransaction"
 import {Account, Crypto} from 'nem2-sdk'
 import {walletApi} from "@/core/api/walletApi"
 import {namespaceApi} from "@/core/api/namespaceApi"

@@ -6,7 +6,7 @@ import {formatSeconds, formatAddress} from '@/core/utils/utils.js'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {transactionApi} from '@/core/api/transactionApi'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/help/appHelp'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/utils/wallet'
 import {
     MosaicId,
     MosaicNonce,
@@ -253,7 +253,7 @@ export class MosaicTransactionTs extends Vue {
                 account,
                 aggregateFee
             ).then((aggregateTransaction) => {
-                transactionInterface.announceBondedWithLock({
+                transactionApi.announceBondedWithLock({
                     aggregateTransaction,
                     account,
                     listener,
@@ -271,7 +271,7 @@ export class MosaicTransactionTs extends Vue {
             networkType,
             aggregateFee,
         ).then((aggregateTransaction) => {
-            transactionInterface._announce({
+            transactionApi._announce({
                 transaction: aggregateTransaction,
                 account,
                 node,
