@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { decode } from 'utf8';
 import * as utilities from './Utilities';
 
 export class Convert {
@@ -171,5 +172,22 @@ export class Convert {
             result += rawString.charCodeAt(i).toString(16).padStart(2, '0');
         }
         return result;
+    }
+
+    /**
+     * @internal decode hex to uft8 string
+     * @param hex - Hex input
+     * @returns {string}
+     */
+    public static decodeHex = (hex: string): string => {
+        let str = '';
+        for (let i = 0; i < hex.length; i += 2) {
+            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+        }
+        try {
+            return decode(str);
+        } catch (e) {
+            return str;
+        }
     }
 }

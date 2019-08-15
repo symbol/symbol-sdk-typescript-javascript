@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+import { SignSchema } from '../../core/crypto/SignSchema';
 import { Convert, RawAddress } from '../../core/format';
 import { AddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/AddressAliasTransactionBuilder';
 import { AddressDto } from '../../infrastructure/catbuffer/AddressDto';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedAddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAddressAliasTransactionBuilder';
-import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
@@ -31,6 +31,7 @@ import { AliasAction } from '../namespace/AliasAction';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -100,6 +101,32 @@ export class AddressAliasTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.ADDRESS_ALIAS, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedAddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            AddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = AddressAliasTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
+            builder.getAliasAction().valueOf(),
+            new NamespaceId(builder.getNamespaceId().namespaceId),
+            Address.createFromEncoded(
+                Convert.uint8ToHex(builder.getAddress().address)),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AddressAliasTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
     }
 
     /**

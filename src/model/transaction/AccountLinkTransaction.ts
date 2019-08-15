@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { SignSchema } from '../../core/crypto/SignSchema';
 import { Convert } from '../../core/format';
 import { AccountLinkTransactionBuilder } from '../../infrastructure/catbuffer/AccountLinkTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -26,6 +27,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { LinkAction } from './LinkAction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
@@ -85,6 +87,30 @@ export class AccountLinkTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.LINK_ACCOUNT, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedAccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+                        AccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = AccountLinkTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountLinkTransactionBuilder).getDeadline().timestamp),
+            Convert.uint8ToHex(builder.getRemoteAccountPublicKey().key),
+            builder.getLinkAction().valueOf(),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountLinkTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
     }
 
     /**

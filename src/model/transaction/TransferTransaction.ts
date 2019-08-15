@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { SignSchema } from '../../core/crypto/SignSchema';
 import { Convert, Convert as convert } from '../../core/format';
 import { RawAddress } from '../../core/format/RawAddress';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -31,10 +32,15 @@ import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
+import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { EncryptedMessage } from './EncryptedMessage';
+import { InnerTransaction } from './InnerTransaction';
 import { Message } from './Message';
+import { MessageType } from './MessageType';
+import { PlainMessage } from './PlainMessage';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -101,6 +107,40 @@ export class TransferTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.TRANSFER, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedTransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            TransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const messageType = builder.getMessage()[0];
+        const messageHex = Convert.uint8ToHex(builder.getMessage()).substring(2);
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = TransferTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as TransferTransactionBuilder).getDeadline().timestamp),
+            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipient().unresolvedAddress)),
+            builder.getMosaics().map((mosaic) => {
+                return new Mosaic(
+                    new MosaicId(mosaic.mosaicId.unresolvedMosaicId),
+                    new UInt64(mosaic.amount.amount));
+            }),
+            messageType === MessageType.PlainMessage ?
+                PlainMessage.createFromPayload(messageHex) :
+                EncryptedMessage.createFromPayload(messageHex),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
     }
 
     /**

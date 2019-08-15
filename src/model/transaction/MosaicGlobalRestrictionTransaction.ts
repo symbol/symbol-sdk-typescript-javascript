@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { SignSchema } from '../../core/crypto/SignSchema';
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedMosaicGlobalRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicGlobalRestrictionTransactionBuilder';
@@ -29,6 +30,7 @@ import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicRestrictionType } from '../mosaic/MosaicRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -134,6 +136,36 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.MOSAIC_GLOBAL_RESTRICTION, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+    }
+
+    /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedMosaicGlobalRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            MosaicGlobalRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = MosaicGlobalRestrictionTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as MosaicGlobalRestrictionTransactionBuilder).getDeadline().timestamp),
+            new MosaicId(builder.getMosaicId().unresolvedMosaicId),
+            new MosaicId(builder.getReferenceMosaicId().unresolvedMosaicId),
+            new UInt64(builder.getRestrictionKey()),
+            new UInt64(builder.getPreviousRestrictionValue()),
+            builder.getPreviousRestrictionType().valueOf(),
+            new UInt64(builder.getNewRestrictionValue()),
+            builder.getNewRestrictionType().valueOf(),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicGlobalRestrictionTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
     }
 
     /**
