@@ -86,7 +86,7 @@
         initData() {
             this.node = this.$store.state.account.node
             this.$Notice.config({
-                duration: 3
+                duration: 4
             });
         }
 
