@@ -115,6 +115,17 @@ export const accountInterface: SdkV0.account = {
                 linkedPublicKey: ''
             }
         }
+    },
 
+    getAccountProperties: async (params) => {
+        const {node, address} = params
+
+        const accountHttp = new AccountHttp(node)
+        const accountPropertiesInfo = await accountHttp.getAccountProperties(Address.createFromRawAddress(address.trim()))
+        return {
+            result: {
+                accountPropertiesInfo: ''
+            }
+        }
     }
 }

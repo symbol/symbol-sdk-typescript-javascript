@@ -2,6 +2,7 @@ import {Message} from "@/config/index"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {multisigInterface} from '@/interface/sdkMultisig.ts'
 import {transactionInterface} from '@/interface/sdkTransaction.ts'
+import {createBondedMultisigTransaction} from '@/help/appHelp'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     Account,
@@ -156,14 +157,13 @@ export class MultisigConversionTs extends Vue {
             networkType,
             UInt64.fromUint(innerFee)
         );
-        multisigInterface.bondedMultisigTransaction({
-            networkType: networkType,
-            account: account,
-            fee: bondedFee,
-            multisigPublickey: account.publicKey,
-            transaction: [modifyMultisigAccountTransaction],
-        }).then((result) => {
-            const aggregateTransaction = result.result.aggregateTransaction
+        createBondedMultisigTransaction(
+            [modifyMultisigAccountTransaction],
+            account.publicKey,
+            networkType,
+            account,
+            bondedFee,
+        ).then(aggregateTransaction=>{
             transactionInterface.announceBondedWithLock({
                 aggregateTransaction,
                 account,

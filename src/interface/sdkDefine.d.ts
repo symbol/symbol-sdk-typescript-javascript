@@ -22,7 +22,9 @@ import {
     AggregateTransaction,
     AccountPropertyTransaction,
     PropertyType,
-    ModifyAccountPropertyAddressTransaction
+    ModifyAccountPropertyAddressTransaction,
+    AccountPropertyModification,
+    ModifyAccountPropertyMosaicTransaction, ModifyAccountPropertyEntityTypeTransaction
 } from 'nem2-sdk'
 
 
@@ -130,6 +132,12 @@ declare namespace SdkV0 {
             address: string,
         }) => Rst<{
             linkedPublicKey: any
+        }>;
+        getAccountProperties: (params: {
+            address: string,
+            node: string
+        }) => Rst<{
+            accountPropertiesInfo: any
         }>;
     }
 
@@ -338,11 +346,6 @@ declare namespace SdkV0 {
         }) => Rst<{
             mosaicId: object
         }>;
-        // getcurrentXEM: (params: {
-        //     node: string,
-        // }) => Rst<{
-        //     mosaicsInfos: string
-        // }>;
     }
 
     interface alias {
@@ -481,6 +484,35 @@ declare namespace SdkV0 {
             transaction: Array<Transaction>,
         }) => Rst<{
             aggregateTransaction: AggregateTransaction
+        }>;
+    }
+
+    interface filter {
+        creatrModifyAccountPropertyAddressTransaction: (params: {
+            propertyType: PropertyType,
+            modifications: Array<AccountPropertyModification<string>>,
+            networkType: NetworkType,
+            fee: number,
+        }) => Rst<{
+            modifyAccountPropertyAddressTransaction: ModifyAccountPropertyAddressTransaction
+        }>;
+
+        creatrModifyAccountPropertyMosaicTransaction: (params: {
+            propertyType: PropertyType,
+            modifications: Array<AccountPropertyModification<number[]>>,
+            networkType: NetworkType,
+            fee: number,
+        }) => Rst<{
+            modifyAccountPropertyMosaicTransaction: ModifyAccountPropertyMosaicTransaction
+        }>;
+
+        creatrModifyAccountPropertyEntityTypeTransaction: (params: {
+            propertyType: PropertyType,
+            modifications: Array<AccountPropertyModification<number[]>>,
+            networkType: NetworkType,
+            fee: number,
+        }) => Rst<{
+            modifyAccountPropertyEntityTypeTransaction: ModifyAccountPropertyEntityTypeTransaction
         }>;
     }
 }

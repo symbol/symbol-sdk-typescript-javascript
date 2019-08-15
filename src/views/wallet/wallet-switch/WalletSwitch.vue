@@ -45,7 +45,7 @@
         </Col>
       </Row>
     </div>
-    <DeleteWalletCheck :showCheckPWDialog="showCheckPWDialog" @checkEnd="checkEnd"
+    <DeleteWalletCheck :showCheckPWDialog="showCheckPWDialog" @checkEnd="checkEnd" :transactionDetail="{}"
                        @closeCheckPWDialog="closeCheckPWDialog"></DeleteWalletCheck>
   </div>
 </template>

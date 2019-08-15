@@ -97,7 +97,7 @@
 
 
       <div class="new_model_btn">
-<!--        <span class="modal_btn_cancel radius pointer" @click="modalCancel">{{$t('remote_modal_cancel')}}</span>-->
+        <!--        <span class="modal_btn_cancel radius pointer" @click="modalCancel">{{$t('remote_modal_cancel')}}</span>-->
         <span class="modal_btn pointer radius" @click="confirmInput">{{$t('remote_modal_comfire')}}</span>
       </div>
     </Modal>

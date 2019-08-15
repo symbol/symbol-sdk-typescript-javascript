@@ -1,47 +1,96 @@
-import {Message} from "@/config/index"
+import {Message, entityTypeList} from "@/config/index"
 import {Component, Vue} from 'vue-property-decorator'
-import {Crypto} from "nem2-sdk";
-import {walletInterface} from "@/interface/sdkWallet";
+import {walletInterface} from "@/interface/sdkWallet"
+import {Crypto, PropertyType, Account} from "nem2-sdk"
+import {transactionInterface} from "@/interface/sdkTransaction"
+import {creatrModifyAccountPropertyTransaction, getAccountProperties} from '@/help/appHelp'
 
 @Component
 export class WalletFilterTs extends Vue {
+    entityTypeList = entityTypeList
     aliasList = []
     isShowDialog = false
     isShowDeleteIcon = false
     currentAlias: any = false
     currentTitle = 'add_address'
+    currentFilter: any = ''
     filterTypeList = [true, false, false]
     titleList = ['add_address', 'add_mosaic', 'add_entity_type']
+    PropertyType = PropertyType
+    showPropertyType = true
     formItem = {
-        address: '',
-        fee: 0,
+        filterType: PropertyType.AllowAddress,
+        filterList: [],
+        fee: 50000,
         password: '',
-        mosaic: '',
-        entityType: -1
     }
-    namespaceList = [
-        {
-            label: 'no data',
-            value: 'no data'
-        }
-    ]
 
+    namespaceList = []
+
+    clearCurrentFilter() {
+        this.currentFilter = ''
+    }
 
     get getWallet() {
         return this.$store.state.account.wallet
     }
 
+    initForm() {
+        this.currentFilter = ''
+        this.formItem = {
+            filterType: PropertyType.AllowAddress,
+            filterList: [],
+            fee: 50000,
+            password: '',
+        }
+    }
+
+    addFilterItem() {
+        if (this.currentFilter === '') {
+            return
+        }
+        if (this.filterTypeList[2]) {
+            this.formItem.filterList.unshift({
+                label: this.$t(this.currentFilter) + '(' + entityTypeList[this.currentFilter].value + ')',
+                value: entityTypeList[this.currentFilter].value
+            })
+            return
+        }
+        this.formItem.filterList.unshift({
+            label: this.currentFilter,
+            value: this.currentFilter
+        })
+        this.clearCurrentFilter()
+    }
+
+    removeFilterItem(index) {
+        this.formItem.filterList.splice(index, 1)
+    }
 
     showFilterTypeListIndex(index) {
+        this.initForm()
         this.currentTitle = this.titleList[index]
         this.filterTypeList = [false, false, false]
         this.filterTypeList[index] = true
+        console.log(index)
+
+        if (index === 0) {
+            this.formItem.filterType = PropertyType.AllowAddress
+            return
+        }
+        if (index === 1) {
+            this.formItem.filterType = PropertyType.AllowMosaic
+            return
+        }
+        if (index === 2) {
+            this.formItem.filterType = PropertyType.AllowTransaction
+            return
+        }
     }
 
     checkForm(): boolean {
-        const {fee, password, address, mosaic, entityType} = this.formItem
-        const {filterTypeList} = this
-        if (password || password.trim()) {
+        const {fee, password, filterType, filterList} = this.formItem
+        if (!password || !password.trim()) {
             this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
             return false
         }
@@ -51,21 +100,21 @@ export class WalletFilterTs extends Vue {
             return false
         }
 
-        if (filterTypeList[0] && address.length < 40) {
-            this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
-            return false
-        }
-
-
-        if (filterTypeList[1] && mosaic) {
-            this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR))
-            return false
-        }
-
-        if (filterTypeList[2] && entityType) {
-            this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR))
-            return false
-        }
+        // if (filterTypeList[0] && address.length < 40) {
+        //     this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
+        //     return false
+        // }
+        //
+        //
+        // if (filterTypeList[1] && mosaic) {
+        //     this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR))
+        //     return false
+        // }
+        //
+        // if (filterTypeList[2] && entityType) {
+        //     this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR))
+        //     return false
+        // }
 
         return true
     }
@@ -82,35 +131,32 @@ export class WalletFilterTs extends Vue {
         this.decryptKey()
     }
 
-    generateAddressFilter() {
-        const {fee, password, address, mosaic, entityType} = this.formItem
-
+    generateFilter(privatekey) {
+        let {fee, filterType, filterList} = this.formItem
+        const {networkType} = this.$store.state.account.wallet
+        const {generationHash, node} = this.$store.state.account
+        const account = Account.createFromPrivateKey(privatekey, networkType)
+        creatrModifyAccountPropertyTransaction(
+            filterType,
+            filterList,
+            networkType,
+            fee
+        ).then((modifyAccountPropertyAddressTransaction) => {
+            console.log(modifyAccountPropertyAddressTransaction)
+            transactionInterface._announce({
+                transaction: modifyAccountPropertyAddressTransaction,
+                account,
+                node,
+                generationHash
+            })
+        })
     }
 
-    generateMosaicFilter() {
-
-    }
-
-    generateEntityFilter() {
-
-    }
 
     sendTransaction(privatekey) {
         const {filterTypeList} = this
-        const {fee, password, address, mosaic, entityType} = this.formItem
-        if (filterTypeList[0]) {
-            this.generateAddressFilter()
-            return
-        }
-        if (filterTypeList[1]) {
-            this.generateMosaicFilter()
-            return
-        }
-        if (filterTypeList[2]) {
-            this.generateEntityFilter()
-            return
-        }
-
+        const {fee, password, filterType, filterList} = this.formItem
+        this.generateFilter(privatekey)
     }
 
     decryptKey() {
@@ -130,12 +176,24 @@ export class WalletFilterTs extends Vue {
             privateKey: DeTxt.length === 64 ? DeTxt : ''
         }).then(async (Wallet: any) => {
             this.sendTransaction(DeTxt)
-        }).catch(() => {
-            that.$Notice.error({
-                title: this.$t('password_error') + ''
-            })
+        }).catch((e) => {
+            console.log(e)
+            that.showErrorMessage(this.$t(Message.WRONG_PASSWORD_ERROR))
         })
     }
 
+    getAccountProperties() {
+        const {node} = this.$store.state.account
+        const {address} = this.$store.state.account.wallet
+        console.log(address.length)
+        // TODO SDK has not been complete yet
+        // getAccountProperties(address, node).then((accountPropertiesInfo) => {
+        //     console.log(accountPropertiesInfo)
+        // })
+    }
+
+    created() {
+        this.getAccountProperties()
+    }
 
 }

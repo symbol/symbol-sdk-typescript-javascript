@@ -6,6 +6,7 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import {transactionInterface} from "@/interface/sdkTransaction"
 import {Message, bandedNamespace as BandedNamespaceList} from "@/config/index"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/help/appHelp'
 
 @Component({
     components: {
@@ -109,17 +110,16 @@ export class RootNamespaceTs extends Vue {
             duration: duration,
             networkType: networkType,
             maxFee: innerFee
-        }).then((transaction) => {
+        }).then(async (transaction) => {
             const rootNamespaceTransaction = transaction.result.rootNamespaceTransaction
             if (that.currentMinApproval > 1) {
-                multisigInterface.bondedMultisigTransaction({
-                    networkType: networkType,
-                    account: account,
-                    fee: aggregateFee,
-                    multisigPublickey: multisigPublickey,
-                    transaction: [rootNamespaceTransaction],
-                }).then((result) => {
-                    const aggregateTransaction = result.result.aggregateTransaction
+                await createBondedMultisigTransaction(
+                    [rootNamespaceTransaction],
+                    multisigPublickey,
+                    networkType,
+                    account,
+                    aggregateFee
+                ).then((aggregateTransaction) => {
                     transactionInterface.announceBondedWithLock({
                         aggregateTransaction,
                         account,
@@ -132,13 +132,13 @@ export class RootNamespaceTs extends Vue {
                 })
                 return
             }
-            multisigInterface.completeMultisigTransaction({
-                networkType: networkType,
-                fee: aggregateFee,
-                multisigPublickey: multisigPublickey,
-                transaction: [rootNamespaceTransaction],
-            }).then((result) => {
-                const aggregateTransaction = result.result.aggregateTransaction
+
+            createCompleteMultisigTransaction(
+                [rootNamespaceTransaction],
+                multisigPublickey,
+                networkType,
+                aggregateFee
+            ).then((aggregateTransaction) => {
                 transactionInterface._announce({
                     transaction: aggregateTransaction,
                     account,
@@ -258,7 +258,7 @@ export class RootNamespaceTs extends Vue {
     async onMultisigPublickeyChange() {
         const that = this
         const {multisigPublickey} = this.form
-        if(multisigPublickey.length !== 64){
+        if (multisigPublickey.length !== 64) {
             return
         }
         const {node} = this.$store.state.account
@@ -294,7 +294,7 @@ export class RootNamespaceTs extends Vue {
             return
         }
         if (duration * 12 >= 60 * 60 * 24 * 365) {
-            this.$Message.error(Message.DURATION_MORE_THAN_1_YEARS_ERROR)
+            this.showErrorMessage(this.$t(Message.DURATION_MORE_THAN_1_YEARS_ERROR) + '')
             this.form.duration = 0
         }
         this.durationIntoDate = formatSeconds(duration * 12)

@@ -602,7 +602,8 @@ export const zh_CN = {
     modify_account_property_address: '地址过滤',
     modify_account_property_mosaic: '马赛克过滤',
     modify_account_property_entity_type: '交易实体过滤',
-    link_account: '远程收获'
+    link_account: '远程收获',
+    please_choose_entity_type:'请选择交易类型'
 
 
 }

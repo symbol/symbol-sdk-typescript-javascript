@@ -219,7 +219,6 @@ export const transactionInterface: SdkV0.transaction = {
         const mosaicHex = Vue.$store.state.account.currentXEM1
         const hashLockTransaction = HashLockTransaction.create(
             Deadline.create(),
-            // todo repalce mosaic id
             new Mosaic(new MosaicId(mosaicHex), UInt64.fromUint(10000000)),
             UInt64.fromUint(480),
             signedTransaction,
