@@ -82,7 +82,7 @@ export class MonitorDashBoardTs extends Vue {
 
     showDialog(transaction) {
         this.isShowDialog = true
-        console.log(transaction.dialogDetailMap)
+        console.log(transaction)
         this.transactionDetails = transaction.dialogDetailMap
     }
 
@@ -158,7 +158,6 @@ export class MonitorDashBoardTs extends Vue {
                 that.currentDataAmount = transferTransaction.length
                 that.confirmedTransactionList = transferTransaction
                 that.isLoadingConfirmedTx = false
-                // console.log(transferTransaction)
             })
         })
     }

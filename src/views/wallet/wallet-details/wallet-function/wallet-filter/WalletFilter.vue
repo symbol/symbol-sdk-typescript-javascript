@@ -171,8 +171,11 @@
                 @click="showFilterTypeListIndex(2)">{{$t('transaction_type')}}</span>
         </Col>
         <Col span="14">
-          <span class="right alias_delete pointer" @click="isShowDeleteIcon=true"></span>
-          <span class="right alias_add pointer" @click="isShowDialog=true"></span>
+          <!--          <span class="right alias_delete pointer" @click="isShowDeleteIcon=true"></span>-->
+          <!--          <span class="right alias_add pointer" @click="isShowDialog=true"></span>-->
+          <!--          TODO filter can't use-->
+          <span class="right alias_delete pointer"></span>
+          <span class="right alias_add pointer"></span>
         </Col>
       </Row>
     </div>
