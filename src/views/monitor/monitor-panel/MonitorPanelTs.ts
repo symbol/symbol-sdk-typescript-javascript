@@ -42,7 +42,7 @@ export class MonitorPanelTs extends Vue {
             path: 'transfer'
         },
         {
-            name: 'receipt',
+            name: 'receive',
             isSelect: false,
             path: 'receipt'
         },
