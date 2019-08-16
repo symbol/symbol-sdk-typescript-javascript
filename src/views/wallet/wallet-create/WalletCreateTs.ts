@@ -47,7 +47,7 @@ export class WalletCreateTs extends Vue {
             this.$Notice.error({title: this.$t(Message.WALLET_NAME_INPUT_ERROR) + ''});
             return false
         }
-        if (!this.formItem.password || !passwordValidator(this.formItem.password)) {
+        if (!passwordValidator(this.formItem.password)) {
             this.$Notice.error({title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''});
             return false
         }

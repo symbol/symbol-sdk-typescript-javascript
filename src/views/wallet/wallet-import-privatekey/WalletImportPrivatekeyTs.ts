@@ -69,7 +69,7 @@ export class WalletImportPrivatekeyTs extends Vue {
             })
             return false
         }
-        if (!this.form.password || !passwordValidator(this.form.password)) {
+        if (!passwordValidator(this.form.password)) {
             this.$Notice.error({
                 title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
             })
@@ -92,7 +92,7 @@ export class WalletImportPrivatekeyTs extends Vue {
                 })
                 return false
             }
-            const account = Account.createFromPrivateKey(this.form.privateKey, NetworkType.MIJIN_TEST)
+            const account = Account.createFromPrivateKey(this.form.privateKey, this.form.networkType)
             this.account = account
             return true
         } catch (e) {

@@ -71,7 +71,7 @@ export class WalletImportMnemonicTs extends Vue {
             })
             return false
         }
-        if (!this.form.password || !passwordValidator(this.form.password)) {
+        if (!passwordValidator(this.form.password)) {
             this.$Notice.error({
                 title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
             })
