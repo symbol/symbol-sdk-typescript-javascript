@@ -10,10 +10,10 @@
 
 <script lang="ts">
     import echarts from 'echarts'
-    import {copyTxt} from '@/help/help.ts'
+    import {copyTxt} from '@/core/utils/utils.js'
    import {Message} from "@/config/index"
     import {Component, Vue} from 'vue-property-decorator'
-    import {multisigInterface} from '@/interface/sdkMultisig'
+    import {multisigApi} from '@/core/api/multisigApi'
     import multisignSelfIcon from '@/common/img/service/multisig/multisignSelfIcon.png'
     import multisignCosignerIcon from '@/common/img/service/multisig/multisignCosignerIcon.png'
     import multisignMultisignerIcon from '@/common/img/service/multisig/multisignMultisignerIcon.png'
@@ -119,7 +119,7 @@
             let allAccountList = []
             let links = []
             const xAxisDistance = 30
-            await multisigInterface.getMultisigAccountInfo({
+            await multisigApi.getMultisigAccountInfo({
                 address,
                 node
             }).then((result) => {
@@ -135,7 +135,7 @@
                     }
                 }
                 const multisigInfo = result.result.multisigInfo
-                // multisig nodes
+                // multisigApi nodes
                 multisigList = multisigInfo.multisigAccounts.map((item, index) => {
                     item.name = 'm-' + index
                     item.x = index * xAxisDistance

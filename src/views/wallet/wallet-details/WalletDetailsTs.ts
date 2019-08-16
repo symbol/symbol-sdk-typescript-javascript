@@ -1,4 +1,4 @@
-import {copyTxt} from '@/help/help'
+import {copyTxt} from '@/core/utils/utils'
 import {QRCodeGenerator} from 'nem2-qr-library'
 import {Address} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'

@@ -1,11 +1,11 @@
 import {Message} from "@/config/index"
-import {walletInterface} from "@/interface/sdkWallet"
-import {aliasInterface} from "@/interface/sdkNamespace"
-import {transactionInterface} from "@/interface/sdkTransaction"
+import {walletApi} from "@/core/api/walletApi"
+import {namespaceApi} from "@/core/api/namespaceApi"
+import {transactionApi} from "@/core/api/transactionApi"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
-import {decryptKey} from "@/help/appHelp"
+import {decryptKey} from "@/core/utils/wallet"
 
 @Component
 export class MosaicAliasDialogTs extends Vue {
@@ -84,7 +84,7 @@ export class MosaicAliasDialogTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''
@@ -101,7 +101,7 @@ export class MosaicAliasDialogTs extends Vue {
         const that = this
         let transaction
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
-        aliasInterface.mosaicAliasTransaction({
+        namespaceApi.mosaicAliasTransaction({
             actionType: AliasActionType.Link,
             namespaceId: new NamespaceId(that.mosaic.aliasName),
             mosaicId: new MosaicId(that.mosaic['hex']),
@@ -111,7 +111,7 @@ export class MosaicAliasDialogTs extends Vue {
             let transaction
             transaction = aliasTransaction.result.aliasMosaicTransaction
             const signature = account.sign(transaction, this.generationHash)
-            transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
+            transactionApi.announce({signature, node: this.node}).then((announceResult) => {
                 // get announce status
                 console.log(signature)
                 announceResult.result.announceStatus.subscribe((announceInfo: any) => {

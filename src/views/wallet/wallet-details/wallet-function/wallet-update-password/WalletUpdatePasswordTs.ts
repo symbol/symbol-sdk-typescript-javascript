@@ -1,10 +1,10 @@
 import {Message} from "@/config/index"
+import {walletApi} from "@/core/api/walletApi"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {walletInterface} from "@/interface/sdkWallet"
-import {decryptKey, encryptKey, saveLocalWallet} from "@/help/appHelp";
+import {decryptKey, encryptKey, saveLocalWallet} from "@/core/utils/wallet";
 
 @Component
-export  class WalletUpdatePasswordTs extends Vue {
+export class WalletUpdatePasswordTs extends Vue {
     formItem = {
         prePassword: '',
         newPassword: '',
@@ -15,7 +15,8 @@ export  class WalletUpdatePasswordTs extends Vue {
     repeatPassword = ''
     privateKey = ''
     isCompleteForm = false
-    get getWallet () {
+
+    get getWallet() {
         return this.$store.state.account.wallet
     }
 
@@ -50,11 +51,12 @@ export  class WalletUpdatePasswordTs extends Vue {
     }
 
     confirmUpdate() {
-        if(!this.isCompleteForm) return
-        if(!this.checkInfo()) return
+        if (!this.isCompleteForm) return
+        if (!this.checkInfo()) return
         this.checkPrivateKey(decryptKey(this.getWallet, this.prePassword))
     }
-    updatePW () {
+
+    updatePW() {
         let encryptObj = encryptKey(this.privateKey, this.newPassword)
         let wallet = this.getWallet
         let walletList = this.$store.state.app.walletList;
@@ -70,9 +72,9 @@ export  class WalletUpdatePasswordTs extends Vue {
         })
     }
 
-    checkPrivateKey (DeTxt) {
+    checkPrivateKey(DeTxt) {
         const that = this
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''
@@ -86,7 +88,7 @@ export  class WalletUpdatePasswordTs extends Vue {
         })
     }
 
-    init(){
+    init() {
         this.prePassword = ''
         this.newPassword = ''
         this.repeatPassword = ''
@@ -100,7 +102,7 @@ export  class WalletUpdatePasswordTs extends Vue {
         this.isCompleteForm = prePassword !== '' && newPassword !== '' && repeatPassword !== ''
     }
 
-    created () {
+    created() {
         this.init()
     }
 }

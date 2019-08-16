@@ -1,9 +1,9 @@
 import {Message, entityTypeList} from "@/config/index"
 import {Component, Vue} from 'vue-property-decorator'
-import {walletInterface} from "@/interface/sdkWallet"
-import {Crypto, PropertyType, Account} from "nem2-sdk"
-import {transactionInterface} from "@/interface/sdkTransaction"
-import {creatrModifyAccountPropertyTransaction, getAccountProperties} from '@/help/appHelp'
+import {creatrModifyAccountPropertyTransaction} from '@/core/utils/wallet'
+import {Account, Crypto, PropertyType} from "nem2-sdk";
+import {walletApi} from "@/core/api/walletApi";
+import {transactionApi} from "@/core/api/transactionApi";
 
 @Component
 export class WalletFilterTs extends Vue {
@@ -143,7 +143,7 @@ export class WalletFilterTs extends Vue {
             fee
         ).then((modifyAccountPropertyAddressTransaction) => {
             console.log(modifyAccountPropertyAddressTransaction)
-            transactionInterface._announce({
+            transactionApi._announce({
                 transaction: modifyAccountPropertyAddressTransaction,
                 account,
                 node,
@@ -170,7 +170,7 @@ export class WalletFilterTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletInterface.getWallet({
+        walletApi.getWallet({
             name: this.getWallet.name,
             networkType: this.getWallet.networkType,
             privateKey: DeTxt.length === 64 ? DeTxt : ''

@@ -13,9 +13,9 @@ import {
     NetworkCurrencyMosaic,
     MosaicSupplyType
 } from 'nem2-sdk'
-import {SdkV0} from "./sdkDefine";
+import {sdkApi} from "@/core/api/apis";
 
-export const mosaicInterface: SdkV0.mosaic = {
+export const mosaicApi: sdkApi.mosaic = {
     getMosaicByNamespace: async (params) => {
         const currentXem = params.namespace
         const uintArray = NamespaceMosaicIdGenerator.namespaceId(currentXem)

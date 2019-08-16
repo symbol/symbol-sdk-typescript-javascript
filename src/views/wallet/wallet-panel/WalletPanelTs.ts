@@ -1,10 +1,10 @@
-import {localRead} from '@/help/help'
+import {localRead} from '@/core/utils/utils'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import GuideInto from '@/views/login/guide-into/GuideInto.vue'
 import WalletFn from '@/views/wallet/wallet-fn/WalletFn.vue'
 import WalletSwitch from '@/views/wallet/wallet-switch/WalletSwitch.vue'
 import WalletDetails from '@/views/wallet/wallet-details/WalletDetails.vue'
-import {getNamespaces} from "@/help/appHelp";
+import {getNamespaces} from "@/core/utils/wallet";
 
 @Component({
     components: {

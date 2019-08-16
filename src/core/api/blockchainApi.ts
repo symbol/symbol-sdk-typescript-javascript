@@ -1,7 +1,8 @@
-import {SdkV0} from './sdkDefine'
-import { BlockHttp, ChainHttp } from 'nem2-sdk'
 
-export const blockchainInterface:SdkV0.blockchain = {
+import { BlockHttp, ChainHttp } from 'nem2-sdk'
+import {sdkApi} from "@/core/api/apis";
+
+export const blockchainApi:sdkApi.blockchain = {
 
   getBlockByHeight: async (params) => {
     const node = params.node

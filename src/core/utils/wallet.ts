@@ -1,9 +1,5 @@
-import {localRead, localSave} from "@/help/help"
-import {filterInterface} from '@/interface/sdkFilter'
-import {walletInterface} from "@/interface/sdkWallet"
-import {accountInterface} from "@/interface/sdkAccount"
-import {aliasInterface} from "@/interface/sdkNamespace"
-import {multisigInterface} from "@/interface/sdkMultisig"
+import {localRead, localSave} from "@/core/utils/utils"
+
 import {
     Account,
     AccountPropertyModification,
@@ -16,6 +12,11 @@ import {
     PropertyModificationType,
     MosaicId
 } from 'nem2-sdk'
+import {walletApi} from "@/core/api/walletApi";
+import {accountApi} from "@/core/api/accountApi";
+import {namespaceApi} from "@/core/api/namespaceApi";
+import {multisigApi} from "@/core/api/multisigApi";
+import {filterApi} from "@/core/api/filterApi";
 
 export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) => {
     let localData: any[] = []
@@ -49,7 +50,7 @@ export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) =
 
 export const getAccountDefault = async (name, account, netType, node?, currentXEM1?, currentXEM2?) => {
     let storeWallet = {}
-    await walletInterface.getWallet({
+    await walletApi.getWallet({
         name: name,
         networkType: netType,
         privateKey: account.privateKey
@@ -79,7 +80,7 @@ export const getAccountDefault = async (name, account, netType, node?, currentXE
 
 export const setWalletMosaic = async (storeWallet, node, currentXEM1, currentXEM2) => {
     let wallet = storeWallet
-    await accountInterface.getAccountInfo({
+    await accountApi.getAccountInfo({
         node,
         address: wallet.address
     }).then(accountInfoResult => {
@@ -102,7 +103,7 @@ export const setWalletMosaic = async (storeWallet, node, currentXEM1, currentXEM
 
 export const setMultisigAccount = async (storeWallet, node) => {
     let wallet = storeWallet
-    await accountInterface.getMultisigAccountInfo({
+    await accountApi.getMultisigAccountInfo({
         node: node,
         address: wallet.address
     }).then((multisigAccountInfo) => {
@@ -120,7 +121,7 @@ export const setMultisigAccount = async (storeWallet, node) => {
 export const getNamespaces = async (address, node) => {
     let list = []
     let namespace = {}
-    await aliasInterface.getNamespacesFromAccount({
+    await namespaceApi.getNamespacesFromAccount({
         address: Address.createFromRawAddress(address),
         url: node
     }).then((namespacesFromAccount) => {
@@ -153,7 +154,7 @@ export const getNamespaces = async (address, node) => {
 }
 
 export const createRootNamespace = (namespaceName, duration, networkType, maxFee) => {
-    return aliasInterface.createdRootNamespace({
+    return namespaceApi.createdRootNamespace({
         namespaceName: namespaceName,
         duration: duration,
         networkType: networkType,
@@ -164,7 +165,7 @@ export const createRootNamespace = (namespaceName, duration, networkType, maxFee
 }
 
 export const createSubNamespace = (rootNamespaceName, subNamespaceName, networkType, maxFee) => {
-    return aliasInterface.createdSubNamespace({
+    return namespaceApi.createdSubNamespace({
         parentNamespace: rootNamespaceName,
         namespaceName: subNamespaceName,
         networkType: networkType,
@@ -174,7 +175,7 @@ export const createSubNamespace = (rootNamespaceName, subNamespaceName, networkT
     })
 }
 export const multisigAccountInfo = (address, node) => {
-    return multisigInterface.getMultisigAccountInfo({
+    return multisigApi.getMultisigAccountInfo({
         address,
         node
     }).then((result) => {
@@ -197,7 +198,7 @@ export const decryptKey = (wallet, password) => {
 
 
 export const createBondedMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, account: Account, fee: number) => {
-    return multisigInterface.bondedMultisigTransaction({
+    return multisigApi.bondedMultisigTransaction({
         transaction,
         multisigPublickey,
         networkType,
@@ -209,7 +210,7 @@ export const createBondedMultisigTransaction = (transaction: Array<Transaction>,
 }
 
 export const createCompleteMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, fee: number) => {
-    return multisigInterface.completeMultisigTransaction({
+    return multisigApi.completeMultisigTransaction({
         transaction,
         multisigPublickey,
         networkType,
@@ -229,7 +230,7 @@ export const creatrModifyAccountPropertyTransaction = (propertyType: PropertyTyp
                 Address.createFromRawAddress(item.value)
             )
         })
-        return filterInterface.creatrModifyAccountPropertyAddressTransaction({
+        return filterApi.creatrModifyAccountPropertyAddressTransaction({
             propertyType,
             modifications,
             networkType,
@@ -247,7 +248,7 @@ export const creatrModifyAccountPropertyTransaction = (propertyType: PropertyTyp
                 item.value
             )
         })
-        return filterInterface.creatrModifyAccountPropertyEntityTypeTransaction({
+        return filterApi.creatrModifyAccountPropertyEntityTypeTransaction({
             propertyType,
             modifications,
             networkType,
@@ -265,7 +266,7 @@ export const creatrModifyAccountPropertyTransaction = (propertyType: PropertyTyp
                 new MosaicId(item.value)
             )
         })
-        return filterInterface.creatrModifyAccountPropertyMosaicTransaction({
+        return filterApi.creatrModifyAccountPropertyMosaicTransaction({
             propertyType,
             modifications,
             networkType,
@@ -278,12 +279,12 @@ export const creatrModifyAccountPropertyTransaction = (propertyType: PropertyTyp
 
 }
 
-export const getAccountProperties = (address: string, node: string) => {
-    // TODO sdk is not complete yet
-    // return accountInterface.getAccountProperties({
-    //     address,
-    //     node
-    // }).then((result) => {
-    //     return result.result.accountPropertiesInfo
-    // })
-}
+// export const getAccountProperties = (address: string, node: string) => {
+//     // TODO sdk is not complete yet
+//     // return accountInterface.getAccountProperties({
+//     //     address,
+//     //     node
+//     // }).then((result) => {
+//     //     return result.result.accountPropertiesInfo
+//     // })
+// }

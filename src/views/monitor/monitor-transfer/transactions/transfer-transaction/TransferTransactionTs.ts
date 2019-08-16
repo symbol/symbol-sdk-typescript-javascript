@@ -1,9 +1,9 @@
 import {Message} from "@/config/index"
-import {mosaicInterface} from '@/interface/sdkMosaic'
-import {accountInterface} from '@/interface/sdkAccount'
+import {mosaicApi} from '@/core/api/mosaicApi'
+import {accountApi} from '@/core/api/accountApi'
 import { Account, Mosaic, MosaicId, UInt64} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {transactionInterface} from '@/interface/sdkTransaction'
+import {transactionApi} from '@/core/api/transactionApi'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
 
@@ -70,7 +70,7 @@ export default class TransferTransactionTs extends Vue {
         let {address, mosaic, amount, remark, fee} = this.formItem
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
 
-        transactionInterface.transferTransaction({
+        transactionApi.transferTransaction({
             network: this.getWallet.networkType,
             MaxFee: fee,
             receive: address,
@@ -84,7 +84,7 @@ export default class TransferTransactionTs extends Vue {
             console.log(transaction)
             const signature = account.sign(transaction, generationHash)
             // send tx
-            transactionInterface.announce({signature, node}).then((announceResult) => {
+            transactionApi.announce({signature, node}).then((announceResult) => {
                 // get announce status
                 announceResult.result.announceStatus.subscribe((announceInfo: any) => {
                     console.log(signature)
@@ -130,7 +130,7 @@ export default class TransferTransactionTs extends Vue {
         const that = this
         let {accountAddress, node} = this
         const {currentXEM1, currentXEM2} = this.$store.state.account
-        await accountInterface.getAccountInfo({
+        await accountApi.getAccountInfo({
             node,
             address: accountAddress
         }).then(async accountInfoResult => {
@@ -174,7 +174,7 @@ export default class TransferTransactionTs extends Vue {
     getNamespace(currentXem, mosaicIdList, currentXEM1, currentXEM2, mosaicList) {
         let currentXEMHex = ''
         const that = this
-        mosaicInterface.getMosaicByNamespace({
+        mosaicApi.getMosaicByNamespace({
             namespace: currentXem
         }).then((result: any) => {
             let isCrrentXEMExists = true

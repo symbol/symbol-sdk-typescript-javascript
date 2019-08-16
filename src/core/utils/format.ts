@@ -1,5 +1,5 @@
 import {transactionTag} from '@/config'
-import {formatNemDeadline} from "@/help/help"
+import {formatNemDeadline} from "@/core/utils/utils"
 import {MosaicId, Transaction, TransactionType, UInt64} from 'nem2-sdk'
 
 function formatTx(transaction: any, accountAddress: string) {

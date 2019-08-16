@@ -1,12 +1,12 @@
 import {Message} from "@/config/index"
-import {multisigAccountInfo} from "@/help/appHelp"
-import {mosaicInterface} from '@/interface/sdkMosaic.ts'
-import {multisigInterface} from '@/interface/sdkMultisig'
-import {formatSeconds, formatAddress} from '@/help/help.ts'
+import {multisigAccountInfo} from "@/core/utils/wallet"
+import {mosaicApi} from '@/core/api/mosaicApi.js'
+import {multisigApi} from '@/core/api/multisigApi'
+import {formatSeconds, formatAddress} from '@/core/utils/utils.js'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {transactionInterface} from '@/interface/sdkTransaction'
+import {transactionApi} from '@/core/api/transactionApi'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/help/appHelp'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/utils/wallet'
 import {
     MosaicId,
     MosaicNonce,
@@ -184,7 +184,7 @@ export class MosaicTransactionTs extends Vue {
         const that = this
         const nonce = MosaicNonce.createRandom()
         const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType))
-        mosaicInterface.createMosaic({
+        mosaicApi.createMosaic({
             mosaicNonce: nonce,
             supply: supply,
             mosaicId: mosaicId,
@@ -198,7 +198,7 @@ export class MosaicTransactionTs extends Vue {
         }).then((result: any) => {
             const mosaicDefinitionTransaction = result.result.mosaicDefinitionTransaction
             const signature = account.sign(mosaicDefinitionTransaction, generationHash)
-            transactionInterface.announce({signature, node}).then((announceResult) => {
+            transactionApi.announce({signature, node}).then((announceResult) => {
                 // get announce status
                 announceResult.result.announceStatus.subscribe((announceInfo: any) => {
                     console.log(signature)
@@ -253,7 +253,7 @@ export class MosaicTransactionTs extends Vue {
                 account,
                 aggregateFee
             ).then((aggregateTransaction) => {
-                transactionInterface.announceBondedWithLock({
+                transactionApi.announceBondedWithLock({
                     aggregateTransaction,
                     account,
                     listener,
@@ -271,7 +271,7 @@ export class MosaicTransactionTs extends Vue {
             networkType,
             aggregateFee,
         ).then((aggregateTransaction) => {
-            transactionInterface._announce({
+            transactionApi._announce({
                 transaction: aggregateTransaction,
                 account,
                 node,
@@ -282,7 +282,7 @@ export class MosaicTransactionTs extends Vue {
 
     checkForm() {
         const {supply, divisibility, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
-        // multisig check
+        // multisigApi check
         if (this.isMultisigAccount) {
             if (!multisigPublickey) {
                 this.$Notice.error({

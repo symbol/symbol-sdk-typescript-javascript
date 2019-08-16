@@ -1,10 +1,9 @@
 import {Message} from "@/config/index"
-import {accountInterface} from '@/interface/sdkAccount'
-import {multisigInterface} from '@/interface/sdkMultisig'
+import {accountApi} from '@/core/api/accountApi'
+import {multisigApi} from '@/core/api/multisigApi'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {transactionInterface} from '@/interface/sdkTransaction'
+import {transactionApi} from '@/core/api/transactionApi'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/help/appHelp'
 import {
     Account,
     Mosaic,
@@ -16,6 +15,7 @@ import {
     Deadline,
     Listener,
 } from 'nem2-sdk'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet";
 
 @Component({
     components: {
@@ -119,7 +119,7 @@ export class MultisigTransferTransactionTs extends Vue {
                 account,
                 bondedFee
             ).then((aggregateTransaction) => {
-                transactionInterface.announceBondedWithLock({
+                transactionApi.announceBondedWithLock({
                     aggregateTransaction,
                     account,
                     listener,
@@ -137,7 +137,7 @@ export class MultisigTransferTransactionTs extends Vue {
             networkType,
             aggregateFee
         ).then((aggregateTransaction) => {
-            transactionInterface._announce({
+            transactionApi._announce({
                 transaction: aggregateTransaction,
                 account,
                 node,
@@ -151,7 +151,7 @@ export class MultisigTransferTransactionTs extends Vue {
         const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
 
-        multisigInterface.getMultisigAccountInfo({
+        multisigApi.getMultisigAccountInfo({
             address,
             node
         }).then((result) => {
@@ -216,7 +216,7 @@ export class MultisigTransferTransactionTs extends Vue {
         const {node, currentXem} = this
         const {currentXEM1, currentXEM2} = this.$store.state.account
         let mosaicIdList = []
-        await accountInterface.getAccountInfo({
+        await accountApi.getAccountInfo({
             node,
             address: accountAddress
         }).then(async accountInfoResult => {
@@ -292,7 +292,7 @@ export class MultisigTransferTransactionTs extends Vue {
         let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
         await this.getMosaicList(address)
 
-        multisigInterface.getMultisigAccountInfo({
+        multisigApi.getMultisigAccountInfo({
             address,
             node
         }).then((result) => {

@@ -1,9 +1,9 @@
 import {Account} from "nem2-sdk"
 import {Message} from "@/config/index"
-import {formatAddress} from '@/help/help'
+import {formatAddress} from '@/core/utils/utils'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {aliasInterface} from "@/interface/sdkNamespace"
-import {transactionInterface} from "@/interface/sdkTransaction"
+import {namespaceApi} from "@/core/api/namespaceApi"
+import {transactionApi} from "@/core/api/transactionApi"
 import {bandedNamespace as BandedNamespaceList} from '@/config/index'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
@@ -83,7 +83,7 @@ export class SubNamespaceTs extends Vue {
             transaction = subNamespaceTransaction
         })
         const signature = account.sign(transaction, this.generationHash)
-        transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
+        transactionApi.announce({signature, node: this.node}).then((announceResult) => {
             // get announce status
             announceResult.result.announceStatus.subscribe((announceInfo: any) => {
                 that.$emit('createdNamespace')
@@ -158,7 +158,7 @@ export class SubNamespaceTs extends Vue {
     }
 
     createSubNamespace() {
-        return aliasInterface.createdSubNamespace({
+        return namespaceApi.createdSubNamespace({
             parentNamespace: this.form.rootNamespaceName,
             namespaceName: this.form.subNamespaceName,
             networkType: this.getWallet.networkType,

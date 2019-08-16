@@ -457,7 +457,7 @@ export const zh_CN = {
 
     no_mnemonic: '暂无助记词',
 
-    //multisig
+    //multisigApi
     map: '多签地图',
     convert: '转化为多签',
     manage: '编辑多签',
@@ -527,7 +527,7 @@ export const zh_CN = {
     apostille_result: '公证结果',
     Delete_records_locally: '本地删除记录',
     Notarized_data_backup: '公证数据备份',
-    //multisig
+    //multisigApi
     first_floor: '第一层',
     second_floor: '第二层',
     third_floor: '第三层',

@@ -1,7 +1,7 @@
 import {NetworkType} from 'nem2-sdk'
-import {saveLocalWallet} from '@/help/appHelp'
+import {saveLocalWallet} from '@/core/utils/wallet'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {localRead, localSave, formatXEMamount} from '@/help/help'
+import {localRead, localSave, formatXEMamount} from '@/core/utils/utils'
 import DeleteWalletCheck from './delete-wallet-check/DeleteWalletCheck.vue'
 
 @Component({

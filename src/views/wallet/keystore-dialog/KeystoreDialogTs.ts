@@ -1,6 +1,6 @@
 
 import {Message} from "@/config/index"
-import {copyTxt} from '@/help/help'
+import {copyTxt} from '@/core/utils/utils'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 @Component

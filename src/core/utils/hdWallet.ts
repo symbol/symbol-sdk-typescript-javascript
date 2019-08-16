@@ -1,11 +1,11 @@
 import {ExtendedKey, MnemonicPassPhrase, Wallet} from "nem2-hd-wallets";
 
-export const  createMnemonic = () => {
+export const createMnemonic = () => {
     const mnemonic = MnemonicPassPhrase.createRandom('english', 128);
     return mnemonic.plain
 }
 
-export const createAccount = (mnemonic) =>{
+export const createAccount = (mnemonic) => {
     const PassPhrase = new MnemonicPassPhrase(mnemonic);
     const bip32Seed = PassPhrase.toSeed();
     const bip32Node = ExtendedKey.createFromSeed(buf2hex(bip32Seed));
@@ -16,26 +16,26 @@ export const createAccount = (mnemonic) =>{
 
 export const randomMnemonicWord = (mnemonic) => {
     let numberArr = [];
-    let randomWord =[];
-    for(let i=0;i<mnemonic.length;i++){
-        const randomNum = checkRandomArr(numberArr,mnemonic)
+    let randomWord = [];
+    for (let i = 0; i < mnemonic.length; i++) {
+        const randomNum = checkRandomArr(numberArr, mnemonic)
         numberArr.push(randomNum)
         randomWord.push(mnemonic[randomNum])
     }
     return randomWord
 }
 
-function checkRandomArr (arr,mnemonic) {
+function checkRandomArr(arr, mnemonic) {
     const mnemonicNum = randomNum(mnemonic)
-    if(arr.includes(mnemonicNum)){
-        return checkRandomArr(arr,mnemonic)
-    }else {
+    if (arr.includes(mnemonicNum)) {
+        return checkRandomArr(arr, mnemonic)
+    } else {
         return mnemonicNum
     }
 }
 
-function randomNum (mnemonic) {
-    return Math.floor(Math.random()*(mnemonic.length))
+function randomNum(mnemonic) {
+    return Math.floor(Math.random() * (mnemonic.length))
 }
 
 function buf2hex(buffer) {

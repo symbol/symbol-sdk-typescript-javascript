@@ -1,4 +1,4 @@
-import {SdkV0} from "@/interface/sdkDefine";
+
 import {
     UInt64,
     Deadline,
@@ -6,8 +6,9 @@ import {
     ModifyAccountPropertyMosaicTransaction,
     ModifyAccountPropertyEntityTypeTransaction
 } from 'nem2-sdk'
+import {sdkApi} from "@/core/api/apis";
 
-export const filterInterface: SdkV0.filter = {
+export const filterApi: sdkApi.filter = {
     creatrModifyAccountPropertyAddressTransaction: async (params) => {
         const {propertyType, modifications, networkType, fee} = params
         const modifyAccountPropertyAddressTransaction = ModifyAccountPropertyAddressTransaction.create(

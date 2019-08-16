@@ -1,12 +1,13 @@
 import {Account, Address, Listener} from "nem2-sdk"
-import {aliasInterface} from "@/interface/sdkNamespace"
-import {multisigInterface} from '@/interface/sdkMultisig'
-import {formatSeconds, formatAddress} from '@/help/help.ts'
+import {namespaceApi} from "@/core/api/namespaceApi"
+import {multisigApi} from '@/core/api/multisigApi'
+import {formatSeconds, formatAddress} from '@/core/utils/utils.js'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {transactionInterface} from "@/interface/sdkTransaction"
+import {transactionApi} from "@/core/api/transactionApi"
 import {Message, bandedNamespace as BandedNamespaceList} from "@/config/index"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/help/appHelp'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet";
+
 
 @Component({
     components: {
@@ -88,7 +89,7 @@ export class RootNamespaceTs extends Vue {
             transaction = rootNamespaceTransaction
         })
         const signature = account.sign(transaction, this.generationHash)
-        transactionInterface.announce({signature, node: this.node}).then((announceResult) => {
+        transactionApi.announce({signature, node: this.node}).then((announceResult) => {
             // get announce status
             announceResult.result.announceStatus.subscribe((announceInfo: any) => {
                 that.$emit('createdNamespace')
@@ -105,7 +106,7 @@ export class RootNamespaceTs extends Vue {
         const account = Account.createFromPrivateKey(privatekey, networkType)
         const {generationHash, node} = this.$store.state.account
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-        aliasInterface.createdRootNamespace({
+        namespaceApi.createdRootNamespace({
             namespaceName: rootNamespaceName,
             duration: duration,
             networkType: networkType,
@@ -120,7 +121,7 @@ export class RootNamespaceTs extends Vue {
                     account,
                     aggregateFee
                 ).then((aggregateTransaction) => {
-                    transactionInterface.announceBondedWithLock({
+                    transactionApi.announceBondedWithLock({
                         aggregateTransaction,
                         account,
                         listener,
@@ -139,7 +140,7 @@ export class RootNamespaceTs extends Vue {
                 networkType,
                 aggregateFee
             ).then((aggregateTransaction) => {
-                transactionInterface._announce({
+                transactionApi._announce({
                     transaction: aggregateTransaction,
                     account,
                     node,
@@ -159,7 +160,7 @@ export class RootNamespaceTs extends Vue {
     }
 
     createRootNamespace() {
-        return aliasInterface.createdRootNamespace({
+        return namespaceApi.createdRootNamespace({
             namespaceName: this.form.rootNamespaceName,
             duration: this.form.duration,
             networkType: this.getWallet.networkType,
@@ -242,7 +243,7 @@ export class RootNamespaceTs extends Vue {
         const that = this
         const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
-        multisigInterface.getMultisigAccountInfo({
+        multisigApi.getMultisigAccountInfo({
             address,
             node
         }).then((result) => {
@@ -264,7 +265,7 @@ export class RootNamespaceTs extends Vue {
         const {node} = this.$store.state.account
         const {networkType} = this.$store.state.account.wallet
         let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
-        multisigInterface.getMultisigAccountInfo({
+        multisigApi.getMultisigAccountInfo({
             address,
             node
         }).then((result) => {
