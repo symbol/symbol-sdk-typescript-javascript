@@ -4,10 +4,18 @@ import {Component, Vue} from 'vue-property-decorator'
 import {strToHexCharCode} from '@/core/utils/utils'
 import {createAccount} from "@/core/utils/hdWallet";
 import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet";
-import {passwordValidator} from "@/core/utils/validation";
+import {
+    ALLOWED_SPECIAL_CHAR,
+    MAX_PASSWORD_LENGTH,
+    MIN_PASSWORD_LENGTH,
+    passwordValidator
+} from "@/core/utils/validation";
 
 @Component
 export class WalletImportMnemonicTs extends Vue {
+    MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
+    MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
+    ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
     form = {
         mnemonic: '',
         networkType: 0,

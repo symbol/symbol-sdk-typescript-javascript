@@ -33,6 +33,7 @@
           <div class="tips">
             {{$t('mnemonic_describle_tips')}}
           </div>
+          <p class="formItemTxt">{{$t('password_hint', {min: MIN_PASSWORD_LENGTH, max: MAX_PASSWORD_LENGTH, specialChar: ALLOWED_SPECIAL_CHAR})}}</p>
           <div class="gray_content">
             <input class="absolute" type="password" v-model="form.password"
                    :placeholder="$t('please_set_your_password')">

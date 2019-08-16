@@ -37,6 +37,7 @@
           <div class="tips">
             {{$t('This_password_is_a_private_key_password_and_will_be_used_when_you_pay')}}
           </div>
+          <p class="formItemTxt">{{$t('password_hint', {min: MIN_PASSWORD_LENGTH, max: MAX_PASSWORD_LENGTH, specialChar: ALLOWED_SPECIAL_CHAR})}}</p>
           <div class="gray_content">
             <input class="absolute" v-model="form.password" type="password"
                    :placeholder="$t('please_set_your_password')">

@@ -2,10 +2,18 @@ import {Message} from "@/config"
 import {Component, Vue} from 'vue-property-decorator'
 import {Account, NetworkType} from "nem2-sdk"
 import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet";
-import {passwordValidator} from "@/core/utils/validation";
+import {
+    ALLOWED_SPECIAL_CHAR,
+    MAX_PASSWORD_LENGTH,
+    MIN_PASSWORD_LENGTH,
+    passwordValidator
+} from "@/core/utils/validation";
 
 @Component
 export class WalletImportPrivatekeyTs extends Vue {
+    MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
+    MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
+    ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
     account = {}
     form = {
         privateKey: 'FB628AF4276F696AD1FA85B7AB1E49CFD896E5EC85000E3179EEEA59717DD8DE',
