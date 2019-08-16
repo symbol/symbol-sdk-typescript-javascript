@@ -87,17 +87,18 @@
       <div class="gray_input_content">
         <span class="title">{{$t('fee')}}</span>
         <input type="text" v-model="formItem.fee" :placeholder="$t('remote_modal_place1')">
+        <span class="gas">gas</span>
       </div>
 
 
       <div class="gray_input_content">
-        <span class="title">{{$t('fee')}}</span>
-        <input type="text" v-model="formItem.password" :placeholder="$t('remote_modal_place1')">
+        <span class="title">{{$t('password')}}</span>
+        <input type="password" v-model="formItem.password" :placeholder="$t('remote_modal_place2')">
+
       </div>
 
 
       <div class="new_model_btn">
-        <!--        <span class="modal_btn_cancel radius pointer" @click="modalCancel">{{$t('remote_modal_cancel')}}</span>-->
         <span class="modal_btn pointer radius" @click="confirmInput">{{$t('remote_modal_comfire')}}</span>
       </div>
     </Modal>

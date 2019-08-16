@@ -1,6 +1,7 @@
 .remote_board_container {
   height: calc(100% - 70px);
 
+
   .ivu-switch {
     margin-left: 20px;
 
@@ -294,6 +295,12 @@
     display: flex;
     align-items: center;
     margin-bottom: 30px;
+    position: relative;
+
+    .gas {
+      position: absolute;
+      right: 100px;
+    }
 
     .title {
       display: inline-block;
@@ -303,6 +310,7 @@
 
     input {
       width: 600px;
+      padding-right: 50px;
       height: 45px;
       border: 1px solid rgba(204, 204, 204, 1);
       border-radius: 4px;
