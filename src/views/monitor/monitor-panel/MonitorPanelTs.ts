@@ -114,7 +114,7 @@ export class MonitorPanelTs extends Vue {
         copyTxt(this.address).then(() => {
             that.$Notice.success(
                 {
-                    title: this.$t(Message.COPY_SUCCESS).toString()
+                    title: this.$t(Message.COPY_SUCCESS) + ''
                 }
             )
         })
@@ -136,14 +136,14 @@ export class MonitorPanelTs extends Vue {
         const that = this
         const {node, currentXEM1, currentXEM2} = this
         setWalletMosaic(this.getWallet, node, currentXEM1, currentXEM2)
-            .then((wallet)=>{
+            .then((wallet) => {
                 that.XEMamount = wallet.balance
-    })
+            })
     }
 
     getMyNamespaces() {
         getNamespaces(this.getWallet.address, this.node)
-            .then((list)=>{
+            .then((list) => {
                 this.$store.commit('SET_NAMESPACE', list)
             })
     }
@@ -175,9 +175,9 @@ export class MonitorPanelTs extends Vue {
             addressList: [Address.createFromRawAddress(accountAddress)]
         }).then((namespaceResult) => {
             namespaceResult.result.namespaceList.subscribe((namespaceInfo) => {
-                if(namespaceInfo[0].names.length > 0){
+                if (namespaceInfo[0].names.length > 0) {
                     that.isShowAccountAlias = true
-                }else {
+                } else {
                     that.isShowAccountAlias = false
                 }
             }, () => {
@@ -190,7 +190,7 @@ export class MonitorPanelTs extends Vue {
         const that = this
         const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"});
         const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
-        const result = rstQuery.data[0].close
+        const result = rstQuery.data ? rstQuery.data[0].close : 0
         that.currentPrice = result
     }
 
