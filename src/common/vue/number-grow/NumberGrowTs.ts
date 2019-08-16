@@ -28,7 +28,7 @@ export class NumberGrowTs extends Vue {
             if (current === start) {
                 return
             }
-            current = Number(start.toFixed(0))
+            current = Number(Number(start).toFixed(0))
             ele.innerHTML = current.toString().replace(/(\d)(?=(?:\d{3}[+]?)+$)/g, '$1,')
         }, 10)
     }

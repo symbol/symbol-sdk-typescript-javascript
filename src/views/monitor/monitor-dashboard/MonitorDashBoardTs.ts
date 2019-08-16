@@ -31,15 +31,16 @@ export class MonitorDashBoardTs extends Vue {
     currentDataAmount = 0
     currentPrice: any = 0
     accountPrivateKey = ''
-    confirmedDataAmount = 0
-    unconfirmedDataAmount = 0
+    transferListLength = 0
+    receiptListLength = 0
     currentTransactionList = []
     xemNum: number = 8999999999
-    isLoadingConfirmedTx = true
-    confirmedTransactionList = []
-    isLoadingUnconfirmedTx = false
-    unconfirmedTransactionList = []
+    allTransacrionList = []
+    transferTransactionList = []
+    isLoadingTransactions = false
+    receiptList = []
     showConfirmedTransactions = true
+    transactionDetails = {}
     networkStatusList = [
         {
             icon: dashboardBlockHeight,
@@ -69,7 +70,6 @@ export class MonitorDashBoardTs extends Vue {
             variable: 'signerPublicKey'
         }
     ]
-    transactionDetails = {}
 
 
     get getWallet() {
@@ -82,10 +82,12 @@ export class MonitorDashBoardTs extends Vue {
 
     showDialog(transaction) {
         this.isShowDialog = true
-        console.log(transaction.dialogDetailMap)
         this.transactionDetails = transaction.dialogDetailMap
     }
 
+    get currentHeight() {
+        return this.$store.state.app.chainStatus.currentHeight
+    }
 
     async getMarketOpenPrice() {
         if (!isRefreshData('openPriceOneMinute', 1000 * 60, new Date().getSeconds())) {
@@ -96,7 +98,7 @@ export class MonitorDashBoardTs extends Vue {
         const that = this
         const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"});
         const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
-        const result = rstQuery.data[0].close
+        const result = rstQuery.data ? rstQuery.data[0].close : 0
         that.currentPrice = result * that.xemNum
         const openPriceOneMinute = {
             timestamp: new Date().getTime(),
@@ -108,7 +110,7 @@ export class MonitorDashBoardTs extends Vue {
 
     switchTransactionPanel(flag) {
         this.showConfirmedTransactions = flag
-        this.currentDataAmount = flag ? this.confirmedDataAmount : this.unconfirmedDataAmount
+        this.currentDataAmount = flag ? this.transferListLength : this.receiptListLength
         this.changePage(1)
     }
 
@@ -139,7 +141,7 @@ export class MonitorDashBoardTs extends Vue {
     }
 
 
-    getConfirmedTransactions() {
+    refreshTransferTransactionList() {
         const that = this
         let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
@@ -151,19 +153,12 @@ export class MonitorDashBoardTs extends Vue {
             }
         }).then((transactionsResult) => {
             transactionsResult.result.transactions.subscribe((transactionsInfo) => {
-                let transferTransaction = transactionFormat(transactionsInfo, accountAddress)
-                // let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
-                that.changeCurrentTransactionList(transferTransaction.slice(0, 10))
-                that.confirmedDataAmount = transferTransaction.length
-                that.currentDataAmount = transferTransaction.length
-                that.confirmedTransactionList = transferTransaction
-                that.isLoadingConfirmedTx = false
-                // console.log(transferTransaction)
+                that.allTransacrionList.push(...transactionsInfo)
             })
         })
     }
 
-    getUnconfirmedTransactions() {
+    refreshReceiptList() {
         const that = this
         let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
@@ -175,12 +170,11 @@ export class MonitorDashBoardTs extends Vue {
             }
         }).then((transactionsResult) => {
             transactionsResult.result.unconfirmedTransactions.subscribe((unconfirmedtransactionsInfo) => {
-                let transferTransaction = transactionFormat(unconfirmedtransactionsInfo, accountAddress)
-                that.changeCurrentTransactionList(transferTransaction.slice(0, 10))
-                that.currentDataAmount = transferTransaction.length
-                that.unconfirmedDataAmount = transferTransaction.length
-                that.unconfirmedTransactionList = transferTransaction
-                that.isLoadingUnconfirmedTx = false
+                unconfirmedtransactionsInfo = unconfirmedtransactionsInfo.map((unconfirmedtransaction) => {
+                    unconfirmedtransaction.isTxUnconfirmed = true
+                    return unconfirmedtransaction
+                })
+                that.allTransacrionList.push(...unconfirmedtransactionsInfo)
             })
         })
     }
@@ -193,41 +187,47 @@ export class MonitorDashBoardTs extends Vue {
         this.currentXem = this.$store.state.account.currentXem
     }
 
-    changeCurrentTransactionList(list: Array<any>) {
-        this.currentTransactionList = list
-    }
-
     changePage(page) {
         const pageSize = 10
         const {showConfirmedTransactions} = this
         const start = (page - 1) * pageSize
         const end = page * pageSize
         if (showConfirmedTransactions) {
-            //confirmed
-            this.changeCurrentTransactionList(this.confirmedTransactionList.slice(start, end))
+            //transfer
+            this.currentTransactionList = this.transferTransactionList.slice(start, end)
             return
         }
-        this.changeCurrentTransactionList(this.unconfirmedTransactionList.slice(start, end))
+        this.currentTransactionList = this.receiptList.slice(start, end)
     }
 
     @Watch('getWallet')
     onGetWalletChange() {
         this.initData()
-        this.getUnconfirmedTransactions()
-        this.getConfirmedTransactions()
+        this.refreshReceiptList()
+        this.refreshTransferTransactionList()
         this.getMarketOpenPrice()
         this.getPointInfo()
     }
 
     @Watch('ConfirmedTxList')
     onConfirmedTxChange() {
-        this.getUnconfirmedTransactions()
-        this.getConfirmedTransactions()
+        this.allTransacrionList = []
+        this.refreshReceiptList()
+        this.refreshTransferTransactionList()
     }
 
-    get currentHeight() {
-        return this.$store.state.app.chainStatus.currentHeight
+    @Watch('allTransacrionList')
+    onAllTransacrionListChange() {
+        const {allTransacrionList, accountAddress, showConfirmedTransactions} = this
+        this.transferTransactionList = transactionFormat(allTransacrionList, accountAddress).transferTransactionList
+        this.receiptList = transactionFormat(allTransacrionList, accountAddress).receiptList
+        this.changePage(1)
+        this.transferListLength = this.transferTransactionList.length
+        this.receiptListLength = this.receiptList.length
+        this.currentDataAmount = showConfirmedTransactions ? this.transferListLength : this.receiptListLength
+        this.isLoadingTransactions = false
     }
+
 
     @Watch('currentHeight')
     onChainStatus() {
@@ -240,8 +240,8 @@ export class MonitorDashBoardTs extends Vue {
     created() {
         this.initData()
         this.getMarketOpenPrice()
-        this.getConfirmedTransactions()
-        this.getUnconfirmedTransactions()
+        this.refreshTransferTransactionList()
+        this.refreshReceiptList()
         this.getPointInfo()
     }
 

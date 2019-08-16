@@ -224,7 +224,7 @@ export default class TransferTransactionTs extends Vue {
     onFormItemChange() {
         const {address, mosaic, amount, fee} = this.formItem
         // isCompleteForm
-        this.isCompleteForm = address !== '' && mosaic !== '' && parseInt(amount.toString()) >= 0 && fee  > 0
+        this.isCompleteForm = address !== '' && mosaic !== '' && parseInt(amount.toString()) >= 0 && fee  >= 0
     }
 
     created() {

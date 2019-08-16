@@ -48,7 +48,6 @@ export class MonitorReceiptTs extends Vue {
     ]
 
 
-
     get getWallet() {
         return this.$store.state.account.wallet
     }
@@ -60,10 +59,11 @@ export class MonitorReceiptTs extends Vue {
     checkForm() {
         let {assetAmount} = this
         assetAmount = Number(assetAmount)
-        if (!assetAmount || assetAmount < 0) {
+        if ((!Number(assetAmount) && Number(assetAmount) !== 0) || Number(assetAmount) < 0) {
             this.showErrorMessage(this.$t(Message.AMOUNT_LESS_THAN_0_ERROR))
             return false
         }
+        return true
     }
 
     showErrorMessage(message) {
@@ -134,6 +134,7 @@ export class MonitorReceiptTs extends Vue {
             )
         })
     }
+
     initData() {
         this.accountPublicKey = this.getWallet.publicKey
         this.accountAddress = this.getWallet.address

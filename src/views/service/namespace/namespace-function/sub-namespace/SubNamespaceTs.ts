@@ -53,11 +53,12 @@ export class SubNamespaceTs extends Vue {
     }
 
     get namespaceList() {
-        return !this.$store.state.account.namespace || !this.$store.state.account.namespace.length ? [{
+        console.log(this.$store.state.account.namespace)
+        return this.$store.state.account.namespace ? this.$store.state.account.namespace : [{
             label: 'no data',
             value: 'no data',
             levels: '0'
-        }] : this.$store.state.account.namespace.length
+        }]
     }
 
     formatAddress(address) {
@@ -173,7 +174,8 @@ export class SubNamespaceTs extends Vue {
             rootNamespaceName: '',
             subNamespaceName: '',
             multisigPublickey: '',
-            maxFee: 50000
+            maxFee: 50000,
+
         }
     }
 
