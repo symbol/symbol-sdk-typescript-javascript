@@ -27,11 +27,11 @@ const iconMap = {
 }
 
 
-const formatTransferTransactions = function (transaction, accountAddress) {
+const formatTransferTransactions = function (transaction, accountAddress, currentXEM) {
     transaction.isReceipt = transaction.recipient.address == accountAddress
     transaction.tag = transaction.isReceipt ? transactionTag.GATHERING : transactionTag.PAYMENT
     transaction.infoFirst = transaction.isReceipt ? transaction.signer.address.address : transaction.recipient.address;
-    transaction.infoSecond = transaction.mosaics && transaction.mosaics[0] ? transaction.mosaics[0].id.id.toHex().toUpperCase() : 'nem.xem';
+    transaction.infoSecond = transaction.mosaics && transaction.mosaics[0] && currentXEM.toUpperCase() !== transaction.mosaics[0].id.id.toHex().toUpperCase() ? transaction.mosaics[0].id.id.toHex().toUpperCase() : 'nem.xem';
     transaction.infoThird = (transaction.isReceipt ? '+' : '-') + (transaction.mosaics && transaction.mosaics[0] ? transaction.mosaics[0].amount.compact() : '0')
     transaction.time = formatNemDeadline(transaction.deadline);
     transaction.dialogDetailMap = {
@@ -261,8 +261,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
 }
 
 
-export const transactionFormat = (transactionList: Array<Transaction>, accountAddress: string) => {
-
+export const transactionFormat = (transactionList: Array<Transaction>, accountAddress: string, currentXEM: string) => {
     const transferTransactionList = []
     const receiptList = []
     transactionList.forEach((item) => {
@@ -271,7 +270,7 @@ export const transactionFormat = (transactionList: Array<Transaction>, accountAd
             receiptList.push(item)
             return
         }
-        item = formatTransferTransactions(item, accountAddress)
+        item = formatTransferTransactions(item, accountAddress, currentXEM)
         transferTransactionList.push(item)
     })
     const result = {

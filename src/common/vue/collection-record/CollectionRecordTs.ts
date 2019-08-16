@@ -6,7 +6,7 @@ import {formatTransactions, getCurrentMonthFirst, getCurrentMonthLast,} from '@/
 
 
 @Component
-export  class CollectionRecordTs extends Vue {
+export class CollectionRecordTs extends Vue {
     node = ''
     currentPrice = 0
     currentMonth = ''
@@ -130,6 +130,7 @@ export  class CollectionRecordTs extends Vue {
 
     async getConfirmedTransactions() {
         const that = this
+        const {currentXEM1} = this.$store.state.account
         let {accountPublicKey, accountAddress, node, transactionType} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
         await transactionApi.transactions({
@@ -140,7 +141,7 @@ export  class CollectionRecordTs extends Vue {
             }
         }).then((transactionsResult) => {
             transactionsResult.result.transactions.subscribe((transactionsInfo) => {
-                let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
+                let transferTransaction = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
                 let list = []
                 // get transaction by choose recript tx or send
                 if (transactionType == 1) {
@@ -169,6 +170,7 @@ export  class CollectionRecordTs extends Vue {
 
     async getUnConfirmedTransactions() {
         const that = this
+        const {currentXEM1} = this.$store.state.account
         let {accountPublicKey, accountAddress, node, transactionType, UnconfirmedTxList} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
         await transactionApi.unconfirmedTransactions({
@@ -179,12 +181,12 @@ export  class CollectionRecordTs extends Vue {
             }
         }).then((transactionsResult) => {
             transactionsResult.result.unconfirmedTransactions.subscribe((transactionsInfo) => {
-                let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
+                let transferTransaction = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
                 let list = []
                 // get transaction by choose recript tx or send
                 if (transactionType == 1) {
                     transferTransaction.forEach((item) => {
-                        if (item.isReceipt ) {
+                        if (item.isReceipt) {
                             list.push(item)
                         }
                     })
@@ -194,7 +196,7 @@ export  class CollectionRecordTs extends Vue {
                     return
                 }
                 transferTransaction.forEach((item) => {
-                    if (!item.isReceipt ) {
+                    if (!item.isReceipt) {
                         list.push(item)
                     }
                 })

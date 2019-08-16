@@ -72,7 +72,7 @@
         <img src="@/common/img/monitor/transaction/txConfirmed.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
-            <div class="top">{{c.mosaic.id ? c.mosaic.id.id.toHex().toUpperCase().slice(0,8)+'...': "null"}}</div>
+            <div class="top">{{c.mosaicName}}</div>
             <div class="bottom"> {{c.time.slice(0, c.time.length - 3)}}</div>
           </div>
           <div class="right">
