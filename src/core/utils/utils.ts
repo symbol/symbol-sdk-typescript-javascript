@@ -252,7 +252,6 @@ export const formatTransactions = function (transactionList, accountAddress) {
             item.signerAddress = item.signer.address.address;
             item.recipientAddress = item.recipient.address;
             item.oppositeAddress = item.isReceipt ? item.signerAddress : item.recipient.address;
-            item.target = 'my wallet name';
             item.time = formatNemDeadline(item.deadline);
             item.mosaic = item.mosaics.length == 0 ? false : item.mosaics[0];
             item.date = new Date(item.time);

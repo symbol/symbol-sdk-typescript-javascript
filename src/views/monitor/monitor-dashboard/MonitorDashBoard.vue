@@ -49,65 +49,78 @@
       <div class="label_page">
         <span @click="switchTransactionPanel(true)"
               :class="['pointer',showConfirmedTransactions?'selected':'','page_title']">
-          {{$t('confirmed_transaction')}} ({{confirmedDataAmount}})
+          {{$t('transfer_record')}} ({{transferListLength}})
         </span>
         <span class="line">|</span>
         <span @click="switchTransactionPanel(false)"
               :class="['pointer',showConfirmedTransactions?'':'selected','page_title']">
-          {{$t('unconfirmed_transaction')}} ({{unconfirmedDataAmount}})
+          {{$t('receipt')}} ({{receiptListLength}})
         </span>
       </div>
 
-      <div class="all_transaction">
-        <div class="table_head">
-          <span class="account">{{$t('account')}}</span>
-          <span class="transfer_type">{{$t('transaction_type')}}</span>
-          <span class="amount">{{$t('the_amount')}}</span>
-          <span class="date">{{$t('date')}}</span>
-        </div>
-        <div class="confirmed_transactions" v-if="showConfirmedTransactions">
-          <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
-          <div class="table_body hide_scroll" ref="confirmedTableBody">
-            <div class="table_item pointer" @click="showDialog(c)" v-for="c in currentTransactionList">
-              <img class="mosaic_action" v-if="!c.isReceipt"
-                   src="@/common/img/monitor/dash-board/dashboardMosaicOut.png" alt="">
-              <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
-                   alt="">
-              <span class="account overflow_ellipsis">{{c.infoFirst}}</span>
-              <span class="transfer_type overflow_ellipsis">{{$t(c.tag)}}</span>
-              <span class="mosaicId overflow_ellipsis">{{c.infoSecond?c.infoSecond:null}}</span>
-              <span class="amount overflow_ellipsis" v-if="c.infoThird">{{c.infoThird}}</span>
-              <span v-else class="amount overflow_ellipsis"> 0</span>
-              <span class="date overflow_ellipsis">{{c.time}}</span>
-              <img src="@/common/img/monitor/dash-board/dashboardExpand.png"
-                   class="radius expand_mosaic_info">
-            </div>
-            <div class="no_data" v-if="confirmedTransactionList.length == 0">
-              {{$t('no_confirmed_transactions')}}
+      <div class="table_container" v-if="showConfirmedTransactions">
+        <div class="all_transaction">
+          <div class="table_head">
+            <span class="account">{{$t('account')}}</span>
+            <span class="transfer_type">{{$t('asset_type')}}</span>
+            <span class="amount">{{$t('the_amount')}}</span>
+            <span class="date">{{$t('date')}}</span>
+          </div>
+          <div class="confirmed_transactions">
+            <Spin v-if="isLoadingTransactions" size="large" fix class="absolute"></Spin>
+            <div class="table_body hide_scroll" ref="confirmedTableBody">
+              <div class="table_item pointer" @click="showDialog(c)" v-for="c in currentTransactionList">
+                <img class="mosaic_action" v-if="!c.isReceipt"
+                     src="@/common/img/monitor/dash-board/dashboardMosaicOut.png" alt="">
+                <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
+                     alt="">
+                <span class="account overflow_ellipsis">{{c.infoFirst}}</span>
+                <span class="transfer_type overflow_ellipsis">{{c.infoSecond?c.infoSecond:null}}</span>
+                <span class="amount overflow_ellipsis" v-if="c.infoThird">{{c.infoThird}}</span>
+                <span v-else class="amount overflow_ellipsis"> 0</span>
+                <span class="date overflow_ellipsis">{{c.time}}</span>
+                <img v-if="c.isTxUnconfirmed" src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
+                     class="expand_mosaic_info">
+                <img v-else src="@/common/img/monitor/dash-board/dashboardConfirmed.png"
+                     class="expand_mosaic_info">
+              </div>
+              <div class="no_data" v-if="transferTransactionList.length == 0">
+                {{$t('no_confirmed_transactions')}}
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="unconfirmed_transactions" v-if="!showConfirmedTransactions">
-          <Spin v-if="isLoadingUnconfirmedTx" size="large" fix class="absolute"></Spin>
-          <div class="table_body hide_scroll" ref="unconfirmedTableBody">
-            <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in unconfirmedTransactionList"
-                 :key="index">
-              <img class="mosaic_action" v-if="!u.isReceipt"
-                   src="@/common/img/monitor/dash-board/dashboardMosaicOut.png" alt="">
-              <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
-                   alt="">
-              <span class="account overflow_ellipsis">{{u.infoFirst}}</span>
-              <span class="transfer_type overflow_ellipsis">{{$t(u.tag)}}</span>
-              <span class="mosaicId overflow_ellipsis">{{u.infoSecond?u.infoSecond:null}}</span>
-              <span class="amount overflow_ellipsis" v-if="u.infoThird">{{u.infoThird}}</span>
-              <span v-else class="amount overflow_ellipsis"> 0</span>
-              <span class="date overflow_ellipsis">{{u.time}}</span>
-              <img src="@/common/img/monitor/dash-board/dashboardExpand.png"
-                   class="radius expand_mosaic_info">
-            </div>
-            <div class="no_data" v-if="unconfirmedTransactionList.length == 0">
-              {{$t('no_unconfirmed_transactions')}}
+      <div class="table_container_unconfirmed table_container" v-if="!showConfirmedTransactions">
+        <div class="all_transaction">
+          <div class="table_head">
+            <span class="account">{{$t('transaction_type')}}</span>
+            <span class="transfer_type">{{$t('remote_modal_price')}}(Gas)</span>
+            <span class="amount">{{$t('block')}}</span>
+            <span class="date">{{$t('date')}}</span>
+          </div>
+          <div class="unconfirmed_transactions">
+            <Spin v-if="isLoadingTransactions" size="large" fix class="absolute"></Spin>
+            <div class="table_body hide_scroll" ref="unconfirmedTableBody">
+              <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in receiptList"
+                   :key="index">
+                <img class="mosaic_action" v-if="!u.isReceipt"
+                     src="@/common/img/monitor/dash-board/dashboardMosaicOut.png" alt="">
+                <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
+                     alt="">
+                <span class="account overflow_ellipsis">{{$t(u.tag)}}</span>
+                <span class="transfer_type overflow_ellipsis">{{u.infoSecond}}</span>
+                <span class="amount overflow_ellipsis">{{u.infoThird}}</span>
+                <span class="date overflow_ellipsis">{{u.time}}</span>
+                <img v-if="u.isTxUnconfirmed" src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
+                     class="expand_mosaic_info">
+                <img v-else src="@/common/img/monitor/dash-board/dashboardConfirmed.png"
+                     class="expand_mosaic_info">
+              </div>
+              <div class="no_data" v-if="receiptList.length == 0">
+                {{$t('no_unconfirmed_transactions')}}
+              </div>
             </div>
           </div>
         </div>

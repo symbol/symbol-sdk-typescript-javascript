@@ -3,12 +3,12 @@
 
   .top_network_info {
     margin: 15px 0;
-    height: 480px;
+    height: 440px;
 
     .left_echart {
       width: 960px;
-      height: 480px;
-      padding: 30px 0;
+      height: 100%;
+      padding: 15px 0;
       background-color: white;
       float: left;
       position: relative;
@@ -37,7 +37,7 @@
     .right_net_status {
       float: left;
       width: 335px;
-      height: 480px;
+      height: 100%;
       background-color: white;
       margin-left: 15px;
       padding: 29px 31px;
@@ -55,7 +55,7 @@
         justify-content: space-between;
         align-content: center;
         align-items: center;
-        padding: 18px 22px;
+        padding: 15px 22px;
         border: 1px solid rgba(238, 238, 238, 1);
         margin: 8px 0;
 
@@ -88,7 +88,7 @@
 
   .bottom_transactions {
     width: 1310px;
-    height: calc(100% - 495px);
+    height: calc(100% - 455px);
     background-color: white;
     padding: 24px 31px;
     position: relative;
@@ -98,9 +98,11 @@
       position: absolute;
       right: 90px;
       z-index: 999;
-      span{
+
+      span {
         vertical-align: middle;
       }
+
       .page_content {
         display: inline-block;
         vertical-align: middle;
@@ -140,6 +142,7 @@
             transform: scale(.7);
           }
         }
+
         .gray {
           background-color: #ccc;
         }
@@ -185,7 +188,6 @@
     }
 
     .table_head {
-      display: none;
       padding: 2px 0 10px;
 
       span {
@@ -193,40 +195,36 @@
       }
 
       .account {
-        text-align: center;
+        padding-left: 70px;
       }
     }
 
     .account {
+      text-align: left;
       width: 500px;
     }
 
     .transfer_type {
       width: 250px;
-      text-align: center;
     }
-    .mosaicId{
+
+    .mosaicId {
       width: 106px;
-      text-align: center;
     }
 
     .amount {
       width: 154px;
-      text-align: center;
       padding-left: 0 !important;
     }
 
     .date {
       width: 205px;
-      padding-left: 50px;
     }
 
+    .table_container,
     .unconfirmed_transactions,
     .confirmed_transactions {
       height: 100%;
-      position: absolute;
-      left: 0;
-      top: 0;
 
 
       .table_body {
@@ -254,12 +252,9 @@
           }
 
           .expand_mosaic_info {
-            width: 16px;
-            height: 16px;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0px 1px 5px 0px rgba(32, 181, 172, 0.4);
+            width: 19px;
             margin-top: 24px;
-            right: 30px;
+            right: 80px;
             border-radius: 8px;
           }
 
@@ -278,7 +273,23 @@
     }
   }
 
+  .table_container_unconfirmed {
+    .account {
+      width: 300px;
+    }
 
+    .transfer_type {
+      width: 300px;
+    }
+
+    .amount {
+      width: 200px;
+    }
+
+    .date {
+      width: 300px;
+    }
+  }
 }
 
 .dash_board_dialog {
@@ -289,10 +300,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  .ivu-modal-close{
+
+  .ivu-modal-close {
     top: 15px;
     right: 15px;
   }
+
   .title {
     display: inline-block;
     width: 100px;
@@ -338,6 +351,7 @@
   animation: fadeOutDown .5s infinite;
   -webkit-animation: fadeOutDown .5s; /* Safari 和 Chrome */
 }
+
 .appear {
   animation: fadeOutUp .5s infinite;
   -webkit-animation: fadeOutUp .5s; /* Safari 和 Chrome */
