@@ -20,6 +20,8 @@ export  class CollectionRecordTs extends Vue {
     confirmedTransactionList = []
     currentMonthFirst: number = 0
     localConfirmedTransactions = []
+    unConfirmedTransactionList = []
+    localUnConfirmedTransactions = []
     isLoadingTransactionRecord = true
     transacrionAssetIcon = transacrionAssetIcon
     transactionDetails = [
@@ -68,29 +70,20 @@ export  class CollectionRecordTs extends Vue {
         return this.$store.state.account.wallet
     }
 
+    get UnconfirmedTxList() {
+        return this.$store.state.account.UnconfirmedTx
+    }
+
+    get ConfirmedTxList() {
+        return this.$store.state.account.ConfirmedTx
+    }
+
     hideSearchDetail() {
         this.isShowSearchDetail = false
     }
 
     changeCurrentMonth(e) {
         this.currentMonth = e
-    }
-
-
-    // month filter
-    @Watch('currentMonth')
-    onCurrentMonthChange() {
-        this.confirmedTransactionList = []
-        const that = this
-        const currentMonth = new Date(this.currentMonth)
-        this.currentMonthFirst = getCurrentMonthFirst(currentMonth)
-        this.currentMonthLast = getCurrentMonthLast(currentMonth)
-        const {currentMonthFirst, currentMonthLast, localConfirmedTransactions} = this
-        localConfirmedTransactions.forEach((item) => {
-            if (item.date <= currentMonthLast && item.date >= currentMonthFirst) {
-                that.confirmedTransactionList.push(item)
-            }
-        })
     }
 
     showDialog(transaction) {
@@ -135,11 +128,11 @@ export  class CollectionRecordTs extends Vue {
         ]
     }
 
-    getConfirmedTransactions() {
+    async getConfirmedTransactions() {
         const that = this
-        let {accountPrivateKey, accountPublicKey, accountAddress, node, transactionType} = this
+        let {accountPublicKey, accountAddress, node, transactionType} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
-        transactionApi.transactions({
+        await transactionApi.transactions({
             publicAccount,
             node,
             queryParams: {
@@ -150,14 +143,13 @@ export  class CollectionRecordTs extends Vue {
                 let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
                 let list = []
                 // get transaction by choose recript tx or send
-                if (that.transactionType == 1) {
+                if (transactionType == 1) {
                     transferTransaction.forEach((item) => {
                         if (item.isReceipt) {
                             list.push(item)
                         }
                     })
-                    that.confirmedTransactionList = list
-                    this.localConfirmedTransactions = list
+                    that.localConfirmedTransactions = list
                     that.onCurrentMonthChange()
                     that.isLoadingTransactionRecord = false
                     return
@@ -168,12 +160,47 @@ export  class CollectionRecordTs extends Vue {
                         list.push(item)
                     }
                 })
-                that.confirmedTransactionList = list
-                this.localConfirmedTransactions = list
+                that.localConfirmedTransactions = list
                 that.onCurrentMonthChange()
                 that.isLoadingTransactionRecord = false
-                return
+            })
+        })
+    }
 
+    async getUnConfirmedTransactions() {
+        const that = this
+        let {accountPublicKey, accountAddress, node, transactionType, UnconfirmedTxList} = this
+        const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
+        await transactionApi.unconfirmedTransactions({
+            publicAccount,
+            node,
+            queryParams: {
+                pageSize: 100
+            }
+        }).then((transactionsResult) => {
+            transactionsResult.result.unconfirmedTransactions.subscribe((transactionsInfo) => {
+                let transferTransaction = formatTransactions(transactionsInfo, accountAddress)
+                let list = []
+                // get transaction by choose recript tx or send
+                if (transactionType == 1) {
+                    transferTransaction.forEach((item) => {
+                        if (item.isReceipt ) {
+                            list.push(item)
+                        }
+                    })
+                    that.localUnConfirmedTransactions = list
+                    that.onCurrentMonthChange()
+                    that.isLoadingTransactionRecord = false
+                    return
+                }
+                transferTransaction.forEach((item) => {
+                    if (!item.isReceipt ) {
+                        list.push(item)
+                    }
+                })
+                that.localUnConfirmedTransactions = list
+                that.onCurrentMonthChange()
+                that.isLoadingTransactionRecord = false
             })
         })
     }
@@ -198,8 +225,40 @@ export  class CollectionRecordTs extends Vue {
         this.getConfirmedTransactions()
     }
 
+    @Watch('UnconfirmedTxList')
+    onUnconfirmedTxChange() {
+        this.isLoadingTransactionRecord = true
+        this.getUnConfirmedTransactions()
+    }
+
+    // month filter
+    @Watch('currentMonth')
+    onCurrentMonthChange() {
+        this.confirmedTransactionList = []
+        const that = this
+        const currentMonth = new Date(this.currentMonth)
+        let currentConfirmedTxList = []
+        let currentUnConfirmedTxList = []
+        this.currentMonthFirst = getCurrentMonthFirst(currentMonth)
+        this.currentMonthLast = getCurrentMonthLast(currentMonth)
+        const {currentMonthFirst, currentMonthLast, localConfirmedTransactions, localUnConfirmedTransactions} = this
+        localConfirmedTransactions.forEach((item) => {
+            if (item.date <= currentMonthLast && item.date >= currentMonthFirst) {
+                currentConfirmedTxList.push(item)
+            }
+        })
+        that.confirmedTransactionList = currentConfirmedTxList
+        localUnConfirmedTransactions.forEach((item) => {
+            if (item.date <= currentMonthLast && item.date >= currentMonthFirst) {
+                currentUnConfirmedTxList.push(item)
+            }
+        })
+        that.unConfirmedTransactionList = currentUnConfirmedTxList
+    }
+
     created() {
         this.initData()
         this.getConfirmedTransactions()
+        this.getUnConfirmedTransactions()
     }
 }

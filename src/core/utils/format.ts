@@ -219,7 +219,6 @@ function formatTx(transaction: any, accountAddress: string) {
 
 
 export const transactionFormat = (transactionList: Array<Transaction>, accountAddress: string) => {
-    console.log(transactionList, accountAddress)
     transactionList = transactionList.map((item) => {
         item = formatTx(item, accountAddress)
         return item

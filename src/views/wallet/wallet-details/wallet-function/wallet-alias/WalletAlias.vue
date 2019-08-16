@@ -43,7 +43,7 @@
 
       <div class="button_content">
         <span class="cancel pointer" @click="closeModel">{{$t('canel')}}</span>
-        <span :class="['cancel', isCompleteForm?'pointer':'not_allowed']" @click="checkAliasForm()">{{aliasListIndex >= 0?$t('unbind'):$t('bind')}}</span>
+        <span :class="['cancel', 'checkBtn', isCompleteForm?'pointer':'not_allowed']" @click="checkAliasForm()">{{aliasListIndex >= 0?$t('unbind'):$t('bind')}}</span>
       </div>
     </Modal>
 

@@ -2,6 +2,7 @@ import {Message} from "@/config"
 import {Component, Vue} from 'vue-property-decorator'
 import {Account, NetworkType} from "nem2-sdk"
 import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet";
+import {passwordValidator} from "@/core/utils/validation";
 
 @Component
 export class WalletImportPrivatekeyTs extends Vue {
@@ -60,7 +61,7 @@ export class WalletImportPrivatekeyTs extends Vue {
             })
             return false
         }
-        if (!this.form.password || this.form.password == '') {
+        if (!this.form.password || !passwordValidator(this.form.password)) {
             this.$Notice.error({
                 title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
             })
