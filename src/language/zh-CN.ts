@@ -143,7 +143,7 @@ export const zh_CN = {
     remote_modal_cancel: '取消',
     remote_modal_place1: '请输入或粘贴远程公钥',
     remote_modal_place2: '请输入钱包密码',
-
+    receive:'收款',
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: '欢迎回到CATAPULT测试版',
     welcome_to_the_CATAPULT_beta: '欢迎使用CATAPULT测试版',

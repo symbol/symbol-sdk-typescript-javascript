@@ -164,7 +164,7 @@ export const en_US = {
     remote_modal_cancel: 'cancel',
     remote_modal_place1: 'Please enter or paste a remote public key',
     remote_modal_place2: 'Please enter your wallet password',
-
+    receive:'receive',
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: 'WELCOME BACK TO THE CATAPULT BETA',
     welcome_to_the_CATAPULT_beta: 'WELCOME TO USE THE CATAPULT BETA',

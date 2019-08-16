@@ -76,7 +76,7 @@
                      alt="">
                 <span class="account overflow_ellipsis">{{c.infoFirst}}</span>
                 <span class="transfer_type overflow_ellipsis">{{c.infoSecond?c.infoSecond:null}}</span>
-                <span class="amount overflow_ellipsis" v-if="c.infoThird">{{c.infoThird}}</span>
+                <span :class="['amount','overflow_ellipsis',!c.isReceipt?'orange':'blue']" v-if="c.infoThird">{{c.infoThird}}</span>
                 <span v-else class="amount overflow_ellipsis"> 0</span>
                 <span class="date overflow_ellipsis">{{c.time}}</span>
                 <img v-if="c.isTxUnconfirmed" src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
