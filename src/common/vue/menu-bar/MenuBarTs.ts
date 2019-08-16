@@ -232,8 +232,7 @@ export class MenuBarTs extends Vue {
             this.$store.state.account.UnconfirmedTx = list
             this.$Notice.success({
                 title: this.$t('Transaction_sending').toString(),
-                duration: 4,
-                // desc: 'hash：'+ transaction.transactionInfo.hash
+                duration: 20,
             });
         }
     }
@@ -243,11 +242,12 @@ export class MenuBarTs extends Vue {
         let unList = this.UnconfirmedTxList
         if (!list.includes(transaction.transactionInfo.hash)) {
             list.push(transaction.transactionInfo.hash)
-            if(unList.includes(transaction.transactionInfo.hash)){
-                unList.splice(unList.indexOf(transaction.transactionInfo.hash),1)
+            if (unList.includes(transaction.transactionInfo.hash)) {
+                unList.splice(unList.indexOf(transaction.transactionInfo.hash), 1)
             }
             this.$store.state.account.ConfirmedTx = list
             this.$store.state.account.UnconfirmedTx = unList
+            this.$Notice.destroy()
             this.$Notice.success({
                 title: this.$t('Transaction_Reception').toString(),
                 duration: 4,
@@ -261,10 +261,10 @@ export class MenuBarTs extends Vue {
         if (!list.includes(transaction.hash)) {
             list.push(transaction.hash)
             this.$store.state.account.errorTx = list
+            this.$Notice.destroy()
             this.$Notice.error({
                 title: transaction.status.split('_').join(' '),
                 duration: 10,
-                // desc: 'hash：'+ transaction.transactionInfo.hash
             });
         }
     }

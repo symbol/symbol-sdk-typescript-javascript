@@ -23,8 +23,8 @@
       <div class="remark flex_center">
         <span class="title">{{$t('remarks')}}</span>
         <span class=" textarea_container flex_center value radius ">
-              <textarea name="" id="" cols="70" rows="4"></textarea>
-            </span>
+          <textarea></textarea>
+        </span>
       </div>
       <div @click="genaerateQR()" class="send_button pointer">
         {{$t('generate_QR_code')}}
@@ -49,6 +49,7 @@
 </template>
 
 <script lang="ts">
+    import "./MonitorReceipt.less"
     import {MonitorReceiptTs} from './MonitorReceiptTs'
 
     export default class MonitorReceipt extends MonitorReceiptTs {
@@ -56,5 +57,5 @@
     }
 </script>
 <style scoped lang="less">
-  @import "MonitorReceipt.less";
+
 </style>

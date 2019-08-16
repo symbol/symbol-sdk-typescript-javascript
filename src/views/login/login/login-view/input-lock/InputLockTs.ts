@@ -67,7 +67,6 @@ export class InputLockTs extends Vue {
         this.$router.push({
             name: 'monitorPanel'
         })
-
     }
 
     clearCache() {

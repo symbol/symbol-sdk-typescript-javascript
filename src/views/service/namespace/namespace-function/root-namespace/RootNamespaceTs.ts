@@ -15,10 +15,11 @@ import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from
     }
 })
 export class RootNamespaceTs extends Vue {
-    durationIntoDate:any = 0
-    currentMinApproval = -1
-    showCheckPWDialog = false
+    transactionDetail = {}
     isCompleteForm = false
+    currentMinApproval = -1
+    durationIntoDate: any = 0
+    showCheckPWDialog = false
     form = {
         duration: 1000,
         rootNamespaceName: '',
@@ -284,6 +285,12 @@ export class RootNamespaceTs extends Vue {
     createTransaction() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
+        const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
+        this.transactionDetail = {
+            "duration": duration,
+            "namespace": rootNamespaceName,
+            "fee": innerFee
+        }
         this.showCheckPWDialog = true
     }
 

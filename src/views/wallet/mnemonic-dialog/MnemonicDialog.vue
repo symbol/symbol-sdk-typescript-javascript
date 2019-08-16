@@ -72,6 +72,7 @@
           <p class="tit">{{$t('please_accurately_copy_the_safety_backup_mnemonic')}}</p>
           <p class="mnemonicWords">{{mnemonic}}</p>
           <div class="buttons_container">
+
             <Button type="success" @click="exportMnemonic">
               {{$t('next')}}
               <Icon class="next" type="ios-arrow-round-forward"/>
@@ -108,15 +109,8 @@
           </div>
           <p class="backupTxt">{{$t('the_mnemonic_order_is_correct_and_the_backup_is_successful')}}</p>
           <div class="buttons_container">
-            <Button type="success" @click="toPrePage()">
-              <Icon class="pre" type="ios-arrow-round-back"/>
-              {{$t('previous')}}
-            </Button>
-
-
-            <Button type="success" @click="exportMnemonic">
-              {{$t('next')}}
-              <Icon class="next" type="ios-arrow-round-forward"/>
+            <Button type="success" @click="show=false">
+              {{$t('confirm')}}
             </Button>
 
           </div>

@@ -34,7 +34,8 @@
           <Form :model="wallet">
             <FormItem>
               <Input v-model="wallet.password" type="password" required
-                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
+                     :placeholder="$t('please_enter_your_wallet_password')">
+              </Input>
             </FormItem>
             <FormItem>
               <Button type="success" @click="checkPassword"> {{$t('confirm')}}</Button>
@@ -50,6 +51,7 @@
 <script lang="ts">
     import "./CheckPasswordDialog.less"
     import {CheckPasswordDialogTs} from './CheckPasswordDialogTs'
+
     /**
      @Prop: showCheckPWDialog
      @return: closeCheckPWDialog()
@@ -57,7 +59,7 @@
      */
 
     export default class CheckPWDialog extends CheckPasswordDialogTs {
-          }
+    }
 </script>
 
 <style scoped>

@@ -37,7 +37,7 @@ export class MosaicTransactionTs extends Vue {
     generationHash = ''
     currentXEM2: string
     currentXEM1: string
-    durationIntoDate:any = 0
+    durationIntoDate: any = 0
     accountPublicKey = ''
     currentTab: number = 0
     currentMinApproval = -1
@@ -114,7 +114,6 @@ export class MosaicTransactionTs extends Vue {
         this.formItem.supply = this.formItem.supply >= 2 ? Number(this.formItem.supply - 1) : Number(this.formItem.supply)
     }
 
-
     switchType(index) {
         this.initForm()
         let list = this.typeList
@@ -133,6 +132,12 @@ export class MosaicTransactionTs extends Vue {
     showCheckDialog() {
         const {supply, divisibility, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
         // TODO mosaic transaction detail
+        this.transactionDetail = {
+            "supply": supply,
+            "mosaic_divisibility": divisibility,
+            "duration": duration,
+            "fee": innerFee
+        }
         this.showCheckPWDialog = true
     }
 
@@ -335,7 +340,7 @@ export class MosaicTransactionTs extends Vue {
 
 
     createMosaic(isMultisigAccount) {
-        if(!this.isCompleteForm) return
+        if (!this.isCompleteForm) return
         this.isMultisigAccount = isMultisigAccount
         if (!this.checkForm()) return
         this.showCheckDialog()
