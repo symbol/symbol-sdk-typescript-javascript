@@ -97,7 +97,7 @@
         }
 
         created() {
-            checkInstall()
+            // checkInstall()
             this.initData()
             this.initApp()
             this.chainListner()

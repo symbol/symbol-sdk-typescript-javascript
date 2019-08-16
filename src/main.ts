@@ -12,7 +12,7 @@ import htmlRem from '@/core/utils/rem'
 //Introduced the global
 Vue.use(iView);
 htmlRem()
-resetFontSize()
+// resetFontSize()
 
 Vue.config.productionTip = false
 
