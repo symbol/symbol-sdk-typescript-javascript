@@ -276,13 +276,19 @@ export class MenuBarTs extends Vue {
         const {currentNode} = this
         this.$store.state.account.node = currentNode
         const that = this
-        this.unconfirmedListener()
-        this.confirmedListener()
-        this.txErrorListener()
         const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('nem.xem'))
         linkedMosaic.subscribe((mosaic) => {
-            this.$store.state.account.currentXEM1 = mosaic.toHex();
+            this.$store.state.account.currentXEM1 = mosaic.toHex()
         })
+        try {
+            this.unconfirmedListener()
+            this.confirmedListener()
+            this.txErrorListener()
+        } catch (e) {
+            console.log(e)
+        }
+
+
         axios.get(currentNode + '/chain/height').then(function (response) {
             that.isNodeHealthy = true
             that.getGenerateHash(currentNode)
@@ -303,6 +309,7 @@ export class MenuBarTs extends Vue {
     created() {
         windowSizeChange()
         this.initData()
+        this.onCurrentNode()
         this.unconfirmedListener()
         this.confirmedListener()
         this.txErrorListener()
