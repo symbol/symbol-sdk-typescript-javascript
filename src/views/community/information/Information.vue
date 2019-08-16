@@ -44,7 +44,7 @@
         </span>
         </div>
 
-        <div class="artile_content scroll content">
+        <div class="artile_content scroll content" @scroll="divScroll" >
           <div v-html="currentArticle.content">
           </div>
           <div class="comment">

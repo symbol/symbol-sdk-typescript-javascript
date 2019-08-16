@@ -285,8 +285,10 @@ export class RootNamespaceTs extends Vue {
     createTransaction() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
+        const {address} = this.getWallet
         const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
         this.transactionDetail = {
+            "address": address,
             "duration": duration,
             "namespace": rootNamespaceName,
             "fee": innerFee

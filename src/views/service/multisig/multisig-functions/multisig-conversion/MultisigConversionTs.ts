@@ -24,6 +24,7 @@ export class MultisigConversionTs extends Vue {
     isMultisig = false
     isCompleteForm = false
     showCheckPWDialog = false
+    transactionDetail = {}
     formItem = {
         publickeyList: [],
         minApproval: 1,
@@ -33,6 +34,9 @@ export class MultisigConversionTs extends Vue {
         innerFee: 10000000
     }
 
+    get getWallet() {
+        return this.$store.state.account.wallet
+    }
 
     addAddress() {
         const {currentAddress} = this
@@ -52,7 +56,16 @@ export class MultisigConversionTs extends Vue {
         // check input data
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
+        const {address} = this.getWallet
+        const {publickeyList, minApproval, minRemoval, bondedFee, lockFee, innerFee} = this.formItem
+        this.transactionDetail = {
+            "address": address,
+            "min_approval": minApproval,
+            "min_removal": minRemoval,
+            "cosigner": publickeyList.join(','),
+            "fee": innerFee
 
+        }
         this.showCheckPWDialog = true
     }
 
@@ -163,7 +176,7 @@ export class MultisigConversionTs extends Vue {
             networkType,
             account,
             bondedFee,
-        ).then(aggregateTransaction=>{
+        ).then(aggregateTransaction => {
             transactionApi.announceBondedWithLock({
                 aggregateTransaction,
                 account,

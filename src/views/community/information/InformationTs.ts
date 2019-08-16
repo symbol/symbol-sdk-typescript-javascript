@@ -21,6 +21,7 @@ export class informationTs extends Vue {
     showCheckPWDialog = false
     loadAllCommentData = false
     isLoadingConfirmedTx = true
+    scroll: any
     currentArticle: any = {
         title: 'null',
         content: 'null'
@@ -57,7 +58,17 @@ export class informationTs extends Vue {
         })
         list[index].isSelect = true
         this.articleList = list
+        this.scrollTop()
     }
+
+    divScroll(div) {
+        this.scroll = div;
+    }
+
+    scrollTop() {
+        this.scroll.target.scrollTop = 0;
+    }
+
 
     checkForm() {
         const {commentContent} = this
