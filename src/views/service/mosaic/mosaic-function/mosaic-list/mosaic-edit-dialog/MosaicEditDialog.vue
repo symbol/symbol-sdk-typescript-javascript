@@ -17,7 +17,7 @@
               <p class="mosaicTxt">{{mosaic.hex.toString().toUpperCase()}}</p>
             </FormItem>
             <FormItem :label="$t('alias')">
-              <p class="mosaicTxt">{{mosaic.name}}</p>
+              <p class="mosaicTxt">{{mosaic.name?mosaic.name:'no data'}}</p>
             </FormItem>
             <FormItem :label="$t('existing_supply')">
               <p class="mosaicTxt">{{supply}}</p>
@@ -52,7 +52,9 @@
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem class="button_update">
-              <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="checkMosaicForm"> {{$t('update')}}</Button>
+              <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="checkMosaicForm">
+                {{$t('update')}}
+              </Button>
             </FormItem>
           </Form>
         </div>
