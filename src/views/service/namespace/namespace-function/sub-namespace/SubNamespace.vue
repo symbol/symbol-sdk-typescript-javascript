@@ -48,7 +48,7 @@
           </div>
         </div>
 
-        <div class="form_item" >
+        <div class="form_item">
           <span class="key">{{$t('inner_fee')}}</span>
           <span class="value">
               <input type="text" v-model="form.innerFee" :placeholder="$t('undefined')">
@@ -81,7 +81,8 @@
           </div>
         </div>
 
-        <div :class="['create_button',isCompleteForm?'pointer':'not_allowed']" @click="createTransaction">
+        <div v-if="typeList[0].isSelected" :class="['create_button',isCompleteForm?'pointer':'not_allowed']"
+             @click="createTransaction">
           {{$t('create')}}
         </div>
       </div>
