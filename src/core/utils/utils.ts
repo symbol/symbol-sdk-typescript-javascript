@@ -243,7 +243,7 @@ export const formatNemDeadline = function (deadline) {
 };
 
 
-export const formatTransactions = function (transactionList, accountAddress) {
+export const formatTransactions = function (transactionList, accountAddress, currentXEM) {
     const that = this;
     let transferTransaction = [];
     transactionList.map((item) => {
@@ -254,6 +254,7 @@ export const formatTransactions = function (transactionList, accountAddress) {
             item.oppositeAddress = item.isReceipt ? item.signerAddress : item.recipient.address;
             item.time = formatNemDeadline(item.deadline);
             item.mosaic = item.mosaics.length == 0 ? false : item.mosaics[0];
+            item.mosaicName = !item.mosaic || !item.mosaic.id || item.mosaic.id.id.toHex().toUpperCase() == currentXEM.toUpperCase() ? 'nem.xem' : item.mosaic.id.id.toHex().toUpperCase().slice(0, 8) + '...'
             item.date = new Date(item.time);
             transferTransaction.push(item)
         }

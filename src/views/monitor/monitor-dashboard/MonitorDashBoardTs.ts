@@ -218,9 +218,10 @@ export class MonitorDashBoardTs extends Vue {
 
     @Watch('allTransacrionList')
     onAllTransacrionListChange() {
+        const currentXEM = this.$store.state.account.currentXEM1
         const {allTransacrionList, accountAddress, showConfirmedTransactions} = this
-        this.transferTransactionList = transactionFormat(allTransacrionList, accountAddress).transferTransactionList
-        this.receiptList = transactionFormat(allTransacrionList, accountAddress).receiptList
+        this.transferTransactionList = transactionFormat(allTransacrionList, accountAddress, currentXEM).transferTransactionList
+        this.receiptList = transactionFormat(allTransacrionList, accountAddress, currentXEM).receiptList
         this.changePage(1)
         this.transferListLength = this.transferTransactionList.length
         this.receiptListLength = this.receiptList.length
