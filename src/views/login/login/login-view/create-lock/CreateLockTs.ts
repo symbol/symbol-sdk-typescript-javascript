@@ -24,7 +24,7 @@ export class CreateLockTs extends Vue {
     ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
 
     checkInput() {
-        if (!this.lockPW.password || !passwordValidator(this.lockPW.password)) {
+        if (!passwordValidator(this.lockPW.password)) {
             this.$Notice.error({
                 title: this.$t(Message.PASSWORD_CREATE_ERROR) + ''
             });

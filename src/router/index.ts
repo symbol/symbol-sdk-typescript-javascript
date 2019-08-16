@@ -13,7 +13,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     if (!to.name) {
         next({
-            path: '/home'
+            path: '/login'
         })
     } else {
         next()
