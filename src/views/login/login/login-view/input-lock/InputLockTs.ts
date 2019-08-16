@@ -65,9 +65,8 @@ export class InputLockTs extends Vue {
         }
         this.$store.state.app.isInLoginPage = false
         this.$router.push({
-            name: 'dashBoard'
+            name: 'monitorPanel'
         })
-
     }
 
     clearCache() {

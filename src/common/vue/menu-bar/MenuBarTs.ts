@@ -229,7 +229,6 @@ export class MenuBarTs extends Vue {
         let list = this.UnconfirmedTxList
         if (!list.includes(transaction.transactionInfo.hash)) {
             list.push(transaction.transactionInfo.hash)
-            this.$Notice.destroy()
             this.$store.state.account.UnconfirmedTx = list
             this.$Notice.success({
                 title: this.$t('Transaction_sending').toString(),

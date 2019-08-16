@@ -100,6 +100,7 @@ export const zh_CN = {
     mosaic: '马赛克',
     assets: '资产',
     namespace: '命名空间',
+    sub_namespace: '子命名空间',
     validity_period: '有效期',
     harvested_block: '收获的块',
     successful_copy: '复制成功',

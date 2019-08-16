@@ -18,6 +18,7 @@ export class SubNamespaceTs extends Vue {
     multisigPublickey = ''
     isCompleteForm = false
     showCheckPWDialog = false
+    transactionDetail = {}
     form = {
         rootNamespaceName: '',
         subNamespaceName: '',
@@ -190,6 +191,13 @@ export class SubNamespaceTs extends Vue {
     createTransaction() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
+        const {rootNamespaceName, innerFee, subNamespaceName, multisigPublickey} = this.form
+        this.transactionDetail = {
+            "namespace": rootNamespaceName,
+            "innerFee": innerFee,
+            "sub_namespace": subNamespaceName,
+            "fee": innerFee
+        }
         this.showCheckPWDialog = true
     }
 

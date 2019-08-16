@@ -4,11 +4,8 @@
     <div class="address flex_center">
       <span class="title">{{$t('transfer_target')}}</span>
       <span class="value radius flex_center">
-              <input type="text" v-model="formItem.address" :placeholder="$t('receive_address_or_alias')">
-        <!--              <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>-->
-        <!--               <div v-if="isShowSubAlias" class="selections">-->
-        <!--            </div>-->
-            </span>
+        <input type="text" v-model="formItem.address" :placeholder="$t('receive_address_or_alias')">
+      </span>
     </div>
     <div class="asset flex_center">
       <span class="title">{{$t('asset_type')}}</span>
@@ -32,7 +29,8 @@
     <div class="remark flex_center">
       <span class="title">{{$t('remarks')}}</span>
       <span class=" textarea_container  flex_center value radius ">
-              <textarea class="hide_scroll" v-model="formItem.remark" :placeholder="$t('please_enter_a_comment')"></textarea>
+              <textarea class="hide_scroll" v-model="formItem.remark"
+                        :placeholder="$t('please_enter_a_comment')"></textarea>
             </span>
     </div>
     <div class="fee flex_center">

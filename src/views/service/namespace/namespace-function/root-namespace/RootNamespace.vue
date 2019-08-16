@@ -109,7 +109,7 @@
       </div>
     </div>
     <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
-                   @checkEnd="checkEnd"></CheckPWDialog>
+                   @checkEnd="checkEnd" :transactionDetail="transactionDetail"></CheckPWDialog>
 
   </div>
 </template>

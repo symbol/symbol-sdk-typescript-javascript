@@ -1,9 +1,8 @@
-import {Crypto} from 'nem2-sdk'
-import {hexCharCodeToStr} from '@/core/utils/utils'
 import {walletApi} from "@/core/api/walletApi"
+import {decryptKey} from "@/core/utils/wallet"
+import {hexCharCodeToStr} from '@/core/utils/utils'
+import {randomMnemonicWord} from "@/core/utils/hdWallet"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {decryptKey} from "@/core/utils/wallet";
-import {randomMnemonicWord} from "@/core/utils/hdWallet";
 
 @Component({
     components: {},
@@ -39,13 +38,13 @@ export class MnemonicDialogTs extends Vue {
         switch (this.stepIndex) {
             case 0 :
                 if (!this.checkInput()) return
-                const DeTxt =decryptKey(this.getWallet, this.wallet.password)
+                const DeTxt = decryptKey(this.getWallet, this.wallet.password)
                 walletApi.getWallet({
                     name: this.getWallet.name,
                     networkType: this.getWallet.networkType,
                     privateKey: DeTxt.length === 64 ? DeTxt : ''
                 }).then(async (Wallet: any) => {
-                    const DeMnemonic =decryptKey(this.getWallet['mnemonicEnCodeObj'], this.wallet.password)
+                    const DeMnemonic = decryptKey(this.getWallet['mnemonicEnCodeObj'], this.wallet.password)
                     this.mnemonic = hexCharCodeToStr(DeMnemonic)
                     this.mnemonicRandomArr = randomMnemonicWord(this.mnemonic.split(' '))
                     this.stepIndex = 1
