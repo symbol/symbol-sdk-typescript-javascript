@@ -169,7 +169,7 @@ export  class CollectionRecordTs extends Vue {
 
     async getUnConfirmedTransactions() {
         const that = this
-        let {accountPublicKey, accountAddress, node, transactionType, UnconfirmedTxList} = this
+        let {accountPublicKey, accountAddress, node, transactionType} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
         await transactionApi.unconfirmedTransactions({
             publicAccount,
