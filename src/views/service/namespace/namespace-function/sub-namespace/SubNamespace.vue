@@ -48,10 +48,10 @@
           </div>
         </div>
 
-        <div class="form_item">
-          <span class="key">{{$t('fee')}}</span>
+        <div class="form_item" >
+          <span class="key">{{$t('inner_fee')}}</span>
           <span class="value">
-              <input type="text" v-model="form.maxFee" :placeholder="$t('undefined')">
+              <input type="text" v-model="form.innerFee" :placeholder="$t('undefined')">
             <span class="end_label">gas</span>
           </span>
           <div class="tips">
@@ -59,7 +59,29 @@
           </div>
         </div>
 
-        <div v-if="typeList[0].isSelected" :class="['create_button',isCompleteForm?'pointer':'not_allowed']" @click="createTransaction">
+        <div class="form_item" v-if="typeList[1].isSelected">
+          <span class="key">{{$t('bonded_fee')}}</span>
+          <span class="value">
+              <input type="text" v-model="form.bondedFee" :placeholder="$t('undefined')">
+            <span class="end_label">gas</span>
+          </span>
+          <div class="tips">
+            {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+          </div>
+        </div>
+
+        <div class="form_item" v-if="typeList[1].isSelected">
+          <span class="key">{{$t('lock_fee')}}</span>
+          <span class="value">
+              <input type="text" v-model="form.lockFee" :placeholder="$t('undefined')">
+            <span class="end_label">gas</span>
+          </span>
+          <div class="tips">
+            {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+          </div>
+        </div>
+
+        <div :class="['create_button',isCompleteForm?'pointer':'not_allowed']" @click="createTransaction">
           {{$t('create')}}
         </div>
       </div>

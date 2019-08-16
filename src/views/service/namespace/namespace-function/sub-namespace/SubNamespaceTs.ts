@@ -6,6 +6,7 @@ import {namespaceApi} from "@/core/api/namespaceApi"
 import {transactionApi} from "@/core/api/transactionApi"
 import {bandedNamespace as BandedNamespaceList} from '@/config'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {multisigApi} from "@/core/api/multisigApi";
 
 @Component({
     components: {
@@ -21,7 +22,9 @@ export class SubNamespaceTs extends Vue {
         rootNamespaceName: '',
         subNamespaceName: '',
         multisigPublickey: '',
-        maxFee: 50000
+        innerFee: 50000,
+        bondedFee: 50000,
+        lockFee: 50000,
     }
     multisigPublickeyList = [
         {
@@ -104,7 +107,7 @@ export class SubNamespaceTs extends Vue {
     }
 
     checkForm(): boolean {
-        const {rootNamespaceName, maxFee, subNamespaceName, multisigPublickey} = this.form
+        const {rootNamespaceName, innerFee, subNamespaceName, multisigPublickey} = this.form
 
         if (!rootNamespaceName || !rootNamespaceName.trim()) {
             this.showErrorMessage(this.$t(Message.NAMESPACE_NULL_ERROR))
@@ -142,7 +145,7 @@ export class SubNamespaceTs extends Vue {
             this.showErrorMessage(this.$t(Message.NAMESPACE_FORMAT_ERROR))
             return false
         }
-        if ((!Number(maxFee) && Number(maxFee) !== 0) || Number(maxFee) < 0) {
+        if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
             this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
             return false
         }
@@ -163,7 +166,7 @@ export class SubNamespaceTs extends Vue {
             parentNamespace: this.form.rootNamespaceName,
             namespaceName: this.form.subNamespaceName,
             networkType: this.getWallet.networkType,
-            maxFee: this.form.maxFee
+            maxFee: this.form.innerFee
         }).then((transaction) => {
             return transaction.result.subNamespaceTransaction
         })
@@ -174,8 +177,9 @@ export class SubNamespaceTs extends Vue {
             rootNamespaceName: '',
             subNamespaceName: '',
             multisigPublickey: '',
-            maxFee: 50000,
-
+            innerFee: 50000,
+            bondedFee: 50000,
+            lockFee: 50000,
         }
     }
 
@@ -189,17 +193,36 @@ export class SubNamespaceTs extends Vue {
         this.showCheckPWDialog = true
     }
 
+    getMultisigAccountList() {
+        const that = this
+        const {address} = this.$store.state.account.wallet
+        const {node} = this.$store.state.account
+        multisigApi.getMultisigAccountInfo({
+            address,
+            node
+        }).then((result) => {
+            that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
+                item.value = item.publicKey
+                item.label = item.publicKey
+                return item
+            })
+        })
+    }
+
     @Watch('form', {immediate: true, deep: true})
     onFormItemChange() {
-        const {rootNamespaceName, maxFee, subNamespaceName, multisigPublickey} = this.form
+        const {rootNamespaceName, innerFee, subNamespaceName, multisigPublickey} = this.form
 
         // isCompleteForm
         if (this.typeList[0].isSelected) {
-            this.isCompleteForm = maxFee + '' !== '' && rootNamespaceName !== '' && subNamespaceName !== ''
+            this.isCompleteForm = innerFee + '' !== '' && rootNamespaceName !== '' && subNamespaceName !== ''
             return
         }
-        this.isCompleteForm = maxFee + '' !== '' && rootNamespaceName !== '' && subNamespaceName !== '' && multisigPublickey && multisigPublickey.length === 64
+        this.isCompleteForm = innerFee + '' !== '' && rootNamespaceName !== '' && subNamespaceName !== '' && multisigPublickey && multisigPublickey.length === 64
     }
 
+    created() {
+        this.getMultisigAccountList()
+    }
 
 }
