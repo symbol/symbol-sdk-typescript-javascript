@@ -1,7 +1,7 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {UInt64} from 'nem2-sdk'
-import {localRead} from '@/core/utils/utils.js'
+import {localRead} from '@/core/utils/utils'
 import {decryptKey} from "@/core/utils/wallet";
 
 @Component

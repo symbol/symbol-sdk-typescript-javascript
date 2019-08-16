@@ -1,4 +1,4 @@
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {UInt64} from 'nem2-sdk'
 import {
     passwordValidator,
@@ -6,7 +6,7 @@ import {
     MAX_PASSWORD_LENGTH,
     ALLOWED_SPECIAL_CHAR,
 } from '@/core/utils/validation'
-import {localSave} from '@/core/utils/utils.js'
+import {localSave} from '@/core/utils/utils'
 import {Component, Vue} from 'vue-property-decorator'
 import {encryptKey} from "@/core/utils/wallet";
 

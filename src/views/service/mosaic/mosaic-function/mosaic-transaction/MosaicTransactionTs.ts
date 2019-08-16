@@ -1,8 +1,8 @@
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {multisigAccountInfo} from "@/core/utils/wallet"
-import {mosaicApi} from '@/core/api/mosaicApi.js'
+import {mosaicApi} from '@/core/api/mosaicApi'
 import {multisigApi} from '@/core/api/multisigApi'
-import {formatSeconds, formatAddress} from '@/core/utils/utils.js'
+import {formatSeconds, formatAddress} from '@/core/utils/utils'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {transactionApi} from '@/core/api/transactionApi'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'

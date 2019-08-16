@@ -1,10 +1,7 @@
-import {Message} from "@/config/index"
-import {NetworkType, Crypto} from "nem2-sdk"
+import {Message} from "@/config"
+import {NetworkType} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
-import {walletApi} from "@/core/api/walletApi"
-import {accountApi} from "@/core/api/accountApi"
-import {strToHexCharCode,localRead, localSave} from '@/core/utils/utils'
-import {MnemonicPassPhrase, ExtendedKey, Wallet} from 'nem2-hd-wallets'
+import {strToHexCharCode} from '@/core/utils/utils'
 import {createAccount} from "@/core/utils/hdWallet";
 import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet";
 

@@ -1,9 +1,8 @@
 import './NamespaceEditDialog.less'
-import {Message} from "@/config/index"
-import {Account, Crypto} from 'nem2-sdk'
+import {Message} from "@/config"
+import {Account} from 'nem2-sdk'
 import {walletApi} from "@/core/api/walletApi"
-import {namespaceApi} from "@/core/api/namespaceApi"
-import {formatSeconds, formatAddress} from '@/core/utils/utils.js'
+import {formatSeconds} from '@/core/utils/utils'
 import {transactionApi} from "@/core/api/transactionApi"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {createRootNamespace, decryptKey} from "@/core/utils/wallet";

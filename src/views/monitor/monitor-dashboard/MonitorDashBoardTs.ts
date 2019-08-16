@@ -7,7 +7,7 @@ import LineChart from '@/common/vue/line-chart/LineChart.vue'
 import {transactionApi} from '@/core/api/transactionApi'
 import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
 import {transactionFormat} from '@/core/utils/format'
-import {isRefreshData, localSave, localRead, formatTransactions} from '@/core/utils/utils.js'
+import {isRefreshData, localSave, localRead, formatTransactions} from '@/core/utils/utils'
 import dashboardBlockTime from '@/common/img/monitor/dash-board/dashboardBlockTime.png'
 import dashboardPublickey from '@/common/img/monitor/dash-board/dashboardPublickey.png'
 import dashboardBlockHeight from '@/common/img/monitor/dash-board/dashboardBlockHeight.png'
@@ -175,7 +175,7 @@ export class MonitorDashBoardTs extends Vue {
             }
         }).then((transactionsResult) => {
             transactionsResult.result.unconfirmedTransactions.subscribe((unconfirmedtransactionsInfo) => {
-                let transferTransaction = formatTransactions(unconfirmedtransactionsInfo, accountAddress)
+                let transferTransaction = transactionFormat(unconfirmedtransactionsInfo, accountAddress)
                 that.changeCurrentTransactionList(transferTransaction.slice(0, 10))
                 that.currentDataAmount = transferTransaction.length
                 that.unconfirmedDataAmount = transferTransaction.length

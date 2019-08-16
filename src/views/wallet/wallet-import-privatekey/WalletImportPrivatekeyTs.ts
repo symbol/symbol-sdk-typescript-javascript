@@ -1,9 +1,6 @@
-import {Message} from "@/config/index"
-import {localRead, localSave} from '@/core/utils/utils'
+import {Message} from "@/config"
 import {Component, Vue} from 'vue-property-decorator'
-import {Account, NetworkType, Crypto} from "nem2-sdk"
-import {walletApi} from "@/core/api/walletApi"
-import {accountApi} from "@/core/api/accountApi"
+import {Account, NetworkType} from "nem2-sdk"
 import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet";
 
 @Component

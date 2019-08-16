@@ -2,7 +2,7 @@ import {KlineQuery} from "@/core/query/klineQuery"
 import {market} from "@/core/api/logicApi"
 import {Component, Vue} from 'vue-property-decorator'
 import LineChart from '@/common/vue/line-chart-by-day/LineChartByDay.vue'
-import {isRefreshData, localSave, localRead, formatDate} from '@/core/utils/utils.js'
+import {isRefreshData, localSave, localRead, formatDate} from '@/core/utils/utils'
 
 @Component({
     components: {

@@ -1,7 +1,7 @@
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {multisigApi} from '@/core/api/multisigApi.js'
-import {transactionApi} from '@/core/api/transactionApi.js'
+import {multisigApi} from '@/core/api/multisigApi'
+import {transactionApi} from '@/core/api/transactionApi'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     Account,

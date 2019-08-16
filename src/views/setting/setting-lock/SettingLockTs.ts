@@ -1,5 +1,5 @@
 import {UInt64} from 'nem2-sdk'
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {localRead, localSave} from '@/core/utils/utils'
 import {Component, Vue} from 'vue-property-decorator'
 import {decryptKey, encryptKey} from "@/core/utils/wallet"

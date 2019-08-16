@@ -1,5 +1,5 @@
-import {Message} from "@/config/index"
-import {formatDate} from '@/core/utils/utils.js'
+import {Message} from "@/config"
+import {formatDate} from '@/core/utils/utils'
 import {blog} from "@/core/api/logicApi"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'

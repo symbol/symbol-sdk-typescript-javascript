@@ -1,4 +1,4 @@
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
