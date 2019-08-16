@@ -1,7 +1,7 @@
 import {Account, Address, Listener} from "nem2-sdk"
 import {namespaceApi} from "@/core/api/namespaceApi"
 import {multisigApi} from '@/core/api/multisigApi'
-import {formatSeconds, formatAddress} from '@/core/utils/utils.js'
+import {formatSeconds, formatAddress} from '@/core/utils/utils'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {transactionApi} from "@/core/api/transactionApi"
 import {Message, bandedNamespace as BandedNamespaceList} from "@/config/index"

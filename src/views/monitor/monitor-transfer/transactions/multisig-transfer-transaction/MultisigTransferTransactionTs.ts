@@ -1,4 +1,4 @@
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {accountApi} from '@/core/api/accountApi'
 import {multisigApi} from '@/core/api/multisigApi'
 import {Component, Vue, Watch} from 'vue-property-decorator'

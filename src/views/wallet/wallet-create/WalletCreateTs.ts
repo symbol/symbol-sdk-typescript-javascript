@@ -1,8 +1,7 @@
 
 import {NetworkType} from "nem2-sdk"
 import {localRead} from '@/core/utils/utils'
-import {Message} from "@/config/index"
-import {MnemonicPassPhrase} from 'nem2-hd-wallets'
+import {Message} from "@/config"
 import {Component, Vue} from 'vue-property-decorator'
 import {createMnemonic} from "@/core/utils/hdWallet";
 import {

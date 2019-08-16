@@ -1,6 +1,6 @@
 import {MosaicId} from "nem2-sdk"
-import {mosaicApi} from '@/core/api/mosaicApi.js'
-import {accountApi} from '@/core/api/accountApi.js'
+import {mosaicApi} from '@/core/api/mosaicApi'
+import {accountApi} from '@/core/api/accountApi'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'

@@ -10,7 +10,7 @@
 
 <script lang="ts">
     import echarts from 'echarts'
-    import {copyTxt} from '@/core/utils/utils.js'
+    import {copyTxt} from '@/core/utils/utils'
    import {Message} from "@/config/index"
     import {Component, Vue} from 'vue-property-decorator'
     import {multisigApi} from '@/core/api/multisigApi'

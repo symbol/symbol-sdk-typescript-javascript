@@ -1,4 +1,4 @@
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {walletApi} from "@/core/api/walletApi"
 import {namespaceApi} from "@/core/api/namespaceApi"
 import {transactionApi} from "@/core/api/transactionApi"

@@ -1,4 +1,4 @@
-import {Message, entityTypeList} from "@/config/index"
+import {Message, entityTypeList} from "@/config"
 import {Component, Vue} from 'vue-property-decorator'
 import {creatrModifyAccountPropertyTransaction} from '@/core/utils/wallet'
 import {Account, Crypto, PropertyType} from "nem2-sdk";

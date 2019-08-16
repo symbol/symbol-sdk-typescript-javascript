@@ -1,4 +1,4 @@
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {walletApi} from "@/core/api/walletApi"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {decryptKey, encryptKey, saveLocalWallet} from "@/core/utils/wallet";

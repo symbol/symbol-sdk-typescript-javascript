@@ -1,4 +1,4 @@
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {mosaicApi} from '@/core/api/mosaicApi'
 import {accountApi} from '@/core/api/accountApi'
 import { Account, Mosaic, MosaicId, UInt64} from 'nem2-sdk'

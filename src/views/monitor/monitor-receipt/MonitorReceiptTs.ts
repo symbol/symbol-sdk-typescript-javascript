@@ -1,6 +1,6 @@
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {QRCodeGenerator} from 'nem2-qr-library'
-import {copyTxt} from '@/core/utils/utils.js'
+import {copyTxt} from '@/core/utils/utils'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 

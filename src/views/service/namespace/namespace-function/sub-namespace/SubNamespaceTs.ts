@@ -1,10 +1,10 @@
 import {Account} from "nem2-sdk"
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {formatAddress} from '@/core/utils/utils'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {namespaceApi} from "@/core/api/namespaceApi"
 import {transactionApi} from "@/core/api/transactionApi"
-import {bandedNamespace as BandedNamespaceList} from '@/config/index'
+import {bandedNamespace as BandedNamespaceList} from '@/config'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
 @Component({

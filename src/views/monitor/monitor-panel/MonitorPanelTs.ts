@@ -1,14 +1,13 @@
-import {Message} from "@/config/index"
+import {Message} from "@/config"
 import {market} from "@/core/api/logicApi"
 import {KlineQuery} from "@/core/query/klineQuery"
-import {Address, MosaicId, UInt64} from 'nem2-sdk'
+import {Address, MosaicId} from 'nem2-sdk'
 import {mosaicApi} from '@/core/api/mosaicApi'
 import {accountApi} from '@/core/api/accountApi'
-import {namespaceApi} from "@/core/api/namespaceApi"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import monitorSeleted from '@/common/img/monitor/monitorSeleted.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
-import {copyTxt, localSave, localRead, formatXEMamount} from '@/core/utils/utils.js'
+import {copyTxt, localSave, localRead, formatXEMamount} from '@/core/utils/utils'
 import {getNamespaces, setWalletMosaic} from "@/core/utils/wallet";
 
 @Component
