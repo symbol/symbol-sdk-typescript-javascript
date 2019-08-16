@@ -31,14 +31,14 @@ const formatTransferTransactions = function (transaction, accountAddress) {
     transaction.isReceipt = transaction.recipient.address == accountAddress
     transaction.tag = transaction.isReceipt ? transactionTag.GATHERING : transactionTag.PAYMENT
     transaction.infoFirst = transaction.isReceipt ? transaction.signer.address.address : transaction.recipient.address;
-    transaction.infoSecond = transaction.mosaics && transaction.mosaics[0] ? transaction.mosaics[0].id.id.toHex().toUpperCase() : 'null';
-    transaction.infoThird = (transaction.isReceipt ? '+' : '-') + (transaction.mosaics && transaction.mosaics[0] ? transaction.mosaics[0].amount.compact() : '')
+    transaction.infoSecond = transaction.mosaics && transaction.mosaics[0] ? transaction.mosaics[0].id.id.toHex().toUpperCase() : 'nem.xem';
+    transaction.infoThird = (transaction.isReceipt ? '+' : '-') + (transaction.mosaics && transaction.mosaics[0] ? transaction.mosaics[0].amount.compact() : '0')
     transaction.time = formatNemDeadline(transaction.deadline);
     transaction.dialogDetailMap = {
         'transfer_type': transaction.tag,
         'from': transaction.infoFirst,
-        'mosaic': transaction.infoThird,
-        'the_amount': transaction.infoSecond,
+        'mosaic': transaction.infoSecond,
+        'the_amount': transaction.infoThird,
         'fee': transaction.maxFee.compact(),
         'block': transaction.transactionInfo.height.compact(),
         'hash': transaction.transactionInfo.hash,
