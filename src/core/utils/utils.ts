@@ -248,7 +248,7 @@ export const formatTransactions = function (transactionList, accountAddress) {
     let transferTransaction = [];
     transactionList.map((item) => {
         if (item.type == TransactionType.TRANSFER) {
-            item.isReceipt = item.recipient.address == accountAddress ? true : false
+            item.isReceipt = item.recipient.address == accountAddress;
             item.signerAddress = item.signer.address.address;
             item.recipientAddress = item.recipient.address;
             item.oppositeAddress = item.isReceipt ? item.signerAddress : item.recipient.address;

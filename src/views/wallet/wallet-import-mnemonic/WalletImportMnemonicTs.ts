@@ -4,6 +4,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {strToHexCharCode} from '@/core/utils/utils'
 import {createAccount} from "@/core/utils/hdWallet";
 import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet";
+import {passwordValidator} from "@/core/utils/validation";
 
 @Component
 export class WalletImportMnemonicTs extends Vue {
@@ -62,7 +63,7 @@ export class WalletImportMnemonicTs extends Vue {
             })
             return false
         }
-        if (!this.form.password || this.form.password == '') {
+        if (!this.form.password || !passwordValidator(this.form.password)) {
             this.$Notice.error({
                 title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
             })

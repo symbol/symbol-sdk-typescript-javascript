@@ -51,6 +51,23 @@
     </div>
     <div class="bottom_transfer_record_list scroll">
       <Spin v-if="isLoadingTransactionRecord" size="large" fix></Spin>
+
+      <div class="transaction_record_item pointer" @click="showDialog(c)" v-for="c in unConfirmedTransactionList">
+        <img src="@/common/img/monitor/transaction/txUnConfirmed.png" alt="">
+        <div class="flex_content">
+          <div class="left left_components">
+            <div class="top">{{c.mosaic.id ? c.mosaic.id.id.toHex().toUpperCase().slice(0,8)+'...': "&nbsp;"}}</div>
+            <div class="bottom"> {{c.time.slice(0, c.time.length - 3)}}</div>
+          </div>
+          <div class="right">
+            <div class="top">{{c.mosaic?c.mosaic.amount.compact():0}}</div>
+            <div class="bottom">
+              {{c.transactionInfo && c.transactionInfo.height.compact()}}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="transaction_record_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">
         <img src="@/common/img/monitor/transaction/txConfirmed.png" alt="">
         <div class="flex_content">

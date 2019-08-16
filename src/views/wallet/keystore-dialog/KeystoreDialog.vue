@@ -23,7 +23,7 @@
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
-              <Button type="success" @click="exportKeystore">{{$t('next')}}
+              <Button type="success" class="not_allowed" @click="exportKeystore">{{$t('next')}}
                 <Icon type="ios-arrow-round-forward"/>
               </Button>
             </FormItem>
