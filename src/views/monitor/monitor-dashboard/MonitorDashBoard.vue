@@ -105,10 +105,8 @@
             <div class="table_body hide_scroll" ref="unconfirmedTableBody">
               <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in receiptList"
                    :key="index">
-                <img class="mosaic_action" v-if="!u.isReceipt"
-                     src="@/common/img/monitor/dash-board/dashboardMosaicOut.png" alt="">
-                <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
-                     alt="">
+                <img class="mosaic_action"
+                     :src="u.icon" alt="">
                 <span class="account overflow_ellipsis">{{$t(u.tag)}}</span>
                 <span class="transfer_type overflow_ellipsis">{{u.infoSecond}}</span>
                 <span class="amount overflow_ellipsis">{{u.infoThird}}</span>

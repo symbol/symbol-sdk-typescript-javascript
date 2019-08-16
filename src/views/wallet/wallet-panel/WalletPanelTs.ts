@@ -126,6 +126,10 @@ export class WalletPanelTs extends Vue {
     }
 
     async getMyNamespaces() {
+        if (!this.getWallet) {
+            this.$store.commit('SET_NAMESPACE', [])
+            return
+        }
         const list = await getNamespaces(this.getWallet.address, this.node)
         this.$store.commit('SET_NAMESPACE', list)
     }

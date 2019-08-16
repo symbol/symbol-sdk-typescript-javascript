@@ -1,8 +1,30 @@
 import {transactionTag} from '@/config'
 import {formatNemDeadline} from "@/core/utils/utils"
-import { Transaction, TransactionType} from 'nem2-sdk'
+import {Transaction, TransactionType} from 'nem2-sdk'
 
+import dashboardAddressAlias from '@/common/img/monitor/dash-board/dashboardAddressAlias.png'
+import dashboardAggregate from '@/common/img/monitor/dash-board/dashboardAggregate.png'
+import dashboardDefinition from '@/common/img/monitor/dash-board/dashboardDefinition.png'
+import dashboardFilter from '@/common/img/monitor/dash-board/dashboardFilter.png'
+import dashboardLinkAccount from '@/common/img/monitor/dash-board/dashboardLinkAccount.png'
+import dashboardLock from '@/common/img/monitor/dash-board/dashboardLock.png'
+import dashboardModify from '@/common/img/monitor/dash-board/dashboardModify.png'
+import dashboardMosaicAlias from '@/common/img/monitor/dash-board/dashboardMosaicAlias.png'
+import dashboardNamespace from '@/common/img/monitor/dash-board/dashboardNamespace.png'
+import dashboardSecret from '@/common/img/monitor/dash-board/dashboardSecret.png'
 
+const iconMap = {
+    dashboardAddressAlias,
+    dashboardAggregate,
+    dashboardDefinition,
+    dashboardFilter,
+    dashboardLinkAccount,
+    dashboardLock,
+    dashboardModify,
+    dashboardMosaicAlias,
+    dashboardNamespace,
+    dashboardSecret
+}
 
 
 const formatTransferTransactions = function (transaction, accountAddress) {
@@ -30,11 +52,12 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
     const {type} = transaction
     transaction.time = formatNemDeadline(transaction.deadline);
     transaction.isReceipt = false
-    transaction.infoSecond =  transaction.maxFee.compact()
+    transaction.infoSecond = transaction.maxFee.compact()
     transaction.infoThird = transaction.transactionInfo.height.compact()
     switch (type) {
         case TransactionType.REGISTER_NAMESPACE:
             transaction.tag = transactionTag.REGIST_NAMESPACE
+            transaction.icon = iconMap.dashboardNamespace
             // transaction.infoFirst = transaction.tag;
             // transaction.infoSecond =  transaction.maxFee.compact()
             // transaction.infoThird = transaction.transactionInfo.height.compact()
@@ -46,6 +69,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.ADDRESS_ALIAS:
+            transaction.icon = iconMap.dashboardAddressAlias
             transaction.tag = transactionTag.ADDRESS_ALIAS
             // transaction.infoFirst = transaction.actionType;
             // transaction.infoSecond = transaction.namespaceId
@@ -58,6 +82,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             }
 
         case TransactionType.MOSAIC_ALIAS:
+            transaction.icon = iconMap.dashboardMosaicAlias
             transaction.tag = transactionTag.MOSAIC_ALIAS
             // transaction.infoFirst = transaction.transactionInfo.hash
             // transaction.infoSecond = transaction.transactionInfo.height.compact()
@@ -70,6 +95,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.MOSAIC_DEFINITION:
+            transaction.icon = iconMap.dashboardModify
             transaction.tag = transactionTag.MOSAIC_DEFINITION
             // transaction.infoFirst = transaction.MosaicId.id.toHex();
             // transaction.infoSecond = transaction.mosaicProperties.supplyMutable
@@ -83,6 +109,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             break;
 
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
+            transaction.icon = iconMap.dashboardModify
             transaction.tag = transactionTag.MOSAIC_SUPPLY_CHANGE
             // transaction.infoFirst = transaction.MosaicId.id.toHex();
             // transaction.infoSecond = transaction.direction
@@ -96,6 +123,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
 
             break;
         case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+            transaction.icon = iconMap.dashboardModify
             transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
             // transaction.infoFirst = transaction.transactionInfo.hash;
             // transaction.infoSecond = transaction.transactionInfo.height.compact()
@@ -108,6 +136,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.AGGREGATE_COMPLETE:
+            transaction.icon = iconMap.dashboardAggregate
             transaction.tag = transactionTag.AGGREGATE_COMPLETE
             // transaction.infoFirst = transaction.transactionInfo.hash;
             // transaction.infoSecond = transaction.transactionInfo.height.compact()
@@ -121,6 +150,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             break;
 
         case TransactionType.AGGREGATE_BONDED:
+            transaction.icon = iconMap.dashboardAggregate
             transaction.tag = transactionTag.AGGREGATE_BONDED
             // transaction.infoFirst = transaction.transactionInfo.hash;
             // transaction.infoSecond = transaction.transactionInfo.height.compact()
@@ -135,6 +165,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
 
         case TransactionType.LOCK:
             transaction.tag = transactionTag.LOCK
+            transaction.icon = iconMap.dashboardLock
             // transaction.infoFirst = transaction.transactionInfo.hash;
             // transaction.infoSecond = transaction.transactionInfo.height.compact()
             // transaction.infoThird = '-' + transaction.maxFee.compact()
@@ -148,6 +179,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
 
         case TransactionType.SECRET_LOCK:
             transaction.tag = transactionTag.SECRET_LOCK
+            transaction.icon = iconMap.dashboardSecret
             // transaction.infoFirst = transaction.transactionInfo.hash;
             // transaction.infoSecond = transaction.transactionInfo.height.compact()
             // transaction.infoThird = '-' + transaction.maxFee.compact()
@@ -160,6 +192,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             break;
 
         case TransactionType.SECRET_PROOF:
+            transaction.icon = iconMap.dashboardSecret
             transaction.tag = transactionTag.SECRET_PROOF
             // transaction.infoFirst = transaction.transactionInfo.hash;
             // transaction.infoSecond = transaction.transactionInfo.height.compact()
@@ -172,6 +205,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
+            transaction.icon = iconMap.dashboardFilter
             transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ADDRESS
             // transaction.infoFirst = transaction.transactionInfo.hash;
             // transaction.infoSecond = transaction.transactionInfo.height.compact()
@@ -184,6 +218,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
+            transaction.icon = iconMap.dashboardFilter
             transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_MOSAIC
             // transaction.infoFirst = transaction.transactionInfo.hash;
             // transaction.infoSecond = transaction.transactionInfo.height.compact()
@@ -196,6 +231,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
+            transaction.icon = iconMap.dashboardFilter
             transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE
             // transaction.infoFirst = transaction.transactionInfo.hash;
             // transaction.infoSecond = transaction.transactionInfo.height.compact()
@@ -208,6 +244,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.LINK_ACCOUNT:
+            transaction.icon = iconMap.dashboardLinkAccount
             transaction.tag = transactionTag.LINK_ACCOUNT
             // transaction.infoFirst = transaction.transactionInfo.hash;
             // transaction.infoSecond = transaction.transactionInfo.height.compact()

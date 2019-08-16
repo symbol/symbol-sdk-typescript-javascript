@@ -378,7 +378,7 @@ export class MonitorPanelTs extends Vue {
                     let defaultMosaic = {
                         amount: 0,
                         name: 'nem.xem',
-                        hex: that.currentXEM2,
+                        hex: that.currentXEM1,
                         show: true,
                         showInManage: true
                     }

@@ -181,6 +181,9 @@ export class MenuBarTs extends Vue {
     }
 
     unconfirmedListener() {
+        if (!this.getWallet) {
+            return
+        }
         const node = this.node.replace('http', 'ws')
         const that = this
         this.unconfirmedTxListener && this.unconfirmedTxListener.close()
@@ -193,6 +196,9 @@ export class MenuBarTs extends Vue {
     }
 
     confirmedListener() {
+        if (!this.getWallet) {
+            return
+        }
         const node = this.node.replace('http', 'ws')
         const that = this
         this.confirmedTxListener && this.confirmedTxListener.close()
@@ -205,6 +211,9 @@ export class MenuBarTs extends Vue {
     }
 
     txErrorListener() {
+        if (!this.getWallet) {
+            return
+        }
         const node = this.node.replace('http', 'ws')
         const that = this
         this.txStatusListener && this.txStatusListener.close()
@@ -275,14 +284,9 @@ export class MenuBarTs extends Vue {
         linkedMosaic.subscribe((mosaic) => {
             this.$store.state.account.currentXEM1 = mosaic.toHex()
         })
-        try {
-            this.unconfirmedListener()
-            this.confirmedListener()
-            this.txErrorListener()
-        } catch (e) {
-            console.log(e)
-        }
-
+        this.unconfirmedListener()
+        this.confirmedListener()
+        this.txErrorListener()
 
         axios.get(currentNode + '/chain/height').then(function (response) {
             that.isNodeHealthy = true
