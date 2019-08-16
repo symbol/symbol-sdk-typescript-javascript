@@ -311,7 +311,7 @@ export class MenuBarTs extends Vue {
     }
 
     created() {
-        windowSizeChange()
+        // windowSizeChange()
         this.initData()
         this.onCurrentNode()
         this.unconfirmedListener()
