@@ -12,8 +12,8 @@ function formatTx(transaction: any, accountAddress: string) {
             transaction.isReceipt = transaction.recipient.address == accountAddress ? true : false
             transaction.tag = transaction.isReceipt ? transactionTag.GATHERING : transactionTag.PAYMENT
             transaction.infoFirst = transaction.isReceipt ? transaction.signer.address.address : transaction.recipient.address;
-            transaction.infoThird = (transaction.isReceipt ? '+' : '-') + (transaction.mosaics ? transaction.mosaics[0].amount.compact() : '')
-            transaction.infoSecond = transaction.mosaics ? transaction.mosaics[0].id.id.toHex().toUpperCase() : 'null';
+            transaction.infoThird = (transaction.isReceipt ? '+' : '-') + (transaction.mosaics && transaction.mosaics[0] ? transaction.mosaics[0].amount.compact() : '')
+            transaction.infoSecond = transaction.mosaics && transaction.mosaics[0] ? transaction.mosaics[0].id.id.toHex().toUpperCase() : 'null';
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
                 'from': transaction.infoFirst,
