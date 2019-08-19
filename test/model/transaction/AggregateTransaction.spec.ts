@@ -265,6 +265,33 @@ describe('AggregateTransaction', () => {
 
     });
 
+    it('should createBonded an AggregateTransaction object with TransferTransaction', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createBonded(
+            Deadline.create(2, ChronoUnit.MINUTES),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+
+        const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('CD000000');
+        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('5100000051000000');
+        expect(signedTransaction.payload.substring(204, 208)).to.be.equal('4142');
+        expect(signedTransaction.payload.substring(
+            320,
+            signedTransaction.payload.length,
+        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
+    });
+
     it('should validate if accounts have signed an aggregate transaction', () => {
         const aggregateTransactionDTO = {
             meta: {

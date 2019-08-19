@@ -131,9 +131,14 @@ export class AggregateTransaction extends Transaction {
      * @returns {AggregateTransaction}
      */
     public static createFromPayload(payload: string, signSchema: SignSchema = SignSchema.SHA3): AggregateTransaction {
-        const builder = AggregateCompleteTransactionBuilder
-            .loadFromBinary(Convert.hexToUint8(payload));
-        const type = builder.getType().valueOf();
+        /**
+         * Get transaction type from the payload hex
+         * As buffer uses separate builder class for Complete and bonded
+         */
+        const type = parseInt(Convert.uint8ToHex(Convert.hexToUint8(payload.substring(204, 208)).reverse()), 16);
+        const builder = type === TransactionType.AGGREGATE_COMPLETE ?
+            AggregateCompleteTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            AggregateBondedTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const innerTransactionHex = Convert.uint8ToHex(builder.getTransactions());
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
         const consignaturesHex = Convert.uint8ToHex(builder.getCosignatures());
