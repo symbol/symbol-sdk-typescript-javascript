@@ -16,7 +16,8 @@
 
 import { KeyPair, SignSchema } from '../../core/crypto';
 import { Convert } from '../../core/format';
-import { AggregateTransactionBuilder } from '../../infrastructure/catbuffer/AggregateTransactionBuilder';
+import { AggregateBondedTransactionBuilder } from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
+import { AggregateCompleteTransactionBuilder } from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { CosignatureBuilder } from '../../infrastructure/catbuffer/CosignatureBuilder';
 import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
@@ -130,7 +131,7 @@ export class AggregateTransaction extends Transaction {
      * @returns {AggregateTransaction}
      */
     public static createFromPayload(payload: string, signSchema: SignSchema = SignSchema.SHA3): AggregateTransaction {
-        const builder = AggregateTransactionBuilder
+        const builder = AggregateCompleteTransactionBuilder
             .loadFromBinary(Convert.hexToUint8(payload));
         const type = builder.getType().valueOf();
         const innerTransactionHex = Convert.uint8ToHex(builder.getTransactions());
@@ -297,16 +298,27 @@ export class AggregateTransaction extends Transaction {
             cosignatures = GeneratorUtils.concatTypedArrays(cosignatures, cosignatureBytes);
         });
 
-        const transactionBuilder = new AggregateTransactionBuilder(
-            new SignatureDto(signatureBuffer),
-            new KeyDto(signerBuffer),
-            this.versionToDTO(),
-            this.type.valueOf(),
-            new AmountDto(this.maxFee.toDTO()),
-            new TimestampDto(this.deadline.toDTO()),
-            transactions,
-            cosignatures,
-        );
+        const transactionBuilder = this.type === TransactionType.AGGREGATE_COMPLETE ?
+            new AggregateCompleteTransactionBuilder(
+                new SignatureDto(signatureBuffer),
+                new KeyDto(signerBuffer),
+                this.versionToDTO(),
+                this.type.valueOf(),
+                new AmountDto(this.maxFee.toDTO()),
+                new TimestampDto(this.deadline.toDTO()),
+                transactions,
+                cosignatures,
+            ) :
+            new AggregateBondedTransactionBuilder(
+                new SignatureDto(signatureBuffer),
+                new KeyDto(signerBuffer),
+                this.versionToDTO(),
+                this.type.valueOf(),
+                new AmountDto(this.maxFee.toDTO()),
+                new TimestampDto(this.deadline.toDTO()),
+                transactions,
+                cosignatures,
+            );
         return transactionBuilder.serialize();
     }
 

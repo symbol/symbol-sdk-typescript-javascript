@@ -25,109 +25,67 @@ export enum EntityTypeDto {
     /** Reserved entity type. */
     RESERVED = 0,
     /**
-     * Transfer Transaction transaction type.
-     * @type {number}
+     * Account address restriction transaction.
      */
-    TRANSFER = 0x4154,
-
+    ACCOUNT_ADDRESS_RESTRICTION_TRANSACTION = 0x4150,
     /**
-     * Register namespace transaction type.
-     * @type {number}
+     * Account mosaic restriction transaction.
      */
-    REGISTER_NAMESPACE = 0x414E,
-
+    ACCOUNT_MOSAIC_RESTRICTION_TRANSACTION = 0x4250,
     /**
-     * Address alias transaction type
-     * @type {number}
+     * Account operation restriction transaction.
      */
-    ADDRESS_ALIAS = 0x424E,
-
+    ACCOUNT_OPERATION_RESTRICTION_TRANSACTION = 0x4350,
     /**
-     * Mosaic alias transaction type
-     * @type {number}
+     * Account link transaction.
      */
-    MOSAIC_ALIAS = 0x434E,
-
+    ACCOUNT_LINK_TRANSACTION = 0x414C,
     /**
-     * Mosaic definition transaction type.
-     * @type {number}
+     * Address alias transaction.
      */
-    MOSAIC_DEFINITION = 0x414D,
-
+    ADDRESS_ALIAS_TRANSACTION = 0x424E,
+    /**
+     * Aggregate bonded transaction.
+     */
+    AGGREGATE_BONDED_TRANSACTION = 0x4241,
+    /**
+     * Aggregate complete transaction.
+     */
+    AGGREGATE_COMPLETE_TRANSACTION = 0x4141,
+    /**
+     * Hash lock transaction.
+     */
+    HASH_LOCK_TRANSACTION = 0x4148,
+    /**
+     * Modify multisig account transaction.
+     */
+    MODIFY_MULTISIG_ACCOUNT_TRANSACTION = 0x4155,
+    /**
+     * Mosaic definition transaction.
+     */
+    MOSAIC_DEFINITION_TRANSACTION = 0x414D,
     /**
      * Mosaic supply change transaction.
-     * @type {number}
      */
-    MOSAIC_SUPPLY_CHANGE = 0x424D,
-
+    MOSAIC_SUPPLY_CHANGE_TRANSACTION = 0x424D,
     /**
-     * Modify multisig account transaction type.
-     * @type {number}
+     * Mosaic alias transaction.
      */
-    MODIFY_MULTISIG_ACCOUNT = 0x4155,
-
+    MOSAIC_ALIAS_TRANSACTION = 0x434E,
     /**
-     * Aggregate complete transaction type.
-     * @type {number}
+     * Register namespace transaction.
      */
-    AGGREGATE_COMPLETE = 0x4141,
-
+    REGISTER_NAMESPACE_TRANSACTION = 0x414E,
     /**
-     * Aggregate bonded transaction type
+     * Secret lock transaction.
      */
-    AGGREGATE_BONDED = 0x4241,
-
+    SECRET_LOCK_TRANSACTION = 0x4152,
     /**
-     * Lock transaction type
-     * @type {number}
+     * Secret Proof transaction.
      */
-    LOCK = 0x4148,
-
+    SECRET_PROOF_TRANSACTION = 0x4252,
     /**
-     * Secret Lock Transaction type
-     * @type {number}
+     * Transfer transaction.
      */
-    SECRET_LOCK = 0x4152,
-
-    /**
-     * Secret Proof transaction type
-     * @type {number}
-     */
-    SECRET_PROOF = 0x4252,
-
-    /**
-     * Account restriction address transaction type
-     * @type {number}
-     */
-    ACCOUNT_RESTRICTION_ADDRESS = 0x4150,
-
-    /**
-     * Account restriction mosaic transaction type
-     * @type {number}
-     */
-    ACCOUNT_RESTRICTION_MOSAIC = 0x4250,
-
-    /**
-     * Account restriction operation transaction type
-     * @type {number}
-     */
-   ACCOUNT_RESTRICTION_OPERATION = 0x4350,
-
-    /**
-     * Link account transaction type
-     * @type {number}
-     */
-    LINK_ACCOUNT = 0x414C,
-
-    /**
-     * Mosaic address restriction type
-     * @type {number}
-     */
-    MOSAIC_ADDRESS_RESTRICTION = 0x4251,
-
-    /**
-     * Mosaic global restriction type
-     * @type {number}
-     */
-    MOSAIC_GLOBAL_RESTRICTION = 0x4151,
+    TRANSFER_TRANSACTION = 0x4154,
 }
