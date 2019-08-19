@@ -440,6 +440,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AggregateTransaction;
 
+        expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(transaction.innerTransactions[0].type).to.be.equal(TransactionType.TRANSFER);
     });
 
@@ -462,6 +463,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as AggregateTransaction;
 
+        expect(transaction.type).to.be.equal(TransactionType.AGGREGATE_BONDED);
         expect(transaction.innerTransactions[0].type).to.be.equal(TransactionType.TRANSFER);
     });
 
