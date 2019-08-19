@@ -25,7 +25,8 @@
 export class GeneratorUtils {
 
     /**
-     * Converts a (64bit) uint8 array into a number array.
+     * Convert a UInt8Array input into an array of 2 numbers.
+     * Numbers in the returned array are cast to UInt32.
      * @param {Uint8Array} input A uint8 array.
      * @returns {number[]} The uint64 representation of the input.
      */
@@ -39,7 +40,7 @@ export class GeneratorUtils {
     }
 
     /**
-     * Read buffer into 32bits integer at given index.
+     * Read 4 bytes as a uint32 value from buffer bytes starting at given index.
      * @param {Uint8Array} bytes A uint8 array.
      * @param {number} index Index.
      * @returns {number} 32bits integer.
@@ -49,7 +50,7 @@ export class GeneratorUtils {
     }
 
     /**
-     * Write uint to buffer
+     * Convert uint value into buffer
      * @param {number} uintValue A uint8 array.
      * @param {number} bufferSize Buffer size.
      * @returns {Uint8Array}
@@ -57,39 +58,45 @@ export class GeneratorUtils {
     public static uintToBuffer(uintValue: number, bufferSize: number): Uint8Array {
         const buffer = new ArrayBuffer(bufferSize);
         const dataView = new DataView(buffer);
-        if (1 === bufferSize) {
-            dataView.setUint8(0, uintValue);
-        } else if (2 === bufferSize) {
-            dataView.setUint16(0, uintValue, true);
-        } else if (4 === bufferSize) {
-            dataView.setUint32(0, uintValue, true);
-        } else {
-            throw new Error('Unexpected bufferSize');
+        try {
+            if (1 === bufferSize) {
+                dataView.setUint8(0, uintValue);
+            } else if (2 === bufferSize) {
+                dataView.setUint16(0, uintValue, true);
+            } else if (4 === bufferSize) {
+                dataView.setUint32(0, uintValue, true);
+            } else {
+                throw new Error('Unexpected bufferSize');
+            }
+            return new Uint8Array(buffer);
+        } catch (e) {
+            throw new Error(`Converting uint value ${uintValue} into buffer with error: ${e}`);
         }
-
-        return new Uint8Array(buffer);
     }
 
     /**
-     * Write uint to buffer
+     * Convert uint8 array buffer into number
      * @param {Uint8Array} buffer A uint8 array.
      * @returns {number}
      */
     public static bufferToUint(buffer: Uint8Array): number {
         const dataView = new DataView(buffer.buffer);
-        if (1 === buffer.byteLength) {
-            return dataView.getUint8(0);
-        } else if (2 === buffer.byteLength) {
-            return dataView.getUint16(0, true);
-        } else if (4 === buffer.byteLength) {
-            return dataView.getUint32(0, true);
-             }
-
-        throw new Error('Unexpected buffer size');
+        try {
+            if (1 === buffer.byteLength) {
+                return dataView.getUint8(0);
+            } else if (2 === buffer.byteLength) {
+                return dataView.getUint16(0, true);
+            } else if (4 === buffer.byteLength) {
+                return dataView.getUint32(0, true);
+            }
+            throw new Error('Unexpected buffer size');
+        } catch (e) {
+            throw new Error(`Converting buffer into number with error: ${e}`);
+        }
     }
 
     /**
-     * Write Uint64 to buffer
+     * Convert unit64 into buffer
      * @param {number} uintValue Uint64 (number[]).
      * @returns {Uint8Array}
      */

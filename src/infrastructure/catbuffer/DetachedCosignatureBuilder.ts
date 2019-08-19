@@ -19,77 +19,73 @@
 *** along with Catapult. If not, see <http://www.gnu.org/licenses/>.
 **/
 
+import { CosignatureBuilder } from './CosignatureBuilder';
 import { GeneratorUtils } from './GeneratorUtils';
+import { Hash256Dto } from './Hash256Dto';
 import { KeyDto } from './KeyDto';
 import { SignatureDto } from './SignatureDto';
-import { CosignatureBuilder } from './CosignatureBuilder';
-import { Hash256Dto } from './Hash256Dto';
 
-/** a detached cosignature. */
+/** Cosignature detached from an aggregate transaction. */
 export class DetachedCosignatureBuilder extends CosignatureBuilder {
-    /** hash of the corresponding parent. */
+    /** Hash of the aggregate transaction that is signed by this cosignature. */
     parentHash: Hash256Dto;
 
     /**
      * Constructor.
      *
-     * @param signer cosigner public key.
-     * @param signature cosigner signature.
-     * @param parentHash hash of the corresponding parent.
+     * @param signer Cosigner public key.
+     * @param signature Cosigner signature.
+     * @param parentHash Hash of the aggregate transaction that is signed by this cosignature.
      */
-    public constructor(signer: KeyDto, signature: SignatureDto, parentHash: Hash256Dto) {
+    public constructor(signer: KeyDto,  signature: SignatureDto,  parentHash: Hash256Dto) {
         super(signer, signature);
         this.parentHash = parentHash;
     }
 
     /**
-     * loadFromBinary - Create an instance of DetachedCosignatureBuilder from a stream.
+     * Creates an instance of DetachedCosignatureBuilder from binary payload.
      *
-     * @param payload Byte to use to serialize the object.
-     * @return An instance of DetachedCosignatureBuilder.
+     * @param payload Byte payload to use to serialize the object.
+     * @return Instance of DetachedCosignatureBuilder.
      */
     public static loadFromBinary(payload: Uint8Array): DetachedCosignatureBuilder {
         const byteArray = Array.from(payload);
-        const signer = KeyDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, signer.getSize());
-        const signature = SignatureDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, signature.getSize());
+        const superObject = CosignatureBuilder.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, superObject.getSize());
         const parentHash = Hash256Dto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, parentHash.getSize());
-        return new DetachedCosignatureBuilder(signer, signature, parentHash);
+        return new DetachedCosignatureBuilder(superObject.signer, superObject.signature, parentHash);
     }
 
     /**
-     * Get hash of the corresponding parent.
+     * Gets hash of the aggregate transaction that is signed by this cosignature.
      *
-     * @return hash of the corresponding parent.
+     * @return Hash of the aggregate transaction that is signed by this cosignature.
      */
     public getParentHash(): Hash256Dto {
         return this.parentHash;
     }
 
     /**
-     * Get the size of the object.
+     * Gets the size of the object.
      *
      * @return Size in bytes.
      */
     public getSize(): number {
-        let size = super.getSize();
+        let size: number = super.getSize();
         size += this.parentHash.getSize();
         return size;
     }
 
     /**
-     * Serialize the object to bytes.
+     * Serializes an object to bytes.
      *
      * @return Serialized bytes.
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
-        const signerBytes = this.signer.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, signerBytes);
-        const signatureBytes = this.signature.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, signatureBytes);
+        const superBytes = super.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, superBytes);
         const parentHashBytes = this.parentHash.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, parentHashBytes);
         return newArray;
