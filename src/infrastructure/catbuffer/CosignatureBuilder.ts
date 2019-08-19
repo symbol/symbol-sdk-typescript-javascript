@@ -23,29 +23,29 @@ import { GeneratorUtils } from './GeneratorUtils';
 import { KeyDto } from './KeyDto';
 import { SignatureDto } from './SignatureDto';
 
-/** a cosignature. */
+/** Cosignature attached to an aggregate transaction. */
 export class CosignatureBuilder {
-    /** cosigner public key. */
+    /** Cosigner public key. */
     signer: KeyDto;
-    /** cosigner signature. */
+    /** Cosigner signature. */
     signature: SignatureDto;
 
     /**
      * Constructor.
      *
-     * @param signer cosigner public key.
-     * @param signature cosigner signature.
+     * @param signer Cosigner public key.
+     * @param signature Cosigner signature.
      */
-    public constructor(signer: KeyDto, signature: SignatureDto) {
+    public constructor(signer: KeyDto,  signature: SignatureDto) {
         this.signer = signer;
         this.signature = signature;
     }
 
     /**
-     * loadFromBinary - Create an instance of CosignatureBuilder from a stream.
+     * Creates an instance of CosignatureBuilder from binary payload.
      *
-     * @param payload Byte to use to serialize the object.
-     * @return An instance of CosignatureBuilder.
+     * @param payload Byte payload to use to serialize the object.
+     * @return Instance of CosignatureBuilder.
      */
     public static loadFromBinary(payload: Uint8Array): CosignatureBuilder {
         const byteArray = Array.from(payload);
@@ -57,25 +57,25 @@ export class CosignatureBuilder {
     }
 
     /**
-     * Get cosigner public key.
+     * Gets cosigner public key.
      *
-     * @return cosigner public key.
+     * @return Cosigner public key.
      */
     public getSigner(): KeyDto {
         return this.signer;
     }
 
     /**
-     * Get cosigner signature.
+     * Gets cosigner signature.
      *
-     * @return cosigner signature.
+     * @return Cosigner signature.
      */
     public getSignature(): SignatureDto {
         return this.signature;
     }
 
     /**
-     * Get the size of the object.
+     * Gets the size of the object.
      *
      * @return Size in bytes.
      */
@@ -87,7 +87,7 @@ export class CosignatureBuilder {
     }
 
     /**
-     * Serialize the object to bytes.
+     * Serializes an object to bytes.
      *
      * @return Serialized bytes.
      */
