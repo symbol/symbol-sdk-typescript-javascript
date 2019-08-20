@@ -29,6 +29,10 @@ export enum EntityTypeDto {
      */
     ACCOUNT_ADDRESS_RESTRICTION_TRANSACTION = 0x4150,
     /**
+     * Account metadata transaction
+     */
+    ACCOUNT_METADATA_TRANSACTION = 0x4144,
+    /**
      * Account mosaic restriction transaction.
      */
     ACCOUNT_MOSAIC_RESTRICTION_TRANSACTION = 0x4250,
@@ -65,6 +69,10 @@ export enum EntityTypeDto {
      */
     MOSAIC_DEFINITION_TRANSACTION = 0x414D,
     /**
+     * Mosaic metadata transaction.
+     */
+    MOSAIC_METADATA_TRANSACTION = 0x4244,
+    /**
      * Mosaic supply change transaction.
      */
     MOSAIC_SUPPLY_CHANGE_TRANSACTION = 0x424D,
@@ -72,6 +80,10 @@ export enum EntityTypeDto {
      * Mosaic alias transaction.
      */
     MOSAIC_ALIAS_TRANSACTION = 0x434E,
+    /**
+     * Namespace metadata transaction.
+     */
+    NAMESPACE_METADATA_TRANSACTION = 0x4344,
     /**
      * Register namespace transaction.
      */

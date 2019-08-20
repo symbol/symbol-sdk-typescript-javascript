@@ -36,6 +36,7 @@ import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { NamespaceType } from '../../../src/model/namespace/NamespaceType';
 import { AccountAddressRestrictionTransaction } from '../../../src/model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../../src/model/transaction/AccountLinkTransaction';
+import { AccountMetadataTransaction } from '../../../src/model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../../src/model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountRestrictionModification } from '../../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../../src/model/transaction/AccountRestrictionTransaction';
@@ -52,9 +53,11 @@ import { MosaicAddressRestrictionTransaction } from '../../../src/model/transact
 import { MosaicAliasTransaction } from '../../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../../src/model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../../src/model/transaction/MosaicGlobalRestrictionTransaction';
+import { MosaicMetadataTransaction } from '../../../src/model/transaction/MosaicMetadataTransaction';
 import { MosaicSupplyChangeTransaction } from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { MultisigCosignatoryModification } from '../../../src/model/transaction/MultisigCosignatoryModification';
 import { MultisigCosignatoryModificationType } from '../../../src/model/transaction/MultisigCosignatoryModificationType';
+import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetaDataTransaction';
 import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { RegisterNamespaceTransaction } from '../../../src/model/transaction/RegisterNamespaceTransaction';
 import { SecretLockTransaction } from '../../../src/model/transaction/SecretLockTransaction';
@@ -587,6 +590,73 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
         expect(transaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
     });
+
+    it('should create AddressMetadataTransaction', () => {
+        const accountMetadataTransaction = AccountMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            1,
+            new Uint8Array(10),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTx = accountMetadataTransaction.signWith(account, generationHash);
+
+        const transaction = TransactionMapping.createFromPayload(signedTx.payload) as AccountMetadataTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA_TRANSACTION);
+        expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.valueSizeDelta).to.be.equal(1);
+        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
+    });
+
+    it('should create MosaicMetadataTransaction', () => {
+        const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new MosaicId([2262289484, 3405110546]),
+            1,
+            new Uint8Array(10),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTx = mosaicMetadataTransaction.signWith(account, generationHash);
+
+        const transaction = TransactionMapping.createFromPayload(signedTx.payload) as MosaicMetadataTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
+        expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.valueSizeDelta).to.be.equal(1);
+        expect(transaction.targetMosaicId.toHex()).to.be.equal(new MosaicId([2262289484, 3405110546]).toHex());
+        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
+    });
+
+    it('should create NamespaceMetadataTransaction', () => {
+        const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new NamespaceId([2262289484, 3405110546]),
+            1,
+            new Uint8Array(10),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTx = namespaceMetadataTransaction.signWith(account, generationHash);
+
+        const transaction = TransactionMapping.createFromPayload(signedTx.payload) as NamespaceMetadataTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
+        expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.valueSizeDelta).to.be.equal(1);
+        expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId([2262289484, 3405110546]).toHex());
+        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
+    });
 });
 
 describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () => {
@@ -1007,5 +1077,69 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.targetAddress.plain()).to.be.equal(account.address.plain());
         expect(transaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
         expect(transaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(0).toHex());
+    });
+
+    it('should create AddressMetadataTransaction', () => {
+        const accountMetadataTransaction = AccountMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            1,
+            new Uint8Array(10),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(accountMetadataTransaction.toJSON()) as AccountMetadataTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA_TRANSACTION);
+        expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.valueSizeDelta).to.be.equal(1);
+        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
+    });
+
+    it('should create MosaicMetadataTransaction', () => {
+        const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new MosaicId([2262289484, 3405110546]),
+            1,
+            new Uint8Array(10),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(mosaicMetadataTransaction.toJSON()) as MosaicMetadataTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
+        expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.valueSizeDelta).to.be.equal(1);
+        expect(transaction.targetMosaicId.toHex()).to.be.equal(new MosaicId([2262289484, 3405110546]).toHex());
+        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
+    });
+
+    it('should create NamespaceMetadataTransaction', () => {
+        const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            new NamespaceId([2262289484, 3405110546]),
+            1,
+            new Uint8Array(10),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(namespaceMetadataTransaction.toJSON()) as NamespaceMetadataTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
+        expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
+        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.valueSizeDelta).to.be.equal(1);
+        expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId([2262289484, 3405110546]).toHex());
+        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
     });
 });
