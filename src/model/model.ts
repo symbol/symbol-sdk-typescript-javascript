@@ -133,6 +133,8 @@ export * from './transaction/TransferTransaction';
 export * from './transaction/AccountMetadataTransaction';
 export * from './transaction/MosaicMetadataTransaction';
 export * from './transaction/NamespaceMetadataTransaction';
+export * from './transaction/MosaicGlobalRestrictionTransaction';
+export * from './transaction/MosaicAddressRestrictionTransaction';
 
 // Wallet
 export * from './wallet/EncryptedPrivateKey';
