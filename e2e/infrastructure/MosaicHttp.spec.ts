@@ -182,19 +182,6 @@ describe('MosaicHttp', () => {
         });
     });
 
-    describe('getMosaics', () => {
-        it('should return mosaics given array of mosaicIds', (done) => {
-            mosaicHttp.getMosaics([mosaicId])
-                .subscribe((mosaicInfos) => {
-                    expect(mosaicInfos[0].height.lower).not.to.be.null;
-                    expect(mosaicInfos[0].divisibility).to.be.equal(3);
-                    expect(mosaicInfos[0].isSupplyMutable()).to.be.equal(true);
-                    expect(mosaicInfos[0].isTransferable()).to.be.equal(true);
-                    done();
-                });
-        });
-    });
-
     describe('getMosaicsNames', () => {
         it('should call getMosaicsNames successfully', (done) => {
             mosaicHttp.getMosaicsNames([mosaicId]).subscribe((mosaicNames) => {
