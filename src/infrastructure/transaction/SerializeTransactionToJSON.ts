@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+import { Convert } from '../../core/format/Convert';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
@@ -26,7 +28,9 @@ import { MosaicAddressRestrictionTransaction } from '../../model/transaction/Mos
 import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
+import { MosaicMetadataTransaction } from '../../model/transaction/MosaicMetadataTransaction';
 import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSupplyChangeTransaction';
+import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetaDataTransaction';
 import { RegisterNamespaceTransaction } from '../../model/transaction/RegisterNamespaceTransaction';
 import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../model/transaction/SecretProofTransaction';
@@ -177,6 +181,35 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 targetAddress: (transaction as MosaicAddressRestrictionTransaction).targetAddress.toDTO(),
                 previousRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).previousRestrictionValue.toDTO(),
                 newRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).newRestrictionValue.toDTO(),
+
+            };
+        case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+            return {
+                targetPublicKey: (transaction as AccountMetadataTransaction).targetPublicKey,
+                scopedMetadataKey: (transaction as AccountMetadataTransaction).scopedMetadataKey.toDTO(),
+                valueSizeDelta: (transaction as AccountMetadataTransaction).valueSizeDelta,
+                valueSize: (transaction as AccountMetadataTransaction).value.length,
+                value: Convert.uint8ToHex((transaction as AccountMetadataTransaction).value),
+
+            };
+        case TransactionType.MOSAIC_METADATA_TRANSACTION:
+            return {
+                targetPublicKey: (transaction as MosaicMetadataTransaction).targetPublicKey,
+                scopedMetadataKey: (transaction as MosaicMetadataTransaction).scopedMetadataKey.toDTO(),
+                valueSizeDelta: (transaction as MosaicMetadataTransaction).valueSizeDelta,
+                targetMosaicId: (transaction as MosaicMetadataTransaction).targetMosaicId.id.toDTO(),
+                valueSize: (transaction as MosaicMetadataTransaction).value.length,
+                value: Convert.uint8ToHex((transaction as MosaicMetadataTransaction).value),
+
+            };
+        case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+            return {
+                targetPublicKey: (transaction as NamespaceMetadataTransaction).targetPublicKey,
+                scopedMetadataKey: (transaction as NamespaceMetadataTransaction).scopedMetadataKey.toDTO(),
+                valueSizeDelta: (transaction as NamespaceMetadataTransaction).valueSizeDelta,
+                targetNamespaceId: (transaction as NamespaceMetadataTransaction).targetNamespaceId.id.toDTO(),
+                valueSize: (transaction as NamespaceMetadataTransaction).value.length,
+                value: Convert.uint8ToHex((transaction as NamespaceMetadataTransaction).value),
 
             };
         default:

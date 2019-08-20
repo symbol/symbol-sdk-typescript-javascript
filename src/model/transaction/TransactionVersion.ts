@@ -135,4 +135,22 @@ export class TransactionVersion {
      * @type {number}
      */
     public static readonly LINK_ACCOUNT = 0x01;
+
+    /**
+     * Account metadata transaction version
+     * @type {number}
+     */
+    public static readonly ACCOUNT_METADATA_TRANSACTION = 0x01;
+
+    /**
+     * Mosaic metadata transaction version
+     * @type {number}
+     */
+    public static readonly MOSAIC_METADATA_TRANSACTION = 0x01;
+
+    /**
+     * Namespace metadata transaction version
+     * @type {number}
+     */
+    public static readonly NAMESPACE_METADATA_TRANSACTION = 0x01;
 }
