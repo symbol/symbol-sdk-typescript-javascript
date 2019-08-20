@@ -130,6 +130,9 @@ export * from './transaction/TransactionStatus';
 export * from './transaction/TransactionStatusError';
 export * from './transaction/TransactionType';
 export * from './transaction/TransferTransaction';
+export * from './transaction/AccountMetadataTransaction';
+export * from './transaction/MosaicMetadataTransaction';
+export * from './transaction/NamespaceMetadataTransaction';
 
 // Wallet
 export * from './wallet/EncryptedPrivateKey';
