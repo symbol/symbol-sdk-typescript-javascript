@@ -75,7 +75,7 @@ export class MosaicHttp extends Http implements MosaicRepository {
                             divisibility = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Divisibility].value;
                         }
                         if (mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value) {
-                            duration = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Divisibility].value;
+                            duration = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value;
                         }
                         return new MosaicInfo(
                             mosaicInfoDTO.meta.id,
