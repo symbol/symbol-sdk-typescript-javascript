@@ -57,7 +57,7 @@ import { MosaicMetadataTransaction } from '../../../src/model/transaction/Mosaic
 import { MosaicSupplyChangeTransaction } from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { MultisigCosignatoryModification } from '../../../src/model/transaction/MultisigCosignatoryModification';
 import { MultisigCosignatoryModificationType } from '../../../src/model/transaction/MultisigCosignatoryModificationType';
-import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetaDataTransaction';
+import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';
 import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { RegisterNamespaceTransaction } from '../../../src/model/transaction/RegisterNamespaceTransaction';
 import { SecretLockTransaction } from '../../../src/model/transaction/SecretLockTransaction';

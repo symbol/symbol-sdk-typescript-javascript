@@ -32,7 +32,7 @@ import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefin
 import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
 import { MosaicMetadataTransaction } from '../../model/transaction/MosaicMetadataTransaction';
 import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSupplyChangeTransaction';
-import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetaDataTransaction';
+import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetadataTransaction';
 import { RegisterNamespaceTransaction } from '../../model/transaction/RegisterNamespaceTransaction';
 import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../model/transaction/SecretProofTransaction';
