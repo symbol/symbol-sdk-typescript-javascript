@@ -127,4 +127,22 @@ export enum TransactionType {
      * @type {number}
      */
     MOSAIC_GLOBAL_RESTRICTION = 0x4151,
+
+    /**
+     * Account metadata transaction
+     * @type {number}
+     */
+    ACCOUNT_METADATA_TRANSACTION = 0x4144,
+
+    /**
+     * Mosaic metadata transaction
+     * @type {number}
+     */
+    MOSAIC_METADATA_TRANSACTION = 0x4244,
+
+    /**
+     * Namespace metadata transaction
+     * @type {number}
+     */
+    NAMESPACE_METADATA_TRANSACTION = 0x4344,
 }

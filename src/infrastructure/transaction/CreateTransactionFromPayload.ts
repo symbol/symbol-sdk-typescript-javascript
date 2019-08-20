@@ -19,6 +19,7 @@ import { Convert as convert } from '../../core/format';
 import { InnerTransaction } from '../../model/model';
 import { AccountAddressRestrictionTransaction } from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
 import { AccountMosaicRestrictionTransaction } from '../../model/transaction/AccountMosaicRestrictionTransaction';
 import { AccountOperationRestrictionTransaction } from '../../model/transaction/AccountOperationRestrictionTransaction';
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
@@ -29,7 +30,9 @@ import { MosaicAddressRestrictionTransaction } from '../../model/transaction/Mos
 import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
+import { MosaicMetadataTransaction } from '../../model/transaction/MosaicMetadataTransaction';
 import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSupplyChangeTransaction';
+import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetaDataTransaction';
 import { RegisterNamespaceTransaction } from '../../model/transaction/RegisterNamespaceTransaction';
 import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../model/transaction/SecretProofTransaction';
@@ -92,6 +95,12 @@ export const CreateTransactionFromPayload = (payload: string,
             return MosaicGlobalRestrictionTransaction.createFromPayload(payload, isEmbedded, signSchema);
         case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
             return MosaicAddressRestrictionTransaction.createFromPayload(payload, isEmbedded, signSchema);
+        case TransactionType.ACCOUNT_METADATA_TRANSACTION:
+            return AccountMetadataTransaction.createFromPayload(payload, isEmbedded, signSchema);
+        case TransactionType.MOSAIC_METADATA_TRANSACTION:
+            return MosaicMetadataTransaction.createFromPayload(payload, isEmbedded, signSchema);
+        case TransactionType.NAMESPACE_METADATA_TRANSACTION:
+            return NamespaceMetadataTransaction.createFromPayload(payload, isEmbedded, signSchema);
         case TransactionType.AGGREGATE_COMPLETE:
         case TransactionType.AGGREGATE_BONDED:
             return AggregateTransaction.createFromPayload(payload, signSchema);

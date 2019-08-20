@@ -18,7 +18,7 @@ import * as CryptoJS from 'crypto-js';
 import {ChronoUnit} from 'js-joda';
 import {keccak_256, sha3_256} from 'js-sha3';
 import {Crypto} from '../../src/core/crypto';
-import { Convert as convert } from '../../src/core/format';
+import { Convert as convert, Convert } from '../../src/core/format';
 import { TransactionMapping } from '../../src/core/utils/TransactionMapping';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import { NamespaceHttp } from '../../src/infrastructure/infrastructure';
@@ -66,6 +66,9 @@ import {Transaction} from '../../src/model/transaction/Transaction';
 import {TransactionType} from '../../src/model/transaction/TransactionType';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../src/model/UInt64';
+import { AccountMetadataTransaction } from '../../src/model/transaction/AccountMetadataTransaction';
+import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMetadataTransaction';
+import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetaDataTransaction';
 describe('TransactionHttp', () => {
     let transactionHash;
     let transactionId;
@@ -197,6 +200,206 @@ describe('TransactionHttp', () => {
                 []);
             const signedTransaction = aggregateTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('AccountMetadataTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const accountMetadataTransaction = AccountMetadataTransaction.create(
+                Deadline.create(),
+                account.publicKey,
+                UInt64.fromUint(1000),
+                10,
+                new Uint8Array(10),
+                NetworkType.MIJIN_TEST,
+            );
+
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [accountMetadataTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            listener.confirmed(account.address).subscribe((transaction: AggregateTransaction) => {
+                transaction.innerTransactions.forEach((innerTx) => {
+                    expect((innerTx as AccountMetadataTransaction).targetPublicKey, 'TargetPublicKey').not.to.be.undefined;
+                    expect((innerTx as AccountMetadataTransaction).scopedMetadataKey, 'ScopedMetadataKey').not.to.be.undefined;
+                    expect((innerTx as AccountMetadataTransaction).valueSizeDelta, 'ValueSizeDelta').not.to.be.undefined;
+                    expect((innerTx as AccountMetadataTransaction).value, 'Value').not.to.be.undefined;
+                });
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('MosaicMetadataTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+                Deadline.create(),
+                account.publicKey,
+                UInt64.fromUint(1000),
+                mosaicId,
+                10,
+                new Uint8Array(10),
+                NetworkType.MIJIN_TEST,
+            );
+
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [mosaicMetadataTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            listener.confirmed(account.address).subscribe((transaction: AggregateTransaction) => {
+                transaction.innerTransactions.forEach((innerTx) => {
+                    expect((innerTx as MosaicMetadataTransaction).targetPublicKey, 'TargetPublicKey').not.to.be.undefined;
+                    expect((innerTx as MosaicMetadataTransaction).scopedMetadataKey, 'ScopedMetadataKey').not.to.be.undefined;
+                    expect((innerTx as MosaicMetadataTransaction).valueSizeDelta, 'ValueSizeDelta').not.to.be.undefined;
+                    expect((innerTx as MosaicMetadataTransaction).value, 'Value').not.to.be.undefined;
+                    expect((innerTx as MosaicMetadataTransaction).targetMosaicId, 'TargetMosaicId').not.to.be.undefined;
+                });
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('RegisterNamespaceTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
+            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+                Deadline.create(),
+                namespaceName,
+                UInt64.fromUint(1000),
+                NetworkType.MIJIN_TEST,
+            );
+            namespaceId = new NamespaceId(namespaceName);
+            const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
+            listener.confirmed(account.address).subscribe((transaction: RegisterNamespaceTransaction) => {
+                expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
+                expect(transaction.namespaceName, 'NamespaceName').not.to.be.undefined;
+                expect(transaction.namespaceType, 'NamespaceType').not.to.be.undefined;
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('RegisterNamespaceTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+                Deadline.create(),
+                'root-test-namespace-' + Math.floor(Math.random() * 10000),
+                UInt64.fromUint(1000),
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [registerNamespaceTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                []);
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('NamespaceMetadataTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('aggregate', (done) => {
+            const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+                Deadline.create(),
+                account.publicKey,
+                UInt64.fromUint(1000),
+                namespaceId,
+                10,
+                new Uint8Array(10),
+                NetworkType.MIJIN_TEST,
+            );
+
+            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                [namespaceMetadataTransaction.toAggregate(account.publicAccount)],
+                NetworkType.MIJIN_TEST,
+                [],
+            );
+            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+            listener.confirmed(account.address).subscribe((transaction: AggregateTransaction) => {
+                transaction.innerTransactions.forEach((innerTx) => {
+                    expect((innerTx as NamespaceMetadataTransaction).targetPublicKey, 'TargetPublicKey').not.to.be.undefined;
+                    expect((innerTx as NamespaceMetadataTransaction).scopedMetadataKey, 'ScopedMetadataKey').not.to.be.undefined;
+                    expect((innerTx as NamespaceMetadataTransaction).valueSizeDelta, 'ValueSizeDelta').not.to.be.undefined;
+                    expect((innerTx as NamespaceMetadataTransaction).value, 'Value').not.to.be.undefined;
+                    expect((innerTx as NamespaceMetadataTransaction).targetNamespaceId, 'TargetNamespaceId').not.to.be.undefined;
+                });
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -677,71 +880,7 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
-    describe('RegisterNamespaceTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('standalone', (done) => {
-            const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
-            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
-                Deadline.create(),
-                namespaceName,
-                UInt64.fromUint(1000),
-                NetworkType.MIJIN_TEST,
-            );
-            namespaceId = new NamespaceId(namespaceName);
-            const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe((transaction: RegisterNamespaceTransaction) => {
-                expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
-                expect(transaction.namespaceName, 'NamespaceName').not.to.be.undefined;
-                expect(transaction.namespaceType, 'NamespaceType').not.to.be.undefined;
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
-        });
-    });
-    describe('RegisterNamespaceTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('aggregate', (done) => {
-            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
-                Deadline.create(),
-                'root-test-namespace-' + Math.floor(Math.random() * 10000),
-                UInt64.fromUint(1000),
-                NetworkType.MIJIN_TEST,
-            );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                [registerNamespaceTransaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
-                []);
-            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
-        });
-    });
+
     describe('AddressAliasTransaction', () => {
         let listener: Listener;
         before (() => {
@@ -1381,7 +1520,7 @@ describe('TransactionHttp', () => {
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
                 listener.confirmed(account2.address).subscribe((transaction: SecretProofTransaction) => {
                     expect(transaction.secret, 'Secret').not.to.be.undefined;
                     expect(transaction.recipient, 'Recipient').not.to.be.undefined;
@@ -1431,8 +1570,8 @@ describe('TransactionHttp', () => {
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
+                listener.confirmed(account2.address).subscribe(() => {
                     done();
                 });
                 const secretProofTransaction = SecretProofTransaction.create(
@@ -1479,8 +1618,8 @@ describe('TransactionHttp', () => {
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
+                listener.confirmed(account2.address).subscribe(() => {
                     done();
                 });
                 const secretProofTransaction = SecretProofTransaction.create(
@@ -1523,8 +1662,8 @@ describe('TransactionHttp', () => {
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
+                listener.confirmed(account2.address).subscribe(() => {
                     done();
                 });
                 const secretProofTransaction = SecretProofTransaction.create(
@@ -1573,8 +1712,8 @@ describe('TransactionHttp', () => {
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
+                listener.confirmed(account2.address).subscribe(() => {
                     done();
                 });
                 listener.status(account2.address).subscribe((error) => {
@@ -1625,8 +1764,8 @@ describe('TransactionHttp', () => {
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
+                listener.confirmed(account2.address).subscribe(() => {
                     done();
                 });
                 listener.status(account2.address).subscribe((error) => {
@@ -1680,8 +1819,8 @@ describe('TransactionHttp', () => {
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
+                listener.confirmed(account2.address).subscribe(() => {
                     done();
                 });
                 listener.status(account2.address).subscribe((error) => {
@@ -1731,8 +1870,8 @@ describe('TransactionHttp', () => {
                 account2.address,
                 NetworkType.MIJIN_TEST,
             );
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                listener.confirmed(account2.address).subscribe((transaction: Transaction) => {
+            listener.confirmed(account.address).subscribe(() => {
+                listener.confirmed(account2.address).subscribe(() => {
                     done();
                 });
                 listener.status(account2.address).subscribe((error) => {
