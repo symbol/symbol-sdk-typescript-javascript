@@ -90,18 +90,15 @@ export class UInt64 {
      * @return {string}
      */
     public toString(radix: number = 10): string {
-        var result = '';
-        var high = this.higher;
-        var low = this.lower;
-        while (true) {
-            var mod = (high % radix) * 0x100000000 + low;
+        let result = '';
+        let high = this.higher;
+        let low = this.lower;
+        do {
+            let mod = (high % radix) * 0x100000000 + low;
             high = Math.floor(high / radix);
             low = Math.floor(mod / radix);
             result = (mod % radix).toString(radix) + result;
-            if (!high && !low) {
-                break;
-            }
-        }
+        } while (high !== 0 || low !== 0);
         return result;
     }
 
