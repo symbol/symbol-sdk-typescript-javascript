@@ -1,5 +1,5 @@
 export const en_US = {
-    just_now: 'Just',
+    just_now: 'Just now',
     time_ago: 'ago',
     time_after: 'later',
     time_second: 'seconds',
@@ -8,6 +8,7 @@ export const en_US = {
     time_day: 'day',
     month: 'month',
     year: 'year',
+	// Please add Plural form for time unit here（请添加时间单复数校验）
     m_ago: 'minute ago',
     h_ago: 'hour ago',
     d_ago: 'day ago',
@@ -20,17 +21,21 @@ export const en_US = {
     vote: 'Vote',
 
     //infomation
-    no_more_data: 'No more datamore data',
+    no_more_data: 'No more data',
     business: 'Business',
     service: 'Service',
     comment: 'Comment',
     remaining: 'Remaining',
     word: 'Word',
     publish: 'Publish',
-    anonymous_user: 'Anonymous useruser',
-    no_comment_yet: 'No comment yetcomment yet',
-    successful_operation: 'Successful operation',
-    operation_failed: 'Operatio failed',
+    anonymous_user: 'Anonymous user',
+    no_comment_yet: 'No comment yet',
+<<<<<<< HEAD
+    successful_operation: 'Request Succeeded',
+=======
+    successful_operation: 'Request succeeded',
+>>>>>>> cfc9f0286918d47a9952a9ca48c7c4d16d9d2234
+    operation_failed: 'Request Failed',
 
     // vote
     over: 'Over',
@@ -41,18 +46,22 @@ export const en_US = {
     title: 'Title',
     please_enter_a_voting_title: 'Please enter a voting title',
     description: 'Description',
-    about_voting_content_description: 'About voting content description',
+    about_voting_content_description: 'Description for voting content',
     option: 'Option',
     multiple_selection: 'Multiple',
     radio: 'Radio',
     enter_the_date_for_example: 'Enter the date ,for example：',
     fee: 'Fee',
     the_default_is: 'Default',
-    the_more_you_set_the_cost_the_higher_the_processing_priority: 'The more you cost ,the higher the processing priority. (1000000gas = 1.0xem)',
+<<<<<<< HEAD
+    the_more_you_set_the_cost_the_higher_the_processing_priority: 'Increasing the fee will makes the transaction processing quicker. (1000000 microxem = 1.0xem)',
+=======
+    the_more_you_set_the_cost_the_higher_the_processing_priority: 'Increasing the fee makes the transaction processing quicker.(1000000 microxem = 1.0xem)',
+>>>>>>> cfc9f0286918d47a9952a9ca48c7c4d16d9d2234
     create: 'Create',
     all: 'All',
     processing: 'Processing',
-    already_involved: 'Involved',
+    already_involved: 'Voted',
     choose_to_vote: 'Vote',
     create_a_vote: 'Create',
 
@@ -71,19 +80,19 @@ export const en_US = {
     the_amount: 'Amount',
     date: 'Date',
     block_height: 'Height',
-    average_block_time: 'Generation',
+    average_block_time: 'Block Time',
     point: 'Node',
     number_of_transactions: 'Transactions',
     transfer_type: 'Type',
-    gathering: 'Gathering',
+    gathering: 'Invoice',
     payment: 'Payment',
     from: 'From',
-    aims: 'Aims',
+    aims: 'To',
     block: 'Block',
     message: 'message',
     confirmed_transaction: 'Confirmed',
     unconfirmed_transaction: 'Unconfirmed',
-    total: 'Total',
+    total: 'Total:',
     data: 'Data',
     no_unconfirmed_transactions: 'No unconfirmed transactions',
     no_confirmed_transactions: 'No confirmed transactions',
@@ -93,16 +102,16 @@ export const en_US = {
     lowest_price: 'Lowest',
     average_price: 'Average',
     whole_network_transaction: 'Transactions',
-    please_enter_the_asset_type: 'Please enter the asset type',
+    please_enter_the_asset_type: 'Please enter the token name',
     search: 'Search',
-    no_such_currency_transaction_record_yet: 'No such currency transaction record yet',
+    no_such_currency_transaction_record_yet: 'No trading record',
     price: 'Price',
     quantity: 'Quantity',
-    sub_namespace: 'sub namespace',
+	sub_namespace: 'sub namespace',
     //monitpr-panel
     wallet_balance: 'Balance',
     asset_setting: 'Asset setting',
-    search_for_asset_name: 'Search for asset name',
+    search_for_asset_name: 'Search for mosaic',
     dash_board: 'Board',
     market: 'Market',
     transfer: 'Transfer',
@@ -142,7 +151,7 @@ export const en_US = {
     QR_code_generation_failed: 'QR code generation failed',
 
     //monitor-remote
-    Remote_title_recipt: 'Cumulative entrusted income',
+    Remote_title_recipt: 'Accumulated delegated harvesting income',
     Remote_state: 'Current state',
     Remote_pubulic_pik: 'Remote public key',
     Remote_question: 'Related issues',
@@ -153,10 +162,14 @@ export const en_US = {
     remote_rep_list: 'Income list',
     remote_list_col1: 'Hash',
     remote_list_col2: 'Height',
-    remote_list_col3: 'Cost',
+    remote_list_col3: 'Reward',
     remote_list_col4: 'Time',
     remote_no_data: 'No data',
-    remote_repaly: 'Entrusted harvest',
+    remote_repaly: 'Delegated harvesting',
+<<<<<<< HEAD
+	receive:'Receive'
+=======
+>>>>>>> cfc9f0286918d47a9952a9ca48c7c4d16d9d2234
     remote_modal_pul: 'Remote public key',
     remote_modal_price: 'Cost',
     reomte_modal_pass: 'password',
@@ -170,7 +183,7 @@ export const en_US = {
     welcome_to_the_CATAPULT_beta: 'WELCOME TO USE THE CATAPULT BETA',
     this_is_a_distributed_desktop_wallet_based_on_CATAPULT_I_wish_you_a_pleasant_trip: 'This is a distributed desktop wallet based on CATAPULT ,I wish you a pleasant trip.',
     send_and_receive_XEM_almost_instantly_in_just_1_minute: 'Send and receive XEM almost instantly in just 1 minute !',
-    provides_an_editable_chain_on_protocol_in_a_multi_signature_account_which_is_the_best_way_to_store_funds_and_achieve_a_common_account: 'Provides an editable chain on protocol in a multi signature account ,which is the best way to store funds and achieve a common account.',
+    provides_an_editable_chain_on_protocol_in_a_multi_signature_account_which_is_the_best_way_to_store_funds_and_achieve_a_common_account: 'Provides an editable onchain protocol in a multi signature account ,which is the best way to store funds and manage a common account.',
     a_namespace_is_a_domain_name_that_stores_mosaics_Each_namespace_is_unique_within_a_blockchain_and_mosaics_can_be_defined_and_authenticated_on_a_multi_level_sub_namespace: 'A namespace is a domain name that stores mosaics .Each namespace is unique within a blockchain and mosaics can be defined and authenticated on a multi level sub namespace.',
     NEM_Mosaic_is_a_smart_asset_with_rich_attributes_and_features_To_create_a_mosaic_you_must_provision_the_root_namespace_for_your_account: 'NEM Mosaic is a smart asset with rich attributes and features .To create a mosaic you must provision the root namespace for your account.',
     entrusted_harvesting_is_a_way_to_achieve_remote_online_mining_without_having_to_keep_the_original_account_open: 'Entrusted harvesting is a way to achieve remote online mining without having to keep the original account open.',
@@ -179,7 +192,7 @@ export const en_US = {
     use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates: 'Use Changelly and ShapeShift widgets to buy XEM at the best rates !',
 
 //   monitor-transfer
-    transfer_target: 'Target',
+    transfer_target: 'To',
     send: 'Send',
     transfer_record: 'Transfer record',
     receive_address_or_alias: 'Receive address or alias',
@@ -195,9 +208,9 @@ export const en_US = {
     about_us: 'About us',
 
     //setting-lock
-    old_password: 'Pre password',
-    please_enter_the_original_password: 'Please enter the original password',
-    set_password: 'Set password',
+    old_password: 'old password',
+    please_enter_the_original_password: 'Please enter the old password',
+    set_password: 'Set new password',
     this_password_is_used_to_lock_the_desktop_wallet_Once_lost_you_will_lose_the_right_to_enter_the_desktop_wallet: 'This password is used to lock the desktop wallet .Once lost you will lose the right to enter the desktop wallet.',
     please_enter_a_new_password: 'Please enter a new password',
     confirm_password: 'Confirm password',
@@ -205,7 +218,8 @@ export const en_US = {
 
     // setting network
     save: 'Save',
-    canel: 'Canel',
+	// front end need change: canel--->cancel
+    canel: 'Cancel',
 
     //setting-panel
     general_settings: 'General settings',
@@ -289,7 +303,7 @@ export const en_US = {
     multi_signature: 'Multi signature',
     apostille: 'Apostille',
     address_book: 'Address book',
-    instant_xchanges: 'Instant xchangesExchanges',
+    instant_xchanges: 'Instant Exchanges',
 
     //import
     mnemonic: 'Mnemonic',
@@ -297,7 +311,7 @@ export const en_US = {
     keystore: 'Keystore',
     import: 'Import ',
     back: 'Back',
-    mnemonic_describle: 'The mnemonic is a 12-word seed file. By importing this torrent file, you can restore your wallet. Please keep it safe and keep it confidential.',
+    mnemonic_describle: 'The mnemonic is a 12-word seed file. By importing this seed file, you can restore your wallet. Please keep it safe and keep it confidential.',
     input_mnemonic: 'Input mnemonic',
     enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word: 'Enter 12 words, please pay attention to the order, separated by a space between each word',
     mnemonic_describle_tips: 'This password is a private key password and will be used when you pay. If the password is forgotten, you can use the mnemonic to recover the wallet.',
@@ -329,7 +343,7 @@ export const en_US = {
     next: 'Next',
 
     //guide into
-    start_the_NEM_tour: 'START THE NEM TOUR',
+    start_the_NEM_tour: 'START THE NEM JOURNEY',
     existing_wallet: 'Existing wallet',
     import_text: 'Use private key, mnemonic or keystore to import wallet.',
     import_wallet: 'Import wallet',
@@ -339,10 +353,10 @@ export const en_US = {
     hash: 'Hash',
     //menu bar
     wallet_name: 'Wallet name',
-    switch_point: 'Switch point',
-    current_point: 'Current point',
-    please_enter_a_custom_nod_address: 'Please input point url',
-    point_null_error: 'Point null error',
+    switch_point: 'Switch Node',
+    current_point: 'Current Node',
+    please_enter_a_custom_nod_address: 'Please input Node url',
+    point_null_error: 'Node null error',
     //check pw dialog
     please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe: 'Please enter your wallet password to ensure your own operation and keep your wallet safe.',
 
@@ -355,15 +369,15 @@ export const en_US = {
     backup_prompt: 'Backup prompt',
     backup: 'Backup',
     obtaining_a_Keystore_password_is_equal_to_owning_a_wallet_asset: 'Obtaining a Keystore+ password is equal to owning a wallet asset',
-    Please_back_up_the_Keystore_properly_If_your_phone_is_lost_stolen_or_damaged: 'Please back up the Keystore properly. If your phone is lost, stolen or damaged, Keystore+ password will be able to recover your assets.',
+    Please_back_up_the_Keystore_properly_If_your_phone_is_lost_stolen_or_damaged: 'Please back up the Keystore properly. If your device is lost, stolen or damaged, Keystore+ password will be able to recover your assets.',
     offline_storage: 'Offline storage',
-    keep_it_in_a_safe_place_on_the_isolated_network: 'Keep it in a safe place on the isolated network. Do not share and store mnemonics in a networked environment, such as emails, photo albums, social applications, etc.',
+    keep_it_in_a_safe_place_on_the_isolated_network: 'Keep it in a safe place on the isolated network. Do not share and store mnemonics in a networked environment, such as emails, photo albums, social network, messager, etc.',
     please_safely_back_up_the_Keystore: 'Please safely back up the Keystore',
     do_not_save_to_email_notepad_web_chat_etc_It_is_very_dangerous_Please_don_use_network_transmission: 'Don\'t save to email, notepad, web, chat, etc. It\'s very dangerous. Please don\'t use network transmission.',
     do_not_use_network_transmission: 'Do not use network transmission',
     Do_not_transmit_through_network_tools_once_acquired_by_hackers_will_cause_irreparable_asset_losses_It_is_recommended_that_the_offline_device_be_transmitted_by_scanning_the_QR_code: 'Do not transmit through network tools, once acquired by hackers will cause irreparable asset losses. It is recommended that the offline device be transmitted by scanning the QR code.',
     password_management_tool_save: 'Password management tool save',
-    it_is_recommended_to_use_password_management_tool_management: 'It is recommended to use password management tool management',
+    it_is_recommended_to_use_password_management_tool_management: 'It is recommended to use password management tool to management your password',
     copy: 'Copy',
     Display_Keystore_QR_code: 'Display QR code',
     Show_Keystore: 'Show Keystore',
@@ -404,7 +418,7 @@ export const en_US = {
     walletCreateNetTypeRemind: 'Please select a wallet network! ',
     walletCreateWalletNameRemind: 'Wallet name input error! ',
     walletCreatePasswordRemind: 'Password input error! ',
-    walletCreateCheckPWRemind: 'Two passwords are inconsistent! ',
+    walletCreateCheckPWRemind: 'Two inputs are inconsistent! ',
     //Backup mnemonic  created
     Backup_mnemonics_can_effectively_back_up_and_restore_your_account: 'Backup mnemonics can effectively back up and restore your account',
     tips: 'tips',
@@ -479,8 +493,8 @@ export const en_US = {
     Add_co_signers_here_will_be_displayed_in_the_action_list_click_delete_to_cancel_the_operation: 'Add co-signers, here will be displayed in the action list, click delete to cancel the operation',
     Wallet_account_address_or_alias: 'Account publickey or alias',
     min_approval: 'Min approval',
-    min_approval_delta: 'Delta of min  approval',
-    min_removal_delta: ' Delta of min removal',
+    min_approval_delta: 'Delta of min approval',
+    min_removal_delta: 'Delta of min removal',
     The_number_of_signatures_required_to_add_someone_from_a_multi_sign_or_complete_this_multi_tap_transaction: 'Min signatures to add cosigner or complete transaction',
     Please_set_the_minimum_number_of_signatures_number_of_co_signers: 'Minimum of signatures <= co-signers',
     min_removal: 'Min removal',
@@ -612,7 +626,8 @@ export const en_US = {
     aggregate_bonded: 'Bonded',
     lock: 'Lock',
     secret_lock: 'Secret lock',
-    scret_proof: 'Scret proof',
+	//secret_proof
+    scret_proof: 'Secret proof',
     modify_account_property_address: 'Address filter',
     modify_account_property_mosaic: 'Mosaic filter',
     modify_account_property_entity_type: 'Entity filter',

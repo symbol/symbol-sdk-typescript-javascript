@@ -42,7 +42,7 @@ export const zh_CN = {
     enter_the_date_for_example: '输入日期,例如：',
     fee: '费用',
     the_default_is: '默认为',
-    the_more_you_set_the_cost_the_higher_the_processing_priority: '设置的费用越多，处理优先级越高 (1000000gas = 1.0xem)',
+    the_more_you_set_the_cost_the_higher_the_processing_priority: '设置的费用越多，处理优先级越高 (1000000 microxem = 1.0xem)',
     create: '创建',
     all: '全部',
     processing: '进行中',
@@ -79,6 +79,7 @@ export const zh_CN = {
     transaction_detail: '交易详情',
     no_unconfirmed_transactions: '暂无未确认交易',
     no_confirmed_transactions: '暂无已确认交易',
+
     //monitor-market
     highest_price: '最高价格',
     lowest_price: '最低价格',
@@ -89,18 +90,19 @@ export const zh_CN = {
     no_such_currency_transaction_record_yet: '暂无任何该货币交易记录',
     price: '价格',
     quantity: '数量',
+
+    //monitpr-panel
     wallet_balance: '钱包余额',
     asset_setting: '资产设置',
     search_for_asset_name: '搜索资产名',
     dash_board: '仪表盘',
     market: '市场',
     transfer: '转账',
-    receipt: '收据',
+    receipt: '收款',
     remote: '委托收益',
     mosaic: '马赛克',
     assets: '资产',
     namespace: '命名空间',
-    sub_namespace: '子命名空间',
     validity_period: '有效期',
     harvested_block: '收获的块',
     successful_copy: '复制成功',
@@ -126,7 +128,7 @@ export const zh_CN = {
     Remote_state: '当前状态',
     Remote_pubulic_pik: '远程公钥',
     Remote_question: '相关问题',
-    Remote_ques1: '1、怎么获得收益？',
+    Remote_ques1: '1、 怎么获得收益？',
     remote_ques1_rep: '帐户开启委托收获，就是将其重要性分数将转移到远程帐户。远程帐户继承了原始帐户的重要性，实现在线远程“挖矿”，收集收获的奖励。',
     remote_ques2: '2、收益是怎么？',
     remote_ques2_rep: '远程账户继承了原始账户的重要性，创建新块收获的奖励称为收益。',
@@ -144,7 +146,7 @@ export const zh_CN = {
     remote_modal_cancel: '取消',
     remote_modal_place1: '请输入或粘贴远程公钥',
     remote_modal_place2: '请输入钱包密码',
-    receive:'收款',
+
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: '欢迎回到CATAPULT测试版',
     welcome_to_the_CATAPULT_beta: '欢迎使用CATAPULT测试版',
@@ -185,6 +187,7 @@ export const zh_CN = {
 
     // setting network
     save: '保存',
+	// front end need change: canel--->cancel
     canel: '取消',
 
     //setting-panel
@@ -215,8 +218,8 @@ export const zh_CN = {
     please_enter_the_initial_supply: '请输入初始供应量',
     severability: '可分割性',
     please_enter_separability: '请输入可分性',
-    transmittable: '可传输性',
-    variable_upply: '供应量可变性',
+    transmittable: '可传输',
+    variable_upply: '可变供应量',
     duration_permanent: '是否永久存在',
     other_information: '其他信息',
     duration: '持续时间',
@@ -314,7 +317,7 @@ export const zh_CN = {
     set_password_hint: '设置密码提示',
     password_hints_great_help_when_you_forget_your_password: '密码提示，在忘记密码时有很大帮助',
     please_set_a_password_hint: '请设置密码提示',
-    create_a_Lock_password: '创建Lock密码',
+    create_a_Lock_password: '创建锁定密码',
     lock_pass_text: '本密码用于桌面钱包的锁定，一旦丢失，你将失去进入桌面钱包的权利； 因此你需要对你的资产账户的记助词或私钥进行备份，以便恢复。',
     lock_pass_text_2: '本密码是进入桌面钱包的依据，没有转账的权利，转帐需要你的私钥密码才能完成。',
 
@@ -348,7 +351,7 @@ export const zh_CN = {
     backup_prompt: '备份提示',
     backup: '备份',
     obtaining_a_Keystore_password_is_equal_to_owning_a_wallet_asset: '获得Keystore+密码等于拥有钱包资产所有权',
-    Please_back_up_the_Keystore_properly_If_your_phone_is_lost_stolen_or_damaged: '请妥善备份Keystore,如果你的手机丢失、被盗、损坏,Keystore+密码将可以恢复你的资产',
+    Please_back_up_the_Keystore_properly_If_your_phone_is_lost_stolen_or_damaged: '请妥善备份Keystore,如果你的设备丢失、被盗、损坏,Keystore+密码将可以恢复你的资产',
     offline_storage: '离线保管',
     keep_it_in_a_safe_place_on_the_isolated_network: '妥善保管至隔离网络的安全地方,请勿将助记词在联网环境下分享和存储,比如邮件、相册、社交应用等',
     please_safely_back_up_the_Keystore: '请安全备份Keystore',
@@ -604,6 +607,7 @@ export const zh_CN = {
     modify_account_property_mosaic: '马赛克过滤',
     modify_account_property_entity_type: '交易实体过滤',
     link_account: '远程收获',
-    please_choose_entity_type: '请选择交易类型',
+    please_choose_entity_type:'请选择交易类型'
+
 
 }
