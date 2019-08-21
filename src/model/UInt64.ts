@@ -85,6 +85,27 @@ export class UInt64 {
     }
 
     /**
+     * Get string representation of number (by default, decimal representation)
+     *
+     * @return {string}
+     */
+    public toString(radix: number = 10): string {
+        var result = '';
+        var high = this.higher;
+        var low = this.lower;
+        while (true) {
+            var mod = (high % radix) * 0x100000000 + low;
+            high = Math.floor(high / radix);
+            low = Math.floor(mod / radix);
+            result = (mod % radix).toString(radix) + result;
+            if (!high && !low) {
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
      * Compact higher and lower uint parts into a uint
      * @returns {number}
      */

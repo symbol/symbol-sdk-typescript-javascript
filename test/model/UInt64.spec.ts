@@ -122,4 +122,31 @@ describe('Uint64', () => {
             });
         });
     });
+
+    describe('toString', () => {
+        it('should be able to serialize to decimal notation with 2 values', () => {
+            const value = new UInt64([13, 12]);
+            expect(value.toString() === '51539607565').to.be.equal(true);
+        });
+
+        it('should be able to serialize to decimal notation with no higher value', () => {
+            const value = new UInt64([12, 0]);
+            expect(value.toString() === '12').to.be.equal(true);
+        });
+
+        it('should be able to serialize to decimal notation with no lower value', () => {
+            const value = new UInt64([0, 12]);
+            expect(value.toString() === '51539607552').to.be.equal(true);
+        });
+
+        it('should be able to serialize to decimal notation with an explicit radix', () => {
+            const value = new UInt64([13, 12]);
+            expect(value.toString(10) === '51539607565').to.be.equal(true);
+        });
+
+        it('should be able to serialize to binary notation', () => {
+            const value = new UInt64([13, 12]);
+            expect(value.toString(2) === '110000000000000000000000000000001101').to.be.equal(true);
+        });
+    });
 });
