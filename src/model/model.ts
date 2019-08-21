@@ -56,6 +56,7 @@ export * from './mosaic/NetworkCurrencyMosaic';
 export * from './mosaic/NetworkHarvestMosaic';
 export * from './mosaic/MosaicNames';
 export * from './mosaic/MosaicPropertyType';
+export * from './mosaic/MosaicRestrictionType';
 
 // Namespace
 export * from '../service/Namespace';
