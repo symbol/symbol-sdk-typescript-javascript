@@ -10,10 +10,10 @@
 
 <script lang="ts">
     import echarts from 'echarts'
-    import {copyTxt} from '@/core/utils/utils'
-   import {Message} from "@/config/index"
+    import {copyTxt} from '@/core/utils/utils.ts'
+   import {Message} from "@/config/index.ts"
     import {Component, Vue} from 'vue-property-decorator'
-    import {multisigApi} from '@/core/api/multisigApi'
+    import {multisigApi} from '@/core/api/multisigApi.ts'
     import multisignSelfIcon from '@/common/img/service/multisig/multisignSelfIcon.png'
     import multisignCosignerIcon from '@/common/img/service/multisig/multisignCosignerIcon.png'
     import multisignMultisignerIcon from '@/common/img/service/multisig/multisignMultisignerIcon.png'

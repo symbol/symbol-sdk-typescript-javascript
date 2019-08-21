@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-    import {MultisigMapTs} from './MultisigMapTs'
+    import {MultisigMapTs} from '@/views/service/multisig/multisig-functions/multisig-map/MultisigMapTs.ts'
 
     export default class MultisigMap extends MultisigMapTs {
 

@@ -1,7 +1,8 @@
-import {Message} from "@/config"
+import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {multisigApi} from '@/core/api/multisigApi'
-import {transactionApi} from '@/core/api/transactionApi'
+import {multisigApi} from '@/core/api/multisigApi.ts'
+import {transactionApi} from '@/core/api/transactionApi.ts'
+import {createBondedMultisigTransaction} from "@/core/utils/wallet.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     Account,
@@ -11,7 +12,6 @@ import {
     PublicAccount,
     ModifyMultisigAccountTransaction, Deadline, UInt64
 } from 'nem2-sdk';
-import {createBondedMultisigTransaction} from "@/core/utils/wallet";
 
 @Component({
     components: {
@@ -138,7 +138,8 @@ export class MultisigConversionTs extends Vue {
 
     getMultisigAccountList() {
         const that = this
-        const {address} = this.$store.state.account.wallet
+        if(!this.getWallet) return
+        const {address} = this.getWallet
         const {node} = this.$store.state.account
 
         multisigApi.getMultisigAccountInfo({

@@ -1,12 +1,11 @@
 import {Account} from "nem2-sdk"
-import {Message} from "@/config"
-import {formatAddress} from '@/core/utils/utils'
+import {Message, bandedNamespace as BandedNamespaceList} from "@/config/index.ts"
+import {formatAddress} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {namespaceApi} from "@/core/api/namespaceApi"
-import {transactionApi} from "@/core/api/transactionApi"
-import {bandedNamespace as BandedNamespaceList} from '@/config'
+import {namespaceApi} from "@/core/api/namespaceApi.ts"
+import {transactionApi} from "@/core/api/transactionApi.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {multisigApi} from "@/core/api/multisigApi";
+import {multisigApi} from "@/core/api/multisigApi.ts"
 
 @Component({
     components: {
@@ -203,6 +202,7 @@ export class SubNamespaceTs extends Vue {
 
     getMultisigAccountList() {
         const that = this
+        if(!this.$store.state.account.wallet) return
         const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
         multisigApi.getMultisigAccountInfo({

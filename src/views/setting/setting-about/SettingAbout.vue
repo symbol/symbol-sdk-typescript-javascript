@@ -9,7 +9,8 @@
 </template>
 
 <script lang="ts">
-    import {SettingAboutTs} from './SettingAboutTs'
+    // @ts-ignore
+    import {SettingAboutTs} from '@/views/setting/setting-about/SettingAboutTs.ts'
 
     export default class SettingAbout extends SettingAboutTs {
 

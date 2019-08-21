@@ -58,7 +58,8 @@
 </template>
 
 <script lang="ts">
-    import {WalletImportMnemonicTs} from './WalletImportMnemonicTs'
+    //@ts-ignore
+    import {WalletImportMnemonicTs} from '@/views/wallet/wallet-import-mnemonic/WalletImportMnemonicTs.ts'
 
     export default class WalletImportMnemonic extends WalletImportMnemonicTs {
 

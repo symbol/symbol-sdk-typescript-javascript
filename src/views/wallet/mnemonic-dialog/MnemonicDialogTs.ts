@@ -1,7 +1,7 @@
-import {walletApi} from "@/core/api/walletApi"
-import {decryptKey} from "@/core/utils/wallet"
-import {hexCharCodeToStr} from '@/core/utils/utils'
-import {randomMnemonicWord} from "@/core/utils/hdWallet"
+import {walletApi} from "@/core/api/walletApi.ts"
+import {decryptKey} from "@/core/utils/wallet.ts"
+import {hexCharCodeToStr} from '@/core/utils/utils.ts'
+import {randomMnemonicWord} from "@/core/utils/hdWallet.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 @Component({

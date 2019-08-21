@@ -1,7 +1,7 @@
-import {Message} from "@/config"
-import {walletApi} from "@/core/api/walletApi"
+import {Message} from "@/config/index.ts"
+import {walletApi} from "@/core/api/walletApi.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {decryptKey, encryptKey, saveLocalWallet} from "@/core/utils/wallet";
+import {decryptKey, encryptKey, saveLocalWallet} from "@/core/utils/wallet.ts"
 
 @Component
 export class WalletUpdatePasswordTs extends Vue {

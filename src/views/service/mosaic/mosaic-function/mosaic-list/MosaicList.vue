@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-    import {MosaicListTs} from './MosaicListTs'
+    import {MosaicListTs} from '@/views/service/mosaic/mosaic-function/mosaic-list/MosaicListTs.ts'
 
     export default class MosaicList extends MosaicListTs {
 

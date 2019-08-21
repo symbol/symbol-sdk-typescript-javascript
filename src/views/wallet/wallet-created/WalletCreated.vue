@@ -80,7 +80,8 @@
 
 <script lang="ts">
     import './WalletCreated.less'
-    import {WalletCreatedTs} from './WalletCreatedTs'
+    //@ts-ignore
+    import {WalletCreatedTs} from '@/views/wallet/wallet-created/WalletCreatedTs.ts'
 
     export default class WalletCreated extends WalletCreatedTs {
 

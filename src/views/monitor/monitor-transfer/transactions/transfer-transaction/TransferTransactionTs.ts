@@ -1,9 +1,9 @@
-import {Message} from "@/config"
-import {mosaicApi} from '@/core/api/mosaicApi'
-import {accountApi} from '@/core/api/accountApi'
-import { Account, Mosaic, MosaicId, UInt64} from 'nem2-sdk'
+import {Message} from "@/config/index.ts"
+import {mosaicApi} from '@/core/api/mosaicApi.ts'
+import {accountApi} from '@/core/api/accountApi.ts'
+import {Account, Mosaic, MosaicId, UInt64} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {transactionApi} from '@/core/api/transactionApi'
+import {transactionApi} from '@/core/api/transactionApi.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
 
@@ -192,6 +192,9 @@ export default class TransferTransactionTs extends Vue {
     }
 
     initData() {
+        if (!this.getWallet) {
+            return
+        }
         this.accountPublicKey = this.getWallet.publicKey
         this.accountAddress = this.getWallet.address
         this.node = this.$store.state.account.node
@@ -224,7 +227,7 @@ export default class TransferTransactionTs extends Vue {
     onFormItemChange() {
         const {address, mosaic, amount, fee} = this.formItem
         // isCompleteForm
-        this.isCompleteForm = address !== '' && mosaic !== '' && parseInt(amount.toString()) >= 0 && fee  >= 0
+        this.isCompleteForm = address !== '' && mosaic !== '' && parseInt(amount.toString()) >= 0 && fee >= 0
     }
 
     created() {

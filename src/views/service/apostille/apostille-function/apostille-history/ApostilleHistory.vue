@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-    import {ApostilleHistoryTs} from './ApostilleHistoryTs'
+    import {ApostilleHistoryTs} from '@/views/service/apostille/apostille-function/apostille-history/ApostilleHistoryTs.ts'
 
     export default class ApostilleHistory extends ApostilleHistoryTs {
 

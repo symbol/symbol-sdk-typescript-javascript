@@ -1,8 +1,8 @@
 import {UInt64} from 'nem2-sdk'
-import {Message} from "@/config"
-import {localRead, localSave} from '@/core/utils/utils'
+import {Message} from "@/config/index.ts"
+import {localRead, localSave} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
-import {decryptKey, encryptKey} from "@/core/utils/wallet"
+import {decryptKey, encryptKey} from "@/core/utils/wallet.ts"
 
 @Component
 export class SettingLockTs extends Vue {

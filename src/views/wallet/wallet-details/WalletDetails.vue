@@ -4,17 +4,17 @@
       <Row>
         <Col span="18">
           <h6>{{$t('Basic_information')}}</h6>
-          <div class="walletInfo">
+          <div v-if="getWallet" class="walletInfo">
             <p>
               <span class="tit">{{$t('Wallet_type')}}</span>
-              <span class="walletType">{{getWallet.isMultisig ? $t('Public_account'):$t('Private_account')}}</span>
+              <span class="walletType" v-if="getWallet">{{getWallet.isMultisig ? $t('Public_account'):$t('Private_account')}}</span>
             </p>
             <p>
               <span class="tit">{{$t('Wallet_name')}}</span>
-              <span class="walletName">{{getWallet.name}}</span>
+              <span class="walletName" v-if="getWallet">{{getWallet.name}}</span>
               <!--              <i class="updateWalletName"><img src="@/common/img/wallet/editIcon.png"></i>-->
             </p>
-            <p>
+            <p >
               <span class="tit">{{$t('Wallet_address')}}</span>
               <span class="walletAddress">{{getWallet.address}}</span>
               <i class="copyIcon" @click="copy(getWallet.address)"><img
@@ -62,7 +62,6 @@
           <li :class="['left',functionShowList[1]?'active':''] " @click="showFunctionIndex(1)">
             {{$t('Filter_management')}}
           </li>
-          <!--          <li class="left">{{$t('Subaddress_management')}}</li>-->
           <li :class="['left',functionShowList[2]?'active':''] " @click="showFunctionIndex(2)">
             {{$t('Modify_the_private_key_wallet_password')}}
           </li>
@@ -82,7 +81,8 @@
 </template>
 
 <script lang="ts">
-    import {WalletDetailsTs} from './WalletDetailsTs'
+    //@ts-ignore
+    import {WalletDetailsTs} from '@/views/wallet/wallet-details/WalletDetailsTs.ts'
 
     export default class WalletDetails extends WalletDetailsTs {
 

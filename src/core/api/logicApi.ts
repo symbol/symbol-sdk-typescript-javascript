@@ -1,6 +1,6 @@
-import {WebClient} from "@/core/utils/web"
-import {AppConfig} from "@/config"
-import {api} from "@/core/api/apis";
+import {WebClient} from "@/core/utils/web.ts"
+import {AppConfig} from "@/config/index.ts"
+import {api} from "@/core/api/apis.d.ts";
 
 export const market: api.market = {
 

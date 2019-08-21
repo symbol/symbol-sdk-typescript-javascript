@@ -128,8 +128,8 @@
 </template>
 
 <script lang="ts">
-
-    import {MonitorDashBoardTs} from './MonitorDashBoardTs'
+    // @ts-ignore
+    import {MonitorDashBoardTs} from '@/views/monitor/monitor-dashboard/MonitorDashBoardTs.ts'
 
     export default class DashBoard extends MonitorDashBoardTs {
 

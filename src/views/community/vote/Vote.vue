@@ -163,7 +163,8 @@
 </template>
 
 <script lang="ts">
-    import {VoteTs} from './VoteTs'
+    // @ts-ignore
+    import {VoteTs} from '@/views/community/vote/VoteTs.ts'
 
     export default class InputLock extends VoteTs {
 

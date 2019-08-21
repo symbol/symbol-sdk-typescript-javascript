@@ -13,9 +13,9 @@ import {
     MosaicId,
     ModifyAccountPropertyAddressTransaction
 } from 'nem2-sdk'
-import {sdkApi} from "@/core/api/apis";
-import {filter, mergeMap} from "rxjs/operators";
-import Vue from '../../main'
+import {sdkApi} from "@/core/api/apis.d.ts"
+import {filter, mergeMap} from "rxjs/operators"
+import Vue from '@/main.ts'
 
 export const transactionApi: sdkApi.transaction = {
 

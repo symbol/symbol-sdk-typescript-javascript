@@ -19,7 +19,8 @@
 </template>
 
 <script lang="ts">
-    import {ApostilleTs} from './ApostilleTs'
+    // @ts-ignore
+    import {ApostilleTs} from '@/views/service/apostille/ApostilleTs.ts'
 
     export default class Apostille extends ApostilleTs {
 

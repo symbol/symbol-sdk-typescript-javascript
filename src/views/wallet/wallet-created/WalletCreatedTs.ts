@@ -1,10 +1,10 @@
 
-import {Message} from "@/config"
+import {Message} from "@/config/index.ts"
 import {NetworkType} from "nem2-sdk"
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {strToHexCharCode} from '@/core/utils/utils'
-import {createAccount, randomMnemonicWord} from "@/core/utils/hdWallet";
-import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet";
+import {strToHexCharCode} from '@/core/utils/utils.ts'
+import {createAccount, randomMnemonicWord} from "@/core/utils/hdWallet.ts"
+import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet.ts"
 
 @Component
 export class WalletCreatedTs extends Vue{

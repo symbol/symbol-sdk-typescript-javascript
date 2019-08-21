@@ -23,7 +23,8 @@
 </template>
 
 <script lang="ts">
-    import {SettingPanelTs} from './SettingPanelTs'
+    //@ts-ignore
+    import {SettingPanelTs} from '@/views/setting/setting-panel/SettingPanelTs.ts'
 
     export default class SettingPanel extends SettingPanelTs {
 

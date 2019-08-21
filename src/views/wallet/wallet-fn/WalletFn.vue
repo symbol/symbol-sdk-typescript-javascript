@@ -22,7 +22,8 @@
 
 <script lang="ts">
     import './WalletFn.less'
-    import {WalletFnTs} from './WalletFnTs'
+    //@ts-ignore
+    import {WalletFnTs} from '@/views/wallet/wallet-fn/WalletFnTs.ts'
 
     export default class WalletFn extends WalletFnTs {
 

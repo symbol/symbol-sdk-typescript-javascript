@@ -1,13 +1,13 @@
-import {Message} from "@/config"
+import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {Account, NetworkType} from "nem2-sdk"
-import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet";
+import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet.ts"
 import {
     ALLOWED_SPECIAL_CHAR,
     MAX_PASSWORD_LENGTH,
     MIN_PASSWORD_LENGTH,
     passwordValidator
-} from "@/core/utils/validation";
+} from "@/core/utils/validation.ts";
 
 @Component
 export class WalletImportPrivatekeyTs extends Vue {

@@ -10,7 +10,7 @@
       <div class="namespace_transaction">
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>
-          <span class="value" v-if="typeList[0].isSelected">{{formatAddress(getWallet.address)}}</span>
+          <span class="value" v-if="typeList[0].isSelected &&getWallet">{{formatAddress(getWallet.address)}}</span>
           <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="multisigPublickey"
                   class="select">
             <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">{{ item.label }}
@@ -94,7 +94,8 @@
 </template>
 
 <script lang="ts">
-    import {SubNamespaceTs} from './SubNamespaceTs'
+    // @ts-ignore
+    import {SubNamespaceTs} from '@/views/service/namespace/namespace-function/sub-namespace/SubNamespaceTs.ts'
 
     export default class SubNamespace extends SubNamespaceTs {
 

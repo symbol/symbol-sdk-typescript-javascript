@@ -37,7 +37,8 @@
 
 <script lang="ts">
     import "./DeleteWalletCheck.less"
-    import {DeleteWalletCheckTs} from './DeleteWalletCheckTs'
+    //@ts-ignore
+    import {DeleteWalletCheckTs} from '@/views/wallet/wallet-switch/delete-wallet-check/DeleteWalletCheckTs.ts'
 
     /**
      @Prop: showCheckPWDialog

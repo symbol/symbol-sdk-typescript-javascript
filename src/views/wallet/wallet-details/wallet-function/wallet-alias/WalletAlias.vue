@@ -82,7 +82,8 @@
 </template>
 
 <script lang="ts">
-    import {WalletAliasTs} from './WalletAliasTs'
+    //@ts-ignore
+    import {WalletAliasTs} from '@/views/wallet/wallet-details/wallet-function/wallet-alias/WalletAliasTs.ts'
 
     export default class WalletAlias extends WalletAliasTs {
 

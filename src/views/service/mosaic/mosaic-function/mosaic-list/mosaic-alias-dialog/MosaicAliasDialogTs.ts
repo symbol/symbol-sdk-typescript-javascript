@@ -1,11 +1,11 @@
-import {Message} from "@/config"
-import {walletApi} from "@/core/api/walletApi"
-import {namespaceApi} from "@/core/api/namespaceApi"
-import {transactionApi} from "@/core/api/transactionApi"
+import {Message} from "@/config/index.ts"
+import {walletApi} from "@/core/api/walletApi.ts"
+import {namespaceApi} from "@/core/api/namespaceApi.ts"
+import {transactionApi} from "@/core/api/transactionApi.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
-import {decryptKey} from "@/core/utils/wallet"
+import {decryptKey} from "@/core/utils/wallet.ts"
 
 @Component
 export class MosaicAliasDialogTs extends Vue {

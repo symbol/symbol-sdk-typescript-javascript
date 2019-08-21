@@ -1,11 +1,11 @@
 import './NamespaceEditDialog.less'
-import {Message} from "@/config"
+import {Message} from "@/config/index.ts"
 import {Account} from 'nem2-sdk'
-import {walletApi} from "@/core/api/walletApi"
-import {formatSeconds} from '@/core/utils/utils'
-import {transactionApi} from "@/core/api/transactionApi"
+import {walletApi} from "@/core/api/walletApi.ts"
+import {formatSeconds} from '@/core/utils/utils.ts'
+import {transactionApi} from "@/core/api/transactionApi.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {createRootNamespace, decryptKey} from "@/core/utils/wallet";
+import {createRootNamespace, decryptKey} from "@/core/utils/wallet.ts"
 
 @Component
 export class NamespaceEditDialogTs extends Vue {
@@ -20,22 +20,27 @@ export class NamespaceEditDialogTs extends Vue {
         password: ''
     }
 
-    @Prop()
+    @Prop({default: false})
     showNamespaceEditDialog: boolean
 
 
-    @Prop()
+    @Prop({
+        default: {
+            name: '',
+            duration: ''
+        }
+    })
     currentNamespace: any
 
-    get getWallet () {
+    get getWallet() {
         return this.$store.state.account.wallet
     }
 
-    get generationHash () {
+    get generationHash() {
         return this.$store.state.account.generationHash
     }
 
-    get node () {
+    get node() {
         return this.$store.state.account.node
     }
 
@@ -61,6 +66,7 @@ export class NamespaceEditDialogTs extends Vue {
         }
         this.durationIntoDate = Number(formatSeconds(duration * 12))
     }
+
     checkInfo() {
         const {namespace} = this
 
@@ -84,13 +90,14 @@ export class NamespaceEditDialogTs extends Vue {
         }
         return true
     }
+
     checkNamespaceForm() {
         if (!this.isCompleteForm) return
         if (!this.checkInfo()) return
         this.checkPrivateKey(decryptKey(this.getWallet, this.namespace.password))
     }
 
-    checkPrivateKey (DeTxt) {
+    checkPrivateKey(DeTxt) {
         const that = this
         walletApi.getWallet({
             name: this.getWallet.name,
@@ -104,12 +111,13 @@ export class NamespaceEditDialogTs extends Vue {
             })
         })
     }
-    async updateMosaic (key) {
-        const that =this
+
+    async updateMosaic(key) {
+        const that = this
         let transaction
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
         await createRootNamespace(this.currentNamespace.name, this.namespace.duration,
-            this.getWallet.networkType, this.namespace.fee).then((rootNamespaceTransaction)=>{
+            this.getWallet.networkType, this.namespace.fee).then((rootNamespaceTransaction) => {
             transaction = rootNamespaceTransaction
             const signature = account.sign(transaction, this.generationHash)
             transactionApi.announce({signature, node: this.node}).then((announceResult) => {
@@ -125,12 +133,12 @@ export class NamespaceEditDialogTs extends Vue {
         })
     }
 
-    updatedNamespace () {
+    updatedNamespace() {
         this.show = false
         this.namespaceEditDialogCancel()
     }
 
-    initForm () {
+    initForm() {
         this.namespace = {
             name: '',
             duration: 0,
@@ -147,8 +155,8 @@ export class NamespaceEditDialogTs extends Vue {
 
     @Watch('namespace', {immediate: true, deep: true})
     onFormItemChange() {
-        const {name, duration,fee, password} = this.namespace
+        const {name, duration, fee, password} = this.namespace
         // isCompleteForm
-        this.isCompleteForm = name !== ''&& duration > 0 && fee > 0 && password !== ''
+        this.isCompleteForm = name !== '' && duration > 0 && fee > 0 && password !== ''
     }
 }

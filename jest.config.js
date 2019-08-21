@@ -1,4 +1,6 @@
+const path = require('path')
 module.exports = {
+  rootDir: path.join(__dirname),
   moduleFileExtensions: [
     'js',
     'jsx',
@@ -16,13 +18,14 @@ module.exports = {
     '/node_modules/'
   ],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "\\.(css|less)$": "identity-obj-proxy"
   },
   snapshotSerializers: [
     'jest-serializer-vue'
   ],
   testMatch: [
-    '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'
+    '**/__tests__/**/*.(js|jsx|ts|tsx)'
   ],
   testURL: 'http://localhost/',
   watchPlugins: [

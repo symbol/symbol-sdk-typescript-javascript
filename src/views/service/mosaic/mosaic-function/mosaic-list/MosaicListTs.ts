@@ -1,6 +1,6 @@
 import {MosaicId} from "nem2-sdk"
-import {mosaicApi} from '@/core/api/mosaicApi'
-import {accountApi} from '@/core/api/accountApi'
+import {mosaicApi} from '@/core/api/mosaicApi.ts'
+import {accountApi} from '@/core/api/accountApi.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
@@ -93,6 +93,9 @@ export class MosaicListTs extends Vue {
 
 
     initData() {
+        if (!this.getWallet) {
+            return
+        }
         this.accountPublicKey = this.getWallet.publicKey
         this.accountAddress = this.getWallet.address
         this.node = this.$store.state.account.node

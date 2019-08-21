@@ -52,7 +52,8 @@
 
 <script lang="ts">
     import './WalletSwitch.less'
-    import {WalletSwitchTs} from './WalletSwitchTs'
+    //@ts-ignore
+    import {WalletSwitchTs} from '@/views/wallet/wallet-switch/WalletSwitchTs.ts'
 
     export default class WalletSwitch extends WalletSwitchTs {
 

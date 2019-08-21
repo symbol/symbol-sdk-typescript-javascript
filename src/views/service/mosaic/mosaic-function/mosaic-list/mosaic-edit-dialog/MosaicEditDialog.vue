@@ -65,7 +65,8 @@
 
 <script lang="ts">
     import './MosaicEditDialog.less'
-    import {MosaicEditDialogTs} from '../mosaic-edit-dialog/MosaicEditDialogTs'
+    // @ts-ignore
+    import {MosaicEditDialogTs} from '@/views/service/mosaic/mosaic-function/mosaic-list/mosaic-edit-dialog/MosaicEditDialogTs.ts'
 
     export default class MosaicEditDialog extends MosaicEditDialogTs {
 

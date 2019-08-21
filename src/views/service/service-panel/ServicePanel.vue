@@ -11,7 +11,8 @@
 
 <script lang="ts">
     import './ServicePanel.less'
-    import {ServicePanelTs} from './ServicePanelTs'
+    // @ts-ignore
+    import {ServicePanelTs} from '@/views/service/service-panel/ServicePanelTs.ts'
 
     export default class ServicePanel extends ServicePanelTs {
 

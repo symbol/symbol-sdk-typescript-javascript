@@ -12,6 +12,7 @@ export const multisigApi: sdkApi.multisig = {
 
     getMultisigAccountInfo: async (params) => {
         const {address, node} = params
+        if (!address) return
         const accountHttp = new AccountHttp(node)
         const multisigInfo = await accountHttp.getMultisigAccountInfo(Address.createFromRawAddress(address)).toPromise();
         return {

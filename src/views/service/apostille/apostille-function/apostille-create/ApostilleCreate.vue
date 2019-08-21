@@ -119,7 +119,7 @@
 </template>
 
 <script lang="ts">
-    import {ApostilleCreateTs} from './ApostilleCreateTs'
+    import {ApostilleCreateTs} from '@/views/service/apostille/apostille-function/apostille-create/ApostilleCreateTs.ts'
 
     export default class InputLock extends ApostilleCreateTs {
 

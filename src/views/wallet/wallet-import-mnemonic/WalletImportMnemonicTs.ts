@@ -1,15 +1,15 @@
-import {Message} from "@/config"
+import {Message} from "@/config/index.ts"
 import {NetworkType} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
-import {strToHexCharCode} from '@/core/utils/utils'
-import {createAccount} from "@/core/utils/hdWallet";
-import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet";
+import {strToHexCharCode} from '@/core/utils/utils.ts'
+import {createAccount} from "@/core/utils/hdWallet.ts"
+import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet.ts"
 import {
     ALLOWED_SPECIAL_CHAR,
     MAX_PASSWORD_LENGTH,
     MIN_PASSWORD_LENGTH,
     passwordValidator
-} from "@/core/utils/validation";
+} from "@/core/utils/validation.ts";
 
 @Component
 export class WalletImportMnemonicTs extends Vue {

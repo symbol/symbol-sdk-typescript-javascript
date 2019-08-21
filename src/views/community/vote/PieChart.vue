@@ -12,11 +12,12 @@
     export default class PieChart extends Vue {
         pie: any = {};
         option = {
+            font: {},
             tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b} : {c} ({d}%)",
             },
-            color:['#EC5447','#F1C850'],
+            color: ['#EC5447', '#F1C850'],
             series: [
                 {
                     name: 'vote',
@@ -31,8 +32,8 @@
                             shadowOffsetX: 0,
                             shadowColor: 'rgba(0, 0, 0, 0.5)'
                         },
-                        borderWidth:2,
-                        borderColor:'#fff',
+                        borderWidth: 2,
+                        borderColor: '#fff',
                     }
                 }
             ]
@@ -42,9 +43,9 @@
         currentVote: any
 
         mounted() {
-            this.pie = echarts.init(this.$refs.pie);
+            this.pie = echarts.init(this.$refs.pie)
+            if (this.$refs.pie) return
             this.pie.setOption(this.option)
-
         }
 
         @Watch('currentVote')
@@ -52,9 +53,6 @@
             this.option.series[0].data = this.currentVote.selctions
             this.pie = echarts.init(this.$refs.pie);
             this.pie.setOption(this.option)
-        }
-
-        created(){
         }
     }
 </script>

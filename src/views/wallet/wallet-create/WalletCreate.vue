@@ -43,7 +43,8 @@
 
 <script lang="ts">
     import './WalletCreate.less'
-    import {WalletCreateTs} from './WalletCreateTs'
+    //@ts-ignore
+    import {WalletCreateTs} from '@/views/wallet/wallet-create/WalletCreateTs.ts'
 
     export default class WalletCreate extends WalletCreateTs {
 

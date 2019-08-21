@@ -45,7 +45,8 @@
 </template>
 
 <script lang="ts">
-    import {NamespaceListTs} from './NamespaceListTs'
+    // @ts-ignore
+    import {NamespaceListTs} from '@/views/service/namespace/namespace-function/namespace-list/NamespaceListTs.ts'
 
     export default class NamespaceList extends NamespaceListTs {
 

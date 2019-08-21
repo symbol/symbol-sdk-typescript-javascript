@@ -1,14 +1,14 @@
 import axios from 'axios'
-import routers from '@/router/routers'
-import {Message} from "@/config"
-import {listenerApi} from "@/core/api/listenerApi"
-import {blockchainApi} from '@/core/api/blockchainApi'
+import routers from '@/router/routers.ts'
+import {Message} from "@/config/index.ts"
+import {listenerApi} from "@/core/api/listenerApi.ts"
+import {blockchainApi} from '@/core/api/blockchainApi.ts'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
 import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk"
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
-import {localSave, localRead} from "@/core/utils/utils"
-import {Component, Vue, Watch} from 'vue-property-decorator/lib/vue-property-decorator'
-import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/core/utils/electron'
+import {localSave, localRead} from "@/core/utils/utils.ts"
+import {Component, Vue, Watch} from 'vue-property-decorator'
+import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/core/utils/electron.ts'
 
 @Component
 export class MenuBarTs extends Vue {

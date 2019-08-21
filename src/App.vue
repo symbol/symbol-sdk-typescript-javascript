@@ -6,12 +6,12 @@
 
 <script lang="ts">
     import 'animate.css'
-    import {localRead} from '@/core/utils/utils'
+    import {localRead} from '@/core/utils/utils.ts'
     import {PublicAccount, Listener} from "nem2-sdk"
-    import {listenerApi} from '@/core/api/listenerApi'
+    import {checkInstall} from '@/core/utils/electron.ts'
+    import {accountApi} from '@/core/api/accountApi.ts'
+    import {listenerApi} from '@/core/api/listenerApi.ts'
     import {Component, Vue} from 'vue-property-decorator'
-    import {accountApi} from '@/core/api/accountApi'
-    import {checkInstall} from '@/core/utils/electron'
 
     @Component
     export default class App extends Vue {
@@ -81,6 +81,9 @@
         }
 
         initData() {
+            if(!this.$store){
+                return
+            }
             this.node = this.$store.state.account.node
             this.$Notice.config({
                 duration: 4
@@ -88,6 +91,9 @@
         }
 
         chainListner() {
+            if(!this.node){
+                return
+            }
             const node = this.node.replace('http', 'ws')
             const listener = new Listener(node, WebSocket)
             listenerApi.newBlock({

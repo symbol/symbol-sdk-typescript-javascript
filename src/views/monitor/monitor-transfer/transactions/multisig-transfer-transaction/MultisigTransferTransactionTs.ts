@@ -1,8 +1,8 @@
-import {Message} from "@/config"
-import {accountApi} from '@/core/api/accountApi'
-import {multisigApi} from '@/core/api/multisigApi'
+import {Message} from "@/config/index.ts"
+import {accountApi} from '@/core/api/accountApi.ts'
+import {multisigApi} from '@/core/api/multisigApi.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {transactionApi} from '@/core/api/transactionApi'
+import {transactionApi} from '@/core/api/transactionApi.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     Account,
@@ -15,7 +15,7 @@ import {
     Deadline,
     Listener,
 } from 'nem2-sdk'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet";
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet.ts"
 
 @Component({
     components: {
@@ -72,8 +72,8 @@ export class MultisigTransferTransactionTs extends Vue {
     }
 
     checkInfo() {
-        if(!this.isCompleteForm) return
-        if(!this.checkForm()) return
+        if (!this.isCompleteForm) return
+        if (!this.checkForm()) return
         this.showDialog()
 
     }
@@ -148,7 +148,8 @@ export class MultisigTransferTransactionTs extends Vue {
 
     getMultisigAccountList() {
         const that = this
-        const {address} = this.$store.state.account.wallet
+        if (!this.getWallet) return
+        const {address} = this.getWallet
         const {node} = this.$store.state.account
 
         multisigApi.getMultisigAccountInfo({
@@ -258,6 +259,7 @@ export class MultisigTransferTransactionTs extends Vue {
     }
 
     initData() {
+        if (!this.getWallet) return
         this.accountPublicKey = this.getWallet.publicKey
         this.accountAddress = this.getWallet.address
         this.node = this.$store.state.account.node
@@ -307,8 +309,9 @@ export class MultisigTransferTransactionTs extends Vue {
         const {address, mosaic, amount, bondedFee, lockFee, aggregateFee, multisigPublickey} = this.formItem
         // isCompleteForm
         this.isCompleteForm = address !== '' && mosaic !== '' && parseInt(amount.toString()) >= 0 && multisigPublickey !== '' &&
-            bondedFee > 0 && lockFee > 0 && aggregateFee  > 0
+            bondedFee > 0 && lockFee > 0 && aggregateFee > 0
     }
+
     created() {
         this.initData()
         this.getMultisigAccountList()

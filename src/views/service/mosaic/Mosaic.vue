@@ -18,8 +18,9 @@
 </template>
 
 <script lang="ts">
-    import "./Mosaic.less";
-    import {MosaicTs} from './MosaicTs'
+    import "./Mosaic.less"
+    // @ts-ignore
+    import {MosaicTs} from '@/views/service/mosaic/MosaicTs.ts'
 
     export default class Mosaic extends MosaicTs {
 

@@ -15,7 +15,8 @@
 
 <script lang="ts">
     import './ServiceSwitch.less'
-    import {ServiceSwitchTs} from './ServiceSwitchTs'
+    // @ts-ignore
+    import {ServiceSwitchTs} from '@/views/service/service-switch/ServiceSwitchTs.ts'
 
     export default class ServiceSwitch extends ServiceSwitchTs {
 

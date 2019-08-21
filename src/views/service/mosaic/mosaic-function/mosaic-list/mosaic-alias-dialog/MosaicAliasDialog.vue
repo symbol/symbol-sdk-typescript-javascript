@@ -44,7 +44,8 @@
 
 <script lang="ts">
     import './MosaicAliasDialog.less'
-    import {MosaicAliasDialogTs} from './MosaicAliasDialogTs'
+    // @ts-ignore
+    import {MosaicAliasDialogTs} from '@/views/service/mosaic/mosaic-function/mosaic-list/mosaic-alias-dialog/MosaicAliasDialogTs.ts'
 
     export default class MosaicAliasDialog extends MosaicAliasDialogTs {
 

@@ -56,7 +56,8 @@
 </template>
 
 <script lang="ts">
-    import {SettingNetworkTs} from './SettingNetworkTs'
+    //@ts-ignore
+    import {SettingNetworkTs} from '@/views/setting/setting-network/SettingNetworkTs.ts'
 
     export default class SettingNetwork extends SettingNetworkTs {
 

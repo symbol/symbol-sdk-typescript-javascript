@@ -138,7 +138,8 @@
 </template>
 
 <script lang="ts">
-    import {MonitorMarketTs} from './MonitorMarketTs'
+    // @ts-ignore
+    import {MonitorMarketTs} from '@/views/monitor/monitor-market/MonitorMarketTs.ts'
 
     export default class MonitorMarket extends MonitorMarketTs {
 

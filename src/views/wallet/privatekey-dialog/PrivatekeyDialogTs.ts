@@ -1,8 +1,7 @@
-import {Crypto} from 'nem2-sdk'
 import {QRCodeGenerator} from 'nem2-qr-library'
-import {walletApi} from "@/core/api/walletApi"
+import {walletApi} from "@/core/api/walletApi.ts"
+import {decryptKey} from "@/core/utils/wallet.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {decryptKey} from "@/core/utils/wallet";
 
 @Component
 export class PrivatekeyDialogTs extends Vue {

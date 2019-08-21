@@ -23,7 +23,8 @@
 </template>
 
 <script lang="ts">
-    import {MonitorTransferTs} from './MonitorTransferTs'
+    // @ts-ignore
+    import {MonitorTransferTs} from '@/views/monitor/monitor-transfer/MonitorTransferTs.ts'
 
     export default class MonitorTransfer extends MonitorTransferTs {
 

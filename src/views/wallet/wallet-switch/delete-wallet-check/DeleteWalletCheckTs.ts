@@ -1,6 +1,6 @@
 import {Crypto} from 'nem2-sdk'
-import {Message} from "@/config"
-import {walletApi} from "@/core/api/walletApi"
+import {Message} from "@/config/index.ts"
+import {walletApi} from "@/core/api/walletApi.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 @Component

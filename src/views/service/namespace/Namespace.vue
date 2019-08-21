@@ -21,7 +21,8 @@
 </template>
 
 <script lang="ts">
-    import {NamespaceTs} from './NamespaceTs'
+    // @ts-ignore
+    import {NamespaceTs} from '@/views/service/namespace/NamespaceTs.ts'
 
     export default class Namespace extends NamespaceTs {
 

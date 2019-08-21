@@ -78,7 +78,8 @@
 </template>
 
 <script lang="ts">
-    import {MenuBarTs} from './MenuBarTs'
+    // @ts-ignore
+    import {MenuBarTs} from '@/common/vue/menu-bar/MenuBarTs.ts'
 
     export default class MenuBar extends MenuBarTs {
 

@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-    import TransferTransactionTs from './TransferTransactionTs'
+    import TransferTransactionTs from '@/views/monitor/monitor-transfer/transactions/transfer-transaction/TransferTransactionTs.ts'
 
     export default class TransferTransaction extends TransferTransactionTs {
 

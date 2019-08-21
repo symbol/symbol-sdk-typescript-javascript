@@ -1,12 +1,11 @@
-import {Message} from "@/config"
-import {multisigAccountInfo} from "@/core/utils/wallet"
-import {mosaicApi} from '@/core/api/mosaicApi'
-import {multisigApi} from '@/core/api/multisigApi'
-import {formatSeconds, formatAddress} from '@/core/utils/utils'
+import {Message} from "@/config/index.ts"
+import {multisigAccountInfo} from "@/core/utils/wallet.ts"
+import {mosaicApi} from '@/core/api/mosaicApi.ts'
+import {formatSeconds, formatAddress} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {transactionApi} from '@/core/api/transactionApi'
+import {transactionApi} from '@/core/api/transactionApi.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/utils/wallet'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/utils/wallet.ts'
 import {
     MosaicId,
     MosaicNonce,
@@ -353,7 +352,8 @@ export class MosaicTransactionTs extends Vue {
 
     getMultisigAccountList() {
         const that = this
-        const {address} = this.$store.state.account.wallet
+        if (!this.getWallet) return
+        const {address} = this.getWallet
         const {node} = this.$store.state.account
         const multisigInfo = multisigAccountInfo(address, node)
         const multisigPublickeyList = multisigInfo['multisigAccounts'] ? multisigInfo['multisigAccounts'].map((item) => {
@@ -394,6 +394,7 @@ export class MosaicTransactionTs extends Vue {
     }
 
     initData() {
+        if (!this.getWallet) return
         this.accountPublicKey = this.getWallet.publicKey
         this.accountAddress = this.getWallet.address
         this.node = this.$store.state.account.node

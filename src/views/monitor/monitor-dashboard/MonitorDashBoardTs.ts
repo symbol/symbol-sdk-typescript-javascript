@@ -1,13 +1,13 @@
-import {market} from "@/core/api/logicApi"
-import {KlineQuery} from "@/core/query/klineQuery"
+import {market} from "@/core/api/logicApi.ts"
+import {KlineQuery} from "@/core/query/klineQuery.ts"
 import {PublicAccount, NetworkType} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {blockchainApi} from '@/core/api/blockchainApi'
+import {blockchainApi} from '@/core/api/blockchainApi.ts'
 import LineChart from '@/common/vue/line-chart/LineChart.vue'
-import {transactionApi} from '@/core/api/transactionApi'
+import {transactionApi} from '@/core/api/transactionApi.ts'
 import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
-import {transactionFormat} from '@/core/utils/format'
-import {isRefreshData, localSave, localRead} from '@/core/utils/utils'
+import {transactionFormat} from '@/core/utils/format.ts'
+import {isRefreshData, localSave, localRead} from '@/core/utils/utils.ts'
 import dashboardBlockTime from '@/common/img/monitor/dash-board/dashboardBlockTime.png'
 import dashboardPublickey from '@/common/img/monitor/dash-board/dashboardPublickey.png'
 import dashboardBlockHeight from '@/common/img/monitor/dash-board/dashboardBlockHeight.png'
@@ -144,6 +144,7 @@ export class MonitorDashBoardTs extends Vue {
     refreshTransferTransactionList() {
         const that = this
         let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
+        if (!accountPublicKey || accountPublicKey.length < 64) return
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
         transactionApi.transactions({
             publicAccount,
@@ -161,6 +162,7 @@ export class MonitorDashBoardTs extends Vue {
     refreshReceiptList() {
         const that = this
         let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
+        if (!accountPublicKey || accountPublicKey.length < 64) return
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
         transactionApi.unconfirmedTransactions({
             publicAccount,
@@ -180,6 +182,9 @@ export class MonitorDashBoardTs extends Vue {
     }
 
     initData() {
+        if (!this.getWallet) {
+            return
+        }
         this.accountPrivateKey = this.getWallet.privateKey
         this.accountPublicKey = this.getWallet.publicKey
         this.accountAddress = this.getWallet.address

@@ -17,7 +17,8 @@
 </template>
 
 <script lang="ts">
-    import {MultisigTs} from './MultisigTs'
+    // @ts-ignore
+    import {MultisigTs} from '@/views/service/multisig/MultisigTs.ts'
 
     export default class Multisig extends MultisigTs {
 

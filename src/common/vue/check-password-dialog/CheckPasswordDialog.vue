@@ -38,7 +38,7 @@
               </Input>
             </FormItem>
             <FormItem>
-              <Button type="success" @click="checkPassword"> {{$t('confirm')}}</Button>
+              <Button type="success" @click="checkPassword">{{$t('confirm')}}</Button>
             </FormItem>
           </Form>
         </div>
@@ -50,7 +50,7 @@
 
 <script lang="ts">
     import "./CheckPasswordDialog.less"
-    import {CheckPasswordDialogTs} from './CheckPasswordDialogTs'
+    import {CheckPasswordDialogTs} from '@/common/vue/check-password-dialog/CheckPasswordDialogTs.ts'
 
     /**
      @Prop: showCheckPWDialog

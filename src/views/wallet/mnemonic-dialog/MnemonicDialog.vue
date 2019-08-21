@@ -122,7 +122,8 @@
 
 <script lang="ts">
     import './MnemonicDialog.less'
-    import {MnemonicDialogTs} from "./MnemonicDialogTs"
+    //@ts-ignore
+    import {MnemonicDialogTs} from "@/views/wallet/mnemonic-dialog/MnemonicDialogTs.ts"
 
     export default class MnemonicDialog extends MnemonicDialogTs {
 

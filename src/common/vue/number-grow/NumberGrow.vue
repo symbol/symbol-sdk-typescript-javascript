@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-    import {NumberGrowTs} from './NumberGrowTs'
+    import {NumberGrowTs} from '@/common/vue/number-grow/NumberGrowTs.ts'
 
     export default class NumberGrow extends NumberGrowTs {
 

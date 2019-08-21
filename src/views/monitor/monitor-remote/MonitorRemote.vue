@@ -109,7 +109,8 @@
 
 <script lang="ts">
     import "./MonitorRemote.less"
-    import {MonitorRemoteTs} from './MonitorRemoteTs'
+    // @ts-ignore
+    import {MonitorRemoteTs} from '@/views/monitor/monitor-remote/MonitorRemoteTs.ts'
 
     export default class MonitorRemote extends MonitorRemoteTs {
 

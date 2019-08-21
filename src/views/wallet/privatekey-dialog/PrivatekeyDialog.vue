@@ -93,7 +93,8 @@
 
 <script lang="ts">
     import './PrivatekeyDialog.less'
-    import {PrivatekeyDialogTs} from './PrivatekeyDialogTs'
+    //@ts-ignore
+    import {PrivatekeyDialogTs} from '@/views/wallet/privatekey-dialog/PrivatekeyDialogTs.ts'
 
     export default class PrivatekeyDialog extends PrivatekeyDialogTs {
 

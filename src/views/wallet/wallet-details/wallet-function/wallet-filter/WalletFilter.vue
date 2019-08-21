@@ -216,7 +216,8 @@
 
 <script lang="ts">
     import "./WalletFilter.less"
-    import {WalletFilterTs} from './WalletFilterTs'
+    //@ts-ignore
+    import {WalletFilterTs} from '@/views/wallet/wallet-details/wallet-function/wallet-filter/WalletFilterTs.ts'
 
     export default class WalletFilter extends WalletFilterTs {
 

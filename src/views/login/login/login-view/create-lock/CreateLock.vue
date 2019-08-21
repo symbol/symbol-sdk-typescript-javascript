@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-    import {CreateLockTs} from './CreateLockTs'
+    import {CreateLockTs} from '@/views/login/login/login-view/create-lock/CreateLockTs.ts'
 
     export default class InputLock extends CreateLockTs {
 

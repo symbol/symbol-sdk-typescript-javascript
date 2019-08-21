@@ -1,8 +1,8 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {Message} from "@/config"
+import {Message} from "@/config/index.ts"
 import {UInt64} from 'nem2-sdk'
-import {localRead} from '@/core/utils/utils'
-import {decryptKey} from "@/core/utils/wallet";
+import {localRead} from '@/core/utils/utils.ts'
+import {decryptKey} from "@/core/utils/wallet.ts";
 
 @Component
 export class InputLockTs extends Vue {
@@ -78,6 +78,6 @@ export class InputLockTs extends Vue {
 
     created() {
         this.$store.state.app.isInLoginPage = true
-        this.lockPromptText = JSON.parse(localRead('lock')).remindTxt
+        this.lockPromptText = JSON.parse(localRead('lock')?localRead('lock'):'{}').remindTxt
     }
 }
