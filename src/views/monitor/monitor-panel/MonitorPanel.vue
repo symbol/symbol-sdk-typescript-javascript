@@ -98,7 +98,8 @@
 </template>
 
 <script lang="ts">
-    import {MonitorPanelTs} from './MonitorPanelTs'
+    // @ts-ignore
+    import {MonitorPanelTs} from '@/views/monitor/monitor-panel/MonitorPanelTs.ts'
 
     export default class MonitorPanel extends MonitorPanelTs {
 

@@ -1,9 +1,9 @@
-import {Message, entityTypeList} from "@/config"
+import {walletApi} from "@/core/api/walletApi.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {creatrModifyAccountPropertyTransaction} from '@/core/utils/wallet'
-import {Account, Crypto, PropertyType} from "nem2-sdk";
-import {walletApi} from "@/core/api/walletApi";
-import {transactionApi} from "@/core/api/transactionApi";
+import {Account, Crypto, PropertyType} from "nem2-sdk"
+import {Message, entityTypeList} from "@/config/index.ts"
+import {transactionApi} from "@/core/api/transactionApi.ts"
+import {creatrModifyAccountPropertyTransaction} from '@/core/utils/wallet.ts'
 
 @Component
 export class WalletFilterTs extends Vue {
@@ -183,9 +183,11 @@ export class WalletFilterTs extends Vue {
     }
 
     getAccountProperties() {
+        if(!this.$store.state.account.wallet){
+            return
+        }
         const {node} = this.$store.state.account
         const {address} = this.$store.state.account.wallet
-        console.log(address.length)
         // TODO SDK has not been complete yet
         // getAccountProperties(address, node).then((accountPropertiesInfo) => {
         //     console.log(accountPropertiesInfo)

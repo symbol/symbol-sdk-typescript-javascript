@@ -1,6 +1,6 @@
-import {Message} from "@/config"
+import {Message} from "@/config/index.ts"
 import {QRCodeGenerator} from 'nem2-qr-library'
-import {copyTxt} from '@/core/utils/utils'
+import {copyTxt} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 
@@ -136,6 +136,7 @@ export class MonitorReceiptTs extends Vue {
     }
 
     initData() {
+        if (!this.getWallet) return
         this.accountPublicKey = this.getWallet.publicKey
         this.accountAddress = this.getWallet.address
         this.node = this.$store.state.account.node
@@ -143,6 +144,7 @@ export class MonitorReceiptTs extends Vue {
     }
 
     createQRCode() {
+        if (!this.getWallet) return
         const QRCodeData = {publickKey: this.accountPublicKey}
         const {networkType} = this.getWallet
         const {generationHash} = this.$store.state.account

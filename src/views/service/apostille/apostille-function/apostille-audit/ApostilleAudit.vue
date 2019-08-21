@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-    import {ApostilleAuditTs} from './ApostilleAuditTs'
+    import {ApostilleAuditTs} from '@/views/service/apostille/apostille-function/apostille-audit/ApostilleAuditTs.ts'
 
     export default class ApostilleAudit extends ApostilleAuditTs {
 

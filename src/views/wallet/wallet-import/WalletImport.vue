@@ -25,7 +25,8 @@
 
 <script lang="ts">
     import './WalletImport.less'
-    import {WalletImportTs} from './WalletImportTs'
+    //@ts-ignore
+    import {WalletImportTs} from '@/views/wallet/wallet-import/WalletImportTs.ts'
 
     export default class WalletImport extends WalletImportTs {
 

@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-    import {LineChartTs} from './LineChartTs'
+    import {LineChartTs} from '@/common/vue/line-chart/LineChartTs.ts'
 
     export default class LineChart extends LineChartTs {
     }

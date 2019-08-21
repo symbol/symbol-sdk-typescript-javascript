@@ -1,4 +1,5 @@
-import {Message} from "@/config"
+import {Message} from "@/config/index.ts"
+import {transactionApi} from "@/core/api/transactionApi.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
@@ -16,8 +17,7 @@ import {
     createBondedMultisigTransaction,
     createCompleteMultisigTransaction,
     multisigAccountInfo
-} from "@/core/utils/wallet";
-import {transactionApi} from "@/core/api/transactionApi";
+} from "@/core/utils/wallet.ts"
 
 @Component({
     components: {

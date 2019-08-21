@@ -1,4 +1,4 @@
-import {copyTxt} from '@/core/utils/utils'
+import {copyTxt} from '@/core/utils/utils.ts'
 import {QRCodeGenerator} from 'nem2-qr-library'
 import {Address} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
@@ -32,6 +32,7 @@ export class WalletDetailsTs extends Vue {
     }
 
     get getAddress() {
+        if (!this.getWallet) return
         return this.getWallet.address
     }
 
@@ -71,6 +72,7 @@ export class WalletDetailsTs extends Vue {
     }
 
     setQRCode(address) {
+        if (!address || address.length < 40) return
         const {networkType} = Address.createFromRawAddress(address)
         const {generationHash} = this.$store.state.account
         this.QRCode = QRCodeGenerator

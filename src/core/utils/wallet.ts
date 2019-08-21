@@ -1,4 +1,4 @@
-import {localRead, localSave} from "@/core/utils/utils"
+import {localRead, localSave} from "@/core/utils/utils.ts"
 
 import {
     Account,
@@ -8,15 +8,14 @@ import {
     NetworkType,
     PropertyType,
     Transaction,
-    UInt64,
     PropertyModificationType,
     MosaicId
 } from 'nem2-sdk'
-import {walletApi} from "@/core/api/walletApi";
-import {accountApi} from "@/core/api/accountApi";
-import {namespaceApi} from "@/core/api/namespaceApi";
-import {multisigApi} from "@/core/api/multisigApi";
-import {filterApi} from "@/core/api/filterApi";
+import {walletApi} from "@/core/api/walletApi.ts";
+import {accountApi} from "@/core/api/accountApi.ts";
+import {namespaceApi} from "@/core/api/namespaceApi.ts";
+import {multisigApi} from "@/core/api/multisigApi.ts";
+import {filterApi} from "@/core/api/filterApi.ts";
 
 export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) => {
     let localData: any[] = []

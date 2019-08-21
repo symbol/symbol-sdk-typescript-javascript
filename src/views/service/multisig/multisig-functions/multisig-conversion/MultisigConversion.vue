@@ -123,7 +123,7 @@
 </template>
 
 <script lang="ts">
-    import {MultisigConversionTs} from './MultisigConversionTs'
+    import {MultisigConversionTs} from '@/views/service/multisig/multisig-functions/multisig-conversion/MultisigConversionTs.ts'
 
     export default class MultisigConversion extends MultisigConversionTs {
 

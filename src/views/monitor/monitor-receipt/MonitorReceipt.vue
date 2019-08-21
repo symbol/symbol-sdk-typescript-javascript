@@ -50,7 +50,8 @@
 
 <script lang="ts">
     import "./MonitorReceipt.less"
-    import {MonitorReceiptTs} from './MonitorReceiptTs'
+    // @ts-ignore
+    import {MonitorReceiptTs} from '@/views/monitor/monitor-receipt/MonitorReceiptTs.ts'
 
     export default class MonitorReceipt extends MonitorReceiptTs {
 

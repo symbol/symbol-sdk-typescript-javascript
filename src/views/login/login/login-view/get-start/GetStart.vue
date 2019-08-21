@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-    import {GetStartTs} from './GetStartTs'
+    import {GetStartTs} from '@/views/login/login/login-view/get-start/GetStartTs.ts'
 
     export default class GetStart extends GetStartTs {
 

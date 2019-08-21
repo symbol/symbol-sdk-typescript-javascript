@@ -1,8 +1,8 @@
 import echarts from 'echarts'
-import {market} from "@/core/api/logicApi"
-import {KlineQuery} from "@/core/query/klineQuery"
+import {market} from "@/core/api/logicApi.ts"
+import {KlineQuery} from "@/core/query/klineQuery.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {localSave, localRead, isRefreshData, addZero, formatDate} from '@/core/utils/utils'
+import {localSave, localRead, isRefreshData, addZero, formatDate} from '@/core/utils/utils.ts'
 
 @Component
 export class LineChartByDayTs extends Vue {

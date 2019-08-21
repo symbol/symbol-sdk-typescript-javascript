@@ -32,7 +32,8 @@
 </template>
 
 <script lang="ts">
-    import {SettingNormalTs} from './SettingNormalTs'
+    //@ts-ignore
+    import {SettingNormalTs} from '@/views/setting/setting-normal/SettingNormalTs.ts'
 
     export default class SettingNormal extends SettingNormalTs {
 

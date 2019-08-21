@@ -1,10 +1,10 @@
-import {Message} from "@/config"
-import {walletApi} from "@/core/api/walletApi"
-import {mosaicApi} from "@/core/api/mosaicApi"
-import {transactionApi} from "@/core/api/transactionApi"
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Account, Crypto} from 'nem2-sdk'
-import {decryptKey} from "@/core/utils/wallet";
+import {Message} from "@/config/index.ts"
+import {walletApi} from "@/core/api/walletApi.ts"
+import {mosaicApi} from "@/core/api/mosaicApi.ts"
+import {decryptKey} from "@/core/utils/wallet.ts"
+import {transactionApi} from "@/core/api/transactionApi.ts"
+import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 @Component
 export class MosaicEditDialogTs extends Vue {
@@ -105,7 +105,7 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     decryptKey() {
-        this.checkPrivateKey(decryptKey( this.getWallet, this.mosaic.password))
+        this.checkPrivateKey(decryptKey(this.getWallet, this.mosaic.password))
     }
 
     checkPrivateKey(DeTxt) {

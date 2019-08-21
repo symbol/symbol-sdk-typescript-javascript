@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-    import {MultisigCosignTs} from './MultisigCosignTs'
+    import {MultisigCosignTs} from '@/views/service/multisig/multisig-functions/multisig-cosign/MultisigCosignTs.ts'
 
     export default class MultisigCosign extends MultisigCosignTs {
 

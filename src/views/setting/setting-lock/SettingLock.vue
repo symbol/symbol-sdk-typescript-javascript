@@ -35,7 +35,8 @@
 </template>
 
 <script lang="ts">
-    import {SettingLockTs} from './SettingLockTs'
+    // @ts-ignore
+    import {SettingLockTs} from '@/views/setting/setting-lock/SettingLockTs.ts'
 
     export default class SettingLock extends SettingLockTs {
 

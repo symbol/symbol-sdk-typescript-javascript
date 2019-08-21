@@ -11,7 +11,7 @@
       <div class="namespace_transaction">
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>
-          <span class="value" v-if="typeList[0].isSelected">{{formatAddress(getWallet.address)}}</span>
+          <span class="value" v-if="typeList[0].isSelected && getWallet">{{formatAddress(getWallet.address)}}</span>
           <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="form.multisigPublickey"
                   class="select">
             <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">{{ item.label }}
@@ -115,7 +115,8 @@
 </template>
 
 <script lang="ts">
-    import {RootNamespaceTs} from './RootNamespaceTs'
+    // @ts-ignore
+    import {RootNamespaceTs} from '@/views/service/namespace/namespace-function/root-namespace/RootNamespaceTs.ts'
 
     export default class RootNamespace extends RootNamespaceTs {
 

@@ -1,9 +1,8 @@
-const routers = [
+ const routers = [
     {
         path: '/',
         name: 'home',
         redirect: '/login',
-        // @ts-ignore
         component: () => import('@/common/vue/menu-bar/MenuBar.vue'),
         children: [
             {
@@ -11,7 +10,6 @@ const routers = [
                 name: 'monitorPanel',
                 redirect: '/dashBoard',
                 meta: {},
-                // @ts-ignore
                 component: () => import('@/views/monitor/monitor-panel/MonitorPanel.vue'),
                 children: [
                     {
@@ -191,4 +189,5 @@ const routers = [
     },
 ]
 
-export default routers
+
+ export default routers

@@ -42,7 +42,7 @@
 
 <script lang="ts">
     import './MosaicUnAliasDialog.less'
-    import {MosaicUnAliasDialogTs} from './MosaicUnAliasDialogTs'
+    import {MosaicUnAliasDialogTs} from '@/views/service/mosaic/mosaic-function/mosaic-list/mosaic-unAlias-dialog/MosaicUnAliasDialogTs.ts'
 
     export default class MosaicUnAliasDialog extends MosaicUnAliasDialogTs {
 

@@ -1,12 +1,12 @@
-import {Message} from "@/config"
+import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias";
-import {namespaceApi} from "@/core/api/namespaceApi";
+import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
+import {namespaceApi} from "@/core/api/namespaceApi.ts"
 import {Account, Address, AddressAlias, AliasActionType, MosaicId, NamespaceId} from "nem2-sdk";
-import {transactionApi} from "@/core/api/transactionApi";
-import {decryptKey} from "@/core/utils/wallet";
-import {walletApi} from "@/core/api/walletApi";
-import {formatAddress, formatSeconds} from "@/core/utils/utils";
+import {transactionApi} from "@/core/api/transactionApi.ts"
+import {decryptKey} from "@/core/utils/wallet.ts"
+import {walletApi} from "@/core/api/walletApi.ts"
+import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 
 @Component
 export class WalletAliasTs extends Vue {
@@ -67,7 +67,7 @@ export class WalletAliasTs extends Vue {
     }
     checkForm(): boolean {
         const {address, alias, fee, password} = this.formItem
-        if (address.length !== 40) {
+        if (address.length < 40) {
             this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
             return false
         }

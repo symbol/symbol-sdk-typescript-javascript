@@ -44,7 +44,7 @@
         </span>
         </div>
 
-        <div class="artile_content scroll content" @scroll="divScroll" >
+        <div class="artile_content scroll content" @scroll="divScroll">
           <div v-html="currentArticle.content">
           </div>
           <div class="comment">
@@ -81,7 +81,8 @@
 </template>
 
 <script lang="ts">
-    import {informationTs} from './InformationTs'
+    //@ts-ignore
+    import {informationTs} from '@/views/community/information/InformationTs.ts'
 
     export default class InputLock extends informationTs {
 

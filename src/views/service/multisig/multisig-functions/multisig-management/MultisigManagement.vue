@@ -142,7 +142,7 @@
 </template>
 
 <script lang="ts">
-    import {MultisigManagementTs} from './MultisigManagementTs'
+    import {MultisigManagementTs} from '@/views/service/multisig/multisig-functions/multisig-management/MultisigManagementTs.ts'
 
     export default class MultisigManagement extends MultisigManagementTs {
 

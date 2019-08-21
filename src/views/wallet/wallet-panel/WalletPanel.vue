@@ -21,7 +21,8 @@
 
 <script lang="ts">
     import './WalletPanel.less'
-    import {WalletPanelTs} from './WalletPanelTs'
+    //@ts-ignore
+    import {WalletPanelTs} from '@/views/wallet/wallet-panel/WalletPanelTs.ts'
 
     export default class WalletPanel extends WalletPanelTs {
 

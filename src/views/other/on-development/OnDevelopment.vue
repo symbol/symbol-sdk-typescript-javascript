@@ -6,7 +6,8 @@
 
 <script lang="ts">
     import './OnDevelopment.less'
-    import {OnDevelopmentTs} from './OnDevelopmentTs'
+    // @ts-ignore
+    import {OnDevelopmentTs} from '@/views/other/on-development/OnDevelopmentTs.ts'
 
     export default class OnDevelopment extends OnDevelopmentTs {
 

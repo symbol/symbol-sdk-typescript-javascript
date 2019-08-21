@@ -1,4 +1,4 @@
-import {sessionRead, sessionSave} from "@/core/utils/utils";
+import {sessionRead, sessionSave} from "@/core/utils/utils.ts";
 
 export const openFile = (fn) => {
     const electron = window['electron'];

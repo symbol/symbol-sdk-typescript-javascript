@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import app from './app'
-import account from './account'
+import app from '@/store/app/index.ts'
+import account from '@/store/account/index.ts'
 
 Vue.use(Vuex)
 

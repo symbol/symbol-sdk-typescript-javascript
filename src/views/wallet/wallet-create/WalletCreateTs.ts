@@ -1,15 +1,14 @@
-
 import {NetworkType} from "nem2-sdk"
-import {localRead} from '@/core/utils/utils'
-import {Message} from "@/config"
+import {localRead} from '@/core/utils/utils.ts'
+import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {createMnemonic} from "@/core/utils/hdWallet";
+import {createMnemonic} from "@/core/utils/hdWallet.ts"
 import {
     passwordValidator,
     MIN_PASSWORD_LENGTH,
     MAX_PASSWORD_LENGTH,
     ALLOWED_SPECIAL_CHAR,
-} from '@/core/utils/validation'
+} from '@/core/utils/validation.ts'
 @Component
 export class WalletCreateTs extends Vue {
     formItem = {

@@ -1,8 +1,8 @@
 import {PublicAccount} from 'nem2-sdk'
-import {transactionApi} from '@/core/api/transactionApi'
+import {transactionApi} from '@/core/api/transactionApi.ts'
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import transacrionAssetIcon from '@/common/img/monitor/transaction/txConfirmed.png'
-import {formatTransactions, getCurrentMonthFirst, getCurrentMonthLast,} from '@/core/utils/utils'
+import {formatTransactions, getCurrentMonthFirst, getCurrentMonthLast,} from '@/core/utils/utils.ts'
 
 
 @Component
@@ -208,6 +208,9 @@ export class CollectionRecordTs extends Vue {
     }
 
     initData() {
+        if (!this.getWallet) {
+            return
+        }
         this.accountPrivateKey = this.getWallet.privateKey
         this.accountPublicKey = this.getWallet.publicKey
         this.accountAddress = this.getWallet.address

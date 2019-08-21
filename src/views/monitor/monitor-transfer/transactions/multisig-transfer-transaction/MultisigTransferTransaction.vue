@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-    import {MultisigTransferTransactionTs} from './MultisigTransferTransactionTs'
+    import {MultisigTransferTransactionTs} from '@/views/monitor/monitor-transfer/transactions/multisig-transfer-transaction/MultisigTransferTransactionTs.ts'
 
     export default class MultisigTransferTransaction extends MultisigTransferTransactionTs {
 

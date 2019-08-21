@@ -1,14 +1,14 @@
-import {Message} from "@/config"
-import {market} from "@/core/api/logicApi"
-import {KlineQuery} from "@/core/query/klineQuery"
+import {Message} from "@/config/index.ts"
+import {market} from "@/core/api/logicApi.ts"
+import {KlineQuery} from "@/core/query/klineQuery.ts"
 import {Address, MosaicId} from 'nem2-sdk'
-import {mosaicApi} from '@/core/api/mosaicApi'
-import {accountApi} from '@/core/api/accountApi'
+import {mosaicApi} from '@/core/api/mosaicApi.ts'
+import {accountApi} from '@/core/api/accountApi.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import monitorSeleted from '@/common/img/monitor/monitorSeleted.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
-import {copyTxt, localSave, localRead, formatXEMamount} from '@/core/utils/utils'
-import {getNamespaces, setWalletMosaic} from "@/core/utils/wallet";
+import {copyTxt, localSave, localRead, formatXEMamount} from '@/core/utils/utils.ts'
+import {getNamespaces, setWalletMosaic} from "@/core/utils/wallet.ts"
 
 @Component
 export class MonitorPanelTs extends Vue {
@@ -169,20 +169,21 @@ export class MonitorPanelTs extends Vue {
     getAccountsName() {
         const that = this
         const {accountAddress, node} = this
-        accountApi.getAccountsNames({
-            node,
-            addressList: [Address.createFromRawAddress(accountAddress)]
-        }).then((namespaceResult) => {
-            namespaceResult.result.namespaceList.subscribe((namespaceInfo) => {
-                if (namespaceInfo[0].names.length > 0) {
-                    that.isShowAccountAlias = true
-                } else {
+        if (!accountAddress || accountAddress.length < 40) return
+            accountApi.getAccountsNames({
+                node,
+                addressList: [Address.createFromRawAddress(accountAddress)]
+            }).then((namespaceResult) => {
+                namespaceResult.result.namespaceList.subscribe((namespaceInfo) => {
+                    if (namespaceInfo[0].names.length > 0) {
+                        that.isShowAccountAlias = true
+                    } else {
+                        that.isShowAccountAlias = false
+                    }
+                }, () => {
                     that.isShowAccountAlias = false
-                }
-            }, () => {
-                that.isShowAccountAlias = false
+                })
             })
-        })
     }
 
     async getMarketOpenPrice() {

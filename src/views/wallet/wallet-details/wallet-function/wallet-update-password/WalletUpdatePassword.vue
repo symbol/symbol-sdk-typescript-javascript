@@ -15,7 +15,8 @@
 
       <div class="input_content">
         <span>{{$t('Confirm_the_password')}}</span>
-        <input type="password" v-model="formItem.repeatPassword" :placeholder="$t('please_enter_your_new_password_again')">
+        <input type="password" v-model="formItem.repeatPassword"
+               :placeholder="$t('please_enter_your_new_password_again')">
       </div>
 
 
@@ -38,7 +39,8 @@
 </template>
 
 <script lang="ts">
-    import {WalletUpdatePasswordTs} from './WalletUpdatePasswordTs'
+    //@ts-ignore
+    import {WalletUpdatePasswordTs} from '@/views/wallet/wallet-details/wallet-function/wallet-update-password/WalletUpdatePasswordTs.ts'
 
     export default class WalletUpdatePassword extends WalletUpdatePasswordTs {
 

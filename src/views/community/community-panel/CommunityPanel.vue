@@ -20,7 +20,8 @@
 
 <script lang="ts">
     import './CommunityPanel.less'
-    import {CommunityPanelTs} from './CommunityPanelTs'
+    // @ts-ignore
+    import {CommunityPanelTs} from '@/views/community/community-panel/CommunityPanelTs.ts'
 
     export default class CommunityPanel extends CommunityPanelTs {
 

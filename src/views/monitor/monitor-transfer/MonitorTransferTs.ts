@@ -35,7 +35,7 @@ export class MonitorTransferTs extends Vue {
     ]
     currentPrice = 0
 
-    get getWallet () {
+    get getWallet() {
         return this.$store.state.account.wallet
     }
 
@@ -46,6 +46,7 @@ export class MonitorTransferTs extends Vue {
     hideSearchDetail() {
 
     }
+
     swicthTransferType(index) {
         const list: any = this.transferTypeList
         if (list[index].disabled) {
@@ -61,6 +62,7 @@ export class MonitorTransferTs extends Vue {
 
 
     initData() {
+        if (!this.getWallet) return
         this.accountPublicKey = this.getWallet.publicKey
         this.accountAddress = this.getWallet.address
         this.node = this.$store.state.account.node

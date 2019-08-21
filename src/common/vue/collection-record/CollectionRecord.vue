@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts">
-    import {CollectionRecordTs} from './CollectionRecordTs'
+    import {CollectionRecordTs} from '@/common/vue/collection-record/CollectionRecordTs.ts'
 
     export default class CollectionRecord extends CollectionRecordTs {
 

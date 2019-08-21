@@ -10,7 +10,7 @@
       <div class="namespace_transaction">
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>
-          <span class="value" v-if="typeList[0].isSelected">{{formatAddress(getWallet.address)}}</span>
+          <span class="value" v-if="typeList[0].isSelected && getWallet">{{formatAddress(getWallet.address)}}</span>
           <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="formItem.multisigPublickey"
                   class="select">
             <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">{{ item.label }}
@@ -127,7 +127,8 @@
 </template>
 
 <script lang="ts">
-    import {MosaicTransactionTs} from './MosaicTransactionTs'
+    // @ts-ignore
+    import {MosaicTransactionTs} from '@/views/service/mosaic/mosaic-function/mosaic-transaction/MosaicTransactionTs.ts'
 
     export default class MosaicTransaction extends MosaicTransactionTs {
 

@@ -13,8 +13,8 @@ import {
     MosaicId,
     ModifyAccountPropertyAddressTransaction
 } from 'nem2-sdk'
-import {sdkApi} from "@/core/api/apis";
-import {filter, mergeMap} from "rxjs/operators";
+import {sdkApi} from "@/core/api/apis.d.ts"
+import {filter, mergeMap} from "rxjs/operators"
 
 export const transactionApi: sdkApi.transaction = {
 

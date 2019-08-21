@@ -40,7 +40,8 @@
 </template>
 
 <script lang="ts">
-    import {WalletImportKeystoreTs} from './WalletImportKeystoreTs'
+    //@ts-ignore
+    import {WalletImportKeystoreTs} from '@/views/wallet/wallet-import-keystore/WalletImportKeystoreTs.ts'
 
     export default class WalletImportKeystore extends WalletImportKeystoreTs {
 

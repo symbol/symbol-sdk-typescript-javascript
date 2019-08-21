@@ -1,10 +1,10 @@
-import {Message} from "@/config"
-import {walletApi} from "@/core/api/walletApi"
+import {Message} from "@/config/index.ts"
+import {walletApi} from "@/core/api/walletApi.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {transactionApi} from '@/core/api/transactionApi'
+import {transactionApi} from '@/core/api/transactionApi.ts'
 import {AccountLinkTransaction, UInt64, LinkAction, NetworkType, Deadline, Account} from "nem2-sdk"
-import {decryptKey} from "@/core/utils/wallet";
-import {accountApi} from "@/core/api/accountApi";
+import {decryptKey} from "@/core/utils/wallet.ts"
+import {accountApi} from "@/core/api/accountApi.ts"
 
 
 @Component
@@ -118,6 +118,9 @@ export class MonitorRemoteTs extends Vue {
     }
 
     getLinkPublicKey() {
+        if(!this.$store.state.account.wallet){
+           return
+        }
         const that = this
         const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account

@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-    import {LineChartByDayTs} from './LineChartByDayTs'
+    import {LineChartByDayTs} from '@/common/vue/line-chart-by-day/LineChartByDayTs.ts'
 
     export default class LineChart extends LineChartByDayTs {
     }

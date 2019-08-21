@@ -1,12 +1,8 @@
-import Vue from 'vue'
 import Router from 'vue-router'
-import routers from './routers'
-
-Vue.use(Router)
+import routers from '@/router/routers.ts'
 
 const router = new Router({
     mode: 'hash',
-    // ts-ignore
     routes: routers
 })
 

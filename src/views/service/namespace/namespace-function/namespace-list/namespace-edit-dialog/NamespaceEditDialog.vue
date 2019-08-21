@@ -36,7 +36,9 @@
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
-              <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="updateNamespace"> {{$t('confirm')}}</Button>
+              <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="updateNamespace">
+                {{$t('confirm')}}
+              </Button>
             </FormItem>
           </Form>
         </div>
@@ -46,7 +48,8 @@
 </template>
 
 <script lang="ts">
-    import {NamespaceEditDialogTs} from './NamespaceEditDialogTs'
+    // @ts-ignore
+    import {NamespaceEditDialogTs} from '@/views/service/namespace/namespace-function/namespace-list/namespace-edit-dialog/NamespaceEditDialogTs.ts'
 
     export default class NamespaceEditDialog extends NamespaceEditDialogTs {
 

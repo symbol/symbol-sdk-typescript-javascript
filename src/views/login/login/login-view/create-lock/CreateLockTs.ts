@@ -1,14 +1,14 @@
-import {Message} from "@/config"
+import {Message} from "@/config/index.ts"
 import {UInt64} from 'nem2-sdk'
 import {
     passwordValidator,
     MIN_PASSWORD_LENGTH,
     MAX_PASSWORD_LENGTH,
     ALLOWED_SPECIAL_CHAR,
-} from '@/core/utils/validation'
-import {localSave} from '@/core/utils/utils'
+} from '@/core/utils/validation.ts'
+import {localSave} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
-import {encryptKey} from "@/core/utils/wallet";
+import {encryptKey} from "@/core/utils/wallet.ts";
 
 @Component
 export class CreateLockTs extends Vue {

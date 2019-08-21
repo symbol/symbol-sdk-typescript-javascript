@@ -1,4 +1,4 @@
-import {formatSeconds} from '@/core/utils/utils'
+import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
 

@@ -1,6 +1,6 @@
 import {AccountHttp, Address, EncryptedMessage} from 'nem2-sdk'
-import {WebClient} from "@/core/utils/web"
-import {sdkApi} from "@/core/api/apis";
+import {WebClient} from "@/core/utils/web.ts"
+import {sdkApi} from "@/core/api/apis.d.ts";
 
 export const accountApi: sdkApi.account = {
     getAccountsNames: async (params) => {

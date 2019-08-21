@@ -27,7 +27,8 @@
 </template>
 
 <script lang="ts">
-    import {GuideIntoTs} from './GuideIntoTs'
+    //@ts-ignore
+    import {GuideIntoTs} from '@/views/login/guide-into/GuideIntoTs.ts'
 
     export default class GuideInto extends GuideIntoTs {
 

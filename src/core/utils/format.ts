@@ -1,7 +1,6 @@
-import {transactionTag} from '@/config'
-import {formatNemDeadline} from "@/core/utils/utils"
+import {transactionTag} from '@/config/index.ts'
+import {formatNemDeadline} from "@/core/utils/utils.ts"
 import {Transaction, TransactionType} from 'nem2-sdk'
-
 import dashboardAddressAlias from '@/common/img/monitor/dash-board/dashboardAddressAlias.png'
 import dashboardAggregate from '@/common/img/monitor/dash-board/dashboardAggregate.png'
 import dashboardDefinition from '@/common/img/monitor/dash-board/dashboardDefinition.png'
