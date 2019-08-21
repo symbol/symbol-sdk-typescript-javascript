@@ -30,11 +30,7 @@ export const en_US = {
     publish: 'Publish',
     anonymous_user: 'Anonymous user',
     no_comment_yet: 'No comment yet',
-<<<<<<< HEAD
-    successful_operation: 'Request Succeeded',
-=======
     successful_operation: 'Request succeeded',
->>>>>>> cfc9f0286918d47a9952a9ca48c7c4d16d9d2234
     operation_failed: 'Request Failed',
 
     // vote
@@ -53,11 +49,7 @@ export const en_US = {
     enter_the_date_for_example: 'Enter the date ,for example：',
     fee: 'Fee',
     the_default_is: 'Default',
-<<<<<<< HEAD
-    the_more_you_set_the_cost_the_higher_the_processing_priority: 'Increasing the fee will makes the transaction processing quicker. (1000000 microxem = 1.0xem)',
-=======
     the_more_you_set_the_cost_the_higher_the_processing_priority: 'Increasing the fee makes the transaction processing quicker.(1000000 microxem = 1.0xem)',
->>>>>>> cfc9f0286918d47a9952a9ca48c7c4d16d9d2234
     create: 'Create',
     all: 'All',
     processing: 'Processing',
@@ -166,10 +158,7 @@ export const en_US = {
     remote_list_col4: 'Time',
     remote_no_data: 'No data',
     remote_repaly: 'Delegated harvesting',
-<<<<<<< HEAD
-	receive:'Receive'
-=======
->>>>>>> cfc9f0286918d47a9952a9ca48c7c4d16d9d2234
+	receive:'Receive',
     remote_modal_pul: 'Remote public key',
     remote_modal_price: 'Cost',
     reomte_modal_pass: 'password',
@@ -177,7 +166,6 @@ export const en_US = {
     remote_modal_cancel: 'cancel',
     remote_modal_place1: 'Please enter or paste a remote public key',
     remote_modal_place2: 'Please enter your wallet password',
-    receive:'Receive',
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: 'WELCOME BACK TO THE CATAPULT BETA',
     welcome_to_the_CATAPULT_beta: 'WELCOME TO USE THE CATAPULT BETA',
