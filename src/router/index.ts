@@ -1,6 +1,7 @@
 import Router from 'vue-router'
 import routers from '@/router/routers.ts'
 
+
 const router = new Router({
     mode: 'hash',
     routes: routers

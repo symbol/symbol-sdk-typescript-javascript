@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import QRCode from 'qrcode'
-import i18n  from '@/language/index.ts'
+import i18n from '@/language/index.ts'
 import {AliasActionType, TransactionType} from 'nem2-sdk'
 
 const vueInstance = new Vue({i18n});
@@ -263,6 +263,7 @@ export const formatTransactions = function (transactionList, accountAddress, cur
 };
 
 export const formatAddress = function (address) {
+    if (!address) return
     let txt = '';
     let formatAress = [];
     address.split('').map((item, index) => {
@@ -309,6 +310,7 @@ export const isRefreshData = function (localstorageName, refreshTime, borderline
     return false
 };
 export const formatSeconds = function (second) {
+    if (!second && second !== 0) return 0
     let d = 0, h = 0, m = 0;
 
     if (second > 86400) {
