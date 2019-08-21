@@ -99,6 +99,7 @@ export class MultisigTransferTransactionTs extends Vue {
         const that = this
         const {networkType} = this.$store.state.account.wallet
         const {generationHash, node} = this.$store.state.account
+        const mosaicHex = this.$store.state.account.currentXEM1
         const account = Account.createFromPrivateKey(privatekey, networkType)
         let {address, bondedFee, lockFee, aggregateFee, mosaic, amount, remark, multisigPublickey} = this.formItem
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
@@ -126,7 +127,8 @@ export class MultisigTransferTransactionTs extends Vue {
                     node,
                     generationHash,
                     networkType,
-                    fee: lockFee
+                    fee: lockFee,
+                    mosaicHex,
                 })
             })
             return

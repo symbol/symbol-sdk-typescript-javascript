@@ -15,7 +15,6 @@ import {
 } from 'nem2-sdk'
 import {sdkApi} from "@/core/api/apis";
 import {filter, mergeMap} from "rxjs/operators";
-import Vue from '../../main'
 
 export const transactionApi: sdkApi.transaction = {
 
@@ -211,10 +210,9 @@ export const transactionApi: sdkApi.transaction = {
 
 
     announceBondedWithLock: async (params) => {
-        const {aggregateTransaction, account, listener, node, generationHash, networkType, fee} = params
+        const {aggregateTransaction, account, listener, node, generationHash, networkType, fee, mosaicHex } = params
         const transactionHttp = new TransactionHttp(node);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
-        const mosaicHex = Vue.$store.state.account.currentXEM1
         const hashLockTransaction = HashLockTransaction.create(
             Deadline.create(),
             new Mosaic(new MosaicId(mosaicHex), UInt64.fromUint(10000000)),

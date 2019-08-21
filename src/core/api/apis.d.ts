@@ -321,7 +321,8 @@ declare namespace sdkApi {
             node: string,
             generationHash: string,
             networkType,
-            fee
+            fee,
+            mosaicHex: string
         }) => Rst<{
             aggregateBondedTx: any
         }>;

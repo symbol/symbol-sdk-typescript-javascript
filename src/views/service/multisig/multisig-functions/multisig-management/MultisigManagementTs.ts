@@ -116,6 +116,7 @@ export class MultisigManagementTs extends Vue {
         const {cosignerList, bondedFee, lockFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
         const {networkType} = this.$store.state.account.wallet
         const {generationHash, node} = this.$store.state.account
+        const mosaicHex = this.$store.state.account.currentXEM1
         const account = Account.createFromPrivateKey(privatekey, networkType)
         const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
             cosigner.type,
@@ -143,7 +144,8 @@ export class MultisigManagementTs extends Vue {
                 node,
                 generationHash,
                 networkType,
-                fee: lockFee
+                fee: lockFee,
+                mosaicHex,
             })
         })
     }

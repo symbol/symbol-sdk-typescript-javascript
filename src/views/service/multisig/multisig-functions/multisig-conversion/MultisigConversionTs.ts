@@ -155,6 +155,7 @@ export class MultisigConversionTs extends Vue {
         const {publickeyList, minApproval, minRemoval, lockFee, bondedFee, innerFee} = this.formItem
         const {networkType} = this.$store.state.account.wallet
         const {generationHash, node} = this.$store.state.account
+        const mosaicHex = this.$store.state.account.currentXEM1
         const account = Account.createFromPrivateKey(privatekey, networkType)
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         const multisigCosignatoryModificationList = publickeyList.map(cosigner => new MultisigCosignatoryModification(
@@ -184,7 +185,8 @@ export class MultisigConversionTs extends Vue {
                 node,
                 generationHash,
                 networkType,
-                fee: lockFee
+                fee: lockFee,
+                mosaicHex,
             })
         })
     }

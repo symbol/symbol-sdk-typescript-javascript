@@ -106,6 +106,7 @@ export class RootNamespaceTs extends Vue {
         const {networkType} = this.getWallet
         const account = Account.createFromPrivateKey(privatekey, networkType)
         const {generationHash, node} = this.$store.state.account
+        const mosaicHex  = this.$store.state.account.currentXEM1
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         namespaceApi.createdRootNamespace({
             namespaceName: rootNamespaceName,
@@ -129,7 +130,8 @@ export class RootNamespaceTs extends Vue {
                         node,
                         generationHash,
                         networkType,
-                        fee: lockFee
+                        fee: lockFee,
+                        mosaicHex,
                     })
                 })
                 return
