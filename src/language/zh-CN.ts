@@ -607,7 +607,9 @@ export const zh_CN = {
     modify_account_property_mosaic: '马赛克过滤',
     modify_account_property_entity_type: '交易实体过滤',
     link_account: '远程收获',
-    please_choose_entity_type:'请选择交易类型'
+    please_choose_entity_type:'请选择交易类型',
+    Node_connection_failed:'节点连接失败',
+    Node_connection_succeeded:'节点连接成功',
 
 
 }

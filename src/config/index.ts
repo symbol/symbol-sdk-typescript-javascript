@@ -15,6 +15,7 @@ export const Message = {
     SUCCESS: 'success',
     OPERATION_SUCCESS: 'successful_operation',
     UPDATE_SUCCESS: 'update_completed',
+    NODE_CONNECTION_SUCCEEDED:'Node_connection_succeeded',
 
     PLEASE_SET_WALLET_PASSWORD_INFO: 'please_set_your_wallet_password',
     PLEASE_ENTER_MNEMONIC_INFO: 'Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct',
@@ -58,7 +59,8 @@ export const Message = {
     NAMESPACE_STARTING_ERROR: 'Namespace_must_start_with_a_letter',
     NAMESPACE_FORMAT_ERROR: 'Namespace_can_only_contain_numbers_letters_and_other',
     NAMESPACE_USE_BANDED_WORD_ERROR: 'Namespace_cannot_use_forbidden_words',
-    SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR: 'The_sub_namespace_cannot_be_longer_than_16'
+    SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR: 'The_sub_namespace_cannot_be_longer_than_16',
+    NODE_CONNECTION_ERROR:'Node_connection_failed'
 }
 
 export const transactionTag = {

@@ -620,5 +620,7 @@ export const en_US = {
     modify_account_property_mosaic: 'Mosaic filter',
     modify_account_property_entity_type: 'Entity filter',
     link_account: 'Link account',
-    please_choose_entity_type: 'please choose entity type'
+    please_choose_entity_type: 'please choose entity type',
+    Node_connection_failed:'Node connection failed',
+    Node_connection_succeeded:'Node connection succeeded'
 }

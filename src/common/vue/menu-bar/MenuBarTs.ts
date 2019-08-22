@@ -1,4 +1,3 @@
-import axios from 'axios'
 import routers from '@/router/routers.ts'
 import {Message} from "@/config/index.ts"
 import {listenerApi} from "@/core/api/listenerApi.ts"
@@ -251,10 +250,10 @@ export class MenuBarTs extends Vue {
             this.$Notice.success({
                 title: this.$t('Transaction_Reception').toString(),
                 duration: 4,
-                // desc: 'hash：'+ transaction.transactionInfo.hash
             });
         }
     }
+
 
     disposeTxStatus(transaction) {
         let list = this.errorTxList
@@ -289,16 +288,29 @@ export class MenuBarTs extends Vue {
         linkedMosaic.subscribe((mosaic) => {
             this.$store.state.account.currentXEM1 = mosaic.toHex()
         })
+        that.isNodeHealthy = false
         this.unconfirmedListener()
         this.confirmedListener()
         this.txErrorListener()
 
-        axios.get(currentNode + '/chain/height').then(function (response) {
-            that.isNodeHealthy = true
-            that.getGenerateHash(currentNode)
-        }).catch(function (error) {
+        blockchainApi.getBlockchainHeight({
+            node: currentNode
+        }).then((result) => {
+            result.result.blockchainHeight.subscribe((info) => {
+                that.isNodeHealthy = true
+                that.getGenerateHash(currentNode)
+                that.$Notice.destroy()
+                that.$Notice.success({
+                    title: that.$t(Message.NODE_CONNECTION_SUCCEEDED) + ''
+                });
+            })
+        }).catch((e: Error) => {
             that.isNodeHealthy = false
-        });
+            that.$Notice.destroy()
+            that.$Notice.error({
+                title: that.$t(Message.NODE_CONNECTION_ERROR) + ''
+            });
+        })
     }
 
     @Watch('getWallet')
