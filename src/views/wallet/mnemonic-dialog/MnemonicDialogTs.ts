@@ -37,23 +37,7 @@ export class MnemonicDialogTs extends Vue {
     exportMnemonic() {
         switch (this.stepIndex) {
             case 0 :
-                if (!this.checkInput()) return
-                const DeTxt = decryptKey(this.getWallet, this.wallet.password)
-                walletApi.getWallet({
-                    name: this.getWallet.name,
-                    networkType: this.getWallet.networkType,
-                    privateKey: DeTxt.length === 64 ? DeTxt : ''
-                }).then(async (Wallet: any) => {
-                    const DeMnemonic = decryptKey(this.getWallet['mnemonicEnCodeObj'], this.wallet.password)
-                    this.mnemonic = hexCharCodeToStr(DeMnemonic)
-                    this.mnemonicRandomArr = randomMnemonicWord(this.mnemonic.split(' '))
-                    this.stepIndex = 1
-                    this.wallet.password = ''
-                }).catch(() => {
-                    this.$Notice.error({
-                        title: this.$t('password_error') + ''
-                    })
-                })
+                this.checkPassword()
                 break;
             case 1 :
                 this.stepIndex = 2
@@ -69,6 +53,26 @@ export class MnemonicDialogTs extends Vue {
                 this.mnemonicDialogCancel()
                 break;
         }
+    }
+
+    checkPassword() {
+        if (!this.checkInput()) return
+        const DeTxt = decryptKey(this.getWallet, this.wallet.password)
+        walletApi.getWallet({
+            name: this.getWallet.name,
+            networkType: this.getWallet.networkType,
+            privateKey: DeTxt.length === 64 ? DeTxt : ''
+        }).then(async (Wallet: any) => {
+            const DeMnemonic = decryptKey(this.getWallet['mnemonicEnCodeObj'], this.wallet.password)
+            this.mnemonic = hexCharCodeToStr(DeMnemonic)
+            this.mnemonicRandomArr = randomMnemonicWord(this.mnemonic.split(' '))
+            this.stepIndex = 1
+            this.wallet.password = ''
+        }).catch(() => {
+            this.$Notice.error({
+                title: this.$t('password_error') + ''
+            })
+        })
     }
 
     checkInput() {

@@ -354,6 +354,12 @@ export const en_US = {
     //export keystore
     export: 'Export',
     input_password: 'Input password',
+    set_keystore_password:'Set keystore password',
+    input_keystore_password: 'Input keystore password',
+    please_enter_your_keystore_password:'Please enter your keystore password',
+    please_set_your_keystore_password:'Please set your keystore password',
+    please_enter_your_keystore_password_again:'Please enter your keystore password again',
+    input_wallet_password: 'Input wallet password',
     backup_prompt: 'Backup prompt',
     backup: 'Backup',
     obtaining_a_Keystore_password_is_equal_to_owning_a_wallet_asset: 'Obtaining a Keystore+ password is equal to owning a wallet asset',
@@ -394,6 +400,7 @@ export const en_US = {
     display_private_key: 'Privatekey',
 
     // wallet create
+    Keystore_decryption_failed:'Keystore decryption failed',
     choose_network: 'Choose network',
     In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks: 'In the \'nem2 ecosystem, you can build your own home wallet, or private network wallet, or test the network.',
     set_the_wallet_name: 'Set the wallet name',

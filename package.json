@@ -15,6 +15,7 @@
     "crypto": "^1.0.1",
     "echarts": "^4.2.1",
     "electron": "^5.0.6",
+    "ethereumjs-wallet": "^0.6.3",
     "generate-password": "^1.4.2",
     "identity-obj-proxy": "^3.0.0",
     "iview": "^3.4.2",

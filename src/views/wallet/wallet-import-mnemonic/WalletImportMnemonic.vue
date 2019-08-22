@@ -14,13 +14,13 @@
         </li>
 
         <li>
-          {{$t('choose_network')}}
-          <div class="gray_content">
-            <Select v-model="form.networkType" :placeholder="$t('choose_network')">
-              <Option v-for="item in NetworkTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-          </div>
-        </li>
+        {{$t('choose_network')}}
+        <div class="gray_content">
+          <Select v-model="form.networkType" :placeholder="$t('choose_network')">
+            <Option v-for="item in NetworkTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </div>
+      </li>
         <li>
           {{$t('set_the_wallet_name')}}
           <div class="gray_content">

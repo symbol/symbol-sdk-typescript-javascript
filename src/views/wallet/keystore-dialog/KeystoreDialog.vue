@@ -7,15 +7,18 @@
             :width="1000"
             :transfer="false"
             @on-cancel="keystoreDialogCancel">
+      <Spin v-if="isGenerationKeystore" size="large" fix class="absolute"></Spin>
       <div slot="header" class="keystoreDialogHeader">
         <span class="title">{{$t('export')}} Keystore</span>
       </div>
       <div class="keystoreDialogBody">
-        <div class="steps" v-if="stepIndex != 4">
-          <span :class="['stepItem',stepIndex == 0?'active':'']">{{$t('input_password')}}</span>
-          <span :class="['stepItem',stepIndex == 1?'active':'']">{{$t('backup_prompt')}}</span>
-          <span :class="['stepItem',stepIndex == 2||stepIndex == 3?'active':'']">{{$t('backup')}} Keystore</span>
+        <div class="steps" v-if="stepIndex != 5">
+          <span :class="['stepItem',stepIndex == 0?'active':'']">{{$t('input_wallet_password')}}</span>
+          <span :class="['stepItem',stepIndex == 1?'active':'']">{{$t('set_keystore_password')}}</span>
+          <span :class="['stepItem',stepIndex == 2?'active':'']">{{$t('backup_prompt')}}</span>
+          <span :class="['stepItem',stepIndex == 3||stepIndex == 4?'active':'']">{{$t('backup')}} Keystore</span>
         </div>
+        <!--    input wallet password     -->
         <div class="stepItem1" v-if="stepIndex == 0">
           <Form :model="wallet">
             <FormItem>
@@ -23,14 +26,34 @@
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
-              <Button type="success" class="not_allowed" @click="exportKeystore">{{$t('next')}}
+              <Button type="success" @click="exportKeystore">{{$t('next')}}
                 <Icon type="ios-arrow-round-forward"/>
               </Button>
             </FormItem>
           </Form>
         </div>
 
-        <div class="stepItem2" v-if="stepIndex == 1">
+        <!--        set keystore password-->
+        <div class="stepItem1" v-if="stepIndex == 1">
+          <Form :model="wallet">
+            <FormItem>
+              <Input v-model="wallet.keystorePassword" type="password" required
+                     :placeholder="$t('please_enter_your_keystore_password')"></Input>
+            </FormItem>
+
+            <FormItem>
+              <Input v-model="wallet.keystorePasswordAgain" type="password" required
+                     :placeholder="$t('please_enter_your_keystore_password_again')"></Input>
+            </FormItem>
+            <FormItem>
+              <Button type="success" @click="exportKeystore">{{$t('next')}}
+                <Icon type="ios-arrow-round-forward"/>
+              </Button>
+            </FormItem>
+          </Form>
+        </div>
+
+        <div class="stepItem2" v-if="stepIndex == 2">
           <div class="step2Txt">
             <Row>
               <Col span="8">
@@ -61,11 +84,11 @@
           </Button>
         </div>
 
-        <div class="stepItem3" v-if="stepIndex == 2">
+        <div class="stepItem3" v-if="stepIndex == 3">
           <Row>
             <Col span="15">
               <div class="keystoreCode">
-                {"crypto":{"cipher":"aes-128-ctr","cipherparams":{"iv":"5eb58323f39467d9a4b7c14b76fb2154"},"ciphertext":"571cba91c56605a5ac115918be84b454333ccb600310a0bf3dec25ff778e04b9","kdf":"pbkdf2","kdfparams":{"c":10240,"dklen":32,"prf":"hmac-sha256","salt":"a417c49dbeb3bbec79cfbf3cda545e47b4ce150f4e32b7d4c3de34b4c9b4a496"},"mac":"ee97c769b3fde908a5e59689de6226107d098e27b0508cde8449143008c1f6c1"},"id":"e6ba80f1-fd2b-407c-9ef6-cec880ce481e","version":3,"address":"d18ad549395b1c03c05ec4375ed99c9737e51594"}
+                {{keystoreText}}
               </div>
             </Col>
             <Col span="9">
@@ -83,13 +106,13 @@
             <Col span="12">
               <Button type="success" @click="copyKeystore">{{$t('copy')}} Keystore</Button>
             </Col>
-            <Col span="8">
-              <Button type="success" @click="exportKeystore">{{$t('Display_Keystore_QR_code')}}</Button>
-            </Col>
+            <!--            <Col span="8">-->
+            <!--              <Button type="success" @click="exportKeystore">{{$t('Display_Keystore_QR_code')}}</Button>-->
+            <!--            </Col>-->
           </Row>
         </div>
 
-        <div class="stepItem4" v-if="stepIndex == 3">
+        <div class="stepItem4" v-if="stepIndex == 4">
           <div class="QRCodeImg">
             <img :src="QRCode">
             <div class="imgBorder"></div>
@@ -101,7 +124,7 @@
                 <Button type="success" @click="toPrevPage">{{$t('Show_Keystore')}}</Button>
               </Col>
               <Col span="5">
-                <Button type="success" @click="saveQRCode">{{$t('copy_QR_code')}}</Button>
+                <Button type="success" @click="downloadQR">{{$t('copy_QR_code')}}</Button>
               </Col>
               <Col span="7">&nbsp;</Col>
             </Row>

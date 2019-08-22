@@ -60,7 +60,9 @@ export const Message = {
     NAMESPACE_FORMAT_ERROR: 'Namespace_can_only_contain_numbers_letters_and_other',
     NAMESPACE_USE_BANDED_WORD_ERROR: 'Namespace_cannot_use_forbidden_words',
     SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR: 'The_sub_namespace_cannot_be_longer_than_16',
-    NODE_CONNECTION_ERROR:'Node_connection_failed'
+    NODE_CONNECTION_ERROR:'Node_connection_failed',
+    KEYSTORE_DECRYPTION_FAILED:'Keystore_decryption_failed',
+
 }
 
 export const transactionTag = {
