@@ -119,9 +119,6 @@ export class WalletPanelTs extends Vue {
         this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
         const wallets = localRead('wallets')
         let list = wallets ? JSON.parse(wallets) : []
-        if (list.length < 1) {
-            this.$store.state.app.isInLoginPage = true
-        }
 
     }
 
@@ -132,11 +129,6 @@ export class WalletPanelTs extends Vue {
         }
         const list = await getNamespaces(this.getWallet.address, this.node)
         this.$store.commit('SET_NAMESPACE', list)
-    }
-
-    initData() {
-        if (this.$route.params['create']) return
-        this.$store.state.app.isInLoginPage = false
     }
 
     @Watch('ConfirmedTxList')
@@ -154,6 +146,5 @@ export class WalletPanelTs extends Vue {
         this.setDefaultPage()
         this.setWalletList()
         this.getMyNamespaces()
-        this.initData()
     }
 }

@@ -85,7 +85,6 @@ export class WalletSwitchTs extends Vue {
         list.splice(index, 1)
         localData.splice(index, 1)
         if (list.length < 1) {
-            this.$store.state.app.isInLoginPage = true
             this.$emit('noHasWallet')
         }
         this.$store.commit('SET_WALLET_LIST', list)

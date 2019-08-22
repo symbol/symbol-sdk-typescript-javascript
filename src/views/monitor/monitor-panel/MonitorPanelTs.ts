@@ -128,7 +128,6 @@ export class MonitorPanelTs extends Vue {
         this.currentXEM2 = this.$store.state.account.currentXEM2
         this.currentXEM1 = this.$store.state.account.currentXEM1
         this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
-        this.$store.state.app.isInLoginPage = false
     }
 
     getXEMAmount() {

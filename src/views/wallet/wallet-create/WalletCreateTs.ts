@@ -67,11 +67,4 @@ export class WalletCreateTs extends Vue {
         this.$emit('closeCreate')
     }
 
-    created() {
-        const wallets = localRead('wallets')
-        let list = wallets ? JSON.parse(wallets) : []
-        if (list.length < 1) {
-            this.$store.state.app.isInLoginPage = true
-        }
-    }
 }

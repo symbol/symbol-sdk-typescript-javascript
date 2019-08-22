@@ -10,7 +10,4 @@ export class GetStartTs extends Vue {
         this.$emit('showIndexView', 1)
     }
 
-    created() {
-        this.$store.state.app.isInLoginPage = true
-    }
 }

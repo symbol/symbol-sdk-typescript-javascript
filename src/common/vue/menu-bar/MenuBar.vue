@@ -3,7 +3,7 @@
     <div class="left_navigator">
       <div class="navigator_icon">
         <div :key="index"
-             :class="[$store.state.app.currentPanelIndex == index ? 'active_panel' : '',$store.state.app.isInLoginPage?'un_click':'pointer']"
+             :class="[$store.state.app.currentPanelIndex == index ? 'active_panel' : '',!$store.state.app.walletList.length?'un_click':'pointer']"
              @click="switchPanel(index)"
              v-for="(a,index) in activePanelList">
           <span :class="['absolute', $store.state.app.currentPanelIndex == index ? 'active_icon' : '']"></span>
@@ -11,7 +11,7 @@
       </div>
 
       <div @click="accountQuit" class="quit_account pointer"
-           v-if=" !$store.state.app.isInLoginPage && $store.state.app.walletList.length !==0">
+           v-if="$store.state.app.walletList.length !==0">
         <img src="../../img/window/windowAccoutQuit.png" alt="">
         <span>Nember</span>
       </div>
@@ -78,7 +78,6 @@
 </template>
 
 <script lang="ts">
-    // @ts-ignore
     import {MenuBarTs} from '@/common/vue/menu-bar/MenuBarTs.ts'
 
     export default class MenuBar extends MenuBarTs {

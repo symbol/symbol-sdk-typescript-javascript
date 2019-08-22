@@ -51,21 +51,21 @@ export class LoginTs extends Vue {
         this.indexShowList = list
     }
 
-    created() {
-        this.$store.state.app.isInLoginPage = true
-        this.initData()
-
+    isCallShowIndexView() {
         if (this.$route.params.index) {
             this.showIndexView(this.$route.params.index)
             return
         }
-
         const wallets = localRead('wallets')
         const walletList = wallets ? JSON.parse(wallets) : []
-        const local = localRead('local') ? localRead('local') :''
         if (walletList.length >= 1) {
             this.showIndexView(2)
-            return
         }
+    }
+
+    created() {
+        this.initData()
+        this.isCallShowIndexView()
+
     }
 }

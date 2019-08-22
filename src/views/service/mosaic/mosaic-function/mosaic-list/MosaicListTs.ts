@@ -100,7 +100,6 @@ export class MosaicListTs extends Vue {
         this.accountAddress = this.getWallet.address
         this.node = this.$store.state.account.node
         this.generationHash = this.$store.state.account.generationHash
-        this.$store.state.app.isInLoginPage = false
         this.currentXEM2 = this.$store.state.account.currentXEM2
         this.currentXEM1 = this.$store.state.account.currentXEM1
         this.currentXem = this.$store.state.account.currentXem

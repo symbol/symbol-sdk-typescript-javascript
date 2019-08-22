@@ -62,8 +62,6 @@ export class InputLockTs extends Vue {
             })
             return
         }
-        // alert('monitorPanel')
-        this.$store.state.app.isInLoginPage = false
         this.$router.push({
             name: 'monitorPanel'
         })
@@ -77,7 +75,6 @@ export class InputLockTs extends Vue {
     }
 
     created() {
-        this.$store.state.app.isInLoginPage = true
         this.lockPromptText = JSON.parse(localRead('lock')?localRead('lock'):'{}').remindTxt
     }
 }

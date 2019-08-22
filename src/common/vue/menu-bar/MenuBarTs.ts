@@ -120,7 +120,7 @@ export class MenuBarTs extends Vue {
     }
 
     switchPanel(index) {
-        if (this.$store.state.app.isInLoginPage) {
+        if (!this.$store.state.app.walletList.length) {
             return
         }
         const routerIcon = routers[0].children
@@ -157,7 +157,6 @@ export class MenuBarTs extends Vue {
     }
 
     accountQuit() {
-        this.$store.state.app.isInLoginPage = true
         this.$store.state.app.currentPanelIndex = 0
         this.$router.push({
             name: "login",
