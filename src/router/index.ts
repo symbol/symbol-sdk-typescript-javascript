@@ -10,8 +10,9 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     const walletList = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
-    const {path} = to
-    if (!to.name || (!walletList.length && path !== '/login')) {
+    const toPath = to.path
+    const fromPath = from.path
+    if (!to.name || (!walletList.length && toPath !== '/login' && fromPath !== '/login')) {
         next({
             path: '/login'
         })
