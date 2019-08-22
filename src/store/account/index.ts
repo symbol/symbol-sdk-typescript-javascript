@@ -1,21 +1,25 @@
 import {Account} from 'nem2-sdk'
 
 declare interface account {
+    node: string,
+    currentXem: string,
+    currentXEM1: string,
+    currentXEM2: string,
     account: Account,
     wallet: any,
     mosaic: any[],
     namespace: any[],
+    UnconfirmedTx: any,
+    ConfirmedTx: any,
+    errorTx: any,
+    generationHash: string
 }
 
 export default {
     state: {
-        accountPrivateKey: '',
-        accountPublicKey: '',
-        accountAddress: '',
         node: 'http://47.107.245.217:3000',
         currentXem: 'nem.xem',
         currentXEM1: '577cba5470751c05',
-        // currentXEM1: '37EF2403A20729DF',
         currentXEM2: '1B47399ABD2C1E49',
         account: {},
         wallet: {},

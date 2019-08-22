@@ -92,8 +92,8 @@ export const listenerApi: sdkApi.ws = {
                 .subscribe(announcedAggregateBonded => {
                     },
 
-                        // err =>
-                        // console.error(err)
+                    // err =>
+                    // console.error(err)
                 )
         }).catch((e) => {
             // console.log(e)
@@ -113,29 +113,26 @@ export const listenerApi: sdkApi.ws = {
                 .newBlock()
                 .subscribe(
                     (block) => {
-                        // console.log(block)
                         const {currentBlockInfo, preBlockInfo} = pointer.$store.state.app.chainStatus
-                        // console.log(pointer.$store.state.app.chainStatus)
-                        // console.log(block.timestamp.compact())
-                        pointer.$store.state.app.chainStatus.preBlockInfo = currentBlockInfo   //pre
-                        pointer.$store.state.app.chainStatus.numTransactions = block.numTransactions ? block.numTransactions : 0   //num
-                        pointer.$store.state.app.chainStatus.signerPublicKey = block.signer.publicKey
-                        pointer.$store.state.app.chainStatus.currentHeight = block.height.compact()    //height
-                        pointer.$store.state.app.chainStatus.currentBlockInfo = block
-
+                        const chainStatus = {
+                            preBlockInfo: currentBlockInfo,
+                            numTransactions: block.numTransactions ? block.numTransactions : 0,
+                            signerPublicKey: block.signer.publicKey,
+                            currentHeight: block.height.compact(),
+                            currentBlockInfo: block,
+                            currentGenerateTime: 12
+                        }
                         if (preBlockInfo.timestamp) {
                             let currentGenerateTime = (block.timestamp.compact() - preBlockInfo.timestamp.compact()) / 1000    //time
-                            pointer.$store.state.app.chainStatus.currentGenerateTime = currentGenerateTime.toFixed(0)
-                            return
+                            chainStatus.currentGenerateTime = Number(currentGenerateTime.toFixed(0))
                         }
-                        pointer.$store.state.app.chainStatus.currentGenerateTime = 12
+                        pointer.$store.commit('SET_CHAIN_STATUS', chainStatus)
                     },
                     err => {
                         // console.log(err)
                     }
                 );
         }).catch((e) => {
-            // console.log(e)
         })
 
         return {

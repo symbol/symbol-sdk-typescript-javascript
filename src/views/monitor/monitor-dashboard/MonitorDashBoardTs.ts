@@ -123,17 +123,20 @@ export class MonitorDashBoardTs extends Vue {
         }).then((result) => {
             result.result.blockchainHeight.subscribe((res) => {
                 const height = Number.parseInt(res.toHex(), 16)
-                that.$store.state.app.chainStatus.currentHeight = height
+                that.$store.commit('SET_CHAIN_STATUS',{currentHeight:height})
                 blockchainApi.getBlockByHeight({
                     node,
                     height: height
                 }).then((blockInfo) => {
                     blockInfo.result.Block.subscribe((block) => {
-                        that.$store.state.app.chainStatus.numTransactions = block.numTransactions ? block.numTransactions : 0   //num
-                        that.$store.state.app.chainStatus.signerPublicKey = block.signer.publicKey
-                        that.$store.state.app.chainStatus.currentHeight = block.height.compact()    //height
-                        that.$store.state.app.chainStatus.currentBlockInfo = block
-                        that.$store.state.app.chainStatus.currentGenerateTime = 12
+                        const chainStatus = {
+                            numTransactions: block.numTransactions ? block.numTransactions : 0,
+                            signerPublicKey: block.signer.publicKey,
+                            currentHeight: block.height.compact(),
+                            currentBlockInfo: block,
+                            currentGenerateTime: 12
+                        }
+                        that.$store.commit('SET_CHAIN_STATUS', chainStatus)
                     })
                 })
             })

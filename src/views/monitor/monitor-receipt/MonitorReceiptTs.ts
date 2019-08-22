@@ -95,12 +95,12 @@ export class MonitorReceiptTs extends Vue {
     }
 
     downloadQR() {
-        const accountAddress = this.$store.state.account.accountAddress
+        const {address} = this.getWallet
         var oQrcode: any = document.querySelector('#qrImg')
         var url = oQrcode.src
         var a = document.createElement('a')
         var event = new MouseEvent('click')
-        a.download = 'qr_receive_' + accountAddress
+        a.download = 'qr_receive_' + address
         a.href = url
         a.dispatchEvent(event)
     }
