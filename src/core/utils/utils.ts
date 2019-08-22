@@ -344,6 +344,7 @@ export const formatSeconds = function (second) {
 
 };
 export const formatXEMamount = (XEMamount) => {
+    if (!XEMamount) return '0'
     if (XEMamount.includes('.')) {
         const decimal = XEMamount.split('.')[1];
         if (decimal.length > 2) {
