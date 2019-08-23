@@ -306,7 +306,7 @@ export const zh_CN = {
     keyStore_describle: 'KeyStore是私钥被加密过后的存储文件, 在导入此文件时,需要你的KeyStore密码方可成功',
     keystore_string: 'keystore字符串',
     keystore_text: 'keystore文本',
-    keystore_describle_text: '此密码为KeyStore加密密码，在你支付的时候会被使用，如果需要修改此密码，请进入钱包管理中心',
+    keystore_describle_text: '此密码为KeyStore解密密码',
     keystore_describle_import: '从你的电脑中，选择加载KY文件或者在下方输入框中粘贴KeyStore字符串',
 
 
@@ -397,7 +397,7 @@ export const zh_CN = {
     In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks: 'nem2 的生态系统中，你可以构建自己的主网钱包，或者私用网络钱包，或者测试网络',
     set_the_wallet_name: '设置钱包名',
     The_name_of_the_wallet_can_be_convenient_for_you_to_use_you_can_distinguish_different_wallets_etc_for_better_management_after_entering_the_system_you_can_also_modify_the_wallet_details: '钱包名能方便你在使用中，可以区别不同的钱包等，便于更好的管理；进入系统后，你也可以钱包详情中修改',
-    This_password_is_used_to_encrypt_your_private_key: 'This password is used to encrypt your private key. The more complicated it is, the better the encryption will be.',
+    This_password_is_used_to_encrypt_your_private_key: '此密码用于加密您的私钥,请避免使用过于简单的密码',
     password_hint: '在 %{min} 到 %{max} 个字符。允许特殊字符: %{specialChar}',
     please_set_your_wallet_password: '请输入设置的密码',
     please_enter_your_password_again: '请再次输入你设置的密码',

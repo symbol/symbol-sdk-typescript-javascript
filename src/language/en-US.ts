@@ -313,7 +313,7 @@ export const en_US = {
     keyStore_describle: 'KeyStore is the storage file after the private key is encrypted. When importing this file, you need your KeyStore password to succeed.',
     keystore_string: 'Keystore string',
     keystore_text: 'Keystore text content',
-    keystore_describle_text: 'This password is the KeyStore encryption password, which will be used when you pay. If you need to modify this password, please enter the wallet management center.',
+    keystore_describle_text: 'This password is the KeyStore decryption password.',
     keystore_describle_import: 'From your computer, choose to load the KY file or paste the KeyStore string in the input box below.',
     //create lock pw
     new_password: 'New password',
