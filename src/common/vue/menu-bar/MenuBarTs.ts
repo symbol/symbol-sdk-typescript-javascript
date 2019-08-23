@@ -37,6 +37,7 @@ export class MenuBarTs extends Vue {
             isSelected: true,
         }
     ]
+    isNowWindowMax = false
     isShowDialog = true
     activePanelList = [false, false, false, false, false]
     currentLanguage: any = false
@@ -84,6 +85,7 @@ export class MenuBarTs extends Vue {
     }
 
     maxWindow() {
+        this.isNowWindowMax = !this.isNowWindowMax
         maxWindow()
     }
 

@@ -1,7 +1,7 @@
 import Wallet from 'ethereumjs-wallet'
 import {Message} from "@/config/index.ts"
-import {decryptKey} from "@/core/utils/wallet"
-import {copyTxt} from "@/core/utils/utils"
+import {decryptKey} from "@/core/utils/wallet.ts"
+import {copyTxt} from "@/core/utils/utils.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 @Component

@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {Account, NetworkType} from "nem2-sdk"
 import Wallet from 'ethereumjs-wallet'
 import {Component, Vue} from 'vue-property-decorator'
-import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet"
+import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet.ts"
 import {
     passwordValidator,
     ALLOWED_SPECIAL_CHAR,

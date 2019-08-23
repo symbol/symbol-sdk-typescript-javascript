@@ -8,7 +8,7 @@ export const en_US = {
     time_day: 'day',
     month: 'month',
     year: 'year',
-	// Please add Plural form for time unit here（请添加时间单复数校验）
+    // Please add Plural form for time unit here（请添加时间单复数校验）
     m_ago: 'minute ago',
     h_ago: 'hour ago',
     d_ago: 'day ago',
@@ -99,7 +99,7 @@ export const en_US = {
     no_such_currency_transaction_record_yet: 'No trading record',
     price: 'Price',
     quantity: 'Quantity',
-	sub_namespace: 'sub namespace',
+    sub_namespace: 'sub namespace',
     //monitpr-panel
     wallet_balance: 'Balance',
     asset_setting: 'Asset setting',
@@ -158,7 +158,7 @@ export const en_US = {
     remote_list_col4: 'Time',
     remote_no_data: 'No data',
     remote_repaly: 'Delegated harvesting',
-	receive:'Receive',
+    receive: 'Receive',
     remote_modal_pul: 'Remote public key',
     remote_modal_price: 'Cost',
     reomte_modal_pass: 'password',
@@ -206,7 +206,7 @@ export const en_US = {
 
     // setting network
     save: 'Save',
-	// front end need change: canel--->cancel
+    // front end need change: canel--->cancel
     canel: 'Cancel',
 
     //setting-panel
@@ -354,11 +354,11 @@ export const en_US = {
     //export keystore
     export: 'Export',
     input_password: 'Input password',
-    set_keystore_password:'Set keystore password',
+    set_keystore_password: 'Set keystore password',
     input_keystore_password: 'Input keystore password',
-    please_enter_your_keystore_password:'Please enter your keystore password',
-    please_set_your_keystore_password:'Please set your keystore password',
-    please_enter_your_keystore_password_again:'Please enter your keystore password again',
+    please_enter_your_keystore_password: 'Please enter your keystore password',
+    please_set_your_keystore_password: 'Please set your keystore password',
+    please_enter_your_keystore_password_again: 'Please enter your keystore password again',
     input_wallet_password: 'Input wallet password',
     backup_prompt: 'Backup prompt',
     backup: 'Backup',
@@ -400,7 +400,7 @@ export const en_US = {
     display_private_key: 'Privatekey',
 
     // wallet create
-    Keystore_decryption_failed:'Keystore decryption failed',
+    Keystore_decryption_failed: 'Keystore decryption failed',
     choose_network: 'Choose network',
     In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks: 'In the \'nem2 ecosystem, you can build your own home wallet, or private network wallet, or test the network.',
     set_the_wallet_name: 'Set the wallet name',
@@ -617,17 +617,17 @@ export const en_US = {
     mosaic_definition: 'Mosaic definition',
     mosaic_supply_change: 'Mosaic supply',
     modify_multisig_account: 'Modify multisigApi',
-    aggregate_complete: 'Complete',
-    aggregate_bonded: 'Bonded',
+    aggregate_complete: 'Aggregate Complete',
+    aggregate_bonded: 'Aggregate Bonded',
     lock: 'Lock',
     secret_lock: 'Secret lock',
-	//secret_proof
+    //secret_proof
     scret_proof: 'Secret proof',
     modify_account_property_address: 'Address filter',
     modify_account_property_mosaic: 'Mosaic filter',
     modify_account_property_entity_type: 'Entity filter',
     link_account: 'Link account',
     please_choose_entity_type: 'please choose entity type',
-    Node_connection_failed:'Node connection failed',
-    Node_connection_succeeded:'Node connection succeeded'
+    Node_connection_failed: 'Node connection failed',
+    Node_connection_succeeded: 'Node connection succeeded'
 }

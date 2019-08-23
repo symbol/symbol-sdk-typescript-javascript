@@ -25,8 +25,10 @@
       <div class="controller">
         <div class="window_controller">
           <div>
+            <!--             TODO UPDATE MIN ICON-->
             <span class="pointer" @click="minWindow"></span>
-            <span class="pointer" @click="maxWindow"></span>
+            <span class="pointer not_window_max " v-if="!isNowWindowMax" @click="maxWindow"></span>
+            <span class="pointer now_window_max" v-else @click="maxWindow"></span>
             <span class="pointer" @click="closeWindow"></span>
           </div>
         </div>
@@ -86,6 +88,6 @@
 </script>
 
 <style scoped lang="less">
-  @import "./MenuBar.less";
+  @import "./MenuBarWindows.less";
 </style>
 

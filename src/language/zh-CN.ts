@@ -159,7 +159,7 @@ export const zh_CN = {
     use_the_NEM_Apostille_service_to_create_blockchain_notarized_timestamps_to_track_and_audit_file_authentication_status: '使用NEM Apostille服务创建区块链公证时间戳,跟踪和审计文件认证状态。',
     assign_tags_to_addresses_to_easily_track_contacts: '将标签分配给地址以轻松跟踪联系人',
     use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates: 'Use Changelly and ShapeShift widgets to buy XEM at the best rates!',
-
+    receive: '收款',
 //   monitor-transfer
     transfer_target: '转账目标',
     send: '发送',
@@ -351,8 +351,8 @@ export const zh_CN = {
     input_wallet_password: '输入钱包密码',
     set_keystore_password: '设置keystore密码',
     input_keystore_password: '输入keystore密码',
-    please_enter_your_keystore_password:'请输入keystore密码',
-    please_set_your_keystore_password:'请设置keystore密码',
+    please_enter_your_keystore_password: '请输入keystore密码',
+    please_set_your_keystore_password: '请设置keystore密码',
     backup_prompt: '备份提示',
     backup: '备份',
     obtaining_a_Keystore_password_is_equal_to_owning_a_wallet_asset: '获得Keystore+密码等于拥有钱包资产所有权',
@@ -360,7 +360,7 @@ export const zh_CN = {
     offline_storage: '离线保管',
     keep_it_in_a_safe_place_on_the_isolated_network: '妥善保管至隔离网络的安全地方,请勿将助记词在联网环境下分享和存储,比如邮件、相册、社交应用等',
     please_safely_back_up_the_Keystore: '请安全备份Keystore',
-    please_enter_your_keystore_password_again:'请确认keystore密码',
+    please_enter_your_keystore_password_again: '请确认keystore密码',
     do_not_save_to_email_notepad_web_chat_etc_It_is_very_dangerous_Please_don_use_network_transmission: '切勿保存至邮箱、记事本、网盘、聊天工具等，非常危险请勿使用网络传输',
     do_not_use_network_transmission: '请勿使用网络传输',
     Do_not_transmit_through_network_tools_once_acquired_by_hackers_will_cause_irreparable_asset_losses_It_is_recommended_that_the_offline_device_be_transmitted_by_scanning_the_QR_code: '请勿通过网络工具传输，一旦被黑客获取将造成不可挽回的资产损失。建议离线设备通过扫二维码方式传输。',
@@ -430,7 +430,7 @@ export const zh_CN = {
     Mnemonic_inconsistency: '助记词不一致',
 
     //wallet details
-    Keystore_decryption_failed:'keystore解密失败',
+    Keystore_decryption_failed: 'keystore解密失败',
     Basic_information: '基本信息',
     Wallet_type: '钱包类型',
     Public_wallet: '公共钱包',
