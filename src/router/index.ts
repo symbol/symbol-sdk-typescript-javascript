@@ -21,8 +21,4 @@ router.beforeEach((to, from, next) => {
     }
 })
 
-router.afterEach((to, from) => {
-
-})
-
 export default router

@@ -618,5 +618,22 @@ export const zh_CN = {
     Node_connection_failed: '节点连接失败',
     Node_connection_succeeded: '节点连接成功',
 
+    // Forms
+    newPassword: 'new password',
+    LABEL_new_password: 'New password',
+    HINT_new_password1: 'should be between 6 and 32 chars.',
+    HINT_new_password2: 'allowed special chars: - _ ! @ # $ & * " ~ + = %',
+    PLACEHOLDER_new_password: '9_pass-WORD',
 
+    previousPassword: 'previous password',
+    LABEL_previous_password: 'Previous password',
+    HINT_previous_password: 'The password used to log into the application',
+    PLACEHOLDER_previous_password: 'My FiRst Pa$$word!',
+
+    confirmPassword: 'confirm password',
+    LABEL_confirm_password: 'Confirm your new password',
+    PLACEHOLDER_confirm_password: '9_pass-WORD',
+    cipher: 'cipher',
+
+    HINT_cipher_hint1: 'should be between 1 and 32 chars.',
 }

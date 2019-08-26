@@ -1,64 +1,38 @@
 import {Message} from "@/config/index.ts"
-import {UInt64} from 'nem2-sdk'
-import {
-    passwordValidator,
-    MIN_PASSWORD_LENGTH,
-    MAX_PASSWORD_LENGTH,
-    ALLOWED_SPECIAL_CHAR,
-} from '@/core/utils/validation.ts'
-import {localSave} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
-import {encryptKey} from "@/core/utils/wallet.ts";
+import {AppLock} from "@/core/utils/AppLock"
+import { formFields } from '@/core/validation'
 
 @Component
 export class CreateLockTs extends Vue {
+    formFields: object = formFields
+    errors: any
+
     lockPW = {
         password: '',
         checkPW: '',
-        remindTxt: ''
+        hint: ''
     }
 
-    passwordValidator = passwordValidator
-    MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
-    MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
-    ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
+    submit() {
+      console.log('SUBMIT CALLED')
+      if(this.errors.items.length > 0) {
+        this.$Notice.error({ title: this.errors.items[0].msg })
+        return
+      }
 
-    checkInput() {
-        if (!passwordValidator(this.lockPW.password)) {
-            this.$Notice.error({
-                title: this.$t(Message.PASSWORD_CREATE_ERROR) + ''
-            });
-            return false
-        }
-        if (this.lockPW.password !== this.lockPW.checkPW) {
-            this.$Notice.error({
-                title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + '',
-            });
-            return false
-        }
-        if (!this.lockPW.remindTxt || this.lockPW.remindTxt === '') {
-            this.$Notice.error({
-                title: this.$t(Message.PASSWORD_HIT_SETTING_ERROR) + '',
-            });
-            return false
-        }
-        return true
+      this.$validator
+        .validate()
+        .then((valid) => {
+          if(!valid) return
+          new AppLock().storeLock(this.lockPW.password, this.lockPW.hint)
+          this.showIndexView()
+          this.$Notice.success({
+             title: this.$t(Message.SUCCESS) + ''
+          })
+        });
     }
 
-    showIndexView() {
-        const u = [50, 50]
-        if (!this.checkInput()) return
-        const encryptObj = encryptKey(new UInt64(u).toHex(), this.lockPW.password)
-        let saveData = {
-            ciphertext: encryptObj.ciphertext,
-            iv: encryptObj.iv,
-            remindTxt: this.lockPW.remindTxt
-        }
-        localSave('lock', JSON.stringify(saveData))
-        this.$emit('showIndexView', 2)
-    }
-
-    hideIndexView() {
-        this.$emit('showIndexView', 0)
-    }
+    showIndexView() { this.$emit('showIndexView', 2) }
+    hideIndexView() { this.$emit('showIndexView', 0) }
 }

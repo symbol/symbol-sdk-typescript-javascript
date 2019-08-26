@@ -9,7 +9,7 @@ import {
     MAX_PASSWORD_LENGTH,
     MIN_PASSWORD_LENGTH,
     passwordValidator
-} from "@/core/utils/validation.ts";
+} from "@/core/validation";
 
 @Component
 export class WalletImportMnemonicTs extends Vue {

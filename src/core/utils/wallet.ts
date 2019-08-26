@@ -182,7 +182,7 @@ export const multisigAccountInfo = (address, node) => {
 }
 
 export const encryptKey = (data, password) => {
-    return Crypto.encrypt(data, password)
+  return Crypto.encrypt(data, password)
 }
 
 export const decryptKey = (wallet, password) => {

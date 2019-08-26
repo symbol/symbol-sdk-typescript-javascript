@@ -25,6 +25,7 @@ export class SettingPanelTs extends Vue {
     currentHeadText = ''
 
     jumpToView(n, index) {
+        console.log(index, 'jumpToView', n)
         if (this.navagatorList[index].disabled) return
         let list = this.navagatorList
         list.map((item) => {

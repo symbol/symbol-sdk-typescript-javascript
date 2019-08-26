@@ -66,6 +66,5 @@ export class LoginTs extends Vue {
     created() {
         this.initData()
         this.isCallShowIndexView()
-
     }
 }

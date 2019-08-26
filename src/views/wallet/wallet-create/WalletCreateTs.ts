@@ -8,7 +8,7 @@ import {
     MIN_PASSWORD_LENGTH,
     MAX_PASSWORD_LENGTH,
     ALLOWED_SPECIAL_CHAR,
-} from '@/core/utils/validation.ts'
+} from '@/core/validation'
 @Component
 export class WalletCreateTs extends Vue {
     formItem = {

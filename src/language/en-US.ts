@@ -567,7 +567,7 @@ export const en_US = {
     skip: 'Skip',
     finished: 'Finished',
     forget_password: 'Forgot password',
-    passowrd_prompt: 'Passowrd hint',
+    passowrd_prompt: 'Password hint',
     XEM_market_trend_nearly_24_hours: 'XEM market trend nearly 24 hours',
     This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe: '1、This password will be used for all transactions in your wallet account. Please remember your password and keep it safe.',
     The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_the_security_of_your_wallet: '2、The password setting requirement is not less than six digits. The more complicated the recommendation, the better the security of your wallet!',
@@ -629,5 +629,24 @@ export const en_US = {
     link_account: 'Link account',
     please_choose_entity_type: 'please choose entity type',
     Node_connection_failed: 'Node connection failed',
-    Node_connection_succeeded: 'Node connection succeeded'
+    Node_connection_succeeded: 'Node connection succeeded',
+
+    // Forms
+    newPassword: 'new password',
+    LABEL_new_password: 'New password',
+    HINT_new_password1: 'should be between 6 and 32 chars.',
+    HINT_new_password2: 'allowed special chars: - _ ! @ # $ & * " ~ + = %',
+    PLACEHOLDER_new_password: '9_pass-WORD',
+
+    previousPassword: 'previous password',
+    LABEL_previous_password: 'Previous password',
+    HINT_previous_password: 'The password used to log into the application',
+    PLACEHOLDER_previous_password: 'My FiRst Pa$$word!',
+
+    confirmPassword: 'confirm password',
+    LABEL_confirm_password: 'Confirm your new password',
+    PLACEHOLDER_confirm_password: '9_pass-WORD',
+    cipher: 'cipher',
+
+    HINT_cipher_hint1: 'should be between 1 and 32 chars.',
 }

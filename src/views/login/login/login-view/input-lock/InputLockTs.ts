@@ -1,80 +1,52 @@
-import {Component, Vue} from 'vue-property-decorator'
-import {Message} from "@/config/index.ts"
-import {UInt64} from 'nem2-sdk'
-import {localRead} from '@/core/utils/utils.ts'
-import {decryptKey} from "@/core/utils/wallet.ts";
+import {Component, Vue } from 'vue-property-decorator'
+import { AppLock, StoredCipher } from '@/core/utils/AppLock'
+import { formFields } from '@/core/validation'
 
 @Component
 export class InputLockTs extends Vue {
-    lockPromptText: string = ''
-    isShowPrompt: boolean = false
-    currentText: string = ''
-    isShowClearCache: boolean = false
-    form: { password: '' } = {password: ''}
+  passwordFieldValidation = formFields.previousPassword.validation
+  storedCipher: StoredCipher = new AppLock().getLock()
+  cipher: string = this.storedCipher.cipher
+  cipherHint: string = this.storedCipher.hint
+  password: string = ''
+  errors: any
+  activeError: string = ''
+  isShowPrompt: boolean = false
+  currentText: string = ''
+  isShowClearCache: boolean = false
 
+  showPrompt() { this.isShowPrompt = true }
+  showIndexView() { this.$emit('showIndexView', 1) }
 
-    showPrompt() {
-        this.isShowPrompt = true
+  jumpToDashBoard() {
+    if (this.$store.state.app.walletList.length == 0) {
+      this.$router.push({
+        name: 'walletCreate',
+        params: { name: 'walletCreate' }
+      })
+      return
+    }
+    this.$router.push({ name: 'monitorPanel' })
+  }
+
+  submit() {
+    if(this.errors.items.length > 0) {
+      this.$Notice.error({ title: this.errors.items[0].msg })
+      return
     }
 
-    showIndexView() {
-        this.$emit('showIndexView', 1)
-    }
-
-    checkInput() {
-        const {form} = this
-        if (form.password == '') {
-            this.$Notice.error({title: this.$t(Message.INPUT_EMPTY_ERROR) + ''});
-            return false
-        }
-        return true
-    }
-
-    checkLock() {
-        if (!this.checkInput()) {
-            return
-        }
-        let lock: any = localRead('lock')
-        try {
-            const u = [50, 50]
-            lock = JSON.parse(lock)
-            const enTxt = decryptKey(lock, this.form.password)
-            if (enTxt !== new UInt64(u).toHex()) {
-                this.$Notice.error({title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''});
-                return false
-            }
-            return true
-        } catch (e) {
-            this.$Notice.error({title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''});
-            return false
-        }
-    }
-
-
-    jumpToDashBoard() {
-        if (!this.checkLock()) return
-        if (this.$store.state.app.walletList.length == 0) {
-            this.$router.push({
-                name: 'walletCreate',
-                params: {
-                    name: 'walletCreate'
-                }
-            })
-            return
-        }
-        this.$router.push({
-            name: 'monitorPanel'
-        })
-    }
+    this.$validator
+      .validate()
+      .then((valid) => {
+        if(!valid) return 
+        this.jumpToDashBoard()
+      });
+  }
 
     clearCache() {
         // localRead remove
         // localRemove('lock')
         // localRemove('wallets')
         // localRemove('loglevel:webpack-dev-server')
-    }
-
-    created() {
-        this.lockPromptText = JSON.parse(localRead('lock')?localRead('lock'):'{}').remindTxt
     }
 }

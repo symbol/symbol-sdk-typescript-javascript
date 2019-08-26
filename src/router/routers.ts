@@ -149,7 +149,7 @@
             {
                 path: '/settingPanel',
                 name: 'settingPanel',
-                redirect: '/settingNormal',
+                // redirect: '/settingNormal',
                 meta: {
                     //     disabled: true,
                 },
