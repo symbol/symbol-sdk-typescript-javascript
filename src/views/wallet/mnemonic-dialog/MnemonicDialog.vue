@@ -26,7 +26,7 @@
             </FormItem>
             <FormItem>
               <div class="buttons_container">
-                <Button type="success" @click="exportMnemonic">
+                <Button class="button_arrow" type="success" @click="exportMnemonic">
                   {{$t('next')}}
                   <Icon class="next" type="ios-arrow-round-forward"/>
                 </Button>
@@ -60,7 +60,7 @@
             </Row>
           </div>
           <div class="buttons_container">
-            <Button type="success" @click="exportMnemonic">
+            <Button class="button_arrow" type="success" @click="exportMnemonic">
               {{$t('next')}}
               <Icon class="next" type="ios-arrow-round-forward"/>
             </Button>
@@ -89,13 +89,13 @@
             <span v-for="(item, index) in mnemonicRandomArr" @click="sureWord(index)" :key="index">{{item}}</span>
           </p>
           <div class="buttons_container">
-            <Button type="success" class="preButton" @click="toPrePage()">
+            <Button type="success" class="pre_button button_arrow" @click="toPrePage()">
               <Icon class="pre" type="ios-arrow-round-back"/>
               {{$t('previous')}}
             </Button>
 
 
-            <Button type="success" @click="exportMnemonic">
+            <Button type="success" class="button_arrow" @click="exportMnemonic">
               {{$t('next')}}
               <Icon class="next" type="ios-arrow-round-forward"/>
             </Button>
@@ -109,7 +109,7 @@
           </div>
           <p class="backupTxt">{{$t('the_mnemonic_order_is_correct_and_the_backup_is_successful')}}</p>
           <div class="buttons_container">
-            <Button type="success" @click="show=false">
+            <Button class="button_arrow" type="success" @click="show=false">
               {{$t('confirm')}}
             </Button>
 

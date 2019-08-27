@@ -210,7 +210,7 @@ export const transactionApi: sdkApi.transaction = {
 
 
     announceBondedWithLock: async (params) => {
-        const {aggregateTransaction, account, listener, node, generationHash, networkType, fee, mosaicHex } = params
+        const {aggregateTransaction, account, listener, node, generationHash, networkType, fee, mosaicHex} = params
         const transactionHttp = new TransactionHttp(node);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const hashLockTransaction = HashLockTransaction.create(
@@ -242,4 +242,16 @@ export const transactionApi: sdkApi.transaction = {
             }
         }
     },
+
+    getTransactionEffectiveFee: async (params: any) => {
+        const {node, hash} = params
+        const transactionHttp = new TransactionHttp(node)
+        const effectiveFee = await transactionHttp.getTransactionEffectiveFee(hash)
+        console.log(effectiveFee)
+        return {
+            result: {
+                effectiveFee: ''
+            }
+        }
+    }
 }

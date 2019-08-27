@@ -1,20 +1,16 @@
-import Wallet from 'ethereumjs-wallet'
 import {Message} from "@/config/index.ts"
-import {decryptKey} from "@/core/utils/wallet.ts"
-import {copyTxt} from "@/core/utils/utils.ts"
+import {decryptKey, encryptKeystore} from "@/core/utils/wallet.ts"
+import {copyTxt, localRead} from "@/core/utils/utils.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 @Component
 export class KeystoreDialogTs extends Vue {
-    isGenerationKeystore = false
     stepIndex = 0
     show = false
     QRCode = ''
     keystoreText = ''
     wallet = {
-        password: '',
-        keystorePassword: '',
-        keystorePasswordAgain: ''
+        password: ''
     }
 
     @Prop()
@@ -47,35 +43,22 @@ export class KeystoreDialogTs extends Vue {
             case 2 :
                 this.stepIndex = 3
                 break;
-            case 3 :
-                this.stepIndex = 4
-                break;
         }
     }
 
     async generateKeystore() {
-        if (!this.checkKeystorePassword()) return
-        const {keystorePassword} = this.wallet
-        const privatekey = decryptKey(this.getWallet, this.wallet.password) + ''
-        let key = Buffer.from(privatekey, 'hex')
-        const wallet = await Wallet.fromPrivateKey(key);
-        this.keystoreText = await wallet.toV3String(keystorePassword)
-        this.isGenerationKeystore = false
+        const walletList = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
+        const address = this.getWallet.address
+        let walletInfo: any
+        walletList.every((item) => {
+            if (item.address === address) {
+                walletInfo = item
+                return false
+            }
+            return true
+        })
+        this.keystoreText = encryptKeystore(JSON.stringify(walletInfo))
         this.stepIndex = 2
-    }
-
-    checkKeystorePassword() {
-        const {keystorePassword, keystorePasswordAgain} = this.wallet
-        if (keystorePassword !== keystorePasswordAgain) {
-            this.$Notice.destroy()
-            this.$Notice.error({
-                title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''
-            })
-            return false
-        }
-
-        return true
-
     }
 
     checkWalletPassword() {

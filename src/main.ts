@@ -7,16 +7,20 @@ import i18n from '@/language/index.ts'
 import store from '@/store/index.ts'
 import router from '@/router/index.ts'
 import 'iview/dist/styles/iview.css'
-// import {resetFontSize} from '@/core/utils/electron'
 import htmlRem from '@/core/utils/rem.ts'
+import {isWindows} from "@/config/index.ts"
+import {resetFontSize} from '@/core/utils/electron.ts'
 import VeeValidate from 'vee-validate';
 
+Vue.use(require('vue-moment'))
 Vue.use(Router)
 //Introduced the global
 Vue.use(iView)
 Vue.use(VeeValidate, veeValidateConfig)
 htmlRem()
-// resetFontSize()
+if (isWindows) {
+    resetFontSize()
+}
 
 Vue.config.productionTip = false
 

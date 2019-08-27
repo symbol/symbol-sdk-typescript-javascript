@@ -38,7 +38,7 @@ const formatTransferTransactions = function (transaction, accountAddress, curren
         'from': transaction.infoFirst,
         'mosaic': transaction.infoSecond,
         'the_amount': transaction.infoThird,
-        'fee': transaction.maxFee.compact(),
+        'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
         'block': transaction.transactionInfo.height.compact(),
         'hash': transaction.transactionInfo.hash,
         'message': transaction.message.payload
@@ -57,12 +57,14 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.REGISTER_NAMESPACE:
             transaction.tag = transactionTag.REGIST_NAMESPACE
             transaction.icon = iconMap.dashboardNamespace
-            // transaction.infoFirst = transaction.tag;
-            // transaction.infoSecond =  transaction.maxFee.compact()
-            // transaction.infoThird = transaction.transactionInfo.height.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'space_name': transaction.namespaceName + ' (' + (transaction.namespaceType ? 'sub' : 'root') + ')',
+                'root_namespace': transaction.parentId ? transaction.parentId.id.toHex() : '-',
+                'sender': transaction.signer.publicKey,
+                'duration': transaction.duration ? transaction.duration.compact() : 0,
+                'rent': (transaction.duration ? transaction.duration.compact() : '0') * 0.00005 + ' XEM',
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -70,12 +72,9 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.ADDRESS_ALIAS:
             transaction.icon = iconMap.dashboardAddressAlias
             transaction.tag = transactionTag.ADDRESS_ALIAS
-            // transaction.infoFirst = transaction.actionType;
-            // transaction.infoSecond = transaction.namespaceId
-            // transaction.infoThird = transaction.address
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -83,12 +82,9 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.MOSAIC_ALIAS:
             transaction.icon = iconMap.dashboardMosaicAlias
             transaction.tag = transactionTag.MOSAIC_ALIAS
-            // transaction.infoFirst = transaction.transactionInfo.hash
-            // transaction.infoSecond = transaction.transactionInfo.height.compact()
-            // transaction.infoThird = '-' + transaction.maxFee.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -96,12 +92,9 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.MOSAIC_DEFINITION:
             transaction.icon = iconMap.dashboardModify
             transaction.tag = transactionTag.MOSAIC_DEFINITION
-            // transaction.infoFirst = transaction.MosaicId.id.toHex();
-            // transaction.infoSecond = transaction.mosaicProperties.supplyMutable
-            // transaction.infoThird = transaction.mosaicProperties.duration
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -110,12 +103,9 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
             transaction.icon = iconMap.dashboardModify
             transaction.tag = transactionTag.MOSAIC_SUPPLY_CHANGE
-            // transaction.infoFirst = transaction.MosaicId.id.toHex();
-            // transaction.infoSecond = transaction.direction
-            // transaction.infoThird = transaction.delta.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -124,25 +114,20 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.MODIFY_MULTISIG_ACCOUNT:
             transaction.icon = iconMap.dashboardModify
             transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
-            // transaction.infoFirst = transaction.transactionInfo.hash;
-            // transaction.infoSecond = transaction.transactionInfo.height.compact()
-            // transaction.infoThird = '-' + transaction.maxFee.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
             break;
         case TransactionType.AGGREGATE_COMPLETE:
+            console.log(transaction)
             transaction.icon = iconMap.dashboardAggregate
             transaction.tag = transactionTag.AGGREGATE_COMPLETE
-            // transaction.infoFirst = transaction.transactionInfo.hash;
-            // transaction.infoSecond = transaction.transactionInfo.height.compact()
-            // transaction.infoThird = '-' + transaction.maxFee.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -151,12 +136,9 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.AGGREGATE_BONDED:
             transaction.icon = iconMap.dashboardAggregate
             transaction.tag = transactionTag.AGGREGATE_BONDED
-            // transaction.infoFirst = transaction.transactionInfo.hash;
-            // transaction.infoSecond = transaction.transactionInfo.height.compact()
-            // transaction.infoThird = '-' + transaction.maxFee.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -165,12 +147,12 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.LOCK:
             transaction.tag = transactionTag.LOCK
             transaction.icon = iconMap.dashboardLock
-            // transaction.infoFirst = transaction.transactionInfo.hash;
-            // transaction.infoSecond = transaction.transactionInfo.height.compact()
-            // transaction.infoThird = '-' + transaction.maxFee.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'mosaic_ID': 'nem.xem' + `(${transaction.mosaic.id.toHex()})`,
+                'quantity': transaction.mosaic.amount.compact(),
+                'timestamp': transaction.time,
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -179,12 +161,9 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.SECRET_LOCK:
             transaction.tag = transactionTag.SECRET_LOCK
             transaction.icon = iconMap.dashboardSecret
-            // transaction.infoFirst = transaction.transactionInfo.hash;
-            // transaction.infoSecond = transaction.transactionInfo.height.compact()
-            // transaction.infoThird = '-' + transaction.maxFee.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -193,12 +172,9 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.SECRET_PROOF:
             transaction.icon = iconMap.dashboardSecret
             transaction.tag = transactionTag.SECRET_PROOF
-            // transaction.infoFirst = transaction.transactionInfo.hash;
-            // transaction.infoSecond = transaction.transactionInfo.height.compact()
-            // transaction.infoThird = '-' + transaction.maxFee.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -206,12 +182,9 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
             transaction.icon = iconMap.dashboardFilter
             transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ADDRESS
-            // transaction.infoFirst = transaction.transactionInfo.hash;
-            // transaction.infoSecond = transaction.transactionInfo.height.compact()
-            // transaction.infoThird = '-' + transaction.maxFee.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -219,12 +192,9 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
             transaction.icon = iconMap.dashboardFilter
             transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_MOSAIC
-            // transaction.infoFirst = transaction.transactionInfo.hash;
-            // transaction.infoSecond = transaction.transactionInfo.height.compact()
-            // transaction.infoThird = '-' + transaction.maxFee.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -232,12 +202,9 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
             transaction.icon = iconMap.dashboardFilter
             transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE
-            // transaction.infoFirst = transaction.transactionInfo.hash;
-            // transaction.infoSecond = transaction.transactionInfo.height.compact()
-            // transaction.infoThird = '-' + transaction.maxFee.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -245,12 +212,9 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
         case TransactionType.LINK_ACCOUNT:
             transaction.icon = iconMap.dashboardLinkAccount
             transaction.tag = transactionTag.LINK_ACCOUNT
-            // transaction.infoFirst = transaction.transactionInfo.hash;
-            // transaction.infoSecond = transaction.transactionInfo.height.compact()
-            // transaction.infoThird = '-' + transaction.maxFee.compact()
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'fee': transaction.maxFee.compact(),
+                'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
@@ -260,7 +224,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
 }
 
 
-export const transactionFormat = (transactionList: Array<Transaction>, accountAddress: string, currentXEM: string) => {
+export const transactionFormat = (transactionList: Array<Transaction>, accountAddress: string, currentXEM: string, namespaceList?: Array<any>) => {
     const transferTransactionList = []
     const receiptList = []
     transactionList.forEach((item) => {

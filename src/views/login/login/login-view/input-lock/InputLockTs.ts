@@ -1,6 +1,6 @@
 import {Component, Vue } from 'vue-property-decorator'
-import { AppLock, StoredCipher } from '@/core/utils/AppLock'
-import { formFields } from '@/core/validation'
+import { AppLock, StoredCipher } from '@/core/utils/AppLock.ts'
+import { formFields } from '@/core/validation/index.ts'
 
 @Component
 export class InputLockTs extends Vue {
@@ -38,7 +38,7 @@ export class InputLockTs extends Vue {
     this.$validator
       .validate()
       .then((valid) => {
-        if(!valid) return 
+        if(!valid) return
         this.jumpToDashBoard()
       });
   }

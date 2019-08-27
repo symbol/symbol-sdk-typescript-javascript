@@ -2,7 +2,9 @@ import {PublicAccount} from 'nem2-sdk'
 import {transactionApi} from '@/core/api/transactionApi.ts'
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import transacrionAssetIcon from '@/common/img/monitor/transaction/txConfirmed.png'
-import {formatTransactions, getCurrentMonthFirst, getCurrentMonthLast,} from '@/core/utils/utils.ts'
+import {formateNemTimestamp, formatTransactions, getCurrentMonthFirst, getCurrentMonthLast,} from '@/core/utils/utils.ts'
+import {blockchainApi} from "@/core/api/blockchainApi";
+import {getBlockInfoByTransactionList} from '@/core/utils/wallet.ts'
 
 
 @Component
@@ -140,7 +142,7 @@ export class CollectionRecordTs extends Vue {
                 pageSize: 100
             }
         }).then((transactionsResult) => {
-            transactionsResult.result.transactions.subscribe((transactionsInfo) => {
+            transactionsResult.result.transactions.subscribe(async (transactionsInfo) => {
                 let transferTransaction = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
                 let list = []
                 // get transaction by choose recript tx or send
@@ -151,6 +153,7 @@ export class CollectionRecordTs extends Vue {
                         }
                     })
                     that.localConfirmedTransactions = list
+                    await that.getBlockInfoByTransactionList(that.localConfirmedTransactions, node)
                     that.onCurrentMonthChange()
                     that.isLoadingTransactionRecord = false
                     return
@@ -162,11 +165,18 @@ export class CollectionRecordTs extends Vue {
                     }
                 })
                 that.localConfirmedTransactions = list
+                await that.getBlockInfoByTransactionList(that.localConfirmedTransactions, node)
                 that.onCurrentMonthChange()
                 that.isLoadingTransactionRecord = false
             })
         })
     }
+
+    getBlockInfoByTransactionList(transactionList, node) {
+        const offset = this.$store.state.app.timeZone
+        getBlockInfoByTransactionList(transactionList, node, offset)
+    }
+
 
     async getUnConfirmedTransactions() {
         const that = this
@@ -180,7 +190,7 @@ export class CollectionRecordTs extends Vue {
                 pageSize: 100
             }
         }).then((transactionsResult) => {
-            transactionsResult.result.unconfirmedTransactions.subscribe((transactionsInfo) => {
+            transactionsResult.result.unconfirmedTransactions.subscribe(async (transactionsInfo) => {
                 let transferTransaction = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
                 let list = []
                 // get transaction by choose recript tx or send
@@ -208,9 +218,6 @@ export class CollectionRecordTs extends Vue {
     }
 
     initData() {
-        if (!this.getWallet) {
-            return
-        }
         this.accountPrivateKey = this.getWallet.privateKey
         this.accountPublicKey = this.getWallet.publicKey
         this.accountAddress = this.getWallet.address

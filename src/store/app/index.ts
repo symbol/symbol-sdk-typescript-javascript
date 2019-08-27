@@ -6,6 +6,7 @@ declare interface appInfo {
     languageList: Array<any>,
     currentPanelIndex: number,
     mnemonic: string,
+    timeZone: number,
     chainStatus: {
         currentHeight: number,
         currentGenerateTime: number,
@@ -19,6 +20,7 @@ declare interface appInfo {
 
 export default {
     state: {
+        timeZone: new Date().getTimezoneOffset() / 60,   // current time zone
         local: false,
         currentPanelIndex: 0,
         localMap: {
@@ -63,6 +65,9 @@ export default {
         },
         SET_MNEMONIC(state: appInfo, mnemonic: string): void {
             state.mnemonic = mnemonic
+        },
+        SET_TIME_ZONE(state: appInfo, timeZone: number): void {
+            state.timeZone = timeZone
         },
         SET_CHAIN_STATUS(state: appInfo, chainStatus: any) {
             const {currentHeight, currentGenerateTime, numTransactions, currentBlockInfo, preBlockInfo, signerPublicKey, nodeAmount} = chainStatus

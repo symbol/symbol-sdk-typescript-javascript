@@ -1,11 +1,12 @@
 <template>
-  <div id="app">
-    <router-view />
+  <div id="app" :class="[isWindows?'windows':'mac']">
+    <router-view/>
   </div>
 </template>
 
 <script lang="ts">
     import 'animate.css'
+    import {isWindows} from "@/config/index.ts"
     import {localRead} from '@/core/utils/utils.ts'
     import {PublicAccount, Listener} from "nem2-sdk"
     import {checkInstall} from '@/core/utils/electron.ts'
@@ -13,9 +14,11 @@
     import {listenerApi} from '@/core/api/listenerApi.ts'
     import {Component, Vue} from 'vue-property-decorator'
 
+
     @Component
     export default class App extends Vue {
         node: any
+        isWindows = isWindows
 
         async initApp() {
             let walletList: any = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
@@ -80,7 +83,7 @@
         }
 
         initData() {
-            if(!this.$store){
+            if (!this.$store) {
                 return
             }
             this.node = this.$store.state.account.node
@@ -90,7 +93,7 @@
         }
 
         chainListner() {
-            if(!this.node){
+            if (!this.node) {
                 return
             }
             const node = this.node.replace('http', 'ws')
@@ -102,7 +105,9 @@
         }
 
         created() {
-            // checkInstall()
+            if (isWindows) {
+                checkInstall()
+            }
             this.initData()
             this.initApp()
             this.chainListner()
@@ -112,5 +117,6 @@
 
 <style lang="less">
   @import "./common/css/common.less";
-  @import "./common/css/iview.less";
+  @import "./common/css/ivewWindows.less";
+  @import "./common/css/iviewMac.less";
 </style>

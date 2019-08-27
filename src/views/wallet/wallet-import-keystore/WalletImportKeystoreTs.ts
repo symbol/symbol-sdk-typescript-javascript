@@ -1,8 +1,13 @@
 import {Message} from "@/config/index.ts"
 import {Account, NetworkType} from "nem2-sdk"
-import Wallet from 'ethereumjs-wallet'
 import {Component, Vue} from 'vue-property-decorator'
-import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet.ts"
+import {
+    decryptKeystore,
+    getAccountDefault,
+    encryptKey,
+    decryptKey,
+    saveLocalWallet
+} from "@/core/utils/wallet.ts"
 import {
     passwordValidator,
     ALLOWED_SPECIAL_CHAR,
@@ -38,10 +43,10 @@ export class WalletImportKeystoreTs extends Vue {
     formItem = {
         walletName: 'wak',
         networkType: NetworkType.MIJIN_TEST,
-        keystoreStr: '{"version":3,"id":"8f68aaa2-3f30-4cfd-b847-875e68a4697f","address":"a86a2bf1ae8942c4cbd3942322171352fae26abc","crypto":{"ciphertext":"5be1181a01f2a9a63de7afc66423c458e2b962d6b0986039d6269cb96ba6d56b","cipherparams":{"iv":"6ab5676a6df280be6c8872c62e7f058b"},"cipher":"aes-128-ctr","kdf":"scrypt","kdfparams":{"dklen":32,"salt":"1246dc705e65f13cc393e1e8842f182336d134c00f4934c3f87fbcda15f2627a","n":262144,"r":8,"p":1},"mac":"7bbf13c9e9d072664133eae4b5c6aa73af353c0ed9762d5a174785d3423e11d3"}}',
-        walletPassword: '',
-        walletPasswordAgain: '',
-        keystorePassword: '1'
+        keystoreStr: 'eyJuYW1lIjoiMzIxMzIxMzEyIiwiY2lwaGVydGV4dCI6eyJ3b3JkcyI6Wzg1NDY0MjkyNSwyMDMwOTQ2OTg5LC0xMTYzOTM0MCwxMjYzMTEzOTQyLDE1OTgyNzY0MjMsLTEzNDMwODUyMDgsLTEwMTM2MDI4NzAsMTIxNDI5ODg2LC0xNTkyNDUzNzg0LDE1OTU5OTEwMDYsLTEwMzkxMTQ1NjQsNzI4MjgxODc3XSwic2lnQnl0ZXMiOjQ4fSwiaXYiOnsidHlwZSI6IkJ1ZmZlciIsImRhdGEiOlsxODAsMTk2LDIyNywxNjYsMTc4LDIzNSw4OSwxNDUsMjI4LDY2LDExMiw2MSwyNCwyNSwzOCwxNjZdfSwibmV0d29ya1R5cGUiOjE0NCwiYWRkcmVzcyI6IlNBVUE1SlFSUDJGQk5QQU8zRlFJUlRKUlM1UEhKVjdDTFpTT1lMS0YiLCJwdWJsaWNLZXkiOiI2MjMyM0JDMkQwNzVDRDgxNUU0QTcxQjE4NzQ3MDhDOEVBQUVGRUMyOTVDNkYxQTgyRTZCOTE4MjJCQjJEREJCIiwibW5lbW9uaWNFbkNvZGVPYmoiOnt9fQ==',
+        walletPassword: '111111',
+        walletPasswordAgain: '111111',
+        keystorePassword: '123'
     }
 
 
@@ -64,18 +69,18 @@ export class WalletImportKeystoreTs extends Vue {
     }
 
     async importWalletByKeystore() {
-        const {keystoreStr, networkType, keystorePassword} = this.formItem
+        const {keystoreStr, networkType, keystorePassword, walletPassword} = this.formItem
         const that = this
-        try {
-            let privatekey = Wallet.fromV3(keystoreStr.trim(), keystorePassword).getPrivateKeyString()
-            privatekey = privatekey.substr(2, 64)
-            const account = Account.createFromPrivateKey(privatekey, networkType)
-            this.loginWallet(account)
-        } catch (e) {
+        const wallet = JSON.parse(decryptKeystore(keystoreStr))
+        const privatekey = decryptKey(wallet, keystorePassword) + ''
+        if (!privatekey || privatekey.length !== 64) {
             this.$Notice.error({
                 title: this.$t(Message.KEYSTORE_DECRYPTION_FAILED) + ''
             })
+            return
         }
+        const account = Account.createFromPrivateKey(privatekey, networkType)
+        this.loginWallet(account)
     }
 
     loginWallet(account) {
@@ -103,7 +108,7 @@ export class WalletImportKeystoreTs extends Vue {
         this.$emit('toWalletDetails')
     }
 
-    checkForm() {
+    async checkForm() {
         const {keystoreStr, networkType, walletName, walletPassword, keystorePassword, walletPasswordAgain} = this.formItem
         if (networkType == 0) {
             this.$Notice.error({
@@ -117,14 +122,14 @@ export class WalletImportKeystoreTs extends Vue {
             })
             return false
         }
-
-        if (!walletPassword) {
+        if (!walletPassword || walletPassword.length < 6) {
             this.$Notice.error({
                 title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
             })
             return false
         }
-        if (walletPassword !== walletPasswordAgain) {
+
+        if (walletPassword != walletPasswordAgain) {
             this.$Notice.error({
                 title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''
             })

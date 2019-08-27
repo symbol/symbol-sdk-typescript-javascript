@@ -326,6 +326,12 @@ declare namespace sdkApi {
         }) => Rst<{
             aggregateBondedTx: any
         }>;
+        getTransactionEffectiveFee: (params: {
+            node: string,
+            hash: string
+        }) => Rst<{
+            effectiveFee: string
+        }>;
 
     }
 

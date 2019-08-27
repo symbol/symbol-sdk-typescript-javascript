@@ -131,7 +131,6 @@ export class MosaicTransactionTs extends Vue {
     showCheckDialog() {
         const {supply, divisibility, transferable, supplyMutable, duration, innerFee} = this.formItem
         const address = this.getWallet.address
-        // TODO mosaic transaction detail
         this.transactionDetail = {
             "address": address,
             "supply": supply,

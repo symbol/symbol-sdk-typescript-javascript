@@ -103,7 +103,7 @@
           <div class="unconfirmed_transactions">
             <Spin v-if="isLoadingTransactions" size="large" fix class="absolute"></Spin>
             <div class="table_body hide_scroll" ref="unconfirmedTableBody">
-              <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in receiptList"
+              <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in currentTransactionList"
                    :key="index">
                 <img class="mosaic_action"
                      :src="u.icon" alt="">

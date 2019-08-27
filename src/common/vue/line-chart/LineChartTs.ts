@@ -11,7 +11,6 @@ export  class LineChartTs extends Vue {
     spinShow = true
     xemDataList = []
     btcDataList = []
-    // TODO put option in configure.ts
     option = {
         legend: [
             {

@@ -79,8 +79,6 @@
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
           </div>
         </div>
-
-        <!-- TODO confirm  isMultisigAccount-->
         <div v-else>
           <div class="form_item">
             <span class="key">{{$t('inner_fee')}}</span>

@@ -1,8 +1,13 @@
 import {TransactionType} from 'nem2-sdk'
+import {timeZoneList} from '@/config/TimeZone.ts'
+
+const isWin32 = require('./packgeParam.ts').isWin32
 
 export const apiUrl = process.env.NODE_ENV === 'production' ? 'http://120.79.181.170' : 'http://120.79.181.170'
 
 export const bandedNamespace = ['nem', 'user', 'account', 'org', 'com', 'biz', 'net', 'edu', 'mil', 'gov ', 'info']
+
+export const isWindows = isWin32
 
 export const AppConfig = {
     apiUrl: 'http://120.79.181.170',
@@ -15,7 +20,7 @@ export const Message = {
     SUCCESS: 'success',
     OPERATION_SUCCESS: 'successful_operation',
     UPDATE_SUCCESS: 'update_completed',
-    NODE_CONNECTION_SUCCEEDED:'Node_connection_succeeded',
+    NODE_CONNECTION_SUCCEEDED: 'Node_connection_succeeded',
 
     PLEASE_SET_WALLET_PASSWORD_INFO: 'please_set_your_wallet_password',
     PLEASE_ENTER_MNEMONIC_INFO: 'Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct',
@@ -60,8 +65,8 @@ export const Message = {
     NAMESPACE_FORMAT_ERROR: 'Namespace_can_only_contain_numbers_letters_and_other',
     NAMESPACE_USE_BANDED_WORD_ERROR: 'Namespace_cannot_use_forbidden_words',
     SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR: 'The_sub_namespace_cannot_be_longer_than_16',
-    NODE_CONNECTION_ERROR:'Node_connection_failed',
-    KEYSTORE_DECRYPTION_FAILED:'Keystore_decryption_failed',
+    NODE_CONNECTION_ERROR: 'Node_connection_failed',
+    KEYSTORE_DECRYPTION_FAILED: 'Keystore_decryption_failed',
 
 }
 
@@ -153,4 +158,6 @@ export const entityTypeList = {
         value: TransactionType.LINK_ACCOUNT
     }
 }
+
+export const timeZoneListData = timeZoneList
 

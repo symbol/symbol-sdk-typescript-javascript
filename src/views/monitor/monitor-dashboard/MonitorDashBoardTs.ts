@@ -1,13 +1,14 @@
 import {market} from "@/core/api/logicApi.ts"
 import {KlineQuery} from "@/core/query/klineQuery.ts"
-import {PublicAccount, NetworkType} from 'nem2-sdk'
-import {Component, Vue, Watch} from 'vue-property-decorator'
-import {blockchainApi} from '@/core/api/blockchainApi.ts'
-import LineChart from '@/common/vue/line-chart/LineChart.vue'
-import {transactionApi} from '@/core/api/transactionApi.ts'
-import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
 import {transactionFormat} from '@/core/utils/format.ts'
-import {isRefreshData, localSave, localRead} from '@/core/utils/utils.ts'
+import {blockchainApi} from '@/core/api/blockchainApi.ts'
+import {transactionApi} from '@/core/api/transactionApi.ts'
+import {Component, Vue, Watch} from 'vue-property-decorator'
+import {PublicAccount, NetworkType, Deadline} from 'nem2-sdk'
+import LineChart from '@/common/vue/line-chart/LineChart.vue'
+import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
+import {getBlockInfoByTransactionList} from "@/core/utils/wallet";
+import {isRefreshData, localSave, localRead, formateNemTimestamp} from '@/core/utils/utils.ts'
 import dashboardBlockTime from '@/common/img/monitor/dash-board/dashboardBlockTime.png'
 import dashboardPublickey from '@/common/img/monitor/dash-board/dashboardPublickey.png'
 import dashboardBlockHeight from '@/common/img/monitor/dash-board/dashboardBlockHeight.png'
@@ -123,7 +124,7 @@ export class MonitorDashBoardTs extends Vue {
         }).then((result) => {
             result.result.blockchainHeight.subscribe((res) => {
                 const height = Number.parseInt(res.toHex(), 16)
-                that.$store.commit('SET_CHAIN_STATUS',{currentHeight:height})
+                that.$store.commit('SET_CHAIN_STATUS', {currentHeight: height})
                 blockchainApi.getBlockByHeight({
                     node,
                     height: height
@@ -156,8 +157,9 @@ export class MonitorDashBoardTs extends Vue {
                 pageSize: 100
             }
         }).then((transactionsResult) => {
-            transactionsResult.result.transactions.subscribe((transactionsInfo) => {
+            transactionsResult.result.transactions.subscribe(async (transactionsInfo) => {
                 that.allTransacrionList.push(...transactionsInfo)
+                await that.getBlockInfoByTransactionList(that.allTransacrionList, node)
             })
         })
     }
@@ -174,12 +176,13 @@ export class MonitorDashBoardTs extends Vue {
                 pageSize: 100
             }
         }).then((transactionsResult) => {
-            transactionsResult.result.unconfirmedTransactions.subscribe((unconfirmedtransactionsInfo) => {
+            transactionsResult.result.unconfirmedTransactions.subscribe(async (unconfirmedtransactionsInfo) => {
                 unconfirmedtransactionsInfo = unconfirmedtransactionsInfo.map((unconfirmedtransaction) => {
                     unconfirmedtransaction.isTxUnconfirmed = true
                     return unconfirmedtransaction
                 })
                 that.allTransacrionList.push(...unconfirmedtransactionsInfo)
+                await that.getBlockInfoByTransactionList(that.allTransacrionList, node)
             })
         })
     }
@@ -197,16 +200,22 @@ export class MonitorDashBoardTs extends Vue {
 
     changePage(page) {
         const pageSize = 10
-        const {showConfirmedTransactions} = this
+        const {showConfirmedTransactions, node} = this
         const start = (page - 1) * pageSize
         const end = page * pageSize
         if (showConfirmedTransactions) {
-            //transfer
             this.currentTransactionList = this.transferTransactionList.slice(start, end)
             return
         }
         this.currentTransactionList = this.receiptList.slice(start, end)
     }
+
+
+    getBlockInfoByTransactionList(transactionList, node) {
+        const offset = this.$store.state.app.timeZone
+        getBlockInfoByTransactionList(transactionList, node, offset)
+    }
+
 
     @Watch('getWallet')
     onGetWalletChange() {
@@ -228,8 +237,9 @@ export class MonitorDashBoardTs extends Vue {
     onAllTransacrionListChange() {
         const currentXEM = this.$store.state.account.currentXEM1
         const {allTransacrionList, accountAddress, showConfirmedTransactions} = this
-        this.transferTransactionList = transactionFormat(allTransacrionList, accountAddress, currentXEM).transferTransactionList
-        this.receiptList = transactionFormat(allTransacrionList, accountAddress, currentXEM).receiptList
+        const transactionList = transactionFormat(allTransacrionList, accountAddress, currentXEM)
+        this.transferTransactionList = transactionList.transferTransactionList
+        this.receiptList = transactionList.receiptList
         this.changePage(1)
         this.transferListLength = this.transferTransactionList.length
         this.receiptListLength = this.receiptList.length
@@ -247,6 +257,7 @@ export class MonitorDashBoardTs extends Vue {
     }
 
     created() {
+
         this.initData()
         this.getMarketOpenPrice()
         this.refreshTransferTransactionList()

@@ -1,5 +1,5 @@
 import routers from '@/router/routers.ts'
-import {Message} from "@/config/index.ts"
+import {Message, isWindows} from "@/config/index.ts"
 import {listenerApi} from "@/core/api/listenerApi.ts"
 import {blockchainApi} from '@/core/api/blockchainApi.ts'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
@@ -12,6 +12,7 @@ import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/core/utils/
 @Component
 export class MenuBarTs extends Vue {
     isShowNodeList = false
+    isWindows = isWindows
     inputNodeValue = ''
     nodetList = [
         {
@@ -324,7 +325,9 @@ export class MenuBarTs extends Vue {
     }
 
     created() {
-        // windowSizeChange()
+        if (isWindows) {
+            windowSizeChange()
+        }
         this.initData()
         this.onCurrentNode()
         this.unconfirmedListener()

@@ -8,7 +8,7 @@ export const en_US = {
     time_day: 'day',
     month: 'month',
     year: 'year',
-    // Please add Plural form for time unit here（请添加时间单复数校验）
+    // Please add Plural form for time unit here
     m_ago: 'minute ago',
     h_ago: 'hour ago',
     d_ago: 'day ago',
@@ -219,6 +219,7 @@ export const en_US = {
     //setting-normal
     switch_language: 'Switch language',
     currency_setting: 'Currency setting',
+    Time_zone_setting: 'Time zone setting',
     account_name: 'Account name',
     the_default_is_Number: 'The default is Nember',
     confirm: 'Confirm',
@@ -567,7 +568,7 @@ export const en_US = {
     skip: 'Skip',
     finished: 'Finished',
     forget_password: 'Forgot password',
-    passowrd_prompt: 'Password hint',
+    passowrd_prompt: 'Passowrd hint',
     XEM_market_trend_nearly_24_hours: 'XEM market trend nearly 24 hours',
     This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe: '1、This password will be used for all transactions in your wallet account. Please remember your password and keep it safe.',
     The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_the_security_of_your_wallet: '2、The password setting requirement is not less than six digits. The more complicated the recommendation, the better the security of your wallet!',
@@ -611,7 +612,7 @@ export const en_US = {
     delete_wallet: 'Delete wallet',
 
 
-    regist_namespace: 'Regist namespace',
+    regist_namespace: 'Regist/Renewal namespace',
     address_alias: 'Address alias',
     mosaic_alias: 'Mosaic alias',
     mosaic_definition: 'Mosaic definition',
@@ -629,8 +630,6 @@ export const en_US = {
     link_account: 'Link account',
     please_choose_entity_type: 'please choose entity type',
     Node_connection_failed: 'Node connection failed',
-    Node_connection_succeeded: 'Node connection succeeded',
-
     // Forms
     newPassword: 'new password',
     LABEL_new_password: 'New password',
@@ -649,4 +648,10 @@ export const en_US = {
     cipher: 'cipher',
 
     HINT_cipher_hint1: 'should be between 1 and 32 chars.',
+    Node_connection_succeeded: 'Node connection succeeded',
+
+    This_password_is_used_for_importing_the_keystore_file: 'This password is the password for decrypting the Keystore and is used for importing the keystore file. Please remember it.',
+    timestamp: 'timestamp',
+    sender: 'sender'
+
 }

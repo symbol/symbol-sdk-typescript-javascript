@@ -3,27 +3,29 @@
     <div class="lock_content">
       <ul>
         <li>
-          <FormInput fieldName="previousPassword" :formModel="formModel" />
+          <FormInput fieldName="previousPassword" :formModel="formModel"/>
         </li>
         <li>
-          <FormInput fieldName="newPassword" :formModel="formModel" />
+          <FormInput fieldName="newPassword" :formModel="formModel"/>
         </li>
         <li>
-          <FormInput fieldName="confirmPassword" :formModel="formModel" />
+          <FormInput fieldName="confirmPassword" :formModel="formModel"/>
           <span
-            :class="`submit-button${submitDisabled ? ' submit-button-disabled' : ''}`"
-            @click="submit"
+                  :class="`submit-button${submitDisabled ? ' submit-button-disabled' : ''}`"
+                  @click="submit"
           >{{$t('confirm')}}</span>
         </li>
-        <FormInput style="display:none" fieldName="cipher" :formModel="formModel" />
+        <FormInput style="display:none" fieldName="cipher" :formModel="formModel"/>
       </ul>
     </div>
   </form>
 </template>
 
 <script lang="ts">
-  import {SettingLockTs} from './SettingLockTs'
-  export default class SettingLock extends SettingLockTs { }
+    import {SettingLockTs} from '@/views/setting/setting-lock/SettingLockTs.ts'
+
+    export default class SettingLock extends SettingLockTs {
+    }
 </script>
 <style scoped lang="less">
   @import "SettingLock.less";

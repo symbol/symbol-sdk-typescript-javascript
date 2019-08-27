@@ -23,7 +23,8 @@
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
-              <Button type="success" @click="exportPrivatekey">{{$t('next')}}
+              <Button type="success" class="button_arrow" @click="exportPrivatekey">
+                {{$t('next')}}
                 <Icon type="ios-arrow-round-forward"/>
               </Button>
             </FormItem>
@@ -52,7 +53,7 @@
               </Col>
             </Row>
           </div>
-          <Button type="success" @click="exportPrivatekey">{{$t('next')}}
+          <Button type="success" class="button_arrow" @click="exportPrivatekey">{{$t('next')}}
             <Icon type="ios-arrow-round-forward"/>
           </Button>
         </div>
@@ -66,12 +67,11 @@
           <p class="tit">{{$t('password_management_tool_save')}}</p>
           <p class="txt">{{$t('it_is_recommended_to_use_password_management_tool_management')}}</p>
           <div class="privateKeyCode">{{wallet.privatekey }}</div>
-          <Button type="success" @click="exportPrivatekey">{{$t('display_private_key_QR_code')}}</Button>
+          <Button type="success" class="button_arrow" @click="exportPrivatekey">{{$t('display_private_key_QR_code')}}</Button>
         </div>
         <div class="stepItem4" v-if="stepIndex == 3">
           <div class="QRCodeImg">
             <img :src="QRCode">
-            <div class="imgBorder"></div>
           </div>
           <div class="btns">
             <Row :gutter="80">

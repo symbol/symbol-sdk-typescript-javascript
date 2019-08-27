@@ -17,8 +17,27 @@
             <Option v-for="item in coinList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
-
       </li>
+
+      <li>
+        {{$t('Time_zone_setting')}}
+        <div class="gray_content">
+
+          <Select v-model="tz" :placeholder="$t('Time_zone_setting')" >
+            <Option v-for="item in timeZoneListData" :value="item.value" :key="item.value">
+              <span @click="chooseTimeZone(item)">{{ item.label }}</span>
+            </Option>
+          </Select>
+
+          <!--          -->
+          <!--          <Select v-model="tz" :placeholder="$t('Time_zone_setting')">-->
+          <!--            <Option @click="chooseTimeZone(item)" v-for="item in timeZoneListData" :value="item.value"-->
+          <!--                    :key="item.value">-->
+          <!--              <span>{{ item.label }}</span></Option>-->
+          <!--          </Select>-->
+        </div>
+      </li>
+
       <li>
         {{$t('account_name')}}
         <div class="tips">{{$t('the_default_is_Number')}}</div>
