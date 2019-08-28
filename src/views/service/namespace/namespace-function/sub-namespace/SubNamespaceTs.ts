@@ -2,10 +2,10 @@ import {Account} from "nem2-sdk"
 import {Message, bandedNamespace as BandedNamespaceList} from "@/config/index.ts"
 import {formatAddress} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {namespaceApi} from "@/core/api/namespaceApi.ts"
-import {transactionApi} from "@/core/api/transactionApi.ts"
+import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
+import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {multisigApi} from "@/core/api/multisigApi.ts"
+import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
 
 @Component({
     components: {
@@ -83,19 +83,14 @@ export class SubNamespaceTs extends Vue {
         const that = this;
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
 
-        await this.createSubNamespace().then((subNamespaceTransaction) => {
-            transaction = subNamespaceTransaction
-        })
+        transaction = this.createSubNamespace()
         const signature = account.sign(transaction, this.generationHash)
-        transactionApi.announce({signature, node: this.node}).then((announceResult) => {
-            // get announce status
-            announceResult.result.announceStatus.subscribe((announceInfo: any) => {
+        new TransactionApiRxjs().announce(signature,  this.node).subscribe((announceInfo: any) => {
                 that.$emit('createdNamespace')
                 that.$Notice.success({
                     title: this.$t(Message.SUCCESS) + ''
                 })
                 that.initForm()
-            })
         })
     }
 
@@ -162,14 +157,12 @@ export class SubNamespaceTs extends Vue {
     }
 
     createSubNamespace() {
-        return namespaceApi.createdSubNamespace({
-            parentNamespace: this.form.rootNamespaceName,
-            namespaceName: this.form.subNamespaceName,
-            networkType: this.getWallet.networkType,
-            maxFee: this.form.innerFee
-        }).then((transaction) => {
-            return transaction.result.subNamespaceTransaction
-        })
+        return new NamespaceApiRxjs().createdSubNamespace(
+            this.form.subNamespaceName,
+            this.form.rootNamespaceName,
+            this.getWallet.networkType,
+            this.form.innerFee
+        )
     }
 
     initForm() {
@@ -202,14 +195,11 @@ export class SubNamespaceTs extends Vue {
 
     getMultisigAccountList() {
         const that = this
-        if(!this.$store.state.account.wallet) return
+        if (!this.$store.state.account.wallet) return
         const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
-        multisigApi.getMultisigAccountInfo({
-            address,
-            node
-        }).then((result) => {
-            that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
+        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
+            that.multisigPublickeyList = multisigInfo.multisigAccounts.map((item: any) => {
                 item.value = item.publicKey
                 item.label = item.publicKey
                 return item

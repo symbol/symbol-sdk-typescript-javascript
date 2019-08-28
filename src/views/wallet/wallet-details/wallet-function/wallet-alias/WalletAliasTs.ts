@@ -1,11 +1,11 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
-import {namespaceApi} from "@/core/api/namespaceApi.ts"
+import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Account, Address, AddressAlias, AliasActionType, MosaicId, NamespaceId} from "nem2-sdk";
-import {transactionApi} from "@/core/api/transactionApi.ts"
+import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
-import {walletApi} from "@/core/api/walletApi.ts"
+import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 
 @Component
@@ -28,7 +28,7 @@ export class WalletAliasTs extends Vue {
         return this.$store.state.account.wallet
     }
 
-    get namespaceList () {
+    get namespaceList() {
         return this.$store.state.account.namespace
     }
 
@@ -40,11 +40,11 @@ export class WalletAliasTs extends Vue {
         return this.$store.state.account.node
     }
 
-    get nowBlockHeihgt () {
+    get nowBlockHeihgt() {
         return this.$store.state.app.chainStatus.currentHeight
     }
 
-    showUnLink(index){
+    showUnLink(index) {
         this.aliasListIndex = index
         this.formItem = {
             address: this.aliasList[index].alias.address,
@@ -55,7 +55,7 @@ export class WalletAliasTs extends Vue {
         this.isShowDialog = true
     }
 
-    closeModel () {
+    closeModel() {
         this.isShowDialog = false
         this.aliasListIndex = -1
         this.formItem = {
@@ -65,6 +65,7 @@ export class WalletAliasTs extends Vue {
             password: ''
         }
     }
+
     checkForm(): boolean {
         const {address, alias, fee, password} = this.formItem
         if (address.length < 40) {
@@ -94,61 +95,54 @@ export class WalletAliasTs extends Vue {
     }
 
     checkAliasForm() {
-        if(!this.isCompleteForm) return
-        if(!this.checkForm()) return
-        if(this.aliasListIndex >= 0){
+        if (!this.isCompleteForm) return
+        if (!this.checkForm()) return
+        if (this.aliasListIndex >= 0) {
             this.addressAlias(decryptKey(this.getWallet, this.formItem.password), false)
-        }else {
+        } else {
             this.checkPrivateKey(decryptKey(this.getWallet, this.formItem.password))
         }
     }
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletApi.getWallet({
-            name: this.getWallet.name,
-            networkType: this.getWallet.networkType,
-            privateKey: DeTxt.length === 64 ? DeTxt : ''
-        }).then(async (Wallet: any) => {
-            this.addressAlias(DeTxt, true)
-        }).catch(() => {
+        try {
+            new WalletApiRxjs().getWallet(this.getWallet.name,
+                DeTxt.length === 64 ? DeTxt : '',
+                this.getWallet.networkType,
+            )
+            that.addressAlias(DeTxt, true)
+        } catch (e) {
             that.$Notice.error({
                 title: this.$t('password_error') + ''
             })
-        })
+        }
     }
 
-    addressAlias (key, type) {
+    addressAlias(key, type) {
         const that = this
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
-        namespaceApi.addressAliasTransaction({
-            actionType: type ? AliasActionType.Link : AliasActionType.Unlink,
-            namespaceId: new NamespaceId(that.formItem.alias),
-            address: Address.createFromRawAddress(that.formItem.address),
-            networkType: this.getWallet.networkType,
-            maxFee: that.formItem.fee
-        }).then((addressAliasTransaction)=>{
-            let transaction
-            transaction = addressAliasTransaction.result.aliasAddressTransaction
-            const signature = account.sign(transaction, this.generationHash)
-            transactionApi.announce({signature, node: this.node}).then((announceResult) => {
-                // get announce status
-                console.log(signature)
-                announceResult.result.announceStatus.subscribe((announceInfo: any) => {
-                    that.$Notice.success({
-                        title: this.$t(Message.SUCCESS) + ''
-                    })
-                    this.closeModel()
-                })
+        let transaction = new NamespaceApiRxjs().addressAliasTransaction(
+            type ? AliasActionType.Link : AliasActionType.Unlink,
+            new NamespaceId(that.formItem.alias),
+            Address.createFromRawAddress(that.formItem.address),
+            this.getWallet.networkType,
+            that.formItem.fee
+        )
+        const signature = account.sign(transaction, this.generationHash)
+        new TransactionApiRxjs().announce(signature, this.node).subscribe((announceInfo: any) => {
+            that.$Notice.success({
+                title: this.$t(Message.SUCCESS) + ''
             })
+            this.closeModel()
         })
     }
 
-    formatAddress (address) {
+    formatAddress(address) {
         return formatAddress(address)
     }
 
-    computeDuration (duration) {
+    computeDuration(duration) {
         let expireTime = duration - this.nowBlockHeihgt > 0 ? this.durationToTime(duration - this.nowBlockHeihgt) : 'Expired'
         return expireTime
     }
@@ -165,7 +159,7 @@ export class WalletAliasTs extends Vue {
         this.namespaceList.map((item, index) => {
             if (item.alias instanceof EmptyAlias) {
                 list.push(item)
-            }else if(item.alias instanceof AddressAlias){
+            } else if (item.alias instanceof AddressAlias) {
                 addressAliasList.push(item)
             }
         })
@@ -182,10 +176,10 @@ export class WalletAliasTs extends Vue {
     onFormItemChange() {
         const {address, alias, password, fee} = this.formItem
         // isCompleteForm
-        this.isCompleteForm = address !== '' && alias !== '' && password !== '' && fee  > 0
+        this.isCompleteForm = address !== '' && alias !== '' && password !== '' && fee > 0
     }
 
-    created () {
+    created() {
         this.initData()
     }
 }

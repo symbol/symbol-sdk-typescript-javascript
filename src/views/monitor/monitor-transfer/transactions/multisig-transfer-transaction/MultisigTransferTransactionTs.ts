@@ -1,8 +1,8 @@
 import {Message} from "@/config/index.ts"
-import {accountApi} from '@/core/api/accountApi.ts'
-import {multisigApi} from '@/core/api/multisigApi.ts'
+import {AccountApiRxjs} from '@/core/api/AccountApiRxjs.ts'
+import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {transactionApi} from '@/core/api/transactionApi.ts'
+import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     Account,
@@ -39,7 +39,7 @@ export class MultisigTransferTransactionTs extends Vue {
         label: 'no data',
         value: 'no data'
     }]
-    multisigPublickeyList = [{
+    multisigPublickeyList: any = [{
         label: 'no data',
         value: 'no data'
     }]
@@ -113,56 +113,51 @@ export class MultisigTransferTransactionTs extends Vue {
         )
 
         if (this.currentMinApproval > 1) {
-            createBondedMultisigTransaction(
+            const aggregateTransaction = createBondedMultisigTransaction(
                 [transaction],
                 multisigPublickey,
                 networkType,
                 account,
                 bondedFee
-            ).then((aggregateTransaction) => {
-                transactionApi.announceBondedWithLock({
-                    aggregateTransaction,
-                    account,
-                    listener,
-                    node,
-                    generationHash,
-                    networkType,
-                    fee: lockFee,
-                    mosaicHex,
-                })
-            })
+            )
+            new TransactionApiRxjs().announceBondedWithLock(
+                aggregateTransaction,
+                account,
+                listener,
+                node,
+                generationHash,
+                networkType,
+                lockFee,
+                mosaicHex,
+            )
             return
         }
-        createCompleteMultisigTransaction(
+        const aggregateTransaction = createCompleteMultisigTransaction(
             [transaction],
             multisigPublickey,
             networkType,
             aggregateFee
-        ).then((aggregateTransaction) => {
-            transactionApi._announce({
-                transaction: aggregateTransaction,
-                account,
-                node,
-                generationHash
-            })
-        })
+        )
+        new TransactionApiRxjs()._announce(
+            aggregateTransaction,
+            node,
+            account,
+            generationHash
+        )
     }
-
+    MosaicTransactionTs
     getMultisigAccountList() {
         const that = this
         if (!this.getWallet) return
         const {address} = this.getWallet
         const {node} = this.$store.state.account
 
-        multisigApi.getMultisigAccountInfo({
-            address,
-            node
-        }).then((result) => {
-            if (result.result.multisigInfo.multisigAccounts.length == 0) {
+        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
+            if (multisigInfo.multisigAccounts.length == 0) {
                 that.isShowPanel = false
                 return
             }
-            that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
+            that.multisigPublickeyList = multisigInfo.multisigAccounts.map((item: any) => {
                 item.value = item.publicKey
                 item.label = item.publicKey
                 return item
@@ -219,44 +214,39 @@ export class MultisigTransferTransactionTs extends Vue {
         const {node, currentXem} = this
         const {currentXEM1, currentXEM2} = this.$store.state.account
         let mosaicIdList = []
-        await accountApi.getAccountInfo({
-            node,
-            address: accountAddress
-        }).then(async accountInfoResult => {
-            await accountInfoResult.result.accountInfo.subscribe((accountInfo) => {
-                let mosaicList = []
-                // set mosaicList
-                mosaicList = accountInfo.mosaics.map((item) => {
-                    item._amount = item.amount.compact()
-                    item.value = item.id.toHex()
-                    if (item.value == currentXEM1 || item.value == currentXEM2) {
-                        item.label = 'nem.xem' + ' (' + item._amount + ')'
-                    } else {
-                        item.label = item.id.toHex() + ' (' + item._amount + ')'
-                    }
-                    return item
-                })
-                let isCrrentXEMExists = mosaicList.every((item) => {
-                    if (item.value == currentXEM1 || item.value == currentXEM2) {
-                        return false
-                    }
-                    return true
-                })
-                if (isCrrentXEMExists) {
-                    mosaicList.unshift({
-                        value: currentXEM1,
-                        label: 'nem.xem'
-                    })
+        await new AccountApiRxjs().getAccountInfo(accountAddress, node).subscribe((accountInfo) => {
+            let mosaicList = []
+            // set mosaicList
+            mosaicList = accountInfo.mosaics.map((item: any) => {
+                item._amount = item.amount.compact()
+                item.value = item.id.toHex()
+                if (item.value == currentXEM1 || item.value == currentXEM2) {
+                    item.label = 'nem.xem' + ' (' + item._amount + ')'
+                } else {
+                    item.label = item.id.toHex() + ' (' + item._amount + ')'
                 }
-                that.mosaicList = mosaicList
-            }, () => {
-                let mosaicList = []
+                return item
+            })
+            let isCrrentXEMExists = mosaicList.every((item) => {
+                if (item.value == currentXEM1 || item.value == currentXEM2) {
+                    return false
+                }
+                return true
+            })
+            if (isCrrentXEMExists) {
                 mosaicList.unshift({
                     value: currentXEM1,
                     label: 'nem.xem'
                 })
-                that.mosaicList = mosaicList
+            }
+            that.mosaicList = mosaicList
+        }, () => {
+            let mosaicList = []
+            mosaicList.unshift({
+                value: currentXEM1,
+                label: 'nem.xem'
             })
+            that.mosaicList = mosaicList
         })
     }
 
@@ -295,14 +285,9 @@ export class MultisigTransferTransactionTs extends Vue {
         const {networkType} = this.$store.state.account.wallet
         let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
         await this.getMosaicList(address)
-
-        multisigApi.getMultisigAccountInfo({
-            address,
-            node
-        }).then((result) => {
-            const currentMultisigAccount = result.result.multisigInfo
-            that.currentMinApproval = currentMultisigAccount.minApproval
-            that.currentCosignatoryList = currentMultisigAccount.cosignatories
+        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
+            that.currentMinApproval = multisigInfo.minApproval
+            that.currentCosignatoryList = multisigInfo.cosignatories
         })
     }
 

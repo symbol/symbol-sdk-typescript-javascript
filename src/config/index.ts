@@ -14,6 +14,10 @@ export const AppConfig = {
     marketUrl: 'http://app.nemcn.io',
 }
 
+export const TransferType = {
+    'RECEIVED': 1,
+    'SENDED': 0
+}
 //error message
 export const Message = {
     COPY_SUCCESS: 'successful_copy',
@@ -160,4 +164,5 @@ export const entityTypeList = {
 }
 
 export const timeZoneListData = timeZoneList
+
 

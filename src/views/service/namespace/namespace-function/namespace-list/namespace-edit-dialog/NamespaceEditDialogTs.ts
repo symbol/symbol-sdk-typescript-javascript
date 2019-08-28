@@ -1,9 +1,9 @@
 import './NamespaceEditDialog.less'
 import {Message} from "@/config/index.ts"
 import {Account} from 'nem2-sdk'
-import {walletApi} from "@/core/api/walletApi.ts"
+import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {formatSeconds} from '@/core/utils/utils.ts'
-import {transactionApi} from "@/core/api/transactionApi.ts"
+import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {createRootNamespace, decryptKey} from "@/core/utils/wallet.ts"
 
@@ -99,17 +99,18 @@ export class NamespaceEditDialogTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletApi.getWallet({
-            name: this.getWallet.name,
-            networkType: this.getWallet.networkType,
-            privateKey: DeTxt.length === 64 ? DeTxt : ''
-        }).then(async (Wallet: any) => {
+        try {
+            new WalletApiRxjs().getWallet(this.getWallet.name,
+                this.getWallet.networkType,
+                DeTxt.length === 64 ? DeTxt : ''
+            )
             this.updateMosaic(DeTxt)
-        }).catch(() => {
+        } catch (e) {
             that.$Notice.error({
                 title: this.$t('password_error') + ''
             })
-        })
+        }
+
     }
 
     async updateMosaic(key) {
@@ -117,19 +118,14 @@ export class NamespaceEditDialogTs extends Vue {
         let transaction
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
         await createRootNamespace(this.currentNamespace.name, this.namespace.duration,
-            this.getWallet.networkType, this.namespace.fee).then((rootNamespaceTransaction) => {
-            transaction = rootNamespaceTransaction
-            const signature = account.sign(transaction, this.generationHash)
-            transactionApi.announce({signature, node: this.node}).then((announceResult) => {
-                // get announce status
-                announceResult.result.announceStatus.subscribe((announceInfo: any) => {
-                    that.$Notice.success({
-                        title: this.$t(Message.SUCCESS) + ''
-                    })
-                    that.initForm()
-                    that.updatedNamespace()
-                })
+            transaction = this.getWallet.networkType, this.namespace.fee)
+        const signature = account.sign(transaction, this.generationHash)
+        new TransactionApiRxjs().announce(signature, this.node).subscribe((announceInfo: any) => {
+            that.$Notice.success({
+                title: this.$t(Message.SUCCESS) + ''
             })
+            that.initForm()
+            that.updatedNamespace()
         })
     }
 

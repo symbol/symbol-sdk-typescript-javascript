@@ -25,6 +25,176 @@ const iconMap = {
     dashboardSecret
 }
 
+const formatAggregateCompelete = (innerTransactionList: Array<any>) => {
+    innerTransactionList = innerTransactionList.map((item) => {
+        const type = item.type
+        switch (type) {
+            case TransactionType.REGISTER_NAMESPACE:
+                item.tag = transactionTag.REGIST_NAMESPACE
+                item.icon = iconMap.dashboardNamespace
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'space_name': item.namespaceName + ' (' + (item.namespaceType ? 'sub' : 'root') + ')',
+                    'root_namespace': item.parentId ? item.parentId.id.toHex() : '-',
+                    'sender': item.signer.publicKey,
+                    'duration': item.duration ? item.duration.compact() : 0,
+                    'rent': (item.duration ? item.duration.compact() : '0') * 0.00005 + ' XEM',
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+            case TransactionType.ADDRESS_ALIAS:
+                item.icon = iconMap.dashboardAddressAlias
+                item.tag = transactionTag.ADDRESS_ALIAS
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+            case TransactionType.MOSAIC_ALIAS:
+                item.icon = iconMap.dashboardMosaicAlias
+                item.tag = transactionTag.MOSAIC_ALIAS
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+            case TransactionType.MOSAIC_DEFINITION:
+                item.icon = iconMap.dashboardModify
+                item.tag = transactionTag.MOSAIC_DEFINITION
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+            case TransactionType.MOSAIC_SUPPLY_CHANGE:
+                item.icon = iconMap.dashboardModify
+                item.tag = transactionTag.MOSAIC_SUPPLY_CHANGE
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+
+                break;
+            case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+                item.icon = iconMap.dashboardModify
+                item.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+            // case TransactionType.AGGREGATE_COMPLETE:
+            //     const innerTransactionList = item.innerTransactions
+            //     item.formatAggregateCompelete = formatAggregateCompelete(innerTransactionList)
+            //     item.icon = iconMap.dashboardAggregate
+            //     item.tag = transactionTag.AGGREGATE_COMPLETE
+            //     item.dialogDetailMap = {
+            //         'transfer_type': item.tag,
+            //         'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+            //         'block': item.transactionInfo.height.compact(),
+            //         'hash': item.transactionInfo.hash,
+            //     }
+            //     break;
+            case TransactionType.AGGREGATE_BONDED:
+                item.icon = iconMap.dashboardAggregate
+                item.tag = transactionTag.AGGREGATE_BONDED
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+            case TransactionType.LOCK:
+                item.tag = transactionTag.LOCK
+                item.icon = iconMap.dashboardLock
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'mosaic_ID': 'nem.xem' + `(${item.mosaic.id.toHex()})`,
+                    'quantity': item.mosaic.amount.compact(),
+                    'timestamp': item.time,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+            case TransactionType.SECRET_LOCK:
+                item.tag = transactionTag.SECRET_LOCK
+                item.icon = iconMap.dashboardSecret
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+            case TransactionType.SECRET_PROOF:
+                item.icon = iconMap.dashboardSecret
+                item.tag = transactionTag.SECRET_PROOF
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+            case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
+                item.icon = iconMap.dashboardFilter
+                item.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ADDRESS
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+            case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
+                item.icon = iconMap.dashboardFilter
+                item.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_MOSAIC
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+            case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
+                item.icon = iconMap.dashboardFilter
+                item.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+            case TransactionType.LINK_ACCOUNT:
+                item.icon = iconMap.dashboardLinkAccount
+                item.tag = transactionTag.LINK_ACCOUNT
+                item.dialogDetailMap = {
+                    'transfer_type': item.tag,
+                    'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
+                    'block': item.transactionInfo.height.compact(),
+                    'hash': item.transactionInfo.hash,
+                }
+                break;
+        }
+        return item
+    })
+    return innerTransactionList
+}
+
 
 const formatTransferTransactions = function (transaction, accountAddress, currentXEM) {
     transaction.isReceipt = transaction.recipient.address == accountAddress
@@ -78,7 +248,6 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-
         case TransactionType.MOSAIC_ALIAS:
             transaction.icon = iconMap.dashboardMosaicAlias
             transaction.tag = transactionTag.MOSAIC_ALIAS
@@ -99,7 +268,6 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'hash': transaction.transactionInfo.hash,
             }
             break;
-
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
             transaction.icon = iconMap.dashboardModify
             transaction.tag = transactionTag.MOSAIC_SUPPLY_CHANGE
@@ -122,7 +290,8 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             }
             break;
         case TransactionType.AGGREGATE_COMPLETE:
-            console.log(transaction)
+            const innerTransactionList = transaction.innerTransactions
+            transaction.formatAggregateCompelete = formatAggregateCompelete(innerTransactionList)
             transaction.icon = iconMap.dashboardAggregate
             transaction.tag = transactionTag.AGGREGATE_COMPLETE
             transaction.dialogDetailMap = {
@@ -132,7 +301,6 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'hash': transaction.transactionInfo.hash,
             }
             break;
-
         case TransactionType.AGGREGATE_BONDED:
             transaction.icon = iconMap.dashboardAggregate
             transaction.tag = transactionTag.AGGREGATE_BONDED
@@ -143,7 +311,6 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'hash': transaction.transactionInfo.hash,
             }
             break;
-
         case TransactionType.LOCK:
             transaction.tag = transactionTag.LOCK
             transaction.icon = iconMap.dashboardLock
@@ -157,7 +324,6 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'hash': transaction.transactionInfo.hash,
             }
             break;
-
         case TransactionType.SECRET_LOCK:
             transaction.tag = transactionTag.SECRET_LOCK
             transaction.icon = iconMap.dashboardSecret
@@ -168,7 +334,6 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'hash': transaction.transactionInfo.hash,
             }
             break;
-
         case TransactionType.SECRET_PROOF:
             transaction.icon = iconMap.dashboardSecret
             transaction.tag = transactionTag.SECRET_PROOF

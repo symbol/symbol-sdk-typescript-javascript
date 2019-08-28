@@ -1,9 +1,13 @@
 import {PublicAccount} from 'nem2-sdk'
-import {transactionApi} from '@/core/api/transactionApi.ts'
+import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import {TransferType} from '@/config/index.ts'
 import transacrionAssetIcon from '@/common/img/monitor/transaction/txConfirmed.png'
-import {formateNemTimestamp, formatTransactions, getCurrentMonthFirst, getCurrentMonthLast,} from '@/core/utils/utils.ts'
-import {blockchainApi} from "@/core/api/blockchainApi";
+import {
+    formatTransactions,
+    getCurrentMonthFirst,
+    getCurrentMonthLast,
+} from '@/core/utils/utils.ts'
 import {getBlockInfoByTransactionList} from '@/core/utils/wallet.ts'
 
 
@@ -135,40 +139,46 @@ export class CollectionRecordTs extends Vue {
         const {currentXEM1} = this.$store.state.account
         let {accountPublicKey, accountAddress, node, transactionType} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
-        await transactionApi.transactions({
+        await new TransactionApiRxjs().transactions(
             publicAccount,
-            node,
-            queryParams: {
+            {
                 pageSize: 100
-            }
-        }).then((transactionsResult) => {
-            transactionsResult.result.transactions.subscribe(async (transactionsInfo) => {
-                let transferTransaction = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
-                let list = []
-                // get transaction by choose recript tx or send
-                if (transactionType == 1) {
-                    transferTransaction.forEach((item) => {
-                        if (item.isReceipt) {
-                            list.push(item)
-                        }
-                    })
-                    that.localConfirmedTransactions = list
-                    await that.getBlockInfoByTransactionList(that.localConfirmedTransactions, node)
-                    that.onCurrentMonthChange()
-                    that.isLoadingTransactionRecord = false
-                    return
-                }
-
+            },
+            node,
+        ).subscribe(async (transactionsInfo) => {
+            let transferTransaction = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
+            // get transaction by choose recript tx or send
+            if (transactionType == TransferType.RECEIVED) {
                 transferTransaction.forEach((item) => {
-                    if (!item.isReceipt) {
-                        list.push(item)
+                    if (item.isReceipt) {
+                        that.localConfirmedTransactions.push(item)
                     }
                 })
-                that.localConfirmedTransactions = list
+                try {
+                    await that.getBlockInfoByTransactionList(that.localConfirmedTransactions, node)
+                } catch (e) {
+                    console.log(e)
+                } finally {
+                    that.onCurrentMonthChange()
+                    that.isLoadingTransactionRecord = false
+                }
+                return
+            }
+
+            transferTransaction.forEach((item) => {
+                if (!item.isReceipt) {
+                    that.localConfirmedTransactions.push(item)
+                }
+            })
+            try {
                 await that.getBlockInfoByTransactionList(that.localConfirmedTransactions, node)
+            } catch (e) {
+                console.log(e)
+            } finally {
                 that.onCurrentMonthChange()
                 that.isLoadingTransactionRecord = false
-            })
+            }
+
         })
     }
 
@@ -183,37 +193,32 @@ export class CollectionRecordTs extends Vue {
         const {currentXEM1} = this.$store.state.account
         let {accountPublicKey, accountAddress, node, transactionType, UnconfirmedTxList} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
-        await transactionApi.unconfirmedTransactions({
+        await new TransactionApiRxjs().unconfirmedTransactions(
             publicAccount,
-            node,
-            queryParams: {
+            {
                 pageSize: 100
-            }
-        }).then((transactionsResult) => {
-            transactionsResult.result.unconfirmedTransactions.subscribe(async (transactionsInfo) => {
-                let transferTransaction = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
-                let list = []
-                // get transaction by choose recript tx or send
-                if (transactionType == 1) {
-                    transferTransaction.forEach((item) => {
-                        if (item.isReceipt) {
-                            list.push(item)
-                        }
-                    })
-                    that.localUnConfirmedTransactions = list
-                    that.onCurrentMonthChange()
-                    that.isLoadingTransactionRecord = false
-                    return
-                }
+            },
+            node,
+        ).subscribe(async (transactionsInfo) => {
+            let transferTransaction = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
+            // get transaction by choose recript tx or send
+            if (transactionType == TransferType.RECEIVED) {
                 transferTransaction.forEach((item) => {
-                    if (!item.isReceipt) {
-                        list.push(item)
+                    if (item.isReceipt) {
+                        that.localUnConfirmedTransactions.push(item)
                     }
                 })
-                that.localUnConfirmedTransactions = list
                 that.onCurrentMonthChange()
                 that.isLoadingTransactionRecord = false
+                return
+            }
+            transferTransaction.forEach((item) => {
+                if (!item.isReceipt) {
+                    that.localUnConfirmedTransactions.push(item)
+                }
             })
+            that.onCurrentMonthChange()
+            that.isLoadingTransactionRecord = false
         })
     }
 

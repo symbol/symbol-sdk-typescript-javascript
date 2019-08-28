@@ -3,6 +3,7 @@ import {QRCodeGenerator} from 'nem2-qr-library'
 import {copyTxt} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
+import {TransferType} from '@/config/index.ts'
 
 @Component({
     components: {
@@ -17,6 +18,7 @@ export class MonitorReceiptTs extends Vue {
     accountAddress = ''
     QRCode: string = ''
     transactionHash = ''
+    TransferType = TransferType
     isShowDialog = false
     accountPublicKey = ''
     mosaicList = [

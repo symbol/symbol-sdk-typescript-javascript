@@ -117,7 +117,7 @@ export class WalletImportPrivatekeyTs extends Vue {
                 const encryptObj = encryptKey(storeWallet['privateKey'], that.form['password'])
                 saveLocalWallet(storeWallet, encryptObj, null,{})
                 this.toWalletDetails()
-            })
+            }).catch((error)=>{console.log(error)})
     }
 
     toWalletDetails() {

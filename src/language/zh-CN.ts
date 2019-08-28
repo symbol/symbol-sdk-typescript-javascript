@@ -629,13 +629,13 @@ export const zh_CN = {
 
     previousPassword: '旧密码',
     LABEL_previous_password: '旧密码',
-    HINT_previous_password: '用于登入程序的面膜',
+    HINT_previous_password: '用于登入程序的密码',
     PLACEHOLDER_previous_password: 'My FiRst Pa$$word!',
-    HINT_cipher_hint1: 'should be between 1 and 32 chars.',
+    HINT_cipher_hint1: '应该在 1 到 32 字符。',
 
     timestamp: '时间戳',
     sender: '发送者',
-
+    inner_transaction:'内部交易',
 
     amount: '金额'
 }

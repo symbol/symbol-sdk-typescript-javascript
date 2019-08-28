@@ -1,5 +1,5 @@
 import {Message} from "@/config/index.ts"
-import {walletApi} from "@/core/api/walletApi.ts"
+import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {decryptKey, encryptKey, saveLocalWallet} from "@/core/utils/wallet.ts"
 
@@ -74,18 +74,18 @@ export class WalletUpdatePasswordTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletApi.getWallet({
-            name: this.getWallet.name,
-            networkType: this.getWallet.networkType,
-            privateKey: DeTxt.length === 64 ? DeTxt : ''
-        }).then(async (Wallet: any) => {
+        try {
+            new WalletApiRxjs().getWallet(this.getWallet.name,
+                DeTxt.length === 64 ? DeTxt : '',
+                this.getWallet.networkType,
+            )
             that.privateKey = DeTxt.toString().toUpperCase()
             that.updatePW()
-        }).catch(() => {
+        } catch (e) {
             that.$Notice.error({
                 title: this.$t('password_error') + ''
             })
-        })
+        }
     }
 
     init() {

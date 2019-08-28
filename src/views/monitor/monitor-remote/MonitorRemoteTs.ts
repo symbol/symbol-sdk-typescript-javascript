@@ -1,10 +1,10 @@
 import {Message} from "@/config/index.ts"
-import {walletApi} from "@/core/api/walletApi.ts"
+import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {transactionApi} from '@/core/api/transactionApi.ts'
+import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {AccountLinkTransaction, UInt64, LinkAction, NetworkType, Deadline, Account} from "nem2-sdk"
 import {decryptKey} from "@/core/utils/wallet.ts"
-import {accountApi} from "@/core/api/accountApi.ts"
+import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 
 
 @Component
@@ -82,17 +82,18 @@ export class MonitorRemoteTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletApi.getWallet({
-            name: this.getWallet.name,
-            networkType: this.getWallet.networkType,
-            privateKey: DeTxt.length === 64 ? DeTxt : ''
-        }).then(async (Wallet: any) => {
+        try {
+            new WalletApiRxjs().getWallet(
+                this.getWallet.name,
+                DeTxt.length === 64 ? DeTxt : '',
+                this.getWallet.networkType,
+            )
             this.sendTransaction(DeTxt)
-        }).catch(() => {
+        } catch (e) {
             that.$Notice.error({
                 title: this.$t('password_error') + ''
             })
-        })
+        }
     }
 
     sendTransaction(privatekey) {
@@ -103,12 +104,12 @@ export class MonitorRemoteTs extends Vue {
         const account = Account.createFromPrivateKey(privatekey, networkType)
         const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(), remotePublickey, isLinked ? LinkAction.Link : LinkAction.Unlink, NetworkType.MIJIN_TEST, UInt64.fromUint(fee)
         )
-        transactionApi._announce({
-            transaction: accountLinkTransaction,
+        new TransactionApiRxjs()._announce(
+            accountLinkTransaction,
             node,
             account,
             generationHash
-        })
+        )
         this.modalCancel()
     }
 
@@ -117,25 +118,28 @@ export class MonitorRemoteTs extends Vue {
     }
 
     getLinkPublicKey() {
-        if(!this.$store.state.account.wallet){
-           return
+        if (!this.$store.state.account.wallet) {
+            return
         }
         const that = this
         const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
-        accountApi.getLinkedPublickey({
-            node,
-            address
-        }).then((result) => {
-            const linkedPublicKey = result.result.linkedPublicKey
-            that.remotePublickey = linkedPublicKey
-            if (Number(linkedPublicKey) != 0) {
-                // switch on
-                that.formItem.remotePublickey = linkedPublicKey
-                that.isLinked = true
-                return
+        new AccountApiRxjs().getLinkedPublickey(node, address).subscribe((resStr: string) => {
+                that.remotePublickey = ''
+                if (JSON.parse(resStr) && JSON.parse(resStr).account && JSON.parse(resStr).account.linkedAccountKey) {
+                    let linkedPublicKey = JSON.parse(resStr).account.linkedAccountKey
+                    that.remotePublickey = Buffer.from(linkedPublicKey, 'base64').toString('hex').toUpperCase()
+                }
+                that.remotePublickey = ''
+                if (Number(that.remotePublickey) != 0) {
+                    // switch on
+                    that.formItem.remotePublickey = that.remotePublickey
+                    that.isLinked = true
+                    return
+                }
+
             }
-        })
+        )
     }
 
     created() {

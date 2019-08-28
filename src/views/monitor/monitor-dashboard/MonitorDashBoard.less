@@ -1,6 +1,17 @@
 .dash_board_container {
   height: calc(100% - 70px);
 
+
+  .inner_transaction_title {
+    width: 200px !important;
+  }
+
+  .inner_transaction {
+    margin-left: 110px;
+    position: relative;
+    bottom: 20px;
+  }
+
   .top_network_info {
     margin: 15px 0;
     height: 440px;
@@ -227,6 +238,7 @@
     .confirmed_transactions {
       height: 100%;
       padding: 0 0 12px 0;
+
       .table_body {
         width: 1250px;
         height: 100%;
@@ -326,11 +338,12 @@
     color: rgba(34, 34, 34, 1);
   }
 
-  .other_info:nth-of-type(odd) {
-    margin-top: 20px;
+  .other_info:nth-of-type(even) {
+    margin-bottom: 20px;
   }
 
   .transfer_type {
+    margin-bottom: 20px;
     .value {
       font-size: 20px;
       font-weight: bold;

@@ -1,9 +1,9 @@
 import {Account, Crypto} from 'nem2-sdk'
 import {Message} from "@/config/index.ts"
-import {walletApi} from "@/core/api/walletApi.ts"
-import {mosaicApi} from "@/core/api/mosaicApi.ts"
+import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
+import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
-import {transactionApi} from "@/core/api/transactionApi.ts"
+import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 
 @Component
@@ -110,39 +110,27 @@ export class MosaicEditDialogTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletApi.getWallet({
-            name: this.getWallet.name,
-            networkType: this.getWallet.networkType,
-            privateKey: DeTxt.length === 64 ? DeTxt : ''
-        }).then(async (Wallet: any) => {
+        try {
+            new WalletApiRxjs().getWallet(
+                this.getWallet.name,
+                this.getWallet.networkType,
+                DeTxt.length === 64 ? DeTxt : ''
+            )
             this.updateMosaic(DeTxt)
-        }).catch(() => {
+        } catch (e) {
             that.$Notice.error({
                 title: this.$t('password_error') + ''
             })
-        })
+        }
     }
 
     updateMosaic(key) {
         const that = this
-        mosaicApi.mosaicSupplyChange({
-            mosaicId: this.mosaic['mosaicId'],
-            delta: this.mosaic.changeDelta,
-            netWorkType: this.getWallet.networkType,
-            MosaicSupplyType: this.mosaic.supplyType,
-            maxFee: this.mosaic.fee,
-        }).then((changed) => {
-            const transaction = changed.result.mosaicSupplyChangeTransaction
-            const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
-            const signature = account.sign(transaction, this.generationHash)
-
-            transactionApi.announce({signature, node: that.node}).then((announceResult) => {
-                // get announce status
-                announceResult.result.announceStatus.subscribe((announceInfo: any) => {
-                    console.log(signature)
-                    that.updatedMosaic()
-                })
-            })
+        const transaction = new MosaicApiRxjs().mosaicSupplyChange(this.mosaic['mosaicId'], this.mosaic.changeDelta, this.mosaic.supplyType, this.getWallet.networkType, this.mosaic.fee)
+        const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
+        const signature = account.sign(transaction, this.generationHash)
+        new TransactionApiRxjs().announce(signature, that.node).subscribe((announceInfo: any) => {
+            that.updatedMosaic()
         })
     }
 

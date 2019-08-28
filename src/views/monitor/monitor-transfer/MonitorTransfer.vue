@@ -18,13 +18,14 @@
         </div>
       </div>
     </div>
-    <CollectionRecord :transactionType="0"></CollectionRecord>
+    <CollectionRecord :transactionType="TransferType.SENDED"></CollectionRecord>
   </div>
 </template>
 
 <script lang="ts">
     // @ts-ignore
     import {MonitorTransferTs} from '@/views/monitor/monitor-transfer/MonitorTransferTs.ts'
+
 
     export default class MonitorTransfer extends MonitorTransferTs {
 

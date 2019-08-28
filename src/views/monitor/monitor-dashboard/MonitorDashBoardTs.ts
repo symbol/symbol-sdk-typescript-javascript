@@ -1,8 +1,8 @@
 import {market} from "@/core/api/logicApi.ts"
 import {KlineQuery} from "@/core/query/klineQuery.ts"
 import {transactionFormat} from '@/core/utils/format.ts'
-import {blockchainApi} from '@/core/api/blockchainApi.ts'
-import {transactionApi} from '@/core/api/transactionApi.ts'
+import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
+import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {PublicAccount, NetworkType, Deadline} from 'nem2-sdk'
 import LineChart from '@/common/vue/line-chart/LineChart.vue'
@@ -83,7 +83,8 @@ export class MonitorDashBoardTs extends Vue {
 
     showDialog(transaction) {
         this.isShowDialog = true
-        this.transactionDetails = transaction.dialogDetailMap
+        this.transactionDetails = transaction
+        console.log(transaction, '.............')
     }
 
     get currentHeight() {
@@ -119,27 +120,18 @@ export class MonitorDashBoardTs extends Vue {
         const that = this
         const node = this.$store.state.account.node
         const {currentBlockInfo, preBlockInfo} = this.$store.state.app.chainStatus
-        blockchainApi.getBlockchainHeight({
-            node
-        }).then((result) => {
-            result.result.blockchainHeight.subscribe((res) => {
-                const height = Number.parseInt(res.toHex(), 16)
-                that.$store.commit('SET_CHAIN_STATUS', {currentHeight: height})
-                blockchainApi.getBlockByHeight({
-                    node,
-                    height: height
-                }).then((blockInfo) => {
-                    blockInfo.result.Block.subscribe((block) => {
-                        const chainStatus = {
-                            numTransactions: block.numTransactions ? block.numTransactions : 0,
-                            signerPublicKey: block.signer.publicKey,
-                            currentHeight: block.height.compact(),
-                            currentBlockInfo: block,
-                            currentGenerateTime: 12
-                        }
-                        that.$store.commit('SET_CHAIN_STATUS', chainStatus)
-                    })
-                })
+        new BlockApiRxjs().getBlockchainHeight(node).subscribe((res) => {
+            const height = Number.parseInt(res.toHex(), 16)
+            that.$store.commit('SET_CHAIN_STATUS', {currentHeight: height})
+            new BlockApiRxjs().getBlockByHeight(node, height).subscribe((block) => {
+                const chainStatus = {
+                    numTransactions: block.numTransactions ? block.numTransactions : 0,
+                    signerPublicKey: block.signer.publicKey,
+                    currentHeight: block.height.compact(),
+                    currentBlockInfo: block,
+                    currentGenerateTime: 12
+                }
+                that.$store.commit('SET_CHAIN_STATUS', chainStatus)
             })
         })
     }
@@ -150,17 +142,15 @@ export class MonitorDashBoardTs extends Vue {
         let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
         if (!accountPublicKey || accountPublicKey.length < 64) return
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
-        transactionApi.transactions({
+        new TransactionApiRxjs().transactions(
             publicAccount,
-            node,
-            queryParams: {
+            {
                 pageSize: 100
-            }
-        }).then((transactionsResult) => {
-            transactionsResult.result.transactions.subscribe(async (transactionsInfo) => {
-                that.allTransacrionList.push(...transactionsInfo)
-                await that.getBlockInfoByTransactionList(that.allTransacrionList, node)
-            })
+            },
+            node,
+        ).subscribe(async (transactionsInfo) => {
+            that.allTransacrionList.push(...transactionsInfo)
+            await that.getBlockInfoByTransactionList(that.allTransacrionList, node)
         })
     }
 
@@ -169,21 +159,20 @@ export class MonitorDashBoardTs extends Vue {
         let {accountPrivateKey, accountPublicKey, currentXem, accountAddress, node} = this
         if (!accountPublicKey || accountPublicKey.length < 64) return
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
-        transactionApi.unconfirmedTransactions({
+        new TransactionApiRxjs().unconfirmedTransactions(
             publicAccount,
-            node,
-            queryParams: {
+
+            {
                 pageSize: 100
-            }
-        }).then((transactionsResult) => {
-            transactionsResult.result.unconfirmedTransactions.subscribe(async (unconfirmedtransactionsInfo) => {
-                unconfirmedtransactionsInfo = unconfirmedtransactionsInfo.map((unconfirmedtransaction) => {
-                    unconfirmedtransaction.isTxUnconfirmed = true
-                    return unconfirmedtransaction
-                })
-                that.allTransacrionList.push(...unconfirmedtransactionsInfo)
-                await that.getBlockInfoByTransactionList(that.allTransacrionList, node)
+            },
+            node,
+        ).subscribe(async (unconfirmedtransactionsInfo:any) => {
+            unconfirmedtransactionsInfo = unconfirmedtransactionsInfo.map((unconfirmedtransaction) => {
+                unconfirmedtransaction.isTxUnconfirmed = true
+                return unconfirmedtransaction
             })
+            that.allTransacrionList.push(...unconfirmedtransactionsInfo)
+            await that.getBlockInfoByTransactionList(that.allTransacrionList, node)
         })
     }
 

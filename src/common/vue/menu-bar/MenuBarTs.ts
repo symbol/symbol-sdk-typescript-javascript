@@ -1,7 +1,7 @@
 import routers from '@/router/routers.ts'
 import {Message, isWindows} from "@/config/index.ts"
-import {listenerApi} from "@/core/api/listenerApi.ts"
-import {blockchainApi} from '@/core/api/blockchainApi.ts'
+import {ListenerApiRxjs} from "@/core/api/ListenerApiRxjs.ts"
+import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
 import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk"
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
@@ -171,13 +171,8 @@ export class MenuBarTs extends Vue {
 
     async getGenerateHash(node) {
         const that = this
-        await blockchainApi.getBlockByHeight({
-            height: 1,
-            node
-        }).then(async (blockReasult: any) => {
-            await blockReasult.result.Block.subscribe((blockInfo) => {
-                that.$store.state.account.generationHash = blockInfo.generationHash
-            })
+        await new BlockApiRxjs().getBlockByHeight(node, 1).subscribe((blockInfo) => {
+            that.$store.state.account.generationHash = blockInfo.generationHash
         })
     }
 
@@ -189,11 +184,7 @@ export class MenuBarTs extends Vue {
         const that = this
         this.unconfirmedTxListener && this.unconfirmedTxListener.close()
         this.unconfirmedTxListener = new Listener(node, WebSocket)
-        listenerApi.listenerUnconfirmed({
-            listener: this.unconfirmedTxListener,
-            address: Address.createFromRawAddress(that.getWallet.address),
-            fn: that.disposeUnconfirmed
-        })
+        new ListenerApiRxjs().listenerUnconfirmed(this.unconfirmedTxListener, Address.createFromRawAddress(that.getWallet.address), that.disposeUnconfirmed)
     }
 
     confirmedListener() {
@@ -204,11 +195,7 @@ export class MenuBarTs extends Vue {
         const that = this
         this.confirmedTxListener && this.confirmedTxListener.close()
         this.confirmedTxListener = new Listener(node, WebSocket)
-        listenerApi.listenerConfirmed({
-            listener: this.confirmedTxListener,
-            address: Address.createFromRawAddress(that.getWallet.address),
-            fn: that.disposeConfirmed
-        })
+        new ListenerApiRxjs().listenerConfirmed(this.confirmedTxListener, Address.createFromRawAddress(that.getWallet.address), that.disposeConfirmed)
     }
 
     txErrorListener() {
@@ -219,11 +206,7 @@ export class MenuBarTs extends Vue {
         const that = this
         this.txStatusListener && this.txStatusListener.close()
         this.txStatusListener = new Listener(node, WebSocket)
-        listenerApi.listenerTxStatus({
-            listener: this.txStatusListener,
-            address: Address.createFromRawAddress(that.getWallet.address),
-            fn: that.disposeTxStatus
-        })
+        new ListenerApiRxjs().listenerTxStatus(this.txStatusListener, Address.createFromRawAddress(that.getWallet.address), that.disposeTxStatus)
     }
 
     disposeUnconfirmed(transaction) {
@@ -295,23 +278,19 @@ export class MenuBarTs extends Vue {
         this.confirmedListener()
         this.txErrorListener()
 
-        blockchainApi.getBlockchainHeight({
-            node: currentNode
-        }).then((result) => {
-            result.result.blockchainHeight.subscribe((info) => {
-                that.isNodeHealthy = true
-                that.getGenerateHash(currentNode)
-                that.$Notice.destroy()
-                that.$Notice.success({
-                    title: that.$t(Message.NODE_CONNECTION_SUCCEEDED) + ''
-                });
-            })
-        }).catch((e: Error) => {
+        new BlockApiRxjs().getBlockchainHeight(currentNode).subscribe((info) => {
+            that.isNodeHealthy = true
+            that.getGenerateHash(currentNode)
+            that.$Notice.destroy()
+            that.$Notice.success({
+                title: that.$t(Message.NODE_CONNECTION_SUCCEEDED) + ''
+            });
+        }, (e: Error) => {
             that.isNodeHealthy = false
             that.$Notice.destroy()
             that.$Notice.error({
                 title: that.$t(Message.NODE_CONNECTION_ERROR) + ''
-            });
+            })
         })
     }
 

@@ -1,4 +1,4 @@
-import {walletApi} from "@/core/api/walletApi.ts"
+import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {hexCharCodeToStr} from '@/core/utils/utils.ts'
 import {randomMnemonicWord} from "@/core/utils/hdWallet.ts"
@@ -58,21 +58,22 @@ export class MnemonicDialogTs extends Vue {
     checkPassword() {
         if (!this.checkInput()) return
         const DeTxt = decryptKey(this.getWallet, this.wallet.password)
-        walletApi.getWallet({
-            name: this.getWallet.name,
-            networkType: this.getWallet.networkType,
-            privateKey: DeTxt.length === 64 ? DeTxt : ''
-        }).then(async (Wallet: any) => {
+        try {
+            new WalletApiRxjs().getWallet(
+                this.getWallet.name,
+                DeTxt.length === 64 ? DeTxt : '',
+                this.getWallet.networkType,
+            )
             const DeMnemonic = decryptKey(this.getWallet['mnemonicEnCodeObj'], this.wallet.password)
             this.mnemonic = hexCharCodeToStr(DeMnemonic)
             this.mnemonicRandomArr = randomMnemonicWord(this.mnemonic.split(' '))
             this.stepIndex = 1
             this.wallet.password = ''
-        }).catch(() => {
+        } catch (error) {
             this.$Notice.error({
                 title: this.$t('password_error') + ''
             })
-        })
+        }
     }
 
     checkInput() {

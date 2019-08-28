@@ -95,7 +95,7 @@ export class KeystoreDialogTs extends Vue {
             this.$Notice.success({
                 title: this.$t(Message.COPY_SUCCESS) + ''
             });
-        })
+        }).catch((error)=>{console.log(error)})
     }
 
 

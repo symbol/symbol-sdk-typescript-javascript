@@ -1,9 +1,8 @@
-import {walletApi} from "@/core/api/walletApi.ts"
+import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {Account, Crypto, PropertyType} from "nem2-sdk"
 import {Message, entityTypeList} from "@/config/index.ts"
-import {transactionApi} from "@/core/api/transactionApi.ts"
-import {creatrModifyAccountPropertyTransaction} from '@/core/utils/wallet.ts'
+import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 
 @Component
 export class WalletFilterTs extends Vue {
@@ -136,20 +135,20 @@ export class WalletFilterTs extends Vue {
         const {networkType} = this.$store.state.account.wallet
         const {generationHash, node} = this.$store.state.account
         const account = Account.createFromPrivateKey(privatekey, networkType)
-        creatrModifyAccountPropertyTransaction(
-            filterType,
-            filterList,
-            networkType,
-            fee
-        ).then((modifyAccountPropertyAddressTransaction) => {
-            console.log(modifyAccountPropertyAddressTransaction)
-            transactionApi._announce({
-                transaction: modifyAccountPropertyAddressTransaction,
-                account,
-                node,
-                generationHash
-            })
-        })
+        // creatrModifyAccountPropertyTransaction(
+        //     filterType,
+        //     filterList,
+        //     networkType,
+        //     fee
+        // ).then((modifyAccountPropertyAddressTransaction) => {
+        //     console.log(modifyAccountPropertyAddressTransaction)
+        //     new TransactionApiRxjs()._announce(
+        //         modifyAccountPropertyAddressTransaction,
+        //         node,
+        //         account,
+        //         generationHash
+        //     )
+        // })
     }
 
 
@@ -170,28 +169,22 @@ export class WalletFilterTs extends Vue {
 
     checkPrivateKey(DeTxt) {
         const that = this
-        walletApi.getWallet({
-            name: this.getWallet.name,
-            networkType: this.getWallet.networkType,
-            privateKey: DeTxt.length === 64 ? DeTxt : ''
-        }).then(async (Wallet: any) => {
+        try {
+            new WalletApiRxjs().getWallet(this.getWallet.name,
+                DeTxt.length === 64 ? DeTxt : '',
+                this.getWallet.networkType)
             this.sendTransaction(DeTxt)
-        }).catch((e) => {
-            console.log(e)
+        } catch (e) {
             that.showErrorMessage(this.$t(Message.WRONG_PASSWORD_ERROR))
-        })
+        }
     }
 
     getAccountProperties() {
-        if(!this.$store.state.account.wallet){
+        if (!this.$store.state.account.wallet) {
             return
         }
         const {node} = this.$store.state.account
         const {address} = this.$store.state.account.wallet
-        // TODO SDK has not been complete yet
-        // getAccountProperties(address, node).then((accountPropertiesInfo) => {
-        //     console.log(accountPropertiesInfo)
-        // })
     }
 
     created() {

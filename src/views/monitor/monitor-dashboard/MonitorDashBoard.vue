@@ -7,14 +7,24 @@
             class-name="dash_board_dialog">
       <div class="transfer_type">
         <span class="title">{{$t('transfer_type')}}</span>
-        <span class="value">{{$t(transactionDetails.transfer_type)}}</span>
+        <span class="value">{{$t(transactionDetails.dialogDetailMap?transactionDetails.dialogDetailMap.transfer_type:'-')}}</span>
       </div>
       <div>
-        <div v-if="key !=='transfer_type'" v-for="(value,key,index) in transactionDetails" class="other_info">
+        <div v-if="key !=='transfer_type'" v-for="(value,key,index) in transactionDetails.dialogDetailMap"
+             class="other_info">
           <span class="title">{{$t(key)}}</span>
           <span class="value">{{value}}</span>
         </div>
+        <!--        inner transaction-->
+        <div v-if="transactionDetails.formatAggregateCompelete">
+          <span class=" title"> {{$t('inner_transaction')}}</span>
+          <div class="inner_transaction"
+               v-for="(innerTransaction,index ) in transactionDetails.formatAggregateCompelete">
+            <span class="value">{{$t(innerTransaction.dialogDetailMap.transfer_type)}}</span>
+          </div>
+        </div>
       </div>
+
     </Modal>
 
     <div class="top_network_info">

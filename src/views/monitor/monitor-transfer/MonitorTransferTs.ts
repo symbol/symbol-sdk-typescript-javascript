@@ -2,6 +2,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 import TransferTransaction from './transactions/transfer-transaction/TransferTransaction.vue'
 import MultisigTransferTransaction from './transactions/multisig-transfer-transaction/MultisigTransferTransaction.vue'
+import {TransferType} from '@/config/index.ts'
 
 @Component({
     components: {
@@ -11,6 +12,7 @@ import MultisigTransferTransaction from './transactions/multisig-transfer-transa
     }
 })
 export class MonitorTransferTs extends Vue {
+    TransferType = TransferType
     accountPublicKey = ''
     accountAddress = ''
     node = ''

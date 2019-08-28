@@ -1,5 +1,5 @@
 import {Message} from "@/config/index.ts"
-import {transactionApi} from "@/core/api/transactionApi.ts"
+import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
@@ -97,19 +97,18 @@ export class MultisigManagementTs extends Vue {
             networkType,
             UInt64.fromUint(innerFee)
         )
-        createCompleteMultisigTransaction(
+        const aggregateTransaction = createCompleteMultisigTransaction(
             [modifyMultisigAccountTx],
             multisigPublickey,
             networkType,
             innerFee,
-        ).then((aggregateTransaction) => {
-            transactionApi._announce({
-                transaction: aggregateTransaction,
-                account,
-                node,
-                generationHash
-            })
-        })
+        )
+        new TransactionApiRxjs()._announce(
+             aggregateTransaction,
+            node,
+            account,
+            generationHash
+        )
     }
 
     createBondedModifyTransaction(privatekey) {
@@ -131,23 +130,22 @@ export class MultisigManagementTs extends Vue {
             networkType,
             UInt64.fromUint(innerFee)
         );
-        createBondedMultisigTransaction(
+        const aggregateTransaction = createBondedMultisigTransaction(
             [modifyMultisigAccountTransaction],
             account.publicKey,
             networkType,
             account, bondedFee
-        ).then((aggregateTransaction) => {
-            transactionApi.announceBondedWithLock({
-                aggregateTransaction,
-                account,
-                listener,
-                node,
-                generationHash,
-                networkType,
-                fee: lockFee,
-                mosaicHex,
-            })
-        })
+        )
+        new TransactionApiRxjs().announceBondedWithLock(
+            aggregateTransaction,
+            account,
+            listener,
+            node,
+            generationHash,
+            networkType,
+            lockFee,
+            mosaicHex,
+        )
     }
 
 

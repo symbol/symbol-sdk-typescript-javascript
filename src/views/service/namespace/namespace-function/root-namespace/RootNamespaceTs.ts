@@ -1,9 +1,9 @@
 import {Account, Address, Listener} from "nem2-sdk"
-import {namespaceApi} from "@/core/api/namespaceApi.ts"
-import {multisigApi} from '@/core/api/multisigApi.ts'
+import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
+import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {formatSeconds, formatAddress} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {transactionApi} from "@/core/api/transactionApi.ts"
+import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Message, bandedNamespace as BandedNamespaceList} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet.ts"
@@ -28,7 +28,7 @@ export class RootNamespaceTs extends Vue {
         aggregateFee: 50000,
         lockFee: 50000
     }
-    multisigPublickeyList = [
+    multisigPublickeyList: any = [
         {
             value: 'no data ',
             label: 'no data '
@@ -86,17 +86,12 @@ export class RootNamespaceTs extends Vue {
         let transaction;
         const that = this;
         const account = Account.createFromPrivateKey(privatekey, this.getWallet.networkType);
-        await this.createRootNamespace().then((rootNamespaceTransaction) => {
-            transaction = rootNamespaceTransaction
-        })
+        transaction = this.createRootNamespace()
         const signature = account.sign(transaction, this.generationHash)
-        transactionApi.announce({signature, node: this.node}).then((announceResult) => {
-            // get announce status
-            announceResult.result.announceStatus.subscribe((announceInfo: any) => {
+        new TransactionApiRxjs().announce(signature,this.node).subscribe((announceInfo: any) => {
                 that.$emit('createdNamespace')
                 that.$Notice.success({title: this.$t(Message.SUCCESS) + ''})
                 that.initForm()
-            })
         })
     }
 
@@ -106,52 +101,47 @@ export class RootNamespaceTs extends Vue {
         const {networkType} = this.getWallet
         const account = Account.createFromPrivateKey(privatekey, networkType)
         const {generationHash, node} = this.$store.state.account
-        const mosaicHex  = this.$store.state.account.currentXEM1
+        const mosaicHex = this.$store.state.account.currentXEM1
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-        namespaceApi.createdRootNamespace({
-            namespaceName: rootNamespaceName,
-            duration: duration,
-            networkType: networkType,
-            maxFee: innerFee
-        }).then(async (transaction) => {
-            const rootNamespaceTransaction = transaction.result.rootNamespaceTransaction
-            if (that.currentMinApproval > 1) {
-                await createBondedMultisigTransaction(
-                    [rootNamespaceTransaction],
-                    multisigPublickey,
-                    networkType,
-                    account,
-                    aggregateFee
-                ).then((aggregateTransaction) => {
-                    transactionApi.announceBondedWithLock({
-                        aggregateTransaction,
-                        account,
-                        listener,
-                        node,
-                        generationHash,
-                        networkType,
-                        fee: lockFee,
-                        mosaicHex,
-                    })
-                })
-                return
-            }
-
-            createCompleteMultisigTransaction(
+        const rootNamespaceTransaction = new NamespaceApiRxjs().createdRootNamespace(
+            rootNamespaceName,
+            duration,
+            networkType,
+            innerFee
+        )
+        if (that.currentMinApproval > 1) {
+            const aggregateTransaction = createBondedMultisigTransaction(
                 [rootNamespaceTransaction],
                 multisigPublickey,
                 networkType,
+                account,
                 aggregateFee
-            ).then((aggregateTransaction) => {
-                transactionApi._announce({
-                    transaction: aggregateTransaction,
-                    account,
-                    node,
-                    generationHash
-                })
-            })
-        })
-        console.log(privatekey)
+            )
+            new TransactionApiRxjs().announceBondedWithLock(
+                aggregateTransaction,
+                account,
+                listener,
+                node,
+                generationHash,
+                networkType,
+                lockFee,
+                mosaicHex,
+            )
+
+            return
+        }
+        const aggregateTransaction = createCompleteMultisigTransaction(
+            [rootNamespaceTransaction],
+            multisigPublickey,
+            networkType,
+            aggregateFee
+        )
+        new TransactionApiRxjs()._announce(
+           aggregateTransaction,
+            node,
+            account,
+            generationHash
+        )
     }
 
     async checkEnd(privatekey) {
@@ -163,14 +153,9 @@ export class RootNamespaceTs extends Vue {
     }
 
     createRootNamespace() {
-        return namespaceApi.createdRootNamespace({
-            namespaceName: this.form.rootNamespaceName,
-            duration: this.form.duration,
-            networkType: this.getWallet.networkType,
-            maxFee: this.form.innerFee
-        }).then((transaction) => {
-            return transaction.result.rootNamespaceTransaction
-        })
+        return new NamespaceApiRxjs().createdRootNamespace(this.form.rootNamespaceName,
+            this.form.duration, this.getWallet.networkType, this.form.innerFee
+        )
     }
 
 
@@ -243,15 +228,12 @@ export class RootNamespaceTs extends Vue {
 
 
     getMultisigAccountList() {
-        if(!this.$store.state.account.wallet) return
+        if (!this.$store.state.account.wallet) return
         const that = this
         const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
-        multisigApi.getMultisigAccountInfo({
-            address,
-            node
-        }).then((result) => {
-            that.multisigPublickeyList = result.result.multisigInfo.multisigAccounts.map((item) => {
+        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
+            that.multisigPublickeyList = multisigInfo.multisigAccounts.map((item: any) => {
                 item.value = item.publicKey
                 item.label = item.publicKey
                 return item
@@ -269,12 +251,8 @@ export class RootNamespaceTs extends Vue {
         const {node} = this.$store.state.account
         const {networkType} = this.$store.state.account.wallet
         let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
-        multisigApi.getMultisigAccountInfo({
-            address,
-            node
-        }).then((result) => {
-            const currentMultisigAccount = result.result.multisigInfo
-            that.currentMinApproval = currentMultisigAccount.minApproval
+        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
+            that.currentMinApproval = multisigInfo.minApproval
         })
     }
 

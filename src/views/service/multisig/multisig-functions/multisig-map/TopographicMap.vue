@@ -10,13 +10,14 @@
 
 <script lang="ts">
     import echarts from 'echarts'
+    import {Message} from "@/config/index.ts"
     import {copyTxt} from '@/core/utils/utils.ts'
-   import {Message} from "@/config/index.ts"
     import {Component, Vue} from 'vue-property-decorator'
-    import {multisigApi} from '@/core/api/multisigApi.ts'
+    import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
     import multisignSelfIcon from '@/common/img/service/multisig/multisignSelfIcon.png'
     import multisignCosignerIcon from '@/common/img/service/multisig/multisignCosignerIcon.png'
     import multisignMultisignerIcon from '@/common/img/service/multisig/multisignMultisignerIcon.png'
+    import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs";
 
     @Component
     export default class LineChart extends Vue {
@@ -109,7 +110,7 @@
         }
 
 
-        async getMultisigInfo() {
+        getMultisigInfo() {
             const that = this
             const {address, publicAccount} = this.$store.state.account.wallet
             const {node} = this.$store.state.account
@@ -119,10 +120,7 @@
             let allAccountList = []
             let links = []
             const xAxisDistance = 30
-            await multisigApi.getMultisigAccountInfo({
-                address,
-                node
-            }).then((result) => {
+            new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
                 //self
                 const selfNode = {
                     name: 'self',
@@ -134,9 +132,8 @@
                         color: '#F3875B'
                     }
                 }
-                const multisigInfo = result.result.multisigInfo
                 // multisigApi nodes
-                multisigList = multisigInfo.multisigAccounts.map((item, index) => {
+                multisigList = multisigInfo.multisigAccounts.map((item: any, index: number) => {
                     item.name = 'm-' + index
                     item.x = index * xAxisDistance
                     item.y = 150
@@ -149,7 +146,7 @@
                     return item
                 })
                 // cosigner nodes
-                cosignerList = multisigInfo.cosignatories.map((item, index) => {
+                cosignerList = multisigInfo.cosignatories.map((item: any, index: number) => {
                     item.name = 'c-' + index
                     item.x = index * xAxisDistance
                     item.y = 50
@@ -167,7 +164,7 @@
                 that.notMultisigNorCosigner = allAccountList.length == 1 ? true : false
                 that.option.series[0].data = allAccountList
                 that.option.series[0].links = links
-            }).catch(e => console.log(e))
+            })
         }
 
         async created() {
