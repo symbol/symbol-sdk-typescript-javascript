@@ -1,5 +1,5 @@
 import {Component, Vue, Prop, Watch, Inject} from 'vue-property-decorator'
-import {formFields} from '@/core/validation'
+import {standardFields} from '@/core/validation'
 
 @Component
 export class FormInputTs extends Vue {
@@ -21,12 +21,12 @@ export class FormInputTs extends Vue {
   constructor() {
     super()
     this.displayedError = ''
-    this.hint1 = formFields[this.fieldName].hint[0] || ''
-    this.hint2 = formFields[this.fieldName].hint[1] || ''
-    this.label = formFields[this.fieldName].label || ''
-    this.placeholder = formFields[this.fieldName].placeholder || ''
-    this.validation = formFields[this.fieldName].validation || ''
-    this.fieldType = formFields[this.fieldName].type || ''
+    this.hint1 = standardFields[this.fieldName].hint[0] || ''
+    this.hint2 = standardFields[this.fieldName].hint[1] || ''
+    this.label = standardFields[this.fieldName].label || ''
+    this.placeholder = standardFields[this.fieldName].placeholder || ''
+    this.validation = standardFields[this.fieldName].validation || ''
+    this.fieldType = standardFields[this.fieldName].type || ''
   }
 
   created() { this.$validator = this.validator }

@@ -6,16 +6,19 @@ import registerCustomValidators from './registerCustomValidators';
 
 // @TODO: refactor dictionaries import
 const customMessagesEn = {
-  address: field => `${field} invalid`,
-  addressOrMosaicId: field => `${field} invalid`,
+  address: () => `this address is invalid`,
+  confirmLock: () => `this password is incorrect`,
+  confirmPassword: () => 'passwords do not match',
 };
 const customMessagesZh = {
-  address: field => `${field} 不正确`,
-  addressOrMosaicId: field => `${field} 不正确`,
+  address: () => `this address is invalid`,
+  confirmLock: () => `this password is incorrect`,
+  confirmPassword: () => 'passwords do not match',
 };
 
 export const veeValidateConfig = {
  i18n,
+ fieldsBagName: 'fieldBags',
  dictionary: {
    'en-US': {
      messages: { ...en.messages, ...customMessagesEn },

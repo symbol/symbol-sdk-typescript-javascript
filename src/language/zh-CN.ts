@@ -631,8 +631,11 @@ export const zh_CN = {
     LABEL_previous_password: '旧密码',
     HINT_previous_password: '用于登入程序的面膜',
     PLACEHOLDER_previous_password: 'My FiRst Pa$$word!',
+    HINT_cipher_hint1: 'should be between 1 and 32 chars.',
 
     timestamp: '时间戳',
-    sender: '发送者'
+    sender: '发送者',
 
+
+    amount: '金额'
 }

@@ -32,7 +32,7 @@ const { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, PASSWORD_SPECIAL_CHAR } = APP_
 // confirm_password
 // please_enter_your_new_password_again
 
-export const formFields = {
+export const standardFields = {
  previousPassword: {
   default: '',
   label: 'LABEL_previous_password',
@@ -374,4 +374,4 @@ export const selectFields = {
  },
 };
 
-export default formFields;
+export default standardFields;

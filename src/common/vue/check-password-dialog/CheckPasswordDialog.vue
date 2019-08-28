@@ -23,7 +23,11 @@
 
 
           <div class="info_container" v-else>
-            <div class="info_container_item" v-for="(value,key,index) in transactionDetail">
+            <div
+              v-for="(value,key,index) in transactionDetail"
+              :key="`ic${index}`"
+              class="info_container_item"
+            >
               <span class="key">{{$t(key)}}</span>
               <span v-if="index == 0" class="value orange">{{$t(value)}}</span>
               <span v-else class="value">{{value}}</span>
@@ -31,16 +35,11 @@
           </div>
 
 
-          <Form :model="wallet">
-            <FormItem>
-              <Input v-model="wallet.password" type="password" required
-                     :placeholder="$t('please_enter_your_wallet_password')">
-              </Input>
-            </FormItem>
-            <FormItem>
+          <form>
+              <input v-model="wallet.password" type="password" required
+                     :placeholder="$t('please_enter_your_wallet_password')" />
               <Button type="success" @click="checkPassword">{{$t('confirm')}}</Button>
-            </FormItem>
-          </Form>
+          </form>
         </div>
       </div>
     </Modal>

@@ -149,10 +149,7 @@
             {
                 path: '/settingPanel',
                 name: 'settingPanel',
-                // redirect: '/settingNormal',
-                meta: {
-                    //     disabled: true,
-                },
+                redirect: '/settingNormal',
                 // @ts-ignore
                 component: () => import('@/views/setting/setting-panel/SettingPanel.vue'),
                 children: [

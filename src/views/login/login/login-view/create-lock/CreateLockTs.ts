@@ -1,11 +1,11 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {AppLock} from "@/core/utils/AppLock.ts"
-import { formFields } from '@/core/validation'
+import {AppLock} from "@/core/utils/AppLock"
+import { standardFields } from '@/core/validation'
 
 @Component
 export class CreateLockTs extends Vue {
-    formFields: object = formFields
+    standardFields: object = standardFields
     errors: any
 
     lockPW = {
@@ -15,7 +15,6 @@ export class CreateLockTs extends Vue {
     }
 
     submit() {
-      console.log('SUBMIT CALLED')
       if(this.errors.items.length > 0) {
         this.$Notice.error({ title: this.errors.items[0].msg })
         return

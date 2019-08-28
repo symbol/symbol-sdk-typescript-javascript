@@ -648,6 +648,8 @@ export const en_US = {
     cipher: 'cipher',
 
     HINT_cipher_hint1: 'should be between 1 and 32 chars.',
+
+    amount: 'amount',
     Node_connection_succeeded: 'Node connection succeeded',
 
     This_password_is_used_for_importing_the_keystore_file: 'This password is the password for decrypting the Keystore and is used for importing the keystore file. Please remember it.',

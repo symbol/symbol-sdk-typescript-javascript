@@ -1,4 +1,3 @@
-import {Crypto} from 'nem2-sdk'
 import {Message} from "@/config/index.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {walletApi} from "@/core/api/walletApi.ts"

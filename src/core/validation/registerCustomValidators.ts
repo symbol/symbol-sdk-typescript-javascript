@@ -1,3 +1,4 @@
+import { Address, MosaicId } from 'nem2-sdk'
 import { AppLock } from '@/core/utils/AppLock'
 
 const getOtherFieldValue = (otherField, validator) => {
@@ -8,19 +9,23 @@ const getOtherFieldValue = (otherField, validator) => {
 }
 
 export const CUSTOM_VALIDATORS_NAMES = {
- confirmPassword: 'confirmPassword',
- confirmLock: 'confirmLock'
+  address: 'address', 
+  confirmPassword: 'confirmPassword',
+  confirmLock: 'confirmLock',
+  mosaicId: 'mosaicId',
 };
 
-const confirmPasswordValidator = (context) => {
+const addressValidator = (context) => {
  return context.Validator.extend(
-  CUSTOM_VALIDATORS_NAMES.confirmPassword,
-  (password, [otherField]) => new Promise((resolve) => {
-    const otherValue = getOtherFieldValue(otherField, context)
-    if (otherValue !== password) resolve({ valid: false })
-    resolve({ valid: password });
+  CUSTOM_VALIDATORS_NAMES.address,
+  (address) => new Promise((resolve) => {
+    try {
+      Address.createFromRawAddress(address);
+      resolve({ valid: address });
+    } catch (error) {
+      resolve({ valid: false });
+    }
   }),
-  { hasTarget: true },
  )
 }
 
@@ -36,9 +41,37 @@ const confirmLockValidator = (context) => {
  )
 }
 
+const confirmPasswordValidator = (context) => {
+ return context.Validator.extend(
+  CUSTOM_VALIDATORS_NAMES.confirmPassword,
+  (password, [otherField]) => new Promise((resolve) => {
+    const otherValue = getOtherFieldValue(otherField, context)
+    if (otherValue !== password) resolve({ valid: false })
+    resolve({ valid: password });
+  }),
+  { hasTarget: true },
+ )
+}
+
+const mosaicIdValidator = (context) => {
+ return context.Validator.extend(
+  CUSTOM_VALIDATORS_NAMES.mosaicId,
+  (mosaicId) => new Promise((resolve) => {
+    try {
+      new MosaicId(mosaicId);
+      resolve({ valid: mosaicId });
+    } catch (error) {
+      resolve({ valid: false });
+    }
+  }),
+ )
+}
+
 const customValidatorFactory = {
- [CUSTOM_VALIDATORS_NAMES.confirmPassword]: confirmPasswordValidator,
+ [CUSTOM_VALIDATORS_NAMES.address]: addressValidator,
  [CUSTOM_VALIDATORS_NAMES.confirmLock]: confirmLockValidator,
+ [CUSTOM_VALIDATORS_NAMES.confirmPassword]: confirmPasswordValidator,
+ [CUSTOM_VALIDATORS_NAMES.mosaicId]: mosaicIdValidator,
 };
 
 const CustomValidator = (name, Validator) => ({

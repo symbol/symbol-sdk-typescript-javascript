@@ -1,7 +1,7 @@
 import { Component, Vue, Provide, Watch } from 'vue-property-decorator'
 import { Message } from "@/config"
 import { clone } from '@/core/utils/utils'
-import { formFields } from '@/core/validation'
+import { standardFields } from '@/core/validation'
 import { AppLock } from '@/core/utils/AppLock'
 import FormInput from '../../other/forms/input/FormInput.vue'
 
@@ -14,17 +14,17 @@ export class SettingLockTs extends Vue {
   submitDisabled: boolean = false
 
   formFields = {
-      previousPassword: formFields.previousPassword.default,
-      newPassword: formFields.previousPassword.default,
-      confirmPassword: formFields.previousPassword.default,
+      previousPassword: standardFields.previousPassword.default,
+      newPassword: standardFields.previousPassword.default,
+      confirmPassword: standardFields.previousPassword.default,
       cipher: new AppLock().getLock().cipher,
-      hint: formFields.hint.default,
+      hint: standardFields.hint.default,
   }
 
   formModel = clone(this.formFields)
 
   @Watch('errors')
-  onErrorsChanged(n) { this.submitDisabled = this.errors.items.length > 0 }
+  onErrorsChanged() { this.submitDisabled = this.errors.items.length > 0 }
   
   resetFields() { this.formModel = clone(this.formFields) }
 

@@ -1,10 +1,10 @@
 import {Component, Vue } from 'vue-property-decorator'
-import { AppLock, StoredCipher } from '@/core/utils/AppLock.ts'
-import { formFields } from '@/core/validation/index.ts'
+import { AppLock, StoredCipher } from '@/core/utils/AppLock'
+import { standardFields } from '@/core/validation'
 
 @Component
 export class InputLockTs extends Vue {
-  passwordFieldValidation = formFields.previousPassword.validation
+  passwordFieldValidation = standardFields.previousPassword.validation
   storedCipher: StoredCipher = new AppLock().getLock()
   cipher: string = this.storedCipher.cipher
   cipherHint: string = this.storedCipher.hint

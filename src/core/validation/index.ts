@@ -1,4 +1,4 @@
 export * from './validation'
-export * from './formFields'
+export * from './standardFields'
 export * from './registerCustomValidators'
 export * from './veeValidate'
