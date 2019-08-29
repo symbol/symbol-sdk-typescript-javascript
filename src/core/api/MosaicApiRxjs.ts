@@ -13,10 +13,9 @@ import {
     NetworkCurrencyMosaic,
     MosaicSupplyType, PublicAccount
 } from 'nem2-sdk'
-import { MosaicRepository } from "@/core/api/repository/MosaicRepository.ts";
 import { from as observableFrom } from "rxjs";
 
-export class MosaicApiRxjs implements MosaicRepository {
+export class MosaicApiRxjs {
     getMosaicByNamespace(namespace: string) {
         const uintArray = NamespaceMosaicIdGenerator.namespaceId(namespace)
         return new MosaicId(uintArray)

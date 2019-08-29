@@ -6,6 +6,7 @@ import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
 import {decryptKey} from "@/core/utils/wallet.ts"
+import {signAndAnnounceNormal} from '@/core/utils/wallet.ts'
 
 @Component
 export class MosaicAliasDialogTs extends Vue {
@@ -100,6 +101,7 @@ export class MosaicAliasDialogTs extends Vue {
 
     async updateMosaic(key) {
         const that = this
+        const {node, generationHash} = this
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
         let transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
             AliasActionType.Link,
@@ -108,15 +110,15 @@ export class MosaicAliasDialogTs extends Vue {
             this.getWallet.networkType,
             that.mosaic.fee
         )
-        const signature = account.sign(transaction, this.generationHash)
-        new TransactionApiRxjs().announce(signature, this.node).subscribe((announceInfo: any) => {
-            that.$Notice.success({
-                title: this.$t(Message.SUCCESS) + ''
-            })
-            that.initForm()
-            that.updatedMosaicAlias()
-        })
+        signAndAnnounceNormal(account, node, generationHash, [transaction], this.showNotice())
+        that.initForm()
+        that.updatedMosaicAlias()
+    }
 
+    showNotice() {
+        this.$Notice.success({
+            title: this.$t(Message.SUCCESS) + ''
+        })
     }
 
     updatedMosaicAlias() {

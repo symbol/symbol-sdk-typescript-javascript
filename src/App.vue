@@ -16,17 +16,26 @@
     import {mapState} from 'vuex';
 
 
-
-    @Component({ computed: {
-      ...mapState({ activeAccount: 'account' })}
+    @Component({
+        computed: {
+            ...mapState({activeAccount: 'account'})
+        }
     })
     export default class App extends Vue {
         isWindows = isWindows
         activeAccount: any
 
-        get node(): string { return this.activeAccount.node }
-        get currentXEM2(): string { return this.activeAccount.currentXEM2 }
-        get currentXEM1(): string { return this.activeAccount.currentXEM1 }
+        get node(): string {
+            return this.activeAccount.node
+        }
+
+        get currentXEM2(): string {
+            return this.activeAccount.currentXEM2
+        }
+
+        get currentXEM1(): string {
+            return this.activeAccount.currentXEM1
+        }
 
         async initApp() {
             let walletList: any = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
@@ -51,32 +60,29 @@
             walletItem.mosaics = []
 
             new AccountApiRxjs().getAccountInfo(walletItem.address, this.node)
-              .subscribe((accountInfo) => {
-                let mosaicList = accountInfo.mosaics
-                mosaicList.map((item: any) => {
-                    item.hex = item.id.toHex()
-                    if (item.id.toHex() === this.currentXEM2
-                      || item.id.toHex() === this.currentXEM1) {
-                        walletItem.balance = item.amount.compact() / 1000000
-                    }
+                .subscribe((accountInfo) => {
+                    let mosaicList = accountInfo.mosaics
+                    mosaicList.map((item: any) => {
+                        item.hex = item.id.toHex()
+                        if (item.id.toHex() === this.currentXEM2
+                            || item.id.toHex() === this.currentXEM1) {
+                            walletItem.balance = item.amount.compact() / 1000000
+                        }
+                    })
+                    walletItem.mosaics = mosaicList
+                }, (error) => {
+                    walletItem.mosaics = []
                 })
-                walletItem.mosaics = mosaicList
-            }, (error) => {
-                walletItem.mosaics = []
-            })
             return walletItem
         }
 
         async getMultisigAccount(listItem) {
             let walletItem = listItem
             walletItem.isMultisig = false
-            new AccountApiRxjs().getMultisigAccountInfo(walletItem.address, this.node)
-              .subscribe((multisigAccountInfo: any) => {
-                multisigAccountInfo.subscribe((accountInfo) => {
-                    walletItem.isMultisig = true
-                }, () => {
-                    walletItem.isMultisig = false
-                })
+            new AccountApiRxjs().getMultisigAccountInfo(walletItem.address, this.node).subscribe((multisigAccountInfo: any) => {
+                walletItem.isMultisig = true
+            }, () => {
+                walletItem.isMultisig = false
             })
             return walletItem
         }

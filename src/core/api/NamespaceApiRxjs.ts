@@ -7,10 +7,9 @@ import {
     AddressAliasTransaction,
     NamespaceHttp, NetworkType, AliasActionType, MosaicId, Address, Namespace,
 } from 'nem2-sdk'
-import {NamespaceRepository} from "@/core/api/repository/NamespaceRepository.ts";
 import {from as observableFrom, Observable} from "rxjs";
 
-export class NamespaceApiRxjs implements NamespaceRepository {
+export class NamespaceApiRxjs  {
 
     createNamespaceId(name: string | number[]) {
         return new NamespaceId(name);

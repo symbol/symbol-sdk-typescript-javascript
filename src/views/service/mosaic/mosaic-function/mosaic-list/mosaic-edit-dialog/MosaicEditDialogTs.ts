@@ -5,6 +5,7 @@ import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {signAndAnnounceNormal} from "@/core/utils/wallet";
 
 @Component
 export class MosaicEditDialogTs extends Vue {
@@ -126,11 +127,15 @@ export class MosaicEditDialogTs extends Vue {
 
     updateMosaic(key) {
         const that = this
+        const {node, generationHash} = this
         const transaction = new MosaicApiRxjs().mosaicSupplyChange(this.mosaic['mosaicId'], this.mosaic.changeDelta, this.mosaic.supplyType, this.getWallet.networkType, this.mosaic.fee)
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
-        const signature = account.sign(transaction, this.generationHash)
-        new TransactionApiRxjs().announce(signature, that.node).subscribe((announceInfo: any) => {
-            that.updatedMosaic()
+        signAndAnnounceNormal(account, node, generationHash, [transaction], this.showNotice())
+    }
+
+    showNotice() {
+        this.$Notice.success({
+            title: this.$t(Message.SUCCESS) + ''
         })
     }
 

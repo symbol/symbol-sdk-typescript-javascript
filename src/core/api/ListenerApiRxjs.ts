@@ -1,9 +1,8 @@
 import { filter, mergeMap } from 'rxjs/operators'
 import { Address, Listener, TransactionHttp } from 'nem2-sdk'
 import { from as observableFrom } from "rxjs";
-import { ListenerRepository } from "@/core/api/repository/ListenerRepository";
 
-export class ListenerApiRxjs implements ListenerRepository {
+export class ListenerApiRxjs {
 
     public openWs(listener: any) {
         return observableFrom(listener.open())

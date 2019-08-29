@@ -114,8 +114,12 @@
         {{$t('This_account_is_already_a_multi_sign_account')}}
       </div>
 
-      <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
-                     @checkEnd="checkEnd"></CheckPWDialog>
+      <CheckPWDialog :showCheckPWDialog="showCheckPWDialog"
+                     @closeCheckPWDialog="closeCheckPWDialog"
+                     @checkEnd="checkEnd"
+                     :transactionList="transactionList"
+                     :otherDetails=otherDetails
+      ></CheckPWDialog>
     </div>
 
   </div>

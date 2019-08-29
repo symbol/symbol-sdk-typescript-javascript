@@ -26,8 +26,10 @@ import {
 })
 export class MultisigManagementTs extends Vue {
     isShowPanel = true
+    transactionList = []
     currentPublickey = ''
     currentMinRemoval = 0
+    otherDetails: any = {}
     currentMinApproval = 0
     hasAddCosigner = false
     isCompleteForm = false
@@ -74,17 +76,32 @@ export class MultisigManagementTs extends Vue {
     }
 
     confirmInput() {
+        const {lockFee} = this.formItem
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
+        this.otherDetails = {
+            lockFee: lockFee
+        }
+        const {hasAddCosigner} = this
+        const {cosignerList} = this.formItem
+        if (this.currentMinApproval == 0) {
+            return
+        }
+        if (this.currentMinApproval > 1 || hasAddCosigner) {
+            console.log('bonded')
+            this.createBondedModifyTransaction();
+            return
+        }
+        console.log('complete')
+        this.createCompleteModifyTransaction();
         this.showCheckPWDialog = true
     }
 
 
-    createCompleteModifyTransaction(privatekey) {
+    createCompleteModifyTransaction() {
         const {multisigPublickey, cosignerList, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
         const {networkType} = this.$store.state.account.wallet
         const {generationHash, node} = this.$store.state.account
-        const account = Account.createFromPrivateKey(privatekey, networkType)
         const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
             cosigner.type,
             PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
@@ -103,20 +120,14 @@ export class MultisigManagementTs extends Vue {
             networkType,
             innerFee,
         )
-        new TransactionApiRxjs()._announce(
-             aggregateTransaction,
-            node,
-            account,
-            generationHash
-        )
+        this.transactionList = [aggregateTransaction]
     }
 
-    createBondedModifyTransaction(privatekey) {
+    createBondedModifyTransaction() {
         const {cosignerList, bondedFee, lockFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
         const {networkType} = this.$store.state.account.wallet
         const {generationHash, node} = this.$store.state.account
         const mosaicHex = this.$store.state.account.currentXEM1
-        const account = Account.createFromPrivateKey(privatekey, networkType)
         const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
             cosigner.type,
             PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
@@ -132,38 +143,20 @@ export class MultisigManagementTs extends Vue {
         );
         const aggregateTransaction = createBondedMultisigTransaction(
             [modifyMultisigAccountTransaction],
-            account.publicKey,
+            this.$store.state.account.wallet.publicKey,
             networkType,
-            account, bondedFee
+            bondedFee
         )
-        new TransactionApiRxjs().announceBondedWithLock(
-            aggregateTransaction,
-            account,
-            listener,
-            node,
-            generationHash,
-            networkType,
-            lockFee,
-            mosaicHex,
-        )
+        this.transactionList = [aggregateTransaction]
     }
 
-
-    checkEnd(privatekey) {
-        const {hasAddCosigner} = this
-        const {cosignerList} = this.formItem
-        if (this.currentMinApproval == 0) {
-            return
+    checkEnd(isPasswordRight) {
+        if (!isPasswordRight) {
+            this.$Notice.destroy()
+            this.$Notice.error({
+                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+            })
         }
-        if (this.currentMinApproval > 1 || hasAddCosigner) {
-            console.log('bonded')
-            this.createBondedModifyTransaction(privatekey);
-            return
-        }
-        console.log('complete')
-        this.createCompleteModifyTransaction(privatekey);
-        return
-
     }
 
 

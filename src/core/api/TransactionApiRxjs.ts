@@ -13,14 +13,13 @@ import {
     MosaicId,
     Transaction, Account, PublicAccount, Listener
 } from 'nem2-sdk'
-import { filter, mergeMap } from "rxjs/operators"
-import { TransactionRepository } from "@/core/api/repository/TransactionRepository";
-import { from as observableFrom, Observable } from "rxjs";
+import {filter, mergeMap} from "rxjs/operators"
+import {from as observableFrom, Observable} from "rxjs";
 
-export class TransactionApiRxjs implements TransactionRepository {
+export class TransactionApiRxjs  {
 
     announce(signature: any,
-        node: string) {
+             node: string) {
         return observableFrom(new TransactionHttp(node).announce(signature))
 
     }
@@ -50,13 +49,13 @@ export class TransactionApiRxjs implements TransactionRepository {
         const MaxFeeUInt = UInt64.fromUint(MaxFee);
         receive = Address.createFromRawAddress(receive);
         // @ts-ignore
-        const msg = new Message(MessageType, params.message);
+        const msg = new Message(MessageType, message);
         return TransferTransaction.create(deadline, receive, mosaics, msg, network, MaxFeeUInt)
     }
 
     aggregateCompleteTransaction(network: number,
-        MaxFee: number,
-        transactions: any) {
+                                 MaxFee: number,
+                                 transactions: any) {
         return AggregateTransaction.createComplete(
             Deadline.create(),
             transactions,
@@ -69,7 +68,7 @@ export class TransactionApiRxjs implements TransactionRepository {
 
 
     aggregateBondedTransaction(network: number,
-        transactions: any) {
+                               transactions: any) {
         const deadline = Deadline.create()
         return AggregateTransaction.createBonded(
             deadline,
@@ -80,62 +79,62 @@ export class TransactionApiRxjs implements TransactionRepository {
 
 
     getTransaction(transactionId: string,
-        node: string) {
+                   node: string) {
         return observableFrom(new TransactionHttp(node).getTransaction(transactionId))
     }
 
     getTransactionStatus(hash: string,
-        node: string) {
+                         node: string) {
         return observableFrom(new TransactionHttp(node).getTransactionStatus(hash))
 
     }
 
     transactions(publicAccount: PublicAccount,
-        queryParams: any,
-        node: string) {
+                 queryParams: any,
+                 node: string) {
         return observableFrom(new AccountHttp(node).transactions(publicAccount, queryParams))
     }
 
     incomingTransactions(publicAccount: PublicAccount,
-        queryParams: any,
-        node: string) {
+                         queryParams: any,
+                         node: string) {
         return observableFrom(new AccountHttp(node).incomingTransactions(publicAccount, queryParams))
     }
 
     outgoingTransactions(publicAccount: PublicAccount,
-        queryParams: any,
-        node: string) {
+                         queryParams: any,
+                         node: string) {
 
         return observableFrom(new AccountHttp(node).outgoingTransactions(publicAccount, queryParams))
     }
 
     unconfirmedTransactions(publicAccount: PublicAccount,
-        queryParams: any,
-        node: string) {
+                            queryParams: any,
+                            node: string) {
 
         return observableFrom(new AccountHttp(node).unconfirmedTransactions(publicAccount, queryParams))
     }
 
     getAggregateBondedTransactions(publicAccount: any,
-        queryParams: any,
-        node: string) {
+                                   queryParams: any,
+                                   node: string) {
         return observableFrom(new AccountHttp(node).aggregateBondedTransactions(publicAccount, queryParams))
     }
 
     announceAggregateBonded(signedTransaction: any,
-        node: string) {
+                            node: string) {
         return observableFrom(new TransactionHttp(node).announceAggregateBonded(signedTransaction))
 
     }
 
     announceBondedWithLock(aggregateTransaction: AggregateTransaction,
-        account: Account,
-        listener: Listener,
-        node: string,
-        generationHash: string,
-        networkType,
-        fee,
-        mosaicHex: string) {
+                           account: Account,
+                           listener: Listener,
+                           node: string,
+                           generationHash: string,
+                           networkType,
+                           fee,
+                           mosaicHex: string) {
         const transactionHttp = new TransactionHttp(node);
         const signedTransaction = account.sign(aggregateTransaction, generationHash);
         const hashLockTransaction = HashLockTransaction.create(
@@ -160,11 +159,13 @@ export class TransactionApiRxjs implements TransactionRepository {
                 )
                 .subscribe(announcedAggregateBonded => console.log(announcedAggregateBonded),
                     err => console.error(err));
-        }).catch((error)=>{console.log(error)})
+        }).catch((error) => {
+            console.log(error)
+        })
     }
 
     getTransactionEffectiveFee(node: string,
-        hash: string) {
+                               hash: string) {
         const transactionHttp = new TransactionHttp(node)
         return observableFrom(transactionHttp.getTransactionEffectiveFee(hash))
 

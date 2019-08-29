@@ -38,15 +38,15 @@ export class WalletImportPrivatekeyTs extends Vue {
         },
     ]
 
-    get getNode () {
+    get getNode() {
         return this.$store.state.account.node
     }
 
-    get currentXEM1(){
+    get currentXEM1() {
         return this.$store.state.account.currentXEM1
     }
 
-    get currentXEM2(){
+    get currentXEM2() {
         return this.$store.state.account.currentXEM2
     }
 
@@ -69,7 +69,14 @@ export class WalletImportPrivatekeyTs extends Vue {
             })
             return false
         }
-        if (!passwordValidator(this.form.password)) {
+        // if (!passwordValidator(this.form.password)) {
+        //     this.$Notice.error({
+        //         title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
+        //     })
+        //     return false
+        // }
+
+        if (this.form.password || this.form.password.length < 6 || this.form.password.length > 32) {
             this.$Notice.error({
                 title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
             })
@@ -110,14 +117,16 @@ export class WalletImportPrivatekeyTs extends Vue {
         const walletList = this.$store.state.app.walletList
         const style = 'walletItem_bg_' + walletList.length % 3
         getAccountDefault(walletName, account, netType, this.getNode, this.currentXEM1, this.currentXEM2)
-            .then((wallet)=>{
+            .then((wallet) => {
                 let storeWallet = wallet
                 storeWallet['style'] = style
                 that.$store.commit('SET_WALLET', storeWallet)
                 const encryptObj = encryptKey(storeWallet['privateKey'], that.form['password'])
-                saveLocalWallet(storeWallet, encryptObj, null,{})
+                saveLocalWallet(storeWallet, encryptObj, null, {})
                 this.toWalletDetails()
-            }).catch((error)=>{console.log(error)})
+            }).catch((error) => {
+            console.log(error)
+        })
     }
 
     toWalletDetails() {

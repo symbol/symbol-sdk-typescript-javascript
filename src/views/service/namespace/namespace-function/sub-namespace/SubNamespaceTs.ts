@@ -1,9 +1,8 @@
-import {Account} from "nem2-sdk"
+
 import {Message, bandedNamespace as BandedNamespaceList} from "@/config/index.ts"
 import {formatAddress} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
-import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
 
@@ -17,7 +16,9 @@ export class SubNamespaceTs extends Vue {
     multisigPublickey = ''
     isCompleteForm = false
     showCheckPWDialog = false
+    otherDetails: any = {}
     transactionDetail = {}
+    transactionList = []
     form = {
         rootNamespaceName: '',
         subNamespaceName: '',
@@ -78,20 +79,13 @@ export class SubNamespaceTs extends Vue {
         this.typeList = list
     }
 
-    async checkEnd(key) {
-        let transaction;
-        const that = this;
-        const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
-
-        transaction = this.createSubNamespace()
-        const signature = account.sign(transaction, this.generationHash)
-        new TransactionApiRxjs().announce(signature,  this.node).subscribe((announceInfo: any) => {
-                that.$emit('createdNamespace')
-                that.$Notice.success({
-                    title: this.$t(Message.SUCCESS) + ''
-                })
-                that.initForm()
-        })
+    async checkEnd(isPasswordRight) {
+        if (!isPasswordRight) {
+            this.$Notice.destroy()
+            this.$Notice.error({
+                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+            })
+        }
     }
 
     showErrorMessage(message) {
@@ -190,6 +184,7 @@ export class SubNamespaceTs extends Vue {
             "sub_namespace": subNamespaceName,
             "fee": innerFee
         }
+        this.transactionList = [this.createSubNamespace()]
         this.showCheckPWDialog = true
     }
 

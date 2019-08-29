@@ -1,9 +1,8 @@
 import { from as observableFrom } from "rxjs"
 import { BlockHttp, ChainHttp } from 'nem2-sdk'
-import { BlockRepository } from "@/core/api/repository/BlockRepository.ts";
 
 
-export class BlockApiRxjs implements BlockRepository {
+export class BlockApiRxjs {
 
     /**
      *  getBlockByHeight

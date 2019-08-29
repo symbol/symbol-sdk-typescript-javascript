@@ -1,9 +1,8 @@
 import generator from 'generate-password';
-import {WalletRepository} from "@/core/api/repository/WalletRepository";
 import {Password, SimpleWallet, Account, PublicAccount, AccountHttp, NetworkType} from 'nem2-sdk'
 import {from as observableFrom} from "rxjs";
 
-export class WalletApiRxjs implements WalletRepository {
+export class WalletApiRxjs {
 
     loginWallet(name: string,
                 privateKey: string,

@@ -24,7 +24,11 @@ export class MultisigTs extends Vue {
         }, {
             name: 'map',
             isSelected: true
-        }
+        },
+        // {
+        //     name: 'MultisigCosign',
+        //     isSelected: false
+        // }
     ]
 
     switchButton(index) {

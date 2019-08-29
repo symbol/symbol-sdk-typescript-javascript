@@ -5,6 +5,7 @@ import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Account, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
+import {signAndAnnounceNormal} from "@/core/utils/wallet";
 
 @Component
 export class MosaicUnAliasDialogTs extends Vue {
@@ -73,12 +74,12 @@ export class MosaicUnAliasDialogTs extends Vue {
     checkPrivateKey(DeTxt) {
         const that = this
         try {
-            new WalletApiRxjs().getWallet( this.getWallet.name,
+            new WalletApiRxjs().getWallet(this.getWallet.name,
                 this.getWallet.networkType,
                 DeTxt.length === 64 ? DeTxt : ''
             )
             this.updateMosaic(DeTxt)
-        }catch (e) {
+        } catch (e) {
             that.$Notice.error({
                 title: this.$t('password_error') + ''
             })
@@ -87,23 +88,25 @@ export class MosaicUnAliasDialogTs extends Vue {
 
     async updateMosaic(key) {
         const that = this
+        const {node, generationHash} = this
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
         let transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
-             AliasActionType.Unlink,
-             new NamespaceId(that.mosaic['name']),
-             new MosaicId(that.mosaic['hex']),
-             this.getWallet.networkType,
-             that.mosaic.fee
+            AliasActionType.Unlink,
+            new NamespaceId(that.mosaic['name']),
+            new MosaicId(that.mosaic['hex']),
+            this.getWallet.networkType,
+            that.mosaic.fee
         )
-            const signature = account.sign(transaction, this.generationHash)
-            new TransactionApiRxjs().announce(signature,this.node).subscribe((announceInfo: any) => {
-                    that.$Notice.success({
-                        title: this.$t(Message.SUCCESS) + ''
-                    })
-                    that.initForm()
-                    that.updatedMosaicAlias()
-        })
+        signAndAnnounceNormal(account, node, generationHash, [transaction], this.showNotice())
+        that.initForm()
+        that.updatedMosaicAlias()
 
+    }
+
+    showNotice() {
+        this.$Notice.success({
+            title: this.$t(Message.SUCCESS) + ''
+        })
     }
 
     updatedMosaicAlias() {

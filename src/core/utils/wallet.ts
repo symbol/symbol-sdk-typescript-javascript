@@ -2,9 +2,9 @@ import {localRead, localSave} from "@/core/utils/utils.ts"
 import {
     Account,
     Address,
-    Crypto,
+    Crypto, Listener,
     NetworkType,
-    Transaction,
+    Transaction, TransactionType,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts";
@@ -16,6 +16,8 @@ import {BlockApiRxjs} from "@/core/api/BlockApiRxjs.ts";
 import {formateNemTimestamp} from "@/core/utils/utils.ts";
 import {concatAll} from 'rxjs/operators';
 import rxjs from 'rxjs'
+import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs";
+import {Message} from "@/config";
 
 export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) => {
     let localData: any[] = []
@@ -173,7 +175,6 @@ export const decryptKeystore = (encryptStr: string) => {
     return parseStr
 }
 
-//
 export const encryptKeystore = (decryptStr: string) => {
     let str = CryptoJS.enc.Utf8.parse(decryptStr)
     str = CryptoJS.enc.Base64.stringify(str)
@@ -181,71 +182,13 @@ export const encryptKeystore = (decryptStr: string) => {
 }
 
 
-export const createBondedMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, account: Account, fee: number) => {
-    return new MultisigApiRxjs().bondedMultisigTransaction(networkType, account, fee, multisigPublickey, transaction)
+export const createBondedMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, fee: number) => {
+    return new MultisigApiRxjs().bondedMultisigTransaction(networkType, fee, multisigPublickey, transaction)
 }
 
 export const createCompleteMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, fee: number) => {
     return new MultisigApiRxjs().completeMultisigTransaction(networkType, fee, multisigPublickey, transaction)
 }
-
-// export const creatrModifyAccountPropertyTransaction = (propertyType: PropertyType, modifications: Array<any>, networkType: NetworkType, fee: number,) => {
-//     //address
-//     if (propertyType === PropertyType.BlockAddress || propertyType === PropertyType.AllowAddress) {
-//         modifications = modifications.map((item) => {
-//             return AccountPropertyModification.createForAddress(
-//                 // TODO AFTER SDK COMPLETE  add PropertyModificationType
-//                 PropertyModificationType.Remove,
-//                 Address.createFromRawAddress(item.value)
-//             )
-//         })
-//         return filterApi.creatrModifyAccountPropertyAddressTransaction({
-//             propertyType,
-//             modifications,
-//             networkType,
-//             fee
-//         }).then((result) => {
-//             return result.result.modifyAccountPropertyAddressTransaction
-//         })
-//     }
-//     // entity type
-//     if (propertyType === PropertyType.BlockTransaction || propertyType === PropertyType.AllowTransaction) {
-//         modifications = modifications.map((item) => {
-//             return AccountPropertyModification.createForEntityType(
-//                 // TODO AFTER SDK COMPLETE  add PropertyModificationType
-//                 PropertyModificationType.Remove,
-//                 item.value
-//             )
-//         })
-//         return filterApi.creatrModifyAccountPropertyEntityTypeTransaction({
-//             propertyType,
-//             modifications,
-//             networkType,
-//             fee
-//         }).then((result) => {
-//             return result.result.modifyAccountPropertyEntityTypeTransaction
-//         })
-//     }
-//     // mosaic
-//     if (propertyType === PropertyType.BlockMosaic || propertyType === PropertyType.AllowMosaic) {
-//         modifications = modifications.map((item) => {
-//             // TODO AFTER SDK COMPLETE  add PropertyModificationType
-//             return AccountPropertyModification.createForMosaic(
-//                 PropertyModificationType.Remove,
-//                 new MosaicId(item.value)
-//             )
-//         })
-//         return filterApi.creatrModifyAccountPropertyMosaicTransaction({
-//             propertyType,
-//             modifications,
-//             networkType,
-//             fee
-//         }).then((result) => {
-//             return result.result.modifyAccountPropertyMosaicTransaction
-//         })
-//     }
-// }
-
 /*  transactionList: pointer of target array  Array
 *   node:node   stirng
 *   offset: time zone   number
@@ -266,3 +209,42 @@ export const getBlockInfoByTransactionList = (transactionList: Array<any>, node:
         return item.transactionInfo.height.compact()
     })
 }
+
+
+export const signAndAnnounceNormal = (account: Account, node: string, generationHash: string, transactionList: Array<any>, callBack: any) => {
+    try {
+        const signature = account.sign(transactionList[0], generationHash)
+        new TransactionApiRxjs().announce(signature, node).subscribe(() => {
+                callBack()
+            }, (error) => {
+                console.log(error)
+            }
+        )
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const signAndAnnounceBonded = (
+    account: Account,
+    lockFee: number,
+    node: string,
+    generationHash: string,
+    transactionList: Array<any>,
+    currentXEM1: string,
+    networkType:NetworkType,
+) => {
+    const aggregateTransaction = transactionList[0]
+    const listener = new Listener(node.replace('http', 'ws'), WebSocket)
+    new TransactionApiRxjs().announceBondedWithLock(
+        aggregateTransaction,
+        account,
+        listener,
+        node,
+        generationHash,
+        networkType,
+        lockFee,
+        currentXEM1,
+    )
+}
+

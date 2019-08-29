@@ -25,6 +25,8 @@ export class MultisigConversionTs extends Vue {
     isCompleteForm = false
     showCheckPWDialog = false
     transactionDetail = {}
+    otherDetails = {}
+    transactionList = []
     formItem = {
         publickeyList: [],
         minApproval: 1,
@@ -64,8 +66,11 @@ export class MultisigConversionTs extends Vue {
             "min_removal": minRemoval,
             "cosigner": publickeyList.join(','),
             "fee": innerFee
-
         }
+        this.otherDetails = {
+            lockFee: lockFee
+        }
+        this.sendMultisignConversionTransaction()
         this.showCheckPWDialog = true
     }
 
@@ -132,8 +137,13 @@ export class MultisigConversionTs extends Vue {
         this.showCheckPWDialog = false
     }
 
-    checkEnd(privatekey) {
-        this.sendMultisignConversionTransaction(privatekey)
+    checkEnd(isPasswordRight) {
+        if (!isPasswordRight) {
+            this.$Notice.destroy()
+            this.$Notice.error({
+                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+            })
+        }
     }
 
     getMultisigAccountList() {
@@ -151,12 +161,12 @@ export class MultisigConversionTs extends Vue {
         })
     }
 
-    sendMultisignConversionTransaction(privatekey) {
+    sendMultisignConversionTransaction() {
         const {publickeyList, minApproval, minRemoval, lockFee, bondedFee, innerFee} = this.formItem
         const {networkType} = this.$store.state.account.wallet
-        const {generationHash, node} = this.$store.state.account
+        const {node} = this.$store.state.account
         const mosaicHex = this.$store.state.account.currentXEM1
-        const account = Account.createFromPrivateKey(privatekey, networkType)
+        const publickey = this.$store.state.account.wallet.publicKey
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         const multisigCosignatoryModificationList = publickeyList.map(cosigner => new MultisigCosignatoryModification(
             MultisigCosignatoryModificationType.Add,
@@ -173,21 +183,14 @@ export class MultisigConversionTs extends Vue {
         );
         const aggregateTransaction = createBondedMultisigTransaction(
             [modifyMultisigAccountTransaction],
-            account.publicKey,
+            publickey,
             networkType,
-            account,
             bondedFee,
         )
-        new TransactionApiRxjs().announceBondedWithLock(
-            aggregateTransaction,
-            account,
-            listener,
-            node,
-            generationHash,
-            networkType,
-            lockFee,
-            mosaicHex,
-        )
+        this.otherDetails = {
+            lockFee
+        }
+        this.transactionList = [aggregateTransaction]
     }
 
     @Watch('formItem', {immediate: true, deep: true})

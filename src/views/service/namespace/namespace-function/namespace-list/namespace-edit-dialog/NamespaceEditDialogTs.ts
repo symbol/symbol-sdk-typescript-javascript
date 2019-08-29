@@ -6,6 +6,7 @@ import {formatSeconds} from '@/core/utils/utils.ts'
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {createRootNamespace, decryptKey} from "@/core/utils/wallet.ts"
+import {signAndAnnounceNormal} from "@/core/utils/wallet";
 
 @Component
 export class NamespaceEditDialogTs extends Vue {
@@ -115,17 +116,22 @@ export class NamespaceEditDialogTs extends Vue {
 
     async updateMosaic(key) {
         const that = this
-        let transaction
+        const {node, generationHash} = this
         const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
-        await createRootNamespace(this.currentNamespace.name, this.namespace.duration,
-            transaction = this.getWallet.networkType, this.namespace.fee)
-        const signature = account.sign(transaction, this.generationHash)
-        new TransactionApiRxjs().announce(signature, this.node).subscribe((announceInfo: any) => {
-            that.$Notice.success({
-                title: this.$t(Message.SUCCESS) + ''
-            })
-            that.initForm()
-            that.updatedNamespace()
+        const transaction = createRootNamespace(
+            this.currentNamespace.name,
+            this.namespace.duration,
+            this.getWallet.networkType,
+            this.namespace.fee
+        )
+        signAndAnnounceNormal(account, node, generationHash, [transaction], this.showNotice())
+        that.initForm()
+        that.updatedNamespace()
+    }
+
+    showNotice() {
+        this.$Notice.success({
+            title: this.$t(Message.SUCCESS) + ''
         })
     }
 

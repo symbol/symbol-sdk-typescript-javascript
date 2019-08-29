@@ -20,6 +20,8 @@ export class RootNamespaceTs extends Vue {
     currentMinApproval = -1
     durationIntoDate: any = 0
     showCheckPWDialog = false
+    transactionList = []
+    otherDetails: any = {}
     form = {
         duration: 1000,
         rootNamespaceName: '',
@@ -82,25 +84,16 @@ export class RootNamespaceTs extends Vue {
         this.typeList = list
     }
 
-    async createBySelf(privatekey) {
-        let transaction;
-        const that = this;
-        const account = Account.createFromPrivateKey(privatekey, this.getWallet.networkType);
-        transaction = this.createRootNamespace()
-        const signature = account.sign(transaction, this.generationHash)
-        new TransactionApiRxjs().announce(signature,this.node).subscribe((announceInfo: any) => {
-                that.$emit('createdNamespace')
-                that.$Notice.success({title: this.$t(Message.SUCCESS) + ''})
-                that.initForm()
-        })
+    async createBySelf() {
+        let transaction = this.createRootNamespace()
+        this.transactionList = [transaction]
     }
 
-    createByMultisig(privatekey) {
+    createByMultisig() {
         const that = this
         const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
         const {networkType} = this.getWallet
-        const account = Account.createFromPrivateKey(privatekey, networkType)
-        const {generationHash, node} = this.$store.state.account
+        const {node} = this.$store.state.account
         const mosaicHex = this.$store.state.account.currentXEM1
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         const rootNamespaceTransaction = new NamespaceApiRxjs().createdRootNamespace(
@@ -114,20 +107,10 @@ export class RootNamespaceTs extends Vue {
                 [rootNamespaceTransaction],
                 multisigPublickey,
                 networkType,
-                account,
                 aggregateFee
             )
-            new TransactionApiRxjs().announceBondedWithLock(
-                aggregateTransaction,
-                account,
-                listener,
-                node,
-                generationHash,
-                networkType,
-                lockFee,
-                mosaicHex,
-            )
 
+            this.transactionList = [aggregateTransaction]
             return
         }
         const aggregateTransaction = createCompleteMultisigTransaction(
@@ -136,19 +119,15 @@ export class RootNamespaceTs extends Vue {
             networkType,
             aggregateFee
         )
-        new TransactionApiRxjs()._announce(
-           aggregateTransaction,
-            node,
-            account,
-            generationHash
-        )
+        this.transactionList = [aggregateTransaction]
     }
 
-    async checkEnd(privatekey) {
-        if (this.typeList[0].isSelected) {
-            this.createBySelf(privatekey)
-        } else {
-            this.createByMultisig(privatekey)
+    async checkEnd(isPasswordRight) {
+        if (!isPasswordRight) {
+            this.$Notice.destroy()
+            this.$Notice.error({
+                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+            })
         }
     }
 
@@ -273,6 +252,14 @@ export class RootNamespaceTs extends Vue {
             "duration": duration,
             "namespace": rootNamespaceName,
             "fee": innerFee
+        }
+        this.otherDetails = {
+            lockFee: lockFee
+        }
+        if (this.typeList[0].isSelected) {
+            this.createBySelf()
+        } else {
+            this.createByMultisig()
         }
         this.showCheckPWDialog = true
     }

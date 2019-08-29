@@ -6,24 +6,24 @@ import {
     AccountHttp,
     Address, NetworkType, Account, Transaction
 } from 'nem2-sdk'
-import { MultisigRepository } from "@/core/api/repository/MultisigRepository";
 import { from as observableFrom, Observable } from "rxjs";
 
-export class MultisigApiRxjs implements MultisigRepository {
-
-    getMultisigAccountInfo(address: string, node: string) {
+export class MultisigApiRxjs  {
+    getMultisigAccountInfo(
+        address: string,
+        node: string
+    ) {
         if (!address) return
         const accountHttp = new AccountHttp(node)
         return observableFrom(accountHttp.getMultisigAccountInfo(Address.createFromRawAddress(address)))
     }
 
-    bondedMultisigTransaction(networkType: NetworkType,
-        account: Account,
+    bondedMultisigTransaction(
+        networkType: NetworkType,
         fee: number,
         multisigPublickey: string,
         transaction: Array<Transaction>
     ) {
-
         transaction = transaction.map((item) => {
             item = item.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))
             return item
@@ -38,7 +38,8 @@ export class MultisigApiRxjs implements MultisigRepository {
     }
 
 
-    completeMultisigTransaction(networkType: NetworkType,
+    completeMultisigTransaction(
+        networkType: NetworkType,
         fee: number,
         multisigPublickey: string,
         transaction: Array<Transaction>) {

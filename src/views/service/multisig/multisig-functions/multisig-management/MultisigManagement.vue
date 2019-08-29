@@ -134,8 +134,12 @@
         {{$t('There_are_no_more_accounts_under_this_account')}}
       </div>
 
-      <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
-                     @checkEnd="checkEnd"></CheckPWDialog>
+      <CheckPWDialog :showCheckPWDialog="showCheckPWDialog"
+                     @closeCheckPWDialog="closeCheckPWDialog"
+                     @checkEnd="checkEnd"
+                     :transactionList="transactionList"
+                     :otherDetails="otherDetails"
+      ></CheckPWDialog>
     </div>
   </div>
 

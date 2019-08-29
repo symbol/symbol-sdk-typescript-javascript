@@ -13,7 +13,6 @@
     import {Message} from "@/config/index.ts"
     import {copyTxt} from '@/core/utils/utils.ts'
     import {Component, Vue} from 'vue-property-decorator'
-    import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
     import multisignSelfIcon from '@/common/img/service/multisig/multisignSelfIcon.png'
     import multisignCosignerIcon from '@/common/img/service/multisig/multisignCosignerIcon.png'
     import multisignMultisignerIcon from '@/common/img/service/multisig/multisignMultisignerIcon.png'
@@ -35,7 +34,6 @@
                     }
                     const template = `<div class="tooltip" >
                                         <div>${params.data.address.address}</div>
-<!--                                        <div>publickey:${params.data.publicKey}</div>-->
                                     </div>`
                     return template
                 }
@@ -84,16 +82,6 @@
         async refresh() {
             const that = this
             await this.getMultisigInfo()
-            if (this.notMultisigNorCosigner) {
-                return
-            }
-
-            this.dom = echarts.init(this.$refs.dom)
-            await this.dom.on('click', function (params) {
-                that.copyAddress(params)
-            })
-            this.dom.setOption(that.option)
-            window.onresize = this.dom.resize
 
         }
 
@@ -164,6 +152,18 @@
                 that.notMultisigNorCosigner = allAccountList.length == 1 ? true : false
                 that.option.series[0].data = allAccountList
                 that.option.series[0].links = links
+
+                if (that.notMultisigNorCosigner) {
+                    return
+                }
+
+
+                that.dom = echarts.init(this.$refs.dom)
+                that.dom.on('click', function (params) {
+                    that.copyAddress(params)
+                })
+                that.dom.setOption(that.option)
+                window.onresize = this.dom.resize
             })
         }
 

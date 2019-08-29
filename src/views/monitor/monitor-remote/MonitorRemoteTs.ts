@@ -5,7 +5,7 @@ import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {AccountLinkTransaction, UInt64, LinkAction, NetworkType, Deadline, Account} from "nem2-sdk"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
-
+import {signAndAnnounceNormal} from '@/core/utils/wallet.ts'
 
 @Component
 export class MonitorRemoteTs extends Vue {
@@ -102,8 +102,14 @@ export class MonitorRemoteTs extends Vue {
         const {networkType} = this.getWallet
         const {generationHash, node} = this.$store.state.account
         const account = Account.createFromPrivateKey(privatekey, networkType)
-        const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(), remotePublickey, isLinked ? LinkAction.Link : LinkAction.Unlink, NetworkType.MIJIN_TEST, UInt64.fromUint(fee)
+        const accountLinkTransaction = AccountLinkTransaction.create(
+            Deadline.create(),
+            remotePublickey,
+            isLinked ? LinkAction.Link : LinkAction.Unlink,
+            NetworkType.MIJIN_TEST,
+            UInt64.fromUint(fee)
         )
+        signAndAnnounceNormal(account, node, generationHash, [accountLinkTransaction], this.showNotice())
         new TransactionApiRxjs()._announce(
             accountLinkTransaction,
             node,
@@ -111,6 +117,12 @@ export class MonitorRemoteTs extends Vue {
             generationHash
         )
         this.modalCancel()
+    }
+
+    showNotice() {
+        this.$Notice.success({
+            title: this.$t(Message.SUCCESS) + ''
+        })
     }
 
     toggleSwitch(status) {

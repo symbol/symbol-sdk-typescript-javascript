@@ -71,11 +71,11 @@ export class MenuBarTs extends Vue {
     get errorTxList() { return this.activeAccount.errorTx }
     get currentNode() { return this.activeAccount.node }
     get language() { return this.$i18n.locale }
-    set language(lang) { 
+    set language(lang) {
         this.$i18n.locale = lang
         localSave('locale', lang)
     }
-        
+
     closeWindow() {
         closeWindow()
     }
@@ -165,7 +165,7 @@ export class MenuBarTs extends Vue {
 
     confirmedListener() {
         if (!this.wallet) return
-  
+
         const node = this.node.replace('http', 'ws')
         const that = this
         this.confirmedTxListener && this.confirmedTxListener.close()
