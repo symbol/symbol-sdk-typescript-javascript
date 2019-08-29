@@ -34,28 +34,32 @@
           <div class="app_controller clear">
             <div :class="[isNodeHealthy?'point_healthy':'point_unhealthy']">
               <Poptip placement="bottom-end">
-                <i class="pointer point" @click="toggleNodeList"></i>
+                <i class="pointer point" @click="toggleNodeList" />
                 <span class="network_type_text" v-if="$store.state.account.wallet">
                 {{ $store.state.account.wallet.networkType == 144 ? 'MIJIN_TEST':''}}
               </span>
                 <div slot="title" class="title">{{$t('current_point')}}：{{$store.state.account.node}}</div>
                 <div slot="content">
-                  <div @click="selectPoint(index)" class="point_item pointer" v-for="(p,index) in nodetList">
+                  <div
+                    @click="selectEndpoint(index)"
+                    class="point_item pointer"
+                    v-for="(p,index) in nodeList"
+                    :key="`sep${index}`"
+                  >
                     <img :src="p.isSelected ? monitorSeleted : monitorUnselected">
                     <span>{{p.name}} ({{p.url}})</span>
                   </div>
 
                   <div class="input_point point_item">
                     <input v-model="inputNodeValue" type="text" :placeholder="$t('please_enter_a_custom_nod_address')">
-                    <span @click="changePointByInput" class="sure_button radius pointer">+</span>
+                    <span @click="changeEndpointByInput" class="sure_button radius pointer">+</span>
                   </div>
 
                 </div>
               </Poptip>
             </div>
             <div class="switch_language">
-              <i-select @on-change="switchLanguage" :model="currentLanguage"
-                        :placeholder="currentLanguage ? $store.state.app.localMap[currentLanguage] : '中文'">
+              <i-select v-model="language">
                 <i-option v-for="(item, index) in languageList" :value="item.value" :key="index">{{ item.label }}
                 </i-option>
               </i-select>

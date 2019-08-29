@@ -1,9 +1,6 @@
 declare interface appInfo {
-    local: any,
-    localMap: any,
     walletList: any[]
     hasWallet: boolean,
-    languageList: Array<any>,
     currentPanelIndex: number,
     mnemonic: string,
     timeZone: number,
@@ -21,22 +18,8 @@ declare interface appInfo {
 export default {
     state: {
         timeZone: new Date().getTimezoneOffset() / 60,   // current time zone
-        local: false,
+        locale: false,
         currentPanelIndex: 0,
-        localMap: {
-            'zh-CN': '中文',
-            'en-US': 'English'
-        },
-        languageList: [
-            {
-                value: 'zh-CN',
-                label: '中文'
-            },
-            {
-                value: 'en-US',
-                label: 'English'
-            }
-        ],
         walletList: [],
         hasWallet: false,
         mnemonic: '',
@@ -49,8 +32,6 @@ export default {
             signerPublicKey: '',
             nodeAmount: 4
         }
-
-
     },
     getters: {},
     mutations: {

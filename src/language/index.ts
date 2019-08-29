@@ -11,8 +11,8 @@ Vue.use({
 
 const navLang = navigator.language
 const localLang = (navLang === 'zh-CN' || navLang === 'en-US') ? navLang : false
-let lang = window.localStorage.getItem('local') || localLang || 'en-US'
-window.localStorage.setItem('local', lang)
+let lang = window.localStorage.getItem('locale') || localLang || 'en-US'
+window.localStorage.setItem('locale', lang)
 
 
 const messages = {

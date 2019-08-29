@@ -25,7 +25,7 @@
             <Input v-model="formItem.password" type="password" required
                    :placeholder="$t('please_set_your_wallet_password')" />
           </FormItem>
-          <FormItem :label="$t('repeat_the_paright ssword')">
+          <FormItem :label="$t('repeat_the_password')">
             <Input v-model="formItem.checkPW" type="password" required
                    :placeholder="$t('please_enter_your_password_again')" />
           </FormItem>

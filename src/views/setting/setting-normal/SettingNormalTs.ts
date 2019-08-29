@@ -1,13 +1,12 @@
-import {timeZoneListData} from '@/config/index.ts'
+import {timeZoneListData, languageList} from '@/config/index.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {localSave, getCurrentTimeZone} from '@/core/utils/utils.ts'
 import {covertOffset} from '@/core/utils/utils.ts'
 
 @Component
 export class SettingNormalTs extends Vue {
-    language = ''
+    languageList: any = languageList
     coin = 'USD'
-    languageList = []
     tz = 'Pacific/Rarotonga'
     timeZone = 0
     timeZoneListData = timeZoneListData
@@ -18,13 +17,10 @@ export class SettingNormalTs extends Vue {
         },
     ]
 
-    switchLanguage(language) {
-        this.$store.state.app.local = {
-            abbr: language,
-            language: this.$store.state.app.localMap[language]
-        }
-        this.$i18n.locale = language
-        localSave('local', language)
+    get language() { return this.$i18n.locale }
+    set language(lang) { 
+        this.$i18n.locale = lang
+        localSave('locale', lang)
     }
 
     chooseTimeZone(item) {
@@ -36,20 +32,11 @@ export class SettingNormalTs extends Vue {
         this.timeZone = getCurrentTimeZone()
     }
 
-    initLanguage() {
-        this.languageList = this.$store.state.app.languageList
-        this.language = this.$i18n.locale
-    }
-
     @Watch('timeZone')
     onTimeZoneChange() {
         this.$store.commit('SET_TIME_ZONE', this.timeZone)
         console.log(new Date(covertOffset(new Date().getTime(), -11)))
     }
 
-    created() {
-        this.initLanguage()
-        this.initCurrentTimeZone()
-    }
-
+    mounted() { this.timeZone = getCurrentTimeZone() }
 }

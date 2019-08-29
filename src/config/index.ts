@@ -14,6 +14,22 @@ export const AppConfig = {
     marketUrl: 'http://app.nemcn.io',
 }
 
+export const localesMap: any = {
+    'zh-CN': '中文',
+    'en-US': 'English'
+}
+
+export const languageList: Array<any> = [
+    {
+        value: 'zh-CN',
+        label: '中文'
+    },
+    {
+        value: 'en-US',
+        label: 'English'
+    }
+]
+
 export const TransferType = {
     'RECEIVED': 1,
     'SENDED': 0

@@ -1,3 +1,4 @@
+import {localesMap, languageList} from "@/config/index.ts"
 import {localSave, localRead} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import GetStart from './login-view/get-start/GetStart.vue'
@@ -12,33 +13,24 @@ import CreateLock from './login-view/create-lock/CreateLock.vue'
     }
 })
 export class LoginTs extends Vue {
-    languageList = []
+    languageList = languageList
     isShowDialog = true
-    currentLanguage: any = false
     indexShowList = [true, false, false]
 
     switchLanguage(language) {
-        this.$store.state.app.local = {
-            abbr: language,
-            language: this.$store.state.app.localMap[language]
-        }
         // @ts-ignore
         this.$i18n.locale = language
-        localSave('local', language)
+        localSave('locale', language)
     }
 
     get getWalletList() {
         return this.$store.state.app.walletList || []
     }
 
-
-    initData() {
-        this.languageList = this.$store.state.app.languageList
-        this.currentLanguage = localRead('local')
-        this.$store.state.app.local = {
-            abbr: this.currentLanguage,
-            language: this.$store.state.app.localMap[this.currentLanguage]
-        }
+    get language() { return this.$i18n.locale }
+    set language(lang) { 
+        this.$i18n.locale = lang
+        localSave('locale', lang)
     }
 
     showIndexView(index) {
@@ -64,7 +56,6 @@ export class LoginTs extends Vue {
     }
 
     created() {
-        this.initData()
         this.isCallShowIndexView()
     }
 }

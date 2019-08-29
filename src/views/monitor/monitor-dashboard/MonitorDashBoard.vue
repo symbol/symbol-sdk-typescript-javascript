@@ -7,7 +7,8 @@
             class-name="dash_board_dialog">
       <div class="transfer_type">
         <span class="title">{{$t('transfer_type')}}</span>
-        <span class="value">{{$t(transactionDetails.dialogDetailMap?transactionDetails.dialogDetailMap.transfer_type:'-')}}</span>
+        <span class="value">{{transactionDetails.dialogDetailMap
+          ? $t(transactionDetails.dialogDetailMap.transfer_type) :'-'}}</span>
       </div>
       <div>
         <div v-if="key !=='transfer_type'" v-for="(value,key,index) in transactionDetails.dialogDetailMap"

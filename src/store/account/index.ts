@@ -57,5 +57,8 @@ export default {
         SET_NAMESPACE(state: account, namespace: any[]): void {
             state.namespace = namespace
         },
+        SET_NODE(state: account, node: string): void {
+            state.node = node
+        },
     },
 }

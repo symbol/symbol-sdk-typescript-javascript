@@ -4,11 +4,10 @@
       <li>
         {{$t('switch_language')}}
         <div class="gray_content">
-          <Select v-model="language" @on-change="switchLanguage" :placeholder="$t('switch_language')">
+          <Select v-model="language">
             <Option v-for="item in languageList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
-
       </li>
       <li>
         {{$t('currency_setting')}}

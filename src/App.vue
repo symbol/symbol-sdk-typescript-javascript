@@ -13,12 +13,20 @@
     import {AccountApiRxjs} from '@/core/api/AccountApiRxjs.ts'
     import {ListenerApiRxjs} from '@/core/api/ListenerApiRxjs.ts'
     import {Component, Vue} from 'vue-property-decorator'
+    import {mapState} from 'vuex';
 
 
-    @Component
+
+    @Component({ computed: {
+      ...mapState({ activeAccount: 'account' })}
+    })
     export default class App extends Vue {
-        node: any
         isWindows = isWindows
+        activeAccount: any
+
+        get node(): string { return this.activeAccount.node }
+        get currentXEM2(): string { return this.activeAccount.currentXEM2 }
+        get currentXEM1(): string { return this.activeAccount.currentXEM1 }
 
         async initApp() {
             let walletList: any = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
@@ -34,21 +42,21 @@
                     walletList[i] = data
                 })
             }
-            this.$store.state.account.wallet = walletList[0]
-            this.$store.state.app.walletList = walletList
+            this.$store.commit('SET_WALLET', walletList[0])
+            this.$store.commit('SET_WALLET_LIST', walletList)
         }
 
         async getAccountInfo(listItem) {
             let walletItem = listItem
             walletItem.mosaics = []
-            let node = this.$store.state.account.node
-            let currentXEM2 = this.$store.state.account.currentXEM2
-            let currentXEM1 = this.$store.state.account.currentXEM1
-            new AccountApiRxjs().getAccountInfo(walletItem.address, node).subscribe((accountInfo) => {
+
+            new AccountApiRxjs().getAccountInfo(walletItem.address, this.node)
+              .subscribe((accountInfo) => {
                 let mosaicList = accountInfo.mosaics
                 mosaicList.map((item: any) => {
                     item.hex = item.id.toHex()
-                    if (item.id.toHex() == currentXEM2 || item.id.toHex() == currentXEM1) {
+                    if (item.id.toHex() === this.currentXEM2
+                      || item.id.toHex() === this.currentXEM1) {
                         walletItem.balance = item.amount.compact() / 1000000
                     }
                 })
@@ -61,9 +69,9 @@
 
         async getMultisigAccount(listItem) {
             let walletItem = listItem
-            let node = this.$store.state.account.node
             walletItem.isMultisig = false
-            new AccountApiRxjs().getMultisigAccountInfo(walletItem.address, node).subscribe((multisigAccountInfo: any) => {
+            new AccountApiRxjs().getMultisigAccountInfo(walletItem.address, this.node)
+              .subscribe((multisigAccountInfo: any) => {
                 multisigAccountInfo.subscribe((accountInfo) => {
                     walletItem.isMultisig = true
                 }, () => {
@@ -71,16 +79,6 @@
                 })
             })
             return walletItem
-        }
-
-        initData() {
-            if (!this.$store) {
-                return
-            }
-            this.node = this.$store.state.account.node
-            this.$Notice.config({
-                duration: 4
-            });
         }
 
         chainListner() {
@@ -92,11 +90,16 @@
             new ListenerApiRxjs().newBlock(listener, this)
         }
 
+        mounted() {
+            this.$Notice.config({
+                duration: 4
+            });
+        }
+
         created() {
             if (isWindows) {
                 checkInstall()
             }
-            this.initData()
             this.initApp()
             this.chainListner()
         }
