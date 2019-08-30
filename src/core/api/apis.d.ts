@@ -1,29 +1,4 @@
-import {
-    Account,
-    Address,
-    AliasActionType,
-    Deadline,
-    MosaicId,
-    NamespaceId,
-    NetworkType,
-    Password,
-    PublicAccount,
-    SignedTransaction,
-    MultisigAccountInfo,
-
-    Listener,
-    MosaicSupplyChangeTransaction,
-    AggregateTransaction,
-    PropertyType,
-    ModifyAccountPropertyAddressTransaction,
-    AccountPropertyModification,
-    ModifyAccountPropertyMosaicTransaction, ModifyAccountPropertyEntityTypeTransaction
-} from 'nem2-sdk'
-import {SimpleWallet} from "nem2-sdk";
-import {Transaction} from "nem2-sdk";
-import {UInt64} from "nem2-sdk";
-
-declare namespace api {
+export declare namespace api {
     interface market {
         kline: (params: {
             symbol: string,
@@ -72,5 +47,4 @@ declare namespace api {
             rst: any;
         }>;
     }
-
 }

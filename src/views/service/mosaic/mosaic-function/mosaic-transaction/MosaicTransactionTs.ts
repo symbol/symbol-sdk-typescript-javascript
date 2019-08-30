@@ -3,14 +3,12 @@ import {multisigAccountInfo} from "@/core/utils/wallet.ts"
 import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
 import {formatSeconds, formatAddress} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/utils/wallet.ts'
 import {
     MosaicId,
     MosaicNonce,
     PublicAccount,
-    Account,
     Address,
     Listener,
     MosaicDefinitionTransaction,
@@ -20,6 +18,7 @@ import {
     MosaicSupplyChangeTransaction,
     MosaicSupplyType
 } from 'nem2-sdk'
+import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs";
 
 @Component({
     components: {
@@ -27,7 +26,6 @@ import {
     }
 })
 export class MosaicTransactionTs extends Vue {
-
     node = ''
     duration = 0
     otherDetails: any = {}
@@ -47,7 +45,7 @@ export class MosaicTransactionTs extends Vue {
     transactionList = []
     showMosaicEditDialog = false
     showMosaicAliasDialog = false
-    isCompleteForm = false
+    isCompleteForm = true
 
     multisigPublickeyList = [{
         value: 'no data',
@@ -142,6 +140,7 @@ export class MosaicTransactionTs extends Vue {
         }
         if (this.isMultisigAccount) {
             this.createByMultisig()
+            this.showCheckPWDialog = true
             return
         }
         this.createBySelf()
@@ -319,16 +318,16 @@ export class MosaicTransactionTs extends Vue {
 
     getMultisigAccountList() {
         const that = this
-        if (!this.getWallet) return
-        const {address} = this.getWallet
+        if (!this.$store.state.account.wallet) return
+        const {address} = this.$store.state.account.wallet
         const {node} = this.$store.state.account
-        const multisigInfo = multisigAccountInfo(address, node)
-        const multisigPublickeyList = multisigInfo['multisigAccounts'] ? multisigInfo['multisigAccounts'].map((item) => {
-            item.value = item.publicKey
-            item.label = item.publicKey
-            return item
-        }) : [{label: 'no data', value: 'no data'}]
-        that.multisigPublickeyList = multisigPublickeyList
+        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
+            that.multisigPublickeyList = multisigInfo.multisigAccounts.map((item: any) => {
+                item.value = item.publicKey
+                item.label = item.publicKey
+                return item
+            })
+        })
     }
 
     @Watch('formItem.multisigPublickey')
@@ -349,16 +348,16 @@ export class MosaicTransactionTs extends Vue {
 
     }
 
-    @Watch('formItem', {immediate: true, deep: true})
-    onFormItemChange() {
-        const {supply, divisibility, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
-        // isCompleteForm
-        if (this.typeList[0].isSelected) {
-            this.isCompleteForm = supply !== '' && divisibility !== '' && duration !== '' && innerFee !== ''
-            return
-        }
-        this.isCompleteForm = supply !== '' && divisibility !== '' && duration !== '' && innerFee !== '' && aggregateFee !== '' && lockFee !== '' && multisigPublickey && multisigPublickey.length === 64
-    }
+    // @Watch('formItem', {immediate: true, deep: true})
+    // onFormItemChange() {
+    //     const {supply, divisibility, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
+    //     // isCompleteForm
+    //     if (this.typeList[0].isSelected) {
+    //         this.isCompleteForm = supply !== '' && divisibility !== '' && duration !== '' && innerFee !== ''
+    //         return
+    //     }
+    //     this.isCompleteForm = supply !== '' && divisibility !== '' && duration !== '' && innerFee !== '' && aggregateFee !== '' && lockFee !== '' && multisigPublickey && multisigPublickey.length === 64
+    // }
 
     initData() {
         if (!this.getWallet) return

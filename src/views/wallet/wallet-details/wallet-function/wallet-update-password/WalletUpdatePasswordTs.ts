@@ -75,7 +75,8 @@ export class WalletUpdatePasswordTs extends Vue {
     checkPrivateKey(DeTxt) {
         const that = this
         try {
-            new WalletApiRxjs().getWallet(this.getWallet.name,
+            new WalletApiRxjs().getWallet(
+                this.getWallet.name,
                 DeTxt.length === 64 ? DeTxt : '',
                 this.getWallet.networkType,
             )

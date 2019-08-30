@@ -42,7 +42,7 @@ export const zh_CN = {
     enter_the_date_for_example: '输入日期,例如：',
     fee: '费用',
     the_default_is: '默认为',
-    the_more_you_set_the_cost_the_higher_the_processing_priority: '设置的费用越多，处理优先级越高 (1000000 microxem = 1.0xem)',
+    the_more_you_set_the_cost_the_higher_the_processing_priority: '设置的费用越多，处理优先级越高 (1000000 gas = 1.0xem)',
     create: '创建',
     all: '全部',
     processing: '进行中',
@@ -58,6 +58,7 @@ export const zh_CN = {
     The_total_market_capitalization: '市场总值',
     network_status: '网络状态',
     account: '账户',
+    aggregate_hash: '聚合hash',
     transaction_type: '交易类型',
     the_amount: '量',
     date: '日期',
@@ -235,7 +236,7 @@ export const zh_CN = {
     transportability: '可传输性',
     variable_supply: '可变供应量',
     effective_time: '有效时间(块)',
-    overdue: '已过期',
+    overdue: '剩余持有时间',
     forever: '永远',
     alias: '别名',
     supply_can_not_less_than_0: '供应量不可小于零',
@@ -444,7 +445,7 @@ export const zh_CN = {
     Export_private_key: '导出私钥',
     Export_Keystore: '导出Keystore',
     Alias_settings: '别名设置',
-    Filter_management: '过滤器管理',
+    Filter_management: '拦截器',
     Subaddress_management: '子地址管理',
     Modify_the_private_key_wallet_password: '修改钱包密码',
     status: '状态',
@@ -498,6 +499,10 @@ export const zh_CN = {
     Namespace_list: '命名空间列表',
     New_root_space: '新的根空间',
     Subspace: '子空间',
+    is_active: '当前是否可用',
+    true: '是',
+    false: '否',
+
     Input_space_name: '输入空间名',
     namespace_tips_key_1: '1.根命名空间长度限制为16个字符以内，二级命名空间长度限制为64个字符以内,有效字符：',
     namespace_tips_key_2: '2.命名空间的首个字符必须使用英文字母，不被允许的命名空间包含字符串有：',
@@ -577,7 +582,7 @@ export const zh_CN = {
     There_are_no_more_accounts_under_this_account: '此账户下暂无多签账户',
     There_are_no_more_accounts_under_this_account_or_cosigner: '此账户下暂无多签账户或共签人',
     This_account_is_already_a_multi_sign_account: '此账户已经是一个多签账户',
-    mosaic_id_format_error: '马赛克id格式错误',
+    mosaic_hex_format_error: '马赛克hex格式错误',
     alias_name_format_error: '别名格式错误',
     max_approval_amount_more_than_10: 'Min approval 不可大于10',
     max_removal_amount_more_than_10: 'Min removal 不可大于10',
@@ -635,7 +640,7 @@ export const zh_CN = {
 
     timestamp: '时间戳',
     sender: '发送者',
-    inner_transaction:'内部交易',
+    inner_transaction: '内部交易',
 
     amount: '金额'
 }

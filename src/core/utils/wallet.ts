@@ -2,22 +2,19 @@ import {localRead, localSave} from "@/core/utils/utils.ts"
 import {
     Account,
     Address,
-    Crypto, Listener,
+    Crypto,
     NetworkType,
-    Transaction, TransactionType,
+    Transaction,
+    Listener
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts";
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts";
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts";
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts";
-// import {filterApi} from "@/core/api/filterApi.ts";
 import {BlockApiRxjs} from "@/core/api/BlockApiRxjs.ts";
 import {formateNemTimestamp} from "@/core/utils/utils.ts";
-import {concatAll} from 'rxjs/operators';
-import rxjs from 'rxjs'
-import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs";
-import {Message} from "@/config";
+import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 
 export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) => {
     let localData: any[] = []
@@ -108,7 +105,7 @@ export const setMultisigAccount = async (storeWallet, node) => {
     return wallet
 }
 
-export const getNamespaces = async (address, node) => {
+export const getNamespaces = async (address: string, node: string) => {
     let list = []
     let namespace = {}
     new NamespaceApiRxjs().getNamespacesFromAccount(
@@ -128,10 +125,12 @@ export const getNamespaces = async (address, node) => {
             item.namespaceInfo.levels.map((item, index) => {
                 namespaceName += namespace[item.id.toHex()] + '.'
             })
+            console.log(item.namespaceInfo)
             namespaceName = namespaceName.slice(0, namespaceName.length - 1)
             const newObj = {
                 value: namespaceName,
                 label: namespaceName,
+                isActive: item.namespaceInfo.active,
                 alias: item.namespaceInfo.alias,
                 levels: item.namespaceInfo.levels.length,
                 name: namespaceName,
@@ -160,12 +159,13 @@ export const encryptKey = (data, password) => {
     return Crypto.encrypt(data, password)
 }
 
-export const decryptKey = (wallet, password) => {
-    let encryptObj = {
+export const decryptKey = (wallet, password: string) => {
+    const encryptObj = {
         ciphertext: wallet.ciphertext,
         iv: wallet.iv.data ? wallet.iv.data : wallet.iv,
         key: password
     }
+    // console.log()
     return Crypto.decrypt(encryptObj)
 }
 
@@ -214,6 +214,7 @@ export const getBlockInfoByTransactionList = (transactionList: Array<any>, node:
 export const signAndAnnounceNormal = (account: Account, node: string, generationHash: string, transactionList: Array<any>, callBack: any) => {
     try {
         const signature = account.sign(transactionList[0], generationHash)
+        console.log(signature)
         new TransactionApiRxjs().announce(signature, node).subscribe(() => {
                 callBack()
             }, (error) => {
@@ -232,7 +233,7 @@ export const signAndAnnounceBonded = (
     generationHash: string,
     transactionList: Array<any>,
     currentXEM1: string,
-    networkType:NetworkType,
+    networkType: NetworkType,
 ) => {
     const aggregateTransaction = transactionList[0]
     const listener = new Listener(node.replace('http', 'ws'), WebSocket)

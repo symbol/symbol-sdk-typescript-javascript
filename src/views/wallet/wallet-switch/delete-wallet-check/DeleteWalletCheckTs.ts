@@ -31,7 +31,8 @@ export class DeleteWalletCheckTs extends Vue {
         const DeTxt = Crypto.decrypt(saveData)
 
         try {
-            new WalletApiRxjs().getWallet(this.getWallet.name,
+            new WalletApiRxjs().getWallet(
+                this.getWallet.name,
                 DeTxt.length === 64 ? DeTxt : '',
                 this.getWallet.networkType,
             )

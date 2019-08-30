@@ -76,7 +76,7 @@ export const Message = {
     ILLEGAL_PUBLICKEY_ERROR: 'illegal_publickey',
     ILLEGAL_MIN_APPROVAL_ERROR: 'min_approval_amount_illegal',
     ILLEGAL_MIN_REMOVAL_ERROR: 'min_removal_amount_illegal',
-    MOSAIC_ID_FORMAT_ERROR: 'mosaic_id_format_error',
+    MOSAIC_HEX_FORMAT_ERROR: 'mosaic_hex_format_error',
     ALIAS_NAME_FORMAT_ERROR: 'alias_name_format_error',
     DURATION_VALUE_LESS_THAN_1_ERROR: 'The_value_of_duration_cannot_be_less_than_1',
     NAMESPACE_NULL_ERROR: 'Namespace_cannot_be_a_null_or_empty_string',
@@ -163,15 +163,15 @@ export const entityTypeList = {
     },
     'modify_account_property_address': {
         label: 'modify_account_property_address',
-        value: TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS
+        value: TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS
     },
     'modify_account_property_mosaic': {
         label: 'modify_account_property_address',
-        value: TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC
+        value: TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC
     },
     'modify_account_property_entity_type': {
         label: 'modify_account_property_entity_type',
-        value: TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE
+        value: TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION
     },
     'link_account': {
         label: 'link_account',

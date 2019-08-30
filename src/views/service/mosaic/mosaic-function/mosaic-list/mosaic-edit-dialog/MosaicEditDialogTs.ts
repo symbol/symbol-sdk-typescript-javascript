@@ -114,8 +114,8 @@ export class MosaicEditDialogTs extends Vue {
         try {
             new WalletApiRxjs().getWallet(
                 this.getWallet.name,
+                DeTxt.length === 64 ? DeTxt : '',
                 this.getWallet.networkType,
-                DeTxt.length === 64 ? DeTxt : ''
             )
             this.updateMosaic(DeTxt)
         } catch (e) {
@@ -175,8 +175,6 @@ export class MosaicEditDialogTs extends Vue {
     @Watch('mosaic', {immediate: true, deep: true})
     onFormItemChange() {
         const {delta, fee, password} = this.mosaic
-        // isCompleteForm
-        console.log(delta, fee, password)
         this.isCompleteForm = parseInt(delta.toString()) >= 0 && fee > 0 && password !== ''
     }
 }

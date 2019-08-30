@@ -3,7 +3,6 @@ import {Message} from "@/config/index.ts"
 import {Account} from 'nem2-sdk'
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {formatSeconds} from '@/core/utils/utils.ts'
-import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {createRootNamespace, decryptKey} from "@/core/utils/wallet.ts"
 import {signAndAnnounceNormal} from "@/core/utils/wallet";
@@ -13,7 +12,7 @@ export class NamespaceEditDialogTs extends Vue {
     show = false
     isCompleteForm = false
     stepIndex = 0
-    durationIntoDate = 0
+    durationIntoDate: string = '0'
     namespace = {
         name: '',
         duration: 0,
@@ -58,14 +57,14 @@ export class NamespaceEditDialogTs extends Vue {
         const duration = Number(this.namespace.duration)
         if (Number.isNaN(duration)) {
             this.namespace.duration = 0
-            this.durationIntoDate = 0
+            this.durationIntoDate = '0'
             return
         }
         if (duration * 12 >= 60 * 60 * 24 * 365) {
             this.$Message.error(Message.DURATION_MORE_THAN_1_YEARS_ERROR)
             this.namespace.duration = 0
         }
-        this.durationIntoDate = Number(formatSeconds(duration * 12))
+        this.durationIntoDate = formatSeconds(duration * 12) + ''
     }
 
     checkInfo() {
@@ -102,8 +101,9 @@ export class NamespaceEditDialogTs extends Vue {
         const that = this
         try {
             new WalletApiRxjs().getWallet(this.getWallet.name,
+                DeTxt.length === 64 ? DeTxt : '',
                 this.getWallet.networkType,
-                DeTxt.length === 64 ? DeTxt : ''
+
             )
             this.updateMosaic(DeTxt)
         } catch (e) {
@@ -147,7 +147,7 @@ export class NamespaceEditDialogTs extends Vue {
             fee: 50000,
             password: ''
         }
-        this.durationIntoDate = 0
+        this.durationIntoDate = '0'
     }
 
     @Watch('showNamespaceEditDialog')

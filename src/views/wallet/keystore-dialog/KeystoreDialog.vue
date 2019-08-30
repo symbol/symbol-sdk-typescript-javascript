@@ -56,7 +56,7 @@
               </Col>
             </Row>
           </div>
-          <Button type="success" class="button_arrow"  @click="exportKeystore">{{$t('next')}}
+          <Button type="success" class="button_arrow" @click="exportKeystore">{{$t('next')}}
             <Icon type="ios-arrow-round-forward"/>
           </Button>
         </div>
@@ -77,16 +77,14 @@
                 {{$t('Do_not_transmit_through_network_tools_once_acquired_by_hackers_will_cause_irreparable_asset_losses_It_is_recommended_that_the_offline_device_be_transmitted_by_scanning_the_QR_code')}}</p>
               <p class="tit">{{$t('password_management_tool_save')}}</p>
               <p class="txt">{{$t('it_is_recommended_to_use_password_management_tool_management')}}</p>
+              <Button type="success" class="button_arrow" @click="copyKeystore">{{$t('copy')}} Keystore</Button>
+
             </Col>
           </Row>
-          <Row :gutter="80">
-            <Col span="12">
-              <Button type="success" class="button_arrow"  @click="copyKeystore">{{$t('copy')}} Keystore</Button>
-            </Col>
-<!--            <Col span="8">-->
-<!--              <Button type="success" @click="exportKeystore">{{$t('Display_Keystore_QR_code')}}</Button>-->
-<!--            </Col>-->
-          </Row>
+
+          <!--            <Col span="8">-->
+          <!--              <Button type="success" @click="exportKeystore">{{$t('Display_Keystore_QR_code')}}</Button>-->
+          <!--            </Col>-->
         </div>
 
         <div class="stepItem4" v-if="stepIndex == 3">

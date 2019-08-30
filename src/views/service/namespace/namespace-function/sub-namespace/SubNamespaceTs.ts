@@ -1,10 +1,12 @@
-
 import {Message, bandedNamespace as BandedNamespaceList} from "@/config/index.ts"
 import {formatAddress} from '@/core/utils/utils.ts'
+import {getNamespaces} from '@/core/utils/wallet.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
+import {Address, Listener} from "nem2-sdk";
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet";
 
 @Component({
     components: {
@@ -13,18 +15,19 @@ import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
 })
 export class SubNamespaceTs extends Vue {
     durationIntoDate = 0
-    multisigPublickey = ''
-    isCompleteForm = false
+    isCompleteForm = true
     showCheckPWDialog = false
     otherDetails: any = {}
     transactionDetail = {}
+    multisigNamespaceList = []
     transactionList = []
+    currentMinApproval = -1
     form = {
         rootNamespaceName: '',
         subNamespaceName: '',
         multisigPublickey: '',
         innerFee: 50000,
-        bondedFee: 50000,
+        aggregateFee: 50000,
         lockFee: 50000,
     }
     multisigPublickeyList = [
@@ -57,13 +60,13 @@ export class SubNamespaceTs extends Vue {
     }
 
     get namespaceList() {
-        console.log(this.$store.state.account.namespace)
         return this.$store.state.account.namespace ? this.$store.state.account.namespace : [{
             label: 'no data',
             value: 'no data',
             levels: '0'
         }]
     }
+
 
     formatAddress(address) {
         return formatAddress(address)
@@ -93,6 +96,34 @@ export class SubNamespaceTs extends Vue {
         this.$Notice.error({
             title: message
         })
+    }
+
+    createByMultisig() {
+        const that = this
+        const {rootNamespaceName, subNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
+        const {networkType} = this.getWallet
+        const {node} = this.$store.state.account
+        const mosaicHex = this.$store.state.account.currentXEM1
+        const listener = new Listener(node.replace('http', 'ws'), WebSocket)
+        const rootNamespaceTransaction = this.createSubNamespace()
+        if (that.currentMinApproval > 1) {
+            const aggregateTransaction = createBondedMultisigTransaction(
+                [rootNamespaceTransaction],
+                multisigPublickey,
+                networkType,
+                aggregateFee
+            )
+
+            this.transactionList = [aggregateTransaction]
+            return
+        }
+        const aggregateTransaction = createCompleteMultisigTransaction(
+            [rootNamespaceTransaction],
+            multisigPublickey,
+            networkType,
+            aggregateFee
+        )
+        this.transactionList = [aggregateTransaction]
     }
 
     checkForm(): boolean {
@@ -151,11 +182,13 @@ export class SubNamespaceTs extends Vue {
     }
 
     createSubNamespace() {
+        const {rootNamespaceName, subNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
+        const {networkType} = this.getWallet
         return new NamespaceApiRxjs().createdSubNamespace(
-            this.form.subNamespaceName,
-            this.form.rootNamespaceName,
-            this.getWallet.networkType,
-            this.form.innerFee
+            subNamespaceName,
+            rootNamespaceName,
+            networkType,
+            innerFee
         )
     }
 
@@ -165,7 +198,7 @@ export class SubNamespaceTs extends Vue {
             subNamespaceName: '',
             multisigPublickey: '',
             innerFee: 50000,
-            bondedFee: 50000,
+            aggregateFee: 50000,
             lockFee: 50000,
         }
     }
@@ -184,8 +217,17 @@ export class SubNamespaceTs extends Vue {
             "sub_namespace": subNamespaceName,
             "fee": innerFee
         }
-        this.transactionList = [this.createSubNamespace()]
+        if (this.typeList[0].isSelected) {
+            this.createBySelf()
+        } else {
+            this.createByMultisig()
+        }
         this.showCheckPWDialog = true
+    }
+
+    createBySelf() {
+        let transaction = this.createSubNamespace()
+        this.transactionList = [transaction]
     }
 
     getMultisigAccountList() {
@@ -202,6 +244,25 @@ export class SubNamespaceTs extends Vue {
         })
     }
 
+    @Watch('form.multisigPublickey')
+    async onMultisigPublickeyChange() {
+        const {node} = this
+        const {networkType} = this.getWallet
+        const {multisigPublickey} = this.form
+        const address = Address.createFromPublicKey(multisigPublickey, networkType).toDTO().address
+        if (multisigPublickey.length !== 64) {
+            return
+        }
+        this.multisigNamespaceList = await getNamespaces(address, node)
+
+        const that = this
+        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
+            that.currentMinApproval = multisigInfo.minApproval
+        })
+
+    }
+
+
     @Watch('form', {immediate: true, deep: true})
     onFormItemChange() {
         const {rootNamespaceName, innerFee, subNamespaceName, multisigPublickey} = this.form
@@ -212,6 +273,7 @@ export class SubNamespaceTs extends Vue {
             return
         }
         this.isCompleteForm = innerFee + '' !== '' && rootNamespaceName !== '' && subNamespaceName !== '' && multisigPublickey && multisigPublickey.length === 64
+        this.isCompleteForm = true
     }
 
     created() {

@@ -223,13 +223,14 @@ export class RootNamespaceTs extends Vue {
     @Watch('form.multisigPublickey')
     async onMultisigPublickeyChange() {
         const that = this
+        const {networkType} = this.getWallet
+        const {node} = this
         const {multisigPublickey} = this.form
         if (multisigPublickey.length !== 64) {
             return
         }
-        const {node} = this.$store.state.account
-        const {networkType} = this.$store.state.account.wallet
-        let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
+        const address = Address.createFromPublicKey(multisigPublickey, networkType).toDTO().address
+
         new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
             that.currentMinApproval = multisigInfo.minApproval
         })
@@ -246,7 +247,7 @@ export class RootNamespaceTs extends Vue {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
         const {address} = this.getWallet
-        const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
+        const {duration, rootNamespaceName, lockFee, innerFee} = this.form
         this.transactionDetail = {
             "address": address,
             "duration": duration,

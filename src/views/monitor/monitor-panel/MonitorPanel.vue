@@ -39,7 +39,6 @@
                   <div>{{value.amount.lower?value.amount.compact():value.amount}}</div>
                 </span>
                 </div>
-                <div class="mosaic_data"></div>
               </div>
             </TabPane>
           </Tabs>

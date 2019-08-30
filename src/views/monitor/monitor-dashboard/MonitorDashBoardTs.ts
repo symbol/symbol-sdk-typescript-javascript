@@ -1,14 +1,14 @@
 import {market} from "@/core/api/logicApi.ts"
+import {PublicAccount, NetworkType} from 'nem2-sdk'
 import {KlineQuery} from "@/core/query/klineQuery.ts"
-import {transactionFormat} from '@/core/utils/format.ts'
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
-import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
+import {transactionFormat} from '@/core/utils/format.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {PublicAccount, NetworkType, Deadline} from 'nem2-sdk'
 import LineChart from '@/common/vue/line-chart/LineChart.vue'
 import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
-import {getBlockInfoByTransactionList} from "@/core/utils/wallet";
-import {isRefreshData, localSave, localRead, formateNemTimestamp} from '@/core/utils/utils.ts'
+import {getBlockInfoByTransactionList} from "@/core/utils/wallet"
+import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
+import {isRefreshData, localSave, localRead} from '@/core/utils/utils.ts'
 import dashboardBlockTime from '@/common/img/monitor/dash-board/dashboardBlockTime.png'
 import dashboardPublickey from '@/common/img/monitor/dash-board/dashboardPublickey.png'
 import dashboardBlockHeight from '@/common/img/monitor/dash-board/dashboardBlockHeight.png'
@@ -28,6 +28,8 @@ export class MonitorDashBoardTs extends Vue {
     accountAddress = ''
     updateAnimation = ''
     isShowDialog = false
+    isShowInnerDialog = false
+    currentInnerTransaction = {}
     accountPublicKey = ''
     currentDataAmount = 0
     currentPrice: any = 0
@@ -81,14 +83,19 @@ export class MonitorDashBoardTs extends Vue {
         return this.$store.state.account.ConfirmedTx
     }
 
-    showDialog(transaction) {
-        this.isShowDialog = true
-        this.transactionDetails = transaction
-        console.log(transaction, '.............')
-    }
 
     get currentHeight() {
         return this.$store.state.app.chainStatus.currentHeight
+    }
+    showDialog(transaction) {
+        this.isShowDialog = true
+        this.transactionDetails = transaction
+    }
+
+
+    showInnerDialog(currentInnerTransaction) {
+        this.isShowInnerDialog = true
+        this.currentInnerTransaction = currentInnerTransaction
     }
 
     async getMarketOpenPrice() {
@@ -150,7 +157,11 @@ export class MonitorDashBoardTs extends Vue {
             node,
         ).subscribe(async (transactionsInfo) => {
             that.allTransacrionList.push(...transactionsInfo)
-            await that.getBlockInfoByTransactionList(that.allTransacrionList, node)
+            try {
+                await that.getBlockInfoByTransactionList(that.allTransacrionList, node)
+            } catch (e) {
+                console.log(e)
+            }
         })
     }
 
@@ -166,13 +177,17 @@ export class MonitorDashBoardTs extends Vue {
                 pageSize: 100
             },
             node,
-        ).subscribe(async (unconfirmedtransactionsInfo:any) => {
+        ).subscribe(async (unconfirmedtransactionsInfo: any) => {
             unconfirmedtransactionsInfo = unconfirmedtransactionsInfo.map((unconfirmedtransaction) => {
                 unconfirmedtransaction.isTxUnconfirmed = true
                 return unconfirmedtransaction
             })
             that.allTransacrionList.push(...unconfirmedtransactionsInfo)
-            await that.getBlockInfoByTransactionList(that.allTransacrionList, node)
+            try {
+                await that.getBlockInfoByTransactionList(that.allTransacrionList, node)
+            } catch (e) {
+                console.log(e)
+            }
         })
     }
 

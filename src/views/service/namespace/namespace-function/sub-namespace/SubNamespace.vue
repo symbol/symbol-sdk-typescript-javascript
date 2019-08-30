@@ -11,7 +11,7 @@
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>
           <span class="value" v-if="typeList[0].isSelected &&getWallet">{{formatAddress(getWallet.address)}}</span>
-          <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="multisigPublickey"
+          <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="form.multisigPublickey"
                   class="select">
             <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">{{ item.label }}
             </Option>
@@ -22,8 +22,15 @@
         <div class="form_item">
           <span class="key">{{$t('parent_namespace')}}</span>
           <span class="value">
-              <Select :placeholder="$t('select_parent_namespace')" v-model="form.rootNamespaceName" class="select">
+              <Select v-if="typeList[0].isSelected " :placeholder="$t('select_parent_namespace')"
+                      v-model="form.rootNamespaceName" class="select">
                   <Option v-for="item in namespaceList" v-if="item.levels < 3" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+
+             <Select v-else :placeholder="$t('select_parent_namespace')" v-model="form.rootNamespaceName"
+                     class="select">
+                  <Option v-for="item in multisigNamespaceList" v-if="item.levels < 3" :value="item.value"
+                          :key="item.value">{{ item.label }}</Option>
               </Select>
           </span>
         </div>
@@ -62,7 +69,7 @@
         <div class="form_item" v-if="typeList[1].isSelected">
           <span class="key">{{$t('bonded_fee')}}</span>
           <span class="value">
-              <input type="text" v-model="form.bondedFee" :placeholder="$t('undefined')">
+              <input type="text" v-model="form.aggregateFee" :placeholder="$t('undefined')">
             <span class="end_label">gas</span>
           </span>
           <div class="tips">
@@ -81,7 +88,7 @@
           </div>
         </div>
 
-        <div v-if="typeList[0].isSelected" :class="['create_button',isCompleteForm?'pointer':'not_allowed']"
+        <div :class="['create_button',isCompleteForm?'pointer':'not_allowed']"
              @click="createTransaction">
           {{$t('create')}}
         </div>

@@ -14,17 +14,19 @@
 
           <div class="input_area">
             <input type="text" :placeholder="$t('address')" v-model="currentFilter">
-            <span class="icon_add radius pointer tip" @click="addFilterItem()"></span>
+            <span class="icon_add radius pointer tip" @click="addFilterItem(RestrictionModificationType.Add)"></span>
+            <span class="icon_remove radius pointer tip"
+                  @click="addFilterItem(RestrictionModificationType.Remove)"></span>
           </div>
 
         </div>
 
-        <div class="property_type" v-if="showPropertyType">
+        <div class="property_type" v-if="showRestrictionType">
           <RadioGroup v-model="formItem.filterType">
-            <Radio :label="PropertyType.AllowAddress">
+            <Radio :label="RestrictionType.AllowAddress">
               <span>allow</span>
             </Radio>
-            <Radio :label="PropertyType.BlockAddress">
+            <Radio :label="RestrictionType.BlockAddress">
               <span>block</span>
             </Radio>
           </RadioGroup>
@@ -61,16 +63,18 @@
           <div class="title">{{$t('mosaic')}}</div>
           <div class="input_area">
             <input v-model="currentFilter" type="text" :placeholder="$t('mosaic')">
-            <span class="icon_add radius pointer tip" @click="addFilterItem()"></span>
+            <span class="icon_add radius pointer tip" @click="addFilterItem(RestrictionModificationType.Add)"></span>
+            <span class="icon_remove radius pointer tip"
+                  @click="addFilterItem(RestrictionModificationType.Remove)"></span>
           </div>
         </div>
 
-        <div class="property_type" v-if="showPropertyType">
+        <div class="property_type" v-if="showRestrictionType">
           <RadioGroup v-model="formItem.filterType">
-            <Radio :label="PropertyType.AllowMosaic">
+            <Radio :label="RestrictionType.AllowMosaic">
               <span>allow</span>
             </Radio>
-            <Radio :label="PropertyType.BlockTransaction">
+            <Radio :label="RestrictionType.BlockTransaction">
               <span>block</span>
             </Radio>
           </RadioGroup>
@@ -112,15 +116,17 @@
 
             <span>{{currentFilter?entityTypeList[currentFilter].value:''}}</span>
 
-            <span class="icon_add radius pointer tip" @click="addFilterItem()"></span>
+            <span class="icon_add radius pointer tip" @click="addFilterItem(RestrictionModificationType.Add)"></span>
+            <span class="icon_remove radius pointer tip"
+                  @click="addFilterItem(RestrictionModificationType.Remove)"></span>
           </div>
         </div>
-        <div class="property_type" v-if="showPropertyType">
+        <div class="property_type" v-if="showRestrictionType">
           <RadioGroup v-model="formItem.filterType">
-            <Radio :label="PropertyType.AllowTransaction">
+            <Radio :label="RestrictionType.AllowTransaction">
               <span>allow</span>
             </Radio>
-            <Radio :label="PropertyType.BlockTransaction">
+            <Radio :label="RestrictionType.BlockTransaction">
               <span>block</span>
             </Radio>
           </RadioGroup>
@@ -166,16 +172,14 @@
           <span :class="[filterTypeList[1]?'active':'','pointer','filter_type_title']"
                 @click="showFilterTypeListIndex(1)">{{$t('mosaic')}}</span>
         </Col>
-        <Col span="3">
-          <span :class="[filterTypeList[2]?'active':'','pointer','filter_type_title']"
-                @click="showFilterTypeListIndex(2)">{{$t('transaction_type')}}</span>
-        </Col>
+        <!--        todo after sdk complete-->
+        <!--        <Col span="3">-->
+        <!--          <span :class="[filterTypeList[2]?'active':'','pointer','filter_type_title']"-->
+        <!--                @click="showFilterTypeListIndex(2)">{{$t('transaction_type')}}</span>-->
+        <!--        </Col>-->
         <Col span="14">
-          <!--          <span class="right alias_delete pointer" @click="isShowDeleteIcon=true"></span>-->
-          <!--          <span class="right alias_add pointer" @click="isShowDialog=true"></span>-->
-          <!--          TODO filter can't use-->
-          <span class="right alias_delete pointer"></span>
-          <span class="right alias_add pointer"></span>
+          <span class="right alias_delete pointer" @click="isShowDeleteIcon=true"></span>
+          <span class="right alias_add pointer" @click="isShowDialog=true"></span>
         </Col>
       </Row>
     </div>

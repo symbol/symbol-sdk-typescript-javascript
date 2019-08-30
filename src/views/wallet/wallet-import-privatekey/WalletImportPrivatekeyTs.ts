@@ -76,7 +76,7 @@ export class WalletImportPrivatekeyTs extends Vue {
         //     return false
         // }
 
-        if (this.form.password || this.form.password.length < 6 || this.form.password.length > 32) {
+        if (!this.form.password || this.form.password.length < 6 || this.form.password.length > 32) {
             this.$Notice.error({
                 title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
             })

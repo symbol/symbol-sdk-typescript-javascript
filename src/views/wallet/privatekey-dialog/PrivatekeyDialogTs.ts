@@ -2,6 +2,7 @@ import {QRCodeGenerator} from 'nem2-qr-library'
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Message} from "@/config";
 
 @Component
 export class PrivatekeyDialogTs extends Vue {
@@ -31,25 +32,53 @@ export class PrivatekeyDialogTs extends Vue {
         }, 300)
     }
 
+
+    checkPassword() {
+        if (!this.checkInput()) return
+        const DeTxt = decryptKey(this.getWallet, this.wallet.password).trim()
+        console.log(DeTxt)
+        try {
+            new WalletApiRxjs().getWallet(
+                this.getWallet.name,
+                DeTxt.length === 64 ? DeTxt : '',
+                this.getWallet.networkType,
+            )
+            this.stepIndex = 1
+            this.wallet.password = ''
+            this.stepIndex = 1
+            this.wallet.privatekey = DeTxt.toString().toUpperCase()
+        } catch (e) {
+            console.log(e)
+            this.$Notice.destroy()
+            this.$Notice.error({
+                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+            })
+        }
+    }
+
+
     exportPrivatekey() {
         switch (this.stepIndex) {
             case 0 :
-                if (!this.checkInput()) return
-                const DeTxt = decryptKey(this.getWallet, this.wallet.password)
-                try {
-                    new WalletApiRxjs().getWallet(this.getWallet.name,
-                        this.getWallet.networkType,
-                        DeTxt.length === 64 ? DeTxt : ''
-                    )
-                    this.stepIndex = 1
-                    this.wallet.password = ''
-                    this.stepIndex = 1
-                    this.wallet.privatekey = DeTxt.toString().toUpperCase()
-                } catch (e) {
-                    this.$Notice.error({
-                        title: this.$t('password_error') + ''
-                    })
-                }
+                this.checkPassword()
+                // if (!this.checkInput()) return
+                // const DeTxt = decryptKey(this.getWallet, this.wallet.password)
+                // try {
+                //     new WalletApiRxjs().getWallet(
+                //         this.getWallet.name,
+                //         DeTxt.length === 64 ? DeTxt : '',
+                //         this.getWallet.networkType,
+                //     )
+                //     this.stepIndex = 1
+                //     this.wallet.password = ''
+                //     this.stepIndex = 1
+                //     this.wallet.privatekey = DeTxt.toString().toUpperCase()
+                // } catch (e) {
+                //     console.log(e)
+                //     this.$Notice.error({
+                //         title: this.$t('password_error') + ''
+                //     })
+                // }
                 break;
             case 1 :
                 this.createQRCode()

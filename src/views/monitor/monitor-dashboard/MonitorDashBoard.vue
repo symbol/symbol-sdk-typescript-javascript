@@ -1,5 +1,7 @@
 <template>
-  <div class="dash_board_container">
+  <div class="dash_board_container ">
+
+
     <Modal
             :title="$t('transaction_detail')"
             v-model="isShowDialog"
@@ -20,13 +22,36 @@
         <div v-if="transactionDetails.formatAggregateCompelete">
           <span class=" title"> {{$t('inner_transaction')}}</span>
           <div class="inner_transaction"
-               v-for="(innerTransaction,index ) in transactionDetails.formatAggregateCompelete">
-            <span class="value">{{$t(innerTransaction.dialogDetailMap.transfer_type)}}</span>
+               v-for="(innerTransaction ) in transactionDetails.formatAggregateCompelete">
+            <span class="pointer value" @click="showInnerDialog(innerTransaction)">{{$t(innerTransaction.dialogDetailMap.transfer_type)}}</span>
           </div>
         </div>
       </div>
-
     </Modal>
+
+    <Modal
+            :title="$t('transaction_detail')"
+            v-model="isShowInnerDialog"
+            :transfer="false"
+            class-name="dash_board_dialog inner_dialog">
+
+      <div class="transfer_type">
+        <span class="title">{{$t('transfer_type')}}</span>
+        <span class="value">{{currentInnerTransaction.dialogDetailMap
+          ? $t(currentInnerTransaction.dialogDetailMap.transfer_type) :'-'}}</span>
+      </div>
+      <div>
+        <div v-if="key !=='transfer_type'" v-for="(value,key,index) in currentInnerTransaction.dialogDetailMap"
+             class="other_info">
+          <span class="title">{{$t(key)}}</span>
+          <span class="value">{{value}}</span>
+        </div>
+      </div>
+      <!--      <div class="transfer_type">-->
+      <!--        {{currentInnerTransaction}}-->
+      <!--      </div>-->
+    </Modal>
+
 
     <div class="top_network_info">
       <div class="left_echart radius">

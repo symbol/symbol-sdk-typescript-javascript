@@ -112,7 +112,7 @@ export class MosaicListTs extends Vue {
 
         await new AccountApiRxjs().getAccountInfo(accountAddress, node).subscribe(async (accountInfo) => {
             let mosaicList = accountInfo.mosaics
-            let mosaicIdList = mosaicList.map((item) => {
+            let mosaicIdList:any = mosaicList.map((item) => {
                 return item.id
             })
             await new MosaicApiRxjs().getMosaics(node, mosaicIdList).subscribe(async (mosaicListInfo: any) => {

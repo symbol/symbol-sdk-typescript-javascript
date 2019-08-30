@@ -11,11 +11,11 @@ export class NamespaceListTs extends Vue {
     showNamespaceEditDialog = false
     currentNamespace = ''
 
-    get namespaceList () {
+    get namespaceList() {
         return this.$store.state.account.namespace
     }
 
-    get nowBlockHeihgt () {
+    get nowBlockHeihgt() {
         return this.$store.state.app.chainStatus.currentHeight
     }
 
@@ -28,8 +28,12 @@ export class NamespaceListTs extends Vue {
         this.showNamespaceEditDialog = false
     }
 
-    computeDuration (duration) {
-        let expireTime = duration - this.nowBlockHeihgt > 0 ? duration - this.nowBlockHeihgt : 'Expired'
+    computeDuration(namespaceInfo) {
+        const {duration, isActive} = namespaceInfo
+        if (!isActive) {
+            return 'Expired'
+        }
+        const expireTime = duration - this.nowBlockHeihgt > 0 ? duration - this.nowBlockHeihgt : 'not active'
         return expireTime
     }
 

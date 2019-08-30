@@ -49,7 +49,7 @@ export const en_US = {
     enter_the_date_for_example: 'Enter the date ,for example：',
     fee: 'Fee',
     the_default_is: 'Default',
-    the_more_you_set_the_cost_the_higher_the_processing_priority: 'Increasing the fee makes the transaction processing quicker.(1000000 microxem = 1.0xem)',
+    the_more_you_set_the_cost_the_higher_the_processing_priority: 'Increasing the fee makes the transaction processing quicker.(1000000 gas = 1.0xem)',
     create: 'Create',
     all: 'All',
     processing: 'Processing',
@@ -61,7 +61,7 @@ export const en_US = {
     number_of_voters: 'Number of voters',
     yes: 'Yes',
     no: 'No',
-
+    aggregate_hash:'aggregate hash',
     //monitor-dashboard
     transaction_detail: 'Transaction detail',
     XEM_market_trend_nearly_7_days: 'XEM market trend nearly 7 days',
@@ -248,7 +248,7 @@ export const en_US = {
     transportability: 'Transportability',
     variable_supply: 'Supply',
     effective_time: 'Duration(block)',
-    overdue: 'Overdue',
+    overdue: 'Will lost ownership in ',
     forever: 'Forever',
     alias: 'Alias',
 
@@ -280,6 +280,10 @@ export const en_US = {
     select_root_namespace: 'Choose root namespace',
     select_parent_namespace: 'Choose parent namespace',
     subspace: 'Subspace',
+    is_active: 'active',
+    true: 'true',
+    false: 'false',
+
     input_space_name: 'Input space name',
     the_duration_is_calculated_in_blocks_one_block_is_12_seconds: 'The duration is calculated in blocks one block is 12 seconds.',
     space_list: 'Space list',
@@ -450,7 +454,7 @@ export const en_US = {
     Export_private_key: 'Export private key',
     Export_Keystore: 'Export Keystore',
     Alias_settings: 'Alias settings',
-    Filter_management: 'Filter management',
+    Filter_management: 'Restriction',
     Subaddress_management: 'Subaddress ',
     Modify_the_private_key_wallet_password: 'Modify password',
     status: 'Status',
@@ -588,7 +592,7 @@ export const en_US = {
     There_are_no_more_accounts_under_this_account: 'There are no more multisigApi under this account.',
     There_are_no_more_accounts_under_this_account_or_cosigner: 'There are no more multisigApi or cosigner under this account.',
     This_account_is_already_a_multi_sign_account: 'This account is already a multi-sign account',
-    mosaic_id_format_error: 'Mosaic id format error',
+    mosaic_hex_format_error: 'Mosaic hex format error',
     alias_name_format_error: 'alias name format error',
     max_approval_amount_more_than_10: 'Max approval cannot be more than 10',
     max_removal_amount_more_than_10: 'Max removal  cannot be more than 10',
@@ -623,9 +627,9 @@ export const en_US = {
     secret_lock: 'Secret lock',
     //secret_proof
     scret_proof: 'Secret proof',
-    modify_account_property_address: 'Address filter',
-    modify_account_property_mosaic: 'Mosaic filter',
-    modify_account_property_entity_type: 'Entity filter',
+    modify_account_property_address: 'Address restriction',
+    modify_account_property_mosaic: 'Mosaic restriction',
+    modify_account_property_entity_type: 'Entity restriction',
     link_account: 'Link account',
     please_choose_entity_type: 'please choose entity type',
     Node_connection_failed: 'Node connection failed',
@@ -655,6 +659,6 @@ export const en_US = {
     timestamp: 'timestamp',
     sender: 'sender',
 
-    inner_transaction:'inner',
+    inner_transaction: 'inner',
 
 }
