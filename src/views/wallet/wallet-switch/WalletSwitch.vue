@@ -11,7 +11,9 @@
           <Col span="15">
             <div>
               <p class="walletName">{{item.name}}</p>
-              <p class="walletAmount">{{item.balance ? formatXEMamount(item.balance + ''):0}}&nbsp;<span class="tails">XEM</span>
+              <p class="walletAmount">
+                  {{ getWalletBalance(index) }}
+                  &nbsp;<span class="tails">XEM</span>
               </p>
             </div>
           </Col>

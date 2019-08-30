@@ -1,45 +1,26 @@
-import {NetworkType} from 'nem2-sdk'
 import {saveLocalWallet} from '@/core/utils/wallet.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {localRead, localSave, formatXEMamount} from '@/core/utils/utils.ts'
 import DeleteWalletCheck from './delete-wallet-check/DeleteWalletCheck.vue'
+import {mapState} from 'vuex';
 
 @Component({
-    components: {
-        DeleteWalletCheck
-    }
+    components: { DeleteWalletCheck },
+    computed: { ...mapState({
+      activeAccount: 'account',
+      app: 'app',
+    }) }
 })
 export class WalletSwitchTs extends Vue {
-    walletList = []
-    currentNetType = {}
+    app: any
+    activeAccount: any
     showCheckPWDialog = false
     deleteIndex = -1
     deletecurrent = -1
-    netType = [
-        {
-            value: NetworkType.MIJIN_TEST,
-            label: 'MIJIN_TEST'
-        }, {
-            value: NetworkType.MAIN_NET,
-            label: 'MAIN_NET'
-        }, {
-            value: NetworkType.TEST_NET,
-            label: 'TEST_NET'
-        }, {
-            value: NetworkType.MIJIN,
-            label: 'MIJIN'
-        },
-    ]
-
-
-    get getWalletList() {
-        return this.$store.state.app.walletList
-    }
-
-    get getWallet() {
-        return this.$store.state.account.wallet
-    }
-
+    
+    get walletList() { return this.app.walletList }
+    get wallet() { return this.activeAccount.wallet }
+    
     toShowCheckPWDialog(index, current) {
         this.showCheckPWDialog = true
         this.deleteIndex = index
@@ -47,8 +28,8 @@ export class WalletSwitchTs extends Vue {
     }
 
     checkEnd() {
-        const {deleteIndex, deletecurrent} = this
-        this.delWallet(deleteIndex, deletecurrent)
+        const {deleteIndex} = this
+        this.delWallet(deleteIndex)
     }
 
     closeCheckPWDialog() {
@@ -57,7 +38,8 @@ export class WalletSwitchTs extends Vue {
 
     chooseWallet(walletIndex) {
         let localData = JSON.parse(localRead('wallets'))
-        let list = this.getWalletList
+        // @TODO: review
+        let list = this.walletList
         const storeWallet = this.walletList[walletIndex]
         const localWallet = localData[walletIndex]
         list.splice(walletIndex, 1)
@@ -73,13 +55,12 @@ export class WalletSwitchTs extends Vue {
         })
         const account = saveLocalWallet(storeWallet, null, walletIndex)
         this.$store.commit('SET_WALLET', account)
-        this.walletList = list
         this.$store.commit('SET_WALLET_LIST', list)
         localSave('wallets', JSON.stringify(localData))
     }
 
 
-    delWallet(index, current) {
+    delWallet(index) {
         let list = this.walletList;
         let localData = JSON.parse(localRead('wallets'))
         list.splice(index, 1)
@@ -95,15 +76,21 @@ export class WalletSwitchTs extends Vue {
         });
         document.body.click()
         this.initWalletList()
-
     }
 
     formatXEMamount(text) {
         return formatXEMamount(text)
     }
 
+    // @TODO: Probably not necessary after app.vue review
+    getWalletBalance(index) { 
+      const { balance } = this.walletList[index]
+      if (!balance || balance === 0) return 0
+      return this.formatXEMamount(balance)
+    }
+
     initWalletList() {
-        const list = this.getWalletList
+        const list = this.walletList
         list.map((item, index) => {
             if (index === 0) {
                 item.active = true
@@ -122,10 +109,6 @@ export class WalletSwitchTs extends Vue {
         }
     }
 
-    initData() {
-        this.currentNetType = this.netType[0].value
-    }
-
     toImport() {
         this.$emit('toImport')
     }
@@ -134,14 +117,8 @@ export class WalletSwitchTs extends Vue {
         this.$emit('toCreate')
     }
 
-    @Watch('getWallet')
+    @Watch('wallet.address')
     onGetWalletChange() {
-        this.initWalletList()
-    }
-
-    created() {
-        this.initData()
-        this.$store.commit('SET_WALLET', this.getWalletList[0])
         this.initWalletList()
     }
 }
