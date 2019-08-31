@@ -1,6 +1,6 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {AppLock} from "@/core/utils/AppLock"
+import {AppLock} from "@/core/utils/appLock"
 import { standardFields } from '@/core/validation'
 
 @Component

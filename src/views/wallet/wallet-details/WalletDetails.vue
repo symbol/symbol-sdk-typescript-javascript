@@ -12,7 +12,6 @@
             <p>
               <span class="tit">{{$t('Wallet_name')}}</span>
               <span class="walletName" v-if="getWallet">{{getWallet.name}}</span>
-              <!--              <i class="updateWalletName"><img src="@/common/img/wallet/editIcon.png"></i>-->
             </p>
             <p >
               <span class="tit">{{$t('Wallet_address')}}</span>

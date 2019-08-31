@@ -36,13 +36,13 @@ export class KeystoreDialogTs extends Vue {
         switch (this.stepIndex) {
             case 0 :
                 this.checkWalletPassword()
-                break;
+                break
             case 1 :
                 this.generateKeystore()
-                break;
+                break
             case 2 :
                 this.stepIndex = 3
-                break;
+                break
         }
     }
 
@@ -94,8 +94,10 @@ export class KeystoreDialogTs extends Vue {
         copyTxt(this.keystoreText).then((data) => {
             this.$Notice.success({
                 title: this.$t(Message.COPY_SUCCESS) + ''
-            });
-        }).catch((error)=>{console.log(error)})
+            })
+        }).catch((error) => {
+            console.log(error)
+        })
     }
 
 

@@ -61,7 +61,7 @@ export const en_US = {
     number_of_voters: 'Number of voters',
     yes: 'Yes',
     no: 'No',
-    aggregate_hash:'aggregate hash',
+    aggregate_hash: 'aggregate hash',
     //monitor-dashboard
     transaction_detail: 'Transaction detail',
     XEM_market_trend_nearly_7_days: 'XEM market trend nearly 7 days',
@@ -141,7 +141,6 @@ export const en_US = {
     crosschain_transfer: 'Crosschain',
     aggregate_transfer: 'Aggregate',
     QR_code_generation_failed: 'QR code generation failed',
-
     //monitor-remote
     Remote_title_recipt: 'Accumulated delegated harvesting income',
     Remote_state: 'Current state',
@@ -166,6 +165,8 @@ export const en_US = {
     remote_modal_cancel: 'cancel',
     remote_modal_place1: 'Please enter or paste a remote public key',
     remote_modal_place2: 'Please enter your wallet password',
+    Unlink_now: 'Unlink now',
+    Link_now: 'Link now',
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: 'WELCOME BACK TO THE CATAPULT BETA',
     welcome_to_the_CATAPULT_beta: 'WELCOME TO USE THE CATAPULT BETA',
@@ -196,8 +197,8 @@ export const en_US = {
     about_us: 'About us',
 
     //setting-lock
-    old_password: 'old password',
-    please_enter_the_original_password: 'Please enter the old password',
+    old_password: 'Old password',
+    please_enter_the_original_password: 'Please enter the Old password',
     set_password: 'Set new password',
     this_password_is_used_to_lock_the_desktop_wallet_Once_lost_you_will_lose_the_right_to_enter_the_desktop_wallet: 'This password is used to lock the desktop wallet .Once lost you will lose the right to enter the desktop wallet.',
     please_enter_a_new_password: 'Please enter a new password',
@@ -248,10 +249,10 @@ export const en_US = {
     transportability: 'Transportability',
     variable_supply: 'Supply',
     effective_time: 'Duration(block)',
-    overdue: 'Will lost ownership in ',
+    overdue: 'overdue ',
     forever: 'Forever',
     alias: 'Alias',
-
+    Time_zone_setting: 'Time zone setting',
     // edit dialog
     modify_supply: 'Modify supply',
     binding_alias: 'Binding alias',
@@ -306,12 +307,12 @@ export const en_US = {
     mnemonic_describle: 'The mnemonic is a 12-word seed file. By importing this seed file, you can restore your wallet. Please keep it safe and keep it confidential.',
     input_mnemonic: 'Input mnemonic',
     enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word: 'Enter 12 words, please pay attention to the order, separated by a space between each word',
-    mnemonic_describle_tips: 'This password is a private key password and will be used when you pay. If the password is forgotten, you can use the mnemonic to recover the wallet.',
+    mnemonic_describle_tips: 'This password is a wallet password and will be used when you pay. If the password is forgotten, you can use the mnemonic to recover the wallet.',
     the_private_key_is_a_string_of_256_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe: 'The private key is a string of 256-bit random strings, which is the absolute control of the account. Please keep it safe.',
     private_key_string: 'Private key string',
     Please_paste_the_private_key_string_in_the_input_box_below: 'Please paste the private key string in the input box below',
     Paste_the_private_key_string_in_the_input_box: 'Paste the private key string in the input box',
-    This_password_is_a_private_key_password_and_will_be_used_when_you_pay: 'This password is a private key password and will be used when you pay. If the password is forgotten, you can use the private key to recover the wallet.',
+    This_password_is_a_private_key_password_and_will_be_used_when_you_pay: 'This password is a wallet password and will be used when you pay. If the password is forgotten, you can use the private key to recover the wallet.',
     please_set_your_password: 'Please set your password',
     please_enter_your_wallet_password_again: 'Please enter your wallet password again',
     keyStore_describle: 'KeyStore is the storage file after the private key is encrypted. When importing this file, you need your KeyStore password to succeed.',
@@ -408,8 +409,8 @@ export const en_US = {
     choose_network: 'Choose network',
     In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks: 'In the \'nem2 ecosystem, you can build your own home wallet, or private network wallet, or test the network.',
     set_the_wallet_name: 'Set the wallet name',
-    The_name_of_the_wallet_can_be_convenient_for_you_to_use_you_can_distinguish_different_wallets_etc_for_better_management_after_entering_the_system_you_can_also_modify_the_wallet_details: 'The name of the wallet can be convenient for you to use, you can distinguish different wallets, etc., for better management; after entering the system, you can also modify the wallet details.',
-    This_password_is_used_to_encrypt_your_private_key: 'This password is used to encrypt your private key. The more complicated it is, the better the encryption will be.',
+    The_name_of_the_wallet_can_be_convenient_for_you_to_use_you_can_distinguish_different_wallets_etc_for_better_management_after_entering_the_system_you_can_also_modify_the_wallet_details: 'The name of the wallet can be convenient for you to use, you can distinguish different wallets, etc., for better management。',
+    This_password_is_used_to_encrypt_your_private_key: 'This password is used to encrypt your wallet. The more complicated it is, the better the encryption will be.',
     password_hint: 'Between %{min} and %{max} characters. Allowed special characters: %{specialChar}',
     please_set_your_wallet_password: 'Please set your wallet password',
     please_enter_your_password_again: 'Please enter your password again',
@@ -427,7 +428,7 @@ export const en_US = {
     previous: 'Previous',
     Confirm_mnemonic: 'Confirm mnemonic',
     Please_select_each_phrase_to_make_sure_the_mnemonic_is_correct: 'Please select each phrase to make sure the mnemonic is correct',
-    If_you_have_a_record_to_back_up_your_own_supporting_words_be_sure_to_verify_it_with_the_left_program_to_ensure_that_there_are_no_errors_in_the_auxiliary_words_Once_you_are_mistaken_you_may_never_be_able_to_get_it_back_You_pay_attention_to_and_understand_the_risks_involved_If_you_dont_want_to_back_up_or_verify_now: 'If you have a record to back up your own supporting words, be sure to verify it with the left program to ensure that there are no errors in the auxiliary words. Once you are mistaken, you may never be able to get it back. You pay attention to and understand the risks involved. If you don\'t want to back up or verify now,',
+    If_you_have_a_record_to_back_up_your_own_supporting_words_be_sure_to_verify_it_with_the_left_program_to_ensure_that_there_are_no_errors_in_the_auxiliary_words_Once_you_are_mistaken_you_may_never_be_able_to_get_it_back_You_pay_attention_to_and_understand_the_risks_involved_If_you_dont_want_to_back_up_or_verify_now: 'If you have a record to back up your own supporting words, be sure to verify it with the below program to ensure that there are no errors in the auxiliary words. Once you are mistaken, you may never be able to get it back. You pay attention to and understand the risks involved. If you don\'t want to back up or verify now,',
     click: 'Click',
     Skip_this_action_but_please_confirm_your_risk_If_you_need_to_back_up_the_mnemonic_again_you_can_find_it_in_the_Wallet_Details_Export_mnemonic: 'To skip this action, but please confirm your risk. If you need to back up the mnemonic again, you can find it in the Wallet Details - Export mnemonic.',
     Congratulations_on_creating_a_wallet: 'Congratulations on creating a wallet.',
@@ -631,34 +632,39 @@ export const en_US = {
     modify_account_property_mosaic: 'Mosaic restriction',
     modify_account_property_entity_type: 'Entity restriction',
     link_account: 'Link account',
-    please_choose_entity_type: 'please choose entity type',
+    please_choose_entity_type: 'Please choose entity type',
     Node_connection_failed: 'Node connection failed',
     // Forms
-    newPassword: 'new password',
+    newPassword: 'New password',
     LABEL_new_password: 'New password',
-    HINT_new_password1: 'should be between 6 and 32 chars.',
-    HINT_new_password2: 'allowed special chars: - _ ! @ # $ & * " ~ + = %',
+    HINT_new_password1: 'Should be between 6 and 32 chars.',
+    HINT_new_password2: 'Allowed special chars: - _ ! @ # $ & * " ~ + = %',
     PLACEHOLDER_new_password: '9_pass-WORD',
 
-    previousPassword: 'previous password',
+    previousPassword: 'Previous password',
     LABEL_previous_password: 'Previous password',
     HINT_previous_password: 'The password used to log into the application',
     PLACEHOLDER_previous_password: 'My FiRst Pa$$word!',
 
-    confirmPassword: 'confirm password',
+    confirmPassword: 'Confirm password',
     LABEL_confirm_password: 'Confirm your new password',
     PLACEHOLDER_confirm_password: '9_pass-WORD',
-    cipher: 'cipher',
+    cipher: 'Cipher',
 
-    HINT_cipher_hint1: 'should be between 1 and 32 chars.',
+    HINT_cipher_hint1: 'Should be between 1 and 32 chars.',
 
-    amount: 'amount',
+    amount: 'Amount',
     Node_connection_succeeded: 'Node connection succeeded',
 
     This_password_is_used_for_importing_the_keystore_file: 'This password is the password for decrypting the Keystore and is used for importing the keystore file. Please remember it.',
-    timestamp: 'timestamp',
+    timestamp: 'Timestamp',
     sender: 'sender',
-
-    inner_transaction: 'inner',
+    HINT_mosaic_list: 'Mosaics for sending',
+    inner_transaction: 'Inner',
+    LABEL_mosaic_list: 'Mosaic list',
+    The_mosaic_to_be_sent_is_empty: 'The mosaic to be sent is empty',
+    Node_not_available_please_check_your_node_or_network_settings: 'Node not available, please check your node or network settings.',
+    encryption: 'Encryption',
+    Not_encrypted: 'Not encrypted'
 
 }

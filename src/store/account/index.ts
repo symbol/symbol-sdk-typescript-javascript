@@ -1,4 +1,5 @@
 import {Account} from 'nem2-sdk'
+import {nodeConfig} from "@/config/index.ts"
 
 declare interface account {
     node: string,
@@ -11,16 +12,18 @@ declare interface account {
     namespace: any[],
     UnconfirmedTx: any,
     ConfirmedTx: any,
-    errorTx: any,
-    generationHash: string
+    errorTx: Array<any>,
+    mosaicMap: any,
+    generationHash: string,
+
 }
 
 export default {
     state: {
-        node: 'http://47.107.245.217:3000',
-        currentXem: 'nem.xem',
-        currentXEM1: '577cba5470751c05',
-        currentXEM2: '1B47399ABD2C1E49',
+        node: nodeConfig.node,
+        currentXem: nodeConfig.currentXem,
+        currentXEM1: nodeConfig.currentXEM1,
+        currentXEM2: nodeConfig.currentXEM2,
         account: {},
         wallet: {},
         mosaic: [],
@@ -28,20 +31,21 @@ export default {
         UnconfirmedTx: [],
         ConfirmedTx: [],
         errorTx: [],
+        mosaicMap: {},
         generationHash: ''
     },
     getters: {
         Address(state) {
-            return state.account.address;
+            return state.account.address
         },
         PublicAccount(state) {
-            return state.account.publicAccount;
+            return state.account.publicAccount
         },
         privateKey(state) {
-            return state.account.privateKey;
+            return state.account.privateKey
         },
         publicKey(state) {
-            return state.account.publicKey;
+            return state.account.publicKey
         }
     },
     mutations: {
@@ -59,6 +63,24 @@ export default {
         },
         SET_NODE(state: account, node: string): void {
             state.node = node
+        },
+        SET_GENERATION_HASH(state: account, generationHash: string): void {
+            state.generationHash = generationHash
+        },
+        SET_ERROR_TEXT(state: account, errorTx: Array<any>): void {
+            state.errorTx = errorTx
+        },
+        SET_CURRENT_XEM_1(state: account, currentXEM1: string): void {
+            state.currentXEM1 = currentXEM1
+        },
+        SET_MOSAIC_MAP(state: account, mosaicMap: any): void {
+            state.mosaicMap = mosaicMap
+        },
+        SET_UNCONFIRMED_TX(state: account, UnconfirmedTx: any): void {
+            state.UnconfirmedTx = UnconfirmedTx
+        },
+        SET_CONFIRMED_TX(state: account, ConfirmedTx: any): void {
+            state.ConfirmedTx = ConfirmedTx
         },
     },
 }

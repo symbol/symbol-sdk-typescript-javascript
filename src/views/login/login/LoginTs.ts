@@ -27,8 +27,11 @@ export class LoginTs extends Vue {
         return this.$store.state.app.walletList || []
     }
 
-    get language() { return this.$i18n.locale }
-    set language(lang) { 
+    get language() {
+        return this.$i18n.locale
+    }
+
+    set language(lang) {
         this.$i18n.locale = lang
         localSave('locale', lang)
     }

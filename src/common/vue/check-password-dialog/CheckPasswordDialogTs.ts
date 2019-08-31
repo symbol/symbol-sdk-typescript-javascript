@@ -14,7 +14,7 @@ export class CheckPasswordDialogTs extends Vue {
     show = false
     activeAccount: any
     wallet = {
-        password: '111111'
+        password: ''
     }
 
     @Prop()

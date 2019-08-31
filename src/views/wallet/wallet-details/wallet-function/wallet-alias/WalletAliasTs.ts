@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
-import {Account, Address, AddressAlias, AliasActionType, MosaicId, NamespaceId} from "nem2-sdk";
+import {Account, Address, AddressAlias, AliasActionType, NamespaceId} from "nem2-sdk"
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
@@ -13,7 +13,7 @@ export class WalletAliasTs extends Vue {
     isShowDialog = false
     isShowDeleteIcon = false
     showCheckPWDialog = false
-    isCompleteForm = false
+    isCompleteForm = true
     formItem = {
         address: '',
         alias: '',
@@ -122,7 +122,7 @@ export class WalletAliasTs extends Vue {
 
     addressAlias(key, type) {
         const that = this
-        const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
+        const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
         let transaction = new NamespaceApiRxjs().addressAliasTransaction(
             type ? AliasActionType.Link : AliasActionType.Unlink,
             new NamespaceId(that.formItem.alias),
@@ -157,7 +157,7 @@ export class WalletAliasTs extends Vue {
     initData() {
         let list = []
         let addressAliasList = []
-        this.namespaceList.map((item, index) => {
+        this.namespaceList.map((item) => {
             if (item.alias instanceof EmptyAlias) {
                 list.push(item)
             } else if (item.alias instanceof AddressAlias) {
@@ -173,12 +173,12 @@ export class WalletAliasTs extends Vue {
         this.initData()
     }
 
-    @Watch('formItem', {immediate: true, deep: true})
-    onFormItemChange() {
-        const {address, alias, password, fee} = this.formItem
-        // isCompleteForm
-        this.isCompleteForm = address !== '' && alias !== '' && password !== '' && fee > 0
-    }
+    // @Watch('formItem', {immediate: true, deep: true})
+    // onFormItemChange() {
+    //     const {address, alias, password, fee} = this.formItem
+    //     // isCompleteForm
+    //     this.isCompleteForm = address !== '' && alias !== '' && password !== '' && fee > 0
+    // }
 
     created() {
         this.initData()

@@ -2,8 +2,8 @@ import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {RestrictionApiRxjs} from '@/core/api/RestrictionApiRxjs.ts'
 import {Message, entityTypeList} from "@/config/index.ts"
-import {decryptKey, signAndAnnounceNormal} from "@/core/utils/wallet";
-import {mapState} from "vuex";
+import {decryptKey, signAndAnnounceNormal} from "@/core/utils/wallet"
+import {mapState} from "vuex"
 import {
     Account,
     RestrictionType,
@@ -170,7 +170,7 @@ export class WalletFilterTs extends Vue {
         let {filterList, filterType, fee} = this.formItem
         const {node, generationHash} = this
         const addressRestriction = filterList.map((item) => {
-            return AccountRestrictionModification.createForAddress(item.modificationType, Address.createFromRawAddress(item.value));
+            return AccountRestrictionModification.createForAddress(item.modificationType, Address.createFromRawAddress(item.value))
         })
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
@@ -178,7 +178,7 @@ export class WalletFilterTs extends Vue {
             addressRestriction,
             networkType,
             UInt64.fromUint(fee)
-        );
+        )
         signAndAnnounceNormal(account, node, generationHash, [addressRestrictionTransaction], this.showNotice)
     }
 
@@ -188,9 +188,8 @@ export class WalletFilterTs extends Vue {
         let {filterList, filterType, fee} = this.formItem
         const {node, generationHash} = this
         const mosaicRestriction = filterList.map((item) => {
-            return AccountRestrictionModification.createForMosaic(item.modificationType, new MosaicId(item.value));
+            return AccountRestrictionModification.createForMosaic(item.modificationType, new MosaicId(item.value))
         })
-        console.log(mosaicRestriction)
         const addressRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             filterType,
@@ -209,7 +208,7 @@ export class WalletFilterTs extends Vue {
             case RestrictionType.AllowAddress:
             case RestrictionType.BlockAddress:
                 this.generateAddressRestriction(account)
-                break;
+                break
             case RestrictionType.AllowMosaic:
             case RestrictionType.BlockMosaic:
                 this.generateMosaicRestriction(account)

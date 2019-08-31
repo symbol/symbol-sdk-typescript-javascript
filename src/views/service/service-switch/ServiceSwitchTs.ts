@@ -1,4 +1,3 @@
-
 import {Component, Vue} from 'vue-property-decorator'
 import mosaic1Icon from '@/common/img/service/mosaic1.png'
 import mosaic2Icon from '@/common/img/service/mosaic2.png'

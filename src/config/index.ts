@@ -1,15 +1,13 @@
-import {TransactionType} from 'nem2-sdk'
-import {timeZoneList} from '@/config/TimeZone.ts'
+import {NetworkType, TransactionType} from 'nem2-sdk'
+import {timeZoneList} from '@/config/timeZone.ts'
 
-const isWin32 = require('./packgeParam.ts').isWin32
-
-export const apiUrl = process.env.NODE_ENV === 'production' ? 'http://120.79.181.170' : 'http://120.79.181.170'
+const isWin32 = require('./packge.ts').isWin32
 
 export const bandedNamespace = ['nem', 'user', 'account', 'org', 'com', 'biz', 'net', 'edu', 'mil', 'gov ', 'info']
 
 export const isWindows = isWin32
 
-export const AppConfig = {
+export const apiServerConfig = {
     apiUrl: 'http://120.79.181.170',
     marketUrl: 'http://app.nemcn.io',
 }
@@ -34,6 +32,22 @@ export const TransferType = {
     'RECEIVED': 1,
     'SENDED': 0
 }
+export const networkType = [
+    {
+        value: NetworkType.MIJIN_TEST,
+        label: 'MIJIN_TEST'
+    }, {
+        value: NetworkType.MAIN_NET,
+        label: 'MAIN_NET'
+    }, {
+        value: NetworkType.TEST_NET,
+        label: 'TEST_NET'
+    }, {
+        value: NetworkType.MIJIN,
+        label: 'MIJIN'
+    },
+]
+
 //error message
 export const Message = {
     COPY_SUCCESS: 'successful_copy',
@@ -87,6 +101,7 @@ export const Message = {
     SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR: 'The_sub_namespace_cannot_be_longer_than_16',
     NODE_CONNECTION_ERROR: 'Node_connection_failed',
     KEYSTORE_DECRYPTION_FAILED: 'Keystore_decryption_failed',
+    MOSACI_LIST_NULL_ERROR: 'The_mosaic_to_be_sent_is_empty',
 
 }
 
@@ -109,7 +124,6 @@ export const transactionTag = {
     MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE: 'modify_account_property_entity_type',
     LINK_ACCOUNT: 'link_account'
 }
-
 
 export const entityTypeList = {
     'transfer': {
@@ -179,6 +193,43 @@ export const entityTypeList = {
     }
 }
 
+export const nodeList = [
+    {
+        value: 'http://192.168.0.105:3000',
+        name: 'my-8',
+        url: '192.168.0.105',
+        isSelected: false,
+    },
+    {
+        value: 'http://3.0.78.183:3000',
+        name: 'my-8',
+        url: '3.0.78.183',
+        isSelected: false,
+    }, {
+        value: 'http://13.114.200.132:3000',
+        name: 'jp-5',
+        url: '13.114.200.132',
+        isSelected: false,
+    }, {
+        value: 'http://47.107.245.217:3000',
+        name: 'cn-2',
+        url: '47.107.245.217',
+        isSelected: true,
+    }
+]
+
 export const timeZoneListData = timeZoneList
 
 
+export const nodeConfig = {
+    node: 'http://47.107.245.217:3000',
+    currentXem: 'nem.xem',
+    currentXEM1: '577cba5470751c05',
+    currentXEM2: '1B47399ABD2C1E49'
+}
+export const aliasType = {
+    noAlias: 0,
+    mosaicAlias: 1,
+    addressAlias: 2
+
+}

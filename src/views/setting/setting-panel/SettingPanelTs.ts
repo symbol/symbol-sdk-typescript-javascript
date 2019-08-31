@@ -1,4 +1,4 @@
-import {Component, Vue} from 'vue-property-decorator';
+import {Component, Vue} from 'vue-property-decorator'
 
 @Component
 export class SettingPanelTs extends Vue {
@@ -25,7 +25,6 @@ export class SettingPanelTs extends Vue {
     currentHeadText = ''
 
     jumpToView(n, index) {
-        console.log(index, 'jumpToView', n)
         if (this.navagatorList[index].disabled) return
         let list = this.navagatorList
         list.map((item) => {

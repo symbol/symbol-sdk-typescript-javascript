@@ -5,8 +5,8 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
-import {Address, Listener} from "nem2-sdk";
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet";
+import {Address, Listener} from "nem2-sdk"
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet"
 
 @Component({
     components: {
@@ -30,12 +30,7 @@ export class SubNamespaceTs extends Vue {
         aggregateFee: 50000,
         lockFee: 50000,
     }
-    multisigPublickeyList = [
-        {
-            value: 'no data',
-            label: 'no data'
-        },
-    ]
+    multisigPublickeyList = []
 
     typeList = [
         {
@@ -60,11 +55,7 @@ export class SubNamespaceTs extends Vue {
     }
 
     get namespaceList() {
-        return this.$store.state.account.namespace ? this.$store.state.account.namespace : [{
-            label: 'no data',
-            value: 'no data',
-            levels: '0'
-        }]
+        return this.$store.state.account.namespace ? this.$store.state.account.namespace : []
     }
 
 

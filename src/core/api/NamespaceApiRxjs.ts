@@ -5,20 +5,19 @@ import {
     UInt64,
     MosaicAliasTransaction,
     AddressAliasTransaction,
-    NamespaceHttp, NetworkType, AliasActionType, MosaicId, Address, Namespace,
+    NamespaceHttp, NetworkType, AliasActionType, MosaicId, Address,
 } from 'nem2-sdk'
-import {from as observableFrom, Observable} from "rxjs";
 
-export class NamespaceApiRxjs  {
+export class NamespaceApiRxjs {
 
     createNamespaceId(name: string | number[]) {
-        return new NamespaceId(name);
+        return new NamespaceId(name)
 
     }
 
     createdRootNamespace(namespaceName: string, duration: number, networkType: NetworkType, maxFee?: number) {
-        const deadline = Deadline.create();
-        const durationUint = UInt64.fromUint(duration);
+        const deadline = Deadline.create()
+        const durationUint = UInt64.fromUint(duration)
         return RegisterNamespaceTransaction.createRootNamespace(
             deadline,
             namespaceName,
@@ -32,7 +31,7 @@ export class NamespaceApiRxjs  {
                         parentNamespace: string | NamespaceId,
                         networkType: NetworkType,
                         maxFee?: number) {
-        const deadline = Deadline.create();
+        const deadline = Deadline.create()
 
         return RegisterNamespaceTransaction.createSubNamespace(
             deadline,
@@ -49,7 +48,7 @@ export class NamespaceApiRxjs  {
                            mosaicId: MosaicId,
                            networkType: NetworkType,
                            maxFee?: number) {
-        const deadline = Deadline.create();
+        const deadline = Deadline.create()
         return MosaicAliasTransaction.create(
             deadline,
             actionType,
@@ -65,7 +64,7 @@ export class NamespaceApiRxjs  {
                             address: Address,
                             networkType: NetworkType,
                             maxFee?: number) {
-        const deadline = Deadline.create();
+        const deadline = Deadline.create()
         return AddressAliasTransaction.create(
             deadline,
             actionType,
@@ -88,14 +87,14 @@ export class NamespaceApiRxjs  {
         let namespaces: any = []
         const namespaceHttp = new NamespaceHttp(url)
         let namespaceInfo = await namespaceHttp.getNamespacesFromAccount(address).toPromise()
-        let namespaceIds = namespaceInfo.map((item, index, arr) => {
-            namespaces[item.id.toHex().toUpperCase()] = {namespaceInfo: item};
+        let namespaceIds = namespaceInfo.map((item) => {
+            namespaces[item.id.toHex().toUpperCase()] = {namespaceInfo: item}
             return item.id
         })
         const namespaceName = await namespaceHttp.getNamespacesName(namespaceIds).toPromise()
-        namespaces = namespaceName.map((item, index, arr) => {
-            const namespace = namespaces[item.namespaceId.toHex().toUpperCase()];
-            namespace.namespaceName = item.name;
+        namespaces = namespaceName.map((item) => {
+            const namespace = namespaces[item.namespaceId.toHex().toUpperCase()]
+            namespace.namespaceName = item.name
             return namespace
         })
         return {

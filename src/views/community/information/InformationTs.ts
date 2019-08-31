@@ -3,13 +3,22 @@ import {formatDate} from '@/core/utils/utils.ts'
 import {blog} from "@/core/api/logicApi.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {mapState} from "vuex"
 
 @Component({
     components: {
         CheckPWDialog
+    },
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app',
+        })
     }
 })
 export class informationTs extends Vue {
+    activeAccount: any
+    app: any
     startPage = 0
     articleList = []
     commentList = []
@@ -25,6 +34,18 @@ export class informationTs extends Vue {
     currentArticle: any = {
         title: 'null',
         content: 'null'
+    }
+
+    get address() {
+        return this.activeAccount.wallet.address
+    }
+
+    get nickName() {
+        return this.activeAccount.wallet.name
+    }
+
+    get abbreviation() {
+        return this.$i18n.locale
     }
 
     closeCheckPWDialog() {
@@ -62,11 +83,11 @@ export class informationTs extends Vue {
     }
 
     divScroll(div) {
-        this.scroll = div;
+        this.scroll = div
     }
 
     scrollTop() {
-        this.scroll.target.scrollTop = 0;
+        this.scroll.target.scrollTop = 0
     }
 
 
@@ -85,8 +106,7 @@ export class informationTs extends Vue {
         const that = this
         const comment = this.commentContent
         const cid = this.currentArticle.cid
-        const address = this.$store.state.account.wallet.address
-        const nickName = this.$store.state.account.wallet.name
+        const {address, nickName} = this
         const gtmCreate = new Date()
         try {
             await blog.commentSave({
@@ -95,26 +115,26 @@ export class informationTs extends Vue {
                 address: address,
                 nickName: nickName,
                 gtmCreate: gtmCreate.toDateString()
-            });
-            that.$Notice.success({title: that.$t(Message.SUCCESS) + ''});
+            })
+            that.$Notice.success({title: that.$t(Message.SUCCESS) + ''})
         } catch (e) {
-            that.$Notice.error({title: that.$t(Message.OPERATION_FAILED_ERROR) + ''});
+            that.$Notice.error({title: that.$t(Message.OPERATION_FAILED_ERROR) + ''})
         }
         this.onCurrentArticleChange()
     }
 
     switchLanguege() {
-        const abbreviation = this.$store.state.app.local.abbr
+        const {abbreviation} = this
         let languageNumber = 1
         switch (abbreviation) {
             case 'zh-CN':
-                languageNumber = 1;
-                break;
+                languageNumber = 1
+                break
             case 'en-US' :
-                languageNumber = 2;
-                break;
+                languageNumber = 2
+                break
         }
-        return languageNumber;
+        return languageNumber
     }
 
     automaticLoadingArticla(e) {
@@ -145,8 +165,8 @@ export class informationTs extends Vue {
             offset: startPage.toString(),
             limit: "10",
             language: languageNumber.toString()
-        });
-        const rstQuery = JSON.parse(rstStr.rst);
+        })
+        const rstQuery = JSON.parse(rstStr.rst)
 
         let articleList = that.articleList.concat(rstQuery.rows)
         articleList.map((item) => {
@@ -169,8 +189,8 @@ export class informationTs extends Vue {
         const that = this
         const cid = this.currentArticle.cid
         const offset = this.commentStartPage
-        const rstStr = await blog.commentList({cid: cid, limit: "10", offset: offset.toString()});
-        const rstQuery = JSON.parse(rstStr.rst);
+        const rstStr = await blog.commentList({cid: cid, limit: "10", offset: offset.toString()})
+        const rstQuery = JSON.parse(rstStr.rst)
         that.commentList.push(...rstQuery.rows)
         that.totalComment = rstQuery.total
         if (rstQuery.total <= that.commentList.length) {
@@ -204,7 +224,7 @@ export class informationTs extends Vue {
         const languageNumber = this.switchLanguege()
         await this.getArticleByPage()
         this.currentArticle = this.articleList[0]
-        const listContainer = this.$refs.listContainer;
+        const listContainer = this.$refs.listContainer
     }
 
 }

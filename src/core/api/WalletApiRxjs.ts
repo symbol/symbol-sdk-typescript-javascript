@@ -1,6 +1,6 @@
-import generator from 'generate-password';
+import generator from 'generate-password'
 import {Password, SimpleWallet, Account, PublicAccount, AccountHttp, NetworkType} from 'nem2-sdk'
-import {from as observableFrom} from "rxjs";
+import {from as observableFrom} from "rxjs"
 
 export class WalletApiRxjs {
 
@@ -8,7 +8,7 @@ export class WalletApiRxjs {
                 privateKey: string,
                 networkType: NetworkType,
                 node?: string) {
-        const password = new Password(generator.generate({length: 50, numbers: true, symbols: true,}));
+        const password = new Password(generator.generate({length: 50, numbers: true, symbols: true,}))
         const account = Account.createFromPrivateKey(privateKey, networkType)
         const publicAccount = PublicAccount.createFromPublicKey(account.publicKey, networkType)
         let mosaics: any = []
@@ -37,19 +37,19 @@ export class WalletApiRxjs {
 
     async createWallet(name: string,
                        networkType: NetworkType) {
-        const privateKey = Account.generateNewAccount(networkType).privateKey;
-        const password = new Password(generator.generate({length: 50, numbers: true, symbols: true,}));
+        const privateKey = Account.generateNewAccount(networkType).privateKey
+        const password = new Password(generator.generate({length: 50, numbers: true, symbols: true,}))
         return {
             wallet: SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType),
             privateKey: privateKey,
             password: password
-        };
+        }
     }
 
     getWallet(name: string,
               privateKey: string,
               networkType: NetworkType) {
-        const password = new Password(generator.generate({length: 50, numbers: true, symbols: true,}));
+        const password = new Password(generator.generate({length: 50, numbers: true, symbols: true,}))
         return {
             wallet: SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType),
             privateKey: privateKey,
@@ -61,6 +61,6 @@ export class WalletApiRxjs {
                   wallet: SimpleWallet) {
         return {
             account: wallet.open(password)
-        };
+        }
     }
 }

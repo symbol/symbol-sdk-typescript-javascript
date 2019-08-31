@@ -5,7 +5,7 @@ import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {createRootNamespace, decryptKey} from "@/core/utils/wallet.ts"
-import {signAndAnnounceNormal} from "@/core/utils/wallet";
+import {signAndAnnounceNormal} from "@/core/utils/wallet"
 
 @Component
 export class NamespaceEditDialogTs extends Vue {
@@ -103,7 +103,6 @@ export class NamespaceEditDialogTs extends Vue {
             new WalletApiRxjs().getWallet(this.getWallet.name,
                 DeTxt.length === 64 ? DeTxt : '',
                 this.getWallet.networkType,
-
             )
             this.updateMosaic(DeTxt)
         } catch (e) {
@@ -117,7 +116,7 @@ export class NamespaceEditDialogTs extends Vue {
     async updateMosaic(key) {
         const that = this
         const {node, generationHash} = this
-        const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
+        const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
         const transaction = createRootNamespace(
             this.currentNamespace.name,
             this.namespace.duration,

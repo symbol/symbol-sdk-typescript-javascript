@@ -110,7 +110,6 @@ export class VoteTs extends Vue {
     }
 
     addSelection() {
-        console.log(this.selectionList)
         this.selectionList.push({
             value: ''
         })
@@ -127,11 +126,9 @@ export class VoteTs extends Vue {
 
     closeCheckPWDialog() {
         // TODO
-        console.log('......closeCheckPWDialog')
     }
 
     checkEnd(boolean) {
-        console.log(boolean)
     }
 
     sendVote() {

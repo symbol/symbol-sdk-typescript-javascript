@@ -1,6 +1,4 @@
-import {NetworkType} from "nem2-sdk"
-import {localRead} from '@/core/utils/utils.ts'
-import {Message} from "@/config/index.ts"
+import {Message, networkType} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {createMnemonic} from "@/core/utils/hdWallet.ts"
 import {
@@ -9,6 +7,7 @@ import {
     MAX_PASSWORD_LENGTH,
     ALLOWED_SPECIAL_CHAR,
 } from '@/core/validation'
+
 @Component
 export class WalletCreateTs extends Vue {
     formItem = {
@@ -21,37 +20,23 @@ export class WalletCreateTs extends Vue {
     MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
     MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
     ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
-    netType = [
-        {
-            value: NetworkType.MIJIN_TEST,
-            label: 'MIJIN_TEST'
-        }, {
-            value: NetworkType.MAIN_NET,
-            label: 'MAIN_NET'
-        }, {
-            value: NetworkType.TEST_NET,
-            label: 'TEST_NET'
-        }, {
-            value: NetworkType.MIJIN,
-            label: 'MIJIN'
-        },
-    ]
+    netType = networkType
 
     checkInput() {
         if (!this.formItem.currentNetType || this.formItem.currentNetType == '') {
-            this.$Notice.error({title: this.$t(Message.PLEASE_SWITCH_NETWORK) + ''});
+            this.$Notice.error({title: this.$t(Message.PLEASE_SWITCH_NETWORK) + ''})
             return false
         }
         if (!this.formItem.walletName || this.formItem.walletName == '') {
-            this.$Notice.error({title: this.$t(Message.WALLET_NAME_INPUT_ERROR) + ''});
+            this.$Notice.error({title: this.$t(Message.WALLET_NAME_INPUT_ERROR) + ''})
             return false
         }
         if (!passwordValidator(this.formItem.password)) {
-            this.$Notice.error({title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''});
+            this.$Notice.error({title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''})
             return false
         }
         if (this.formItem.password !== this.formItem.checkPW) {
-            this.$Notice.error({title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''});
+            this.$Notice.error({title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''})
             return false
         }
         return true

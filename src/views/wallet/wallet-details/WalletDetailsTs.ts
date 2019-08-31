@@ -76,14 +76,14 @@ export class WalletDetailsTs extends Vue {
         const {networkType} = Address.createFromRawAddress(address)
         const {generationHash} = this.$store.state.account
         this.QRCode = QRCodeGenerator
-            .createExportObject({address}, networkType, generationHash).toBase64();
+            .createExportObject({address}, networkType, generationHash).toBase64()
     }
 
     copy(txt) {
         copyTxt(txt).then(() => {
             this.$Notice.success({
                 title: this['$t']('successful_copy') + ''
-            });
+            })
         })
     }
 

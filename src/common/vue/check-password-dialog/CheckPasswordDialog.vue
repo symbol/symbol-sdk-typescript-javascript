@@ -11,8 +11,6 @@
       </div>
       <div class="checkPWDialogBody">
         <div class="stepItem1">
-
-
           <div v-if="!transactionDetail">
             <div class="checkPWImg">
               <img src="@/common/img/window/checkPW.png">
@@ -26,11 +24,10 @@
             <div
                     v-for="(value,key,index) in transactionDetail"
                     :key="`ic${index}`"
-                    class="info_container_item"
-            >
+                    class="info_container_item">
               <span class="key">{{$t(key)}}</span>
-              <span v-if="index == 0" class="value orange">{{value}}</span>
-              <span v-else class="value">{{value}}</span>
+              <span v-if="key == 'transaction_type'" class="value orange">{{$t(value)}}</span>
+              <span v-else class="value overflow_ellipsis">{{value}}</span>
             </div>
           </div>
 

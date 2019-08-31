@@ -1,6 +1,59 @@
 .transfer {
   position: relative;
 
+
+  .no_data {
+    text-align: center;
+    line-height: 50px;
+    color: #999;
+  }
+
+  .mosaic_list_container {
+    width: 560px;
+    color: #999;
+    height: 150px;
+    padding: 20px 10px 10px 10px;
+    margin-left: 100px;
+    border: 1px solid #ccc;
+
+    .mosaic_list_item {
+      padding: 10px 0;
+      background: rgba(247, 251, 252, 1);
+      margin-bottom: 10px;
+    }
+
+    .scroll {
+      margin: 0 5px;
+      height: 100px;
+    }
+
+    span {
+      display: inline-block;
+    }
+
+    .mosaic_name {
+      width: 280px;
+      padding-left: 50px;
+    }
+
+    .mosaic_amount {
+      width: 150px;
+    }
+
+    .icon_delete {
+      display: inline-block;
+      background-image: url("../../../../../common/img/wallet/wallet-detail/walletDetailsdelete.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 15px;
+      height: 15px;
+    }
+
+    .icon_delete:hover {
+      background-image: url("../../../../../common/img/wallet/wallet-detail/walletDetailsdeleteHover.png");
+    }
+  }
+
   .title {
     display: inline-block;
     width: 80px;
@@ -28,7 +81,7 @@
   }
 
   input {
-    width: 540px;
+    width: 520px;
     border: none;
     outline: none;
     padding-left: 20px;
@@ -38,8 +91,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  input::placeholder{
-    color:rgba(204,204,204,1);
+
+  input::placeholder {
+    color: rgba(204, 204, 204, 1);
   }
 
   .address {
@@ -66,10 +120,12 @@
     .title {
       margin-bottom: 15px;
     }
+
     .type {
-      width: 240px;
+      width: 180px;
       display: inline-block;
     }
+
     .amount {
       width: 300px;
       display: inline-block;
@@ -77,8 +133,24 @@
 
     }
   }
+
+  .add_mosaic_button {
+    display: inline-block;
+    width: 40px;
+    height: 44px;
+    position: relative;
+    left: 20px;
+    border: 10px solid #20B5AC;
+    background-color: #20B5AC;
+    background-image: url("../../../../../common/img/wallet/wallet-detail/walletDetailAdd.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+
   .remark {
     margin-top: 20px;
+
     .title {
       position: relative;
       bottom: 15px;
@@ -103,11 +175,40 @@
     }
   }
 
+  .encryption_item {
+    margin-left: 10px;
+    margin-top: 20px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 10px;
+    background-size: contain;
+    background-position: center;
+    margin-left: 10px;
+    margin-right: 30px;
+    background-repeat: no-repeat;
+  }
+
+  .encryption {
+    background-image: url("../../../../../common/img/monitor/transaction/txUnselected.png");
+  }
+
+  .not_encryption {
+    background-image: url("../../../../../common/img/monitor/transaction/txSelected.png");
+  }
+
+  encryption_container {
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+
   input::placeholder,
   textarea::placeholder {
     font-size: 14px;
     font-weight: 400;
-    color:rgba(204,204,204,1);
+    color: rgba(204, 204, 204, 1);
   }
 
   .fee {
@@ -125,7 +226,7 @@
     margin-left: 105px;
     display: inline-block;
     padding-top: 10px;
-    color:rgba(153,153,153,1);
+    color: rgba(153, 153, 153, 1);
   }
 
   .send_button {

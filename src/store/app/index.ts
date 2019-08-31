@@ -4,6 +4,7 @@ declare interface appInfo {
     currentPanelIndex: number,
     mnemonic: string,
     timeZone: number,
+    isNodeHealthy: boolean,
     chainStatus: {
         currentHeight: number,
         currentGenerateTime: number,
@@ -22,6 +23,7 @@ export default {
         currentPanelIndex: 0,
         walletList: [],
         hasWallet: false,
+        isNodeHealthy: false,
         mnemonic: '',
         chainStatus: {
             currentHeight: 0,
@@ -50,6 +52,10 @@ export default {
         SET_TIME_ZONE(state: appInfo, timeZone: number): void {
             state.timeZone = timeZone
         },
+        SET_IS_NODE_HEALTHY(state: appInfo, isNodeHealthy: boolean) {
+            state.isNodeHealthy = isNodeHealthy
+        },
+
         SET_CHAIN_STATUS(state: appInfo, chainStatus: any) {
             const {currentHeight, currentGenerateTime, numTransactions, currentBlockInfo, preBlockInfo, signerPublicKey, nodeAmount} = chainStatus
             state.chainStatus.currentHeight = currentHeight ? currentHeight : state.chainStatus.currentHeight

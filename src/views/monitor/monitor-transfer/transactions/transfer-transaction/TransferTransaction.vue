@@ -23,23 +23,23 @@
             <span class="type value radius flex_center">
               <Select
                       data-vv-name="mosaic"
-                      v-model="formModel.mosaic"
+                      v-model="currentMosaic"
                       v-validate="'required'"
                       :data-vv-as="$t('asset_type')"
                       :placeholder="$t('asset_type')"
-                      class="asset_type"
-              >
+                      class="asset_type">
                 <Option v-for="item in mosaicList" :value="item.value" :key="item.value">
-                  {{ item.label }}
+                 {{ item.label }}
                 </Option>
               </Select>
             </span>
           </ErrorTooltip>
+
           <span class="amount value radius flex_center">
             <ErrorTooltip fieldName="amount">
               <input
                       data-vv-name="amount"
-                      v-model="formModel.amount"
+                      v-model="currentAmount"
                       v-validate="`required|${standardFields.amount.validation}`"
                       :data-vv-as="$t('amount')"
                       number
@@ -48,8 +48,38 @@
               />
             </ErrorTooltip>
           </span>
+          <span class="add_mosaic_button radius" @click="addMosaic"></span>
         </span>
       </div>
+
+
+      <div class="mosaic_list_container radius ">
+        <ErrorTooltip fieldName="mosaicListLength" placementOverride="top">
+          <input
+                  data-vv-name="mosaicListLength"
+                  number
+                  type="text"
+                  v-validate="standardFields.mosaicListLength.validation"
+                  style="display: none"
+                  v-model="formModel.mosaicTransferList.length"
+          />
+        </ErrorTooltip>
+
+        <span class="mosaic_name overflow_ellipsis">{{$t('mosaic')}}</span>
+        <span class="mosaic_amount overflow_ellipsis">{{$t('amount')}}</span>
+        <div class="scroll">
+          <div class="no_data" v-if="formModel.mosaicTransferList.length <1">
+            {{$t('no_data')}}
+          </div>
+          <div class="mosaic_list_item radius" v-for="(m,index) in formModel.mosaicTransferList">
+            <span class="mosaic_name overflow_ellipsis">{{m.id.id.toHex()}}</span>
+            <span class="mosaic_amount overflow_ellipsis">{{m.amount.compact()}}</span>
+            <span class="icon_delete" @click="removeMosaic(index)"></span>
+          </div>
+        </div>
+      </div>
+
+
       <div class="remark flex_center">
         <span class="title">{{$t('remarks')}}</span>
         <ErrorTooltip fieldName="remark">
@@ -65,6 +95,25 @@
           </span>
         </ErrorTooltip>
       </div>
+
+      <div>
+        <span class="title">{{$t('encryption')}}</span>
+
+        <span>
+          <span class="encryption_container">{{$t('encryption')}}</span><span
+                @click="formModel.isEncrypted = false"
+                :class="['encryption_item',formModel.isEncrypted?'encryption':'not_encryption']">
+        </span>
+
+          <span class="not_encryption_container">{{$t('Not_encrypted')}}</span>
+          <span
+                  @click="formModel.isEncrypted = true"
+                  :class="['encryption_item',formModel.isEncrypted?'not_encryption':'encryption']">
+        </span>
+
+        </span>
+      </div>
+
       <div class="fee flex_center">
         <span class="title">{{$t('fee')}}</span>
         <span class="value radius flex_center">

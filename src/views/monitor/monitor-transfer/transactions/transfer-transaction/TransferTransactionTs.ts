@@ -1,14 +1,13 @@
 import {Message} from "@/config/index.ts"
-import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
-import {AccountApiRxjs} from '@/core/api/AccountApiRxjs.ts'
-import {Account, Mosaic, MosaicId, UInt64} from 'nem2-sdk'
+import {Mosaic, MosaicId, UInt64} from 'nem2-sdk'
 import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {clone} from '@/core/utils/utils'
+import {cloneData} from '@/core/utils/utils'
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
 import {standardFields} from '@/core/validation'
-import {mapState} from 'vuex';
+import {mapState} from 'vuex'
+import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 
 @Component({
     components: {CheckPWDialog, ErrorTooltip},
@@ -25,16 +24,17 @@ export default class TransferTransactionTs extends Vue {
     transactionDetail = {}
     showCheckPWDialog = false
     isCompleteForm = false
-
+    currentMosaic: string = ''
+    currentAmount: number = 0
     formFields = {
         fee: 50000,
         remark: '',
         address: '',
-        mosaic: '',
-        amount: 0,
+        mosaicTransferList: [],
+        isEncrypted: true
     }
 
-    formModel = clone(this.formFields)
+    formModel = cloneData(this.formFields)
 
     get wallet() {
         return this.activeAccount.wallet
@@ -43,6 +43,7 @@ export default class TransferTransactionTs extends Vue {
     get accountPublicKey() {
         return this.activeAccount.wallet.publicKey
     }
+
 
     get accountAddress() {
         return this.activeAccount.wallet.address
@@ -60,8 +61,21 @@ export default class TransferTransactionTs extends Vue {
         return this.activeAccount.generationHash
     }
 
+    get mosaicMap() {
+        return this.activeAccount.mosaicMap
+    }
+
+    addMosaic() {
+        const {currentMosaic, currentAmount} = this
+        this.formModel.mosaicTransferList.push(new Mosaic(new MosaicId(currentMosaic), UInt64.fromUint(currentAmount)))
+    }
+
+    removeMosaic(index) {
+        this.formModel.mosaicTransferList.splice(index, 1)
+    }
+
     resetFields() {
-        this.formModel = clone(this.formFields)
+        this.formModel = cloneData(this.formFields)
         this.$nextTick(() => this.$validator.reset())
     }
 
@@ -71,18 +85,33 @@ export default class TransferTransactionTs extends Vue {
             .then((valid) => {
                 if (!valid) return
                 this.showDialog()
-            });
+            })
     }
 
+    // checkMosaicTransferList(){
+    //     const { mosaicTransferList} = this.formModel;
+    //     if(mosaicTransferList.length <1){
+    //         this.$Notice.destroy()
+    //         this.$Notice.error({
+    //             title: this.$t(Message.MOSACI_LIST_NULL_ERROR) + ''
+    //         });
+    //         return false
+    //     }
+    //     return true
+    // }
+
     showDialog() {
-        const {address, mosaic, amount, remark, fee} = this.formModel
+        // if(!this.checkMosaicTransferList()) return
+        const {address, mosaicTransferList, remark, fee, isEncrypted} = this.formModel
         this.transactionDetail = {
             "transaction_type": 'ordinary_transfer',
             "transfer_target": address,
-            "asset_type": mosaic,
-            "quantity": amount,
+            "mosaic": mosaicTransferList.map(item => {
+                return item.id.id.toHex() + `(${item.amount.compact()})`
+            }).join(','),
             "fee": fee + 'gas',
-            "remarks": remark
+            "remarks": remark,
+            "encryption": isEncrypted,
         }
         this.showCheckPWDialog = true
         this.generateTransaction()
@@ -90,68 +119,27 @@ export default class TransferTransactionTs extends Vue {
 
     generateTransaction() {
         const that = this
-        let {node, generationHash} = this
-        let {address, mosaic, amount, remark, fee} = this.formModel
+        let {address, remark, fee, mosaicTransferList, isEncrypted} = this.formModel
         const {networkType} = this.wallet
-        // const account = Account.createFromPrivateKey(key, networkType)
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
             fee,
             address,
-            [new Mosaic(new MosaicId(mosaic), UInt64.fromUint(amount))],
-            0,
+            mosaicTransferList,
+            isEncrypted ? MessageType.EncryptedMessage : MessageType.PlainMessage,
             remark
         )
         this.transactionList = [transaction]
-        // const signature = account.sign(transaction, generationHash)
-        // new TransactionApiRxjs().announce(signature, node).subscribe(
-        //     () => {
-        //         that.$Notice.success({
-        //             title: this.$t(Message.SUCCESS) + ''
-        //         })
-        //         that.resetFields()
-        //     }, (error) => {
-        //         console.log(error)
-        //     }
-        // )
     }
 
-    async getMosaicList() {
-        this.mosaicList = []
-        const that = this
-        let {accountAddress, node} = this
-        const {currentXEM1, currentXEM2} = this.activeAccount
-        new AccountApiRxjs().getAccountInfo(accountAddress, node).subscribe((accountInfo) => {
-            // set mosaicList
-            const mosaicList = accountInfo.mosaics.map((item: any) => {
-                item._amount = item.amount.compact()
-                item.value = item.id.toHex()
-                if (item.value == currentXEM1 || item.value == currentXEM2) {
-                    item.label = 'nem.xem' + ' (' + item._amount + ')'
-                } else {
-                    item.label = item.id.toHex() + ' (' + item._amount + ')'
-                }
-                return item
+    async initMosaic() {
+        const {mosaicMap} = this
+        for (let key in mosaicMap) {
+            this.mosaicList.push({
+                label: mosaicMap[key].name + `(${mosaicMap[key].amount})`,
+                value: mosaicMap[key].hex,
             })
-            let isCrrentXEMExists = mosaicList.every((item) => {
-                if (item.value == currentXEM1 || item.value == currentXEM2) {
-                    return false
-                }
-                return true
-            })
-            if (isCrrentXEMExists) {
-                mosaicList.unshift({
-                    value: currentXEM1,
-                    label: 'nem.xem'
-                })
-            }
-            that.mosaicList = mosaicList
-        }, () => {
-            that.mosaicList = [{
-                value: currentXEM1,
-                label: 'nem.xem'
-            }]
-        })
+        }
     }
 
     closeCheckPWDialog() {
@@ -169,7 +157,7 @@ export default class TransferTransactionTs extends Vue {
     @Watch('accountAddress')
     onAcountAddressChange() {
         this.resetFields()
-        this.getMosaicList()
+        this.initMosaic()
     }
 
     @Watch('errors.items')
@@ -178,7 +166,7 @@ export default class TransferTransactionTs extends Vue {
     }
 
     created() {
-        this.getMosaicList()
+        this.initMosaic()
     }
 
     mounted() {

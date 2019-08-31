@@ -8,14 +8,15 @@ export interface MarketTradeQuery {
 
 export interface TradeQuery {
     data: TradeDataQuery[];
-    id:number;
-    ts:number;
+    id: number;
+    ts: number;
 }
+
 export interface TradeDataQuery {
     amount: number;
-    id:number;
-    price:number;
-    ts:number;
+    id: number;
+    price: number;
+    ts: number;
     direction: string;
 }
 

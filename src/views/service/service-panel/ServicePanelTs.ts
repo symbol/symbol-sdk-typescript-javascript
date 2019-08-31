@@ -1,4 +1,3 @@
-
 import {Component, Vue} from 'vue-property-decorator'
 import ServiceSwitch from '@/views/service/service-switch/ServiceSwitch.vue'
 
@@ -7,5 +6,5 @@ import ServiceSwitch from '@/views/service/service-switch/ServiceSwitch.vue'
         ServiceSwitch
     },
 })
-export class ServicePanelTs extends Vue{
+export class ServicePanelTs extends Vue {
 }

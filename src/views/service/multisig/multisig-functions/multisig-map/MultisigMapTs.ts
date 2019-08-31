@@ -1,7 +1,8 @@
 import TopographicMap from './TopographicMap.vue'
-import {Component, Vue} from 'vue-property-decorator';
+import {Component, Vue} from 'vue-property-decorator'
+
 @Component({
-    components:{
+    components: {
         TopographicMap
     }
 })

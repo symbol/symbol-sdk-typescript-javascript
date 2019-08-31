@@ -5,7 +5,7 @@ import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {signAndAnnounceNormal} from "@/core/utils/wallet";
+import {signAndAnnounceNormal} from "@/core/utils/wallet"
 
 @Component
 export class MosaicEditDialogTs extends Vue {
@@ -145,7 +145,7 @@ export class MosaicEditDialogTs extends Vue {
         this.$Notice.success({
             title: this['$t']('mosaic_operation') + '',
             desc: this['$t']('update_completed') + ''
-        });
+        })
     }
 
     initForm() {

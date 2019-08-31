@@ -1,9 +1,8 @@
-
-import {NetworkType} from "nem2-sdk"
-import { Component, Vue } from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import WalletImportKeystore from '@/views/wallet/wallet-import-keystore/WalletImportKeystore.vue'
 import WalletImportMnemonic from '@/views/wallet/wallet-import-mnemonic/WalletImportMnemonic.vue'
 import WalletImportPrivatekey from '@/views/wallet/wallet-import-privatekey/WalletImportPrivatekey.vue'
+import {networkType} from '@/config'
 
 @Component({
     components: {
@@ -12,37 +11,23 @@ import WalletImportPrivatekey from '@/views/wallet/wallet-import-privatekey/Wall
         WalletImportPrivatekey
     },
 })
-export class WalletImportTs extends Vue{
+export class WalletImportTs extends Vue {
     tabIndex = 0
     currentTab = 'mnemonic'
     mnemonic = {
-        mnemonic:'',
+        mnemonic: '',
         password: '',
     }
     privateKey = {
-        privateKey:'',
+        privateKey: '',
         password: '',
         checkPW: '',
     }
     keystore = {
-        keystore:'',
+        keystore: '',
         password: '',
     }
-    netType = [
-        {
-            value:NetworkType.MIJIN_TEST,
-            label:'MIJIN_TEST'
-        },{
-            value:NetworkType.MAIN_NET,
-            label:'MAIN_NET'
-        },{
-            value:NetworkType.TEST_NET,
-            label:'TEST_NET'
-        },{
-            value:NetworkType.MIJIN,
-            label:'MIJIN'
-        },
-    ]
+    netType = networkType
 
     navagatorList = [
         {
@@ -73,57 +58,59 @@ export class WalletImportTs extends Vue{
         this.tabIndex = index
     }
 
-    changeTab (name) {
+    changeTab(name) {
         this.currentTab = name
     }
-    success (title,desc) {
+
+    success(title, desc) {
         this.$Notice.success({
             title: title,
-            desc:  desc?desc:''
-        });
+            desc: desc ? desc : ''
+        })
     }
 
-    toWalletDetails () {
+    toWalletDetails() {
         this.$emit('toWalletDetails')
     }
 
-    closeImport () {
+    closeImport() {
         this.$emit('closeImport')
     }
 
-    importWallet () {
+    importWallet() {
         switch (this.currentTab) {
             case 'mnemonic':
-                this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
-                this.$store.commit('SET_HAS_WALLET',true)
-                this.success(this['$t']('Successfully_imported_wallet'),'')
+                this.$store.commit('SET_WALLET_LIST', [{name: 'a'}])
+                this.$store.commit('SET_HAS_WALLET', true)
+                this.success(this['$t']('Successfully_imported_wallet'), '')
                 this.mnemonic = {
-                    mnemonic:'',
+                    mnemonic: '',
                     password: '',
                 }
-                break;
+                break
             case 'privateKey':
-                this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
-                this.$store.commit('SET_HAS_WALLET',true)
-                this.success(this['$t']('Successfully_imported_wallet'),'')
+                this.$store.commit('SET_WALLET_LIST', [{name: 'a'}])
+                this.$store.commit('SET_HAS_WALLET', true)
+                this.success(this['$t']('Successfully_imported_wallet'), '')
                 this.privateKey = {
-                    privateKey:'',
+                    privateKey: '',
                     password: '',
                     checkPW: '',
                 }
-                break;
+                break
             case 'keystore':
-                this.$store.commit('SET_WALLET_LIST',[{name:'a'}])
-                this.$store.commit('SET_HAS_WALLET',true)
-                this.success(this['$t']('Successfully_imported_wallet'),'')
+                this.$store.commit('SET_WALLET_LIST', [{name: 'a'}])
+                this.$store.commit('SET_HAS_WALLET', true)
+                this.success(this['$t']('Successfully_imported_wallet'), '')
                 this.keystore = {
-                    keystore:'',
+                    keystore: '',
                     password: '',
                 }
-                break;
+                break
         }
     }
-    created () {
+
+    created() {
         this.jumpToView(this.navagatorList[0], 0)
         this.currentHeadText = this.navagatorList[0].title
     }

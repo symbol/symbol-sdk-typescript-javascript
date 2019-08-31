@@ -63,8 +63,11 @@
       <div class="tableCell" v-for="(item,index) in aliasList" :key="index" v-if="aliasList.length>0">
         <Row>
           <Col span="4">{{item.name}}</Col>
-          <Col span="12">{{formatAddress(item.alias.address)}}</Col>
-          <Col span="5">{{computeDuration(item.duration) === 'Expired' ? $t('overdue') : computeDuration(item.duration)}}</Col>
+<!--          <Col span="12">{{formatAddress(item.alias.address)}}</Col>-->
+          <Col span="12">{{item.alias.address}}</Col>
+          <Col span="5">{{computeDuration(item.duration) === 'Expired' ? $t('overdue') :
+            computeDuration(item.duration)}}
+          </Col>
           <Col span="3">
             <span v-show="isShowDeleteIcon"
                   @click="showUnLink(index)"
@@ -75,20 +78,19 @@
     </div>
 
     <div class="noData" v-if="aliasList.length<=0">
-      <i><img src="@/common/img/wallet/no_data.png"></i>
-      <p>{{$t('not_yet_open')}}</p>
+      <p>{{$t('no_data')}}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
     //@ts-ignore
-    import {WalletAliasTs} from '@/views/wallet/wallet-details/wallet-function/wallet-alias/WalletAliasTs.ts'
+    import {WalletAliasTs} from '@/views/wallet/wallet-details/wallet-function/wallet-alias/WalletAliasTs.ts';
 
     export default class WalletAlias extends WalletAliasTs {
 
     }
 </script>
-<style  lang="less">
+<style lang="less">
   @import "WalletAlias.less";
 </style>

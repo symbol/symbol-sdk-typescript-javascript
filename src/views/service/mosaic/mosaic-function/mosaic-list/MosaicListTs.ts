@@ -1,10 +1,11 @@
-import {MosaicId} from "nem2-sdk"
+import {MosaicId, Mosaic} from "nem2-sdk"
 import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
 import {AccountApiRxjs} from '@/core/api/AccountApiRxjs.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
 import MosaicUnAliasDialog from './mosaic-unAlias-dialog/MosaicUnAliasDialog.vue'
+import {getMosaicList, getMosaicInfoList} from '@/core/utils/wallet'
 
 @Component({
     components: {
@@ -106,78 +107,68 @@ export class MosaicListTs extends Vue {
     }
 
 
-    async getMosaicList() {
+    async initMosaic() {
         const that = this
         let {accountPublicKey, accountAddress, node, currentXem} = this
-
-        await new AccountApiRxjs().getAccountInfo(accountAddress, node).subscribe(async (accountInfo) => {
-            let mosaicList = accountInfo.mosaics
-            let mosaicIdList:any = mosaicList.map((item) => {
-                return item.id
-            })
-            await new MosaicApiRxjs().getMosaics(node, mosaicIdList).subscribe(async (mosaicListInfo: any) => {
-                let mosaicMapInfo: any = {}
-                let existMosaics: any = []
-                mosaicMapInfo.length = 0
-                mosaicListInfo.forEach((item) => {
-                    if (item.owner.publicKey !== accountPublicKey) {
-                        return
-                    }
-                    item.hex = item.mosaicId.id.toHex().toUpperCase()
-                    item.supply = item.supply.compact()
-                    item.supplyMutable = item.properties.supplyMutable
-                    item._divisibility = item.properties.divisibility
-                    item.transferable = item.properties.transferable
-                    if (that.computeDuration(item) === 'Forever' || that.computeDuration(item) > 0) {
-                        existMosaics.push(new MosaicId(item.hex))
-                    }
-                    mosaicMapInfo.length += 1
-                    if (item.mosaicId.id.toHex() == that.currentXEM1 || item.mosaicId.id.toHex() == that.currentXEM2) {
-                        item.name = currentXem
-                    } else {
-                        item.name = ''
-                    }
-                    mosaicMapInfo[item.hex] = item
-                })
-                mosaicIdList.map((item: any) => {
-                    return new MosaicId(item)
-                })
-                await new MosaicApiRxjs().getMosaicsNames(node, mosaicIdList).subscribe((mosaicsName: any) => {
-                    console.log(mosaicsName)
-                })
-                that.mosaicMapInfo = mosaicMapInfo
-                that.isLoadingConfirmedTx = false
-            })
-        }, () => {
-            that.mosaicMapInfo = []
-            that.isLoadingConfirmedTx = false
+        let mosaicMapInfo: any = {}
+        mosaicMapInfo.length = 0
+        let existMosaics: any = []
+        const mosaicList: any = await getMosaicList(accountAddress, node)
+        let mosaicIdList: any = mosaicList.map((item) => {
+            return item.id
         })
+        const mosaicListInfo: any = await getMosaicInfoList(node, mosaicIdList)
+        mosaicListInfo.map((mosaicInfo) => {
+            if (mosaicInfo.owner.publicKey !== accountPublicKey) {
+                return
+            }
+            mosaicInfo.hex = mosaicInfo.mosaicId.id.toHex().toUpperCase()
+            mosaicInfo.supply = mosaicInfo.supply.compact()
+            mosaicInfo.supplyMutable = mosaicInfo.properties.supplyMutable
+            mosaicInfo._divisibility = mosaicInfo.properties.divisibility
+            mosaicInfo.transferable = mosaicInfo.properties.transferable
+            if (that.computeDuration(mosaicInfo) === 'Forever' || that.computeDuration(mosaicInfo) > 0) {
+                existMosaics.push(new MosaicId(mosaicInfo.hex))
+            }
+            mosaicMapInfo.length += 1
+            if (mosaicInfo.mosaicId.id.toHex() == that.currentXEM1 || mosaicInfo.mosaicId.id.toHex() == that.currentXEM2) {
+                mosaicInfo.name = currentXem
+            } else {
+                mosaicInfo.name = ''
+            }
+            mosaicMapInfo[mosaicInfo.hex] = mosaicInfo
+        })
+        mosaicIdList.map((item: any) => {
+            return new MosaicId(item)
+        })
+        that.mosaicMapInfo = mosaicMapInfo
+        that.isLoadingConfirmedTx = false
     }
 
     computeDuration(item) {
         let continuousTime
         if (item.properties.duration.compact() === 0) {
             continuousTime = 'Forever'
-        } else {
-            continuousTime = (item.height.compact() + item.properties.duration.compact()) - this.nowBlockHeihgt
+            return continuousTime
         }
-
+        continuousTime = (item.height.compact() + item.properties.duration.compact()) - this.nowBlockHeihgt
         return continuousTime
+
     }
 
     @Watch('getWallet')
     onGetWalletChange() {
         this.initData()
-        this.getMosaicList()
+        this.initMosaic()
     }
 
     @Watch('ConfirmedTxList')
     onConfirmedTxChange() {
-        this.getMosaicList()
+        this.initMosaic()
     }
 
     created() {
         this.initData()
-        this.getMosaicList()
+        this.initMosaic()
     }
 }

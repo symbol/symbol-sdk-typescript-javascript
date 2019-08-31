@@ -1,16 +1,24 @@
 import {Component, Vue} from 'vue-property-decorator'
+import {mapState} from "vuex"
 
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            app: 'app',
+        })
+    }
+})
 export class CommunityPanelTs extends Vue {
     walletList = []
+    app: any
     navList = [
         {name: 'news', to: '/information', active: true},
         {name: 'vote', to: '/vote', active: false,},
     ]
 
     get nowWalletList() {
-        return this.$store.state.app.walletList
+        return this.app.walletList
     }
 
     goToPage(item) {

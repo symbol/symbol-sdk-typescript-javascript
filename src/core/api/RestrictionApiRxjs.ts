@@ -1,5 +1,5 @@
 import {AccountHttp, Address} from 'nem2-sdk'
-import { from as observableFrom} from 'rxjs';
+import {from as observableFrom} from 'rxjs'
 
 export class RestrictionApiRxjs {
     getRestrictionInfo(node: string, address: string) {

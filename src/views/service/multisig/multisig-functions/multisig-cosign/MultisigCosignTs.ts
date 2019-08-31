@@ -7,7 +7,7 @@ import {
     TransactionHttp,
     CosignatureTransaction,
     AggregateTransaction
-} from "nem2-sdk";
+} from "nem2-sdk"
 
 @Component
 export class MultisigCosignTs extends Vue {
@@ -20,13 +20,13 @@ export class MultisigCosignTs extends Vue {
         const {publickey} = this
         const {networkType} = this.$store.state.account.wallet
         const {generationHash, node} = this.$store.state.account
-        const accountHttp = new AccountHttp(node);
+        const accountHttp = new AccountHttp(node)
 
         const publicAccount = PublicAccount.createFromPublicKey(
             publickey,
             NetworkType.MIJIN_TEST,
-        );
-        this.aggregatedTransactionList = await accountHttp.aggregateBondedTransactions(publicAccount).toPromise();
+        )
+        this.aggregatedTransactionList = await accountHttp.aggregateBondedTransactions(publicAccount).toPromise()
     }
 
     cosignTransaction(index) {
@@ -35,20 +35,18 @@ export class MultisigCosignTs extends Vue {
         const {networkType} = this.$store.state.account.wallet
         const {generationHash, node} = this.$store.state.account
 
-        const endpoint = node;
+        const endpoint = node
         const account = Account.createFromPrivateKey(privatekey, NetworkType.MIJIN_TEST)
-        const transactionHttp = new TransactionHttp(endpoint);
+        const transactionHttp = new TransactionHttp(endpoint)
         const emitter = (type, value) => {
-            this.$emit(type, value);
-        };
-        const cosignatureTransaction = CosignatureTransaction.create(this.aggregatedTransactionList[index]);
-        const cosignedTx = account.signCosignatureTransaction(cosignatureTransaction);
-        console.log(account, cosignatureTransaction)
-        console.log(cosignedTx)
+            this.$emit(type, value)
+        }
+        const cosignatureTransaction = CosignatureTransaction.create(this.aggregatedTransactionList[index])
+        const cosignedTx = account.signCosignatureTransaction(cosignatureTransaction)
         transactionHttp.announceAggregateBondedCosignature(cosignedTx).subscribe((x) => {
             console.log(x)
-        });
-        this.getCosignTransactions();
+        })
+        this.getCosignTransactions()
     }
 
 }

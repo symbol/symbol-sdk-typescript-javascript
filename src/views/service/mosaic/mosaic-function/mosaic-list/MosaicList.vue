@@ -4,12 +4,12 @@
       <div class="listTit">
         <Row>
           <Col span="1">&nbsp;</Col>
-          <Col span="5">{{$t('mosaic_ID')}}</Col>
+          <Col span="3">{{$t('mosaic_ID')}}</Col>
           <Col span="4">{{$t('available_quantity')}}</Col>
           <Col span="2">{{$t('mosaic_divisibility')}}</Col>
           <Col span="2">{{$t('transportability')}}</Col>
           <Col span="2">{{$t('variable_supply')}}</Col>
-          <Col span="3">{{$t('effective_time')}}</Col>
+          <Col span="5">{{$t('effective_time')}}</Col>
           <Col span="3">{{$t('alias')}}</Col>
           <Col span="2"></Col>
         </Row>
@@ -19,12 +19,12 @@
       <div class="listItem" v-if="key !== 'length'" v-for="(value,key,index) in mosaicMapInfo">
         <Row>
           <Col span="1">&nbsp;</Col>
-          <Col span="5">{{value.hex}}</Col>
+          <Col span="3">{{value.hex}}</Col>
           <Col span="4">{{value.supply}}</Col>
           <Col span="2" style="padding-left: 20px"> {{value.divisibility}}</Col>
           <Col span="2">{{value.transferable}}</Col>
           <Col span="2">{{value.supplyMutable}}</Col>
-          <Col span="3">{{computeDuration(value) <=0 ? $t('overdue') : (computeDuration(value) === 'Forever'?
+          <Col span="5">{{computeDuration(value) <=0 ? $t('overdue') : (computeDuration(value) === 'Forever'?
             $t('forever') : computeDuration(value))}}
           </Col>
           <Col span="3">{{value.name?value.name:'null'}}</Col>
@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-    import {MosaicListTs} from '@/views/service/mosaic/mosaic-function/mosaic-list/MosaicListTs.ts'
+    import {MosaicListTs} from '@/views/service/mosaic/mosaic-function/mosaic-list/MosaicListTs.ts';
 
     export default class MosaicList extends MosaicListTs {
 

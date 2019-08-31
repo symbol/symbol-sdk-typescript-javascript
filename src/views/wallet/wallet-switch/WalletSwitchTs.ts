@@ -2,14 +2,16 @@ import {saveLocalWallet} from '@/core/utils/wallet.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {localRead, localSave, formatXEMamount} from '@/core/utils/utils.ts'
 import DeleteWalletCheck from './delete-wallet-check/DeleteWalletCheck.vue'
-import {mapState} from 'vuex';
+import {mapState} from 'vuex'
 
 @Component({
-    components: { DeleteWalletCheck },
-    computed: { ...mapState({
-      activeAccount: 'account',
-      app: 'app',
-    }) }
+    components: {DeleteWalletCheck},
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app',
+        })
+    }
 })
 export class WalletSwitchTs extends Vue {
     app: any
@@ -17,10 +19,15 @@ export class WalletSwitchTs extends Vue {
     showCheckPWDialog = false
     deleteIndex = -1
     deletecurrent = -1
-    
-    get walletList() { return this.app.walletList }
-    get wallet() { return this.activeAccount.wallet }
-    
+
+    get walletList() {
+        return this.app.walletList
+    }
+
+    get wallet() {
+        return this.activeAccount.wallet
+    }
+
     toShowCheckPWDialog(index, current) {
         this.showCheckPWDialog = true
         this.deleteIndex = index
@@ -61,7 +68,7 @@ export class WalletSwitchTs extends Vue {
 
 
     delWallet(index) {
-        let list = this.walletList;
+        let list = this.walletList
         let localData = JSON.parse(localRead('wallets'))
         list.splice(index, 1)
         localData.splice(index, 1)
@@ -73,7 +80,7 @@ export class WalletSwitchTs extends Vue {
         localSave('wallets', JSON.stringify(localData))
         this.$Notice.success({
             title: this['$t']('Delete_wallet_successfully') + '',
-        });
+        })
         document.body.click()
         this.initWalletList()
     }
@@ -83,10 +90,10 @@ export class WalletSwitchTs extends Vue {
     }
 
     // @TODO: Probably not necessary after app.vue review
-    getWalletBalance(index) { 
-      const { balance } = this.walletList[index]
-      if (!balance || balance === 0) return 0
-      return this.formatXEMamount(balance)
+    getWalletBalance(index) {
+        const {balance} = this.walletList[index]
+        if (!balance || balance === 0) return 0
+        return this.formatXEMamount(balance)
     }
 
     initWalletList() {

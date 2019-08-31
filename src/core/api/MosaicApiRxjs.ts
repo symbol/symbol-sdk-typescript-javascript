@@ -13,7 +13,7 @@ import {
     NetworkCurrencyMosaic,
     MosaicSupplyType, PublicAccount
 } from 'nem2-sdk'
-import { from as observableFrom } from "rxjs";
+import {from as observableFrom} from "rxjs"
 
 export class MosaicApiRxjs {
     getMosaicByNamespace(namespace: string) {
@@ -21,9 +21,8 @@ export class MosaicApiRxjs {
         return new MosaicId(uintArray)
     }
 
-    getcurrentXEM(params) {
+    getcurrentXEM() {
         return NetworkCurrencyMosaic.createRelative(0)
-
     }
 
     createMosaicNonce(nonce?: Uint8Array) {
@@ -42,15 +41,15 @@ export class MosaicApiRxjs {
     }
 
     createMosaic(mosaicNonce: any,
-        mosaicId: any,
-        supplyMutable: boolean,
-        transferable: boolean,
-        divisibility: number,
-        duration: number | undefined,
-        netWorkType: number,
-        supply: number,
-        publicAccount: PublicAccount,
-        maxFee?: number) {
+                 mosaicId: any,
+                 supplyMutable: boolean,
+                 transferable: boolean,
+                 divisibility: number,
+                 duration: number | undefined,
+                 netWorkType: number,
+                 supply: number,
+                 publicAccount: PublicAccount,
+                 maxFee?: number) {
         const mosaicDefinitionTx = MosaicDefinitionTransaction.create(
             Deadline.create(),
             mosaicNonce,
@@ -84,10 +83,10 @@ export class MosaicApiRxjs {
     }
 
     mosaicSupplyChange(mosaicId: any,
-        delta: number,
-        MosaicSupplyType: number,
-        netWorkType: number,
-        maxFee?: number) {
+                       delta: number,
+                       MosaicSupplyType: number,
+                       netWorkType: number,
+                       maxFee?: number) {
         return MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,

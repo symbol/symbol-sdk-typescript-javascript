@@ -1,13 +1,12 @@
-import {Message} from "@/config/index.ts"
+import {Message, networkType} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {Account, NetworkType} from "nem2-sdk"
 import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet.ts"
 import {
     ALLOWED_SPECIAL_CHAR,
     MAX_PASSWORD_LENGTH,
-    MIN_PASSWORD_LENGTH,
-    passwordValidator
-} from "@/core/validation";
+    MIN_PASSWORD_LENGTH
+} from "@/core/validation"
 
 @Component
 export class WalletImportPrivatekeyTs extends Vue {
@@ -22,21 +21,7 @@ export class WalletImportPrivatekeyTs extends Vue {
         password: '',
         checkPW: '',
     }
-    NetworkTypeList = [
-        {
-            value: NetworkType.MIJIN_TEST,
-            label: 'MIJIN_TEST'
-        }, {
-            value: NetworkType.MAIN_NET,
-            label: 'MAIN_NET'
-        }, {
-            value: NetworkType.TEST_NET,
-            label: 'TEST_NET'
-        }, {
-            value: NetworkType.MIJIN,
-            label: 'MIJIN'
-        },
-    ]
+    NetworkTypeList = networkType
 
     get getNode() {
         return this.$store.state.account.node
@@ -112,8 +97,8 @@ export class WalletImportPrivatekeyTs extends Vue {
 
     loginWallet(account) {
         const that = this
-        const walletName: any = this.form.walletName;
-        const netType: NetworkType = this.form.networkType;
+        const walletName: any = this.form.walletName
+        const netType: NetworkType = this.form.networkType
         const walletList = this.$store.state.app.walletList
         const style = 'walletItem_bg_' + walletList.length % 3
         getAccountDefault(walletName, account, netType, this.getNode, this.currentXEM1, this.currentXEM2)
@@ -132,7 +117,7 @@ export class WalletImportPrivatekeyTs extends Vue {
     toWalletDetails() {
         this.$Notice.success({
             title: this['$t']('Import_private_key_operation') + '',
-        });
+        })
         this.$store.commit('SET_HAS_WALLET', true)
         this.$emit('toWalletDetails')
     }

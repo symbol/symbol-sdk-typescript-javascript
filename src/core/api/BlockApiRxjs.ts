@@ -1,5 +1,5 @@
-import { from as observableFrom } from "rxjs"
-import { BlockHttp, ChainHttp } from 'nem2-sdk'
+import {from as observableFrom} from "rxjs"
+import {BlockHttp, ChainHttp} from 'nem2-sdk'
 
 
 export class BlockApiRxjs {

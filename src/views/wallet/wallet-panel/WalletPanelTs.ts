@@ -50,8 +50,8 @@ export class WalletPanelTs extends Vue {
     }
 
     toWalletDetails() {
-        const wallet = this.$store.state.account.wallet;
-        let list: any[] = this.$store.state.app.walletList;
+        const wallet = this.$store.state.account.wallet
+        let list: any[] = this.$store.state.app.walletList
         let bl = false
         list.map((item, index) => {
             if (item.address === wallet.address) {
@@ -72,17 +72,17 @@ export class WalletPanelTs extends Vue {
     }
 
     copyObj(obj) {
-        const newObj: any = Object.prototype.toString.call(obj) == '[object Array]' ? [] : {};
+        const newObj: any = Object.prototype.toString.call(obj) == '[object Array]' ? [] : {}
 
         for (const key in obj) {
-            const value = obj[key];
+            const value = obj[key]
             if (value && 'object' == typeof value) {
-                newObj[key] = this.copyObj(value);
+                newObj[key] = this.copyObj(value)
             } else {
-                newObj[key] = value;
+                newObj[key] = value
             }
         }
-        return newObj;
+        return newObj
     }
 
     setWalletList() {

@@ -1,6 +1,6 @@
-import { filter, mergeMap } from 'rxjs/operators'
-import { Address, Listener, TransactionHttp } from 'nem2-sdk'
-import { from as observableFrom } from "rxjs";
+import {filter, mergeMap} from 'rxjs/operators'
+import {Address, Listener, TransactionHttp} from 'nem2-sdk'
+import {from as observableFrom} from "rxjs"
 
 export class ListenerApiRxjs {
 
@@ -61,27 +61,27 @@ export class ListenerApiRxjs {
 
     newBlock(listener: Listener, pointer: any) {
         return observableFrom(listener.open().then(() => {
-            listener
-                .newBlock()
-                .subscribe(
-                    (block) => {
-                        const { currentBlockInfo, preBlockInfo } = pointer.$store.state.app.chainStatus
-                        const chainStatus = {
-                            preBlockInfo: currentBlockInfo,
-                            numTransactions: block.numTransactions ? block.numTransactions : 0,
-                            signerPublicKey: block.signer.publicKey,
-                            currentHeight: block.height.compact(),
-                            currentBlockInfo: block,
-                            currentGenerateTime: 12
-                        }
-                        if (preBlockInfo.timestamp) {
-                            let currentGenerateTime = (block.timestamp.compact() - preBlockInfo.timestamp.compact()) / 1000    //time
-                            chainStatus.currentGenerateTime = Number(currentGenerateTime.toFixed(0))
-                        }
-                        pointer.$store.commit('SET_CHAIN_STATUS', chainStatus)
-                    },
-                )
-        })
+                listener
+                    .newBlock()
+                    .subscribe(
+                        (block) => {
+                            const {currentBlockInfo, preBlockInfo} = pointer.$store.state.app.chainStatus
+                            const chainStatus = {
+                                preBlockInfo: currentBlockInfo,
+                                numTransactions: block.numTransactions ? block.numTransactions : 0,
+                                signerPublicKey: block.signer.publicKey,
+                                currentHeight: block.height.compact(),
+                                currentBlockInfo: block,
+                                currentGenerateTime: 12
+                            }
+                            if (preBlockInfo.timestamp) {
+                                let currentGenerateTime = (block.timestamp.compact() - preBlockInfo.timestamp.compact()) / 1000    //time
+                                chainStatus.currentGenerateTime = Number(currentGenerateTime.toFixed(0))
+                            }
+                            pointer.$store.commit('SET_CHAIN_STATUS', chainStatus)
+                        },
+                    )
+            })
         )
     }
 }

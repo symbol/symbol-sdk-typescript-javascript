@@ -30,12 +30,7 @@ export class RootNamespaceTs extends Vue {
         aggregateFee: 50000,
         lockFee: 50000
     }
-    multisigPublickeyList: any = [
-        {
-            value: 'no data ',
-            label: 'no data '
-        },
-    ]
+    multisigPublickeyList: Array<any> = []
     typeList = [
         {
             name: 'ordinary_account',

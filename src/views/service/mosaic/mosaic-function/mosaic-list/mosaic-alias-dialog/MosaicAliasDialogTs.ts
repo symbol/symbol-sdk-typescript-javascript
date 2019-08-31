@@ -102,7 +102,7 @@ export class MosaicAliasDialogTs extends Vue {
     async updateMosaic(key) {
         const that = this
         const {node, generationHash} = this
-        const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
+        const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
         let transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
             AliasActionType.Link,
             new NamespaceId(that.mosaic.aliasName),

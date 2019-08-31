@@ -5,6 +5,7 @@ import {formatSeconds, formatAddress} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/utils/wallet.ts'
+import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
 import {
     MosaicId,
     MosaicNonce,
@@ -18,7 +19,6 @@ import {
     MosaicSupplyChangeTransaction,
     MosaicSupplyType
 } from 'nem2-sdk'
-import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs";
 
 @Component({
     components: {
@@ -26,16 +26,9 @@ import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs";
     }
 })
 export class MosaicTransactionTs extends Vue {
-    node = ''
     duration = 0
     otherDetails: any = {}
-    currentXem = ''
-    accountAddress = ''
-    generationHash = ''
-    currentXEM2: string
-    currentXEM1: string
     durationIntoDate: any = 0
-    accountPublicKey = ''
     currentTab: number = 0
     currentMinApproval = -1
     mosaicMapInfo: any = {}
@@ -47,10 +40,7 @@ export class MosaicTransactionTs extends Vue {
     showMosaicAliasDialog = false
     isCompleteForm = true
 
-    multisigPublickeyList = [{
-        value: 'no data',
-        label: 'no data'
-    }]
+    multisigPublickeyList = []
     typeList = [
         {
             name: 'ordinary_account',
@@ -75,6 +65,39 @@ export class MosaicTransactionTs extends Vue {
 
     get getWallet() {
         return this.$store.state.account.wallet
+    }
+
+    get networkType() {
+        return this.$store.state.account.wallet.networkType
+    }
+
+    get accountPublicKey() {
+        return this.$store.state.account.wallet.publicKey
+    }
+
+    get generationHash() {
+        return this.$store.state.account.generationHash
+    }
+
+    get currentXEM1() {
+        return this.$store.state.account.currentXEM1
+    }
+
+    get currentXEM2() {
+        return this.$store.state.account.currentXEM2
+    }
+
+    get currentXem() {
+        return this.$store.state.account.currentXem
+    }
+
+
+    get accountAddress() {
+        return this.$store.state.account.wallet.address
+    }
+
+    get node() {
+        return this.$store.state.account.node
     }
 
     initForm() {
@@ -180,12 +203,11 @@ export class MosaicTransactionTs extends Vue {
     }
 
     createBySelf() {
-        let {accountPublicKey} = this
-        const {networkType} = this.getWallet
+        let {accountPublicKey, networkType} = this
         const {supply, divisibility, transferable, supplyMutable, duration, innerFee} = this.formItem
         const that = this
         const nonce = MosaicNonce.createRandom()
-        const publicAccount = PublicAccount.createFromPublicKey(this.$store.state.account.wallet.publicKey, networkType)
+        const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, networkType)
         const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType))
         this.transactionList = [
             new MosaicApiRxjs().createMosaic(
@@ -205,11 +227,10 @@ export class MosaicTransactionTs extends Vue {
 
 
     createByMultisig() {
-        const {networkType} = this.$store.state.account.wallet
-        const {generationHash, node} = this.$store.state.account
-        const mosaicHex = this.$store.state.account.currentXEM1
+        const {networkType} = this
+        const {node} = this.$store.state.account
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-        const {supply, divisibility, transferable, supplyMutable, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
+        const {supply, divisibility, transferable, supplyMutable, duration, innerFee, aggregateFee, multisigPublickey} = this.formItem
         const that = this
         const nonce = MosaicNonce.createRandom()
         const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(multisigPublickey, this.getWallet.networkType))
@@ -360,14 +381,6 @@ export class MosaicTransactionTs extends Vue {
     // }
 
     initData() {
-        if (!this.getWallet) return
-        this.accountPublicKey = this.getWallet.publicKey
-        this.accountAddress = this.getWallet.address
-        this.node = this.$store.state.account.node
-        this.generationHash = this.$store.state.account.generationHash
-        this.currentXEM2 = this.$store.state.account.currentXEM2
-        this.currentXEM1 = this.$store.state.account.currentXEM1
-        this.currentXem = this.$store.state.account.currentXem
         this.durationChange()
     }
 

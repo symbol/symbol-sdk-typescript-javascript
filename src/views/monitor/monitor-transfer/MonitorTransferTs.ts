@@ -3,19 +3,23 @@ import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vu
 import TransferTransaction from './transactions/transfer-transaction/TransferTransaction.vue'
 import MultisigTransferTransaction from './transactions/multisig-transfer-transaction/MultisigTransferTransaction.vue'
 import {TransferType} from '@/config/index.ts'
+import {mapState} from "vuex"
 
 @Component({
     components: {
         TransferTransaction,
+        MultisigTransferTransaction,
         CollectionRecord,
-        MultisigTransferTransaction
+    },
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+        })
     }
 })
 export class MonitorTransferTs extends Vue {
+    activeAccount: any
     TransferType = TransferType
-    accountPublicKey = ''
-    accountAddress = ''
-    node = ''
     transferTypeList = [
         {
             name: 'ordinary_transfer',
@@ -38,7 +42,19 @@ export class MonitorTransferTs extends Vue {
     currentPrice = 0
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
+    }
+
+    get accountPublicKey() {
+        return this.activeAccount.wallet.publicKey
+    }
+
+    get accountAddress() {
+        return this.activeAccount.wallet.address
+    }
+
+    get node() {
+        return this.activeAccount.node
     }
 
     showSearchDetail() {
@@ -62,16 +78,4 @@ export class MonitorTransferTs extends Vue {
         this.transferTypeList = list
     }
 
-
-    initData() {
-        if (!this.getWallet) return
-        this.accountPublicKey = this.getWallet.publicKey
-        this.accountAddress = this.getWallet.address
-        this.node = this.$store.state.account.node
-    }
-
-
-    created() {
-        this.initData()
-    }
 }

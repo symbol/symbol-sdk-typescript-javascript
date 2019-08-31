@@ -5,7 +5,7 @@ import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Account, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
-import {signAndAnnounceNormal} from "@/core/utils/wallet";
+import {signAndAnnounceNormal} from "@/core/utils/wallet"
 
 @Component
 export class MosaicUnAliasDialogTs extends Vue {
@@ -78,7 +78,6 @@ export class MosaicUnAliasDialogTs extends Vue {
                 this.getWallet.name,
                 DeTxt.length === 64 ? DeTxt : '',
                 this.getWallet.networkType,
-
             )
             this.updateMosaic(DeTxt)
         } catch (e) {
@@ -91,7 +90,7 @@ export class MosaicUnAliasDialogTs extends Vue {
     async updateMosaic(key) {
         const that = this
         const {node, generationHash} = this
-        const account = Account.createFromPrivateKey(key, this.getWallet.networkType);
+        const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
         let transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
             AliasActionType.Unlink,
             new NamespaceId(that.mosaic['name']),

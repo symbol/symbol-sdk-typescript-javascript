@@ -6,7 +6,6 @@ import {
     MultisigCosignatoryModificationType,
     MultisigCosignatoryModification,
     PublicAccount,
-    Account,
     Listener,
     Address,
     Deadline,
@@ -38,10 +37,7 @@ export class MultisigManagementTs extends Vue {
     currentCosignatoryList = []
     showSubpublickeyList = false
     MultisigCosignatoryModificationType = MultisigCosignatoryModificationType
-    publickeyList = [{
-        label: 'no data',
-        value: 'no data'
-    }]
+    publickeyList = []
 
     formItem = {
         minApprovalDelta: 0,
@@ -88,12 +84,10 @@ export class MultisigManagementTs extends Vue {
             return
         }
         if (this.currentMinApproval > 1 || hasAddCosigner) {
-            console.log('bonded')
-            this.createBondedModifyTransaction();
+            this.createBondedModifyTransaction()
             return
         }
-        console.log('complete')
-        this.createCompleteModifyTransaction();
+        this.createCompleteModifyTransaction()
         this.showCheckPWDialog = true
     }
 
@@ -140,7 +134,7 @@ export class MultisigManagementTs extends Vue {
             multisigCosignatoryModificationList,
             networkType,
             UInt64.fromUint(innerFee)
-        );
+        )
         const aggregateTransaction = createBondedMultisigTransaction(
             [modifyMultisigAccountTransaction],
             this.$store.state.account.wallet.publicKey,
@@ -193,7 +187,7 @@ export class MultisigManagementTs extends Vue {
 
         if (multisigPublickey.length !== 64) {
             this.$Notice.error({title: this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + ''})
-            return false;
+            return false
         }
 
         if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
@@ -221,10 +215,10 @@ export class MultisigManagementTs extends Vue {
 
             if (item.publickey.trim().length !== 64) {
                 this.$Notice.error({title: this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + ''})
-                return false;
+                return false
             }
-            return true;
-        });
+            return true
+        })
         return publickeyFlag
     }
 

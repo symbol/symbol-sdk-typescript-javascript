@@ -6,9 +6,17 @@ import {AccountLinkTransaction, UInt64, LinkAction, NetworkType, Deadline, Accou
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 import {signAndAnnounceNormal} from '@/core/utils/wallet.ts'
+import {mapState} from "vuex"
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+        })
+    }
+})
 export class MonitorRemoteTs extends Vue {
+    activeAccount: any
     isLinked = false
     harvestBlockList = []
     isLinkToRemote = false
@@ -21,9 +29,24 @@ export class MonitorRemoteTs extends Vue {
     }
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
+    get generationHash() {
+        return this.activeAccount.generationHash
+    }
+
+    get node() {
+        return this.activeAccount.node
+    }
+
+    get networkType() {
+        return this.activeAccount.wallet.networkType
+    }
+
+    get address() {
+        return this.activeAccount.wallet.address
+    }
 
     initForm() {
         this.formItem = {
@@ -99,8 +122,7 @@ export class MonitorRemoteTs extends Vue {
     sendTransaction(privatekey) {
         const {isLinked} = this
         const {remotePublickey, fee, password} = this.formItem
-        const {networkType} = this.getWallet
-        const {generationHash, node} = this.$store.state.account
+        const {generationHash, node, networkType} = this
         const account = Account.createFromPrivateKey(privatekey, networkType)
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
@@ -130,12 +152,11 @@ export class MonitorRemoteTs extends Vue {
     }
 
     getLinkPublicKey() {
-        if (!this.$store.state.account.wallet) {
+        if (!this.getWallet) {
             return
         }
         const that = this
-        const {address} = this.$store.state.account.wallet
-        const {node} = this.$store.state.account
+        const {address, node} = this
         new AccountApiRxjs().getLinkedPublickey(node, address).subscribe((resStr: string) => {
                 that.remotePublickey = ''
                 if (JSON.parse(resStr) && JSON.parse(resStr).account && JSON.parse(resStr).account.linkedAccountKey) {
@@ -149,7 +170,6 @@ export class MonitorRemoteTs extends Vue {
                     that.isLinked = true
                     return
                 }
-
             }
         )
     }

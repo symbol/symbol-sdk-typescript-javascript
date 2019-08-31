@@ -6,7 +6,7 @@
             v-model="isShowDialog"
             :transfer="false"
             class-name="dash_board_dialog">
-      <div class="transfer_type">
+      <div class="transfer_type" v-if="transactionDetails.length > 0">
         <span class="title">{{$t(transactionDetails[0].key)}}</span>
         <span class="value">{{$t(transactionDetails[0].value)}}</span>
       </div>

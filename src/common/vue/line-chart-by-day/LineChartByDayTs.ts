@@ -6,7 +6,7 @@ import {localSave, localRead, isRefreshData, addZero, formatDate} from '@/core/u
 
 @Component
 export class LineChartByDayTs extends Vue {
-    dom: any = {};
+    dom: any = {}
     spinShow = true
     option = {
         legend: {
@@ -169,7 +169,7 @@ export class LineChartByDayTs extends Vue {
                 symbol: 'circle',
                 smooth: true,
                 symbolSize: function (parmas) {
-                    return 7;
+                    return 7
                 },
                 showSymbol: false,
                 itemStyle: {
@@ -199,7 +199,7 @@ export class LineChartByDayTs extends Vue {
                 symbol: 'circle',
                 // smooth: true,
                 symbolSize: function (parmas) {
-                    return 7;
+                    return 7
                 },
                 showSymbol: false,
                 itemStyle: {
@@ -228,7 +228,7 @@ export class LineChartByDayTs extends Vue {
                 data: [],
             },
         ],
-    };
+    }
     xemDataList = []
     btcDataList = []
     xemMin = 0
@@ -286,7 +286,7 @@ export class LineChartByDayTs extends Vue {
     }
 
     refreshBtc() {
-        this.dom = echarts.init(this.$refs.dom);
+        this.dom = echarts.init(this.$refs.dom)
         let {btcDataList, xemMin} = this
         let xAxisData = []
 
@@ -324,13 +324,13 @@ export class LineChartByDayTs extends Vue {
 
     async setCharData(coin: string, period: string, size: string) {
         const that = this
-        const rstStr = await market.kline({period: period, symbol: coin + "usdt", size: size});
-        const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+        const rstStr = await market.kline({period: period, symbol: coin + "usdt", size: size})
+        const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
         let dataList = []
         rstQuery.data.forEach((item, index) => {
-            index % 4 == 0 ? dataList.push(item) : dataList;
+            index % 4 == 0 ? dataList.push(item) : dataList
         })
-        let marketPriceDataObject = localRead('marketPriceDataByDayObject') ? JSON.parse(localRead('marketPriceDataByDayObject')) : {}
+        let marketPriceDataObject = localRead('marketPriceDataObject') !== '' ? JSON.parse(localRead('marketPriceDataByDayObject')) : {}
         marketPriceDataObject.timestamp = new Date().getTime()
         if (coin == 'xem') {
             that.xemDataList = dataList
@@ -351,22 +351,21 @@ export class LineChartByDayTs extends Vue {
     }
 
     async getChartData() {
-        await this.setCharData("xem", "15min", "168");
-        await this.setCharData("btc", "15min", "168");
+        await this.setCharData("xem", "15min", "168")
+        await this.setCharData("btc", "15min", "168")
         this.refresh()
     }
 
     async refreshData() {
-        try {
-            if (isRefreshData('marketPriceDataByDayObject', 1000 * 60 * 60, new Date().getMinutes())) {
+        if (isRefreshData('marketPriceDataByDayObject', 1000 * 60 * 60, new Date().getMinutes())) {
+            await this.getChartData().catch(async (e) => {
+                console.log(e)
                 await this.getChartData()
-                return
-            }
-            this.btcDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).btc.dataList
-            this.xemDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).xem.dataList
-        } catch (e) {
-            await this.getChartData()
+            })
+            return
         }
+        this.btcDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).btc.dataList
+        this.xemDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).xem.dataList
     }
 
     mouseoutLine() {

@@ -2,7 +2,7 @@ import {QRCodeGenerator} from 'nem2-qr-library'
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Message} from "@/config";
+import {Message} from "@/config"
 
 @Component
 export class PrivatekeyDialogTs extends Vue {
@@ -36,7 +36,6 @@ export class PrivatekeyDialogTs extends Vue {
     checkPassword() {
         if (!this.checkInput()) return
         const DeTxt = decryptKey(this.getWallet, this.wallet.password).trim()
-        console.log(DeTxt)
         try {
             new WalletApiRxjs().getWallet(
                 this.getWallet.name,
@@ -79,14 +78,14 @@ export class PrivatekeyDialogTs extends Vue {
                 //         title: this.$t('password_error') + ''
                 //     })
                 // }
-                break;
+                break
             case 1 :
                 this.createQRCode()
                 this.stepIndex = 2
-                break;
+                break
             case 2 :
                 this.stepIndex = 3
-                break;
+                break
         }
     }
 

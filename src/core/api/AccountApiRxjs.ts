@@ -1,6 +1,6 @@
 import {Account, AccountHttp, Address, EncryptedMessage, Transaction} from 'nem2-sdk'
 import {WebClient} from "@/core/utils/web.ts"
-import {Observable, from as observableFrom} from 'rxjs';
+import {Observable, from as observableFrom} from 'rxjs'
 
 export class AccountApiRxjs {
 
@@ -10,7 +10,7 @@ export class AccountApiRxjs {
      * @param node
      */
     public getAccountsNames(addressList: Array<Address>, node: string): Observable<any> {
-        const namespaceList = (new AccountHttp(node)).getAccountsNames(addressList)
+        (new AccountHttp(node)).getAccountsNames(addressList)
         return observableFrom(
             new AccountHttp(node).getAccountsNames(addressList)
         )
@@ -77,7 +77,7 @@ export class AccountApiRxjs {
 
     getLinkedPublickey(node: string, address: string) {
         const url = `${node}/account/${address}`
-        const resStr: any = WebClient.request('', {
+        WebClient.request('', {
             url: url,
             method: 'GET',
             headers: {

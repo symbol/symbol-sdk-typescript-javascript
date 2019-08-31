@@ -1,4 +1,4 @@
-import {Message} from "@/config/index.ts"
+import {Message, networkType} from "@/config/index.ts"
 import {NetworkType} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
 import {strToHexCharCode} from '@/core/utils/utils.ts'
@@ -9,7 +9,7 @@ import {
     MAX_PASSWORD_LENGTH,
     MIN_PASSWORD_LENGTH,
     passwordValidator
-} from "@/core/validation";
+} from "@/core/validation"
 
 @Component
 export class WalletImportMnemonicTs extends Vue {
@@ -23,32 +23,18 @@ export class WalletImportMnemonicTs extends Vue {
         password: '',
         checkPW: '',
     }
-    NetworkTypeList = [
-        {
-            value: NetworkType.MIJIN_TEST,
-            label: 'MIJIN_TEST'
-        }, {
-            value: NetworkType.MAIN_NET,
-            label: 'MAIN_NET'
-        }, {
-            value: NetworkType.TEST_NET,
-            label: 'TEST_NET'
-        }, {
-            value: NetworkType.MIJIN,
-            label: 'MIJIN'
-        },
-    ]
+    NetworkTypeList = networkType
     account = {}
 
-    get getNode () {
+    get getNode() {
         return this.$store.state.account.node
     }
 
-    get currentXEM1(){
+    get currentXEM1() {
         return this.$store.state.account.currentXEM1
     }
 
-    get currentXEM2(){
+    get currentXEM2() {
         return this.$store.state.account.currentXEM2
     }
 
@@ -95,7 +81,7 @@ export class WalletImportMnemonicTs extends Vue {
                 return false
             }
             const account = createAccount(this.form.mnemonic)
-            this.$store.commit('SET_ACCOUNT', account);
+            this.$store.commit('SET_ACCOUNT', account)
             this.account = account
             return true
         } catch (e) {
@@ -109,12 +95,12 @@ export class WalletImportMnemonicTs extends Vue {
 
     loginWallet(account) {
         const that = this
-        const walletName: any = this.form.walletName;
-        const netType: NetworkType = this.form.networkType;
+        const walletName: any = this.form.walletName
+        const netType: NetworkType = this.form.networkType
         const walletList = this.$store.state.app.walletList
         const style = 'walletItem_bg_' + walletList.length % 3
         getAccountDefault(walletName, account, netType, this.getNode, this.currentXEM1, this.currentXEM2)
-            .then((wallet)=>{
+            .then((wallet) => {
                 let storeWallet = wallet
                 storeWallet['style'] = style
                 that.$store.commit('SET_WALLET', storeWallet)
@@ -122,13 +108,13 @@ export class WalletImportMnemonicTs extends Vue {
                 const mnemonicEnCodeObj = encryptKey(strToHexCharCode(this.form.mnemonic), that.form['password'])
                 saveLocalWallet(storeWallet, encryptObj, null, mnemonicEnCodeObj)
                 this.toWalletDetails()
-        })
+            })
     }
 
     toWalletDetails() {
         this.$Notice.success({
             title: this['$t']('Imported_wallet_successfully') + ''
-        });
+        })
         this.$store.commit('SET_HAS_WALLET', true)
         this.$emit('toWalletDetails')
     }

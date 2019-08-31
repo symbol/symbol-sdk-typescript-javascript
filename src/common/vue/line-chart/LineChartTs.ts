@@ -5,7 +5,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {localSave, localRead, isRefreshData, formatDate} from '@/core/utils/utils.ts'
 
 @Component
-export  class LineChartTs extends Vue {
+export class LineChartTs extends Vue {
     xemMin = 0
     dom: any = {}
     spinShow = true
@@ -173,7 +173,7 @@ export  class LineChartTs extends Vue {
                 symbol: 'circle',
                 smooth: true,
                 symbolSize: function (parmas) {
-                    return 7;
+                    return 7
                 },
                 showSymbol: false,
                 itemStyle: {
@@ -205,7 +205,7 @@ export  class LineChartTs extends Vue {
                 symbol: 'circle',
                 // smooth: true,
                 symbolSize: function (parmas) {
-                    return 7;
+                    return 7
                 },
                 showSymbol: false,
                 itemStyle: {
@@ -234,7 +234,7 @@ export  class LineChartTs extends Vue {
                 data: [],
             },
         ],
-    };
+    }
 
 
     mounted() {
@@ -248,7 +248,7 @@ export  class LineChartTs extends Vue {
     }
 
     refreshXem() {
-        this.dom = echarts.init(this.$refs.dom);
+        this.dom = echarts.init(this.$refs.dom)
         let {xemDataList, btcDataList} = this
         let xAxisData = []
 
@@ -286,7 +286,7 @@ export  class LineChartTs extends Vue {
     }
 
     refreshBtc() {
-        this.dom = echarts.init(this.$refs.dom);
+        this.dom = echarts.init(this.$refs.dom)
         let {xemDataList, btcDataList, xemMin} = this
         let xAxisData = []
 
@@ -327,13 +327,13 @@ export  class LineChartTs extends Vue {
 
     async setCharData(coin: string, period: string, size: string) {
         const that = this
-        const rstStr = await market.kline({period: period, symbol: coin + "usdt", size: size});
-        const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+        const rstStr = await market.kline({period: period, symbol: coin + "usdt", size: size})
+        const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
         let dataList = []
         rstQuery.data.forEach((item, index) => {
-            index % 4 == 0 ? dataList.push(item) : dataList;
+            index % 4 == 0 ? dataList.push(item) : dataList
         })
-        let marketPriceDataObject = localRead('marketPriceDataObject') ? JSON.parse(localRead('marketPriceDataObject')) : {}
+        let marketPriceDataObject = localRead('marketPriceDataObject') !== '' ? JSON.parse(localRead('marketPriceDataObject')) : {}
         marketPriceDataObject.timestamp = new Date().getTime()
         if (coin == 'xem') {
             that.xemDataList = dataList
@@ -355,23 +355,21 @@ export  class LineChartTs extends Vue {
 
 
     async getChartData() {
-        await this.setCharData("xem", "60min", "168");
-        await this.setCharData("btc", "60min", "168");
+        await this.setCharData("xem", "60min", "168")
+        await this.setCharData("btc", "60min", "168")
         this.refresh()
     }
 
     async refreshData() {
-        try {
-            if (isRefreshData('marketPriceDataObject', 1000 * 60 * 15, new Date().getMinutes())) {
+        if (isRefreshData('marketPriceDataObject', 1000 * 60 * 15, new Date().getMinutes())) {
+            await this.getChartData().catch(async (e) => {
+                console.log(e)
                 await this.getChartData()
-                return
-            }
-            this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
-            this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
-        } catch (e) {
-            console.log('refresh')
-            await this.getChartData()
+            })
+            return
         }
+        this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
+        this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
     }
 
     mouseoutLine() {

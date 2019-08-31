@@ -10,9 +10,6 @@ export class WalletUpdatePasswordTs extends Vue {
         newPassword: '',
         repeatPassword: '',
     }
-    prePassword = ''
-    newPassword = ''
-    repeatPassword = ''
     privateKey = ''
     isCompleteForm = false
 
@@ -21,45 +18,38 @@ export class WalletUpdatePasswordTs extends Vue {
     }
 
     checkInfo() {
-        const {prePassword, newPassword, repeatPassword} = this
+        const {prePassword, newPassword, repeatPassword} = this.formItem
 
-        if (prePassword == '') {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
+        if (prePassword == '' || newPassword == '' || repeatPassword == '') {
+            this.showNotice('' + this.$t(Message.INPUT_EMPTY_ERROR))
             return false
         }
-        if (newPassword == '') {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
-        if (repeatPassword == '') {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
+
         if (newPassword !== repeatPassword) {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INCONSISTENT_PASSWORD_ERROR)
-            })
+            this.showNotice('' + this.$t(Message.INCONSISTENT_PASSWORD_ERROR))
             return false
         }
         return true
     }
 
+
+    showNotice(text) {
+        this.$Notice.destroy()
+        this.$Notice.error({
+            title: '' + text
+        })
+    }
+
     confirmUpdate() {
         if (!this.isCompleteForm) return
         if (!this.checkInfo()) return
-        this.checkPrivateKey(decryptKey(this.getWallet, this.prePassword))
+        this.checkPrivateKey(decryptKey(this.getWallet, this.formItem.prePassword))
     }
 
     updatePW() {
-        let encryptObj = encryptKey(this.privateKey, this.newPassword)
+        let encryptObj = encryptKey(this.privateKey, this.formItem.newPassword)
         let wallet = this.getWallet
-        let walletList = this.$store.state.app.walletList;
+        let walletList = this.$store.state.app.walletList
         wallet.ciphertext = encryptObj['ciphertext']
         wallet.iv = encryptObj['iv']
         walletList[0] = wallet
@@ -76,23 +66,21 @@ export class WalletUpdatePasswordTs extends Vue {
         const that = this
         try {
             new WalletApiRxjs().getWallet(
-                this.getWallet.name,
+                that.getWallet.name,
                 DeTxt.length === 64 ? DeTxt : '',
-                this.getWallet.networkType,
+                that.getWallet.networkType,
             )
             that.privateKey = DeTxt.toString().toUpperCase()
             that.updatePW()
         } catch (e) {
-            that.$Notice.error({
-                title: this.$t('password_error') + ''
-            })
+            that.showNotice('' + this.$t(Message.WRONG_PASSWORD_ERROR))
         }
     }
 
     init() {
-        this.prePassword = ''
-        this.newPassword = ''
-        this.repeatPassword = ''
+        this.formItem.prePassword = ''
+        this.formItem.newPassword = ''
+        this.formItem.repeatPassword = ''
         this.privateKey = ''
     }
 

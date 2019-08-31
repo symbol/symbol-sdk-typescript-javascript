@@ -9,18 +9,18 @@ import {
     getCurrentMonthLast,
 } from '@/core/utils/utils.ts'
 import {getBlockInfoByTransactionList} from '@/core/utils/wallet.ts'
+import {mapState} from "vuex"
 
 
-@Component
+@Component({
+    computed: {...mapState({activeAccount: 'account', app: 'app'})},
+})
 export class CollectionRecordTs extends Vue {
-    node = ''
+    activeAccount: any
+    app: any
     currentPrice = 0
-    currentMonth = ''
-    accountAddress = ''
     transactionHash = ''
     isShowDialog = false
-    accountPublicKey = ''
-    accountPrivateKey = ''
     isShowSearchDetail = false
     currentMonthLast: any = 0
     confirmedTransactionList = []
@@ -29,41 +29,9 @@ export class CollectionRecordTs extends Vue {
     unConfirmedTransactionList = []
     localUnConfirmedTransactions = []
     isLoadingTransactionRecord = true
+    currentMonth: any
     transacrionAssetIcon = transacrionAssetIcon
-    transactionDetails = [
-        {
-            key: 'transfer_type',
-            value: 'gathering'
-        },
-        {
-            key: 'from',
-            value: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN'
-        },
-        {
-            key: 'aims',
-            value: 'Test wallet'
-        },
-        {
-            key: 'the_amount',
-            value: '10.000000XEM'
-        },
-        {
-            key: 'fee',
-            value: '0.050000000XEM'
-        },
-        {
-            key: 'block',
-            value: '1951249'
-        },
-        {
-            key: 'hash',
-            value: '9BBCAECDD5E2D04317DE9873DC99255A9F8A33FA5BB570D1353F65CB31A44151'
-        },
-        {
-            key: 'message',
-            value: 'message test this'
-        }
-    ]
+    transactionDetails: any = []
 
     @Prop({
         default: () => {
@@ -73,16 +41,42 @@ export class CollectionRecordTs extends Vue {
     transactionType
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
     get UnconfirmedTxList() {
-        return this.$store.state.account.UnconfirmedTx
+        return this.activeAccount.UnconfirmedTx
     }
 
     get ConfirmedTxList() {
-        return this.$store.state.account.ConfirmedTx
+        return this.activeAccount.ConfirmedTx
     }
+
+    get currentXEM1() {
+        return this.activeAccount.currentXEM1
+    }
+
+    get accountPrivateKey() {
+        return this.activeAccount.wallet.privateKey
+    }
+
+    get accountPublicKey() {
+        return this.activeAccount.wallet.publicKey
+    }
+
+    get timeZone() {
+        return this.app.timeZone
+    }
+
+    get accountAddress() {
+        return this.activeAccount.wallet.address
+    }
+
+
+    get node() {
+        return this.activeAccount.node
+    }
+
 
     hideSearchDetail() {
         this.isShowSearchDetail = false
@@ -136,8 +130,7 @@ export class CollectionRecordTs extends Vue {
 
     async getConfirmedTransactions() {
         const that = this
-        const {currentXEM1} = this.$store.state.account
-        let {accountPublicKey, accountAddress, node, transactionType} = this
+        let {accountPublicKey, currentXEM1, accountAddress, node, transactionType} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
         await new TransactionApiRxjs().transactions(
             publicAccount,
@@ -183,15 +176,14 @@ export class CollectionRecordTs extends Vue {
     }
 
     getBlockInfoByTransactionList(transactionList, node) {
-        const offset = this.$store.state.app.timeZone
-        getBlockInfoByTransactionList(transactionList, node, offset)
+        const {timeZone} = this
+        getBlockInfoByTransactionList(transactionList, node, timeZone)
     }
 
 
     async getUnConfirmedTransactions() {
         const that = this
-        const {currentXEM1} = this.$store.state.account
-        let {accountPublicKey, accountAddress, node, transactionType, UnconfirmedTxList} = this
+        let {accountPublicKey, currentXEM1, accountAddress, node, transactionType} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
         await new TransactionApiRxjs().unconfirmedTransactions(
             publicAccount,
@@ -223,14 +215,10 @@ export class CollectionRecordTs extends Vue {
     }
 
     initData() {
-        this.accountPrivateKey = this.getWallet.privateKey
-        this.accountPublicKey = this.getWallet.publicKey
-        this.accountAddress = this.getWallet.address
-        this.node = this.$store.state.account.node
         this.currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
     }
 
-    @Watch('getWallet')
+    @Watch('getWallet.address')
     onGetWalletChange() {
         this.initData()
         this.getConfirmedTransactions()

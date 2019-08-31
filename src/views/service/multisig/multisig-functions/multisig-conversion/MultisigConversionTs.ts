@@ -11,7 +11,7 @@ import {
     MultisigCosignatoryModificationType,
     PublicAccount,
     ModifyMultisigAccountTransaction, Deadline, UInt64
-} from 'nem2-sdk';
+} from 'nem2-sdk'
 
 @Component({
     components: {
@@ -126,10 +126,10 @@ export class MultisigConversionTs extends Vue {
         const publickeyFlag = publickeyList.every((item) => {
             if (item.trim().length !== 64) {
                 this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + '')
-                return false;
+                return false
             }
-            return true;
-        });
+            return true
+        })
         return publickeyFlag
     }
 
@@ -180,7 +180,7 @@ export class MultisigConversionTs extends Vue {
             multisigCosignatoryModificationList,
             networkType,
             UInt64.fromUint(innerFee)
-        );
+        )
         const aggregateTransaction = createBondedMultisigTransaction(
             [modifyMultisigAccountTransaction],
             publickey,

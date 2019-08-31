@@ -32,7 +32,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
             case TransactionType.TRANSFER:
                 item.isReceipt = item.recipient.address == accountAddress
                 item.tag = item.isReceipt ? transactionTag.GATHERING : transactionTag.PAYMENT
-                item.time = formatNemDeadline(item.deadline);
+                item.time = formatNemDeadline(item.deadline)
                 item.dialogDetailMap = {
                     'transfer_type': item.tag,
                     'fee': item.maxFee.compact() * 0.0000001 + ' XEM',
@@ -40,7 +40,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                     'message': item.message.payload
                 }
-                break;
+                break
             case TransactionType.REGISTER_NAMESPACE:
                 item.tag = transactionTag.REGIST_NAMESPACE
                 item.icon = iconMap.dashboardNamespace
@@ -55,7 +55,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
             case TransactionType.ADDRESS_ALIAS:
                 item.icon = iconMap.dashboardAddressAlias
                 item.tag = transactionTag.ADDRESS_ALIAS
@@ -74,7 +74,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
             case TransactionType.MOSAIC_DEFINITION:
                 item.icon = iconMap.dashboardModify
                 item.tag = transactionTag.MOSAIC_DEFINITION
@@ -84,7 +84,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
             case TransactionType.MOSAIC_SUPPLY_CHANGE:
                 item.icon = iconMap.dashboardModify
                 item.tag = transactionTag.MOSAIC_SUPPLY_CHANGE
@@ -95,7 +95,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
 
-                break;
+                break
             case TransactionType.MODIFY_MULTISIG_ACCOUNT:
                 item.icon = iconMap.dashboardModify
                 item.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
@@ -105,7 +105,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
             // case TransactionType.AGGREGATE_COMPLETE:
             //     const innerTransactionList = item.innerTransactions
             //     item.formatAggregateCompelete = formatAggregateCompelete(innerTransactionList)
@@ -127,7 +127,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
             case TransactionType.LOCK:
                 item.tag = transactionTag.LOCK
                 item.icon = iconMap.dashboardLock
@@ -140,7 +140,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
             case TransactionType.SECRET_LOCK:
                 item.tag = transactionTag.SECRET_LOCK
                 item.icon = iconMap.dashboardSecret
@@ -150,7 +150,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
             case TransactionType.SECRET_PROOF:
                 item.icon = iconMap.dashboardSecret
                 item.tag = transactionTag.SECRET_PROOF
@@ -160,7 +160,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
             case TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS:
                 item.icon = iconMap.dashboardFilter
                 item.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ADDRESS
@@ -170,7 +170,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
             case TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC:
                 item.icon = iconMap.dashboardFilter
                 item.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_MOSAIC
@@ -180,7 +180,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
             case TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION:
                 item.icon = iconMap.dashboardFilter
                 item.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE
@@ -190,7 +190,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
             case TransactionType.LINK_ACCOUNT:
                 item.icon = iconMap.dashboardLinkAccount
                 item.tag = transactionTag.LINK_ACCOUNT
@@ -200,7 +200,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                     'block': item.transactionInfo.height.compact(),
                     'aggregate_hash': item.transactionInfo.aggregateHash,
                 }
-                break;
+                break
         }
         return item
     })
@@ -211,27 +211,42 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
 const formatTransferTransactions = function (transaction, accountAddress, currentXEM) {
     transaction.isReceipt = transaction.recipient.address == accountAddress
     transaction.tag = transaction.isReceipt ? transactionTag.GATHERING : transactionTag.PAYMENT
-    transaction.infoFirst = transaction.isReceipt ? transaction.signer.address.address : transaction.recipient.address;
-    transaction.infoSecond = transaction.mosaics && transaction.mosaics[0] && currentXEM.toUpperCase() !== transaction.mosaics[0].id.id.toHex().toUpperCase() ? transaction.mosaics[0].id.id.toHex().toUpperCase() : 'nem.xem';
-    transaction.infoThird = (transaction.isReceipt ? '+' : '-') + (transaction.mosaics && transaction.mosaics[0] ? transaction.mosaics[0].amount.compact() : '0')
-    transaction.time = formatNemDeadline(transaction.deadline);
+    transaction.infoFirst = transaction.isReceipt ? transaction.signer.address.address : transaction.recipient.address
+    transaction.infoSecond = transaction.mosaics && transaction.mosaics[0] && currentXEM.toUpperCase() !== transaction.mosaics[0].id.id.toHex().toUpperCase() ?
+        transaction.mosaics.map(item => {
+            const hex = item.id.id.toHex()
+            if (hex == currentXEM) {
+                return 'nem.xem'
+            }
+            return item.id.id.toHex()
+        }).join(',') : 'nem.xem'
+
+    const mosaic = transaction.mosaics.map(item => {
+        const hex = item.id.id.toHex()
+        if (hex == currentXEM) {
+            return 'nem.xem' + `(${item.amount.compact()})`
+        }
+        return item.id.id.toHex() + `(${item.amount.compact()})`
+    }).join(',')
+
+    transaction.infoThird = transaction.mosaics.length <= 1 ? (transaction.isReceipt ? '+' : '-') + (transaction.mosaics && transaction.mosaics[0] ? transaction.mosaics[0].amount.compact() : '0') : 'mix'
+    transaction.time = formatNemDeadline(transaction.deadline)
     transaction.dialogDetailMap = {
         'transfer_type': transaction.tag,
         'from': transaction.infoFirst,
-        'mosaic': transaction.infoSecond,
-        'the_amount': transaction.infoThird,
+        'mosaic': mosaic,
         'fee': transaction.maxFee.compact() * 0.0000001 + ' XEM',
         'block': transaction.transactionInfo.height.compact(),
         'hash': transaction.transactionInfo.hash,
         'message': transaction.message.payload
     }
     return transaction
-};
+}
 
 
 function formatOtherTransaction(transaction: any, accountAddress: string) {
     const {type} = transaction
-    transaction.time = formatNemDeadline(transaction.deadline);
+    transaction.time = formatNemDeadline(transaction.deadline)
     transaction.isReceipt = false
     transaction.infoSecond = transaction.maxFee.compact()
     transaction.infoThird = transaction.transactionInfo.height.compact()
@@ -250,7 +265,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.ADDRESS_ALIAS:
             transaction.icon = iconMap.dashboardAddressAlias
             transaction.tag = transactionTag.ADDRESS_ALIAS
@@ -269,7 +284,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.MOSAIC_DEFINITION:
             transaction.icon = iconMap.dashboardModify
             transaction.tag = transactionTag.MOSAIC_DEFINITION
@@ -279,7 +294,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
             transaction.icon = iconMap.dashboardModify
             transaction.tag = transactionTag.MOSAIC_SUPPLY_CHANGE
@@ -290,7 +305,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'hash': transaction.transactionInfo.hash,
             }
 
-            break;
+            break
         case TransactionType.MODIFY_MULTISIG_ACCOUNT:
             transaction.icon = iconMap.dashboardModify
             transaction.tag = transactionTag.MODIFY_MULTISIG_ACCOUNT
@@ -300,7 +315,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.AGGREGATE_COMPLETE:
             const innerTransactionList = transaction.innerTransactions
             transaction.formatAggregateCompelete = formatAggregateCompelete(innerTransactionList, accountAddress)
@@ -312,7 +327,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.AGGREGATE_BONDED:
             transaction.icon = iconMap.dashboardAggregate
             transaction.tag = transactionTag.AGGREGATE_BONDED
@@ -322,7 +337,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.LOCK:
             transaction.tag = transactionTag.LOCK
             transaction.icon = iconMap.dashboardLock
@@ -335,7 +350,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.SECRET_LOCK:
             transaction.tag = transactionTag.SECRET_LOCK
             transaction.icon = iconMap.dashboardSecret
@@ -345,7 +360,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.SECRET_PROOF:
             transaction.icon = iconMap.dashboardSecret
             transaction.tag = transactionTag.SECRET_PROOF
@@ -355,7 +370,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS:
             transaction.icon = iconMap.dashboardFilter
             transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ADDRESS
@@ -365,7 +380,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC:
             transaction.icon = iconMap.dashboardFilter
             transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_MOSAIC
@@ -375,7 +390,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION:
             transaction.icon = iconMap.dashboardFilter
             transaction.tag = transactionTag.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE
@@ -385,7 +400,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
         case TransactionType.LINK_ACCOUNT:
             transaction.icon = iconMap.dashboardLinkAccount
             transaction.tag = transactionTag.LINK_ACCOUNT
@@ -395,7 +410,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
                 'block': transaction.transactionInfo.height.compact(),
                 'hash': transaction.transactionInfo.hash,
             }
-            break;
+            break
     }
     return transaction
 }

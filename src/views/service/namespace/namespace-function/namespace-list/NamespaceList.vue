@@ -36,8 +36,7 @@
         </div>
 
         <div v-if="namespaceList.length == 0" class="noData">
-          <i><img src="@/common/img/wallet/no_data.png"></i>
-          <p>{{$t('not_yet_open')}}</p>
+          <p>{{$t('no_data')}}</p>
         </div>
 
       </div>

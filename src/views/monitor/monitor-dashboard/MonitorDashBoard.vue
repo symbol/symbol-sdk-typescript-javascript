@@ -1,22 +1,20 @@
 <template>
   <div class="dash_board_container ">
-
-
     <Modal
             :title="$t('transaction_detail')"
             v-model="isShowDialog"
             :transfer="false"
-            class-name="dash_board_dialog">
-      <div class="transfer_type">
+            class-name="dash_board_dialog scroll">
+      <div class="transfer_type ">
         <span class="title">{{$t('transfer_type')}}</span>
-        <span class="value">{{transactionDetails.dialogDetailMap
+        <span class="value overflow_ellipsis">{{transactionDetails.dialogDetailMap
           ? $t(transactionDetails.dialogDetailMap.transfer_type) :'-'}}</span>
       </div>
       <div>
         <div v-if="key !=='transfer_type'" v-for="(value,key,index) in transactionDetails.dialogDetailMap"
              class="other_info">
           <span class="title">{{$t(key)}}</span>
-          <span class="value">{{value}}</span>
+          <span class="value overflow_ellipsis">{{value}}</span>
         </div>
         <!--        inner transaction-->
         <div v-if="transactionDetails.formatAggregateCompelete">
@@ -33,23 +31,20 @@
             :title="$t('transaction_detail')"
             v-model="isShowInnerDialog"
             :transfer="false"
-            class-name="dash_board_dialog inner_dialog">
+            class-name="dash_board_dialog inner_dialog scroll">
 
-      <div class="transfer_type">
-        <span class="title">{{$t('transfer_type')}}</span>
-        <span class="value">{{currentInnerTransaction.dialogDetailMap
+      <div class="transfer_type ">
+        <span class="title overflow_ellipsis">{{$t('transfer_type')}}</span>
+        <span class="value overflow_ellipsis">{{currentInnerTransaction.dialogDetailMap
           ? $t(currentInnerTransaction.dialogDetailMap.transfer_type) :'-'}}</span>
       </div>
       <div>
         <div v-if="key !=='transfer_type'" v-for="(value,key,index) in currentInnerTransaction.dialogDetailMap"
              class="other_info">
-          <span class="title">{{$t(key)}}</span>
-          <span class="value">{{value}}</span>
+          <span class="title overflow_ellipsis">{{$t(key)}}</span>
+          <span class="value overflow_ellipsis">{{value}}</span>
         </div>
       </div>
-      <!--      <div class="transfer_type">-->
-      <!--        {{currentInnerTransaction}}-->
-      <!--      </div>-->
     </Modal>
 
 
@@ -165,7 +160,7 @@
 
 <script lang="ts">
     // @ts-ignore
-    import {MonitorDashBoardTs} from '@/views/monitor/monitor-dashboard/MonitorDashBoardTs.ts'
+    import {MonitorDashBoardTs} from '@/views/monitor/monitor-dashboard/MonitorDashBoardTs.ts';
 
     export default class DashBoard extends MonitorDashBoardTs {
 

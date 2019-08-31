@@ -4,11 +4,11 @@ import {
     PublicAccount,
     AggregateTransaction,
     AccountHttp,
-    Address, NetworkType, Account, Transaction
+    Address, NetworkType, Transaction
 } from 'nem2-sdk'
-import { from as observableFrom, Observable } from "rxjs";
+import {from as observableFrom} from "rxjs"
 
-export class MultisigApiRxjs  {
+export class MultisigApiRxjs {
     getMultisigAccountInfo(
         address: string,
         node: string
@@ -34,7 +34,7 @@ export class MultisigApiRxjs  {
             networkType,
             [],
             UInt64.fromUint(fee)
-        );
+        )
     }
 
 
@@ -53,6 +53,6 @@ export class MultisigApiRxjs  {
             networkType,
             [],
             UInt64.fromUint(fee)
-        );
+        )
     }
 }

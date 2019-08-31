@@ -1,4 +1,4 @@
-import {Message} from "@/config/index.ts"
+import {Message, networkType} from "@/config/index.ts"
 import {Account, NetworkType} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
 import {
@@ -9,7 +9,6 @@ import {
     saveLocalWallet
 } from "@/core/utils/wallet.ts"
 import {
-    passwordValidator,
     ALLOWED_SPECIAL_CHAR,
     MAX_PASSWORD_LENGTH,
     MIN_PASSWORD_LENGTH
@@ -21,25 +20,8 @@ export class WalletImportKeystoreTs extends Vue {
     MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
     ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
     file = ''
-    fileList = [{
-        value: 'no data',
-        label: 'no data'
-    }]
-    NetworkTypeList = [
-        {
-            value: NetworkType.MIJIN_TEST,
-            label: 'MIJIN_TEST'
-        }, {
-            value: NetworkType.MAIN_NET,
-            label: 'MAIN_NET'
-        }, {
-            value: NetworkType.TEST_NET,
-            label: 'TEST_NET'
-        }, {
-            value: NetworkType.MIJIN,
-            label: 'MIJIN'
-        },
-    ]
+    fileList = []
+    NetworkTypeList = networkType
     formItem = {
         walletName: 'wak',
         networkType: NetworkType.MIJIN_TEST,
@@ -86,7 +68,7 @@ export class WalletImportKeystoreTs extends Vue {
     loginWallet(account) {
         const {networkType, walletName, walletPassword} = this.formItem
         const that = this
-        const netType: NetworkType = networkType;
+        const netType: NetworkType = networkType
         const walletList = this.$store.state.app.walletList
         const style = 'walletItem_bg_' + walletList.length % 3
         getAccountDefault(walletName, account, netType, this.getNode, this.currentXEM1, this.currentXEM2)
@@ -103,7 +85,7 @@ export class WalletImportKeystoreTs extends Vue {
     toWalletDetails() {
         this.$Notice.success({
             title: this['$t']('Imported_wallet_successfully') + ''
-        });
+        })
         this.$store.commit('SET_HAS_WALLET', true)
         this.$emit('toWalletDetails')
     }

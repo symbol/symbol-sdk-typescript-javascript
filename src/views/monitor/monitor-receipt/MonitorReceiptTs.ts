@@ -4,23 +4,26 @@ import {copyTxt} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 import {TransferType} from '@/config/index.ts'
+import {mapState} from "vuex"
 
 @Component({
     components: {
         CollectionRecord
+    },
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+        })
     }
 })
 export class MonitorReceiptTs extends Vue {
-    node = ''
+    activeAccount: any
     assetType = ''
-    currentXem = ''
     assetAmount = 0
-    accountAddress = ''
     QRCode: string = ''
     transactionHash = ''
     TransferType = TransferType
     isShowDialog = false
-    accountPublicKey = ''
     mosaicList = [
         {
             value: 'xem',
@@ -49,9 +52,33 @@ export class MonitorReceiptTs extends Vue {
         }
     ]
 
+    get accountPublicKey() {
+        return this.activeAccount.wallet.publicKey
+    }
+
+    get accountAddress() {
+        return this.activeAccount.wallet.address
+    }
+
+    get node() {
+        return this.activeAccount.node
+    }
+
+    get currentXem() {
+        return this.activeAccount.currentXem
+    }
+
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
+    }
+
+    get generationHash() {
+        return this.activeAccount.generationHash
+    }
+
+    get networkType() {
+        return this.activeAccount.wallet.networkType
     }
 
     hideSetAmountDetail() {
@@ -79,18 +106,16 @@ export class MonitorReceiptTs extends Vue {
         if (!this.checkForm()) {
             return
         }
-
+        const {generationHash, networkType} = this
         this.isShowDialog = false
         const QRCodeData = {
             type: 1002,
             address: this.accountAddress,
             timestamp: new Date().getTime().toString(),
             amount: this.assetAmount,
-            amountId: '321d45sa4das4d5ad',
-            reason: '5454564d54as5d4a56d'
+            amountId: '',
+            reason: ''
         }
-        const {networkType} = this.getWallet
-        const {generationHash} = this.$store.state.account
         this.QRCode = QRCodeGenerator
             .createExportObject(QRCodeData, networkType, generationHash)
             .toBase64()
@@ -137,32 +162,21 @@ export class MonitorReceiptTs extends Vue {
         })
     }
 
-    initData() {
-        if (!this.getWallet) return
-        this.accountPublicKey = this.getWallet.publicKey
-        this.accountAddress = this.getWallet.address
-        this.node = this.$store.state.account.node
-        this.currentXem = this.$store.state.account.currentXem
-    }
-
     createQRCode() {
         if (!this.getWallet) return
+        const {generationHash, networkType} = this
         const QRCodeData = {publickKey: this.accountPublicKey}
-        const {networkType} = this.getWallet
-        const {generationHash} = this.$store.state.account
         this.QRCode = QRCodeGenerator
             .createExportObject(QRCodeData, networkType, generationHash)
             .toBase64()
     }
 
-    @Watch('getWallet')
+    @Watch('getWallet.address')
     onGetWalletChange() {
-        this.initData()
         this.createQRCode()
     }
 
     created() {
-        this.initData()
         this.createQRCode()
 
     }

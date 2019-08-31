@@ -4,7 +4,7 @@ import ApostilleCreate from './apostille-function/apostille-create/ApostilleCrea
 import ApostilleHistory from './apostille-function/apostille-history/ApostilleHistory.vue'
 
 @Component({
-    components:{
+    components: {
         ApostilleCreate,
         ApostilleAudit,
         ApostilleHistory

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import iView from 'iview'
 import Router from 'vue-router'
-import { veeValidateConfig } from '@/core/validation';
+import {veeValidateConfig} from '@/core/validation'
 import App from '@/App.vue'
 import i18n from '@/language/index.ts'
 import store from '@/store/index.ts'
@@ -10,12 +10,13 @@ import 'iview/dist/styles/iview.css'
 import htmlRem from '@/core/utils/rem.ts'
 import {isWindows} from "@/config/index.ts"
 import {resetFontSize} from '@/core/utils/electron.ts'
-import VeeValidate from 'vee-validate';
+import VeeValidate from 'vee-validate'
+import locale from 'iview/dist/locale/en-US'
 
+Vue.use(iView, {locale})
 Vue.use(require('vue-moment'))
 Vue.use(Router)
 //Introduced the global
-Vue.use(iView)
 Vue.use(VeeValidate, veeValidateConfig)
 htmlRem()
 if (isWindows) {

@@ -8,12 +8,12 @@
     import 'animate.css'
     import {isWindows} from "@/config/index.ts"
     import {localRead} from '@/core/utils/utils.ts'
-    import {PublicAccount, Listener} from "nem2-sdk"
+    import {Listener} from "nem2-sdk"
     import {checkInstall} from '@/core/utils/electron.ts'
     import {AccountApiRxjs} from '@/core/api/AccountApiRxjs.ts'
     import {ListenerApiRxjs} from '@/core/api/ListenerApiRxjs.ts'
     import {Component, Vue} from 'vue-property-decorator'
-    import {mapState} from 'vuex';
+    import {mapState} from 'vuex'
 
 
     @Component({
@@ -99,7 +99,7 @@
         mounted() {
             this.$Notice.config({
                 duration: 4
-            });
+            })
         }
 
         created() {

@@ -76,19 +76,19 @@ export class MonitorMarketTs extends Vue {
         }
 
         const that = this
-        const rstStr = await market.kline({period: "1day", symbol: "xemusdt", size: "14"});
-        const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+        const rstStr = await market.kline({period: "1day", symbol: "xemusdt", size: "14"})
+        const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
         const result = rstQuery.data
         const currentWeek = result.slice(0, 7)
         const preWeek = result.slice(7, 14)
 
         currentWeek.sort((a, b) => {
-            return a.high < b.high ? 1 : -1;
+            return a.high < b.high ? 1 : -1
         })
         that.highestPrice = currentWeek[0].high
 
         currentWeek.sort((a, b) => {
-            return a.low < b.low ? -1 : 1;
+            return a.low < b.low ? -1 : 1
         })
         that.lowestPrice = currentWeek[0].low
 
@@ -122,8 +122,8 @@ export class MonitorMarketTs extends Vue {
             return
         }
         const that = this
-        const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"});
-        const rstQuery: KlineQuery = JSON.parse(rstStr.rst);
+        const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"})
+        const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
         const result = rstQuery.data[0].close
         that.currentPrice = result
         const openPriceOneMinute = {timestamp: new Date().getTime(), openPrice: result}
@@ -137,9 +137,8 @@ export class MonitorMarketTs extends Vue {
             return
         }
         const that = this
-
-        const rstStr = await market.trade({symbol: "xemusdt", size: "50"});
-        const rstQuery = JSON.parse(rstStr.rst);
+        const rstStr = await market.trade({symbol: "xemusdt", size: "50"})
+        const rstQuery = JSON.parse(rstStr.rst)
         let recentTransactionList = []
         let result = rstQuery.data
         result.map((item) => {

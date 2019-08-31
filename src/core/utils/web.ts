@@ -8,30 +8,30 @@ export class WebClient {
 
     public static async request(content: string, options: request.Options) {
 
-        const contentBuf = new Buffer(content);
+        const contentBuf = new Buffer(content)
         if (!options.headers) {
-            options.headers = {};
+            options.headers = {}
         }
-        options.headers['Content-Length'] = contentBuf.byteLength;
+        options.headers['Content-Length'] = contentBuf.byteLength
 
-        return await WebClient.httpRequest(contentBuf, options);
+        return await WebClient.httpRequest(contentBuf, options)
     };
 
     private static async httpRequest(content: Buffer, options: request.Options) {
-        let isCalled = false;
+        let isCalled = false
         return new Promise((resolve, reject) => {
             const req = request(options, (err, res, body) => {
                 if (isCalled) {
-                    return console.error(null, "Multiple requests");
+                    return console.error(null, "Multiple requests")
                 }
-                isCalled = true;
+                isCalled = true
                 if (err) {
-                    reject(err);
+                    reject(err)
                 }
                 resolve(body)
-            });
-            req.write(content);
-            req.end();
-        });
+            })
+            req.write(content)
+            req.end()
+        })
     }
 }

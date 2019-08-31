@@ -5,16 +5,17 @@ import {
     Crypto,
     NetworkType,
     Transaction,
-    Listener
+    Listener, Mosaic, MosaicInfo
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts";
-import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts";
-import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts";
-import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts";
-import {BlockApiRxjs} from "@/core/api/BlockApiRxjs.ts";
-import {formateNemTimestamp} from "@/core/utils/utils.ts";
+import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
+import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
+import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
+import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
+import {BlockApiRxjs} from "@/core/api/BlockApiRxjs.ts"
+import {formateNemTimestamp} from "@/core/utils/utils.ts"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
+import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
 
 export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) => {
     let localData: any[] = []
@@ -48,7 +49,6 @@ export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) =
 
 export const getAccountDefault = async (name, account, netType, node?, currentXEM1?, currentXEM2?) => {
     let storeWallet = {}
-
     const Wallet = new WalletApiRxjs().getWallet(
         name,
         account.privateKey,
@@ -88,7 +88,6 @@ export const setWalletMosaic = async (storeWallet, node, currentXEM1, currentXEM
     }, () => {
         wallet.balance = 0
         wallet.mosaics = []
-
     })
     return wallet
 }
@@ -125,7 +124,7 @@ export const getNamespaces = async (address: string, node: string) => {
             item.namespaceInfo.levels.map((item, index) => {
                 namespaceName += namespace[item.id.toHex()] + '.'
             })
-            console.log(item.namespaceInfo)
+
             namespaceName = namespaceName.slice(0, namespaceName.length - 1)
             const newObj = {
                 value: namespaceName,
@@ -165,7 +164,6 @@ export const decryptKey = (wallet, password: string) => {
         iv: wallet.iv.data ? wallet.iv.data : wallet.iv,
         key: password
     }
-    // console.log()
     return Crypto.decrypt(encryptObj)
 }
 
@@ -189,10 +187,6 @@ export const createBondedMultisigTransaction = (transaction: Array<Transaction>,
 export const createCompleteMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, fee: number) => {
     return new MultisigApiRxjs().completeMultisigTransaction(networkType, fee, multisigPublickey, transaction)
 }
-/*  transactionList: pointer of target array  Array
-*   node:node   stirng
-*   offset: time zone   number
-* */
 
 export const getBlockInfoByTransactionList = (transactionList: Array<any>, node: string, offset: number) => {
     const blockHeightList = transactionList.map((item) => {
@@ -214,7 +208,6 @@ export const getBlockInfoByTransactionList = (transactionList: Array<any>, node:
 export const signAndAnnounceNormal = (account: Account, node: string, generationHash: string, transactionList: Array<any>, callBack: any) => {
     try {
         const signature = account.sign(transactionList[0], generationHash)
-        console.log(signature)
         new TransactionApiRxjs().announce(signature, node).subscribe(() => {
                 callBack()
             }, (error) => {
@@ -247,5 +240,55 @@ export const signAndAnnounceBonded = (
         lockFee,
         currentXEM1,
     )
+}
+
+export const getMosaicList = async (address: string, node: string) => {
+    let mosaicList: Mosaic[] = []
+    await new AccountApiRxjs().getAccountInfo(address, node).toPromise().then(accountInfo => {
+        mosaicList = accountInfo.mosaics
+    }).catch((_) => {
+        return
+    })
+    return mosaicList
+}
+
+export const getMosaicInfoList = async (node: string, mosaicList: Mosaic[]) => {
+    let mosaicInfoList: MosaicInfo[] = []
+
+    let mosaicIds: any = mosaicList.map((item) => {
+        return item.id
+    })
+    await new MosaicApiRxjs().getMosaics(node, mosaicIds).toPromise().then(mosaics => {
+        mosaicInfoList = mosaics
+    }).catch((_) => {
+        return
+    })
+    return mosaicInfoList
+}
+
+export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, coin2: string): any => {
+    const mosaicListRst = mosaicList.map((mosaic: any) => {
+        mosaic._amount = mosaic.amount.compact()
+        mosaic.value = mosaic.id.toHex()
+        if (mosaic.value == coin1 || mosaic.value == coin2) {
+            mosaic.label = 'nem.xem' + ' (' + mosaic._amount + ')'
+        } else {
+            mosaic.label = mosaic.id.toHex() + ' (' + mosaic._amount + ')'
+        }
+        return mosaic
+    })
+    let isCoinExist = mosaicListRst.every((mosaic) => {
+        if (mosaic.value == coin1 || mosaic.value == coin2) {
+            return false
+        }
+        return true
+    })
+    if (isCoinExist) {
+        mosaicListRst.unshift({
+            value: coin1,
+            label: 'nem.xem'
+        })
+    }
+    return mosaicListRst
 }
 

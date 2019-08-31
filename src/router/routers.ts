@@ -1,4 +1,4 @@
- const routers = [
+const routers = [
     {
         path: '/',
         name: 'home',
@@ -187,4 +187,4 @@
 ]
 
 
- export default routers
+export default routers

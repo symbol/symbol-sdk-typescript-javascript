@@ -38,20 +38,20 @@ export class MnemonicDialogTs extends Vue {
         switch (this.stepIndex) {
             case 0 :
                 this.checkPassword()
-                break;
+                break
             case 1 :
                 this.stepIndex = 2
-                break;
+                break
             case 2 :
                 this.stepIndex = 3
-                break;
+                break
             case 3 :
                 if (!this.checkMnemonic()) return
                 this.stepIndex = 4
-                break;
+                break
             case 4 :
                 this.mnemonicDialogCancel()
-                break;
+                break
         }
     }
 
@@ -92,8 +92,8 @@ export class MnemonicDialogTs extends Vue {
 
     sureWord(index) {
         const word = this.mnemonicRandomArr[index]
-        const wordSpan = document.createElement('span');
-        wordSpan.innerText = word;
+        const wordSpan = document.createElement('span')
+        wordSpan.innerText = word
         wordSpan.onclick = () => {
             this.$refs['mnemonicWordDiv']['removeChild'](wordSpan)
         }
@@ -101,23 +101,23 @@ export class MnemonicDialogTs extends Vue {
     }
 
     checkMnemonic() {
-        const mnemonicDiv = this.$refs['mnemonicWordDiv'];
-        const mnemonicDivChild = mnemonicDiv['getElementsByTagName']('span');
+        const mnemonicDiv = this.$refs['mnemonicWordDiv']
+        const mnemonicDivChild = mnemonicDiv['getElementsByTagName']('span')
         let childWord = []
         for (let i in mnemonicDivChild) {
-            if (typeof mnemonicDivChild[i] !== "object") continue;
+            if (typeof mnemonicDivChild[i] !== "object") continue
             childWord.push(mnemonicDivChild[i]['innerText'])
         }
         if (JSON.stringify(childWord) != JSON.stringify(this.mnemonic.split(' '))) {
             if (childWord.length < 1) {
                 this.$Notice.warning({
                     title: this['$t']('Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct') + ''
-                });
+                })
                 return false
             }
             this.$Notice.warning({
                 title: this['$t']('Mnemonic_inconsistency') + ''
-            });
+            })
             return false
         }
         return true
