@@ -5,6 +5,7 @@ import WalletFn from '@/views/wallet/wallet-fn/WalletFn.vue'
 import WalletSwitch from '@/views/wallet/wallet-switch/WalletSwitch.vue'
 import WalletDetails from '@/views/wallet/wallet-details/WalletDetails.vue'
 import {getNamespaces} from "@/core/utils/wallet.ts"
+import {mapState} from "vuex"
 
 @Component({
     components: {
@@ -13,30 +14,38 @@ import {getNamespaces} from "@/core/utils/wallet.ts"
         GuideInto,
         WalletFn
     },
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app'
+        })
+    }
 })
 export class WalletPanelTs extends Vue {
+    activeAccount: any
+    app: any
     walletList = []
     tabIndex = 0
     toMethod = false
 
     get nowWalletList() {
-        return this.$store.state.app.walletList
+        return this.app.walletList
     }
 
     get reloadWalletPage() {
-        return this.$store.state.app.reloadWalletPage
+        return this.app.reloadWalletPage
     }
 
     get node() {
-        return this.$store.state.account.node
+        return this.activeAccount.node
     }
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
     get ConfirmedTxList() {
-        return this.$store.state.account.ConfirmedTx
+        return this.activeAccount.ConfirmedTx
     }
 
     toCreate() {
@@ -50,8 +59,8 @@ export class WalletPanelTs extends Vue {
     }
 
     toWalletDetails() {
-        const wallet = this.$store.state.account.wallet
-        let list: any[] = this.$store.state.app.walletList
+        const wallet = this.activeAccount.wallet
+        let list: any[] = this.walletList
         let bl = false
         list.map((item, index) => {
             if (item.address === wallet.address) {

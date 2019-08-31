@@ -1,4 +1,4 @@
-import {Message} from "@/config/index.ts"
+import {Message, formData} from "@/config/index.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
@@ -6,16 +6,18 @@ import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Account, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
 import {signAndAnnounceNormal} from "@/core/utils/wallet"
+import {mapState} from "vuex"
 
-@Component
+@Component({
+        computed: {...mapState({activeAccount: 'account'})},
+    }
+)
 export class MosaicUnAliasDialogTs extends Vue {
+    activeAccount: any
     show = false
     isCompleteForm = false
     aliasNameList: any[] = []
-    mosaic = {
-        fee: 50000,
-        password: ''
-    }
+    mosaic = formData.mosaicUnaliasForm
 
     @Prop()
     showMosaicUnAliasDialog: boolean
@@ -23,15 +25,15 @@ export class MosaicUnAliasDialogTs extends Vue {
     itemMosaic: any
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
     get generationHash() {
-        return this.$store.state.account.generationHash
+        return this.activeAccount.generationHash
     }
 
     get node() {
-        return this.$store.state.account.node
+        return this.activeAccount.node
     }
 
     mosaicAliasDialogCancel() {

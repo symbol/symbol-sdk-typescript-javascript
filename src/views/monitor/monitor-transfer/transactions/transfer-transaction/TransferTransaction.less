@@ -103,8 +103,8 @@
     .value {
       span {
         display: inline-block;
-        width: 60px;
-        height: 60px;
+        width: 45px;
+        height: 45px;
         background-color: #4DC2BF;
         color: white;
         font-size: 20px;
@@ -248,21 +248,31 @@
 }
 
 .selections {
-  width: calc(100% - 118px);
+  width: calc(100% - 131px);
   background-color: white;
   border: 1px solid rgba(204, 204, 204, 1);
   position: absolute;
   top: 60px;
   z-index: 999;
+  padding: 5px 0;
   border-radius: 0 0 4px 4px;
   border-top: none;
 
-  div {
-    padding: 5px 15px;
-    font-size: 16px;
+  .selection_container {
+    max-height: 100px;
+    min-height: 50px;
+    margin: 0 10px;
+
+    div {
+      padding: 3px 5px;
+      margin: 2px 0;
+      font-size: 16px;
+    }
+
+    div:hover {
+      background-color: #ddd;
+    }
   }
 
-  div:hover {
-    background-color: #ddd;
-  }
+
 }

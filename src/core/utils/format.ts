@@ -86,7 +86,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                 }
                 break
             case TransactionType.MOSAIC_SUPPLY_CHANGE:
-                item.icon = iconMap.dashboardModify
+                item.icon = iconMap.dashboardDefinition
                 item.tag = transactionTag.MOSAIC_SUPPLY_CHANGE
                 item.dialogDetailMap = {
                     'transfer_type': item.tag,
@@ -296,7 +296,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string) {
             }
             break
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
-            transaction.icon = iconMap.dashboardModify
+            transaction.icon = iconMap.dashboardDefinition
             transaction.tag = transactionTag.MOSAIC_SUPPLY_CHANGE
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,

@@ -237,11 +237,6 @@ export class LineChartTs extends Vue {
     }
 
 
-    mounted() {
-        this.refresh()
-    }
-
-
     refresh() {
         this.refreshXem()
         this.refreshBtc()
@@ -380,7 +375,12 @@ export class LineChartTs extends Vue {
         })
     }
 
-    async created() {
+    async mounted() {
         await this.refreshData()
+        this.refresh()
     }
+
+    // async created() {
+    //     await this.refreshData()
+    // }
 }

@@ -2,9 +2,17 @@ import {Message} from "@/config/index.ts"
 import {decryptKey, encryptKeystore} from "@/core/utils/wallet.ts"
 import {copyTxt, localRead} from "@/core/utils/utils.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {mapState} from "vuex"
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+        })
+    }
+})
 export class KeystoreDialogTs extends Vue {
+    activeAccount: any
     stepIndex = 0
     show = false
     QRCode = ''
@@ -18,7 +26,7 @@ export class KeystoreDialogTs extends Vue {
 
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
     saveQRCode() {

@@ -1,6 +1,7 @@
 import PieChart from './PieChart.vue'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {voteFilterList, voteSelectionList,voteActionList} from '@/config/index.ts'
 
 @Component({
         components: {
@@ -22,32 +23,10 @@ export class VoteTs extends Vue {
     showCheckPWDialog = false
     isLoadingConfirmedTx = true
     alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    voteFilterList = [
-        {
-            value: 0,
-            label: 'all'
-        },
-        {
-            value: 1,
-            label: 'processing'
-        },
-        {
-            value: 2,
-            label: 'already_involved'
-        },
-        {
-            value: 3,
-            label: 'finished'
-        }
-    ]
-    selectionList = [
-        {
-            value: '1'
-        }, {
-            value: '2'
-        }
-    ]
+    voteFilterList = voteFilterList
+    selectionList = voteSelectionList
     voteList = [
+        // TODO data structure
         // {
         //     initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
         //     vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
@@ -70,18 +49,9 @@ export class VoteTs extends Vue {
         //     isSelect: true,
         //     max: 2,
         // }
-
     ]
 
-    voteActionList = [
-        {
-            name: 'choose_to_vote',
-            isSelect: true
-        }, {
-            name: 'create_a_vote',
-            isSelect: false
-        }
-    ]
+    voteActionList = voteActionList
 
 
     swicthVoteAction(index) {

@@ -3,12 +3,20 @@ import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Message} from "@/config"
+import {mapState} from "vuex"
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+        })
+    }
+})
 export class PrivatekeyDialogTs extends Vue {
     QRCode = ''
     show = false
     stepIndex = 0
+    activeAccount: any
     wallet = {
         password: '',
         privatekey: ''
@@ -18,7 +26,15 @@ export class PrivatekeyDialogTs extends Vue {
     showPrivatekeyDialog: boolean
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
+    }
+
+    get account() {
+        return this.activeAccount
+    }
+
+    get generationHash() {
+        return this.activeAccount.generationHash
     }
 
     privatekeyDialogCancel() {
@@ -60,24 +76,6 @@ export class PrivatekeyDialogTs extends Vue {
         switch (this.stepIndex) {
             case 0 :
                 this.checkPassword()
-                // if (!this.checkInput()) return
-                // const DeTxt = decryptKey(this.getWallet, this.wallet.password)
-                // try {
-                //     new WalletApiRxjs().getWallet(
-                //         this.getWallet.name,
-                //         DeTxt.length === 64 ? DeTxt : '',
-                //         this.getWallet.networkType,
-                //     )
-                //     this.stepIndex = 1
-                //     this.wallet.password = ''
-                //     this.stepIndex = 1
-                //     this.wallet.privatekey = DeTxt.toString().toUpperCase()
-                // } catch (e) {
-                //     console.log(e)
-                //     this.$Notice.error({
-                //         title: this.$t('password_error') + ''
-                //     })
-                // }
                 break
             case 1 :
                 this.createQRCode()
@@ -92,7 +90,7 @@ export class PrivatekeyDialogTs extends Vue {
     checkInput() {
         if (!this.wallet.password || this.wallet.password == '') {
             this.$Notice.error({
-                title: '' + this.$t('please_set_your_wallet_password')
+                title: '' + this.$t(Message.PLEASE_SET_WALLET_PASSWORD_INFO)
             })
             return false
         }
@@ -109,7 +107,7 @@ export class PrivatekeyDialogTs extends Vue {
 
     createQRCode() {
         const {networkType} = this.getWallet
-        const {generationHash} = this.$store.state.account
+        const {generationHash} = this
         const object = {privateKey: this.wallet.privatekey}
         this.QRCode = QRCodeGenerator
             .createExportObject(object, networkType, generationHash)

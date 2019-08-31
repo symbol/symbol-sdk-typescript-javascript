@@ -1,25 +1,29 @@
-import {Message} from "@/config/index.ts"
+import {Message,formData} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
-import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {createBondedMultisigTransaction} from "@/core/utils/wallet.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
-    Account,
     Listener,
     MultisigCosignatoryModification,
     MultisigCosignatoryModificationType,
     PublicAccount,
     ModifyMultisigAccountTransaction, Deadline, UInt64
 } from 'nem2-sdk'
+import {mapState} from "vuex"
 
 @Component({
     components: {
         CheckPWDialog
+    },
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+        })
     }
 })
 export class MultisigConversionTs extends Vue {
-
+    activeAccount: any
     currentAddress = ''
     isMultisig = false
     isCompleteForm = false
@@ -27,17 +31,30 @@ export class MultisigConversionTs extends Vue {
     transactionDetail = {}
     otherDetails = {}
     transactionList = []
-    formItem = {
-        publickeyList: [],
-        minApproval: 1,
-        minRemoval: 1,
-        bondedFee: 10000000,
-        lockFee: 10000000,
-        innerFee: 10000000
+    formItem = formData.multisigConversionForm
+
+    get publickey() {
+        return this.activeAccount.wallet.publicKey
     }
 
-    get getWallet() {
-        return this.$store.state.account.wallet
+    get currentXEM1() {
+        return this.activeAccount.currentXEM1
+    }
+
+    get networkType() {
+        return this.activeAccount.wallet.networkType
+    }
+
+    get address() {
+        return this.activeAccount.wallet.address
+    }
+
+    get node() {
+        return this.activeAccount.node
+    }
+
+    get wallet() {
+        return this.activeAccount.wallet
     }
 
     addAddress() {
@@ -58,7 +75,7 @@ export class MultisigConversionTs extends Vue {
         // check input data
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
-        const {address} = this.getWallet
+        const {address} = this.wallet
         const {publickeyList, minApproval, minRemoval, bondedFee, lockFee, innerFee} = this.formItem
         this.transactionDetail = {
             "address": address,
@@ -148,9 +165,8 @@ export class MultisigConversionTs extends Vue {
 
     getMultisigAccountList() {
         const that = this
-        if (!this.getWallet) return
-        const {address} = this.getWallet
-        const {node} = this.$store.state.account
+        if (!this.wallet) return
+        const {node, address} = this
         new MultisigApiRxjs().getMultisigAccountInfo(
             address,
             node
@@ -163,10 +179,7 @@ export class MultisigConversionTs extends Vue {
 
     sendMultisignConversionTransaction() {
         const {publickeyList, minApproval, minRemoval, lockFee, bondedFee, innerFee} = this.formItem
-        const {networkType} = this.$store.state.account.wallet
-        const {node} = this.$store.state.account
-        const mosaicHex = this.$store.state.account.currentXEM1
-        const publickey = this.$store.state.account.wallet.publicKey
+        const {networkType, node, publickey} = this
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         const multisigCosignatoryModificationList = publickeyList.map(cosigner => new MultisigCosignatoryModification(
             MultisigCosignatoryModificationType.Add,

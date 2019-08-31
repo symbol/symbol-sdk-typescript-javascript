@@ -59,13 +59,12 @@ export class ListenerApiRxjs {
     }
 
 
-    newBlock(listener: Listener, pointer: any) {
+    newBlock(listener: Listener, currentBlockInfo, preBlockInfo, callback) {
         return observableFrom(listener.open().then(() => {
                 listener
                     .newBlock()
                     .subscribe(
                         (block) => {
-                            const {currentBlockInfo, preBlockInfo} = pointer.$store.state.app.chainStatus
                             const chainStatus = {
                                 preBlockInfo: currentBlockInfo,
                                 numTransactions: block.numTransactions ? block.numTransactions : 0,
@@ -78,7 +77,7 @@ export class ListenerApiRxjs {
                                 let currentGenerateTime = (block.timestamp.compact() - preBlockInfo.timestamp.compact()) / 1000    //time
                                 chainStatus.currentGenerateTime = Number(currentGenerateTime.toFixed(0))
                             }
-                            pointer.$store.commit('SET_CHAIN_STATUS', chainStatus)
+                            callback(chainStatus)
                         },
                     )
             })

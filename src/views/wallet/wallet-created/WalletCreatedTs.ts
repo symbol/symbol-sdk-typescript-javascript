@@ -1,13 +1,22 @@
-import {Message, networkType} from "@/config/index.ts"
+import {Message, networkTypeList} from "@/config/index.ts"
 import {NetworkType} from "nem2-sdk"
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {strToHexCharCode} from '@/core/utils/utils.ts'
 import {createAccount, randomMnemonicWord} from "@/core/utils/hdWallet.ts"
 import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet.ts"
+import {mapState} from "vuex"
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app:'app'
+        })
+    }
+})
 export class WalletCreatedTs extends Vue {
-
+    app:any
+    activeAccount:any
     tags = 0
     mosaics = []
     storeWallet = {}
@@ -19,7 +28,7 @@ export class WalletCreatedTs extends Vue {
         password: '',
         checkPW: '',
     }
-    netType = networkType
+    netType = networkTypeList
 
 
     @Prop({default: {}})
@@ -27,7 +36,7 @@ export class WalletCreatedTs extends Vue {
 
 
     get mnemonic() {
-        const mnemonic = this.$store.state.app.mnemonic
+        const mnemonic = this.app.mnemonic
         return mnemonic['split'](' ')
     }
 
@@ -36,8 +45,9 @@ export class WalletCreatedTs extends Vue {
     }
 
     get walletList() {
-        return this.$store.state.app.walletList
+        return this.app.walletList
     }
+
 
     hideCover() {
         this.showCover = false
@@ -105,7 +115,7 @@ export class WalletCreatedTs extends Vue {
         const that = this
         const walletName: any = this.formInfo['walletName']
         const netType: NetworkType = Number(this.formInfo['currentNetType'])
-        const walletList = this.$store.state.app.walletList
+        const {walletList} = this
         const style = 'walletItem_bg_' + walletList.length % 3
         getAccountDefault(walletName, account, netType).then((wallet) => {
             let storeWallet = wallet

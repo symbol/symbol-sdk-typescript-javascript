@@ -3,38 +3,34 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import SubNamespace from './namespace-function/sub-namespace/SubNamespace.vue'
 import RootNamespace from './namespace-function/root-namespace/RootNamespace.vue'
 import NamespaceList from './namespace-function/namespace-list/NamespaceList.vue'
-
+import {namespaceButtonList} from '@/config/index.ts'
+import {mapState} from "vuex"
 @Component({
     components: {
         RootNamespace,
         SubNamespace,
         NamespaceList,
+    },
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+        })
     }
 })
 export class NamespaceTs extends Vue {
-    buttonList = [
-        {
-            name: 'Create_namespace',
-            isSelected: true
-        }, {
-            name: 'Create_subNamespace',
-            isSelected: false
-        }, {
-            name: 'Namespace_list',
-            isSelected: false
-        }
-    ]
+    buttonList = namespaceButtonList
+    activeAccount:any
 
     get node() {
-        return this.$store.state.account.node
+        return this.activeAccount.node
     }
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
     get ConfirmedTxList() {
-        return this.$store.state.account.ConfirmedTx
+        return this.activeAccount.ConfirmedTx
     }
 
     switchButton(index) {

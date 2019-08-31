@@ -15,6 +15,7 @@ declare interface account {
     errorTx: Array<any>,
     mosaicMap: any,
     generationHash: string,
+    addresAliasMap:any
 
 }
 
@@ -32,6 +33,7 @@ export default {
         ConfirmedTx: [],
         errorTx: [],
         mosaicMap: {},
+        addresAliasMap:{},
         generationHash: ''
     },
     getters: {
@@ -75,6 +77,9 @@ export default {
         },
         SET_MOSAIC_MAP(state: account, mosaicMap: any): void {
             state.mosaicMap = mosaicMap
+        },
+        SET_ADDRESS_ALIAS_MAP(state: account, addresAliasMap: any): void {
+            state.addresAliasMap = addresAliasMap
         },
         SET_UNCONFIRMED_TX(state: account, UnconfirmedTx: any): void {
             state.UnconfirmedTx = UnconfirmedTx

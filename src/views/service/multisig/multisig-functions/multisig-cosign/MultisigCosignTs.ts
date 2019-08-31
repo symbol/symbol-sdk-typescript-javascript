@@ -8,18 +8,36 @@ import {
     CosignatureTransaction,
     AggregateTransaction
 } from "nem2-sdk"
+import {mapState} from "vuex"
 
-@Component
+// this component is for tesing multisig
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+        })
+    }
+})
 export class MultisigCosignTs extends Vue {
-    privatekey = '864F29FB3C5B4F52C5351974CEFF35D59DB7EE433C4C01AEF8E20D0147FB0A69'
-    publickey = '5FA48DA997E605323BCD579ABD6FC996B18DF3289A488A12E3C9CE27C10AAC41'
+    activeAccount: any
+    privatekey = ''
+    publickey = ''
     aggregatedTransactionList: Array<AggregateTransaction> = []
 
+    get networkType() {
+        return this.activeAccount.wallet.networkType
+    }
+
+    get generationHash() {
+        return this.activeAccount.generationHash
+    }
+
+    get node() {
+        return this.activeAccount.node
+    }
 
     async getCosignTransactions() {
-        const {publickey} = this
-        const {networkType} = this.$store.state.account.wallet
-        const {generationHash, node} = this.$store.state.account
+        const {publickey, node} = this
         const accountHttp = new AccountHttp(node)
 
         const publicAccount = PublicAccount.createFromPublicKey(
@@ -31,10 +49,7 @@ export class MultisigCosignTs extends Vue {
 
     cosignTransaction(index) {
 
-        const {publickey, privatekey} = this
-        const {networkType} = this.$store.state.account.wallet
-        const {generationHash, node} = this.$store.state.account
-
+        const {publickey, node, privatekey} = this
         const endpoint = node
         const account = Account.createFromPrivateKey(privatekey, NetworkType.MIJIN_TEST)
         const transactionHttp = new TransactionHttp(endpoint)

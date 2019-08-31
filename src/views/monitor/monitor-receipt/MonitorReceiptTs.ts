@@ -5,7 +5,7 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 import {TransferType} from '@/config/index.ts'
 import {mapState} from "vuex"
-
+import {monitorRecaeiptMosaicList,monitorRecaeiptTransferTypeList} from '@/config/index.ts'
 @Component({
     components: {
         CollectionRecord
@@ -24,33 +24,8 @@ export class MonitorReceiptTs extends Vue {
     transactionHash = ''
     TransferType = TransferType
     isShowDialog = false
-    mosaicList = [
-        {
-            value: 'xem',
-            label: 'xem'
-        }
-    ]
-
-
-    transferTypeList = [
-        {
-            name: 'ordinary_transfer',
-            isSelect: true,
-            disabled: false
-        }, {
-            name: 'Multisign_transfer',
-            isSelect: false,
-            disabled: false
-        }, {
-            name: 'crosschain_transfer',
-            isSelect: false,
-            disabled: true
-        }, {
-            name: 'aggregate_transfer',
-            isSelect: false,
-            disabled: true
-        }
-    ]
+    mosaicList = monitorRecaeiptMosaicList
+    transferTypeList = monitorRecaeiptTransferTypeList
 
     get accountPublicKey() {
         return this.activeAccount.wallet.publicKey

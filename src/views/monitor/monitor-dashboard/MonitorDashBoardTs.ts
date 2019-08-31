@@ -10,12 +10,7 @@ import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
 import {getBlockInfoByTransactionList} from "@/core/utils/wallet"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {isRefreshData, localSave, localRead} from '@/core/utils/utils.ts'
-import dashboardBlockTime from '@/common/img/monitor/dash-board/dashboardBlockTime.png'
-import dashboardPublickey from '@/common/img/monitor/dash-board/dashboardPublickey.png'
-import dashboardBlockHeight from '@/common/img/monitor/dash-board/dashboardBlockHeight.png'
-import dashboardPointAmount from '@/common/img/monitor/dash-board/dashboardPointAmount.png'
-import dashboardTransactionAmount from '@/common/img/monitor/dash-board/dashboardTransactionAmount.png'
-
+import {networkStatusList,xemTotalSupply} from '@/config/index.ts'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -36,42 +31,14 @@ export class MonitorDashBoardTs extends Vue {
     transferListLength = 0
     receiptListLength = 0
     currentTransactionList = []
-    xemNum: number = 8999999999
+    xemNum: number = xemTotalSupply
     allTransactionsList = []
     transferTransactionList = []
     isLoadingTransactions = false
     receiptList = []
     showConfirmedTransactions = true
     transactionDetails = {}
-    networkStatusList = [
-        {
-            icon: dashboardBlockHeight,
-            descript: 'block_height',
-            data: 1978365,
-            variable: 'currentHeight'
-
-        }, {
-            icon: dashboardBlockTime,
-            descript: 'average_block_time',
-            data: 12,
-            variable: 'currentGenerateTime'
-        }, {
-            icon: dashboardPointAmount,
-            descript: 'point',
-            data: 4,
-            variable: 'nodeAmount'
-        }, {
-            icon: dashboardTransactionAmount,
-            descript: 'number_of_transactions',
-            data: 0,
-            variable: 'numTransactions'
-        }, {
-            icon: dashboardPublickey,
-            descript: 'Harvester',
-            data: 0,
-            variable: 'signerPublicKey'
-        }
-    ]
+    networkStatusList = networkStatusList
 
 
     get getWallet() {
@@ -106,6 +73,9 @@ export class MonitorDashBoardTs extends Vue {
         return this.activeAccount.node
     }
 
+    get chainStatus() {
+        return this.app.chainStatus
+    }
     get currentHeight() {
         return this.app.chainStatus.currentHeight
     }

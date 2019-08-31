@@ -18,12 +18,13 @@
 
     @Component({
         computed: {
-            ...mapState({activeAccount: 'account'})
+            ...mapState({activeAccount: 'account', app: 'app'})
         }
     })
     export default class App extends Vue {
         isWindows = isWindows
         activeAccount: any
+        app: any
 
         get node(): string {
             return this.activeAccount.node
@@ -37,6 +38,23 @@
             return this.activeAccount.currentXEM1
         }
 
+        get preBlockInfo() {
+            return this.app.chainStatus.preBlockInfo
+        }
+
+        get currentBlockInfo() {
+            return this.app.chainStatus.currentBlockInfo
+        }
+
+        // chainStatus: {
+        //     currentHeight: 0,
+        //     currentGenerateTime: 12,
+        //     numTransactions: 0,
+        //     currentBlockInfo: {},
+        //     preBlockInfo: {},
+        //     signerPublicKey: '',
+        //     nodeAmount: 4
+        // }
         async initApp() {
             let walletList: any = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
             const that = this
@@ -91,9 +109,14 @@
             if (!this.node) {
                 return
             }
+            const {currentBlockInfo, preBlockInfo} = this
             const node = this.node.replace('http', 'ws')
             const listener = new Listener(node, WebSocket)
-            new ListenerApiRxjs().newBlock(listener, this)
+            new ListenerApiRxjs().newBlock(listener, currentBlockInfo, preBlockInfo, this.setChainStatus)
+        }
+
+        setChainStatus(chainStatus) {
+            this.$store.commit('SET_CHAIN_STATUS', chainStatus)
         }
 
         mounted() {

@@ -3,11 +3,17 @@ import {decryptKey} from "@/core/utils/wallet.ts"
 import {hexCharCodeToStr} from '@/core/utils/utils.ts'
 import {randomMnemonicWord} from "@/core/utils/hdWallet.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {mapState} from "vuex"
 
 @Component({
-    components: {},
+        computed: {
+            ...mapState({
+                activeAccount: 'account',
+            })
+        }
 })
 export class MnemonicDialogTs extends Vue {
+    activeAccount:any
     show = false
     stepIndex = 0
     mnemonic = ''
@@ -20,7 +26,7 @@ export class MnemonicDialogTs extends Vue {
     showMnemonicDialog: boolean
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
     mnemonicDialogCancel() {

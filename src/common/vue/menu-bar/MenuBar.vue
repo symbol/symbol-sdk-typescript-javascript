@@ -8,15 +8,15 @@
     <div class="left_navigator">
       <div class="navigator_icon">
         <div :key="index"
-             :class="[$store.state.app.currentPanelIndex == index ? 'active_panel' : '',!$store.state.app.walletList.length?'un_click':'pointer']"
+             :class="[currentPanelIndex == index ? 'active_panel' : '',!walletList.length?'un_click':'pointer']"
              @click="switchPanel(index)"
              v-for="(a,index) in activePanelList">
-          <span :class="['absolute', $store.state.app.currentPanelIndex == index ? 'active_icon' : '']"></span>
+          <span :class="['absolute', currentPanelIndex == index ? 'active_icon' : '']"></span>
         </div>
       </div>
 
       <div @click="accountQuit" class="quit_account pointer"
-           v-if="$store.state.app.walletList.length !==0">
+           v-if="walletList.length !==0">
         <img src="../../img/window/windowAccoutQuit.png" alt="">
         <span>Nember</span>
       </div>
@@ -43,7 +43,7 @@
               <span class="network_type_text" v-if="wallet">
                 {{ networkType == 144 ? 'MIJIN_TEST':''}}
               </span>
-              <div slot="title" class="title">{{$t('current_point')}}：{{$store.state.account.node}}</div>
+              <div slot="title" class="title">{{$t('current_point')}}：{{node}}</div>
               <div slot="content">
                 <div
                         @click="selectEndpoint(index)"

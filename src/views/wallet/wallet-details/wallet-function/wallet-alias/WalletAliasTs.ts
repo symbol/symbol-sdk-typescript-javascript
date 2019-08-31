@@ -7,41 +7,51 @@ import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
+import {mapState} from "vuex"
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app:'app'
+        })
+    }
+})
 export class WalletAliasTs extends Vue {
+    activeAccount:any
+    app:any
     isShowDialog = false
     isShowDeleteIcon = false
     showCheckPWDialog = false
     isCompleteForm = true
+    aliasList = []
+    aliasListIndex = -1
+    aliasActionTypeList = []
     formItem = {
         address: '',
         alias: '',
         fee: 50000,
         password: ''
     }
-    aliasList = []
-    aliasListIndex = -1
-    aliasActionTypeList = []
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
     get namespaceList() {
-        return this.$store.state.account.namespace
+        return this.activeAccount.namespace
     }
 
     get generationHash() {
-        return this.$store.state.account.generationHash
+        return this.activeAccount.generationHash
     }
 
     get node() {
-        return this.$store.state.account.node
+        return this.activeAccount.node
     }
 
     get nowBlockHeihgt() {
-        return this.$store.state.app.chainStatus.currentHeight
+        return this.app.chainStatus.currentHeight
     }
 
     showUnLink(index) {

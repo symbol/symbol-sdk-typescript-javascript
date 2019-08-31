@@ -1,4 +1,4 @@
-import {Message} from "@/config/index.ts"
+import {Message, formData} from "@/config/index.ts"
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
@@ -40,16 +40,7 @@ export class MultisigTransferTransactionTs extends Vue {
     currentAmount: number = 0
     mosaicList = []
     multisigPublickeyList: any = []
-    formItem = {
-        address: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
-        remark: '',
-        multisigPublickey: '',
-        innerFee: 1000000,
-        lockFee: 10000000,
-        aggregateFee: 1000000,
-        mosaicTransferList: [],
-        isEncryption: true
-    }
+    formItem = formData.multisigTransferForm
 
 
     get generationHash() {

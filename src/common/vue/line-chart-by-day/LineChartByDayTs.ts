@@ -233,11 +233,6 @@ export class LineChartByDayTs extends Vue {
     btcDataList = []
     xemMin = 0
 
-    mounted() {
-        this.refresh()
-    }
-
-
     refresh() {
         this.refreshXem()
         this.refreshBtc()
@@ -377,7 +372,9 @@ export class LineChartByDayTs extends Vue {
         })
     }
 
-    created() {
-        this.refreshData()
+    async mounted() {
+        await this.refreshData()
+        this.refresh()
     }
+
 }

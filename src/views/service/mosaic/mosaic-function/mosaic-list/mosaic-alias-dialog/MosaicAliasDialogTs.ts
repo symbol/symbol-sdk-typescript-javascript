@@ -1,4 +1,4 @@
-import {Message} from "@/config/index.ts"
+import {Message, formData} from "@/config/index.ts"
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
@@ -7,16 +7,22 @@ import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {Account, Crypto, AliasActionType, NamespaceId, MosaicId} from "nem2-sdk"
 import {decryptKey} from "@/core/utils/wallet.ts"
 import {signAndAnnounceNormal} from '@/core/utils/wallet.ts'
+import {mapState} from "vuex"
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app',
+        })
+    }
+})
 export class MosaicAliasDialogTs extends Vue {
+    activeAccount: any
+    app: any
     show = false
     isCompleteForm = false
-    mosaic = {
-        aliasName: '',
-        fee: 50000,
-        password: ''
-    }
+    mosaic = formData.mosaicAliasForm
     aliasNameList: any[] = []
 
     @Prop()
@@ -25,19 +31,19 @@ export class MosaicAliasDialogTs extends Vue {
     itemMosaic: any
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
     get generationHash() {
-        return this.$store.state.account.generationHash
+        return this.activeAccount.generationHash
     }
 
     get node() {
-        return this.$store.state.account.node
+        return this.activeAccount.node
     }
 
     get namespaceList() {
-        return this.$store.state.account.namespace
+        return this.activeAccount.namespace
     }
 
     mosaicAliasDialogCancel() {

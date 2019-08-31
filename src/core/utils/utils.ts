@@ -288,7 +288,7 @@ export const getCurrentMonthLast = function (date) {
     let nextMonth = ++currentMonth
     let nextMonthFirstDay = new Date(date.getFullYear(), nextMonth, 1)
     let oneDay = 1000 * 60 * 60 * 24
-    return new Date(Number(nextMonthFirstDay) - oneDay)
+    return new Date(Number(nextMonthFirstDay))
 }
 
 export const isRefreshData = function (localstorageName, refreshTime, borderlineTime) {

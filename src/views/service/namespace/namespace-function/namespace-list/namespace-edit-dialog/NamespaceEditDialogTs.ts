@@ -1,24 +1,27 @@
 import './NamespaceEditDialog.less'
-import {Message} from "@/config/index.ts"
+import {Message, formData} from "@/config/index.ts"
 import {Account} from 'nem2-sdk'
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {createRootNamespace, decryptKey} from "@/core/utils/wallet.ts"
 import {signAndAnnounceNormal} from "@/core/utils/wallet"
+import {mapState} from "vuex"
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+        })
+    }
+})
 export class NamespaceEditDialogTs extends Vue {
+    activeAccount: any
     show = false
     isCompleteForm = false
     stepIndex = 0
     durationIntoDate: string = '0'
-    namespace = {
-        name: '',
-        duration: 0,
-        fee: 50000,
-        password: ''
-    }
+    namespace = formData.namesapceEditForm
 
     @Prop({default: false})
     showNamespaceEditDialog: boolean
@@ -32,16 +35,16 @@ export class NamespaceEditDialogTs extends Vue {
     })
     currentNamespace: any
 
-    get getWallet() {
-        return this.$store.state.account.wallet
+    get wallet() {
+        return this.activeAccount.wallet
     }
 
     get generationHash() {
-        return this.$store.state.account.generationHash
+        return this.activeAccount.generationHash
     }
 
     get node() {
-        return this.$store.state.account.node
+        return this.activeAccount.node
     }
 
     namespaceEditDialogCancel() {
@@ -69,45 +72,37 @@ export class NamespaceEditDialogTs extends Vue {
 
     checkInfo() {
         const {namespace} = this
-
-        if (namespace.fee === 0) {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
-        if (namespace.duration === 0) {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
-        if (namespace.password === '') {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
+        if (namespace.password === '' || namespace.duration === 0 || namespace.fee === 0) {
+            this.showErrorNotice(this.$t(Message.INPUT_EMPTY_ERROR))
             return false
         }
         return true
     }
 
+    showErrorNotice(text) {
+        this.$Notice.destroy()
+        this.$Notice.error({
+            title: '' + text
+        })
+    }
+
     checkNamespaceForm() {
         if (!this.isCompleteForm) return
         if (!this.checkInfo()) return
-        this.checkPrivateKey(decryptKey(this.getWallet, this.namespace.password))
+        this.checkPrivateKey(decryptKey(this.wallet, this.namespace.password))
     }
 
     checkPrivateKey(DeTxt) {
         const that = this
         try {
-            new WalletApiRxjs().getWallet(this.getWallet.name,
+            new WalletApiRxjs().getWallet(this.wallet.name,
                 DeTxt.length === 64 ? DeTxt : '',
-                this.getWallet.networkType,
+                this.wallet.networkType,
             )
             this.updateMosaic(DeTxt)
         } catch (e) {
             that.$Notice.error({
-                title: this.$t('password_error') + ''
+                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
             })
         }
 
@@ -116,11 +111,11 @@ export class NamespaceEditDialogTs extends Vue {
     async updateMosaic(key) {
         const that = this
         const {node, generationHash} = this
-        const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
+        const account = Account.createFromPrivateKey(key, this.wallet.networkType)
         const transaction = createRootNamespace(
             this.currentNamespace.name,
             this.namespace.duration,
-            this.getWallet.networkType,
+            this.wallet.networkType,
             this.namespace.fee
         )
         signAndAnnounceNormal(account, node, generationHash, [transaction], this.showNotice())

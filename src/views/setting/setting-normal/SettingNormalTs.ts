@@ -1,6 +1,6 @@
 import {timeZoneListData, languageList} from '@/config/index.ts'
-import {Component, Vue, Watch} from 'vue-property-decorator'
-import {localSave, getCurrentTimeZone} from '@/core/utils/utils.ts'
+import {Component, Vue} from 'vue-property-decorator'
+import {localSave} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
 
 @Component({

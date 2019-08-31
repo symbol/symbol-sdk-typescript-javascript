@@ -2,9 +2,18 @@ import {Message} from "@/config/index.ts"
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {decryptKey, encryptKey, saveLocalWallet} from "@/core/utils/wallet.ts"
+import {mapState} from "vuex"
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app'
+        })
+    },
+})
 export class WalletUpdatePasswordTs extends Vue {
+    activeAccount: any
     formItem = {
         prePassword: '',
         newPassword: '',
@@ -14,7 +23,11 @@ export class WalletUpdatePasswordTs extends Vue {
     isCompleteForm = false
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
+    }
+
+    get walletList() {
+        return this.activeAccount.walletList
     }
 
     checkInfo() {
@@ -49,7 +62,7 @@ export class WalletUpdatePasswordTs extends Vue {
     updatePW() {
         let encryptObj = encryptKey(this.privateKey, this.formItem.newPassword)
         let wallet = this.getWallet
-        let walletList = this.$store.state.app.walletList
+        let {walletList} = this
         wallet.ciphertext = encryptObj['ciphertext']
         wallet.iv = encryptObj['iv']
         walletList[0] = wallet

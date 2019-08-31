@@ -40,7 +40,7 @@ export class MenuBarTs extends Vue {
     localesMap = localesMap
 
     get isNodeHealthy() {
-        return this.$store.state.app.isNodeHealthy
+        return this.app.isNodeHealthy
     }
 
     get wallet() {
@@ -49,6 +49,10 @@ export class MenuBarTs extends Vue {
 
     get walletList() {
         return this.app.walletList || []
+    }
+
+    get currentPanelIndex() {
+        return this.app.currentPanelIndex
     }
 
     get networkType() {

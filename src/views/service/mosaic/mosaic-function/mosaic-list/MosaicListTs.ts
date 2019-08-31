@@ -1,20 +1,22 @@
-import {MosaicId, Mosaic} from "nem2-sdk"
-import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
-import {AccountApiRxjs} from '@/core/api/AccountApiRxjs.ts'
+import {MosaicId} from "nem2-sdk"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
 import MosaicUnAliasDialog from './mosaic-unAlias-dialog/MosaicUnAliasDialog.vue'
 import {getMosaicList, getMosaicInfoList} from '@/core/utils/wallet'
+import {mapState} from "vuex"
 
 @Component({
     components: {
         MosaicAliasDialog,
         MosaicUnAliasDialog,
         EditDialog
-    }
+    },
+    computed: {...mapState({activeAccount: 'account', app: 'app'})},
 })
 export class MosaicListTs extends Vue {
+    activeAccount: any
+    app: any
     isLoadingConfirmedTx = true
     currentTab: number = 0
     rootNameList: any[] = []
@@ -22,30 +24,52 @@ export class MosaicListTs extends Vue {
     showMosaicEditDialog = false
     showMosaicAliasDialog = false
     showMosaicUnAliasDialog = false
-    accountPublicKey = ''
-    accountAddress = ''
-    node = ''
-    generationHash = ''
-    currentXem = ''
-    currentXEM2: string
-    currentXEM1: string
     mosaicMapInfo: any = {}
     selectedMosaic: any = {}
 
+    get currentXem() {
+        return this.activeAccount.currentXem
+    }
+
+    get currentXEM1() {
+        return this.activeAccount.currentXEM1
+    }
+
+    get currentXEM2() {
+        return this.activeAccount.currentXEM2
+    }
+
+
+    get generationHash() {
+        return this.activeAccount.generationHash
+    }
+
+    get accountPublicKey() {
+        return this.activeAccount.wallet.publicKey
+    }
+
+    get accountAddress() {
+        return this.activeAccount.wallet.address
+    }
+
+    get node() {
+        return this.activeAccount.node
+    }
+
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
     get ConfirmedTxList() {
-        return this.$store.state.account.ConfirmedTx
+        return this.activeAccount.ConfirmedTx
     }
 
     get nowBlockHeihgt() {
-        return this.$store.state.app.chainStatus.currentHeight
+        return this.app.chainStatus.currentHeight
     }
 
     get namespaceList() {
-        return this.$store.state.account.namespace
+        return this.activeAccount.namespace
     }
 
     showCheckDialog() {
@@ -91,21 +115,6 @@ export class MosaicListTs extends Vue {
     closeMosaicEditDialog(item) {
         this.showMosaicEditDialog = false
     }
-
-
-    initData() {
-        if (!this.getWallet) {
-            return
-        }
-        this.accountPublicKey = this.getWallet.publicKey
-        this.accountAddress = this.getWallet.address
-        this.node = this.$store.state.account.node
-        this.generationHash = this.$store.state.account.generationHash
-        this.currentXEM2 = this.$store.state.account.currentXEM2
-        this.currentXEM1 = this.$store.state.account.currentXEM1
-        this.currentXem = this.$store.state.account.currentXem
-    }
-
 
     async initMosaic() {
         const that = this
@@ -158,7 +167,6 @@ export class MosaicListTs extends Vue {
 
     @Watch('getWallet')
     onGetWalletChange() {
-        this.initData()
         this.initMosaic()
     }
 
@@ -168,7 +176,6 @@ export class MosaicListTs extends Vue {
     }
 
     created() {
-        this.initData()
         this.initMosaic()
     }
 }

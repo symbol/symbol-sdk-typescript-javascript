@@ -1,4 +1,4 @@
-import {Message, networkType} from "@/config/index.ts"
+import {Message, networkTypeList, importKeystoreDefault} from "@/config/index.ts"
 import {Account, NetworkType} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
 import {
@@ -13,35 +13,42 @@ import {
     MAX_PASSWORD_LENGTH,
     MIN_PASSWORD_LENGTH
 } from "@/core/validation"
+import {mapState} from "vuex"
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app'
+        })
+    }
+})
 export class WalletImportKeystoreTs extends Vue {
+    activeAccount: any
+    app: any
     MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
     MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
     ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
     file = ''
     fileList = []
-    NetworkTypeList = networkType
-    formItem = {
-        walletName: 'wak',
-        networkType: NetworkType.MIJIN_TEST,
-        keystoreStr: 'eyJuYW1lIjoiMzIxMzIxMzEyIiwiY2lwaGVydGV4dCI6eyJ3b3JkcyI6Wzg1NDY0MjkyNSwyMDMwOTQ2OTg5LC0xMTYzOTM0MCwxMjYzMTEzOTQyLDE1OTgyNzY0MjMsLTEzNDMwODUyMDgsLTEwMTM2MDI4NzAsMTIxNDI5ODg2LC0xNTkyNDUzNzg0LDE1OTU5OTEwMDYsLTEwMzkxMTQ1NjQsNzI4MjgxODc3XSwic2lnQnl0ZXMiOjQ4fSwiaXYiOnsidHlwZSI6IkJ1ZmZlciIsImRhdGEiOlsxODAsMTk2LDIyNywxNjYsMTc4LDIzNSw4OSwxNDUsMjI4LDY2LDExMiw2MSwyNCwyNSwzOCwxNjZdfSwibmV0d29ya1R5cGUiOjE0NCwiYWRkcmVzcyI6IlNBVUE1SlFSUDJGQk5QQU8zRlFJUlRKUlM1UEhKVjdDTFpTT1lMS0YiLCJwdWJsaWNLZXkiOiI2MjMyM0JDMkQwNzVDRDgxNUU0QTcxQjE4NzQ3MDhDOEVBQUVGRUMyOTVDNkYxQTgyRTZCOTE4MjJCQjJEREJCIiwibW5lbW9uaWNFbkNvZGVPYmoiOnt9fQ==',
-        walletPassword: '111111',
-        walletPasswordAgain: '111111',
-        keystorePassword: '123'
-    }
+    NetworkTypeList = networkTypeList
+    formItem = importKeystoreDefault
 
 
     get getNode() {
-        return this.$store.state.account.node
+        return this.activeAccount.node
     }
 
     get currentXEM1() {
-        return this.$store.state.account.currentXEM1
+        return this.activeAccount.currentXEM1
+    }
+
+    get walletList() {
+        return this.app.walletList
     }
 
     get currentXEM2() {
-        return this.$store.state.account.currentXEM2
+        return this.activeAccount.currentXEM2
     }
 
 
@@ -51,7 +58,7 @@ export class WalletImportKeystoreTs extends Vue {
     }
 
     async importWalletByKeystore() {
-        const {keystoreStr, networkType, keystorePassword, walletPassword} = this.formItem
+        const {keystoreStr, networkType, keystorePassword} = this.formItem
         const that = this
         const wallet = JSON.parse(decryptKeystore(keystoreStr))
         const privatekey = decryptKey(wallet, keystorePassword) + ''
@@ -65,11 +72,12 @@ export class WalletImportKeystoreTs extends Vue {
         this.loginWallet(account)
     }
 
+
     loginWallet(account) {
         const {networkType, walletName, walletPassword} = this.formItem
         const that = this
         const netType: NetworkType = networkType
-        const walletList = this.$store.state.app.walletList
+        const {walletList} = this
         const style = 'walletItem_bg_' + walletList.length % 3
         getAccountDefault(walletName, account, netType, this.getNode, this.currentXEM1, this.currentXEM2)
             .then((wallet) => {
@@ -91,7 +99,7 @@ export class WalletImportKeystoreTs extends Vue {
     }
 
     async checkForm() {
-        const {keystoreStr, networkType, walletName, walletPassword, keystorePassword, walletPasswordAgain} = this.formItem
+        const {keystoreStr, networkType, walletName, walletPassword, walletPasswordAgain} = this.formItem
         if (networkType == 0) {
             this.$Notice.error({
                 title: this.$t(Message.PLEASE_SWITCH_NETWORK) + ''

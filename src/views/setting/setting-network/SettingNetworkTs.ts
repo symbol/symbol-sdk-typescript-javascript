@@ -1,34 +1,11 @@
 import {Component, Vue} from 'vue-property-decorator'
+import {settingNetworkPointList, settingNetworkColorList} from '@/config/index.ts'
 
 @Component
 export class SettingNetworkTs extends Vue {
-    pointList = [
-        {
-            name: 'NEM_PRIVATE_1',
-            rpcUrl: 'Https://12.10.0.10',
-            chainId: 1,
-            symbol: 'XEM',
-            exploerUrl: 'https://nodeexplorer.com/',
-            isSelected: true
-        }, {
-            name: 'NEM_MAIN',
-            rpcUrl: 'Https://12.10.0.10',
-            chainId: 2,
-            symbol: 'XEM',
-            exploerUrl: 'https://nodeexplorer.com/',
-            isSelected: false
-        },
-        {
-            name: 'NEM_MAIN_NET',
-            rpcUrl: 'Https://12.10.0.10',
-            chainId: 2,
-            symbol: 'XEM',
-            exploerUrl: 'https://nodeexplorer.com/',
-            isSelected: false
-        }
-    ]
+    pointList = settingNetworkPointList
     currentPoint = {}
-    pointerColorList = ['green_point', 'pink_point', 'purple_point', 'yellow_point']
+    pointerColorList = settingNetworkColorList
 
     selectPoint(index) {
 

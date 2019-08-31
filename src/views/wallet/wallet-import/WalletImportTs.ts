@@ -2,7 +2,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import WalletImportKeystore from '@/views/wallet/wallet-import-keystore/WalletImportKeystore.vue'
 import WalletImportMnemonic from '@/views/wallet/wallet-import-mnemonic/WalletImportMnemonic.vue'
 import WalletImportPrivatekey from '@/views/wallet/wallet-import-privatekey/WalletImportPrivatekey.vue'
-import {networkType} from '@/config'
+import {networkTypeList, walletImportNavagatorList} from '@/config/index.ts'
 
 @Component({
     components: {
@@ -14,6 +14,9 @@ import {networkType} from '@/config'
 export class WalletImportTs extends Vue {
     tabIndex = 0
     currentTab = 'mnemonic'
+    netType = networkTypeList
+    navagatorList = walletImportNavagatorList
+    currentHeadText = ''
     mnemonic = {
         mnemonic: '',
         password: '',
@@ -27,24 +30,7 @@ export class WalletImportTs extends Vue {
         keystore: '',
         password: '',
     }
-    netType = networkType
 
-    navagatorList = [
-        {
-            title: 'mnemonic',
-            name: 'walletImportMnemonic',
-            isSelected: true
-        }, {
-            title: 'privatekey',
-            name: 'walletImportPrivatekey',
-            isSelected: false
-        }, {
-            title: 'keystore',
-            name: 'walletImportKeystore',
-            isSelected: false
-        }
-    ]
-    currentHeadText = ''
 
     jumpToView(n, index) {
         let list = this.navagatorList

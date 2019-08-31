@@ -64,8 +64,8 @@
           <img :src="n.icon" alt="">
           <span class="descript">{{$t(n.descript)}}</span>
           <span :class="['data','overflow_ellipsis', updateAnimation]">
-            <numberGrow v-if="index !== 4" :value="$store.state.app.chainStatus[n.variable]"></numberGrow>
-            <span v-else>...{{$store.state.app.chainStatus[n.variable].substr(-5,5)}}</span>
+            <numberGrow v-if="index !== 4" :value="chainStatus[n.variable]"></numberGrow>
+            <span v-else>...{{chainStatus[n.variable].substr(-5,5)}}</span>
           </span>
         </div>
       </div>

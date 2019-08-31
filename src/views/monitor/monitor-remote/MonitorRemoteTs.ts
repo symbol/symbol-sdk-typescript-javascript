@@ -1,4 +1,4 @@
-import {Message} from "@/config/index.ts"
+import {Message, formData} from "@/config/index.ts"
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
@@ -22,11 +22,7 @@ export class MonitorRemoteTs extends Vue {
     isLinkToRemote = false
     isShowDialog = false
     remotePublickey = ''
-    formItem = {
-        remotePublickey: '',
-        fee: 0,
-        password: ''
-    }
+    formItem: any = formData.transferForm
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -131,13 +127,7 @@ export class MonitorRemoteTs extends Vue {
             NetworkType.MIJIN_TEST,
             UInt64.fromUint(fee)
         )
-        signAndAnnounceNormal(account, node, generationHash, [accountLinkTransaction], this.showNotice())
-        new TransactionApiRxjs()._announce(
-            accountLinkTransaction,
-            node,
-            account,
-            generationHash
-        )
+        signAndAnnounceNormal(account, node, generationHash, [accountLinkTransaction], this.showNotice)
         this.modalCancel()
     }
 

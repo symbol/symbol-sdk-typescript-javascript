@@ -208,6 +208,7 @@ export const getBlockInfoByTransactionList = (transactionList: Array<any>, node:
 export const signAndAnnounceNormal = (account: Account, node: string, generationHash: string, transactionList: Array<any>, callBack: any) => {
     try {
         const signature = account.sign(transactionList[0], generationHash)
+        console.log(signature)
         new TransactionApiRxjs().announce(signature, node).subscribe(() => {
                 callBack()
             }, (error) => {

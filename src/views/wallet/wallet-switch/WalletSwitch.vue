@@ -4,7 +4,7 @@
       <p class="tit">{{$t('Wallet_management')}}</p>
     </div>
     <div class="walletList">
-      <div :class="['walletItem',item.style, item.active &&walletList.length > 1 ? 'active':'','radius']"
+      <div :class="['walletItem',item.style, item.active || walletList.length == 1 ? 'active':'','radius']"
            @click="chooseWallet(index)"
            v-for="(item, index) in walletList" :key="index">
         <Row>
@@ -12,8 +12,8 @@
             <div>
               <p class="walletName">{{item.name}}</p>
               <p class="walletAmount">
-                  {{ getWalletBalance(index) }}
-                  &nbsp;<span class="tails">XEM</span>
+                {{ getWalletBalance(index) }}
+                &nbsp;<span class="tails">XEM</span>
               </p>
             </div>
           </Col>

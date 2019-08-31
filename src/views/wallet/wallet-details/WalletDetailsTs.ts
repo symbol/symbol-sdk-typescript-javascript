@@ -8,6 +8,7 @@ import KeystoreDialog from '@/views/wallet/keystore-dialog/KeystoreDialog.vue'
 import MnemonicDialog from '@/views/wallet/mnemonic-dialog/MnemonicDialog.vue'
 import PrivatekeyDialog from '@/views/wallet/privatekey-dialog/PrivatekeyDialog.vue'
 import WalletUpdatePassword from './wallet-function/wallet-update-password/WalletUpdatePassword.vue'
+import {mapState} from "vuex"
 
 @Component({
     components: {
@@ -18,8 +19,16 @@ import WalletUpdatePassword from './wallet-function/wallet-update-password/Walle
         WalletFilter,
         WalletUpdatePassword
     },
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app'
+        })
+    }
 })
 export class WalletDetailsTs extends Vue {
+    activeAccount: any
+    app: any
     aliasList = []
     QRCode: string = ''
     showMnemonicDialog: boolean = false
@@ -28,12 +37,16 @@ export class WalletDetailsTs extends Vue {
     functionShowList = [true, false, false]
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
     get getAddress() {
         if (!this.getWallet) return
         return this.getWallet.address
+    }
+
+    get generationHash() {
+        return this.activeAccount.generationHash
     }
 
     showFunctionIndex(index) {
@@ -74,9 +87,8 @@ export class WalletDetailsTs extends Vue {
     setQRCode(address) {
         if (!address || address.length < 40) return
         const {networkType} = Address.createFromRawAddress(address)
-        const {generationHash} = this.$store.state.account
-        this.QRCode = QRCodeGenerator
-            .createExportObject({address}, networkType, generationHash).toBase64()
+        const {generationHash} = this
+        this.QRCode = QRCodeGenerator.createExportObject({address}, networkType, generationHash).toBase64()
     }
 
     copy(txt) {

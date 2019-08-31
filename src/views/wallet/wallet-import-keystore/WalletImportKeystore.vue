@@ -52,7 +52,7 @@
         <li>
           {{$t('set_password')}}
           <div class="tips">
-            {{$t('This_password_is_used_to_encrypt_your_private_key')}}
+            {{$t('This_password_is_used_to_encrypt_your_private_key_keystore')}}
           </div>
           <p class="formItemTxt">{{$t('password_hint', {min: MIN_PASSWORD_LENGTH, max: MAX_PASSWORD_LENGTH, specialChar: ALLOWED_SPECIAL_CHAR})}}</p>
           <div class="gray_content">

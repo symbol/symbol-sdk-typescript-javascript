@@ -11,6 +11,7 @@ import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
 import {getNamespaces, setWalletMosaic, getMosaicList, getMosaicInfoList} from "@/core/utils/wallet.ts"
 import {copyTxt, localSave, formatXEMamount} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
+import {minitorPanelNavigatorList} from '@/config/index.ts'
 
 @Component({
     computed: {
@@ -34,44 +35,8 @@ export class MonitorPanelTs extends Vue {
     isShowManageMosaicIcon = false
     monitorSeleted = monitorSeleted
     monitorUnselected = monitorUnselected
-    navigatorList: any = [
-        {
-            name: 'dash_board',
-            isSelect: true,
-            path: 'dashBoard'
-        },
-        {
-            name: 'transfer',
-            isSelect: false,
-            path: 'transfer'
-        },
-        {
-            name: 'receive',
-            isSelect: false,
-            path: 'receipt'
-        },
-
-        {
-            name: 'remote',
-            isSelect: false,
-            path: 'remote',
-        },
-        {
-            name: 'market',
-            isSelect: false,
-            path: 'market'
-        },
-    ]
-
-    mosaicMap: any = {
-        aabby: {
-            name: 'nem.xem',
-            hex: 'nem.xem',
-            amount: 0.265874,
-            show: true,
-            showInManage: true
-        }
-    }
+    navigatorList: any = minitorPanelNavigatorList
+    mosaicMap: any = {}
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -222,6 +187,7 @@ export class MonitorPanelTs extends Vue {
         const that = this
         let {accountAddress, node, currentXEM1, currentXem, currentXEM2} = this
         let mosaicMap = {}
+        let addressMap = {}
         let mosaicHexIds = []
         let getWallet = this.getWallet
         let walletList = this.getWalletList
@@ -291,12 +257,18 @@ export class MonitorPanelTs extends Vue {
                 }
             })
             this.namespaceList.forEach((item) => {
-                if (item.alias.type == aliasType.mosaicAlias) {
-                    const mosaicHex = new MosaicId(item.alias.mosaicId).toHex()
-                    if (mosaicMap[mosaicHex]) {
-                        mosaicMap[mosaicHex].name = item.label
-                    }
-
+                switch (item.alias.type) {
+                    case aliasType.mosaicAlias:
+                        const mosaicHex = new MosaicId(item.alias.mosaicId).toHex()
+                        if (mosaicMap[mosaicHex]) {
+                            mosaicMap[mosaicHex].name = item.label
+                        }
+                        break
+                    case  aliasType.addressAlias:
+                        //@ts-ignore
+                        const address = Address.createFromEncoded(item.alias.address).address
+                        addressMap[address] = item
+                        break
                 }
             })
         })
@@ -309,6 +281,7 @@ export class MonitorPanelTs extends Vue {
         that.localMosaicMap = mosaicMap
         that.mosaicMap = mosaicMap
         that.$store.commit('SET_MOSAIC_MAP', mosaicMap)
+        that.$store.commit('SET_ADDRESS_ALIAS_MAP', addressMap)
         that.isLoadingMosaic = false
     }
 
@@ -391,6 +364,7 @@ export class MonitorPanelTs extends Vue {
     }
 
     created() {
+        this.switchPanel(0)
         this.setLeftSwitchIcon()
         this.initLeftNavigator()
         this.initData()

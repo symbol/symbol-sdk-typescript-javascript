@@ -319,7 +319,7 @@ export const en_US = {
     keystore_string: 'Keystore string',
     keystore_text: 'Keystore text content',
     keystore_describle_text: 'This password is the KeyStore decryption password.',
-    keystore_describle_import: 'From your computer, choose to load the KY file or paste the KeyStore string in the input box below.',
+    keystore_describle_import: 'From your computer, paste the KeyStore string in the input box below.',
     //create lock pw
     new_password: 'New password',
     Please_enter_the_name_of_the_wallet: 'Please enter the name of the wallet',
@@ -403,7 +403,7 @@ export const en_US = {
     please_accurately_copy_the_secure_backup_private_key: 'Please accurately copy the secure backup private key',
     display_private_key_QR_code: 'Display QR code',
     display_private_key: 'Privatekey',
-
+    This_password_is_used_to_encrypt_your_private_key_keystore: 'This password is your wallet and the decryption password when exporting the keystore again. Please avoid using an overly simple password.',
     // wallet create
     Keystore_decryption_failed: 'Keystore decryption failed',
     choose_network: 'Choose network',
@@ -664,7 +664,7 @@ export const en_US = {
     LABEL_mosaic_list: 'Mosaic list',
     The_mosaic_to_be_sent_is_empty: 'The mosaic to be sent is empty',
     Node_not_available_please_check_your_node_or_network_settings: 'Node not available, please check your node or network settings.',
-    encryption: 'Encryption',
+    encryption: 'Encrypted',
     Not_encrypted: 'Not encrypted'
 
 }

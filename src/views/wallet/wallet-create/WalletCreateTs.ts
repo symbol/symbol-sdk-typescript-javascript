@@ -1,4 +1,4 @@
-import {Message, networkType} from "@/config/index.ts"
+import {Message, networkTypeList} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {createMnemonic} from "@/core/utils/hdWallet.ts"
 import {
@@ -20,7 +20,7 @@ export class WalletCreateTs extends Vue {
     MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
     MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
     ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
-    netType = networkType
+    netType = networkTypeList
 
     checkInput() {
         if (!this.formItem.currentNetType || this.formItem.currentNetType == '') {

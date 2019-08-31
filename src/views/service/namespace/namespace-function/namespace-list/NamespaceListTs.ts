@@ -1,22 +1,31 @@
 import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
+import {mapState} from "vuex"
 
 @Component({
     components: {
         NamespaceEditDialog
+    },
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app:'app'
+        })
     }
 })
 export class NamespaceListTs extends Vue {
+    activeAccount:any
+    app:any
     showNamespaceEditDialog = false
     currentNamespace = ''
 
     get namespaceList() {
-        return this.$store.state.account.namespace
+        return this.activeAccount.namespace
     }
 
     get nowBlockHeihgt() {
-        return this.$store.state.app.chainStatus.currentHeight
+        return this.app.chainStatus.currentHeight
     }
 
     showEditDialog(namespaceName) {

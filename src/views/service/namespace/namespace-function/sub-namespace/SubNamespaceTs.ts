@@ -1,19 +1,28 @@
-import {Message, bandedNamespace as BandedNamespaceList} from "@/config/index.ts"
+import {Message, bandedNamespace as BandedNamespaceList, subNamespaceTypeList} from "@/config/index.ts"
 import {formatAddress} from '@/core/utils/utils.ts'
 import {getNamespaces} from '@/core/utils/wallet.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
-import {Address, Listener} from "nem2-sdk"
+import {Address} from "nem2-sdk"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet"
+import {mapState} from "vuex"
 
 @Component({
     components: {
         CheckPWDialog
+    },
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app'
+        })
     }
 })
 export class SubNamespaceTs extends Vue {
+    activeAccount: any
+    app: any
     durationIntoDate = 0
     isCompleteForm = true
     showCheckPWDialog = false
@@ -31,31 +40,26 @@ export class SubNamespaceTs extends Vue {
         lockFee: 50000,
     }
     multisigPublickeyList = []
+    typeList = subNamespaceTypeList
 
-    typeList = [
-        {
-            name: 'ordinary_account',
-            isSelected: true
-        }, {
-            name: 'multi_sign_account',
-            isSelected: false
-        }
-    ]
-
-    get getWallet() {
-        return this.$store.state.account.wallet
+    get wallet() {
+        return this.activeAccount.wallet
     }
 
     get generationHash() {
-        return this.$store.state.account.generationHash
+        return this.activeAccount.generationHash
     }
 
     get node() {
-        return this.$store.state.account.node
+        return this.activeAccount.node
+    }
+
+    get address() {
+        return this.activeAccount.wallet.address
     }
 
     get namespaceList() {
-        return this.$store.state.account.namespace ? this.$store.state.account.namespace : []
+        return this.activeAccount.namespace ? this.activeAccount.namespace : []
     }
 
 
@@ -91,11 +95,9 @@ export class SubNamespaceTs extends Vue {
 
     createByMultisig() {
         const that = this
-        const {rootNamespaceName, subNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
-        const {networkType} = this.getWallet
-        const {node} = this.$store.state.account
-        const mosaicHex = this.$store.state.account.currentXEM1
-        const listener = new Listener(node.replace('http', 'ws'), WebSocket)
+        const {aggregateFee, multisigPublickey} = this.form
+        const {networkType} = this.wallet
+        const {node} = this
         const rootNamespaceTransaction = this.createSubNamespace()
         if (that.currentMinApproval > 1) {
             const aggregateTransaction = createBondedMultisigTransaction(
@@ -173,8 +175,8 @@ export class SubNamespaceTs extends Vue {
     }
 
     createSubNamespace() {
-        const {rootNamespaceName, subNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
-        const {networkType} = this.getWallet
+        const {rootNamespaceName, subNamespaceName, innerFee} = this.form
+        const {networkType} = this.wallet
         return new NamespaceApiRxjs().createdSubNamespace(
             subNamespaceName,
             rootNamespaceName,
@@ -201,7 +203,7 @@ export class SubNamespaceTs extends Vue {
     createTransaction() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
-        const {rootNamespaceName, innerFee, subNamespaceName, multisigPublickey} = this.form
+        const {rootNamespaceName, innerFee, subNamespaceName} = this.form
         this.transactionDetail = {
             "namespace": rootNamespaceName,
             "innerFee": innerFee,
@@ -223,9 +225,8 @@ export class SubNamespaceTs extends Vue {
 
     getMultisigAccountList() {
         const that = this
-        if (!this.$store.state.account.wallet) return
-        const {address} = this.$store.state.account.wallet
-        const {node} = this.$store.state.account
+        if (!this.wallet) return
+        const {address, node} = this
         new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
             that.multisigPublickeyList = multisigInfo.multisigAccounts.map((item: any) => {
                 item.value = item.publicKey
@@ -238,7 +239,7 @@ export class SubNamespaceTs extends Vue {
     @Watch('form.multisigPublickey')
     async onMultisigPublickeyChange() {
         const {node} = this
-        const {networkType} = this.getWallet
+        const {networkType} = this.wallet
         const {multisigPublickey} = this.form
         const address = Address.createFromPublicKey(multisigPublickey, networkType).toDTO().address
         if (multisigPublickey.length !== 64) {

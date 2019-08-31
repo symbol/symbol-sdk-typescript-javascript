@@ -1,28 +1,29 @@
-import {Account, Crypto} from 'nem2-sdk'
-import {Message} from "@/config/index.ts"
+import {Account} from 'nem2-sdk'
+import {Message, formData, xemTotalSupply} from "@/config/index.ts"
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
 import {decryptKey} from "@/core/utils/wallet.ts"
-import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {signAndAnnounceNormal} from "@/core/utils/wallet"
+import {mapState} from "vuex"
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app',
+        })
+    }
+
+})
 export class MosaicEditDialogTs extends Vue {
     show = false
+    activeAccount: any
+    app: any
     isCompleteForm = false
     changedSupply = 0
-    totalSupply = 9000000000
-    mosaic = {
-        id: '',
-        aliasName: '',
-        delta: 0,
-        supplyType: 1,
-        changeDelta: 0,
-        duration: '',
-        fee: 50000,
-        password: ''
-    }
+    totalSupply = xemTotalSupply
+    mosaic = formData.mosaicEditForm
 
     @Prop()
     showMosaicEditDialog: boolean
@@ -38,16 +39,17 @@ export class MosaicEditDialogTs extends Vue {
         return this.mosaic['supply']
     }
 
-    get getWallet() {
-        return this.$store.state.account.wallet
+    get wallet() {
+        console.log(this.activeAccount)
+        return this.activeAccount.wallet
     }
 
     get generationHash() {
-        return this.$store.state.account.generationHash
+        return this.activeAccount.generationHash
     }
 
     get node() {
-        return this.$store.state.account.node
+        return this.activeAccount.node
     }
 
     mosaicEditDialogCancel() {
@@ -106,16 +108,16 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     decryptKey() {
-        this.checkPrivateKey(decryptKey(this.getWallet, this.mosaic.password))
+        this.checkPrivateKey(decryptKey(this.wallet, this.mosaic.password))
     }
 
     checkPrivateKey(DeTxt) {
         const that = this
         try {
             new WalletApiRxjs().getWallet(
-                this.getWallet.name,
+                this.wallet.name,
                 DeTxt.length === 64 ? DeTxt : '',
-                this.getWallet.networkType,
+                this.wallet.networkType,
             )
             this.updateMosaic(DeTxt)
         } catch (e) {
@@ -128,8 +130,14 @@ export class MosaicEditDialogTs extends Vue {
     updateMosaic(key) {
         const that = this
         const {node, generationHash} = this
-        const transaction = new MosaicApiRxjs().mosaicSupplyChange(this.mosaic['mosaicId'], this.mosaic.changeDelta, this.mosaic.supplyType, this.getWallet.networkType, this.mosaic.fee)
-        const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
+        const transaction = new MosaicApiRxjs().mosaicSupplyChange(
+            this.mosaic['mosaicId'],
+            this.mosaic.changeDelta,
+            this.mosaic.supplyType,
+            this.wallet.networkType,
+            this.mosaic.fee
+        )
+        const account = Account.createFromPrivateKey(key, this.wallet.networkType)
         signAndAnnounceNormal(account, node, generationHash, [transaction], this.showNotice())
     }
 

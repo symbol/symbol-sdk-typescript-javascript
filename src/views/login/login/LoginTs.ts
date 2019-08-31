@@ -4,15 +4,22 @@ import {Component, Vue} from 'vue-property-decorator'
 import GetStart from './login-view/get-start/GetStart.vue'
 import InputLock from './login-view/input-lock/InputLock.vue'
 import CreateLock from './login-view/create-lock/CreateLock.vue'
+import {mapState} from "vuex"
 
 @Component({
     components: {
         GetStart,
         CreateLock,
         InputLock
+    },
+    computed: {
+        ...mapState({
+            app: 'app',
+        })
     }
 })
 export class LoginTs extends Vue {
+    app:any
     languageList = languageList
     isShowDialog = true
     indexShowList = [true, false, false]
@@ -24,7 +31,7 @@ export class LoginTs extends Vue {
     }
 
     get getWalletList() {
-        return this.$store.state.app.walletList || []
+        return this.app.walletList || []
     }
 
     get language() {

@@ -2,9 +2,19 @@ import {Crypto} from 'nem2-sdk'
 import {Message} from "@/config/index.ts"
 import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {mapState} from "vuex"
 
-@Component
+@Component({
+    computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app',
+        })
+    }
+})
 export class DeleteWalletCheckTs extends Vue {
+    activeAccount:any
+    app:any
     stepIndex = 0
     show = false
     wallet = {
@@ -15,7 +25,7 @@ export class DeleteWalletCheckTs extends Vue {
     showCheckPWDialog: boolean
 
     get getWallet() {
-        return this.$store.state.account.wallet
+        return this.activeAccount.wallet
     }
 
     checkPasswordDialogCancel() {

@@ -13,7 +13,7 @@ export class CheckPasswordDialogTs extends Vue {
     stepIndex = 0
     show = false
     activeAccount: any
-    wallet = {
+    walletInputInfo = {
         password: ''
     }
 
@@ -49,6 +49,10 @@ export class CheckPasswordDialogTs extends Vue {
         return this.activeAccount.currentXEM1
     }
 
+    get networkType() {
+        return this.activeAccount.wallet.networkType
+    }
+
     get generationHash() {
         return this.activeAccount.generationHash
     }
@@ -58,7 +62,7 @@ export class CheckPasswordDialogTs extends Vue {
     }
 
     checkPassword() {
-        const DeTxt = decryptKey(this.getWallet, this.wallet.password).trim()
+        const DeTxt = decryptKey(this.getWallet, this.walletInputInfo.password).trim()
         try {
             new WalletApiRxjs().getWallet(
                 this.getWallet.name,
@@ -80,14 +84,13 @@ export class CheckPasswordDialogTs extends Vue {
 
     @Watch('showCheckPWDialog')
     onShowCheckPWDialogChange() {
-        this.wallet.password = ''
+        this.walletInputInfo.password = ''
         this.show = this.showCheckPWDialog
     }
 
     switchAnnounceType(privatekey) {
         const that = this
-        const {node, generationHash, transactionList, currentXEM1} = this
-        const {networkType} = this.getWallet
+        const {node, generationHash, networkType, transactionList, currentXEM1} = this
         const {lockFee} = this.otherDetails
         const account = Account.createFromPrivateKey(privatekey, networkType)
         if (transactionList[0].type !== TransactionType.AGGREGATE_BONDED) {

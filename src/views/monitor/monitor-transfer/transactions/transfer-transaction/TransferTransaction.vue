@@ -1,5 +1,5 @@
 <template>
-  <div class="transfer">
+  <div class="transfer" @click="isShowSubAlias=false">
     <form @submit.prevent="validateForm('transfer-transaction')">
       <div class="address flex_center">
         <span class="title">{{$t('transfer_target')}}</span>
@@ -14,6 +14,14 @@
                     type="text"
             />
           </ErrorTooltip>
+          <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>
+           <div v-if="isShowSubAlias" class="selections ">
+             <div class="selection_container scroll">
+                <div @click="formModel.address =key " class="overflow_ellipsis"
+                     v-for="(value,key) in addresAliasMap">{{value.label}}({{key}})</div>
+
+             </div>
+           </div>
         </span>
       </div>
       <div class="asset flex_center">

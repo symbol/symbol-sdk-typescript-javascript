@@ -31,10 +31,7 @@ export class informationTs extends Vue {
     loadAllCommentData = false
     isLoadingConfirmedTx = true
     scroll: any
-    currentArticle: any = {
-        title: 'null',
-        content: 'null'
-    }
+    currentArticle: any = {title: 'null', content: 'null'}
 
     get address() {
         return this.activeAccount.wallet.address
