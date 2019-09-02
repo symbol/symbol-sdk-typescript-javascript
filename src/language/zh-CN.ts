@@ -631,7 +631,7 @@ export const zh_CN = {
     // Forms
     newPassword: '新密码',
     LABEL_new_password: '新密码',
-    HINT_new_password1: '应该为6~32字符',
+    HINT_new_password1: '应该为8~32字符',
     HINT_new_password2: '允许以下特殊字符: - _ ! @ # $ & * " ~ + = %',
     PLACEHOLDER_new_password: '9_pass-WORD',
 

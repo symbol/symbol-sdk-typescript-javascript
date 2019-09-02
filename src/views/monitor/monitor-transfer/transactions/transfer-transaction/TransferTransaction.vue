@@ -22,7 +22,7 @@
 
              </div>
            </div>
-        </span>
+          </span>
       </div>
       <div class="asset flex_center">
         <span class="title">{{$t('asset_type')}}</span>

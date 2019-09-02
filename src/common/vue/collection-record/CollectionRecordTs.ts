@@ -29,7 +29,7 @@ export class CollectionRecordTs extends Vue {
     unConfirmedTransactionList = []
     localUnConfirmedTransactions = []
     isLoadingTransactionRecord = true
-    currentMonth: any
+    currentMonth: string = ''
     transacrionAssetIcon = transacrionAssetIcon
     transactionDetails: any = []
 

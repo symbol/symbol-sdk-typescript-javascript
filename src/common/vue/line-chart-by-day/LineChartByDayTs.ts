@@ -325,7 +325,7 @@ export class LineChartByDayTs extends Vue {
         rstQuery.data.forEach((item, index) => {
             index % 4 == 0 ? dataList.push(item) : dataList
         })
-        let marketPriceDataObject = localRead('marketPriceDataObject') !== '' ? JSON.parse(localRead('marketPriceDataByDayObject')) : {}
+        let marketPriceDataObject = localRead('marketPriceDataObject') !== '' ? JSON.parse(localRead('marketPriceDataObject')) : {}
         marketPriceDataObject.timestamp = new Date().getTime()
         if (coin == 'xem') {
             that.xemDataList = dataList
@@ -376,5 +376,6 @@ export class LineChartByDayTs extends Vue {
         await this.refreshData()
         this.refresh()
     }
+
 
 }

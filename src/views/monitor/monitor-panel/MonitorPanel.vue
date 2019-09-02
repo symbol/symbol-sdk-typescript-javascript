@@ -11,7 +11,7 @@
         </div>
 
         <div class="split"></div>
-        <div class="XEM_amount"><span>XEM</span><span class="amount">{{Number(formatXEMamount(XEMamount))?formatXEMamount(XEMamount + ''):'0'}}</span>
+        <div class="XEM_amount"><span>XEM</span><span class="amount">{{formatNumber(Number(formatXEMamount(XEMamount))?formatXEMamount(XEMamount + ''):0)}}</span>
         </div>
         <div class="exchange">${{XEMamount*currentPrice?(XEMamount*currentPrice).toFixed(2):'0.00'}}</div>
 

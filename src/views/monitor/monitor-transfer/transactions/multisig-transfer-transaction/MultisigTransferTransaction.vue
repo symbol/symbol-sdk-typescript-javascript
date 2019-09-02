@@ -17,6 +17,14 @@
       <span class="value radius flex_center">
         <input type="text" v-model="formItem.address" :placeholder="$t('receive_address_or_alias')">
       </span>
+      <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>
+      <div v-if="isShowSubAlias" class="selections ">
+        <div class="selection_container scroll">
+          <div @click="formItem.address =key " class="overflow_ellipsis selection_item"
+               v-for="(value,key) in addresAliasMap">{{value.label}}({{key}})
+          </div>
+        </div>
+      </div>
     </div>
 
 
@@ -142,7 +150,7 @@
 </template>
 
 <script lang="ts">
-    import {MultisigTransferTransactionTs} from '@/views/monitor/monitor-transfer/transactions/multisig-transfer-transaction/MultisigTransferTransactionTs.ts';
+    import {MultisigTransferTransactionTs} from '@/views/monitor/monitor-transfer/transactions/multisig-transfer-transaction/MultisigTransferTransactionTs.ts'
 
     export default class MultisigTransferTransaction extends MultisigTransferTransactionTs {
 

@@ -152,7 +152,6 @@ export default class TransferTransactionTs extends Vue {
     }
 
     created() {
-        console.log(this.addresAliasMap)
         this.initMosaic()
     }
 

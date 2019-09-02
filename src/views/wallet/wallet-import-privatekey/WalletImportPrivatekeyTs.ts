@@ -26,7 +26,7 @@ export class WalletImportPrivatekeyTs extends Vue {
     account = {}
     form = formData.walletImportPrivateKeyForm
     networkType = networkTypeList
-    
+
     NetworkTypeList = networkTypeList
 
     get getNode() {
@@ -69,7 +69,7 @@ export class WalletImportPrivatekeyTs extends Vue {
             return false
         }
 
-        if (!password || password.length < 6 || password.length > 32) {
+        if (!password || password.length < 8 || password.length > 32) {
             this.showNotice(this.$t(Message.PASSWORD_SETTING_INPUT_ERROR))
             return false
         }

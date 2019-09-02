@@ -2,7 +2,7 @@
   <div class="walletSwitchWrap">
     <div class="walletSwitchHead">
       <p class="tit">{{$t('Wallet_management')}}</p>
-     
+
     </div>
     <div class="walletList">
       <div :class="['walletItem',item.style, item.active || walletList.length == 1 ? 'active':'','radius']"
@@ -13,7 +13,7 @@
             <div>
               <p class="walletName">{{item.name}}</p>
               <p class="walletAmount">
-                {{ getWalletBalance(index) }}
+                {{formatNumber(getWalletBalance(index) ) }}
                 &nbsp;<span class="tails">XEM</span>
               </p>
             </div>

@@ -2,7 +2,7 @@ import {mapState} from 'vuex'
 import {AppWallet} from '@/core/utils/wallet.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import DeleteWalletCheck from './delete-wallet-check/DeleteWalletCheck.vue'
-import {localRead, localSave, formatXEMamount} from '@/core/utils/utils.ts'
+import {localRead, localSave, formatXEMamount, formatNumber} from '@/core/utils/utils.ts'
 
 @Component({
     components: {DeleteWalletCheck},
@@ -45,6 +45,10 @@ export class WalletSwitchTs extends Vue {
 
     switchWallet(newActiveWalletAddress) {
         AppWallet.switchWallet(newActiveWalletAddress, this.walletList, this.$store)
+    }
+
+    formatNumber(number) {
+        return formatNumber(number)
     }
 
     // @TODO: bugged, and put in AppWallet class

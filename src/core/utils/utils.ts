@@ -278,7 +278,6 @@ export const formatAddress = function (address) {
 }
 
 export const getCurrentMonthFirst = function (date) {
-
     date.setDate(1)
     return date
 }
@@ -304,6 +303,7 @@ export const isRefreshData = function (localstorageName, refreshTime, borderline
     }
     return false
 }
+
 export const formatSeconds = function (second) {
     if (!second && second !== 0) return 0
     let d = 0, h = 0, m = 0
@@ -338,6 +338,7 @@ export const formatSeconds = function (second) {
     return result
 
 }
+
 export const formatXEMamount = (XEMamount) => {
     if (!Number(XEMamount)) return '0'
     XEMamount = XEMamount + ''

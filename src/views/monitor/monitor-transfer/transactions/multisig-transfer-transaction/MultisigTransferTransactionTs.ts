@@ -31,7 +31,7 @@ export class MultisigTransferTransactionTs extends Vue {
     transactionList = []
     transactionDetail = {}
     currentMinApproval = 0
-    isShowSubAlias = false
+    isShowSubAlias = true
     showCheckPWDialog = false
     otherDetails: any = {}
     isCompleteForm = true
@@ -42,6 +42,9 @@ export class MultisigTransferTransactionTs extends Vue {
     multisigPublickeyList: any = []
     formItem = formData.multisigTransferForm
 
+    get addresAliasMap() {
+        return this.activeAccount.addresAliasMap
+    }
 
     get generationHash() {
         return this.activeAccount.generationHash

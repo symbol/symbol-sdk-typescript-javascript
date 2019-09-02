@@ -29,10 +29,10 @@ body {
   font-family: "Microsoft YaHei";
 
   //
-  -webkit-user-select:none;
-  -moz-user-select:none;
-  -ms-user-select:none;
-  user-select:none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 table {
@@ -244,8 +244,59 @@ textarea {
 }
 
 
-.ivu-tooltip-inner { max-width: unset !important; }
+.ivu-tooltip-inner {
+  max-width: unset !important;
+}
 
+// $notice
+.ivu-notice {
+  position: fixed !important;
+  top: 60px !important;
+  width: auto !important;
+  max-width: 500px !important;
+  z-index: 1000 !important;
 
+  .ivu-notice-notice {
+    width: 100%;
+    height: auto;
+    background: black;
+    display: flex;
+    align-items: center;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: revert;
 
+    .ivu-notice-custom-content {
+      display: flex;
+      align-items: center;
+      align-content: center;
+
+      .ivu-notice-icon {
+        font-size: 40px;
+        position: relative !important;
+      }
+
+    }
+
+    .ivu-notice-title {
+      max-width: 500px;
+      width: auto;
+      height: auto;
+      color: white;
+      overflow: unset;
+      line-height: 24px !important;
+      font-size: 16px !important;
+      word-break: break-all;
+      white-space: unset;
+    }
+
+    .ivu-notice-notice-close {
+      i {
+        color: white;
+
+      }
+    }
+  }
+
+}
 

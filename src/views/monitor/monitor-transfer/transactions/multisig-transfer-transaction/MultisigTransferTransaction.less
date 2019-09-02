@@ -52,6 +52,7 @@
   .address {
     margin-bottom: 20px;
     height: 60px;
+    position: relative;
 
     .value {
       span {
@@ -65,7 +66,46 @@
         color: rgba(255, 255, 255, 1);
         text-align: center;
       }
+    }
 
+    .pointer {
+      display: inline-block;
+      width: 0.45rem;
+      height: 0.45rem;
+      background-color: #4DC2BF;
+      font-size: 0.2rem;
+      font-weight: 400;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .selections {
+      width: calc(100% - 105px);
+      background-color: white;
+      border: 1px solid rgba(204, 204, 204, 1);
+      position: absolute;
+      z-index: 999;
+      padding: 5px 0;
+      right: 0;
+      border-radius: 0 0 4px 4px;
+      border-top: none;
+      top: 60px;
+
+      .selection_container {
+        max-height: 100px;
+        min-height: 50px;
+        margin: 0 10px;
+
+        div {
+          padding: 3px 5px;
+          margin: 2px 0;
+          font-size: 16px;
+        }
+
+        .selection_item:hover {
+          background-color: #ddd;
+        }
+      }
     }
   }
 
@@ -154,26 +194,6 @@
     margin-left: 50%;
     margin-top: 39px;
     margin-bottom: 20px;
-  }
-}
-
-.selections {
-  width: calc(100% - 118px);
-  background-color: white;
-  border: 1px solid rgba(204, 204, 204, 1);
-  position: absolute;
-  top: 60px;
-  z-index: 999;
-  border-radius: 0 0 4px 4px;
-  border-top: none;
-
-  div {
-    padding: 5px 15px;
-    font-size: 16px;
-  }
-
-  div:hover {
-    background-color: #ddd;
   }
 }
 

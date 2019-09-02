@@ -50,6 +50,8 @@ module.exports = {
   },
   // plugins
   pluginOptions: {
-    // ...
+    "process.env": {
+      NODE_DEV: '"development"'
+    }
   }
 }

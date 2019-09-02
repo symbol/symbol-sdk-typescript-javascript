@@ -637,7 +637,7 @@ export const en_US = {
     // Forms
     newPassword: 'New password',
     LABEL_new_password: 'New password',
-    HINT_new_password1: 'Should be between 6 and 32 chars.',
+    HINT_new_password1: 'Should be between 8 and 32 chars.',
     HINT_new_password2: 'Allowed special chars: - _ ! @ # $ & * " ~ + = %',
     PLACEHOLDER_new_password: '9_pass-WORD',
 

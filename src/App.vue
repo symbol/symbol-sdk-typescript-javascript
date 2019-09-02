@@ -31,7 +31,7 @@
         }
 
         get wallet(): any {
-          return this.activeAccount.wallet
+            return this.activeAccount.wallet
         }
 
         get currentXEM2(): string {
@@ -87,10 +87,10 @@
                       .map(wallet => new AppWallet(wallet)
                       .setMultisigStatus(this.node))
                   )
-                
+
                 const walletListWithMultisigStatuses = [...walletListWithBalances]
                     .map((wallet, i) => ({...wallet, isMultisig: multisigStatuses[i]}))
-                
+
                 const activeWalletWithMultisigStatus = walletListWithMultisigStatuses
                   .find(wallet => wallet.address === this.wallet.address)
                 if (activeWalletWithMultisigStatus === undefined) throw new Error('an active wallet was not found in the wallet list')
@@ -98,7 +98,7 @@
                 this.$store.commit('SET_WALLET', activeWalletWithMultisigStatus)
                 localSave('wallets', JSON.stringify(walletListWithMultisigStatuses))
             } catch (error) {
-              // Use this error for network status 
+              // Use this error for network status
               throw new Error(error)
             }
         }
@@ -119,7 +119,7 @@
 
         mounted() {
             this.$Notice.config({
-                duration: 4
+                duration: 4,
             })
             this.initApp()
             this.chainListner()

@@ -1,7 +1,7 @@
 import {Message, networkTypeList, importKeystoreDefault} from "@/config/index.ts"
 import {AppWallet} from '@/core/utils/wallet.ts'
 import {Password} from "nem2-sdk"
-import {mapState} from 'vuex';
+import {mapState} from 'vuex'
 import {Component, Vue} from 'vue-property-decorator'
 import {
     ALLOWED_SPECIAL_CHAR,
@@ -51,21 +51,19 @@ export class WalletImportKeystoreTs extends Vue {
     }
 
     importWallet() {
-      try {
-        new AppWallet().createFromKeystore(
-          this.formItem.walletName,
-          new Password(this.formItem.walletPassword),
-          this.formItem.keystoreStr,
-          this.formItem.networkType,
-          this.$store
-        )
-        this.toWalletDetails()
-      } catch (error) {
-        console.error(error)
-        this.$Notice.error({
-            title: this.$t(Message.OPERATION_FAILED_ERROR) + ''
-        })
-      }
+        try {
+            new AppWallet().createFromKeystore(
+                this.formItem.walletName,
+                new Password(this.formItem.walletPassword),
+                this.formItem.keystoreStr,
+                this.formItem.networkType,
+                this.$store
+            )
+            this.toWalletDetails()
+        } catch (error) {
+            console.error(error)
+            this.showErrorNotice(Message.OPERATION_FAILED_ERROR)
+        }
     }
 
     toWalletDetails() {
@@ -79,21 +77,15 @@ export class WalletImportKeystoreTs extends Vue {
     async checkForm() {
         const {keystoreStr, networkType, walletName, walletPassword, walletPasswordAgain} = this.formItem
         if (networkType == 0) {
-            this.$Notice.error({
-                title: this.$t(Message.PLEASE_SWITCH_NETWORK) + ''
-            })
+            this.showErrorNotice(Message.PLEASE_SWITCH_NETWORK)
             return false
         }
         if (!walletName || walletName == '') {
-            this.$Notice.error({
-                title: this.$t(Message.WALLET_NAME_INPUT_ERROR) + ''
-            })
+            this.showErrorNotice(Message.WALLET_NAME_INPUT_ERROR)
             return false
         }
-        if (!walletPassword || walletPassword.length < 6) {
-            this.$Notice.error({
-                title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
-            })
+        if (!walletPassword || walletPassword.length < 8 || walletPassword.length > 32) {
+            this.showErrorNotice(Message.PASSWORD_SETTING_INPUT_ERROR)
             return false
         }
 
@@ -104,6 +96,13 @@ export class WalletImportKeystoreTs extends Vue {
             return false
         }
         return true
+    }
+
+    showErrorNotice(text) {
+        this.$Notice.destroy()
+        this.$Notice.error({
+            title: this.$t(text) + ''
+        })
     }
 
     toBack() {

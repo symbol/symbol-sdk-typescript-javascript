@@ -12,6 +12,7 @@ import {getNamespaces, getMosaicList, getMosaicInfoList, AppWallet} from "@/core
 import {copyTxt, localSave, formatXEMamount} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
 import {minitorPanelNavigatorList} from '@/config/index.ts'
+import {formatNumber} from "@/core/utils/utils"
 
 @Component({
     computed: {
@@ -53,11 +54,6 @@ export class MonitorPanelTs extends Vue {
         return this.activeAccount.ConfirmedTx
     }
 
-
-    get accountPublicKey() {
-        return this.activeAccount.wallet.publicKey
-    }
-
     get accountAddress() {
         return this.activeAccount.wallet.address
     }
@@ -79,7 +75,7 @@ export class MonitorPanelTs extends Vue {
     }
 
     get networkCurrencies() {
-      return [this.currentXEM1, this.currentXEM2]
+        return [this.currentXem, this.currentXEM2]
     }
 
     get currentXEM1() {
@@ -129,7 +125,6 @@ export class MonitorPanelTs extends Vue {
     }
 
 
-
     getMyNamespaces() {
         getNamespaces(this.getWallet.address, this.node)
             .then((list) => {
@@ -175,10 +170,10 @@ export class MonitorPanelTs extends Vue {
     async getMarketOpenPrice() {
         const that = this
         const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"})
-        if(rstStr instanceof Object) {
-          const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
-          const result = rstQuery.data ? rstQuery.data[0].close : 0
-          that.currentPrice = result
+        if (rstStr instanceof Object) {
+            const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
+            const result = rstQuery.data ? rstQuery.data[0].close : 0
+            that.currentPrice = result
         }
     }
 
@@ -263,18 +258,28 @@ export class MonitorPanelTs extends Vue {
                         break
                 }
             })
+            that.updateMosaicMap(mosaicMap)
+            that.isLoadingMosaic = false
+            if (mosaicList.length > 0) {
+                this.$store.commit('SET_MOSAICS', mosaicList)
+            } else {
+                this.$store.commit('SET_MOSAICS', [defaultMosaic])
+                mosaicMap[defaultMosaic.hex] = defaultMosaic
+            }
         })
-        if (mosaicList.length > 0) {
-            this.$store.commit('SET_MOSAICS', mosaicList)
-        } else {
-            this.$store.commit('SET_MOSAICS', [defaultMosaic])
-            mosaicMap[defaultMosaic.hex] = defaultMosaic
-        }
-        that.localMosaicMap = mosaicMap
-        that.mosaicMap = mosaicMap
-        that.$store.commit('SET_MOSAIC_MAP', mosaicMap)
-        that.$store.commit('SET_ADDRESS_ALIAS_MAP', addressMap)
-        that.isLoadingMosaic = false
+    }
+
+
+    updateMosaicMap(mosaicMap) {
+        this.$set(this, 'localMosaicMap', mosaicMap)
+        this.$set(this, 'mosaicMap', mosaicMap)
+        this.$store.commit('SET_MOSAIC_MAP', mosaicMap)
+        this.$store.commit('SET_ADDRESS_ALIAS_MAP', this)
+    }
+
+
+    formatNumber(number) {
+        return formatNumber(number)
     }
 
     initLeftNavigator() {
@@ -366,6 +371,6 @@ export class MonitorPanelTs extends Vue {
         this.getMyNamespaces()
         this.getAccountsName()
         this.initMosaic()
-        new AppWallet(this.getWallet).updateAccountBalance(this.networkCurrencies, this.node, this.$store)
+        new AppWallet(this.getWallet).getAccountBalance(this.networkCurrencies, this.node)
     }
 }
