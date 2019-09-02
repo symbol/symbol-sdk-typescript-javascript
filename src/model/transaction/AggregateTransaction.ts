@@ -334,5 +334,4 @@ export class AggregateTransaction extends Transaction {
     protected generateEmbeddedBytes(): Uint8Array {
         throw new Error('Method not implemented');
     }
-
 }
