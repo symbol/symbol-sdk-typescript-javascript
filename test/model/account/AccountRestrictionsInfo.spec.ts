@@ -18,9 +18,9 @@ import {deepEqual} from 'assert';
 import { AccountRestriction } from '../../../src/model/account/AccountRestriction';
 import { AccountRestrictions } from '../../../src/model/account/AccountRestrictions';
 import { AccountRestrictionsInfo } from '../../../src/model/account/AccountRestrictionsInfo';
+import { AccountRestrictionType } from '../../../src/model/account/AccountRestrictionType';
 import {Address} from '../../../src/model/account/Address';
 import { RestrictionModificationType } from '../../../src/model/account/RestrictionModificationType';
-import { RestrictionType } from '../../../src/model/account/RestrictionType';
 
 describe('AccountRestrictionsInfo', () => {
 
@@ -31,7 +31,7 @@ describe('AccountRestrictionsInfo', () => {
             accountRestrictions: {
                 address: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
                 restrictions: [{
-                    restrictionType: RestrictionType.AllowAddress,
+                    restrictionType: AccountRestrictionType.AllowIncomingAddress,
                     values: [{modificationType: RestrictionModificationType.Add,
                               value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
                              }],

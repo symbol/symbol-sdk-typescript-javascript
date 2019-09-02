@@ -28,7 +28,7 @@ export * from './account/AccountRestrictions';
 export * from './account/AccountRestrictionsInfo';
 export * from './account/AccountRestriction';
 export * from './account/RestrictionModificationType';
-export * from './account/RestrictionType';
+export * from './account/AccountRestrictionType';
 export * from './account/AccountNames';
 
 // Blockchain

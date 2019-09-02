@@ -18,10 +18,10 @@ import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
 import {Convert as convert} from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
+import { AccountRestrictionType } from '../../src/model/account/AccountRestrictionType';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
-import { RestrictionType } from '../../src/model/account/RestrictionType';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
@@ -83,7 +83,7 @@ describe('SerializeTransactionToJSON', () => {
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            RestrictionType.AllowAddress,
+            AccountRestrictionType.AllowIncomingAddress,
             [addressRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -91,7 +91,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = addressRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS);
-        expect(json.transaction.restrictionType).to.be.equal(RestrictionType.AllowAddress);
+        expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingAddress);
         expect(json.transaction.modifications.length).to.be.equal(1);
     });
 
@@ -103,7 +103,7 @@ describe('SerializeTransactionToJSON', () => {
         );
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            RestrictionType.AllowMosaic,
+            AccountRestrictionType.AllowMosaic,
             [mosaicRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -111,7 +111,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC);
-        expect(json.transaction.restrictionType).to.be.equal(RestrictionType.AllowMosaic);
+        expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowMosaic);
         expect(json.transaction.modifications.length).to.be.equal(1);
     });
 
@@ -123,7 +123,7 @@ describe('SerializeTransactionToJSON', () => {
         );
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            RestrictionType.AllowTransaction,
+            AccountRestrictionType.AllowIncomingTransactionType,
             [operationRestrictionFilter],
             NetworkType.MIJIN_TEST,
         );
@@ -131,7 +131,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = operationRestrictionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION);
-        expect(json.transaction.restrictionType).to.be.equal(RestrictionType.AllowTransaction);
+        expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingTransactionType);
         expect(json.transaction.modifications.length).to.be.equal(1);
     });
 

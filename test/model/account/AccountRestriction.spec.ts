@@ -17,13 +17,13 @@
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import { AccountRestriction } from '../../../src/model/account/AccountRestriction';
+import { AccountRestrictionType } from '../../../src/model/account/AccountRestrictionType';
 import { Address } from '../../../src/model/account/Address';
-import { RestrictionType } from '../../../src/model/account/RestrictionType';
 describe('AccountRestriction', () => {
 
     it('should createComplete an AccountRestriction object', () => {
         const accountRestrictionDTO = {
-            restrictionType: RestrictionType.AllowAddress,
+            restrictionType: AccountRestrictionType.AllowIncomingAddress,
             values: ['906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB'],
         };
 

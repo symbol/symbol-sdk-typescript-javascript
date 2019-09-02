@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { RestrictionType } from '../account/RestrictionType';
+import { AccountRestrictionType } from '../account/AccountRestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionModificationTransaction } from './AccountAddressRestrictionModificationTransaction';
@@ -36,12 +36,15 @@ export class AccountRestrictionTransaction {
      */
     public static createAddressRestrictionModificationTransaction(
         deadline: Deadline,
-        restrictionType: RestrictionType,
+        restrictionType: AccountRestrictionType,
         modifications: Array<AccountRestrictionModification<string>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountAddressRestrictionModificationTransaction {
-        if (![RestrictionType.AllowAddress, RestrictionType.BlockAddress].includes(restrictionType)) {
+        if (![AccountRestrictionType.AllowIncomingAddress,
+              AccountRestrictionType.AllowOutgoingAddress,
+              AccountRestrictionType.BlockOutgoingAddress,
+              AccountRestrictionType.BlockIncomingAddress].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
         return AccountAddressRestrictionModificationTransaction.create(
@@ -64,12 +67,12 @@ export class AccountRestrictionTransaction {
      */
     public static createMosaicRestrictionModificationTransaction(
         deadline: Deadline,
-        restrictionType: RestrictionType,
+        restrictionType: AccountRestrictionType,
         modifications: Array<AccountRestrictionModification<number[]>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountMosaicRestrictionModificationTransaction {
-        if (![RestrictionType.AllowMosaic, RestrictionType.BlockMosaic].includes(restrictionType)) {
+        if (![AccountRestrictionType.AllowMosaic,AccountRestrictionType.BlockMosaic].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
         return AccountMosaicRestrictionModificationTransaction.create(
@@ -92,12 +95,15 @@ export class AccountRestrictionTransaction {
      */
     public static createOperationRestrictionModificationTransaction(
         deadline: Deadline,
-        restrictionType: RestrictionType,
+        restrictionType: AccountRestrictionType,
         modifications: Array<AccountRestrictionModification<TransactionType>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountOperationRestrictionModificationTransaction {
-        if (![RestrictionType.AllowTransaction, RestrictionType.BlockTransaction].includes(restrictionType)) {
+        if (![AccountRestrictionType.AllowIncomingTransactionType,
+              AccountRestrictionType.AllowOutgoingTransactionType,
+              AccountRestrictionType.BlockOutgoingTransactionType,
+              AccountRestrictionType.BlockOutgoingTransactionType].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
         return AccountOperationRestrictionModificationTransaction.create(
