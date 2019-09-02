@@ -263,7 +263,6 @@ export class MonitorPanelTs extends Vue {
                 }
             })
             that.updateMosaicMap(mosaicMap)
-            this.$store.commit('SET_WALLET_BALANCE', mosaicMap[currentXEM1].amount)
             this.$store.commit('SET_ADDRESS_ALIAS_MAP', addressMap)
             that.isLoadingMosaic = false
             if (mosaicList.length > 0) {

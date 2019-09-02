@@ -63,11 +63,10 @@
             const walletListFromStorage: any = localRead('wallets') !== '' ? JSON.parse(localRead('wallets')) : false
             if (!walletListFromStorage) return
             AppWallet.switchWallet(walletListFromStorage[0].address, walletListFromStorage, this.$store)
-            this.updateWalletsBalancesAndMultisigStatus(walletListFromStorage)
+            this.setWalletsBalancesAndMultisigStatus(walletListFromStorage)
         }
 
-        // @TODO: pull out from there, use rxjs
-        async updateWalletsBalancesAndMultisigStatus(walletListFromStorage) {
+        async setWalletsBalancesAndMultisigStatus(walletListFromStorage) {
             const networkCurrencies = [this.currentXEM1, this.currentXEM2]
             try {
                 const balances = await Promise.all(

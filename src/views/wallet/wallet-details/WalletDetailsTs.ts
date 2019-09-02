@@ -41,7 +41,7 @@ export class WalletDetailsTs extends Vue {
     }
 
     get getAddress() {
-        return this.activeAccount.wallet ? this.activeAccount.wallet.address : false
+        return this.activeAccount.wallet.address
     }
 
     get generationHash() {

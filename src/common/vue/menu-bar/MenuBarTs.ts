@@ -55,32 +55,26 @@ export class MenuBarTs extends Vue {
     }
 
     get networkType() {
-        if(!this.wallet) return false
         return this.activeAccount.wallet.networkType
     }
     // @TODO: the !this.wallet are quickfixes
     get node() {
-        if(!this.wallet) return false
         return this.activeAccount.node
     }
 
     get UnconfirmedTxList() {
-        if(!this.wallet) return false
         return this.activeAccount.UnconfirmedTx
     }
 
     get ConfirmedTxList() {
-        if(!this.wallet) return false
         return this.activeAccount.ConfirmedTx
     }
 
     get errorTxList() {
-        if(!this.wallet) return false
         return this.activeAccount.errorTx
     }
 
     get currentNode() {
-        if(!this.wallet) return false
         return this.activeAccount.node
     }
 
@@ -89,12 +83,10 @@ export class MenuBarTs extends Vue {
     }
 
     get confirmedTxList() {
-        if(!this.wallet) return false
         return this.activeAccount.ConfirmedTx
     }
 
     get unconfirmedTxList() {
-        if(!this.wallet) return false
         return this.activeAccount.UnconfirmedTx
     }
 
@@ -181,7 +173,7 @@ export class MenuBarTs extends Vue {
             }
         })
     }
-    // @TODO: make sure generationHash is set at the right place
+
     async getGenerationHash(node) {
         const that = this
         await new BlockApiRxjs().getBlockByHeight(node, 1).subscribe((blockInfo) => {

@@ -59,8 +59,6 @@ export class CheckPasswordDialogTs extends Vue {
         this.$emit('closeCheckPWDialog')
     }
 
-    // @TODO: move to wallet class in favour of a .sign() method
-    // Password validity to be checked at VeeValidate level
     checkPassword() {
         try {
             const isPasswordWalid = new AppWallet(this.wallet).checkPassword(new Password(this.walletInputInfo.password))
@@ -82,7 +80,6 @@ export class CheckPasswordDialogTs extends Vue {
         this.show = this.showCheckPWDialog
     }
 
-    // @TODO: move to wallet class
     switchAnnounceType() {
         const {node, generationHash, transactionList, currentXEM1} = this
         const password = new Password(this.walletInputInfo.password)

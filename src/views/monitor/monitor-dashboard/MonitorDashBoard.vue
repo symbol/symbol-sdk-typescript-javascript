@@ -128,7 +128,7 @@
         <div class="all_transaction">
           <div class="table_head">
             <span class="account">{{$t('transaction_type')}}</span>
-            <span class="transfer_type">{{$t('remote_modal_price')}}(Gas)</span>
+            <span class="transfer_type">{{$t('remote_modal_price')}} (Gas)</span>
             <span class="amount">{{$t('block')}}</span>
             <span class="date">{{$t('date')}}</span>
           </div>
