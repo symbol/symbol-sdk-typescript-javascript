@@ -27,7 +27,7 @@ import { TestingAccount } from '../../conf/conf.spec';
 
 describe('SecretProofTransaction', () => {
     let account: Account;
-
+    const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
         account = TestingAccount;
     });
@@ -190,5 +190,25 @@ describe('SecretProofTransaction', () => {
             );
             expect(secretProofTransaction.size).to.be.equal(212);
         });
+    });
+
+    it('should create and sign SecretProof Transaction', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            account.address,
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTx = secretProofTransaction.signWith(account, generationHash);
+        expect(signedTx.payload.substring(
+            240,
+            signedTx.payload.length,
+        )).to.be.equal(
+            '009B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E90A75B6B63D31BDA938' +
+            '08727940F24699AECDDF17C568508BA2000B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7');
     });
 });

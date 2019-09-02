@@ -24,10 +24,10 @@ import {MosaicId} from '../../model/mosaic/MosaicId';
 import {MosaicProperties} from '../../model/mosaic/MosaicProperties';
 import { MosaicPropertyType } from '../../model/mosaic/MosaicPropertyType';
 import {NamespaceId} from '../../model/namespace/NamespaceId';
-import {AccountAddressRestrictionModificationTransaction} from '../../model/transaction/AccountAddressRestrictionModificationTransaction';
+import {AccountAddressRestrictionTransaction} from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
-import {AccountMosaicRestrictionModificationTransaction} from '../../model/transaction/AccountMosaicRestrictionModificationTransaction';
-import {AccountOperationRestrictionModificationTransaction} from '../../model/transaction/AccountOperationRestrictionModificationTransaction';
+import {AccountMosaicRestrictionTransaction} from '../../model/transaction/AccountMosaicRestrictionTransaction';
+import {AccountOperationRestrictionTransaction} from '../../model/transaction/AccountOperationRestrictionTransaction';
 import {AccountRestrictionModification} from '../../model/transaction/AccountRestrictionModification';
 import {AddressAliasTransaction} from '../../model/transaction/AddressAliasTransaction';
 import {AggregateTransaction} from '../../model/transaction/AggregateTransaction';
@@ -280,8 +280,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             extractNetworkType(transactionDTO.version)) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS) {
-        return new AccountAddressRestrictionModificationTransaction(
+    } else if (transactionDTO.type === TransactionType.ACCOUNT_RESTRICTION_ADDRESS) {
+        return new AccountAddressRestrictionTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
@@ -296,8 +296,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             extractNetworkType(transactionDTO.version)) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION) {
-        return new AccountOperationRestrictionModificationTransaction(
+    } else if (transactionDTO.type === TransactionType.ACCOUNT_RESTRICTION_OPERATION) {
+        return new AccountOperationRestrictionTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
@@ -312,8 +312,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                             extractNetworkType(transactionDTO.version)) : undefined,
             transactionInfo,
         );
-    } else if (transactionDTO.type === TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC) {
-        return new AccountMosaicRestrictionModificationTransaction(
+    } else if (transactionDTO.type === TransactionType.ACCOUNT_RESTRICTION_MOSAIC) {
+        return new AccountMosaicRestrictionTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),

@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-import { Convert as convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/NamespaceCreationTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { SignSchema } from '../../core/crypto/SignSchema';
+import { Convert, Convert as convert } from '../../core/format';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
+import { EmbeddedNamespaceRegistrationTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedNamespaceRegistrationTransactionBuilder';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
+import { NamespaceRegistrationTransactionBuilder } from '../../infrastructure/catbuffer/NamespaceRegistrationTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import {NamespaceMosaicIdGenerator} from '../../infrastructure/transaction/NamespaceMosaicIdGenerator';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -24,6 +31,7 @@ import { NamespaceId } from '../namespace/NamespaceId';
 import { NamespaceType } from '../namespace/NamespaceType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -140,6 +148,40 @@ export class RegisterNamespaceTransaction extends Transaction {
     }
 
     /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const namespaceType = builder.getRegistrationType().valueOf();
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = namespaceType === NamespaceType.RootNamespace ?
+            RegisterNamespaceTransaction.createRootNamespace(
+                isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                    (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
+            Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
+            new UInt64(builder.getDuration()!.blockDuration),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+        ) : RegisterNamespaceTransaction.createSubNamespace(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
+            Convert.decodeHex(Convert.uint8ToHex(builder.getName())),
+            new NamespaceId(builder.getParentId()!.namespaceId),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+    }
+
+    /**
      * @override Transaction.size()
      * @description get the byte size of a RegisterNamespaceTransaction
      * @returns {number}
@@ -162,24 +204,69 @@ export class RegisterNamespaceTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {VerifiableTransaction}
+     * @returns {Uint8Array}
      */
-    protected buildTransaction(): VerifiableTransaction {
-        let registerNamespacetransaction = new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addNamespaceType(this.namespaceType)
-            .addNamespaceId(this.namespaceId.id.toDTO())
-            .addNamespaceName(this.namespaceName);
-
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+        let transactionBuilder: NamespaceRegistrationTransactionBuilder;
         if (this.namespaceType === NamespaceType.RootNamespace) {
-            registerNamespacetransaction = registerNamespacetransaction.addDuration(this.duration!.toDTO());
+            transactionBuilder = new NamespaceRegistrationTransactionBuilder(
+                new SignatureDto(signatureBuffer),
+                new KeyDto(signerBuffer),
+                this.versionToDTO(),
+                TransactionType.REGISTER_NAMESPACE.valueOf(),
+                new AmountDto(this.maxFee.toDTO()),
+                new TimestampDto(this.deadline.toDTO()),
+                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
+                new BlockDurationDto(this.duration!.toDTO()),
+                undefined,
+            );
         } else {
-            registerNamespacetransaction = registerNamespacetransaction.addParentId(this.parentId!.id.toDTO());
+            transactionBuilder = new NamespaceRegistrationTransactionBuilder(
+                new SignatureDto(signatureBuffer),
+                new KeyDto(signerBuffer),
+                this.versionToDTO(),
+                TransactionType.REGISTER_NAMESPACE.valueOf(),
+                new AmountDto(this.maxFee.toDTO()),
+                new TimestampDto(this.deadline.toDTO()),
+                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
+                undefined,
+                new NamespaceIdDto(this.parentId!.id.toDTO()),
+            );
         }
-
-        return registerNamespacetransaction.build();
+        return transactionBuilder.serialize();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        let transactionBuilder: EmbeddedNamespaceRegistrationTransactionBuilder;
+        if (this.namespaceType === NamespaceType.RootNamespace) {
+            transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
+                new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+                this.versionToDTO(),
+                TransactionType.REGISTER_NAMESPACE.valueOf(),
+                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
+                new BlockDurationDto(this.duration!.toDTO()),
+                undefined,
+            );
+        } else {
+            transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
+                new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+                this.versionToDTO(),
+                TransactionType.REGISTER_NAMESPACE.valueOf(),
+                new NamespaceIdDto(this.namespaceId.id.toDTO()),
+                Convert.hexToUint8(Convert.utf8ToHex(this.namespaceName)),
+                undefined,
+                new NamespaceIdDto(this.parentId!.id.toDTO()),
+            );
+        }
+        return transactionBuilder.serialize();
+    }
 }

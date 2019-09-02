@@ -13,16 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert as convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/SecretLockTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { SignSchema } from '../../core/crypto/SignSchema';
+import { Convert, Convert as convert, RawAddress } from '../../core/format';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
+import { EmbeddedSecretLockTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretLockTransactionBuilder';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SecretLockTransactionBuilder } from '../../infrastructure/catbuffer/SecretLockTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
+import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
+import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
+import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -113,6 +126,37 @@ export class SecretLockTransaction extends Transaction {
     }
 
     /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedSecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            SecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = SecretLockTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as SecretLockTransactionBuilder).getDeadline().timestamp),
+            new Mosaic(
+                new MosaicId(builder.getMosaic().mosaicId.unresolvedMosaicId),
+                new UInt64(builder.getMosaic().amount.amount),
+            ),
+            new UInt64(builder.getDuration().blockDuration),
+            builder.getHashAlgorithm().valueOf(),
+            Convert.uint8ToHex(builder.getSecret().hash256),
+            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipient().unresolvedAddress)),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretLockTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+    }
+
+    /**
      * @override Transaction.size()
      * @description get the byte size of a SecretLockTransaction
      * @returns {number}
@@ -135,22 +179,55 @@ export class SecretLockTransaction extends Transaction {
     }
 
     /**
-     * @internal
-     * @returns {VerifiableTransaction}
+     * @description Get secret bytes
+     * @returns {Uint8Array}
+     * @memberof SecretLockTransaction
      */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addType(this.type)
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addMosaicId(this.mosaic.id.id.toDTO())
-            .addMosaicAmount(this.mosaic.amount.toDTO())
-            .addDuration(this.duration.toDTO())
-            .addHashAlgorithm(this.hashType)
-            .addSecret(this.secret)
-            .addRecipient(this.recipient.plain())
-            .build();
+    public getSecretByte(): Uint8Array {
+        return convert.hexToUint8(64 > this.secret.length ? this.secret + '0'.repeat(64 - this.secret.length) : this.secret);
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new SecretLockTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.SECRET_LOCK.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
+                                                   new AmountDto(this.mosaic.amount.toDTO())),
+            new BlockDurationDto(this.duration.toDTO()),
+            this.hashType.valueOf(),
+            new Hash256Dto(this.getSecretByte()),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const transactionBuilder = new EmbeddedSecretLockTransactionBuilder(
+            new KeyDto(convert.hexToUint8(this.signer!.publicKey)),
+            this.versionToDTO(),
+            TransactionType.SECRET_LOCK.valueOf(),
+            new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(this.mosaic.id.id.toDTO()),
+                                                   new AmountDto(this.mosaic.amount.toDTO())),
+            new BlockDurationDto(this.duration.toDTO()),
+            this.hashType.valueOf(),
+            new Hash256Dto(this.getSecretByte()),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+        );
+        return transactionBuilder.serialize();
+    }
 }

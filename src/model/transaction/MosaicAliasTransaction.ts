@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/MosaicAliasTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { SignSchema } from '../../core/crypto/SignSchema';
+import { Convert } from '../../core/format';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedMosaicAliasTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicAliasTransactionBuilder';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { MosaicAliasTransactionBuilder } from '../../infrastructure/catbuffer/MosaicAliasTransactionBuilder';
+import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
+import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -23,6 +32,7 @@ import { AliasAction } from '../namespace/AliasAction';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -91,6 +101,31 @@ export class MosaicAliasTransaction extends Transaction {
     }
 
     /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedMosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            MosaicAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = MosaicAliasTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as MosaicAliasTransactionBuilder).getDeadline().timestamp),
+            builder.getAliasAction().valueOf(),
+            new NamespaceId(builder.getNamespaceId().namespaceId),
+            new MosaicId(builder.getMosaicId().mosaicId),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAliasTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+    }
+
+    /**
      * @override Transaction.size()
      * @description get the byte size of a MosaicAliasTransaction
      * @returns {number}
@@ -109,17 +144,39 @@ export class MosaicAliasTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {VerifiableTransaction}
+     * @returns {Uint8Array}
      */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addAliasAction(this.aliasAction)
-            .addNamespaceId(this.namespaceId.id.toDTO())
-            .addMosaicId(this.mosaicId.id.toDTO())
-            .build();
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new MosaicAliasTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_ALIAS.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            this.aliasAction.valueOf(),
+            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            new MosaicIdDto(this.mosaicId.id.toDTO()),
+        );
+        return transactionBuilder.serialize();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const transactionBuilder = new EmbeddedMosaicAliasTransactionBuilder(
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_ALIAS.valueOf(),
+            this.aliasAction.valueOf(),
+            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            new MosaicIdDto(this.mosaicId.id.toDTO()),
+        );
+        return transactionBuilder.serialize();
+    }
 }

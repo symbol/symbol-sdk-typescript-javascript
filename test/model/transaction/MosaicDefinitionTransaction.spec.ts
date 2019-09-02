@@ -64,7 +64,7 @@ describe('MosaicDefinitionTransaction', () => {
                 duration: UInt64.fromUint(1000),
             }),
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(mosaicDefinitionTransaction.maxFee.higher).to.be.equal(0);
@@ -98,7 +98,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('E6DE84B8010000000000000001070302E803000000000000');
+        )).to.be.equal('E6DE84B801000000000000000703E803000000000000');
 
     });
 
@@ -129,7 +129,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('E6DE84B8010000000000000001000302E803000000000000');
+        )).to.be.equal('E6DE84B801000000000000000003E803000000000000');
 
     });
 
@@ -175,7 +175,7 @@ describe('MosaicDefinitionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('E6DE84B80100000000000000000003');
+        )).to.be.equal('E6DE84B8010000000000000000030000000000000000');
 
     });
 });

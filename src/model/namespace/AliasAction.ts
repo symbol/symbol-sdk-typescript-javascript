@@ -20,6 +20,6 @@
  * 1: Unlink an alias.
  */
 export enum AliasAction {
-    Link = 0,
-    Unlink = 1,
+    Link = 0x01,
+    Unlink = 0x00,
 }

@@ -66,7 +66,7 @@ describe('AccountRestrictionTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 148 for AccountAddressRestrictionModificationTransaction transaction byte size with 1 modification', () => {
+        it('should return 148 for AccountAddressRestrictionTransaction transaction byte size with 1 modification', () => {
             const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
             const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
                 RestrictionModificationType.Add,
@@ -82,7 +82,7 @@ describe('AccountRestrictionTransaction', () => {
             expect(addressRestrictionTransaction.size).to.be.equal(148);
         });
 
-        it('should return 131 for AccountMosaicRestrictionModificationTransaction transaction byte size with 1 modification', () => {
+        it('should return 131 for AccountMosaicRestrictionTransaction transaction byte size with 1 modification', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
                 RestrictionModificationType.Add,
@@ -97,7 +97,7 @@ describe('AccountRestrictionTransaction', () => {
             expect(mosaicRestrictionTransaction.size).to.be.equal(131);
         });
 
-        it('should return 125 for AccountOperationRestrictionModificationTransaction transaction byte size with 1 modification', () => {
+        it('should return 125 for AccountOperationRestrictionTransaction transaction byte size with 1 modification', () => {
             const operation = TransactionType.ADDRESS_ALIAS;
             const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
                 RestrictionModificationType.Add,
@@ -167,7 +167,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('0101009050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+        )).to.be.equal('0101019050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
 
     });
 
@@ -218,7 +218,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('0201004CCCD78612DDF5CA');
+        )).to.be.equal('0201014CCCD78612DDF5CA');
 
     });
 
@@ -271,7 +271,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('0401004E42');
+        )).to.be.equal('0401014E42');
 
     });
 
@@ -322,7 +322,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('4101009050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+        )).to.be.equal('4101019050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
 
         addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
@@ -336,7 +336,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('C101009050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+        )).to.be.equal('C101019050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
 
     });
 
@@ -359,7 +359,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('4401004E42');
+        )).to.be.equal('4401014E42');
 
         operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
@@ -373,7 +373,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('C401004E42');
+        )).to.be.equal('C401014E42');
 
     });
 });

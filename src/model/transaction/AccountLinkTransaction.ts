@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/AccountLinkTransaction';
-import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
+import { SignSchema } from '../../core/crypto/SignSchema';
+import { Convert } from '../../core/format';
+import { AccountLinkTransactionBuilder } from '../../infrastructure/catbuffer/AccountLinkTransactionBuilder';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedAccountLinkTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountLinkTransactionBuilder';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { LinkAction } from './LinkAction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
@@ -82,6 +90,30 @@ export class AccountLinkTransaction extends Transaction {
     }
 
     /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedAccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+                        AccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = AccountLinkTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountLinkTransactionBuilder).getDeadline().timestamp),
+            Convert.uint8ToHex(builder.getRemoteAccountPublicKey().key),
+            builder.getLinkAction().valueOf(),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountLinkTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+    }
+
+    /**
      * @override Transaction.size()
      * @description get the byte size of a AccountLinkTransaction
      * @returns {number}
@@ -99,16 +131,37 @@ export class AccountLinkTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {VerifiableTransaction}
+     * @returns {Uint8Array}
      */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addRemoteAccountKey(this.remoteAccountKey)
-            .addLinkAction(this.linkAction)
-            .build();
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new AccountLinkTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.LINK_ACCOUNT.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new KeyDto(Convert.hexToUint8(this.remoteAccountKey)),
+            this.linkAction.valueOf(),
+        );
+        return transactionBuilder.serialize();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const transactionBuilder = new EmbeddedAccountLinkTransactionBuilder(
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.versionToDTO(),
+            TransactionType.LINK_ACCOUNT.valueOf(),
+            new KeyDto(Convert.hexToUint8(this.remoteAccountKey)),
+            this.linkAction.valueOf(),
+        );
+        return transactionBuilder.serialize();
+    }
 }

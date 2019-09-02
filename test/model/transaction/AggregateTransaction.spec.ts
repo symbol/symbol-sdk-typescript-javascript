@@ -166,12 +166,12 @@ describe('AggregateTransaction', () => {
 
         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
 
-        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('BC000000');
-        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('4000000040000000');
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('BA000000');
+        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('3E0000003E000000');
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('01904D41E6DE84B8010000000000000001070302E803000000000000');
+        )).to.be.equal('01904D41E6DE84B801000000000000000703E803000000000000');
     });
 
     it('should createComplete an AggregateTransaction object with MosaicSupplyChangeTransaction', () => {
@@ -232,8 +232,8 @@ describe('AggregateTransaction', () => {
         expect(signedTransaction.payload.substring(
             320,
             signedTransaction.payload.length,
-        )).to.be.equal('0190554101020200B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC240' +
-            '0B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
+        )).to.be.equal('0190554101020201B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC2401B1B5581FC81A69' +
+            '70DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
     });
 
     it('should createComplete an AggregateTransaction object with different cosignatories', () => {
@@ -263,6 +263,33 @@ describe('AggregateTransaction', () => {
         )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742' +
             'D6D65737361676568B3FBB18729C1FDE225C57F8CE080FA828F0067E451A3FD81FA628842B0B763');
 
+    });
+
+    it('should createBonded an AggregateTransaction object with TransferTransaction', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createBonded(
+            Deadline.create(2, ChronoUnit.MINUTES),
+            [transferTransaction.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+
+        const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('CD000000');
+        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('5100000051000000');
+        expect(signedTransaction.payload.substring(204, 208)).to.be.equal('4142');
+        expect(signedTransaction.payload.substring(
+            320,
+            signedTransaction.payload.length,
+        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
     });
 
     it('should validate if accounts have signed an aggregate transaction', () => {

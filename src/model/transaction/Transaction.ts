@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { SignSchema } from '../../core/crypto';
-import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
+import { KeyPair, SHA3Hasher, SignSchema } from '../../core/crypto';
+import { Convert } from '../../core/format';
 import { SerializeTransactionToJSON } from '../../infrastructure/transaction/SerializeTransactionToJSON';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
@@ -80,6 +80,39 @@ export abstract class Transaction {
     }
 
     /**
+     * Generate transaction hash hex
+     * @param {string} transactionPayload HexString Payload
+     * @param {Array<number>} generationHashBuffer Network generation hash byte
+     * @returns {string} Returns Transaction Payload hash
+     */
+    public static createTransactionHash(transactionPayload: string, generationHashBuffer: number[]): string {
+        const byteBuffer = Array.from(Convert.hexToUint8(transactionPayload));
+        const signingBytes = byteBuffer
+            .slice(4, 36)
+            .concat(byteBuffer
+                .slice(4 + 64, 4 + 64 + 32))
+            .concat(generationHashBuffer)
+            .concat(byteBuffer
+                .splice(4 + 64 + 32, byteBuffer.length));
+
+        const hash = new Uint8Array(32);
+
+        SHA3Hasher.func(hash, signingBytes, 32);
+
+        return Convert.uint8ToHex(hash);
+    }
+
+    /**
+     * @internal
+     */
+    protected abstract generateBytes(): Uint8Array;
+
+    /**
+     * @internal
+     */
+    protected abstract generateEmbeddedBytes(): Uint8Array;
+
+    /**
      * @internal
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account - The account to sign the transaction
@@ -88,27 +121,42 @@ export abstract class Transaction {
      * @returns {SignedTransaction}
      */
     public signWith(account: Account, generationHash: string, signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
-        const transaction = this.buildTransaction();
-        const signedTransactionRaw = transaction.signTransaction(account, generationHash, signSchema);
+        const generationHashBytes = Array.from(Convert.hexToUint8(generationHash));
+        const byteBuffer = Array.from(this.generateBytes());
+        const signingBytes = generationHashBytes.concat(byteBuffer.slice(4 + 64 + 32));
+        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey, signSchema);
+        const signature = Array.from(KeyPair.sign(account, new Uint8Array(signingBytes), signSchema));
+        const signedTransactionBuffer = byteBuffer
+            .splice(0, 4)
+            .concat(signature)
+            .concat(Array.from(keyPairEncoded.publicKey))
+            .concat(byteBuffer
+                .splice(64 + 32, byteBuffer.length));
+        const payload = Convert.uint8ToHex(signedTransactionBuffer);
         return new SignedTransaction(
-            signedTransactionRaw.payload,
-            signedTransactionRaw.hash,
+            payload,
+            Transaction.createTransactionHash(payload, generationHashBytes),
             account.publicKey,
             this.type,
             this.networkType);
     }
 
     /**
-     * @internal
-     */
-    protected abstract buildTransaction(): VerifiableTransaction;
-
-    /**
-     * @internal
-     * @returns {Array<number>}
+     * Converts the transaction into AggregateTransaction compatible
+     * @returns {Array.<*>} AggregateTransaction bytes
      */
     public aggregateTransaction(): number[] {
-        return this.buildTransaction().toAggregateTransaction(this.signer!.publicKey);
+        const signer = Convert.hexToUint8(this.signer!.publicKey);
+        let resultBytes = Array.from(this.generateBytes());
+        resultBytes.splice(0, 4 + 64 + 32);
+        resultBytes = Array.from(signer).concat(resultBytes);
+        resultBytes.splice(32 + 2 + 2, 16);
+        return Array.from((new Uint8Array([
+            (resultBytes.length + 4 & 0x000000ff),
+            (resultBytes.length + 4 & 0x0000ff00) >> 8,
+            (resultBytes.length + 4 & 0x00ff0000) >> 16,
+            (resultBytes.length + 4 & 0xff000000) >> 24,
+        ]))).concat(resultBytes);
     }
 
     /**
@@ -121,6 +169,15 @@ export abstract class Transaction {
             throw new Error('Inner transaction cannot be an aggregated transaction.');
         }
         return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {signer});
+    }
+
+    /**
+     * Takes a transaction and formats bytes to be included in an aggregate transaction.
+     *
+     * @return transaction with signer serialized to be part of an aggregate transaction
+     */
+    public toAggregateTransactionBytes() {
+        return this.generateEmbeddedBytes();
     }
 
     /**
@@ -206,9 +263,8 @@ export abstract class Transaction {
      * @returns {string}
      * @memberof Transaction
      */
-    public serialize() {
-        const transaction = this.buildTransaction();
-        return transaction.serializeUnsignedTransaction();
+    public serialize(): string {
+        return Convert.uint8ToHex(this.generateBytes());
     }
 
     /**

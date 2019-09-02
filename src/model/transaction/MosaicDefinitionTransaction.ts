@@ -14,15 +14,27 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/MosaicCreationTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { SignSchema } from '../../core/crypto/SignSchema';
+import { Convert } from '../../core/format';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
+import { EmbeddedMosaicDefinitionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicDefinitionTransactionBuilder';
+import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { MosaicDefinitionTransactionBuilder } from '../../infrastructure/catbuffer/MosaicDefinitionTransactionBuilder';
+import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
+import { MosaicNonceDto } from '../../infrastructure/catbuffer/MosaicNonceDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
+import { MosaicFlags } from '../mosaic/MosaicFlag';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicNonce } from '../mosaic/MosaicNonce';
 import { MosaicProperties } from '../mosaic/MosaicProperties';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -95,6 +107,38 @@ export class MosaicDefinitionTransaction extends Transaction {
     }
 
     /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedMosaicDefinitionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            MosaicDefinitionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = MosaicDefinitionTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as MosaicDefinitionTransactionBuilder).getDeadline().timestamp),
+            new MosaicNonce(builder.getNonce().serialize()),
+            new MosaicId(builder.getId().mosaicId),
+            MosaicProperties.create({
+                supplyMutable: (builder.getFlags() & 1) === 1,
+                transferable: (builder.getFlags() & 2) === 2,
+                divisibility: builder.getDivisibility(),
+                restrictable: (builder.getFlags() & 4) === 4,
+                duration: new UInt64(builder.getDuration().blockDuration),
+            }),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicDefinitionTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+    }
+
+    /**
      * @override Transaction.size()
      * @description get the byte size of a MosaicDefinitionTransaction
      * @returns {number}
@@ -116,32 +160,77 @@ export class MosaicDefinitionTransaction extends Transaction {
     }
 
     /**
-     * @internal
-     * @returns {VerifiableTransaction}
+     * @description get the calculated mosaic flag value
+     * @returns {number}
+     * @memberof MosaicDefinitionTransaction
      */
-    protected buildTransaction(): VerifiableTransaction {
-        let mosaicDefinitionTransaction = new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addDivisibility(this.mosaicProperties.divisibility)
-            .addDuration(this.mosaicProperties.duration ? this.mosaicProperties.duration.toDTO() : [])
-            .addNonce(this.nonce.toDTO())
-            .addMosaicId(this.mosaicId.id.toDTO());
-
+    public getMosaicFlagValue(): number {
+        let flag = MosaicFlags.NONE;
         if (this.mosaicProperties.supplyMutable === true) {
-            mosaicDefinitionTransaction = mosaicDefinitionTransaction.addSupplyMutable();
+            flag += MosaicFlags.SUPPLY_MUTABLE;
         }
 
         if (this.mosaicProperties.transferable === true) {
-            mosaicDefinitionTransaction = mosaicDefinitionTransaction.addTransferability();
+            flag += MosaicFlags.TRANSFERABLE;
         }
 
         if (this.mosaicProperties.restrictable === true) {
-            mosaicDefinitionTransaction = mosaicDefinitionTransaction.addRestrictable();
+            flag += MosaicFlags.RESTRICTABLE;
         }
 
-        return mosaicDefinitionTransaction.build();
+        return flag.valueOf();
     }
 
+    /**
+     * @description Get mosaic nonce int value
+     * @returns {number}
+     * @memberof MosaicDefinitionTransaction
+     */
+    public getMosaicNonceIntValue(): number {
+        return GeneratorUtils.readUint32At(this.nonce.toDTO(), 0);
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new MosaicDefinitionTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_DEFINITION.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new MosaicNonceDto(this.getMosaicNonceIntValue()),
+            new MosaicIdDto(this.mosaicId.id.toDTO()),
+            this.getMosaicFlagValue(),
+            this.mosaicProperties.divisibility,
+            new BlockDurationDto(this.mosaicProperties.duration ?
+                    this.mosaicProperties.duration.toDTO() : UInt64.fromUint(0).toDTO()),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const transactionBuilder = new EmbeddedMosaicDefinitionTransactionBuilder(
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_DEFINITION.valueOf(),
+            new MosaicNonceDto(this.getMosaicNonceIntValue()),
+            new MosaicIdDto(this.mosaicId.id.toDTO()),
+            this.getMosaicFlagValue(),
+            this.mosaicProperties.divisibility,
+            new BlockDurationDto(this.mosaicProperties.duration ?
+                    this.mosaicProperties.duration.toDTO() : UInt64.fromUint(0).toDTO()),
+        );
+        return transactionBuilder.serialize();
+    }
 }

@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/MosaicAddressRestrictionTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { SignSchema } from '../../core/crypto/SignSchema';
+import { Convert, RawAddress } from '../../core/format';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedMosaicAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicAddressRestrictionTransactionBuilder';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { MosaicAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/MosaicAddressRestrictionTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
+import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -113,6 +122,34 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
     }
 
     /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedMosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+        MosaicAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = MosaicAddressRestrictionTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as MosaicAddressRestrictionTransactionBuilder).getDeadline().timestamp),
+            new MosaicId(builder.getMosaicId().unresolvedMosaicId),
+            new UInt64(builder.getRestrictionKey()),
+            Address.createFromEncoded(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),
+            new UInt64(builder.getPreviousRestrictionValue()),
+            new UInt64(builder.getNewRestrictionValue()),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAddressRestrictionTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+    }
+
+    /**
      * @override Transaction.size()
      * @description get the byte size of a MosaicDefinitionTransaction
      * @returns {number}
@@ -135,19 +172,43 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {VerifiableTransaction}
+     * @returns {Uint8Array}
      */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addMosaicId(this.mosaicId.id.toDTO())
-            .addRestrictionKey(this.restrictionKey.toDTO())
-            .addTargetAddress(this.targetAddress.plain())
-            .addPreviousRestrictionValue(this.previousRestrictionValue.toDTO())
-            .addNewRestrictionValue(this.newRestrictionValue.toDTO())
-            .build();
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new MosaicAddressRestrictionTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_ADDRESS_RESTRICTION.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
+            this.restrictionKey.toDTO(),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.targetAddress.plain())),
+            this.previousRestrictionValue.toDTO(),
+            this.newRestrictionValue.toDTO(),
+        );
+        return transactionBuilder.serialize();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const transactionBuilder = new EmbeddedMosaicAddressRestrictionTransactionBuilder(
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_ADDRESS_RESTRICTION.valueOf(),
+            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
+            this.restrictionKey.toDTO(),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.targetAddress.plain())),
+            this.previousRestrictionValue.toDTO(),
+            this.newRestrictionValue.toDTO(),
+        );
+        return transactionBuilder.serialize();
+    }
 }

@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/MosaicSupplyChangeTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { SignSchema } from '../../core/crypto/SignSchema';
+import { Convert } from '../../core/format';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedMosaicSupplyChangeTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedMosaicSupplyChangeTransactionBuilder';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { MosaicSupplyChangeTransactionBuilder } from '../../infrastructure/catbuffer/MosaicSupplyChangeTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicSupplyType } from '../mosaic/MosaicSupplyType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -94,6 +102,32 @@ export class MosaicSupplyChangeTransaction extends Transaction {
     }
 
     /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedMosaicSupplyChangeTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            MosaicSupplyChangeTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = MosaicSupplyChangeTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as MosaicSupplyChangeTransactionBuilder).getDeadline().timestamp),
+            new MosaicId(builder.getMosaicId().unresolvedMosaicId),
+            builder.getAction().valueOf(),
+            new UInt64(builder.getDelta().amount),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicSupplyChangeTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+    }
+
+    /**
      * @override Transaction.size()
      * @description get the byte size of a MosaicSupplyChangeTransaction
      * @returns {number}
@@ -112,17 +146,39 @@ export class MosaicSupplyChangeTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {VerifiableTransaction}
+     * @returns {Uint8Array}
      */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addMosaicId(this.mosaicId.id.toDTO())
-            .addDirection(this.direction)
-            .addDelta(this.delta.toDTO())
-            .build();
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new MosaicSupplyChangeTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_SUPPLY_CHANGE.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
+            this.direction.valueOf(),
+            new AmountDto(this.delta.toDTO()),
+        );
+        return transactionBuilder.serialize();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const transactionBuilder = new EmbeddedMosaicSupplyChangeTransactionBuilder(
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.versionToDTO(),
+            TransactionType.MOSAIC_SUPPLY_CHANGE.valueOf(),
+            new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
+            this.direction.valueOf(),
+            new AmountDto(this.delta.toDTO()),
+        );
+        return transactionBuilder.serialize();
+    }
 }

@@ -70,7 +70,7 @@ describe('ModifyMultisigAccountTransaction', () => {
                         NetworkType.MIJIN_TEST),
                 )],
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(modifyMultisigAccountTransaction.maxFee.higher).to.be.equal(0);
@@ -115,8 +115,8 @@ describe('ModifyMultisigAccountTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('01020200B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC' +
-            '6EC2400B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
+        )).to.be.equal('01020201B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC2401B1' +
+            'B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
 
     });
 

@@ -56,7 +56,7 @@ describe('MosaicAliasTransaction', () => {
             namespaceId,
             mosaicId,
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(mosaicAliasTransaction.maxFee.higher).to.be.equal(0);
@@ -85,7 +85,7 @@ describe('MosaicAliasTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('002AD8FC018D9A49E14CCCD78612DDF5CA');
+        )).to.be.equal('012AD8FC018D9A49E14CCCD78612DDF5CA');
 
     });
 

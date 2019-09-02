@@ -15,6 +15,7 @@
  */
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
+import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {NetworkCurrencyMosaic} from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
@@ -24,8 +25,11 @@ import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
 describe('LockFundsTransaction', () => {
-    const account = TestingAccount;
+    let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    before(() => {
+        account = TestingAccount;
+    });
     it('should default maxFee field be set to 0', () => {
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
@@ -58,7 +62,7 @@ describe('LockFundsTransaction', () => {
             UInt64.fromUint(10),
             signedTransaction,
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(lockFundsTransaction.maxFee.higher).to.be.equal(0);
@@ -98,6 +102,28 @@ describe('LockFundsTransaction', () => {
                 signedTransaction,
                 NetworkType.MIJIN_TEST);
         }).to.throw(Error);
+    });
+
+    it('should create and sign LockFundsTransaction', () => {
+        const aggregateTransaction = AggregateTransaction.createBonded(
+            Deadline.create(),
+            [],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+        const signedTransaction = account.sign(aggregateTransaction, generationHash);
+        const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
+            NetworkCurrencyMosaic.createRelative(10),
+            UInt64.fromUint(10),
+            signedTransaction,
+            NetworkType.MIJIN_TEST,
+        );
+        const signedTx = lockFundsTransaction.signWith(account, generationHash);
+
+        expect(signedTx.payload.substring(
+            136,
+            signedTransaction.payload.length - 32,
+        )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE0190484100000000');
     });
 
     describe('size', () => {

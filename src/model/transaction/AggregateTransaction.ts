@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-import { SignSchema } from '../../core/crypto';
-import { Builder } from '../../infrastructure/builders/AggregateTransaction';
-import { AggregateTransaction as AggregatedTransactionCore} from '../../infrastructure/builders/AggregateTransaction';
+import { KeyPair, SignSchema } from '../../core/crypto';
+import { Convert } from '../../core/format';
+import { AggregateBondedTransactionBuilder } from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
+import { AggregateCompleteTransactionBuilder } from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { CosignatureBuilder } from '../../infrastructure/catbuffer/CosignatureBuilder';
+import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
 import { Account } from '../account/Account';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';
 import { CosignatureSignedTransaction } from './CosignatureSignedTransaction';
+import { CosignatureTransaction } from './CosignatureTransaction';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
@@ -127,20 +136,65 @@ export class AggregateTransaction extends Transaction {
     }
 
     /**
-     * @internal
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {AggregateTransaction}
      */
-    public buildTransaction(): AggregatedTransactionCore {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addType(this.type)
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addTransactions(this.innerTransactions.map((transaction) => {
-                return transaction.aggregateTransaction();
-            })).build();
-    }
+    public static createFromPayload(payload: string, signSchema: SignSchema = SignSchema.SHA3): AggregateTransaction {
+        /**
+         * Get transaction type from the payload hex
+         * As buffer uses separate builder class for Complete and bonded
+         */
+        const type = parseInt(Convert.uint8ToHex(Convert.hexToUint8(payload.substring(204, 208)).reverse()), 16);
+        const builder = type === TransactionType.AGGREGATE_COMPLETE ?
+            AggregateCompleteTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            AggregateBondedTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const innerTransactionHex = Convert.uint8ToHex(builder.getTransactions());
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const consignaturesHex = Convert.uint8ToHex(builder.getCosignatures());
 
+        /**
+         * Get inner transactions array
+         */
+        const embeddedTransactionArray: string[] = [];
+        let innerBinary = innerTransactionHex;
+        while (innerBinary.length) {
+            const payloadSize = parseInt(Convert.uint8ToHex(Convert.hexToUint8(innerBinary.substring(0, 8)).reverse()), 16) * 2;
+            const innerTransaction = innerBinary.substring(0, payloadSize);
+            embeddedTransactionArray.push(innerTransaction);
+            innerBinary = innerBinary.substring(payloadSize);
+        }
+
+        /**
+         * Get cosignatures
+         */
+        const consignatureArray = consignaturesHex.match(/.{1,192}/g);
+        const consignatures = consignatureArray ? consignatureArray.map((cosignature) =>
+                    new AggregateTransactionCosignature(
+                        cosignature.substring(64, 192),
+                        PublicAccount.createFromPublicKey(cosignature.substring(0, 64), networkType, signSchema),
+                )) : [];
+
+        return type === TransactionType.AGGREGATE_COMPLETE ?
+            AggregateTransaction.createComplete(
+                Deadline.createFromDTO(builder.deadline.timestamp),
+                embeddedTransactionArray.map((transactionRaw) => {
+                    return CreateTransactionFromPayload(transactionRaw, true, signSchema) as InnerTransaction;
+                }),
+                networkType,
+                consignatures,
+                new UInt64(builder.fee.amount),
+            ) : AggregateTransaction.createBonded(
+                Deadline.createFromDTO(builder.deadline.timestamp),
+                embeddedTransactionArray.map((transactionRaw) => {
+                    return CreateTransactionFromPayload(transactionRaw, true, signSchema) as InnerTransaction;
+                }),
+                networkType,
+                consignatures,
+                new UInt64(builder.fee.amount),
+            );
+    }
     /**
      * @internal
      * Sign transaction with cosignatories creating a new SignedTransaction
@@ -153,11 +207,23 @@ export class AggregateTransaction extends Transaction {
     public signTransactionWithCosignatories(initiatorAccount: Account,
                                             cosignatories: Account[],
                                             generationHash: string,
-                                            signSchema: SignSchema = SignSchema.SHA3) {
-        const aggregateTransaction = this.buildTransaction();
-        const signedTransactionRaw = aggregateTransaction
-                .signTransactionWithCosigners(initiatorAccount, cosignatories, generationHash, signSchema);
-        return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
+                                            signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
+        const signedTransaction = this.signWith(initiatorAccount, generationHash, signSchema);
+        const transactionHashBytes = Convert.hexToUint8(signedTransaction.hash);
+        let signedPayload = signedTransaction.payload;
+        cosignatories.forEach((cosigner) => {
+            const signature = KeyPair.sign(cosigner, transactionHashBytes, signSchema);
+            signedPayload += cosigner.publicKey + Convert.uint8ToHex(signature);
+        });
+
+        // Calculate new size
+        const size = `00000000${(signedPayload.length / 2).toString(16)}`;
+        const formatedSize = size.substr(size.length - 8, size.length);
+        const littleEndianSize = formatedSize.substr(6, 2) + formatedSize.substr(4, 2) +
+            formatedSize.substr(2, 2) + formatedSize.substr(0, 2);
+
+        signedPayload = littleEndianSize + signedPayload.substr(8, signedPayload.length - 8);
+        return new SignedTransaction(signedPayload, signedTransaction.hash, initiatorAccount.publicKey,
                                      this.type, this.networkType);
     }
 
@@ -174,13 +240,21 @@ export class AggregateTransaction extends Transaction {
     public signTransactionGivenSignatures(initiatorAccount: Account,
                                           cosignatureSignedTransactions: CosignatureSignedTransaction[],
                                           generationHash: string,
-                                          signSchema: SignSchema= SignSchema.SHA3) {
-        const aggregateTransaction = this.buildTransaction();
-        const signedTransactionRaw = aggregateTransaction.signTransactionGivenSignatures(initiatorAccount,
-                                                                                         cosignatureSignedTransactions,
-                                                                                         generationHash,
-                                                                                         signSchema);
-        return new SignedTransaction(signedTransactionRaw.payload, signedTransactionRaw.hash, initiatorAccount.publicKey,
+                                          signSchema: SignSchema= SignSchema.SHA3): SignedTransaction {
+        const signedTransaction = this.signWith(initiatorAccount, generationHash, signSchema);
+        let signedPayload = signedTransaction.payload;
+        cosignatureSignedTransactions.forEach((cosignedTransaction) => {
+            signedPayload += cosignedTransaction.signer + cosignedTransaction.signature;
+        });
+
+        // Calculate new size
+        const size = `00000000${(signedPayload.length / 2).toString(16)}`;
+        const formatedSize = size.substr(size.length - 8, size.length);
+        const littleEndianSize = formatedSize.substr(6, 2) + formatedSize.substr(4, 2) +
+            formatedSize.substr(2, 2) + formatedSize.substr(0, 2);
+
+        signedPayload = littleEndianSize + signedPayload.substr(8, signedPayload.length - 8);
+        return new SignedTransaction(signedPayload, signedTransaction.hash, initiatorAccount.publicKey,
                                      this.type, this.networkType);
     }
 
@@ -213,5 +287,62 @@ export class AggregateTransaction extends Transaction {
         });
 
         return byteSize + byteTransactionsSize + byteTransactions;
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        let transactions = Uint8Array.from([]);
+        this.innerTransactions.forEach((transaction) => {
+            const transactionByte = transaction.toAggregateTransactionBytes();
+            transactions = GeneratorUtils.concatTypedArrays(transactions, transactionByte);
+        });
+
+        let cosignatures = Uint8Array.from([]);
+        this.cosignatures.forEach((cosignature) => {
+            const signerBytes = Convert.hexToUint8(cosignature.signer.publicKey);
+            const signatureBytes = Convert.hexToUint8(cosignature.signature);
+            const cosignatureBytes = new CosignatureBuilder(
+                new KeyDto(signerBytes),
+                new SignatureDto(signatureBytes),
+            ).serialize();
+            cosignatures = GeneratorUtils.concatTypedArrays(cosignatures, cosignatureBytes);
+        });
+
+        const transactionBuilder = this.type === TransactionType.AGGREGATE_COMPLETE ?
+            new AggregateCompleteTransactionBuilder(
+                new SignatureDto(signatureBuffer),
+                new KeyDto(signerBuffer),
+                this.versionToDTO(),
+                this.type.valueOf(),
+                new AmountDto(this.maxFee.toDTO()),
+                new TimestampDto(this.deadline.toDTO()),
+                transactions,
+                cosignatures,
+            ) :
+            new AggregateBondedTransactionBuilder(
+                new SignatureDto(signatureBuffer),
+                new KeyDto(signerBuffer),
+                this.versionToDTO(),
+                this.type.valueOf(),
+                new AmountDto(this.maxFee.toDTO()),
+                new TimestampDto(this.deadline.toDTO()),
+                transactions,
+                cosignatures,
+            );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        throw new Error('Method not implemented');
     }
 }

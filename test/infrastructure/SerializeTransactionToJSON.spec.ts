@@ -90,7 +90,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = addressRestrictionTransaction.toJSON();
 
-        expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS);
+        expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_RESTRICTION_ADDRESS);
         expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingAddress);
         expect(json.transaction.modifications.length).to.be.equal(1);
     });
@@ -110,7 +110,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = mosaicRestrictionTransaction.toJSON();
 
-        expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC);
+        expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_RESTRICTION_MOSAIC);
         expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowMosaic);
         expect(json.transaction.modifications.length).to.be.equal(1);
     });
@@ -130,7 +130,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = operationRestrictionTransaction.toJSON();
 
-        expect(json.transaction.type).to.be.equal(TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION);
+        expect(json.transaction.type).to.be.equal(TransactionType.ACCOUNT_RESTRICTION_OPERATION);
         expect(json.transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingTransactionType);
         expect(json.transaction.modifications.length).to.be.equal(1);
     });

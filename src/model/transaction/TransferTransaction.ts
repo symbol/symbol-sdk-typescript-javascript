@@ -14,17 +14,32 @@
  * limitations under the License.
  */
 
-import { Convert as convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/TransferTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { SignSchema } from '../../core/crypto/SignSchema';
+import { Convert, Convert as convert } from '../../core/format';
+import { RawAddress } from '../../core/format/RawAddress';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedTransferTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransferTransactionBuilder';
+import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { TransferTransactionBuilder } from '../../infrastructure/catbuffer/TransferTransactionBuilder';
+import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
+import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
+import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
+import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { EncryptedMessage } from './EncryptedMessage';
+import { InnerTransaction } from './InnerTransaction';
 import { Message } from './Message';
+import { MessageType } from './MessageType';
+import { PlainMessage } from './PlainMessage';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -94,6 +109,40 @@ export class TransferTransaction extends Transaction {
     }
 
     /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedTransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            TransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const messageType = builder.getMessage()[0];
+        const messageHex = Convert.uint8ToHex(builder.getMessage()).substring(2);
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = TransferTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as TransferTransactionBuilder).getDeadline().timestamp),
+            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipient().unresolvedAddress)),
+            builder.getMosaics().map((mosaic) => {
+                return new Mosaic(
+                    new MosaicId(mosaic.mosaicId.unresolvedMosaicId),
+                    new UInt64(mosaic.amount.amount));
+            }),
+            messageType === MessageType.PlainMessage ?
+                PlainMessage.createFromPayload(messageHex) :
+                EncryptedMessage.createFromPayload(messageHex),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+    }
+
+    /**
      * Return the string notation for the set recipient
      * @internal
      * @returns {string}
@@ -107,6 +156,46 @@ export class TransferTransaction extends Transaction {
 
         // address recipient
         return (this.recipient as Address).plain();
+    }
+
+    /**
+     * Return sorted mosaic arrays
+     * @internal
+     * @returns {Mosaic[]}
+     */
+    public sortMosaics(): Mosaic[] {
+        const sortedMosaics = this.mosaics.sort((a, b) => {
+            if (Number(a.id[1]) > b.id[1]) { return 1; } else if (a.id[1] < b.id[1]) { return -1; }
+            return 0;
+        });
+        return sortedMosaics;
+    }
+
+    /**
+     * Return message buffer
+     * @internal
+     * @returns {Uint8Array}
+     */
+    public getMessageBuffer(): Uint8Array {
+        const payloadBuffer = Convert.hexToUint8(Convert.utf8ToHex(this.message.payload));
+        const typeBuffer = GeneratorUtils.uintToBuffer(this.message.type, 1);
+        return GeneratorUtils.concatTypedArrays(typeBuffer, payloadBuffer);
+    }
+
+    /**
+     * Return unresolved address bytes of the recipient
+     * @internal
+     * @returns {string}
+     */
+    public getRecipientBytes(): Uint8Array {
+        const recipient = this.recipientToString();
+        if (/^[0-9a-fA-F]{16}$/.test(recipient)) {
+            // received hexadecimal notation of namespaceId (alias)
+            return RawAddress.aliasToRecipient(convert.hexToUint8(recipient));
+        } else {
+            // received recipient address
+            return RawAddress.stringToAddress(recipient);
+        }
     }
 
     /**
@@ -133,17 +222,45 @@ export class TransferTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {VerifiableTransaction}
+     * @returns {Uint8Array}
      */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addRecipient(this.recipientToString())
-            .addMosaics(this.mosaics.map((mosaic) => mosaic.toDTO()))
-            .addMessage(this.message)
-            .build();
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new TransferTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.TRANSFER.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            new UnresolvedAddressDto(this.getRecipientBytes()),
+            this.getMessageBuffer(),
+            this.sortMosaics().map((mosaic) => {
+                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
+                                                   new AmountDto(mosaic.amount.toDTO()));
+            }),
+        );
+        return transactionBuilder.serialize();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const transactionBuilder = new EmbeddedTransferTransactionBuilder(
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.versionToDTO(),
+            TransactionType.TRANSFER.valueOf(),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientToString())),
+            this.getMessageBuffer(),
+            this.sortMosaics().map((mosaic) => {
+                return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
+                                                   new AmountDto(mosaic.amount.toDTO()));
+            }),
+        );
+        return transactionBuilder.serialize();
+    }
 }

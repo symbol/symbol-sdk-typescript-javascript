@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-import { Convert as convert } from '../../core/format';
-import { Builder } from '../../infrastructure/builders/SecretProofTransaction';
-import {VerifiableTransaction} from '../../infrastructure/builders/VerifiableTransaction';
+import { SignSchema } from '../../core/crypto/SignSchema';
+import { Convert, Convert as convert, RawAddress } from '../../core/format';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedSecretProofTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretProofTransactionBuilder';
+import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
+import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { SecretProofTransactionBuilder } from '../../infrastructure/catbuffer/SecretProofTransactionBuilder';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -93,6 +102,33 @@ export class SecretProofTransaction extends Transaction {
     }
 
     /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedSecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            SecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = SecretProofTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO(
+                (builder as SecretProofTransactionBuilder).getDeadline().timestamp),
+            builder.getHashAlgorithm().valueOf(),
+            Convert.uint8ToHex(builder.getSecret().hash256),
+            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipient().unresolvedAddress)),
+            Convert.uint8ToHex(builder.getProof()),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretProofTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+    }
+
+    /**
      * @override Transaction.size()
      * @description get the byte size of a SecretProofTransaction
      * @returns {number}
@@ -114,20 +150,60 @@ export class SecretProofTransaction extends Transaction {
     }
 
     /**
-     * @internal
-     * @returns {VerifiableTransaction}
+     * @description Get secret bytes
+     * @returns {Uint8Array}
+     * @memberof SecretLockTransaction
      */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addType(this.type)
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addHashAlgorithm(this.hashType)
-            .addSecret(this.secret)
-            .addRecipient(this.recipient.plain())
-            .addProof(this.proof)
-            .build();
+    public getSecretByte(): Uint8Array {
+        return convert.hexToUint8(64 > this.secret.length ? this.secret + '0'.repeat(64 - this.secret.length) : this.secret);
     }
 
+    /**
+     * @description Get proof bytes
+     * @returns {Uint8Array}
+     * @memberof SecretLockTransaction
+     */
+    public getProofByte(): Uint8Array {
+        return convert.hexToUint8(this.proof);
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new SecretProofTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.SECRET_PROOF.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            this.hashType.valueOf(),
+            new Hash256Dto(this.getSecretByte()),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+            this.getProofByte(),
+        );
+        return transactionBuilder.serialize();
+    }
+
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const transactionBuilder = new EmbeddedSecretProofTransactionBuilder(
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.versionToDTO(),
+            TransactionType.SECRET_PROOF.valueOf(),
+            this.hashType.valueOf(),
+            new Hash256Dto(this.getSecretByte()),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+            this.getProofByte(),
+        );
+        return transactionBuilder.serialize();
+    }
 }

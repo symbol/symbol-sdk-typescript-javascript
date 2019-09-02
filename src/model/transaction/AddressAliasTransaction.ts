@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-import { Builder } from '../../infrastructure/builders/AddressAliasTransaction';
-import { VerifiableTransaction } from '../../infrastructure/builders/VerifiableTransaction';
+import { SignSchema } from '../../core/crypto/SignSchema';
+import { Convert, RawAddress } from '../../core/format';
+import { AddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/AddressAliasTransactionBuilder';
+import { AddressDto } from '../../infrastructure/catbuffer/AddressDto';
+import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
+import { EmbeddedAddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAddressAliasTransactionBuilder';
+import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
+import { NamespaceIdDto } from '../../infrastructure/catbuffer/NamespaceIdDto';
+import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
+import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
@@ -23,6 +31,7 @@ import { AliasAction } from '../namespace/AliasAction';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
+import { InnerTransaction } from './InnerTransaction';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -95,6 +104,32 @@ export class AddressAliasTransaction extends Transaction {
     }
 
     /**
+     * Create a transaction object from payload
+     * @param {string} payload Binary payload
+     * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @returns {Transaction | InnerTransaction}
+     */
+    public static createFromPayload(payload: string,
+                                    isEmbedded: boolean = false,
+                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+        const builder = isEmbedded ? EmbeddedAddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
+            AddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
+        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
+        const transaction = AddressAliasTransaction.create(
+            isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
+            builder.getAliasAction().valueOf(),
+            new NamespaceId(builder.getNamespaceId().namespaceId),
+            Address.createFromEncoded(
+                Convert.uint8ToHex(builder.getAddress().address)),
+            networkType,
+            isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AddressAliasTransactionBuilder).fee.amount),
+        );
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+    }
+
+    /**
      * @override Transaction.size()
      * @description get the byte size of a AddressAliasTransaction
      * @returns {number}
@@ -113,17 +148,39 @@ export class AddressAliasTransaction extends Transaction {
 
     /**
      * @internal
-     * @returns {VerifiableTransaction}
+     * @returns {Uint8Array}
      */
-    protected buildTransaction(): VerifiableTransaction {
-        return new Builder()
-            .addDeadline(this.deadline.toDTO())
-            .addFee(this.maxFee.toDTO())
-            .addVersion(this.versionToDTO())
-            .addAliasAction(this.aliasAction)
-            .addNamespaceId(this.namespaceId.id.toDTO())
-            .addAddress(this.address.plain())
-            .build();
+    protected generateBytes(): Uint8Array {
+        const signerBuffer = new Uint8Array(32);
+        const signatureBuffer = new Uint8Array(64);
+
+        const transactionBuilder = new AddressAliasTransactionBuilder(
+            new SignatureDto(signatureBuffer),
+            new KeyDto(signerBuffer),
+            this.versionToDTO(),
+            TransactionType.ADDRESS_ALIAS.valueOf(),
+            new AmountDto(this.maxFee.toDTO()),
+            new TimestampDto(this.deadline.toDTO()),
+            this.aliasAction.valueOf(),
+            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            new AddressDto(RawAddress.stringToAddress(this.address.plain())),
+        );
+        return transactionBuilder.serialize();
     }
 
+    /**
+     * @internal
+     * @returns {Uint8Array}
+     */
+    protected generateEmbeddedBytes(): Uint8Array {
+        const transactionBuilder = new EmbeddedAddressAliasTransactionBuilder(
+            new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
+            this.versionToDTO(),
+            TransactionType.ADDRESS_ALIAS.valueOf(),
+            this.aliasAction.valueOf(),
+            new NamespaceIdDto(this.namespaceId.id.toDTO()),
+            new AddressDto(RawAddress.stringToAddress(this.address.plain())),
+        );
+        return transactionBuilder.serialize();
+    }
 }
