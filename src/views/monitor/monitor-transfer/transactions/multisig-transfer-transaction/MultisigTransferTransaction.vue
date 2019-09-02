@@ -20,9 +20,12 @@
       <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>
       <div v-if="isShowSubAlias" class="selections ">
         <div class="selection_container scroll">
-          <div @click="formItem.address =key " class="overflow_ellipsis selection_item"
+          <div @click="formModel.address =key " class="overflow_ellipsis selection_item"
                v-for="(value,key) in addresAliasMap">{{value.label}}({{key}})
           </div>
+        </div>
+        <div v-if="isAddressMapNull" class="no_data">
+          {{$t('no_data')}}
         </div>
       </div>
     </div>

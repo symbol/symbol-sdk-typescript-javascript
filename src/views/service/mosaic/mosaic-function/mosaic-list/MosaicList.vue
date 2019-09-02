@@ -1,11 +1,11 @@
 <template>
-  <div class="mosaicList ">
+  <div class="mosaicList secondary_page_animate">
     <div class="mosaicListBody scroll">
       <div class="listTit">
         <Row>
           <Col span="1">&nbsp;</Col>
-          <Col span="3">{{$t('mosaic_ID')}}</Col>
-          <Col span="4">{{$t('available_quantity')}}</Col>
+          <Col span="4">{{$t('mosaic_ID')}}</Col>
+          <Col span="3">{{$t('available_quantity')}}</Col>
           <Col span="2">{{$t('mosaic_divisibility')}}</Col>
           <Col span="2">{{$t('transportability')}}</Col>
           <Col span="2">{{$t('variable_supply')}}</Col>
@@ -19,8 +19,8 @@
       <div class="listItem" v-if="key !== 'length'" v-for="(value,key,index) in mosaicMapInfo">
         <Row>
           <Col span="1">&nbsp;</Col>
-          <Col span="3">{{value.hex}}</Col>
-          <Col span="4">{{value.supply}}</Col>
+          <Col span="4">{{value.hex}}</Col>
+          <Col span="3">{{value.supply}}</Col>
           <Col span="2" style="padding-left: 20px"> {{value.divisibility}}</Col>
           <Col span="2">{{value.transferable}}</Col>
           <Col span="2">{{value.supplyMutable}}</Col>

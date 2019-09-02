@@ -1,5 +1,5 @@
 <template>
-  <div class="apostille_history">
+  <div class="apostille_history secondary_page_animate">
     <div class="bottom_table">
       <div class="table_main_head">
         <span>

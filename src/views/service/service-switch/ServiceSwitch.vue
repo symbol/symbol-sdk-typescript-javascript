@@ -1,5 +1,5 @@
 <template>
-  <div class="serviceSwitchWrap radius">
+  <div class="serviceSwitchWrap radius secondary_page_animate">
     <div class="serviceSwitchHead">
       <p class="tit">{{$t('service')}}</p>
     </div>

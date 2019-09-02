@@ -27,10 +27,6 @@ export class MonitorTransferTs extends Vue {
         return this.activeAccount.wallet
     }
 
-    get accountPublicKey() {
-        return this.activeAccount.wallet.publicKey
-    }
-
     get accountAddress() {
         return this.activeAccount.wallet.address
     }

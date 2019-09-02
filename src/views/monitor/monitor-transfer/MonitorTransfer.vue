@@ -1,5 +1,5 @@
 <template>
-  <div class="transaction_content" @click="hideSearchDetail()">
+  <div class="transaction_content secondary_page_animate" @click="hideSearchDetail()">
     <div class="left_container radius ">
       <div class="top_transfer_type">
         <span

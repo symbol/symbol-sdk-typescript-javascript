@@ -1,5 +1,5 @@
 <template>
-  <div class="dash_board_container ">
+  <div class="dash_board_container secondary_page_animate" >
     <Modal
             :title="$t('transaction_detail')"
             v-model="isShowDialog"
@@ -7,8 +7,9 @@
             class-name="dash_board_dialog scroll">
       <div class="transfer_type ">
         <span class="title">{{$t('transfer_type')}}</span>
-        <span class="value overflow_ellipsis">{{transactionDetails.dialogDetailMap
-          ? $t(transactionDetails.dialogDetailMap.transfer_type) :'-'}}</span>
+        <span class="value overflow_ellipsis">
+          {{transactionDetails.dialogDetailMap ? $t(transactionDetails.dialogDetailMap.transfer_type) :'-'}}
+        </span>
       </div>
       <div>
         <div v-if="key !=='transfer_type'" v-for="(value,key,index) in transactionDetails.dialogDetailMap"
@@ -53,7 +54,7 @@
         <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
         <span class="right">
           <span>{{$t('The_total_market_capitalization')}}（USD）</span>
-          <span class="black">{{currentPrice}}</span>
+          <span class="black">{{formatNumber(currentPrice)}}</span>
         </span>
         <LineChart></LineChart>
       </div>

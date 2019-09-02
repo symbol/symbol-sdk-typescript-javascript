@@ -10,7 +10,8 @@ import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
 import {getBlockInfoByTransactionList} from "@/core/utils/wallet"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {isRefreshData, localSave, localRead} from '@/core/utils/utils.ts'
-import {networkStatusList,xemTotalSupply} from '@/config/index.ts'
+import {networkStatusList, xemTotalSupply} from '@/config/index.ts'
+import {formatNumber} from "@/core/utils/utils"
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -41,7 +42,7 @@ export class MonitorDashBoardTs extends Vue {
     networkStatusList = networkStatusList
 
 
-    get getWallet() {
+    get wallet() {
         return this.activeAccount.wallet
     }
 
@@ -76,6 +77,7 @@ export class MonitorDashBoardTs extends Vue {
     get chainStatus() {
         return this.app.chainStatus
     }
+
     get currentHeight() {
         return this.app.chainStatus.currentHeight
     }
@@ -89,6 +91,9 @@ export class MonitorDashBoardTs extends Vue {
         this.transactionDetails = transaction
     }
 
+    formatNumber(number) {
+        return formatNumber(number)
+    }
 
     showInnerDialog(currentInnerTransaction) {
         this.isShowInnerDialog = true
@@ -161,13 +166,13 @@ export class MonitorDashBoardTs extends Vue {
     }
 
     refreshReceiptList() {
+        this.isLoadingTransactions = true
         const that = this
         let {accountPublicKey, node} = this
         if (!accountPublicKey || accountPublicKey.length < 64) return
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
         new TransactionApiRxjs().unconfirmedTransactions(
             publicAccount,
-
             {
                 pageSize: 100
             },
@@ -206,8 +211,9 @@ export class MonitorDashBoardTs extends Vue {
     }
 
 
-    @Watch('getWallet')
+    @Watch('wallet.address')
     onGetWalletChange() {
+        this.allTransactionsList = []
         this.refreshReceiptList()
         this.refreshTransferTransactionList()
         this.getMarketOpenPrice()

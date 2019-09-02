@@ -1,5 +1,5 @@
 <template>
-  <div class="market_board_container" @click="hideSearchDetail()">
+  <div class="market_board_container secondary_page_animate" @click="hideSearchDetail()">
 
     <div class="top_network_info">
       <div class="left_echart radius">

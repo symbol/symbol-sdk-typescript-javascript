@@ -1,5 +1,5 @@
 <template>
-  <div class="informationWrap">
+  <div class="informationWrap secondary_page_animate">
     <div class="left left_article_list radius">
 
       <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>

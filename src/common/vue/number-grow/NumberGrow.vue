@@ -1,7 +1,7 @@
 <template>
   <div class="number-grow-warp">
     <span v-if="isAdd" ref="numberGrow" :data-time="time" class="number-grow" :data-value="value?value:0"></span>
-    <span v-else="isAdd">{{numValue}}</span>
+    <span v-else="isAdd">{{formatNumber(numValue)}}</span>
   </div>
 </template>
 

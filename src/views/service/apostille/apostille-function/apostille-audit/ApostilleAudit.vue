@@ -1,5 +1,5 @@
 <template>
-  <div class="apostille_audit_container">
+  <div class="apostille_audit_container secondary_page_animate">
     <div class="top_tips">
       <div class="head">
         {{$t('Apostille_format_example')}}

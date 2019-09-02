@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="multisig_convert_container">
+    <div class="multisig_convert_container secondary_page_animate">
       <div class="multisig_convert_head">{{$t('Convert_to_multi_sign_account')}}</div>
       <div class="convert_form">
         <div class="multisig_add gray_content">

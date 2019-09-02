@@ -1,5 +1,5 @@
 <template>
-  <div class="setting_container scroll radius">
+  <div class="setting_container scroll radius selection_container">
     <div class="top_navigator radius">
       <span class="button_list_item" v-for="(b,index) in buttonList">
         <span :class="['name',b.isSelected?'active':'','pointer']" @click="switchButton(index)">{{$t(b.name)}}</span>

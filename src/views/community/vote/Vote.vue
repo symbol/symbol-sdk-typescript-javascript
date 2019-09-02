@@ -1,5 +1,5 @@
 <template>
-  <div class="vote_container radius">
+  <div class="vote_container radius secondary_page_animate">
 
     <div class="fake_content" v-if="voteActionList[1].isSelect"></div>
 

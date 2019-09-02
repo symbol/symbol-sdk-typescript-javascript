@@ -31,7 +31,7 @@ export class MultisigTransferTransactionTs extends Vue {
     transactionList = []
     transactionDetail = {}
     currentMinApproval = 0
-    isShowSubAlias = true
+    isShowSubAlias = false
     showCheckPWDialog = false
     otherDetails: any = {}
     isCompleteForm = true
@@ -40,10 +40,17 @@ export class MultisigTransferTransactionTs extends Vue {
     currentAmount: number = 0
     mosaicList = []
     multisigPublickeyList: any = []
+    isAddressMapNull = true
     formItem = formData.multisigTransferForm
 
     get addresAliasMap() {
-        return this.activeAccount.addresAliasMap
+        const addresAliasMap = this.activeAccount.addresAliasMap
+        for (let item in addresAliasMap) {
+            this.isAddressMapNull = false
+            return addresAliasMap
+        }
+        this.isAddressMapNull = true
+        return addresAliasMap
     }
 
     get generationHash() {
@@ -58,11 +65,6 @@ export class MultisigTransferTransactionTs extends Vue {
 
     get accountAddress() {
         return this.activeAccount.wallet.address
-    }
-
-
-    get accountPublicKey() {
-        return this.activeAccount.wallet.publicKey
     }
 
     get currentXEM1() {
@@ -143,7 +145,6 @@ export class MultisigTransferTransactionTs extends Vue {
         const that = this
         const {networkType, node} = this
         let {address, innerFee, lockFee, aggregateFee, mosaicTransferList, isEncryption, remark, multisigPublickey} = this.formItem
-        const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
             innerFee,

@@ -1,5 +1,5 @@
 <template>
-  <div class="network_content">
+  <div class="network_content secondary_page_animate">
 
     <div class="right_set_point left">
       <ul>

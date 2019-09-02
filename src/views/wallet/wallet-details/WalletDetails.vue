@@ -4,25 +4,27 @@
       <Row>
         <Col span="18">
           <h6>{{$t('Basic_information')}}</h6>
-          <div v-if="getWallet" class="walletInfo">
+          <div v-if="wallet" class="walletInfo">
             <p>
               <span class="tit">{{$t('Wallet_type')}}</span>
-              <span class="walletType" v-if="getWallet">{{getWallet.isMultisig ? $t('Public_account'):$t('Private_account')}}</span>
+              <span class="walletType" v-if="wallet">
+                {{wallet.isMultisig ? $t('Public_account'):$t('Private_account')}}
+              </span>
             </p>
             <p>
               <span class="tit">{{$t('Wallet_name')}}</span>
-              <span class="walletName" v-if="getWallet">{{getWallet.name}}</span>
+              <span class="walletName" v-if="wallet">{{wallet.name}}</span>
             </p>
-            <p >
+            <p>
               <span class="tit">{{$t('Wallet_address')}}</span>
-              <span class="walletAddress">{{getWallet.address}}</span>
-              <i class="copyIcon" @click="copy(getWallet.address)"><img
+              <span class="walletAddress">{{wallet.address}}</span>
+              <i class="copyIcon" @click="copy(wallet.address)"><img
                       src="@/common/img/wallet/copyIcon.png"></i>
             </p>
             <p>
               <span class="tit">{{$t('publickey')}}</span>
-              <span class="walletPublicKey">{{getWallet.publicKey}}</span>
-              <i class="copyIcon" @click="copy(getWallet.publicKey)"><img
+              <span class="walletPublicKey">{{wallet.publicKey}}</span>
+              <i class="copyIcon" @click="copy(wallet.publicKey)"><img
                       src="@/common/img/wallet/copyIcon.png"></i>
             </p>
           </div>

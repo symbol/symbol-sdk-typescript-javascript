@@ -1,5 +1,5 @@
 <template>
-  <div class="namespace_transaction_container">
+  <div class="namespace_transaction_container secondary_page_animate">
     <div class="left_switch_type">
       <div class="type_list_item " v-for="(b,index) in typeList">
         <span :class="['name',b.isSelected?'active':'','pointer']" @click="switchType(index)">{{$t(b.name)}}</span>

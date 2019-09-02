@@ -88,17 +88,6 @@ export const standardFields = {
         hint: 'HINT_address',
         placeholder: 'PLACEHOLDER_address',
     },
-
-    /*  addressOrMosaicId: {
-       default: '',
-       label: 'addressOrMosaicId',
-       name: 'addressOrMosaicId',
-       type: 'text',
-       validation: `required|${CUSTOM_VALIDATORS_NAMES.addressOrMosaicId}`,
-       hint: 'HINT_mosaicId',
-       placeholder: 'PLACEHOLDER_mosaicId',
-     },
-     */
     amount: {
         default: '',
         label: 'amount',

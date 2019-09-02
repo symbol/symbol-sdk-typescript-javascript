@@ -1,5 +1,5 @@
 <template>
-  <div class="normal_set">
+  <div class="normal_set secondary_page_animate">
     <ul>
       <li>{{$t('privacy_policy')}}</li>
       <li>{{$t('terms_of_use')}}</li>

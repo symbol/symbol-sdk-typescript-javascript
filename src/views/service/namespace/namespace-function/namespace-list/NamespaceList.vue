@@ -1,5 +1,5 @@
 <template>
-  <div class="namespace_list_container">
+  <div class="namespace_list_container secondary_page_animate">
     <div class="top_text">
       <div class="head_title">{{$t('Update_namespace_prompts')}}</div>
       <div class="tips">{{$t('namespace_list_tips_1')}}</div>

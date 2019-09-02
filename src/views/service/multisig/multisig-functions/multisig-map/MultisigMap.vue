@@ -1,5 +1,5 @@
 <template>
-  <div class="multisig_map_container">
+  <div class="multisig_map_container secondary_page_animate">
     <div class="multisig_head_title">{{$t('Current_wallet_multi_sign_relationship_map')}}</div>
     <div class="multisig_tips">
       <span class="tips_title">{{$t('prompt')}}:</span>

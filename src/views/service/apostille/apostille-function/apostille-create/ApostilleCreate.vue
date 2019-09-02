@@ -1,5 +1,5 @@
 <template>
-  <div class="apostille_create_container">
+  <div class="apostille_create_container secondary_page_animate">
     <div class="content_head_title">
       {{$t('apotille_transaction')}}
     </div>

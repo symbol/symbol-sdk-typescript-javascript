@@ -449,6 +449,7 @@ export const zh_CN = {
     Export_Keystore: '导出Keystore',
     Alias_settings: '别名设置',
     Filter_management: '拦截器',
+    LABEL_confirm_password: '确认新密码',
     Subaddress_management: '子地址管理',
     Modify_the_private_key_wallet_password: '修改钱包密码',
     status: '状态',

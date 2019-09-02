@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="multisig_management_container" @click="showSubpublickeyList = false">
+    <div class="multisig_management_container secondary_page_animate" @click="showSubpublickeyList = false">
       <div class="container_head_title">{{$t('Edit_co_signers_and_signature_thresholds')}}</div>
       <div class="edit_form">
         <div class="form_item">

@@ -1,5 +1,5 @@
 <template>
-  <div class="namespace_container">
+  <div class="namespace_container secondary_page_animate">
     <div class="top_navigator radius">
       <span class="button_list_item " v-for="(b,index) in buttonList">
         <span :class="['name',b.isSelected?'active':'','pointer']" @click="switchButton(index)">{{$t(b.name)}}</span>
