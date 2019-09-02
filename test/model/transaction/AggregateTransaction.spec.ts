@@ -454,6 +454,33 @@ describe('AggregateTransaction', () => {
         expect(standardCosignedTransaction.hash).to.be.equal(signedTransaction.hash);
     });
 
+    it('Should be able to add innertransactions to current aggregate tx', () => {
+        const transferTx1 = TransferTransaction.create(Deadline.create(),
+                                                  account.address,
+                                                  [],
+                                                  PlainMessage.create('a to b'),
+                                                  NetworkType.MIJIN_TEST);
+        const transferTx2 = TransferTransaction.create(Deadline.create(),
+                                                  account.address,
+                                                  [],
+                                                  PlainMessage.create('b to a'),
+                                                  NetworkType.MIJIN_TEST);
+        let aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [transferTx1.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+
+        expect(aggregateTransaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
+        expect(aggregateTransaction.innerTransactions.length).to.be.equal(1);
+
+        aggregateTransaction = aggregateTransaction.addTransactions([transferTx2.toAggregate(account.publicAccount)]);
+
+        expect(aggregateTransaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
+        expect(aggregateTransaction.innerTransactions.length).to.be.equal(2);
+    });
+
     describe('size', () => {
         it('should return 282 for AggregateTransaction byte size with TransferTransaction with 1 mosaic and message NEM', () => {
             const transaction = TransferTransaction.create(
