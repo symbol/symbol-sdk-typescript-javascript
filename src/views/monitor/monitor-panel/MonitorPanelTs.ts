@@ -79,7 +79,7 @@ export class MonitorPanelTs extends Vue {
     }
 
     get networkCurrencies() {
-      return [this.currentXem, this.currentXEM2]
+      return [this.currentXEM1, this.currentXEM2]
     }
 
     get currentXEM1() {
@@ -211,10 +211,6 @@ export class MonitorPanelTs extends Vue {
                 mosaicItem.hex = item.mosaicId.toHex()
                 if (mosaicItem.hex == currentXEM2 || mosaicItem.hex == currentXEM1) {
                     mosaicItem.name = currentXem
-                    getWallet.balance = mosaicItem.amount.compact() / Math.pow(10, item.divisibility)
-                    this.$store.commit('SET_WALLET', getWallet)
-                    walletList[0] = getWallet
-                    this.$store.commit('SET_WALLET_LIST', walletList)
                     mosaicItem.amount = mosaicItem.amount.compact()
                     mosaicItem.show = true
                     mosaicItem.showInManage = true
@@ -334,7 +330,7 @@ export class MonitorPanelTs extends Vue {
         if (!n.address || n.address === o.address) return
         this.initData()
         this.initMosaic()
-        new AppWallet(this.getWallet).getAccountBalance(this.networkCurrencies, this.node)
+        new AppWallet(this.getWallet).updateAccountBalance(this.networkCurrencies, this.node, this.$store)
         this.getAccountsName()
         this.getMarketOpenPrice()
         this.getMyNamespaces()
@@ -343,7 +339,7 @@ export class MonitorPanelTs extends Vue {
     @Watch('confirmedTxList')
     onConfirmedTxChange() {
         this.initMosaic()
-        new AppWallet(this.getWallet).getAccountBalance(this.networkCurrencies, this.node)
+        new AppWallet(this.getWallet).updateAccountBalance(this.networkCurrencies, this.node, this.$store)
         this.getAccountsName()
         this.getMyNamespaces()
     }
@@ -370,6 +366,6 @@ export class MonitorPanelTs extends Vue {
         this.getMyNamespaces()
         this.getAccountsName()
         this.initMosaic()
-        new AppWallet(this.getWallet).getAccountBalance(this.networkCurrencies, this.node)
+        new AppWallet(this.getWallet).updateAccountBalance(this.networkCurrencies, this.node, this.$store)
     }
 }

@@ -7,7 +7,7 @@
 <script lang="ts">
     import 'animate.css'
     import {isWindows} from "@/config/index.ts"
-    import {localRead} from '@/core/utils/utils.ts'
+    import {localRead, localSave} from '@/core/utils/utils.ts'
     import {AppWallet} from '@/core/utils/wallet.ts'
     import {Listener} from "nem2-sdk"
     import {checkInstall} from '@/core/utils/electron.ts'
@@ -15,7 +15,6 @@
     import {ListenerApiRxjs} from '@/core/api/ListenerApiRxjs.ts'
     import {Component, Vue} from 'vue-property-decorator'
     import {mapState} from 'vuex'
-
 
     @Component({
         computed: {
@@ -60,9 +59,9 @@
         //     signerPublicKey: '',
         //     nodeAmount: 4
         // }
-        async initApp() {
+        initApp() {
             const walletListFromStorage: any = localRead('wallets') !== '' ? JSON.parse(localRead('wallets')) : false
-            if (!walletListFromStorage) throw new Error('no wallet list from storage found in initApp')
+            if (!walletListFromStorage) return
             AppWallet.switchWallet(walletListFromStorage[0].address, walletListFromStorage, this.$store)
             this.updateWalletsBalancesAndMultisigStatus(walletListFromStorage)
         }
@@ -71,38 +70,35 @@
         async updateWalletsBalancesAndMultisigStatus(walletListFromStorage) {
             const networkCurrencies = [this.currentXEM1, this.currentXEM2]
             try {
-                const balances = await Promise.all([
-                    walletListFromStorage
+                const balances = await Promise.all(
+                    [...walletListFromStorage]
                       .map(wallet => new AppWallet(wallet)
                       .getAccountBalance(networkCurrencies, this.node))
-                  ])
-                const walletListWithBalances = [...walletListFromStorage]
-                walletListWithBalances.map((wallet, i) => ({wallet, balance: balances[i]}))
-                
-                const activeWalletWithBalance = walletListWithBalances
-                  .find(wallet => wallet.address === this.wallet.address)
-                
+                  )
+                const walletListWithBalances = [...walletListFromStorage].map((wallet, i) => ({...wallet, balance: balances[i]}))
+                const activeWalletWithBalance = walletListWithBalances.find(wallet => wallet.address === this.wallet.address)
                 if (activeWalletWithBalance === undefined) throw new Error('an active wallet was not found in the wallet list')
                 this.$store.commit('SET_WALLET_LIST', walletListWithBalances)
                 this.$store.commit('SET_WALLET', activeWalletWithBalance)
+                localSave('wallets', JSON.stringify(walletListWithBalances))
 
-                const multisigStatuses = await Promise.all([
-                    walletListFromStorage
+                const multisigStatuses = await Promise.all(
+                    [...walletListFromStorage]
                       .map(wallet => new AppWallet(wallet)
                       .setMultisigStatus(this.node))
-                  ])
+                  )
                 
                 const walletListWithMultisigStatuses = [...walletListWithBalances]
-                walletListWithMultisigStatuses.map((wallet, i) => ({wallet, isMultisig: multisigStatuses[i]}))
+                    .map((wallet, i) => ({...wallet, isMultisig: multisigStatuses[i]}))
                 
                 const activeWalletWithMultisigStatus = walletListWithMultisigStatuses
                   .find(wallet => wallet.address === this.wallet.address)
-                
                 if (activeWalletWithMultisigStatus === undefined) throw new Error('an active wallet was not found in the wallet list')
-                this.$store.commit('SET_WALLET_LIST', walletListWithBalances)
-                this.$store.commit('SET_WALLET', activeWalletWithBalance)
+                this.$store.commit('SET_WALLET_LIST', walletListWithMultisigStatuses)
+                this.$store.commit('SET_WALLET', activeWalletWithMultisigStatus)
+                localSave('wallets', JSON.stringify(walletListWithMultisigStatuses))
             } catch (error) {
-              // USe this error for network status 
+              // Use this error for network status 
               throw new Error(error)
             }
         }

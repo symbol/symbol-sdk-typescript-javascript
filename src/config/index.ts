@@ -243,7 +243,7 @@ export const timeZoneListData = timeZoneList
 export const nodeConfig = {
     node: 'http://47.107.245.217:3000',
     currentXem: 'nem.xem',
-    currentXEM1: '577cba5470751c05',
+    currentXEM1: '77a1969932d987d7',
     currentXEM2: '1B47399ABD2C1E49'
 }
 

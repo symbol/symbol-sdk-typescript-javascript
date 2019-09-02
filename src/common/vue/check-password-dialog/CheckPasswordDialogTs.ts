@@ -69,7 +69,6 @@ export class CheckPasswordDialogTs extends Vue {
             this.switchAnnounceType()
             this.checkPasswordDialogCancel()
         } catch (e) {
-            console.log(e)
             this.$Notice.destroy()
             this.$Notice.error({
                 title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''

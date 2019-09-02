@@ -180,17 +180,45 @@ export class AppWallet {
             const accountInfo = await new AccountApiRxjs()
                 .getAccountInfo(this.address, node)
                 .toPromise()
-
-            if (!accountInfo.mosaics.length) this.balance = 0
+            if (!accountInfo.mosaics.length) return 0
             const xemIndex = accountInfo.mosaics
               .findIndex(mosaic => networkCurrencies.indexOf(mosaic.id.toHex()) > -1)
 
-            if (xemIndex > -1) this.balance = 0
+
+            if (xemIndex === -1) return 0
             // @TODO: handle divisibility
             return accountInfo.mosaics[xemIndex].amount.compact() / 1000000
         } catch (error) {
             return 0
         }
+    }
+
+    async updateAccountBalance(networkCurrencies: any, node: string, store: any) {
+      try {
+          const balance = await this.getAccountBalance(networkCurrencies, node)
+          this.balance = balance
+          this.updateWallet(store)
+      } catch (error) {
+          console.error(error)
+      }
+    }
+
+    updateWallet(store: any) {
+        const localData: any[] = localRead('wallets') === ''
+          ? [] : JSON.parse(localRead('wallets'))
+
+        if (!localData.length) throw new Error('error at update wallet, no wallets in storage')
+
+        let newWalletList = [...localData]
+        const newWalletIndex = localData.findIndex(({address}) => address === this.address)
+
+        if (newWalletIndex === -1) throw new Error('wallet not found when updating')
+
+        newWalletList[newWalletIndex] = this
+
+        store.commit('SET_WALLET_LIST', newWalletList)
+        store.commit('SET_WALLET', this)
+        localSave('wallets', JSON.stringify(newWalletList))
     }
 
     async setMultisigStatus(node: string): Promise<boolean> {
@@ -207,7 +235,6 @@ export class AppWallet {
         try {
             const account = this.getAccount(password)
             const signature = account.sign(transactionList[0], generationHash)
-            console.log(signature, transactionList[0], generationHash, 'signature, transactionList[0], generationHash')
             new TransactionApiRxjs().announce(signature, node).subscribe(() => {
                 that.$Notice.success({ title: that.$t(Message.SUCCESS) + '' })
             })
