@@ -20,8 +20,8 @@
       </div>
 
 
-      <div :class="[isCompleteForm?'pointer':'not_allowed', 'confirmButton']" @click="confirmUpdate">
-        {{$t('confirm')}}
+      <div :class="[isCompleteForm?'pointer':'not_allowed', 'confirmButton']" @click="submit">
+        {{$t('confirm')}} 
       </div>
     </div>
 

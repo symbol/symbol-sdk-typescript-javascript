@@ -1,4 +1,4 @@
-import {Message,formData} from "@/config/index.ts"
+import {Message, formData} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {createBondedMultisigTransaction} from "@/core/utils/wallet.ts"

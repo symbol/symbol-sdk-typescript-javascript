@@ -1,6 +1,6 @@
 <template>
   <div class="WalletPanelWrap clear">
-    <div class="hasWalletPanel" v-if="!toMethod&&walletList.length > 0">
+    <div class="hasWalletPanel" v-if="!toMethod && wallet && walletList.length">
       <div class="left WalletSwitch">
         <WalletSwitch
                 @noHasWallet="noHasWallet"
@@ -10,7 +10,7 @@
         ></WalletSwitch>
       </div>
       <div class="left WalletFn">
-        <WalletDetails></WalletDetails>
+        <WalletDetails />
       </div>
     </div>
     <div class="walletMethods">

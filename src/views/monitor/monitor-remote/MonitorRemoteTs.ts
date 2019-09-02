@@ -1,11 +1,8 @@
 import {Message, formData} from "@/config/index.ts"
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
-import {AccountLinkTransaction, UInt64, LinkAction, NetworkType, Deadline, Account} from "nem2-sdk"
-import {decryptKey} from "@/core/utils/wallet.ts"
+import {AccountLinkTransaction, UInt64, LinkAction, Deadline, Password} from "nem2-sdk"
+import {AppWallet} from "@/core/utils/wallet.ts"
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
-import {signAndAnnounceNormal} from '@/core/utils/wallet.ts'
 import {mapState} from "vuex"
 
 @Component({
@@ -87,54 +84,38 @@ export class MonitorRemoteTs extends Vue {
             this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
             return false
         }
+
+        if (password.length < 8) {
+            this.showErrorMessage(this.$t('password_error') + '')
+            return false
+        }
+
+        const validPassword = new AppWallet(this.getWallet).checkPassword(new Password(password))
+
+        if (!validPassword) {
+            this.showErrorMessage(this.$t('password_error') + '')
+            return false
+        }
         return true
     }
 
     confirmInput() {
         if (!this.checkForm()) return
-        this.decryptKey()
+        this.sendTransaction()
     }
 
-    decryptKey() {
-        this.checkPrivateKey(decryptKey(this.getWallet, this.formItem.password))
-    }
-
-    checkPrivateKey(DeTxt) {
-        const that = this
-        try {
-            new WalletApiRxjs().getWallet(
-                this.getWallet.name,
-                DeTxt.length === 64 ? DeTxt : '',
-                this.getWallet.networkType,
-            )
-            this.sendTransaction(DeTxt)
-        } catch (e) {
-            that.$Notice.error({
-                title: this.$t('password_error') + ''
-            })
-        }
-    }
-
-    sendTransaction(privatekey) {
-        const {isLinked} = this
+    sendTransaction() {
         const {remotePublickey, fee, password} = this.formItem
-        const {generationHash, node, networkType} = this
-        const account = Account.createFromPrivateKey(privatekey, networkType)
+        const {generationHash, node, networkType, isLinked} = this
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
             remotePublickey,
-            isLinked ? LinkAction.Link : LinkAction.Unlink,
-            NetworkType.MIJIN_TEST,
+            isLinked ? LinkAction.Unlink : LinkAction.Link,
+            networkType,
             UInt64.fromUint(fee)
         )
-        signAndAnnounceNormal(account, node, generationHash, [accountLinkTransaction], this.showNotice)
+        new AppWallet(this.getWallet).signAndAnnounceNormal(new Password(password), node, generationHash, [accountLinkTransaction], this)
         this.modalCancel()
-    }
-
-    showNotice() {
-        this.$Notice.success({
-            title: this.$t(Message.SUCCESS) + ''
-        })
     }
 
     toggleSwitch(status) {
@@ -142,7 +123,7 @@ export class MonitorRemoteTs extends Vue {
     }
 
     getLinkPublicKey() {
-        if (!this.getWallet) {
+        if (!this.getWallet.address) {
             return
         }
         const that = this
@@ -164,7 +145,7 @@ export class MonitorRemoteTs extends Vue {
         )
     }
 
-    created() {
+    mounted() {
         this.getLinkPublicKey()
     }
 }

@@ -8,7 +8,7 @@
             <p class="formItemTxt">
               {{$t('In_the_nem2_ecosystem_you_can_build_your_own_home_wallet_or_private_network_wallet_or_test_the_network_such_as_Mainnet_Testnet_different_wallet_address_prefixes_generated_under_different_networks')}}</p>
             <Select :placeholder="$t('choose_network')" v-model="formItem.currentNetType" required>
-              <Option :value="item.value" v-for="(item,index) in netType" :key="index">{{item.label}}</Option>
+              <Option :value="item.value" v-for="(item,index) in networkTypeList" :key="index">{{item.label}}</Option>
             </Select>
           </FormItem>
           <FormItem :label="$t('set_the_wallet_name')">

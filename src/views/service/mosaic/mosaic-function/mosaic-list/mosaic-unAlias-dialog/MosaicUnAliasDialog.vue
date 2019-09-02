@@ -31,7 +31,7 @@
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem class="button_update">
-              <Button type="success" @click="updateMosaicAlias">{{$t('unbind')}}</Button>
+              <Button type="success" @click="submit">{{$t('unbind')}}</Button>
             </FormItem>
           </Form>
         </div>

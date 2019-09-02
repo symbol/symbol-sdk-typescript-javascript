@@ -20,6 +20,7 @@ export const echartsConfigure = echartsConfigureData
 
 export const formData = formDataObject
 
+
 const isWin32 = require('./packge.ts').isWin32
 
 export const bandedNamespace = ['nem', 'user', 'account', 'org', 'com', 'biz', 'net', 'edu', 'mil', 'gov ', 'info']
@@ -239,13 +240,13 @@ export const nodeList = [
 
 export const timeZoneListData = timeZoneList
 
-
 export const nodeConfig = {
     node: 'http://47.107.245.217:3000',
     currentXem: 'nem.xem',
     currentXEM1: '577cba5470751c05',
     currentXEM2: '1B47399ABD2C1E49'
 }
+
 export const aliasType = {
     noAlias: 0,
     mosaicAlias: 1,

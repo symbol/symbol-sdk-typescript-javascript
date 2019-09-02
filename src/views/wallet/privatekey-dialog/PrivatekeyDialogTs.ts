@@ -1,6 +1,6 @@
 import {QRCodeGenerator} from 'nem2-qr-library'
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
-import {decryptKey} from "@/core/utils/wallet.ts"
+import {Password} from 'nem2-sdk'
+import {AppWallet} from '@/core/utils/wallet.ts'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Message} from "@/config"
 import {mapState} from "vuex"
@@ -51,17 +51,14 @@ export class PrivatekeyDialogTs extends Vue {
 
     checkPassword() {
         if (!this.checkInput()) return
-        const DeTxt = decryptKey(this.getWallet, this.wallet.password).trim()
         try {
-            new WalletApiRxjs().getWallet(
-                this.getWallet.name,
-                DeTxt.length === 64 ? DeTxt : '',
-                this.getWallet.networkType,
-            )
+            const {privateKey} = new AppWallet(this.getWallet)
+                .getAccount(new Password(this.wallet.password))
+            
             this.stepIndex = 1
             this.wallet.password = ''
             this.stepIndex = 1
-            this.wallet.privatekey = DeTxt.toString().toUpperCase()
+            this.wallet.privatekey = privateKey.toString().toUpperCase()
         } catch (e) {
             console.log(e)
             this.$Notice.destroy()

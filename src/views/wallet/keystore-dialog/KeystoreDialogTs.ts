@@ -53,24 +53,20 @@ export class KeystoreDialogTs extends Vue {
                 break
         }
     }
-
+    
+    // @TODO: move to AppWallet and encode in base 64
     async generateKeystore() {
         const walletList = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
-        const address = this.getWallet.address
-        let walletInfo: any
-        walletList.every((item) => {
-            if (item.address === address) {
-                walletInfo = item
-                return false
-            }
-            return true
-        })
-        this.keystoreText = encryptKeystore(JSON.stringify(walletInfo))
+        const walletAddress = this.getWallet.address
+        const wallet = walletList.find(({address})=> address === walletAddress)
+        if (wallet === undefined) throw new Error('the wallet was not found in the list')
+        this.keystoreText = JSON.stringify(wallet.simpleWallet)
         this.stepIndex = 2
     }
 
+    // @TODO: VeeValidate
     checkWalletPassword() {
-        if (!this.checkInput()) return
+        // if (!this.checkInput()) return
         this.stepIndex = 1
     }
 

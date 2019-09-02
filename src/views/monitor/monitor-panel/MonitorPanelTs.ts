@@ -8,7 +8,7 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import {aliasType} from '@/config/index.ts'
 import monitorSeleted from '@/common/img/monitor/monitorSeleted.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
-import {getNamespaces, setWalletMosaic, getMosaicList, getMosaicInfoList} from "@/core/utils/wallet.ts"
+import {getNamespaces, getMosaicList, getMosaicInfoList, AppWallet} from "@/core/utils/wallet.ts"
 import {copyTxt, localSave, formatXEMamount} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
 import {minitorPanelNavigatorList} from '@/config/index.ts'
@@ -24,7 +24,6 @@ import {minitorPanelNavigatorList} from '@/config/index.ts'
 export class MonitorPanelTs extends Vue {
     app: any
     activeAccount: any
-    XEMamount = 0
     mosaic: string
     mosaicName = ''
     currentPrice = 0
@@ -42,10 +41,13 @@ export class MonitorPanelTs extends Vue {
         return this.activeAccount.wallet
     }
 
+    get XEMamount() {
+        return this.activeAccount.wallet.balance
+    }
+
     get getWalletList() {
         return this.app.walletList || []
     }
-
 
     get confirmedTxList() {
         return this.activeAccount.ConfirmedTx
@@ -72,11 +74,13 @@ export class MonitorPanelTs extends Vue {
         return this.activeAccount.currentXem
     }
 
-
     get currentXEM2() {
         return this.activeAccount.currentXEM2
     }
 
+    get networkCurrencies() {
+      return [this.currentXem, this.currentXEM2]
+    }
 
     get currentXEM1() {
         return this.activeAccount.currentXEM1
@@ -124,14 +128,7 @@ export class MonitorPanelTs extends Vue {
         this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
     }
 
-    getXEMAmount() {
-        const that = this
-        const {node, currentXEM1, currentXEM2} = this
-        setWalletMosaic(this.getWallet, node, currentXEM1, currentXEM2)
-            .then((wallet) => {
-                that.XEMamount = wallet.balance
-            })
-    }
+
 
     getMyNamespaces() {
         getNamespaces(this.getWallet.address, this.node)
@@ -178,9 +175,11 @@ export class MonitorPanelTs extends Vue {
     async getMarketOpenPrice() {
         const that = this
         const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"})
-        const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
-        const result = rstQuery.data ? rstQuery.data[0].close : 0
-        that.currentPrice = result
+        if(rstStr instanceof Object) {
+          const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
+          const result = rstQuery.data ? rstQuery.data[0].close : 0
+          that.currentPrice = result
+        }
     }
 
     async initMosaic() {
@@ -245,9 +244,6 @@ export class MonitorPanelTs extends Vue {
             }
             mosaicList = mosaicList.reverse()
             mosaicList.forEach((item) => {
-                if (item.name == 'nem.xem') {
-                    that.XEMamount = item.amount / 1000000
-                }
                 mosaicMap[item.hex] = {
                     amount: item.amount,
                     name: item.name,
@@ -333,11 +329,12 @@ export class MonitorPanelTs extends Vue {
         return formatXEMamount(text)
     }
 
-    @Watch('getWallet.address')
-    onGetWalletChange() {
+    @Watch('getWallet')
+    onGetWalletChange(n, o) {
+        if (!n.address || n.address === o.address) return
         this.initData()
         this.initMosaic()
-        this.getXEMAmount()
+        new AppWallet(this.getWallet).getAccountBalance(this.networkCurrencies, this.node)
         this.getAccountsName()
         this.getMarketOpenPrice()
         this.getMyNamespaces()
@@ -346,7 +343,7 @@ export class MonitorPanelTs extends Vue {
     @Watch('confirmedTxList')
     onConfirmedTxChange() {
         this.initMosaic()
-        this.getXEMAmount()
+        new AppWallet(this.getWallet).getAccountBalance(this.networkCurrencies, this.node)
         this.getAccountsName()
         this.getMyNamespaces()
     }
@@ -363,15 +360,16 @@ export class MonitorPanelTs extends Vue {
         }
     }
 
-    created() {
+    mounted() {
         this.switchPanel(0)
         this.setLeftSwitchIcon()
         this.initLeftNavigator()
         this.initData()
-        this.initMosaic()
-        this.getXEMAmount()
-        this.getAccountsName()
         this.getMarketOpenPrice()
+        // Functions hereunder should probably not be here
         this.getMyNamespaces()
+        this.getAccountsName()
+        this.initMosaic()
+        new AppWallet(this.getWallet).getAccountBalance(this.networkCurrencies, this.node)
     }
 }

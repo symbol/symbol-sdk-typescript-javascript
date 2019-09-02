@@ -20,7 +20,7 @@ export class WalletCreateTs extends Vue {
     MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
     MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
     ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
-    netType = networkTypeList
+    networkTypeList = networkTypeList
 
     checkInput() {
         if (!this.formItem.currentNetType || this.formItem.currentNetType == '') {
@@ -51,5 +51,4 @@ export class WalletCreateTs extends Vue {
     toBack() {
         this.$emit('closeCreate')
     }
-
 }

@@ -1,16 +1,14 @@
 import {Message, networkTypeList, formData} from "@/config/index.ts"
-import {NetworkType} from "nem2-sdk"
+import {AppWallet} from '@/core/utils/wallet.ts'
+import {mapState} from 'vuex';
+import {Password} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
-import {strToHexCharCode} from '@/core/utils/utils.ts'
-import {createAccount} from "@/core/utils/hdWallet.ts"
-import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet.ts"
 import {
     ALLOWED_SPECIAL_CHAR,
     MAX_PASSWORD_LENGTH,
     MIN_PASSWORD_LENGTH,
     passwordValidator
 } from "@/core/validation"
-import {mapState} from "vuex"
 
 @Component({
     computed: {
@@ -46,10 +44,9 @@ export class WalletImportMnemonicTs extends Vue {
         return this.app.walletList
     }
 
-    importWallet() {
-        if (!this.checkMnemonic()) return
+    submit() {
         if (!this.checkImport()) return
-        this.loginWallet(this.account)
+        this.importWallet()
     }
 
     checkImport() {
@@ -77,46 +74,31 @@ export class WalletImportMnemonicTs extends Vue {
             })
             return false
         }
-        return true
-    }
-
-    checkMnemonic() {
-        try {
-            if (!this.form.mnemonic || this.form.mnemonic === '' || this.form.mnemonic.split(' ').length != 12) {
-                this.$Notice.error({
-                    title: this.$t(Message.MNENOMIC_INPUT_ERROR) + ''
-                })
-                return false
-            }
-            const account = createAccount(this.form.mnemonic)
-            this.$store.commit('SET_ACCOUNT', account)
-            this.account = account
-            return true
-        } catch (e) {
+        if (!this.form.mnemonic || this.form.mnemonic === '' || this.form.mnemonic.split(' ').length != 12) {
             this.$Notice.error({
                 title: this.$t(Message.MNENOMIC_INPUT_ERROR) + ''
             })
             return false
         }
-
+        return true
     }
 
-    loginWallet(account) {
-        const that = this
-        const walletName: any = this.form.walletName
-        const netType: NetworkType = this.form.networkType
-        const {walletList} = this
-        const style = 'walletItem_bg_' + walletList.length % 3
-        getAccountDefault(walletName, account, netType, this.getNode, this.currentXEM1, this.currentXEM2)
-            .then((wallet) => {
-                let storeWallet = wallet
-                storeWallet['style'] = style
-                that.$store.commit('SET_WALLET', storeWallet)
-                const encryptObj = encryptKey(storeWallet['privateKey'], that.form['password'])
-                const mnemonicEnCodeObj = encryptKey(strToHexCharCode(this.form.mnemonic), that.form['password'])
-                saveLocalWallet(storeWallet, encryptObj, null, mnemonicEnCodeObj)
-                this.toWalletDetails()
-            })
+    importWallet() {
+      try {
+        new AppWallet().createFromMnemonic(
+          this.form.walletName,
+          new Password(this.form.password),
+          this.form.mnemonic,
+          this.form.networkType,
+          this.$store
+        )
+        this.toWalletDetails()
+      } catch (error) {
+        console.error(error)
+        this.$Notice.error({
+            title: this.$t(Message.OPERATION_FAILED_ERROR) + ''
+        })
+      }
     }
 
     toWalletDetails() {

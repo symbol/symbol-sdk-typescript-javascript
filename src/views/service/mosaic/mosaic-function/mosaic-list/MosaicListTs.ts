@@ -165,7 +165,7 @@ export class MosaicListTs extends Vue {
 
     }
 
-    @Watch('getWallet')
+    @Watch('getWallet.address')
     onGetWalletChange() {
         this.initMosaic()
     }

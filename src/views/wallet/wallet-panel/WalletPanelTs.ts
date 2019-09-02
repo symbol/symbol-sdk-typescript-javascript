@@ -24,11 +24,14 @@ import {mapState} from "vuex"
 export class WalletPanelTs extends Vue {
     activeAccount: any
     app: any
-    walletList = []
     tabIndex = 0
     toMethod = false
 
-    get nowWalletList() {
+    get wallet() {
+        return this.activeAccount.wallet || false
+    }
+
+    get walletList() {
         return this.app.walletList
     }
 
@@ -40,9 +43,7 @@ export class WalletPanelTs extends Vue {
         return this.activeAccount.node
     }
 
-    get getWallet() {
-        return this.activeAccount.wallet
-    }
+
 
     get ConfirmedTxList() {
         return this.activeAccount.ConfirmedTx
@@ -58,6 +59,7 @@ export class WalletPanelTs extends Vue {
         this.toMethod = true
     }
 
+    // @TODO: review
     toWalletDetails() {
         const wallet = this.activeAccount.wallet
         let list: any[] = this.walletList
@@ -70,7 +72,6 @@ export class WalletPanelTs extends Vue {
             return item
         })
         if (!bl) list.unshift(wallet)
-        this.walletList = list
         this.$store.commit('SET_WALLET_LIST', list)
         this.$router.replace({path: '/monitorPanel'})
         this.toMethod = false
@@ -95,7 +96,7 @@ export class WalletPanelTs extends Vue {
     }
 
     setWalletList() {
-        let list = this.copyObj(this.nowWalletList)
+        let list = this.copyObj(this.walletList)
         for (let i in list) {
             this.$set(this.walletList, i, list[i])
         }
@@ -105,7 +106,6 @@ export class WalletPanelTs extends Vue {
     }
 
     noHasWallet() {
-        this.walletList = []
         this.toCreate()
         this.$store.commit('SET_HAS_WALLET', false)
     }
@@ -132,11 +132,11 @@ export class WalletPanelTs extends Vue {
     }
 
     async getMyNamespaces() {
-        if (!this.getWallet) {
+        if (!this.wallet.address) {
             this.$store.commit('SET_NAMESPACE', [])
             return
         }
-        const list = await getNamespaces(this.getWallet.address, this.node)
+        const list = await getNamespaces(this.wallet.address, this.node)
         this.$store.commit('SET_NAMESPACE', list)
     }
 
@@ -145,8 +145,9 @@ export class WalletPanelTs extends Vue {
         this.getMyNamespaces()
     }
 
-    @Watch('getWallet')
-    onGetWalletChange() {
+    @Watch('wallet')
+    onGetWalletChange(n, o) {
+        if(!n.address || o.address === n.address) return
         this.getMyNamespaces()
     }
 

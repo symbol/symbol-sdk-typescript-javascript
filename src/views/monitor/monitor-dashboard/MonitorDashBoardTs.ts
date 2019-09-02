@@ -244,11 +244,10 @@ export class MonitorDashBoardTs extends Vue {
         }, 500)
     }
 
-    created() {
+    mounted() {
         this.getMarketOpenPrice()
         this.refreshTransferTransactionList()
         this.refreshReceiptList()
         this.getPointInfo()
     }
-
 }

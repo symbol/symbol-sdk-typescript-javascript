@@ -1,20 +1,16 @@
-import {Crypto} from 'nem2-sdk'
+import {Password} from 'nem2-sdk'
+import {AppWallet} from '@/core/utils/wallet.ts'
 import {Message} from "@/config/index.ts"
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {mapState} from "vuex"
+import {mapState} from 'vuex';
 
 @Component({
     computed: {
-        ...mapState({
-            activeAccount: 'account',
-            app: 'app',
-        })
+        ...mapState({activeAccount: 'account'})
     }
 })
 export class DeleteWalletCheckTs extends Vue {
-    activeAccount:any
-    app:any
+    activeAccount: any
     stepIndex = 0
     show = false
     wallet = {
@@ -32,23 +28,19 @@ export class DeleteWalletCheckTs extends Vue {
         this.$emit('closeCheckPWDialog')
     }
 
+    // @TODO detele component in favord of VeeValidate check in WalletSwitch
     checkPassword() {
-        let saveData = {
-            ciphertext: this.getWallet.ciphertext,
-            iv: this.getWallet.iv.data ? this.getWallet.iv.data : this.getWallet.iv,
-            key: this.wallet.password
-        }
-        const DeTxt = Crypto.decrypt(saveData)
-
         try {
-            new WalletApiRxjs().getWallet(
-                this.getWallet.name,
-                DeTxt.length === 64 ? DeTxt : '',
-                this.getWallet.networkType,
-            )
-            this.show = false
-            this.checkPasswordDialogCancel()
-            this.$emit('checkEnd', DeTxt)
+            const isPasswordCorrect = new AppWallet(this.getWallet).checkPassword(new Password(this.wallet.password))
+            if (isPasswordCorrect) {
+              this.checkPasswordDialogCancel()
+              this.$emit('checkEnd')
+            } else {
+              this.$Notice.error({
+                  title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+              })
+            }
+
         } catch (error) {
             this.$Notice.error({
                 title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''

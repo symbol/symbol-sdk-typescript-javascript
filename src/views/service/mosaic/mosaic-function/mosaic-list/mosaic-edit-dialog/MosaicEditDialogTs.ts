@@ -1,25 +1,19 @@
-import {Account} from 'nem2-sdk'
+import {Password} from 'nem2-sdk'
 import {Message, formData, xemTotalSupply} from "@/config/index.ts"
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
-import {decryptKey} from "@/core/utils/wallet.ts"
+import {AppWallet} from "@/core/utils/wallet.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {signAndAnnounceNormal} from "@/core/utils/wallet"
 import {mapState} from "vuex"
 
 @Component({
     computed: {
-        ...mapState({
-            activeAccount: 'account',
-            app: 'app',
-        })
+        ...mapState({ activeAccount: 'account' })
     }
 
 })
 export class MosaicEditDialogTs extends Vue {
     show = false
     activeAccount: any
-    app: any
     isCompleteForm = false
     changedSupply = 0
     totalSupply = xemTotalSupply
@@ -40,7 +34,6 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     get wallet() {
-        console.log(this.activeAccount)
         return this.activeAccount.wallet
     }
 
@@ -98,38 +91,34 @@ export class MosaicEditDialogTs extends Vue {
             })
             return false
         }
+
+        if (mosaic.password.length < 8) {
+            this.$Notice.error({
+                title: '' + this.$t('password_error')
+            })
+            return false
+        }
+
+        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(mosaic.password))
+
+        if (!validPassword) {
+            this.$Notice.error({
+                title: '' + this.$t('password_error')
+            })
+            return false
+        }        
         return true
     }
 
-    checkMosaicForm() {
+    submit() {
         if (!this.isCompleteForm) return
         if (!this.checkInfo()) return
-        this.decryptKey()
+        this.updateMosaic()
     }
 
-    decryptKey() {
-        this.checkPrivateKey(decryptKey(this.wallet, this.mosaic.password))
-    }
-
-    checkPrivateKey(DeTxt) {
-        const that = this
-        try {
-            new WalletApiRxjs().getWallet(
-                this.wallet.name,
-                DeTxt.length === 64 ? DeTxt : '',
-                this.wallet.networkType,
-            )
-            this.updateMosaic(DeTxt)
-        } catch (e) {
-            that.$Notice.error({
-                title: this.$t('password_error') + ''
-            })
-        }
-    }
-
-    updateMosaic(key) {
-        const that = this
+    updateMosaic() {
         const {node, generationHash} = this
+        const password = new Password(this.mosaic.password)
         const transaction = new MosaicApiRxjs().mosaicSupplyChange(
             this.mosaic['mosaicId'],
             this.mosaic.changeDelta,
@@ -137,16 +126,10 @@ export class MosaicEditDialogTs extends Vue {
             this.wallet.networkType,
             this.mosaic.fee
         )
-        const account = Account.createFromPrivateKey(key, this.wallet.networkType)
-        signAndAnnounceNormal(account, node, generationHash, [transaction], this.showNotice())
+        new AppWallet(this.wallet)
+          .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
     }
-
-    showNotice() {
-        this.$Notice.success({
-            title: this.$t(Message.SUCCESS) + ''
-        })
-    }
-
+    
     updatedMosaic() {
         this.show = false
         this.mosaicEditDialogCancel()

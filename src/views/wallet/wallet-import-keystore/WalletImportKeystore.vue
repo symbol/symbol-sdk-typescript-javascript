@@ -74,7 +74,7 @@
     </div>
     <div class="bottom_button ">
       <span class="back left pointer" @click="toBack"> {{$t('back')}}</span>
-      <span class="import right" @click="importWallet">{{$t('import')}}</span>
+      <span class="import right" @click="submit">{{$t('import')}}</span>
     </div>
   </div>
 

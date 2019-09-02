@@ -2,10 +2,8 @@ import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
-import {Account, Address, AddressAlias, AliasActionType, NamespaceId} from "nem2-sdk"
-import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs.ts"
-import {decryptKey} from "@/core/utils/wallet.ts"
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
+import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
+import {AppWallet} from "@/core/utils/wallet.ts"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
 
@@ -94,6 +92,18 @@ export class WalletAliasTs extends Vue {
             this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
             return false
         }
+
+        if (password.length < 8) {
+            this.showErrorMessage(this.$t('password_error') + '')
+            return false
+        }
+
+        const validPassword = new AppWallet(this.getWallet).checkPassword(new Password(password))
+
+        if (!validPassword) {
+            this.showErrorMessage(this.$t('password_error') + '')
+            return false
+        }
         return true
     }
 
@@ -104,49 +114,29 @@ export class WalletAliasTs extends Vue {
         })
     }
 
-    checkAliasForm() {
+    submit() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
         if (this.aliasListIndex >= 0) {
-            this.addressAlias(decryptKey(this.getWallet, this.formItem.password), false)
+            this.addressAlias(false)
         } else {
-            this.checkPrivateKey(decryptKey(this.getWallet, this.formItem.password))
+            this.addressAlias(true)
         }
     }
 
-    checkPrivateKey(DeTxt) {
-        const that = this
-        try {
-            new WalletApiRxjs().getWallet(
-                this.getWallet.name,
-                DeTxt.length === 64 ? DeTxt : '',
-                this.getWallet.networkType,
-            )
-            that.addressAlias(DeTxt, true)
-        } catch (e) {
-            that.$Notice.error({
-                title: this.$t('password_error') + ''
-            })
-        }
-    }
-
-    addressAlias(key, type) {
-        const that = this
-        const account = Account.createFromPrivateKey(key, this.getWallet.networkType)
+    addressAlias(type) {
         let transaction = new NamespaceApiRxjs().addressAliasTransaction(
             type ? AliasActionType.Link : AliasActionType.Unlink,
-            new NamespaceId(that.formItem.alias),
-            Address.createFromRawAddress(that.formItem.address),
+            new NamespaceId(this.formItem.alias),
+            Address.createFromRawAddress(this.formItem.address),
             this.getWallet.networkType,
-            that.formItem.fee
+            this.formItem.fee
         )
-        const signature = account.sign(transaction, this.generationHash)
-        new TransactionApiRxjs().announce(signature, this.node).subscribe((announceInfo: any) => {
-            that.$Notice.success({
-                title: this.$t(Message.SUCCESS) + ''
-            })
-            this.closeModel()
-        })
+        const {node, generationHash} = this
+        const password = new Password(this.formItem.password)
+        
+        new AppWallet(this.getWallet).signAndAnnounceNormal(password, node, generationHash, [transaction], this)
+        this.closeModel()
     }
 
     formatAddress(address) {
@@ -190,7 +180,7 @@ export class WalletAliasTs extends Vue {
     //     this.isCompleteForm = address !== '' && alias !== '' && password !== '' && fee > 0
     // }
 
-    created() {
+    mounted() {
         this.initData()
     }
 }

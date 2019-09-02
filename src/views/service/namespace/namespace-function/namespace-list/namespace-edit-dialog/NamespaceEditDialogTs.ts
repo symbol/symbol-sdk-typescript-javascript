@@ -1,11 +1,9 @@
 import './NamespaceEditDialog.less'
 import {Message, formData} from "@/config/index.ts"
-import {Account} from 'nem2-sdk'
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
+import {Password} from 'nem2-sdk'
 import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {createRootNamespace, decryptKey} from "@/core/utils/wallet.ts"
-import {signAndAnnounceNormal} from "@/core/utils/wallet"
+import {createRootNamespace, AppWallet} from "@/core/utils/wallet.ts"
 import {mapState} from "vuex"
 
 @Component({
@@ -52,8 +50,10 @@ export class NamespaceEditDialogTs extends Vue {
         this.$emit('closeNamespaceEditDialog')
     }
 
-    updateNamespace() {
-        this.checkNamespaceForm()
+    submit() {
+        if (!this.isCompleteForm) return
+        if (!this.checkInfo()) return
+        this.updateMosaic()
     }
 
     changeXEMRentFee() {
@@ -73,60 +73,42 @@ export class NamespaceEditDialogTs extends Vue {
     checkInfo() {
         const {namespace} = this
         if (namespace.password === '' || namespace.duration === 0 || namespace.fee === 0) {
-            this.showErrorNotice(this.$t(Message.INPUT_EMPTY_ERROR))
+            this.$Notice.error({
+                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
+            })
             return false
         }
+        if (namespace.password.length < 8) {
+            this.$Notice.error({
+                title: '' + this.$t('password_error')
+            })
+            return false
+        }
+
+        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(namespace.password))
+
+        if (!validPassword) {
+            this.$Notice.error({
+                title: '' + this.$t('password_error')
+            })
+            return false
+        }                
         return true
     }
 
-    showErrorNotice(text) {
-        this.$Notice.destroy()
-        this.$Notice.error({
-            title: '' + text
-        })
-    }
-
-    checkNamespaceForm() {
-        if (!this.isCompleteForm) return
-        if (!this.checkInfo()) return
-        this.checkPrivateKey(decryptKey(this.wallet, this.namespace.password))
-    }
-
-    checkPrivateKey(DeTxt) {
-        const that = this
-        try {
-            new WalletApiRxjs().getWallet(this.wallet.name,
-                DeTxt.length === 64 ? DeTxt : '',
-                this.wallet.networkType,
-            )
-            this.updateMosaic(DeTxt)
-        } catch (e) {
-            that.$Notice.error({
-                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-            })
-        }
-
-    }
-
-    async updateMosaic(key) {
-        const that = this
+    async updateMosaic() {
         const {node, generationHash} = this
-        const account = Account.createFromPrivateKey(key, this.wallet.networkType)
+        const password = new Password(this.namespace.password)
         const transaction = createRootNamespace(
             this.currentNamespace.name,
             this.namespace.duration,
             this.wallet.networkType,
             this.namespace.fee
         )
-        signAndAnnounceNormal(account, node, generationHash, [transaction], this.showNotice())
-        that.initForm()
-        that.updatedNamespace()
-    }
-
-    showNotice() {
-        this.$Notice.success({
-            title: this.$t(Message.SUCCESS) + ''
-        })
+        new AppWallet(this.wallet)
+          .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
+        this.initForm()
+        this.updatedNamespace()
     }
 
     updatedNamespace() {

@@ -138,7 +138,7 @@ export class MonitorReceiptTs extends Vue {
     }
 
     createQRCode() {
-        if (!this.getWallet) return
+        if (!this.getWallet.address) return
         const {generationHash, networkType} = this
         const QRCodeData = {publickKey: this.accountPublicKey}
         this.QRCode = QRCodeGenerator

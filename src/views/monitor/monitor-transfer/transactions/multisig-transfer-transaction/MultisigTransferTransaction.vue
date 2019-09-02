@@ -100,7 +100,7 @@
 
 
     <div class="fee flex_center">
-      <span class="title">{{$t('bondedFee')}}</span>
+      <span class="title">{{$t('bonded_fee')}}</span>
       <span class="value radius flex_center">
         <input v-model="formItem.bondedFee" placeholder="50000" type="text">
         <span class="uint">gas</span>

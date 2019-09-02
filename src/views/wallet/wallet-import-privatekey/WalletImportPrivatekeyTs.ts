@@ -1,13 +1,13 @@
+import {AppWallet} from '@/core/utils/wallet.ts'
+import {mapState} from 'vuex';
 import {Message, networkTypeList, formData} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {Account, NetworkType} from "nem2-sdk"
-import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet.ts"
+import {Password, Account} from "nem2-sdk"
 import {
     ALLOWED_SPECIAL_CHAR,
     MAX_PASSWORD_LENGTH,
     MIN_PASSWORD_LENGTH
 } from "@/core/validation"
-import {mapState} from "vuex"
 
 @Component({
     computed: {
@@ -18,13 +18,15 @@ import {mapState} from "vuex"
     }
 })
 export class WalletImportPrivatekeyTs extends Vue {
+    activeAccount: any
+    app: any
     MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
     MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
     ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
-    activeAccount: any
-    app: any
     account = {}
     form = formData.walletImportPrivateKeyForm
+    networkType = networkTypeList
+    
     NetworkTypeList = networkTypeList
 
     get getNode() {
@@ -38,15 +40,26 @@ export class WalletImportPrivatekeyTs extends Vue {
     get currentXEM2() {
         return this.activeAccount.currentXEM2
     }
-
     get walletList() {
         return this.app.walletList
     }
 
     importWallet() {
-        if (!this.checkPrivateKey()) return
-        if (!this.checkImport()) return
-        this.loginWallet(this.account)
+      try {
+        new AppWallet().createFromPrivateKey(
+          this.form.walletName,
+          new Password(this.form.password),
+          this.form.privateKey,
+          this.form.networkType,
+          this.$store
+        )
+        this.toWalletDetails()
+      } catch (error) {
+        console.error(error)
+        this.$Notice.error({
+            title: this.$t(Message.OPERATION_FAILED_ERROR) + ''
+        })
+      }
     }
 
     checkImport() {
@@ -55,12 +68,6 @@ export class WalletImportPrivatekeyTs extends Vue {
             this.showNotice(this.$t(Message.WALLET_NAME_INPUT_ERROR))
             return false
         }
-        // if (!passwordValidator(this.form.password)) {
-        //     this.$Notice.error({
-        //         title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
-        //     })
-        //     return false
-        // }
 
         if (!password || password.length < 6 || password.length > 32) {
             this.showNotice(this.$t(Message.PASSWORD_SETTING_INPUT_ERROR))
@@ -102,25 +109,7 @@ export class WalletImportPrivatekeyTs extends Vue {
         })
     }
 
-    loginWallet(account) {
-        const that = this
-        const walletName: any = this.form.walletName
-        const netType: NetworkType = this.form.networkType
-        const {walletList} = this
-        const style = 'walletItem_bg_' + walletList.length % 3
-        getAccountDefault(walletName, account, netType, this.getNode, this.currentXEM1, this.currentXEM2)
-            .then((wallet) => {
-                let storeWallet = wallet
-                storeWallet['style'] = style
-                that.$store.commit('SET_WALLET', storeWallet)
-                const encryptObj = encryptKey(storeWallet['privateKey'], that.form['password'])
-                saveLocalWallet(storeWallet, encryptObj, null, {})
-                this.toWalletDetails()
-            }).catch((error) => {
-            console.log(error)
-        })
-    }
-
+    // @TODO: VeeValidate
     toWalletDetails() {
         this.$Notice.success({
             title: this['$t']('Import_private_key_operation') + '',
@@ -132,5 +121,4 @@ export class WalletImportPrivatekeyTs extends Vue {
     toBack() {
         this.$emit('closeImport')
     }
-
 }

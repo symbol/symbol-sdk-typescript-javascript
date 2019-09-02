@@ -1,9 +1,7 @@
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
-import {decryptKey} from "@/core/utils/wallet.ts"
-import {hexCharCodeToStr} from '@/core/utils/utils.ts'
-import {randomMnemonicWord} from "@/core/utils/hdWallet.ts"
+import {AppWallet} from "@/core/utils/wallet.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
+import {Password} from "nem2-sdk"
 
 @Component({
         computed: {
@@ -63,23 +61,6 @@ export class MnemonicDialogTs extends Vue {
 
     checkPassword() {
         if (!this.checkInput()) return
-        const DeTxt = decryptKey(this.getWallet, this.wallet.password)
-        try {
-            new WalletApiRxjs().getWallet(
-                this.getWallet.name,
-                DeTxt.length === 64 ? DeTxt : '',
-                this.getWallet.networkType,
-            )
-            const DeMnemonic = decryptKey(this.getWallet['mnemonicEnCodeObj'], this.wallet.password)
-            this.mnemonic = hexCharCodeToStr(DeMnemonic)
-            this.mnemonicRandomArr = randomMnemonicWord(this.mnemonic.split(' '))
-            this.stepIndex = 1
-            this.wallet.password = ''
-        } catch (error) {
-            this.$Notice.error({
-                title: this.$t('password_error') + ''
-            })
-        }
     }
 
     checkInput() {
@@ -89,6 +70,23 @@ export class MnemonicDialogTs extends Vue {
             })
             return false
         }
+
+        if (this.wallet.password.length < 8) {
+            this.$Notice.error({
+                title: this.$t('password_error') + ''
+            })
+            return false
+        }
+
+        const validPassword = new AppWallet(this.getWallet).checkPassword(new Password(this.wallet.password))
+
+        if (!validPassword) {
+            this.$Notice.error({
+                title: this.$t('password_error') + ''
+            })
+            return false
+        }
+        
         return true
     }
 

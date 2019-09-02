@@ -1,9 +1,8 @@
-import {Message, networkTypeList} from "@/config/index.ts"
-import {NetworkType} from "nem2-sdk"
+import {Message} from "@/config/index.ts"
+import {Password} from "nem2-sdk"
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {strToHexCharCode} from '@/core/utils/utils.ts'
-import {createAccount, randomMnemonicWord} from "@/core/utils/hdWallet.ts"
-import {encryptKey, getAccountDefault, saveLocalWallet} from "@/core/utils/wallet.ts"
+import {randomMnemonicWord} from "@/core/utils/hdWallet.ts"
+import {AppWallet} from "@/core/utils/wallet.ts"
 import {mapState} from "vuex"
 
 @Component({
@@ -28,8 +27,6 @@ export class WalletCreatedTs extends Vue {
         password: '',
         checkPW: '',
     }
-    netType = networkTypeList
-
 
     @Prop({default: {}})
     createForm: any
@@ -95,37 +92,29 @@ export class WalletCreatedTs extends Vue {
                 if (!this.checkMnemonic()) {
                     return
                 }
-                const account = createAccount(this.mnemonic.join(' '))
-                this.$store.commit('SET_ACCOUNT', account)
-                this.loginWallet(account)
+                this.createFromMnemonic()
                 this.tags = index
                 break
         }
     }
 
     skipInput(index) {
-        const account = createAccount(this.mnemonic.join(' '))
-        this.$store.commit('SET_ACCOUNT', account)
-        this.loginWallet(account)
-        this.tags = index
+      this.createFromMnemonic()
+      this.tags = index
     }
 
-
-    loginWallet(account) {
-        const that = this
-        const walletName: any = this.formInfo['walletName']
-        const netType: NetworkType = Number(this.formInfo['currentNetType'])
-        const {walletList} = this
-        const style = 'walletItem_bg_' + walletList.length % 3
-        getAccountDefault(walletName, account, netType).then((wallet) => {
-            let storeWallet = wallet
-            storeWallet['style'] = style
-            that.storeWallet = storeWallet
-            that.$store.commit('SET_WALLET', storeWallet)
-            const encryptObj = encryptKey(storeWallet['privateKey'], that.formInfo['password'])
-            const mnemonicEnCodeObj = encryptKey(strToHexCharCode(this.mnemonic.join(' ')), that.formInfo['password'])
-            saveLocalWallet(storeWallet, encryptObj, null, mnemonicEnCodeObj)
-        })
+    createFromMnemonic() {
+      try {
+          new AppWallet().createFromMnemonic(
+              this.formInfo.walletName,
+              new Password(this.formInfo.password),
+              this.mnemonic.join(' '),
+              this.formInfo.currentNetType,
+              this.$store,
+          )
+      } catch (error) {
+        throw new Error(error)
+      }
     }
 
     toWalletPage() {

@@ -1,10 +1,8 @@
 import {mapState} from "vuex"
 import {Message} from "@/config/index.ts"
-import {Account, TransactionType} from "nem2-sdk"
-import {decryptKey} from "@/core/utils/wallet.ts"
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
+import {TransactionType, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {signAndAnnounceBonded, signAndAnnounceNormal} from '@/core/utils/wallet.ts'
+import {AppWallet} from '@/core/utils/wallet.ts'
 
 @Component({
     computed: {...mapState({activeAccount: 'account'})},
@@ -41,7 +39,7 @@ export class CheckPasswordDialogTs extends Vue {
         return this.activeAccount.node
     }
 
-    get getWallet() {
+    get wallet() {
         return this.activeAccount.wallet
     }
 
@@ -61,17 +59,14 @@ export class CheckPasswordDialogTs extends Vue {
         this.$emit('closeCheckPWDialog')
     }
 
+    // @TODO: move to wallet class in favour of a .sign() method
+    // Password validity to be checked at VeeValidate level
     checkPassword() {
-        const DeTxt = decryptKey(this.getWallet, this.walletInputInfo.password).trim()
         try {
-            new WalletApiRxjs().getWallet(
-                this.getWallet.name,
-                DeTxt.length === 64 ? DeTxt : '',
-                this.getWallet.networkType,
-            )
+            const isPasswordWalid = new AppWallet(this.wallet).checkPassword(new Password(this.walletInputInfo.password))
             this.show = false
-            this.$emit('checkEnd', Boolean(DeTxt))
-            this.switchAnnounceType(DeTxt)
+            this.$emit('checkEnd', Boolean(isPasswordWalid))
+            this.switchAnnounceType()
             this.checkPasswordDialogCancel()
         } catch (e) {
             console.log(e)
@@ -88,19 +83,20 @@ export class CheckPasswordDialogTs extends Vue {
         this.show = this.showCheckPWDialog
     }
 
-    switchAnnounceType(privatekey) {
-        const that = this
-        const {node, generationHash, networkType, transactionList, currentXEM1} = this
+    // @TODO: move to wallet class
+    switchAnnounceType() {
+        const {node, generationHash, transactionList, currentXEM1} = this
+        const password = new Password(this.walletInputInfo.password)
+        const {networkType} = this.wallet
         const {lockFee} = this.otherDetails
-        const account = Account.createFromPrivateKey(privatekey, networkType)
         if (transactionList[0].type !== TransactionType.AGGREGATE_BONDED) {
             // normal transaction
-            signAndAnnounceNormal(account, node, generationHash, transactionList, this.showNotice)
+            new AppWallet(this.wallet).signAndAnnounceNormal(password, node, generationHash, transactionList, this)
             return
         }
         // bonded transaction
-        signAndAnnounceBonded(
-            account,
+        new AppWallet(this.wallet).signAndAnnounceBonded(
+            password,
             lockFee,
             node,
             generationHash,

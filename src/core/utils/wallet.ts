@@ -1,3 +1,4 @@
+import {Message} from "@/config/index.ts"
 import {localRead, localSave} from "@/core/utils/utils.ts"
 import {
     Account,
@@ -5,10 +6,12 @@ import {
     Crypto,
     NetworkType,
     Transaction,
+    SimpleWallet,
+    Password,
+    WalletAlgorithm,
     Listener, Mosaic, MosaicInfo
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
@@ -16,92 +19,246 @@ import {BlockApiRxjs} from "@/core/api/BlockApiRxjs.ts"
 import {formateNemTimestamp} from "@/core/utils/utils.ts"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
+import {createAccount} from "@/core/utils/hdWallet.ts"
 
-export const saveLocalWallet = (wallet, encryptObj, index, mnemonicEnCodeObj?) => {
-    let localData: any[] = []
-    let isExist: boolean = false
-    try {
-        localData = JSON.parse(localRead('wallets'))
-    } catch (e) {
-        localData = []
+
+export class AppWallet {
+    constructor(  wallet? : {
+                  name? : string,
+                  simpleWallet? : SimpleWallet
+    }) {
+      Object.assign(this, wallet)
     }
-    let saveData = {
-        name: wallet.name,
-        ciphertext: encryptObj ? encryptObj.ciphertext : localData[index].ciphertext,
-        iv: encryptObj ? encryptObj.iv : localData[index].iv,
-        networkType: wallet.networkType,
-        address: wallet.address,
-        publicKey: wallet.publicKey,
-        mnemonicEnCodeObj: mnemonicEnCodeObj || wallet.mnemonicEnCodeObj
-    }
-    let account = wallet
-    account = Object.assign(account, saveData)
-    for (let i in localData) {
-        if (localData[i].address === account.address) {
-            localData[i] = saveData
-            isExist = true
+    name: string | undefined
+    simpleWallet: SimpleWallet | undefined
+    address: string | undefined
+    publicKey: string | undefined
+    networkType: NetworkType | undefined
+    active: boolean | undefined
+    style: string | undefined
+    balance: number | 0
+    isMultisig: boolean | undefined
+
+    createFromPrivateKey( name: string,
+                          password: Password,
+                          privateKey: string,
+                          networkType: NetworkType,
+                          store: any): AppWallet
+      {
+        try {
+          this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType)
+          this.name = name
+          this.address = this.simpleWallet.address.plain()
+          this.publicKey = Account.createFromPrivateKey(privateKey, networkType).publicKey
+          this.networkType = networkType
+          this.active = true
+
+          this.addNewWalletToList(store)
+          return this
+        } catch (error) {
+          throw new Error(error)
         }
     }
-    if (!isExist) localData.unshift(saveData)
-    localSave('wallets', JSON.stringify(localData))
-    return account
-}
 
-export const getAccountDefault = async (name, account, netType, node?, currentXEM1?, currentXEM2?) => {
-    let storeWallet = {}
-    const Wallet = new WalletApiRxjs().getWallet(
-        name,
-        account.privateKey,
-        netType,
-    )
-    storeWallet = {
-        name: Wallet.wallet.name,
-        address: Wallet.wallet.address['address'],
-        networkType: Wallet.wallet.address['networkType'],
-        privateKey: Wallet.privateKey,
-        publicKey: account.publicKey,
-        publicAccount: account.publicAccount,
-        mosaics: [],
-        wallet: Wallet.wallet,
-        password: Wallet.password,
-        balance: 0
+    createFromMnemonic( name: string,
+                        password: Password,
+                        mnemonic: string,
+                        networkType: NetworkType,
+                        store: any): AppWallet
+    {
+      try {
+        const account = createAccount(mnemonic)
+        this.simpleWallet = SimpleWallet
+          .createFromPrivateKey(name, password, account.privateKey, networkType)
+        this.name = name
+        this.address = this.simpleWallet.address.plain()
+        this.publicKey = account.publicKey
+        this.networkType = networkType
+        this.active = true
+        // @TODO: save the encrypted memo for further export
+        this.addNewWalletToList(store)
+        return this
+      } catch (error) {
+        throw new Error(error)
+      }
     }
-    if (!node) return storeWallet
-    storeWallet = await setWalletMosaic(storeWallet, node, currentXEM1, currentXEM2)
-    storeWallet = await setMultisigAccount(storeWallet, node)
-    return storeWallet
-}
 
-export const setWalletMosaic = async (storeWallet, node, currentXEM1, currentXEM2) => {
-    let wallet = storeWallet
-    wallet.balance = 0
-    wallet.mosaics = []
-    await new AccountApiRxjs().getAccountInfo(wallet.address, node).subscribe((accountInfo) => {
-        let mosaicList = accountInfo.mosaics
-        mosaicList.map((item: any) => {
-            item.hex = item.id.toHex()
-            if (item.id.toHex() == currentXEM2 || item.id.toHex() == currentXEM1) {
-                wallet.balance = item.amount.compact() / 1000000
-            }
-        })
-        wallet.mosaics = mosaicList
-    }, () => {
-        wallet.balance = 0
-        wallet.mosaics = []
-    })
-    return wallet
-}
+    createFromKeystore( name: string,
+                        password: Password,
+                        keystoreStr: string,
+                        networkType: NetworkType,
+                        store: any): AppWallet
+    {
+      try {
+        // @TODO: encode do base64
+        this.name = name
+        this.networkType = networkType
+        this.simpleWallet = JSON.parse(keystoreStr)
+        const {privateKey} = this.getAccount(password)
+        this.createFromPrivateKey(name, password, privateKey, networkType, store)
+        return this
+      } catch (error) {
+        throw new Error(error)
+      }
+    }
 
-export const setMultisigAccount = async (storeWallet, node) => {
-    let wallet = storeWallet
-    wallet.isMultisig = false
-    await new AccountApiRxjs().getMultisigAccountInfo(wallet.address, node).subscribe((accountInfo) => {
-            wallet.isMultisig = true
-        }, (error) => {
-            wallet.isMultisig = false
+    getAccount(password: Password): Account {
+        // @TODO: update after nem2-sdk EncryptedPrivateKey constructor definition is fixed
+        // https://github.com/nemtech/nem2-sdk-typescript-javascript/issues/241
+        const { encryptedKey, iv } = this.simpleWallet.encryptedPrivateKey;
+
+        const common = { password: password.value, privateKey: '' };
+        const wallet = { encrypted: encryptedKey, iv };
+        Crypto.passwordToPrivateKey(common, wallet, WalletAlgorithm.Pass_bip32);
+        const privateKey = common.privateKey
+        return Account.createFromPrivateKey(privateKey, this.networkType)
+    }
+
+    checkPassword(password: Password): boolean {
+      try {
+        this.getAccount(password)
+        return true
+      } catch (error) {
+        return false
+      }
+    }
+
+    updatePassword(oldPassword: Password, newPassword: Password, store: any): void {
+      const account = this.getAccount(oldPassword)
+      this.createFromPrivateKey(this.name,
+                                newPassword,
+                                account.privateKey,
+                                this.networkType,
+                                store)
+    }
+
+    addNewWalletToList(store: any): void {
+      const localData: any[] = localRead('wallets') === ''
+        ? [] : JSON.parse(localRead('wallets'))
+
+      this.style = this.style || `walletItem_bg_${String(Number(localData.length) % 3)}`
+
+      if(!localData.length) {
+        AppWallet.switchWallet(this.address, [this], store)
+        return
+      }
+
+      let dataToStore = [...localData]
+      const walletIndex = dataToStore.findIndex(({ address }) => address === this.address)
+      if(walletIndex > -1) dataToStore.splice(walletIndex, 1)
+
+      AppWallet.switchWallet(this.address, [this, ...dataToStore], store)
+    }
+
+    // storeWalletList(store: any, walletList: AppWallet[]) {
+    //   store.commit('SET_WALLET_LIST', walletList)
+    //   localSave('wallets', JSON.stringify(walletList))
+    // }
+
+    static switchWallet(newActiveWalletAddress: string, walletList: any, store: any) {
+        const newWalletIndex = walletList.findIndex(({address}) => address === newActiveWalletAddress)
+        if (newWalletIndex === -1) throw new Error('wallet not found when switching')
+
+        let newWallet = walletList[newWalletIndex]
+        newWallet.active = true
+
+        let newWalletList = [...walletList]
+        newWalletList
+          .filter(wallet => wallet.address !== newActiveWalletAddress)
+          .map(wallet => wallet.active = false)
+
+        newWalletList.splice(newWalletIndex, 1)
+        const walletListToStore = [newWallet, ...newWalletList]
+
+        store.commit('SET_WALLET_LIST', walletListToStore)
+        store.commit('SET_WALLET', newWallet)
+        localSave('wallets', JSON.stringify(walletListToStore))
+    }
+    
+    async getAccountBalance(networkCurrencies: any, node: string): Promise<number> {
+        try {
+            const accountInfo = await new AccountApiRxjs()
+                .getAccountInfo(this.address, node)
+                .toPromise()
+
+            if (!accountInfo.mosaics.length) this.balance = 0
+            const xemIndex = accountInfo.mosaics
+              .findIndex(mosaic => networkCurrencies.indexOf(mosaic.id.toHex()) > -1)
+
+            if (xemIndex > -1) this.balance = 0
+            // @TODO: handle divisibility
+            return accountInfo.mosaics[xemIndex].amount.compact() / 1000000
+        } catch (error) {
+            return 0
         }
-    )
-    return wallet
+    }
+
+    async setMultisigStatus(node: string): Promise<boolean> {
+        try {
+            await new AccountApiRxjs().getMultisigAccountInfo(this.address, node).toPromise()
+            this.isMultisig = true
+            return true
+        } catch (error) {
+            return false
+        }
+    }
+
+    signAndAnnounceNormal(password: Password, node: string, generationHash: string, transactionList: Array<any>, that: any): void {
+        try {
+            const account = this.getAccount(password)
+            const signature = account.sign(transactionList[0], generationHash)
+            console.log(signature, transactionList[0], generationHash, 'signature, transactionList[0], generationHash')
+            new TransactionApiRxjs().announce(signature, node).subscribe(() => {
+                that.$Notice.success({ title: that.$t(Message.SUCCESS) + '' })
+            })
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    signAndAnnounceBonded = (
+      password: Password,
+      lockFee: number,
+      node: string,
+      generationHash: string,
+      transactionList: Array<any>,
+      currentXEM1: string,
+      networkType: NetworkType,
+    ) => {
+        const account = this.getAccount(password)
+        const aggregateTransaction = transactionList[0]
+        const listener = new Listener(node.replace('http', 'ws'), WebSocket)
+        new TransactionApiRxjs().announceBondedWithLock(
+            aggregateTransaction,
+            account,
+            listener,
+            node,
+            generationHash,
+            networkType,
+            lockFee,
+            currentXEM1,
+        )
+    }
+}
+
+export const saveLocalWallet = (wallet: any): void => {
+  const localData: any[] = localRead('wallets') === ''
+    ? [] : JSON.parse(localRead('wallets'))
+
+  if(!localData.length) {
+    localSave('wallets', JSON.stringify([wallet]))
+    return
+  }
+
+  let dataToStore = [...localData]
+  const walletIndex = localData.find(({ address }) => address === wallet.address)
+
+  if(walletIndex > -1) {
+    localSave('wallets', JSON.stringify(dataToStore[walletIndex].assign(wallet)))
+    return
+  }
+
+  localSave('wallets', JSON.stringify([wallet, ...dataToStore]))
 }
 
 export const getNamespaces = async (address: string, node: string) => {
@@ -124,7 +281,6 @@ export const getNamespaces = async (address: string, node: string) => {
             item.namespaceInfo.levels.map((item, index) => {
                 namespaceName += namespace[item.id.toHex()] + '.'
             })
-
             namespaceName = namespaceName.slice(0, namespaceName.length - 1)
             const newObj = {
                 value: namespaceName,
@@ -152,10 +308,6 @@ export const multisigAccountInfo = (address, node) => {
     return new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
         return multisigInfo
     })
-}
-
-export const encryptKey = (data, password) => {
-    return Crypto.encrypt(data, password)
 }
 
 export const decryptKey = (wallet, password: string) => {
@@ -202,45 +354,6 @@ export const getBlockInfoByTransactionList = (transactionList: Array<any>, node:
         })
         return item.transactionInfo.height.compact()
     })
-}
-
-
-export const signAndAnnounceNormal = (account: Account, node: string, generationHash: string, transactionList: Array<any>, callBack: any) => {
-    try {
-        const signature = account.sign(transactionList[0], generationHash)
-        console.log(signature)
-        new TransactionApiRxjs().announce(signature, node).subscribe(() => {
-                callBack()
-            }, (error) => {
-                console.log(error)
-            }
-        )
-    } catch (e) {
-        console.log(e)
-    }
-}
-
-export const signAndAnnounceBonded = (
-    account: Account,
-    lockFee: number,
-    node: string,
-    generationHash: string,
-    transactionList: Array<any>,
-    currentXEM1: string,
-    networkType: NetworkType,
-) => {
-    const aggregateTransaction = transactionList[0]
-    const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-    new TransactionApiRxjs().announceBondedWithLock(
-        aggregateTransaction,
-        account,
-        listener,
-        node,
-        generationHash,
-        networkType,
-        lockFee,
-        currentXEM1,
-    )
 }
 
 export const getMosaicList = async (address: string, node: string) => {

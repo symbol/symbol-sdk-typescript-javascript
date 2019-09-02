@@ -20,7 +20,7 @@
           {{$t('choose_network')}}
           <div class="gray_content">
             <Select v-model="form.networkType" :placeholder="$t('choose_network')">
-              <Option v-for="item in NetworkTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Option v-for="item in networkType" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </div>
         </li>

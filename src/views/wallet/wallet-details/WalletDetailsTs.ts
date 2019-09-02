@@ -41,8 +41,7 @@ export class WalletDetailsTs extends Vue {
     }
 
     get getAddress() {
-        if (!this.getWallet) return
-        return this.getWallet.address
+        return this.activeAccount.wallet ? this.activeAccount.address : false
     }
 
     get generationHash() {
@@ -54,8 +53,9 @@ export class WalletDetailsTs extends Vue {
         this.functionShowList[index] = true
     }
 
+    // @TODO
     changeMnemonicDialog() {
-        if (!this.getWallet['mnemonicEnCodeObj']['ciphertext']) {
+        if (!this.getWallet['mnemonicEnCodeObj'] || this.getWallet['mnemonicEnCodeObj']['ciphertext']) {
             this.$Notice.warning({
                 title: this.$t('no_mnemonic') + ''
             })

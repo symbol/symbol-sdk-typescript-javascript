@@ -171,7 +171,7 @@ export class MultisigTransferTransactionTs extends Vue {
 
     getMultisigAccountList() {
         const that = this
-        if (!this.getWallet) return
+        if (!this.getWallet.address) return
         const {address} = this.getWallet
         const {node} = this
 

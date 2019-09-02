@@ -36,7 +36,7 @@
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
-              <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="updateNamespace">
+              <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="submit">
                 {{$t('confirm')}}
               </Button>
             </FormItem>

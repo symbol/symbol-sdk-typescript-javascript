@@ -1,8 +1,7 @@
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {RestrictionApiRxjs} from '@/core/api/RestrictionApiRxjs.ts'
 import {Message, entityTypeList} from "@/config/index.ts"
-import {decryptKey, signAndAnnounceNormal} from "@/core/utils/wallet"
+import { AppWallet} from "@/core/utils/wallet"
 import {mapState} from "vuex"
 import {
     Account,
@@ -12,7 +11,8 @@ import {
     UInt64,
     AccountRestrictionModification,
     RestrictionModificationType,
-    Address, MosaicId
+    Address, MosaicId,
+    Password
 } from "nem2-sdk"
 
 @Component({
@@ -152,6 +152,19 @@ export class WalletFilterTs extends Vue {
             }
             return flag
         }
+
+        if (this.formItem.password.length < 8) {
+            this.showErrorMessage(this.$t('password_error'))
+            return false
+        }
+
+        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(this.formItem.password))
+
+        if (!validPassword) {
+            this.showErrorMessage(this.$t('password_error'))
+            return false
+        }        
+
         return true
     }
 
@@ -164,7 +177,6 @@ export class WalletFilterTs extends Vue {
 
     confirmInput() {
         if (!this.checkForm()) return
-        this.checkPassword()
     }
 
     showNotice() {
@@ -187,7 +199,8 @@ export class WalletFilterTs extends Vue {
             networkType,
             UInt64.fromUint(fee)
         )
-        signAndAnnounceNormal(account, node, generationHash, [addressRestrictionTransaction], this.showNotice)
+        const password = new Password(this.formItem.password)
+        new AppWallet(this.getWallet).signAndAnnounceNormal(password, node, generationHash, [addressRestrictionTransaction], this)
     }
 
 
@@ -205,7 +218,8 @@ export class WalletFilterTs extends Vue {
             networkType,
             UInt64.fromUint(fee)
         )
-        signAndAnnounceNormal(account, node, generationHash, [addressRestrictionTransaction], this.showNotice)
+        const password = new Password(this.formItem.password)
+        new AppWallet(this.getWallet).signAndAnnounceNormal(password, node, generationHash, [addressRestrictionTransaction], this)
     }
 
     switchRestrictionType(privatekey) {
@@ -224,25 +238,6 @@ export class WalletFilterTs extends Vue {
             case RestrictionType.AllowTransaction:
             case RestrictionType.BlockTransaction:
                 break
-        }
-    }
-
-
-    checkPassword() {
-        const DeTxt = decryptKey(this.getWallet, this.formItem.password).trim()
-        try {
-            new WalletApiRxjs().getWallet(
-                this.getWallet.name,
-                DeTxt.length === 64 ? DeTxt : '',
-                this.getWallet.networkType,
-            )
-            this.switchRestrictionType(DeTxt)
-        } catch (e) {
-            console.log(e)
-            this.$Notice.destroy()
-            this.$Notice.error({
-                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-            })
         }
     }
 

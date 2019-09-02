@@ -1,5 +1,5 @@
 import {mapState} from 'vuex'
-import {saveLocalWallet} from '@/core/utils/wallet.ts'
+import {AppWallet} from '@/core/utils/wallet.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import DeleteWalletCheck from './delete-wallet-check/DeleteWalletCheck.vue'
 import {localRead, localSave, formatXEMamount} from '@/core/utils/utils.ts'
@@ -43,30 +43,11 @@ export class WalletSwitchTs extends Vue {
         this.showCheckPWDialog = false
     }
 
-    chooseWallet(walletIndex) {
-        let localData = JSON.parse(localRead('wallets'))
-        // @TODO: review
-        let list = this.walletList
-        const storeWallet = this.walletList[walletIndex]
-        const localWallet = localData[walletIndex]
-        list.splice(walletIndex, 1)
-        localData.splice(walletIndex, 1)
-        list.unshift(storeWallet)
-        localData.unshift(localWallet)
-        list.map((item, index) => {
-            if (index === 0) {
-                item.active = true
-            } else {
-                item.active = false
-            }
-        })
-        const account = saveLocalWallet(storeWallet, null, walletIndex)
-        this.$store.commit('SET_WALLET', account)
-        this.$store.commit('SET_WALLET_LIST', list)
-        localSave('wallets', JSON.stringify(localData))
+    switchWallet(newActiveWalletAddress) {
+        AppWallet.switchWallet(newActiveWalletAddress, this.walletList, this.$store)
     }
 
-
+    // @TODO: bugged, and put in AppWallet class
     delWallet(index) {
         let list = this.walletList
         let localData = JSON.parse(localRead('wallets'))
@@ -96,6 +77,7 @@ export class WalletSwitchTs extends Vue {
         return this.formatXEMamount(balance)
     }
 
+    // @TODO: this should probably not be here
     initWalletList() {
         const list = this.walletList
         list.map((item, index) => {

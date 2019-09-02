@@ -2,10 +2,11 @@
   <div class="walletSwitchWrap">
     <div class="walletSwitchHead">
       <p class="tit">{{$t('Wallet_management')}}</p>
+     
     </div>
     <div class="walletList">
       <div :class="['walletItem',item.style, item.active || walletList.length == 1 ? 'active':'','radius']"
-           @click="chooseWallet(index)"
+           @click="switchWallet(item.address)"
            v-for="(item, index) in walletList" :key="index">
         <Row>
           <Col span="15">

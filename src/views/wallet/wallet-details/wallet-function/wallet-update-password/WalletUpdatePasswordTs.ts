@@ -1,8 +1,8 @@
 import {Message} from "@/config/index.ts"
-import {WalletApiRxjs} from "@/core/api/WalletApiRxjs.ts"
+import {AppWallet} from '@/core/utils/wallet.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {decryptKey, encryptKey, saveLocalWallet} from "@/core/utils/wallet.ts"
-import {mapState} from "vuex"
+import {mapState} from 'vuex';
+import {Password} from 'nem2-sdk'
 
 @Component({
     computed: {
@@ -10,10 +10,11 @@ import {mapState} from "vuex"
             activeAccount: 'account',
             app: 'app'
         })
-    },
+    }
 })
 export class WalletUpdatePasswordTs extends Vue {
     activeAccount: any
+    app: any
     formItem = {
         prePassword: '',
         newPassword: '',
@@ -27,10 +28,11 @@ export class WalletUpdatePasswordTs extends Vue {
     }
 
     get walletList() {
-        return this.activeAccount.walletList
+        return this.app.walletList
     }
 
     checkInfo() {
+        // @TODO check password VeeValidate
         const {prePassword, newPassword, repeatPassword} = this.formItem
 
         if (prePassword == '' || newPassword == '' || repeatPassword == '') {
@@ -53,41 +55,21 @@ export class WalletUpdatePasswordTs extends Vue {
         })
     }
 
-    confirmUpdate() {
+    submit() {
         if (!this.isCompleteForm) return
         if (!this.checkInfo()) return
-        this.checkPrivateKey(decryptKey(this.getWallet, this.formItem.prePassword))
+        this.updatePassword()
     }
 
-    updatePW() {
-        let encryptObj = encryptKey(this.privateKey, this.formItem.newPassword)
-        let wallet = this.getWallet
-        let {walletList} = this
-        wallet.ciphertext = encryptObj['ciphertext']
-        wallet.iv = encryptObj['iv']
-        walletList[0] = wallet
-        this.$store.commit('SET_WALLET', wallet)
-        this.$store.commit('SET_WALLET_LIST', walletList)
-        saveLocalWallet(wallet, encryptObj, null, wallet.mnemonicEnCodeObj)
+    updatePassword() {
+        const oldPassword = new Password(this.formItem.prePassword)
+        const newPassword = new Password(this.formItem.newPassword)
+        new AppWallet(this.getWallet).updatePassword(oldPassword, newPassword, this.$store)
+
         this.init()
         this.$Notice.success({
             title: this.$t(Message.SUCCESS) + ''
         })
-    }
-
-    checkPrivateKey(DeTxt) {
-        const that = this
-        try {
-            new WalletApiRxjs().getWallet(
-                that.getWallet.name,
-                DeTxt.length === 64 ? DeTxt : '',
-                that.getWallet.networkType,
-            )
-            that.privateKey = DeTxt.toString().toUpperCase()
-            that.updatePW()
-        } catch (e) {
-            that.showNotice('' + this.$t(Message.WRONG_PASSWORD_ERROR))
-        }
     }
 
     init() {
@@ -100,7 +82,6 @@ export class WalletUpdatePasswordTs extends Vue {
     @Watch('formItem', {immediate: true, deep: true})
     onFormItemChange() {
         const {prePassword, newPassword, repeatPassword} = this.formItem
-        // isCompleteForm
         this.isCompleteForm = prePassword !== '' && newPassword !== '' && repeatPassword !== ''
     }
 

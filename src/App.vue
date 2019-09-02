@@ -8,6 +8,7 @@
     import 'animate.css'
     import {isWindows} from "@/config/index.ts"
     import {localRead} from '@/core/utils/utils.ts'
+    import {AppWallet} from '@/core/utils/wallet.ts'
     import {Listener} from "nem2-sdk"
     import {checkInstall} from '@/core/utils/electron.ts'
     import {AccountApiRxjs} from '@/core/api/AccountApiRxjs.ts'
@@ -28,6 +29,10 @@
 
         get node(): string {
             return this.activeAccount.node
+        }
+
+        get wallet(): any {
+          return this.activeAccount.wallet
         }
 
         get currentXEM2(): string {
@@ -56,53 +61,50 @@
         //     nodeAmount: 4
         // }
         async initApp() {
-            let walletList: any = localRead('wallets') ? JSON.parse(localRead('wallets')) : []
-            const that = this
-            for (let i in walletList) {
-                walletList[i].iv = walletList[i].iv.data
-                let style = 'walletItem_bg_' + String(Number(i) % 3)
-                walletList[i].style = style
-                that.getAccountInfo(walletList[i]).then((data) => {
-                    walletList[i] = data
-                })
-                that.getMultisigAccount(walletList[i]).then((data) => {
-                    walletList[i] = data
-                })
+            const walletListFromStorage: any = localRead('wallets') !== '' ? JSON.parse(localRead('wallets')) : false
+            if (!walletListFromStorage) throw new Error('no wallet list from storage found in initApp')
+            AppWallet.switchWallet(walletListFromStorage[0].address, walletListFromStorage, this.$store)
+            this.updateWalletsBalancesAndMultisigStatus(walletListFromStorage)
+        }
+
+        // @TODO: pull out from there, use rxjs
+        async updateWalletsBalancesAndMultisigStatus(walletListFromStorage) {
+            const networkCurrencies = [this.currentXEM1, this.currentXEM2]
+            try {
+                const balances = await Promise.all([
+                    walletListFromStorage
+                      .map(wallet => new AppWallet(wallet)
+                      .getAccountBalance(networkCurrencies, this.node))
+                  ])
+                const walletListWithBalances = [...walletListFromStorage]
+                walletListWithBalances.map((wallet, i) => ({wallet, balance: balances[i]}))
+                
+                const activeWalletWithBalance = walletListWithBalances
+                  .find(wallet => wallet.address === this.wallet.address)
+                
+                if (activeWalletWithBalance === undefined) throw new Error('an active wallet was not found in the wallet list')
+                this.$store.commit('SET_WALLET_LIST', walletListWithBalances)
+                this.$store.commit('SET_WALLET', activeWalletWithBalance)
+
+                const multisigStatuses = await Promise.all([
+                    walletListFromStorage
+                      .map(wallet => new AppWallet(wallet)
+                      .setMultisigStatus(this.node))
+                  ])
+                
+                const walletListWithMultisigStatuses = [...walletListWithBalances]
+                walletListWithMultisigStatuses.map((wallet, i) => ({wallet, isMultisig: multisigStatuses[i]}))
+                
+                const activeWalletWithMultisigStatus = walletListWithMultisigStatuses
+                  .find(wallet => wallet.address === this.wallet.address)
+                
+                if (activeWalletWithMultisigStatus === undefined) throw new Error('an active wallet was not found in the wallet list')
+                this.$store.commit('SET_WALLET_LIST', walletListWithBalances)
+                this.$store.commit('SET_WALLET', activeWalletWithBalance)
+            } catch (error) {
+              // USe this error for network status 
+              throw new Error(error)
             }
-            this.$store.commit('SET_WALLET', walletList[0])
-            this.$store.commit('SET_WALLET_LIST', walletList)
-        }
-
-        async getAccountInfo(listItem) {
-            let walletItem = listItem
-            walletItem.mosaics = []
-
-            new AccountApiRxjs().getAccountInfo(walletItem.address, this.node)
-                .subscribe((accountInfo) => {
-                    let mosaicList = accountInfo.mosaics
-                    mosaicList.map((item: any) => {
-                        item.hex = item.id.toHex()
-                        if (item.id.toHex() === this.currentXEM2
-                            || item.id.toHex() === this.currentXEM1) {
-                            walletItem.balance = item.amount.compact() / 1000000
-                        }
-                    })
-                    walletItem.mosaics = mosaicList
-                }, (error) => {
-                    walletItem.mosaics = []
-                })
-            return walletItem
-        }
-
-        async getMultisigAccount(listItem) {
-            let walletItem = listItem
-            walletItem.isMultisig = false
-            new AccountApiRxjs().getMultisigAccountInfo(walletItem.address, this.node).subscribe((multisigAccountInfo: any) => {
-                walletItem.isMultisig = true
-            }, () => {
-                walletItem.isMultisig = false
-            })
-            return walletItem
         }
 
         chainListner() {
@@ -123,14 +125,14 @@
             this.$Notice.config({
                 duration: 4
             })
+            this.initApp()
+            this.chainListner()
         }
 
         created() {
             if (isWindows) {
                 checkInstall()
             }
-            this.initApp()
-            this.chainListner()
         }
     }
 </script>

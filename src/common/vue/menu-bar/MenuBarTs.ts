@@ -1,5 +1,6 @@
 import routers from '@/router/routers.ts'
 import {Message, isWindows, languageList, localesMap, nodeList} from "@/config/index.ts"
+import {AppWallet} from '@/core/utils/wallet'
 import {ListenerApiRxjs} from "@/core/api/ListenerApiRxjs.ts"
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
@@ -28,8 +29,6 @@ export class MenuBarTs extends Vue {
     isNowWindowMax = false
     isShowDialog = true
     activePanelList = [false, false, false, false, false]
-    currentWallet = ''
-    showSelectWallet = true
     monitorSeleted = monitorSeleted
     monitorUnselected = monitorUnselected
     accountAddress = ''
@@ -56,26 +55,32 @@ export class MenuBarTs extends Vue {
     }
 
     get networkType() {
+        if(!this.wallet) return false
         return this.activeAccount.wallet.networkType
     }
-
+    // @TODO: the !this.wallet are quickfixes
     get node() {
+        if(!this.wallet) return false
         return this.activeAccount.node
     }
 
     get UnconfirmedTxList() {
+        if(!this.wallet) return false
         return this.activeAccount.UnconfirmedTx
     }
 
     get ConfirmedTxList() {
+        if(!this.wallet) return false
         return this.activeAccount.ConfirmedTx
     }
 
     get errorTxList() {
+        if(!this.wallet) return false
         return this.activeAccount.errorTx
     }
 
     get currentNode() {
+        if(!this.wallet) return false
         return this.activeAccount.node
     }
 
@@ -84,10 +89,12 @@ export class MenuBarTs extends Vue {
     }
 
     get confirmedTxList() {
+        if(!this.wallet) return false
         return this.activeAccount.ConfirmedTx
     }
 
     get unconfirmedTxList() {
+        if(!this.wallet) return false
         return this.activeAccount.UnconfirmedTx
     }
 
@@ -103,13 +110,18 @@ export class MenuBarTs extends Vue {
         this.$store.commit('SET_UNCONFIRMED_TX', unconfirmedTx)
     }
 
-    set wallet(wallet) {
-        this.$store.commit(' SET_WALLET', wallet)
-    }
-
     set language(lang) {
         this.$i18n.locale = lang
         localSave('locale', lang)
+    }
+
+    get currentWalletAddress() {
+      if(!this.wallet) return false
+      return this.activeAccount.wallet.address
+    }
+
+    set currentWalletAddress(newActiveWalletAddress) {
+      AppWallet.switchWallet(newActiveWalletAddress, this.walletList, this.$store)
     }
 
     closeWindow() {
@@ -160,20 +172,6 @@ export class MenuBarTs extends Vue {
         this.$store.commit('SET_CURRENT_PANEL_INDEX', index)
     }
 
-    switchWallet(address) {
-        const that = this
-        const walletList = [...this.walletList]
-        let list = [...this.walletList]
-        walletList.forEach((item, index) => {
-            if (item.address === address) {
-                that.wallet = item
-                list.splice(index, 1)
-                list.unshift(item)
-            }
-        })
-        this.$store.commit('SET_WALLET_LIST', list)
-    }
-
     accountQuit() {
         this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
         this.$router.push({
@@ -183,39 +181,38 @@ export class MenuBarTs extends Vue {
             }
         })
     }
-
+    // @TODO: make sure generationHash is set at the right place
     async getGenerationHash(node) {
         const that = this
         await new BlockApiRxjs().getBlockByHeight(node, 1).subscribe((blockInfo) => {
+            // @TODO: move to app.vue
             that.$store.commit('SET_GENERATION_HASH', blockInfo.generationHash)
         })
     }
 
     unconfirmedListener() {
-        if (!this.wallet) return
-        const that = this
+        if (!this.wallet.address) return
         const node = this.node.replace('http', 'ws')
         this.unconfirmedTxListener && this.unconfirmedTxListener.close()
         this.unconfirmedTxListener = new Listener(node, WebSocket)
-        new ListenerApiRxjs().listenerUnconfirmed(this.unconfirmedTxListener, Address.createFromRawAddress(that.wallet.address), that.disposeUnconfirmed)
+        new ListenerApiRxjs().listenerUnconfirmed(this.unconfirmedTxListener, Address.createFromRawAddress(this.wallet.address), this.disposeUnconfirmed)
     }
 
     confirmedListener() {
-        if (!this.wallet) return
+        if (!this.wallet.address) return
         const node = this.node.replace('http', 'ws')
-        const that = this
         this.confirmedTxListener && this.confirmedTxListener.close()
         this.confirmedTxListener = new Listener(node, WebSocket)
-        new ListenerApiRxjs().listenerConfirmed(this.confirmedTxListener, Address.createFromRawAddress(that.wallet.address), that.disposeConfirmed)
+        new ListenerApiRxjs().listenerConfirmed(this.confirmedTxListener,
+          Address.createFromRawAddress(this.wallet.address), this.disposeConfirmed)
     }
 
     txErrorListener() {
-        if (!this.wallet) return
-        const that = this
+        if (!this.wallet.address) return
         const node = this.node.replace('http', 'ws')
         this.txStatusListener && this.txStatusListener.close()
         this.txStatusListener = new Listener(node, WebSocket)
-        new ListenerApiRxjs().listenerTxStatus(this.txStatusListener, Address.createFromRawAddress(that.wallet.address), that.disposeTxStatus)
+        new ListenerApiRxjs().listenerTxStatus(this.txStatusListener, Address.createFromRawAddress(this.wallet.address), this.disposeTxStatus)
     }
 
     disposeUnconfirmed(transaction) {
