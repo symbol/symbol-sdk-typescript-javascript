@@ -125,6 +125,17 @@ export class AggregateTransaction extends Transaction {
     }
 
     /**
+     * @description add inner transactions to current list
+     * @param {InnerTransaction[]} transaction
+     * @returns {AggregateTransaction}
+     * @memberof AggregateTransaction
+     */
+    public addTransactions(transactions: InnerTransaction[]): AggregateTransaction {
+        const innerTransactions = this.innerTransactions.concat(transactions);
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {innerTransactions});
+    }
+
+    /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
      * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)

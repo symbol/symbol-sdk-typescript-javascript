@@ -24,8 +24,8 @@ import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
+import { AccountRestrictionType } from '../account/AccountRestrictionType';
 import { PublicAccount } from '../account/PublicAccount';
-import { RestrictionType } from '../account/RestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
@@ -49,7 +49,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
      * @returns {AccountAddressRestrictionTransaction}
      */
     public static create(deadline: Deadline,
-                         restrictionType: RestrictionType,
+                         restrictionType: AccountRestrictionType,
                          modifications: Array<AccountRestrictionModification<number[]>>,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountMosaicRestrictionTransaction {
@@ -76,7 +76,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
                 version: number,
                 deadline: Deadline,
                 maxFee: UInt64,
-                public readonly restrictionType: RestrictionType,
+                public readonly restrictionType: AccountRestrictionType,
                 public readonly modifications: Array<AccountRestrictionModification<number[]>>,
                 signature?: string,
                 signer?: PublicAccount,

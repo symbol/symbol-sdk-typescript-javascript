@@ -40,7 +40,7 @@ export class AccountRestrictionTransaction {
         modifications: Array<AccountRestrictionModification<string>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
-    ): AccountAddressRestrictionModificationTransaction {
+    ): AccountAddressRestrictionTransaction {
         if (![AccountRestrictionType.AllowIncomingAddress,
               AccountRestrictionType.AllowOutgoingAddress,
               AccountRestrictionType.BlockOutgoingAddress,
@@ -71,7 +71,7 @@ export class AccountRestrictionTransaction {
         modifications: Array<AccountRestrictionModification<number[]>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
-    ): AccountMosaicRestrictionModificationTransaction {
+    ): AccountMosaicRestrictionTransaction {
         if (![AccountRestrictionType.AllowMosaic,AccountRestrictionType.BlockMosaic].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
@@ -91,7 +91,7 @@ export class AccountRestrictionTransaction {
      * @param modification - array of operation modifications
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {createOperationRestrictionModificationTransaction}
+     * @returns {AccountOperationRestrictionTransaction}
      */
     public static createOperationRestrictionModificationTransaction(
         deadline: Deadline,
@@ -99,7 +99,7 @@ export class AccountRestrictionTransaction {
         modifications: Array<AccountRestrictionModification<TransactionType>>,
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
-    ): AccountOperationRestrictionModificationTransaction {
+    ): AccountOperationRestrictionTransaction {
         if (![AccountRestrictionType.AllowIncomingTransactionType,
               AccountRestrictionType.AllowOutgoingTransactionType,
               AccountRestrictionType.BlockOutgoingTransactionType,

@@ -322,7 +322,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('4101009050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+        )).to.be.equal('4101019050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
 
         addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
@@ -336,7 +336,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('C101009050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
+        )).to.be.equal('C101019050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142');
 
     });
 
@@ -359,7 +359,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('4401004E42');
+        )).to.be.equal('4401014E42');
 
         operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
@@ -373,7 +373,7 @@ describe('AccountRestrictionTransaction', () => {
         expect(signedTransaction.payload.substring(
             240,
             signedTransaction.payload.length,
-        )).to.be.equal('C401004E42');
+        )).to.be.equal('C401014E42');
 
     });
 });

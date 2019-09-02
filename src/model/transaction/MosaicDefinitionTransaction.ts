@@ -39,19 +39,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { MosaicDefinitionTransactionBuilder } from '../../infrastructure/catbuffer/MosaicDefinitionTransactionBuilder';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { MosaicNonceDto } from '../../infrastructure/catbuffer/MosaicNonceDto';
-import { MosaicIdDto } from '../../infrastructure/catbuffer/MosaicIdDto';
-import { MosaicFlagsDto } from '../../infrastructure/catbuffer/MosaicFlagsDto';
-import { MosaicFlags } from '../mosaic/MosaicFlag';
-import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
-import { Convert } from '../../core/format';
-import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 
 /**
  * Before a mosaic can be created or transferred, a corresponding definition of the mosaic has to be created and published to the network.

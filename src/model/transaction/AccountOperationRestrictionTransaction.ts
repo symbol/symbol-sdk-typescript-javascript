@@ -23,8 +23,8 @@ import { EmbeddedAccountOperationRestrictionTransactionBuilder } from '../../inf
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
+import { AccountRestrictionType } from '../account/AccountRestrictionType';
 import { PublicAccount } from '../account/PublicAccount';
-import { RestrictionType } from '../account/RestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountRestrictionModification } from './AccountRestrictionModification';
@@ -34,13 +34,6 @@ import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
 import { TransactionVersion } from './TransactionVersion';
-import { AccountOperationRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
-import { AccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 
 export class AccountOperationRestrictionTransaction extends Transaction {
 
@@ -54,7 +47,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      * @returns {AccountOperationRestrictionTransaction}
      */
     public static create(deadline: Deadline,
-                         restrictionType: RestrictionType,
+                         restrictionType: AccountRestrictionType,
                          modifications: Array<AccountRestrictionModification<TransactionType>>,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountOperationRestrictionTransaction {
@@ -81,7 +74,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
                 version: number,
                 deadline: Deadline,
                 maxFee: UInt64,
-                public readonly restrictionType: RestrictionType,
+                public readonly restrictionType: AccountRestrictionType,
                 public readonly modifications: Array<AccountRestrictionModification<TransactionType>>,
                 signature?: string,
                 signer?: PublicAccount,
