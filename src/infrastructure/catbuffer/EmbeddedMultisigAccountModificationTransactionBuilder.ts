@@ -34,7 +34,7 @@ export class EmbeddedMultisigAccountModificationTransactionBuilder extends Embed
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param minRemovalDelta Relative change of the minimal number of cosignatories required when removing an account.
@@ -42,8 +42,8 @@ export class EmbeddedMultisigAccountModificationTransactionBuilder extends Embed
      * @param modifications Attached cosignatory modifications.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  minRemovalDelta: number,  minApprovalDelta: number,  modifications: CosignatoryModificationBuilder[]) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  minRemovalDelta: number,  minApprovalDelta: number,  modifications: CosignatoryModificationBuilder[]) {
+        super(signerPublicKey, version, type);
         // tslint:disable-next-line: max-line-length
         this.multisigAccountModificationTransactionBody = new MultisigAccountModificationTransactionBodyBuilder(minRemovalDelta, minApprovalDelta, modifications);
     }
@@ -62,7 +62,7 @@ export class EmbeddedMultisigAccountModificationTransactionBuilder extends Embed
         const multisigAccountModificationTransactionBody = MultisigAccountModificationTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, multisigAccountModificationTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedMultisigAccountModificationTransactionBuilder(superObject.signer, superObject.version, superObject.type, multisigAccountModificationTransactionBody.minRemovalDelta, multisigAccountModificationTransactionBody.minApprovalDelta, multisigAccountModificationTransactionBody.modifications);
+        return new EmbeddedMultisigAccountModificationTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, multisigAccountModificationTransactionBody.minRemovalDelta, multisigAccountModificationTransactionBody.minApprovalDelta, multisigAccountModificationTransactionBody.modifications);
     }
 
     /**

@@ -40,7 +40,7 @@ export class AddressAliasTransactionBuilder extends TransactionBuilder {
      * Constructor.
      *
      * @param signature Entity signature.
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param fee Transaction fee.
@@ -50,8 +50,8 @@ export class AddressAliasTransactionBuilder extends TransactionBuilder {
      * @param address Aliased address.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signer: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  aliasAction: AliasActionDto,  namespaceId: NamespaceIdDto,  address: AddressDto) {
-        super(signature, signer, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  aliasAction: AliasActionDto,  namespaceId: NamespaceIdDto,  address: AddressDto) {
+        super(signature, signerPublicKey, version, type, fee, deadline);
         this.addressAliasTransactionBody = new AddressAliasTransactionBodyBuilder(aliasAction, namespaceId, address);
     }
 
@@ -68,7 +68,7 @@ export class AddressAliasTransactionBuilder extends TransactionBuilder {
         const addressAliasTransactionBody = AddressAliasTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, addressAliasTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new AddressAliasTransactionBuilder(superObject.signature, superObject.signer, superObject.version, superObject.type, superObject.fee, superObject.deadline, addressAliasTransactionBody.aliasAction, addressAliasTransactionBody.namespaceId, addressAliasTransactionBody.address);
+        return new AddressAliasTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, addressAliasTransactionBody.aliasAction, addressAliasTransactionBody.namespaceId, addressAliasTransactionBody.address);
     }
 
     /**

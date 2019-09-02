@@ -33,12 +33,12 @@ export class DetachedCosignatureBuilder extends CosignatureBuilder {
     /**
      * Constructor.
      *
-     * @param signer Cosigner public key.
+     * @param signerPublicKey Cosigner public key.
      * @param signature Cosigner signature.
      * @param parentHash Hash of the aggregate transaction that is signed by this cosignature.
      */
-    public constructor(signer: KeyDto,  signature: SignatureDto,  parentHash: Hash256Dto) {
-        super(signer, signature);
+    public constructor(signerPublicKey: KeyDto,  signature: SignatureDto,  parentHash: Hash256Dto) {
+        super(signerPublicKey, signature);
         this.parentHash = parentHash;
     }
 
@@ -54,7 +54,7 @@ export class DetachedCosignatureBuilder extends CosignatureBuilder {
         byteArray.splice(0, superObject.getSize());
         const parentHash = Hash256Dto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, parentHash.getSize());
-        return new DetachedCosignatureBuilder(superObject.signer, superObject.signature, parentHash);
+        return new DetachedCosignatureBuilder(superObject.signerPublicKey, superObject.signature, parentHash);
     }
 
     /**

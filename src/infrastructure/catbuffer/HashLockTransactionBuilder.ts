@@ -40,7 +40,7 @@ export class HashLockTransactionBuilder extends TransactionBuilder {
      * Constructor.
      *
      * @param signature Entity signature.
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param fee Transaction fee.
@@ -50,8 +50,8 @@ export class HashLockTransactionBuilder extends TransactionBuilder {
      * @param hash Lock hash.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signer: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hash: Hash256Dto) {
-        super(signature, signer, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hash: Hash256Dto) {
+        super(signature, signerPublicKey, version, type, fee, deadline);
         this.hashLockTransactionBody = new HashLockTransactionBodyBuilder(mosaic, duration, hash);
     }
 
@@ -68,7 +68,7 @@ export class HashLockTransactionBuilder extends TransactionBuilder {
         const hashLockTransactionBody = HashLockTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, hashLockTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new HashLockTransactionBuilder(superObject.signature, superObject.signer, superObject.version, superObject.type, superObject.fee, superObject.deadline, hashLockTransactionBody.mosaic, hashLockTransactionBody.duration, hashLockTransactionBody.hash);
+        return new HashLockTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, hashLockTransactionBody.mosaic, hashLockTransactionBody.duration, hashLockTransactionBody.hash);
     }
 
     /**

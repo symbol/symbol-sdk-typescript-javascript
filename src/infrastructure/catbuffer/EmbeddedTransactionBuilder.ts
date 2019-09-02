@@ -28,7 +28,7 @@ export class EmbeddedTransactionBuilder {
     /** Entity size. */
     size = 0;
     /** Entity signer's public key. */
-    signer: KeyDto;
+    signerPublicKey: KeyDto;
     /** Entity version. */
     version: number;
     /** Entity type. */
@@ -37,12 +37,12 @@ export class EmbeddedTransactionBuilder {
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      */
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto) {
-        this.signer = signer;
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto) {
+        this.signerPublicKey = signerPublicKey;
         this.version = version;
         this.type = type;
     }
@@ -57,13 +57,13 @@ export class EmbeddedTransactionBuilder {
         const byteArray = Array.from(payload);
         const size = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 4));
         byteArray.splice(0, 4);
-        const signer = KeyDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, signer.getSize());
+        const signerPublicKey = KeyDto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, signerPublicKey.getSize());
         const version = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 2));
         byteArray.splice(0, 2);
         const type = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 2));
         byteArray.splice(0, 2);
-        return new EmbeddedTransactionBuilder(signer, version, type);
+        return new EmbeddedTransactionBuilder(signerPublicKey, version, type);
     }
 
     /**
@@ -71,8 +71,8 @@ export class EmbeddedTransactionBuilder {
      *
      * @return Entity signer's public key.
      */
-    public getSigner(): KeyDto {
-        return this.signer;
+    public getSignerPublicKey(): KeyDto {
+        return this.signerPublicKey;
     }
 
     /**
@@ -101,7 +101,7 @@ export class EmbeddedTransactionBuilder {
     public getSize(): number {
         let size = 0;
         size += 4; // size
-        size += this.signer.getSize();
+        size += this.signerPublicKey.getSize();
         size += 2; // version
         size += 2; // type
         return size;
@@ -116,8 +116,8 @@ export class EmbeddedTransactionBuilder {
         let newArray = Uint8Array.from([]);
         const sizeBytes = GeneratorUtils.uintToBuffer(this.getSize(), 4);
         newArray = GeneratorUtils.concatTypedArrays(newArray, sizeBytes);
-        const signerBytes = this.signer.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, signerBytes);
+        const signerPublicKeyBytes = this.signerPublicKey.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, signerPublicKeyBytes);
         const versionBytes = GeneratorUtils.uintToBuffer(this.getVersion(), 2);
         newArray = GeneratorUtils.concatTypedArrays(newArray, versionBytes);
         const typeBytes = GeneratorUtils.uintToBuffer(this.type, 2);

@@ -25,9 +25,9 @@ import { UnresolvedMosaicBuilder } from './UnresolvedMosaicBuilder';
 
 /** Binary layout for a transfer transaction. */
 export class TransferTransactionBodyBuilder {
-    /** Transaction recipient. */
-    recipient: UnresolvedAddressDto;
-    /** Transaction message. */
+    /** Recipient address. */
+    recipientAddress: UnresolvedAddressDto;
+    /** Attached message. */
     message: Uint8Array;
     /** Attached mosaics. */
     mosaics: UnresolvedMosaicBuilder[];
@@ -35,12 +35,12 @@ export class TransferTransactionBodyBuilder {
     /**
      * Constructor.
      *
-     * @param recipient Transaction recipient.
-     * @param message Transaction message.
+     * @param recipientAddress Recipient address.
+     * @param message Attached message.
      * @param mosaics Attached mosaics.
      */
-    public constructor(recipient: UnresolvedAddressDto,  message: Uint8Array,  mosaics: UnresolvedMosaicBuilder[]) {
-        this.recipient = recipient;
+    public constructor(recipientAddress: UnresolvedAddressDto,  message: Uint8Array,  mosaics: UnresolvedMosaicBuilder[]) {
+        this.recipientAddress = recipientAddress;
         this.message = message;
         this.mosaics = mosaics;
     }
@@ -53,8 +53,8 @@ export class TransferTransactionBodyBuilder {
      */
     public static loadFromBinary(payload: Uint8Array): TransferTransactionBodyBuilder {
         const byteArray = Array.from(payload);
-        const recipient = UnresolvedAddressDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, recipient.getSize());
+        const recipientAddress = UnresolvedAddressDto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, recipientAddress.getSize());
         const messageSize = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 2));
         byteArray.splice(0, 2);
         const mosaicsCount = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
@@ -67,22 +67,22 @@ export class TransferTransactionBodyBuilder {
             mosaics.push(item);
             byteArray.splice(0, item.getSize());
         }
-        return new TransferTransactionBodyBuilder(recipient, message, mosaics);
+        return new TransferTransactionBodyBuilder(recipientAddress, message, mosaics);
     }
 
     /**
-     * Gets transaction recipient.
+     * Gets recipient address.
      *
-     * @return Transaction recipient.
+     * @return Recipient address.
      */
-    public getRecipient(): UnresolvedAddressDto {
-        return this.recipient;
+    public getRecipientAddress(): UnresolvedAddressDto {
+        return this.recipientAddress;
     }
 
     /**
-     * Gets transaction message.
+     * Gets attached message.
      *
-     * @return Transaction message.
+     * @return Attached message.
      */
     public getMessage(): Uint8Array {
         return this.message;
@@ -104,7 +104,7 @@ export class TransferTransactionBodyBuilder {
      */
     public getSize(): number {
         let size = 0;
-        size += this.recipient.getSize();
+        size += this.recipientAddress.getSize();
         size += 2; // messageSize
         size += 1; // mosaicsCount
         size += this.message.length;
@@ -119,8 +119,8 @@ export class TransferTransactionBodyBuilder {
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
-        const recipientBytes = this.recipient.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, recipientBytes);
+        const recipientAddressBytes = this.recipientAddress.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, recipientAddressBytes);
         const messageSizeBytes = GeneratorUtils.uintToBuffer(this.message.length, 2);
         newArray = GeneratorUtils.concatTypedArrays(newArray, messageSizeBytes);
         const mosaicsCountBytes = GeneratorUtils.uintToBuffer(this.mosaics.length, 1);

@@ -36,7 +36,7 @@ export class EmbeddedNamespaceRegistrationTransactionBuilder extends EmbeddedTra
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param duration Namespace duration.
@@ -45,8 +45,8 @@ export class EmbeddedNamespaceRegistrationTransactionBuilder extends EmbeddedTra
      * @param name Namespace name.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  id: NamespaceIdDto,  name: Uint8Array,  duration?: BlockDurationDto,  parentId?: NamespaceIdDto) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  id: NamespaceIdDto,  name: Uint8Array,  duration?: BlockDurationDto,  parentId?: NamespaceIdDto) {
+        super(signerPublicKey, version, type);
         if ((duration && parentId) || (!duration && !parentId)) {
             throw new Error('Invalid conditional parameters');
         }
@@ -68,7 +68,7 @@ export class EmbeddedNamespaceRegistrationTransactionBuilder extends EmbeddedTra
         const namespaceRegistrationTransactionBody = NamespaceRegistrationTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, namespaceRegistrationTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedNamespaceRegistrationTransactionBuilder(superObject.signer, superObject.version, superObject.type, namespaceRegistrationTransactionBody.id, namespaceRegistrationTransactionBody.name, namespaceRegistrationTransactionBody.duration, namespaceRegistrationTransactionBody.parentId);
+        return new EmbeddedNamespaceRegistrationTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, namespaceRegistrationTransactionBody.id, namespaceRegistrationTransactionBody.name, namespaceRegistrationTransactionBody.duration, namespaceRegistrationTransactionBody.parentId);
     }
 
     /**

@@ -33,7 +33,7 @@ export class TransactionBuilder {
     /** Entity signature. */
     signature: SignatureDto;
     /** Entity signer's public key. */
-    signer: KeyDto;
+    signerPublicKey: KeyDto;
     /** Entity version. */
     version: number;
     /** Entity type. */
@@ -47,16 +47,16 @@ export class TransactionBuilder {
      * Constructor.
      *
      * @param signature Entity signature.
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signer: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto) {
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto) {
         this.signature = signature;
-        this.signer = signer;
+        this.signerPublicKey = signerPublicKey;
         this.version = version;
         this.type = type;
         this.fee = fee;
@@ -75,8 +75,8 @@ export class TransactionBuilder {
         byteArray.splice(0, 4);
         const signature = SignatureDto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, signature.getSize());
-        const signer = KeyDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, signer.getSize());
+        const signerPublicKey = KeyDto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, signerPublicKey.getSize());
         const version = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 2));
         byteArray.splice(0, 2);
         const type = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 2));
@@ -85,7 +85,7 @@ export class TransactionBuilder {
         byteArray.splice(0, fee.getSize());
         const deadline = TimestampDto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, deadline.getSize());
-        return new TransactionBuilder(signature, signer, version, type, fee, deadline);
+        return new TransactionBuilder(signature, signerPublicKey, version, type, fee, deadline);
     }
 
     /**
@@ -102,8 +102,8 @@ export class TransactionBuilder {
      *
      * @return Entity signer's public key.
      */
-    public getSigner(): KeyDto {
-        return this.signer;
+    public getSignerPublicKey(): KeyDto {
+        return this.signerPublicKey;
     }
 
     /**
@@ -151,7 +151,7 @@ export class TransactionBuilder {
         let size = 0;
         size += 4; // size
         size += this.signature.getSize();
-        size += this.signer.getSize();
+        size += this.signerPublicKey.getSize();
         size += 2; // version
         size += 2; // type
         size += this.fee.getSize();
@@ -170,8 +170,8 @@ export class TransactionBuilder {
         newArray = GeneratorUtils.concatTypedArrays(newArray, sizeBytes);
         const signatureBytes = this.signature.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, signatureBytes);
-        const signerBytes = this.signer.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, signerBytes);
+        const signerPublicKeyBytes = this.signerPublicKey.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, signerPublicKeyBytes);
         const versionBytes = GeneratorUtils.uintToBuffer(this.getVersion(), 2);
         newArray = GeneratorUtils.concatTypedArrays(newArray, versionBytes);
         const typeBytes = GeneratorUtils.uintToBuffer(this.type, 2);

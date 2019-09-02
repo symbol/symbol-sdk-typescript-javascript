@@ -36,8 +36,8 @@ export class SecretLockTransactionBodyBuilder {
     hashAlgorithm: LockHashAlgorithmDto;
     /** Secret. */
     secret: Hash256Dto;
-    /** Locked mosaic recipient. */
-    recipient: UnresolvedAddressDto;
+    /** Locked mosaic recipient address. */
+    recipientAddress: UnresolvedAddressDto;
 
     /**
      * Constructor.
@@ -46,15 +46,15 @@ export class SecretLockTransactionBodyBuilder {
      * @param duration Number of blocks for which a lock should be valid.
      * @param hashAlgorithm Hash algorithm.
      * @param secret Secret.
-     * @param recipient Locked mosaic recipient.
+     * @param recipientAddress Locked mosaic recipient address.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipient: UnresolvedAddressDto) {
+    public constructor(mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipientAddress: UnresolvedAddressDto) {
         this.mosaic = mosaic;
         this.duration = duration;
         this.hashAlgorithm = hashAlgorithm;
         this.secret = secret;
-        this.recipient = recipient;
+        this.recipientAddress = recipientAddress;
     }
 
     /**
@@ -73,9 +73,9 @@ export class SecretLockTransactionBodyBuilder {
         byteArray.splice(0, 1);
         const secret = Hash256Dto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, secret.getSize());
-        const recipient = UnresolvedAddressDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, recipient.getSize());
-        return new SecretLockTransactionBodyBuilder(mosaic, duration, hashAlgorithm, secret, recipient);
+        const recipientAddress = UnresolvedAddressDto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, recipientAddress.getSize());
+        return new SecretLockTransactionBodyBuilder(mosaic, duration, hashAlgorithm, secret, recipientAddress);
     }
 
     /**
@@ -115,12 +115,12 @@ export class SecretLockTransactionBodyBuilder {
     }
 
     /**
-     * Gets locked mosaic recipient.
+     * Gets locked mosaic recipient address.
      *
-     * @return Locked mosaic recipient.
+     * @return Locked mosaic recipient address.
      */
-    public getRecipient(): UnresolvedAddressDto {
-        return this.recipient;
+    public getRecipientAddress(): UnresolvedAddressDto {
+        return this.recipientAddress;
     }
 
     /**
@@ -134,7 +134,7 @@ export class SecretLockTransactionBodyBuilder {
         size += this.duration.getSize();
         size += 1; // hashAlgorithm
         size += this.secret.getSize();
-        size += this.recipient.getSize();
+        size += this.recipientAddress.getSize();
         return size;
     }
 
@@ -153,8 +153,8 @@ export class SecretLockTransactionBodyBuilder {
         newArray = GeneratorUtils.concatTypedArrays(newArray, hashAlgorithmBytes);
         const secretBytes = this.secret.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, secretBytes);
-        const recipientBytes = this.recipient.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, recipientBytes);
+        const recipientAddressBytes = this.recipientAddress.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, recipientAddressBytes);
         return newArray;
     }
 }

@@ -160,7 +160,7 @@ export class RegisterNamespaceTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const namespaceType = builder.getRegistrationType().valueOf();
-        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
         const transaction = namespaceType === NamespaceType.RootNamespace ?
             RegisterNamespaceTransaction.createRootNamespace(

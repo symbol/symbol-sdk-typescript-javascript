@@ -25,19 +25,19 @@ import { KeyDto } from './KeyDto';
 
 /** Binary layout for an account link transaction. */
 export class AccountLinkTransactionBodyBuilder {
-    /** Remote account public key. */
-    remoteAccountPublicKey: KeyDto;
+    /** Remote public key. */
+    remotePublicKey: KeyDto;
     /** Account link action. */
     linkAction: AccountLinkActionDto;
 
     /**
      * Constructor.
      *
-     * @param remoteAccountPublicKey Remote account public key.
+     * @param remotePublicKey Remote public key.
      * @param linkAction Account link action.
      */
-    public constructor(remoteAccountPublicKey: KeyDto,  linkAction: AccountLinkActionDto) {
-        this.remoteAccountPublicKey = remoteAccountPublicKey;
+    public constructor(remotePublicKey: KeyDto,  linkAction: AccountLinkActionDto) {
+        this.remotePublicKey = remotePublicKey;
         this.linkAction = linkAction;
     }
 
@@ -49,20 +49,20 @@ export class AccountLinkTransactionBodyBuilder {
      */
     public static loadFromBinary(payload: Uint8Array): AccountLinkTransactionBodyBuilder {
         const byteArray = Array.from(payload);
-        const remoteAccountPublicKey = KeyDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, remoteAccountPublicKey.getSize());
+        const remotePublicKey = KeyDto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, remotePublicKey.getSize());
         const linkAction = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 1));
         byteArray.splice(0, 1);
-        return new AccountLinkTransactionBodyBuilder(remoteAccountPublicKey, linkAction);
+        return new AccountLinkTransactionBodyBuilder(remotePublicKey, linkAction);
     }
 
     /**
-     * Gets remote account public key.
+     * Gets remote public key.
      *
-     * @return Remote account public key.
+     * @return Remote public key.
      */
-    public getRemoteAccountPublicKey(): KeyDto {
-        return this.remoteAccountPublicKey;
+    public getRemotePublicKey(): KeyDto {
+        return this.remotePublicKey;
     }
 
     /**
@@ -81,7 +81,7 @@ export class AccountLinkTransactionBodyBuilder {
      */
     public getSize(): number {
         let size = 0;
-        size += this.remoteAccountPublicKey.getSize();
+        size += this.remotePublicKey.getSize();
         size += 1; // linkAction
         return size;
     }
@@ -93,8 +93,8 @@ export class AccountLinkTransactionBodyBuilder {
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
-        const remoteAccountPublicKeyBytes = this.remoteAccountPublicKey.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, remoteAccountPublicKeyBytes);
+        const remotePublicKeyBytes = this.remotePublicKey.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, remotePublicKeyBytes);
         const linkActionBytes = GeneratorUtils.uintToBuffer(this.linkAction, 1);
         newArray = GeneratorUtils.concatTypedArrays(newArray, linkActionBytes);
         return newArray;

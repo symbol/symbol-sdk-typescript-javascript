@@ -36,18 +36,18 @@ export class EmbeddedSecretProofTransactionBuilder extends EmbeddedTransactionBu
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param hashAlgorithm Hash algorithm.
      * @param secret Secret.
-     * @param recipient Recipient.
+     * @param recipientAddress Locked mosaic recipient address.
      * @param proof Proof data.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipient: UnresolvedAddressDto,  proof: Uint8Array) {
-        super(signer, version, type);
-        this.secretProofTransactionBody = new SecretProofTransactionBodyBuilder(hashAlgorithm, secret, recipient, proof);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipientAddress: UnresolvedAddressDto,  proof: Uint8Array) {
+        super(signerPublicKey, version, type);
+        this.secretProofTransactionBody = new SecretProofTransactionBodyBuilder(hashAlgorithm, secret, recipientAddress, proof);
     }
 
     /**
@@ -63,7 +63,7 @@ export class EmbeddedSecretProofTransactionBuilder extends EmbeddedTransactionBu
         const secretProofTransactionBody = SecretProofTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, secretProofTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedSecretProofTransactionBuilder(superObject.signer, superObject.version, superObject.type, secretProofTransactionBody.hashAlgorithm, secretProofTransactionBody.secret, secretProofTransactionBody.recipient, secretProofTransactionBody.proof);
+        return new EmbeddedSecretProofTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, secretProofTransactionBody.hashAlgorithm, secretProofTransactionBody.secret, secretProofTransactionBody.recipientAddress, secretProofTransactionBody.proof);
     }
 
     /**
@@ -85,12 +85,12 @@ export class EmbeddedSecretProofTransactionBuilder extends EmbeddedTransactionBu
     }
 
     /**
-     * Gets recipient.
+     * Gets locked mosaic recipient address.
      *
-     * @return Recipient.
+     * @return Locked mosaic recipient address.
      */
-    public getRecipient(): UnresolvedAddressDto {
-        return this.secretProofTransactionBody.getRecipient();
+    public getRecipientAddress(): UnresolvedAddressDto {
+        return this.secretProofTransactionBody.getRecipientAddress();
     }
 
     /**

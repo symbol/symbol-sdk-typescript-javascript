@@ -34,16 +34,16 @@ export class EmbeddedAccountLinkTransactionBuilder extends EmbeddedTransactionBu
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
-     * @param remoteAccountPublicKey Remote account public key.
+     * @param remotePublicKey Remote public key.
      * @param linkAction Account link action.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  remoteAccountPublicKey: KeyDto,  linkAction: AccountLinkActionDto) {
-        super(signer, version, type);
-        this.accountLinkTransactionBody = new AccountLinkTransactionBodyBuilder(remoteAccountPublicKey, linkAction);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  remotePublicKey: KeyDto,  linkAction: AccountLinkActionDto) {
+        super(signerPublicKey, version, type);
+        this.accountLinkTransactionBody = new AccountLinkTransactionBodyBuilder(remotePublicKey, linkAction);
     }
 
     /**
@@ -59,16 +59,16 @@ export class EmbeddedAccountLinkTransactionBuilder extends EmbeddedTransactionBu
         const accountLinkTransactionBody = AccountLinkTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountLinkTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedAccountLinkTransactionBuilder(superObject.signer, superObject.version, superObject.type, accountLinkTransactionBody.remoteAccountPublicKey, accountLinkTransactionBody.linkAction);
+        return new EmbeddedAccountLinkTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, accountLinkTransactionBody.remotePublicKey, accountLinkTransactionBody.linkAction);
     }
 
     /**
-     * Gets remote account public key.
+     * Gets remote public key.
      *
-     * @return Remote account public key.
+     * @return Remote public key.
      */
-    public getRemoteAccountPublicKey(): KeyDto {
-        return this.accountLinkTransactionBody.getRemoteAccountPublicKey();
+    public getRemotePublicKey(): KeyDto {
+        return this.accountLinkTransactionBody.getRemotePublicKey();
     }
 
     /**

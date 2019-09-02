@@ -37,7 +37,7 @@ export class AggregateCompleteTransactionBuilder extends TransactionBuilder {
      * Constructor.
      *
      * @param signature Entity signature.
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param fee Transaction fee.
@@ -46,8 +46,8 @@ export class AggregateCompleteTransactionBuilder extends TransactionBuilder {
      * @param cosignatures Cosignatures data (fills remaining body space after transactions).
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signer: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  transactions: Uint8Array,  cosignatures: Uint8Array) {
-        super(signature, signer, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  transactions: Uint8Array,  cosignatures: Uint8Array) {
+        super(signature, signerPublicKey, version, type, fee, deadline);
         this.aggregateTransactionBody = new AggregateTransactionBodyBuilder(transactions, cosignatures);
     }
 
@@ -64,7 +64,7 @@ export class AggregateCompleteTransactionBuilder extends TransactionBuilder {
         const aggregateTransactionBody = AggregateTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, aggregateTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new AggregateCompleteTransactionBuilder(superObject.signature, superObject.signer, superObject.version, superObject.type, superObject.fee, superObject.deadline, aggregateTransactionBody.transactions, aggregateTransactionBody.cosignatures);
+        return new AggregateCompleteTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, aggregateTransactionBody.transactions, aggregateTransactionBody.cosignatures);
     }
 
     /**

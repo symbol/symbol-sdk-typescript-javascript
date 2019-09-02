@@ -39,7 +39,7 @@ export class AccountAddressRestrictionTransactionBuilder extends TransactionBuil
      * Constructor.
      *
      * @param signature Entity signature.
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param fee Transaction fee.
@@ -48,8 +48,8 @@ export class AccountAddressRestrictionTransactionBuilder extends TransactionBuil
      * @param modifications Account restriction modifications.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signer: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  restrictionType: AccountRestrictionTypeDto,  modifications: AccountAddressRestrictionModificationBuilder[]) {
-        super(signature, signer, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  restrictionType: AccountRestrictionTypeDto,  modifications: AccountAddressRestrictionModificationBuilder[]) {
+        super(signature, signerPublicKey, version, type, fee, deadline);
         // tslint:disable-next-line: max-line-length
         this.accountAddressRestrictionTransactionBody = new AccountAddressRestrictionTransactionBodyBuilder(restrictionType, modifications);
     }
@@ -68,7 +68,7 @@ export class AccountAddressRestrictionTransactionBuilder extends TransactionBuil
         const accountAddressRestrictionTransactionBody = AccountAddressRestrictionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountAddressRestrictionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new AccountAddressRestrictionTransactionBuilder(superObject.signature, superObject.signer, superObject.version, superObject.type, superObject.fee, superObject.deadline, accountAddressRestrictionTransactionBody.restrictionType, accountAddressRestrictionTransactionBody.modifications);
+        return new AccountAddressRestrictionTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, accountAddressRestrictionTransactionBody.restrictionType, accountAddressRestrictionTransactionBody.modifications);
     }
 
     /**

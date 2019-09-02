@@ -35,15 +35,15 @@ export class EmbeddedAccountOperationRestrictionTransactionBuilder extends Embed
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param restrictionType Account restriction type.
      * @param modifications Account restriction modifications.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  restrictionType: AccountRestrictionTypeDto,  modifications: AccountOperationRestrictionModificationBuilder[]) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  restrictionType: AccountRestrictionTypeDto,  modifications: AccountOperationRestrictionModificationBuilder[]) {
+        super(signerPublicKey, version, type);
         // tslint:disable-next-line: max-line-length
         this.accountOperationRestrictionTransactionBody = new AccountOperationRestrictionTransactionBodyBuilder(restrictionType, modifications);
     }
@@ -62,7 +62,7 @@ export class EmbeddedAccountOperationRestrictionTransactionBuilder extends Embed
         const accountOperationRestrictionTransactionBody = AccountOperationRestrictionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountOperationRestrictionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedAccountOperationRestrictionTransactionBuilder(superObject.signer, superObject.version, superObject.type, accountOperationRestrictionTransactionBody.restrictionType, accountOperationRestrictionTransactionBody.modifications);
+        return new EmbeddedAccountOperationRestrictionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, accountOperationRestrictionTransactionBody.restrictionType, accountOperationRestrictionTransactionBody.modifications);
     }
 
     /**

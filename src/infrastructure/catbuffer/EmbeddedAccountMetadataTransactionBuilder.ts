@@ -33,7 +33,7 @@ export class EmbeddedAccountMetadataTransactionBuilder extends EmbeddedTransacti
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param targetPublicKey Metadata target public key.
@@ -44,8 +44,8 @@ export class EmbeddedAccountMetadataTransactionBuilder extends EmbeddedTransacti
      * @note when there is an existing value, new value is calculated as xor(previous-value, value).
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  valueSizeDelta: number,  value: Uint8Array) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  valueSizeDelta: number,  value: Uint8Array) {
+        super(signerPublicKey, version, type);
         // tslint:disable-next-line: max-line-length
         this.accountMetadataTransactionBody = new AccountMetadataTransactionBodyBuilder(targetPublicKey, scopedMetadataKey, valueSizeDelta, value);
     }
@@ -63,7 +63,7 @@ export class EmbeddedAccountMetadataTransactionBuilder extends EmbeddedTransacti
         const accountMetadataTransactionBody = AccountMetadataTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountMetadataTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedAccountMetadataTransactionBuilder(superObject.signer, superObject.version, superObject.type, accountMetadataTransactionBody.targetPublicKey, accountMetadataTransactionBody.scopedMetadataKey, accountMetadataTransactionBody.valueSizeDelta, accountMetadataTransactionBody.value);
+        return new EmbeddedAccountMetadataTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, accountMetadataTransactionBody.targetPublicKey, accountMetadataTransactionBody.scopedMetadataKey, accountMetadataTransactionBody.valueSizeDelta, accountMetadataTransactionBody.value);
     }
 
     /**

@@ -38,18 +38,18 @@ export class AccountLinkTransactionBuilder extends TransactionBuilder {
      * Constructor.
      *
      * @param signature Entity signature.
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
-     * @param remoteAccountPublicKey Remote account public key.
+     * @param remotePublicKey Remote public key.
      * @param linkAction Account link action.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signer: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  remoteAccountPublicKey: KeyDto,  linkAction: AccountLinkActionDto) {
-        super(signature, signer, version, type, fee, deadline);
-        this.accountLinkTransactionBody = new AccountLinkTransactionBodyBuilder(remoteAccountPublicKey, linkAction);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  remotePublicKey: KeyDto,  linkAction: AccountLinkActionDto) {
+        super(signature, signerPublicKey, version, type, fee, deadline);
+        this.accountLinkTransactionBody = new AccountLinkTransactionBodyBuilder(remotePublicKey, linkAction);
     }
 
     /**
@@ -65,16 +65,16 @@ export class AccountLinkTransactionBuilder extends TransactionBuilder {
         const accountLinkTransactionBody = AccountLinkTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountLinkTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new AccountLinkTransactionBuilder(superObject.signature, superObject.signer, superObject.version, superObject.type, superObject.fee, superObject.deadline, accountLinkTransactionBody.remoteAccountPublicKey, accountLinkTransactionBody.linkAction);
+        return new AccountLinkTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, accountLinkTransactionBody.remotePublicKey, accountLinkTransactionBody.linkAction);
     }
 
     /**
-     * Gets remote account public key.
+     * Gets remote public key.
      *
-     * @return Remote account public key.
+     * @return Remote public key.
      */
-    public getRemoteAccountPublicKey(): KeyDto {
-        return this.accountLinkTransactionBody.getRemoteAccountPublicKey();
+    public getRemotePublicKey(): KeyDto {
+        return this.accountLinkTransactionBody.getRemotePublicKey();
     }
 
     /**

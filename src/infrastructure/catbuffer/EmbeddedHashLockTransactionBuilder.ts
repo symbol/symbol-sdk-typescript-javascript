@@ -36,7 +36,7 @@ export class EmbeddedHashLockTransactionBuilder extends EmbeddedTransactionBuild
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param mosaic Lock mosaic.
@@ -44,8 +44,8 @@ export class EmbeddedHashLockTransactionBuilder extends EmbeddedTransactionBuild
      * @param hash Lock hash.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hash: Hash256Dto) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hash: Hash256Dto) {
+        super(signerPublicKey, version, type);
         this.hashLockTransactionBody = new HashLockTransactionBodyBuilder(mosaic, duration, hash);
     }
 
@@ -62,7 +62,7 @@ export class EmbeddedHashLockTransactionBuilder extends EmbeddedTransactionBuild
         const hashLockTransactionBody = HashLockTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, hashLockTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedHashLockTransactionBuilder(superObject.signer, superObject.version, superObject.type, hashLockTransactionBody.mosaic, hashLockTransactionBody.duration, hashLockTransactionBody.hash);
+        return new EmbeddedHashLockTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, hashLockTransactionBody.mosaic, hashLockTransactionBody.duration, hashLockTransactionBody.hash);
     }
 
     /**

@@ -30,8 +30,8 @@ export class SecretProofTransactionBodyBuilder {
     hashAlgorithm: LockHashAlgorithmDto;
     /** Secret. */
     secret: Hash256Dto;
-    /** Recipient. */
-    recipient: UnresolvedAddressDto;
+    /** Locked mosaic recipient address. */
+    recipientAddress: UnresolvedAddressDto;
     /** Proof data. */
     proof: Uint8Array;
 
@@ -40,14 +40,14 @@ export class SecretProofTransactionBodyBuilder {
      *
      * @param hashAlgorithm Hash algorithm.
      * @param secret Secret.
-     * @param recipient Recipient.
+     * @param recipientAddress Locked mosaic recipient address.
      * @param proof Proof data.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipient: UnresolvedAddressDto,  proof: Uint8Array) {
+    public constructor(hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipientAddress: UnresolvedAddressDto,  proof: Uint8Array) {
         this.hashAlgorithm = hashAlgorithm;
         this.secret = secret;
-        this.recipient = recipient;
+        this.recipientAddress = recipientAddress;
         this.proof = proof;
     }
 
@@ -63,13 +63,13 @@ export class SecretProofTransactionBodyBuilder {
         byteArray.splice(0, 1);
         const secret = Hash256Dto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, secret.getSize());
-        const recipient = UnresolvedAddressDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, recipient.getSize());
+        const recipientAddress = UnresolvedAddressDto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, recipientAddress.getSize());
         const proofSize = GeneratorUtils.bufferToUint(GeneratorUtils.getBytes(Uint8Array.from(byteArray), 2));
         byteArray.splice(0, 2);
         const proof = GeneratorUtils.getBytes(Uint8Array.from(byteArray), proofSize);
         byteArray.splice(0, proofSize);
-        return new SecretProofTransactionBodyBuilder(hashAlgorithm, secret, recipient, proof);
+        return new SecretProofTransactionBodyBuilder(hashAlgorithm, secret, recipientAddress, proof);
     }
 
     /**
@@ -91,12 +91,12 @@ export class SecretProofTransactionBodyBuilder {
     }
 
     /**
-     * Gets recipient.
+     * Gets locked mosaic recipient address.
      *
-     * @return Recipient.
+     * @return Locked mosaic recipient address.
      */
-    public getRecipient(): UnresolvedAddressDto {
-        return this.recipient;
+    public getRecipientAddress(): UnresolvedAddressDto {
+        return this.recipientAddress;
     }
 
     /**
@@ -117,7 +117,7 @@ export class SecretProofTransactionBodyBuilder {
         let size = 0;
         size += 1; // hashAlgorithm
         size += this.secret.getSize();
-        size += this.recipient.getSize();
+        size += this.recipientAddress.getSize();
         size += 2; // proofSize
         size += this.proof.length;
         return size;
@@ -134,8 +134,8 @@ export class SecretProofTransactionBodyBuilder {
         newArray = GeneratorUtils.concatTypedArrays(newArray, hashAlgorithmBytes);
         const secretBytes = this.secret.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, secretBytes);
-        const recipientBytes = this.recipient.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, recipientBytes);
+        const recipientAddressBytes = this.recipientAddress.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, recipientAddressBytes);
         const proofSizeBytes = GeneratorUtils.uintToBuffer(this.proof.length, 2);
         newArray = GeneratorUtils.concatTypedArrays(newArray, proofSizeBytes);
         newArray = GeneratorUtils.concatTypedArrays(newArray, this.proof);

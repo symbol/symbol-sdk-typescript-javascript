@@ -122,12 +122,12 @@ export class TransferTransaction extends Transaction {
             TransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const messageType = builder.getMessage()[0];
         const messageHex = Convert.uint8ToHex(builder.getMessage()).substring(2);
-        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
         const transaction = TransferTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as TransferTransactionBuilder).getDeadline().timestamp),
-            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipient().unresolvedAddress)),
+            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             builder.getMosaics().map((mosaic) => {
                 return new Mosaic(
                     new MosaicId(mosaic.mosaicId.unresolvedMosaicId),

@@ -35,15 +35,15 @@ export class EmbeddedAccountAddressRestrictionTransactionBuilder extends Embedde
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param restrictionType Account restriction type.
      * @param modifications Account restriction modifications.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  restrictionType: AccountRestrictionTypeDto,  modifications: AccountAddressRestrictionModificationBuilder[]) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  restrictionType: AccountRestrictionTypeDto,  modifications: AccountAddressRestrictionModificationBuilder[]) {
+        super(signerPublicKey, version, type);
         // tslint:disable-next-line: max-line-length
         this.accountAddressRestrictionTransactionBody = new AccountAddressRestrictionTransactionBodyBuilder(restrictionType, modifications);
     }
@@ -62,7 +62,7 @@ export class EmbeddedAccountAddressRestrictionTransactionBuilder extends Embedde
         const accountAddressRestrictionTransactionBody = AccountAddressRestrictionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountAddressRestrictionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedAccountAddressRestrictionTransactionBuilder(superObject.signer, superObject.version, superObject.type, accountAddressRestrictionTransactionBody.restrictionType, accountAddressRestrictionTransactionBody.modifications);
+        return new EmbeddedAccountAddressRestrictionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, accountAddressRestrictionTransactionBody.restrictionType, accountAddressRestrictionTransactionBody.modifications);
     }
 
     /**

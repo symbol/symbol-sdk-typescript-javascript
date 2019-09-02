@@ -36,7 +36,7 @@ export class EmbeddedMosaicSupplyChangeTransactionBuilder extends EmbeddedTransa
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param mosaicId Affected mosaic identifier.
@@ -44,8 +44,8 @@ export class EmbeddedMosaicSupplyChangeTransactionBuilder extends EmbeddedTransa
      * @param delta Change amount.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  mosaicId: UnresolvedMosaicIdDto,  action: MosaicSupplyChangeActionDto,  delta: AmountDto) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  mosaicId: UnresolvedMosaicIdDto,  action: MosaicSupplyChangeActionDto,  delta: AmountDto) {
+        super(signerPublicKey, version, type);
         this.mosaicSupplyChangeTransactionBody = new MosaicSupplyChangeTransactionBodyBuilder(mosaicId, action, delta);
     }
 
@@ -63,7 +63,7 @@ export class EmbeddedMosaicSupplyChangeTransactionBuilder extends EmbeddedTransa
         const mosaicSupplyChangeTransactionBody = MosaicSupplyChangeTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicSupplyChangeTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedMosaicSupplyChangeTransactionBuilder(superObject.signer, superObject.version, superObject.type, mosaicSupplyChangeTransactionBody.mosaicId, mosaicSupplyChangeTransactionBody.action, mosaicSupplyChangeTransactionBody.delta);
+        return new EmbeddedMosaicSupplyChangeTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, mosaicSupplyChangeTransactionBody.mosaicId, mosaicSupplyChangeTransactionBody.action, mosaicSupplyChangeTransactionBody.delta);
     }
 
     /**
