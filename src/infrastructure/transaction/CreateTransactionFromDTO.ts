@@ -26,6 +26,7 @@ import { MosaicPropertyType } from '../../model/mosaic/MosaicPropertyType';
 import {NamespaceId} from '../../model/namespace/NamespaceId';
 import {AccountAddressRestrictionTransaction} from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
+import { AccountMetadataTransaction } from '../../model/transaction/AccountMetadataTransaction';
 import {AccountMosaicRestrictionTransaction} from '../../model/transaction/AccountMosaicRestrictionTransaction';
 import {AccountOperationRestrictionTransaction} from '../../model/transaction/AccountOperationRestrictionTransaction';
 import {AccountRestrictionModification} from '../../model/transaction/AccountRestrictionModification';
@@ -42,8 +43,10 @@ import { MosaicAddressRestrictionTransaction } from '../../model/transaction/Mos
 import {MosaicAliasTransaction} from '../../model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
+import { MosaicMetadataTransaction } from '../../model/transaction/MosaicMetadataTransaction';
 import {MosaicSupplyChangeTransaction} from '../../model/transaction/MosaicSupplyChangeTransaction';
 import {MultisigCosignatoryModification} from '../../model/transaction/MultisigCosignatoryModification';
+import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetadataTransaction';
 import {EmptyMessage, PlainMessage} from '../../model/transaction/PlainMessage';
 import {RegisterNamespaceTransaction} from '../../model/transaction/RegisterNamespaceTransaction';
 import {SecretLockTransaction} from '../../model/transaction/SecretLockTransaction';
@@ -372,6 +375,53 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
                 Address.createFromRawAddress(targetAddress.address) : Address.createFromEncoded(targetAddress),
             new UInt64(transactionDTO.previousRestrictionValue),
             new UInt64(transactionDTO.newRestrictionValue),
+            transactionDTO.signature,
+            transactionDTO.signer ? PublicAccount.createFromPublicKey(transactionDTO.signer,
+                    extractNetworkType(transactionDTO.version)) : undefined,
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.ACCOUNT_METADATA_TRANSACTION) {
+        return new AccountMetadataTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
+            transactionDTO.targetPublicKey,
+            new UInt64(transactionDTO.scopedMetadataKey),
+            transactionDTO.valueSizeDelta,
+            convert.hexToUint8(transactionDTO.value),
+            transactionDTO.signature,
+            transactionDTO.signer ? PublicAccount.createFromPublicKey(transactionDTO.signer,
+                    extractNetworkType(transactionDTO.version)) : undefined,
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.MOSAIC_METADATA_TRANSACTION) {
+        return new MosaicMetadataTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
+            transactionDTO.targetPublicKey,
+            new UInt64(transactionDTO.scopedMetadataKey),
+            new MosaicId(transactionDTO.targetMosaicId),
+            transactionDTO.valueSizeDelta,
+            convert.hexToUint8(transactionDTO.value),
+            transactionDTO.signature,
+            transactionDTO.signer ? PublicAccount.createFromPublicKey(transactionDTO.signer,
+                    extractNetworkType(transactionDTO.version)) : undefined,
+            transactionInfo,
+        );
+    } else if (transactionDTO.type === TransactionType.NAMESPACE_METADATA_TRANSACTION) {
+        return new NamespaceMetadataTransaction(
+            extractNetworkType(transactionDTO.version),
+            extractTransactionVersion(transactionDTO.version),
+            Deadline.createFromDTO(transactionDTO.deadline),
+            new UInt64(transactionDTO.maxFee || [0, 0]),
+            transactionDTO.targetPublicKey,
+            new UInt64(transactionDTO.scopedMetadataKey),
+            new NamespaceId(transactionDTO.targetNamespaceId),
+            transactionDTO.valueSizeDelta,
+            convert.hexToUint8(transactionDTO.value),
             transactionDTO.signature,
             transactionDTO.signer ? PublicAccount.createFromPublicKey(transactionDTO.signer,
                     extractNetworkType(transactionDTO.version)) : undefined,

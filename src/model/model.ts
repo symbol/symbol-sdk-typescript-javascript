@@ -56,6 +56,7 @@ export * from './mosaic/NetworkCurrencyMosaic';
 export * from './mosaic/NetworkHarvestMosaic';
 export * from './mosaic/MosaicNames';
 export * from './mosaic/MosaicPropertyType';
+export * from './mosaic/MosaicRestrictionType';
 
 // Namespace
 export * from '../service/Namespace';
@@ -130,6 +131,11 @@ export * from './transaction/TransactionStatus';
 export * from './transaction/TransactionStatusError';
 export * from './transaction/TransactionType';
 export * from './transaction/TransferTransaction';
+export * from './transaction/AccountMetadataTransaction';
+export * from './transaction/MosaicMetadataTransaction';
+export * from './transaction/NamespaceMetadataTransaction';
+export * from './transaction/MosaicGlobalRestrictionTransaction';
+export * from './transaction/MosaicAddressRestrictionTransaction';
 
 // Wallet
 export * from './wallet/EncryptedPrivateKey';
