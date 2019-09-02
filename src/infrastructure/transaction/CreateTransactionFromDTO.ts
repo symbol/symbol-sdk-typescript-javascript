@@ -38,17 +38,17 @@ import {Deadline} from '../../model/transaction/Deadline';
 import { EncryptedMessage } from '../../model/transaction/EncryptedMessage';
 import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
 import { MessageType } from '../../model/transaction/MessageType';
-import {ModifyMultisigAccountTransaction} from '../../model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAddressRestrictionTransaction } from '../../model/transaction/MosaicAddressRestrictionTransaction';
 import {MosaicAliasTransaction} from '../../model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
 import { MosaicMetadataTransaction } from '../../model/transaction/MosaicMetadataTransaction';
 import {MosaicSupplyChangeTransaction} from '../../model/transaction/MosaicSupplyChangeTransaction';
+import {MultisigAccountModificationTransaction} from '../../model/transaction/MultisigAccountModificationTransaction';
 import {MultisigCosignatoryModification} from '../../model/transaction/MultisigCosignatoryModification';
 import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetadataTransaction';
+import {NamespaceRegistrationTransaction} from '../../model/transaction/NamespaceRegistrationTransaction';
 import {EmptyMessage, PlainMessage} from '../../model/transaction/PlainMessage';
-import {RegisterNamespaceTransaction} from '../../model/transaction/RegisterNamespaceTransaction';
 import {SecretLockTransaction} from '../../model/transaction/SecretLockTransaction';
 import {SecretProofTransaction} from '../../model/transaction/SecretProofTransaction';
 import {SignedTransaction} from '../../model/transaction/SignedTransaction';
@@ -141,7 +141,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.REGISTER_NAMESPACE) {
-        return new RegisterNamespaceTransaction(
+        return new NamespaceRegistrationTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
@@ -190,7 +190,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.MODIFY_MULTISIG_ACCOUNT) {
-        return new ModifyMultisigAccountTransaction(
+        return new MultisigAccountModificationTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),

@@ -15,11 +15,11 @@
  */
 
 /**
- * Namespace type. Supported types are:
- * 0: Namespace.
- * 1: Sub namespace.
+ * Multsig cosignatory modification type. Supported types are:
+ * 0: Add cosignatory.
+ * 1: Remove cosignatory.
  */
-export enum NamespaceType {
-    RootNamespace = 0,
-    SubNamespace = 1,
+export enum CosignatoryModificationAction {
+    Add = 0x01,
+    Remove = 0x00,
 }

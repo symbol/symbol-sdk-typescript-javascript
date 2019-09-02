@@ -15,11 +15,11 @@
  */
 
 /**
- * The supply type. Supported supply types are:
- * 0: Increase in supply.
- * 1: Decrease in supply.
+ * Namespace type. Supported types are:
+ * 0: Namespace.
+ * 1: Sub namespace.
  */
-export enum MosaicSupplyType {
-    Decrease = 0x00,
-    Increase = 0x01,
+export enum NamespaceRegistrationType {
+    RootNamespace = 0,
+    SubNamespace = 1,
 }

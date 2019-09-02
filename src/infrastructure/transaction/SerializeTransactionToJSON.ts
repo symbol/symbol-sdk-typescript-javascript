@@ -23,15 +23,15 @@ import { AccountOperationRestrictionTransaction } from '../../model/transaction/
 import { AddressAliasTransaction } from '../../model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../model/transaction/AggregateTransaction';
 import { LockFundsTransaction } from '../../model/transaction/LockFundsTransaction';
-import { ModifyMultisigAccountTransaction } from '../../model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAddressRestrictionTransaction } from '../../model/transaction/MosaicAddressRestrictionTransaction';
 import { MosaicAliasTransaction } from '../../model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../model/transaction/MosaicGlobalRestrictionTransaction';
 import { MosaicMetadataTransaction } from '../../model/transaction/MosaicMetadataTransaction';
 import { MosaicSupplyChangeTransaction } from '../../model/transaction/MosaicSupplyChangeTransaction';
+import { MultisigAccountModificationTransaction } from '../../model/transaction/MultisigAccountModificationTransaction';
 import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetadataTransaction';
-import { RegisterNamespaceTransaction } from '../../model/transaction/RegisterNamespaceTransaction';
+import { NamespaceRegistrationTransaction } from '../../model/transaction/NamespaceRegistrationTransaction';
 import { SecretLockTransaction } from '../../model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../model/transaction/SecretProofTransaction';
 import { Transaction } from '../../model/transaction/Transaction';
@@ -99,9 +99,9 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.MODIFY_MULTISIG_ACCOUNT:
             return {
-                minApprovalDelta: (transaction as ModifyMultisigAccountTransaction).minApprovalDelta,
-                minRemovalDelta: (transaction as ModifyMultisigAccountTransaction).minRemovalDelta,
-                modifications: (transaction as ModifyMultisigAccountTransaction).modifications.map((modification) => {
+                minApprovalDelta: (transaction as MultisigAccountModificationTransaction).minApprovalDelta,
+                minRemovalDelta: (transaction as MultisigAccountModificationTransaction).minRemovalDelta,
+                modifications: (transaction as MultisigAccountModificationTransaction).modifications.map((modification) => {
                         return modification.toDTO();
                     }),
             };
@@ -124,13 +124,13 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 delta: (transaction as MosaicSupplyChangeTransaction).delta.toDTO(),
             };
         case TransactionType.REGISTER_NAMESPACE:
-            const registerNamespaceDuration = (transaction as RegisterNamespaceTransaction).duration;
-            const registerNamespaceParentId = (transaction as RegisterNamespaceTransaction).parentId;
+            const registerNamespaceDuration = (transaction as NamespaceRegistrationTransaction).duration;
+            const registerNamespaceParentId = (transaction as NamespaceRegistrationTransaction).parentId;
 
             const jsonObject = {
-                namespaceType: (transaction as RegisterNamespaceTransaction).namespaceType,
-                namespaceName: (transaction as RegisterNamespaceTransaction).namespaceName,
-                namespaceId: (transaction as RegisterNamespaceTransaction).namespaceId.toDTO(),
+                namespaceType: (transaction as NamespaceRegistrationTransaction).namespaceType,
+                namespaceName: (transaction as NamespaceRegistrationTransaction).namespaceName,
+                namespaceId: (transaction as NamespaceRegistrationTransaction).namespaceId.toDTO(),
             };
 
             if (registerNamespaceDuration) {

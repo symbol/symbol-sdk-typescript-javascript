@@ -25,10 +25,10 @@ import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
+import { CosignatoryModificationAction } from '../../src/model/transaction/CosignatoryModificationAction';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
+import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
-import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { TransactionUtils } from './TransactionUtils';
@@ -203,7 +203,7 @@ describe('Listener', () => {
         });
     });
 
-    describe('ModifyMultisigAccountTransaction - Create multisig account', () => {
+    describe('MultisigAccountModificationTransaction - Create multisig account', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -212,14 +212,14 @@ describe('Listener', () => {
         after(() => {
             return listener.close();
         });
-        it('ModifyMultisigAccountTransaction', (done) => {
-            const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+        it('MultisigAccountModificationTransaction', (done) => {
+            const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 2,
                 1,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount1.publicAccount),
-                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount2.publicAccount),
-                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount3.publicAccount),
+                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount1.publicAccount),
+                    new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount2.publicAccount),
+                    new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount3.publicAccount),
                 ],
                 NetworkType.MIJIN_TEST,
             );
@@ -347,7 +347,7 @@ describe('Listener', () => {
         });
     });
 
-    describe('ModifyMultisigAccountTransaction - Restore multisig Accounts', () => {
+    describe('MultisigAccountModificationTransaction - Restore multisig Accounts', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -357,28 +357,28 @@ describe('Listener', () => {
             return listener.close();
         });
         it('Restore Multisig Account', (done) => {
-            const removeCosigner1 = ModifyMultisigAccountTransaction.create(
+            const removeCosigner1 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 -1,
                 0,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount1.publicAccount),
+                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount1.publicAccount),
                 ],
                 NetworkType.MIJIN_TEST,
             );
-            const removeCosigner2 = ModifyMultisigAccountTransaction.create(
+            const removeCosigner2 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 0,
                 0,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount2.publicAccount),
+                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount2.publicAccount),
                 ],
                 NetworkType.MIJIN_TEST,
             );
 
-            const removeCosigner3 = ModifyMultisigAccountTransaction.create(
+            const removeCosigner3 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 -1,
                 -1,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount3.publicAccount),
+                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount3.publicAccount),
                 ],
                 NetworkType.MIJIN_TEST,
             );

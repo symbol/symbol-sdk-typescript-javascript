@@ -24,12 +24,12 @@ import {NetworkType} from '../model/blockchain/NetworkType';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {AggregateTransactionCosignature} from '../model/transaction/AggregateTransactionCosignature';
+import {CosignatoryModificationAction} from '../model/transaction/CosignatoryModificationAction';
 import {CosignatureSignedTransaction} from '../model/transaction/CosignatureSignedTransaction';
 import {Deadline} from '../model/transaction/Deadline';
 import {InnerTransaction} from '../model/transaction/InnerTransaction';
-import {ModifyMultisigAccountTransaction} from '../model/transaction/ModifyMultisigAccountTransaction';
+import {MultisigAccountModificationTransaction} from '../model/transaction/MultisigAccountModificationTransaction';
 import {MultisigCosignatoryModification} from '../model/transaction/MultisigCosignatoryModification';
-import {MultisigCosignatoryModificationType} from '../model/transaction/MultisigCosignatoryModificationType';
 import {Transaction} from '../model/transaction/Transaction';
 import {TransactionStatusError} from '../model/transaction/TransactionStatusError';
 import {TransferTransaction} from '../model/transaction/TransferTransaction';
@@ -407,9 +407,9 @@ export class Listener {
      */
     // tslint:disable-next-line:adjacent-overload-signatures
     private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
-        if (transaction instanceof ModifyMultisigAccountTransaction) {
+        if (transaction instanceof MultisigAccountModificationTransaction) {
             transaction.modifications.map((_: MultisigCosignatoryModification) => {
-                if (_.modificiationType === MultisigCosignatoryModificationType.Add && _.cosignatoryPublicAccount.address.equals(address)) {
+                if (_.modificiationType === CosignatoryModificationAction.Add && _.cosignatoryPublicAccount.address.equals(address)) {
                     return true;
                 }
             });

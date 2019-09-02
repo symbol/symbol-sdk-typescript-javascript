@@ -18,7 +18,7 @@ import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import {MosaicSupplyType} from '../../../src/model/mosaic/MosaicSupplyType';
+import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicSupplyChangeTransaction,} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
 import {UInt64} from '../../../src/model/UInt64';
@@ -36,7 +36,7 @@ describe('MosaicSupplyChangeTransaction', () => {
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
-            MosaicSupplyType.Increase,
+            MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
             NetworkType.MIJIN_TEST,
         );
@@ -50,7 +50,7 @@ describe('MosaicSupplyChangeTransaction', () => {
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
-            MosaicSupplyType.Increase,
+            MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
             NetworkType.MIJIN_TEST,
             new UInt64([1, 0])
@@ -65,12 +65,12 @@ describe('MosaicSupplyChangeTransaction', () => {
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
-            MosaicSupplyType.Increase,
+            MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicSupplyChangeTransaction.direction).to.be.equal(MosaicSupplyType.Increase);
+        expect(mosaicSupplyChangeTransaction.direction).to.be.equal(MosaicSupplyChangeAction.Increase);
         expect(mosaicSupplyChangeTransaction.delta.lower).to.be.equal(10);
         expect(mosaicSupplyChangeTransaction.delta.higher).to.be.equal(0);
         expect(mosaicSupplyChangeTransaction.mosaicId.id.lower).to.be.equal(2262289484);
@@ -91,7 +91,7 @@ describe('MosaicSupplyChangeTransaction', () => {
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
                 Deadline.create(),
                 mosaicId,
-                MosaicSupplyType.Increase,
+                MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(10),
                 NetworkType.MIJIN_TEST,
             );

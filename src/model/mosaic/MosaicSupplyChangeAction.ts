@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2018 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 
 /**
- * Account restriction modification type
+ * The supply type. Supported supply types are:
+ * 0: Increase in supply.
+ * 1: Decrease in supply.
  */
-export enum RestrictionModificationType {
-    Add = 0x01,
-    Remove = 0x00,
+export enum MosaicSupplyChangeAction {
+    Decrease = 0x00,
+    Increase = 0x01,
 }

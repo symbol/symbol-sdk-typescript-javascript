@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { AccountRestrictionModificationAction } from '../account/AccountRestrictionModificationAction';
 import { Address } from '../account/Address';
-import { RestrictionModificationType } from '../account/RestrictionModificationType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { TransactionType } from './TransactionType';
 
@@ -30,7 +30,7 @@ export class AccountRestrictionModification<T> {
                 /**
                  * Modification type.
                  */
-                public readonly modificationType: RestrictionModificationType,
+                public readonly modificationType: AccountRestrictionModificationAction,
                 /**
                  * Modification value (Address, Mosaic or Transaction Type).
                  */
@@ -44,7 +44,7 @@ export class AccountRestrictionModification<T> {
      * @param address - modification value (Address)
      * @returns {AccountRestrictionModification}
      */
-    public static createForAddress(modificationType: RestrictionModificationType,
+    public static createForAddress(modificationType: AccountRestrictionModificationAction,
                                    address: Address): AccountRestrictionModification<string> {
         return new AccountRestrictionModification<string>(modificationType, address.plain());
     }
@@ -54,7 +54,7 @@ export class AccountRestrictionModification<T> {
      * @param mosaicId - modification value (Mosaic)
      * @returns {AccountRestrictionModification}
      */
-    public static createForMosaic(modificationType: RestrictionModificationType,
+    public static createForMosaic(modificationType: AccountRestrictionModificationAction,
                                   mosaicId: MosaicId): AccountRestrictionModification<number[]> {
     return new AccountRestrictionModification<number[]>(modificationType, mosaicId.id.toDTO());
     }
@@ -65,7 +65,7 @@ export class AccountRestrictionModification<T> {
      * @param operation - modification value (Transaction Type)
      * @returns {AccountRestrictionModification}
      */
-    public static createForOperation(modificationType: RestrictionModificationType,
+    public static createForOperation(modificationType: AccountRestrictionModificationAction,
                                      operation: number): AccountRestrictionModification<TransactionType> {
     return new AccountRestrictionModification<TransactionType>(modificationType, operation);
     }

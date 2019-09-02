@@ -175,7 +175,7 @@ describe('CreateTransactionFromDTO', () => {
         });
     });
 
-    describe('RegisterNamespaceTransaction', () => {
+    describe('NamespaceRegistrationTransaction', () => {
         describe('namespace', () => {
             it('standalone', () => {
                 const registerNamespaceTransactionDTO = {
@@ -222,7 +222,7 @@ describe('CreateTransactionFromDTO', () => {
             });
 
             it('aggregate', () => {
-                const aggregateRegisterNamespaceTransactionDTO = {
+                const aggregateNamespaceRegistrationTransactionDTO = {
                     meta: {
                         hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                         height: [
@@ -286,12 +286,12 @@ describe('CreateTransactionFromDTO', () => {
                     },
                 };
 
-                const aggregateRegisterNamespaceTransaction = CreateTransactionFromDTO(
-                    aggregateRegisterNamespaceTransactionDTO,
+                const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(
+                    aggregateNamespaceRegistrationTransactionDTO,
                 );
 
                 ValidateTransaction.validateAggregateTx(
-                    aggregateRegisterNamespaceTransaction, aggregateRegisterNamespaceTransactionDTO);
+                    aggregateNamespaceRegistrationTransaction, aggregateNamespaceRegistrationTransactionDTO);
             });
         });
 
@@ -340,7 +340,7 @@ describe('CreateTransactionFromDTO', () => {
             });
 
             it('aggregate', () => {
-                const aggregateRegisterNamespaceTransactionDTO = {
+                const aggregateNamespaceRegistrationTransactionDTO = {
                     meta: {
                         hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                         height: [
@@ -404,11 +404,11 @@ describe('CreateTransactionFromDTO', () => {
                     },
                 };
 
-                const aggregateRegisterNamespaceTransaction = CreateTransactionFromDTO(
-                    aggregateRegisterNamespaceTransactionDTO);
+                const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(
+                    aggregateNamespaceRegistrationTransactionDTO);
 
                 ValidateTransaction.validateAggregateTx(
-                    aggregateRegisterNamespaceTransaction, aggregateRegisterNamespaceTransactionDTO);
+                    aggregateNamespaceRegistrationTransaction, aggregateNamespaceRegistrationTransactionDTO);
             });
         });
     });
@@ -565,11 +565,11 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const aggregateRegisterNamespaceTransaction = CreateTransactionFromDTO(
+            const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(
                 aggregateMosaicDefinitionTransactionDTO);
 
             ValidateTransaction.validateAggregateTx(
-                aggregateRegisterNamespaceTransaction, aggregateMosaicDefinitionTransactionDTO);
+                aggregateNamespaceRegistrationTransaction, aggregateMosaicDefinitionTransactionDTO);
         });
     });
 
@@ -689,7 +689,7 @@ describe('CreateTransactionFromDTO', () => {
         });
     });
 
-    describe('ModifyMultisigAccountTransaction', () => {
+    describe('MultisigAccountModificationTransaction', () => {
         it('standalone', () => {
             const modifyMultisigAccountTransactionDTO = {
                 meta: {
@@ -734,7 +734,7 @@ describe('CreateTransactionFromDTO', () => {
         });
 
         it('aggregate', () => {
-            const aggregateModifyMultisigAccountTransactionDTO = {
+            const aggregateMultisigAccountModificationTransactionDTO = {
                 meta: {
                     hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                     height: [
@@ -797,11 +797,11 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const aggregateModifyMultisigAccountTransaction = CreateTransactionFromDTO(
-                aggregateModifyMultisigAccountTransactionDTO);
+            const aggregateMultisigAccountModificationTransaction = CreateTransactionFromDTO(
+                aggregateMultisigAccountModificationTransactionDTO);
 
             ValidateTransaction.validateAggregateTx(
-                aggregateModifyMultisigAccountTransaction, aggregateModifyMultisigAccountTransactionDTO);
+                aggregateMultisigAccountModificationTransaction, aggregateMultisigAccountModificationTransactionDTO);
         });
     });
 });

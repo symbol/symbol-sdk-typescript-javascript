@@ -40,7 +40,7 @@ import { TransactionVersion } from './TransactionVersion';
  * min number of signatures to approve a transaction and a min number of signatures to remove a cosignatory.
  * @since 1.0
  */
-export class ModifyMultisigAccountTransaction extends Transaction {
+export class MultisigAccountModificationTransaction extends Transaction {
 
     /**
      * Create a modify multisig account transaction object
@@ -50,15 +50,15 @@ export class ModifyMultisigAccountTransaction extends Transaction {
      * @param modifications - The array of modifications.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @returns {ModifyMultisigAccountTransaction}
+     * @returns {MultisigAccountModificationTransaction}
      */
     public static create(deadline: Deadline,
                          minApprovalDelta: number,
                          minRemovalDelta: number,
                          modifications: MultisigCosignatoryModification[],
                          networkType: NetworkType,
-                         maxFee: UInt64 = new UInt64([0, 0])): ModifyMultisigAccountTransaction {
-        return new ModifyMultisigAccountTransaction(networkType,
+                         maxFee: UInt64 = new UInt64([0, 0])): MultisigAccountModificationTransaction {
+        return new MultisigAccountModificationTransaction(networkType,
             TransactionVersion.MODIFY_MULTISIG_ACCOUNT,
             deadline,
             maxFee,
@@ -117,7 +117,7 @@ export class ModifyMultisigAccountTransaction extends Transaction {
             MultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
-        const transaction = ModifyMultisigAccountTransaction.create(
+        const transaction = MultisigAccountModificationTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as MultisigAccountModificationTransactionBuilder).getDeadline().timestamp),
             builder.getMinApprovalDelta(),
@@ -139,9 +139,9 @@ export class ModifyMultisigAccountTransaction extends Transaction {
 
     /**
      * @override Transaction.size()
-     * @description get the byte size of a ModifyMultisigAccountTransaction
+     * @description get the byte size of a MultisigAccountModificationTransaction
      * @returns {number}
-     * @memberof ModifyMultisigAccountTransaction
+     * @memberof MultisigAccountModificationTransaction
      */
     public get size(): number {
         const byteSize = super.size;

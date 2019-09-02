@@ -18,14 +18,14 @@ import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {CosignatoryModificationAction} from '../../../src/model/transaction/CosignatoryModificationAction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
-import {ModifyMultisigAccountTransaction} from '../../../src/model/transaction/ModifyMultisigAccountTransaction';
+import {MultisigAccountModificationTransaction} from '../../../src/model/transaction/MultisigAccountModificationTransaction';
 import {MultisigCosignatoryModification} from '../../../src/model/transaction/MultisigCosignatoryModification';
-import {MultisigCosignatoryModificationType} from '../../../src/model/transaction/MultisigCosignatoryModificationType';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
-describe('ModifyMultisigAccountTransaction', () => {
+describe('MultisigAccountModificationTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     before(() => {
@@ -33,17 +33,17 @@ describe('ModifyMultisigAccountTransaction', () => {
     });
 
     it('should default maxFee field be set to 0', () => {
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             2,
             1,
             [new MultisigCosignatoryModification(
-                MultisigCosignatoryModificationType.Add,
+                CosignatoryModificationAction.Add,
                 PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
                     NetworkType.MIJIN_TEST),
             ),
                 new MultisigCosignatoryModification(
-                    MultisigCosignatoryModificationType.Add,
+                    CosignatoryModificationAction.Add,
                     PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
                         NetworkType.MIJIN_TEST),
                 )],
@@ -55,17 +55,17 @@ describe('ModifyMultisigAccountTransaction', () => {
     });
 
     it('should filled maxFee override transaction maxFee', () => {
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             2,
             1,
             [new MultisigCosignatoryModification(
-                MultisigCosignatoryModificationType.Add,
+                CosignatoryModificationAction.Add,
                 PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
                     NetworkType.MIJIN_TEST),
             ),
                 new MultisigCosignatoryModification(
-                    MultisigCosignatoryModificationType.Add,
+                    CosignatoryModificationAction.Add,
                     PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
                         NetworkType.MIJIN_TEST),
                 )],
@@ -77,18 +77,18 @@ describe('ModifyMultisigAccountTransaction', () => {
         expect(modifyMultisigAccountTransaction.maxFee.lower).to.be.equal(1);
     });
 
-    it('should createComplete an ModifyMultisigAccountTransaction object and sign it', () => {
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+    it('should createComplete an MultisigAccountModificationTransaction object and sign it', () => {
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             2,
             1,
             [new MultisigCosignatoryModification(
-                MultisigCosignatoryModificationType.Add,
+                CosignatoryModificationAction.Add,
                 PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
                     NetworkType.MIJIN_TEST),
             ),
                 new MultisigCosignatoryModification(
-                    MultisigCosignatoryModificationType.Add,
+                    CosignatoryModificationAction.Add,
                     PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
                         NetworkType.MIJIN_TEST),
                 )],
@@ -102,11 +102,11 @@ describe('ModifyMultisigAccountTransaction', () => {
         expect(modifyMultisigAccountTransaction.modifications.length)
             .to.be.equal(2);
         expect(modifyMultisigAccountTransaction.modifications[0].modificiationType)
-            .to.be.equal(MultisigCosignatoryModificationType.Add);
+            .to.be.equal(CosignatoryModificationAction.Add);
         expect(modifyMultisigAccountTransaction.modifications[0].cosignatoryPublicAccount.publicKey)
             .to.be.equal('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24');
         expect(modifyMultisigAccountTransaction.modifications[1].modificiationType)
-            .to.be.equal(MultisigCosignatoryModificationType.Add);
+            .to.be.equal(CosignatoryModificationAction.Add);
         expect(modifyMultisigAccountTransaction.modifications[1].cosignatoryPublicAccount.publicKey)
             .to.be.equal('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
 
@@ -121,13 +121,13 @@ describe('ModifyMultisigAccountTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 156 for ModifyMultisigAccountTransaction transaction byte size with 1 modification', () => {
-            const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+        it('should return 156 for MultisigAccountModificationTransaction transaction byte size with 1 modification', () => {
+            const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 1,
                 1,
                 [new MultisigCosignatoryModification(
-                    MultisigCosignatoryModificationType.Add,
+                    CosignatoryModificationAction.Add,
                     PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
                         NetworkType.MIJIN_TEST),
                 )],

@@ -26,7 +26,7 @@ import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/Unresolved
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
-import { MosaicSupplyType } from '../mosaic/MosaicSupplyType';
+import { MosaicSupplyChangeAction } from '../mosaic/MosaicSupplyChangeAction';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -53,7 +53,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      */
     public static create(deadline: Deadline,
                          mosaicId: MosaicId,
-                         direction: MosaicSupplyType,
+                         direction: MosaicSupplyChangeAction,
                          delta: UInt64,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): MosaicSupplyChangeTransaction {
@@ -90,7 +90,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
                 /**
                  * The supply type.
                  */
-                public readonly direction: MosaicSupplyType,
+                public readonly direction: MosaicSupplyChangeAction,
                 /**
                  * The supply change in units for the mosaic.
                  */

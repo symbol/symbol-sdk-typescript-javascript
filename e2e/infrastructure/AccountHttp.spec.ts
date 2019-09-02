@@ -19,10 +19,10 @@ import {assert, expect} from 'chai';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import { Account } from '../../src/model/account/Account';
+import { AccountRestrictionModificationAction } from '../../src/model/account/AccountRestrictionModificationAction';
 import { AccountRestrictionType } from '../../src/model/account/AccountRestrictionType';
 import {Address} from '../../src/model/account/Address';
 import {PublicAccount} from '../../src/model/account/PublicAccount';
-import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
@@ -31,12 +31,12 @@ import { AccountRestrictionModification } from '../../src/model/transaction/Acco
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
+import { CosignatoryModificationAction } from '../../src/model/transaction/CosignatoryModificationAction';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
+import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
-import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
+import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
-import { RegisterNamespaceTransaction } from '../../src/model/transaction/RegisterNamespaceTransaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 
@@ -129,9 +129,9 @@ describe('AccountHttp', () => {
         after(() => {
             return listener.close();
         });
-        it('Announce RegisterNamespaceTransaction', (done) => {
+        it('Announce NamespaceRegistrationTransaction', (done) => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
-            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+            const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(1000),
@@ -195,7 +195,7 @@ describe('AccountHttp', () => {
 
         it('Announce AccountRestrictionTransaction', (done) => {
             const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-                RestrictionModificationType.Add,
+                AccountRestrictionModificationAction.Add,
                 account3.address,
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -226,14 +226,14 @@ describe('AccountHttp', () => {
         after(() => {
             return listener.close();
         });
-        it('Announce ModifyMultisigAccountTransaction', (done) => {
-            const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+        it('Announce MultisigAccountModificationTransaction', (done) => {
+            const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 2,
                 1,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount1.publicAccount),
-                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount2.publicAccount),
-                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Add, cosignAccount3.publicAccount),
+                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount1.publicAccount),
+                    new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount2.publicAccount),
+                    new MultisigCosignatoryModification(CosignatoryModificationAction.Add, cosignAccount3.publicAccount),
                 ],
                 NetworkType.MIJIN_TEST,
             );
@@ -421,7 +421,7 @@ describe('AccountHttp', () => {
 
         it('Announce AccountRestrictionTransaction', (done) => {
             const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-                RestrictionModificationType.Remove,
+                AccountRestrictionModificationAction.Remove,
                 account3.address,
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -453,29 +453,29 @@ describe('AccountHttp', () => {
         after(() => {
             return listener.close();
         });
-        it('Announce ModifyMultisigAccountTransaction', (done) => {
-            const removeCosigner1 = ModifyMultisigAccountTransaction.create(
+        it('Announce MultisigAccountModificationTransaction', (done) => {
+            const removeCosigner1 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 -1,
                 0,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount1.publicAccount),
+                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount1.publicAccount),
                 ],
                 NetworkType.MIJIN_TEST,
             );
-            const removeCosigner2 = ModifyMultisigAccountTransaction.create(
+            const removeCosigner2 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 0,
                 0,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount2.publicAccount),
+                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount2.publicAccount),
                 ],
                 NetworkType.MIJIN_TEST,
             );
 
-            const removeCosigner3 = ModifyMultisigAccountTransaction.create(
+            const removeCosigner3 = MultisigAccountModificationTransaction.create(
                 Deadline.create(),
                 -1,
                 -1,
-                [   new MultisigCosignatoryModification(MultisigCosignatoryModificationType.Remove, cosignAccount3.publicAccount),
+                [   new MultisigCosignatoryModification(CosignatoryModificationAction.Remove, cosignAccount3.publicAccount),
                 ],
                 NetworkType.MIJIN_TEST,
             );

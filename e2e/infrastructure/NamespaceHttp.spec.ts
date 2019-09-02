@@ -25,7 +25,7 @@ import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { RegisterNamespaceTransaction } from '../../src/model/transaction/RegisterNamespaceTransaction';
+import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 
 describe('NamespaceHttp', () => {
@@ -51,7 +51,7 @@ describe('NamespaceHttp', () => {
             done();
         });
     });
-    describe('RegisterNamespaceTransaction', () => {
+    describe('NamespaceRegistrationTransaction', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -62,7 +62,7 @@ describe('NamespaceHttp', () => {
         });
         it('standalone', (done) => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
-            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+            const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(1000),

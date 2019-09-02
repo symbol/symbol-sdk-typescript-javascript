@@ -25,19 +25,19 @@ import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
 import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
-import {MosaicSupplyType} from '../../../src/model/mosaic/MosaicSupplyType';
+import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
+import {CosignatoryModificationAction} from '../../../src/model/transaction/CosignatoryModificationAction';
 import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
 import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
-import {ModifyMultisigAccountTransaction} from '../../../src/model/transaction/ModifyMultisigAccountTransaction';
 import {MosaicDefinitionTransaction} from '../../../src/model/transaction/MosaicDefinitionTransaction';
 import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
+import {MultisigAccountModificationTransaction} from '../../../src/model/transaction/MultisigAccountModificationTransaction';
 import {MultisigCosignatoryModification} from '../../../src/model/transaction/MultisigCosignatoryModification';
-import {MultisigCosignatoryModificationType} from '../../../src/model/transaction/MultisigCosignatoryModificationType';
+import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
 import {PlainMessage} from '../../../src/model/transaction/PlainMessage';
-import {RegisterNamespaceTransaction} from '../../../src/model/transaction/RegisterNamespaceTransaction';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import {TransferTransaction} from '../../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../../src/model/UInt64';
@@ -116,8 +116,8 @@ describe('AggregateTransaction', () => {
         )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
     });
 
-    it('should createComplete an AggregateTransaction object with RegisterNamespaceTransaction', () => {
-        const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+    it('should createComplete an AggregateTransaction object with NamespaceRegistrationTransaction', () => {
+        const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
             UInt64.fromUint(1000),
@@ -179,7 +179,7 @@ describe('AggregateTransaction', () => {
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
-            MosaicSupplyType.Increase,
+            MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
             NetworkType.MIJIN_TEST,
         );
@@ -201,18 +201,18 @@ describe('AggregateTransaction', () => {
         )).to.be.equal('01904D424CCCD78612DDF5CA010A00000000000000');
     });
 
-    it('should createComplete an AggregateTransaction object with ModifyMultisigAccountTransaction', () => {
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+    it('should createComplete an AggregateTransaction object with MultisigAccountModificationTransaction', () => {
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             2,
             1,
             [new MultisigCosignatoryModification(
-                MultisigCosignatoryModificationType.Add,
+                CosignatoryModificationAction.Add,
                 PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
                     NetworkType.MIJIN_TEST),
             ),
                 new MultisigCosignatoryModification(
-                    MultisigCosignatoryModificationType.Add,
+                    CosignatoryModificationAction.Add,
                     PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
                         NetworkType.MIJIN_TEST),
                 )],
