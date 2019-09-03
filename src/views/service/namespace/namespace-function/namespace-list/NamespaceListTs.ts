@@ -49,6 +49,5 @@ export class NamespaceListTs extends Vue {
     durationToTime(duration) {
         const durationNum = Number(duration - this.nowBlockHeihgt)
         return formatSeconds(durationNum * 12)
-
     }
 }

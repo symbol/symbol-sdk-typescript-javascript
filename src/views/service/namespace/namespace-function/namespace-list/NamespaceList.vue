@@ -18,8 +18,7 @@
         <div class="table_body_item radius" v-for="n in namespaceList">
           <span class="namesapce_name">{{n.name}}</span>
           <span class="duration">
-            {{computeDuration(n) === 'Expired' ? $t('overdue') : computeDuration(n.duration)}}
-            ({{durationToTime(n.duration)}})
+            {{computeDuration(n) === 'Expired' ? $t('overdue') : durationToTime(n.duration)}}
           </span>
           <span class="is_active">{{n.isActive?$t('true'):$t('false')}}</span>
           <span class="more" v-if="n.levels === 1">

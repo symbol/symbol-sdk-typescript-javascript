@@ -593,7 +593,7 @@ export const zh_CN = {
     bonded_fee: '聚合费用',
     lock_fee: '锁定费用',
     inner_fee: '内部费用',
-
+    innerFee: '内部费用',
     The_value_of_duration_cannot_be_less_than_1: 'Duration 的值不能小于1',
     Namespace_cannot_be_a_null_or_empty_string: 'Namespace 不能为空值或空字符串',
     The_root_namespace_cannot_be_longer_than_16: 'Root namespace 长度不能大于16',

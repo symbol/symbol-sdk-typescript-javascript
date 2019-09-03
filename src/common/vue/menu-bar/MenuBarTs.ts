@@ -57,7 +57,7 @@ export class MenuBarTs extends Vue {
     get networkType() {
         return this.activeAccount.wallet.networkType
     }
-    // @TODO: the !this.wallet are quickfixes
+
     get node() {
         return this.activeAccount.node
     }

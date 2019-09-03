@@ -321,7 +321,7 @@ export const formatSeconds = function (second) {
         second = second % 60
     }
     // let result = second + vueInstance.$t('time_second');
-    let result = second + ' s '
+    let result = ''
     if (m > 0 || h > 0 || d > 0) {
         // result = m + vueInstance.$t('time_minute') + result;
         result = m + ' m ' + result
