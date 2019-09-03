@@ -4,7 +4,6 @@
       <div class="left WalletSwitch">
         <WalletSwitch
                 @noHasWallet="noHasWallet"
-                @hasWallet="hasWallet"
                 @toCreate="toCreate"
                 @toImport="toImport"
         ></WalletSwitch>

@@ -2,10 +2,9 @@
   <div class="walletSwitchWrap">
     <div class="walletSwitchHead">
       <p class="tit">{{$t('Wallet_management')}}</p>
-
     </div>
     <div class="walletList">
-      <div :class="['walletItem',item.style, item.active || walletList.length == 1 ? 'active':'','radius']"
+      <div :class="['walletItem', item.style, item.active || walletList.length === 1 ? 'active':'','radius']"
            @click="switchWallet(item.address)"
            v-for="(item, index) in walletList" :key="index">
         <Row>
@@ -25,7 +24,10 @@
                 <Poptip placement="bottom">
                   <img src="@/common/img/wallet/moreActive.png">
                   <div slot="content">
-                    <p class="optionItem" @click.stop="toShowCheckPWDialog(index, item.active)">
+                    <p
+                      class="optionItem"
+                      @click.stop="walletToDelete = item; showCheckPWDialog = true"
+                    >
                       <i><img src="@/common/img/wallet/delete.png"></i>
                       <span>{{$t('delete')}}</span>
                     </p>
@@ -48,8 +50,11 @@
         </Col>
       </Row>
     </div>
-    <DeleteWalletCheck :showCheckPWDialog="showCheckPWDialog" @checkEnd="checkEnd" :transactionDetail="{}"
-                       @closeCheckPWDialog="closeCheckPWDialog"></DeleteWalletCheck>
+    <DeleteWalletCheck
+      :showCheckPWDialog="showCheckPWDialog"
+      :wallet-to-delete="walletToDelete"
+      @closeCheckPWDialog="closeCheckPWDialog"
+    />
   </div>
 </template>
 

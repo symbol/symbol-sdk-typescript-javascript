@@ -20,27 +20,25 @@ export class DeleteWalletCheckTs extends Vue {
     @Prop()
     showCheckPWDialog: boolean
 
-    get getWallet() {
-        return this.activeAccount.wallet
-    }
+    @Prop()
+    walletToDelete: AppWallet
 
     checkPasswordDialogCancel() {
-        this.$emit('closeCheckPWDialog')
     }
 
     // @TODO detele component in favord of VeeValidate check in WalletSwitch
-    checkPassword() {
+    submit() {
         try {
-            const isPasswordCorrect = new AppWallet(this.getWallet).checkPassword(new Password(this.wallet.password))
+            const password = new Password(this.wallet.password)
+            const isPasswordCorrect = new AppWallet(this.walletToDelete).checkPassword(password)
             if (isPasswordCorrect) {
-              this.checkPasswordDialogCancel()
-              this.$emit('checkEnd')
+              new AppWallet(this.walletToDelete).delete(this.$store, this)
+              this.$emit('closeCheckPWDialog')
             } else {
               this.$Notice.error({
                   title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
               })
             }
-
         } catch (error) {
             this.$Notice.error({
                 title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
@@ -53,5 +51,4 @@ export class DeleteWalletCheckTs extends Vue {
         this.wallet.password = ''
         this.show = this.showCheckPWDialog
     }
-
 }

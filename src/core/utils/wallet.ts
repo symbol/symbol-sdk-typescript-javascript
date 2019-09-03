@@ -150,6 +150,29 @@ export class AppWallet {
       AppWallet.switchWallet(this.address, [this, ...dataToStore], store)
     }
 
+    delete(store: any, that: any) {
+        const list = [...store.state.app.walletList]
+        const walletIndex = list.findIndex(({address})=>address === this.address)
+        if (walletIndex === -1) throw new Error('The wallet was not found in the list')
+        list.splice(walletIndex, 1)
+        store.commit('SET_WALLET_LIST', list)
+        localSave('wallets', JSON.stringify(list))
+
+        if (list.length < 1) {
+          store.commit('SET_HAS_WALLET', false)
+          store.commit('SET_WALLET', {})
+        }
+
+        if (store.state.account.wallet.address === this.address) {
+          list[0].active = true
+          store.commit('SET_WALLET', list[0])
+        }
+
+        that.$Notice.success({
+            title: that['$t']('Delete_wallet_successfully') + '',
+        })
+        // this.$emit('hasWallet')
+    }
     // storeWalletList(store: any, walletList: AppWallet[]) {
     //   store.commit('SET_WALLET_LIST', walletList)
     //   localSave('wallets', JSON.stringify(walletList))

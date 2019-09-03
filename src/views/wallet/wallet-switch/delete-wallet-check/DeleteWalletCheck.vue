@@ -25,7 +25,7 @@
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
-              <Button type="success" @click="checkPassword"> {{$t('confirm')}}</Button>
+              <Button type="success" @click="submit"> {{$t('confirm')}}</Button>
             </FormItem>
           </Form>
         </div>

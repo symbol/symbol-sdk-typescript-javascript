@@ -43,8 +43,6 @@ export class WalletPanelTs extends Vue {
         return this.activeAccount.node
     }
 
-
-
     get ConfirmedTxList() {
         return this.activeAccount.ConfirmedTx
     }
@@ -59,20 +57,7 @@ export class WalletPanelTs extends Vue {
         this.toMethod = true
     }
 
-    // @TODO: review
     toWalletDetails() {
-        const wallet = this.activeAccount.wallet
-        let list: any[] = this.walletList
-        let bl = false
-        list.map((item, index) => {
-            if (item.address === wallet.address) {
-                item = wallet
-                bl = true
-            }
-            return item
-        })
-        if (!bl) list.unshift(wallet)
-        this.$store.commit('SET_WALLET_LIST', list)
         this.$router.replace({path: '/monitorPanel'})
         this.toMethod = false
     }
@@ -95,23 +80,9 @@ export class WalletPanelTs extends Vue {
         return newObj
     }
 
-    setWalletList() {
-        let list = this.copyObj(this.walletList)
-        for (let i in list) {
-            this.$set(this.walletList, i, list[i])
-        }
-        if (this.walletList.length > 0) {
-            this.$store.commit('SET_HAS_WALLET', true)
-        }
-    }
-
     noHasWallet() {
         this.toCreate()
         this.$store.commit('SET_HAS_WALLET', false)
-    }
-
-    hasWallet() {
-        this.setWalletList()
     }
 
     setDefaultPage() {
@@ -151,10 +122,9 @@ export class WalletPanelTs extends Vue {
         this.getMyNamespaces()
     }
 
-    created() {
+    mounted() {
         this.setLeftSwitchIcon()
         this.setDefaultPage()
-        this.setWalletList()
         this.getMyNamespaces()
     }
 }

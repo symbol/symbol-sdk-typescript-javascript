@@ -61,7 +61,7 @@
         // }
         initApp() {
             const walletListFromStorage: any = localRead('wallets') !== '' ? JSON.parse(localRead('wallets')) : false
-            if (!walletListFromStorage) return
+            if (!walletListFromStorage || !walletListFromStorage.length) return
             AppWallet.switchWallet(walletListFromStorage[0].address, walletListFromStorage, this.$store)
             this.setWalletsBalancesAndMultisigStatus(walletListFromStorage)
         }
