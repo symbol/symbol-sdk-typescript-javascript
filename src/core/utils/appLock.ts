@@ -41,6 +41,28 @@ export class AppLock {
     }
 
     /**
+     * @description Encrypts a string
+     * @param {string} toEncrypt
+     * @param {string} password
+     * @returns {string} encrypted string
+     */
+    public static encryptString = (toEncrypt: string, password: string): string => {
+        const encryptedWorkArray = CryptoJS.enc.Utf16.parse(toEncrypt)
+        return PasswordBasedCipher.encrypt(defaultAlgo, encryptedWorkArray, password).toString()
+    }
+
+    /**
+     * @description Decrypts a string
+     * @param {string} toDecrypt
+     * @param {string} password
+     * @returns {string} decrypted string
+     */
+    public static decryptString = (toDecrypt: string, password: string): string => {
+        const decrypted = PasswordBasedCipher.decrypt(defaultAlgo, toDecrypt, password)
+        return CryptoJS.enc.Utf16.stringify(decrypted)
+    }
+
+    /**
      * @description Returns a cipher from localStorage
      * @returns {StoredCipher}
      */

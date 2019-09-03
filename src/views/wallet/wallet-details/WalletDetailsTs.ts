@@ -55,7 +55,7 @@ export class WalletDetailsTs extends Vue {
 
     // @TODO
     changeMnemonicDialog() {
-        if (!this.wallet['mnemonicEnCodeObj'] || this.wallet['mnemonicEnCodeObj']['ciphertext']) {
+        if (!this.wallet.encryptedMnemonic) {
             this.$Notice.warning({
                 title: this.$t('no_mnemonic') + ''
             })

@@ -45,7 +45,6 @@ export class WalletSwitchTs extends Vue {
         return formatXEMamount(text)
     }
 
-    // @TODO: Probably not necessary after app.vue review
     getWalletBalance(index) {
         const {balance} = this.walletList[index]
         if (!balance || balance === 0) return 0

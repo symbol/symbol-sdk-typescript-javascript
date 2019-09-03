@@ -177,7 +177,6 @@ export class MenuBarTs extends Vue {
     async getGenerationHash(node) {
         const that = this
         await new BlockApiRxjs().getBlockByHeight(node, 1).subscribe((blockInfo) => {
-            // @TODO: move to app.vue
             that.$store.commit('SET_GENERATION_HASH', blockInfo.generationHash)
         })
     }

@@ -26,7 +26,6 @@ export class DeleteWalletCheckTs extends Vue {
     checkPasswordDialogCancel() {
     }
 
-    // @TODO detele component in favord of VeeValidate check in WalletSwitch
     submit() {
         try {
             const password = new Password(this.wallet.password)

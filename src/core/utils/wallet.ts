@@ -20,7 +20,7 @@ import {formateNemTimestamp} from "@/core/utils/utils.ts"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
 import {createAccount} from "@/core/utils/hdWallet.ts"
-
+import {AppLock} from "@/core/utils/appLock"
 
 export class AppWallet {
     constructor(  wallet? : {
@@ -38,6 +38,7 @@ export class AppWallet {
     style: string | undefined
     balance: number | 0
     isMultisig: boolean | undefined
+    encryptedMnemonic: string | undefined
 
     createFromPrivateKey( name: string,
                           password: Password,
@@ -75,7 +76,7 @@ export class AppWallet {
         this.publicKey = account.publicKey
         this.networkType = networkType
         this.active = true
-        // @TODO: save the encrypted memo for further export
+        this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
         this.addNewWalletToList(store)
         return this
       } catch (error) {
@@ -112,6 +113,15 @@ export class AppWallet {
         Crypto.passwordToPrivateKey(common, wallet, WalletAlgorithm.Pass_bip32);
         const privateKey = common.privateKey
         return Account.createFromPrivateKey(privateKey, this.networkType)
+    }
+
+    getMnemonic(password: Password): string {
+      if (this.encryptedMnemonic === undefined) throw new Error('This wallet has no encrypted mnemonic')
+      try {
+        return AppLock.decryptString(this.encryptedMnemonic, password.value)
+      } catch (error) {
+        throw new Error('Could not decrypt the mnemonic')
+      }
     }
 
     checkPassword(password: Password): boolean {
@@ -359,28 +369,6 @@ export const multisigAccountInfo = (address, node) => {
         return multisigInfo
     })
 }
-
-export const decryptKey = (wallet, password: string) => {
-    const encryptObj = {
-        ciphertext: wallet.ciphertext,
-        iv: wallet.iv.data ? wallet.iv.data : wallet.iv,
-        key: password
-    }
-    return Crypto.decrypt(encryptObj)
-}
-
-export const decryptKeystore = (encryptStr: string) => {
-    const words = CryptoJS.enc.Base64.parse(encryptStr)
-    const parseStr = words.toString(CryptoJS.enc.Utf8)
-    return parseStr
-}
-
-export const encryptKeystore = (decryptStr: string) => {
-    let str = CryptoJS.enc.Utf8.parse(decryptStr)
-    str = CryptoJS.enc.Base64.stringify(str)
-    return str
-}
-
 
 export const createBondedMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, fee: number) => {
     return new MultisigApiRxjs().bondedMultisigTransaction(networkType, fee, multisigPublickey, transaction)

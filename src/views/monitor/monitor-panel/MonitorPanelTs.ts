@@ -374,6 +374,6 @@ export class MonitorPanelTs extends Vue {
         this.getMyNamespaces()
         this.getAccountsName()
         this.initMosaic()
-        new AppWallet(this.getWallet).getAccountBalance(this.networkCurrencies, this.node)
+        new AppWallet(this.getWallet).updateAccountBalance(this.networkCurrencies, this.node, this.$store)
     }
 }
