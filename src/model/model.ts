@@ -19,6 +19,8 @@ export * from './Id';
 
 // Account
 export * from './account/Account';
+export * from './account/AccountType';
+export * from './account/ActivityBucket';
 export * from './account/AccountInfo';
 export * from './account/Address';
 export * from './account/MultisigAccountGraphInfo';
@@ -38,7 +40,6 @@ export * from './blockchain/BlockInfo';
 export * from './blockchain/NetworkType';
 export * from './blockchain/MerklePathItem';
 export * from './blockchain/MerkleProofInfo';
-export * from './blockchain/MerkleProofInfoPayload';
 
 // Diagnostic
 export * from './diagnostic/ServerInfo';

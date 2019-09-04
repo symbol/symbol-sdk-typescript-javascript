@@ -29,7 +29,7 @@ import {NamespaceId} from '../model/namespace/NamespaceId';
 import {NamespaceInfo} from '../model/namespace/NamespaceInfo';
 import {NamespaceName} from '../model/namespace/NamespaceName';
 import {UInt64} from '../model/UInt64';
-import { NamespaceInfoDTO, NamespaceNameDTO, NamespaceRoutesApi } from './api';
+import { NamespaceInfoDTO, NamespaceNameDTO, NamespaceRoutesApi, NamespaceDTO } from './api';
 import {Http} from './Http';
 import {NamespaceRepository} from './NamespaceRepository';
 import {NetworkHttp} from './NetworkHttp';
@@ -69,15 +69,16 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                 this.namespaceRoutesApi.getNamespace(namespaceId.toHex())).pipe(
                     map((response: { response: ClientResponse; body: NamespaceInfoDTO; } ) => {
                         const namespaceInfoDTO = response.body;
+
                         return new NamespaceInfo(
                             namespaceInfoDTO.meta.active,
                             namespaceInfoDTO.meta.index,
                             namespaceInfoDTO.meta.id,
-                            namespaceInfoDTO.namespace.type as number,
+                            namespaceInfoDTO.namespace.registrationType as number,
                             namespaceInfoDTO.namespace.depth,
                             this.extractLevels(namespaceInfoDTO.namespace),
                             new NamespaceId(namespaceInfoDTO.namespace.parentId),
-                            PublicAccount.createFromPublicKey(namespaceInfoDTO.namespace.owner, networkType),
+                            PublicAccount.createFromPublicKey(namespaceInfoDTO.namespace.ownerPublicKey, networkType),
                             new UInt64(namespaceInfoDTO.namespace.startHeight),
                             new UInt64(namespaceInfoDTO.namespace.endHeight),
                             this.extractAlias(namespaceInfoDTO.namespace),
@@ -110,11 +111,11 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                             namespaceInfoDTO.meta.active,
                             namespaceInfoDTO.meta.index,
                             namespaceInfoDTO.meta.id,
-                            namespaceInfoDTO.namespace.type as number,
+                            namespaceInfoDTO.namespace.registrationType as number,
                             namespaceInfoDTO.namespace.depth,
                             this.extractLevels(namespaceInfoDTO.namespace),
                             new NamespaceId(namespaceInfoDTO.namespace.parentId),
-                            PublicAccount.createFromPublicKey(namespaceInfoDTO.namespace.owner, networkType),
+                            PublicAccount.createFromPublicKey(namespaceInfoDTO.namespace.ownerPublicKey, networkType),
                             new UInt64(namespaceInfoDTO.namespace.startHeight),
                             new UInt64(namespaceInfoDTO.namespace.endHeight),
                             this.extractAlias(namespaceInfoDTO.namespace),
@@ -139,10 +140,7 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
         };
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
-                this.namespaceRoutesApi.getNamespacesFromAccounts(publicKeysBody,
-                                                                  this.queryParams(queryParams).pageSize,
-                                                                  this.queryParams(queryParams).id,
-                                                                  this.queryParams(queryParams).order)).pipe(
+                this.namespaceRoutesApi.getNamespacesFromAccounts(publicKeysBody)).pipe(
                 map((response: { response: ClientResponse; body: NamespaceInfoDTO[]; }) => {
                     const namespaceInfosDTO = response.body;
                     return namespaceInfosDTO.map((namespaceInfoDTO) => {
@@ -150,11 +148,11 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                             namespaceInfoDTO.meta.active,
                             namespaceInfoDTO.meta.index,
                             namespaceInfoDTO.meta.id,
-                            namespaceInfoDTO.namespace.type as number,
+                            namespaceInfoDTO.namespace.registrationType as number,
                             namespaceInfoDTO.namespace.depth,
                             this.extractLevels(namespaceInfoDTO.namespace),
                             new NamespaceId(namespaceInfoDTO.namespace.parentId),
-                            PublicAccount.createFromPublicKey(namespaceInfoDTO.namespace.owner, networkType),
+                            PublicAccount.createFromPublicKey(namespaceInfoDTO.namespace.ownerPublicKey, networkType),
                             new UInt64(namespaceInfoDTO.namespace.startHeight),
                             new UInt64(namespaceInfoDTO.namespace.endHeight),
                             this.extractAlias(namespaceInfoDTO.namespace),
@@ -207,8 +205,8 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                         throw namespaceInfoDTO;
                     }
 
-                    if (namespaceInfoDTO.namespace.alias.type === AliasType.None
-                        || namespaceInfoDTO.namespace.alias.type !== AliasType.Mosaic
+                    if (namespaceInfoDTO.namespace.alias.type.valueOf() === AliasType.None
+                        || namespaceInfoDTO.namespace.alias.type.valueOf() !== AliasType.Mosaic
                         || !namespaceInfoDTO.namespace.alias.mosaicId) {
                         throw new Error('No mosaicId is linked to namespace \'' + namespaceInfoDTO.namespace.level0 + '\'');
                     }
@@ -235,8 +233,8 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                         throw namespaceInfoDTO;
                     }
 
-                    if (namespaceInfoDTO.namespace.alias.type === AliasType.None
-                        || namespaceInfoDTO.namespace.alias.type !== AliasType.Address
+                    if (namespaceInfoDTO.namespace.alias.type.valueOf() === AliasType.None
+                        || namespaceInfoDTO.namespace.alias.type.valueOf() !== AliasType.Address
                         || !namespaceInfoDTO.namespace.alias.address) {
                         throw new Error('No address is linked to namespace \'' + namespaceInfoDTO.namespace.level0 + '\'');
                     }

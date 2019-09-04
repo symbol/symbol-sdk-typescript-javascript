@@ -34,5 +34,5 @@ export interface ChainRepository {
      * Gets current blockchain score
      * @returns Observable<BlockchainScore>
      */
-    getBlockchainScore(): Observable<BlockchainScore>;
+    getChainScore(): Observable<BlockchainScore>;
 }

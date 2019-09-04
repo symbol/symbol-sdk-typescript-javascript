@@ -78,11 +78,10 @@ export class MosaicHttp extends Http implements MosaicRepository {
                             duration = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value;
                         }
                         return new MosaicInfo(
-                            mosaicInfoDTO.meta.id,
-                            new MosaicId(mosaicInfoDTO.mosaic.mosaicId),
+                            new MosaicId(mosaicInfoDTO.mosaic.id),
                             new UInt64(mosaicInfoDTO.mosaic.supply),
-                            new UInt64(mosaicInfoDTO.mosaic.height),
-                            PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
+                            new UInt64(mosaicInfoDTO.mosaic.startHeight),
+                            PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
                             mosaicInfoDTO.mosaic.revision,
                             new MosaicProperties(
                                 mosaicFlag ? new UInt64(mosaicFlag) : UInt64.fromUint(0),
@@ -124,11 +123,10 @@ export class MosaicHttp extends Http implements MosaicRepository {
                                 duration = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value;
                             }
                             return new MosaicInfo(
-                                mosaicInfoDTO.meta.id,
-                                new MosaicId(mosaicInfoDTO.mosaic.mosaicId),
+                                new MosaicId(mosaicInfoDTO.mosaic.id),
                                 new UInt64(mosaicInfoDTO.mosaic.supply),
-                                new UInt64(mosaicInfoDTO.mosaic.height),
-                                PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.owner, networkType),
+                                new UInt64(mosaicInfoDTO.mosaic.startHeight),
+                                PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
                                 mosaicInfoDTO.mosaic.revision,
                                 new MosaicProperties(
                                     mosaicFlag ? new UInt64(mosaicFlag) : UInt64.fromUint(0),

@@ -21,6 +21,7 @@ import { DtoMapping } from '../core/utils/DtoMapping';
 import {AccountInfo} from '../model/account/AccountInfo';
 import { AccountNames } from '../model/account/AccountNames';
 import { AccountRestrictionsInfo } from '../model/account/AccountRestrictionsInfo';
+import { ActivityBucket } from '../model/account/ActivityBucket';
 import {Address} from '../model/account/Address';
 import {MultisigAccountGraphInfo} from '../model/account/MultisigAccountGraphInfo';
 import {MultisigAccountInfo} from '../model/account/MultisigAccountInfo';
@@ -79,11 +80,20 @@ export class AccountHttp extends Http implements AccountRepository {
             map((response: { response: ClientResponse; body: AccountInfoDTO; }) => {
                 const accountInfoDTO = response.body;
                 return new AccountInfo(
-                    accountInfoDTO.meta,
                     Address.createFromEncoded(accountInfoDTO.account.address),
                     new UInt64(accountInfoDTO.account.addressHeight),
                     accountInfoDTO.account.publicKey,
                     new UInt64(accountInfoDTO.account.publicKeyHeight),
+                    accountInfoDTO.account.accountType.valueOf(),
+                    accountInfoDTO.account.linkedAccountKey,
+                    accountInfoDTO.account.activityBuckets.map((bucket) => {
+                        return new ActivityBucket(
+                            bucket.startHeight,
+                            bucket.totalFeesPaid,
+                            bucket.beneficiaryCount,
+                            bucket.rawScore,
+                        );
+                    }),
                     accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(
                         new MosaicId(mosaicDTO.id),
                         new UInt64(mosaicDTO.amount),
@@ -147,16 +157,28 @@ export class AccountHttp extends Http implements AccountRepository {
                     const accountsInfoMetaDataDTO = response.body;
                     return accountsInfoMetaDataDTO.map((accountInfoDTO: AccountInfoDTO) => {
                         return new AccountInfo(
-                            accountInfoDTO.meta,
                             Address.createFromEncoded(accountInfoDTO.account.address),
                             new UInt64(accountInfoDTO.account.addressHeight),
                             accountInfoDTO.account.publicKey,
                             new UInt64(accountInfoDTO.account.publicKeyHeight),
-                            accountInfoDTO.account.mosaics.map((mosaicDTO: MosaicDTO) =>
-                                new Mosaic(new MosaicId(mosaicDTO.id), new UInt64(mosaicDTO.amount))),
+                            accountInfoDTO.account.accountType.valueOf(),
+                            accountInfoDTO.account.linkedAccountKey,
+                            accountInfoDTO.account.activityBuckets.map((bucket) => {
+                                return new ActivityBucket(
+                                    bucket.startHeight,
+                                    bucket.totalFeesPaid,
+                                    bucket.beneficiaryCount,
+                                    bucket.rawScore,
+                                );
+                            }),
+                            accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(
+                                new MosaicId(mosaicDTO.id),
+                                new UInt64(mosaicDTO.amount),
+                            )),
                             new UInt64(accountInfoDTO.account.importance),
                             new UInt64(accountInfoDTO.account.importanceHeight),
                         );
+
                     });
                 }),
                 catchError((error) =>  throwError(error)),
@@ -195,12 +217,12 @@ export class AccountHttp extends Http implements AccountRepository {
                     .pipe(map((response: { response: ClientResponse; body: MultisigAccountInfoDTO; }) => {
                         const multisigAccountInfoDTO = response.body;
                         return new MultisigAccountInfo(
-                            PublicAccount.createFromPublicKey(multisigAccountInfoDTO.multisig.account, networkType),
+                            PublicAccount.createFromPublicKey(multisigAccountInfoDTO.multisig.accountPublicKey, networkType),
                             multisigAccountInfoDTO.multisig.minApproval,
                             multisigAccountInfoDTO.multisig.minRemoval,
-                            multisigAccountInfoDTO.multisig.cosignatories
+                            multisigAccountInfoDTO.multisig.cosignatoryPublicKeys
                                 .map((cosigner) => PublicAccount.createFromPublicKey(cosigner, networkType)),
-                            multisigAccountInfoDTO.multisig.multisigAccounts
+                            multisigAccountInfoDTO.multisig.multisigPublicKeys
                                 .map((multisigAccount) => PublicAccount.createFromPublicKey(multisigAccount, networkType)),
                         );
                     }),
@@ -224,12 +246,12 @@ export class AccountHttp extends Http implements AccountRepository {
                             multisigAccounts.set(multisigAccountGraphInfoDTO.level,
                                 multisigAccountGraphInfoDTO.multisigEntries.map((multisigAccountInfoDTO) => {
                                     return new MultisigAccountInfo(
-                                        PublicAccount.createFromPublicKey(multisigAccountInfoDTO.multisig.account, networkType),
+                                        PublicAccount.createFromPublicKey(multisigAccountInfoDTO.multisig.accountPublicKey, networkType),
                                         multisigAccountInfoDTO.multisig.minApproval,
                                         multisigAccountInfoDTO.multisig.minRemoval,
-                                        multisigAccountInfoDTO.multisig.cosignatories
+                                        multisigAccountInfoDTO.multisig.cosignatoryPublicKeys
                                             .map((cosigner) => PublicAccount.createFromPublicKey(cosigner, networkType)),
-                                        multisigAccountInfoDTO.multisig.multisigAccounts
+                                        multisigAccountInfoDTO.multisig.multisigPublicKeys
                                             .map((multisigAccountDTO) =>
                                                 PublicAccount.createFromPublicKey(multisigAccountDTO, networkType)));
                                 }),

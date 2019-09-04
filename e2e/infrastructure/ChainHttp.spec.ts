@@ -43,7 +43,7 @@ describe('ChainHttp', () => {
 
     describe('getBlockchainScore', () => {
         it('should return blockchain score', (done) => {
-            chainHttp.getBlockchainScore()
+            chainHttp.getChainScore()
                 .subscribe((blockchainScore) => {
                     expect(blockchainScore.scoreLow).to.not.be.equal(undefined);
                     expect(blockchainScore.scoreHigh.lower).to.be.equal(0);

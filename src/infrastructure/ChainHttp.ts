@@ -19,11 +19,11 @@ import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {BlockchainScore} from '../model/blockchain/BlockchainScore';
 import {UInt64} from '../model/UInt64';
-import { BlockchainScoreDTO,
-         ChainRoutesApi,
+import { ChainRoutesApi,
          HeightInfoDTO } from './api';
 import { ChainRepository } from './ChainRepository';
 import {Http} from './Http';
+import { ChainScoreDTO } from './model/chainScoreDTO';
 
 /**
  * Chian http repository.
@@ -64,9 +64,9 @@ export class ChainHttp extends Http implements ChainRepository {
      * Gets current blockchain score
      * @returns Observable<BlockchainScore>
      */
-    public getBlockchainScore(): Observable<BlockchainScore> {
-        return observableFrom(this.chainRoutesApi.getBlockchainScore()).pipe(
-            map((response: { response: ClientResponse; body: BlockchainScoreDTO; } ) => {
+    public getChainScore(): Observable<BlockchainScore> {
+        return observableFrom(this.chainRoutesApi.getChainScore()).pipe(
+            map((response: { response: ClientResponse; body: ChainScoreDTO; } ) => {
                 const blockchainScoreDTO = response.body;
                 return new BlockchainScore(
                     new UInt64(blockchainScoreDTO.scoreLow),

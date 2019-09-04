@@ -17,12 +17,11 @@
 import {expect} from 'chai';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import {MosaicAmountView} from '../../../src/service/MosaicAmountView';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicInfo} from '../../../src/model/mosaic/MosaicInfo';
 import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
-import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
 import {UInt64} from '../../../src/model/UInt64';
+import {MosaicAmountView} from '../../../src/service/MosaicAmountView';
 
 describe('MosaicAmountView', () => {
 
@@ -30,7 +29,6 @@ describe('MosaicAmountView', () => {
 
     before(() => {
         mosaicInfo = new MosaicInfo(
-            '59FDA0733F17CF0001772CBC',
             new MosaicId([3294802500, 2243684972]), // mosaicId
             new UInt64([3403414400, 2095475]), // supply
             new UInt64([1, 0]), // height

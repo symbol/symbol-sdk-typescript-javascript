@@ -29,7 +29,6 @@ describe('MosaicView', () => {
 
     before(() => {
         mosaicInfo = new MosaicInfo(
-            '59FDA0733F17CF0001772CBC',
             new MosaicId([3294802500, 2243684972]),
             new UInt64([3403414400, 2095475]), // supply
             new UInt64([1, 0]), // height
