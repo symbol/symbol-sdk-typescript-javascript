@@ -311,12 +311,6 @@ export class LineChartTs extends Vue {
 
 
         this.dom.setOption(this.option)
-        this.dom.dispatchAction({
-            type: 'showTip',
-            seriesIndex: 0,
-            dataIndex: btcDataList.length - 1,
-
-        })
         window.onresize = this.dom.resize
     }
 
@@ -345,7 +339,6 @@ export class LineChartTs extends Vue {
 
         marketPriceDataObject.timestamp = new Date().getTime()
         localSave('marketPriceDataObject', JSON.stringify(marketPriceDataObject))
-        this.refresh()
     }
 
 
@@ -356,18 +349,18 @@ export class LineChartTs extends Vue {
     }
 
     async refreshData() {
-        if (isRefreshData('marketPriceDataObject', 1000 * 60 * 15, new Date().getMinutes())) {
-            await this.getChartData().catch(async (e) => {
-                console.log(e)
-                await this.getChartData()
-            })
-            return
+        try {
+            await this.getChartData()
+            this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
+            this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
+            console.log('CALL',this.btcDataList,  this.xemDataList)
+        } catch (error) {
+          setTimeout(() => { this.refreshData() }, 10000)
         }
-        this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
-        this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
     }
 
     mouseoutLine() {
+        if(this.dom.dispatchAction === undefined) return
         this.dom.dispatchAction({
             type: 'showTip',
             seriesIndex: 0,
@@ -375,12 +368,7 @@ export class LineChartTs extends Vue {
         })
     }
 
-    async mounted() {
-        await this.refreshData()
-        this.refresh()
+    mounted() {
+        this.refreshData()
     }
-
-    // async created() {
-    //     await this.refreshData()
-    // }
 }

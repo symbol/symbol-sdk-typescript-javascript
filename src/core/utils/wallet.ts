@@ -238,7 +238,7 @@ export class AppWallet {
           this.balance = balance
           this.updateWallet(store)
       } catch (error) {
-          console.error(error)
+        // do nothing
       }
     }
 

@@ -26,6 +26,7 @@ export class MonitorPanelTs extends Vue {
     activeAccount: any
     mosaic: string
     mosaicName = ''
+    // @TODO: current price in the store
     currentPrice = 0
     isLoadingMosaic = true
     localMosaicMap: any = {}
@@ -69,17 +70,19 @@ export class MonitorPanelTs extends Vue {
         return this.activeAccount.currentXem
     }
 
+    get currentXEM1() {
+        return this.activeAccount.currentXEM1
+    }
+
     get currentXEM2() {
         return this.activeAccount.currentXEM2
     }
 
     get networkCurrencies() {
-        return [this.currentXem, this.currentXEM2]
+        return [this.currentXEM1, this.currentXEM2]
     }
 
-    get currentXEM1() {
-        return this.activeAccount.currentXEM1
-    }
+
 
     get namespaceList() {
         return this.activeAccount.namespace
@@ -167,13 +170,14 @@ export class MonitorPanelTs extends Vue {
     }
 
     async getMarketOpenPrice() {
-        const that = this
-        const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"})
-        if (rstStr instanceof Object) {
-            const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
-            const result = rstQuery.data ? rstQuery.data[0].close : 0
-            that.currentPrice = result
-        }
+      try {
+          const rstStr = await market.kline({period : "1min", symbol: "xemusdt", size: "1"})
+          const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
+          const result = rstQuery.data ? rstQuery.data[0].close : 0
+          this.currentPrice = result
+      } catch (error) {
+          setTimeout(() => this.getMarketOpenPrice(), 10000)
+      }
     }
 
     async initMosaic() {
