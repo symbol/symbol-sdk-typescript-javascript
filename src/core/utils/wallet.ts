@@ -91,10 +91,11 @@ export class AppWallet {
                         store: any): AppWallet
     {
       try {
-        // @TODO: encode do base64
         this.name = name
         this.networkType = networkType
-        this.simpleWallet = JSON.parse(keystoreStr)
+        const words = CryptoJS.enc.Base64.parse(keystoreStr)
+        const keystore = words.toString(CryptoJS.enc.Utf8)
+        this.simpleWallet = JSON.parse(keystore)
         const {privateKey} = this.getAccount(password)
         this.createFromPrivateKey(name, password, privateKey, networkType, store)
         return this
@@ -122,6 +123,11 @@ export class AppWallet {
       } catch (error) {
         throw new Error('Could not decrypt the mnemonic')
       }
+    }
+
+    getKeystore(): string {
+      const parsed = CryptoJS.enc.Utf8.parse(JSON.stringify(this.simpleWallet))
+      return CryptoJS.enc.Base64.stringify(parsed)
     }
 
     checkPassword(password: Password): boolean {
@@ -207,7 +213,7 @@ export class AppWallet {
         store.commit('SET_WALLET', newWallet)
         localSave('wallets', JSON.stringify(walletListToStore))
     }
-    
+
     async getAccountBalance(networkCurrencies: any, node: string): Promise<number> {
         try {
             const accountInfo = await new AccountApiRxjs()
