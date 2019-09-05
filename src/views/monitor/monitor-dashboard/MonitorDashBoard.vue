@@ -1,5 +1,5 @@
 <template>
-  <div class="dash_board_container secondary_page_animate" >
+  <div class="dash_board_container secondary_page_animate">
     <Modal
             :title="$t('transaction_detail')"
             v-model="isShowDialog"
@@ -57,6 +57,14 @@
           <span>{{$t('The_total_market_capitalization')}}（USD）</span>
           <span class="black">{{formatNumber(currentPrice)}}</span>
         </span>
+        <div>
+   <span class="right">
+          <span>{{$t('average_price')}}</span><span class="black">${{averagePrice}} </span>
+           <span>{{$t('yesterday')}}</span><span :class="riseRange < 0 ? 'red':'green'">{{riseRange}}%</span>
+        </span>
+        </div>
+
+
         <LineChart></LineChart>
       </div>
       <div class="right_net_status radius">

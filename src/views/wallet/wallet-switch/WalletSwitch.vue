@@ -11,7 +11,7 @@
           <Col span="15">
             <div>
               <p class="walletName">{{item.name}}</p>
-              <p class="walletAmount">
+              <p class="walletAmount overflow_ellipsis">
                 {{formatNumber(getWalletBalance(index) ) }}
                 &nbsp;<span class="tails">XEM</span>
               </p>
@@ -25,8 +25,8 @@
                   <img src="@/common/img/wallet/moreActive.png">
                   <div slot="content">
                     <p
-                      class="optionItem"
-                      @click.stop="walletToDelete = item; showCheckPWDialog = true"
+                            class="optionItem"
+                            @click.stop="walletToDelete = item; showCheckPWDialog = true"
                     >
                       <i><img src="@/common/img/wallet/delete.png"></i>
                       <span>{{$t('delete')}}</span>
@@ -51,9 +51,9 @@
       </Row>
     </div>
     <DeleteWalletCheck
-      :showCheckPWDialog="showCheckPWDialog"
-      :wallet-to-delete="walletToDelete"
-      @closeCheckPWDialog="closeCheckPWDialog"
+            :showCheckPWDialog="showCheckPWDialog"
+            :wallet-to-delete="walletToDelete"
+            @closeCheckPWDialog="closeCheckPWDialog"
     />
   </div>
 </template>

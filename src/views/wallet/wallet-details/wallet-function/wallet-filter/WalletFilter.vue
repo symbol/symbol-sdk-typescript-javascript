@@ -5,10 +5,9 @@
             :title="$t(currentTitle)"
             v-model="isShowDialog"
             :transfer="true"
-            class-name="filter_dialog">
-
+            class-name="filter_dialog scroll">
       <!--      address-->
-      <div class="address_dialog" v-if="filterTypeList[0]">
+      <div class="address_dialog " v-if="filterTypeList[0]">
         <div class="input_content">
           <div class="title">{{$t('address')}}</div>
 

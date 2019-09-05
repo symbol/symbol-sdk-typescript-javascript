@@ -62,6 +62,17 @@ export class MultisigConversionTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
+    initForm() {
+        this.formItem = {
+            publickeyList: [],
+            minApproval: 1,
+            minRemoval: 1,
+            bondedFee: 1,
+            lockFee: 10,
+            innerFee: 1
+        }
+    }
+
     addAddress() {
         const {currentAddress} = this
         if (!currentAddress || !currentAddress.trim()) {
@@ -92,6 +103,7 @@ export class MultisigConversionTs extends Vue {
         this.otherDetails = {
             lockFee: lockFee
         }
+        this.initForm()
         this.sendMultisignConversionTransaction()
         this.showCheckPWDialog = true
     }

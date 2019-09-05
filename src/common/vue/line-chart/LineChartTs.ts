@@ -8,16 +8,18 @@ import {localSave, localRead, isRefreshData, formatDate} from '@/core/utils/util
 export class LineChartTs extends Vue {
     xemMin = 0
     dom: any = {}
+
     spinShow = true
     xemDataList = []
     btcDataList = []
     option = {
+        rate: 1,
         legend: [
             {
                 data: ['xem', 'btc', 'amount'],
                 show: true,
-                x: 'right',
-                y: '-5px'
+                x: '20px',
+                y: '-6px'
             }
         ],
         axisPointer: {
@@ -32,26 +34,42 @@ export class LineChartTs extends Vue {
             alwaysShowContent: true,
             padding: 0,
             formatter: (params: any) => {
-                let currentParam = {}
+                let currentXemParam: any = {}
+                let currentBtcParam: any = {}
                 params.forEach((item: any) => {
                     if (item.seriesName == 'xem') {
-                        currentParam = item
+                        currentXemParam = item
+                    }
+                    if (item.seriesName == 'btc') {
+                        currentBtcParam = item
                     }
                 })
 
-                params = currentParam
-                const {dataIndex, value} = params
-                let riseRange: any = 0
-                if (dataIndex !== 0) {
-                    const preData = this.option.series[0].data[dataIndex - 1]
-                    riseRange = ((value - preData) / preData).toFixed(3)
+                const xemDataIndex = currentXemParam.dataIndex
+                const xemValue = currentBtcParam.value
+                const btcDataIndex = currentBtcParam.dataIndex
+                const btcValue = currentBtcParam.value
+                let xemRiseRange: any = 0
+
+                if (xemDataIndex !== 0) {
+                    const preData = this.option.series[0].data[xemDataIndex - 1]
+                    xemRiseRange = ((xemValue - preData) / preData).toFixed(6)
                 }
-                const date = formatDate(params.name)
+                let btcRiseRange: any = 0
+                if (btcDataIndex !== 0) {
+                    const preData = this.option.series[1].data[btcDataIndex - 1]
+                    btcRiseRange = ((btcValue - preData) / preData).toFixed(6)
+                }
+                const date = formatDate(currentXemParam.name)
                 const template = `<div style="box-shadow: 0 0 5px #e0e0e0; padding: 5px">
                                     <div style="color: #999;">${date}</div>
                                     <div style="display: flex;justify-content: center;justify-items: center">
-                                      <span style="color: #666666;margin-right: 5px">$${value}</span>
-                                      <span style="float:right;color: #20B5AC">${riseRange}%</span>
+                                      <span style="color: #666666;margin-right: 5px;width: 80px">$${(xemValue + '').substring(0, 9)}</span>
+                                      <span style="float:right;color: #20B5AC">${xemRiseRange}%</span>
+                                    </div>
+                                   <div style="display: flex;justify-content: center;justify-items: center">
+                                      <span style="color: #666666;margin-right: 5px;width: 80px">$${('' + btcValue * this.option.rate).substring(0, 9)}</span>
+                                      <span style="float:right;color: #f7a800">${btcRiseRange}%</span>
                                     </div>
                                     </div>`
                 return template
@@ -282,7 +300,7 @@ export class LineChartTs extends Vue {
 
     refreshBtc() {
         this.dom = echarts.init(this.$refs.dom)
-        let {xemDataList, btcDataList, xemMin} = this
+        let {btcDataList, xemMin} = this
         let xAxisData = []
 
         if (btcDataList.length == 0) {
@@ -299,7 +317,8 @@ export class LineChartTs extends Vue {
             return a.id > b.id ? 1 : -1
         })
 
-        const rate: any = xemMin > low ? xemMin / low : low / xemMin
+        const rate: any = low / xemMin
+        this.option.rate = rate
         btcDataList = btcDataList.map(item => {
             let i: any = {}
             xAxisData.push(item.id * 1000)
@@ -307,7 +326,6 @@ export class LineChartTs extends Vue {
             return item.open
         })
         this.option.series[1].data = btcDataList
-
 
         this.dom.setOption(this.option)
         window.onresize = this.dom.resize
@@ -348,15 +366,14 @@ export class LineChartTs extends Vue {
     }
 
     async refreshData() {
-        try {
-            await this.getChartData()
-            this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
-            this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
-        } catch (error) {
-            setTimeout(() => {
-                this.refreshData()
-            }, 10000)
+        if (isRefreshData('marketPriceDataObject', 1000 * 60 * 60, new Date().getMinutes())) {
+            await this.getChartData().catch(async (e) => {
+                await this.getChartData()
+            })
+            return
         }
+        this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
+        this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
     }
 
     mouseoutLine() {
@@ -368,7 +385,8 @@ export class LineChartTs extends Vue {
         })
     }
 
-    mounted() {
-        this.refreshData()
+    async mounted() {
+        await this.refreshData()
+        this.refresh()
     }
 }

@@ -442,12 +442,18 @@ export const en_US = {
     Nemwallet_can_not_recover_your_mnemonic: 'Nemwallet can\'t recover your mnemonic',
     Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct: 'Please enter a mnemonic to ensure that the mnemonic is correct',
     Mnemonic_inconsistency: 'Mnemonic inconsistency',
-    bind_mosaic:'bind mosaic',
-    bind_address:'bind address',
+
+    bind_mosaic: 'bind mosaic',
+    bind_address: 'bind address',
+
     //wallet details
     Basic_information: 'Basic information',
     link: 'Link info',
     type: 'Link type',
+
+    pre_week: 'PreWeek',
+    yesterday: 'Yesterday',
+
     Wallet_type: 'Type',
     Public_wallet: 'Public wallet',
     Wallet_name: 'Name',
@@ -577,7 +583,7 @@ export const en_US = {
     finished: 'Finished',
     forget_password: 'Forgot password',
     passowrd_prompt: 'Passowrd hint',
-    XEM_market_trend_nearly_24_hours: 'XEM market trend nearly 24 hours',
+    XEM_market_trend_nearly_24_hours: '24-hours market trend',
     This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe: '1、This password will be used for all transactions in your wallet account. Please remember it and keep it in a safe place.',
     The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_the_security_of_your_wallet: '2、The password setting requirement is not less than six digits. The more complicated the recommendation, the better the security of your wallet!',
     add_address: 'Add address',

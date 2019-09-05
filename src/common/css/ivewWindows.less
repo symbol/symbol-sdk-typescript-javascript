@@ -719,6 +719,9 @@
       box-shadow: none !important;
       position: absolute;
       z-index: 666;
+      bottom: 5px;
+      padding-right: 450px;
+
     }
 
   }
@@ -802,202 +805,203 @@
     }
   }
 
-  .ivu-modal-wrap {
-    z-index: 99999991 !important;
 
-    .alias_bind_dialog {
-      .ivu-modal {
-        width: 500px !important;
-        height: 691px !important;
-        background: rgba(255, 255, 255, 1);
-        border-radius: 8px;
-      }
-
-      .ivu-modal-content {
-        width: 500px !important;
-        height: 691px !important;
-
-        .ivu-modal-body {
-          padding: 14px 55px 0 55px;
-        }
-      }
-
-      .ivu-btn {
-        display: none !important;
-      }
-
-      .ivu-modal-footer {
-        border-top: none !important;
-      }
-
-      .ivu-modal-header {
-        border: none !important;
-      }
-
-      .title {
-        color: #999999;
-        font-size: 20px;
-        margin: 10px 0 5px 0;
-      }
-
-      .input_area {
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid rgba(238, 238, 238, 1);
-
-        input {
-          width: 410px;
-          height: 50px;
-          border: none;
-
-        }
-
-        input::placeholder {
-          color: #CCCCCC;
-        }
-
-        .tip {
-          font-size: 16px;
-          font-weight: 400;
-          color: rgba(51, 51, 51, 1);
-          line-height: 16px;
-          margin-right: 10px;
-        }
-      }
-
-      .ivu-modal-header p, .ivu-modal-header-inner {
-        padding: 60px 40px 40px 40px;
-        font-size: 28px;
-        font-weight: 400;
-        color: #20B5AC;
-      }
-
-      .ivu-select-selection {
-        border: none !important;
-      }
-
-      .button_content {
-        float: right;
-        margin-top: 30px;
-
-        span {
-          display: inline-block;
-          width: 86px;
-          height: 44px;
-          line-height: 44px;
-          text-align: center;
-        }
-      }
-    }
-  }
-
-  .setting_container {
-    .ivu-select {
-      height: 45px !important;
-      //border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 8px 0;
-    }
-  }
-
-
-  // $notice
-  .ivu-notice {
-    position: fixed !important;
-    top: 150px !important;
-    width: auto !important;
-    max-width: 500px !important;
-    z-index: 99999999 !important;
-
-    .ivu-notice-notice {
-      width: 100%;
-      height: auto;
-      background: black;
-      display: flex;
-      align-items: center;
-      word-break: break-all;
-      word-wrap: break-word;
-      overflow: revert;
-
-      .ivu-notice-custom-content {
-        display: flex;
-        align-items: center;
-        align-content: center;
-
-        .ivu-notice-icon {
-          font-size: 40px;
-          position: relative !important;
-        }
-
-      }
-
-      .ivu-notice-title {
-        max-width: 500px;
-        width: auto;
-        height: auto;
-        color: white;
-        overflow: unset;
-        line-height: 24px !important;
-        font-size: 16px !important;
-        word-break: break-all;
-        white-space: unset;
-      }
-
-      .ivu-notice-notice-close {
-        i {
-          color: white;
-
-        }
-      }
+  .alias_bind_dialog {
+    .ivu-modal-wrap {
+      z-index: 99999991 !important;
     }
 
-  }
-
-
-  //check dialog
-  .checkPWDialogWrap {
-    .checkPWDialogHeader {
-      height: 74px;
-      line-height: 74px;
-      font-size: 28px;
-      font-weight: 400;
-      color: #222222;
-
-      .title {
-        padding-left: 64px;
-      }
+    .ivu-modal {
+      width: 500px !important;
+      height: 691px !important;
+      background: rgba(255, 255, 255, 1);
+      border-radius: 8px;
     }
 
     .ivu-modal-content {
-      .ivu-modal-close {
-        top: 30px;
-        right: 40px;
+      width: 500px !important;
+      height: 691px !important;
 
-        .ivu-icon-ios-close {
-          font-size: 40px;
-          color: #666666;
-          font-weight: 400;
-        }
+      .ivu-modal-body {
+        padding: 14px 55px 0 55px;
       }
     }
-  }
 
-  .multisig_management_container {
-    .select {
-      border: none;
+    .ivu-btn {
+      display: none !important;
+    }
+
+    .ivu-modal-footer {
+      border-top: none !important;
+    }
+
+    .ivu-modal-header {
+      border: none !important;
+    }
+
+    .title {
+      color: #999999;
+      font-size: 20px;
+      margin: 10px 0 5px 0;
+    }
+
+    .input_area {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(238, 238, 238, 1);
+
+      input {
+        width: 410px;
+        height: 50px;
+        border: none;
+
+      }
+
+      input::placeholder {
+        color: #CCCCCC;
+      }
+
+      .tip {
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 1);
+        line-height: 16px;
+        margin-right: 10px;
+      }
+    }
+
+    .ivu-modal-header p, .ivu-modal-header-inner {
+      padding: 60px 40px 40px 40px;
+      font-size: 28px;
+      font-weight: 400;
+      color: #20B5AC;
     }
 
     .ivu-select-selection {
-      border-color: #ccc;
+      border: none !important;
+    }
+
+    .button_content {
+      float: right;
+      margin-top: 30px;
+
+      span {
+        display: inline-block;
+        width: 86px;
+        height: 44px;
+        line-height: 44px;
+        text-align: center;
+      }
     }
   }
+}
 
-  .setting_container {
-    .main_view {
-      .gray_content {
-        border: 1px solid #ccc;
+.setting_container {
+  .ivu-select {
+    height: 45px !important;
+    //border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 0;
+  }
+}
+
+
+// $notice
+.ivu-notice {
+  position: fixed !important;
+  top: 150px !important;
+  width: auto !important;
+  max-width: 500px !important;
+  z-index: 99999999 !important;
+
+  .ivu-notice-notice {
+    width: 100%;
+    height: auto;
+    background: black;
+    display: flex;
+    align-items: center;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: revert;
+
+    .ivu-notice-custom-content {
+      display: flex;
+      align-items: center;
+      align-content: center;
+
+      .ivu-notice-icon {
+        font-size: 40px;
+        position: relative !important;
+      }
+
+    }
+
+    .ivu-notice-title {
+      max-width: 500px;
+      width: auto;
+      height: auto;
+      color: white;
+      overflow: unset;
+      line-height: 24px !important;
+      font-size: 16px !important;
+      word-break: break-all;
+      white-space: unset;
+    }
+
+    .ivu-notice-notice-close {
+      i {
+        color: white;
+
       }
     }
   }
 
 }
+
+
+//check dialog
+.checkPWDialogWrap {
+  .checkPWDialogHeader {
+    height: 74px;
+    line-height: 74px;
+    font-size: 28px;
+    font-weight: 400;
+    color: #222222;
+
+    .title {
+      padding-left: 64px;
+    }
+  }
+
+  .ivu-modal-content {
+    .ivu-modal-close {
+      top: 30px;
+      right: 40px;
+
+      .ivu-icon-ios-close {
+        font-size: 40px;
+        color: #666666;
+        font-weight: 400;
+      }
+    }
+  }
+}
+
+.multisig_management_container {
+  .select {
+    border: none;
+  }
+
+  .ivu-select-selection {
+    border-color: #ccc;
+  }
+}
+
+.setting_container {
+  .main_view {
+    .gray_content {
+      border: 1px solid #ccc;
+    }
+  }
+}
+

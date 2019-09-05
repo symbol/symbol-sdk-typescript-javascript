@@ -71,24 +71,24 @@ export class MonitorMarketTs extends Vue {
     }
 
     async getMarketPrice() {
-        if (!isRefreshData('oneWeekPrice', 1000 * 60 * 60 * 24, new Date().getHours())) {
-            const oneWeekPrice = JSON.parse(localRead('oneWeekPrice'))
+        if (!isRefreshData('oneDayPrice', 1000 * 60 * 60 * 24, new Date().getHours())) {
+            const oneWeekPrice = JSON.parse(localRead('oneDayPrice'))
             this.highestPrice = oneWeekPrice.highestPrice
             this.lowestPrice = oneWeekPrice.lowestPrice
             this.averagePrice = oneWeekPrice.averagePrice
             this.riseRange = oneWeekPrice.riseRange
             return
         }
-
         const that = this
-        const rstStr = await market.kline({period: "1day", symbol: "xemusdt", size: "14"})
+        const rstStr = await market.kline({period: "60min", symbol: "xemusdt", size: "48"})
+
         if (!rstStr.rst) {
             return
         }
-        const rstQuery: KlineQuery = rstStr.rst
+        const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
         const result = rstQuery.data
-        const currentWeek = result.slice(0, 7)
-        const preWeek = result.slice(7, 14)
+        const currentWeek = result.slice(0, 24)
+        const preWeek = result.slice(24, 48)
 
         currentWeek.sort((a, b) => {
             return a.high < b.high ? 1 : -1
@@ -104,13 +104,13 @@ export class MonitorMarketTs extends Vue {
         currentWeek.forEach((item) => {
             average += item.high + item.low
         })
-        that.averagePrice = (average / 14).toFixed(4)
+        that.averagePrice = (average / 24).toFixed(4)
 
         let preAverage: any = 0
         preWeek.forEach((item) => {
             preAverage += item.high + item.low
         })
-        preAverage = (preAverage / 14).toFixed(4)
+        preAverage = (preAverage / 24).toFixed(4)
         that.riseRange = (((that.averagePrice - preAverage) / preAverage) * 100).toFixed(2)
         const oneWeekPrice = {
             averagePrice: that.averagePrice,
@@ -119,7 +119,7 @@ export class MonitorMarketTs extends Vue {
             riseRange: that.riseRange,
             timestamp: new Date().getTime()
         }
-        localSave('oneWeekPrice', JSON.stringify(oneWeekPrice))
+        localSave('oneDayPrice', JSON.stringify(oneWeekPrice))
 
     }
 
@@ -170,7 +170,7 @@ export class MonitorMarketTs extends Vue {
                 timestamp: new Date().getTime(),
                 recentTransactionList: recentTransactionList
             }
-            localSave('transactionsOverNetwork', JSON.stringify(transactionsOverNetwork))
+            localSave('openPriceOneDay', JSON.stringify(transactionsOverNetwork))
         }
     }
 

@@ -33,7 +33,6 @@ export class SettingLockTs extends Vue {
     }
 
     submit() {
-        console.log(this.formModel)
         this.$validator
             .validate()
             .then((valid) => {

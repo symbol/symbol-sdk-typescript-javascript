@@ -111,11 +111,12 @@ export const zh_CN = {
     validity_period: '有效期',
     harvested_block: '收获的块',
     successful_copy: '复制成功',
-
+    pre_week: '上周',
     // monitor-receipt
     set_amount: '设置金额',
     asset_type: '资产类型',
     transfer_amount: '转账金额',
+    yesterday: '昨天',
     remarks: '备注',
     generate_QR_code: '生成二维码',
     copy_address: '复制地址',
@@ -253,8 +254,8 @@ export const zh_CN = {
     // edit dialog
     modify_supply: '修改供应量',
     binding_alias: '绑定别名',
-    bind_mosaic:'绑定马赛克',
-    bind_address:'绑定地址',
+    bind_mosaic: '绑定马赛克',
+    bind_address: '绑定地址',
     unbind: '取消绑定',
     alias_selection: '别名选择',
     password: '密码',

@@ -33,7 +33,7 @@
             <span class="pointer" @click="minWindow"></span>
             <span class="pointer not_window_max " v-if="!isNowWindowMax" @click="maxWindow"></span>
             <span class="pointer now_window_max" v-else @click="maxWindow"></span>
-            <span class="pointer" @click="closeWindow"></span>
+            <span class="pointer close_window" @click="closeWindow"></span>
           </div>
         </div>
         <div class="app_controller clear">

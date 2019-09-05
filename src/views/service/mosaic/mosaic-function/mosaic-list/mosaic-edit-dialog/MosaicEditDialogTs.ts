@@ -133,6 +133,7 @@ export class MosaicEditDialogTs extends Vue {
             networkType,
             fee
         )
+        this.show = false
         new AppWallet(this.wallet)
             .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
     }

@@ -12,8 +12,8 @@
             <span>{{$t('lowest_price')}}</span><span class="black">${{lowestPrice}}</span>
           </span>
           <span class="price_item">
-            <span>{{$t('average_price')}}</span><span class="black">${{averagePrice}}</span><span
-                  :class="riseRange < 0 ? 'red':'green'">{{riseRange}}%</span>
+            <span>{{$t('average_price')}}</span><span class="black">${{averagePrice}} </span>
+            <span>{{$t('pre_week')}}</span><span :class="riseRange < 0 ? 'red':'green'">{{riseRange}}%</span>
           </span>
         </span>
         <LineChart></LineChart>

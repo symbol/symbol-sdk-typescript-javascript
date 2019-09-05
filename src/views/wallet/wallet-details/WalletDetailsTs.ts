@@ -89,7 +89,6 @@ export class WalletDetailsTs extends Vue {
         const {networkType} = Address.createFromRawAddress(address)
         const {generationHash} = this
         this.QRCode = QRCodeGenerator.createExportObject({address}, networkType, generationHash).toBase64()
-        console.log(this.QRCode)
     }
 
     copy(txt) {
