@@ -19,6 +19,10 @@ const addressValidator = (context) => {
     return context.Validator.extend(
         CUSTOM_VALIDATORS_NAMES.address,
         (address) => new Promise((resolve) => {
+            if (address.indexOf('@') !== -1) {
+                resolve({valid: address})
+                return address
+            }
             try {
                 Address.createFromRawAddress(address)
                 resolve({valid: address})

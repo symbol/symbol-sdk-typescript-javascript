@@ -234,6 +234,7 @@ export class MonitorDashBoardTs extends Vue {
             let resultList = transactionList
             that.currentTransactionList = transactionList
             if (transactionList.length > 0) {
+                that.isLoadingTransactions = true
                 Promise.all(transactionList.map(async (item, index) => {
                     if (item.mosaics.length == 1) {
                         //infoThird

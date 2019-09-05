@@ -36,7 +36,7 @@ export class VoteTs extends Vue {
             initiator: 'TCTEXC-5TGXD7-OQCHBB-MNU3LS-2GFCB4-2KD75D-5VCN',
             vote: 'NAMESP-ACEWH4-MKFMBC-VFERDP-OOP4FK-7MTBXD-PZZA',
             title: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
-            endtime: '2019-05-21 14:00',
+            deadline: '2019-05-21 14:00',
             startTimestamp: '1537333994',
             endTimestamp: '1571462284',
             content: 'Encrypted messages cannot currently be read and captured in mode. This is an unacceptable condition. The developer should fix it. Do you agree?',
@@ -57,8 +57,8 @@ export class VoteTs extends Vue {
     ]
     voteType = voteType
     formItem = {
-        title: 'wwwwwwwwwwwvvvvvvvvvvvvvvvvwwwwwwwwww',
-        content: 'wwwwwwwwwwwvvvvvvvvvvvvvvvvwwwwwwwwww',
+        title: '',
+        content: '',
         voteType: 0,
         endtime: '2019-12-28 14:57',
         starttime: '2019-12-28 14:57',
@@ -142,7 +142,8 @@ export class VoteTs extends Vue {
 
     submitCreatVote() {
         const {address, publicKey} = this
-        const {title, content, voteType, endtime, starttime, fee, optionList} = this.formItem
+        const that = this
+        const {title, content, voteType, endtime, starttime,  optionList} = this.formItem
         const voteParam = {
             title,
             address,
@@ -157,9 +158,27 @@ export class VoteTs extends Vue {
         vote.saveVote({
             vote: voteParam
         }).then(() => {
-            this.$Notice.success({
-                title: Message.SUCCESS
+            that.$Notice.success({
+                title: this.$t(Message.SUCCESS) + ''
             })
+        })
+        this.$Notice.success({
+            title: this.$t(Message.OPERATION_SUCCESS) + ''
+        })
+    }
+
+    checkForm() {
+        const {title, content, voteType, endtime, starttime, optionList} = this.formItem
+        if (title === '' || title.trim() === '' || content === '' || content.trim() === '' || optionList.length < 1 || endtime == '' || endtime.trim() == '' || starttime == '' || starttime.trim() == '') {
+            this.showErrorNotice(Message.INPUT_EMPTY_ERROR)
+            return false
+        }
+    }
+
+    showErrorNotice(text) {
+        this.$Notice.destroy()
+        this.$Notice.error({
+            title: this.$t(text) + ''
         })
     }
 
@@ -184,6 +203,10 @@ export class VoteTs extends Vue {
         this.currentVoteFilter = this.voteFilterList[0].value
         this.currentTimestamp = Number((new Date()).valueOf() / 1000).toFixed(0)
         this.currentVoteList = this.voteList
+    }
+
+    created() {
+        this.getVoteList()
     }
 }
 

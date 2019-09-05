@@ -1,5 +1,5 @@
 import {Message} from "@/config/index.ts"
-import {Component, Vue, Watch} from 'vue-property-decorator'
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
@@ -15,12 +15,10 @@ import {mapState} from "vuex"
         })
     }
 })
-export class WalletAliasTs extends Vue {
+export class NamespaceAddressAliasDialogTs extends Vue {
     activeAccount: any
     app: any
     isShowDialog = false
-    isShowDeleteIcon = false
-    showCheckPWDialog = false
     isCompleteForm = true
     aliasList = []
     aliasListIndex = -1
@@ -28,9 +26,15 @@ export class WalletAliasTs extends Vue {
     formItem = {
         address: '',
         alias: '',
-        fee: 1,
+        fee: .5,
         password: ''
     }
+
+    @Prop()
+    isShowAddressAliasDialog: boolean
+    @Prop()
+    addressAliasItem: any
+
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -52,6 +56,7 @@ export class WalletAliasTs extends Vue {
         return this.app.chainStatus.currentHeight
     }
 
+
     showUnLink(index) {
         this.aliasListIndex = index
         this.formItem = {
@@ -64,6 +69,7 @@ export class WalletAliasTs extends Vue {
     }
 
     closeModel() {
+        this.$emit('closeAddressAliasDialog')
         this.isShowDialog = false
         this.aliasListIndex = -1
         this.formItem = {
@@ -170,6 +176,13 @@ export class WalletAliasTs extends Vue {
 
     @Watch('namespaceList')
     onNamespaceListChange() {
+        this.initData()
+    }
+
+    @Watch('isShowAddressAliasDialog')
+    onShowMosaicAliasDialogChange() {
+        this.isShowDialog = this.isShowAddressAliasDialog
+        this.formItem.alias = this.addressAliasItem.name
         this.initData()
     }
 

@@ -253,6 +253,8 @@ export const zh_CN = {
     // edit dialog
     modify_supply: '修改供应量',
     binding_alias: '绑定别名',
+    bind_mosaic:'绑定马赛克',
+    bind_address:'绑定地址',
     unbind: '取消绑定',
     alias_selection: '别名选择',
     password: '密码',
@@ -572,6 +574,8 @@ export const zh_CN = {
     add_address: '添加账户地址',
     add_mosaic: '添加马赛克',
     add_entity_type: '添加交易类型',
+    link: '是否绑定',
+    type: '绑定信息',
     Any_information_cannot_be_empty: '任意信息不能为空',
     success: '操作成功',
     Transaction_sending: '节点已接收事务',

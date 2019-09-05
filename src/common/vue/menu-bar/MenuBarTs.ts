@@ -186,7 +186,6 @@ export class MenuBarTs extends Vue {
         const node = this.node.replace('http', 'ws')
         this.unconfirmedTxListener && this.unconfirmedTxListener.close()
         this.unconfirmedTxListener = new Listener(node, WebSocket)
-        console.log(this.wallet.address)
         new ListenerApiRxjs().listenerUnconfirmed(this.unconfirmedTxListener, Address.createFromRawAddress(this.wallet.address), this.disposeUnconfirmed)
     }
 
@@ -270,7 +269,10 @@ export class MenuBarTs extends Vue {
         that.$Notice.error({
             title: that.$t(Message.NODE_CONNECTION_ERROR) + ''
         })
-        new BlockApiRxjs().getBlockchainHeight(currentNode ? currentNode : 1).subscribe((info) => {
+        if (!currentNode) {
+            return
+        }
+        new BlockApiRxjs().getBlockchainHeight(currentNode).subscribe((info) => {
             that.isNodeHealthy = true
             that.getGenerationHash(currentNode)
             that.$Notice.destroy()

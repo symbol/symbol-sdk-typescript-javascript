@@ -1,12 +1,13 @@
 import {Message, formData} from "@/config/index.ts"
-import {Mosaic, MosaicId, UInt64} from 'nem2-sdk'
+import {Mosaic, MosaicId, NamespaceHttp, NamespaceId, UInt64} from 'nem2-sdk'
 import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {cloneData, getRelativeMosaicAmount, getAbsoluteMosaicAmount} from '@/core/utils/utils'
+import {cloneData, getAbsoluteMosaicAmount} from '@/core/utils/utils'
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
 import {standardFields} from '@/core/validation'
 import {mapState} from 'vuex'
+import {NamespaceApiRxjs} from '@/core/api/NamespaceApiRxjs.ts'
 import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 
 @Component({
@@ -28,6 +29,7 @@ export default class TransferTransactionTs extends Vue {
     currentMosaic: string = ''
     currentAmount: number = 0
     isAddressMapNull = true
+    isAddressAliasExist = false
     formFields = formData.transferForm
     formModel = cloneData(this.formFields)
 
@@ -106,15 +108,41 @@ export default class TransferTransactionTs extends Vue {
             "remarks": remark,
             "encryption": isEncrypted,
         }
-        this.showCheckPWDialog = true
         this.generateTransaction()
+        this.showCheckPWDialog = true
+    }
+
+    async formatAddress() {
+        const {node} = this
+        let addressAlias = this.formModel.address
+        this.formModel.address = ''
+        if (addressAlias.indexOf('@') == -1) {
+            return
+        }
+        const namespaceId = new NamespaceId(addressAlias.substring(1))
+        try {
+            const namespaceInfo = await new NamespaceApiRxjs().getNamespace(namespaceId, node).toPromise()
+            this.formModel.address = namespaceInfo.alias.address
+        } catch (e) {
+            console.log(e)
+            return false
+        }
     }
 
     generateTransaction() {
-        const that = this
+        // TODO address alias
         let {address, remark, fee, mosaicTransferList, isEncrypted} = this.formModel
+        this.formatAddress()
+        if (!address || address.length < 40) {
+            this.$Notice.error({
+                title: 'address alias not exist'
+            })
+            return
+        }
+
         const {networkType, xemDivisibility} = this.wallet
         fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
+
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
             fee,

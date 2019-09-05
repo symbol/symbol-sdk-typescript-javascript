@@ -442,9 +442,12 @@ export const en_US = {
     Nemwallet_can_not_recover_your_mnemonic: 'Nemwallet can\'t recover your mnemonic',
     Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct: 'Please enter a mnemonic to ensure that the mnemonic is correct',
     Mnemonic_inconsistency: 'Mnemonic inconsistency',
-
+    bind_mosaic:'bind mosaic',
+    bind_address:'bind address',
     //wallet details
     Basic_information: 'Basic information',
+    link: 'Link info',
+    type: 'Link type',
     Wallet_type: 'Type',
     Public_wallet: 'Public wallet',
     Wallet_name: 'Name',

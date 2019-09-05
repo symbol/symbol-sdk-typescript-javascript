@@ -11,24 +11,43 @@
         <span class="namesapce_name">{{$t('space_name')}}</span>
         <span class="duration">{{$t('duration')}}</span>
         <span class="is_active">{{$t('is_active')}}</span>
+        <span class="link">{{$t('link')}}</span>
+        <span class="type">{{$t('type')}}</span>
         <span class="more"></span>
       </div>
 
       <div class="table_body">
-        <div class="table_body_item radius" v-for="n in namespaceList">
-          <span class="namesapce_name">{{n.name}}</span>
-          <span class="duration">
+
+        <div class="table_body_item radius" v-if="n" v-for="n in namespaceList">
+          <span class="namesapce_name overflow_ellipsis">{{n.name}}</span>
+          <span class="duration overflow_ellipsis">
             {{computeDuration(n) === 'Expired' ? $t('overdue') : durationToTime(n.duration)}}
           </span>
-          <span class="is_active">{{n.isActive?$t('true'):$t('false')}}</span>
-          <span class="more" v-if="n.levels === 1">
-            <Poptip class="poptip_container" placement="top-start">
+          <span class="is_active overflow_ellipsis">{{n.isActive?$t('true'):$t('false')}}</span>
+          <span class="link overflow_ellipsis">{{n.aliasType}}</span>
+          <span class="type overflow_ellipsis">{{n.aliasTarget}}</span>
+          <span class="more overflow_ellipsis">
+            <Poptip class="poptip_container" placement="top-end">
               <i class="moreFn"></i>
-              <div slot="content" max-width="50" class="refresh_sub_container">
-                <span class="fnItem pointer" @click="showEditDialog(n)">
+              <div slot="content" max-width="150" class="refresh_sub_container">
+                <span class="fnItem pointer" v-if="n.levels === 1" @click="showEditDialog(n)">
                   <img src="@/common/img/service/namespace/namespaceRefresh.png">
                   <span>{{$t('update')}}</span>
                 </span>
+               <span v-if="n.isLinked" class="fnItem pointer" @click="showUnlinkDialog(n)">
+                <img src="@/common/img/service/namespace/namespaceRefresh.png">
+                <span>{{$t('unbind')}}</span>
+              </span>
+
+              <span v-if="!n.isLinked" class="fnItem pointer" @click="showMosaicLinkDialog(n)">
+                <img src="@/common/img/service/namespace/namespaceRefresh.png">
+                <span>{{$t('bind_mosaic')}}</span>
+              </span>
+
+                  <span v-if="!n.isLinked" class="fnItem pointer" @click="showAddressLinkDialog(n)">
+                <img src="@/common/img/service/namespace/namespaceRefresh.png">
+                <span>{{$t('bind_address')}}</span>
+              </span>
               </div>
             </Poptip>
           </span>
@@ -40,8 +59,30 @@
 
       </div>
     </div>
-    <NamespaceEditDialog :currentNamespace="currentNamespace" :showNamespaceEditDialog="showNamespaceEditDialog"
-                         @closeNamespaceEditDialog='closeNamespaceEditDialog'></NamespaceEditDialog>
+    <NamespaceEditDialog
+            :currentNamespace="currentNamespace"
+            :showNamespaceEditDialog="showNamespaceEditDialog"
+            @closeNamespaceEditDialog='closeNamespaceEditDialog'
+    ></NamespaceEditDialog>
+
+    <NamespaceUnAliasDialog
+            :showUnAliasDialog="showUnAliasDialog"
+            :unAliasItem="aliasDialogItem"
+            @closeUnAliasDialog="closeUnAliasDialog"
+    ></NamespaceUnAliasDialog>
+
+    <NamespaceMosaicAliasDialog
+            :showMosaicAliasDialog="showMosaicAliasDialog"
+            :itemMosaic="aliasDialogItem"
+            @closeMosaicAliasDialog="closeMosaicAliasDialog"
+    ></NamespaceMosaicAliasDialog>
+
+    <NamespaceAddressAliasDialog
+            :isShowAddressAliasDialog="isShowAddressAliasDialog"
+            :addressAliasItem="aliasDialogItem"
+            @closeAddressAliasDialog="closeAddressAliasDialog"
+    ></NamespaceAddressAliasDialog>
+
   </div>
 </template>
 

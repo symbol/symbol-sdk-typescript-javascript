@@ -217,9 +217,9 @@ export const entityTypeList = {
 
 export const nodeList = [
     {
-        value: 'http://192.168.0.105:3000',
-        name: 'my-8',
-        url: '192.168.0.105',
+        value: 'http://52.194.207.217:3000',
+        name: 'api-node-jp-12',
+        url: '52.194.207.217',
         isSelected: false,
     },
     {
@@ -600,3 +600,4 @@ export const voteType = {
     RADIO: 0,
     MULTIPLE: 1
 }
+

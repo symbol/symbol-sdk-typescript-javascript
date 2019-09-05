@@ -118,7 +118,7 @@ export class WalletPanelTs extends Vue {
 
     @Watch('wallet')
     onGetWalletChange(n, o) {
-        if(!n.address || o.address === n.address) return
+        if (!n.address || o.address === n.address) return
         this.getMyNamespaces()
     }
 

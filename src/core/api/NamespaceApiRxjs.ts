@@ -5,7 +5,11 @@ import {
     UInt64,
     MosaicAliasTransaction,
     AddressAliasTransaction,
-    NamespaceHttp, NetworkType, AliasActionType, MosaicId, Address,
+    NamespaceHttp,
+    NetworkType,
+    AliasActionType,
+    MosaicId,
+    Address,
 } from 'nem2-sdk'
 
 export class NamespaceApiRxjs {
@@ -77,7 +81,8 @@ export class NamespaceApiRxjs {
 
     getLinkedMosaicId(
         namespaceId: NamespaceId,
-        url: string) {
+        url: string
+    ) {
         const namespaceHttp = new NamespaceHttp(url)
         return namespaceHttp.getLinkedMosaicId(namespaceId)
 
@@ -92,8 +97,10 @@ export class NamespaceApiRxjs {
             return item.id
         })
         const namespaceName = await namespaceHttp.getNamespacesName(namespaceIds).toPromise()
-        namespaces = namespaceName.map((item) => {
-            const namespace = namespaces[item.namespaceId.toHex().toUpperCase()]
+        namespaces = namespaceName.map((item: any) => {
+            let namespace = namespaces[item.namespaceId.toHex().toUpperCase()]
+            // namespaceInfo may be undefined
+            if (!namespace) return
             namespace.namespaceName = item.name
             return namespace
         })
@@ -102,6 +109,9 @@ export class NamespaceApiRxjs {
                 namespaceList: namespaces
             }
         }
+    }
 
+    getNamespace(namespaceId: NamespaceId, node: string) {
+        return new NamespaceHttp(node).getNamespace(namespaceId)
     }
 }

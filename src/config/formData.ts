@@ -3,9 +3,9 @@ export const formData = {
         address: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
         remark: '',
         multisigPublickey: '',
-        innerFee: 1000000,
-        lockFee: 10000000,
-        aggregateFee: 1000000,
+        innerFee: 1,
+        lockFee: 10,
+        aggregateFee: 1,
         mosaicTransferList: [],
         isEncryption: true
     },
@@ -18,7 +18,7 @@ export const formData = {
     },
     mosaicAliasForm: {
         aliasName: '',
-        fee: 50000,
+        fee: 0.5,
         password: ''
     },
     mosaicEditForm: {
@@ -28,55 +28,55 @@ export const formData = {
         supplyType: 1,
         changeDelta: 0,
         duration: '',
-        fee: 50000,
+        fee: 0.5,
         password: ''
     },
     mosaicUnaliasForm: {
-        fee: 50000,
+        fee: 0.5,
         password: ''
     },
     mosaicTransactionForm: {
-        supply: 500000000,
+        supply: 0.50000,
         divisibility: 6,
         transferable: true,
         supplyMutable: true,
         permanent: false,
         duration: 1000,
-        innerFee: 50000,
-        aggregateFee: 50000,
-        lockFee: 50000,
+        innerFee: 0.5,
+        aggregateFee: 0.5,
+        lockFee: 0.5,
         multisigPublickey: ''
     },
     multisigConversionForm: {
         publickeyList: [],
         minApproval: 1,
         minRemoval: 1,
-        bondedFee: 10000000,
-        lockFee: 10000000,
-        innerFee: 10000000
+        bondedFee: 1,
+        lockFee: 10,
+        innerFee: 1
     },
     multisigManagementForm: {
         minApprovalDelta: 0,
         minRemovalDelta: 0,
-        bondedFee: 10000000,
-        lockFee: 10000000,
-        innerFee: 10000000,
+        bondedFee: 1,
+        lockFee: 10,
+        innerFee: 1,
         cosignerList: [],
         multisigPublickey: ''
     },
     namesapceEditForm: {
         name: '',
         duration: 0,
-        fee: 50000,
+        fee: 0.5,
         password: ''
     },
     rootNamespaceForm: {
         duration: 1000,
         rootNamespaceName: '',
         multisigPublickey: '',
-        innerFee: 50000,
-        aggregateFee: 50000,
-        lockFee: 50000
+        innerFee: 0.5,
+        aggregateFee: 0.5,
+        lockFee: 0.5
     },
     walletImportMnemonicForm: {
         mnemonic: '',

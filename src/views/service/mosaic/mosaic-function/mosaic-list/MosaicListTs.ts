@@ -1,4 +1,4 @@
-import {MosaicId} from "nem2-sdk"
+import {Address, MosaicId} from "nem2-sdk"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
@@ -6,6 +6,7 @@ import MosaicUnAliasDialog from './mosaic-unAlias-dialog/MosaicUnAliasDialog.vue
 import {getMosaicList, getMosaicInfoList} from '@/core/utils/wallet'
 import {mapState} from "vuex"
 import {formatNumber} from "@/core/utils/utils"
+import {aliasType} from "@/config"
 
 @Component({
     components: {
@@ -69,13 +70,25 @@ export class MosaicListTs extends Vue {
         return this.app.chainStatus.currentHeight
     }
 
-    get namespaceList() {
-        return this.activeAccount.namespace
+    get namespaceMap() {
+        let namespaceMap = {}
+        this.activeAccount.namespace.forEach((item) => {
+            switch (item.alias.type) {
+                case (aliasType.addressAlias):
+                    //@ts-ignore
+                    namespaceMap[Address.createFromEncoded(item.alias.address).address] = item
+                    break
+                case (aliasType.mosaicAlias):
+                    namespaceMap[new MosaicId(item.alias.mosaicId).toHex()] = item
+            }
+        })
+        return namespaceMap
     }
 
     showCheckDialog() {
         this.showCheckPWDialog = true
     }
+
     formatNumber(number) {
         return formatNumber(number)
     }
@@ -122,7 +135,7 @@ export class MosaicListTs extends Vue {
 
     async initMosaic() {
         const that = this
-        let {accountPublicKey, accountAddress, node, currentXem} = this
+        let {accountPublicKey, accountAddress, node, currentXem, namespaceMap} = this
         let mosaicMapInfo: any = {}
         mosaicMapInfo.length = 0
         let existMosaics: any = []
@@ -132,10 +145,11 @@ export class MosaicListTs extends Vue {
         })
         const mosaicListInfo: any = await getMosaicInfoList(node, mosaicIdList)
         mosaicListInfo.map((mosaicInfo) => {
+            const mosaicHex = mosaicInfo.mosaicId.id.toHex()
             if (mosaicInfo.owner.publicKey !== accountPublicKey) {
                 return
             }
-            mosaicInfo.hex = mosaicInfo.mosaicId.id.toHex().toUpperCase()
+            mosaicInfo.hex = mosaicHex.toUpperCase()
             mosaicInfo.supply = mosaicInfo.supply.compact()
             mosaicInfo.supplyMutable = mosaicInfo.properties.supplyMutable
             mosaicInfo._divisibility = mosaicInfo.properties.divisibility
@@ -144,10 +158,10 @@ export class MosaicListTs extends Vue {
                 existMosaics.push(new MosaicId(mosaicInfo.hex))
             }
             mosaicMapInfo.length += 1
-            if (mosaicInfo.mosaicId.id.toHex() == that.currentXEM1 || mosaicInfo.mosaicId.id.toHex() == that.currentXEM2) {
+            if (mosaicHex == that.currentXEM1 || mosaicHex == that.currentXEM2) {
                 mosaicInfo.name = currentXem
             } else {
-                mosaicInfo.name = ''
+                mosaicInfo.name = namespaceMap[mosaicHex] ? namespaceMap[mosaicHex].name : ''
             }
             mosaicMapInfo[mosaicInfo.hex] = mosaicInfo
         })

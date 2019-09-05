@@ -41,6 +41,7 @@
                     <i><img src="@/common/img/service/setAlias.png"></i>
                     <span>{{$t('binding_alias')}}</span>
                   </p>
+
                   <p class="fnItem" @click="showUnAliasDialog(value)" v-if="value.name">
                     <i><img src="@/common/img/service/clearAlias.png"></i>
                     <span>{{$t('unbind')}}</span>
@@ -52,6 +53,7 @@
         </Row>
       </div>
     </div>
+
     <MosaicAliasDialog :showMosaicAliasDialog="showMosaicAliasDialog" :itemMosaic="selectedMosaic"
                        @closeMosaicAliasDialog="closeMosaicAliasDialog"></MosaicAliasDialog>
     <MosaicUnAliasDialog :showMosaicUnAliasDialog="showMosaicUnAliasDialog" :itemMosaic="selectedMosaic"
@@ -62,7 +64,7 @@
 </template>
 
 <script lang="ts">
-    import {MosaicListTs} from '@/views/service/mosaic/mosaic-function/mosaic-list/MosaicListTs.ts';
+    import {MosaicListTs} from '@/views/service/mosaic/mosaic-function/mosaic-list/MosaicListTs.ts'
 
     export default class MosaicList extends MosaicListTs {
 

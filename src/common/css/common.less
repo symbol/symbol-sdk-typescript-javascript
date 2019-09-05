@@ -207,6 +207,10 @@ input::placeholder {
   text-overflow: ellipsis;
 }
 
+.overflow_hidden {
+  overflow: hidden;
+}
+
 textarea {
   border: none;
   outline: none;
@@ -308,4 +312,20 @@ textarea {
 .selection_animate {
   animation: fadeIn .5s infinite;
   -webkit-animation: fadeIn .5s;
+}
+
+
+// service namespace_list_container
+.namespace_list_container {
+  .ivu-poptip-popper {
+    top: unset !important;
+    bottom: 40px !important;
+    right: 120px;
+
+  }
+
+  .ivu-poptip-inner {
+    width: 180px;
+  }
+
 }
