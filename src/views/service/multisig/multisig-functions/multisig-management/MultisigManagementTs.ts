@@ -1,4 +1,4 @@
-import {Message,formData} from "@/config/index.ts"
+import {Message, formData} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
@@ -17,6 +17,7 @@ import {
     multisigAccountInfo
 } from "@/core/utils/wallet.ts"
 import {mapState} from "vuex"
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 @Component({
     components: {
@@ -71,6 +72,10 @@ export class MultisigManagementTs extends Vue {
         return this.activeAccount.node
     }
 
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
+    }
+
     addCosigner(flag) {
         const {currentPublickey} = this
         if (!currentPublickey || !currentPublickey.trim()) {
@@ -114,12 +119,13 @@ export class MultisigManagementTs extends Vue {
 
 
     createCompleteModifyTransaction() {
-        const {multisigPublickey, cosignerList, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
-        const {networkType} = this
+        let {multisigPublickey, cosignerList, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
+        const {networkType, xemDivisibility} = this
         const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
             cosigner.type,
             PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
         ))
+        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
         const modifyMultisigAccountTx = ModifyMultisigAccountTransaction.create(
             Deadline.create(),
             Number(minApprovalDelta),
@@ -138,13 +144,14 @@ export class MultisigManagementTs extends Vue {
     }
 
     createBondedModifyTransaction() {
-        const {cosignerList, bondedFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
-        const {networkType, node, publicKey} = this
+        let {cosignerList, bondedFee, innerFee, minApprovalDelta, minRemovalDelta} = this.formItem
+        const {networkType, node, publicKey,xemDivisibility} = this
+        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        bondedFee = getAbsoluteMosaicAmount(bondedFee, xemDivisibility)
         const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
             cosigner.type,
             PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
         ))
-        const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
             Deadline.create(),
             Number(minApprovalDelta),

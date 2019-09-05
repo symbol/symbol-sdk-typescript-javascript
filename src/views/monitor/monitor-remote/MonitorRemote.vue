@@ -4,7 +4,7 @@
       <div class="remote_total">
         <strong class="trend"> {{$t('Remote_title_recipt')}}</strong>
         <div class="num_class">
-          <span class="trend_red"> 0.000</span>
+          <span class="trend_red"> {{$t('not_yet_open')}}</span>
         </div>
         <div class="state_class">
           <div class="div_cer">
@@ -109,9 +109,9 @@
 </template>
 
 <script lang="ts">
-    import "./MonitorRemote.less";
+    import "./MonitorRemote.less"
     // @ts-ignore
-    import {MonitorRemoteTs} from '@/views/monitor/monitor-remote/MonitorRemoteTs.ts';
+    import {MonitorRemoteTs} from '@/views/monitor/monitor-remote/MonitorRemoteTs.ts'
 
     export default class MonitorRemote extends MonitorRemoteTs {
 

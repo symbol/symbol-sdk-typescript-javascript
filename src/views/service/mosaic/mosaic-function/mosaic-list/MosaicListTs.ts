@@ -5,6 +5,7 @@ import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
 import MosaicUnAliasDialog from './mosaic-unAlias-dialog/MosaicUnAliasDialog.vue'
 import {getMosaicList, getMosaicInfoList} from '@/core/utils/wallet'
 import {mapState} from "vuex"
+import {formatNumber} from "@/core/utils/utils"
 
 @Component({
     components: {
@@ -74,6 +75,9 @@ export class MosaicListTs extends Vue {
 
     showCheckDialog() {
         this.showCheckPWDialog = true
+    }
+    formatNumber(number) {
+        return formatNumber(number)
     }
 
     closeCheckPWDialog() {

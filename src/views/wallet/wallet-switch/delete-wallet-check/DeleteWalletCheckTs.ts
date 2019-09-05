@@ -2,7 +2,7 @@ import {Password} from 'nem2-sdk'
 import {AppWallet} from '@/core/utils/wallet.ts'
 import {Message} from "@/config/index.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {mapState} from 'vuex';
+import {mapState} from 'vuex'
 
 @Component({
     computed: {
@@ -23,6 +23,11 @@ export class DeleteWalletCheckTs extends Vue {
     @Prop()
     walletToDelete: AppWallet
 
+
+    get getWallet() {
+        return this.activeAccount.wallet
+    }
+
     checkPasswordDialogCancel() {
     }
 
@@ -31,12 +36,12 @@ export class DeleteWalletCheckTs extends Vue {
             const password = new Password(this.wallet.password)
             const isPasswordCorrect = new AppWallet(this.walletToDelete).checkPassword(password)
             if (isPasswordCorrect) {
-              new AppWallet(this.walletToDelete).delete(this.$store, this)
-              this.$emit('closeCheckPWDialog')
+                new AppWallet(this.walletToDelete).delete(this.$store, this)
+                this.$emit('closeCheckPWDialog')
             } else {
-              this.$Notice.error({
-                  title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-              })
+                this.$Notice.error({
+                    title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
+                })
             }
         } catch (error) {
             this.$Notice.error({

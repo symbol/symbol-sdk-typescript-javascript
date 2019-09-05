@@ -1,8 +1,5 @@
 <template>
-  <div class="vote_container radius secondary_page_animate">
-
-    <div class="fake_content" v-if="voteActionList[1].isSelect"></div>
-
+  <div class="vote_container radius">
     <div class="top_button letter_spacing">
       <span
               @click="swicthVoteAction(index)"
@@ -10,8 +7,8 @@
               v-for="(t,index) in voteActionList">
         {{$t(t.name)}}
         </span>
-      <div v-show="false">
-        <Select v-show="voteActionList[0]" class="vote_filter" v-model="currentVoteFilter" style="width:100px">
+      <div>
+        <Select v-show="voteActionList[0].isSelect" class="vote_filter" v-model="currentVoteFilter" style="width:100px">
           <Option class="pointer" v-for="(item,index) in voteFilterList" :value="item.value" :key="index">
             {{ $t(item.label)}}
           </Option>
@@ -36,71 +33,67 @@
                   <span v-if='v.voteStatus == 3' :class="v.isSelect?'yellow':''">{{$t('finished')}}</span>
                 </span>
               </div>
-
             </div>
           </div>
-
         </div>
 
         <div class="right_article_detail radius  right">
-          <div v-if="0 == 0" class="noData">
-            <i><img src="@/common/img/wallet/no_data.png"></i>
-            <p>{{$t('not_yet_open')}}</p>
-          </div>
           <div class="right_container scroll">
-
-
-            <!--            <div class="initor">-->
-            <!--              <span class="blue">{{$t('initiation_address')}}</span>-->
-            <!--              <span>  f65sf5s5af65as6df5sa5f6s5f6s5af65sa6f5s6af5s6a5f6f</span>-->
-            <!--            </div>-->
-            <!--            <div class="vote_address">-->
-            <!--              <span class="blue">{{$t('voting_address')}}</span>-->
-            <!--              <span>ad5as4d5a4d5as4d5as5d45asd54sa5d45as4d5as4d5a</span>-->
-            <!--            </div>-->
-            <!--            <div class="title">{{currentVote.title}}</div>-->
-            <!--            <div class="date letter_spacing"><span class="orange"> {{$t('deadline')}} </span>:-->
-            <!--              <span>2019/7/10 16:33</span></div>-->
-            <!--            <div class="content">{{currentVote.title}}</div>-->
-            <!--            <div class="selection">-->
-            <!--              <RadioGroup v-model="sigleSelection" v-if="!currentVote.isMultiple">-->
-            <!--                <Radio v-for="(i,index) in currentVote.selctions" :label="alphabet[index] + ' : '+i.name"></Radio>-->
-            <!--              </RadioGroup>-->
-            <!--              <CheckboxGroup v-model="multiSelectionList" v-else>-->
-            <!--                <Checkbox v-for="(i,index) in currentVote.selctions" :label="alphabet[index] + ' : '+i.name"></Checkbox>-->
-            <!--              </CheckboxGroup>-->
-            <!--            </div>-->
-            <!--            <div class="pie_chart">-->
-            <!--              <PieChart :currentVote="currentVote"></PieChart>-->
-            <!--            </div>-->
-            <!--            <div @click="sendVote" class="click_to_vote un_click">-->
-            <!--              {{$t('confirm_vote')}}-->
-            <!--            </div>-->
+            <div class="initor">
+              <span class="blue">{{$t('initiation_address')}}</span>
+              <span>  f65sf5s5af65as6df5sa5f6s5f6s5af65sa6f5s6af5s6a5f6f</span>
+            </div>
+            <div class="vote_address">
+              <span class="blue">{{$t('voting_address')}}</span>
+              <span>ad5as4d5a4d5as4d5as5d45asd54sa5d45as4d5as4d5a</span>
+            </div>
+            <div class="title">{{currentVote.title}}</div>
+            <div class="date letter_spacing"><span class="orange"> {{$t('deadline')}} </span>:
+              <span>2019/7/10 16:33</span></div>
+            <div class="content">{{currentVote.title}}</div>
+            <div class="selection">
+              <RadioGroup v-model="sigleSelection" v-if="!currentVote.isMultiple">
+                <Radio v-for="(i,index) in currentVote.selctions" :label="alphabet[index] + ' : '+i.name"></Radio>
+              </RadioGroup>
+              <CheckboxGroup v-model="multiSelectionList" v-else>
+                <Checkbox v-for="(i,index) in currentVote.selctions" :label="alphabet[index] + ' : '+i.name"></Checkbox>
+              </CheckboxGroup>
+            </div>
+            <div class="pie_chart">
+              <PieChart :currentVote="currentVote"></PieChart>
+            </div>
+            <div @click="sendVote" class="click_to_vote un_click">
+              {{$t('confirm_vote')}}
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="create_vote scroll radius" v-show="!voteActionList[0].isSelect">
-
       <div class="vote_creating_content">
         <div class="vote_title">
           <span class="title">{{$t('title')}}</span>
-          <span class="value radius"><input :placeholder="$t('please_enter_a_voting_title')" type="text"></span>
+          <span class="value radius">
+            <input v-model="formItem.title" :placeholder="$t('please_enter_a_voting_title')" type="text">
+          </span>
         </div>
         <div class="vote_describle">
           <span class="title">{{$t('description')}}</span>
           <span class="value radius">
-          <textarea :placeholder="$t('about_voting_content_description')" class="scroll" name="" id="" cols="95"
-                    rows="3"></textarea>
+          <textarea :placeholder="$t('about_voting_content_description')"
+                    class="scroll"
+                    v-model="formItem.content"
+          >
+          </textarea>
         </span>
         </div>
         <div class="vote_selections">
           <span class="title">{{$t('option')}}</span>
           <span class="selection_list right">
-          <div class="list_cloumn" v-for="(s,index) in selectionList">
+          <div class="list_cloumn" v-for="(s,index) in formItem.optionList">
             <span class="value radius">
-              <input v-model="s.value" type="text"/>
+              <input v-model="s.description" type="text"/>
                <span class="button_content">
                   <img src="@/common/img/community/vote/voteAddLine.png" :class="['pointer',index === 0?'alone':'']"
                        @click="addSelection()"
@@ -114,47 +107,71 @@
         </div>
 
         <div class="vote_vote_type">
-          <RadioGroup v-model="voteType">
-            <Radio class="vote_mul" :label="$t('multiple_selection')"></Radio>
-            <Radio class="vote_single" :label="$t('radio')"></Radio>
+          <RadioGroup v-model="formItem.voteType">
+            <Radio class="vote_mul" :label="voteType.MULTIPLE">{{$t('MULTIPLE')}}</Radio>
+            <Radio class="vote_single" :label="voteType.RADIO">{{$t('RADIO')}}</Radio>
           </RadioGroup>
         </div>
         <div class="vote_deadline">
-          <span class="title">{{$t('deadline')}}</span>
+          <span class="title">{{$t('start_time')}}</span>
           <span class="value radius">
-          <input type="text" :value="deadline" :placeholder="$t('enter_the_date_for_example')+'2019-12-28 14:57'">
-
+          <input type="text" v-model="formItem.starttime"
+                 :placeholder="$t('enter_the_date_for_example')+'2019-12-28 14:57'">
             <span class="select_date pointer">
               <div class="date_container pointer">
                 <div class="month_value pointer">
                 <img src="@/common/img/monitor/market/marketCalendar.png" alt="">
               </div>
               <div class="date_selector pointer">
-                <DatePicker class="pointer" @on-change="changeCurrentMonth" type="datetime" placeholder=""
-                            :value="currentMonth"
-                            style="width: 70px"></DatePicker>
+                <DatePicker class="pointer"
+                            @on-change="updateStartTime"
+                            type="datetime"
+                            placeholder=""
+                            :value="formItem.starttime"
+                            style="width: 50px"
+                ></DatePicker>
               </div>
               </div>
-
             </span>
         </span>
         </div>
-        <div class="vote_fee">
-          <span class="title">{{$t('fee')}}</span>
+
+        <div class="vote_deadline">
+          <span class="title">{{$t('deadline')}}</span>
           <span class="value radius">
-          <input placeholder="0.050000" type="text">
-          <span class="right">gas</span>
+          <input type="text" v-model="formItem.endtime"
+                 :placeholder="$t('enter_the_date_for_example')+'2019-12-28 14:57'">
+            <span class="select_date pointer">
+              <div class="date_container pointer">
+                <div class="month_value pointer">
+                <img src="@/common/img/monitor/market/marketCalendar.png" alt="">
+              </div>
+              <div class="date_selector pointer">
+                <DatePicker class="pointer" @on-change="updateCurrentMonth" type="datetime" placeholder=""
+                            :value="formItem.endtime"
+                            style="width: 50px"></DatePicker>
+              </div>
+              </div>
+            </span>
         </span>
         </div>
+
+        <!--        todo add fee after updating vote sdk-->
+        <!--        <div class="vote_fee">-->
+        <!--          <span class="title">{{$t('fee')}}</span>-->
+        <!--          <span class="value radius">-->
+        <!--          <input v-model="formItem.fee" placeholder="0.050000" type="text">-->
+        <!--          <span class="right">gas</span>-->
+        <!--        </span>-->
+        <!--        </div>-->
         <div class="tips red right">
           {{$t('the_default_is')}}:50000gas，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
         </div>
 
-        <div class="create_button">
+        <div class="create_button" @click="submitCreatVote">
           {{$t('create')}}
         </div>
       </div>
-
     </div>
 
     <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"

@@ -108,12 +108,12 @@ export class MenuBarTs extends Vue {
     }
 
     get currentWalletAddress() {
-      if(!this.wallet) return false
-      return this.activeAccount.wallet.address
+        if (!this.wallet) return false
+        return this.activeAccount.wallet.address
     }
 
     set currentWalletAddress(newActiveWalletAddress) {
-      AppWallet.switchWallet(newActiveWalletAddress, this.walletList, this.$store)
+        AppWallet.switchWallet(newActiveWalletAddress, this.walletList, this.$store)
     }
 
     closeWindow() {
@@ -186,6 +186,7 @@ export class MenuBarTs extends Vue {
         const node = this.node.replace('http', 'ws')
         this.unconfirmedTxListener && this.unconfirmedTxListener.close()
         this.unconfirmedTxListener = new Listener(node, WebSocket)
+        console.log(this.wallet.address)
         new ListenerApiRxjs().listenerUnconfirmed(this.unconfirmedTxListener, Address.createFromRawAddress(this.wallet.address), this.disposeUnconfirmed)
     }
 
@@ -195,7 +196,7 @@ export class MenuBarTs extends Vue {
         this.confirmedTxListener && this.confirmedTxListener.close()
         this.confirmedTxListener = new Listener(node, WebSocket)
         new ListenerApiRxjs().listenerConfirmed(this.confirmedTxListener,
-          Address.createFromRawAddress(this.wallet.address), this.disposeConfirmed)
+            Address.createFromRawAddress(this.wallet.address), this.disposeConfirmed)
     }
 
     txErrorListener() {
@@ -269,7 +270,7 @@ export class MenuBarTs extends Vue {
         that.$Notice.error({
             title: that.$t(Message.NODE_CONNECTION_ERROR) + ''
         })
-        new BlockApiRxjs().getBlockchainHeight(currentNode).subscribe((info) => {
+        new BlockApiRxjs().getBlockchainHeight(currentNode ? currentNode : 1).subscribe((info) => {
             that.isNodeHealthy = true
             that.getGenerationHash(currentNode)
             that.$Notice.destroy()

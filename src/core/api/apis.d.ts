@@ -1,3 +1,5 @@
+import {VoteQuery} from "@/core/query/voteQuery"
+
 export declare namespace api {
     interface market {
         kline: (params: {
@@ -46,5 +48,40 @@ export declare namespace api {
         }) => Promise<{
             rst: any;
         }>;
+    }
+
+    interface vote {
+        list: (params: {
+            limit: string,
+            offset: string,
+        }) => Promise<{
+            rst: any;
+        }>;
+        listData: (params: {
+            voteid: string,
+        }) => Promise<{
+            rst: any;
+        }>;
+        saveVote: (params: {
+            vote: VoteQuery
+        }) => Promise<{
+            rst: any;
+        }>;
+        addVote: (params: {
+            address: string,
+            voteId: string,
+            voteDataIds: string[],
+        }) => Promise<{
+            rst: any;
+        }>;
+
+        userAlready: (params: {
+            limit: string,
+            offset: string,
+            address: string
+        }) => Promise<{
+            rst: any;
+        }>;
+
     }
 }

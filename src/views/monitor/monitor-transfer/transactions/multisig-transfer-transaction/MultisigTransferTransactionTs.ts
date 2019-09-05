@@ -18,6 +18,7 @@ import {
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs"
 import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 import {mapState} from "vuex"
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 @Component({
     components: {
@@ -57,7 +58,6 @@ export class MultisigTransferTransactionTs extends Vue {
         return this.activeAccount.generationHash
     }
 
-
     get currentXem() {
         return this.activeAccount.currentXem
     }
@@ -87,16 +87,20 @@ export class MultisigTransferTransactionTs extends Vue {
         return this.activeAccount.wallet.networkType
     }
 
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
+    }
+
     initForm() {
         this.formItem = {
             address: '',
             mosaicTransferList: [],
             remark: '',
             multisigPublickey: '',
-            innerFee: 10000000,
-            lockFee: 10000000,
+            innerFee: 1,
+            lockFee: 10,
             isEncryption: true,
-            aggregateFee: 10000000,
+            aggregateFee: 1,
         }
     }
 
@@ -143,8 +147,11 @@ export class MultisigTransferTransactionTs extends Vue {
             return
         }
         const that = this
-        const {networkType, node} = this
-        let {address, innerFee, lockFee, aggregateFee, mosaicTransferList, isEncryption, remark, multisigPublickey} = this.formItem
+        const {networkType, node, xemDivisibility} = this
+        let {address, innerFee, aggregateFee, mosaicTransferList, isEncryption, remark, multisigPublickey} = this.formItem
+        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        aggregateFee = getAbsoluteMosaicAmount(aggregateFee, xemDivisibility)
+
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
             innerFee,

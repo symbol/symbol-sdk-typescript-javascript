@@ -7,9 +7,13 @@ import {
     formatTransactions,
     getCurrentMonthFirst,
     getCurrentMonthLast,
+    formatNumber,
+    getRelativeMosaicAmount
 } from '@/core/utils/utils.ts'
 import {getBlockInfoByTransactionList} from '@/core/utils/wallet.ts'
 import {mapState} from "vuex"
+import {getMosaicInfoList} from "@/core/utils/wallet"
+import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
 
 
 @Component({
@@ -30,6 +34,7 @@ export class CollectionRecordTs extends Vue {
     localUnConfirmedTransactions = []
     isLoadingTransactionRecord = true
     currentMonth: string = ''
+    isLoadingModalDetailsInfo = false
     transacrionAssetIcon = transacrionAssetIcon
     transactionDetails: any = []
 
@@ -68,6 +73,10 @@ export class CollectionRecordTs extends Vue {
         return this.app.timeZone
     }
 
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
+    }
+
     get accountAddress() {
         return this.activeAccount.wallet.address
     }
@@ -86,7 +95,59 @@ export class CollectionRecordTs extends Vue {
         this.currentMonth = e
     }
 
-    showDialog(transaction) {
+    formatNumber(number) {
+        return formatNumber(number)
+    }
+
+
+    async getConfirmedTransactions() {
+        const that = this
+        let {accountPublicKey, currentXEM1, accountAddress, node, transactionType} = this
+        const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
+        await new TransactionApiRxjs().transactions(
+            publicAccount,
+            {
+                pageSize: 100
+            },
+            node,
+        ).subscribe(async (transactionsInfo) => {
+                let transferTransactionList = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
+                // get transaction by choose recript tx or send
+                if (transactionType == TransferType.RECEIVED) {
+                    transferTransactionList.forEach((item) => {
+                        if (item.isReceipt) {
+                            that.localConfirmedTransactions.push(item)
+                        }
+                    })
+                    try {
+                        await that.getBlockInfoByTransactionList(that.localConfirmedTransactions, node)
+                    } catch (e) {
+                        console.log(e)
+                    } finally {
+                        that.onCurrentMonthChange()
+                    }
+                    return
+                }
+
+                transferTransactionList.forEach((item) => {
+                    if (!item.isReceipt) {
+                        that.localConfirmedTransactions.push(item)
+                    }
+                })
+                try {
+                    await that.getBlockInfoByTransactionList(that.localConfirmedTransactions, node)
+                    await that.getRelativeMosaicByTransaction(that.localConfirmedTransactions, node)
+                } catch (e) {
+                    console.log(e)
+                } finally {
+                    that.onCurrentMonthChange()
+                }
+
+            }
+        )
+    }
+
+    initDialogData(transaction) {
         this.isShowDialog = true
         this.transactionDetails = [
             {
@@ -103,15 +164,11 @@ export class CollectionRecordTs extends Vue {
             },
             {
                 key: 'mosaic',
-                value: transaction.mosaic ? transaction.mosaic.id.toHex().toUpperCase() : null
-            },
-            {
-                key: 'the_amount',
-                value: transaction.mosaic ? transaction.mosaic.amount.compact() : 0
+                value: transaction.mosaic ? transaction.mosaic : null
             },
             {
                 key: 'fee',
-                value: transaction.maxFee.compact()
+                value: getRelativeMosaicAmount(transaction.maxFee.compact(), 6) + 'XEM'
             },
             {
                 key: 'block',
@@ -128,51 +185,54 @@ export class CollectionRecordTs extends Vue {
         ]
     }
 
-    async getConfirmedTransactions() {
+// getRelativeMosaicAmount
+    showDialog(transaction, isTransferTransaction?: boolean) {
+        let MosaicDivisibilityMap = {}
         const that = this
-        let {accountPublicKey, currentXEM1, accountAddress, node, transactionType} = this
-        const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
-        await new TransactionApiRxjs().transactions(
-            publicAccount,
-            {
-                pageSize: 100
-            },
-            node,
-        ).subscribe(async (transactionsInfo) => {
-            let transferTransaction = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
-            // get transaction by choose recript tx or send
-            if (transactionType == TransferType.RECEIVED) {
-                transferTransaction.forEach((item) => {
-                    if (item.isReceipt) {
-                        that.localConfirmedTransactions.push(item)
-                    }
-                })
-                try {
-                    await that.getBlockInfoByTransactionList(that.localConfirmedTransactions, node)
-                } catch (e) {
-                    console.log(e)
-                } finally {
-                    that.onCurrentMonthChange()
-                    that.isLoadingTransactionRecord = false
-                }
-                return
-            }
-
-            transferTransaction.forEach((item) => {
-                if (!item.isReceipt) {
-                    that.localConfirmedTransactions.push(item)
+        const {node} = this
+        this.isLoadingModalDetailsInfo = true
+        this.isShowDialog = true
+        const transactionMosaicList = transaction.mosaics
+        that.transactionDetails = transaction
+        const mosaicIdList = transactionMosaicList.map((item) => {
+            return item.id
+        })
+        new MosaicApiRxjs().getMosaics(node, mosaicIdList).subscribe((mosaicInfoList: any) => {
+            mosaicInfoList.forEach(mosaicInfo => {
+                MosaicDivisibilityMap[mosaicInfo.mosaicId.toHex()] = {
+                    divisibility: mosaicInfo.properties.divisibility
                 }
             })
-            try {
-                await that.getBlockInfoByTransactionList(that.localConfirmedTransactions, node)
-            } catch (e) {
-                console.log(e)
-            } finally {
-                that.onCurrentMonthChange()
-                that.isLoadingTransactionRecord = false
-            }
-
+            transaction.mosaic = transactionMosaicList.map((item) => {
+                const mosaicHex = item.id.id.toHex() + ''
+                return mosaicHex + `(${getRelativeMosaicAmount(item.amount.compact(), MosaicDivisibilityMap[mosaicHex].divisibility)})`
+            }).join(',')
+            that.transactionDetails = transaction
+            that.initDialogData(transaction)
+            that.isLoadingModalDetailsInfo = false
         })
+
+    }
+
+    getRelativeMosaicByTransaction(transactionList, node) {
+        let resultList = transactionList
+        const that = this
+        this.isLoadingTransactionRecord = true
+        if (transactionList.length != 0) {
+            Promise.all(transactionList.map(async (item, index) => {
+                if (item.mosaics.length == 1) {
+                    const amount = item.mosaics[0].amount.compact()
+                    const mosaicInfoList = await getMosaicInfoList(node, [item.mosaics[0].id])
+                    const mosaicInfo: any = mosaicInfoList[0]
+                    resultList[index].mosaicAmount = item.isReceipt ? '+' : '-' + getRelativeMosaicAmount(amount, mosaicInfo.properties.divisibility)
+                }
+            })).then(() => {
+                that.isLoadingTransactionRecord = false
+                that.localConfirmedTransactions = [...resultList]
+            }).catch((e) => {
+                console.log(e)
+            })
+        }
     }
 
     getBlockInfoByTransactionList(transactionList, node) {
@@ -192,19 +252,20 @@ export class CollectionRecordTs extends Vue {
             },
             node,
         ).subscribe(async (transactionsInfo) => {
-            let transferTransaction = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
+            let transferTransactionList = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
             // get transaction by choose recript tx or send
             if (transactionType == TransferType.RECEIVED) {
-                transferTransaction.forEach((item) => {
+                transferTransactionList.forEach((item) => {
                     if (item.isReceipt) {
                         that.localUnConfirmedTransactions.push(item)
                     }
                 })
+                that.getRelativeMosaicByTransaction(that.localConfirmedTransactions, node)
                 that.onCurrentMonthChange()
                 that.isLoadingTransactionRecord = false
                 return
             }
-            transferTransaction.forEach((item) => {
+            transferTransactionList.forEach((item) => {
                 if (!item.isReceipt) {
                     that.localUnConfirmedTransactions.push(item)
                 }
@@ -252,6 +313,7 @@ export class CollectionRecordTs extends Vue {
                 currentConfirmedTxList.push(item)
             }
         })
+
         that.confirmedTransactionList = currentConfirmedTxList
         localUnConfirmedTransactions.forEach((item) => {
             if (item.date <= currentMonthLast && item.date >= currentMonthFirst) {

@@ -5,6 +5,7 @@ import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {createRootNamespace, AppWallet} from "@/core/utils/wallet.ts"
 import {mapState} from "vuex"
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 @Component({
     computed: {
@@ -43,6 +44,10 @@ export class NamespaceEditDialogTs extends Vue {
 
     get node() {
         return this.activeAccount.node
+    }
+
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
     }
 
     namespaceEditDialogCancel() {
@@ -92,21 +97,23 @@ export class NamespaceEditDialogTs extends Vue {
                 title: '' + this.$t('password_error')
             })
             return false
-        }                
+        }
         return true
     }
 
     async updateMosaic() {
-        const {node, generationHash} = this
+        let {fee, duration} = this.namespace
+        const {node, generationHash, xemDivisibility} = this
         const password = new Password(this.namespace.password)
+        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
         const transaction = createRootNamespace(
             this.currentNamespace.name,
-            this.namespace.duration,
+            duration,
             this.wallet.networkType,
-            this.namespace.fee
+            fee
         )
         new AppWallet(this.wallet)
-          .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
+            .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
         this.initForm()
         this.updatedNamespace()
     }

@@ -3,6 +3,7 @@ import {Message} from "@/config/index.ts"
 import {TransactionType, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {AppWallet} from '@/core/utils/wallet.ts'
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 @Component({
     computed: {...mapState({activeAccount: 'account'})},
@@ -55,6 +56,11 @@ export class CheckPasswordDialogTs extends Vue {
         return this.activeAccount.generationHash
     }
 
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
+    }
+
+
     checkPasswordDialogCancel() {
         this.$emit('closeCheckPWDialog')
     }
@@ -81,10 +87,11 @@ export class CheckPasswordDialogTs extends Vue {
     }
 
     switchAnnounceType() {
-        const {node, generationHash, transactionList, currentXEM1} = this
+        const {node, generationHash, transactionList, currentXEM1, xemDivisibility} = this
         const password = new Password(this.walletInputInfo.password)
         const {networkType} = this.wallet
-        const {lockFee} = this.otherDetails
+        let {lockFee} = this.otherDetails  // lockFee param should be relative
+        lockFee = getAbsoluteMosaicAmount(lockFee, xemDivisibility)
         if (transactionList[0].type !== TransactionType.AGGREGATE_BONDED) {
             // normal transaction
             new AppWallet(this.wallet).signAndAnnounceNormal(password, node, generationHash, transactionList, this)

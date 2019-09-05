@@ -184,7 +184,7 @@ export const en_US = {
     transfer_target: 'To',
     send: 'Send',
     transfer_record: 'Transfer records',
-    receive_address_or_alias: 'Receive address or alias',
+    receive_address_or_alias: 'Receive address or @+alias（@nem.xem）',
     please_enter_the_transfer_amount: 'Please enter the transfer amount',
     please_enter_a_comment: 'Please enter a comment',
     password_error: 'Password error',
@@ -223,10 +223,11 @@ export const en_US = {
     account_name: 'Account name',
     the_default_is_Number: 'The default is Nember',
     confirm: 'Confirm',
-
+    MULTIPLE: 'Multiple',
+    RADIO: 'Radio',
     // on_dev
     not_yet_open: 'Not yet open',
-
+    start_time: 'start time',
     //service mosaic
     ordinary_account: 'Ordinary',
     basic_attribute: 'Basic attribute',
@@ -613,7 +614,7 @@ export const en_US = {
     confirm_infomation: 'Confirm infomation',
     please_input_new_account_name: 'Please input new account name',
     Locking_passwords_as_a_form_of_program_protection: 'Locking passwords as a form of program protection verification.Once forgotten, there will be no recovery. Please remember your Lock password.',
-    delete_wallet_tip: 'After changing the wallet, the wallet data will be deleted. Make sure the wallet is backed up. If you do not properly back up, you will not be able to retrieve your wallet after deleting your wallet. Please handle this operation carefully. Also, in order to ensure that I am operating, please enter the wallet password.',
+    delete_wallet_tip: 'Be careful! You\'re deleting wallet %{walletName} After changing the wallet, the wallet data will be deleted. Make sure the wallet is backed up. If you do not properly back up, you will not be able to retrieve your wallet after deleting your wallet. Please handle this operation carefully. Also, in order to ensure that I am operating, please enter the wallet password.',
     delete_wallet: 'Delete wallet',
 
 

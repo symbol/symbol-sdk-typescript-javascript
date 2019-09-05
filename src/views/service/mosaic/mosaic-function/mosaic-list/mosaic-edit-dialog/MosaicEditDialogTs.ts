@@ -4,10 +4,11 @@ import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
 import {AppWallet} from "@/core/utils/wallet.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 @Component({
     computed: {
-        ...mapState({ activeAccount: 'account' })
+        ...mapState({activeAccount: 'account'})
     }
 
 })
@@ -17,7 +18,7 @@ export class MosaicEditDialogTs extends Vue {
     isCompleteForm = false
     changedSupply = 0
     totalSupply = xemTotalSupply
-    mosaic = formData.mosaicEditForm
+    mosaic: any = formData.mosaicEditForm
 
     @Prop()
     showMosaicEditDialog: boolean
@@ -43,6 +44,10 @@ export class MosaicEditDialogTs extends Vue {
 
     get node() {
         return this.activeAccount.node
+    }
+
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
     }
 
     mosaicEditDialogCancel() {
@@ -94,7 +99,7 @@ export class MosaicEditDialogTs extends Vue {
 
         if (mosaic.password.length < 8) {
             this.$Notice.error({
-                title: '' + this.$t('password_error')
+                title: '' + Message.WRONG_PASSWORD_ERROR
             })
             return false
         }
@@ -103,10 +108,10 @@ export class MosaicEditDialogTs extends Vue {
 
         if (!validPassword) {
             this.$Notice.error({
-                title: '' + this.$t('password_error')
+                title: '' + Message.WRONG_PASSWORD_ERROR
             })
             return false
-        }        
+        }
         return true
     }
 
@@ -117,25 +122,27 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     updateMosaic() {
-        const {node, generationHash} = this
+        const {node, generationHash, xemDivisibility} = this
         const password = new Password(this.mosaic.password)
+        let {mosaicId, changeDelta, supplyType, networkType, fee} = this.mosaic
+        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
         const transaction = new MosaicApiRxjs().mosaicSupplyChange(
-            this.mosaic['mosaicId'],
-            this.mosaic.changeDelta,
-            this.mosaic.supplyType,
-            this.wallet.networkType,
-            this.mosaic.fee
+            mosaicId,
+            changeDelta,
+            supplyType,
+            networkType,
+            fee
         )
         new AppWallet(this.wallet)
-          .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
+            .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
     }
-    
+
     updatedMosaic() {
         this.show = false
         this.mosaicEditDialogCancel()
         this.$Notice.success({
-            title: this['$t']('mosaic_operation') + '',
-            desc: this['$t']('update_completed') + ''
+            title: this.$t('mosaic_operation') + '',
+            desc: this.$t('update_completed') + ''
         })
     }
 

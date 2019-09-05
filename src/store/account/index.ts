@@ -27,6 +27,7 @@ export default {
         currentXEM1: nodeConfig.currentXEM1,
         currentXEM2: nodeConfig.currentXEM2,
         account: {},
+        xemDivisibility: 6,
         wallet: {},
         mosaic: [],
         namespace: [],
@@ -35,8 +36,7 @@ export default {
         errorTx: [],
         mosaicMap: {},
         addresAliasMap: {},
-        generationHash: '',
-        xemDivisibility: 6
+        generationHash: ''
     },
     getters: {
         Address(state) {
@@ -89,8 +89,11 @@ export default {
         SET_CONFIRMED_TX(state: account, ConfirmedTx: any): void {
             state.ConfirmedTx = ConfirmedTx
         },
-        SET_XEM_DIVISIBILITY(state: account, xemDivisibility: number): void {
+        SET_XEM_DIVISIBILITY(state: account, xemDivisibility: number) {
             state.xemDivisibility = xemDivisibility
+        },
+        SET_WALLET_BALANCE(state: account, balance: number) {
+            state.wallet.balance = balance
         },
     },
 }

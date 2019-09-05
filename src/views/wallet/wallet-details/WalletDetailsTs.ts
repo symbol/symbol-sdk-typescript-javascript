@@ -41,7 +41,7 @@ export class WalletDetailsTs extends Vue {
     }
 
     get getAddress() {
-        return this.activeAccount.wallet.address
+        return this.activeAccount.wallet ? this.activeAccount.wallet.address : false
     }
 
     get generationHash() {
@@ -55,7 +55,7 @@ export class WalletDetailsTs extends Vue {
 
     // @TODO
     changeMnemonicDialog() {
-        if (!this.wallet.encryptedMnemonic) {
+        if (!this.wallet['mnemonicEnCodeObj'] || this.wallet['mnemonicEnCodeObj']['ciphertext']) {
             this.$Notice.warning({
                 title: this.$t('no_mnemonic') + ''
             })
@@ -89,6 +89,7 @@ export class WalletDetailsTs extends Vue {
         const {networkType} = Address.createFromRawAddress(address)
         const {generationHash} = this
         this.QRCode = QRCodeGenerator.createExportObject({address}, networkType, generationHash).toBase64()
+        console.log(this.QRCode)
     }
 
     copy(txt) {

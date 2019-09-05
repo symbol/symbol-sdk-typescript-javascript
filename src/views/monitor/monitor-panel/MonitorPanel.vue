@@ -2,6 +2,7 @@
   <div class="monitor_panel_container">
     <div class="monitor_panel_left_container" ref="monitorPanelLeftContainer">
       <div class="top_wallet_address radius">
+        <Spin v-if="isLoadingMosaic" size="large" fix class="absolute"></Spin>
         <div class="wallet_address">
           <span class="address">
             {{address}}
@@ -11,7 +12,9 @@
         </div>
 
         <div class="split"></div>
-        <div class="XEM_amount overflow_ellipsis"><span>XEM</span><span class="amount">{{formatNumber(Number(formatXEMamount(XEMamount))?formatXEMamount(XEMamount + ''):0)}}</span>
+        <div class="XEM_amount overflow_ellipsis">
+          <span>XEM</span>
+          <span class="amount">{{formatNumber(Number(formatXEMamount(XEMamount))?formatXEMamount(XEMamount + ''):0)}}</span>
         </div>
         <div class="exchange">${{formatNumber(XEMamount*currentPrice?(XEMamount*currentPrice).toFixed(2).toLocaleString():'0.00')}}</div>
 

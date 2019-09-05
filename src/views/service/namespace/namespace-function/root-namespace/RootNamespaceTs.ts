@@ -7,6 +7,7 @@ import {Message, bandedNamespace as BandedNamespaceList,rootNamespaceTypelist,fo
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet.ts"
 import {mapState} from "vuex"
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 
 @Component({
@@ -50,6 +51,10 @@ export class RootNamespaceTs extends Vue {
         return this.activeAccount.wallet.address
     }
 
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
+    }
+
     initForm() {
         this.form = {
             multisigPublickey: '',
@@ -83,9 +88,11 @@ export class RootNamespaceTs extends Vue {
 
     createByMultisig() {
         const that = this
-        const {duration, rootNamespaceName, aggregateFee, innerFee, multisigPublickey} = this.form
+        let {duration, rootNamespaceName, aggregateFee, innerFee, multisigPublickey} = this.form
         const {networkType} = this.wallet
-        const {node} = this
+        const {xemDivisibility} = this
+        aggregateFee = getAbsoluteMosaicAmount(aggregateFee, xemDivisibility)
+        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
         const rootNamespaceTransaction = new NamespaceApiRxjs().createdRootNamespace(
             rootNamespaceName,
             duration,
@@ -219,7 +226,6 @@ export class RootNamespaceTs extends Vue {
             return
         }
         const address = Address.createFromPublicKey(multisigPublickey, networkType).toDTO().address
-
         new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
             that.currentMinApproval = multisigInfo.minApproval
         })

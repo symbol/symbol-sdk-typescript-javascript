@@ -1,7 +1,7 @@
-import {Message} from "@/config/index.ts"
+import {Message, nodeConfig} from "@/config/index.ts"
 import {market} from "@/core/api/logicApi.ts"
 import {KlineQuery} from "@/core/query/klineQuery.ts"
-import {Address, MosaicHttp, MosaicId, MosaicInfo, NamespaceHttp, NamespaceId} from 'nem2-sdk'
+import {Address, MosaicHttp, MosaicId, NamespaceHttp, NamespaceId} from 'nem2-sdk'
 import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
 import {AccountApiRxjs} from '@/core/api/AccountApiRxjs.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
@@ -9,9 +9,9 @@ import {aliasType} from '@/config/index.ts'
 import monitorSeleted from '@/common/img/monitor/monitorSeleted.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
 import {getNamespaces, getMosaicList, getMosaicInfoList, AppWallet} from "@/core/utils/wallet.ts"
-import {copyTxt, localSave, formatXEMamount, formatNumber} from '@/core/utils/utils.ts'
+import {copyTxt, localSave, formatXEMamount, formatNumber, getRelativeMosaicAmount} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
-import {minitorPanelNavigatorList, nodeConfig} from '@/config/index.ts'
+import {minitorPanelNavigatorList} from '@/config/index.ts'
 
 @Component({
     computed: {
@@ -44,10 +44,6 @@ export class MonitorPanelTs extends Vue {
 
     get XEMamount() {
         return this.activeAccount.wallet.balance
-    }
-
-    get getWalletList() {
-        return this.app.walletList || []
     }
 
     get confirmedTxList() {
@@ -83,9 +79,12 @@ export class MonitorPanelTs extends Vue {
     }
 
 
-
     get namespaceList() {
         return this.activeAccount.namespace
+    }
+
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
     }
 
     switchPanel(index) {
@@ -170,14 +169,14 @@ export class MonitorPanelTs extends Vue {
     }
 
     async getMarketOpenPrice() {
-      try {
-          const rstStr = await market.kline({period : "1min", symbol: "xemusdt", size: "1"})
-          const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
-          const result = rstQuery.data ? rstQuery.data[0].close : 0
-          this.currentPrice = result
-      } catch (error) {
-          setTimeout(() => this.getMarketOpenPrice(), 10000)
-      }
+        try {
+            const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"})
+            const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
+            const result = rstQuery.data ? rstQuery.data[0].close : 0
+            this.currentPrice = result
+        } catch (error) {
+            setTimeout(() => this.getMarketOpenPrice(), 10000)
+        }
     }
 
     async initMosaic() {
@@ -192,6 +191,7 @@ export class MonitorPanelTs extends Vue {
             name: nodeConfig.currentXem,
             hex: that.currentXEM1,
             show: true,
+            divisibility: 6,
             showInManage: true
         }
         let mosaicList: any = await getMosaicList(accountAddress, node)
@@ -208,19 +208,21 @@ export class MonitorPanelTs extends Vue {
             new MosaicHttp(node).getMosaic(mosaicId).subscribe((mosaic: any) => {
                 that.$store.commit('SET_XEM_DIVISIBILITY', mosaic.properties.divisibility)
             })
-            mosaicList = mosaicInfoList.map((item) => {
+            mosaicList = mosaicInfoList.map((item: any) => {
                 const mosaicItem: any = mosaicList[mosaicHexIds.indexOf(item.mosaicId.toHex())]
                 mosaicItem.hex = item.mosaicId.toHex()
                 if (mosaicItem.hex == currentXEM2 || mosaicItem.hex == currentXEM1) {
                     mosaicItem.name = currentXem
-                    mosaicItem.amount = mosaicItem.amount.compact()
+                    mosaicItem.amount = getRelativeMosaicAmount(mosaicItem.amount.compact(), item.divisibility)
                     mosaicItem.show = true
+                    mosaicItem.divisibility = item.properties.divisibility
                     mosaicItem.showInManage = true
                     return mosaicItem
                 }
                 mosaicItem.name = item.mosaicId.toHex()
-                mosaicItem.amount = mosaicItem.amount.compact()
+                mosaicItem.amount = getRelativeMosaicAmount(mosaicItem.amount.compact(), item.divisibility)
                 mosaicItem.show = true
+                mosaicItem.divisibility = item.properties.divisibility
                 mosaicItem.showInManage = true
                 return mosaicItem
             })
@@ -234,6 +236,7 @@ export class MonitorPanelTs extends Vue {
                 mosaicList.unshift({
                     amount: 0,
                     hex: currentXEM1,
+                    divisibility: that.xemDivisibility,
                     name: nodeConfig.currentXem,
                     id: new MosaicId(currentXEM1),
                     show: true,
@@ -245,12 +248,12 @@ export class MonitorPanelTs extends Vue {
                 mosaicMap[item.hex] = {
                     amount: item.amount,
                     name: item.name,
+                    divisibility: item.divisibility,
                     hex: item.hex,
                     show: true,
                     showInManage: true
                 }
             })
-
             this.namespaceList.forEach((item) => {
                 switch (item.alias.type) {
                     case aliasType.mosaicAlias:
@@ -267,7 +270,6 @@ export class MonitorPanelTs extends Vue {
                 }
             })
             that.updateMosaicMap(mosaicMap)
-            this.$store.commit('SET_ADDRESS_ALIAS_MAP', addressMap)
             that.isLoadingMosaic = false
             if (mosaicList.length > 0) {
                 this.$store.commit('SET_MOSAICS', mosaicList)
@@ -283,7 +285,10 @@ export class MonitorPanelTs extends Vue {
         this.$set(this, 'localMosaicMap', mosaicMap)
         this.$set(this, 'mosaicMap', mosaicMap)
         this.$store.commit('SET_MOSAIC_MAP', mosaicMap)
+        this.$store.commit('SET_ADDRESS_ALIAS_MAP', mosaicMap)
+        this.$store.commit('SET_WALLET_BALANCE', mosaicMap[this.currentXEM1].amount)
     }
+
 
     formatNumber(number) {
         return formatNumber(number)

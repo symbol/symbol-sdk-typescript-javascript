@@ -303,7 +303,6 @@ export class LineChartTs extends Vue {
         btcDataList = btcDataList.map(item => {
             let i: any = {}
             xAxisData.push(item.id * 1000)
-            // console.log(item.open)
             item.open = item.open / rate.toFixed(0)
             return item.open
         })
@@ -353,14 +352,15 @@ export class LineChartTs extends Vue {
             await this.getChartData()
             this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
             this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
-            console.log('CALL',this.btcDataList,  this.xemDataList)
         } catch (error) {
-          setTimeout(() => { this.refreshData() }, 10000)
+            setTimeout(() => {
+                this.refreshData()
+            }, 10000)
         }
     }
 
     mouseoutLine() {
-        if(this.dom.dispatchAction === undefined) return
+        if (this.dom.dispatchAction === undefined) return
         this.dom.dispatchAction({
             type: 'showTip',
             seriesIndex: 0,

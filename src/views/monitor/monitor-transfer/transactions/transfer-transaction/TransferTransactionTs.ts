@@ -3,7 +3,7 @@ import {Mosaic, MosaicId, UInt64} from 'nem2-sdk'
 import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {cloneData} from '@/core/utils/utils'
+import {cloneData, getRelativeMosaicAmount, getAbsoluteMosaicAmount} from '@/core/utils/utils'
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
 import {standardFields} from '@/core/validation'
 import {mapState} from 'vuex'
@@ -29,15 +29,10 @@ export default class TransferTransactionTs extends Vue {
     currentAmount: number = 0
     isAddressMapNull = true
     formFields = formData.transferForm
-
     formModel = cloneData(this.formFields)
 
     get wallet() {
         return this.activeAccount.wallet
-    }
-
-    get accountPublicKey() {
-        return this.activeAccount.wallet.publicKey
     }
 
 
@@ -72,9 +67,13 @@ export default class TransferTransactionTs extends Vue {
     }
 
 
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
+    }
+
     addMosaic() {
-        const {currentMosaic, currentAmount} = this
-        this.formModel.mosaicTransferList.push(new Mosaic(new MosaicId(currentMosaic), UInt64.fromUint(currentAmount)))
+        const {currentMosaic, mosaicMap, currentAmount} = this
+        this.formModel.mosaicTransferList.push(new Mosaic(new MosaicId(currentMosaic), UInt64.fromUint(getAbsoluteMosaicAmount(currentAmount, mosaicMap[currentMosaic].divisibility))))
     }
 
     removeMosaic(index) {
@@ -114,7 +113,8 @@ export default class TransferTransactionTs extends Vue {
     generateTransaction() {
         const that = this
         let {address, remark, fee, mosaicTransferList, isEncrypted} = this.formModel
-        const {networkType} = this.wallet
+        const {networkType, xemDivisibility} = this.wallet
+        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
             fee,

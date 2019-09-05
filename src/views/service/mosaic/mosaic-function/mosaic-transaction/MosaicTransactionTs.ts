@@ -20,6 +20,7 @@ import {
     MosaicSupplyType
 } from 'nem2-sdk'
 import {mapState} from "vuex"
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 @Component({
     components: {
@@ -78,9 +79,12 @@ export class MosaicTransactionTs extends Vue {
         return this.activeAccount.currentXem
     }
 
-
     get address() {
         return this.activeAccount.wallet.address
+    }
+
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
     }
 
     get node() {
@@ -95,9 +99,9 @@ export class MosaicTransactionTs extends Vue {
             supplyMutable: true,
             permanent: false,
             duration: 1000,
-            innerFee: 50000,
-            aggregateFee: 50000,
-            lockFee: 50000,
+            innerFee: .5,
+            aggregateFee: .5,
+            lockFee: 10,
             multisigPublickey: ''
         }
     }
@@ -180,6 +184,8 @@ export class MosaicTransactionTs extends Vue {
         this.showMosaicEditDialog = false
     }
 
+
+
     checkEnd(isPasswordRight) {
         if (!isPasswordRight) {
             this.$Notice.destroy()
@@ -190,12 +196,13 @@ export class MosaicTransactionTs extends Vue {
     }
 
     createBySelf() {
-        let {accountPublicKey, networkType} = this
-        const {supply, divisibility, transferable, supplyMutable, duration, innerFee} = this.formItem
+        let {accountPublicKey, networkType, xemDivisibility} = this
+        let {supply, divisibility, transferable, supplyMutable, duration, innerFee} = this.formItem
         const that = this
         const nonce = MosaicNonce.createRandom()
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, networkType)
         const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(accountPublicKey, this.wallet.networkType))
+        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
         this.transactionList = [
             new MosaicApiRxjs().createMosaic(
                 nonce,
@@ -214,10 +221,10 @@ export class MosaicTransactionTs extends Vue {
 
 
     createByMultisig() {
-        const {networkType} = this
-        const {node} = this
-        const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-        const {supply, divisibility, transferable, supplyMutable, duration, innerFee, aggregateFee, multisigPublickey} = this.formItem
+        const {node, networkType, xemDivisibility} = this
+        let {supply, divisibility, transferable, supplyMutable, duration, innerFee, aggregateFee, multisigPublickey} = this.formItem
+        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        aggregateFee = getAbsoluteMosaicAmount(aggregateFee, xemDivisibility)
         const that = this
         const nonce = MosaicNonce.createRandom()
         const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(multisigPublickey, this.wallet.networkType))

@@ -4,6 +4,7 @@ import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {mapState} from "vuex"
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 @Component({
         computed: {...mapState({activeAccount: 'account'})},
@@ -14,7 +15,7 @@ export class MosaicUnAliasDialogTs extends Vue {
     show = false
     isCompleteForm = false
     aliasNameList: any[] = []
-    mosaic = formData.mosaicUnaliasForm
+    mosaic: any = formData.mosaicUnaliasForm
 
     @Prop()
     showMosaicUnAliasDialog: boolean
@@ -31,6 +32,10 @@ export class MosaicUnAliasDialogTs extends Vue {
 
     get node() {
         return this.activeAccount.node
+    }
+
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
     }
 
     mosaicAliasDialogCancel() {
@@ -62,7 +67,7 @@ export class MosaicUnAliasDialogTs extends Vue {
 
         if (mosaic.password.length < 8) {
             this.$Notice.error({
-                title: '' + this.$t('password_error')
+                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
             })
             return false
         }
@@ -74,23 +79,25 @@ export class MosaicUnAliasDialogTs extends Vue {
                 title: '' + this.$t('password_error')
             })
             return false
-        }        
+        }
         return true
     }
 
     async updateMosaic() {
-        const {node, generationHash} = this
+        const {node, generationHash, xemDivisibility} = this
+        const {networkType} = this.getWallet
         const password = new Password(this.mosaic.password)
-
+        let {fee, hex, name} = this.mosaic
+        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
         const transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
             AliasActionType.Unlink,
-            new NamespaceId(this.mosaic['name']),
-            new MosaicId(this.mosaic['hex']),
-            this.getWallet.networkType,
-            this.mosaic.fee
+            name,
+            hex,
+            networkType,
+            fee
         )
         new AppWallet(this.getWallet)
-          .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
+            .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
         this.initForm()
         this.updatedMosaicAlias()
     }

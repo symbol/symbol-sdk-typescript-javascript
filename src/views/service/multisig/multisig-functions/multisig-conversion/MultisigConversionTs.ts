@@ -11,6 +11,7 @@ import {
     ModifyMultisigAccountTransaction, Deadline, UInt64
 } from 'nem2-sdk'
 import {mapState} from "vuex"
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 @Component({
     components: {
@@ -57,6 +58,10 @@ export class MultisigConversionTs extends Vue {
         return this.activeAccount.wallet
     }
 
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
+    }
+
     addAddress() {
         const {currentAddress} = this
         if (!currentAddress || !currentAddress.trim()) {
@@ -99,8 +104,7 @@ export class MultisigConversionTs extends Vue {
     }
 
     checkForm(): boolean {
-        const {publickeyList, minApproval, minRemoval, bondedFee, lockFee, innerFee} = this.formItem
-
+        let {publickeyList, minApproval, minRemoval, bondedFee, lockFee, innerFee} = this.formItem
         if (publickeyList.length < 1) {
             this.showErrorMessage(this.$t(Message.CO_SIGNER_NULL_ERROR) + '')
             return false
@@ -178,7 +182,11 @@ export class MultisigConversionTs extends Vue {
     }
 
     sendMultisignConversionTransaction() {
-        const {publickeyList, minApproval, minRemoval, lockFee, bondedFee, innerFee} = this.formItem
+        const {xemDivisibility} = this
+        // here lock fee should be relative param
+        let {publickeyList, minApproval, minRemoval, lockFee, bondedFee, innerFee} = this.formItem
+        bondedFee = getAbsoluteMosaicAmount(bondedFee, xemDivisibility)
+        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
         const {networkType, node, publickey} = this
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         const multisigCosignatoryModificationList = publickeyList.map(cosigner => new MultisigCosignatoryModification(

@@ -5,6 +5,7 @@
             v-model="isShowDialog"
             :transfer="false"
             class-name="dash_board_dialog scroll">
+      <Spin v-if="isLoadingModalDetailsInfo" size="large" fix class="absolute"></Spin>
       <div class="transfer_type ">
         <span class="title">{{$t('transfer_type')}}</span>
         <span class="value overflow_ellipsis">
@@ -80,17 +81,17 @@
 
       <div class="label_page">
         <span @click="switchTransactionPanel(true)"
-              :class="['pointer',showConfirmedTransactions?'selected':'','page_title']">
+              :class="['pointer',isShowTransferTransactions?'selected':'','page_title']">
           {{$t('transfer_record')}} ({{transferListLength}})
         </span>
         <span class="line">|</span>
         <span @click="switchTransactionPanel(false)"
-              :class="['pointer',showConfirmedTransactions?'':'selected','page_title']">
+              :class="['pointer',isShowTransferTransactions?'':'selected','page_title']">
           {{$t('receipt')}} ({{receiptListLength}})
         </span>
       </div>
 
-      <div class="table_container" v-if="showConfirmedTransactions">
+      <div class="table_container" v-if="isShowTransferTransactions">
         <div class="all_transaction">
           <div class="table_head">
             <span class="account">{{$t('account')}}</span>
@@ -101,14 +102,14 @@
           <div class="confirmed_transactions">
             <Spin v-if="isLoadingTransactions" size="large" fix class="absolute"></Spin>
             <div class="table_body hide_scroll" ref="confirmedTableBody">
-              <div class="table_item pointer" @click="showDialog(c)" v-for="c in currentTransactionList">
+              <div class="table_item pointer" @click="showDialog(c,true)" v-for="c in currentTransactionList">
                 <img class="mosaic_action" v-if="!c.isReceipt"
                      src="@/common/img/monitor/dash-board/dashboardMosaicOut.png" alt="">
                 <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
                      alt="">
                 <span class="account overflow_ellipsis">{{c.infoFirst}}</span>
                 <span class="transfer_type overflow_ellipsis">{{c.infoSecond?c.infoSecond:null}}</span>
-                <span :class="['amount','overflow_ellipsis',!c.isReceipt?'orange':'blue']" v-if="c.infoThird">{{c.infoThird}}</span>
+                <span :class="['amount','overflow_ellipsis',!c.isReceipt?'orange':'blue']" v-if="c.infoThird">{{formatNumber(c.infoThird)}}</span>
                 <span v-else class="amount overflow_ellipsis"> 0</span>
                 <span class="date overflow_ellipsis">{{c.time}}</span>
                 <img v-if="c.isTxUnconfirmed" src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
@@ -124,7 +125,7 @@
         </div>
       </div>
 
-      <div class="table_container_unconfirmed table_container" v-if="!showConfirmedTransactions">
+      <div class="table_container_unconfirmed table_container" v-if="!isShowTransferTransactions">
         <div class="all_transaction">
           <div class="table_head">
             <span class="account">{{$t('transaction_type')}}</span>
@@ -135,13 +136,13 @@
           <div class="unconfirmed_transactions">
             <Spin v-if="isLoadingTransactions" size="large" fix class="absolute"></Spin>
             <div class="table_body hide_scroll" ref="unconfirmedTableBody">
-              <div class="table_item pointer" @click="showDialog(u)" v-for="(u,index) in currentTransactionList"
+              <div class="table_item pointer" @click="showDialog(u,false)" v-for="(u,index) in currentTransactionList"
                    :key="index">
                 <img class="mosaic_action"
                      :src="u.icon" alt="">
                 <span class="account overflow_ellipsis">{{$t(u.tag)}}</span>
-                <span class="transfer_type overflow_ellipsis">{{u.infoSecond}}</span>
-                <span class="amount overflow_ellipsis">{{u.infoThird}}</span>
+                <span class="transfer_type overflow_ellipsis">{{formatNumber(u.infoSecond)}}</span>
+                <span class="amount overflow_ellipsis">{{formatNumber(u.infoThird)}}</span>
                 <span class="date overflow_ellipsis">{{u.time}}</span>
                 <img v-if="u.isTxUnconfirmed" src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
                      class="expand_mosaic_info">
@@ -161,7 +162,7 @@
 
 <script lang="ts">
     // @ts-ignore
-    import {MonitorDashBoardTs} from '@/views/monitor/monitor-dashboard/MonitorDashBoardTs.ts';
+    import {MonitorDashBoardTs} from '@/views/monitor/monitor-dashboard/MonitorDashBoardTs.ts'
 
     export default class DashBoard extends MonitorDashBoardTs {
 

@@ -6,6 +6,7 @@
             v-model="isShowDialog"
             :transfer="false"
             class-name="dash_board_dialog">
+      <Spin v-if="isLoadingModalDetailsInfo" size="large" fix class="absolute"></Spin>
       <div class="transfer_type" v-if="transactionDetails.length > 0">
         <span class="title">{{$t(transactionDetails[0].key)}}</span>
         <span class="value">{{$t(transactionDetails[0].value)}}</span>
@@ -37,7 +38,6 @@
               <span>{{$t('search')}}</span>
             </span>
       </div>
-
       <div v-show="isShowSearchDetail" class="search_expand">
             <span class="search_container">
               <img src="@/common/img/monitor/market/marketSearch.png" alt="">
@@ -49,20 +49,22 @@
 
 
     </div>
-    <div class="bottom_transfer_record_list scroll">
-      <Spin v-if="isLoadingTransactionRecord" size="large" fix></Spin>
+
+
+    <div :class="['bottom_transfer_record_list','scroll']">
+      <!--      <Spin v-if="isLoadingTransactionRecord" size="large" fix></Spin>-->
 
       <div class="transaction_record_item pointer" @click="showDialog(c)" v-for="c in unConfirmedTransactionList">
         <img src="@/common/img/monitor/transaction/txUnConfirmed.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
-            <div class="top">{{c.mosaic.id ? c.mosaic.id.id.toHex().toUpperCase().slice(0,8)+'...': "&nbsp;"}}</div>
-            <div class="bottom"> {{c.time.slice(0, c.time.length - 3)}}</div>
+            <div class="top overflow_ellipsis">{{c.mosaic}}</div>
+            <div class="bottom overflow_ellipsis"> {{c.time.slice(0, c.time.length - 3)}}</div>
           </div>
           <div class="right">
-            <div class="top">{{c.mosaic?c.mosaic.amount.compact():0}}</div>
-            <div class="bottom">
-              {{c.transactionInfo && c.transactionInfo.height.compact()}}
+            <div class="top overflow_ellipsis">{{formatNumber(c.mosaicAmount)}}</div>
+            <div class="bottom overflow_ellipsis">
+              {{formatNumber(c.transactionInfo && c.transactionInfo.height.compact())}}
             </div>
           </div>
         </div>
@@ -72,13 +74,13 @@
         <img src="@/common/img/monitor/transaction/txConfirmed.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
-            <div class="top">{{c.mosaicName}}</div>
-            <div class="bottom"> {{c.time.slice(0, c.time.length - 3)}}</div>
+            <div class="top overflow_ellipsis">{{c.mosaic}}</div>
+            <div class="bottom overflow_ellipsis"> {{c.time.slice(0, c.time.length - 3)}}</div>
           </div>
           <div class="right">
-            <div class="top">{{c.mosaic?c.mosaic.amount.compact():0}}</div>
-            <div class="bottom">
-              {{c.transactionInfo && c.transactionInfo.height.compact()}}
+            <div class="top overflow_ellipsis">{{formatNumber(c.mosaicAmount)}}</div>
+            <div class="bottom overflow_ellipsis">
+              {{formatNumber(c.transactionInfo && c.transactionInfo.height.compact())}}
             </div>
           </div>
         </div>

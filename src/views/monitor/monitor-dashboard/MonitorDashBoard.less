@@ -116,7 +116,7 @@
     .splite_page {
       position: absolute;
       right: 90px;
-      z-index: 999;
+      z-index: 0;
 
       span {
         vertical-align: middle;
@@ -244,7 +244,7 @@
     .table_container,
     .unconfirmed_transactions,
     .confirmed_transactions {
-      height: 100%;
+      height: calc(100% - 20px);
       padding: 0 0 12px 0;
 
       .table_body {

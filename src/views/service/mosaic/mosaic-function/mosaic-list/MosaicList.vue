@@ -20,12 +20,12 @@
         <Row>
           <Col span="1">&nbsp;</Col>
           <Col span="4">{{value.hex}}</Col>
-          <Col span="3">{{value.supply}}</Col>
+          <Col span="3">{{formatNumber(value.supply)}}</Col>
           <Col span="2" style="padding-left: 20px"> {{value.divisibility}}</Col>
           <Col span="2">{{value.transferable}}</Col>
           <Col span="2">{{value.supplyMutable}}</Col>
           <Col span="5">{{computeDuration(value) <=0 ? $t('overdue') : (computeDuration(value) === 'Forever'?
-            $t('forever') : computeDuration(value))}}
+            $t('forever') : formatNumber(computeDuration(value)))}}
           </Col>
           <Col span="3">{{value.name?value.name:'null'}}</Col>
           <Col span="2">

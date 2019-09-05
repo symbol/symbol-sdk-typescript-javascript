@@ -47,16 +47,12 @@
           <div class="transaction_item" v-for="r in recentTransactionList">
             <img v-if="r.type == 'XEM'" src="@/common/img/monitor/market/marketAssetLogo.png"
                  alt="">
-            <img v-if="r.type == 'BTC'" src="@/common/img/monitor/market/marketCoinBTC.png"
-                 alt="">
-            <img v-if="r.type == 'ETH'" src="@/common/img/monitor/market/marketCoinETH.png"
-                 alt="">
             <div>
               <div class="top overflow_ellipsis ">{{r.type}}</div>
               <div class="bottom">{{r.time}}</div>
             </div>
             <div class="right">
-              <div class="top coin_amount">{{r.direction === 'sell'? '+':'-'}}{{r.amount.toFixed(6)}}
+              <div class="top coin_amount">{{r.direction === 'sell'? '+':'-'}}{{formatNumber(r.amount.toFixed(6))}}
               </div>
               <div class="bottom coin_cost">USD {{r.result}}</div>
             </div>

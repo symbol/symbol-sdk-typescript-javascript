@@ -10,18 +10,18 @@ export const formData = {
         isEncryption: true
     },
     transferForm: {
-        fee: 50000,
+        fee: 0.5,
         remark: '',
-        address: '',
+        address: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
         mosaicTransferList: [],
         isEncrypted: true
     },
-    mosaicAliasForm :{
+    mosaicAliasForm: {
         aliasName: '',
         fee: 50000,
         password: ''
     },
-    mosaicEditForm:{
+    mosaicEditForm: {
         id: '',
         aliasName: '',
         delta: 0,
@@ -31,11 +31,11 @@ export const formData = {
         fee: 50000,
         password: ''
     },
-    mosaicUnaliasForm:   {
+    mosaicUnaliasForm: {
         fee: 50000,
         password: ''
     },
-    mosaicTransactionForm:{
+    mosaicTransactionForm: {
         supply: 500000000,
         divisibility: 6,
         transferable: true,
@@ -55,7 +55,7 @@ export const formData = {
         lockFee: 10000000,
         innerFee: 10000000
     },
-    multisigManagementForm:{
+    multisigManagementForm: {
         minApprovalDelta: 0,
         minRemovalDelta: 0,
         bondedFee: 10000000,
@@ -64,13 +64,13 @@ export const formData = {
         cosignerList: [],
         multisigPublickey: ''
     },
-    namesapceEditForm:{
+    namesapceEditForm: {
         name: '',
         duration: 0,
         fee: 50000,
         password: ''
     },
-    rootNamespaceForm:{
+    rootNamespaceForm: {
         duration: 1000,
         rootNamespaceName: '',
         multisigPublickey: '',
@@ -78,7 +78,7 @@ export const formData = {
         aggregateFee: 50000,
         lockFee: 50000
     },
-    walletImportMnemonicForm:{
+    walletImportMnemonicForm: {
         mnemonic: '',
         networkType: 0,
         walletName: '',

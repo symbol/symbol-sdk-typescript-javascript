@@ -5,6 +5,7 @@ import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {AppWallet} from "@/core/utils/wallet.ts"
 import {mapState} from "vuex"
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 @Component({
     computed: {
@@ -19,7 +20,7 @@ export class MosaicAliasDialogTs extends Vue {
     app: any
     show = false
     isCompleteForm = false
-    mosaic = formData.mosaicAliasForm
+    mosaic: any = formData.mosaicAliasForm
     aliasNameList: any[] = []
 
     @Prop()
@@ -41,6 +42,10 @@ export class MosaicAliasDialogTs extends Vue {
 
     get namespaceList() {
         return this.activeAccount.namespace
+    }
+
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
     }
 
     mosaicAliasDialogCancel() {
@@ -95,17 +100,20 @@ export class MosaicAliasDialogTs extends Vue {
     }
 
     async updateMosaic() {
-        const {node, generationHash} = this
+        const {node, generationHash, xemDivisibility} = this
+        const {networkType} = this.getWallet
+        let {fee, hex, aliasName} = this.mosaic
+        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
         const password = new Password(this.mosaic.password)
         let transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
             AliasActionType.Link,
-            new NamespaceId(this.mosaic.aliasName),
-            new MosaicId(this.mosaic['hex']),
-            this.getWallet.networkType,
-            this.mosaic.fee
+            new NamespaceId(aliasName),
+            new MosaicId(hex),
+            networkType,
+            fee
         )
         new AppWallet(this.getWallet)
-          .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
+            .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
         this.initForm()
         this.updatedMosaicAlias()
     }

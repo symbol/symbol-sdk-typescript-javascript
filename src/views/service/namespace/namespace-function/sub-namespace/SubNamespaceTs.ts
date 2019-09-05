@@ -8,6 +8,7 @@ import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
 import {Address} from "nem2-sdk"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet"
 import {mapState} from "vuex"
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 @Component({
     components: {
@@ -62,6 +63,9 @@ export class SubNamespaceTs extends Vue {
         return this.activeAccount.namespace ? this.activeAccount.namespace : []
     }
 
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
+    }
 
     formatAddress(address) {
         return formatAddress(address)
@@ -95,10 +99,11 @@ export class SubNamespaceTs extends Vue {
 
     createByMultisig() {
         const that = this
-        const {aggregateFee, multisigPublickey} = this.form
+        let {aggregateFee, multisigPublickey} = this.form
         const {networkType} = this.wallet
-        const {node} = this
+        const {xemDivisibility} = this
         const rootNamespaceTransaction = this.createSubNamespace()
+        aggregateFee = getAbsoluteMosaicAmount(aggregateFee, xemDivisibility)
         if (that.currentMinApproval > 1) {
             const aggregateTransaction = createBondedMultisigTransaction(
                 [rootNamespaceTransaction],
@@ -120,26 +125,26 @@ export class SubNamespaceTs extends Vue {
     }
 
     checkForm(): boolean {
-        const {rootNamespaceName, innerFee, subNamespaceName, multisigPublickey} = this.form
+        const {rootNamespaceName, innerFee, subNamespaceName} = this.form
 
         if (!rootNamespaceName || !rootNamespaceName.trim()) {
             this.showErrorMessage(this.$t(Message.NAMESPACE_NULL_ERROR))
             return false
         }
-        if (rootNamespaceName.length > 16) {
-            this.showErrorMessage(this.$t(Message.SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR))
-            return false
-        }
+        // if (rootNamespaceName.length > 16) {
+        //     this.showErrorMessage(this.$t(Message.SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR))
+        //     return false
+        // }
         //^[a-z].*
-        if (!rootNamespaceName.match(/^[a-z].*/)) {
-            this.showErrorMessage(this.$t(Message.NAMESPACE_STARTING_ERROR))
-            return false
-        }
+        // if (!rootNamespaceName.match(/^[a-z].*/)) {
+        //     this.showErrorMessage(this.$t(Message.NAMESPACE_STARTING_ERROR))
+        //     return false
+        // }
         //^[0-9a-zA-Z_-]*$
-        if (!rootNamespaceName.match(/^[0-9a-zA-Z_-]*$/g)) {
-            this.showErrorMessage(this.$t(Message.NAMESPACE_FORMAT_ERROR))
-            return false
-        }
+        // if (!rootNamespaceName.match(/^[0-9a-zA-Z_-]*$/g)) {
+        //     this.showErrorMessage(this.$t(Message.NAMESPACE_FORMAT_ERROR))
+        //     return false
+        // }
         if (!subNamespaceName || !subNamespaceName.trim()) {
             this.showErrorMessage(this.$t(Message.NAMESPACE_NULL_ERROR))
             return false
@@ -175,7 +180,9 @@ export class SubNamespaceTs extends Vue {
     }
 
     createSubNamespace() {
-        const {rootNamespaceName, subNamespaceName, innerFee} = this.form
+        let {rootNamespaceName, subNamespaceName, innerFee} = this.form
+        const {xemDivisibility} = this
+        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
         const {networkType} = this.wallet
         return new NamespaceApiRxjs().createdSubNamespace(
             subNamespaceName,

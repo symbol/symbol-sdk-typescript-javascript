@@ -4,6 +4,7 @@ import {AccountLinkTransaction, UInt64, LinkAction, Deadline, Password} from "ne
 import {AppWallet} from "@/core/utils/wallet.ts"
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 import {mapState} from "vuex"
+import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
 
 @Component({
     computed: {
@@ -39,6 +40,10 @@ export class MonitorRemoteTs extends Vue {
 
     get address() {
         return this.activeAccount.wallet.address
+    }
+
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
     }
 
     initForm() {
@@ -105,8 +110,9 @@ export class MonitorRemoteTs extends Vue {
     }
 
     sendTransaction() {
-        const {remotePublickey, fee, password} = this.formItem
+        let {remotePublickey, fee, password, xemDivisibility} = this.formItem
         const {generationHash, node, networkType, isLinked} = this
+        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
             remotePublickey,

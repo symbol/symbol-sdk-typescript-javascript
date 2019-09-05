@@ -3,6 +3,7 @@ import {market} from "@/core/api/logicApi.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import LineChart from '@/common/vue/line-chart-by-day/LineChartByDay.vue'
 import {isRefreshData, localSave, localRead, formatDate} from '@/core/utils/utils.ts'
+import {formatNumber} from "@/core/utils/utils"
 
 @Component({
     components: {
@@ -56,6 +57,10 @@ export class MonitorMarketTs extends Vue {
         this.sellAmount += 1
     }
 
+    formatNumber(number) {
+        return formatNumber(number)
+    }
+
 
     cutSellAmount() {
         this.sellAmount = this.sellAmount >= 1 ? this.sellAmount - 1 : this.sellAmount
@@ -77,7 +82,10 @@ export class MonitorMarketTs extends Vue {
 
         const that = this
         const rstStr = await market.kline({period: "1day", symbol: "xemusdt", size: "14"})
-        const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
+        if (!rstStr.rst) {
+            return
+        }
+        const rstQuery: KlineQuery = rstStr.rst
         const result = rstQuery.data
         const currentWeek = result.slice(0, 7)
         const preWeek = result.slice(7, 14)
