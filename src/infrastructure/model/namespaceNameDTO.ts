@@ -27,8 +27,14 @@
 
 
 export class NamespaceNameDTO {
-    'parentId'?: Array<number>;
-    'namespaceId': Array<number>;
+    /**
+    * Namespace identifier.
+    */
+    'parentId'?: string;
+    /**
+    * Namespace identifier.
+    */
+    'namespaceId': string;
     /**
     * Namespace name.
     */
@@ -40,12 +46,12 @@ export class NamespaceNameDTO {
         {
             "name": "parentId",
             "baseName": "parentId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "namespaceId",
             "baseName": "namespaceId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "name",

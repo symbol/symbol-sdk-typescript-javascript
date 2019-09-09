@@ -25,36 +25,21 @@
  * Do not edit the class manually.
  */
 
-import { SourceDTO } from './sourceDTO';
+import { TransactionStatementBodyDTO } from './transactionStatementBodyDTO';
 
 /**
 * Collection of receipts related to a transaction.
 */
 export class TransactionStatementDTO {
-    'height': Array<number>;
-    'source': SourceDTO;
-    /**
-    * Array of receipts.
-    */
-    'receipts': Array<any>;
+    'statement': TransactionStatementBodyDTO;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "height",
-            "baseName": "height",
-            "type": "Array<number>"
-        },
-        {
-            "name": "source",
-            "baseName": "source",
-            "type": "SourceDTO"
-        },
-        {
-            "name": "receipts",
-            "baseName": "receipts",
-            "type": "Array<AnyOfBalanceTransferReceiptDTOBalanceChangeReceiptDTOArtifactExpiryReceiptDTOInflationReceiptDTO>"
+            "name": "statement",
+            "baseName": "statement",
+            "type": "TransactionStatementBodyDTO"
         }    ];
 
     static getAttributeTypeMap() {

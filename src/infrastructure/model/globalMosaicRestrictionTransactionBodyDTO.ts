@@ -28,12 +28,27 @@
 import { MosaicRestrictionTypeEnum } from './mosaicRestrictionTypeEnum';
 
 export class GlobalMosaicRestrictionTransactionBodyDTO {
-    'mosaicId': Array<number>;
-    'referenceMosaicId': Array<number>;
-    'restrictionKey': Array<number>;
-    'previousRestrictionValue': Array<number>;
+    /**
+    * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
+    */
+    'mosaicId': string;
+    /**
+    * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
+    */
+    'referenceMosaicId': string;
+    /**
+    * Restriction key relative to the reference mosaic identifier.
+    */
+    'restrictionKey': string;
+    /**
+    * Previous restriction value.
+    */
+    'previousRestrictionValue': string;
     'previousRestrictionType': MosaicRestrictionTypeEnum;
-    'newRestrictionValue': Array<number>;
+    /**
+    * New restriction value.
+    */
+    'newRestrictionValue': string;
     'newRestrictionType': MosaicRestrictionTypeEnum;
 
     static discriminator: string | undefined = undefined;
@@ -42,22 +57,22 @@ export class GlobalMosaicRestrictionTransactionBodyDTO {
         {
             "name": "mosaicId",
             "baseName": "mosaicId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "referenceMosaicId",
             "baseName": "referenceMosaicId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "restrictionKey",
             "baseName": "restrictionKey",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "previousRestrictionValue",
             "baseName": "previousRestrictionValue",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "previousRestrictionType",
@@ -67,7 +82,7 @@ export class GlobalMosaicRestrictionTransactionBodyDTO {
         {
             "name": "newRestrictionValue",
             "baseName": "newRestrictionValue",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "newRestrictionType",

@@ -27,7 +27,10 @@
 
 
 export class EmbeddedTransactionMetaDTO {
-    'height': Array<number>;
+    /**
+    * Height of the blockchain.
+    */
+    'height': string;
     'aggregateHash': string;
     'aggregateId': string;
     'index': number;
@@ -39,7 +42,7 @@ export class EmbeddedTransactionMetaDTO {
         {
             "name": "height",
             "baseName": "height",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "aggregateHash",

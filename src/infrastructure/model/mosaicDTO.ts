@@ -28,9 +28,18 @@
 import { MosaicPropertiesDTO } from './mosaicPropertiesDTO';
 
 export class MosaicDTO {
-    'id': Array<number>;
-    'supply': Array<number>;
-    'startHeight': Array<number>;
+    /**
+    * Mosaic identifier.
+    */
+    'id': string;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'supply': string;
+    /**
+    * Height of the blockchain.
+    */
+    'startHeight': string;
     'ownerPublicKey': string;
     'ownerAddress': string;
     /**
@@ -45,17 +54,17 @@ export class MosaicDTO {
         {
             "name": "id",
             "baseName": "id",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "supply",
             "baseName": "supply",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "startHeight",
             "baseName": "startHeight",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "ownerPublicKey",

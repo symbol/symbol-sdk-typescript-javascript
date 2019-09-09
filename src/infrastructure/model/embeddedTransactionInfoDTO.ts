@@ -29,7 +29,7 @@ import { EmbeddedTransactionMetaDTO } from './embeddedTransactionMetaDTO';
 
 export class EmbeddedTransactionInfoDTO {
     'meta': EmbeddedTransactionMetaDTO;
-    'transaction': object;
+    'transaction': any;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,7 +42,7 @@ export class EmbeddedTransactionInfoDTO {
         {
             "name": "transaction",
             "baseName": "transaction",
-            "type": "AnyOfEmbeddedAccountLinkTransactionDTOEmbeddedMosaicDefinitionTransactionDTOEmbeddedMosaicSupplyChangeTransactionDTOEmbeddedMultisigAccountModificationTransactionDTOEmbeddedNamespaceRegistrationTransactionDTOEmbeddedAddressAliasTransactionDTOEmbeddedMosaicAliasTransactionDTOEmbeddedHashLockTransactionDTOEmbeddedSecretLockTransactionDTOEmbeddedSecretProofTransactionDTOEmbeddedAccountAddressRestrictionTransactionDTOEmbeddedAccountMosaicRestrictionTransactionDTOEmbeddedAccountOperationRestrictionTransactionDTOEmbeddedGlobalMosaicRestrictionTransactionDTOEmbeddedAddressMosaicRestrictionTransactionDTOEmbeddedTransferTransactionDTO"
+            "type": "any"
         }    ];
 
     static getAttributeTypeMap() {

@@ -34,7 +34,7 @@ export class ArtifactExpiryReceiptDTOAllOf {
         {
             "name": "artifactId",
             "baseName": "artifactId",
-            "type": "AnyOfarrayarray"
+            "type": "any"
         }    ];
 
     static getAttributeTypeMap() {

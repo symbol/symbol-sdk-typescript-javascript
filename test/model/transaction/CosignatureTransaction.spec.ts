@@ -50,7 +50,7 @@ describe('CosignatureTransaction', () => {
                     {
                         signature: '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
                         'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
-                        signer: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
+                        signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                     },
                 ],
                 deadline: [
@@ -63,7 +63,7 @@ describe('CosignatureTransaction', () => {
                 ],
                 signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
                 '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
-                signer: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
+                signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                 transactions: [
                     {
                         meta: {
@@ -93,8 +93,8 @@ describe('CosignatureTransaction', () => {
                                     ],
                                 },
                             ],
-                            recipient: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
-                            signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                            recipientAddress: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
+                            signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                             type: 16724,
                             version: 36865,
                         },
@@ -114,7 +114,7 @@ describe('CosignatureTransaction', () => {
         expect(cosignatureSignedTransaction.parentHash).to.be.equal(aggregateTransferTransaction.transactionInfo!.hash);
         expect(cosignatureSignedTransaction.signature).to.be.equal('BF3BC39F2292C028CB0FFA438A9F567A7C4D7' +
             '93D2F8522C8DEAC74BEFBCB61AF6414ADF27B2176D6A24FEF612AA6DB2F562176A11C46BA6D5E05430042CB5705');
-        expect(cosignatureSignedTransaction.signer).to.be.equal(account.publicKey);
+        expect(cosignatureSignedTransaction.signerPublicKey).to.be.equal(account.publicKey);
     });
 
     it('should sign a transaction with transaction payload', () => {
@@ -126,7 +126,7 @@ describe('CosignatureTransaction', () => {
 
         const signedTx = CosignatureTransaction.signTransactionPayload(account, txPayload, generationHash);
 
-        expect(signedTx.signer).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE');
-        expect(signedTx.signer).to.be.equal(account.publicKey);
+        expect(signedTx.signerPublicKey).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFE');
+        expect(signedTx.signerPublicKey).to.be.equal(account.publicKey);
     });
 });

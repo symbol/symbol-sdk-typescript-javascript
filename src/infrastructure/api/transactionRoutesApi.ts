@@ -429,7 +429,7 @@ export class TransactionRoutesApi {
     }
     /**
      * Returns an array of transaction statuses for a given array of transaction hashes.
-     * @summary Get transactions status.
+     * @summary Get transactions status
      * @param transactionHashes 
      */
     public async getTransactionsStatuses (transactionHashes: TransactionHashes, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<TransactionStatusDTO>;  }> {

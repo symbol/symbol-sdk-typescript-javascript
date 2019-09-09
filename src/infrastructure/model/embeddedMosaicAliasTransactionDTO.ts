@@ -36,11 +36,23 @@ export class EmbeddedMosaicAliasTransactionDTO {
     */
     'version': number;
     'type': number;
-    'maxFee': Array<number>;
-    'deadline': Array<number>;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'maxFee': string;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'deadline': string;
     'aliasAction': AliasActionEnum;
-    'namespaceId': Array<number>;
-    'mosaicId': Array<number>;
+    /**
+    * Namespace identifier.
+    */
+    'namespaceId': string;
+    /**
+    * Mosaic identifier.
+    */
+    'mosaicId': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -63,12 +75,12 @@ export class EmbeddedMosaicAliasTransactionDTO {
         {
             "name": "maxFee",
             "baseName": "maxFee",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "deadline",
             "baseName": "deadline",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "aliasAction",
@@ -78,12 +90,12 @@ export class EmbeddedMosaicAliasTransactionDTO {
         {
             "name": "namespaceId",
             "baseName": "namespaceId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "mosaicId",
             "baseName": "mosaicId",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

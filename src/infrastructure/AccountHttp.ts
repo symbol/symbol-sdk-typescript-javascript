@@ -32,7 +32,6 @@ import { NamespaceId } from '../model/namespace/NamespaceId';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {Transaction} from '../model/transaction/Transaction';
-import {UInt64} from '../model/UInt64';
 import {AccountRepository} from './AccountRepository';
 import { AccountInfoDTO,
          AccountNamesDTO,
@@ -46,6 +45,7 @@ import {Http} from './Http';
 import {NetworkHttp} from './NetworkHttp';
 import {QueryParams} from './QueryParams';
 import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
+import { UInt64 } from '../model/UInt64';
 
 /**
  * Account http repository.
@@ -81,9 +81,9 @@ export class AccountHttp extends Http implements AccountRepository {
                 const accountInfoDTO = response.body;
                 return new AccountInfo(
                     Address.createFromEncoded(accountInfoDTO.account.address),
-                    new UInt64(accountInfoDTO.account.addressHeight),
+                    UInt64.fromNumericString(accountInfoDTO.account.addressHeight),
                     accountInfoDTO.account.publicKey,
-                    new UInt64(accountInfoDTO.account.publicKeyHeight),
+                    UInt64.fromNumericString(accountInfoDTO.account.publicKeyHeight),
                     accountInfoDTO.account.accountType.valueOf(),
                     accountInfoDTO.account.linkedAccountKey,
                     accountInfoDTO.account.activityBuckets.map((bucket) => {
@@ -96,10 +96,10 @@ export class AccountHttp extends Http implements AccountRepository {
                     }),
                     accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(
                         new MosaicId(mosaicDTO.id),
-                        new UInt64(mosaicDTO.amount),
+                        UInt64.fromNumericString(mosaicDTO.amount),
                     )),
-                    new UInt64(accountInfoDTO.account.importance),
-                    new UInt64(accountInfoDTO.account.importanceHeight),
+                    UInt64.fromNumericString(accountInfoDTO.account.importance),
+                    UInt64.fromNumericString(accountInfoDTO.account.importanceHeight),
                 );
             }),
             catchError((error) =>  throwError(this.errorHandling(error))),
@@ -158,9 +158,9 @@ export class AccountHttp extends Http implements AccountRepository {
                     return accountsInfoMetaDataDTO.map((accountInfoDTO: AccountInfoDTO) => {
                         return new AccountInfo(
                             Address.createFromEncoded(accountInfoDTO.account.address),
-                            new UInt64(accountInfoDTO.account.addressHeight),
+                            UInt64.fromNumericString(accountInfoDTO.account.addressHeight),
                             accountInfoDTO.account.publicKey,
-                            new UInt64(accountInfoDTO.account.publicKeyHeight),
+                            UInt64.fromNumericString(accountInfoDTO.account.publicKeyHeight),
                             accountInfoDTO.account.accountType.valueOf(),
                             accountInfoDTO.account.linkedAccountKey,
                             accountInfoDTO.account.activityBuckets.map((bucket) => {
@@ -173,10 +173,10 @@ export class AccountHttp extends Http implements AccountRepository {
                             }),
                             accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(
                                 new MosaicId(mosaicDTO.id),
-                                new UInt64(mosaicDTO.amount),
+                                UInt64.fromNumericString(mosaicDTO.amount),
                             )),
-                            new UInt64(accountInfoDTO.account.importance),
-                            new UInt64(accountInfoDTO.account.importanceHeight),
+                            UInt64.fromNumericString(accountInfoDTO.account.importance),
+                            UInt64.fromNumericString(accountInfoDTO.account.importanceHeight),
                         );
 
                     });
@@ -191,8 +191,8 @@ export class AccountHttp extends Http implements AccountRepository {
         };
         return observableFrom(
             this.accountRoutesApi.getAccountsNames(accountIdsBody)).pipe(
-                map((response: { response: ClientResponse; body: AccountNamesDTO[]; }) => {
-                    const accountNames = response.body;
+                map((response: { response: ClientResponse; body: any; }) => {
+                    const accountNames = response.body.accountNames;
                     return accountNames.map((accountName) => {
                         return new AccountNames(
                             Address.createFromEncoded(accountName.address),
@@ -207,13 +207,13 @@ export class AccountHttp extends Http implements AccountRepository {
     }
     /**
      * Gets a MultisigAccountInfo for an account.
-     * @param address - User address
+     * @param publicAccount - User public account
      * @returns Observable<MultisigAccountInfo>
      */
-    public getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
+    public getMultisigAccountInfo(publicAccount: PublicAccount): Observable<MultisigAccountInfo> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
-                this.accountRoutesApi.getAccountMultisig(address.plain()))
+                this.accountRoutesApi.getAccountMultisig(publicAccount.publicKey))
                     .pipe(map((response: { response: ClientResponse; body: MultisigAccountInfoDTO; }) => {
                         const multisigAccountInfoDTO = response.body;
                         return new MultisigAccountInfo(
@@ -232,13 +232,13 @@ export class AccountHttp extends Http implements AccountRepository {
 
     /**
      * Gets a MultisigAccountGraphInfo for an account.
-     * @param address - User address
+     * @param publicAccount - User publicAccount
      * @returns Observable<MultisigAccountGraphInfo>
      */
-    public getMultisigAccountGraphInfo(address: Address): Observable<MultisigAccountGraphInfo> {
+    public getMultisigAccountGraphInfo(publicAccount: PublicAccount): Observable<MultisigAccountGraphInfo> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
-                this.accountRoutesApi.getAccountMultisigGraph(address.plain()))
+                this.accountRoutesApi.getAccountMultisigGraph(publicAccount.publicKey))
                     .pipe(map((response: { response: ClientResponse; body: MultisigAccountGraphInfoDTO[]; }) => {
                         const multisigAccountGraphInfosDTO = response.body;
                         const multisigAccounts = new Map<number, MultisigAccountInfo[]>();

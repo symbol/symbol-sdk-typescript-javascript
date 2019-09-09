@@ -71,17 +71,17 @@ export interface AccountRepository {
 
     /**
      * Gets a MultisigAccountInfo for an account.
-     * @param address - User address
+     * @param publicAccount - User public account
      * @returns Observable<MultisigAccountInfo>
      */
-    getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo>;
+    getMultisigAccountInfo(publicAccount: PublicAccount): Observable<MultisigAccountInfo>;
 
     /**
      * Gets a MultisigAccountGraphInfo for an account.
-     * @param address - User address
+     * @param publicAccount - User public account
      * @returns Observable<MultisigAccountGraphInfo>
      */
-    getMultisigAccountGraphInfo(address: Address): Observable<MultisigAccountGraphInfo>;
+    getMultisigAccountGraphInfo(publicAccount: PublicAccount): Observable<MultisigAccountGraphInfo>;
 
     /**
      * Gets an array of confirmed transactions for which an account is signer or receiver.

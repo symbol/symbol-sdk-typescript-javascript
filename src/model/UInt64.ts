@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import * as Long from 'long';
 import { RawUInt64 as uint64 } from '../core/format';
 
 /**
@@ -53,6 +54,19 @@ export class UInt64 {
         return new UInt64(dto);
     }
 
+    /**
+     * Parses a numeric string into a UInt64.
+     * @param {string} input A numeric string.
+     * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
+     */
+    public static fromNumericString(input: string): UInt64 {
+        const input_long = Long.fromString(input, true);
+        if (! /^\d+$/.test(input) || (input.substr(0, 1) === '0' && input.length > 1) || !Long.isLong(input_long)) {
+            throw new Error('Input string is not a valid numeric string');
+        }
+
+        return new UInt64([input_long.getLowBitsUnsigned(), input_long.getHighBitsUnsigned()]);
+    }
     /**
      * Constructor
      * @param uintArray

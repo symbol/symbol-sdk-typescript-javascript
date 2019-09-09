@@ -115,7 +115,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
                                     signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedMultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             MultisigAccountModificationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
         const transaction = MultisigAccountModificationTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
@@ -134,7 +134,8 @@ export class MultisigAccountModificationTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MultisigAccountModificationTransactionBuilder).fee.amount),
         );
-        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
     }
 
     /**

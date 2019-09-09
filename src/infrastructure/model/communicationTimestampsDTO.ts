@@ -27,8 +27,14 @@
 
 
 export class CommunicationTimestampsDTO {
-    'sendTimestamp'?: Array<number>;
-    'receiveTimestamp'?: Array<number>;
+    /**
+    * Number of seconds elapsed since the creation of the nemesis block.
+    */
+    'sendTimestamp'?: string;
+    /**
+    * Number of seconds elapsed since the creation of the nemesis block.
+    */
+    'receiveTimestamp'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -36,12 +42,12 @@ export class CommunicationTimestampsDTO {
         {
             "name": "sendTimestamp",
             "baseName": "sendTimestamp",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "receiveTimestamp",
             "baseName": "receiveTimestamp",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -28,7 +28,10 @@
 
 export class BlockMetaDTO {
     'hash': string;
-    'totalFee': Array<number>;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'totalFee': string;
     'generationHash': string;
     'stateHashSubCacheMerkleRoots': Array<string>;
     'numTransactions': number;
@@ -45,7 +48,7 @@ export class BlockMetaDTO {
         {
             "name": "totalFee",
             "baseName": "totalFee",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "generationHash",

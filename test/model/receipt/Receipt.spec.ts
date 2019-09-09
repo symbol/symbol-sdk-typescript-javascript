@@ -141,13 +141,13 @@ describe('Receipt', () => {
             version: 1,
             type: 4685,
             sender: account.publicKey,
-            recipient: '9103B60AAF2762688300000000000000000000000000000000',
+            recipientAddress: '9103B60AAF2762688300000000000000000000000000000000',
             mosaicId: [481110499, 231112638],
             amount: [1000, 0],
           };
         const receipt = new BalanceTransferReceipt(
             PublicAccount.createFromPublicKey(receiptDTO.sender, netWorkType),
-            Address.createFromEncoded(receiptDTO.recipient),
+            Address.createFromEncoded(receiptDTO.recipientAddress),
             new MosaicId(receiptDTO.mosaicId),
             new UInt64(receiptDTO.amount),
             receiptDTO.version,
@@ -158,7 +158,7 @@ describe('Receipt', () => {
         deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Levy);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
-        deepEqual(receipt.recipient, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
+        deepEqual(receipt.recipientAddress, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
     });
 
     it('should createComplete a balance transfer receipt - Mosaic Rental Fee', () => {
@@ -166,14 +166,14 @@ describe('Receipt', () => {
             version: 1,
             type: 4941,
             sender: account.publicKey,
-            recipient: '9103B60AAF2762688300000000000000000000000000000000',
+            recipientAddress: '9103B60AAF2762688300000000000000000000000000000000',
             mosaicId: [3646934825, 3576016193],
             amount: [1000, 0],
         };
 
         const receipt = new BalanceTransferReceipt(
             PublicAccount.createFromPublicKey(receiptDTO.sender, netWorkType),
-            Address.createFromEncoded(receiptDTO.recipient),
+            Address.createFromEncoded(receiptDTO.recipientAddress),
             new MosaicId(receiptDTO.mosaicId),
             new UInt64(receiptDTO.amount),
             receiptDTO.version,
@@ -181,7 +181,7 @@ describe('Receipt', () => {
         );
 
         deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
-        deepEqual(receipt.recipient, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
+        deepEqual(receipt.recipientAddress, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
         deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Rental_Fee);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
@@ -204,7 +204,7 @@ describe('Receipt', () => {
             receiptDTO.type,
         );
 
-        deepEqual(receipt.account.publicKey, receiptDTO.account);
+        deepEqual(receipt.targetPublicAccount.publicKey, receiptDTO.account);
         deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
         deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Harvest_Fee);
@@ -228,7 +228,7 @@ describe('Receipt', () => {
             receiptDTO.type,
         );
 
-        deepEqual(receipt.account.publicKey, receiptDTO.account);
+        deepEqual(receipt.targetPublicAccount.publicKey, receiptDTO.account);
         deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
         deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.LockHash_Created);
@@ -280,7 +280,7 @@ describe('Receipt', () => {
         );
         deepEqual(statement.source.primaryId, statementDto.source.primaryId);
         deepEqual(statement.source.secondaryId, statementDto.source.secondaryId);
-        deepEqual((statement.receipts[0] as BalanceChangeReceipt).account.publicKey, account.publicKey);
+        deepEqual((statement.receipts[0] as BalanceChangeReceipt).targetPublicAccount.publicKey, account.publicKey);
     });
 
     it('should createComplete resolution statement - mosaic', () => {

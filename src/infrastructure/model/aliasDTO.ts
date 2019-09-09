@@ -29,7 +29,10 @@ import { AliasTypeEnum } from './aliasTypeEnum';
 
 export class AliasDTO {
     'type': AliasTypeEnum;
-    'mosaicId'?: Array<number>;
+    /**
+    * Mosaic identifier.
+    */
+    'mosaicId'?: string;
     /**
     * Decoded address.
     */
@@ -46,7 +49,7 @@ export class AliasDTO {
         {
             "name": "mosaicId",
             "baseName": "mosaicId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "address",

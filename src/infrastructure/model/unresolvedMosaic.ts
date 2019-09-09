@@ -27,8 +27,14 @@
 
 
 export class UnresolvedMosaic {
-    'id': Array<number>;
-    'amount': Array<number>;
+    /**
+    * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
+    */
+    'id': string;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'amount': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -36,12 +42,12 @@ export class UnresolvedMosaic {
         {
             "name": "id",
             "baseName": "id",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "amount",
             "baseName": "amount",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

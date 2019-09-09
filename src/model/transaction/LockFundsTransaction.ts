@@ -126,7 +126,7 @@ export class LockFundsTransaction extends Transaction {
                                     signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedHashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             HashLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
         const transaction = LockFundsTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as HashLockTransactionBuilder).getDeadline().timestamp),
@@ -140,7 +140,8 @@ export class LockFundsTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as HashLockTransactionBuilder).fee.amount),
         );
-        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
     }
 
     /**

@@ -28,9 +28,15 @@
 import { MosaicSupplyChangeActionEnum } from './mosaicSupplyChangeActionEnum';
 
 export class MosaicSupplyChangeTransactionBodyDTO {
-    'mosaicId': Array<number>;
+    /**
+    * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
+    */
+    'mosaicId': string;
     'action': MosaicSupplyChangeActionEnum;
-    'delta': Array<number>;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'delta': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -38,7 +44,7 @@ export class MosaicSupplyChangeTransactionBodyDTO {
         {
             "name": "mosaicId",
             "baseName": "mosaicId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "action",
@@ -48,7 +54,7 @@ export class MosaicSupplyChangeTransactionBodyDTO {
         {
             "name": "delta",
             "baseName": "delta",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

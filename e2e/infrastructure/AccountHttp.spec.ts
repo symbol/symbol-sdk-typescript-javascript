@@ -134,7 +134,7 @@ describe('AccountHttp', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(1000),
+                UInt64.fromUint(5),
                 NetworkType.MIJIN_TEST,
             );
             namespaceId = new NamespaceId(namespaceName);
@@ -183,7 +183,7 @@ describe('AccountHttp', () => {
         });
     });
 
-    describe('Setup Test AccountAddressProperty', () => {
+    describe('Setup Test AccountAddressRestriction', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -200,12 +200,11 @@ describe('AccountHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.BlockIncomingAddress,
+                AccountRestrictionType.AllowIncomingAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
-
             listener.confirmed(account.address).subscribe(() => {
                 done();
             });
@@ -307,7 +306,7 @@ describe('AccountHttp', () => {
     describe('getMultisigAccountGraphInfo', () => {
         it('should call getMultisigAccountGraphInfo successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getMultisigAccountGraphInfo(multisigAccount.address).subscribe((multisigAccountGraphInfo) => {
+                accountHttp.getMultisigAccountGraphInfo(multisigAccount.publicAccount).subscribe((multisigAccountGraphInfo) => {
                     expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].
                         account.publicKey).to.be.equal(multisigAccount.publicKey);
                     done();
@@ -318,7 +317,7 @@ describe('AccountHttp', () => {
     describe('getMultisigAccountInfo', () => {
         it('should call getMultisigAccountInfo successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getMultisigAccountInfo(multisigAccount.address).subscribe((multisigAccountInfo) => {
+                accountHttp.getMultisigAccountInfo(multisigAccount.publicAccount).subscribe((multisigAccountInfo) => {
                     expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigAccount.publicKey);
                     done();
                 });
@@ -426,12 +425,11 @@ describe('AccountHttp', () => {
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
                 Deadline.create(),
-                AccountRestrictionType.BlockIncomingAddress,
+                AccountRestrictionType.AllowIncomingAddress,
                 [addressPropertyFilter],
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = addressModification.signWith(account, generationHash);
-
             listener.confirmed(account.address).subscribe(() => {
                 done();
             });

@@ -27,7 +27,10 @@
 
 
 export class TransactionMetaDTO {
-    'height': Array<number>;
+    /**
+    * Height of the blockchain.
+    */
+    'height': string;
     'hash': string;
     'merkleComponentHash': string;
     'index': number;
@@ -39,7 +42,7 @@ export class TransactionMetaDTO {
         {
             "name": "height",
             "baseName": "height",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "hash",

@@ -29,7 +29,10 @@ import { AliasActionEnum } from './aliasActionEnum';
 
 export class AddressAliasTransactionBodyDTO {
     'aliasAction': AliasActionEnum;
-    'namespaceId': Array<number>;
+    /**
+    * Namespace identifier.
+    */
+    'namespaceId': string;
     /**
     * Decoded address.
     */
@@ -46,7 +49,7 @@ export class AddressAliasTransactionBodyDTO {
         {
             "name": "namespaceId",
             "baseName": "namespaceId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "address",

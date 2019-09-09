@@ -32,7 +32,6 @@ export * from './aggregateTransactionBodyDTO';
 export * from './aliasActionEnum';
 export * from './aliasDTO';
 export * from './aliasTypeEnum';
-export * from './amount';
 export * from './announceTransactionInfoDTO';
 export * from './artifactExpiryReceiptDTO';
 export * from './artifactExpiryReceiptDTOAllOf';
@@ -42,7 +41,6 @@ export * from './balanceTransferReceiptDTO';
 export * from './balanceTransferReceiptDTOAllOf';
 export * from './blockDTO';
 export * from './blockDTOAllOf';
-export * from './blockDuration';
 export * from './blockInfoDTO';
 export * from './blockMetaDTO';
 export * from './chainScoreDTO';
@@ -52,7 +50,6 @@ export * from './cosignatoryModificationDTO';
 export * from './cosignature';
 export * from './cosignatureDTO';
 export * from './cosignatureDTOAllOf';
-export * from './difficulty';
 export * from './embeddedAccountAddressRestrictionTransactionDTO';
 export * from './embeddedAccountLinkTransactionDTO';
 export * from './embeddedAccountMosaicRestrictionTransactionDTO';
@@ -77,9 +74,7 @@ export * from './globalMosaicRestrictionTransactionBodyDTO';
 export * from './globalMosaicRestrictionTransactionDTO';
 export * from './hashLockTransactionBodyDTO';
 export * from './hashLockTransactionDTO';
-export * from './height';
 export * from './heightInfoDTO';
-export * from './importance';
 export * from './inflationReceiptDTO';
 export * from './inflationReceiptDTOAllOf';
 export * from './lockHashAlgorithmEnum';
@@ -94,7 +89,6 @@ export * from './mosaicAliasTransactionDTO';
 export * from './mosaicDTO';
 export * from './mosaicDefinitionTransactionBodyDTO';
 export * from './mosaicDefinitionTransactionDTO';
-export * from './mosaicId';
 export * from './mosaicIds';
 export * from './mosaicInfoDTO';
 export * from './mosaicNamesDTO';
@@ -110,7 +104,6 @@ export * from './multisigAccountModificationTransactionBodyDTO';
 export * from './multisigAccountModificationTransactionDTO';
 export * from './multisigDTO';
 export * from './namespaceDTO';
-export * from './namespaceId';
 export * from './namespaceIds';
 export * from './namespaceInfoDTO';
 export * from './namespaceMetaDTO';
@@ -126,7 +119,6 @@ export * from './receiptTypeEnum';
 export * from './resolutionEntryDTO';
 export * from './resolutionStatementDTO';
 export * from './rolesTypeEnum';
-export * from './score';
 export * from './secretLockTransactionBodyDTO';
 export * from './secretLockTransactionDTO';
 export * from './secretProofTransactionBodyDTO';
@@ -136,7 +128,6 @@ export * from './serverInfoDTO';
 export * from './sourceDTO';
 export * from './statementsDTO';
 export * from './storageInfoDTO';
-export * from './timestamp';
 export * from './transactionBodyDTO';
 export * from './transactionDTO';
 export * from './transactionHashes';
@@ -150,7 +141,6 @@ export * from './transactionTypeEnum';
 export * from './transferTransactionBodyDTO';
 export * from './transferTransactionDTO';
 export * from './unresolvedMosaic';
-export * from './unresolvedMosaicId';
 export * from './verifiableEntityDTO';
 
 import localVarRequest = require('request');
@@ -189,7 +179,6 @@ import { AggregateTransactionBodyDTO } from './aggregateTransactionBodyDTO';
 import { AliasActionEnum } from './aliasActionEnum';
 import { AliasDTO } from './aliasDTO';
 import { AliasTypeEnum } from './aliasTypeEnum';
-import { Amount } from './amount';
 import { AnnounceTransactionInfoDTO } from './announceTransactionInfoDTO';
 import { ArtifactExpiryReceiptDTO } from './artifactExpiryReceiptDTO';
 import { ArtifactExpiryReceiptDTOAllOf } from './artifactExpiryReceiptDTOAllOf';
@@ -199,7 +188,6 @@ import { BalanceTransferReceiptDTO } from './balanceTransferReceiptDTO';
 import { BalanceTransferReceiptDTOAllOf } from './balanceTransferReceiptDTOAllOf';
 import { BlockDTO } from './blockDTO';
 import { BlockDTOAllOf } from './blockDTOAllOf';
-import { BlockDuration } from './blockDuration';
 import { BlockInfoDTO } from './blockInfoDTO';
 import { BlockMetaDTO } from './blockMetaDTO';
 import { ChainScoreDTO } from './chainScoreDTO';
@@ -209,7 +197,6 @@ import { CosignatoryModificationDTO } from './cosignatoryModificationDTO';
 import { Cosignature } from './cosignature';
 import { CosignatureDTO } from './cosignatureDTO';
 import { CosignatureDTOAllOf } from './cosignatureDTOAllOf';
-import { Difficulty } from './difficulty';
 import { EmbeddedAccountAddressRestrictionTransactionDTO } from './embeddedAccountAddressRestrictionTransactionDTO';
 import { EmbeddedAccountLinkTransactionDTO } from './embeddedAccountLinkTransactionDTO';
 import { EmbeddedAccountMosaicRestrictionTransactionDTO } from './embeddedAccountMosaicRestrictionTransactionDTO';
@@ -234,9 +221,7 @@ import { GlobalMosaicRestrictionTransactionBodyDTO } from './globalMosaicRestric
 import { GlobalMosaicRestrictionTransactionDTO } from './globalMosaicRestrictionTransactionDTO';
 import { HashLockTransactionBodyDTO } from './hashLockTransactionBodyDTO';
 import { HashLockTransactionDTO } from './hashLockTransactionDTO';
-import { Height } from './height';
 import { HeightInfoDTO } from './heightInfoDTO';
-import { Importance } from './importance';
 import { InflationReceiptDTO } from './inflationReceiptDTO';
 import { InflationReceiptDTOAllOf } from './inflationReceiptDTOAllOf';
 import { LockHashAlgorithmEnum } from './lockHashAlgorithmEnum';
@@ -251,7 +236,6 @@ import { MosaicAliasTransactionDTO } from './mosaicAliasTransactionDTO';
 import { MosaicDTO } from './mosaicDTO';
 import { MosaicDefinitionTransactionBodyDTO } from './mosaicDefinitionTransactionBodyDTO';
 import { MosaicDefinitionTransactionDTO } from './mosaicDefinitionTransactionDTO';
-import { MosaicId } from './mosaicId';
 import { MosaicIds } from './mosaicIds';
 import { MosaicInfoDTO } from './mosaicInfoDTO';
 import { MosaicNamesDTO } from './mosaicNamesDTO';
@@ -267,7 +251,6 @@ import { MultisigAccountModificationTransactionBodyDTO } from './multisigAccount
 import { MultisigAccountModificationTransactionDTO } from './multisigAccountModificationTransactionDTO';
 import { MultisigDTO } from './multisigDTO';
 import { NamespaceDTO } from './namespaceDTO';
-import { NamespaceId } from './namespaceId';
 import { NamespaceIds } from './namespaceIds';
 import { NamespaceInfoDTO } from './namespaceInfoDTO';
 import { NamespaceMetaDTO } from './namespaceMetaDTO';
@@ -283,7 +266,6 @@ import { ReceiptTypeEnum } from './receiptTypeEnum';
 import { ResolutionEntryDTO } from './resolutionEntryDTO';
 import { ResolutionStatementDTO } from './resolutionStatementDTO';
 import { RolesTypeEnum } from './rolesTypeEnum';
-import { Score } from './score';
 import { SecretLockTransactionBodyDTO } from './secretLockTransactionBodyDTO';
 import { SecretLockTransactionDTO } from './secretLockTransactionDTO';
 import { SecretProofTransactionBodyDTO } from './secretProofTransactionBodyDTO';
@@ -293,7 +275,6 @@ import { ServerInfoDTO } from './serverInfoDTO';
 import { SourceDTO } from './sourceDTO';
 import { StatementsDTO } from './statementsDTO';
 import { StorageInfoDTO } from './storageInfoDTO';
-import { Timestamp } from './timestamp';
 import { TransactionBodyDTO } from './transactionBodyDTO';
 import { TransactionDTO } from './transactionDTO';
 import { TransactionHashes } from './transactionHashes';
@@ -307,7 +288,6 @@ import { TransactionTypeEnum } from './transactionTypeEnum';
 import { TransferTransactionBodyDTO } from './transferTransactionBodyDTO';
 import { TransferTransactionDTO } from './transferTransactionDTO';
 import { UnresolvedMosaic } from './unresolvedMosaic';
-import { UnresolvedMosaicId } from './unresolvedMosaicId';
 import { VerifiableEntityDTO } from './verifiableEntityDTO';
 
 /* tslint:disable:no-unused-variable */
@@ -369,7 +349,6 @@ let typeMap: {[index: string]: any} = {
     "AggregateCompleteTransactionDTO": AggregateCompleteTransactionDTO,
     "AggregateTransactionBodyDTO": AggregateTransactionBodyDTO,
     "AliasDTO": AliasDTO,
-    "Amount": Amount,
     "AnnounceTransactionInfoDTO": AnnounceTransactionInfoDTO,
     "ArtifactExpiryReceiptDTO": ArtifactExpiryReceiptDTO,
     "ArtifactExpiryReceiptDTOAllOf": ArtifactExpiryReceiptDTOAllOf,
@@ -379,7 +358,6 @@ let typeMap: {[index: string]: any} = {
     "BalanceTransferReceiptDTOAllOf": BalanceTransferReceiptDTOAllOf,
     "BlockDTO": BlockDTO,
     "BlockDTOAllOf": BlockDTOAllOf,
-    "BlockDuration": BlockDuration,
     "BlockInfoDTO": BlockInfoDTO,
     "BlockMetaDTO": BlockMetaDTO,
     "ChainScoreDTO": ChainScoreDTO,
@@ -388,7 +366,6 @@ let typeMap: {[index: string]: any} = {
     "Cosignature": Cosignature,
     "CosignatureDTO": CosignatureDTO,
     "CosignatureDTOAllOf": CosignatureDTOAllOf,
-    "Difficulty": Difficulty,
     "EmbeddedAccountAddressRestrictionTransactionDTO": EmbeddedAccountAddressRestrictionTransactionDTO,
     "EmbeddedAccountLinkTransactionDTO": EmbeddedAccountLinkTransactionDTO,
     "EmbeddedAccountMosaicRestrictionTransactionDTO": EmbeddedAccountMosaicRestrictionTransactionDTO,
@@ -413,9 +390,7 @@ let typeMap: {[index: string]: any} = {
     "GlobalMosaicRestrictionTransactionDTO": GlobalMosaicRestrictionTransactionDTO,
     "HashLockTransactionBodyDTO": HashLockTransactionBodyDTO,
     "HashLockTransactionDTO": HashLockTransactionDTO,
-    "Height": Height,
     "HeightInfoDTO": HeightInfoDTO,
-    "Importance": Importance,
     "InflationReceiptDTO": InflationReceiptDTO,
     "InflationReceiptDTOAllOf": InflationReceiptDTOAllOf,
     "MerklePathItem": MerklePathItem,
@@ -428,7 +403,6 @@ let typeMap: {[index: string]: any} = {
     "MosaicDTO": MosaicDTO,
     "MosaicDefinitionTransactionBodyDTO": MosaicDefinitionTransactionBodyDTO,
     "MosaicDefinitionTransactionDTO": MosaicDefinitionTransactionDTO,
-    "MosaicId": MosaicId,
     "MosaicIds": MosaicIds,
     "MosaicInfoDTO": MosaicInfoDTO,
     "MosaicNamesDTO": MosaicNamesDTO,
@@ -442,7 +416,6 @@ let typeMap: {[index: string]: any} = {
     "MultisigAccountModificationTransactionDTO": MultisigAccountModificationTransactionDTO,
     "MultisigDTO": MultisigDTO,
     "NamespaceDTO": NamespaceDTO,
-    "NamespaceId": NamespaceId,
     "NamespaceIds": NamespaceIds,
     "NamespaceInfoDTO": NamespaceInfoDTO,
     "NamespaceMetaDTO": NamespaceMetaDTO,
@@ -455,7 +428,6 @@ let typeMap: {[index: string]: any} = {
     "ReceiptDTO": ReceiptDTO,
     "ResolutionEntryDTO": ResolutionEntryDTO,
     "ResolutionStatementDTO": ResolutionStatementDTO,
-    "Score": Score,
     "SecretLockTransactionBodyDTO": SecretLockTransactionBodyDTO,
     "SecretLockTransactionDTO": SecretLockTransactionDTO,
     "SecretProofTransactionBodyDTO": SecretProofTransactionBodyDTO,
@@ -465,7 +437,6 @@ let typeMap: {[index: string]: any} = {
     "SourceDTO": SourceDTO,
     "StatementsDTO": StatementsDTO,
     "StorageInfoDTO": StorageInfoDTO,
-    "Timestamp": Timestamp,
     "TransactionBodyDTO": TransactionBodyDTO,
     "TransactionDTO": TransactionDTO,
     "TransactionHashes": TransactionHashes,
@@ -478,7 +449,6 @@ let typeMap: {[index: string]: any} = {
     "TransferTransactionBodyDTO": TransferTransactionBodyDTO,
     "TransferTransactionDTO": TransferTransactionDTO,
     "UnresolvedMosaic": UnresolvedMosaic,
-    "UnresolvedMosaicId": UnresolvedMosaicId,
     "VerifiableEntityDTO": VerifiableEntityDTO,
 }
 

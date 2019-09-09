@@ -34,9 +34,15 @@ export class AccountDTO {
     * Decoded address.
     */
     'address': string;
-    'addressHeight': Array<number>;
+    /**
+    * Height of the blockchain.
+    */
+    'addressHeight': string;
     'publicKey': string;
-    'publicKeyHeight': Array<number>;
+    /**
+    * Height of the blockchain.
+    */
+    'publicKeyHeight': string;
     'accountType': AccountTypeEnum;
     'linkedAccountKey': string;
     'activityBuckets': Array<ActivityBucketDTO>;
@@ -44,8 +50,14 @@ export class AccountDTO {
     * Mosaic units owned. The amount is represented in absolute amount. Thus a balance of 123456789 for a mosaic with divisibility 6 (absolute) means the account owns 123.456789. 
     */
     'mosaics': Array<Mosaic>;
-    'importance': Array<number>;
-    'importanceHeight': Array<number>;
+    /**
+    * Probability of an account to harvest the next block.
+    */
+    'importance': string;
+    /**
+    * Height of the blockchain.
+    */
+    'importanceHeight': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -58,7 +70,7 @@ export class AccountDTO {
         {
             "name": "addressHeight",
             "baseName": "addressHeight",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "publicKey",
@@ -68,7 +80,7 @@ export class AccountDTO {
         {
             "name": "publicKeyHeight",
             "baseName": "publicKeyHeight",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "accountType",
@@ -93,12 +105,12 @@ export class AccountDTO {
         {
             "name": "importance",
             "baseName": "importance",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "importanceHeight",
             "baseName": "importanceHeight",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

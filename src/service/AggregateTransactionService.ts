@@ -49,17 +49,17 @@ export class AggregateTransactionService {
          * Include both initiator & cosigners
          */
         const signers = (aggregateTransaction.cosignatures.map((cosigner) => cosigner.signer.publicKey));
-        if (signedTransaction.signer) {
-            signers.push(signedTransaction.signer);
+        if (signedTransaction.signerPublicKey) {
+            signers.push(signedTransaction.signerPublicKey);
         }
         return observableFrom(aggregateTransaction.innerTransactions).pipe(
-            mergeMap((innerTransaction) => this.accountHttp.getMultisigAccountInfo(innerTransaction.signer.address)
+            mergeMap((innerTransaction) => this.accountHttp.getMultisigAccountInfo(innerTransaction.signer)
                 .pipe(
                     /**
                      * For multisig account, we need to get the graph info in case it has multiple levels
                      */
                     mergeMap((_) => _.minApproval !== 0 && _.minRemoval !== 0 ?
-                        this.accountHttp.getMultisigAccountGraphInfo(_.account.address)
+                        this.accountHttp.getMultisigAccountGraphInfo(_.account)
                         .pipe(
                             map((graphInfo) => this.validateCosignatories(graphInfo, signers, innerTransaction)),
                         ) : observableOf(signers.find((s) => s === _.account.publicKey ) !== undefined),

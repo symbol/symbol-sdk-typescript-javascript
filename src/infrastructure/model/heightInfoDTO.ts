@@ -27,7 +27,10 @@
 
 
 export class HeightInfoDTO {
-    'height': Array<number>;
+    /**
+    * Height of the blockchain.
+    */
+    'height': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -35,7 +38,7 @@ export class HeightInfoDTO {
         {
             "name": "height",
             "baseName": "height",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

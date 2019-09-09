@@ -54,7 +54,7 @@ export class ChainHttp extends Http implements ChainRepository {
         return observableFrom(this.chainRoutesApi.getBlockchainHeight()).pipe(
             map((response: { response: ClientResponse; body: HeightInfoDTO; } ) => {
                 const heightDTO = response.body;
-                return new UInt64(heightDTO.height);
+                return UInt64.fromNumericString(heightDTO.height);
             }),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
@@ -69,8 +69,8 @@ export class ChainHttp extends Http implements ChainRepository {
             map((response: { response: ClientResponse; body: ChainScoreDTO; } ) => {
                 const blockchainScoreDTO = response.body;
                 return new BlockchainScore(
-                    new UInt64(blockchainScoreDTO.scoreLow),
-                    new UInt64(blockchainScoreDTO.scoreHigh),
+                    UInt64.fromNumericString(blockchainScoreDTO.scoreLow),
+                    UInt64.fromNumericString(blockchainScoreDTO.scoreHigh),
                 );
             }),
             catchError((error) =>  throwError(this.errorHandling(error))),

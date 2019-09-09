@@ -160,7 +160,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
         const builder = isEmbedded ? EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const namespaceType = builder.getRegistrationType().valueOf();
-        const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
         const transaction = namespaceType === NamespaceRegistrationType.RootNamespace ?
             NamespaceRegistrationTransaction.createRootNamespace(
@@ -178,7 +178,8 @@ export class NamespaceRegistrationTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceRegistrationTransactionBuilder).fee.amount),
         );
-        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
     }
 
     /**

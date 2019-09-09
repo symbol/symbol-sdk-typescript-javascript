@@ -27,9 +27,18 @@
 
 
 export class BlockDTOAllOf {
-    'height': Array<number>;
-    'timestamp': Array<number>;
-    'difficulty': Array<number>;
+    /**
+    * Height of the blockchain.
+    */
+    'height': string;
+    /**
+    * Number of seconds elapsed since the creation of the nemesis block.
+    */
+    'timestamp': string;
+    /**
+    * Defines how difficult it will be to harvest next the block, based on previous blocks.
+    */
+    'difficulty': string;
     /**
     * Fee multiplier applied to transactions contained in block.
     */
@@ -46,17 +55,17 @@ export class BlockDTOAllOf {
         {
             "name": "height",
             "baseName": "height",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "timestamp",
             "baseName": "timestamp",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "difficulty",
             "baseName": "difficulty",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "feeMultiplier",

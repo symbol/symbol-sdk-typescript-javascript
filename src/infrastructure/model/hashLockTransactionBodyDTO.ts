@@ -29,7 +29,10 @@ import { Mosaic } from './mosaic';
 
 export class HashLockTransactionBodyDTO {
     'mosaic': Mosaic;
-    'duration': Array<number>;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'duration': string;
     'hash': string;
 
     static discriminator: string | undefined = undefined;
@@ -43,7 +46,7 @@ export class HashLockTransactionBodyDTO {
         {
             "name": "duration",
             "baseName": "duration",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "hash",

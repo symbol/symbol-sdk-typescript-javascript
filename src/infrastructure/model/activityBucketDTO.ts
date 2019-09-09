@@ -27,6 +27,9 @@
 
 
 export class ActivityBucketDTO {
+    /**
+    * Height of the blockchain.
+    */
     'startHeight': string;
     'totalFeesPaid': number;
     'beneficiaryCount': number;

@@ -34,18 +34,36 @@ export class NamespaceDTO {
     * Level of the namespace.
     */
     'depth': number;
-    'level0': Array<number>;
-    'level1'?: Array<number>;
-    'level2'?: Array<number>;
+    /**
+    * Namespace identifier.
+    */
+    'level0': string;
+    /**
+    * Namespace identifier.
+    */
+    'level1'?: string;
+    /**
+    * Namespace identifier.
+    */
+    'level2'?: string;
     'alias': AliasDTO;
-    'parentId': Array<number>;
+    /**
+    * Namespace identifier.
+    */
+    'parentId': string;
     'ownerPublicKey': string;
     /**
     * Decoded address.
     */
     'ownerAddress': string;
-    'startHeight': Array<number>;
-    'endHeight': Array<number>;
+    /**
+    * Height of the blockchain.
+    */
+    'startHeight': string;
+    /**
+    * Height of the blockchain.
+    */
+    'endHeight': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -63,17 +81,17 @@ export class NamespaceDTO {
         {
             "name": "level0",
             "baseName": "level0",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "level1",
             "baseName": "level1",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "level2",
             "baseName": "level2",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "alias",
@@ -83,7 +101,7 @@ export class NamespaceDTO {
         {
             "name": "parentId",
             "baseName": "parentId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "ownerPublicKey",
@@ -98,12 +116,12 @@ export class NamespaceDTO {
         {
             "name": "startHeight",
             "baseName": "startHeight",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "endHeight",
             "baseName": "endHeight",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

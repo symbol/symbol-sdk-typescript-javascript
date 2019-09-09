@@ -36,11 +36,26 @@ export class EmbeddedSecretLockTransactionDTO {
     */
     'version': number;
     'type': number;
-    'maxFee': Array<number>;
-    'deadline': Array<number>;
-    'duration': Array<number>;
-    'mosaicId': Array<number>;
-    'amount': Array<number>;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'maxFee': string;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'deadline': string;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'duration': string;
+    /**
+    * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
+    */
+    'mosaicId': string;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'amount': string;
     'hashAlgorithm': LockHashAlgorithmEnum;
     'secret': string;
     /**
@@ -69,27 +84,27 @@ export class EmbeddedSecretLockTransactionDTO {
         {
             "name": "maxFee",
             "baseName": "maxFee",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "deadline",
             "baseName": "deadline",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "duration",
             "baseName": "duration",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "mosaicId",
             "baseName": "mosaicId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "amount",
             "baseName": "amount",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "hashAlgorithm",

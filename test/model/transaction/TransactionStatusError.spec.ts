@@ -23,7 +23,7 @@ describe('TransactionStatusError', () => {
 
     it('should createComplete an TransactionStatusError object', () => {
         const statusInfoErrorDTO = {
-            deadline: [ 1010, 0 ],
+            deadline: '1010',
             hash: 'transaction-hash',
             status: 'error-message',
         };

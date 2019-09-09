@@ -35,7 +35,10 @@ export class MosaicPropertiesDTO {
     * Determines up to what decimal place the mosaic can be divided. Divisibility of 3 means that a mosaic can be divided into smallest parts of 0.001 mosaics. The divisibility must be in the range of 0 and 6. 
     */
     'divisibility'?: number;
-    'duration'?: Array<number>;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'duration'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -53,7 +56,7 @@ export class MosaicPropertiesDTO {
         {
             "name": "duration",
             "baseName": "duration",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

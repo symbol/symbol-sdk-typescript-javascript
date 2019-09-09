@@ -32,8 +32,14 @@ export class BalanceTransferReceiptDTOAllOf {
     * Decoded address.
     */
     'recipientAddress': string;
-    'mosaicId': Array<number>;
-    'amount': Array<number>;
+    /**
+    * Mosaic identifier.
+    */
+    'mosaicId': string;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'amount': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -51,12 +57,12 @@ export class BalanceTransferReceiptDTOAllOf {
         {
             "name": "mosaicId",
             "baseName": "mosaicId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "amount",
             "baseName": "amount",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

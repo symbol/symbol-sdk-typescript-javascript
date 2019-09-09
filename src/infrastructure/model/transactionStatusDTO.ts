@@ -30,8 +30,14 @@ export class TransactionStatusDTO {
     'group'?: string;
     'status': string;
     'hash'?: string;
-    'deadline'?: Array<number>;
-    'height'?: Array<number>;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'deadline'?: string;
+    /**
+    * Height of the blockchain.
+    */
+    'height'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -54,12 +60,12 @@ export class TransactionStatusDTO {
         {
             "name": "deadline",
             "baseName": "deadline",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "height",
             "baseName": "height",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

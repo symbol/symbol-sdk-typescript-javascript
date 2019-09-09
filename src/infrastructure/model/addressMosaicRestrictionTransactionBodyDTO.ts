@@ -27,14 +27,26 @@
 
 
 export class AddressMosaicRestrictionTransactionBodyDTO {
-    'mosaicId': Array<number>;
-    'restrictionKey': Array<number>;
+    /**
+    * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
+    */
+    'mosaicId': string;
+    /**
+    * Restriction key relative to the reference mosaic identifier.
+    */
+    'restrictionKey': string;
     /**
     * Address decoded. If the bit 0 of byte 0 is not set (like in 0x90), then it is a regular address. Else (e.g. 0x91) it represents a namespace id which starts at byte 1. 
     */
     'targetAddress': string;
-    'previousRestrictionValue': Array<number>;
-    'newRestrictionValue': Array<number>;
+    /**
+    * Previous restriction value.
+    */
+    'previousRestrictionValue': string;
+    /**
+    * New restriction value.
+    */
+    'newRestrictionValue': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,12 +54,12 @@ export class AddressMosaicRestrictionTransactionBodyDTO {
         {
             "name": "mosaicId",
             "baseName": "mosaicId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "restrictionKey",
             "baseName": "restrictionKey",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "targetAddress",
@@ -57,12 +69,12 @@ export class AddressMosaicRestrictionTransactionBodyDTO {
         {
             "name": "previousRestrictionValue",
             "baseName": "previousRestrictionValue",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "newRestrictionValue",
             "baseName": "newRestrictionValue",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

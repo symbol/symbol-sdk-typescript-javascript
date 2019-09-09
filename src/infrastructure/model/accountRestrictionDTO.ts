@@ -45,7 +45,7 @@ export class AccountRestrictionDTO {
         {
             "name": "values",
             "baseName": "values",
-            "type": "Array<AnyOfstringTransactionTypeEnumarray>"
+            "type": "Array<any>"
         }    ];
 
     static getAttributeTypeMap() {

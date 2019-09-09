@@ -27,8 +27,14 @@
 
 
 export class ChainScoreDTO {
-    'scoreHigh': Array<number>;
-    'scoreLow': Array<number>;
+    /**
+    * Score of the blockchain.During synchronization, nodes try to get the blockchain with highest score in the network. 
+    */
+    'scoreHigh': string;
+    /**
+    * Score of the blockchain.During synchronization, nodes try to get the blockchain with highest score in the network. 
+    */
+    'scoreLow': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -36,12 +42,12 @@ export class ChainScoreDTO {
         {
             "name": "scoreHigh",
             "baseName": "scoreHigh",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "scoreLow",
             "baseName": "scoreLow",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

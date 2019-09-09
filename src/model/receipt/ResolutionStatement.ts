@@ -16,8 +16,7 @@
 
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
-import { Receipt } from './Receipt';
-import { ReceiptType } from './ReceiptType';
+import { UInt64 } from '../UInt64';
 import { ResolutionEntry } from './ResolutionEntry';
 
 /**
@@ -37,7 +36,7 @@ export class ResolutionStatement {
                 /**
                  * The block height.
                  */
-                public readonly height: number[],
+                public readonly height: UInt64,
                 /**
                  * An unresolved address or unresolved mosaicId.
                  */

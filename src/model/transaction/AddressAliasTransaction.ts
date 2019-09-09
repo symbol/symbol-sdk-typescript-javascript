@@ -115,7 +115,7 @@ export class AddressAliasTransaction extends Transaction {
                                     signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedAddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             AddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
         const transaction = AddressAliasTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AddressAliasTransactionBuilder).getDeadline().timestamp),
@@ -126,7 +126,8 @@ export class AddressAliasTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AddressAliasTransactionBuilder).fee.amount),
         );
-        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
     }
 
     /**

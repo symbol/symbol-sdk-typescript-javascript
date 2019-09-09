@@ -29,7 +29,7 @@ import { TransactionMetaDTO } from './transactionMetaDTO';
 
 export class TransactionInfoDTO {
     'meta': TransactionMetaDTO;
-    'transaction': object;
+    'transaction': any;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,7 +42,7 @@ export class TransactionInfoDTO {
         {
             "name": "transaction",
             "baseName": "transaction",
-            "type": "AnyOfAccountLinkTransactionDTOAggregateCompleteTransactionDTOAggregateBondedTransactionDTOMosaicDefinitionTransactionDTOMosaicSupplyChangeTransactionDTOMultisigAccountModificationTransactionDTONamespaceRegistrationTransactionDTOAddressAliasTransactionDTOMosaicAliasTransactionDTOHashLockTransactionDTOSecretLockTransactionDTOSecretProofTransactionDTOAccountAddressRestrictionTransactionDTOAccountMosaicRestrictionTransactionDTOAccountOperationRestrictionTransactionDTOGlobalMosaicRestrictionTransactionDTOAddressMosaicRestrictionTransactionDTOTransferTransactionDTO"
+            "type": "any"
         }    ];
 
     static getAttributeTypeMap() {

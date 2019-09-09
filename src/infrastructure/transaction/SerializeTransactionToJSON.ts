@@ -48,7 +48,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
     switch (transaction.type) {
         case TransactionType.LINK_ACCOUNT:
             return {
-                remoteAccountKey: (transaction as AccountLinkTransaction).remoteAccountKey,
+                remotePublicKey: (transaction as AccountLinkTransaction).remotePublicKey,
                 linkAction: (transaction as AccountLinkTransaction).linkAction,
             };
         case TransactionType.ADDRESS_ALIAS:
@@ -147,18 +147,18 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 duration: (transaction as SecretLockTransaction).duration.toDTO(),
                 hashAlgorithm: (transaction as SecretLockTransaction).hashType,
                 secret: (transaction as SecretLockTransaction).secret,
-                recipient: (transaction as SecretLockTransaction).recipient.toDTO(),
+                recipientAddress: (transaction as SecretLockTransaction).recipientAddress.toDTO(),
             };
         case TransactionType.SECRET_PROOF:
             return {
                 hashAlgorithm: (transaction as SecretProofTransaction).hashType,
                 secret: (transaction as SecretProofTransaction).secret,
-                recipient: (transaction as SecretProofTransaction).recipient.toDTO(),
+                recipientAddress: (transaction as SecretProofTransaction).recipientAddress.toDTO(),
                 proof: (transaction as SecretProofTransaction).proof,
             };
         case TransactionType.TRANSFER:
             return {
-                recipient: (transaction as TransferTransaction).recipient.toDTO(),
+                recipientAddress: (transaction as TransferTransaction).recipientAddress.toDTO(),
                 mosaics: (transaction as TransferTransaction).mosaics.map((mosaic) => {
                     return mosaic.toDTO();
                 }),

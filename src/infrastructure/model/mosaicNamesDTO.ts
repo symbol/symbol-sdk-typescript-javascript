@@ -27,7 +27,10 @@
 
 
 export class MosaicNamesDTO {
-    'mosaicId': Array<number>;
+    /**
+    * Mosaic identifier.
+    */
+    'mosaicId': string;
     /**
     * Mosaic linked namespace names.
     */
@@ -39,7 +42,7 @@ export class MosaicNamesDTO {
         {
             "name": "mosaicId",
             "baseName": "mosaicId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "names",

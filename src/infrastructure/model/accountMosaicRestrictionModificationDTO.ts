@@ -29,7 +29,10 @@ import { AccountRestrictionModificationActionEnum } from './accountRestrictionMo
 
 export class AccountMosaicRestrictionModificationDTO {
     'modificationAction': AccountRestrictionModificationActionEnum;
-    'value': Array<number>;
+    /**
+    * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
+    */
+    'value': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -42,7 +45,7 @@ export class AccountMosaicRestrictionModificationDTO {
         {
             "name": "value",
             "baseName": "value",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

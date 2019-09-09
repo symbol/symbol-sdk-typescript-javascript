@@ -35,16 +35,34 @@ export class EmbeddedAddressMosaicRestrictionTransactionDTO {
     */
     'version': number;
     'type': number;
-    'maxFee': Array<number>;
-    'deadline': Array<number>;
-    'mosaicId': Array<number>;
-    'restrictionKey': Array<number>;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'maxFee': string;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'deadline': string;
+    /**
+    * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
+    */
+    'mosaicId': string;
+    /**
+    * Restriction key relative to the reference mosaic identifier.
+    */
+    'restrictionKey': string;
     /**
     * Address decoded. If the bit 0 of byte 0 is not set (like in 0x90), then it is a regular address. Else (e.g. 0x91) it represents a namespace id which starts at byte 1. 
     */
     'targetAddress': string;
-    'previousRestrictionValue': Array<number>;
-    'newRestrictionValue': Array<number>;
+    /**
+    * Previous restriction value.
+    */
+    'previousRestrictionValue': string;
+    /**
+    * New restriction value.
+    */
+    'newRestrictionValue': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -67,22 +85,22 @@ export class EmbeddedAddressMosaicRestrictionTransactionDTO {
         {
             "name": "maxFee",
             "baseName": "maxFee",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "deadline",
             "baseName": "deadline",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "mosaicId",
             "baseName": "mosaicId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "restrictionKey",
             "baseName": "restrictionKey",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "targetAddress",
@@ -92,12 +110,12 @@ export class EmbeddedAddressMosaicRestrictionTransactionDTO {
         {
             "name": "previousRestrictionValue",
             "baseName": "previousRestrictionValue",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "newRestrictionValue",
             "baseName": "newRestrictionValue",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -37,8 +37,14 @@ export class EmbeddedAccountOperationRestrictionTransactionDTO {
     */
     'version': number;
     'type': number;
-    'maxFee': Array<number>;
-    'deadline': Array<number>;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'maxFee': string;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'deadline': string;
     'restrictionType': AccountRestrictionTypeEnum;
     'modifications': Array<AccountOperationRestrictionModificationDTO>;
 
@@ -63,12 +69,12 @@ export class EmbeddedAccountOperationRestrictionTransactionDTO {
         {
             "name": "maxFee",
             "baseName": "maxFee",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "deadline",
             "baseName": "deadline",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "restrictionType",

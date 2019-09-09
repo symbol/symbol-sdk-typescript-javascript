@@ -26,7 +26,7 @@ import { MosaicPropertyType } from '../model/mosaic/MosaicPropertyType';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import {UInt64} from '../model/UInt64';
-import { MosaicInfoDTO, MosaicNamesDTO, MosaicRoutesApi } from './api';
+import { MosaicInfoDTO, MosaicNamesDTO, MosaicRoutesApi, MosaicsNamesDTO } from './api';
 import {Http} from './Http';
 import {MosaicRepository} from './MosaicRepository';
 import {NetworkHttp} from './NetworkHttp';
@@ -68,25 +68,25 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         let mosaicFlag;
                         let divisibility;
                         let duration;
-                        if (mosaicInfoDTO.mosaic.properties[MosaicPropertyType.MosaicFlags].value) {
-                            mosaicFlag = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.MosaicFlags].value;
+                        if (mosaicInfoDTO.mosaic.properties.flags) {
+                            mosaicFlag = mosaicInfoDTO.mosaic.properties.flags;
                         }
-                        if (mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Divisibility].value) {
-                            divisibility = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Divisibility].value;
+                        if (mosaicInfoDTO.mosaic.properties.divisibility) {
+                            divisibility = mosaicInfoDTO.mosaic.properties.divisibility;
                         }
-                        if (mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value) {
-                            duration = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value;
+                        if (mosaicInfoDTO.mosaic.properties.duration) {
+                            duration = mosaicInfoDTO.mosaic.properties.duration;
                         }
                         return new MosaicInfo(
                             new MosaicId(mosaicInfoDTO.mosaic.id),
-                            new UInt64(mosaicInfoDTO.mosaic.supply),
-                            new UInt64(mosaicInfoDTO.mosaic.startHeight),
+                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.supply),
+                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.startHeight),
                             PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
                             mosaicInfoDTO.mosaic.revision,
                             new MosaicProperties(
-                                mosaicFlag ? new UInt64(mosaicFlag) : UInt64.fromUint(0),
-                                (divisibility ? new UInt64(divisibility) : UInt64.fromUint(0)).compact(),
-                                duration ? new UInt64(duration) : undefined,
+                                mosaicFlag ? UInt64.fromUint(mosaicFlag) : UInt64.fromUint(0),
+                                (divisibility ? divisibility : 0),
+                                duration ? UInt64.fromNumericString(duration) : undefined,
                             ),
                     );
                 }),
@@ -113,25 +113,25 @@ export class MosaicHttp extends Http implements MosaicRepository {
                             let mosaicFlag;
                             let divisibility;
                             let duration;
-                            if (mosaicInfoDTO.mosaic.properties[MosaicPropertyType.MosaicFlags].value) {
-                                mosaicFlag = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.MosaicFlags].value;
+                            if (mosaicInfoDTO.mosaic.properties.flags) {
+                                mosaicFlag = mosaicInfoDTO.mosaic.properties.flags;
                             }
-                            if (mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Divisibility].value) {
-                                divisibility = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Divisibility].value;
+                            if (mosaicInfoDTO.mosaic.properties.divisibility) {
+                                divisibility = mosaicInfoDTO.mosaic.properties.divisibility;
                             }
-                            if (mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value) {
-                                duration = mosaicInfoDTO.mosaic.properties[MosaicPropertyType.Duration].value;
+                            if (mosaicInfoDTO.mosaic.properties.duration) {
+                                duration = mosaicInfoDTO.mosaic.properties.duration;
                             }
                             return new MosaicInfo(
                                 new MosaicId(mosaicInfoDTO.mosaic.id),
-                                new UInt64(mosaicInfoDTO.mosaic.supply),
-                                new UInt64(mosaicInfoDTO.mosaic.startHeight),
+                                UInt64.fromNumericString(mosaicInfoDTO.mosaic.supply),
+                                UInt64.fromNumericString(mosaicInfoDTO.mosaic.startHeight),
                                 PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
                                 mosaicInfoDTO.mosaic.revision,
                                 new MosaicProperties(
-                                    mosaicFlag ? new UInt64(mosaicFlag) : UInt64.fromUint(0),
-                                    (divisibility ? new UInt64(divisibility) : UInt64.fromUint(0)).compact(),
-                                    duration ? new UInt64(duration) : undefined,
+                                    mosaicFlag ? UInt64.fromUint(mosaicFlag) : UInt64.fromUint(0),
+                                    (divisibility ? divisibility : 0),
+                                    duration ? UInt64.fromNumericString(duration) : undefined,
                                 ),
                             );
                         });
@@ -154,9 +154,9 @@ export class MosaicHttp extends Http implements MosaicRepository {
         };
         return observableFrom(
             this.mosaicRoutesApi.getMosaicsNames(mosaicIdsBody)).pipe(
-                map((response: { response: ClientResponse; body: MosaicNamesDTO[]; }) => {
+                map((response: { response: ClientResponse; body: MosaicsNamesDTO; }) => {
                     const mosaics = response.body;
-                    return mosaics.map((mosaic) => {
+                    return mosaics.mosaicNames.map((mosaic) => {
                         return new MosaicNames(
                             new MosaicId(mosaic.mosaicId),
                             mosaic.names.map((name) => {

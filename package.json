@@ -55,15 +55,17 @@
     "typescript-require": "^0.2.9-1"
   },
   "dependencies": {
+    "@types/long": "^4.0.0",
     "bluebird": "^3.5.5",
     "crypto-js": "^3.1.9-1",
     "flatbuffers": "^1.11.0",
     "js-joda": "^1.6.2",
     "js-sha256": "^0.9.0",
     "js-sha3": "^0.8.0",
-    "ripemd160": "^2.0.2",
+    "long": "^4.0.0",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",
+    "ripemd160": "^2.0.2",
     "rxjs": "^6.2.1",
     "rxjs-compat": "^6.2.1",
     "utf8": "^2.1.2",

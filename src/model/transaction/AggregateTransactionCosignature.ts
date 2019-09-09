@@ -42,7 +42,7 @@ export class AggregateTransactionCosignature {
     public toDTO() {
         return {
             signature: this.signature,
-            signer: this.signer.toDTO(),
+            signerPublicKey: this.signer.toDTO(),
         };
     }
 }

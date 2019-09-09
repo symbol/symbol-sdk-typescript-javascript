@@ -111,8 +111,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     transactionStatusDTO.status,
                     transactionStatusDTO.group,
                     transactionStatusDTO.hash,
-                    transactionStatusDTO.deadline ? Deadline.createFromDTO(transactionStatusDTO.deadline) : undefined,
-                    transactionStatusDTO.height ? new UInt64(transactionStatusDTO.height) : undefined);
+                    transactionStatusDTO.deadline ?
+                    Deadline.createFromDTO(UInt64.fromNumericString(transactionStatusDTO.deadline).toDTO()) : undefined,
+                    transactionStatusDTO.height ? UInt64.fromNumericString(transactionStatusDTO.height) : undefined);
             }),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
@@ -136,8 +137,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
                         transactionStatusDTO.status,
                         transactionStatusDTO.group,
                         transactionStatusDTO.hash,
-                        transactionStatusDTO.deadline ? Deadline.createFromDTO(transactionStatusDTO.deadline) : undefined,
-                        transactionStatusDTO.height ? new UInt64(transactionStatusDTO.height) : undefined);
+                        transactionStatusDTO.deadline ?
+                            Deadline.createFromDTO(UInt64.fromNumericString(transactionStatusDTO.deadline).toDTO()) : undefined,
+                        transactionStatusDTO.height ? UInt64.fromNumericString(transactionStatusDTO.height) : undefined);
                 });
             }),
             catchError((error) =>  throwError(error.error.errorMessage)),
@@ -194,7 +196,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
     }
 
     public announceSync(signedTx: SignedTransaction): Observable<Transaction> {
-        const address = PublicAccount.createFromPublicKey(signedTx.signer, signedTx.networkType).address;
+        const address = PublicAccount.createFromPublicKey(signedTx.signerPublicKey, signedTx.networkType).address;
         const syncAnnounce = new SyncAnnounce(
             signedTx.payload,
             signedTx.hash,

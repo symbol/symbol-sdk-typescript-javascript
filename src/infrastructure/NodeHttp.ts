@@ -22,6 +22,7 @@ import { NodeTime } from '../model/node/NodeTime';
 import { NodeInfoDTO, NodeRoutesApi, NodeTimeDTO } from './api';
 import {Http} from './Http';
 import {NodeRepository} from './NodeRepository';
+import { UInt64 } from '../model/UInt64';
 
 /**
  * Node http repository.
@@ -75,8 +76,11 @@ export class NodeHttp extends Http implements NodeRepository {
         return observableFrom(this.nodeRoutesApi.getNodeTime()).pipe(
             map((response: { response: ClientResponse; body: NodeTimeDTO; } ) => {
                 const nodeTimeDTO = response.body;
-                return new NodeTime(nodeTimeDTO.communicationTimestamps.sendTimestamp,
-                                    nodeTimeDTO.communicationTimestamps.receiveTimestamp);
+                if (nodeTimeDTO.communicationTimestamps.sendTimestamp && nodeTimeDTO.communicationTimestamps.receiveTimestamp) {
+                    return new NodeTime(UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.sendTimestamp).toDTO(),
+                                    UInt64.fromNumericString(nodeTimeDTO.communicationTimestamps.receiveTimestamp).toDTO());
+                }
+                throw Error ('Node time not available');
             }),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );

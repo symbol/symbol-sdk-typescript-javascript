@@ -25,36 +25,21 @@
  * Do not edit the class manually.
  */
 
-import { ResolutionEntryDTO } from './resolutionEntryDTO';
+import { ResolutionStatementBodyDTO } from './resolutionStatementBodyDTO';
 
 /**
 * A resolution statement keeps the relation between a namespace alias used in a transaction and the real address or mosaicId.
 */
 export class ResolutionStatementDTO {
-    'height': Array<number>;
-    'unresolved': any;
-    /**
-    * Array of resolution entries linked to the unresolved namespaceId. It is an array instead of a single UInt64 field since within one block the resolution might change for different sources due to alias related transactions.
-    */
-    'resolutionEntries': Array<ResolutionEntryDTO>;
+    'statement': ResolutionStatementBodyDTO;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "height",
-            "baseName": "height",
-            "type": "Array<number>"
-        },
-        {
-            "name": "unresolved",
-            "baseName": "unresolved",
-            "type": "AnyOfarraystring"
-        },
-        {
-            "name": "resolutionEntries",
-            "baseName": "resolutionEntries",
-            "type": "Array<ResolutionEntryDTO>"
+            "name": "statement",
+            "baseName": "statement",
+            "type": "ResolutionStatementBodyDTO"
         }    ];
 
     static getAttributeTypeMap() {

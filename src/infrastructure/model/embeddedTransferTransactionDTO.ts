@@ -37,8 +37,14 @@ export class EmbeddedTransferTransactionDTO {
     */
     'version': number;
     'type': number;
-    'maxFee': Array<number>;
-    'deadline': Array<number>;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'maxFee': string;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'deadline': string;
     /**
     * Address decoded. If the bit 0 of byte 0 is not set (like in 0x90), then it is a regular address. Else (e.g. 0x91) it represents a namespace id which starts at byte 1. 
     */
@@ -70,12 +76,12 @@ export class EmbeddedTransferTransactionDTO {
         {
             "name": "maxFee",
             "baseName": "maxFee",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "deadline",
             "baseName": "deadline",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "recipientAddress",

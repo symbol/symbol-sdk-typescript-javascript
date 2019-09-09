@@ -309,7 +309,7 @@ describe('AggregateTransaction', () => {
                     {
                         signature: '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
                         'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
-                        signer: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
+                        signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                     },
                 ],
                 deadline: [
@@ -322,7 +322,7 @@ describe('AggregateTransaction', () => {
                 ],
                 signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
                 '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
-                signer: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
+                signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                 transactions: [
                     {
                         meta: {
@@ -461,8 +461,8 @@ describe('AggregateTransaction', () => {
 
         // First Alice need to append cosignatories to current transaction.
         const cosignatureSignedTransactions = [
-            new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signer),
-            new CosignatureSignedTransaction(signedTxCarol.parentHash, signedTxCarol.signature, signedTxCarol.signer),
+            new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signerPublicKey),
+            new CosignatureSignedTransaction(signedTxCarol.parentHash, signedTxCarol.signature, signedTxCarol.signerPublicKey),
         ];
 
         const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
@@ -470,7 +470,7 @@ describe('AggregateTransaction', () => {
         const signedTransaction = recreatedTx.signTransactionGivenSignatures(accountAlice, cosignatureSignedTransactions, generationHash);
 
         expect(signedTransaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
-        expect(signedTransaction.signer).to.be.equal(accountAlice.publicKey);
+        expect(signedTransaction.signerPublicKey).to.be.equal(accountAlice.publicKey);
         expect(signedTransaction.payload.indexOf(accountBob.publicKey) > -1).to.be.true;
         expect(signedTransaction.payload.indexOf(accountCarol.publicKey) > -1).to.be.true;
 

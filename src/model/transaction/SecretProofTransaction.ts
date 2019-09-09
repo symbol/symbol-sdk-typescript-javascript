@@ -45,7 +45,7 @@ export class SecretProofTransaction extends Transaction {
      * @param deadline - The deadline to include the transaction.
      * @param hashType - The hash algorithm secret is generated with.
      * @param secret - The seed proof hashed.
-     * @param recipient - UnresolvedAddress
+     * @param recipientAddress - UnresolvedAddress
      * @param proof - The seed proof.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
@@ -55,7 +55,7 @@ export class SecretProofTransaction extends Transaction {
     public static create(deadline: Deadline,
                          hashType: HashType,
                          secret: string,
-                         recipient: Address,
+                         recipientAddress: Address,
                          proof: string,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): SecretProofTransaction {
@@ -66,7 +66,7 @@ export class SecretProofTransaction extends Transaction {
             maxFee,
             hashType,
             secret,
-            recipient,
+            recipientAddress,
             proof,
         );
     }
@@ -78,7 +78,7 @@ export class SecretProofTransaction extends Transaction {
      * @param maxFee
      * @param hashType
      * @param secret
-     * @param recipient
+     * @param recipientAddress
      * @param proof
      * @param signature
      * @param signer
@@ -90,7 +90,7 @@ export class SecretProofTransaction extends Transaction {
                 maxFee: UInt64,
                 public readonly hashType: HashType,
                 public readonly secret: string,
-                public readonly recipient: Address,
+                public readonly recipientAddress: Address,
                 public readonly proof: string,
                 signature?: string,
                 signer?: PublicAccount,
@@ -113,7 +113,7 @@ export class SecretProofTransaction extends Transaction {
                                     signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedSecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             SecretProofTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
         const transaction = SecretProofTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
@@ -125,7 +125,8 @@ export class SecretProofTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretProofTransactionBuilder).fee.amount),
         );
-        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
     }
 
     /**
@@ -184,7 +185,7 @@ export class SecretProofTransaction extends Transaction {
             new TimestampDto(this.deadline.toDTO()),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientAddress.plain())),
             this.getProofByte(),
         );
         return transactionBuilder.serialize();
@@ -201,7 +202,7 @@ export class SecretProofTransaction extends Transaction {
             TransactionType.SECRET_PROOF.valueOf(),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientAddress.plain())),
             this.getProofByte(),
         );
         return transactionBuilder.serialize();

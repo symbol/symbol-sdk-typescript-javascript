@@ -71,7 +71,7 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = accountLinkTransaction.toJSON();
 
-        expect(json.transaction.remoteAccountKey).to.be.equal(account.publicKey);
+        expect(json.transaction.remotePublicKey).to.be.equal(account.publicKey);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
@@ -251,14 +251,14 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-        const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
+        const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyMosaic.createAbsolute(10),
             UInt64.fromUint(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
-            recipient,
+            recipientAddress,
             NetworkType.MIJIN_TEST,
         );
 

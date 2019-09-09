@@ -29,8 +29,14 @@ import { AliasActionEnum } from './aliasActionEnum';
 
 export class MosaicAliasTransactionBodyDTO {
     'aliasAction': AliasActionEnum;
-    'namespaceId': Array<number>;
-    'mosaicId': Array<number>;
+    /**
+    * Namespace identifier.
+    */
+    'namespaceId': string;
+    /**
+    * Mosaic identifier.
+    */
+    'mosaicId': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -43,12 +49,12 @@ export class MosaicAliasTransactionBodyDTO {
         {
             "name": "namespaceId",
             "baseName": "namespaceId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "mosaicId",
             "baseName": "mosaicId",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

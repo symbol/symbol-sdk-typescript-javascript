@@ -36,12 +36,27 @@ export class EmbeddedNamespaceRegistrationTransactionDTO {
     */
     'version': number;
     'type': number;
-    'maxFee': Array<number>;
-    'deadline': Array<number>;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'maxFee': string;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'deadline': string;
     'registrationType': NamespaceRegistrationTypeEnum;
-    'duration': Array<number>;
-    'parentId': Array<number>;
-    'id': Array<number>;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'duration': string;
+    /**
+    * Namespace identifier.
+    */
+    'parentId': string;
+    /**
+    * Namespace identifier.
+    */
+    'id': string;
     /**
     * Namespace name.
     */
@@ -68,12 +83,12 @@ export class EmbeddedNamespaceRegistrationTransactionDTO {
         {
             "name": "maxFee",
             "baseName": "maxFee",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "deadline",
             "baseName": "deadline",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "registrationType",
@@ -83,17 +98,17 @@ export class EmbeddedNamespaceRegistrationTransactionDTO {
         {
             "name": "duration",
             "baseName": "duration",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "parentId",
             "baseName": "parentId",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "id",
             "baseName": "id",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "name",

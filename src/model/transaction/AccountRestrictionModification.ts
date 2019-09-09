@@ -41,22 +41,22 @@ export class AccountRestrictionModification<T> {
     /**
      * Create an address filter for account restriction modification
      * @param modificationType - modification type. 0: Add, 1: Remove
-     * @param address - modification value (Address)
+     * @param value - modification value (Address)
      * @returns {AccountRestrictionModification}
      */
     public static createForAddress(modificationType: AccountRestrictionModificationAction,
-                                   address: Address): AccountRestrictionModification<string> {
-        return new AccountRestrictionModification<string>(modificationType, address.plain());
+                                   value: Address): AccountRestrictionModification<string> {
+        return new AccountRestrictionModification<string>(modificationType, value.plain());
     }
     /**
      * Create an mosaic filter for account restriction modification
      * @param modificationType - modification type. 0: Add, 1: Remove
-     * @param mosaicId - modification value (Mosaic)
+     * @param value - modification value (Mosaic)
      * @returns {AccountRestrictionModification}
      */
     public static createForMosaic(modificationType: AccountRestrictionModificationAction,
-                                  mosaicId: MosaicId): AccountRestrictionModification<number[]> {
-    return new AccountRestrictionModification<number[]>(modificationType, mosaicId.id.toDTO());
+                                  value: MosaicId): AccountRestrictionModification<number[]> {
+    return new AccountRestrictionModification<number[]>(modificationType, value.id.toDTO());
     }
 
     /**
@@ -66,8 +66,8 @@ export class AccountRestrictionModification<T> {
      * @returns {AccountRestrictionModification}
      */
     public static createForOperation(modificationType: AccountRestrictionModificationAction,
-                                     operation: number): AccountRestrictionModification<TransactionType> {
-    return new AccountRestrictionModification<TransactionType>(modificationType, operation);
+                                     value: number): AccountRestrictionModification<TransactionType> {
+    return new AccountRestrictionModification<TransactionType>(modificationType, value);
     }
 
     /**
@@ -76,7 +76,7 @@ export class AccountRestrictionModification<T> {
     toDTO() {
         return {
             value: this.value,
-            type: this.modificationType,
+            modificationAction: this.modificationType,
         };
     }
 }

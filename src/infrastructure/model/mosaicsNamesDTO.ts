@@ -31,13 +31,13 @@ export class MosaicsNamesDTO {
     /**
     * Array of mosaic names.
     */
-    'accountNames': Array<MosaicNamesDTO>;
+    'mosaicNames': Array<MosaicNamesDTO>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "accountNames",
+            "name": "mosaicNames",
             "baseName": "accountNames",
             "type": "Array<MosaicNamesDTO>"
         }    ];

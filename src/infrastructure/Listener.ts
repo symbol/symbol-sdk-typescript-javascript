@@ -129,7 +129,7 @@ export class Listener {
                                 message.meta.totalFee ? new UInt64(message.meta.totalFee) : new UInt64([0, 0]),
                                 message.meta.numTransactions,
                                 message.block.signature,
-                                PublicAccount.createFromPublicKey(message.block.signer, networkType),
+                                PublicAccount.createFromPublicKey(message.block.signerPublicKey, networkType),
                                 networkType,
                                 parseInt(message.block.version.toString(16).substr(2, 2), 16), // Tx version
                                 message.block.type,
@@ -156,7 +156,7 @@ export class Listener {
                     } else if (message.parentHash) {
                         this.messageSubject.next({
                             channelName: ListenerChannelName.cosignature,
-                            message: new CosignatureSignedTransaction(message.parentHash, message.signature, message.signer),
+                            message: new CosignatureSignedTransaction(message.parentHash, message.signature, message.signerPublicKey),
                         });
                     }
                 };
@@ -389,12 +389,12 @@ export class Listener {
 
         if (address instanceof NamespaceId) {
             return transaction instanceof TransferTransaction
-                && (transaction.recipient as NamespaceId).equals(address);
+                && (transaction.recipientAddress as NamespaceId).equals(address);
         }
 
         return transaction.signer!.address.equals(address) || (
                transaction instanceof TransferTransaction
-            && (transaction.recipient as Address).equals(address)
+            && (transaction.recipientAddress as Address).equals(address)
         );
     }
 

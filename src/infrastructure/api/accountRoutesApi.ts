@@ -265,7 +265,7 @@ export class AccountRoutesApi {
      * @param accountId Account public key or address.
      */
     public async getAccountRestrictions (accountId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: AccountRestrictionsInfoDTO;  }> {
-        const localVarPath = this.basePath + '/account/{accountId}/restrictions/'
+        const localVarPath = this.basePath + '/account/{accountId}/restrictions'
             .replace('{' + 'accountId' + '}', encodeURIComponent(String(accountId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -419,7 +419,7 @@ export class AccountRoutesApi {
     }
     /**
      * Returns friendly names for accounts.
-     * @summary Get readable names for a set of accountIds.
+     * @summary Get readable names for a set of accountIds
      * @param accountIds 
      */
     public async getAccountsNames (accountIds?: AccountIds, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: AccountsNamesDTO;  }> {

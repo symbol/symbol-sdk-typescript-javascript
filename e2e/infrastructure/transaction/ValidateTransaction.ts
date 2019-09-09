@@ -16,14 +16,14 @@
 
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
+import {Address} from '../../../src/model/account/Address';
+import { PublicAccount } from '../../../src/model/account/PublicAccount';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import {MultisigCosignatoryModification} from '../../../src/model/transaction/MultisigCosignatoryModification';
 import {TransactionType} from '../../../src/model/transaction/TransactionType';
 import {UInt64} from '../../../src/model/UInt64';
-import {Address} from '../../../src/model/account/Address';
-import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
-import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { PublicAccount } from '../../../src/model/account/PublicAccount';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 
 const ValidateTransaction = {
     validateStandaloneTx: (transaction, transactionDTO) => {
@@ -41,7 +41,7 @@ const ValidateTransaction = {
         expect(transaction.signature)
             .to.be.equal(transactionDTO.transaction.signature);
         expect(transaction.signer.publicKey)
-            .to.be.equal(transactionDTO.transaction.signer);
+            .to.be.equal(transactionDTO.transaction.signerPublicKey);
         expect(transaction.networkType)
             .to.be.equal(parseInt(transactionDTO.transaction.version.toString(16).substr(0, 2), 16));
         expect(transaction.version)
@@ -80,7 +80,7 @@ const ValidateTransaction = {
         expect(aggregateTransaction.signature)
             .to.be.equal(aggregateTransactionDTO.transaction.signature);
         expect(aggregateTransaction.signer.publicKey)
-            .to.be.equal(aggregateTransactionDTO.transaction.signer);
+            .to.be.equal(aggregateTransactionDTO.transaction.signerPublicKey);
         expect(aggregateTransaction.networkType)
             .to.be.equal(parseInt(aggregateTransactionDTO.transaction.version.toString(16).substr(0, 2), 16));
         expect(aggregateTransaction.version)
@@ -147,8 +147,8 @@ const ValidateTransaction = {
         }
     },
     validateTransferTx: (transferTransaction, transferTransactionDTO) => {
-        deepEqual(transferTransaction.recipient,
-            Address.createFromEncoded(transferTransactionDTO.transaction.recipient));
+        deepEqual(transferTransaction.recipientAddress,
+            Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
         expect(transferTransaction.message.payload)
             .to.be.equal('test-message');
     },

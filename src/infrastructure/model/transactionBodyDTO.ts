@@ -27,8 +27,14 @@
 
 
 export class TransactionBodyDTO {
-    'maxFee': Array<number>;
-    'deadline': Array<number>;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'maxFee': string;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'deadline': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -36,12 +42,12 @@ export class TransactionBodyDTO {
         {
             "name": "maxFee",
             "baseName": "maxFee",
-            "type": "Array<number>"
+            "type": "string"
         },
         {
             "name": "deadline",
             "baseName": "deadline",
-            "type": "Array<number>"
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

@@ -171,88 +171,88 @@ describe('TransactionHttp', () => {
         });
     });
 
-    describe('MosaicDefinitionTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('aggregate', (done) => {
-            const nonce = MosaicNonce.createRandom();
-            const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
-                Deadline.create(),
-                nonce,
-                MosaicId.createFromNonce(nonce, account.publicAccount),
-                MosaicProperties.create({
-                    supplyMutable: true,
-                    transferable: true,
-                    divisibility: 3,
-                    restrictable: true,
-                }),
-                NetworkType.MIJIN_TEST,
-            );
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                [mosaicDefinitionTransaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
-                []);
-            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe((transaction: Transaction) => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
-        });
-    });
+    // describe('MosaicDefinitionTransaction', () => {
+    //     let listener: Listener;
+    //     before (() => {
+    //         listener = new Listener(config.apiUrl);
+    //         return listener.open();
+    //     });
+    //     after(() => {
+    //         return listener.close();
+    //     });
+    //     it('aggregate', (done) => {
+    //         const nonce = MosaicNonce.createRandom();
+    //         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+    //             Deadline.create(),
+    //             nonce,
+    //             MosaicId.createFromNonce(nonce, account.publicAccount),
+    //             MosaicProperties.create({
+    //                 supplyMutable: true,
+    //                 transferable: true,
+    //                 divisibility: 3,
+    //                 restrictable: true,
+    //             }),
+    //             NetworkType.MIJIN_TEST,
+    //         );
+    //         const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+    //             [mosaicDefinitionTransaction.toAggregate(account.publicAccount)],
+    //             NetworkType.MIJIN_TEST,
+    //             []);
+    //         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+    //         listener.confirmed(account.address).subscribe((transaction: Transaction) => {
+    //             done();
+    //         });
+    //         listener.status(account.address).subscribe((error) => {
+    //             console.log('Error:', error);
+    //             assert(false);
+    //             done();
+    //         });
+    //         transactionHttp.announce(signedTransaction);
+    //     });
+    // });
 
-    describe('AccountMetadataTransaction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-        it('aggregate', (done) => {
-            const accountMetadataTransaction = AccountMetadataTransaction.create(
-                Deadline.create(),
-                account.publicKey,
-                UInt64.fromUint(1000),
-                10,
-                new Uint8Array(10),
-                NetworkType.MIJIN_TEST,
-            );
+    // describe('AccountMetadataTransaction', () => {
+    //     let listener: Listener;
+    //     before (() => {
+    //         listener = new Listener(config.apiUrl);
+    //         return listener.open();
+    //     });
+    //     after(() => {
+    //         return listener.close();
+    //     });
+    //     it('aggregate', (done) => {
+    //         const accountMetadataTransaction = AccountMetadataTransaction.create(
+    //             Deadline.create(),
+    //             account.publicKey,
+    //             UInt64.fromUint(5),
+    //             10,
+    //             new Uint8Array(10),
+    //             NetworkType.MIJIN_TEST,
+    //         );
 
-            const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
-                [accountMetadataTransaction.toAggregate(account.publicAccount)],
-                NetworkType.MIJIN_TEST,
-                [],
-            );
-            const signedTransaction = aggregateTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe((transaction: AggregateTransaction) => {
-                transaction.innerTransactions.forEach((innerTx) => {
-                    expect((innerTx as AccountMetadataTransaction).targetPublicKey, 'TargetPublicKey').not.to.be.undefined;
-                    expect((innerTx as AccountMetadataTransaction).scopedMetadataKey, 'ScopedMetadataKey').not.to.be.undefined;
-                    expect((innerTx as AccountMetadataTransaction).valueSizeDelta, 'ValueSizeDelta').not.to.be.undefined;
-                    expect((innerTx as AccountMetadataTransaction).value, 'Value').not.to.be.undefined;
-                });
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
-        });
-    });
+    //         const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+    //             [accountMetadataTransaction.toAggregate(account.publicAccount)],
+    //             NetworkType.MIJIN_TEST,
+    //             [],
+    //         );
+    //         const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+    //         listener.confirmed(account.address).subscribe((transaction: AggregateTransaction) => {
+    //             transaction.innerTransactions.forEach((innerTx) => {
+    //                 expect((innerTx as AccountMetadataTransaction).targetPublicKey, 'TargetPublicKey').not.to.be.undefined;
+    //                 expect((innerTx as AccountMetadataTransaction).scopedMetadataKey, 'ScopedMetadataKey').not.to.be.undefined;
+    //                 expect((innerTx as AccountMetadataTransaction).valueSizeDelta, 'ValueSizeDelta').not.to.be.undefined;
+    //                 expect((innerTx as AccountMetadataTransaction).value, 'Value').not.to.be.undefined;
+    //             });
+    //             done();
+    //         });
+    //         listener.status(account.address).subscribe((error) => {
+    //             console.log('Error:', error);
+    //             assert(false);
+    //             done();
+    //         });
+    //         transactionHttp.announce(signedTransaction);
+    //     });
+    // });
 
     describe('MosaicMetadataTransaction', () => {
         let listener: Listener;
@@ -267,7 +267,7 @@ describe('TransactionHttp', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(1000),
+                UInt64.fromUint(5),
                 mosaicId,
                 10,
                 new Uint8Array(10),
@@ -313,7 +313,7 @@ describe('TransactionHttp', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(1000),
+                UInt64.fromUint(5),
                 NetworkType.MIJIN_TEST,
             );
             namespaceId = new NamespaceId(namespaceName);
@@ -346,7 +346,7 @@ describe('TransactionHttp', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 'root-test-namespace-' + Math.floor(Math.random() * 10000),
-                UInt64.fromUint(1000),
+                UInt64.fromUint(5),
                 NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
@@ -379,7 +379,7 @@ describe('TransactionHttp', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(1000),
+                UInt64.fromUint(5),
                 namespaceId,
                 10,
                 new Uint8Array(10),
@@ -545,7 +545,7 @@ describe('TransactionHttp', () => {
             listener.confirmed(account.address).subscribe((transaction: TransferTransaction) => {
                 expect(transaction.message, 'Message').not.to.be.undefined;
                 expect(transaction.mosaics, 'Mosaic').not.to.be.undefined;
-                expect(transaction.recipient, 'Recipient').not.to.be.undefined;
+                expect(transaction.recipientAddress, 'RecipientAddress').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -988,7 +988,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction: AccountLinkTransaction) => {
-                expect(transaction.remoteAccountKey, 'RemoteAccountKey').not.to.be.undefined;
+                expect(transaction.remotePublicKey, 'RemotePublicKey').not.to.be.undefined;
                 expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
                 done();
             });
@@ -1408,7 +1408,7 @@ describe('TransactionHttp', () => {
                 expect(transaction.duration, 'Duration').not.to.be.undefined;
                 expect(transaction.hashType, 'HashType').not.to.be.undefined;
                 expect(transaction.secret, 'Secret').not.to.be.undefined;
-                expect(transaction.recipient, 'Recipient').not.to.be.undefined;
+                expect(transaction.recipientAddress, 'RecipientAddress').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -1676,7 +1676,7 @@ describe('TransactionHttp', () => {
             listener.confirmed(account.address).subscribe(() => {
                 listener.confirmed(account2.address).subscribe((transaction: SecretProofTransaction) => {
                     expect(transaction.secret, 'Secret').not.to.be.undefined;
-                    expect(transaction.recipient, 'Recipient').not.to.be.undefined;
+                    expect(transaction.recipientAddress, 'RecipientAddress').not.to.be.undefined;
                     expect(transaction.hashType, 'HashType').not.to.be.undefined;
                     expect(transaction.proof, 'Proof').not.to.be.undefined;
                     done();
@@ -2098,7 +2098,7 @@ describe('TransactionHttp', () => {
 
             // 03. Alice collects the cosignatures, recreate, sign, and announces the transaction
             const cosignatureSignedTransactions = [
-                new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signer),
+                new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signerPublicKey),
             ];
             const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
 
@@ -2256,31 +2256,4 @@ describe('TransactionHttp', () => {
                 });
         });
     });
-    // describe('announceSync', () => {
-    //     it('should return insufficient balance error', (done) => {
-    //         const aggregateTransaction = AggregateTransaction.createBonded(
-    //                         Deadline.create(),
-    //                         [],
-    //                         NetworkType.MIJIN_TEST,
-    //                         [],
-    //                     );
-    //         const signedTransaction = account.sign(aggregateTransaction);
-
-    //         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-    //             NetworkCurrencyMosaic.createAbsolute(0),
-    //             UInt64.fromUint(10000),
-    //             signedTransaction,
-    //             NetworkType.MIJIN_TEST);
-
-    //         transactionHttp
-    //             .announceSync(lockFundsTransaction.signWith(account, generationHash))
-    //             .subscribe((shouldNotBeCalled) => {
-    //                 throw new Error('should not be called');
-    //             }, (err) => {
-    //                 console.log(err);
-    //                 expect(err.status).to.be.equal('Failure_LockHash_Invalid_Mosaic_Amount');
-    //                 done();
-    //             });
-    //     });
-    // });
 });
