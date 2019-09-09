@@ -170,8 +170,9 @@ export const vote: api.vote = {
         const limit = params.limit
         const offset = params.offset
         const address = params.address
+        const voteId = params.voteId
         const resStr = await WebClient.request('', {
-            url: `${apiServerConfig.voteUrl}/rest/vote/list/user?&limit=${limit}&offset=${offset}&address=${address}`,
+            url: `${apiServerConfig.voteUrl}/rest/vote/list/user?&limit=${limit}&offset=${offset}&address=${address}&voteid=${voteId}`,
             method: 'GET',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'

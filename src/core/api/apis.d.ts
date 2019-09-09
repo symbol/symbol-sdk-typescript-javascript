@@ -58,7 +58,8 @@ export declare namespace api {
             rst: any;
         }>;
         listData: (params: {
-            voteid: string,
+            voteid: string,   // vote id
+            id?: string   // selection id
         }) => Promise<{
             rst: any;
         }>;
@@ -76,9 +77,10 @@ export declare namespace api {
         }>;
 
         userAlready: (params: {
-            limit: string,
-            offset: string,
-            address: string
+            limit: string,   //1
+            offset: string,    //0
+            address: string,
+            voteId?: string
         }) => Promise<{
             rst: any;
         }>;

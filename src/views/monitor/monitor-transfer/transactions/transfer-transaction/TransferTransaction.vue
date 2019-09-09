@@ -113,14 +113,14 @@
 
         <span>
           <span class="encryption_container">{{$t('encryption')}}</span><span
-                @click="formModel.isEncrypted = false"
+                @click="formModel.isEncrypted = true"
                 :class="['encryption_item',formModel.isEncrypted?'encryption':'not_encryption']">
         </span>
 
           <span class="not_encryption_container">{{$t('Not_encrypted')}}</span>
           <span
 
-                  @click="formModel.isEncrypted = true"
+                  @click="formModel.isEncrypted = false"
                   :class="['encryption_item',formModel.isEncrypted?'not_encryption':'encryption']">
         </span>
 
@@ -136,12 +136,12 @@
                     v-model="formModel.fee"
                     v-validate="standardFields.maxFee.validation"
                     :data-vv-as="$t('fee')"
-                    placeholder="50000"
+                    placeholder=".5"
                     number
                     type="text"
             />
           </ErrorTooltip>
-          <span class="uint">gas</span>
+<!--          <span class="uint">gas</span>-->
         </span>
       </div>
       <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>

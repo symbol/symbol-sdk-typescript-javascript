@@ -65,9 +65,9 @@
         <div class="form_item input_fee">
           <div class="title">{{$t('inner_fee')}}</div>
           <div class="manage_cosigner">
-            <input type="text" v-model="formItem.innerFee" placeholder="50000" class="radius">
-            <span class="xem_container">gas</span>
-            <span class="xem_amount">{{formItem.innerFee / 1000000}} xem </span>
+            <input type="text" v-model="formItem.innerFee" placeholder=".5" class="radius">
+<!--            <span class="xem_container">gas</span>-->
+<!--            <span class="xem_amount">{{formItem.innerFee / 1000000}} xem </span>-->
           </div>
           <div class="input_describe">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -79,9 +79,9 @@
           <div class="form_item input_fee">
             <div class="title">{{$t('bonded_fee')}}</div>
             <div class="manage_cosigner">
-              <input type="text" v-model="formItem.bondedFee" placeholder="50000" class="radius">
-              <span class="xem_container">gas</span>
-              <span class="xem_amount">{{formItem.bondedFee / 1000000}} xem </span>
+              <input type="text" v-model="formItem.bondedFee" placeholder=".5" class="radius">
+<!--              <span class="xem_container">gas</span>-->
+<!--              <span class="xem_amount">{{formItem.bondedFee / 1000000}} xem </span>-->
             </div>
             <div class="input_describe">
               {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -92,9 +92,9 @@
           <div class="form_item input_fee">
             <div class="title">{{$t('lock_fee')}}</div>
             <div class="manage_cosigner">
-              <input type="text" v-model="formItem.lockFee" placeholder="50000" class="radius">
-              <span class="xem_container">gas</span>
-              <span class="xem_amount">{{formItem.lockFee / 1000000}} xem </span>
+              <input type="text" v-model="formItem.lockFee" placeholder=".5" class="radius">
+<!--              <span class="xem_container">gas</span>-->
+<!--              <span class="xem_amount">{{formItem.lockFee / 1000000}} xem </span>-->
             </div>
             <div class="input_describe">
               {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}

@@ -6,53 +6,33 @@
 
 <script lang="ts">
     import echarts from 'echarts'
-    import {Component, Vue, Watch, Prop} from 'vue-property-decorator';
+    import {Component, Vue, Watch, Prop} from 'vue-property-decorator'
+    import {echartsConfigure} from '@/config/index.ts'
 
     @Component
     export default class PieChart extends Vue {
-        pie: any = {};
-        option = {
-            font: {},
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)",
-            },
-            color: ['#EC5447', '#F1C850'],
-            series: [
-                {
-                    name: 'vote',
-                    type: 'pie',
-                    data: [
-                        {value: 100, name: 'A 335 25%'},
-                        {value: 300, name: 'B 300 75%'},
-                    ],
-                    itemStyle: {
-                        emphasis: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        },
-                        borderWidth: 2,
-                        borderColor: '#fff',
-                    }
-                }
-            ]
-        };
+        pie: any = {}
+        option = echartsConfigure.votePieOption
 
         @Prop()
-        currentVote: any
+        selections: Array<any>
 
         mounted() {
             this.pie = echarts.init(this.$refs.pie)
             if (this.$refs.pie) return
             this.pie.setOption(this.option)
+            window.onresize = this.pie.resize
         }
 
-        @Watch('currentVote')
+        @Watch('selections', {deep: true})
         onCurrentVoteChange() {
-            this.option.series[0].data = this.currentVote.selctions
-            this.pie = echarts.init(this.$refs.pie);
+            if (!this.selections) {
+                return
+            }
+            this.option.series[0].data = this.selections
+            this.pie = echarts.init(this.$refs.pie)
             this.pie.setOption(this.option)
+            window.onresize = this.pie.resize
         }
     }
 </script>

@@ -155,7 +155,7 @@ export class MosaicEditDialogTs extends Vue {
             supplyType: 1,
             changeDelta: 0,
             duration: '',
-            fee: 50000,
+            fee: .5,
             password: ''
         }
     }

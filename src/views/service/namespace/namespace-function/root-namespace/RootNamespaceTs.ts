@@ -60,9 +60,9 @@ export class RootNamespaceTs extends Vue {
             multisigPublickey: '',
             duration: 1000,
             rootNamespaceName: '',
-            innerFee: 50000,
-            aggregateFee: 50000,
-            lockFee: 50000
+            innerFee: .5,
+            aggregateFee: .5,
+            lockFee: 10
         }
     }
 

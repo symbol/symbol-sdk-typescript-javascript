@@ -41,8 +41,8 @@
               <p class="mosaicTxt">{{changedSupply}}XEM</p>
             </FormItem>
             <FormItem :label="$t('fee')">
-              <Input v-model="mosaic.fee" required placeholder="50000"></Input>
-              <p class="tails">gas</p>
+              <Input v-model="mosaic.fee" required placeholder="0.5"></Input>
+<!--              <p class="tails">gas</p>-->
               <div class="tips">
                 {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
               </div>

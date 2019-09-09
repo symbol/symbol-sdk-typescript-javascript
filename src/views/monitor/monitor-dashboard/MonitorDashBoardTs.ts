@@ -246,7 +246,7 @@ export class MonitorDashBoardTs extends Vue {
                         const amount = item.mosaics[0].amount.compact()
                         const mosaicInfoList = await getMosaicInfoList(node, [item.mosaics[0].id])
                         const mosaicInfo: any = mosaicInfoList[0]
-                        resultList[index].infoThird = item.isReceipt ? '+' : '-' + that.getRelativeMosaicAmount(amount, mosaicInfo.properties.divisibility)
+                        resultList[index].infoThird = (item.isReceipt ? '+' : '-') + that.getRelativeMosaicAmount(amount, mosaicInfo.properties.divisibility)
                     }
                 })).then(() => {
                     that.currentTransactionList = [...resultList]

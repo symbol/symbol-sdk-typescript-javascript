@@ -7,26 +7,27 @@
               v-for="(t,index) in voteActionList">
         {{$t(t.name)}}
         </span>
-      <div>
-        <Select v-show="voteActionList[0].isSelect" class="vote_filter" v-model="currentVoteFilter" style="width:100px">
-          <Option class="pointer" v-for="(item,index) in voteFilterList" :value="item.value" :key="index">
-            {{ $t(item.label)}}
-          </Option>
-        </Select>
-      </div>
+      <!--      <div>-->
+      <!--        <Select v-show="voteActionList[0].isSelect" class="vote_filter" v-model="currentVoteFilter" style="width:100px">-->
+      <!--          <Option class="pointer" v-for="(item,index) in voteFilterList" :value="item.value" :key="index">-->
+      <!--            {{ $t(item.label)}}-->
+      <!--          </Option>-->
+      <!--        </Select>-->
+      <!--      </div>-->
 
     </div>
 
     <div class="show_exists_vote_list" v-show="voteActionList[0].isSelect">
       <div class="bottom_vote_list">
         <div class="left  scroll left_article_list">
+
           <div @click="switchVote(index)" v-for="(v,index) in currentVoteList"
                :class="['article_summary_item',v.isSelect?'selected':'','pointer']">
             <div class="left left_info">
               <div class="title">{{v.title}}
               </div>
               <div class="other_info">
-                <span class="date letter_spacing">{{$t('deadline')}} : 2019/7/10 12:02:02</span>
+                <span class="date letter_spacing">{{$t('deadline')}} : {{v.deadline}}</span>
                 <span class="time_tag">
                    <span v-if='v.voteStatus == 1' :class="v.isSelect?'yellow':'blue'">{{$t('processing')}}</span>
                   <span v-if='v.voteStatus == 2' :class="v.isSelect?'yellow':'orange'">{{$t('already_involved')}}</span>
@@ -37,33 +38,35 @@
           </div>
         </div>
 
-        <div class="right_article_detail radius  right">
+        <div class="right_article_detail radius  right" v-if="currentVoteList.length >0">
+
           <div class="right_container scroll">
+            <Spin size="large" class="absolute" fix v-if="spinShow"></Spin>
+
             <div class="initor">
-              <span class="blue">{{$t('initiation_address')}}</span>
-              <span>  f65sf5s5af65as6df5sa5f6s5f6s5af65sa6f5s6af5s6a5f6f</span>
+              <span class="blue">{{$t('initiation_address')}}: </span>
+              <span>{{currentVote.address}}</span>
             </div>
-            <div class="vote_address">
-              <span class="blue">{{$t('voting_address')}}</span>
-              <span>ad5as4d5a4d5as4d5as5d45asd54sa5d45as4d5as4d5a</span>
-            </div>
+            <!--            <div class="vote_address">-->
+            <!--              <span class="blue">{{$t('voting_address')}}</span>-->
+            <!--              <span>ad5as4d5a4d5as4d5as5d45asd54sa5d45as4d5as4d5a</span>-->
+            <!--            </div>-->
             <div class="title">{{currentVote.title}}</div>
             <div class="date letter_spacing"><span class="orange"> {{$t('deadline')}} </span>:
-              <span>2019/7/10 16:33</span></div>
-            <div class="content">{{currentVote.title}}</div>
+              <span>{{currentVote.deadline}}</span></div>
+            <div class="content">{{currentVote.content}}</div>
             <div class="selection">
               <RadioGroup v-model="sigleSelection" v-if="!currentVote.isMultiple">
-                <Radio v-for="(i,index) in currentVote.selctions" :label="alphabet[index] + ' : '+i.name"></Radio>
+                <Radio v-for="(i,index) in selections" :label="i.id">
+                  {{alphabet[index] + ' : '+i.name}}
+                </Radio>
               </RadioGroup>
-              <CheckboxGroup v-model="multiSelectionList" v-else>
-                <Checkbox v-for="(i,index) in currentVote.selctions" :label="alphabet[index] + ' : '+i.name"></Checkbox>
-              </CheckboxGroup>
             </div>
             <div class="pie_chart">
-              <PieChart :currentVote="currentVote"></PieChart>
+              <PieChart :selections="selections"></PieChart>
             </div>
-            <div @click="sendVote" class="click_to_vote un_click">
-              {{$t('confirm_vote')}}
+            <div @click="sendVote" :class="['click_to_vote',isVoted?'voted':'not_voted']">
+              {{isVoted?$t('already_involved'):$t('confirm_vote')}}
             </div>
           </div>
         </div>
@@ -107,10 +110,10 @@
         </div>
 
         <div class="vote_vote_type">
-          <RadioGroup v-model="formItem.voteType">
-            <Radio class="vote_mul" :label="voteType.MULTIPLE">{{$t('MULTIPLE')}}</Radio>
-            <Radio class="vote_single" :label="voteType.RADIO">{{$t('RADIO')}}</Radio>
-          </RadioGroup>
+          <!--          <RadioGroup v-model="formItem.voteType">-->
+          <!--            <Radio class="vote_mul" :label="voteType.MULTIPLE">{{$t('MULTIPLE')}}</Radio>-->
+          <!--            <Radio class="vote_single" :label="voteType.RADIO">{{$t('RADIO')}}</Radio>-->
+          <!--          </RadioGroup>-->
         </div>
         <div class="vote_deadline">
           <span class="title">{{$t('start_time')}}</span>
@@ -165,7 +168,7 @@
         <!--        </span>-->
         <!--        </div>-->
         <div class="tips red right">
-          {{$t('the_default_is')}}:50000gas，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+          {{$t('the_default_is')}}:0.5XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
         </div>
 
         <div class="create_button" @click="submitCreatVote">
@@ -182,6 +185,7 @@
 <script lang="ts">
     // @ts-ignore
     import {VoteTs} from '@/views/community/vote/VoteTs.ts'
+    import "@/views/community/vote/Vote.less"
 
     export default class InputLock extends VoteTs {
 
@@ -189,5 +193,5 @@
 </script>
 
 <style scoped lang="less">
-  @import "Vote.less";
+
 </style>

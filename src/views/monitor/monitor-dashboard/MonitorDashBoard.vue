@@ -118,7 +118,7 @@
                 <span class="account overflow_ellipsis">{{c.infoFirst}}</span>
                 <span class="transfer_type overflow_ellipsis">{{c.infoSecond?c.infoSecond:null}}</span>
                 <span :class="['amount','overflow_ellipsis',!c.isReceipt?'orange':'blue']" v-if="c.infoThird">{{formatNumber(c.infoThird)}}</span>
-                <span v-else class="amount overflow_ellipsis"> 0</span>
+                <span v-else class="amount overflow_ellipsis">0</span>
                 <span class="date overflow_ellipsis">{{c.time}}</span>
                 <img v-if="c.isTxUnconfirmed" src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
                      class="expand_mosaic_info">
@@ -137,7 +137,7 @@
         <div class="all_transaction">
           <div class="table_head">
             <span class="account">{{$t('transaction_type')}}</span>
-            <span class="transfer_type">{{$t('remote_modal_price')}} (Gas)</span>
+            <span class="transfer_type">{{$t('remote_modal_price')}}</span>
             <span class="amount">{{$t('block')}}</span>
             <span class="date">{{$t('date')}}</span>
           </div>

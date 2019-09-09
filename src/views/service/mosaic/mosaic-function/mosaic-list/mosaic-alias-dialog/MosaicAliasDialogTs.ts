@@ -126,7 +126,7 @@ export class MosaicAliasDialogTs extends Vue {
     initForm() {
         this.mosaic = {
             aliasName: '',
-            fee: 50000,
+            fee: .5,
             password: ''
         }
     }

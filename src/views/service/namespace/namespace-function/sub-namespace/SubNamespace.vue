@@ -58,8 +58,8 @@
         <div class="form_item">
           <span class="key">{{$t('inner_fee')}}</span>
           <span class="value">
-              <input type="text" v-model="form.innerFee" :placeholder="$t('undefined')">
-            <span class="end_label">gas</span>
+              <input type="text" v-model="form.innerFee" :placeholder="$t('inner_fee')">
+<!--            <span class="end_label">gas</span>-->
           </span>
           <div class="tips">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -69,8 +69,8 @@
         <div class="form_item" v-if="typeList[1].isSelected">
           <span class="key">{{$t('bonded_fee')}}</span>
           <span class="value">
-              <input type="text" v-model="form.aggregateFee" :placeholder="$t('undefined')">
-            <span class="end_label">gas</span>
+              <input type="text" v-model="form.aggregateFee" :placeholder="$t('bonded_fee')">
+<!--            <span class="end_label">gas</span>-->
           </span>
           <div class="tips">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -80,8 +80,8 @@
         <div class="form_item" v-if="typeList[1].isSelected">
           <span class="key">{{$t('lock_fee')}}</span>
           <span class="value">
-              <input type="text" v-model="form.lockFee" :placeholder="$t('undefined')">
-            <span class="end_label">gas</span>
+              <input type="text" v-model="form.lockFee" :placeholder="$t('lock_fee')">
+<!--            <span class="end_label">gas</span>-->
           </span>
           <div class="tips">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}

@@ -35,7 +35,7 @@ export class WalletFilterTs extends Vue {
     formItem = {
         filterType: RestrictionType.AllowAddress,
         filterList: [],
-        fee: 50000,
+        fee: .5,
         password: '',
     }
 
@@ -72,7 +72,7 @@ export class WalletFilterTs extends Vue {
         this.formItem = {
             filterType: RestrictionType.AllowAddress,
             filterList: [],
-            fee: 50000,
+            fee: .5,
             password: '',
         }
     }
@@ -163,7 +163,7 @@ export class WalletFilterTs extends Vue {
         if (!validPassword) {
             this.showErrorMessage(this.$t('password_error'))
             return false
-        }        
+        }
 
         return true
     }

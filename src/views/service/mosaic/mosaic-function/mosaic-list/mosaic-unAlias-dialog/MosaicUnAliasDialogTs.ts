@@ -109,7 +109,7 @@ export class MosaicUnAliasDialogTs extends Vue {
 
     initForm() {
         this.mosaic = {
-            fee: 50000,
+            fee: .5,
             password: ''
         }
     }

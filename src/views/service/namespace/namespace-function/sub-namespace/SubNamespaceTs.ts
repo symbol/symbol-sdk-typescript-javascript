@@ -36,9 +36,9 @@ export class SubNamespaceTs extends Vue {
         rootNamespaceName: '',
         subNamespaceName: '',
         multisigPublickey: '',
-        innerFee: 50000,
-        aggregateFee: 50000,
-        lockFee: 50000,
+        innerFee: .5,
+        aggregateFee: .5,
+        lockFee: 10,
     }
     multisigPublickeyList = []
     typeList = subNamespaceTypeList
@@ -197,9 +197,9 @@ export class SubNamespaceTs extends Vue {
             rootNamespaceName: '',
             subNamespaceName: '',
             multisigPublickey: '',
-            innerFee: 50000,
-            aggregateFee: 50000,
-            lockFee: 50000,
+            innerFee: .5,
+            aggregateFee: .5,
+            lockFee: 10,
         }
     }
 

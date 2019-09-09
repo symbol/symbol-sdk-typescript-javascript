@@ -104,7 +104,7 @@ export default class TransferTransactionTs extends Vue {
             "mosaic": mosaicTransferList.map(item => {
                 return item.id.id.toHex() + `(${item.amount.compact()})`
             }).join(','),
-            "fee": fee + 'gas',
+            "fee": fee + 'XEM',
             "remarks": remark,
             "encryption": isEncrypted,
         }
@@ -140,9 +140,9 @@ export default class TransferTransactionTs extends Vue {
             return
         }
 
-        const {networkType, xemDivisibility} = this.wallet
+        const {xemDivisibility} = this
+        const {networkType} = this.wallet
         fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
-
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
             fee,

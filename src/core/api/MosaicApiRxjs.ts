@@ -49,6 +49,7 @@ export class MosaicApiRxjs {
                  netWorkType: number,
                  supply: number,
                  publicAccount: PublicAccount,
+                 restrictable: boolean,
                  maxFee?: number) {
         const mosaicDefinitionTx = MosaicDefinitionTransaction.create(
             Deadline.create(),
@@ -58,7 +59,8 @@ export class MosaicApiRxjs {
                 supplyMutable: supplyMutable,
                 transferable: transferable,
                 divisibility: divisibility,
-                duration: duration ? UInt64.fromUint(duration) : undefined
+                duration: duration ? UInt64.fromUint(duration) : undefined,
+                restrictable: restrictable
             }),
             netWorkType,
             maxFee ? UInt64.fromUint(maxFee) : undefined

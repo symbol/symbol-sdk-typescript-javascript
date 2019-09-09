@@ -131,7 +131,7 @@ export class MultisigTransferTransactionTs extends Vue {
             "mosaic": mosaicTransferList.map(item => {
                 return item.id.id.toHex() + `(${item.amount.compact()})`
             }).join(','),
-            "fee": innerFee + lockFee + aggregateFee + 'gas',
+            "fee": innerFee + lockFee + aggregateFee + 'XEM',
             "remarks": remark,
             "encryption": isEncryption,
         }

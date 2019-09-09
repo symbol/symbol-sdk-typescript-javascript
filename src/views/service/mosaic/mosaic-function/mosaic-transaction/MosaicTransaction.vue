@@ -22,7 +22,7 @@
         <div class="form_item">
           <span class="key">{{$t('supply')}}</span>
           <span class="value">
-            <input v-model="formItem.supply" type="text" :placeholder="$t('undefined')">
+            <input v-model="formItem.supply" type="text" :placeholder="$t('supply')">
             <span class="number_controller">
                 <img @click="addSupplyAmount " class="pointer"
                      src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
@@ -35,7 +35,7 @@
         <div class="form_item">
           <span class="key">{{$t('severability')}}</span>
           <span class="value">
-            <input v-model="formItem.divisibility" type="text" :placeholder="$t('undefined')">
+            <input v-model="formItem.divisibility" type="text" :placeholder="$t('severability')">
             <span class="number_controller">
               <img @click="addSeverabilityAmount " class="pointer"
                    src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
@@ -52,11 +52,15 @@
           <Checkbox class="check_box_item" v-model="formItem.permanent">{{$t('duration_permanent')}}</Checkbox>
         </div>
 
+        <div class="check_box">
+          <Checkbox class="check_box_item" v-model="formItem.restrictable">{{$t('restrictable')}}</Checkbox>
+        </div>
+
 
         <div class="form_item duration_item" v-if="!formItem.permanent">
           <span class="key">{{$t('duration')}}</span>
           <span class="value">
-             <input v-model="formItem.duration" @input="durationChange" type="text" :placeholder="$t('undefined')">
+             <input v-model="formItem.duration" @input="durationChange" type="text" :placeholder="$t('duration')">
             <span class="end_label">{{$t('duration')}}:{{durationIntoDate}}</span>
          </span>
           <div class="tips">
@@ -72,8 +76,8 @@
         <div class="form_item" v-if="typeList[0].isSelected">
           <span class="key">{{$t('fee')}}</span>
           <span class="value">
-              <input type="text" v-model="formItem.innerFee" :placeholder="$t('undefined')">
-            <span class="end_label">gas</span>
+              <input type="text" v-model="formItem.innerFee" :placeholder="$t('fee')">
+            <!--            <span class="end_label">gas</span>-->
           </span>
           <div class="tips">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -83,8 +87,8 @@
           <div class="form_item">
             <span class="key">{{$t('inner_fee')}}</span>
             <span class="value">
-              <input type="text" v-model="formItem.innerFee" :placeholder="$t('undefined')">
-            <span class="end_label">gas</span>
+              <input type="text" v-model="formItem.innerFee" :placeholder="$t('inner_fee')">
+              <!--            <span class="end_label">gas</span>-->
           </span>
             <div class="tips">
               {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -94,8 +98,8 @@
           <div class="form_item">
             <span class="key">{{$t('bonded_fee')}}</span>
             <span class="value">
-              <input type="text" v-model="formItem.aggregateFee" :placeholder="$t('undefined')">
-            <span class="end_label">gas</span>
+              <input type="text" v-model="formItem.aggregateFee" :placeholder="$t('bonded_fee')">
+              <!--            <span class="end_label">gas</span>-->
           </span>
             <div class="tips">
               {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -104,8 +108,8 @@
           <div class="form_item">
             <span class="key">{{$t('lock_fee')}}</span>
             <span class="value">
-              <input type="text" v-model="formItem.lockFee" :placeholder="$t('undefined')">
-            <span class="end_label">gas</span>
+              <input type="text" v-model="formItem.lockFee" :placeholder="$t('lock_fee')">
+              <!--            <span class="end_label">gas</span>-->
           </span>
             <div class="tips">
               {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}

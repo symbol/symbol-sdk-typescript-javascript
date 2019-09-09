@@ -74,12 +74,12 @@
     <div class="fee flex_center">
       <span class="title">{{$t('inner_fee')}}</span>
       <span class="value radius flex_center">
-        <input v-model="formItem.aggregateFee" placeholder="50000" type="text">
-        <span class="uint">gas</span>
+        <input v-model="formItem.aggregateFee" placeholder=".5" type="text">
+<!--        <span class="uint">gas</span>-->
       </span>
     </div>
     <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
-    <span class="xem_tips">{{formItem.aggregateFee / 1000000}} xem </span>
+<!--    <span class="xem_tips">{{formItem.aggregateFee / 1000000}} xem </span>-->
 
     <div>
       <span class="title">{{$t('encryption')}}</span>
@@ -102,35 +102,35 @@
     <div class="fee flex_center">
       <span class="title">{{$t('inner_fee')}}</span>
       <span class="value radius flex_center">
-        <input v-model="formItem.inner_fee" placeholder="50000" type="text">
-        <span class="uint">gas</span>
+        <input v-model="formItem.inner_fee" placeholder=".5" type="text">
+<!--        <span class="uint">gas</span>-->
       </span>
     </div>
     <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
-    <span class="xem_tips">{{formItem.bondedFee / 1000000}} xem </span>
+<!--    <span class="xem_tips">{{formItem.bondedFee / 1000000}} xem </span>-->
 
 
     <div class="fee flex_center">
       <span class="title">{{$t('bonded_fee')}}</span>
       <span class="value radius flex_center">
-        <input v-model="formItem.bondedFee" placeholder="50000" type="text">
-        <span class="uint">gas</span>
+        <input v-model="formItem.bondedFee" placeholder=".5" type="text">
+<!--        <span class="uint">gas</span>-->
       </span>
     </div>
     <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
-    <span class="xem_tips">{{formItem.bondedFee / 1000000}} xem </span>
+<!--    <span class="xem_tips">{{formItem.bondedFee / 1000000}} xem </span>-->
 
 
     <div v-if="currentMinApproval > 1">
       <div class="fee flex_center">
         <span class="title">{{$t('lock_fee')}}</span>
         <span class="value radius flex_center">
-              <input v-model="formItem.lock_fee" placeholder="50000" type="text">
-              <span class="uint">gas</span>
+              <input v-model="formItem.lock_fee" placeholder=".5" type="text">
+<!--              <span class="uint">gas</span>-->
             </span>
       </div>
       <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
-      <span class="xem_tips">{{formItem.lockFee / 1000000}} xem </span>
+<!--      <span class="xem_tips">{{formItem.lockFee / 1000000}} xem </span>-->
 
     </div>
 

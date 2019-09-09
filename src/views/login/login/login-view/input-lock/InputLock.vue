@@ -1,10 +1,10 @@
 <template>
   <div class="text_container" @keyup.enter="submit">
     <Modal
-      v-model="isShowClearCache"
-      title=""
-      class="clear_cache_panel"
-      :transfer="true"
+            v-model="isShowClearCache"
+            title=""
+            class="clear_cache_panel"
+            :transfer="true"
     >
       <div class="title">{{$t('clear_cache')}}</div>
       <img src="@/common/img/login/loginWarningIcon.png" alt="">
@@ -25,21 +25,21 @@
     <div class="bottom_text">
       {{$t('This_is_a_distributed_desktop_wallet_based_on_catapult_come_and_explore_the_wonderful_journey_of_catapult')}}
     </div>
-    
+
     <form @submit.prevent="validateForm('input-lock')">
       <div class="bottom_input">
         <input
-          data-vv-name="password"
-          v-model="password"
-          type="password"
-          :placeholder="$t('lock_password')"
-          v-validate="passwordFieldValidation"
+                data-vv-name="password"
+                v-model="password"
+                type="password"
+                :placeholder="$t('lock_password')"
+                v-validate="passwordFieldValidation"
         >
         <input
-          data-vv-name="cipher"
-          v-model="cipher"
-          v-validate=''
-          style="display:none"
+                data-vv-name="cipher"
+                v-model="cipher"
+                v-validate=''
+                style="display:none"
         >
         <img @click="submit" src="@/common/img/login/loginJump.png" alt="">
       </div>
@@ -50,9 +50,8 @@
     </div>
 
     <div class="password_prompt">
-      {{$t('forget_password')}}？
-      <span @click="showPrompt" class="pointer click_to_show_prompt">{{$t('passowrd_prompt')}}</span>
-<!--      <span class="clear_cache pointer" v-show="isShowPrompt">{{$t('clear_cache')}}</span>-->
+      {{$t('forget_password')}}？ <span @click="showPrompt" class="pointer click_to_show_prompt">{{$t('passowrd_prompt')}}</span>
+      <!--      <span class="clear_cache pointer" v-show="isShowPrompt">{{$t('clear_cache')}}</span>-->
     </div>
 
 
@@ -60,8 +59,10 @@
 </template>
 
 <script lang="ts">
-    import { InputLockTs } from '@/views/login/login/login-view/input-lock/InputLockTs.ts'
-    export default class InputLock extends InputLockTs {}
+    import {InputLockTs} from '@/views/login/login/login-view/input-lock/InputLockTs.ts'
+
+    export default class InputLock extends InputLockTs {
+    }
 </script>
 <style scoped lang="less">
   @import "./InputLock.less";

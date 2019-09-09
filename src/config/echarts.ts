@@ -49,5 +49,34 @@ export const echartsConfigure = {
                 }
             }
         ]
+    },
+
+    votePieOption: {
+        font: {},
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)",
+        },
+        color: ['#EC5447', '#F1C850'],
+        series: [
+            {
+                name: 'vote',
+                type: 'pie',
+                data: [
+                    {value: 100, name: 'A 335 25%'},
+                    {value: 300, name: 'B 300 75%'},
+                ],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    },
+                    borderWidth: 2,
+                    borderColor: '#fff',
+                }
+            }
+        ]
     }
 }
+
