@@ -8,10 +8,12 @@ import {
     MultisigCosignatoryModification,
     MultisigCosignatoryModificationType,
     PublicAccount,
-    ModifyMultisigAccountTransaction, Deadline, UInt64
+    ModifyMultisigAccountTransaction, Deadline, UInt64, NamespaceId, Address
 } from 'nem2-sdk'
 import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
+import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
+import {aliasType} from "@/config/index"
 
 @Component({
     components: {

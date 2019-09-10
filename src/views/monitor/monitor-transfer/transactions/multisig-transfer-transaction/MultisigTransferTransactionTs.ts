@@ -7,7 +7,7 @@ import {
     MosaicId,
     UInt64,
     Address,
-    Listener,
+    Listener, NamespaceId,
 } from 'nem2-sdk'
 import {
     createBondedMultisigTransaction,
@@ -19,6 +19,8 @@ import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs"
 import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
+import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
+import {aliasType} from "@/config/index"
 
 @Component({
     components: {
@@ -114,7 +116,17 @@ export class MultisigTransferTransactionTs extends Vue {
         this.formItem.mosaicTransferList.splice(index, 1)
     }
 
-    checkInfo() {
+    async checkInfo() {
+        // get alias
+        let {address} = this.formItem
+        await this.getAddressByAlias()
+        const that = this
+        if (!address || address.length < 40) {
+            this.$Notice.error({
+                title: that.$t(Message.ADDRESS_ALIAS_NOT_EXIST_ERROR) + ''
+            })
+            return
+        }
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
         this.showDialog()
@@ -199,7 +211,7 @@ export class MultisigTransferTransactionTs extends Vue {
         })
     }
 
-    checkForm() {
+    async checkForm() {
         const {address, innerFee, lockFee, aggregateFee, multisigPublickey} = this.formItem
 
         // multisig check
@@ -243,6 +255,26 @@ export class MultisigTransferTransactionTs extends Vue {
         that.mosaicList = await buildMosaicList(mosaicList, currentXEM1, currentXEM2, currentXem)
     }
 
+
+    async getAddressByAlias() {
+        const {node} = this
+        const that = this
+        let addressAlias = this.formItem.address
+        if (addressAlias.indexOf('@') == -1) {
+            return
+        }
+        const namespaceId = new NamespaceId(addressAlias.substring(1))
+        let flag = false
+        try {
+            const namespaceInfo: any = await new NamespaceApiRxjs().getNamespace(namespaceId, node).toPromise()
+            if (namespaceInfo.alias.type === aliasType.addressAlias) {
+                //@ts-ignore
+                that.formModel.address = Address.createFromEncoded(namespaceInfo.alias.address).address
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     closeCheckPWDialog() {
         this.showCheckPWDialog = false

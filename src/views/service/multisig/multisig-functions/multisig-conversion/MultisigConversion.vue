@@ -63,8 +63,6 @@
           </div>
           <div class="input_content">
             <input type="text" v-model="formItem.bondedFee" class="radius" placeholder="0.050000">
-<!--            <span class="XEM_tag">gas </span>-->
-<!--            <span class="xem_amount">{{formItem.bondedFee / 1000000}} xem </span>-->
           </div>
         </span>
         </div>
@@ -78,8 +76,6 @@
           </div>
           <div class="input_content">
             <input type="text" v-model="formItem.lockFee" class="radius" placeholder="0.050000">
-<!--            <span class="XEM_tag">gas </span>-->
-<!--            <span class="xem_amount">{{formItem.lockFee / 1000000}} xem </span>-->
           </div>
         </span>
         </div>

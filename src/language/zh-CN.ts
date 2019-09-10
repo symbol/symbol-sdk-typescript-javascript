@@ -380,7 +380,7 @@ export const zh_CN = {
     copy: '复制',
     Display_Keystore_QR_code: '显示Keystore二维码',
     Show_Keystore: '显示Keystore',
-
+    address_alias_not_exist:'地址别名不存在',
     //export dialog
     export_mnemonic: '导出助记词',
     backup_mnemonic: '备份助记词',

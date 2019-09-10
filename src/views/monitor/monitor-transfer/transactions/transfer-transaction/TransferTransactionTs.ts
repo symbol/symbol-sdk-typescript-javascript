@@ -1,5 +1,5 @@
-import {Message, formData} from "@/config/index.ts"
-import {Mosaic, MosaicId, NamespaceHttp, NamespaceId, UInt64} from 'nem2-sdk'
+import {Message, formData, aliasType} from "@/config/index.ts"
+import {Mosaic, MosaicId, NamespaceHttp, Address, NamespaceId, UInt64} from 'nem2-sdk'
 import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
@@ -87,7 +87,16 @@ export default class TransferTransactionTs extends Vue {
         this.$nextTick(() => this.$validator.reset())
     }
 
-    submit() {
+    async submit() {
+        await this.getAddressByAlias()
+        const that = this
+        let {address} = this.formModel
+        if (!address || address.length < 40) {
+            this.$Notice.error({
+                title: that.$t(Message.ADDRESS_ALIAS_NOT_EXIST_ERROR) + ''
+            })
+            return
+        }
         this.$validator
             .validate()
             .then((valid) => {
@@ -112,34 +121,29 @@ export default class TransferTransactionTs extends Vue {
         this.showCheckPWDialog = true
     }
 
-    async formatAddress() {
+    async getAddressByAlias() {
         const {node} = this
+        const that = this
         let addressAlias = this.formModel.address
-        this.formModel.address = ''
         if (addressAlias.indexOf('@') == -1) {
             return
         }
         const namespaceId = new NamespaceId(addressAlias.substring(1))
+        let flag = false
         try {
-            const namespaceInfo = await new NamespaceApiRxjs().getNamespace(namespaceId, node).toPromise()
-            this.formModel.address = namespaceInfo.alias.address
+            const namespaceInfo: any = await new NamespaceApiRxjs().getNamespace(namespaceId, node).toPromise()
+            if (namespaceInfo.alias.type === aliasType.addressAlias) {
+                //@ts-ignore
+                that.formModel.address = Address.createFromEncoded(namespaceInfo.alias.address).address
+            }
         } catch (e) {
             console.log(e)
-            return false
         }
     }
 
-    generateTransaction() {
+    async generateTransaction() {
         // TODO address alias
         let {address, remark, fee, mosaicTransferList, isEncrypted} = this.formModel
-        this.formatAddress()
-        if (!address || address.length < 40) {
-            this.$Notice.error({
-                title: 'address alias not exist'
-            })
-            return
-        }
-
         const {xemDivisibility} = this
         const {networkType} = this.wallet
         fee = getAbsoluteMosaicAmount(fee, xemDivisibility)

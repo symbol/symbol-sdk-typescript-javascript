@@ -32,7 +32,7 @@ export const en_US = {
     no_comment_yet: 'No comment yet',
     successful_operation: 'Request succeeded',
     operation_failed: 'Request Failed',
-
+    address_alias_not_exist: 'Address alias not exist',
     // vote
     over: 'Over',
     initiation_address: 'Initiation address',
@@ -502,7 +502,7 @@ export const en_US = {
     Convert_to_multi_sign_account: 'Convert to multisig account',
     cosigner: 'Cosigner',
     Add_co_signers_here_will_be_displayed_in_the_action_list_click_delete_to_cancel_the_operation: 'Add co-signers, here will be displayed in the action list, click delete to cancel the operation',
-    Wallet_account_address_or_alias: 'Account publickey or alias',
+    Wallet_account_address_or_alias: 'Input account publickey ',
     min_approval: 'Min approval',
     min_approval_delta: 'Delta of min approval',
     min_removal_delta: 'Delta of min removal',

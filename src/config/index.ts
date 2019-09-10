@@ -124,6 +124,7 @@ export const Message = {
     NODE_CONNECTION_ERROR: 'Node_connection_failed',
     KEYSTORE_DECRYPTION_FAILED: 'Keystore_decryption_failed',
     MOSACI_LIST_NULL_ERROR: 'The_mosaic_to_be_sent_is_empty',
+    ADDRESS_ALIAS_NOT_EXIST_ERROR: 'address_alias_not_exist'
 
 }
 
