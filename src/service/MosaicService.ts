@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Observable, of as observableOf } from 'rxjs';
-import { filter, first, map, mergeMap, take, toArray } from 'rxjs/operators';
+import { zip, from, Observable, of as observableOf } from 'rxjs';
+import { filter, first, map, mergeMap, take, toArray, concatMap, flatMap } from 'rxjs/operators';
 import { AccountHttp } from '../infrastructure/AccountHttp';
 import { MosaicHttp } from '../infrastructure/MosaicHttp';
 import { NamespaceHttp } from '../infrastructure/NamespaceHttp';
@@ -67,8 +67,8 @@ export class MosaicService {
                 toArray(),
                 concatMap(mosaics =>
                     zip(
-                        of(mosaics).pipe(flatMap((_) => _)),
-                        of(mosaics)
+                        observableOf(mosaics).pipe(flatMap((_) => _)),
+                        observableOf(mosaics)
                             .pipe(
                                 flatMap((_) => _),
                                 map(mosaic => new MosaicId(mosaic.id.id.toDTO())),
