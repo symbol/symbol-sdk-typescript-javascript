@@ -4,7 +4,7 @@
       <div class="remote_total">
         <strong class="trend"> {{$t('Remote_title_recipt')}}</strong>
         <div class="num_class">
-          <span class="trend_red"> {{$t('not_yet_open')}}</span>
+          <span class="trend_red"> {{$t('Accumulated_delegated_harvesting_income_is_not_yet_open')}}</span>
         </div>
         <div class="state_class">
           <div class="div_cer">

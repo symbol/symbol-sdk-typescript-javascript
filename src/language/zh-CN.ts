@@ -113,7 +113,7 @@ export const zh_CN = {
     harvested_block: '收获的块',
     successful_copy: '复制成功',
     pre_week: '上周',
-    restrictable:'是否可限制',
+    restrictable: '是否可限制',
     // monitor-receipt
     set_amount: '设置金额',
     asset_type: '资产类型',
@@ -355,7 +355,7 @@ export const zh_CN = {
 
     // wallet import keystore
     please_choose: '请选择',
-
+    Accumulated_delegated_harvesting_income_is_not_yet_open: ' 暂不可获取远程账户相关信息',
 // wallet detail
     export: '导出',
     input_password: '输入密码',

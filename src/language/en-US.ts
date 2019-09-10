@@ -168,6 +168,7 @@ export const en_US = {
     remote_modal_place2: 'Please enter your wallet password',
     Unlink_now: 'Unlink now',
     Link_now: 'Link now',
+    Accumulated_delegated_harvesting_income_is_not_yet_open:' Accumulated delegated harvesting income is not yet open',
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: 'WELCOME BACK TO THE CATAPULT BETA',
     welcome_to_the_CATAPULT_beta: 'WELCOME TO USE THE CATAPULT BETA',

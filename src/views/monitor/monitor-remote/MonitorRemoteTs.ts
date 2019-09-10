@@ -20,7 +20,7 @@ export class MonitorRemoteTs extends Vue {
     isLinkToRemote = false
     isShowDialog = false
     remotePublickey = ''
-    formItem: any = formData.transferForm
+    formItem: any = formData.remoteForm
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -49,7 +49,7 @@ export class MonitorRemoteTs extends Vue {
     initForm() {
         this.formItem = {
             remotePublickey: '',
-            fee: 0,
+            fee: 0.5,
             password: ''
         }
     }
@@ -85,7 +85,7 @@ export class MonitorRemoteTs extends Vue {
             this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
             return false
         }
-        if (password == '' || password.trim() == '') {
+        if (!password || password.trim() == '') {
             this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
             return false
         }
@@ -110,8 +110,9 @@ export class MonitorRemoteTs extends Vue {
     }
 
     sendTransaction() {
-        let {remotePublickey, fee, password, xemDivisibility} = this.formItem
-        const {generationHash, node, networkType, isLinked} = this
+        let {remotePublickey, fee, password} = this.formItem
+        const {generationHash, node, networkType, xemDivisibility, isLinked} = this
+        console.log(fee, xemDivisibility)
         fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
