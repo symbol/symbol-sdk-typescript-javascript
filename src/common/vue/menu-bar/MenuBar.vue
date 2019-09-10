@@ -1,5 +1,6 @@
 <template>
   <div :class="[isWindows?'windows':'mac','wrap']">
+
     <Alert class="alert" v-if="!isNodeHealthy" type="error">
       <Icon type="ios-alert-outline"/>
       {{$t('Node_not_available_please_check_your_node_or_network_settings')}}

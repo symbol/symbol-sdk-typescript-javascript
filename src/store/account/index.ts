@@ -95,5 +95,8 @@ export default {
         SET_WALLET_BALANCE(state: account, balance: number) {
             state.wallet.balance = balance
         },
+        SET_CURRENT_XEM(state: account, currentXem: string) {
+            state.currentXem = currentXem
+        }
     },
 }

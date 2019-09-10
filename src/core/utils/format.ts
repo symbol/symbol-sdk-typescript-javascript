@@ -11,8 +11,6 @@ import dashboardModify from '@/common/img/monitor/dash-board/dashboardModify.png
 import dashboardMosaicAlias from '@/common/img/monitor/dash-board/dashboardMosaicAlias.png'
 import dashboardNamespace from '@/common/img/monitor/dash-board/dashboardNamespace.png'
 import dashboardSecret from '@/common/img/monitor/dash-board/dashboardSecret.png'
-import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
-
 const iconMap = {
     dashboardAddressAlias,
     dashboardAggregate,
@@ -26,7 +24,7 @@ const iconMap = {
     dashboardSecret
 }
 
-const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddress: string, xemDivisibility: number) => {
+const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddress: string, xemDivisibility: number, currentXem: string) => {
     innerTransactionList = innerTransactionList.map((item) => {
         const type = item.type
         switch (type) {
@@ -133,7 +131,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
                 item.icon = iconMap.dashboardLock
                 item.dialogDetailMap = {
                     'transfer_type': item.tag,
-                    'mosaic_ID': 'nem.xem' + `(${item.mosaic.id.toHex()})`,
+                    'mosaic_ID': currentXem + `(${item.mosaic.id.toHex()})`,
                     'quantity': item.mosaic.amount.compact(),
                     'timestamp': item.time,
                     'fee': getRelativeMosaicAmount(item.maxFee.compact(), xemDivisibility) + nodeConfig.XEM,
@@ -208,7 +206,7 @@ const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddre
 }
 
 
-const formatTransferTransactions = function (transaction, accountAddress, currentXEM, xemDivisibility: number, node: string) {
+const formatTransferTransactions = function (transaction, accountAddress, currentXEM, xemDivisibility: number, node: string,currentXem:string) {
     transaction.isReceipt = transaction.recipient.address == accountAddress
     transaction.tag = transaction.isReceipt ? transactionTag.GATHERING : transactionTag.PAYMENT
     transaction.infoFirst = transaction.isReceipt ? transaction.signer.address.address : transaction.recipient.address
@@ -216,10 +214,10 @@ const formatTransferTransactions = function (transaction, accountAddress, curren
         transaction.mosaics.map(item => {
             const hex = item.id.id.toHex()
             if (hex == currentXEM) {
-                return nodeConfig.currentXem
+                return currentXem
             }
             return item.id.id.toHex()
-        }).join(',') : nodeConfig.currentXem
+        }).join(',') : currentXem
     transaction.infoThird = 'mix'
     if (transaction.mosaics.length == 1) {
         transaction.infoThird = 'loading...'
@@ -238,7 +236,7 @@ const formatTransferTransactions = function (transaction, accountAddress, curren
 }
 
 
-function formatOtherTransaction(transaction: any, accountAddress: string, xemDivisibility: number) {
+function formatOtherTransaction(transaction: any, accountAddress: string, xemDivisibility: number,currentXem) {
     const {type} = transaction
     transaction.time = formatNemDeadline(transaction.deadline)
     transaction.isReceipt = false
@@ -312,7 +310,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string, xemDiv
             break
         case TransactionType.AGGREGATE_COMPLETE:
             const innerTransactionList = transaction.innerTransactions
-            transaction.formatAggregateCompelete = formatAggregateCompelete(innerTransactionList, accountAddress, xemDivisibility)
+            transaction.formatAggregateCompelete = formatAggregateCompelete(innerTransactionList, accountAddress, xemDivisibility,currentXem)
             transaction.icon = iconMap.dashboardAggregate
             transaction.tag = transactionTag.AGGREGATE_COMPLETE
             transaction.dialogDetailMap = {
@@ -337,7 +335,7 @@ function formatOtherTransaction(transaction: any, accountAddress: string, xemDiv
             transaction.icon = iconMap.dashboardLock
             transaction.dialogDetailMap = {
                 'transfer_type': transaction.tag,
-                'mosaic_ID': 'nem.xem' + `(${transaction.mosaic.id.toHex()})`,
+                'mosaic_ID': currentXem + `(${transaction.mosaic.id.toHex()})`,
                 'quantity': transaction.mosaic.amount.compact(),
                 'timestamp': transaction.time,
                 'fee': getRelativeMosaicAmount(transaction.maxFee.compact(), xemDivisibility) + nodeConfig.XEM,
@@ -410,16 +408,16 @@ function formatOtherTransaction(transaction: any, accountAddress: string, xemDiv
 }
 
 
-export const transactionFormat = (transactionList: Array<Transaction>, accountAddress: string, currentXEM: string, xemDivisibility: number, node: string, namespaceList?: Array<any>) => {
+export const transactionFormat = (transactionList: Array<Transaction>, accountAddress: string, currentXEM: string, xemDivisibility: number, node: string, currentXem:string,namespaceList?: Array<any>) => {
     const transferTransactionList = []
     const receiptList = []
     transactionList.forEach((item) => {
         if (item.type !== TransactionType.TRANSFER) {
-            item = formatOtherTransaction(item, accountAddress, xemDivisibility)
+            item = formatOtherTransaction(item, accountAddress, xemDivisibility,currentXem)
             receiptList.push(item)
             return
         }
-        item = formatTransferTransactions(item, accountAddress, currentXEM, xemDivisibility, node)
+        item = formatTransferTransactions(item, accountAddress, currentXEM, xemDivisibility, node,currentXem)
         transferTransactionList.push(item)
     })
     const result = {

@@ -1,5 +1,6 @@
 import {from as observableFrom} from "rxjs"
 import {BlockHttp, ChainHttp} from 'nem2-sdk'
+import {WebClient} from "@/core/utils/web"
 
 
 export class BlockApiRxjs {
@@ -37,5 +38,25 @@ export class BlockApiRxjs {
     getBlockchainHeight(node: string) {
         return (new ChainHttp(node).getBlockchainHeight())
     }
+
+    // use url to get block height
+    getBlockchainHeightByUrl(node: string) {
+        const url = `${node}/chain/height`
+        WebClient.request('', {
+            url: url,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        return observableFrom(WebClient.request('', {
+            url: url,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }))
+    }
+
 
 }

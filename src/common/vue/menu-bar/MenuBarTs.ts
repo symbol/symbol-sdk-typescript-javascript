@@ -4,12 +4,13 @@ import {AppWallet} from '@/core/utils/wallet'
 import {ListenerApiRxjs} from "@/core/api/ListenerApiRxjs.ts"
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
-import {Address, Listener, NamespaceHttp, NamespaceId} from "nem2-sdk"
+import {Address, Listener, NamespaceHttp, NamespaceId, TransactionType, QueryParams} from "nem2-sdk"
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
 import {localSave} from "@/core/utils/utils.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/core/utils/electron.ts'
 import {mapState} from 'vuex'
+import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
 
 @Component({
     computed: {
@@ -256,10 +257,6 @@ export class MenuBarTs extends Vue {
     onCurrentNode() {
         const {currentNode} = this
         const that = this
-        const linkedMosaic = new NamespaceHttp(currentNode).getLinkedMosaicId(new NamespaceId('nem.xem'))
-        linkedMosaic.subscribe((mosaic) => {
-            this.$store.commit('SET_CURRENT_XEM_1', mosaic.toHex())
-        })
         that.isNodeHealthy = false
         this.unconfirmedListener()
         this.confirmedListener()
@@ -272,16 +269,60 @@ export class MenuBarTs extends Vue {
         if (!currentNode) {
             return
         }
+        this.getCurrentNetworkMosaic()
         new BlockApiRxjs().getBlockchainHeight(currentNode).subscribe((info) => {
             that.isNodeHealthy = true
-            that.getGenerationHash(currentNode)
             that.$Notice.destroy()
             that.$Notice.success({
                 title: that.$t(Message.NODE_CONNECTION_SUCCEEDED) + ''
             })
-        }, () => {
+            that.getGenerationHash(currentNode)
+        }, (e) => {
             that.isNodeHealthy = false
+            console.log(e)
         })
+    }
+
+    // get current network mosaic hex by Genesis Block Info
+    getCurrentNetworkMosaic() {
+        const {currentNode} = this
+        const that = this
+
+        new BlockApiRxjs().getBlockTransactions(currentNode, 1, new QueryParams(100)).subscribe((genesisBlockInfoList: any) => {
+            const mosaicDefinitionTx = genesisBlockInfoList.find(({type}) => type === TransactionType.MOSAIC_DEFINITION)
+            const mosaicAliasTx = genesisBlockInfoList.find(({type}) => type === TransactionType.MOSAIC_ALIAS)
+
+            that.$store.commit('SET_CURRENT_XEM_1', mosaicDefinitionTx.mosaicId.toHex())
+            that.$store.commit('SET_XEM_DIVISIBILITY', mosaicDefinitionTx.mosaicProperties.divisibility)
+
+            new NamespaceApiRxjs().getNamespacesName([mosaicAliasTx.namespaceId], currentNode).subscribe((namespaceNameResultList: any) => {
+                const namesapceListLength = namespaceNameResultList.length
+                let namespaceMap = {}
+                let rootNamespace: any = {}
+                // get root namespace and get namespaceMap to get fullname
+                namespaceNameResultList.forEach((item, index) => {
+                    if (!item.parentId) {
+                        rootNamespace = item
+                        return
+                    }
+                    namespaceMap[item.parentId.toHex()] = item
+                })
+                const rootHex = rootNamespace.namespaceId.toHex()
+                let currentNamespace = rootNamespace.name
+                // namespace max level <= 3
+                if (namespaceMap[rootHex]) {
+                    const middleHex = namespaceMap[rootHex].namespaceId.toHex()
+                    currentNamespace += '.' + namespaceMap[rootHex].name
+                    if (namespaceMap[middleHex]) {
+                        const leafHex = namespaceMap[middleHex].name
+                        currentNamespace += '.' + leafHex
+                    }
+                }
+
+                that.$store.commit('SET_CURRENT_XEM', currentNamespace)
+            })
+        })
+
     }
 
     @Watch('wallet.address')

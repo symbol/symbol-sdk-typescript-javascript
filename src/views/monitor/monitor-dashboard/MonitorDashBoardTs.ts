@@ -340,9 +340,9 @@ export class MonitorDashBoardTs extends Vue {
 
     @Watch('allTransactionsList')
     onAllTransacrionListChange() {
-        const {currentXEM1, node} = this
+        const {currentXEM1, node, currentXem} = this
         const {allTransactionsList, accountAddress, isShowTransferTransactions, xemDivisibility} = this
-        const transactionList = transactionFormat(allTransactionsList, accountAddress, currentXEM1, xemDivisibility, node)
+        const transactionList = transactionFormat(allTransactionsList, accountAddress, currentXEM1, xemDivisibility, node, currentXem)
         this.transferTransactionList = transactionList.transferTransactionList
         this.receiptList = transactionList.receiptList
         this.changePage(1)

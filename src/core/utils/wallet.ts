@@ -427,12 +427,12 @@ export const getMosaicInfoList = async (node: string, mosaicList: Mosaic[]) => {
     return mosaicInfoList
 }
 
-export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, coin2: string): any => {
+export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, coin2: string,currentXem:string): any => {
     const mosaicListRst = mosaicList.map((mosaic: any) => {
         mosaic._amount = mosaic.amount.compact()
         mosaic.value = mosaic.id.toHex()
         if (mosaic.value == coin1 || mosaic.value == coin2) {
-            mosaic.label = 'nem.xem' + ' (' + mosaic._amount + ')'
+            mosaic.label = currentXem + ' (' + mosaic._amount + ')'
         } else {
             mosaic.label = mosaic.id.toHex() + ' (' + mosaic._amount + ')'
         }

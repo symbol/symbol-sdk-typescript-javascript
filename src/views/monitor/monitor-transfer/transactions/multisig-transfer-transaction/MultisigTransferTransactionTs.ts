@@ -238,9 +238,9 @@ export class MultisigTransferTransactionTs extends Vue {
 
     async initMosaic(accountAddress: string) {
         const that = this
-        const {currentXEM1, currentXEM2, node} = this
+        const {currentXEM1, currentXEM2, node, currentXem} = this
         const mosaicList: Mosaic[] = await getMosaicList(accountAddress, node)
-        that.mosaicList = await buildMosaicList(mosaicList, currentXEM1, currentXEM2)
+        that.mosaicList = await buildMosaicList(mosaicList, currentXEM1, currentXEM2, currentXem)
     }
 
 

@@ -114,4 +114,14 @@ export class NamespaceApiRxjs {
     getNamespace(namespaceId: NamespaceId, node: string) {
         return new NamespaceHttp(node).getNamespace(namespaceId)
     }
+
+
+    /**
+     * Gets array of NamespaceName for different namespaceIds
+     * @param namespaceIds - Array of namespace ids
+     * @returns Observable<NamespaceName[]>
+     */
+    getNamespacesName(namespaceIds: NamespaceId[], node: string) {
+        return new NamespaceHttp(node).getNamespacesName(namespaceIds)
+    }
 }

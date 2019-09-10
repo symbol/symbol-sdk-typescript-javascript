@@ -241,8 +241,7 @@ export const formatNemDeadline = function (deadline) {
 }
 
 
-export const formatTransactions = function (transactionList, accountAddress, currentXEM) {
-    const that = this
+export const formatTransactions = function (transactionList, accountAddress, currentXEM1, currentXem) {
     let transferTransaction = []
     transactionList.map((item) => {
         // TODO if mosaic is null
@@ -256,15 +255,15 @@ export const formatTransactions = function (transactionList, accountAddress, cur
             if (item.mosaics.length == 1) {
                 item.mosaicAmount = 'loading...'
             }
-            item.mosaic = item.mosaics && item.mosaics[0] && currentXEM.toUpperCase() !== item.mosaics[0].id.id.toHex().toUpperCase() ?
+            item.mosaic = item.mosaics && item.mosaics[0] && currentXEM1.toUpperCase() !== item.mosaics[0].id.id.toHex().toUpperCase() ?
                 item.mosaics.map(item => {
                     const amount = item.amount.compact()
                     const hex = item.id.id.toHex()
-                    if (hex == currentXEM) {
-                        return nodeConfig.currentXem + `(${amount})`
+                    if (hex == currentXEM1) {
+                        return currentXem + `(${amount})`
                     }
                     return item.id.id.toHex() + `(${amount})`
-                }).join(',') : nodeConfig.currentXem
+                }).join(',') : currentXem
             // todo get mosaic name like nem.xem(123456)
             item.date = new Date(item.time)
             transferTransaction.push(item)

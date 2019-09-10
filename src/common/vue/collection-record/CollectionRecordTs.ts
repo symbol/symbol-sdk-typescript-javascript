@@ -86,6 +86,9 @@ export class CollectionRecordTs extends Vue {
         return this.activeAccount.node
     }
 
+    get currentXem() {
+        return this.activeAccount.currentXem
+    }
 
     hideSearchDetail() {
         this.isShowSearchDetail = false
@@ -102,7 +105,7 @@ export class CollectionRecordTs extends Vue {
 
     async getConfirmedTransactions() {
         const that = this
-        let {accountPublicKey, currentXEM1, accountAddress, node, transactionType} = this
+        let {accountPublicKey, currentXEM1, accountAddress, currentXem, node, transactionType} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
         await new TransactionApiRxjs().transactions(
             publicAccount,
@@ -111,7 +114,7 @@ export class CollectionRecordTs extends Vue {
             },
             node,
         ).subscribe(async (transactionsInfo) => {
-                let transferTransactionList = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
+                let transferTransactionList = formatTransactions(transactionsInfo, accountAddress, currentXEM1, currentXem)
                 // get transaction by choose recript tx or send
                 if (transactionType == TransferType.RECEIVED) {
                     transferTransactionList.forEach((item) => {
@@ -243,7 +246,7 @@ export class CollectionRecordTs extends Vue {
 
     async getUnConfirmedTransactions() {
         const that = this
-        let {accountPublicKey, currentXEM1, accountAddress, node, transactionType} = this
+        let {accountPublicKey, currentXEM1, currentXem, accountAddress, node, transactionType} = this
         const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, this.getWallet.networkType)
         await new TransactionApiRxjs().unconfirmedTransactions(
             publicAccount,
@@ -252,7 +255,7 @@ export class CollectionRecordTs extends Vue {
             },
             node,
         ).subscribe(async (transactionsInfo) => {
-            let transferTransactionList = formatTransactions(transactionsInfo, accountAddress, currentXEM1)
+            let transferTransactionList = formatTransactions(transactionsInfo, accountAddress, currentXEM1, currentXem)
             // get transaction by choose recript tx or send
             if (transactionType == TransferType.RECEIVED) {
                 transferTransactionList.forEach((item) => {
