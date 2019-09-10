@@ -73,7 +73,7 @@ export class MosaicService {
                                 flatMap((_) => _),
                                 map((mosaic: Mosaic) => new MosaicId(mosaic.id.id.toDTO())),
                                 toArray(),
-                                mergeMap((mosaics: Mosaic[]) => this.mosaicsView(mosaics)),
+                                mergeMap((mosaicIds: MosaicId[]) => this.mosaicsView(mosaicIds)),
                                 flatMap((_) => _),
                             )
                     ).pipe(
