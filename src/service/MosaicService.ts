@@ -71,9 +71,9 @@ export class MosaicService {
                         observableOf(mosaics)
                             .pipe(
                                 flatMap((_) => _),
-                                map(mosaic => new MosaicId(mosaic.id.id.toDTO())),
+                                map((mosaic: Mosaic) => new MosaicId(mosaic.id.id.toDTO())),
                                 toArray(),
-                                mergeMap((mosaic) => this.mosaicsView(mosaic)),
+                                mergeMap((mosaics: Mosaic[]) => this.mosaicsView(mosaics)),
                                 flatMap((_) => _),
                             )
                     ).pipe(
