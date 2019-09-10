@@ -62,16 +62,30 @@ export class MosaicService {
      * @returns {Observable<MosaicAmountView[]>}
      */
     mosaicsAmountView(mosaics: Mosaic[]): Observable<MosaicAmountView[]> {
-        return observableOf(mosaics).pipe(
-            mergeMap((_) => _),
-            mergeMap((mosaic: Mosaic) => this.mosaicsView([new MosaicId(mosaic.id.id.toDTO())]).pipe(
-                filter((_) => _.length !== 0),
-                map<MosaicView[], MosaicAmountView>((mosaicViews) => {
-                    return new MosaicAmountView(mosaicViews[0].mosaicInfo, mosaic.amount);
-                }),
-            toArray())));
+        return from(mosaics)
+            .pipe(
+                toArray(),
+                concatMap(mosaics =>
+                    zip(
+                        of(mosaics).pipe(flatMap((_) => _)),
+                        of(mosaics)
+                            .pipe(
+                                flatMap((_) => _),
+                                map(mosaic => new MosaicId(mosaic.id.id.toDTO())),
+                                toArray(),
+                                mergeMap((mosaic) => this.mosaicsView(mosaic)),
+                                flatMap((_) => _),
+                            )
+                    ).pipe(
+                        map(([mosaic, mosaicView]) => {
+                            return new MosaicAmountView(mosaicView.mosaicInfo, mosaic.amount)
+                        })
+                    ),
+                ),
+                toArray(),
+            )
     }
-
+    
     /**
      * Get balance mosaics in form of MosaicAmountViews for a given account address
      * @param address - Account address
