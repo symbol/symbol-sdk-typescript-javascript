@@ -168,13 +168,13 @@ export class MonitorPanelTs extends Vue {
                 this.arr.push(index)
             }
             if(this.localMosaicMap[index].show ){
-                
+
                 this.a= this.a+1
             }
             else{
                 this.a= this.a-1
             }
-            
+
         })
         if(this.arr.length===this.a){
             this.ischecked=true
@@ -182,7 +182,7 @@ export class MonitorPanelTs extends Vue {
         }
         this.saveMosaicRecordInLocal()
     }
-    
+
 
     saveMosaicRecordInLocal() {
         // save address
