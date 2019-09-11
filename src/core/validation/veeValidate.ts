@@ -2,7 +2,7 @@ import i18n from '@/language'
 import VeeValidate from 'vee-validate'
 import en from 'vee-validate/dist/locale/en'
 import zhCN from 'vee-validate/dist/locale/zh_CN'
-import registerCustomValidators from './registerCustomValidators'
+import {registerCustomValidators} from '@/core/validation/registerCustomValidators.ts'
 
 // @TODO: refactor dictionaries import
 const customMessagesEn = {

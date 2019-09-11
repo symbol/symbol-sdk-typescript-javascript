@@ -86,7 +86,7 @@ const CustomValidator = (name, Validator) => ({
     },
 })
 
-export default function registerCustomValidators(Validator) {
+export const registerCustomValidators = (Validator) => {
     Object.keys(CUSTOM_VALIDATORS_NAMES)
         .forEach(name => CustomValidator(name, Validator).register())
 }
