@@ -281,11 +281,11 @@ describe('Listener', () => {
         });
         it('aggregateBondedTransactionsRemoved', (done) => {
             listener.confirmed(cosignAccount1.address).subscribe((res) => {
-                listener.aggregateBondedRemoved(cosignAccount1.address).subscribe((res) => {
+                listener.aggregateBondedRemoved(cosignAccount1.address).subscribe(() => {
                     done();
                 });
-                listener.aggregateBondedAdded(cosignAccount1.address).subscribe((res) => {
-                    accountHttp.aggregateBondedTransactions(cosignAccount1.publicAccount).subscribe((transactions) => {
+                listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
+                    accountHttp.aggregateBondedTransactions(cosignAccount1.publicAccount.address).subscribe((transactions) => {
                         const transactionToCosign = transactions[0];
                         TransactionUtils.cosignTransaction(transactionToCosign, cosignAccount2, transactionHttp);
                     });
@@ -321,11 +321,11 @@ describe('Listener', () => {
             return listener.close();
         });
         it('cosignatureAdded', (done) => {
-            listener.cosignatureAdded(cosignAccount1.address).subscribe((res) => {
+            listener.cosignatureAdded(cosignAccount1.address).subscribe(() => {
                 done();
             });
-            listener.aggregateBondedAdded(cosignAccount1.address).subscribe((res) => {
-                accountHttp.aggregateBondedTransactions(cosignAccount1.publicAccount).subscribe((transactions) => {
+            listener.aggregateBondedAdded(cosignAccount1.address).subscribe(() => {
+                accountHttp.aggregateBondedTransactions(cosignAccount1.publicAccount.address).subscribe((transactions) => {
                     const transactionToCosign = transactions[0];
                     TransactionUtils.cosignTransaction(transactionToCosign, cosignAccount2, transactionHttp);
                 });

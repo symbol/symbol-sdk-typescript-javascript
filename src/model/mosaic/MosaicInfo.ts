@@ -73,7 +73,7 @@ export class MosaicInfo {
      * Mosaic duration
      * @returns {UInt64}
      */
-    public get duration(): UInt64 | undefined {
+    public get duration(): UInt64 {
         return this.properties.duration;
     }
 

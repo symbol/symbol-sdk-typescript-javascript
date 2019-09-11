@@ -50,88 +50,86 @@ describe('Receipt', () => {
         account2 = Account.createFromPrivateKey('E5DCCEBDB01A8B03A7DB7BA5888E2E33FD4617B5F6FED48C4C09C0780F422713', NetworkType.MIJIN_TEST);
         transactionStatementsDTO = [
             {
-                height: [52, 0],
-                source: {
-                  primaryId: 0,
-                  secondaryId: 0,
-                },
-                receipts: [
-                    {
-                        version: 1,
-                        type: 8515,
-                        account: account.publicKey,
-                        mosaicId: [3646934825, 3576016193],
-                        amount: [1000, 0],
+                statement: {
+                    height: '52',
+                    source: {
+                    primaryId: 0,
+                    secondaryId: 0,
                     },
-                ],
+                    receipts: [
+                        {
+                            version: 1,
+                            type: 8515,
+                            targetPublicKey: account.publicKey,
+                            mosaicId: '85BBEA6CC462B244',
+                            amount: '1000',
+                        },
+                    ],
+                },
             },
         ];
         addressResolutionStatementsDTO = [
             {
-                height: [1488, 0],
-                unresolved: '9103B60AAF2762688300000000000000000000000000000000',
-                resolutionEntries: [
-                  {
-                    source: {
-                      primaryId: 4,
-                      secondaryId: 0,
+                statement: {
+                    height: '1488',
+                    unresolved: '9103B60AAF2762688300000000000000000000000000000000',
+                    resolutionEntries: [
+                    {
+                        source: {
+                        primaryId: 4,
+                        secondaryId: 0,
+                        },
+                        resolved: '917E7E29A01014C2F300000000000000000000000000000000',
                     },
-                    resolved: '917E7E29A01014C2F300000000000000000000000000000000',
-                  },
-                ],
+                    ],
+                },
             },
             {
-                height: [1488, 0],
-                unresolved: '917E7E29A01014C2F300000000000000000000000000000000',
-                resolutionEntries: [
-                  {
-                    source: {
-                      primaryId: 2,
-                      secondaryId: 0,
+                statement: {
+                    height: '1488',
+                    unresolved: '917E7E29A01014C2F300000000000000000000000000000000',
+                    resolutionEntries: [
+                    {
+                        source: {
+                        primaryId: 2,
+                        secondaryId: 0,
+                        },
+                        resolved: '9103B60AAF2762688300000000000000000000000000000000',
                     },
-                    resolved: '9103B60AAF2762688300000000000000000000000000000000',
-                  },
-                ],
+                    ],
+                },
             },
         ];
         mosaicResolutionStatementsDTO = [
             {
-                height: [
-                  1506,
-                  0,
-                ],
-                unresolved: [
-                  4014740460,
-                  2448037180,
-                ],
-                resolutionEntries: [
-                  {
-                    source: {
-                      primaryId: 1,
-                      secondaryId: 0,
+                statement: {
+                    height: '1506',
+                    unresolved: '85BBEA6CC462B244',
+                    resolutionEntries: [
+                    {
+                        source: {
+                        primaryId: 1,
+                        secondaryId: 0,
+                        },
+                        resolved: '941299B2B7E1291C',
                     },
-                    resolved: [2553890912, 2234768168],
-                  },
-                ],
+                    ],
+                },
             },
             {
-                height: [
-                  1506,
-                  0,
-                ],
-                unresolved: [
-                  2234768168,
-                  2553890912,
-                ],
-                resolutionEntries: [
-                  {
-                    source: {
-                      primaryId: 5,
-                      secondaryId: 0,
+                statement: {
+                    height: '1506',
+                    unresolved: '85BBEA6CC462B244',
+                    resolutionEntries: [
+                    {
+                        source: {
+                        primaryId: 5,
+                        secondaryId: 0,
+                        },
+                        resolved: '941299B2B7E1291C',
                     },
-                    resolved: [2553890912, 2234768168],
-                  },
-                ],
+                    ],
+                },
             },
         ];
     });
@@ -140,22 +138,22 @@ describe('Receipt', () => {
         const receiptDTO = {
             version: 1,
             type: 4685,
-            sender: account.publicKey,
+            senderPublicKey: account.publicKey,
             recipientAddress: '9103B60AAF2762688300000000000000000000000000000000',
-            mosaicId: [481110499, 231112638],
-            amount: [1000, 0],
+            mosaicId: '941299B2B7E1291C',
+            amount: '1000',
           };
         const receipt = new BalanceTransferReceipt(
-            PublicAccount.createFromPublicKey(receiptDTO.sender, netWorkType),
+            PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, netWorkType),
             Address.createFromEncoded(receiptDTO.recipientAddress),
             new MosaicId(receiptDTO.mosaicId),
-            new UInt64(receiptDTO.amount),
+            UInt64.fromNumericString(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
-        deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
+        deepEqual(receipt.amount.toString(), receiptDTO.amount);
+        deepEqual(receipt.mosaicId.toHex(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Levy);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
         deepEqual(receipt.recipientAddress, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
@@ -165,24 +163,24 @@ describe('Receipt', () => {
         const receiptDTO = {
             version: 1,
             type: 4941,
-            sender: account.publicKey,
+            senderPublicKey: account.publicKey,
             recipientAddress: '9103B60AAF2762688300000000000000000000000000000000',
-            mosaicId: [3646934825, 3576016193],
-            amount: [1000, 0],
+            mosaicId: '941299B2B7E1291C',
+            amount: '1000',
         };
 
         const receipt = new BalanceTransferReceipt(
-            PublicAccount.createFromPublicKey(receiptDTO.sender, netWorkType),
+            PublicAccount.createFromPublicKey(receiptDTO.senderPublicKey, netWorkType),
             Address.createFromEncoded(receiptDTO.recipientAddress),
             new MosaicId(receiptDTO.mosaicId),
-            new UInt64(receiptDTO.amount),
+            UInt64.fromNumericString(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
+        deepEqual(receipt.amount.toString(), receiptDTO.amount);
         deepEqual(receipt.recipientAddress, Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000'));
-        deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
+        deepEqual(receipt.mosaicId.toHex(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Rental_Fee);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_TRANSFER);
     });
@@ -191,22 +189,22 @@ describe('Receipt', () => {
         const receiptDTO = {
             version: 1,
             type: 8515,
-            account: account.publicKey,
-            mosaicId: [3646934825, 3576016193],
-            amount: [1000, 0],
+            targetPublicKey: account.publicKey,
+            mosaicId: '941299B2B7E1291C',
+            amount: '1000',
         };
 
         const receipt = new BalanceChangeReceipt(
-            PublicAccount.createFromPublicKey(receiptDTO.account, netWorkType),
+            PublicAccount.createFromPublicKey(receiptDTO.targetPublicKey, netWorkType),
             new MosaicId(receiptDTO.mosaicId),
-            new UInt64(receiptDTO.amount),
+            UInt64.fromNumericString(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(receipt.targetPublicAccount.publicKey, receiptDTO.account);
-        deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
-        deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
+        deepEqual(receipt.targetPublicAccount.publicKey, receiptDTO.targetPublicKey);
+        deepEqual(receipt.amount.toString(), receiptDTO.amount);
+        deepEqual(receipt.mosaicId.toHex(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Harvest_Fee);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_CHANGE);
     });
@@ -215,22 +213,22 @@ describe('Receipt', () => {
         const receiptDTO = {
             version: 1,
             type: 12616,
-            account: account.publicKey,
-            mosaicId: [3646934825, 3576016193],
-            amount: [1000, 0],
+            targetPublicKey: account.publicKey,
+            mosaicId: '941299B2B7E1291C',
+            amount: '1000',
         };
 
         const receipt = new BalanceChangeReceipt(
-            PublicAccount.createFromPublicKey(receiptDTO.account, netWorkType),
+            PublicAccount.createFromPublicKey(receiptDTO.targetPublicKey, netWorkType),
             new MosaicId(receiptDTO.mosaicId),
-            new UInt64(receiptDTO.amount),
+            UInt64.fromNumericString(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(receipt.targetPublicAccount.publicKey, receiptDTO.account);
-        deepEqual(receipt.amount.toDTO(), receiptDTO.amount);
-        deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
+        deepEqual(receipt.targetPublicAccount.publicKey, receiptDTO.targetPublicKey);
+        deepEqual(receipt.amount.toString(), receiptDTO.amount);
+        deepEqual(receipt.mosaicId.toHex().toUpperCase(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.LockHash_Created);
         deepEqual(receipt.version, ReceiptVersion.BALANCE_CHANGE);
     });
@@ -239,7 +237,7 @@ describe('Receipt', () => {
         const receiptDTO = {
             version: 1,
             type: 16718,
-            artifactId: [3646934825, 3576016193],
+            artifactId: 'D525AD41D95FCF29',
         };
 
         const receipt = new ArtifactExpiryReceipt(
@@ -248,7 +246,7 @@ describe('Receipt', () => {
             receiptDTO.type,
         );
 
-        deepEqual(receipt.artifactId.id.toDTO(), receiptDTO.artifactId);
+        deepEqual(receipt.artifactId.id.toHex().toUpperCase(), receiptDTO.artifactId);
         deepEqual(receipt.type, ReceiptType.Namespace_Expired);
         deepEqual(receipt.version, ReceiptVersion.ARTIFACT_EXPIRY);
     });
@@ -257,7 +255,7 @@ describe('Receipt', () => {
         const receiptDTO = {
             version: 1,
             type: 16717,
-            artifactId: [3646934825, 3576016193],
+            artifactId: '941299B2B7E1291C',
         };
 
         const receipt = new ArtifactExpiryReceipt(
@@ -265,7 +263,7 @@ describe('Receipt', () => {
             receiptDTO.version,
             receiptDTO.type,
         );
-        deepEqual(receipt.artifactId.toDTO(), receiptDTO.artifactId);
+        deepEqual(receipt.artifactId.toHex().toUpperCase(), receiptDTO.artifactId);
         deepEqual(receipt.type, ReceiptType.Mosaic_Expired);
         deepEqual(receipt.version, ReceiptVersion.ARTIFACT_EXPIRY);
     });
@@ -273,36 +271,36 @@ describe('Receipt', () => {
     it('should createComplete a transaction statement', () => {
         const statementDto = transactionStatementsDTO[0];
         const statement = new TransactionStatement(
-            statementDto.height,
-            new ReceiptSource( statementDto.source.primaryId, statementDto.source.secondaryId),
-            statementDto.receipts.map((receipt) =>
+            statementDto.statement.height,
+            new ReceiptSource( statementDto.statement.source.primaryId, statementDto.statement.source.secondaryId),
+            statementDto.statement.receipts.map((receipt) =>
             CreateReceiptFromDTO(receipt, netWorkType)),
         );
-        deepEqual(statement.source.primaryId, statementDto.source.primaryId);
-        deepEqual(statement.source.secondaryId, statementDto.source.secondaryId);
+        deepEqual(statement.source.primaryId, statementDto.statement.source.primaryId);
+        deepEqual(statement.source.secondaryId, statementDto.statement.source.secondaryId);
         deepEqual((statement.receipts[0] as BalanceChangeReceipt).targetPublicAccount.publicKey, account.publicKey);
     });
 
     it('should createComplete resolution statement - mosaic', () => {
         const statementDto = mosaicResolutionStatementsDTO[0];
         const statement = new ResolutionStatement(
-            statementDto.height,
-            new MosaicId(statementDto.unresolved),
-            statementDto.resolutionEntries.map((resolved) => {
+            statementDto.statement.height,
+            new MosaicId(statementDto.statement.unresolved),
+            statementDto.statement.resolutionEntries.map((resolved) => {
                 return new ResolutionEntry(new MosaicAlias(AliasType.Mosaic, new MosaicId(resolved.resolved)),
                 new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
             }),
         );
-        deepEqual((statement.unresolved as MosaicId).toDTO(), statementDto.unresolved);
-        deepEqual((statement.resolutionEntries[0].resolved as MosaicAlias).mosaicId.id.toDTO(), [2553890912, 2234768168]);
+        deepEqual((statement.unresolved as MosaicId).toHex(), statementDto.statement.unresolved);
+        deepEqual((statement.resolutionEntries[0].resolved as MosaicAlias).mosaicId.id.toHex(), '941299B2B7E1291C');
     });
 
     it('should createComplete resolution statement - address', () => {
         const statementDto = addressResolutionStatementsDTO[0];
         const statement = new ResolutionStatement(
-            statementDto.height,
-            Address.createFromEncoded(statementDto.unresolved),
-            statementDto.resolutionEntries.map((resolved) => {
+            statementDto.statement.height,
+            Address.createFromEncoded(statementDto.statement.unresolved),
+            statementDto.statement.resolutionEntries.map((resolved) => {
                 return new ResolutionEntry(new AddressAlias(AliasType.Address, Address.createFromEncoded(resolved.resolved)),
                 new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
             }),
@@ -317,19 +315,19 @@ describe('Receipt', () => {
         const receiptDTO = {
             version: 1,
             type: 20803,
-            mosaicId: [3646934825, 3576016193],
-            amount: 1000,
+            mosaicId: '941299B2B7E1291C',
+            amount: '1000',
         };
 
         const receipt = new InflationReceipt(
             new MosaicId(receiptDTO.mosaicId),
-            UInt64.fromUint(receiptDTO.amount),
+            UInt64.fromNumericString(receiptDTO.amount),
             receiptDTO.version,
             receiptDTO.type,
         );
 
-        deepEqual(receipt.amount.compact(), receiptDTO.amount);
-        deepEqual(receipt.mosaicId.toDTO(), receiptDTO.mosaicId);
+        deepEqual(receipt.amount.compact().toString(), receiptDTO.amount);
+        deepEqual(receipt.mosaicId.toHex().toUpperCase(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Inflation);
         deepEqual(receipt.version, ReceiptVersion.INFLATION_RECEIPT);
     });

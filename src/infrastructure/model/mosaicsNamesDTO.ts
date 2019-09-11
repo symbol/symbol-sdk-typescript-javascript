@@ -38,7 +38,7 @@ export class MosaicsNamesDTO {
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
             "name": "mosaicNames",
-            "baseName": "accountNames",
+            "baseName": "mosaicNames",
             "type": "Array<MosaicNamesDTO>"
         }    ];
 

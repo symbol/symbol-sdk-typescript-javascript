@@ -277,8 +277,8 @@ export abstract class Transaction {
             type: this.type,
             networkType: this.networkType,
             version: this.versionToDTO(),
-            maxFee: this.maxFee.toDTO(),
-            deadline: this.deadline.toDTO(),
+            maxFee: this.maxFee.toString(),
+            deadline: this.deadline.toString(),
             signature: this.signature ? this.signature : '',
         };
 

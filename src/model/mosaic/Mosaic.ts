@@ -48,8 +48,8 @@ export class Mosaic {
      */
     public toDTO() {
         return {
-            amount: this.amount.toDTO(),
-            id: this.id.id.toDTO(),
+            amount: this.amount.toString(),
+            id: this.id.id.toHex(),
         };
     }
 

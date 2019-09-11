@@ -136,14 +136,14 @@ const ValidateTransaction = {
         expect(registerNamespaceTransaction.namespaceName)
             .to.be.equal(registerNamespaceTransactionDTO.transaction.name);
         deepEqual(registerNamespaceTransaction.namespaceId,
-            new NamespaceId(registerNamespaceTransactionDTO.transaction.namespaceId));
+            new NamespaceId(UInt64.fromHex(registerNamespaceTransactionDTO.transaction.namespaceId).toDTO()));
 
         if (registerNamespaceTransaction.namespaceType === 0) {
             deepEqual(registerNamespaceTransaction.duration,
                 new UInt64(registerNamespaceTransactionDTO.transaction.duration));
         } else {
             deepEqual(registerNamespaceTransaction.parentId,
-                new NamespaceId(registerNamespaceTransactionDTO.transaction.parentId));
+                new NamespaceId(UInt64.fromHex(registerNamespaceTransactionDTO.transaction.parentId).toDTO()));
         }
     },
     validateTransferTx: (transferTransaction, transferTransactionDTO) => {

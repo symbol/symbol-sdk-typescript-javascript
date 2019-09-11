@@ -22,7 +22,6 @@ import {MosaicId} from '../model/mosaic/MosaicId';
 import {MosaicInfo} from '../model/mosaic/MosaicInfo';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
 import {MosaicProperties} from '../model/mosaic/MosaicProperties';
-import { MosaicPropertyType } from '../model/mosaic/MosaicPropertyType';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import {UInt64} from '../model/UInt64';
@@ -84,9 +83,9 @@ export class MosaicHttp extends Http implements MosaicRepository {
                             PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
                             mosaicInfoDTO.mosaic.revision,
                             new MosaicProperties(
-                                mosaicFlag ? UInt64.fromUint(mosaicFlag) : UInt64.fromUint(0),
-                                (divisibility ? divisibility : 0),
-                                duration ? UInt64.fromNumericString(duration) : undefined,
+                                mosaicFlag,
+                                divisibility,
+                                UInt64.fromNumericString(duration),
                             ),
                     );
                 }),
@@ -129,9 +128,9 @@ export class MosaicHttp extends Http implements MosaicRepository {
                                 PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
                                 mosaicInfoDTO.mosaic.revision,
                                 new MosaicProperties(
-                                    mosaicFlag ? UInt64.fromUint(mosaicFlag) : UInt64.fromUint(0),
-                                    (divisibility ? divisibility : 0),
-                                    duration ? UInt64.fromNumericString(duration) : undefined,
+                                    mosaicFlag,
+                                    divisibility,
+                                    UInt64.fromNumericString(duration),
                                 ),
                             );
                         });

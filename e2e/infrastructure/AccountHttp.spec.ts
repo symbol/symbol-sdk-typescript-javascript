@@ -134,7 +134,7 @@ describe('AccountHttp', () => {
             const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(5),
+                UInt64.fromUint(9),
                 NetworkType.MIJIN_TEST,
             );
             namespaceId = new NamespaceId(namespaceName);
@@ -306,7 +306,7 @@ describe('AccountHttp', () => {
     describe('getMultisigAccountGraphInfo', () => {
         it('should call getMultisigAccountGraphInfo successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getMultisigAccountGraphInfo(multisigAccount.publicAccount).subscribe((multisigAccountGraphInfo) => {
+                accountHttp.getMultisigAccountGraphInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountGraphInfo) => {
                     expect(multisigAccountGraphInfo.multisigAccounts.get(0)![0].
                         account.publicKey).to.be.equal(multisigAccount.publicKey);
                     done();
@@ -317,7 +317,7 @@ describe('AccountHttp', () => {
     describe('getMultisigAccountInfo', () => {
         it('should call getMultisigAccountInfo successfully', (done) => {
             setTimeout(() => {
-                accountHttp.getMultisigAccountInfo(multisigAccount.publicAccount).subscribe((multisigAccountInfo) => {
+                accountHttp.getMultisigAccountInfo(multisigAccount.publicAccount.address).subscribe((multisigAccountInfo) => {
                     expect(multisigAccountInfo.account.publicKey).to.be.equal(multisigAccount.publicKey);
                     done();
                 });
@@ -327,7 +327,7 @@ describe('AccountHttp', () => {
 
     describe('outgoingTransactions', () => {
         it('should call outgoingTransactions successfully', (done) => {
-            accountHttp.outgoingTransactions(publicAccount).subscribe((transactions) => {
+            accountHttp.outgoingTransactions(publicAccount.address).subscribe((transactions) => {
                 expect(transactions.length).to.be.greaterThan(0);
                 done();
             });
@@ -336,7 +336,7 @@ describe('AccountHttp', () => {
 
     describe('aggregateBondedTransactions', () => {
         it('should call aggregateBondedTransactions successfully', (done) => {
-            accountHttp.aggregateBondedTransactions(publicAccount).subscribe(() => {
+            accountHttp.aggregateBondedTransactions(publicAccount.address).subscribe(() => {
                 done();
             }, (error) => {
                 console.log('Error:', error);
@@ -347,7 +347,7 @@ describe('AccountHttp', () => {
 
     describe('transactions', () => {
         it('should call transactions successfully', (done) => {
-            accountHttp.transactions(publicAccount).subscribe((transactions) => {
+            accountHttp.transactions(publicAccount.address).subscribe((transactions) => {
                 expect(transactions.length).to.be.greaterThan(0);
                 done();
             });
@@ -356,7 +356,7 @@ describe('AccountHttp', () => {
 
     describe('unconfirmedTransactions', () => {
         it('should call unconfirmedTransactions successfully', (done) => {
-            accountHttp.unconfirmedTransactions(publicAccount).subscribe((transactions) => {
+            accountHttp.unconfirmedTransactions(publicAccount.address).subscribe((transactions) => {
                 expect(transactions.length).to.be.equal(0);
                 done();
             });

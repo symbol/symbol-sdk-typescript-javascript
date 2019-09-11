@@ -22,7 +22,6 @@ import {Id} from '../../model/Id';
 import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicId} from '../../model/mosaic/MosaicId';
 import {MosaicProperties} from '../../model/mosaic/MosaicProperties';
-import { MosaicPropertyType } from '../../model/mosaic/MosaicPropertyType';
 import {NamespaceId} from '../../model/namespace/NamespaceId';
 import {AccountAddressRestrictionTransaction} from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
@@ -165,7 +164,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionDTO.nonce,
             new MosaicId(transactionDTO.id),
             new MosaicProperties(
-                UInt64.fromUint(transactionDTO.flags),
+                transactionDTO.flags,
                 transactionDTO.divisibility,
                 UInt64.fromNumericString(transactionDTO.duration),
             ),
@@ -380,7 +379,6 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             transactionInfo,
         );
     } else if (transactionDTO.type === TransactionType.ACCOUNT_METADATA_TRANSACTION) {
-        console.log('AccountMetadataTransaction', transactionDTO);
         return new AccountMetadataTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
@@ -419,7 +417,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.targetPublicKey,
             UInt64.fromNumericString(transactionDTO.scopedMetadataKey),
-            new NamespaceId(transactionDTO.targetNamespaceId),
+            new NamespaceId(UInt64.fromHex(transactionDTO.targetNamespaceId).toDTO()),
             transactionDTO.valueSizeDelta,
             convert.hexToUint8(transactionDTO.value),
             transactionDTO.signature,
@@ -476,7 +474,7 @@ export const extractRecipient = (recipientAddress: any): Address | NamespaceId 
         if (recipientAddress.hasOwnProperty('address')) {
             return Address.createFromRawAddress(recipientAddress.address);
         } else if (recipientAddress.hasOwnProperty('id')) {
-            return new NamespaceId(recipientAddress.id);
+            return new NamespaceId(UInt64.fromHex(recipientAddress.id).toDTO());
         }
     }
     throw new Error(`Recipient: ${recipientAddress} type is not recognised`);

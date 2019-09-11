@@ -25,8 +25,8 @@ import { NamespaceHttp } from '../../src/infrastructure/infrastructure';
 import {Listener} from '../../src/infrastructure/Listener';
 import {TransactionHttp} from '../../src/infrastructure/TransactionHttp';
 import {Account} from '../../src/model/account/Account';
-import { AccountRestrictionType } from '../../src/model/account/AccountRestrictionType';
 import { AccountRestrictionModificationAction } from '../../src/model/account/AccountRestrictionModificationAction';
+import { AccountRestrictionType } from '../../src/model/account/AccountRestrictionType';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
@@ -190,6 +190,7 @@ describe('TransactionHttp', () => {
                     supplyMutable: true,
                     transferable: true,
                     divisibility: 3,
+                    duration: UInt64.fromUint(0),
                     restrictable: true,
                 }),
                 NetworkType.MIJIN_TEST,
@@ -2118,7 +2119,7 @@ describe('TransactionHttp', () => {
 
     describe('transactions', () => {
         it('should call transactions successfully', (done) => {
-            accountHttp.transactions(account.publicAccount).subscribe((transactions) => {
+            accountHttp.transactions(account.publicAccount.address).subscribe((transactions) => {
                 const transaction = transactions[0];
                 transactionId = transaction.transactionInfo!.id;
                 transactionHash = transaction.transactionInfo!.hash;

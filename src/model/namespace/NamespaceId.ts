@@ -86,7 +86,7 @@ export class NamespaceId {
      */
     public toDTO() {
         return {
-            id: this.id.toDTO(),
+            id: this.id.toHex(),
             fullName: this.fullName ? this.fullName : '',
         };
     }

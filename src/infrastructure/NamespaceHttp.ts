@@ -178,9 +178,9 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
                     const namespaceNamesDTO = response.body;
                     return namespaceNamesDTO.map((namespaceNameDTO) => {
                         return new NamespaceName(
-                            new NamespaceId(namespaceNameDTO.namespaceId),
+                            new NamespaceId(UInt64.fromHex(namespaceNameDTO.namespaceId).toDTO()),
                             namespaceNameDTO.name,
-                            namespaceNameDTO.parentId ? new NamespaceId(namespaceNameDTO.parentId) : undefined,
+                            namespaceNameDTO.parentId ? new NamespaceId(UInt64.fromHex(namespaceNameDTO.parentId).toDTO()) : undefined,
                         );
                     });
                 }),

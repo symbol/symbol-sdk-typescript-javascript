@@ -221,6 +221,7 @@ describe('TransactionMapping - createFromPayload', () => {
                 supplyMutable: false,
                 transferable: false,
                 divisibility: 3,
+                duration: UInt64.fromUint(0),
             }),
             NetworkType.MIJIN_TEST,
         );
@@ -245,6 +246,7 @@ describe('TransactionMapping - createFromPayload', () => {
                 supplyMutable: false,
                 transferable: false,
                 divisibility: 3,
+                duration: UInt64.fromUint(0),
             }),
             NetworkType.MIJIN_TEST,
         );
@@ -269,6 +271,7 @@ describe('TransactionMapping - createFromPayload', () => {
                 supplyMutable: false,
                 transferable: false,
                 divisibility: 3,
+                duration: UInt64.fromUint(0),
             }),
             NetworkType.MIJIN_TEST,
         );
@@ -293,6 +296,7 @@ describe('TransactionMapping - createFromPayload', () => {
                 supplyMutable: false,
                 transferable: false,
                 divisibility: 3,
+                duration: UInt64.fromUint(0),
             }),
             NetworkType.MIJIN_TEST,
         );
@@ -1025,7 +1029,6 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             'parent-test-namespace',
             NetworkType.MIJIN_TEST,
         );
-
         const transaction =
             TransactionMapping.createFromDTO(registerNamespaceTransaction.toJSON()) as NamespaceRegistrationTransaction;
 
@@ -1138,7 +1141,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
-        expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
+        expect(transaction.scopedMetadataKey.toString()).to.be.equal(UInt64.fromUint(1000).toString());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId([2262289484, 3405110546]).toHex());
         expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));

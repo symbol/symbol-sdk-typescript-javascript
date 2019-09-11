@@ -169,7 +169,7 @@ describe('TransferTransaction', () => {
         );
 
         // test recipientToString with NamespaceId recipient
-        expect(transferTransaction.recipientToString()).to.be.equal('d85742d268617751');
+        expect(transferTransaction.recipientToString()).to.be.equal('D85742D268617751');
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
 

@@ -78,6 +78,7 @@ describe('MosaicHttp', () => {
                     supplyMutable: true,
                     transferable: true,
                     divisibility: 3,
+                    duration: UInt64.fromUint(0),
                 }),
                 NetworkType.MIJIN_TEST,
             );

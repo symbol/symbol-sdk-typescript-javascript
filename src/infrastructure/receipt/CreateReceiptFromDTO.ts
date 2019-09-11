@@ -45,9 +45,9 @@ import {UInt64} from '../../model/UInt64';
  */
 export const CreateStatementFromDTO = (receiptDTO, networkType): Statement => {
     return new Statement(
-        receiptDTO.transactionStatements.map((statement) => createTransactionStatement(statement, networkType)),
-        receiptDTO.addressResolutionStatements.map((statement) => createResolutionStatement(statement, ResolutionType.Address)),
-        receiptDTO.mosaicResolutionStatements.map((statement) => createResolutionStatement(statement, ResolutionType.Mosaic)),
+        receiptDTO.transactionStatements.map((statement) => createTransactionStatement(statement.statement, networkType)),
+        receiptDTO.addressResolutionStatements.map((statement) => createResolutionStatement(statement.statement, ResolutionType.Address)),
+        receiptDTO.mosaicResolutionStatements.map((statement) => createResolutionStatement(statement.statement, ResolutionType.Mosaic)),
     );
 };
 
@@ -100,7 +100,6 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
                 }),
             );
         case ResolutionType.Mosaic:
-            console.log(statementDTO);
             return new ResolutionStatement(
                 UInt64.fromNumericString(statementDTO.height),
                 new MosaicId(statementDTO.unresolved),

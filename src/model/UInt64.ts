@@ -99,6 +99,15 @@ export class UInt64 {
     }
 
     /**
+     * Get numeric string representation
+     *
+     * @return {string}
+     */
+    public toString(): string {
+        return this.compact().toString();
+    }
+
+    /**
      * Compact higher and lower uint parts into a uint
      * @returns {number}
      */

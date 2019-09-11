@@ -20,9 +20,9 @@ import { TransactionMapping } from '../core/utils/TransactionMapping';
 import { AccountHttp } from '../infrastructure/AccountHttp';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
+import { CosignatoryModificationAction } from '../model/transaction/CosignatoryModificationAction';
 import { InnerTransaction } from '../model/transaction/InnerTransaction';
 import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
-import { CosignatoryModificationAction } from '../model/transaction/CosignatoryModificationAction';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { TransactionType } from '../model/transaction/TransactionType';
 
@@ -53,13 +53,13 @@ export class AggregateTransactionService {
             signers.push(signedTransaction.signerPublicKey);
         }
         return observableFrom(aggregateTransaction.innerTransactions).pipe(
-            mergeMap((innerTransaction) => this.accountHttp.getMultisigAccountInfo(innerTransaction.signer)
+            mergeMap((innerTransaction) => this.accountHttp.getMultisigAccountInfo(innerTransaction.signer.address)
                 .pipe(
                     /**
                      * For multisig account, we need to get the graph info in case it has multiple levels
                      */
                     mergeMap((_) => _.minApproval !== 0 && _.minRemoval !== 0 ?
-                        this.accountHttp.getMultisigAccountGraphInfo(_.account)
+                        this.accountHttp.getMultisigAccountGraphInfo(_.account.address)
                         .pipe(
                             map((graphInfo) => this.validateCosignatories(graphInfo, signers, innerTransaction)),
                         ) : observableOf(signers.find((s) => s === _.account.publicKey ) !== undefined),

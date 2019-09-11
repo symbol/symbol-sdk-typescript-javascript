@@ -471,21 +471,21 @@ export class AccountRoutesApi {
     /**
      * Gets an array of incoming transactions. A transaction is said to be incoming with respect to an account if the account is the recipient of the transaction. 
      * @summary Get incoming transactions
-     * @param publicKey Public key.
+     * @param accountId Account public key or address.
      * @param pageSize Number of transactions to return for each request.
      * @param id Transaction identifier up to which transactions are returned.
      * @param ordering Ordering criteria: * -id - Descending order by id. * id - Ascending order by id. 
      */
-    public async incomingTransactions (publicKey: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<TransactionInfoDTO>;  }> {
-        const localVarPath = this.basePath + '/account/{publicKey}/transactions/incoming'
-            .replace('{' + 'publicKey' + '}', encodeURIComponent(String(publicKey)));
+    public async incomingTransactions (accountId: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<TransactionInfoDTO>;  }> {
+        const localVarPath = this.basePath + '/account/{accountId}/transactions/incoming'
+            .replace('{' + 'accountId' + '}', encodeURIComponent(String(accountId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         let localVarFormParams: any = {};
 
-        // verify required parameter 'publicKey' is not null or undefined
-        if (publicKey === null || publicKey === undefined) {
-            throw new Error('Required parameter publicKey was null or undefined when calling incomingTransactions.');
+        // verify required parameter 'accountId' is not null or undefined
+        if (accountId === null || accountId === undefined) {
+            throw new Error('Required parameter accountId was null or undefined when calling incomingTransactions.');
         }
 
         if (pageSize !== undefined) {
@@ -542,21 +542,21 @@ export class AccountRoutesApi {
     /**
      * Gets an array of outgoing transactions. A transaction is said to be outgoing with respect to an account if the account is the sender of the transaction.
      * @summary Get outgoing transactions
-     * @param publicKey Public key.
+     * @param accountId Account public key or address.
      * @param pageSize Number of transactions to return for each request.
      * @param id Transaction identifier up to which transactions are returned.
      * @param ordering Ordering criteria: * -id - Descending order by id. * id - Ascending order by id. 
      */
-    public async outgoingTransactions (publicKey: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<TransactionInfoDTO>;  }> {
-        const localVarPath = this.basePath + '/account/{publicKey}/transactions/outgoing'
-            .replace('{' + 'publicKey' + '}', encodeURIComponent(String(publicKey)));
+    public async outgoingTransactions (accountId: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<TransactionInfoDTO>;  }> {
+        const localVarPath = this.basePath + '/account/{accountId}/transactions/outgoing'
+            .replace('{' + 'accountId' + '}', encodeURIComponent(String(accountId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         let localVarFormParams: any = {};
 
-        // verify required parameter 'publicKey' is not null or undefined
-        if (publicKey === null || publicKey === undefined) {
-            throw new Error('Required parameter publicKey was null or undefined when calling outgoingTransactions.');
+        // verify required parameter 'accountId' is not null or undefined
+        if (accountId === null || accountId === undefined) {
+            throw new Error('Required parameter accountId was null or undefined when calling outgoingTransactions.');
         }
 
         if (pageSize !== undefined) {
@@ -613,21 +613,21 @@ export class AccountRoutesApi {
     /**
      * Gets an array of aggregate bonded transactions where the account is the sender or requires to cosign the transaction. 
      * @summary Get aggregate bonded transactions information
-     * @param publicKey Public key.
+     * @param accountId Account public key or address.
      * @param pageSize Number of transactions to return for each request.
      * @param id Transaction identifier up to which transactions are returned.
      * @param ordering Ordering criteria: * -id - Descending order by id. * id - Ascending order by id. 
      */
-    public async partialTransactions (publicKey: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<TransactionInfoDTO>;  }> {
-        const localVarPath = this.basePath + '/account/{publicKey}/transactions/partial'
-            .replace('{' + 'publicKey' + '}', encodeURIComponent(String(publicKey)));
+    public async partialTransactions (accountId: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<TransactionInfoDTO>;  }> {
+        const localVarPath = this.basePath + '/account/{accountId}/transactions/partial'
+            .replace('{' + 'accountId' + '}', encodeURIComponent(String(accountId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         let localVarFormParams: any = {};
 
-        // verify required parameter 'publicKey' is not null or undefined
-        if (publicKey === null || publicKey === undefined) {
-            throw new Error('Required parameter publicKey was null or undefined when calling partialTransactions.');
+        // verify required parameter 'accountId' is not null or undefined
+        if (accountId === null || accountId === undefined) {
+            throw new Error('Required parameter accountId was null or undefined when calling partialTransactions.');
         }
 
         if (pageSize !== undefined) {
@@ -684,21 +684,21 @@ export class AccountRoutesApi {
     /**
      * Gets an array of transactions for which an account is the sender or receiver.
      * @summary Get confirmed transactions
-     * @param publicKey Public key.
+     * @param accountId Account public key or address.
      * @param pageSize Number of transactions to return for each request.
      * @param id Transaction identifier up to which transactions are returned.
      * @param ordering Ordering criteria: * -id - Descending order by id. * id - Ascending order by id. 
      */
-    public async transactions (publicKey: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<TransactionInfoDTO>;  }> {
-        const localVarPath = this.basePath + '/account/{publicKey}/transactions'
-            .replace('{' + 'publicKey' + '}', encodeURIComponent(String(publicKey)));
+    public async transactions (accountId: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<TransactionInfoDTO>;  }> {
+        const localVarPath = this.basePath + '/account/{accountId}/transactions'
+            .replace('{' + 'accountId' + '}', encodeURIComponent(String(accountId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         let localVarFormParams: any = {};
 
-        // verify required parameter 'publicKey' is not null or undefined
-        if (publicKey === null || publicKey === undefined) {
-            throw new Error('Required parameter publicKey was null or undefined when calling transactions.');
+        // verify required parameter 'accountId' is not null or undefined
+        if (accountId === null || accountId === undefined) {
+            throw new Error('Required parameter accountId was null or undefined when calling transactions.');
         }
 
         if (pageSize !== undefined) {
@@ -755,21 +755,21 @@ export class AccountRoutesApi {
     /**
      * Gets the array of transactions not included in a block where an account is the sender or receiver. 
      * @summary Get unconfirmed transactions
-     * @param publicKey Public key.
+     * @param accountId Account public key or address.
      * @param pageSize Number of transactions to return for each request.
      * @param id Transaction identifier up to which transactions are returned.
      * @param ordering Ordering criteria: * -id - Descending order by id. * id - Ascending order by id. 
      */
-    public async unconfirmedTransactions (publicKey: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<TransactionInfoDTO>;  }> {
-        const localVarPath = this.basePath + '/account/{publicKey}/transactions/unconfirmed'
-            .replace('{' + 'publicKey' + '}', encodeURIComponent(String(publicKey)));
+    public async unconfirmedTransactions (accountId: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<TransactionInfoDTO>;  }> {
+        const localVarPath = this.basePath + '/account/{accountId}/transactions/unconfirmed'
+            .replace('{' + 'accountId' + '}', encodeURIComponent(String(accountId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         let localVarFormParams: any = {};
 
-        // verify required parameter 'publicKey' is not null or undefined
-        if (publicKey === null || publicKey === undefined) {
-            throw new Error('Required parameter publicKey was null or undefined when calling unconfirmedTransactions.');
+        // verify required parameter 'accountId' is not null or undefined
+        if (accountId === null || accountId === undefined) {
+            throw new Error('Required parameter accountId was null or undefined when calling unconfirmedTransactions.');
         }
 
         if (pageSize !== undefined) {

@@ -207,13 +207,13 @@ export class AccountHttp extends Http implements AccountRepository {
     }
     /**
      * Gets a MultisigAccountInfo for an account.
-     * @param publicAccount - User public account
+     * @param address - * Address can be created rawAddress or publicKey
      * @returns Observable<MultisigAccountInfo>
      */
-    public getMultisigAccountInfo(publicAccount: PublicAccount): Observable<MultisigAccountInfo> {
+    public getMultisigAccountInfo(address: Address): Observable<MultisigAccountInfo> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
-                this.accountRoutesApi.getAccountMultisig(publicAccount.publicKey))
+                this.accountRoutesApi.getAccountMultisig(address.plain()))
                     .pipe(map((response: { response: ClientResponse; body: MultisigAccountInfoDTO; }) => {
                         const multisigAccountInfoDTO = response.body;
                         return new MultisigAccountInfo(
@@ -232,13 +232,13 @@ export class AccountHttp extends Http implements AccountRepository {
 
     /**
      * Gets a MultisigAccountGraphInfo for an account.
-     * @param publicAccount - User publicAccount
+     * @param address - * Address can be created rawAddress or publicKey
      * @returns Observable<MultisigAccountGraphInfo>
      */
-    public getMultisigAccountGraphInfo(publicAccount: PublicAccount): Observable<MultisigAccountGraphInfo> {
+    public getMultisigAccountGraphInfo(address: Address): Observable<MultisigAccountGraphInfo> {
         return this.getNetworkTypeObservable().pipe(
             mergeMap((networkType) => observableFrom(
-                this.accountRoutesApi.getAccountMultisigGraph(publicAccount.publicKey))
+                this.accountRoutesApi.getAccountMultisigGraph(address.plain()))
                     .pipe(map((response: { response: ClientResponse; body: MultisigAccountGraphInfoDTO[]; }) => {
                         const multisigAccountGraphInfosDTO = response.body;
                         const multisigAccounts = new Map<number, MultisigAccountInfo[]>();
@@ -265,13 +265,13 @@ export class AccountHttp extends Http implements AccountRepository {
 
     /**
      * Gets an array of confirmed transactions for which an account is signer or receiver.
-     * @param publicAccount - User public account
+     * @param address - * Address can be created rawAddress or publicKey
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public transactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable<Transaction[]> {
+    public transactions(address: Address, queryParams?: QueryParams): Observable<Transaction[]> {
         return observableFrom(
-            this.accountRoutesApi.transactions(publicAccount.publicKey,
+            this.accountRoutesApi.transactions(address.plain(),
                                                this.queryParams(queryParams).pageSize,
                                                this.queryParams(queryParams).id,
                                                this.queryParams(queryParams).order)).pipe(
@@ -288,13 +288,13 @@ export class AccountHttp extends Http implements AccountRepository {
     /**
      * Gets an array of transactions for which an account is the recipient of a transaction.
      * A transaction is said to be incoming with respect to an account if the account is the recipient of a transaction.
-     * @param publicAccount - User public account
+     * @param address - * Address can be created rawAddress or publicKey
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public incomingTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <Transaction[]> {
+    public incomingTransactions(address: Address, queryParams?: QueryParams): Observable <Transaction[]> {
         return observableFrom(
-            this.accountRoutesApi.incomingTransactions(publicAccount.publicKey,
+            this.accountRoutesApi.incomingTransactions(address.plain(),
                                                        this.queryParams(queryParams).pageSize,
                                                        this.queryParams(queryParams).id,
                                                        this.queryParams(queryParams).order)).pipe(
@@ -311,13 +311,13 @@ export class AccountHttp extends Http implements AccountRepository {
     /**
      * Gets an array of transactions for which an account is the sender a transaction.
      * A transaction is said to be outgoing with respect to an account if the account is the sender of a transaction.
-     * @param publicAccount - User public account
+     * @param address - * Address can be created rawAddress or publicKey
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public outgoingTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <Transaction[]> {
+    public outgoingTransactions(address: Address, queryParams?: QueryParams): Observable <Transaction[]> {
         return observableFrom(
-            this.accountRoutesApi.outgoingTransactions(publicAccount.publicKey,
+            this.accountRoutesApi.outgoingTransactions(address.plain(),
                                                        this.queryParams(queryParams).pageSize,
                                                        this.queryParams(queryParams).id,
                                                        this.queryParams(queryParams).order)).pipe(
@@ -335,13 +335,13 @@ export class AccountHttp extends Http implements AccountRepository {
      * Gets the array of transactions for which an account is the sender or receiver and which have not yet been included in a block.
      * Unconfirmed transactions are those transactions that have not yet been included in a block.
      * Unconfirmed transactions are not guaranteed to be included in any block.
-     * @param publicAccount - User public account
+     * @param address - * Address can be created rawAddress or publicKey
      * @param queryParams - (Optional) Query params
      * @returns Observable<Transaction[]>
      */
-    public unconfirmedTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <Transaction[]> {
+    public unconfirmedTransactions(address: Address, queryParams?: QueryParams): Observable <Transaction[]> {
         return observableFrom(
-            this.accountRoutesApi.unconfirmedTransactions(publicAccount.publicKey,
+            this.accountRoutesApi.unconfirmedTransactions(address.plain(),
                                                           this.queryParams(queryParams).pageSize,
                                                           this.queryParams(queryParams).id,
                                                           this.queryParams(queryParams).order)).pipe(
@@ -358,13 +358,13 @@ export class AccountHttp extends Http implements AccountRepository {
     /**
      * Gets an array of transactions for which an account is the sender or has sign the transaction.
      * A transaction is said to be aggregate bonded with respect to an account if there are missing signatures.
-     * @param publicAccount - User public account
+     * @param address - * Address can be created rawAddress or publicKey
      * @param queryParams - (Optional) Query params
      * @returns Observable<AggregateTransaction[]>
      */
-    public aggregateBondedTransactions(publicAccount: PublicAccount, queryParams?: QueryParams): Observable <AggregateTransaction[]> {
+    public aggregateBondedTransactions(address: Address, queryParams?: QueryParams): Observable <AggregateTransaction[]> {
         return observableFrom(
-            this.accountRoutesApi.partialTransactions(publicAccount.publicKey,
+            this.accountRoutesApi.partialTransactions(address.plain(),
                                                       this.queryParams(queryParams).pageSize,
                                                       this.queryParams(queryParams).id,
                                                       this.queryParams(queryParams).order)).pipe(

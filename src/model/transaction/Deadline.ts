@@ -82,4 +82,13 @@ export class Deadline {
             (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
         ).toDTO();
     }
+
+    /**
+     * @internal
+     */
+    public toString(): string {
+        return UInt64.fromUint(
+            (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
+        ).toString();
+    }
 }

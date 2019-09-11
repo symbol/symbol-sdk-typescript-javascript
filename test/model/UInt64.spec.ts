@@ -140,4 +140,13 @@ describe('Uint64', () => {
             expect(() => { UInt64.fromNumericString('ABC12345678'); }).to.throw('Input string is not a valid numeric string');
         });
     });
+
+    describe('toNuermicString', () => {
+        it('should return numeric string representation', () => {
+            const value = '1000';
+            const uint64 = UInt64.fromNumericString(value);
+
+            expect(uint64.toString()).to.be.equal(value);
+        });
+    });
 });

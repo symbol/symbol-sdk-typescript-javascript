@@ -37,10 +37,7 @@ describe('CosignatureTransaction', () => {
         const aggregateTransferTransactionDTO = {
             meta: {
                 hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
-                height: [
-                    18160,
-                    0,
-                ],
+                height: '18160',
                 id: '5A0069D83F17CF0001777E55',
                 index: 0,
                 merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
@@ -53,14 +50,8 @@ describe('CosignatureTransaction', () => {
                         signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                     },
                 ],
-                deadline: [
-                    3266625578,
-                    11,
-                ],
-                maxFee: [
-                    0,
-                    0,
-                ],
+                deadline: '1000',
+                maxFee: '0',
                 signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
                 '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
                 signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
@@ -69,10 +60,7 @@ describe('CosignatureTransaction', () => {
                         meta: {
                             aggregateHash: '3D28C804EDD07D5A728E5C5FFEC01AB07AFA5766AE6997B38526D36015A4D006',
                             aggregateId: '5A0069D83F17CF0001777E55',
-                            height: [
-                                18160,
-                                0,
-                            ],
+                            height: '18160',
                             id: '5A0069D83F17CF0001777E56',
                             index: 0,
                         },
@@ -83,14 +71,8 @@ describe('CosignatureTransaction', () => {
                             },
                             mosaics: [
                                 {
-                                    amount: [
-                                        3863990592,
-                                        95248,
-                                    ],
-                                    id: [
-                                        3646934825,
-                                        3576016193,
-                                    ],
+                                    amount: '100',
+                                    id: '85BBEA6CC462B244',
                                 },
                             ],
                             recipientAddress: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',

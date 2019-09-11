@@ -21,12 +21,12 @@ describe('Id', () => {
     describe('toHex()', () => {
         it('should generate mosaic xem id', () => {
             const idName = new Id([3646934825, 3576016193]).toHex();
-            expect(idName).to.be.equal('d525ad41d95fcf29');
+            expect(idName).to.be.equal('D525AD41D95FCF29');
         });
 
         it('should generate namespace nem id', () => {
             const idName = new Id([929036875, 2226345261]).toHex();
-            expect(idName).to.be.equal('84b3552d375ffa4b');
+            expect(idName).to.be.equal('84B3552D375FFA4B');
         });
     });
 

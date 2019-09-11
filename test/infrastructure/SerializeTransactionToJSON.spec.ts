@@ -175,9 +175,10 @@ describe('SerializeTransactionToJSON', () => {
             new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicProperties.create({
-                supplyMutable: false,
-                transferable: false,
-                divisibility: 3,
+                supplyMutable: true,
+                transferable: true,
+                divisibility: 5,
+                restrictable: true,
                 duration: UInt64.fromUint(1000),
             }),
             NetworkType.MIJIN_TEST,
@@ -186,10 +187,9 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicDefinitionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
-        expect(json.transaction.properties.length).to.be.equal(3);
-        expect(new UInt64(json.transaction.properties[1].value).compact()).to.be.equal(UInt64.fromUint(3).compact());
-        expect(new UInt64(json.transaction.properties[2].value).compact()).to.be.equal(UInt64.fromUint(1000).compact());
-        expect(new UInt64(json.transaction.properties[2].value).lower).to.be.equal(UInt64.fromUint(1000).lower);
+        expect(json.transaction.flags).to.be.equal(7);
+        expect(json.transaction.divisibility).to.be.equal(5);
+        expect(json.transaction.duration).to.be.equal('1000');
 
     });
 
@@ -199,9 +199,10 @@ describe('SerializeTransactionToJSON', () => {
             new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicProperties.create({
-                supplyMutable: false,
+                supplyMutable: true,
                 transferable: false,
                 divisibility: 3,
+                duration: UInt64.fromUint(0),
             }),
             NetworkType.MIJIN_TEST,
         );
@@ -209,7 +210,8 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicDefinitionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
-        expect(json.transaction.properties.length).to.be.equal(2);
+        expect(json.transaction.divisibility).to.be.equal(3);
+        expect(json.transaction.flags).to.be.equal(1);
 
     });
 

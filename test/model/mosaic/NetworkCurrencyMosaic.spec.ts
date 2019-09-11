@@ -16,9 +16,9 @@
 
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
-import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {NetworkCurrencyMosaic} from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import {NamespaceId} from '../../../src/model/namespace/NamespaceId';
+import { UInt64 } from '../../../src/model/UInt64';
 
 describe('NetworkCurrencyMosaic', () => {
 
@@ -26,14 +26,14 @@ describe('NetworkCurrencyMosaic', () => {
 
         const currency = NetworkCurrencyMosaic.createRelative(1000);
 
-        deepEqual(currency.id.id.toHex(), '85bbea6cc462b244'); // holds NAMESPACE_ID
+        deepEqual(currency.id.id.toHex(), '85BBEA6CC462B244'); // holds NAMESPACE_ID
         expect(currency.amount.compact()).to.be.equal(1000 * 1000000);
     });
 
     it('should set amount in smallest unit when toDTO()', () => {
 
         const currency = NetworkCurrencyMosaic.createRelative(1000);
-        expect(currency.toDTO().amount[0]).to.be.equal(1000 * 1000000);
+        expect(UInt64.fromNumericString(currency.toDTO().amount).toDTO()[0]).to.be.equal(1000 * 1000000);
     });
 
     it('should have valid statics', () => {

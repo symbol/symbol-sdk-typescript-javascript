@@ -67,7 +67,7 @@ export class MosaicId {
      * @returns {string}
      */
     public toHex(): string {
-        return this.id.toHex();
+        return this.id.toHex().toUpperCase();
     }
 
     /**

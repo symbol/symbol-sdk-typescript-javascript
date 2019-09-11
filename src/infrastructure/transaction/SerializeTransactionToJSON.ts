@@ -54,7 +54,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.ADDRESS_ALIAS:
             return {
                 aliasAction: (transaction as AddressAliasTransaction).aliasAction,
-                namespaceId: (transaction as AddressAliasTransaction).namespaceId.toDTO(),
+                namespaceId: (transaction as AddressAliasTransaction).namespaceId.toHex(),
                 address: (transaction as AddressAliasTransaction).address.toDTO(),
             };
         case TransactionType.AGGREGATE_BONDED:
@@ -70,8 +70,8 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.LOCK:
             return {
                 mosaicId: (transaction as LockFundsTransaction).mosaic.id.id,
-                amount: (transaction as LockFundsTransaction).mosaic.amount.toDTO(),
-                duration: (transaction as LockFundsTransaction).duration.toDTO(),
+                amount: (transaction as LockFundsTransaction).mosaic.amount.toString(),
+                duration: (transaction as LockFundsTransaction).duration.toString(),
                 hash: (transaction as LockFundsTransaction).hash,
             };
         case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
@@ -108,20 +108,23 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.MOSAIC_ALIAS:
             return {
                 aliasAction: (transaction as MosaicAliasTransaction).aliasAction,
-                namespaceId: (transaction as MosaicAliasTransaction).namespaceId.toDTO(),
-                mosaicId: (transaction as MosaicAliasTransaction).mosaicId.toDTO(),
+                namespaceId: (transaction as MosaicAliasTransaction).namespaceId.toHex(),
+                mosaicId: (transaction as MosaicAliasTransaction).mosaicId.toHex(),
             };
         case TransactionType.MOSAIC_DEFINITION:
+            const properties = (transaction as MosaicDefinitionTransaction).mosaicProperties.toDTO();
             return {
                 nonce: (transaction as MosaicDefinitionTransaction).nonce,
-                mosaicId: (transaction as MosaicDefinitionTransaction).mosaicId.toDTO(),
-                properties: (transaction as MosaicDefinitionTransaction).mosaicProperties.toDTO(),
+                mosaicId: (transaction as MosaicDefinitionTransaction).mosaicId.toHex(),
+                flags: properties.flags,
+                divisibility: properties.divisibility,
+                duration: properties.duration,
             };
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
             return {
-                mosaicId: (transaction as MosaicSupplyChangeTransaction).mosaicId.toDTO(),
+                mosaicId: (transaction as MosaicSupplyChangeTransaction).mosaicId.toHex(),
                 direction: (transaction as MosaicSupplyChangeTransaction).direction,
-                delta: (transaction as MosaicSupplyChangeTransaction).delta.toDTO(),
+                delta: (transaction as MosaicSupplyChangeTransaction).delta.toString(),
             };
         case TransactionType.REGISTER_NAMESPACE:
             const registerNamespaceDuration = (transaction as NamespaceRegistrationTransaction).duration;
@@ -130,21 +133,21 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             const jsonObject = {
                 namespaceType: (transaction as NamespaceRegistrationTransaction).namespaceType,
                 namespaceName: (transaction as NamespaceRegistrationTransaction).namespaceName,
-                namespaceId: (transaction as NamespaceRegistrationTransaction).namespaceId.toDTO(),
+                id: (transaction as NamespaceRegistrationTransaction).namespaceId.toHex(),
             };
 
             if (registerNamespaceDuration) {
-                Object.assign(jsonObject, {duration: registerNamespaceDuration.toDTO()});
+                Object.assign(jsonObject, {duration: registerNamespaceDuration.toString()});
             }
             if (registerNamespaceParentId) {
-                Object.assign(jsonObject, {parentId: registerNamespaceParentId.toDTO()});
+                Object.assign(jsonObject, {parentId: registerNamespaceParentId.toHex()});
             }
             return jsonObject;
         case TransactionType.SECRET_LOCK:
             return {
                 mosaicId: (transaction as SecretLockTransaction).mosaic.id.id,
-                amount: (transaction as SecretLockTransaction).mosaic.amount.toDTO(),
-                duration: (transaction as SecretLockTransaction).duration.toDTO(),
+                amount: (transaction as SecretLockTransaction).mosaic.amount.toString(),
+                duration: (transaction as SecretLockTransaction).duration.toString(),
                 hashAlgorithm: (transaction as SecretLockTransaction).hashType,
                 secret: (transaction as SecretLockTransaction).secret,
                 recipientAddress: (transaction as SecretLockTransaction).recipientAddress.toDTO(),
@@ -166,27 +169,27 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             };
         case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
             return {
-                mosaicId: (transaction as MosaicGlobalRestrictionTransaction).mosaicId.toDTO(),
-                referenceMosaicId: (transaction as MosaicGlobalRestrictionTransaction).referenceMosaicId.toDTO(),
-                restrictionKey: (transaction as MosaicGlobalRestrictionTransaction).restrictionKey.toDTO(),
-                previousRestrictionValue: (transaction as MosaicGlobalRestrictionTransaction).previousRestrictionValue.toDTO(),
+                mosaicId: (transaction as MosaicGlobalRestrictionTransaction).mosaicId.toHex(),
+                referenceMosaicId: (transaction as MosaicGlobalRestrictionTransaction).referenceMosaicId.toHex(),
+                restrictionKey: (transaction as MosaicGlobalRestrictionTransaction).restrictionKey.toString(),
+                previousRestrictionValue: (transaction as MosaicGlobalRestrictionTransaction).previousRestrictionValue.toString(),
                 previousRestrictionType: (transaction as MosaicGlobalRestrictionTransaction).previousRestrictionType,
-                newRestrictionValue: (transaction as MosaicGlobalRestrictionTransaction).newRestrictionValue.toDTO(),
+                newRestrictionValue: (transaction as MosaicGlobalRestrictionTransaction).newRestrictionValue.toString(),
                 newRestrictionType: (transaction as MosaicGlobalRestrictionTransaction).newRestrictionType,
             };
         case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
             return {
-                mosaicId: (transaction as MosaicAddressRestrictionTransaction).mosaicId.toDTO(),
-                restrictionKey: (transaction as MosaicAddressRestrictionTransaction).restrictionKey.toDTO(),
+                mosaicId: (transaction as MosaicAddressRestrictionTransaction).mosaicId.toHex(),
+                restrictionKey: (transaction as MosaicAddressRestrictionTransaction).restrictionKey.toString(),
                 targetAddress: (transaction as MosaicAddressRestrictionTransaction).targetAddress.toDTO(),
-                previousRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).previousRestrictionValue.toDTO(),
-                newRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).newRestrictionValue.toDTO(),
+                previousRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).previousRestrictionValue.toString(),
+                newRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).newRestrictionValue.toString(),
 
             };
         case TransactionType.ACCOUNT_METADATA_TRANSACTION:
             return {
                 targetPublicKey: (transaction as AccountMetadataTransaction).targetPublicKey,
-                scopedMetadataKey: (transaction as AccountMetadataTransaction).scopedMetadataKey.toDTO(),
+                scopedMetadataKey: (transaction as AccountMetadataTransaction).scopedMetadataKey.toString(),
                 valueSizeDelta: (transaction as AccountMetadataTransaction).valueSizeDelta,
                 valueSize: (transaction as AccountMetadataTransaction).value.length,
                 value: Convert.uint8ToHex((transaction as AccountMetadataTransaction).value),
@@ -195,9 +198,9 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.MOSAIC_METADATA_TRANSACTION:
             return {
                 targetPublicKey: (transaction as MosaicMetadataTransaction).targetPublicKey,
-                scopedMetadataKey: (transaction as MosaicMetadataTransaction).scopedMetadataKey.toDTO(),
+                scopedMetadataKey: (transaction as MosaicMetadataTransaction).scopedMetadataKey.toString(),
                 valueSizeDelta: (transaction as MosaicMetadataTransaction).valueSizeDelta,
-                targetMosaicId: (transaction as MosaicMetadataTransaction).targetMosaicId.id.toDTO(),
+                targetMosaicId: (transaction as MosaicMetadataTransaction).targetMosaicId.id.toHex(),
                 valueSize: (transaction as MosaicMetadataTransaction).value.length,
                 value: Convert.uint8ToHex((transaction as MosaicMetadataTransaction).value),
 
@@ -205,9 +208,9 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.NAMESPACE_METADATA_TRANSACTION:
             return {
                 targetPublicKey: (transaction as NamespaceMetadataTransaction).targetPublicKey,
-                scopedMetadataKey: (transaction as NamespaceMetadataTransaction).scopedMetadataKey.toDTO(),
+                scopedMetadataKey: (transaction as NamespaceMetadataTransaction).scopedMetadataKey.toString(),
                 valueSizeDelta: (transaction as NamespaceMetadataTransaction).valueSizeDelta,
-                targetNamespaceId: (transaction as NamespaceMetadataTransaction).targetNamespaceId.id.toDTO(),
+                targetNamespaceId: (transaction as NamespaceMetadataTransaction).targetNamespaceId.id.toHex(),
                 valueSize: (transaction as NamespaceMetadataTransaction).value.length,
                 value: Convert.uint8ToHex((transaction as NamespaceMetadataTransaction).value),
 

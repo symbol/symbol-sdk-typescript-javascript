@@ -24,7 +24,7 @@ import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
 import {UInt64} from '../../../src/model/UInt64';
 
 describe('MosaicInfo', () => {
-    const mosaicInfoDTO = {
+    let mosaicInfoDTO = {
         meta: {
             id: '59FDA0733F17CF0001772CBC',
         },
@@ -36,11 +36,9 @@ describe('MosaicInfo', () => {
                 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 NetworkType.MIJIN_TEST),
             revision: 1,
-            properties: [
-                new UInt64([6, 0]), // divisibility
-                new UInt64([3, 0]), // flags
-                new UInt64([1000, 0]), // duration
-            ],
+            flags: 7,
+            divisibility: 3,
+            duration: '1000',
         },
     };
 
@@ -56,9 +54,9 @@ describe('MosaicInfo', () => {
             mosaicInfoDTO.mosaic.owner,
             mosaicInfoDTO.mosaic.revision,
             new MosaicProperties(
-                mosaicInfoDTO.mosaic.properties[0],
-                mosaicInfoDTO.mosaic.properties[1].compact(),
-                mosaicInfoDTO.mosaic.properties[2],
+                mosaicInfoDTO.mosaic.flags,
+                mosaicInfoDTO.mosaic.divisibility,
+                UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
             ),
         );
 
@@ -68,12 +66,13 @@ describe('MosaicInfo', () => {
         expect(mosaicInfo.owner).to.be.equal(mosaicInfoDTO.mosaic.owner);
         deepEqual(mosaicInfo.revision, mosaicInfoDTO.mosaic.revision);
 
-        expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.properties[1].lower);
-        deepEqual(mosaicInfo.duration, mosaicInfoDTO.mosaic.properties[2]);
+        expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.divisibility);
+        deepEqual(mosaicInfo.duration.toString(), mosaicInfoDTO.mosaic.duration);
 
     });
 
     it('should createComplete an MosaicInfo object without duration', () => {
+        mosaicInfoDTO.mosaic.duration = '0';
         const mosaicInfo = new MosaicInfo(
             mosaicInfoDTO.mosaic.mosaicId,
             mosaicInfoDTO.mosaic.supply,
@@ -81,8 +80,9 @@ describe('MosaicInfo', () => {
             mosaicInfoDTO.mosaic.owner,
             mosaicInfoDTO.mosaic.revision,
             new MosaicProperties(
-                mosaicInfoDTO.mosaic.properties[0],
-                mosaicInfoDTO.mosaic.properties[1].compact(),
+                mosaicInfoDTO.mosaic.flags,
+                mosaicInfoDTO.mosaic.divisibility,
+                UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
             ),
         );
 
@@ -92,8 +92,8 @@ describe('MosaicInfo', () => {
         expect(mosaicInfo.owner).to.be.equal(mosaicInfoDTO.mosaic.owner);
         deepEqual(mosaicInfo.revision, mosaicInfoDTO.mosaic.revision);
 
-        expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.properties[1].lower);
-        deepEqual(mosaicInfo.duration, undefined);
+        expect(mosaicInfo.divisibility).to.be.equal(mosaicInfoDTO.mosaic.divisibility);
+        deepEqual(mosaicInfo.duration.toDTO(), [0, 0]);
 
     });
 
@@ -108,8 +108,8 @@ describe('MosaicInfo', () => {
                 MosaicProperties.create({
                     supplyMutable: true,
                     transferable: false,
-                    divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
-                    duration: mosaicInfoDTO.mosaic.properties[2],
+                    divisibility: mosaicInfoDTO.mosaic.divisibility,
+                    duration: UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
                 }),
                 )
             ;
@@ -126,8 +126,8 @@ describe('MosaicInfo', () => {
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: false,
-                    divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
-                    duration: mosaicInfoDTO.mosaic.properties[2],
+                    divisibility: mosaicInfoDTO.mosaic.divisibility,
+                    duration: UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
                 }),
             );
             expect(mosaicInfo.isSupplyMutable()).to.be.equal(false);
@@ -145,8 +145,8 @@ describe('MosaicInfo', () => {
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: true,
-                    divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
-                    duration: mosaicInfoDTO.mosaic.properties[2],
+                    divisibility: mosaicInfoDTO.mosaic.divisibility,
+                    duration: UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
                 }),
             );
             expect(mosaicInfo.isTransferable()).to.be.equal(true);
@@ -162,8 +162,8 @@ describe('MosaicInfo', () => {
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: false,
-                    divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
-                    duration: mosaicInfoDTO.mosaic.properties[2],
+                    divisibility: mosaicInfoDTO.mosaic.divisibility,
+                    duration: UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
                 }),
             );
             expect(mosaicInfo.isTransferable()).to.be.equal(false);
@@ -181,9 +181,9 @@ describe('MosaicInfo', () => {
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: false,
-                    divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
+                    divisibility: mosaicInfoDTO.mosaic.divisibility,
                     restrictable: true,
-                    duration: mosaicInfoDTO.mosaic.properties[2],
+                    duration: UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
                 }),
             );
             expect(mosaicInfo.isRestrictable()).to.be.equal(true);
@@ -199,8 +199,8 @@ describe('MosaicInfo', () => {
                 MosaicProperties.create({
                     supplyMutable: false,
                     transferable: false,
-                    divisibility: mosaicInfoDTO.mosaic.properties[1].compact(),
-                    duration: mosaicInfoDTO.mosaic.properties[2],
+                    divisibility: mosaicInfoDTO.mosaic.divisibility,
+                    duration: UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
                 }),
             );
             expect(mosaicInfo.isRestrictable()).to.be.equal(false);
