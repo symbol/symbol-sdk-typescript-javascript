@@ -1,3 +1,3 @@
 module.exports = {
-    isWin32: false
+    isWin32: true
 }

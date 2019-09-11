@@ -33,10 +33,13 @@ export class MonitorPanelTs extends Vue {
     isShowAccountInfo = true
     isShowAccountAlias = false
     isShowManageMosaicIcon = false
+    ischecked=true
     monitorSeleted = monitorSeleted
     monitorUnselected = monitorUnselected
     navigatorList: any = minitorPanelNavigatorList
     mosaicMap: any = {}
+    arr=[]
+    a=0
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -137,14 +140,49 @@ export class MonitorPanelTs extends Vue {
         this.isShowManageMosaicIcon = !this.isShowManageMosaicIcon
         this.mosaicMap = this.localMosaicMap
     }
+    toggleAllChecked(){
+        this.ischecked = !this.ischecked
+        document.getElementsByClassName("choose")[0].classList.replace(`${!this.ischecked}`,`${this.ischecked}`)
+        Object.keys(this.localMosaicMap).forEach(key=>{
+            this.localMosaicMap[key].show = this.ischecked
+            let pos = this.arr.indexOf(key)
+            if(pos<0){
+                this.arr.push(key)
+            }
+        })
+    }
 
     toggleShowMosaic(key, value) {
+            this.a=0
         if (!this.localMosaicMap[key]) {
             this.localMosaicMap[key] = value
         }
         this.localMosaicMap[key].show = !this.localMosaicMap[key].show
+        if(this.localMosaicMap[key].show===false){
+            this.ischecked=false
+            document.getElementsByClassName("choose")[0].classList.replace(`${!this.ischecked}`,`${this.ischecked}`)
+        }
+        Object.keys(this.localMosaicMap).forEach(index=>{
+            let pos = this.arr.indexOf(index)
+            if(pos<0){
+                this.arr.push(index)
+            }
+            if(this.localMosaicMap[index].show ){
+                
+                this.a= this.a+1
+            }
+            else{
+                this.a= this.a-1
+            }
+            
+        })
+        if(this.arr.length===this.a){
+            this.ischecked=true
+            document.getElementsByClassName("choose")[0].classList.replace(`${!this.ischecked}`,`${this.ischecked}`)
+        }
         this.saveMosaicRecordInLocal()
     }
+    
 
     saveMosaicRecordInLocal() {
         // save address

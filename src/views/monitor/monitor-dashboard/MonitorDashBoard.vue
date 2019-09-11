@@ -70,7 +70,7 @@
       <div class="right_net_status radius">
         <div class="panel_name">{{$t('network_status')}}</div>
 
-        <div class="network_item radius" v-for="(n,index) in networkStatusList">
+        <div class="network_item radius" v-for="(n,index) in networkStatusList" :key="index">
           <img :src="n.icon" alt="">
           <span class="descript">{{$t(n.descript)}}</span>
           <span :class="['data','overflow_ellipsis', updateAnimation]">

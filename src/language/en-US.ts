@@ -20,6 +20,7 @@ export const en_US = {
     news: 'News',
     vote: 'Vote',
 
+
     //infomation
     no_more_data: 'No more data',
     business: 'Business',
@@ -144,6 +145,7 @@ export const en_US = {
     QR_code_generation_failed: 'QR code generation failed',
     //monitor-remote
     Remote_title_recipt: 'Accumulated delegated harvesting income',
+    select_all:'Select all',
     Remote_state: 'Current state',
     Remote_pubulic_pik: 'Remote public key',
     Remote_question: 'Related issues',
@@ -678,6 +680,7 @@ export const en_US = {
     The_mosaic_to_be_sent_is_empty: 'The mosaic to be sent is empty',
     Node_not_available_please_check_your_node_or_network_settings: 'Node not available, please check your node or network settings.',
     encryption: 'Encrypted',
-    Not_encrypted: 'Not encrypted'
+    Not_encrypted: 'Not encrypted',
+    all_unchecked: 'All unchecked'
 
 }

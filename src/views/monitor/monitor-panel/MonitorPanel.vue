@@ -59,7 +59,8 @@
 
             </div>
             <div class="mosaicList">
-              <div class="mosaic_data" v-if="value.showInManage" v-for="(value,key,index) in mosaicMap" :key="index">
+                <div class="toggle_all_checked " ><div class="choose true" @click="toggleAllChecked()"></div>{{ !ischecked ? $t('select_all'):$t('all_unchecked')}}</div>              
+              <div :class="['mosaic_data',index == 0?'padding_top_0':'']" v-if="value.showInManage" v-for="(value,key,index) in mosaicMap" :key="index">
                 <span class="namege_img">
                     <img @click="toggleShowMosaic(key,value)" class="small_icon pointer"
                          :src="value.show?monitorSeleted:monitorUnselected">
