@@ -156,6 +156,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<TransactionAnnounceResponse>
      */
     public announce(signedTransaction: SignedTransaction): Observable<TransactionAnnounceResponse> {
+        if (signedTransaction.type !== TransactionType.AGGREGATE_BONDED) {
+            throw new Error('Announcing aggregate bonded transaction should use \'announceAggregateBonded\'');
+        }
         return observableFrom(this.transactionRoutesApi.announceTransaction(signedTransaction)).pipe(
             map((response: { response: ClientResponse; body: AnnounceTransactionInfoDTO; } ) => {
                 const transactionAnnounceResponseDTO = response.body;
