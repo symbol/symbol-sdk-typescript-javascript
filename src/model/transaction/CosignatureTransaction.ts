@@ -41,9 +41,6 @@ export class CosignatureTransaction {
      * @returns {CosignatureTransaction}
      */
     public static create(transactionToCosign: AggregateTransaction): CosignatureTransaction {
-        if (transactionToCosign.isUnannounced()) {
-            throw new Error('Transaction to cosign should be announced first');
-        }
         return new CosignatureTransaction(transactionToCosign);
     }
 
