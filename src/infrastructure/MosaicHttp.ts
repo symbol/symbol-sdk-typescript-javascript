@@ -68,14 +68,14 @@ export class MosaicHttp extends Http implements MosaicRepository {
                         let mosaicFlag;
                         let divisibility;
                         let duration;
-                        if (mosaicInfoDTO.mosaic.properties.flags) {
-                            mosaicFlag = mosaicInfoDTO.mosaic.properties.flags;
+                        if (mosaicInfoDTO.mosaic.flags) {
+                            mosaicFlag = mosaicInfoDTO.mosaic.flags;
                         }
-                        if (mosaicInfoDTO.mosaic.properties.divisibility) {
-                            divisibility = mosaicInfoDTO.mosaic.properties.divisibility;
+                        if (mosaicInfoDTO.mosaic.divisibility) {
+                            divisibility = mosaicInfoDTO.mosaic.divisibility;
                         }
-                        if (mosaicInfoDTO.mosaic.properties.duration) {
-                            duration = mosaicInfoDTO.mosaic.properties.duration;
+                        if (mosaicInfoDTO.mosaic.duration) {
+                            duration = mosaicInfoDTO.mosaic.duration;
                         }
                         return new MosaicInfo(
                             new MosaicId(mosaicInfoDTO.mosaic.id),
@@ -113,14 +113,14 @@ export class MosaicHttp extends Http implements MosaicRepository {
                             let mosaicFlag;
                             let divisibility;
                             let duration;
-                            if (mosaicInfoDTO.mosaic.properties.flags) {
-                                mosaicFlag = mosaicInfoDTO.mosaic.properties.flags;
+                            if (mosaicInfoDTO.mosaic.flags) {
+                                mosaicFlag = mosaicInfoDTO.mosaic.flags;
                             }
-                            if (mosaicInfoDTO.mosaic.properties.divisibility) {
-                                divisibility = mosaicInfoDTO.mosaic.properties.divisibility;
+                            if (mosaicInfoDTO.mosaic.divisibility) {
+                                divisibility = mosaicInfoDTO.mosaic.divisibility;
                             }
-                            if (mosaicInfoDTO.mosaic.properties.duration) {
-                                duration = mosaicInfoDTO.mosaic.properties.duration;
+                            if (mosaicInfoDTO.mosaic.duration) {
+                                duration = mosaicInfoDTO.mosaic.duration;
                             }
                             return new MosaicInfo(
                                 new MosaicId(mosaicInfoDTO.mosaic.id),

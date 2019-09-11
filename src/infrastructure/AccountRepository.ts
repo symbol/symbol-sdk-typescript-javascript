@@ -49,6 +49,7 @@ export interface AccountRepository {
 
     /**
      * Get readable names for a set of accountIds.
+     * Address can be created by calling 'Address.createFromRawAddress' or 'Address.createFromPublicKey'
      * Returns friendly names for accounts.
      * @param accountIds List of Address
      * @return Observable<AccountNames>

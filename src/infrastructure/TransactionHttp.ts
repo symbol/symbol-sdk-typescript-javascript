@@ -72,9 +72,13 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<Transaction>
      */
     public getTransaction(transactionId: string): Observable<Transaction> {
-        return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(map((transactionDTO) => {
+        return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(
+            map((response: { response: ClientResponse; body: TransactionInfoDTO; } ) => {
+            const transactionDTO = response.body;
             return CreateTransactionFromDTO(transactionDTO);
-        }));
+        }),
+        catchError((error) =>  throwError(this.errorHandling(error))),
+        );
     }
 
     /**
@@ -231,15 +235,16 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public getTransactionEffectiveFee(transactionId: string): Observable<number> {
         return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(
-            mergeMap((transactionDTO) => {
+            mergeMap((response: { response: ClientResponse; body: TransactionInfoDTO; } ) => {
                 // parse transaction to take advantage of `size` getter overload
+                const transactionDTO = response.body;
                 const transaction = CreateTransactionFromDTO(transactionDTO);
                 const uintHeight = (transaction.transactionInfo as TransactionInfo).height;
 
                 // now read block details
                 return observableFrom(this.blockRoutesApi.getBlockByHeight(uintHeight.compact())).pipe(
-                map((response: { response: ClientResponse; body: BlockInfoDTO; } ) => {
-                    const blockDTO = response.body;
+                map((blockResponse: { response: ClientResponse; body: BlockInfoDTO; } ) => {
+                    const blockDTO = blockResponse.body;
                     // @see https://nemtech.github.io/concepts/transaction.html#fees
                     // effective_fee = feeMultiplier x transaction::size
                     return blockDTO.block.feeMultiplier * transaction.size;
