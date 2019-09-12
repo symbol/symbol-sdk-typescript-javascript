@@ -416,7 +416,7 @@ export const en_US = {
     set_the_wallet_name: 'Set the wallet name',
     The_name_of_the_wallet_can_be_convenient_for_you_to_use_you_can_distinguish_different_wallets_etc_for_better_management_after_entering_the_system_you_can_also_modify_the_wallet_details: 'The name of the wallet can be convenient for you to use, you can distinguish different wallets, etc., for better management。',
     This_password_is_used_to_encrypt_your_private_key: 'This password is used to encrypt your wallet. The more complicated it is, the better the encryption will be.',
-    password_hint: 'Between %{min} and %{max} characters. Allowed special characters: %{specialChar}',
+    password_hint: '%{min} characters minimum',
     please_set_your_wallet_password: 'Please set your wallet password',
     please_enter_your_password_again: 'Please enter your password again',
     repeat_the_password: 'Repeat the password',

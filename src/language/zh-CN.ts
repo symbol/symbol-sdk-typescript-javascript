@@ -412,7 +412,7 @@ export const zh_CN = {
     The_name_of_the_wallet_can_be_convenient_for_you_to_use_you_can_distinguish_different_wallets_etc_for_better_management_after_entering_the_system_you_can_also_modify_the_wallet_details: '钱包名能方便你在使用中，区别不同的钱包等，便于更好的管理。',
     This_password_is_used_to_encrypt_your_private_key: '此密码用于加密您的钱包,请避免使用过于简单的密码',
     This_password_is_used_to_encrypt_your_private_key_keystore: '此密码为您的钱包和再次导出keystore时的解密密码,请避免使用过于简单的密码',
-    password_hint: '在 %{min} 到 %{max} 个字符。允许特殊字符: %{specialChar}',
+    password_hint: '最少%{min}个字符',
     please_set_your_wallet_password: '请输入设置的密码',
     please_enter_your_password_again: '请再次输入你设置的密码',
     repeat_the_password: '重复密码',

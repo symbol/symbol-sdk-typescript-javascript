@@ -54,7 +54,7 @@
           <div class="tips">
             {{$t('This_password_is_used_to_encrypt_your_private_key_keystore')}}
           </div>
-          <p class="formItemTxt">{{$t('password_hint', {min: MIN_PASSWORD_LENGTH, max: MAX_PASSWORD_LENGTH, specialChar: ALLOWED_SPECIAL_CHAR})}}</p>
+          <p class="formItemTxt">{{$t('password_hint', {min: 8})}}</p>
           <div class="gray_content">
             <input class="absolute" v-model="formItem.walletPassword" type="password"
                    :placeholder="$t('please_set_your_password')">

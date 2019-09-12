@@ -34,6 +34,5 @@ export const SDK_PARAMS = {
 
 export const APP_PARAMS = {
     MIN_PASSWORD_LENGTH: 8,
-    MAX_PASSWORD_LENGTH: 32,
-    PASSWORD_SPECIAL_CHAR: '-_!@#$&*',
+    MAX_PASSWORD_LENGTH: 64,
 }

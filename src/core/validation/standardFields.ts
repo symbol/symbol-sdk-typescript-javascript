@@ -24,7 +24,7 @@ const {
 } = NETWORK_PARAMS
 
 const {availableNetworkTypes, mosaicSupplyTypes} = SDK_PARAMS
-const {MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, PASSWORD_SPECIAL_CHAR} = APP_PARAMS
+const {MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH} = APP_PARAMS
 
 
 export const standardFields = {
@@ -45,7 +45,7 @@ export const standardFields = {
         type: 'password',
         validation: {
             required: true,
-            regex: `^[A-Za-z0-9${PASSWORD_SPECIAL_CHAR}]{${MIN_PASSWORD_LENGTH},${MAX_PASSWORD_LENGTH}}$`,
+            min: MIN_PASSWORD_LENGTH,
         },
         hint: ['HINT_new_password1', 'HINT_new_password2'],
         placeholder: 'PLACEHOLDER_new_password'
@@ -73,9 +73,6 @@ export const standardFields = {
         label: 'hint',
         name: 'cipherHint',
         type: 'text',
-        validation: {
-            regex: `^[A-Za-z0-9${PASSWORD_SPECIAL_CHAR}]{0,${MAX_PASSWORD_LENGTH}}$`,
-        },
         hint: ['HINT_cipher_hint1', 'HINT_new_password2'],
         placeholder: 'PLACEHOLDER_cipher_hint'
     },
@@ -246,7 +243,7 @@ export const standardFields = {
         type: 'text',
         validation: {
             required: true,
-            regex: `^[a-z0-9${PASSWORD_SPECIAL_CHAR}]{${MIN_PASSWORD_LENGTH},${MAX_PASSWORD_LENGTH}}$`,
+            min: MIN_PASSWORD_LENGTH,
         },
         hint: 'HINT_password',
         placeholder: 'PLACEHOLDER_password',

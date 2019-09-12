@@ -3,12 +3,6 @@ import {AppWallet} from '@/core/utils/wallet.ts'
 import {mapState} from 'vuex';
 import {Password} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
-import {
-    ALLOWED_SPECIAL_CHAR,
-    MAX_PASSWORD_LENGTH,
-    MIN_PASSWORD_LENGTH,
-    passwordValidator
-} from "@/core/validation"
 
 @Component({
     computed: {
@@ -21,9 +15,6 @@ import {
 export class WalletImportMnemonicTs extends Vue {
     activeAccount: any
     app: any
-    MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
-    MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
-    ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
     form = formData.walletImportMnemonicForm
     NetworkTypeList = networkTypeList
     account = {}
@@ -62,7 +53,7 @@ export class WalletImportMnemonicTs extends Vue {
             })
             return false
         }
-        if (!passwordValidator(this.form.password)) {
+        if (!this.form.password || this.form.password.length < 8) {
             this.$Notice.error({
                 title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
             })

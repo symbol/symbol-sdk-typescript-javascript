@@ -1,13 +1,6 @@
 import {Message, networkTypeList} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {createMnemonic} from "@/core/utils/hdWallet.ts"
-import {
-    passwordValidator,
-    MIN_PASSWORD_LENGTH,
-    MAX_PASSWORD_LENGTH,
-    ALLOWED_SPECIAL_CHAR,
-} from '@/core/validation'
-
 @Component
 export class WalletCreateTs extends Vue {
     formItem = {
@@ -16,10 +9,6 @@ export class WalletCreateTs extends Vue {
         password: '',
         checkPW: '',
     }
-    passwordValidator = passwordValidator
-    MIN_PASSWORD_LENGTH = MIN_PASSWORD_LENGTH
-    MAX_PASSWORD_LENGTH = MAX_PASSWORD_LENGTH
-    ALLOWED_SPECIAL_CHAR = ALLOWED_SPECIAL_CHAR
     networkTypeList = networkTypeList
 
     checkInput() {
@@ -31,7 +20,7 @@ export class WalletCreateTs extends Vue {
             this.$Notice.error({title: this.$t(Message.WALLET_NAME_INPUT_ERROR) + ''})
             return false
         }
-        if (!passwordValidator(this.formItem.password)) {
+        if (!this.formItem.password || this.formItem.password.length < 8) {
             this.$Notice.error({title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''})
             return false
         }
