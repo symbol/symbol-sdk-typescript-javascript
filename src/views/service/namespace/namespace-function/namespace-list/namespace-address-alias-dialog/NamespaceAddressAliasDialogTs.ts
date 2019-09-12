@@ -1,6 +1,5 @@
 import {Message} from "@/config/index.ts"
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
 import {AppWallet} from "@/core/utils/wallet.ts"
@@ -20,9 +19,7 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     app: any
     isShowDialog = false
     isCompleteForm = true
-    aliasList = []
     aliasListIndex = -1
-    aliasActionTypeList = []
     formItem = {
         address: '',
         alias: '',
@@ -34,7 +31,6 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     isShowAddressAliasDialog: boolean
     @Prop()
     addressAliasItem: any
-
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -56,6 +52,9 @@ export class NamespaceAddressAliasDialogTs extends Vue {
         return this.app.chainStatus.currentHeight
     }
 
+    get aliasList() {
+        return this.namespaceList.filter(namespace => namespace.alias instanceof AddressAlias)
+    }
 
     showUnLink(index) {
         this.aliasListIndex = index
@@ -160,30 +159,10 @@ export class NamespaceAddressAliasDialogTs extends Vue {
 
     }
 
-    initData() {
-        let list = []
-        let addressAliasList = []
-        this.namespaceList.map((item) => {
-            if (item.alias instanceof EmptyAlias) {
-                list.push(item)
-            } else if (item.alias instanceof AddressAlias) {
-                addressAliasList.push(item)
-            }
-        })
-        this.aliasActionTypeList = list
-        this.aliasList = addressAliasList
-    }
-
-    @Watch('namespaceList')
-    onNamespaceListChange() {
-        this.initData()
-    }
-
     @Watch('isShowAddressAliasDialog')
     onShowMosaicAliasDialogChange() {
         this.isShowDialog = this.isShowAddressAliasDialog
         this.formItem.alias = this.addressAliasItem.name
-        this.initData()
     }
 
     // @Watch('formItem', {immediate: true, deep: true})
@@ -192,8 +171,4 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     //     // isCompleteForm
     //     this.isCompleteForm = address !== '' && alias !== '' && password !== '' && fee > 0
     // }
-
-    mounted() {
-        this.initData()
-    }
 }

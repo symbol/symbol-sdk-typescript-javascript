@@ -1,25 +1,28 @@
 declare interface appInfo {
+    timeZone: number,
+    locale: string,
+    currentPanelIndex: number,
     walletList: any[]
     hasWallet: boolean,
-    currentPanelIndex: number,
-    mnemonic: string,
-    timeZone: number,
     isNodeHealthy: boolean,
+    mnemonic: string,
     chainStatus: {
         currentHeight: number,
-        currentGenerateTime: number,
         numTransactions: number,
         currentBlockInfo: any,
-        preBlockInfo?: any,
         signerPublicKey?: string,
         nodeAmount?: number
-    }
+    },
+    mosaicsLoading: boolean,
+    balanceLoading: boolean,
+    transactionsLoading: boolean,
+    xemUsdPrice: Number,
 }
 
 export default {
     state: {
         timeZone: new Date().getTimezoneOffset() / 60,   // current time zone
-        locale: false,
+        locale: 'en-US',
         currentPanelIndex: 0,
         walletList: [],
         hasWallet: false,
@@ -27,13 +30,15 @@ export default {
         mnemonic: '',
         chainStatus: {
             currentHeight: 0,
-            currentGenerateTime: 12,
             numTransactions: 0,
             currentBlockInfo: {},
-            preBlockInfo: {},
             signerPublicKey: '',
             nodeAmount: 4
-        }
+        },
+        mosaicsLoading: false,
+        balanceLoading: false,
+        transactionsLoading: false,
+        xemUsdPrice: 0,
     },
     getters: {},
     mutations: {
@@ -55,14 +60,23 @@ export default {
         SET_IS_NODE_HEALTHY(state: appInfo, isNodeHealthy: boolean) {
             state.isNodeHealthy = isNodeHealthy
         },
-
+        SET_MOSAICS_LOADING(state: appInfo, bool: boolean) {
+            state.mosaicsLoading = bool
+        },
+        SET_BALANCE_LOADING(state: appInfo, bool: boolean) {
+            state.balanceLoading = bool
+        },
+        SET_TRANSACTIONS_LOADING(state: appInfo, bool: boolean) {
+            state.transactionsLoading = bool
+        },
+        SET_XEM_USD_PRICE(state: appInfo, value: number) {
+            state.xemUsdPrice = value
+        },
         SET_CHAIN_STATUS(state: appInfo, chainStatus: any) {
-            const {currentHeight, currentGenerateTime, numTransactions, currentBlockInfo, preBlockInfo, signerPublicKey, nodeAmount} = chainStatus
+            const {currentHeight, numTransactions, currentBlockInfo, signerPublicKey, nodeAmount} = chainStatus
             state.chainStatus.currentHeight = currentHeight ? currentHeight : state.chainStatus.currentHeight
-            state.chainStatus.currentGenerateTime = currentGenerateTime ? currentGenerateTime : state.chainStatus.currentGenerateTime
             state.chainStatus.numTransactions = numTransactions ? numTransactions : state.chainStatus.numTransactions
             state.chainStatus.currentBlockInfo = currentBlockInfo ? currentBlockInfo : state.chainStatus.currentBlockInfo
-            state.chainStatus.preBlockInfo = preBlockInfo ? preBlockInfo : state.chainStatus.preBlockInfo
             state.chainStatus.signerPublicKey = signerPublicKey ? signerPublicKey : state.chainStatus.signerPublicKey
             state.chainStatus.nodeAmount = nodeAmount ? nodeAmount : state.chainStatus.nodeAmount
         },

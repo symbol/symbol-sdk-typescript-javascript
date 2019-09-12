@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <CollectionRecord :transactionType="TransferType.SENDED"></CollectionRecord>
+    <CollectionRecord :transactionType="TransferType.SENT" />
   </div>
 </template>
 

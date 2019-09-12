@@ -217,11 +217,8 @@ export class informationTs extends Vue {
         }
     }
 
-    async created() {
-        const languageNumber = this.switchLanguege()
+    async mounted() {
         await this.getArticleByPage()
         this.currentArticle = this.articleList[0]
-        const listContainer = this.$refs.listContainer
     }
-
 }

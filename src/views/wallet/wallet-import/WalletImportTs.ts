@@ -96,7 +96,7 @@ export class WalletImportTs extends Vue {
         }
     }
 
-    created() {
+    mounted() {
         this.jumpToView(this.navagatorList[0], 0)
         this.currentHeadText = this.navagatorList[0].title
     }

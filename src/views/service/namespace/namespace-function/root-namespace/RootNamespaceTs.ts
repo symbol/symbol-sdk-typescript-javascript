@@ -18,7 +18,7 @@ import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
         ...mapState({
             activeAccount: 'account',
             app:'app'
-        })
+        }) 
     }
 })
 export class RootNamespaceTs extends Vue {
@@ -226,6 +226,7 @@ export class RootNamespaceTs extends Vue {
             return
         }
         const address = Address.createFromPublicKey(multisigPublickey, networkType).toDTO().address
+        // @TODO: catch error
         new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
             that.currentMinApproval = multisigInfo.minApproval
         })
@@ -260,6 +261,7 @@ export class RootNamespaceTs extends Vue {
         this.showCheckPWDialog = true
     }
 
+    // @TODO: target blockTime is hardcoded
     changeXEMRentFee() {
         const duration = Number(this.form.duration)
         if (Number.isNaN(duration)) {
@@ -274,10 +276,6 @@ export class RootNamespaceTs extends Vue {
         this.durationIntoDate = formatSeconds(duration * 12)
     }
 
-    initData() {
-        this.changeXEMRentFee()
-    }
-
     @Watch('form', {immediate: true, deep: true})
     onFormItemChange() {
         const {duration, rootNamespaceName, aggregateFee, lockFee, innerFee, multisigPublickey} = this.form
@@ -290,8 +288,8 @@ export class RootNamespaceTs extends Vue {
         this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && aggregateFee + '' !== '' && lockFee + '' !== '' && innerFee + '' !== '' && multisigPublickey && multisigPublickey.length === 64
     }
 
-    created() {
-        this.initData()
+    // @TODO: manage it at a higher level, put account list in the sore
+    mounted() {
         this.getMultisigAccountList()
     }
 }

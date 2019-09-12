@@ -160,12 +160,14 @@ export class MosaicEditDialogTs extends Vue {
         }
     }
 
+    // @TODO: use v-model
     @Watch('showMosaicEditDialog')
     onShowMosaicEditDialogChange() {
         this.show = this.showMosaicEditDialog
         Object.assign(this.mosaic, this.selectedMosaic)
     }
 
+    // @TODO: use v-model
     @Watch('selectedMosaic')
     onSelectMosaicChange() {
         Object.assign(this.mosaic, this.selectedMosaic)

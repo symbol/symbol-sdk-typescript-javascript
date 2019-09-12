@@ -275,8 +275,8 @@ export class SubNamespaceTs extends Vue {
         this.isCompleteForm = true
     }
 
-    created() {
+    // @TODO: manage it at a higher level, put account list in the sore
+    mounted() {
         this.getMultisigAccountList()
     }
-
 }

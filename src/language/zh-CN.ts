@@ -174,6 +174,7 @@ export const zh_CN = {
     transfer_target: '转账目标',
     send: '发送',
     transfer_record: '转账记录',
+    transfer_sent: '付款记录',
     receive_address_or_alias: '直接输入接收地址或@+别名（@nem.xem）',
     please_enter_the_transfer_amount: '请输入转账金额',
     please_enter_a_comment: '请输入备注信息',

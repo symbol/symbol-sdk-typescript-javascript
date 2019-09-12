@@ -6,7 +6,6 @@
             v-model="isShowDialog"
             :transfer="false"
             class-name="dash_board_dialog">
-      <Spin v-if="isLoadingModalDetailsInfo" size="large" fix class="absolute"></Spin>
       <div class="transfer_type" v-if="transactionDetails.length > 0">
         <span class="title">{{$t(transactionDetails[0].key)}}</span>
         <span class="value">{{$t(transactionDetails[0].value)}}</span>
@@ -21,7 +20,8 @@
 
 
     <div class="top_title">
-      <span>{{transactionType == 1 ?$t('collection_record'):$t('transfer_record')}}</span>
+      <span>{{transactionType === TransferType.RECEIVED
+          ? $t('collection_record') : $t('transfer_sent')}}</span>
       <div class="right" v-show="!isShowSearchDetail">
             <span class="select_date pointer">
               <div class="month_value">
@@ -33,7 +33,7 @@
                             style="width: 70px"></DatePicker>
               </div>
             </span>
-        <span class="search_input un_click" @click.stop="showSearchDetail">
+        <span class="search_input un_click" @click.stop="">
               <img src="@/common/img/monitor/market/marketSearch.png" alt="">
               <span>{{$t('search')}}</span>
             </span>
@@ -46,23 +46,24 @@
             </span>
         <span class="search_btn pointer " @click.stop="searchByasset">{{$t('search')}}</span>
       </div>
-
-
     </div>
 
-
     <div :class="['bottom_transfer_record_list','scroll']">
-      <!--      <Spin v-if="isLoadingTransactionRecord" size="large" fix></Spin>-->
-
-      <div class="transaction_record_item pointer" @click="showDialog(c)" v-for="c in unConfirmedTransactionList">
+      <Spin v-if="transactionsLoading" size="large" fix />
+      <div
+        v-for="(c, index) in unConfirmedTransactionList"
+        :key="`${index}ucf`"
+        class="transaction_record_item pointer"
+        @click="showDialog(c)"
+      >
         <img src="@/common/img/monitor/transaction/txUnConfirmed.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
-            <div class="top overflow_ellipsis">{{c.mosaic}}</div>
+            <div class="top overflow_ellipsis">{{c.infoSecond}}</div>
             <div class="bottom overflow_ellipsis"> {{c.time.slice(0, c.time.length - 3)}}</div>
           </div>
           <div class="right">
-            <div class="top overflow_ellipsis">{{formatNumber(c.mosaicAmount)}}</div>
+            <div class="top overflow_ellipsis">{{formatNumber(c.infoThird)}}</div>
             <div class="bottom overflow_ellipsis">
               {{formatNumber(c.transactionInfo && c.transactionInfo.height.compact())}}
             </div>
@@ -70,15 +71,20 @@
         </div>
       </div>
 
-      <div class="transaction_record_item pointer" @click="showDialog(c)" v-for="c in confirmedTransactionList">
+      <div
+        v-for="(c, index) in slicedConfirmedTransactionList"
+        :key="`${index}cf`"
+        class="transaction_record_item pointer"
+        @click="showDialog(c)"
+      >
         <img src="@/common/img/monitor/transaction/txConfirmed.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
-            <div class="top overflow_ellipsis">{{c.mosaic}}</div>
+            <div class="top overflow_ellipsis">{{c.infoSecond}}</div>
             <div class="bottom overflow_ellipsis"> {{c.time.slice(0, c.time.length - 3)}}</div>
           </div>
           <div class="right">
-            <div class="top overflow_ellipsis">{{formatNumber(c.mosaicAmount)}}</div>
+            <div class="top overflow_ellipsis">{{formatNumber(c.infoThird)}}</div>
             <div class="bottom overflow_ellipsis">
               {{formatNumber(c.transactionInfo && c.transactionInfo.height.compact())}}
             </div>
@@ -86,7 +92,7 @@
         </div>
       </div>
 
-      <div class="no_data" v-if="confirmedTransactionList.length == 0 && !isLoadingTransactionRecord">
+      <div class="no_data" v-if="slicedConfirmedTransactionList.length == 0 && !transactionsLoading">
         {{$t('no_confirmed_transactions')}}
       </div>
     </div>

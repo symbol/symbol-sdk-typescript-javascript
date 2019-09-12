@@ -111,6 +111,7 @@ export class PrivatekeyDialogTs extends Vue {
             .toBase64()
     }
 
+    // @TODO: use v-model
     @Watch('showPrivatekeyDialog')
     onShowPrivatekeyDialogChange() {
         this.show = this.showPrivatekeyDialog

@@ -123,6 +123,7 @@ export class NamespaceUnAliasDialogTs extends Vue {
         }
     }
 
+    // @TODO: use v-model
     @Watch('showUnAliasDialog')
     onShowUnAliasDialogChange() {
         this.show = this.showUnAliasDialog

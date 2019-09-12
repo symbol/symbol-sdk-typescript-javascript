@@ -10,12 +10,10 @@ export class AccountApiRxjs {
      * @param node
      */
     public getAccountsNames(addressList: Array<Address>, node: string): Observable<any> {
-        (new AccountHttp(node)).getAccountsNames(addressList)
         return observableFrom(
             new AccountHttp(node).getAccountsNames(addressList)
         )
     }
-
 
     /**
      *  getAccountInfo

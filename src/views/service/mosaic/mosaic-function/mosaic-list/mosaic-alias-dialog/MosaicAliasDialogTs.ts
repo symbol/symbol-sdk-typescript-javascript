@@ -21,7 +21,6 @@ export class MosaicAliasDialogTs extends Vue {
     show = false
     isCompleteForm = false
     mosaic: any = formData.mosaicAliasForm
-    aliasNameList: any[] = []
 
     @Prop()
     showMosaicAliasDialog: boolean
@@ -46,6 +45,11 @@ export class MosaicAliasDialogTs extends Vue {
 
     get xemDivisibility() {
         return this.activeAccount.xemDivisibility
+    }
+
+    get aliasNameList() {
+        // @TODO handle namespace list loading state
+        return this.namespaceList.filter(({alias}) => alias instanceof EmptyAlias)
     }
 
     mosaicAliasDialogCancel() {
@@ -130,29 +134,15 @@ export class MosaicAliasDialogTs extends Vue {
             password: ''
         }
     }
-
-    initData() {
-        let list = []
-        this.namespaceList.map((item, index) => {
-            if (item.alias instanceof EmptyAlias) {
-                list.push(item)
-            }
-        })
-        this.aliasNameList = list
-    }
-
+    
+    // @TODO: use v-model
     @Watch('showMosaicAliasDialog')
     onShowMosaicAliasDialogChange() {
         this.show = this.showMosaicAliasDialog
         Object.assign(this.mosaic, this.itemMosaic)
-        this.initData()
     }
 
-    @Watch('namespaceList')
-    onNamespaceListChange() {
-        this.initData()
-    }
-
+    // @TODO: use v-model    
     @Watch('mosaic', {immediate: true, deep: true})
     onFormItemChange() {
         const {aliasName, fee, password} = this.mosaic

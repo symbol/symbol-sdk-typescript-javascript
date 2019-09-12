@@ -24,6 +24,7 @@ const iconMap = {
     dashboardSecret
 }
 
+// @TODO: Transaction headers (eg: time and fee) should be formatted earlier
 const formatAggregateCompelete = (innerTransactionList: Array<any>, accountAddress: string, xemDivisibility: number, currentXem: string) => {
     innerTransactionList = innerTransactionList.map((item) => {
         const type = item.type
@@ -219,10 +220,12 @@ const formatTransferTransactions = function (transaction, accountAddress, curren
             return item.id.id.toHex()
         }).join(',') : currentXem
     transaction.infoThird = 'mix'
+    // @TODO: put the amount
     if (transaction.mosaics.length == 1) {
         transaction.infoThird = 'loading...'
     }
     transaction.time = formatNemDeadline(transaction.deadline)
+    transaction.date = new Date(transaction.time)
     transaction.dialogDetailMap = {
         'transfer_type': transaction.tag,
         'from': transaction.infoFirst,
@@ -234,7 +237,6 @@ const formatTransferTransactions = function (transaction, accountAddress, curren
     }
     return transaction
 }
-
 
 function formatOtherTransaction(transaction: any, accountAddress: string, xemDivisibility: number,currentXem) {
     const {type} = transaction
@@ -407,8 +409,13 @@ function formatOtherTransaction(transaction: any, accountAddress: string, xemDiv
     return transaction
 }
 
-
-export const transactionFormat = (transactionList: Array<Transaction>, accountAddress: string, currentXEM: string, xemDivisibility: number, node: string, currentXem:string,namespaceList?: Array<any>) => {
+// @TODO currentXem
+export const transactionFormat = (  transactionList: Array<Transaction>,
+                                    accountAddress: string,
+                                    currentXEM: string,
+                                    xemDivisibility: number,
+                                    node: string,
+                                    currentXem: string) => {
     const transferTransactionList = []
     const receiptList = []
     transactionList.forEach((item) => {

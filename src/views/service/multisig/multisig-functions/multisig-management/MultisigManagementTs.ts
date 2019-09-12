@@ -289,7 +289,8 @@ export class MultisigManagementTs extends Vue {
         this.isCompleteForm = multisigPublickey.length === 64 && cosignerList.length !== 0 && bondedFee + '' !== '' && lockFee + '' !== '' && innerFee + '' !== '' && minApprovalDelta + '' !== '' && minRemovalDelta + '' !== ''
     }
 
-    created() {
+    // @TODO multisig account list at higher level
+    mounted() {
         this.getMultisigAccountList()
     }
 }

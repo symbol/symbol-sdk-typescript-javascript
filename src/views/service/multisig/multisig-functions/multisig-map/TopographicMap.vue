@@ -45,15 +45,6 @@
             return this.activeAccount.node
         }
 
-        mounted() {
-            this.refresh()
-        }
-
-        async refresh() {
-            const that = this
-            await this.getMultisigInfo()
-        }
-
         copyAddress(params) {
             const that = this
             copyTxt(params.data.address.address).then(() => {
@@ -65,7 +56,6 @@
                 )
             })
         }
-
 
         getMultisigInfo() {
             const that = this
@@ -135,8 +125,9 @@
             })
         }
 
-        async created() {
-            this.refresh()
+        mounted() {
+            // @TODO: manage at higher level
+            this.getMultisigInfo()
         }
     }
 </script>

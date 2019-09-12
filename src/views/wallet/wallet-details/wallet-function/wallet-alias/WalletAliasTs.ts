@@ -22,9 +22,7 @@ export class WalletAliasTs extends Vue {
     isShowDeleteIcon = false
     showCheckPWDialog = false
     isCompleteForm = true
-    aliasList = []
     aliasListIndex = -1
-    aliasActionTypeList = []
     formItem = {
         address: '',
         alias: '',
@@ -50,6 +48,14 @@ export class WalletAliasTs extends Vue {
 
     get nowBlockHeihgt() {
         return this.app.chainStatus.currentHeight
+    }
+
+    get aliasList() {
+        return this.namespaceList.filter(namespace => namespace.alias instanceof AddressAlias)
+    }
+
+    get aliasActionTypeList() {
+        return this.namespaceList.filter(namespace => namespace.alias instanceof EmptyAlias) 
     }
 
     showUnLink(index) {
@@ -154,33 +160,10 @@ export class WalletAliasTs extends Vue {
 
     }
 
-    initData() {
-        let list = []
-        let addressAliasList = []
-        this.namespaceList.map((item) => {
-            if (item.alias instanceof EmptyAlias) {
-                list.push(item)
-            } else if (item.alias instanceof AddressAlias) {
-                addressAliasList.push(item)
-            }
-        })
-        this.aliasActionTypeList = list
-        this.aliasList = addressAliasList
-    }
-
-    @Watch('namespaceList')
-    onNamespaceListChange() {
-        this.initData()
-    }
-
     // @Watch('formItem', {immediate: true, deep: true})
     // onFormItemChange() {
     //     const {address, alias, password, fee} = this.formItem
     //     // isCompleteForm
     //     this.isCompleteForm = address !== '' && alias !== '' && password !== '' && fee > 0
     // }
-
-    mounted() {
-        this.initData()
-    }
 }

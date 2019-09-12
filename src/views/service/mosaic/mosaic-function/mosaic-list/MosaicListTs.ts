@@ -3,7 +3,6 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
 import MosaicUnAliasDialog from './mosaic-unAlias-dialog/MosaicUnAliasDialog.vue'
-import {getMosaicList, getMosaicInfoList} from '@/core/utils/wallet'
 import {mapState} from "vuex"
 import {formatNumber} from "@/core/utils/utils"
 import {aliasType} from "@/config"
@@ -19,7 +18,7 @@ import {aliasType} from "@/config"
 export class MosaicListTs extends Vue {
     activeAccount: any
     app: any
-    isLoadingConfirmedTx = true
+    isLoadingConfirmedTx = false
     currentTab: number = 0
     rootNameList: any[] = []
     showCheckPWDialog = false
@@ -33,6 +32,10 @@ export class MosaicListTs extends Vue {
         return this.activeAccount.currentXem
     }
 
+    get mosaics() {
+        return this.activeAccount.mosaics
+    }
+
     get currentXEM1() {
         return this.activeAccount.currentXEM1
     }
@@ -40,7 +43,6 @@ export class MosaicListTs extends Vue {
     get currentXEM2() {
         return this.activeAccount.currentXEM2
     }
-
 
     get generationHash() {
         return this.activeAccount.generationHash
@@ -62,10 +64,6 @@ export class MosaicListTs extends Vue {
         return this.activeAccount.wallet
     }
 
-    get ConfirmedTxList() {
-        return this.activeAccount.ConfirmedTx
-    }
-
     get nowBlockHeihgt() {
         return this.app.chainStatus.currentHeight
     }
@@ -83,6 +81,13 @@ export class MosaicListTs extends Vue {
             }
         })
         return namespaceMap
+    }
+
+    get filteredMosaics() {
+        const mosaics: any = Object.values(this.mosaics)
+        return [...mosaics].filter(mosaic => (
+            mosaic.mosaicInfo.owner.publicKey === this.accountPublicKey
+        ))
     }
 
     showCheckDialog() {
@@ -133,67 +138,9 @@ export class MosaicListTs extends Vue {
         this.showMosaicEditDialog = false
     }
 
-    async initMosaic() {
-        const that = this
-        let {accountPublicKey, accountAddress, node, currentXem, namespaceMap} = this
-        let mosaicMapInfo: any = {}
-        mosaicMapInfo.length = 0
-        let existMosaics: any = []
-        const mosaicList: any = await getMosaicList(accountAddress, node)
-        let mosaicIdList: any = mosaicList.map((item) => {
-            return item.id
-        })
-        const mosaicListInfo: any = await getMosaicInfoList(node, mosaicIdList,this.nowBlockHeihgt)
-        mosaicListInfo.map((mosaicInfo) => {
-            const mosaicHex = mosaicInfo.mosaicId.id.toHex()
-            if (mosaicInfo.owner.publicKey !== accountPublicKey) {
-                return
-            }
-            mosaicInfo.hex = mosaicHex.toUpperCase()
-            mosaicInfo.supply = mosaicInfo.supply.compact()
-            mosaicInfo.supplyMutable = mosaicInfo.properties.supplyMutable
-            mosaicInfo._divisibility = mosaicInfo.properties.divisibility
-            mosaicInfo.transferable = mosaicInfo.properties.transferable
-            if (that.computeDuration(mosaicInfo) === 'Forever' || that.computeDuration(mosaicInfo) > 0) {
-                existMosaics.push(new MosaicId(mosaicInfo.hex))
-            }
-            mosaicMapInfo.length += 1
-            if (mosaicHex == that.currentXEM1 || mosaicHex == that.currentXEM2) {
-                mosaicInfo.name = currentXem
-            } else {
-                mosaicInfo.name = namespaceMap[mosaicHex] ? namespaceMap[mosaicHex].name : ''
-            }
-            mosaicMapInfo[mosaicInfo.hex] = mosaicInfo
-        })
-        mosaicIdList.map((item: any) => {
-            return new MosaicId(item)
-        })
-        that.mosaicMapInfo = mosaicMapInfo
-        that.isLoadingConfirmedTx = false
-    }
-
     computeDuration(item) {
-        let continuousTime
-        if (item.properties.duration.compact() === 0) {
-            continuousTime = 'Forever'
-            return continuousTime
-        }
-        continuousTime = (item.height.compact() + item.properties.duration.compact()) - this.nowBlockHeihgt
-        return continuousTime
-
-    }
-
-    @Watch('getWallet.address')
-    onGetWalletChange() {
-        this.initMosaic()
-    }
-
-    @Watch('ConfirmedTxList')
-    onConfirmedTxChange() {
-        this.initMosaic()
-    }
-
-    created() {
-        this.initMosaic()
+        const {properties, height} = item.mosaicInfo
+        if (properties.duration.compact() === 0) return 'Forever'
+        return (height.compact() + properties.duration.compact()) - this.nowBlockHeihgt
     }
 }

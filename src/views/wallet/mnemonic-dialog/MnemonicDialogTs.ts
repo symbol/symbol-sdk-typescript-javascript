@@ -133,6 +133,7 @@ export class MnemonicDialogTs extends Vue {
         return true
     }
 
+    // @TODO: use v-model
     @Watch('showMnemonicDialog')
     onShowMnemonicDialogChange() {
         this.show = this.showMnemonicDialog

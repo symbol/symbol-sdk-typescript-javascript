@@ -136,7 +136,7 @@ export const en_US = {
     generate_QR_code: 'Generate QR code',
     copy_address: 'Copy address',
     copy_QR_code: 'Copy QR code',
-    collection_record: 'Collection record',
+    collection_record: 'Transfers received',
     enter_asset_type_alias_or_address_search: 'Enter transaction hash search',
     ordinary_transfer: 'Transfer',
     Multisign_transfer: 'Multisig',
@@ -188,6 +188,7 @@ export const en_US = {
     transfer_target: 'To',
     send: 'Send',
     transfer_record: 'Transfer records',
+    transfer_sent: 'Transfer sent',
     receive_address_or_alias: 'Receive address or @+alias（@nem.xem）',
     please_enter_the_transfer_amount: 'Please enter the transfer amount',
     please_enter_a_comment: 'Please enter a comment',
@@ -454,7 +455,7 @@ export const en_US = {
     Basic_information: 'Basic information',
     link: 'Link info',
     type: 'Link type',
-    restrictable: 'restrictable',
+    restrictable: 'Restrictable',
     pre_week: 'PreWeek',
     yesterday: 'Yesterday',
 
@@ -681,8 +682,8 @@ export const en_US = {
     Node_not_available_please_check_your_node_or_network_settings: 'Node not available, please check your node or network settings.',
     encryption: 'Encrypted',
     Not_encrypted: 'Not encrypted',
-    all_unchecked: 'All unchecked',
-    Display_expired_mosaic:'Display expired mosaic',
-    Hide_expired_mosaic:'Hide expired mosaic'
+    all_unchecked: 'Uncheck all',
+    Display_expired_mosaic:'Display expired mosaics',
+    Hide_expired_mosaic:'Hide expired mosaics'
 
 }

@@ -107,7 +107,7 @@ export class KeystoreDialogTs extends Vue {
         })
     }
 
-
+    // @TODO: use v-model
     @Watch('showKeystoreDialog')
     onShowKeystoreDialogChange() {
         this.show = this.showKeystoreDialog

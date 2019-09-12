@@ -174,7 +174,7 @@ export class MonitorMarketTs extends Vue {
         }
     }
 
-    async created() {
+    async mounted() {
         this.getMarketPrice()
         this.getMarketOpenPrice()
         this.getRecentTransactionList()

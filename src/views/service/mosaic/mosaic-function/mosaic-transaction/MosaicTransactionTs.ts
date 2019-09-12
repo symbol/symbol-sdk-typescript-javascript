@@ -395,8 +395,9 @@ export class MosaicTransactionTs extends Vue {
         this.durationIntoDate = formatSeconds(duration * 12)
     }
 
-    created() {
+    mounted() {
         this.initData()
+        // @TODO multisig account list at higher level
         this.getMultisigAccountList()
     }
 }

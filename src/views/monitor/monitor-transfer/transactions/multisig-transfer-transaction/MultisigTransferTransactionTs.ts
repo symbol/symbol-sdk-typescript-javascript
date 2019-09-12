@@ -311,8 +311,8 @@ export class MultisigTransferTransactionTs extends Vue {
     //         bondedFee > 0 && lockFee > 0 && aggregateFee > 0
     // }
 
-    created() {
+    // @TODO: set this function at a higher level and put the multisig wallet list in the store
+    mounted() {
         this.getMultisigAccountList()
     }
-
 }

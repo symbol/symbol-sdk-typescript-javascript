@@ -57,7 +57,7 @@
             <div class="content">{{currentVote.content}}</div>
             <div class="selection">
               <RadioGroup v-model="sigleSelection" v-if="!currentVote.isMultiple">
-                <Radio v-for="(i,index) in selections" :label="i.id">
+                <Radio v-for="(i,index) in selections" :label="i.id" :key="i">
                   {{alphabet[index] + ' : '+i.name}}
                 </Radio>
               </RadioGroup>

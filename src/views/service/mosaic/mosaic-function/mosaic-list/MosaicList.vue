@@ -14,22 +14,30 @@
           <Col span="2"></Col>
         </Row>
       </div>
-      <Spin v-if="isLoadingConfirmedTx" size="large" fix class="absolute"></Spin>
-      <div class="no_data" v-if="mosaicMapInfo.length == 0">{{$t('no_data')}}</div>
-      <div class="listItem" v-if="key !== 'length'" v-for="(value,key,index) in mosaicMapInfo">
+      <Spin v-if="false" size="large" fix class="absolute"></Spin>
+      <div class="no_data" v-if="false">{{$t('no_data')}}</div>
+      <div
+        v-for="(value, key) in filteredMosaics"
+        :key="key"
+        class="listItem"
+      >
         <Row>
           <Col span="1">&nbsp;</Col>
           <Col span="4">{{value.hex}}</Col>
-          <Col span="3">{{formatNumber(value.supply)}}</Col>
-          <Col span="2" style="padding-left: 20px"> {{value.divisibility}}</Col>
-          <Col span="2">{{value.transferable}}</Col>
-          <Col span="2">{{value.supplyMutable}}</Col>
-          <Col span="5">{{computeDuration(value) <=0 ? $t('overdue') : (computeDuration(value) === 'Forever'?
-            $t('forever') : formatNumber(computeDuration(value)))}}
+          <Col span="3">{{formatNumber(value.mosaicInfo.supply.compact())}}</Col>
+          <Col span="2" style="padding-left: 20px">{{value.mosaicInfo.properties.divisibility}}</Col>
+          <Col span="2">{{value.mosaicInfo.properties.transferable}}</Col>
+          <Col span="2">{{value.mosaicInfo.properties.supplyMutable}}</Col>
+          <Col span="5">
+            {{computeDuration(value) <= 0 ? $t('overdue') : (computeDuration(value) === 'Forever'?
+              $t('forever') : formatNumber(computeDuration(value)))}}
           </Col>
-          <Col span="3">{{value.name?value.name:'null'}}</Col>
+          <Col span="3">{{value.name?value.name:'N/A'}}</Col>
           <Col span="2">
-            <div class="listFnDiv" v-if="computeDuration(value) > 0 || computeDuration(value) === 'Forever'">
+            <div
+              class="listFnDiv"
+              v-if="computeDuration(value) > 0 || computeDuration(value) === 'Forever'"
+            >
               <Poptip placement="bottom">
                 <i class="moreFn"></i>
                 <div slot="content" class="updateFn">

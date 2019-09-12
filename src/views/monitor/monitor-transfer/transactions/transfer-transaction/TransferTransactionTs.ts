@@ -12,16 +12,21 @@ import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 
 @Component({
     components: {CheckPWDialog, ErrorTooltip},
-    computed: {...mapState({activeAccount: 'account'})},
+        computed: {
+        ...mapState({
+            activeAccount: 'account',
+            app: 'app',
+        })
+    },
 })
 export default class TransferTransactionTs extends Vue {
     @Provide() validator: any = this.$validator
+    app: any
     activeAccount: any
     isShowSubAlias = false
     standardFields: object = standardFields
     errors: any
     submitDisabled: boolean = false
-    mosaicList = []
     transactionList = []
     transactionDetail = {}
     showCheckPWDialog = false
@@ -37,6 +42,9 @@ export default class TransferTransactionTs extends Vue {
         return this.activeAccount.wallet
     }
 
+    get mosaicsLoading() {
+        return this.app.mosaicsLoading
+    }
 
     get accountAddress() {
         return this.activeAccount.wallet.address
@@ -54,8 +62,27 @@ export default class TransferTransactionTs extends Vue {
         return this.activeAccount.generationHash
     }
 
-    get mosaicMap() {
-        return this.activeAccount.mosaicMap
+    get mosaics() {
+        return this.activeAccount.mosaics
+    }
+
+    get currentHeight() {
+        return this.app.chainStatus.currentHeight
+    }
+
+    get mosaicList() {
+        // @TODO: would be better to return a loading indicator
+        // instead of an empty array ([] = "no matching data" in the select dropdown)
+        const {mosaics, currentHeight} = this
+        if (this.mosaicsLoading || !mosaics) return []
+        
+        const mosaicList: any = Object.values(this.mosaics)
+        return [...mosaicList]
+        .filter(({expirationHeight}) => expirationHeight === 'Forever' || currentHeight < expirationHeight)
+        .map(({name, balance, hex}) => ({
+            label: `${name||hex} (${balance.toLocaleString()})`,
+            value: hex,
+        }))
     }
 
     get addresAliasMap() {
@@ -68,14 +95,22 @@ export default class TransferTransactionTs extends Vue {
         return addresAliasMap
     }
 
-
     get xemDivisibility() {
         return this.activeAccount.xemDivisibility
     }
 
     addMosaic() {
-        const {currentMosaic, mosaicMap, currentAmount} = this
-        this.formModel.mosaicTransferList.push(new Mosaic(new MosaicId(currentMosaic), UInt64.fromUint(getAbsoluteMosaicAmount(currentAmount, mosaicMap[currentMosaic].divisibility))))
+        const {currentMosaic, mosaics, currentAmount} = this
+        const {divisibility} = mosaics[currentMosaic].mosaicInfo.properties
+        this.formModel.mosaicTransferList
+            .push(
+                new Mosaic(
+                    new MosaicId(currentMosaic),
+                    UInt64.fromUint(
+                        getAbsoluteMosaicAmount(currentAmount, divisibility)
+                    )
+                )
+            )
     }
 
     removeMosaic(index) {
@@ -158,16 +193,6 @@ export default class TransferTransactionTs extends Vue {
         this.transactionList = [transaction]
     }
 
-    async initMosaic() {
-        const {mosaicMap} = this
-        for (let key in mosaicMap) {
-            this.mosaicList.push({
-                label: mosaicMap[key].name + `(${mosaicMap[key].amount})`,
-                value: mosaicMap[key].hex,
-            })
-        }
-    }
-
     closeCheckPWDialog() {
         this.showCheckPWDialog = false
     }
@@ -183,16 +208,11 @@ export default class TransferTransactionTs extends Vue {
     @Watch('accountAddress')
     onAcountAddressChange() {
         this.resetFields()
-        this.initMosaic()
     }
 
     @Watch('errors.items')
     onErrorsChanged() {
         this.submitDisabled = this.errors.items.length > 0
-    }
-
-    created() {
-        this.initMosaic()
     }
 
     mounted() {

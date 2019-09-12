@@ -33,7 +33,7 @@ export class CommunityPanelTs extends Vue {
         this.$router.push({path: item.to})
     }
 
-    created() {
+    mounted() {
         this.goToPage(this.navList[0])
         this.$router.push({
             name: 'information'

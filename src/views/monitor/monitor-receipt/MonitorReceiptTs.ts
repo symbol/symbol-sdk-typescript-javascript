@@ -77,7 +77,7 @@ export class MonitorReceiptTs extends Vue {
         })
     }
 
-    genaerateQR() {
+    generateQR() {
         if (!this.checkForm()) {
             return
         }
@@ -151,8 +151,7 @@ export class MonitorReceiptTs extends Vue {
         this.createQRCode()
     }
 
-    created() {
+    mounted() {
         this.createQRCode()
-
     }
 }

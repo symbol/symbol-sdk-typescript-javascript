@@ -2,7 +2,7 @@
   <div class="monitor_panel_container">
     <div class="monitor_panel_left_container" ref="monitorPanelLeftContainer">
       <div class="top_wallet_address radius">
-        <Spin v-if="isLoadingMosaic" size="large" fix class="absolute"></Spin>
+        <Spin v-if="balanceLoading" size="large" fix class="absolute"></Spin>
         <div class="wallet_address">
           <span class="address">
             {{address}}
@@ -16,33 +16,35 @@
           <span>XEM</span>
           <span class="amount">{{formatNumber(Number(formatXEMamount(XEMamount))?formatXEMamount(XEMamount + ''):0)}}</span>
         </div>
-        <div class="exchange">
-          ${{formatNumber(XEMamount*currentPrice?(XEMamount*currentPrice).toFixed(2).toLocaleString():'0.00')}}
-        </div>
-
-        <div class="account_alias" v-show="isShowAccountAlias">
+        <div class="exchange">${{formatNumber(XEMamount*xemUsdPrice?(XEMamount*xemUsdPrice).toFixed(2).toLocaleString():'0.00')}}</div>
+        <!-- @TODO: Account Alias (update when method available) -->
+        <!--<div class="account_alias" v-show="isShowAccountAlias">
           {{$t('alias')}}：wallet.name
-        </div>
+        </div>-->
       </div>
       <div class="bottom_account_info radius" ref="bottomAccountInfo">
         <div v-if="isShowAccountInfo" class="mosaicListWrap">
-          <Spin v-if="isLoadingMosaic" size="large" fix class="absolute"></Spin>
+          <Spin v-if="mosaicsLoading" size="large" fix class="absolute"></Spin>
           <Tabs size="small" v-if="!isShowManageMosaicIcon">
             <TabPane :label="$t('assets')" name="name1">
               <img @click="manageMosaicList()" class="asset_list pointer"
                    src="@/common/img/monitor/monitorAssetList.png">
               <!--        all       -->
               <div class="mosaicList secondary_page_animate">
-                <div class="mosaic_data" v-if="value.show" v-for="(value,key,index) in mosaicMap"
-                     :key="index">
-                <span class="img_container">
+                <div
+                  class="mosaic_data"
+                  v-for="(mosaic, index) in mosaicList"
+                  :key="index"
+                  v-if="mosaic.show"
+                >
+                  <span class="img_container">
                     <img v-if="index == 0" src="@/common/img/monitor/monitorMosaicIcon.png" alt="">
                     <img v-else src="@/common/img/monitor/mosaicDefault.png" alt="">
-                </span>
-                  <span class="mosaic_name">{{value.name?value.name:key}}</span>
+                  </span>
+                  <span class="mosaic_name">{{mosaic.name || mosaic.hex}}</span>
                   <span class="mosaic_value">
-                  <div>{{formatNumber(value.amount.lower?value.amount.compact():value.amount)}}</div>
-                </span>
+                    <div>{{formatNumber(mosaic.balance)}}</div>
+                  </span>
                 </div>
               </div>
             </TabPane>
@@ -54,7 +56,7 @@
 
             <!--              <span>{{$t('asset_setting')}}</span>-->
             <!--            </div>-->
-            <img src="@/common/img/monitor/monitorLeftArrow.png" alt="">
+            <img src="@/common/img/monitor/monitorLeftArrow.png" @click="showMosaicMap" alt="">
             <div class="input_outter">
 
               <img src="@/common/img/monitor/monitorSearchIcon.png" alt="">
@@ -63,33 +65,32 @@
 
             </div>
             <div class="mosaicList">
-              <div class="toggle_all_checked ">
-                <span>
-
-                <div class="choose true" @click="toggleAllChecked()"></div>
-                {{ !ischecked ? $t('select_all'):$t('all_unchecked')}}
-
-                </span>
-                <span>
-
-                <div class="choose true" @click="isShowExpiredMosaic = !isShowExpiredMosaic"></div>
-                {{ isShowExpiredMosaic ? $t('Hide_expired_mosaic'):$t('Display_expired_mosaic')}}
-
-                </span>
-              </div>
-
-              <div :class="['mosaic_data',index == 0?'padding_top_0':'']" v-if="value.showInManage"
-                   v-for="(value,key,index) in mosaicMap" :key="index">
+                <div class="toggle_all_checked ">
+                  <span @click="toggleAllChecked()">
+                    <div :class="['choose',  ischecked ? 'true' : 'false']"></div>
+                    {{ !ischecked ? $t('select_all'):$t('all_unchecked')}}
+                  </span>
+                  <span @click="toggleShowExpired()">
+                    <div :class="['choose',  showExpiredMosaics ? 'true' : 'false']"></div>
+                    {{ showExpiredMosaics ? $t('Hide_expired_mosaic'):$t('Display_expired_mosaic')}}
+                  </span>
+                </div>
+              <div
+                  :class="['mosaic_data',index == 0?'padding_top_0':'']"
+                  v-for="(mosaic, index) in filteredList"
+                  :key="index"
+                  class="mosaic_data"
+                >
                 <span class="namege_img">
-                    <img @click="toggleShowMosaic(key,value)" class="small_icon pointer"
-                         :src="value.show?monitorSeleted:monitorUnselected">
-                    <img v-if="index == 0" class="mosaicIcon"
-                         src="@/common/img/monitor/monitorMosaicIcon.png">
-                    <img v-else class="mosaicIcon" src="@/common/img/monitor/mosaicDefault.png">
+                  <img @click="toggleShowMosaic(mosaic)" class="small_icon pointer"
+                        :src="mosaic.show?monitorSeleted:monitorUnselected">
+                  <img v-if="index == 0" class="mosaicIcon"
+                        src="@/common/img/monitor/monitorMosaicIcon.png">
+                  <img v-else class="mosaicIcon" src="@/common/img/monitor/mosaicDefault.png">
                 </span>
-                <span class="mosaic_name">{{value.name?value.name:key}}</span>
+                <span class="mosaic_name">{{mosaic.name || mosaic.hex}}</span>
                 <span class="mosaic_value">
-                  <div>{{value.amount}}</div>
+                  <div>{{mosaic.balance}}</div>
                 </span>
               </div>
               <div class="complete_container">
@@ -103,9 +104,12 @@
     </div>
     <div class="monitor_panel_right_container">
       <div class="top_navidator radius">
-        <span :class="[n.isSelect?'active_navigator':'','outter_container',n.disabled?'disabled':'pointer']"
-              @click="switchPanel(index)"
-              v-for="(n,index) in navigatorList">
+        <span
+          :class="[n.isSelect?'active_navigator':'','outter_container',n.disabled?'disabled':'pointer']"
+          @click="switchPanel(index)"
+          v-for="(n,index) in navigatorList"
+          :key="index"
+        >
           <span class="inner_container absolute">{{$t(n.name)}}</span>
           <span class="line">|</span>
         </span>
@@ -113,8 +117,7 @@
       <div class="bottom_router_view">
         <router-view/>
       </div>
-      <div class="transaction_status radius">
-      </div>
+      <div class="transaction_status radius" />
     </div>
   </div>
 </template>

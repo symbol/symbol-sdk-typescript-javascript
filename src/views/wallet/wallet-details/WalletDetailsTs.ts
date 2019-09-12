@@ -108,7 +108,7 @@ export class WalletDetailsTs extends Vue {
         this.init()
     }
 
-    created() {
+    mounted() {
         this.init()
     }
 }

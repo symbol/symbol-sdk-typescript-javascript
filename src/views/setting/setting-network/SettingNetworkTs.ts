@@ -4,7 +4,7 @@ import {settingNetworkPointList, settingNetworkColorList} from '@/config/index.t
 @Component
 export class SettingNetworkTs extends Vue {
     pointList = settingNetworkPointList
-    currentPoint = {}
+    currentEndpoint = {}
     pointerColorList = settingNetworkColorList
 
     selectPoint(index) {
@@ -15,12 +15,12 @@ export class SettingNetworkTs extends Vue {
             return item
         })
         list[index].isSelected = true
-        this.currentPoint = list[index]
+        this.currentEndpoint = list[index]
         this.pointList = list
     }
 
-    created() {
-        this.currentPoint = this.pointList[0]
+    mounted() {
+        this.currentEndpoint = this.pointList[0]
     }
 
 }

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import iView from 'iview'
 import Router from 'vue-router'
+import VueRx from 'vue-rx'
 import {veeValidateConfig} from '@/core/validation'
 import App from '@/App.vue'
 import i18n from '@/language/index.ts'
@@ -16,6 +17,7 @@ import locale from 'iview/dist/locale/en-US'
 Vue.use(iView, {locale})
 Vue.use(require('vue-moment'))
 Vue.use(Router)
+Vue.use(VueRx)
 //Introduced the global
 Vue.use(VeeValidate, veeValidateConfig)
 htmlRem()

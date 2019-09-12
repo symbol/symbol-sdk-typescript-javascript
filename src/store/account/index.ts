@@ -1,23 +1,21 @@
-import {Account} from 'nem2-sdk'
+import {Account, TransactionType} from 'nem2-sdk'
 import {nodeConfig} from "@/config/index.ts"
 
 declare interface account {
     node: string,
+    // @TODO: the currentXem should be renamed
     currentXem: string,
     currentXEM1: string,
     currentXEM2: string,
     account: Account,
     wallet: any,
-    mosaic: any[],
+    mosaics: any[],
     namespace: any[],
-    UnconfirmedTx: any,
-    ConfirmedTx: any,
     errorTx: Array<any>,
-    mosaicMap: any,
-    generationHash: string,
     addresAliasMap: any,
+    generationHash: string,
     xemDivisibility: number
-
+    transactionList: any,
 }
 
 export default {
@@ -27,29 +25,39 @@ export default {
         currentXEM1: nodeConfig.currentXEM1,
         currentXEM2: nodeConfig.currentXEM2,
         account: {},
-        xemDivisibility: 6,
         wallet: {},
-        mosaic: [],
+        mosaics: {},
         namespace: [],
-        UnconfirmedTx: [],
-        ConfirmedTx: [],
         errorTx: [],
-        mosaicMap: {},
         addresAliasMap: {},
-        generationHash: ''
+        generationHash: '',
+        xemDivisibility: 6,
+        transactionList: {
+            transferTransactionList: [],
+            receiptList: [],
+        },
     },
     getters: {
-        Address(state) {
-            return state.account.address
+        wallet(state) {
+            return state.wallet
         },
-        PublicAccount(state) {
-            return state.account.publicAccount
+        currentXEM1(state) {
+            return state.currentXEM1
         },
-        privateKey(state) {
-            return state.account.privateKey
+        xemDivisibility(state) {
+            return state.xemDivisibility
         },
-        publicKey(state) {
-            return state.account.publicKey
+        node(state) {
+            return state.node
+        },
+        currentXem(state) {
+            return state.currentXem
+        },
+        mosaicList(state) {
+            return state.mosaics
+        },
+        transactions(state) {
+            return state.transactionList
         }
     },
     mutations: {
@@ -59,8 +67,8 @@ export default {
         SET_WALLET(state: account, wallet: any): void {
             state.wallet = wallet
         },
-        SET_MOSAICS(state: account, mosaic: any[]): void {
-            state.mosaic = mosaic
+        SET_MOSAICS(state: account, mosaics: any[]): void {
+            state.mosaics = mosaics
         },
         SET_NAMESPACE(state: account, namespace: any[]): void {
             state.namespace = namespace
@@ -77,17 +85,8 @@ export default {
         SET_CURRENT_XEM_1(state: account, currentXEM1: string): void {
             state.currentXEM1 = currentXEM1
         },
-        SET_MOSAIC_MAP(state: account, mosaicMap: any): void {
-            state.mosaicMap = mosaicMap
-        },
         SET_ADDRESS_ALIAS_MAP(state: account, addresAliasMap: any): void {
             state.addresAliasMap = addresAliasMap
-        },
-        SET_UNCONFIRMED_TX(state: account, UnconfirmedTx: any): void {
-            state.UnconfirmedTx = UnconfirmedTx
-        },
-        SET_CONFIRMED_TX(state: account, ConfirmedTx: any): void {
-            state.ConfirmedTx = ConfirmedTx
         },
         SET_XEM_DIVISIBILITY(state: account, xemDivisibility: number) {
             state.xemDivisibility = xemDivisibility
@@ -95,8 +94,41 @@ export default {
         SET_WALLET_BALANCE(state: account, balance: number) {
             state.wallet.balance = balance
         },
+        SET_TRANSACTION_LIST(state: account, list: any[]) {
+            state.transactionList = list
+        },
+        ADD_UNCONFIRMED_TRANSACTION(state: account, list: any) {
+            if (list.transferTransactionList.length) {
+                state.transactionList.transferTransactionList.unshift(list.transferTransactionList[0])
+            } 
+            if (list.receiptList.length) {
+                state.transactionList.receiptList.unshift(list.receiptList[0])
+            } 
+        },
+        ADD_CONFIRMED_TRANSACTION(state: account, tx: any) {
+            // @TODO merge or separate these 2 lists in different objects
+            const newTx = tx.transferTransactionList.length ? tx.transferTransactionList[0] : tx.receiptList[0]
+            const listName = newTx.type === TransactionType.TRANSFER ? 'transferTransactionList' : 'receiptList' 
+            const otherListName = newTx.type !== TransactionType.TRANSFER ? 'transferTransactionList' : 'receiptList'
+
+            const stateTransactions = {...state.transactionList}
+            const txFromStore = stateTransactions[listName]
+
+            const txIndex = txFromStore.findIndex(({transactionInfo}) => newTx.transactionInfo.hash === transactionInfo.hash)
+            if(txIndex > -1 && txFromStore[txIndex].isTxUnconfirmed) txFromStore.splice(txIndex, 1)
+            
+            txFromStore.push(newTx)
+
+            const newTransactionList = {
+                [listName]: txFromStore,
+                [otherListName]: [...state.transactionList[otherListName]]
+            }
+
+            state.transactionList = newTransactionList
+        },
         SET_CURRENT_XEM(state: account, currentXem: string) {
             state.currentXem = currentXem
         }
     },
 }
+ 

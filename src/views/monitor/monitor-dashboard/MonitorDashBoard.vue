@@ -13,16 +13,24 @@
         </span>
       </div>
       <div>
-        <div v-if="key !=='transfer_type'" v-for="(value,key,index) in transactionDetails.dialogDetailMap"
-             class="other_info">
-          <span class="title">{{$t(key)}}</span>
-          <span class="value overflow_ellipsis">{{value}}</span>
+        <div
+          v-for="(value, key) in transactionDetails.dialogDetailMap"
+          :key="key"
+          class="other_info"
+        >
+          <div v-if="key !== 'transfer_type'">
+            <span class="title">{{$t(key)}}</span>
+            <span class="value overflow_ellipsis">{{value}}</span>
+          </div>
         </div>
-        <!--        inner transaction-->
+        <!-- inner transaction -->
         <div v-if="transactionDetails.formatAggregateCompelete">
           <span class=" title"> {{$t('inner_transaction')}}</span>
-          <div class="inner_transaction"
-               v-for="(innerTransaction ) in transactionDetails.formatAggregateCompelete">
+          <div
+            v-for="(innerTransaction, index) in transactionDetails.formatAggregateCompelete"
+            :key="index"
+            class="inner_transaction"
+          >
             <span class="pointer value" @click="showInnerDialog(innerTransaction)">{{$t(innerTransaction.dialogDetailMap.transfer_type)}}</span>
           </div>
         </div>
@@ -41,10 +49,15 @@
           ? $t(currentInnerTransaction.dialogDetailMap.transfer_type) :'-'}}</span>
       </div>
       <div>
-        <div v-if="key !=='transfer_type'" v-for="(value,key,index) in currentInnerTransaction.dialogDetailMap"
-             class="other_info">
-          <span class="title overflow_ellipsis">{{$t(key)}}</span>
-          <span class="value overflow_ellipsis">{{value}}</span>
+          <div
+            v-for="(value, key) in currentInnerTransaction.dialogDetailMap"
+            class="other_info"
+            :key="key"
+          >
+          <div v-if="key !=='transfer_type'">
+            <span class="title overflow_ellipsis">{{$t(key)}}</span>
+            <span class="value overflow_ellipsis">{{value}}</span>
+          </div>
         </div>
       </div>
     </Modal>
@@ -54,23 +67,25 @@
       <div class="left_echart radius">
         <span class="trend">{{$t('XEM_market_trend_nearly_7_days')}}</span>
         <span class="right">
-          <span>{{$t('The_total_market_capitalization')}}（USD）</span>
-          <span class="black">{{formatNumber(currentPrice)}}</span>
+          <span>{{$t('The_total_market_capitalization')}} (USD)</span>
+          <span class="black">{{formatNumber(xemUsdPrice)}}</span>
         </span>
         <div>
-   <span class="right">
-          <span>{{$t('average_price')}}</span><span class="black">${{averagePrice}} </span>
-           <span>{{$t('yesterday')}}</span><span :class="riseRange < 0 ? 'red':'green'">{{riseRange}}%</span>
-        </span>
+          <span class="right">
+              <span>{{$t('average_price')}}</span><span class="black">${{averagePrice}} </span>
+            <span>{{$t('yesterday')}}</span><span :class="riseRange < 0 ? 'red':'green'">{{riseRange}}%</span>
+          </span>
         </div>
-
-
-        <LineChart></LineChart>
+        <LineChart />
       </div>
       <div class="right_net_status radius">
         <div class="panel_name">{{$t('network_status')}}</div>
 
-        <div class="network_item radius" v-for="(n,index) in networkStatusList" :key="index">
+        <div
+          class="network_item radius"
+          v-for="(n, index) in networkStatusList"
+          :key="index"
+        >
           <img :src="n.icon" alt="">
           <span :class="['descript',index==1? 'long':'']">{{$t(n.descript)}}</span>
           <span :class="['data','overflow_ellipsis', updateAnimation]">
@@ -83,19 +98,19 @@
 
     <div class="bottom_transactions radius scroll" ref="bottomTransactions">
       <div class="splite_page">
-        <span>{{$t('total')}}：{{currentDataAmount}} {{$t('data')}}</span>
-        <Page @on-change="changePage" :total="currentDataAmount" class="page_content"/>
+        <span>{{$t('total')}}：{{selectedListLength}} {{$t('data')}}</span>
+        <Page @on-change="changePage" :total="selectedListLength" class="page_content"/>
       </div>
 
       <div class="label_page">
         <span @click="switchTransactionPanel(true)"
               :class="['pointer',isShowTransferTransactions?'selected':'','page_title']">
-          {{$t('transfer_record')}} ({{transferListLength}})
+          {{$t('transfer_record')}} ({{transferTransactionList.length}})
         </span>
         <span class="line">|</span>
         <span @click="switchTransactionPanel(false)"
               :class="['pointer',isShowTransferTransactions?'':'selected','page_title']">
-          {{$t('receipt')}} ({{receiptListLength}})
+          {{$t('receipt')}} ({{receiptTransactionList.length}})
         </span>
       </div>
 
@@ -108,9 +123,14 @@
             <span class="date">{{$t('date')}}</span>
           </div>
           <div class="confirmed_transactions">
-            <Spin v-if="isLoadingTransactions" size="large" fix class="absolute"></Spin>
+            <Spin v-if="transactionsLoading" size="large" fix class="absolute"></Spin>
             <div class="table_body hide_scroll" ref="confirmedTableBody">
-              <div class="table_item pointer" @click="showDialog(c,true)" v-for="c in currentTransactionList">
+              <div
+                class="table_item pointer"
+                @click="showDialog(c,true)"
+                v-for="(c, index) in slicedTransferList"
+                :key="index"
+              >
                 <img class="mosaic_action" v-if="!c.isReceipt"
                      src="@/common/img/monitor/dash-board/dashboardMosaicOut.png" alt="">
                 <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
@@ -125,14 +145,13 @@
                 <img v-else src="@/common/img/monitor/dash-board/dashboardConfirmed.png"
                      class="expand_mosaic_info">
               </div>
-              <div class="no_data" v-if="transferTransactionList.length == 0">
+              <div class="no_data" v-if="!transferTransactionList.length">
                 {{$t('no_confirmed_transactions')}}
               </div>
             </div>
           </div>
         </div>
       </div>
-
       <div class="table_container_unconfirmed table_container" v-if="!isShowTransferTransactions">
         <div class="all_transaction">
           <div class="table_head">
@@ -142,10 +161,14 @@
             <span class="date">{{$t('date')}}</span>
           </div>
           <div class="unconfirmed_transactions">
-            <Spin v-if="isLoadingTransactions" size="large" fix class="absolute"></Spin>
+            <Spin v-if="transactionsLoading" size="large" fix class="absolute"></Spin>
             <div class="table_body hide_scroll" ref="unconfirmedTableBody">
-              <div class="table_item pointer" @click="showDialog(u,false)" v-for="(u,index) in currentTransactionList"
-                   :key="index">
+              <div
+                class="table_item pointer"
+                @click="showDialog(u, false)"
+                v-for="(u, index) in slicedReceiptsLists"
+                :key="index"
+              >
                 <img class="mosaic_action"
                      :src="u.icon" alt="">
                 <span class="account overflow_ellipsis">{{$t(u.tag)}}</span>
@@ -157,7 +180,7 @@
                 <img v-else src="@/common/img/monitor/dash-board/dashboardConfirmed.png"
                      class="expand_mosaic_info">
               </div>
-              <div class="no_data" v-if="receiptList.length == 0">
+              <div class="no_data" v-if="!receiptTransactionList.length">
                 {{$t('no_unconfirmed_transactions')}}
               </div>
             </div>

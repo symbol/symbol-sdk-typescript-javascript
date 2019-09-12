@@ -51,7 +51,7 @@ export const languageList: Array<any> = [
 
 export const TransferType = {
     'RECEIVED': 1,
-    'SENDED': 0
+    'SENT': 0
 }
 export const networkTypeList = [
     {

@@ -21,6 +21,7 @@ import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
 import {createAccount} from "@/core/utils/hdWallet.ts"
 import {AppLock} from "@/core/utils/appLock"
+import { Store } from 'vuex'
 
 export class AppWallet {
     constructor(wallet?: {
@@ -188,11 +189,6 @@ export class AppWallet {
         // this.$emit('hasWallet')
     }
 
-    // storeWalletList(store: any, walletList: AppWallet[]) {
-    //   store.commit('SET_WALLET_LIST', walletList)
-    //   localSave('wallets', JSON.stringify(walletList))
-    // }
-
     static switchWallet(newActiveWalletAddress: string, walletList: any, store: any) {
         const newWalletIndex = walletList.findIndex(({address}) => address === newActiveWalletAddress)
         if (newWalletIndex === -1) throw new Error('wallet not found when switching')
@@ -221,22 +217,20 @@ export class AppWallet {
             if (!accountInfo.mosaics.length) return 0
             const xemIndex = accountInfo.mosaics
                 .findIndex(mosaic => networkCurrencies.indexOf(mosaic.id.toHex()) > -1)
-
-
             if (xemIndex === -1) return 0
-            // @TODO: handle divisibility
             return accountInfo.mosaics[xemIndex].amount.compact() / 1000000
         } catch (error) {
             return 0
         }
     }
 
-    async updateAccountBalance(networkCurrencies: any, node: string, store: any) {
+    async updateAccountBalance(balance: number, store: any): Promise<void> {
         try {
-            const balance = await this.getAccountBalance(networkCurrencies, node)
             this.balance = balance
             this.updateWallet(store)
+            store.commit('SET_BALANCE_LOADING', false)
         } catch (error) {
+            store.commit('SET_BALANCE_LOADING', false)
             // do nothing
         }
     }
@@ -255,17 +249,17 @@ export class AppWallet {
         newWalletList[newWalletIndex] = this
 
         store.commit('SET_WALLET_LIST', newWalletList)
-        store.commit('SET_WALLET', this)
+        if(store.state.account.address === this.address) store.commit('SET_WALLET', this)
         localSave('wallets', JSON.stringify(newWalletList))
     }
 
-    async setMultisigStatus(node: string): Promise<boolean> {
+    async setMultisigStatus(node: string, store: any): Promise<void> {
         try {
             await new AccountApiRxjs().getMultisigAccountInfo(this.address, node).toPromise()
             this.isMultisig = true
-            return true
+            this.updateWallet(store)
         } catch (error) {
-            return false
+            // Do nothing
         }
     }
 
@@ -273,9 +267,10 @@ export class AppWallet {
         try {
             const account = this.getAccount(password)
             const signature = account.sign(transactionList[0], generationHash)
+            const message = that.$t(Message.SUCCESS)
             console.log(signature)
             new TransactionApiRxjs().announce(signature, node).subscribe(() => {
-                that.$Notice.success({title: that.$t(Message.SUCCESS) + ''})
+                that.$Notice.success({title: message }) // quick fix
             })
         } catch (err) {
             console.error(err)
@@ -305,26 +300,6 @@ export class AppWallet {
             currentXEM1,
         )
     }
-}
-
-export const saveLocalWallet = (wallet: any): void => {
-    const localData: any[] = localRead('wallets') === ''
-        ? [] : JSON.parse(localRead('wallets'))
-
-    if (!localData.length) {
-        localSave('wallets', JSON.stringify([wallet]))
-        return
-    }
-
-    let dataToStore = [...localData]
-    const walletIndex = localData.find(({address}) => address === wallet.address)
-
-    if (walletIndex > -1) {
-        localSave('wallets', JSON.stringify(dataToStore[walletIndex].assign(wallet)))
-        return
-    }
-
-    localSave('wallets', JSON.stringify([wallet, ...dataToStore]))
 }
 
 export const getNamespaces = async (address: string, node: string) => {

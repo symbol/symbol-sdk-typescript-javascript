@@ -270,9 +270,5 @@ export class VoteTs extends Vue {
         this.currentTimestamp = Number((new Date()).valueOf() / 1000).toFixed(0)
         this.currentVoteList = this.voteList
     }
-
-    created() {
-        this.getVoteList()
-    }
 }
 

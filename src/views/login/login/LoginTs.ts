@@ -65,7 +65,7 @@ export class LoginTs extends Vue {
         }
     }
 
-    created() {
+    mounted() {
         this.isCallShowIndexView()
     }
 }

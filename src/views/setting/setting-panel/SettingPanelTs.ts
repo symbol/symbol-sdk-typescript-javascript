@@ -21,7 +21,7 @@ export class SettingPanelTs extends Vue {
         })
     }
 
-    created() {
+    mounted() {
         this.currentHeadText = this.navagatorList[0].title
     }
 

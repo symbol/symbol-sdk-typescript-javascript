@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import i18n from '@/language/index.ts'
 import {Address, AliasActionType, Deadline, TransactionType, UInt64} from 'nem2-sdk'
-import {nodeConfig} from "@/config"
 
 const vueInstance = new Vue({i18n})
 
@@ -240,43 +239,42 @@ export const formatNemDeadline = function (deadline) {
     return date + time
 }
 
-
-export const formatTransactions = function (transactionList, accountAddress, currentXEM1, currentXem) {
-    let transferTransaction = []
-    transactionList.map((item) => {
-        // TODO if mosaic is null
-        if (item.type == TransactionType.TRANSFER) {
-            item.isReceipt = item.recipient.address == accountAddress
-            item.signerAddress = item.signer.address.address
-            item.recipientAddress = item.recipient.address
-            item.oppositeAddress = item.isReceipt ? item.signerAddress : item.recipient.address
-            item.time = formatNemDeadline(item.deadline)
-            item.mosaicAmount = 'mix'
-            if (item.mosaics.length == 1) {
-                item.mosaicAmount = 'loading...'
-            }
-            item.mosaic = item.mosaics && item.mosaics[0] && currentXEM1.toUpperCase() !== item.mosaics[0].id.id.toHex().toUpperCase() ?
-                item.mosaics.map(item => {
-                    const amount = item.amount.compact()
-                    const hex = item.id.id.toHex()
-                    if (hex == currentXEM1) {
-                        return currentXem + `(${amount})`
-                    }
-                    return item.id.id.toHex() + `(${amount})`
-                }).join(',') : currentXem
-            // todo get mosaic name like nem.xem(123456)
-            item.date = new Date(item.time)
-            transferTransaction.push(item)
-        }
-    })
-    return transferTransaction
-}
+// @TODO check current xem situation
+// export const formatTransactions = function (transactionList, accountAddress, currentXEM1, currentXem) {
+//     let transferTransaction = []
+//     transactionList.map((item) => {
+//         // TODO if mosaic is null
+//         if (item.type == TransactionType.TRANSFER) {
+//             item.isReceipt = item.recipient.address == accountAddress
+//             item.signerAddress = item.signer.address.address
+//             item.recipientAddress = item.recipient.address
+//             item.oppositeAddress = item.isReceipt ? item.signerAddress : item.recipient.address
+//             item.time = formatNemDeadline(item.deadline)
+//             item.mosaicAmount = 'mix'
+//             if (item.mosaics.length == 1) {
+//                 item.mosaicAmount = 'loading...'
+//             }
+//             item.mosaic = item.mosaics && item.mosaics[0] && currentXEM1.toUpperCase() !== item.mosaics[0].id.id.toHex().toUpperCase() ?
+//                 item.mosaics.map(item => {
+//                     const amount = item.amount.compact()
+//                     const hex = item.id.id.toHex()
+//                     if (hex == currentXEM1) {
+//                         return currentXem + `(${amount})`
+//                     }
+//                     return item.id.id.toHex() + `(${amount})`
+//                 }).join(',') : currentXem
+//             // todo get mosaic name like nem.xem(123456)
+//             item.date = new Date(item.time)
+//             transferTransaction.push(item)
+//         }
+//     })
+//     return transferTransaction
+// }
 
 export const formateNemTimestamp = (timestamp, offset) => {
     return formatDate(covertOffset(timestamp + Deadline.timestampNemesisBlock * 1000, offset))
 }
 
-//
 export const covertOffset = (timestamp, offset) => {
     const currentZone = new Date().getTimezoneOffset() / 60
     return timestamp + (currentZone - offset) * 1000 * 60 * 60
