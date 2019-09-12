@@ -382,7 +382,7 @@ export const zh_CN = {
     copy: '复制',
     Display_Keystore_QR_code: '显示Keystore二维码',
     Show_Keystore: '显示Keystore',
-    address_alias_not_exist:'地址别名不存在',
+    address_alias_not_exist: '地址别名不存在',
     //export dialog
     export_mnemonic: '导出助记词',
     backup_mnemonic: '备份助记词',
@@ -663,5 +663,7 @@ export const zh_CN = {
     amount: '金额',
     encryption: '加密',
     Not_encrypted: '不加密',
-    bondedFee: '绑定费用'
+    bondedFee: '绑定费用',
+    Display_expired_mosaic: '显示隐藏马赛克',
+    Hide_expired_mosaic: '隐藏过期马赛克'
 }

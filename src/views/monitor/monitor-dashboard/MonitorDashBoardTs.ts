@@ -244,7 +244,7 @@ export class MonitorDashBoardTs extends Vue {
                     if (item.mosaics.length == 1) {
                         //infoThird
                         const amount = item.mosaics[0].amount.compact()
-                        const mosaicInfoList = await getMosaicInfoList(node, [item.mosaics[0].id])
+                        const mosaicInfoList = await getMosaicInfoList(node, [item.mosaics[0].id],this.currentHeight)
                         const mosaicInfo: any = mosaicInfoList[0]
                         resultList[index].infoThird = (item.isReceipt ? '+' : '-') + that.getRelativeMosaicAmount(amount, mosaicInfo.properties.divisibility)
                     }

@@ -681,6 +681,8 @@ export const en_US = {
     Node_not_available_please_check_your_node_or_network_settings: 'Node not available, please check your node or network settings.',
     encryption: 'Encrypted',
     Not_encrypted: 'Not encrypted',
-    all_unchecked: 'All unchecked'
+    all_unchecked: 'All unchecked',
+    Display_expired_mosaic:'Display expired mosaic',
+    Hide_expired_mosaic:'Hide expired mosaic'
 
 }

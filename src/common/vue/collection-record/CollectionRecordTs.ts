@@ -90,6 +90,10 @@ export class CollectionRecordTs extends Vue {
         return this.activeAccount.currentXem
     }
 
+    get currentHeight() {
+        return this.app.chainStatus.currentHeight
+    }
+
     hideSearchDetail() {
         this.isShowSearchDetail = false
     }
@@ -225,7 +229,7 @@ export class CollectionRecordTs extends Vue {
             Promise.all(transactionList.map(async (item, index) => {
                 if (item.mosaics.length == 1) {
                     const amount = item.mosaics[0].amount.compact()
-                    const mosaicInfoList = await getMosaicInfoList(node, [item.mosaics[0].id])
+                    const mosaicInfoList = await getMosaicInfoList(node,[item.mosaics[0].id],this.currentHeight)
                     const mosaicInfo: any = mosaicInfoList[0]
                     resultList[index].mosaicAmount = item.isReceipt ? '+' : '-' + getRelativeMosaicAmount(amount, mosaicInfo.properties.divisibility)
                 }

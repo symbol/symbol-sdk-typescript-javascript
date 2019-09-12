@@ -26,6 +26,7 @@ export class MonitorPanelTs extends Vue {
     activeAccount: any
     mosaic: string
     mosaicName = ''
+    isShowExpiredMosaic = false
     // @TODO: current price in the store
     currentPrice = 0
     isLoadingMosaic = true
@@ -33,13 +34,13 @@ export class MonitorPanelTs extends Vue {
     isShowAccountInfo = true
     isShowAccountAlias = false
     isShowManageMosaicIcon = false
-    ischecked=true
+    ischecked = true
     monitorSeleted = monitorSeleted
     monitorUnselected = monitorUnselected
     navigatorList: any = minitorPanelNavigatorList
     mosaicMap: any = {}
-    arr=[]
-    a=0
+    arr = []
+    a = 0
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -88,6 +89,10 @@ export class MonitorPanelTs extends Vue {
 
     get xemDivisibility() {
         return this.activeAccount.xemDivisibility
+    }
+
+    get currentHeight() {
+        return this.app.chainStatus.currentHeight
     }
 
     switchPanel(index) {
@@ -140,49 +145,52 @@ export class MonitorPanelTs extends Vue {
         this.isShowManageMosaicIcon = !this.isShowManageMosaicIcon
         this.mosaicMap = this.localMosaicMap
     }
-    toggleAllChecked(){
+
+    toggleAllChecked() {
         this.ischecked = !this.ischecked
-        document.getElementsByClassName("choose")[0].classList.replace(`${!this.ischecked}`,`${this.ischecked}`)
-        Object.keys(this.localMosaicMap).forEach(key=>{
+        document.getElementsByClassName("choose")[0].classList.replace(`${!this.ischecked}`, `${this.ischecked}`)
+        Object.keys(this.localMosaicMap).forEach(key => {
             this.localMosaicMap[key].show = this.ischecked
             let pos = this.arr.indexOf(key)
-            if(pos<0){
+            if (pos < 0) {
                 this.arr.push(key)
             }
         })
     }
 
     toggleShowMosaic(key, value) {
-            this.a=0
+        this.a = 0
         if (!this.localMosaicMap[key]) {
             this.localMosaicMap[key] = value
         }
         this.localMosaicMap[key].show = !this.localMosaicMap[key].show
-        if(this.localMosaicMap[key].show===false){
-            this.ischecked=false
-            document.getElementsByClassName("choose")[0].classList.replace(`${!this.ischecked}`,`${this.ischecked}`)
+        if (this.localMosaicMap[key].show === false) {
+            this.ischecked = false
+            document.getElementsByClassName("choose")[0].classList.replace(`${!this.ischecked}`, `${this.ischecked}`)
         }
-        Object.keys(this.localMosaicMap).forEach(index=>{
+        Object.keys(this.localMosaicMap).forEach(index => {
             let pos = this.arr.indexOf(index)
-            if(pos<0){
+            if (pos < 0) {
                 this.arr.push(index)
             }
-            if(this.localMosaicMap[index].show ){
+            if (this.localMosaicMap[index].show) {
 
-                this.a= this.a+1
-            }
-            else{
-                this.a= this.a-1
+                this.a = this.a + 1
+            } else {
+                this.a = this.a - 1
             }
 
         })
-        if(this.arr.length===this.a){
-            this.ischecked=true
-            document.getElementsByClassName("choose")[0].classList.replace(`${!this.ischecked}`,`${this.ischecked}`)
+        if (this.arr.length === this.a) {
+            this.ischecked = true
+            document.getElementsByClassName("choose")[0].classList.replace(`${!this.ischecked}`, `${this.ischecked}`)
         }
         this.saveMosaicRecordInLocal()
     }
 
+    expiredMosaic() {
+
+    }
 
     saveMosaicRecordInLocal() {
         // save address
@@ -220,7 +228,8 @@ export class MonitorPanelTs extends Vue {
     async initMosaic() {
         this.isLoadingMosaic = true
         const that = this
-        let {accountAddress, node, currentXEM1, currentXem, currentXEM2} = this
+        let {accountAddress, node, isShowExpiredMosaic, currentXEM1, currentXem, currentXEM2} = this
+        console.log(isShowExpiredMosaic, 'isShowExpiredMosaic')
         let mosaicMap = {}
         let addressMap = {}
         let mosaicHexIds = []
@@ -237,7 +246,7 @@ export class MonitorPanelTs extends Vue {
             mosaicHexIds[index] = item.id.toHex()
             return item.id
         })
-        const mosaicInfoList = await getMosaicInfoList(node, mosaicList)
+        const mosaicInfoList = await getMosaicInfoList(node, mosaicList, this.currentHeight, isShowExpiredMosaic)
         mosaicList = mosaicInfoList.map((item: any) => {
             const mosaicItem: any = mosaicList[mosaicHexIds.indexOf(item.mosaicId.toHex())]
             mosaicItem.hex = item.mosaicId.toHex()
@@ -371,6 +380,10 @@ export class MonitorPanelTs extends Vue {
         return formatXEMamount(text)
     }
 
+    @Watch('isShowExpiredMosaic')
+    onIsShowExpiredMosaic() {
+        this.initMosaic()
+    }
 
     @Watch('currentXem')
     onCurrentXemChange() {

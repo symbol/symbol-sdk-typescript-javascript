@@ -413,14 +413,26 @@ export const getMosaicList = async (address: string, node: string) => {
     return mosaicList
 }
 
-export const getMosaicInfoList = async (node: string, mosaicList: Mosaic[]) => {
+export const getMosaicInfoList = async (node: string, mosaicList: Mosaic[],currentHeight:any,isShowExpired: boolean = true) => {
     let mosaicInfoList: MosaicInfo[] = []
-
     let mosaicIds: any = mosaicList.map((item) => {
         return item.id
     })
     await new MosaicApiRxjs().getMosaics(node, mosaicIds).toPromise().then(mosaics => {
-        mosaicInfoList = mosaics
+        if (!isShowExpired) {
+            let s = 0;
+            mosaics.map((mosaic) => {
+                const duration = mosaic['properties'].duration.compact();
+                const createHeight = mosaic.height.compact();
+                if (duration ===0 || duration + createHeight > Number(currentHeight)) {
+                    s++;
+                    mosaicInfoList.push(mosaic);
+                }
+            })
+            return
+        }else{
+            mosaicInfoList = mosaics;
+        }
     }).catch((_) => {
         return
     })

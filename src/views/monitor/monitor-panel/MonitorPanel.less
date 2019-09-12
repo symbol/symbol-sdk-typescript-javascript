@@ -183,17 +183,19 @@
       }
 
       .input_outter {
-        width: 330px;
+        width: 280px;
         height: 40px;
         display: flex;
+        position: absolute;
+        top: 20px;
+        left: 60px;
         align-items: center;
         flex-direction: row;
-        position: relative;
 
         img {
           width: 18px;
           height: 18px;
-          margin: 0 10px 0 0px;
+          margin: 0 10px 0 10px;
         }
 
         border: 1px solid rgba(238, 238, 238, 1);
@@ -293,17 +295,21 @@
           margin-bottom: 5px;
         }
       }
+
       .padding_top_0 {
         padding-top: 0px !important;
         height: 55px !important;
       }
+
       .padding_top_0 .namege_img {
         top: 10px !important;
       }
-      .padding_top_0 .mosaic_value{
+
+      .padding_top_0 .mosaic_value {
         padding-top: 10px !important;
         margin-left: 70px;
       }
+
       .namespace_data {
         span {
           color: #222222;
@@ -427,6 +433,7 @@
   }
 
 }
+
 .false {
   width: 20px;
   height: 20px;
@@ -435,6 +442,7 @@
   background-size: 20px;
   cursor: pointer;
 }
+
 .true {
   width: 20px;
   height: 20px;
@@ -444,11 +452,21 @@
   margin-right: 10px;
   cursor: pointer;
 }
+
 .toggle_all_checked {
   margin-top: 10px;
   font-size: 13px;
-  height:20px;
+  height: 20px;
   width: 100%;
   line-height: 20px;
   display: flex;
+  align-items: center;
+  padding: 20px 0;
+
+  span {
+    min-width: 150px;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+  }
 }

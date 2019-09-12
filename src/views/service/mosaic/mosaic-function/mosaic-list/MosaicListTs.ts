@@ -143,7 +143,7 @@ export class MosaicListTs extends Vue {
         let mosaicIdList: any = mosaicList.map((item) => {
             return item.id
         })
-        const mosaicListInfo: any = await getMosaicInfoList(node, mosaicIdList)
+        const mosaicListInfo: any = await getMosaicInfoList(node, mosaicIdList,this.nowBlockHeihgt)
         mosaicListInfo.map((mosaicInfo) => {
             const mosaicHex = mosaicInfo.mosaicId.id.toHex()
             if (mosaicInfo.owner.publicKey !== accountPublicKey) {
