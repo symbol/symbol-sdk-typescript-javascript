@@ -147,9 +147,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.registrationType,
             transactionDTO.name,
-            new NamespaceId(UInt64.fromHex(transactionDTO.id).toDTO()),
+            NamespaceId.createFromEncoded(transactionDTO.id),
             transactionDTO.registrationType === 0 ? UInt64.fromNumericString(transactionDTO.duration) : undefined,
-            transactionDTO.registrationType === 1 ? new NamespaceId(UInt64.fromHex(transactionDTO.parentId).toDTO()) : undefined,
+            transactionDTO.registrationType === 1 ? NamespaceId.createFromEncoded(transactionDTO.parentId) : undefined,
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
                             extractNetworkType(transactionDTO.version)) : undefined,
@@ -260,7 +260,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.aliasAction,
-            new NamespaceId(UInt64.fromHex(transactionDTO.namespaceId).toDTO()),
+            NamespaceId.createFromEncoded(transactionDTO.namespaceId),
             new MosaicId(transactionDTO.mosaicId),
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
@@ -274,7 +274,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.aliasAction,
-            new NamespaceId(UInt64.fromHex(transactionDTO.namespaceId).toDTO()),
+            NamespaceId.createFromEncoded(transactionDTO.namespaceId),
             extractRecipient(transactionDTO.address) as Address,
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
@@ -417,7 +417,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.targetPublicKey,
             UInt64.fromNumericString(transactionDTO.scopedMetadataKey),
-            new NamespaceId(UInt64.fromHex(transactionDTO.targetNamespaceId).toDTO()),
+            NamespaceId.createFromEncoded(transactionDTO.targetNamespaceId),
             transactionDTO.valueSizeDelta,
             convert.hexToUint8(transactionDTO.value),
             transactionDTO.signature,
@@ -474,7 +474,7 @@ export const extractRecipient = (recipientAddress: any): Address | NamespaceId 
         if (recipientAddress.hasOwnProperty('address')) {
             return Address.createFromRawAddress(recipientAddress.address);
         } else if (recipientAddress.hasOwnProperty('id')) {
-            return new NamespaceId(UInt64.fromHex(recipientAddress.id).toDTO());
+            return NamespaceId.createFromEncoded(recipientAddress.id);
         }
     }
     throw new Error(`Recipient: ${recipientAddress} type is not recognised`);
@@ -503,7 +503,7 @@ export const extractMosaics = (mosaics: any): Mosaic[] => {
 
         // if most significant bit of byte 0 is set, then we have a namespaceId
         if ((byte0 & 128) === 128) {
-            const namespaceId = new NamespaceId(UInt64.fromHex(mosaicDTO.id).toDTO());
+            const namespaceId = NamespaceId.createFromEncoded(mosaicDTO.id);
             return new Mosaic(namespaceId, UInt64.fromNumericString(mosaicDTO.amount));
         }
 

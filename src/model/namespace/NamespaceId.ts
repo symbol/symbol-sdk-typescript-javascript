@@ -55,7 +55,7 @@ export class NamespaceId {
      * @returns {NamespaceId}
      */
     public static createFromEncoded(encoded: string): NamespaceId {
-        const uint = convert.hexToUint8(encoded).reverse();
+        const uint = convert.hexToUint8(encoded);
         const hex  = convert.uint8ToHex(uint);
         const namespace = new NamespaceId(Id.fromHex(hex).toDTO());
         return namespace;

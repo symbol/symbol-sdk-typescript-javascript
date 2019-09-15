@@ -199,7 +199,7 @@ const extractArtifactId = (receiptType: ReceiptType, id: string): MosaicId | Nam
         case ReceiptType.Mosaic_Expired:
             return new MosaicId(id);
         case ReceiptType.Namespace_Expired:
-            return new NamespaceId(UInt64.fromHex(id).toDTO());
+            return NamespaceId.createFromEncoded(id);
         default:
             throw new Error('Receipt type is not supported.');
     }
