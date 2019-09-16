@@ -133,7 +133,6 @@ export class MosaicListTs extends Vue {
     closeMosaicEditDialog(item) {
         this.showMosaicEditDialog = false
     }
-
     computeDuration(item) {
         const {properties, height} = item.mosaicInfo
         if (properties.duration.compact() === 0) return 'Forever'

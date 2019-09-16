@@ -52,11 +52,7 @@
 
           <!--        sevral      -->
           <div v-if="isShowManageMosaicIcon" class="searchMosaic secondary_page_animate">
-            <!--            <div class="asset_setting_tit pointer" @click="showMosaicMap">-->
-
-            <!--              <span>{{$t('asset_setting')}}</span>-->
-            <!--            </div>-->
-            <img src="@/common/img/monitor/monitorLeftArrow.png" @click="showMosaicMap" alt="">
+            <img src="@/common/img/monitor/monitorLeftArrow.png" class="asset_setting_tit pointer" @click="showMosaicMap" alt="">
             <div class="input_outter">
 
               <img src="@/common/img/monitor/monitorSearchIcon.png" alt="">
@@ -72,18 +68,18 @@
                   </span>
                   <span @click="toggleShowExpired()">
                     <div :class="['choose',  showExpiredMosaics ? 'true' : 'false']"></div>
-                    {{ showExpiredMosaics ? $t('Hide_expired_mosaic'):$t('Display_expired_mosaic')}}
+                    {{$t('Display_expired_mosaic')}}
                   </span>
                 </div>
               <div
                   :class="['mosaic_data',index == 0?'padding_top_0':'']"
                   v-for="(mosaic, index) in filteredList"
                   :key="index"
-                  class="mosaic_data"
+                  class="mosaic_data pointer"
+                  @click="toggleShowMosaic(mosaic)"
                 >
-                <span class="namege_img">
-                  <img @click="toggleShowMosaic(mosaic)" class="small_icon pointer"
-                        :src="mosaic.show?monitorSeleted:monitorUnselected">
+                <span class="namege_img "  >
+                  <img class="small_icon " :src="mosaic.show?monitorSeleted:monitorUnselected">
                   <img v-if="index == 0" class="mosaicIcon"
                         src="@/common/img/monitor/monitorMosaicIcon.png">
                   <img v-else class="mosaicIcon" src="@/common/img/monitor/mosaicDefault.png">

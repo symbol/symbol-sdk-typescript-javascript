@@ -7,25 +7,16 @@
 <script lang="ts">
     import 'animate.css'
     import {mapState} from 'vuex'
-    import {from, interval, asyncScheduler, of} from 'rxjs'
-    import {toArray, flatMap, concatMap, map, tap, throttleTime, finalize, mergeMap} from 'rxjs/operators'
-    import {
-        Listener, NamespaceHttp, NamespaceId, Address, MosaicHttp, MosaicId,
-        MosaicService, AccountHttp, UInt64, MosaicInfo, MosaicAlias
-    } from "nem2-sdk"
-
-    import {isWindows, Message, nodeConfig} from "@/config/index.ts"
-    import {localRead, getRelativeMosaicAmount} from '@/core/utils/utils.ts'
-    import {AppWallet, getMosaicList, getMosaicInfoList, getNamespaces} from '@/core/utils/wallet.ts'
+    import { asyncScheduler} from 'rxjs'
+    import {throttleTime} from 'rxjs/operators'
+    import {isWindows} from "@/config/index.ts"
+    import {localRead} from '@/core/utils/utils.ts'
+    import {AppWallet, getNamespaces} from '@/core/utils/wallet.ts'
     import {checkInstall} from '@/core/utils/electron.ts'
-    import {AccountApiRxjs} from '@/core/api/AccountApiRxjs.ts'
-    import {ListenerApiRxjs} from '@/core/api/ListenerApiRxjs.ts'
-    import {Component, Vue, Watch} from 'vue-property-decorator'
-    import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
+    import {Component, Vue} from 'vue-property-decorator'
     import {ChainListeners} from '@/core/services/listeners.ts'
     import {getNetworkGenerationHash, getCurrentNetworkMosaic} from '@/core/utils/network.ts'
-    import {aliasType} from '@/config/index.ts'
-    import {mosaicsAmountViewFromAddress, initMosaic, enrichMosaics, AppMosaics} from '@/core/services/mosaics'
+    import { initMosaic, enrichMosaics, AppMosaics} from '@/core/services/mosaics'
     import {getMarketOpenPrice} from '@/core/services/marketData.ts'
     import {setTransactionList} from '@/core/services/transactions'
 
@@ -90,7 +81,7 @@
         get mosaicList() {
             return this.activeAccount.mosaics
         }
-        
+
         get transactionList() {
             // used in enrichMosaics
             return this.activeAccount.transactionList
@@ -111,7 +102,7 @@
                     this.$store.commit('SET_BALANCE_LOADING', true),
                     this.$store.commit('SET_MOSAICS_LOADING', true),
                 ])
-    
+
                 const res = await Promise.all([
                     // @TODO make it an AppWallet methods
                     initMosaic(newWallet, this),
@@ -139,6 +130,8 @@
          * Add namespaces and divisibility to transactions and balances
          */
         async mounted() {
+            // need init at start
+            await this.setWalletsList()
             /**
              * On app initialisation
              */
@@ -148,46 +141,46 @@
                 this.$store.commit('SET_MOSAICS_LOADING', true),
             ])
 
-            this.$Notice.config({ duration: 4 })
+            this.$Notice.config({duration: 4})
             const {node} = this
 
             getMarketOpenPrice(this)
             await getNetworkGenerationHash(node, this)
             await getCurrentNetworkMosaic(node, this.$store)
-            await this.setWalletsList()
+
 
             if (this.wallet && this.wallet.address) {
                 this.onWalletChange(this.wallet)
-            } 
+            }
             /**
              * START EVENTS LISTENERS
              */
             this.$watchAsObservable('wallet')
                 .pipe(
-                    throttleTime(6000,asyncScheduler, {leading: true, trailing: true}),
+                    throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
                 ).subscribe(({newValue, oldValue}) => {
-                    /**
-                     * On first wallet set
-                     */
-                    if(oldValue.address === undefined || newValue.address !== undefined) {
-                        // @TODO
-                    }
-                    
-                    /**
-                     * On Wallet Change
-                     */
-                    if (oldValue.address !== undefined && newValue.address !== oldValue.address) {
-                        const appMosaics = AppMosaics()
-                        appMosaics.reset(this.$store)
-                        const networkMosaic = {hex: this.currentXEM1, name: this.currentXem}
-                        appMosaics.addNetworkMosaic(networkMosaic, this.$store)
-                        this.onWalletChange(newValue)
-                    }
-                })
+                /**
+                 * On first wallet set
+                 */
+                if (oldValue.address === undefined || newValue.address !== undefined) {
+                    // @TODO
+                }
+
+                /**
+                 * On Wallet Change
+                 */
+                if (oldValue.address !== undefined && newValue.address !== oldValue.address) {
+                    const appMosaics = AppMosaics()
+                    appMosaics.reset(this.$store)
+                    const networkMosaic = {hex: this.currentXEM1, name: this.currentXem}
+                    appMosaics.addNetworkMosaic(networkMosaic, this.$store)
+                    this.onWalletChange(newValue)
+                }
+            })
 
 
             this.$store.subscribe(async (mutation, state) => {
-              switch(mutation.type) {
+                switch (mutation.type) {
                     /**
                      * On Node Change
                      */
@@ -201,19 +194,19 @@
                                 this.chainListeners = new ChainListeners(this, this.wallet.address, node)
                                 this.chainListeners.start()
                             } catch (error) {
-                                console.error(error)   
+                                console.error(error)
                             }
 
                         } else {
                             this.chainListeners.switchEndpoint(node)
                         }
-                    break;
-              }
+                        break
+                }
             })
             // @TODO: hook to onLogin event
         }
 
-    created() {
+        created() {
             if (isWindows) {
                 checkInstall()
             }

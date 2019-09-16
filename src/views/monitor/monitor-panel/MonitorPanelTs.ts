@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import monitorSeleted from '@/common/img/monitor/monitorSeleted.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
-import {copyTxt, formatXEMamount, formatNumber} from '@/core/utils/utils.ts'
+import {copyTxt, formatXEMamount, formatNumber, localRead, localSave} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
 import {minitorPanelNavigatorList} from '@/config/index.ts'
 
@@ -79,9 +79,10 @@ export class MonitorPanelTs extends Vue {
         const newList: any = Object.values(mosaics)
         return newList.filter(mosaic => (
             mosaic.name && mosaic.name.indexOf(mosaicName) > -1
-                || mosaic.hex.indexOf(mosaicName) > -1
+            || mosaic.hex.indexOf(mosaicName) > -1
         ))
     }
+
 
     get currentHeight() {
         return this.app.chainStatus.currentHeight
@@ -121,21 +122,21 @@ export class MonitorPanelTs extends Vue {
         })
     }
 
-    toggleAllChecked(){
+    toggleAllChecked() {
         this.ischecked = !this.ischecked
         const updatedList: any = {...this.mosaicMap}
-        Object.keys(updatedList).forEach(key=>updatedList[key].show = this.ischecked)        
+        Object.keys(updatedList).forEach(key => updatedList[key].show = this.ischecked)
     }
 
-    toggleShowExpired(){
+    toggleShowExpired() {
         this.showExpiredMosaics = !this.showExpiredMosaics
         const updatedList: any = {...this.mosaicMap}
         const {currentHeight} = this
         Object.keys(updatedList)
-            .forEach(key=>  {
+            .forEach(key => {
                 const {expirationHeight} = updatedList[key]
                 updatedList[key].show = this.showExpiredMosaics
-                    ? true 
+                    ? true
                     : expirationHeight === 'Forever' || currentHeight < expirationHeight
             })
     }
@@ -145,9 +146,21 @@ export class MonitorPanelTs extends Vue {
     }
 
     toggleShowMosaic(mosaic) {
+        let wallets = JSON.parse(localRead('wallets'))
         const updatedList: any = {...this.mosaicMap}
         updatedList[mosaic.hex].show = !updatedList[mosaic.hex].show
         this.$store.commit('SET_MOSAICS', updatedList)
+        wallets[0].hideMosaicMap = wallets[0].hideMosaicMap || {}
+        if (!mosaic.show) {
+            wallets[0].hideMosaicMap[mosaic.hex] = true
+            localSave('wallets', JSON.stringify(wallets))
+            return
+        }
+        // delete from hideMosaicList
+        delete wallets[0].hideMosaicMap[mosaic.hex]
+        localSave('wallets', JSON.stringify(wallets))
+
+
     }
 
     // @TODO: move to formatTransaction

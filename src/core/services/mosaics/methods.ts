@@ -3,6 +3,7 @@ import {AppMosaics} from '@/core/services/mosaics'
 import {of} from 'rxjs'
 import {map, mergeMap} from 'rxjs/operators'
 import {AppWallet} from '@/core/utils/wallet.ts'
+import {localRead} from "@/core/utils/utils"
 
 /**
  * Custom implementation for performance gains
@@ -18,7 +19,7 @@ export const mosaicsAmountViewFromAddress = (node: string, address: Address): Pr
 
       const accountInfo = await accountHttp.getAccountInfo(address).toPromise()
       if(!accountInfo.mosaics.length) return []
-    
+
       const mosaics = accountInfo.mosaics.map(mosaic => mosaic)
       const mosaicIds = mosaics.map(({id}) => new MosaicId(id.toHex()))
       const mosaicViews = await mosaicService.mosaicsView(mosaicIds).toPromise()
@@ -27,11 +28,11 @@ export const mosaicsAmountViewFromAddress = (node: string, address: Address): Pr
         .map(mosaic => {
           const mosaicView = mosaicViews
            .find(({mosaicInfo}) => mosaicInfo.mosaicId.toHex() === mosaic.id.toHex())
-           
+
           if(mosaicView === undefined) throw new Error('A MosaicView was not found')
           return new MosaicAmountView(mosaicView.mosaicInfo, mosaic.amount)
         })
-         
+
       resolve(mosaicAmountViews)
     } catch (error) {
       reject(error)
@@ -63,7 +64,6 @@ export const enrichMosaics = (that) => {
 export const initMosaic = (wallet, that) => {
     const {node, mosaicList, currentXEM1} = that
     const store = that.$store
-
     const appMosaics = AppMosaics()
     appMosaics.init(that.mosaicList)
     const address = Address.createFromRawAddress(wallet.address)
@@ -85,7 +85,7 @@ export const initMosaic = (wallet, that) => {
                 resolve(true)
         } catch (error) {
             store.commit('SET_MOSAICS_LOADING', false)
-            reject(error)   
+            reject(error)
         }
     })
 }

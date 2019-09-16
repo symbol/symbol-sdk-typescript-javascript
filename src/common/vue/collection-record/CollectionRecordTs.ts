@@ -45,7 +45,7 @@ export class CollectionRecordTs extends Vue {
 
     get transferTransactionList() {
         const {transactionList} = this
-        return transactionList.filter(({rawTx})=> rawTx.type === TransactionType.TRANSFER)
+        return transactionList.filter(({rawTx}) => rawTx.type === TransactionType.TRANSFER)
     }
 
     get slicedConfirmedTransactionList() {
@@ -56,16 +56,38 @@ export class CollectionRecordTs extends Vue {
         if (!filteredByDate.length) return []
 
         return this.transactionType === TransferType.SENT
-        ? filteredByDate.filter(({txHeader}) => txHeader.tag === 'payment')
-        : filteredByDate.filter(({txHeader}) => txHeader.tag !== 'payment')
+            ? filteredByDate.filter(({txHeader}) => txHeader.tag === 'payment')
+            : filteredByDate.filter(({txHeader}) => txHeader.tag !== 'payment')
     }
-    
+
+
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
+    }
+
+    get accountAddress() {
+        return this.activeAccount.wallet.address
+    }
+
+
+    get node() {
+        return this.activeAccount.node
+    }
+
+    get currentXem() {
+        return this.activeAccount.currentXem
+    }
+
     get currentHeight() {
         return this.app.chainStatus.currentHeight
     }
 
     get unConfirmedTransactionList() {
         return this.transferTransactionList.filter(({isTxUnconfirmed}) => isTxUnconfirmed)
+    }
+
+    hideSearchDetail() {
+        this.isShowSearchDetail = false
     }
 
     changeCurrentMonth(e) {

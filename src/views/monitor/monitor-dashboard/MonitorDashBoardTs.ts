@@ -170,7 +170,7 @@ export class MonitorDashBoardTs extends Vue {
             this.updateAnimation = 'appear'
         }, 500)
     }
- 
+
     mounted() {
         this.getMarketPrice() // @TODO: review
     }
