@@ -85,14 +85,14 @@ export default class TransferTransactionTs extends Vue {
         }))
     }
 
-    get addresAliasMap() {
-        const addresAliasMap = this.activeAccount.addresAliasMap
-        for (let item in addresAliasMap) {
+    get addressAliasMap() {
+        const addressAliasMap = this.activeAccount.addressAliasMap
+        for (let item in addressAliasMap) {
             this.isAddressMapNull = false
-            return addresAliasMap
+            return addressAliasMap
         }
         this.isAddressMapNull = true
-        return addresAliasMap
+        return addressAliasMap
     }
 
     get xemDivisibility() {

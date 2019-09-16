@@ -24,10 +24,10 @@
           </div>
         </div>
         <!-- inner transaction -->
-        <div v-if="transactionDetails.formatAggregateCompelete">
+        <div v-if="transactionDetails.formattedInnerTransactions">
           <span class=" title"> {{$t('inner_transaction')}}</span>
           <div
-            v-for="(innerTransaction, index) in transactionDetails.formatAggregateCompelete"
+            v-for="(innerTransaction, index) in transactionDetails.formattedInnerTransactions"
             :key="index"
             class="inner_transaction"
           >
@@ -139,7 +139,7 @@
                 <span class="transfer_type overflow_ellipsis">{{c.infoSecond?c.infoSecond:null}}</span>
                 <span :class="['amount','overflow_ellipsis',!c.isReceipt?'orange':'blue']" v-if="c.infoThird">{{formatNumber(c.infoThird)}}</span>
                 <span v-else class="amount overflow_ellipsis">0</span>
-                <span class="date overflow_ellipsis">{{c.time}}</span>
+                <span class="date overflow_ellipsis">{{c.txHeader.time}}</span>
                 <img v-if="c.isTxUnconfirmed" src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
                      class="expand_mosaic_info">
                 <img v-else src="@/common/img/monitor/dash-board/dashboardConfirmed.png"
@@ -171,10 +171,10 @@
               >
                 <img class="mosaic_action"
                      :src="u.icon" alt="">
-                <span class="account overflow_ellipsis">{{$t(u.tag)}}</span>
-                <span class="transfer_type overflow_ellipsis">{{formatNumber(u.infoSecond)}}</span>
-                <span class="amount overflow_ellipsis">{{formatNumber(u.infoThird)}}</span>
-                <span class="date overflow_ellipsis">{{u.time}}</span>
+                <span class="account overflow_ellipsis">{{$t(u.txHeader.tag)}}</span>
+                <span class="transfer_type overflow_ellipsis">{{formatNumber(u.rawTx.maxFee.compact())}}</span>
+                <span class="amount overflow_ellipsis">{{formatNumber(u.txHeader.block)}}</span>
+                <span class="date overflow_ellipsis">{{u.txHeader.time}}</span>
                 <img v-if="u.isTxUnconfirmed" src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
                      class="expand_mosaic_info">
                 <img v-else src="@/common/img/monitor/dash-board/dashboardConfirmed.png"

@@ -1,2 +1,6 @@
 export * from './transactions'
 export * from './formatting'
+export * from './transactionFormatter'
+export * from './transactionHeader'
+export * from './formattedTransaction'
+export * from './transactionFormatters'

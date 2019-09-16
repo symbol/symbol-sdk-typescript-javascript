@@ -46,14 +46,14 @@ export class MultisigTransferTransactionTs extends Vue {
     isAddressMapNull = true
     formItem = formData.multisigTransferForm
 
-    get addresAliasMap() {
-        const addresAliasMap = this.activeAccount.addresAliasMap
-        for (let item in addresAliasMap) {
+    get addressAliasMap() {
+        const addressAliasMap = this.activeAccount.addressAliasMap
+        for (let item in addressAliasMap) {
             this.isAddressMapNull = false
-            return addresAliasMap
+            return addressAliasMap
         }
         this.isAddressMapNull = true
-        return addresAliasMap
+        return addressAliasMap
     }
 
     get generationHash() {
@@ -71,10 +71,6 @@ export class MultisigTransferTransactionTs extends Vue {
 
     get currentXEM1() {
         return this.activeAccount.currentXEM1
-    }
-
-    get currentXEM2() {
-        return this.activeAccount.currentXEM2
     }
 
     get getWallet() {
@@ -250,9 +246,9 @@ export class MultisigTransferTransactionTs extends Vue {
 
     async initMosaic(accountAddress: string) {
         const that = this
-        const {currentXEM1, currentXEM2, node, currentXem} = this
+        const {currentXEM1, node, currentXem} = this
         const mosaicList: Mosaic[] = await getMosaicList(accountAddress, node)
-        that.mosaicList = await buildMosaicList(mosaicList, currentXEM1, currentXEM2, currentXem)
+        that.mosaicList = await buildMosaicList(mosaicList, currentXEM1, currentXem)
     }
 
 

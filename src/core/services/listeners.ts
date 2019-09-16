@@ -1,6 +1,6 @@
 import {Address, Listener} from "nem2-sdk";
 import {filter} from 'rxjs/operators'
-import {formatAndSave} from '@/core/services/transactions/transactions'
+import {formatAndSave} from '@/core/services/transactions'
 
 export class ChainListeners {
     private readonly app: any

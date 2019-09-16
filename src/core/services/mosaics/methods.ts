@@ -1,4 +1,4 @@
-import {AccountHttp, Address, MosaicAmountView, MosaicService, MosaicHttp, MosaicId} from 'nem2-sdk'
+import {AccountHttp, Address, MosaicAmountView, MosaicService, MosaicHttp, MosaicId, TransactionType} from 'nem2-sdk'
 import {AppMosaics} from '@/core/services/mosaics'
 import {of} from 'rxjs'
 import {map, mergeMap} from 'rxjs/operators'
@@ -45,7 +45,9 @@ export const enrichMosaics = (that) => {
           const appMosaics = AppMosaics()
           appMosaics.init(that.mosaicList)
           appMosaics.fromNamespaces(that.namespaceList, that.$store)
-          appMosaics.fromTransactions(that.transactionList.transferTransactionList, that.$store)
+          const transferTransactionList = [...that.transactionList]
+              .filter(({rawTx})=>rawTx.type === TransactionType.TRANSFER)
+          appMosaics.fromTransactions(transferTransactionList, that.$store)
           // @TODO: Check if the unnamed mosaics have aliases
           await appMosaics.augmentTransactionsMosaics(
               that.transactionList,

@@ -8,7 +8,7 @@
 
     <div class="namespace_list_table">
       <div class="table_head">
-        <span class="namesapce_name">{{$t('space_name')}}</span>
+        <span class="namesapce_name">{{$t('namespace_name')}}</span>
         <span class="duration">{{$t('duration')}}</span>
         <span class="is_active">{{$t('is_active')}}</span>
         <span class="link">{{$t('link')}}</span>

@@ -122,29 +122,29 @@ export const Message = {
     SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR: 'The_sub_namespace_cannot_be_longer_than_16',
     NODE_CONNECTION_ERROR: 'Node_connection_failed',
     KEYSTORE_DECRYPTION_FAILED: 'Keystore_decryption_failed',
-    MOSACI_LIST_NULL_ERROR: 'The_mosaic_to_be_sent_is_empty',
+    MOSAIC_LIST_NULL_ERROR: 'The_mosaic_to_be_sent_is_empty',
     ADDRESS_ALIAS_NOT_EXIST_ERROR: 'address_alias_not_exist'
 
 }
 
 export const transactionTag = {
-    GATHERING: 'gathering',
+    RECEIPT: 'receipt',
     PAYMENT: 'payment',
-    REGIST_NAMESPACE: 'regist_namespace',
-    ADDRESS_ALIAS: 'address_alias',
-    MOSAIC_ALIAS: 'mosaic_alias',
-    MOSAIC_DEFINITION: 'mosaic_definition',
-    MOSAIC_SUPPLY_CHANGE: 'mosaic_supply_change',
-    MODIFY_MULTISIG_ACCOUNT: 'modify_multisig_account',
-    AGGREGATE_COMPLETE: 'aggregate_complete',
-    AGGREGATE_BONDED: 'aggregate_bonded',
-    LOCK: 'lock',
-    SECRET_LOCK: 'secret_lock',
-    SECRET_PROOF: 'scret_proof',
-    MODIFY_ACCOUNT_PROPERTY_ADDRESS: 'modify_account_property_address',
-    MODIFY_ACCOUNT_PROPERTY_MOSAIC: 'modify_account_property_mosaic',
-    MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE: 'modify_account_property_entity_type',
-    LINK_ACCOUNT: 'link_account'
+    [TransactionType.REGISTER_NAMESPACE]: 'register_namespace',
+    [TransactionType.ADDRESS_ALIAS]: 'address_alias',
+    [TransactionType.MOSAIC_ALIAS]: 'mosaic_alias',
+    [TransactionType.MOSAIC_DEFINITION]: 'mosaic_definition',
+    [TransactionType.MOSAIC_SUPPLY_CHANGE]: 'mosaic_supply_change',
+    [TransactionType.MODIFY_MULTISIG_ACCOUNT]: 'modify_multisig_account',
+    [TransactionType.AGGREGATE_COMPLETE]: 'aggregate_complete',
+    [TransactionType.AGGREGATE_BONDED]: 'aggregate_bonded',
+    [TransactionType.LOCK]: 'lock',
+    [TransactionType.SECRET_LOCK]: 'secret_lock',
+    [TransactionType.SECRET_PROOF]: 'secret_proof',
+    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS]: 'modify_account_property_address',
+    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC]: 'modify_account_property_mosaic',
+    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION]: 'modify_account_property_entity_type',
+    [TransactionType.LINK_ACCOUNT]: 'link_account'
 }
 
 export const entityTypeList = {
@@ -152,8 +152,8 @@ export const entityTypeList = {
         label: 'transfer',
         value: TransactionType.TRANSFER
     },
-    'regist_namespace': {
-        label: 'regist_namespace',
+    'register_namespace': {
+        label: 'register_namespace',
         value: TransactionType.REGISTER_NAMESPACE
     },
     'address_alias': {
@@ -193,8 +193,8 @@ export const entityTypeList = {
         label: 'secret_lock',
         value: TransactionType.SECRET_LOCK
     },
-    'scret_proof': {
-        label: 'scret_proof',
+    'secret_proof': {
+        label: 'secret_proof',
         value: TransactionType.SECRET_PROOF
     },
     'modify_account_property_address': {
@@ -248,7 +248,6 @@ export const nodeConfig = {
     node: 'http://13.114.200.132:3000',
     currentXem: 'nem.xem',
     currentXEM1: '',
-    currentXEM2: '1B47399ABD2C1E49',
     XEM: 'XEM',
     GasToXemMultiple: 20000   //  1xem=20000gas
 

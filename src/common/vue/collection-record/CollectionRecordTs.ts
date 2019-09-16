@@ -7,6 +7,7 @@ import {
 } from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
 import {TransferType} from '@/config/index.ts'
+import {TransactionType} from 'nem2-sdk'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -38,19 +39,25 @@ export class CollectionRecordTs extends Vue {
         return this.app.transactionsLoading
     }
 
-    get confirmedTransactionList() {
-        return this.activeAccount.transactionList.transferTransactionList
+    get transactionList() {
+        return this.activeAccount.transactionList
+    }
+
+    get transferTransactionList() {
+        const {transactionList} = this
+        return transactionList.filter(({rawTx})=> rawTx.type === TransactionType.TRANSFER)
     }
 
     get slicedConfirmedTransactionList() {
-        const {currentMonthFirst, currentMonthLast, confirmedTransactionList} = this
-        const filteredByDate = [...confirmedTransactionList]
+        const {currentMonthFirst, currentMonthLast, transferTransactionList} = this
+        const filteredByDate = [...transferTransactionList]
             .filter(item => (!item.isTxUnconfirmed
-                && item.date <= currentMonthLast && item.date >= currentMonthFirst))
+                && item.txHeader.date <= currentMonthLast && item.txHeader.date >= currentMonthFirst))
         if (!filteredByDate.length) return []
+
         return this.transactionType === TransferType.SENT
-            ? filteredByDate.filter(({tag}) => tag === 'payment')
-            : filteredByDate.filter(({tag}) => tag !== 'payment')
+        ? filteredByDate.filter(({txHeader}) => txHeader.tag === 'payment')
+        : filteredByDate.filter(({txHeader}) => txHeader.tag !== 'payment')
     }
     
     get currentHeight() {
@@ -58,7 +65,7 @@ export class CollectionRecordTs extends Vue {
     }
 
     get unConfirmedTransactionList() {
-        return [...this.confirmedTransactionList].filter(({isTxUnconfirmed}) => isTxUnconfirmed)
+        return this.transferTransactionList.filter(({isTxUnconfirmed}) => isTxUnconfirmed)
     }
 
     changeCurrentMonth(e) {
@@ -75,35 +82,35 @@ export class CollectionRecordTs extends Vue {
         this.transactionDetails = [
             {
                 key: 'transfer_type',
-                value: transaction.isReceipt ? 'gathering' : 'payment'
+                value: transaction.isReceipt ? 'receipt' : 'payment'
             },
             {
                 key: 'from',
-                value: transaction.signer.address.address
+                value: transaction.rawTx.signer.address.address
             },
             {
                 key: 'aims',
-                value: transaction.recipient.address
+                value: transaction.rawTx.recipient.address
             },
-            {
-                key: 'mosaic',
-                value: transaction.mosaic ? transaction.mosaic : null
-            },
+            // {
+            //     key: 'mosaic',
+            //     value: transaction.mosaic ? transaction.mosaic : null
+            // },
             {
                 key: 'fee',
-                value: getRelativeMosaicAmount(transaction.maxFee.compact(), 6) + 'XEM'
+                value: transaction.dialogDetailMap.fee
             },
             {
                 key: 'block',
-                value: transaction.transactionInfo.height.compact()
+                value: transaction.txHeader.block
             },
             {
                 key: 'hash',
-                value: transaction.transactionInfo.hash
+                value: transaction.txHeader.hash
             },
             {
                 key: 'message',
-                value: transaction.message.payload || 'N/A'
+                value: transaction.rawTx.message.payload || 'N/A'
             }
         ]
     }

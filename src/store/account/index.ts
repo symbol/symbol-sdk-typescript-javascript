@@ -1,21 +1,21 @@
 import {Account, TransactionType} from 'nem2-sdk'
 import {nodeConfig} from "@/config/index.ts"
+import { FormattedTransaction } from '@/core/services/transactions'
 
 declare interface account {
     node: string,
     // @TODO: the currentXem should be renamed
     currentXem: string,
     currentXEM1: string,
-    currentXEM2: string,
     account: Account,
     wallet: any,
     mosaics: any[],
     namespace: any[],
     errorTx: Array<any>,
-    addresAliasMap: any,
+    addressAliasMap: any,
     generationHash: string,
     xemDivisibility: number
-    transactionList: any,
+    transactionList: FormattedTransaction[],
 }
 
 export default {
@@ -23,19 +23,15 @@ export default {
         node: nodeConfig.node,
         currentXem: nodeConfig.currentXem,
         currentXEM1: nodeConfig.currentXEM1,
-        currentXEM2: nodeConfig.currentXEM2,
         account: {},
         wallet: {},
         mosaics: {},
         namespace: [],
         errorTx: [],
-        addresAliasMap: {},
+        addressAliasMap: {},
         generationHash: '',
         xemDivisibility: 6,
-        transactionList: {
-            transferTransactionList: [],
-            receiptList: [],
-        },
+        transactionList: []
     },
     getters: {
         wallet(state) {
@@ -85,8 +81,8 @@ export default {
         SET_CURRENT_XEM_1(state: account, currentXEM1: string): void {
             state.currentXEM1 = currentXEM1
         },
-        SET_ADDRESS_ALIAS_MAP(state: account, addresAliasMap: any): void {
-            state.addresAliasMap = addresAliasMap
+        SET_ADDRESS_ALIAS_MAP(state: account, addressAliasMap: any): void {
+            state.addressAliasMap = addressAliasMap
         },
         SET_XEM_DIVISIBILITY(state: account, xemDivisibility: number) {
             state.xemDivisibility = xemDivisibility
@@ -97,34 +93,21 @@ export default {
         SET_TRANSACTION_LIST(state: account, list: any[]) {
             state.transactionList = list
         },
-        ADD_UNCONFIRMED_TRANSACTION(state: account, list: any) {
-            if (list.transferTransactionList.length) {
-                state.transactionList.transferTransactionList.unshift(list.transferTransactionList[0])
-            } 
-            if (list.receiptList.length) {
-                state.transactionList.receiptList.unshift(list.receiptList[0])
-            } 
+        ADD_UNCONFIRMED_TRANSACTION(state: account, txList: any) {
+            state.transactionList.unshift(txList[0])
         },
-        ADD_CONFIRMED_TRANSACTION(state: account, tx: any) {
+        ADD_CONFIRMED_TRANSACTION(state: account, txList: any) {
             // @TODO merge or separate these 2 lists in different objects
-            const newTx = tx.transferTransactionList.length ? tx.transferTransactionList[0] : tx.receiptList[0]
-            const listName = newTx.type === TransactionType.TRANSFER ? 'transferTransactionList' : 'receiptList' 
-            const otherListName = newTx.type !== TransactionType.TRANSFER ? 'transferTransactionList' : 'receiptList'
-
-            const stateTransactions = {...state.transactionList}
-            const txFromStore = stateTransactions[listName]
-
-            const txIndex = txFromStore.findIndex(({transactionInfo}) => newTx.transactionInfo.hash === transactionInfo.hash)
-            if(txIndex > -1 && txFromStore[txIndex].isTxUnconfirmed) txFromStore.splice(txIndex, 1)
-            
-            txFromStore.push(newTx)
-
-            const newTransactionList = {
-                [listName]: txFromStore,
-                [otherListName]: [...state.transactionList[otherListName]]
-            }
-
-            state.transactionList = newTransactionList
+            const newTx = txList[0]
+            const newStateTransactions = [...state.transactionList]
+            const txIndex = newStateTransactions
+                .findIndex(({txHeader}) => newTx.txHeader.hash === txHeader.hash)
+            console.log(newStateTransactions, newTx, txIndex, newStateTransactions[txIndex], '8978987948645')
+            if(txIndex > -1 && newStateTransactions[txIndex].isTxUnconfirmed) {
+                newStateTransactions.splice(txIndex, 1)
+            } 
+            newStateTransactions.unshift(newTx)
+            state.transactionList = newStateTransactions
         },
         SET_CURRENT_XEM(state: account, currentXem: string) {
             state.currentXem = currentXem

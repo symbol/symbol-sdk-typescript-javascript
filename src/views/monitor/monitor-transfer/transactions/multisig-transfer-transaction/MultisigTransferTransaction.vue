@@ -21,7 +21,7 @@
       <div v-if="isShowSubAlias" class="selections ">
         <div class="selection_container scroll">
           <div @click="formModel.address =key " class="overflow_ellipsis selection_item"
-               v-for="(value,key) in addresAliasMap">{{value.label}}({{key}})
+               v-for="(value,key) in addressAliasMap">{{value.label}}({{key}})
           </div>
         </div>
         <div v-if="isAddressMapNull" class="no_data">

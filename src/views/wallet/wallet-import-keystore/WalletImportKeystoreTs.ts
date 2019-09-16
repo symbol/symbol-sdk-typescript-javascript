@@ -33,10 +33,6 @@ export class WalletImportKeystoreTs extends Vue {
         return this.app.walletList
     }
 
-    get currentXEM2() {
-        return this.activeAccount.currentXEM2
-    }
-
     submit() {
         if (!this.checkForm()) return
         this.importWallet()

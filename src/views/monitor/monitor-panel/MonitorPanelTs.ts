@@ -60,10 +60,6 @@ export class MonitorPanelTs extends Vue {
         return this.activeAccount.currentXEM1
     }
 
-    get currentXEM2() {
-        return this.activeAccount.currentXEM2
-    }
-
     get mosaicMap() {
         return this.activeAccount.mosaics
     }

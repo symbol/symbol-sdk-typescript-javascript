@@ -5,8 +5,9 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import LineChart from '@/common/vue/line-chart/LineChart.vue'
 import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
 import {isRefreshData, localSave, localRead} from '@/core/utils/utils.ts'
-import {networkStatusList, xemTotalSupply} from '@/config/index.ts'
+import {networkStatusList} from '@/config/index.ts'
 import {formatNumber} from "@/core/utils/utils"
+import { TransactionType } from 'nem2-sdk'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -48,16 +49,18 @@ export class MonitorDashBoardTs extends Vue {
         return this.app.transactionsLoading
     }
 
-    get txlist() {
+    get transactionList() {
         return this.activeAccount.transactionList
     }
 
     get transferTransactionList() {
-        return this.activeAccount.transactionList.transferTransactionList
+        const {transactionList} = this
+        return [...transactionList].filter(({rawTx})=>rawTx.type === TransactionType.TRANSFER)
     }
 
     get receiptTransactionList() {
-        return this.activeAccount.transactionList.receiptList
+        const {transactionList} = this
+        return [...transactionList].filter(({rawTx})=>rawTx.type !== TransactionType.TRANSFER)
     }
 
     get slicedReceiptsLists() {
@@ -159,7 +162,7 @@ export class MonitorDashBoardTs extends Vue {
         localSave('oneWeekPrice', JSON.stringify(oneWeekPrice))
     }
 
-    // @TODO: isnt't it doable in pure CSS?
+    // @TODO: isn't it doable in pure CSS?
     @Watch('currentHeight')
     onChainStatus() {
         this.updateAnimation = 'appear'

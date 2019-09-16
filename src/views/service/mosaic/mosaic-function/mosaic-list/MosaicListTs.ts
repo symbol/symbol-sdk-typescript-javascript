@@ -40,10 +40,6 @@ export class MosaicListTs extends Vue {
         return this.activeAccount.currentXEM1
     }
 
-    get currentXEM2() {
-        return this.activeAccount.currentXEM2
-    }
-
     get generationHash() {
         return this.activeAccount.generationHash
     }

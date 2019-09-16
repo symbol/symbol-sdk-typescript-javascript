@@ -13,7 +13,7 @@
       <div class="namespaceEditDialogBody">
         <div class="stepItem1">
           <Form :model="namespace">
-            <FormItem :label="$t('space_name')">
+            <FormItem :label="$t('namespace_name')">
               <p class="namespaceTxt">{{currentNamespace.name}}</p>
             </FormItem>
             <FormItem :label="$t('duration')">

@@ -63,10 +63,6 @@
             return this.activeAccount.currentXEM1
         }
 
-        get currentXEM2(): string {
-            return this.activeAccount.currentXEM2
-        }
-
         get namespaceList() {
             return this.activeAccount.namespace
         }
@@ -83,10 +79,6 @@
             return this.activeAccount.node
         }
 
-        get networkCurrencies() {
-            return [this.currentXEM1, this.currentXEM2]
-        }
-
         get xemDivisibility() {
             return this.activeAccount.xemDivisibility
         }
@@ -98,8 +90,9 @@
         get mosaicList() {
             return this.activeAccount.mosaics
         }
-
+        
         get transactionList() {
+            // used in enrichMosaics
             return this.activeAccount.transactionList
         }
 
@@ -142,8 +135,6 @@
             }
         }
 
-
-        // @TODO: integrate getBlockInfoByTransactionList
         /**
          * Add namespaces and divisibility to transactions and balances
          */
@@ -166,8 +157,7 @@
             await this.setWalletsList()
 
             if (this.wallet && this.wallet.address) {
-            this.onWalletChange(this.wallet)
-
+                this.onWalletChange(this.wallet)
             } 
             /**
              * START EVENTS LISTENERS

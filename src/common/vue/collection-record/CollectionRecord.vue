@@ -18,7 +18,6 @@
       </div>
     </Modal>
 
-
     <div class="top_title">
       <span>{{transactionType === TransferType.RECEIVED
           ? $t('collection_record') : $t('transfer_sent')}}</span>
@@ -60,12 +59,12 @@
         <div class="flex_content">
           <div class="left left_components">
             <div class="top overflow_ellipsis">{{c.infoSecond}}</div>
-            <div class="bottom overflow_ellipsis"> {{c.time.slice(0, c.time.length - 3)}}</div>
+            <div class="bottom overflow_ellipsis"> {{c.txHeader.time.slice(0, c.txHeader.time.length - 3)}}</div>
           </div>
           <div class="right">
             <div class="top overflow_ellipsis">{{formatNumber(c.infoThird)}}</div>
             <div class="bottom overflow_ellipsis">
-              {{formatNumber(c.transactionInfo && c.transactionInfo.height.compact())}}
+              {{formatNumber(c.txHeader.block)}}
             </div>
           </div>
         </div>
@@ -81,12 +80,12 @@
         <div class="flex_content">
           <div class="left left_components">
             <div class="top overflow_ellipsis">{{c.infoSecond}}</div>
-            <div class="bottom overflow_ellipsis"> {{c.time.slice(0, c.time.length - 3)}}</div>
+            <div class="bottom overflow_ellipsis"> {{c.txHeader.time.slice(0, c.txHeader.time.length - 3)}}</div>
           </div>
           <div class="right">
             <div class="top overflow_ellipsis">{{formatNumber(c.infoThird)}}</div>
             <div class="bottom overflow_ellipsis">
-              {{formatNumber(c.transactionInfo && c.transactionInfo.height.compact())}}
+              {{formatNumber(c.txHeader.block)}}
             </div>
           </div>
         </div>

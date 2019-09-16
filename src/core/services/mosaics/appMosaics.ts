@@ -1,6 +1,6 @@
-import { MosaicAlias, MosaicId, UInt64, MosaicAmountView, MosaicDefinitionTransaction, MosaicInfo,
-} from 'nem2-sdk'
+import { MosaicAlias, MosaicId, UInt64, MosaicAmountView, MosaicDefinitionTransaction, MosaicInfo } from 'nem2-sdk'
 import {getRelativeMosaicAmount} from '@/core/utils/utils.ts'
+import { FormattedTransfer, FormattedTransaction } from '../transactions'
 
 class AppMosaic {
     hex: string
@@ -90,9 +90,10 @@ export const AppMosaics = () => ({
       this.addItem(mosaic)
     },
 
-    fromTransactions(transactions: any, store: any): void {
+    fromTransactions(transactions: FormattedTransfer[], store: any): void {
+        const tx: any = transactions
         this.store = store
-        const mosaics = transactions.map(({mosaics}) => mosaics)
+        const mosaics = tx.map(({rawTx}) => rawTx.mosaics)
         const hexIds = [].concat(...mosaics).map(({id}) => ({hex: id.toHex()}))
         this.addItems(hexIds)
     },
@@ -135,74 +136,80 @@ export const AppMosaics = () => ({
         })
     },
     
-    // @TODO: refactor, pull out from here, rename 
+    // @TODO: refactor
     augmentTransactionsMosaics(transactions: any, store: any): Promise<void> {
-      return new Promise(async (resolve, reject) => {
-          try {
-            const augmentedTransactionList = transactions.transferTransactionList
-            .map(tx => {return {...tx, mosaics: tx.mosaics
-            .map(mosaic => {
-                const newMosaic = this.mosaics[mosaic.id.toHex()]
-                if(!newMosaic) return mosaic
-                return {...mosaic, ...newMosaic}
-            })}})
-            .map(tx => {
-              return tx.mosaics.length === 1 && tx.mosaics[0] && tx.mosaics[0].mosaicInfo 
-              ? {
-                  ...tx,
-                  infoThird: getRelativeMosaicAmount(
-                      tx.mosaics[0].amount.compact(),
-                      tx.mosaics[0].mosaicInfo.divisibility,
-                  )
-              }
-              : tx
-            })
+        return new Promise(async (resolve, reject) => {
+            try {
+                const augmentedTransactionList = transactions
+                .map((tx: any) => {
+                    if (!(tx instanceof FormattedTransfer)) return tx
+                    const rawTx: any = tx.rawTx
+                    
+                    return {...tx, mosaics: rawTx.mosaics
+                        .map(mosaic => {
+                            const newMosaic = this.mosaics[mosaic.id.toHex()]
+                            if(!newMosaic) return mosaic
+                            return {...mosaic, ...newMosaic}
+                        })}})
+                .map(tx => {
+                    if(tx instanceof FormattedTransaction && !(tx instanceof FormattedTransfer)) return tx
+                    const mosaics: any = tx.mosaics
+                    return mosaics.length === 1 && mosaics[0] && mosaics[0].mosaicInfo 
+                            ? {
+                                ...tx,
+                                infoSecond:  mosaics[0].name || mosaics[0].id.toHex(),
+                                infoThird: getRelativeMosaicAmount(
+                                    mosaics[0].amount.compact(),
+                                    mosaics[0].mosaicInfo.divisibility,
+                                ),
+                            }
+                            : tx
+                })
 
-            await store.commit('SET_TRANSACTION_LIST', {
-                transferTransactionList: augmentedTransactionList,
-                receiptList: transactions.receiptList,
-            })
-            resolve()
-        } catch (error) {
-            reject(error)
-        }
-    })
+                await store.commit('SET_TRANSACTION_LIST', augmentedTransactionList)
+                resolve()
+            } catch (error) {
+                reject(error)
+            }
+        })
   },
 
   // @TODO: refactor, pull out from here, rename 
   augmentNewTransactionsMosaics(transactions, store: any, {isTxUnconfirmed}): void {
       try {
-        const augmentedTransactionList = transactions.transferTransactionList
-        .map(tx => {return {...tx, mosaics: tx.mosaics
-        .map(mosaic => {
-            const newMosaic = this.mosaics[mosaic.id.toHex()]
-            if(!newMosaic) return mosaic
-            return {...mosaic, ...newMosaic}
-        })}})
-        .map(tx => {
-          return tx.mosaics.length === 1 && tx.mosaics[0] && tx.mosaics[0].mosaicInfo 
-          ? {
-              ...tx,
-              infoThird: getRelativeMosaicAmount(
-                  tx.mosaics[0].amount.compact(),
-                  tx.mosaics[0].mosaicInfo.divisibility,
-              )
-          }
-          : tx
+        const augmentedTransactionList = transactions
+        .map((tx: any) => {
+            if (!(tx instanceof FormattedTransfer)) return tx
+            const rawTx: any = tx.rawTx
+            
+            return {...tx, mosaics: rawTx.mosaics
+                .map(mosaic => {
+                    const newMosaic = this.mosaics[mosaic.id.toHex()]
+                    if(!newMosaic) return mosaic
+                    return {...mosaic, ...newMosaic}
+                })}})
+        .map((tx: any) => {
+            if(tx instanceof FormattedTransaction && !(tx instanceof FormattedTransfer)) return tx
+            const t: any = tx
+            const mosaics: any = t.mosaics
+            return mosaics.length === 1 && mosaics[0] && mosaics[0].mosaicInfo
+                    ? {
+                        ...tx,
+                        infoSecond:  mosaics[0].name || mosaics[0].id.toHex(),
+                        infoThird: getRelativeMosaicAmount(
+                            mosaics[0].amount.compact(),
+                            mosaics[0].mosaicInfo.divisibility,
+                        )
+                    }
+                    : tx
         })
 
         if(isTxUnconfirmed) {
-          store.commit('ADD_UNCONFIRMED_TRANSACTION', {
-              transferTransactionList: augmentedTransactionList,
-              receiptList: transactions.receiptList,
-          })
+          store.commit('ADD_UNCONFIRMED_TRANSACTION', augmentedTransactionList)
           return
         }
 
-        store.commit('ADD_CONFIRMED_TRANSACTION', {
-            transferTransactionList: augmentedTransactionList,
-            receiptList: transactions.receiptList,
-        })
+        store.commit('ADD_CONFIRMED_TRANSACTION', augmentedTransactionList)
 
     } catch (error) {
         console.error(error)

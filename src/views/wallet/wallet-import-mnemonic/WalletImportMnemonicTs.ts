@@ -27,10 +27,6 @@ export class WalletImportMnemonicTs extends Vue {
         return this.activeAccount.currentXEM1
     }
 
-    get currentXEM2() {
-        return this.activeAccount.currentXEM2
-    }
-
     get walletList() {
         return this.app.walletList
     }

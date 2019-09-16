@@ -364,22 +364,6 @@ export const createCompleteMultisigTransaction = (transaction: Array<Transaction
     return new MultisigApiRxjs().completeMultisigTransaction(networkType, fee, multisigPublickey, transaction)
 }
 
-export const getBlockInfoByTransactionList = (transactionList: Array<any>, node: string, offset: number) => {
-    const blockHeightList = transactionList.map((item) => {
-        const height = item.transactionInfo.height.compact()
-        new BlockApiRxjs().getBlockByHeight(node, height).subscribe((info) => {
-            if (info) {
-                item.time = formateNemTimestamp(info.timestamp.compact(), offset)
-            }
-            if (item.dialogDetailMap) {
-                item.dialogDetailMap.timestamp = formateNemTimestamp(info.timestamp.compact(), offset)
-            }
-            return
-        })
-        return item.transactionInfo.height.compact()
-    })
-}
-
 export const getMosaicList = async (address: string, node: string) => {
     let mosaicList: Mosaic[] = []
     await new AccountApiRxjs().getAccountInfo(address, node).toPromise().then(accountInfo => {
@@ -416,11 +400,11 @@ export const getMosaicInfoList = async (node: string, mosaicList: Mosaic[],curre
     return mosaicInfoList
 }
 
-export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, coin2: string,currentXem:string): any => {
+export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, currentXem:string): any => {
     const mosaicListRst = mosaicList.map((mosaic: any) => {
         mosaic._amount = mosaic.amount.compact()
         mosaic.value = mosaic.id.toHex()
-        if (mosaic.value == coin1 || mosaic.value == coin2) {
+        if (mosaic.value == coin1) {
             mosaic.label = currentXem + ' (' + mosaic._amount + ')'
         } else {
             mosaic.label = mosaic.id.toHex() + ' (' + mosaic._amount + ')'
@@ -428,7 +412,7 @@ export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, coin2: stri
         return mosaic
     })
     let isCoinExist = mosaicListRst.every((mosaic) => {
-        if (mosaic.value == coin1 || mosaic.value == coin2) {
+        if (mosaic.value == coin1) {
             return false
         }
         return true

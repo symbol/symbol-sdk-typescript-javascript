@@ -78,7 +78,6 @@ export const en_US = {
     point: 'Node',
     number_of_transactions: 'Transactions',
     transfer_type: 'Type',
-    gathering: 'Invoice',
     payment: 'Payment',
     from: 'From',
     aims: 'To',
@@ -295,7 +294,7 @@ export const en_US = {
     input_space_name: 'Input space name',
     the_duration_is_calculated_in_blocks_one_block_is_12_seconds: 'The duration is calculated in blocks one block is 12 seconds.',
     space_list: 'Space list',
-    space_name: 'Space name',
+    namespace_name: 'Space name',
     update_namespace: 'Update namespace',
     namespace_operation: 'Namespace operation',
 
@@ -633,7 +632,7 @@ export const en_US = {
     delete_wallet: 'Delete wallet',
 
 
-    regist_namespace: 'Regist/Renewal namespace',
+    register_namespace: 'Regist/Renewal namespace',
     address_alias: 'Address alias',
     mosaic_alias: 'Mosaic alias',
     mosaic_definition: 'Mosaic definition',
@@ -644,7 +643,7 @@ export const en_US = {
     lock: 'Lock',
     secret_lock: 'Secret lock',
     //secret_proof
-    scret_proof: 'Secret proof',
+    secret_proof: 'Secret proof',
     modify_account_property_address: 'Address restriction',
     modify_account_property_mosaic: 'Mosaic restriction',
     modify_account_property_entity_type: 'Entity restriction',

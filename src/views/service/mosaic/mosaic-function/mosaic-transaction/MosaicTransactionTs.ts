@@ -71,10 +71,6 @@ export class MosaicTransactionTs extends Vue {
         return this.activeAccount.currentXEM1
     }
 
-    get currentXEM2() {
-        return this.activeAccount.currentXEM2
-    }
-
     get currentXem() {
         return this.activeAccount.currentXem
     }

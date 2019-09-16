@@ -18,7 +18,7 @@
            <div v-if="isShowSubAlias" class="selections selection_animate ">
              <div class="selection_container scroll">
                <div
-                  v-for="(value,key) in addresAliasMap"
+                  v-for="(value,key) in addressAliasMap"
                   :key="key"
                   class="overflow_ellipsis"
                   @click="formModel.address=key"
