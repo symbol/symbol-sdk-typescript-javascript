@@ -552,18 +552,22 @@ export const settingNetworkColorList = ['green_point', 'pink_point', 'purple_poi
 export const settingPanelNavigationBar = [
     {
         title: 'general_settings',
+        navigatorTitle: 'general_settings',
         name: 'settingNormal',
         isSelected: true
     }, {
+        navigatorTitle: 'change_password',
         title: 'lock_password',
         name: 'settingLock',
         isSelected: false
     }, {
+        navigatorTitle: 'network_settings',
         title: 'network_settings',
         name: 'settingNetwork',
         isSelected: false,
         disabled: true
     }, {
+        navigatorTitle: 'about',
         title: 'about',
         name: 'settingAbout',
         isSelected: false

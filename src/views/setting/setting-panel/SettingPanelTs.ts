@@ -15,14 +15,14 @@ export class SettingPanelTs extends Vue {
         })
         list[index].isSelected = true
         this.navagatorList = list
-        this.currentHeadText = n.title
+        this.currentHeadText = n.navigatorTitle
         this.$router.push({
             name: n.name
         })
     }
 
-    mounted() {
-        this.currentHeadText = this.navagatorList[0].title
+    created() {
+        this.jumpToView(this.navagatorList[0], 0)
     }
 
 }

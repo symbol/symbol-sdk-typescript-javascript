@@ -216,6 +216,7 @@ export const en_US = {
     canel: 'Cancel',
 
     //setting-panel
+    change_password:'Change password',
     general_settings: 'General settings',
     lock_password: 'Lock password',
     network_settings: 'Network settings',
@@ -655,20 +656,21 @@ export const en_US = {
     LABEL_new_password: 'New password',
     HINT_new_password1: 'Should be between 8 and 32 chars.',
     HINT_new_password2: 'Allowed special chars: - _ ! @ # $ & * " ~ + = %',
-    PLACEHOLDER_new_password: '9_pass-WORD',
+    PLACEHOLDER_new_password: 'New password',
 
     previousPassword: 'Previous password',
     LABEL_previous_password: 'Previous password',
     HINT_previous_password: 'The password used to log into the application',
-    PLACEHOLDER_previous_password: 'My FiRst Pa$$word!',
+    PLACEHOLDER_previous_password: 'Current password',
 
     confirmPassword: 'Confirm password',
     LABEL_confirm_password: 'Confirm your new password',
-    PLACEHOLDER_confirm_password: '9_pass-WORD',
+    PLACEHOLDER_confirm_password: 'Confirm new  password',
     cipher: 'Cipher',
 
     HINT_cipher_hint1: 'Should be between 1 and 32 chars.',
 
+    PLACEHOLDER_cipher_hint:'Enter hint',
     amount: 'Amount',
     Node_connection_succeeded: 'Node connection succeeded',
 
