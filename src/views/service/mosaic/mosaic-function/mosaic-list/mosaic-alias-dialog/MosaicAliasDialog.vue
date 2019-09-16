@@ -18,7 +18,7 @@
             </FormItem>
             <FormItem :label="$t('alias_selection')">
               <Select v-model="mosaic.aliasName" required>
-                <Option :value="item.value" v-for="(item,index) in aliasNameList" :key="index">{{item.label}}</Option>
+                <Option :value="item.value" v-for="(item, index) in aliasNameList" :key="index">{{item.label}}</Option>
               </Select>
             </FormItem>
             <FormItem :label="$t('fee')">

@@ -10,6 +10,7 @@ import NamespaceMosaicAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-mosaic-alias-dialog/NamespaceMosaicAliasDialog.vue'
 import NamespaceAddressAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-address-alias-dialog/NamespaceAddressAliasDialog.vue'
+import {AppMosaics} from '@/core/services/mosaics'
 
 @Component({
     components: {
@@ -59,6 +60,34 @@ export class NamespaceListTs extends Vue {
             return item
         })
         return namespaceList
+    }
+
+    get currentHeight() {
+        return this.app.chainStatus.currentHeight
+    }
+
+    get mosaics() {
+        return this.activeAccount.mosaics
+    }
+
+    get wallet() {
+        return this.activeAccount.wallet
+    }
+
+    get availableMosaics() {
+        const {mosaics, currentHeight} = this
+        const {address} = this.wallet
+        const appMosaics = AppMosaics()
+        appMosaics.init(mosaics)
+        return appMosaics.getAvailableToBeLinked(currentHeight, address)
+    }
+    
+    get unlinkMosaicList() {
+        const {mosaics, currentHeight} = this
+        const {address} = this.wallet
+        const appMosaics = AppMosaics()
+        appMosaics.init(mosaics)
+        return appMosaics.getAvailableToBeLinked(currentHeight, address)
     }
 
     get nowBlockHeihgt() {

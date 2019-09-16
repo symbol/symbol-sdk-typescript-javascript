@@ -5,6 +5,7 @@ import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {AppWallet} from "@/core/utils/wallet.ts"
 import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
+import { AppMosaics } from '@/core/services/mosaics'
 
 @Component({
     computed: {
@@ -26,7 +27,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     @Prop()
     itemMosaic: any
 
-    get getWallet() {
+    get wallet() {
         return this.activeAccount.wallet
     }
 
@@ -45,14 +46,23 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     get xemDivisibility() {
         return this.activeAccount.xemDivisibility
     }
+
     get mosaics() {
         return this.activeAccount.mosaics
     }
+
+    get currentHeight() {
+        return this.app.chainStatus.currentHeight
+    }
+
     get unlinkMosaicList() {
-        const {mosaics}: any = this
-        return Object.values(mosaics)
-                .filter(({name})=> name)
-                .map((name) => ({label: name, value: name}))
+        const {mosaics, currentHeight} = this
+        const {address} = this.wallet
+        const appMosaics = AppMosaics()
+        appMosaics.init(mosaics)
+        const availableToBeLinked = appMosaics.getAvailableToBeLinked(currentHeight, address)
+        if (!availableToBeLinked.length) return []
+        return availableToBeLinked.map(({hex}) => ({label: hex, value: hex}))
     }
 
     mosaicAliasDialogCancel() {
@@ -95,7 +105,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
             return false
         }
 
-        const validPassword = new AppWallet(this.getWallet).checkPassword(new Password(formItem.password))
+        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(formItem.password))
 
         if (!validPassword) {
             this.$Notice.error({
@@ -108,7 +118,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
 
     async updateMosaic() {
         const {node, generationHash, xemDivisibility} = this
-        const {networkType} = this.getWallet
+        const {networkType} = this.wallet
         let {fee, name, mosaicHex} = this.formItem
         fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
         const password = new Password(this.formItem.password)
@@ -120,7 +130,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
             fee
         )
         this.initForm()
-        new AppWallet(this.getWallet)
+        new AppWallet(this.wallet)
             .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
         this.updatedMosaicAlias()
     }

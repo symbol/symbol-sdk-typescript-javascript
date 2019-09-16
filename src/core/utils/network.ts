@@ -1,7 +1,6 @@
-import {QueryParams, TransactionType, MosaicAlias} from "nem2-sdk"
+import {QueryParams, TransactionType, NamespaceService, NamespaceHttp} from "nem2-sdk"
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import {Message} from "@/config/index.ts"
-import {NamespaceApiRxjs} from '../api/NamespaceApiRxjs'
 import {AppMosaics} from '@/core/services/mosaics/appMosaics'
 
 export const getNetworkGenerationHash = async (node: string, that: any): Promise<void> => {
@@ -38,34 +37,12 @@ export const getCurrentNetworkMosaic = async (currentNode: string, store: any) =
         store.commit('SET_CURRENT_XEM_1', mosaicDefinitionTx.mosaicId.toHex())
         store.commit('SET_XEM_DIVISIBILITY', mosaicDefinitionTx.mosaicProperties.divisibility)
 
-        const namespaceNameResultList = await new NamespaceApiRxjs()
-            .getNamespacesName([mosaicAliasTx.namespaceId], currentNode).toPromise()
-
-        let namespaceMap = {}
-        let rootNamespace: any = {}
-        // get root namespace and get namespaceMap to get fullname
-        namespaceNameResultList.forEach((item) => {
-            if (!item.parentId) {
-                rootNamespace = item
-                return
-            }
-            namespaceMap[item.parentId.toHex()] = item
-        })
-        const rootHex = rootNamespace.namespaceId.toHex()
-        let currentNamespace = rootNamespace.name
-        // namespace max level <= 3
-        if (namespaceMap[rootHex]) {
-            const middleHex = namespaceMap[rootHex].namespaceId.toHex()
-            currentNamespace += '.' + namespaceMap[rootHex].name
-            if (namespaceMap[middleHex]) {
-                const leafHex = namespaceMap[middleHex].name
-                currentNamespace += '.' + leafHex
-            }
-        }
-
+        const networkNamespace = await new NamespaceService(new NamespaceHttp(currentNode))
+            .namespace(mosaicAliasTx.namespaceId).toPromise()
+            
         const appMosaics = AppMosaics()
-        appMosaics.fromGetCurrentNetworkMosaic(mosaicDefinitionTx, currentNamespace, store)
-        store.commit('SET_CURRENT_XEM', currentNamespace)
+        appMosaics.fromGetCurrentNetworkMosaic(mosaicDefinitionTx, networkNamespace.name, store)
+        store.commit('SET_CURRENT_XEM', networkNamespace.name)
 
     } catch (error) {
         store.commit('SET_IS_NODE_HEALTHY', false)

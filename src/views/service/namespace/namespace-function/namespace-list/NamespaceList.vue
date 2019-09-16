@@ -17,7 +17,6 @@
       </div>
 
       <div class="table_body">
-
         <div class="table_body_item radius" v-if="n" v-for="n in namespaceList">
           <span class="namesapce_name overflow_ellipsis">{{n.name}}</span>
           <span class="duration overflow_ellipsis">
@@ -34,16 +33,15 @@
                   <img src="@/common/img/service/namespace/namespaceRefresh.png">
                   <span>{{$t('update')}}</span>
                 </span>
-               <span v-if="n.isLinked" class="fnItem pointer" @click="showUnlinkDialog(n)">
+               <span v-if="n.isLinked && unlinkMosaicList.length" class="fnItem pointer" @click="showUnlinkDialog(n)">
                 <img src="@/common/img/service/namespace/namespaceRefresh.png">
                 <span>{{$t('unbind')}}</span>
               </span>
 
-              <span v-if="!n.isLinked" class="fnItem pointer" @click="showMosaicLinkDialog(n)">
+              <span v-if="!n.isLinked  && availableMosaics.length" class="fnItem pointer" @click="showMosaicLinkDialog(n)">
                 <img src="@/common/img/service/namespace/namespaceRefresh.png">
                 <span>{{$t('bind_mosaic')}}</span>
               </span>
-
                   <span v-if="!n.isLinked" class="fnItem pointer" @click="showAddressLinkDialog(n)">
                 <img src="@/common/img/service/namespace/namespaceRefresh.png">
                 <span>{{$t('bind_address')}}</span>

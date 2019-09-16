@@ -3,11 +3,14 @@ import { MosaicAlias, MosaicId, UInt64, MosaicAmountView, MosaicDefinitionTransa
 import {getRelativeMosaicAmount} from '@/core/utils/utils.ts'
 
 class AppMosaic {
+    hex: string
     amount: any
+    balance?: number
     expirationHeight: number | 'Forever'
     height: UInt64
     mosaicInfo: MosaicInfo
-
+    name: string
+    
     constructor(appMosaic?: {
         hex: string,
         balance?: number,
@@ -24,7 +27,7 @@ class AppMosaic {
         }
   }
 
-  get() {
+  get(): AppMosaic  {
       return this
   }
 }
@@ -33,7 +36,7 @@ export const AppMosaics = () => ({
     mosaics: {},
     store: null,
 
-    init(mosaicsFromStore: any) {
+    init(mosaicsFromStore: Record<string, AppMosaic>) {
         this.mosaics = {...mosaicsFromStore}
     },
 
@@ -41,42 +44,60 @@ export const AppMosaics = () => ({
         return this.mosaics
     },
 
-    storeItems() {
+    getAvailableToBeLinked(currentHeight: number, address: string): AppMosaic[] {
+        const appMosaics: AppMosaic[] = Object.values(this.mosaics)
+        return appMosaics
+            .filter((mosaic: AppMosaic) => (!mosaic.name
+                && mosaic.mosaicInfo.owner.address.plain() === address
+                && mosaic.expirationHeight === 'Forever'
+                || currentHeight > mosaic.expirationHeight))
+    },
+
+    getLinked(currentHeight: number, address: string): AppMosaic[] {
+        const appMosaics: AppMosaic[] = Object.values(this.mosaics)
+        return appMosaics
+            .filter((mosaic: AppMosaic) => (mosaic.name
+                && mosaic.mosaicInfo.owner.address.plain() === address
+                && mosaic.expirationHeight === 'Forever'
+                || currentHeight > mosaic.expirationHeight))
+    },
+
+    getItemsWithoutAlias(): AppMosaic[] {
+        return Object.values(this.mosaics).filter(({name}) => !name).map(({hex}) => hex)
+    },
+    
+    storeItems(): void {
         this.store.commit('SET_MOSAICS', this.mosaics)
     },
 
-    reset(store: any) {
+    reset(store: any): void {
         store.commit('SET_MOSAICS', {})
     },
 
-    addItem(mosaic) {
+    addItem(mosaic): void {
         if (!mosaic.hex) return
         if (!this.mosaics[mosaic.hex]) this.mosaics[mosaic.hex] = {}
         Object.assign(this.mosaics[mosaic.hex], new AppMosaic(mosaic).get())
         this.storeItems()
     },
 
-    addItems(mosaics) {
+    addItems(mosaics): void {
         mosaics.forEach(mosaic => this.addItem(mosaic))
     },
 
-    addNetworkMosaic(mosaic, store) {
+    addNetworkMosaic(mosaic, store): void {
       this.store = store
       this.addItem(mosaic)
     },
 
-    getItemsWithoutAlias() {
-        return Object.values(this.mosaics).filter(({name}) => !name).map(({hex}) => hex)
-    },
-
-    fromTransactions(transactions: any, store: any) {
+    fromTransactions(transactions: any, store: any): void {
         this.store = store
         const mosaics = transactions.map(({mosaics}) => mosaics)
         const hexIds = [].concat(...mosaics).map(({id}) => ({hex: id.toHex()}))
         this.addItems(hexIds)
     },
 
-    fromNamespaces(namespaces: any, store: any) {
+    fromNamespaces(namespaces: any, store: any): void {
         this.store = store
         const items = namespaces
             .filter(({alias}) => alias instanceof MosaicAlias)
@@ -87,7 +108,7 @@ export const AppMosaics = () => ({
             this.addItems(items)
     },
 
-    fromMosaicAmountView(mosaic: MosaicAmountView, store: any) {
+    fromMosaicAmountView(mosaic: MosaicAmountView, store: any): void {
         this.store = store
         this.addItem({
               ...mosaic,
@@ -103,7 +124,7 @@ export const AppMosaics = () => ({
 
     fromGetCurrentNetworkMosaic( mosaicDefinitionTransaction: MosaicDefinitionTransaction,
                                   name: string,
-                                  store: any) {
+                                  store: any): void {
         this.store = store
         const {mosaicId, mosaicProperties} = mosaicDefinitionTransaction
         this.addItem({
@@ -115,7 +136,7 @@ export const AppMosaics = () => ({
     },
     
     // @TODO: refactor, pull out from here, rename 
-    augmentTransactionsMosaics(transactions: any, store: any) {
+    augmentTransactionsMosaics(transactions: any, store: any): Promise<void> {
       return new Promise(async (resolve, reject) => {
           try {
             const augmentedTransactionList = transactions.transferTransactionList
@@ -141,7 +162,7 @@ export const AppMosaics = () => ({
                 transferTransactionList: augmentedTransactionList,
                 receiptList: transactions.receiptList,
             })
-            resolve(true)
+            resolve()
         } catch (error) {
             reject(error)
         }
@@ -149,7 +170,7 @@ export const AppMosaics = () => ({
   },
 
   // @TODO: refactor, pull out from here, rename 
-  augmentNewTransactionsMosaics(transactions, store, {isTxUnconfirmed}) {
+  augmentNewTransactionsMosaics(transactions, store: any, {isTxUnconfirmed}): void {
       try {
         const augmentedTransactionList = transactions.transferTransactionList
         .map(tx => {return {...tx, mosaics: tx.mosaics

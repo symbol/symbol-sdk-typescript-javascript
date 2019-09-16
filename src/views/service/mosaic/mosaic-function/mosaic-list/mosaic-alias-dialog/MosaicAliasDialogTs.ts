@@ -49,7 +49,9 @@ export class MosaicAliasDialogTs extends Vue {
 
     get aliasNameList() {
         // @TODO handle namespace list loading state
-        return this.namespaceList.filter(({alias}) => alias instanceof EmptyAlias)
+        return this.namespaceList
+            .filter(({alias}) => alias instanceof EmptyAlias)
+            .map(alias => ({label: alias.name, value: alias.name}))
     }
 
     mosaicAliasDialogCancel() {

@@ -87,24 +87,22 @@ export class NamespaceUnAliasDialogTs extends Vue {
         const {node, generationHash, xemDivisibility} = this
         const {networkType} = this.getWallet
         const password = new Password(this.formItem.password)
-        let {fee, hex, name} = this.formItem
+        let {fee, hex, name, aliasTarget} = this.formItem
         fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
-        let transaction: any = new NamespaceApiRxjs().mosaicAliasTransaction(
-            AliasActionType.Unlink,
-            new NamespaceId(name),
-            new MosaicId(hex),
-            networkType,
-            fee
-        )
-        if (name > 16) {
-            transaction = new NamespaceApiRxjs().addressAliasTransaction(
+        
+        const transaction = aliasTarget.length === 40 // quickfix
+            ? new NamespaceApiRxjs().addressAliasTransaction(
                 AliasActionType.Unlink,
                 new NamespaceId(name),
-                Address.createFromRawAddress(hex),
+                Address.createFromRawAddress(aliasTarget),
                 networkType,
-                fee
-            )
-        }
+                fee)
+            : new NamespaceApiRxjs().mosaicAliasTransaction(
+                AliasActionType.Unlink,
+                new NamespaceId(name),
+                new MosaicId(hex),
+                networkType,
+                fee)
         new AppWallet(this.getWallet)
             .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
         this.initForm()

@@ -327,6 +327,8 @@ export const getNamespaces = async (address: string, node: string) => {
             })
             namespaceName = namespaceName.slice(0, namespaceName.length - 1)
             const newObj = {
+                id: item.namespaceInfo.id,
+                hex: item.namespaceInfo.id.toHex(),
                 value: namespaceName,
                 label: namespaceName,
                 isActive: item.namespaceInfo.active,
