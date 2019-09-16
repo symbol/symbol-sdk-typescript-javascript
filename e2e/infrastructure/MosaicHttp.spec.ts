@@ -26,7 +26,7 @@ import {NamespaceId} from '../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
-import { RegisterNamespaceTransaction } from '../../src/model/transaction/RegisterNamespaceTransaction';
+import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { UInt64 } from '../../src/model/UInt64';
 
 describe('MosaicHttp', () => {
@@ -78,6 +78,7 @@ describe('MosaicHttp', () => {
                     supplyMutable: true,
                     transferable: true,
                     divisibility: 3,
+                    duration: UInt64.fromUint(0),
                 }),
                 NetworkType.MIJIN_TEST,
             );
@@ -98,9 +99,9 @@ describe('MosaicHttp', () => {
         after(() => {
             return listener.close();
         });
-        it('Announce RegisterNamespaceTransaction', (done) => {
+        it('Announce NamespaceRegistrationTransaction', (done) => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
-            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+            const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
                 UInt64.fromUint(1000),

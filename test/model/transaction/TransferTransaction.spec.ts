@@ -71,8 +71,8 @@ describe('TransferTransaction', () => {
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
         expect(transferTransaction.mosaics.length).to.be.equal(0);
-        expect(transferTransaction.recipient).to.be.instanceof(Address);
-        expect((transferTransaction.recipient as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect(transferTransaction.recipientAddress).to.be.instanceof(Address);
+        expect((transferTransaction.recipientAddress as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
 
@@ -95,8 +95,8 @@ describe('TransferTransaction', () => {
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
         expect(transferTransaction.mosaics.length).to.be.equal(1);
-        expect(transferTransaction.recipient).to.be.instanceof(Address);
-        expect((transferTransaction.recipient as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect(transferTransaction.recipientAddress).to.be.instanceof(Address);
+        expect((transferTransaction.recipientAddress as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
 
@@ -108,7 +108,7 @@ describe('TransferTransaction', () => {
             '44B262C46CEABB8500E1F50500000000');
     });
 
-    it('should createComplete an TransferTransaction object with NamespaceId recipient', () => {
+    it('should createComplete an TransferTransaction object with NamespaceId recipientAddress', () => {
         const addressAlias = new NamespaceId('nem.owner');
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
@@ -122,9 +122,9 @@ describe('TransferTransaction', () => {
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
         expect(transferTransaction.mosaics.length).to.be.equal(1);
-        expect(transferTransaction.recipient).to.be.instanceof(NamespaceId);
-        expect(transferTransaction.recipient).to.be.equal(addressAlias);
-        expect((transferTransaction.recipient as NamespaceId).toHex()).to.be.equal(addressAlias.toHex());
+        expect(transferTransaction.recipientAddress).to.be.instanceof(NamespaceId);
+        expect(transferTransaction.recipientAddress).to.be.equal(addressAlias);
+        expect((transferTransaction.recipientAddress as NamespaceId).toHex()).to.be.equal(addressAlias.toHex());
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
 
@@ -169,7 +169,7 @@ describe('TransferTransaction', () => {
         );
 
         // test recipientToString with NamespaceId recipient
-        expect(transferTransaction.recipientToString()).to.be.equal('d85742d268617751');
+        expect(transferTransaction.recipientToString()).to.be.equal('D85742D268617751');
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
 
@@ -207,8 +207,8 @@ describe('TransferTransaction', () => {
 
         expect(transferTransaction.message.payload).to.be.equal('test-message');
         expect(transferTransaction.mosaics.length).to.be.equal(1);
-        expect(transferTransaction.recipient).to.be.instanceof(Address);
-        expect((transferTransaction.recipient as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+        expect(transferTransaction.recipientAddress).to.be.instanceof(Address);
+        expect((transferTransaction.recipientAddress as Address).plain()).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
 
         const signedTransaction = transferTransaction.signWith(account, generationHash);
 

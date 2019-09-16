@@ -16,9 +16,9 @@
 
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
+import { AccountRestrictionModificationAction } from '../../../src/model/account/AccountRestrictionModificationAction';
 import { AccountRestrictionType } from '../../../src/model/account/AccountRestrictionType';
 import {Address} from '../../../src/model/account/Address';
-import { RestrictionModificationType } from '../../../src/model/account/RestrictionModificationType';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import { AccountRestrictionModification } from '../../../src/model/transaction/AccountRestrictionModification';
@@ -37,20 +37,20 @@ describe('AccountRestrictionTransaction', () => {
     it('should create address restriction filter', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             address,
         );
-        expect(addressRestrictionFilter.modificationType).to.be.equal(RestrictionModificationType.Add);
+        expect(addressRestrictionFilter.modificationType).to.be.equal(AccountRestrictionModificationAction.Add);
         expect(addressRestrictionFilter.value).to.be.equal(address.plain());
     });
 
     it('should create mosaic restriction filter', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             mosaicId,
         );
-        expect(mosaicRestrictionFilter.modificationType).to.be.equal(RestrictionModificationType.Add);
+        expect(mosaicRestrictionFilter.modificationType).to.be.equal(AccountRestrictionModificationAction.Add);
         expect(mosaicRestrictionFilter.value[0]).to.be.equal(mosaicId.id.lower);
         expect(mosaicRestrictionFilter.value[1]).to.be.equal(mosaicId.id.higher);
     });
@@ -58,10 +58,10 @@ describe('AccountRestrictionTransaction', () => {
     it('should create operation restriction filter', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             operation,
         );
-        expect(operationRestrictionFilter.modificationType).to.be.equal(RestrictionModificationType.Add);
+        expect(operationRestrictionFilter.modificationType).to.be.equal(AccountRestrictionModificationAction.Add);
         expect(operationRestrictionFilter.value).to.be.equal(operation);
     });
 
@@ -69,7 +69,7 @@ describe('AccountRestrictionTransaction', () => {
         it('should return 148 for AccountAddressRestrictionTransaction transaction byte size with 1 modification', () => {
             const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
             const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-                RestrictionModificationType.Add,
+                AccountRestrictionModificationAction.Add,
                 address,
             );
             const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -85,7 +85,7 @@ describe('AccountRestrictionTransaction', () => {
         it('should return 131 for AccountMosaicRestrictionTransaction transaction byte size with 1 modification', () => {
             const mosaicId = new MosaicId([2262289484, 3405110546]);
             const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
-                RestrictionModificationType.Add,
+                AccountRestrictionModificationAction.Add,
                 mosaicId,
             );
             const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
@@ -100,7 +100,7 @@ describe('AccountRestrictionTransaction', () => {
         it('should return 125 for AccountOperationRestrictionTransaction transaction byte size with 1 modification', () => {
             const operation = TransactionType.ADDRESS_ALIAS;
             const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-                RestrictionModificationType.Add,
+                AccountRestrictionModificationAction.Add,
                 operation,
             );
             const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
@@ -116,7 +116,7 @@ describe('AccountRestrictionTransaction', () => {
     it('should default maxFee field be set to 0', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             address,
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -133,7 +133,7 @@ describe('AccountRestrictionTransaction', () => {
     it('should filled maxFee override transaction maxFee', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             address,
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -152,7 +152,7 @@ describe('AccountRestrictionTransaction', () => {
 
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             address,
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -175,7 +175,7 @@ describe('AccountRestrictionTransaction', () => {
 
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             address,
         );
 
@@ -203,7 +203,7 @@ describe('AccountRestrictionTransaction', () => {
 
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             mosaicId,
         );
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
@@ -226,7 +226,7 @@ describe('AccountRestrictionTransaction', () => {
 
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             mosaicId,
         );
 
@@ -256,7 +256,7 @@ describe('AccountRestrictionTransaction', () => {
 
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             operation,
         );
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
@@ -279,7 +279,7 @@ describe('AccountRestrictionTransaction', () => {
 
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             operation,
         );
 
@@ -307,7 +307,7 @@ describe('AccountRestrictionTransaction', () => {
 
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             address,
         );
         let addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -344,7 +344,7 @@ describe('AccountRestrictionTransaction', () => {
 
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             operation,
         );
         let operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(

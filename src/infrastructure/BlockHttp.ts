@@ -21,7 +21,6 @@ import {PublicAccount} from '../model/account/PublicAccount';
 import {BlockInfo} from '../model/blockchain/BlockInfo';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
-import { MerkleProofInfoPayload } from '../model/blockchain/MerkleProofInfoPayload';
 import { Statement } from '../model/receipt/Statement';
 import {Transaction} from '../model/transaction/Transaction';
 import {UInt64} from '../model/UInt64';
@@ -87,20 +86,20 @@ export class BlockHttp extends Http implements BlockRepository {
                 return new BlockInfo(
                     blockDTO.meta.hash,
                     blockDTO.meta.generationHash,
-                    new UInt64(blockDTO.meta.totalFee),
+                    UInt64.fromNumericString(blockDTO.meta.totalFee),
                     blockDTO.meta.numTransactions,
                     blockDTO.block.signature,
-                    PublicAccount.createFromPublicKey(blockDTO.block.signer, networkType),
+                    PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, networkType),
                     networkType,
                     parseInt((blockDTO.block.version as number).toString(16).substr(2, 2), 16), // Tx version
                     blockDTO.block.type,
-                    new UInt64(blockDTO.block.height),
-                    new UInt64(blockDTO.block.timestamp),
-                    new UInt64(blockDTO.block.difficulty),
+                    UInt64.fromNumericString(blockDTO.block.height),
+                    UInt64.fromNumericString(blockDTO.block.timestamp),
+                    UInt64.fromNumericString(blockDTO.block.difficulty),
                     blockDTO.block.feeMultiplier,
                     blockDTO.block.previousBlockHash,
-                    blockDTO.block.blockTransactionsHash,
-                    blockDTO.block.blockReceiptsHash,
+                    blockDTO.block.transactionsHash,
+                    blockDTO.block.receiptsHash,
                     blockDTO.block.stateHash,
                     extractBeneficiary(blockDTO, networkType),
                 );
@@ -148,20 +147,20 @@ export class BlockHttp extends Http implements BlockRepository {
                         return new BlockInfo(
                             blockDTO.meta.hash,
                             blockDTO.meta.generationHash,
-                            new UInt64(blockDTO.meta.totalFee),
+                            UInt64.fromNumericString(blockDTO.meta.totalFee),
                             blockDTO.meta.numTransactions,
                             blockDTO.block.signature,
-                            PublicAccount.createFromPublicKey(blockDTO.block.signer, networkType),
+                            PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, networkType),
                             networkType,
                             parseInt((blockDTO.block.version as number).toString(16).substr(2, 2), 16), // Tx version
                             blockDTO.block.type,
-                            new UInt64(blockDTO.block.height),
-                            new UInt64(blockDTO.block.timestamp),
-                            new UInt64(blockDTO.block.difficulty),
+                            UInt64.fromNumericString(blockDTO.block.height),
+                            UInt64.fromNumericString(blockDTO.block.timestamp),
+                            UInt64.fromNumericString(blockDTO.block.difficulty),
                             blockDTO.block.feeMultiplier,
                             blockDTO.block.previousBlockHash,
-                            blockDTO.block.blockTransactionsHash,
-                            blockDTO.block.blockReceiptsHash,
+                            blockDTO.block.transactionsHash,
+                            blockDTO.block.receiptsHash,
                             blockDTO.block.stateHash,
                             extractBeneficiary(blockDTO, networkType),
                         );
@@ -187,10 +186,8 @@ export class BlockHttp extends Http implements BlockRepository {
                 map((response: { response: ClientResponse; body: MerkleProofInfoDTO; } ) => {
                     const merkleProofReceipt = response.body;
                     return new MerkleProofInfo(
-                        new MerkleProofInfoPayload(
-                            merkleProofReceipt.payload.merklePath!.map(
-                                (payload) => new MerklePathItem(payload.position, payload.hash))),
-                        merkleProofReceipt.type,
+                        merkleProofReceipt.merklePath!.map(
+                            (payload) => new MerklePathItem(payload.position, payload.hash)),
                     );
                 }),
                 catchError((error) =>  throwError(this.errorHandling(error))),
@@ -213,10 +210,8 @@ export class BlockHttp extends Http implements BlockRepository {
                 map((response: { response: ClientResponse; body: MerkleProofInfoDTO; } ) => {
                     const merkleProofTransaction = response.body;
                     return new MerkleProofInfo(
-                        new MerkleProofInfoPayload(
-                            merkleProofTransaction.payload.merklePath!.map((payload) =>
-                                new MerklePathItem(payload.position, payload.hash))),
-                            merkleProofTransaction.type,
+                        merkleProofTransaction.merklePath!.map(
+                            (payload) => new MerklePathItem(payload.position, payload.hash)),
                     );
                 }),
                 catchError((error) =>  throwError(this.errorHandling(error))),

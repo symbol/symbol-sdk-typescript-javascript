@@ -22,29 +22,20 @@ import {UInt64} from '../../../src/model/UInt64';
 describe('MosaicProperties', () => {
 
     it('should createComplete an MosaicProperties object with constructor', () => {
-        const propertiesDTO = [
-            new UInt64([
-                7,
-                0,
-            ]),
-            new UInt64([
-                3,
-                0,
-            ]),
-            new UInt64([
-                1000,
-                0,
-            ]),
-        ];
+        const propertiesDTO = {
+            flags: 7,
+            divisibility: 3,
+            duration: '1000',
+        };
 
         const mosaicProperties = new MosaicProperties(
-            propertiesDTO[0],
-            propertiesDTO[1].compact(),
-            propertiesDTO[2],
+            propertiesDTO.flags,
+            propertiesDTO.divisibility,
+            UInt64.fromNumericString(propertiesDTO.duration),
         );
 
-        expect(mosaicProperties.divisibility).to.be.equal(propertiesDTO[1].lower);
-        deepEqual(mosaicProperties.duration, propertiesDTO[2]);
+        expect(mosaicProperties.divisibility).to.be.equal(propertiesDTO.divisibility);
+        deepEqual(mosaicProperties.duration.toString(), propertiesDTO.duration);
 
         expect(mosaicProperties.supplyMutable).to.be.equal(true);
         expect(mosaicProperties.transferable).to.be.equal(true);
@@ -73,10 +64,11 @@ describe('MosaicProperties', () => {
             supplyMutable: false,
             transferable: false,
             divisibility: 10,
+            duration: UInt64.fromUint(0),
         });
 
         expect(mosaicProperties.divisibility).to.be.equal(10);
-        deepEqual(mosaicProperties.duration, undefined);
+        deepEqual(mosaicProperties.duration.toDTO(), [0, 0]);
 
         expect(mosaicProperties.supplyMutable).to.be.equal(false);
         expect(mosaicProperties.transferable).to.be.equal(false);

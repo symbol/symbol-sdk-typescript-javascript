@@ -1,3 +1,5 @@
+import { MerklePathItem } from "./MerklePathItem";
+
 /*
  * Copyright 2019 NEM
  *
@@ -14,25 +16,18 @@
  * limitations under the License.
  */
 
-import { MerkleProofInfoPayload } from "./MerkleProofInfoPayload";
-
 /**
  * The block merkle proof info
  */
 export class MerkleProofInfo {
 
     /**
-     * @param payload - The merkle proof payload
-     * @param type - The merkle proof type
+     * @param merklePath - Array of merkle path items
      */
     constructor(/**
-                 * The merkle proof payload
+                 * The merkle path
                  */
-                public readonly payload: MerkleProofInfoPayload,
-                /**
-                 * The merkle proof type
-                 */
-                public readonly type: string) {
+                public readonly merklePath?: MerklePathItem[]) {
 
     }
 }

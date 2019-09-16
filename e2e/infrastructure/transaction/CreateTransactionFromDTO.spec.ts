@@ -38,12 +38,12 @@ describe('CreateTransactionFromDTO', () => {
                 transaction: {
                     // tslint:disable-next-line:max-line-length
                     signature: '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D',
-                    signer: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
+                    signerPublicKey: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
                     version: 36865,
                     type: 16724,
                     maxFee: [0, 0],
                     deadline: [3362498678, 22],
-                    recipient: '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB',
+                    recipientAddress: '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB',
                     message: {
                         payload: '746573742D6D657373616765',
                         type: 0,
@@ -58,7 +58,7 @@ describe('CreateTransactionFromDTO', () => {
             };
 
             const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
-            deepEqual(transferTransaction.recipient, Address.createFromEncoded(transferTransactionDTO.transaction.recipient));
+            deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
             expect(transferTransaction.message.payload).to.be.equal('test-message');
         });
 
@@ -77,12 +77,12 @@ describe('CreateTransactionFromDTO', () => {
                 transaction: {
                     // tslint:disable-next-line:max-line-length
                     signature: '7442156D839A3AC900BC0299E8701ECDABA674DCF91283223450953B005DE72C538EA54236F5E089530074CE78067CD3325CF53750B9118154C08B20A5CDC00D',
-                    signer: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
+                    signerPublicKey: '2FC3872A792933617D70E02AFF8FBDE152821A0DF0CA5FB04CB56FC3D21C8863',
                     version: 36865,
                     type: 16724,
                     maxFee: [0, 0],
                     deadline: [3362498678, 22],
-                    recipient: '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB',
+                    recipientAddress: '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB',
                     mosaics: [
                         {
                             id: [3294802500, 2243684972],
@@ -93,7 +93,7 @@ describe('CreateTransactionFromDTO', () => {
             };
 
             const transferTransaction = CreateTransactionFromDTO(transferTransactionDTO) as TransferTransaction;
-            deepEqual(transferTransaction.recipient, Address.createFromEncoded(transferTransactionDTO.transaction.recipient));
+            deepEqual(transferTransaction.recipientAddress, Address.createFromEncoded(transferTransactionDTO.transaction.recipientAddress));
             expect(transferTransaction.message.payload).to.be.equal('');
         });
 
@@ -114,7 +114,7 @@ describe('CreateTransactionFromDTO', () => {
                         {
                             signature: '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
                             'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
-                            signer: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
+                            signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                         },
                     ],
                     deadline: [
@@ -127,7 +127,7 @@ describe('CreateTransactionFromDTO', () => {
                     ],
                     signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
                     '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
-                    signer: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
+                    signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                     transactions: [
                         {
                             meta: {
@@ -157,8 +157,8 @@ describe('CreateTransactionFromDTO', () => {
                                         ],
                                     },
                                 ],
-                                recipient: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
-                                signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                                recipientAddress: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
+                                signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                 type: 16724,
                                 version: 36865,
                             },
@@ -175,7 +175,7 @@ describe('CreateTransactionFromDTO', () => {
         });
     });
 
-    describe('RegisterNamespaceTransaction', () => {
+    describe('NamespaceRegistrationTransaction', () => {
         describe('namespace', () => {
             it('standalone', () => {
                 const registerNamespaceTransactionDTO = {
@@ -210,7 +210,7 @@ describe('CreateTransactionFromDTO', () => {
                         namespaceType: 0,
                         signature: '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E0' +
                         '2F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
-                        signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                        signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                         type: 16718,
                         version: 36865,
                     },
@@ -222,7 +222,7 @@ describe('CreateTransactionFromDTO', () => {
             });
 
             it('aggregate', () => {
-                const aggregateRegisterNamespaceTransactionDTO = {
+                const aggregateNamespaceRegistrationTransactionDTO = {
                     meta: {
                         hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                         height: [
@@ -238,7 +238,7 @@ describe('CreateTransactionFromDTO', () => {
                             {
                                 signature: '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
                                 'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
-                                signer: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
+                                signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                             },
                         ],
                         deadline: [
@@ -251,7 +251,7 @@ describe('CreateTransactionFromDTO', () => {
                         ],
                         signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
                         '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
-                        signer: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
+                        signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                         transactions: [
                             {
                                 meta: {
@@ -275,7 +275,7 @@ describe('CreateTransactionFromDTO', () => {
                                         4152736179,
                                     ],
                                     namespaceType: 0,
-                                    signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                                    signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                     type: 16718,
                                     version: 36865,
                                 },
@@ -286,12 +286,12 @@ describe('CreateTransactionFromDTO', () => {
                     },
                 };
 
-                const aggregateRegisterNamespaceTransaction = CreateTransactionFromDTO(
-                    aggregateRegisterNamespaceTransactionDTO,
+                const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(
+                    aggregateNamespaceRegistrationTransactionDTO,
                 );
 
                 ValidateTransaction.validateAggregateTx(
-                    aggregateRegisterNamespaceTransaction, aggregateRegisterNamespaceTransactionDTO);
+                    aggregateNamespaceRegistrationTransaction, aggregateNamespaceRegistrationTransactionDTO);
             });
         });
 
@@ -329,7 +329,7 @@ describe('CreateTransactionFromDTO', () => {
                         ],
                         signature: '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9' +
                         'E02F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
-                        signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                        signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                         type: 16718,
                         version: 36865,
                     },
@@ -340,7 +340,7 @@ describe('CreateTransactionFromDTO', () => {
             });
 
             it('aggregate', () => {
-                const aggregateRegisterNamespaceTransactionDTO = {
+                const aggregateNamespaceRegistrationTransactionDTO = {
                     meta: {
                         hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                         height: [
@@ -356,7 +356,7 @@ describe('CreateTransactionFromDTO', () => {
                             {
                                 signature: '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
                                 'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
-                                signer: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
+                                signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                             },
                         ],
                         deadline: [
@@ -369,7 +369,7 @@ describe('CreateTransactionFromDTO', () => {
                         ],
                         signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
                         '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
-                        signer: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
+                        signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                         transactions: [
                             {
                                 meta: {
@@ -393,7 +393,7 @@ describe('CreateTransactionFromDTO', () => {
                                         3316183705,
                                         3829351378,
                                     ],
-                                    signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                                    signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                     type: 16718,
                                     version: 36865,
                                 },
@@ -404,11 +404,11 @@ describe('CreateTransactionFromDTO', () => {
                     },
                 };
 
-                const aggregateRegisterNamespaceTransaction = CreateTransactionFromDTO(
-                    aggregateRegisterNamespaceTransactionDTO);
+                const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(
+                    aggregateNamespaceRegistrationTransactionDTO);
 
                 ValidateTransaction.validateAggregateTx(
-                    aggregateRegisterNamespaceTransaction, aggregateRegisterNamespaceTransactionDTO);
+                    aggregateNamespaceRegistrationTransaction, aggregateNamespaceRegistrationTransactionDTO);
             });
         });
     });
@@ -468,7 +468,7 @@ describe('CreateTransactionFromDTO', () => {
                     ],
                     signature: '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E02F6EE63025FE' +
                     'EBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
-                    signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                    signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                     type: 16717,
                     version: 36865,
                 },
@@ -496,7 +496,7 @@ describe('CreateTransactionFromDTO', () => {
                         {
                             signature: '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
                             'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
-                            signer: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
+                            signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                         },
                     ],
                     deadline: [
@@ -509,7 +509,7 @@ describe('CreateTransactionFromDTO', () => {
                     ],
                     signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
                     '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
-                    signer: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
+                    signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                     transactions: [
                         {
                             meta: {
@@ -554,7 +554,7 @@ describe('CreateTransactionFromDTO', () => {
                                         ],
                                     },
                                 ],
-                                signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                                signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                 type: 16717,
                                 version: 36865,
                             },
@@ -565,11 +565,11 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const aggregateRegisterNamespaceTransaction = CreateTransactionFromDTO(
+            const aggregateNamespaceRegistrationTransaction = CreateTransactionFromDTO(
                 aggregateMosaicDefinitionTransactionDTO);
 
             ValidateTransaction.validateAggregateTx(
-                aggregateRegisterNamespaceTransaction, aggregateMosaicDefinitionTransactionDTO);
+                aggregateNamespaceRegistrationTransaction, aggregateMosaicDefinitionTransactionDTO);
         });
     });
 
@@ -606,7 +606,7 @@ describe('CreateTransactionFromDTO', () => {
                     ],
                     signature: '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E0' +
                     '2F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
-                    signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                    signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                     type: 16973,
                     version: 36865,
                 },
@@ -634,7 +634,7 @@ describe('CreateTransactionFromDTO', () => {
                         {
                             signature: '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
                             'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
-                            signer: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
+                            signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                         },
                     ],
                     deadline: [
@@ -647,7 +647,7 @@ describe('CreateTransactionFromDTO', () => {
                     ],
                     signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
                     '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
-                    signer: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
+                    signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                     transactions: [
                         {
                             meta: {
@@ -670,7 +670,7 @@ describe('CreateTransactionFromDTO', () => {
                                     3070467832,
                                     2688515262,
                                 ],
-                                signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                                signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                 type: 16973,
                                 version: 36865,
                             },
@@ -689,7 +689,7 @@ describe('CreateTransactionFromDTO', () => {
         });
     });
 
-    describe('ModifyMultisigAccountTransaction', () => {
+    describe('MultisigAccountModificationTransaction', () => {
         it('standalone', () => {
             const modifyMultisigAccountTransactionDTO = {
                 meta: {
@@ -721,7 +721,7 @@ describe('CreateTransactionFromDTO', () => {
                     ],
                     signature: '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E0' +
                     '2F6EE63025FEEBCED3293B622AF8581334D0BDAB7541A9E7411E7EE4EF0BC5D0E',
-                    signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                    signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                     type: 16725,
                     version: 36865,
                 },
@@ -734,7 +734,7 @@ describe('CreateTransactionFromDTO', () => {
         });
 
         it('aggregate', () => {
-            const aggregateModifyMultisigAccountTransactionDTO = {
+            const aggregateMultisigAccountModificationTransactionDTO = {
                 meta: {
                     hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
                     height: [
@@ -750,7 +750,7 @@ describe('CreateTransactionFromDTO', () => {
                         {
                             signature: '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
                             'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
-                            signer: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
+                            signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                         },
                     ],
                     deadline: [
@@ -763,7 +763,7 @@ describe('CreateTransactionFromDTO', () => {
                     ],
                     signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
                     '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
-                    signer: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
+                    signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                     transactions: [
                         {
                             meta: {
@@ -786,7 +786,7 @@ describe('CreateTransactionFromDTO', () => {
                                         modificiationType: 0,
                                     },
                                 ],
-                                signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                                signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                 type: 16725,
                                 version: 36865,
                             },
@@ -797,11 +797,11 @@ describe('CreateTransactionFromDTO', () => {
                 },
             };
 
-            const aggregateModifyMultisigAccountTransaction = CreateTransactionFromDTO(
-                aggregateModifyMultisigAccountTransactionDTO);
+            const aggregateMultisigAccountModificationTransaction = CreateTransactionFromDTO(
+                aggregateMultisigAccountModificationTransactionDTO);
 
             ValidateTransaction.validateAggregateTx(
-                aggregateModifyMultisigAccountTransaction, aggregateModifyMultisigAccountTransactionDTO);
+                aggregateMultisigAccountModificationTransaction, aggregateMultisigAccountModificationTransactionDTO);
         });
     });
 });

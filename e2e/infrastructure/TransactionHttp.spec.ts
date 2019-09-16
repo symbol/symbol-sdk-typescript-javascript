@@ -25,15 +25,15 @@ import { NamespaceHttp } from '../../src/infrastructure/infrastructure';
 import {Listener} from '../../src/infrastructure/Listener';
 import {TransactionHttp} from '../../src/infrastructure/TransactionHttp';
 import {Account} from '../../src/model/account/Account';
+import { AccountRestrictionModificationAction } from '../../src/model/account/AccountRestrictionModificationAction';
 import { AccountRestrictionType } from '../../src/model/account/AccountRestrictionType';
-import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
 import {MosaicNonce} from '../../src/model/mosaic/MosaicNonce';
 import {MosaicProperties} from '../../src/model/mosaic/MosaicProperties';
 import { MosaicRestrictionType } from '../../src/model/mosaic/MosaicRestrictionType';
-import {MosaicSupplyType} from '../../src/model/mosaic/MosaicSupplyType';
+import {MosaicSupplyChangeAction} from '../../src/model/mosaic/MosaicSupplyChangeAction';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -60,8 +60,8 @@ import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/
 import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMetadataTransaction';
 import {MosaicSupplyChangeTransaction} from '../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
+import {NamespaceRegistrationTransaction} from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
-import {RegisterNamespaceTransaction} from '../../src/model/transaction/RegisterNamespaceTransaction';
 import {SecretLockTransaction} from '../../src/model/transaction/SecretLockTransaction';
 import {SecretProofTransaction} from '../../src/model/transaction/SecretProofTransaction';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
@@ -190,6 +190,7 @@ describe('TransactionHttp', () => {
                     supplyMutable: true,
                     transferable: true,
                     divisibility: 3,
+                    duration: UInt64.fromUint(0),
                     restrictable: true,
                 }),
                 NetworkType.MIJIN_TEST,
@@ -224,9 +225,9 @@ describe('TransactionHttp', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(1000),
-                10,
-                new Uint8Array(10),
+                UInt64.fromUint(5),
+                1,
+                new Uint8Array(11),
                 NetworkType.MIJIN_TEST,
             );
 
@@ -267,7 +268,7 @@ describe('TransactionHttp', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(1000),
+                UInt64.fromUint(5),
                 mosaicId,
                 10,
                 new Uint8Array(10),
@@ -299,7 +300,7 @@ describe('TransactionHttp', () => {
         });
     });
 
-    describe('RegisterNamespaceTransaction', () => {
+    describe('NamespaceRegistrationTransaction', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -310,18 +311,18 @@ describe('TransactionHttp', () => {
         });
         it('standalone', (done) => {
             const namespaceName = 'root-test-namespace-' + Math.floor(Math.random() * 10000);
-            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+            const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 namespaceName,
-                UInt64.fromUint(1000),
+                UInt64.fromUint(10),
                 NetworkType.MIJIN_TEST,
             );
             namespaceId = new NamespaceId(namespaceName);
             const signedTransaction = registerNamespaceTransaction.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe((transaction: RegisterNamespaceTransaction) => {
+            listener.confirmed(account.address).subscribe((transaction: NamespaceRegistrationTransaction) => {
                 expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
                 expect(transaction.namespaceName, 'NamespaceName').not.to.be.undefined;
-                expect(transaction.namespaceType, 'NamespaceType').not.to.be.undefined;
+                expect(transaction.namespaceType, 'NamespaceRegistrationType').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -333,7 +334,7 @@ describe('TransactionHttp', () => {
         });
     });
 
-    describe('RegisterNamespaceTransaction', () => {
+    describe('NamespaceRegistrationTransaction', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -343,10 +344,10 @@ describe('TransactionHttp', () => {
             return listener.close();
         });
         it('aggregate', (done) => {
-            const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+            const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(),
                 'root-test-namespace-' + Math.floor(Math.random() * 10000),
-                UInt64.fromUint(1000),
+                UInt64.fromUint(5),
                 NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
@@ -379,7 +380,7 @@ describe('TransactionHttp', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
-                UInt64.fromUint(1000),
+                UInt64.fromUint(5),
                 namespaceId,
                 10,
                 new Uint8Array(10),
@@ -545,7 +546,7 @@ describe('TransactionHttp', () => {
             listener.confirmed(account.address).subscribe((transaction: TransferTransaction) => {
                 expect(transaction.message, 'Message').not.to.be.undefined;
                 expect(transaction.mosaics, 'Mosaic').not.to.be.undefined;
-                expect(transaction.recipient, 'Recipient').not.to.be.undefined;
+                expect(transaction.recipientAddress, 'RecipientAddress').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -602,7 +603,7 @@ describe('TransactionHttp', () => {
 
         it('standalone', (done) => {
             const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-                RestrictionModificationType.Add,
+                AccountRestrictionModificationAction.Add,
                 account3.address,
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -639,7 +640,7 @@ describe('TransactionHttp', () => {
         });
         it('aggregate', (done) => {
             const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-                RestrictionModificationType.Remove,
+                AccountRestrictionModificationAction.Remove,
                 account3.address,
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -678,7 +679,7 @@ describe('TransactionHttp', () => {
 
         it('standalone', (done) => {
             const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-                RestrictionModificationType.Add,
+                AccountRestrictionModificationAction.Add,
                 account3.address,
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -715,7 +716,7 @@ describe('TransactionHttp', () => {
         });
         it('aggregate', (done) => {
             const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-                RestrictionModificationType.Remove,
+                AccountRestrictionModificationAction.Remove,
                 account3.address,
             );
             const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -753,7 +754,7 @@ describe('TransactionHttp', () => {
 
         it('standalone', (done) => {
             const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
-                RestrictionModificationType.Add,
+                AccountRestrictionModificationAction.Add,
                 mosaicId,
             );
             const addressModification = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
@@ -790,7 +791,7 @@ describe('TransactionHttp', () => {
         });
         it('aggregate', (done) => {
             const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
-                RestrictionModificationType.Remove,
+                AccountRestrictionModificationAction.Remove,
                 mosaicId,
             );
             const addressModification = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
@@ -828,7 +829,7 @@ describe('TransactionHttp', () => {
 
         it('standalone', (done) => {
             const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-                RestrictionModificationType.Add,
+                AccountRestrictionModificationAction.Add,
                 TransactionType.LINK_ACCOUNT,
             );
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
@@ -865,7 +866,7 @@ describe('TransactionHttp', () => {
         });
         it('aggregate', (done) => {
             const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-                RestrictionModificationType.Remove,
+                AccountRestrictionModificationAction.Remove,
                 TransactionType.LINK_ACCOUNT,
             );
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
@@ -904,7 +905,7 @@ describe('TransactionHttp', () => {
 
         it('standalone', (done) => {
             const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-                RestrictionModificationType.Add,
+                AccountRestrictionModificationAction.Add,
                 TransactionType.LINK_ACCOUNT,
             );
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
@@ -941,7 +942,7 @@ describe('TransactionHttp', () => {
         });
         it('aggregate', (done) => {
             const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-                RestrictionModificationType.Remove,
+                AccountRestrictionModificationAction.Remove,
                 TransactionType.LINK_ACCOUNT,
             );
             const addressModification = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
@@ -988,7 +989,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = accountLinkTransaction.signWith(account, generationHash);
 
             listener.confirmed(account.address).subscribe((transaction: AccountLinkTransaction) => {
-                expect(transaction.remoteAccountKey, 'RemoteAccountKey').not.to.be.undefined;
+                expect(transaction.remotePublicKey, 'RemotePublicKey').not.to.be.undefined;
                 expect(transaction.linkAction, 'LinkAction').not.to.be.undefined;
                 done();
             });
@@ -1116,7 +1117,7 @@ describe('TransactionHttp', () => {
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
                 Deadline.create(),
                 mosaicId,
-                MosaicSupplyType.Increase,
+                MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(10),
                 NetworkType.MIJIN_TEST,
             );
@@ -1148,7 +1149,7 @@ describe('TransactionHttp', () => {
             const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
                 Deadline.create(),
                 mosaicId,
-                MosaicSupplyType.Increase,
+                MosaicSupplyChangeAction.Increase,
                 UInt64.fromUint(10),
                 NetworkType.MIJIN_TEST,
             );
@@ -1408,7 +1409,7 @@ describe('TransactionHttp', () => {
                 expect(transaction.duration, 'Duration').not.to.be.undefined;
                 expect(transaction.hashType, 'HashType').not.to.be.undefined;
                 expect(transaction.secret, 'Secret').not.to.be.undefined;
-                expect(transaction.recipient, 'Recipient').not.to.be.undefined;
+                expect(transaction.recipientAddress, 'RecipientAddress').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -1676,7 +1677,7 @@ describe('TransactionHttp', () => {
             listener.confirmed(account.address).subscribe(() => {
                 listener.confirmed(account2.address).subscribe((transaction: SecretProofTransaction) => {
                     expect(transaction.secret, 'Secret').not.to.be.undefined;
-                    expect(transaction.recipient, 'Recipient').not.to.be.undefined;
+                    expect(transaction.recipientAddress, 'RecipientAddress').not.to.be.undefined;
                     expect(transaction.hashType, 'HashType').not.to.be.undefined;
                     expect(transaction.proof, 'Proof').not.to.be.undefined;
                     done();
@@ -2098,7 +2099,7 @@ describe('TransactionHttp', () => {
 
             // 03. Alice collects the cosignatures, recreate, sign, and announces the transaction
             const cosignatureSignedTransactions = [
-                new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signer),
+                new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signerPublicKey),
             ];
             const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
 
@@ -2118,7 +2119,7 @@ describe('TransactionHttp', () => {
 
     describe('transactions', () => {
         it('should call transactions successfully', (done) => {
-            accountHttp.transactions(account.publicAccount).subscribe((transactions) => {
+            accountHttp.transactions(account.publicAccount.address).subscribe((transactions) => {
                 const transaction = transactions[0];
                 transactionId = transaction.transactionInfo!.id;
                 transactionHash = transaction.transactionInfo!.hash;
@@ -2256,31 +2257,4 @@ describe('TransactionHttp', () => {
                 });
         });
     });
-    // describe('announceSync', () => {
-    //     it('should return insufficient balance error', (done) => {
-    //         const aggregateTransaction = AggregateTransaction.createBonded(
-    //                         Deadline.create(),
-    //                         [],
-    //                         NetworkType.MIJIN_TEST,
-    //                         [],
-    //                     );
-    //         const signedTransaction = account.sign(aggregateTransaction);
-
-    //         const lockFundsTransaction = LockFundsTransaction.create(Deadline.create(),
-    //             NetworkCurrencyMosaic.createAbsolute(0),
-    //             UInt64.fromUint(10000),
-    //             signedTransaction,
-    //             NetworkType.MIJIN_TEST);
-
-    //         transactionHttp
-    //             .announceSync(lockFundsTransaction.signWith(account, generationHash))
-    //             .subscribe((shouldNotBeCalled) => {
-    //                 throw new Error('should not be called');
-    //             }, (err) => {
-    //                 console.log(err);
-    //                 expect(err.status).to.be.equal('Failure_LockHash_Invalid_Mosaic_Amount');
-    //                 done();
-    //             });
-    //     });
-    // });
 });

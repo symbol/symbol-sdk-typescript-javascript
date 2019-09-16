@@ -28,7 +28,7 @@ export class NamespaceInfo {
      * @param active
      * @param index
      * @param metaId
-     * @param type
+     * @param registrationType
      * @param depth
      * @param levels
      * @param parentId
@@ -49,9 +49,9 @@ export class NamespaceInfo {
                  */
                 public readonly metaId: string,
                 /**
-                 * The namespace type, namespace and sub namespace.
+                 * The namespace registration type, namespace and sub namespace.
                  */
-                private readonly type: number,
+                private readonly registrationType: number,
                 /**
                  * The level of namespace.
                  */
@@ -96,7 +96,7 @@ export class NamespaceInfo {
      * @returns {boolean}
      */
     public isRoot(): boolean {
-        return this.type === 0;
+        return this.registrationType === 0;
     }
 
     /**
@@ -104,7 +104,7 @@ export class NamespaceInfo {
      * @returns {boolean}
      */
     public isSubnamespace(): boolean {
-        return this.type === 1;
+        return this.registrationType === 1;
     }
 
     /**

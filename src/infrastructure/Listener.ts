@@ -24,12 +24,12 @@ import {NetworkType} from '../model/blockchain/NetworkType';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {AggregateTransactionCosignature} from '../model/transaction/AggregateTransactionCosignature';
+import {CosignatoryModificationAction} from '../model/transaction/CosignatoryModificationAction';
 import {CosignatureSignedTransaction} from '../model/transaction/CosignatureSignedTransaction';
 import {Deadline} from '../model/transaction/Deadline';
 import {InnerTransaction} from '../model/transaction/InnerTransaction';
-import {ModifyMultisigAccountTransaction} from '../model/transaction/ModifyMultisigAccountTransaction';
+import {MultisigAccountModificationTransaction} from '../model/transaction/MultisigAccountModificationTransaction';
 import {MultisigCosignatoryModification} from '../model/transaction/MultisigCosignatoryModification';
-import {MultisigCosignatoryModificationType} from '../model/transaction/MultisigCosignatoryModificationType';
 import {Transaction} from '../model/transaction/Transaction';
 import {TransactionStatusError} from '../model/transaction/TransactionStatusError';
 import {TransferTransaction} from '../model/transaction/TransferTransaction';
@@ -129,7 +129,7 @@ export class Listener {
                                 message.meta.totalFee ? new UInt64(message.meta.totalFee) : new UInt64([0, 0]),
                                 message.meta.numTransactions,
                                 message.block.signature,
-                                PublicAccount.createFromPublicKey(message.block.signer, networkType),
+                                PublicAccount.createFromPublicKey(message.block.signerPublicKey, networkType),
                                 networkType,
                                 parseInt(message.block.version.toString(16).substr(2, 2), 16), // Tx version
                                 message.block.type,
@@ -156,7 +156,7 @@ export class Listener {
                     } else if (message.parentHash) {
                         this.messageSubject.next({
                             channelName: ListenerChannelName.cosignature,
-                            message: new CosignatureSignedTransaction(message.parentHash, message.signature, message.signer),
+                            message: new CosignatureSignedTransaction(message.parentHash, message.signature, message.signerPublicKey),
                         });
                     }
                 };
@@ -389,12 +389,12 @@ export class Listener {
 
         if (address instanceof NamespaceId) {
             return transaction instanceof TransferTransaction
-                && (transaction.recipient as NamespaceId).equals(address);
+                && (transaction.recipientAddress as NamespaceId).equals(address);
         }
 
         return transaction.signer!.address.equals(address) || (
                transaction instanceof TransferTransaction
-            && (transaction.recipient as Address).equals(address)
+            && (transaction.recipientAddress as Address).equals(address)
         );
     }
 
@@ -407,9 +407,9 @@ export class Listener {
      */
     // tslint:disable-next-line:adjacent-overload-signatures
     private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
-        if (transaction instanceof ModifyMultisigAccountTransaction) {
+        if (transaction instanceof MultisigAccountModificationTransaction) {
             transaction.modifications.map((_: MultisigCosignatoryModification) => {
-                if (_.modificiationType === MultisigCosignatoryModificationType.Add && _.cosignatoryPublicAccount.address.equals(address)) {
+                if (_.modificiationType === CosignatoryModificationAction.Add && _.cosignatoryPublicAccount.address.equals(address)) {
                     return true;
                 }
             });

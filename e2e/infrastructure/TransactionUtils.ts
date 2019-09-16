@@ -26,9 +26,9 @@ import {AggregateTransaction} from '../../src/model/transaction/AggregateTransac
 import {CosignatureTransaction} from '../../src/model/transaction/CosignatureTransaction';
 import {Deadline} from '../../src/model/transaction/Deadline';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
-import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
+import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
-import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
+import { CosignatoryModificationAction } from '../../src/model/transaction/CosignatoryModificationAction';
 import {PlainMessage} from '../../src/model/transaction/PlainMessage';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
@@ -103,15 +103,15 @@ export class TransactionUtils {
         transactionHttp.announceAggregateBondedCosignature(cosignatureSignedTransaction);
     }
 
-    public static createModifyMultisigAccountTransaction( account: Account,
+    public static createMultisigAccountModificationTransaction( account: Account,
                                                           transactionHttp: TransactionHttp,
                                                           generationHash: string) {
-        const modifyMultisig = ModifyMultisigAccountTransaction.create(
+        const modifyMultisig = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             2,
             1,
             [new MultisigCosignatoryModification(
-                MultisigCosignatoryModificationType.Add,
+                CosignatoryModificationAction.Add,
                 PublicAccount.createFromPublicKey(account.publicKey, NetworkType.MIJIN_TEST),
             )],
             NetworkType.MIJIN_TEST,

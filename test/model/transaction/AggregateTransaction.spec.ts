@@ -25,19 +25,19 @@ import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
 import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
-import {MosaicSupplyType} from '../../../src/model/mosaic/MosaicSupplyType';
+import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
+import {CosignatoryModificationAction} from '../../../src/model/transaction/CosignatoryModificationAction';
 import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
 import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
-import {ModifyMultisigAccountTransaction} from '../../../src/model/transaction/ModifyMultisigAccountTransaction';
 import {MosaicDefinitionTransaction} from '../../../src/model/transaction/MosaicDefinitionTransaction';
 import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
+import {MultisigAccountModificationTransaction} from '../../../src/model/transaction/MultisigAccountModificationTransaction';
 import {MultisigCosignatoryModification} from '../../../src/model/transaction/MultisigCosignatoryModification';
-import {MultisigCosignatoryModificationType} from '../../../src/model/transaction/MultisigCosignatoryModificationType';
+import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
 import {PlainMessage} from '../../../src/model/transaction/PlainMessage';
-import {RegisterNamespaceTransaction} from '../../../src/model/transaction/RegisterNamespaceTransaction';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import {TransferTransaction} from '../../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../../src/model/UInt64';
@@ -116,8 +116,8 @@ describe('AggregateTransaction', () => {
         )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
     });
 
-    it('should createComplete an AggregateTransaction object with RegisterNamespaceTransaction', () => {
-        const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+    it('should createComplete an AggregateTransaction object with NamespaceRegistrationTransaction', () => {
+        const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
             UInt64.fromUint(1000),
@@ -179,7 +179,7 @@ describe('AggregateTransaction', () => {
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
-            MosaicSupplyType.Increase,
+            MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
             NetworkType.MIJIN_TEST,
         );
@@ -201,18 +201,18 @@ describe('AggregateTransaction', () => {
         )).to.be.equal('01904D424CCCD78612DDF5CA010A00000000000000');
     });
 
-    it('should createComplete an AggregateTransaction object with ModifyMultisigAccountTransaction', () => {
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+    it('should createComplete an AggregateTransaction object with MultisigAccountModificationTransaction', () => {
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             2,
             1,
             [new MultisigCosignatoryModification(
-                MultisigCosignatoryModificationType.Add,
+                CosignatoryModificationAction.Add,
                 PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
                     NetworkType.MIJIN_TEST),
             ),
                 new MultisigCosignatoryModification(
-                    MultisigCosignatoryModificationType.Add,
+                    CosignatoryModificationAction.Add,
                     PublicAccount.createFromPublicKey('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4',
                         NetworkType.MIJIN_TEST),
                 )],
@@ -296,10 +296,7 @@ describe('AggregateTransaction', () => {
         const aggregateTransactionDTO = {
             meta: {
                 hash: '671653C94E2254F2A23EFEDB15D67C38332AED1FBD24B063C0A8E675582B6A96',
-                height: [
-                    18160,
-                    0,
-                ],
+                height: '18160',
                 id: '5A0069D83F17CF0001777E55',
                 index: 0,
                 merkleComponentHash: '81E5E7AE49998802DABC816EC10158D3A7879702FF29084C2C992CD1289877A7',
@@ -309,29 +306,20 @@ describe('AggregateTransaction', () => {
                     {
                         signature: '5780C8DF9D46BA2BCF029DCC5D3BF55FE1CB5BE7ABCF30387C4637DD' +
                         'EDFC2152703CA0AD95F21BB9B942F3CC52FCFC2064C7B84CF60D1A9E69195F1943156C07',
-                        signer: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
+                        signerPublicKey: 'A5F82EC8EBB341427B6785C8111906CD0DF18838FB11B51CE0E18B5E79DFF630',
                     },
                 ],
-                deadline: [
-                    3266625578,
-                    11,
-                ],
-                maxFee: [
-                    0,
-                    0,
-                ],
+                deadline: '1000',
+                maxFee: '0',
                 signature: '939673209A13FF82397578D22CC96EB8516A6760C894D9B7535E3A1E0680' +
                 '07B9255CFA9A914C97142A7AE18533E381C846B69D2AE0D60D1DC8A55AD120E2B606',
-                signer: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
+                signerPublicKey: '7681ED5023141D9CDCF184E5A7B60B7D466739918ED5DA30F7E71EA7B86EFF2D',
                 transactions: [
                     {
                         meta: {
                             aggregateHash: '3D28C804EDD07D5A728E5C5FFEC01AB07AFA5766AE6997B38526D36015A4D006',
                             aggregateId: '5A0069D83F17CF0001777E55',
-                            height: [
-                                18160,
-                                0,
-                            ],
+                            height: '18160',
                             id: '5A0069D83F17CF0001777E56',
                             index: 0,
                         },
@@ -461,8 +449,8 @@ describe('AggregateTransaction', () => {
 
         // First Alice need to append cosignatories to current transaction.
         const cosignatureSignedTransactions = [
-            new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signer),
-            new CosignatureSignedTransaction(signedTxCarol.parentHash, signedTxCarol.signature, signedTxCarol.signer),
+            new CosignatureSignedTransaction(signedTxBob.parentHash, signedTxBob.signature, signedTxBob.signerPublicKey),
+            new CosignatureSignedTransaction(signedTxCarol.parentHash, signedTxCarol.signature, signedTxCarol.signerPublicKey),
         ];
 
         const recreatedTx = TransactionMapping.createFromPayload(aliceSignedTransaction.payload) as AggregateTransaction;
@@ -470,7 +458,7 @@ describe('AggregateTransaction', () => {
         const signedTransaction = recreatedTx.signTransactionGivenSignatures(accountAlice, cosignatureSignedTransactions, generationHash);
 
         expect(signedTransaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
-        expect(signedTransaction.signer).to.be.equal(accountAlice.publicKey);
+        expect(signedTransaction.signerPublicKey).to.be.equal(accountAlice.publicKey);
         expect(signedTransaction.payload.indexOf(accountBob.publicKey) > -1).to.be.true;
         expect(signedTransaction.payload.indexOf(accountCarol.publicKey) > -1).to.be.true;
 

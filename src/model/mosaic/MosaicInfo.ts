@@ -27,21 +27,17 @@ export class MosaicInfo {
     /**
      * @param active
      * @param index
-     * @param metaId
      * @param nonce
      * @param supply
      * @param height
      * @param owner
      * @param properties
      */
-    constructor(/**
-                 * The meta data id.
-                 */
-                public readonly metaId: string,
+    constructor(
                 /**
                  * The mosaic id.
                  */
-                public readonly mosaicId: MosaicId,
+                public readonly id: MosaicId,
                 /**
                  * The mosaic supply.
                  */
@@ -77,7 +73,7 @@ export class MosaicInfo {
      * Mosaic duration
      * @returns {UInt64}
      */
-    public get duration(): UInt64 | undefined {
+    public get duration(): UInt64 {
         return this.properties.duration;
     }
 

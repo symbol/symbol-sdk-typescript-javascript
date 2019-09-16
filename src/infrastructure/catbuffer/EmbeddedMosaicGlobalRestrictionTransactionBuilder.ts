@@ -35,7 +35,7 @@ export class EmbeddedMosaicGlobalRestrictionTransactionBuilder extends EmbeddedT
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param mosaicId Identifier of the mosaic being restricted.
@@ -47,8 +47,8 @@ export class EmbeddedMosaicGlobalRestrictionTransactionBuilder extends EmbeddedT
      * @param newRestrictionType New restriction type.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  mosaicId: UnresolvedMosaicIdDto,  referenceMosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  previousRestrictionValue: number[],  previousRestrictionType: MosaicRestrictionTypeDto,  newRestrictionValue: number[],  newRestrictionType: MosaicRestrictionTypeDto) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  mosaicId: UnresolvedMosaicIdDto,  referenceMosaicId: UnresolvedMosaicIdDto,  restrictionKey: number[],  previousRestrictionValue: number[],  previousRestrictionType: MosaicRestrictionTypeDto,  newRestrictionValue: number[],  newRestrictionType: MosaicRestrictionTypeDto) {
+        super(signerPublicKey, version, type);
         // tslint:disable-next-line: max-line-length
         this.mosaicGlobalRestrictionTransactionBody = new MosaicGlobalRestrictionTransactionBodyBuilder(mosaicId, referenceMosaicId, restrictionKey, previousRestrictionValue, previousRestrictionType, newRestrictionValue, newRestrictionType);
     }
@@ -67,7 +67,7 @@ export class EmbeddedMosaicGlobalRestrictionTransactionBuilder extends EmbeddedT
         const mosaicGlobalRestrictionTransactionBody = MosaicGlobalRestrictionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicGlobalRestrictionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedMosaicGlobalRestrictionTransactionBuilder(superObject.signer, superObject.version, superObject.type, mosaicGlobalRestrictionTransactionBody.mosaicId, mosaicGlobalRestrictionTransactionBody.referenceMosaicId, mosaicGlobalRestrictionTransactionBody.restrictionKey, mosaicGlobalRestrictionTransactionBody.previousRestrictionValue, mosaicGlobalRestrictionTransactionBody.previousRestrictionType, mosaicGlobalRestrictionTransactionBody.newRestrictionValue, mosaicGlobalRestrictionTransactionBody.newRestrictionType);
+        return new EmbeddedMosaicGlobalRestrictionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, mosaicGlobalRestrictionTransactionBody.mosaicId, mosaicGlobalRestrictionTransactionBody.referenceMosaicId, mosaicGlobalRestrictionTransactionBody.restrictionKey, mosaicGlobalRestrictionTransactionBody.previousRestrictionValue, mosaicGlobalRestrictionTransactionBody.previousRestrictionType, mosaicGlobalRestrictionTransactionBody.newRestrictionValue, mosaicGlobalRestrictionTransactionBody.newRestrictionType);
     }
 
     /**

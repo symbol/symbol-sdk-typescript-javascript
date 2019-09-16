@@ -19,6 +19,8 @@ export * from './Id';
 
 // Account
 export * from './account/Account';
+export * from './account/AccountType';
+export * from './account/ActivityBucket';
 export * from './account/AccountInfo';
 export * from './account/Address';
 export * from './account/MultisigAccountGraphInfo';
@@ -27,7 +29,7 @@ export * from './account/PublicAccount';
 export * from './account/AccountRestrictions';
 export * from './account/AccountRestrictionsInfo';
 export * from './account/AccountRestriction';
-export * from './account/RestrictionModificationType';
+export * from './account/AccountRestrictionModificationAction';
 export * from './account/AccountRestrictionType';
 export * from './account/AccountNames';
 
@@ -38,7 +40,6 @@ export * from './blockchain/BlockInfo';
 export * from './blockchain/NetworkType';
 export * from './blockchain/MerklePathItem';
 export * from './blockchain/MerkleProofInfo';
-export * from './blockchain/MerkleProofInfoPayload';
 
 // Diagnostic
 export * from './diagnostic/ServerInfo';
@@ -48,14 +49,13 @@ export * from './mosaic/Mosaic';
 export * from './mosaic/MosaicInfo';
 export * from './mosaic/MosaicId';
 export * from './mosaic/MosaicNonce';
-export * from './mosaic/MosaicSupplyType';
+export * from './mosaic/MosaicSupplyChangeAction';
 export * from './mosaic/MosaicProperties';
 export * from '../service/MosaicView';
 export * from '../service/MosaicAmountView';
 export * from './mosaic/NetworkCurrencyMosaic';
 export * from './mosaic/NetworkHarvestMosaic';
 export * from './mosaic/MosaicNames';
-export * from './mosaic/MosaicPropertyType';
 export * from './mosaic/MosaicRestrictionType';
 
 // Namespace
@@ -67,7 +67,7 @@ export * from './namespace/MosaicAlias';
 export * from './namespace/NamespaceId';
 export * from './namespace/NamespaceInfo';
 export * from './namespace/NamespaceName';
-export * from './namespace/NamespaceType';
+export * from './namespace/NamespaceRegistrationType';
 export * from './namespace/AliasAction';
 
 // Node
@@ -95,7 +95,7 @@ export * from './transaction/AccountLinkTransaction';
 export * from './transaction/AccountRestrictionTransaction';
 export * from './transaction/AccountAddressRestrictionTransaction';
 export * from './transaction/AccountMosaicRestrictionTransaction';
-export * from './transaction/AccountMosaicRestrictionTransaction';
+export * from './transaction/AccountOperationRestrictionTransaction';
 export * from './transaction/AccountRestrictionModification';
 export * from './transaction/AddressAliasTransaction';
 export * from './transaction/AggregateTransaction';
@@ -112,14 +112,14 @@ export * from './transaction/InnerTransaction';
 export * from './transaction/LinkAction';
 export * from './transaction/LockFundsTransaction';
 export * from './transaction/Message';
-export * from './transaction/ModifyMultisigAccountTransaction';
+export * from './transaction/MultisigAccountModificationTransaction';
 export * from './transaction/MosaicAliasTransaction';
 export * from './transaction/MosaicDefinitionTransaction';
 export * from './transaction/MosaicSupplyChangeTransaction';
 export * from './transaction/MultisigCosignatoryModification';
-export * from './transaction/MultisigCosignatoryModificationType';
+export * from './transaction/CosignatoryModificationAction';
 export * from './transaction/PlainMessage';
-export * from './transaction/RegisterNamespaceTransaction';
+export * from './transaction/NamespaceRegistrationTransaction';
 export * from './transaction/SecretLockTransaction';
 export * from './transaction/SecretProofTransaction';
 export * from './transaction/SignedTransaction';

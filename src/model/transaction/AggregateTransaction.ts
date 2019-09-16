@@ -125,17 +125,6 @@ export class AggregateTransaction extends Transaction {
     }
 
     /**
-     * @description add inner transactions to current list
-     * @param {InnerTransaction[]} transaction
-     * @returns {AggregateTransaction}
-     * @memberof AggregateTransaction
-     */
-    public addTransactions(transactions: InnerTransaction[]): AggregateTransaction {
-        const innerTransactions = this.innerTransactions.concat(transactions);
-        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {innerTransactions});
-    }
-
-    /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
      * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
@@ -195,6 +184,18 @@ export class AggregateTransaction extends Transaction {
                 new UInt64(builder.fee.amount),
             );
     }
+
+    /**
+     * @description add inner transactions to current list
+     * @param {InnerTransaction[]} transaction
+     * @returns {AggregateTransaction}
+     * @memberof AggregateTransaction
+     */
+    public addTransactions(transactions: InnerTransaction[]): AggregateTransaction {
+        const innerTransactions = this.innerTransactions.concat(transactions);
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {innerTransactions});
+    }
+
     /**
      * @internal
      * Sign transaction with cosignatories creating a new SignedTransaction
@@ -244,7 +245,7 @@ export class AggregateTransaction extends Transaction {
         const signedTransaction = this.signWith(initiatorAccount, generationHash, signSchema);
         let signedPayload = signedTransaction.payload;
         cosignatureSignedTransactions.forEach((cosignedTransaction) => {
-            signedPayload += cosignedTransaction.signer + cosignedTransaction.signature;
+            signedPayload += cosignedTransaction.signerPublicKey + cosignedTransaction.signature;
         });
 
         // Calculate new size

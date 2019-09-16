@@ -31,7 +31,7 @@ export class BalanceTransferReceipt extends Receipt {
     /**
      * Balance transfer expiry receipt
      * @param sender - The public account of the sender.
-     * @param recipient - The mosaic recipient address.
+     * @param recipientAddress - The mosaic recipient address.
      * @param mosaicId - The mosaic id.
      * @param amount - The amount of mosaic.
      * @param version - The receipt version
@@ -46,7 +46,7 @@ export class BalanceTransferReceipt extends Receipt {
                 /**
                  * The mosaic recipient address.
                  */
-                public readonly recipient: Address | NamespaceId,
+                public readonly recipientAddress: Address | NamespaceId,
                 /**
                  * The mosaic id.
                  */

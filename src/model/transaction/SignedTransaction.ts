@@ -38,9 +38,9 @@ export class SignedTransaction {
                  */
                 public readonly hash: string,
                 /**
-                 * Transaction signer
+                 * Transaction signerPublicKey
                  */
-                public readonly signer: string,
+                public readonly signerPublicKey: string,
                 /**
                  * Transaction type
                  */
@@ -61,7 +61,7 @@ export class SignedTransaction {
         return {
             payload: this.payload,
             hash: this.hash,
-            signer: this.signer,
+            signerPublicKey: this.signerPublicKey,
             type: this.type,
             networkType: this.networkType,
         };

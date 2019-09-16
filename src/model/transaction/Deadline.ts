@@ -58,8 +58,9 @@ export class Deadline {
      * @param value
      * @returns {Deadline}
      */
-    public static createFromDTO(value: number[]): Deadline {
-        const dateSeconds = (new UInt64(value)).compact();
+    public static createFromDTO(value: string | number[]): Deadline {
+        const uint64Value = 'string' === typeof value ? UInt64.fromNumericString(value) : new UInt64(value);
+        const dateSeconds = uint64Value.compact();
         const deadline = LocalDateTime.ofInstant(
             Instant.ofEpochMilli(Math.round(dateSeconds + Deadline.timestampNemesisBlock * 1000)),
             ZoneId.SYSTEM);
@@ -80,5 +81,14 @@ export class Deadline {
         return UInt64.fromUint(
             (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
         ).toDTO();
+    }
+
+    /**
+     * @internal
+     */
+    public toString(): string {
+        return UInt64.fromUint(
+            (this.value.atZone(ZoneId.SYSTEM).toInstant().toEpochMilli() - Deadline.timestampNemesisBlock * 1000),
+        ).toString();
     }
 }

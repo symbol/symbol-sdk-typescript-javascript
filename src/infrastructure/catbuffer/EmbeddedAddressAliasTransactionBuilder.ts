@@ -36,7 +36,7 @@ export class EmbeddedAddressAliasTransactionBuilder extends EmbeddedTransactionB
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param aliasAction Alias action.
@@ -44,8 +44,8 @@ export class EmbeddedAddressAliasTransactionBuilder extends EmbeddedTransactionB
      * @param address Aliased address.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  aliasAction: AliasActionDto,  namespaceId: NamespaceIdDto,  address: AddressDto) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  aliasAction: AliasActionDto,  namespaceId: NamespaceIdDto,  address: AddressDto) {
+        super(signerPublicKey, version, type);
         this.addressAliasTransactionBody = new AddressAliasTransactionBodyBuilder(aliasAction, namespaceId, address);
     }
 
@@ -62,7 +62,7 @@ export class EmbeddedAddressAliasTransactionBuilder extends EmbeddedTransactionB
         const addressAliasTransactionBody = AddressAliasTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, addressAliasTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedAddressAliasTransactionBuilder(superObject.signer, superObject.version, superObject.type, addressAliasTransactionBody.aliasAction, addressAliasTransactionBody.namespaceId, addressAliasTransactionBody.address);
+        return new EmbeddedAddressAliasTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, addressAliasTransactionBody.aliasAction, addressAliasTransactionBody.namespaceId, addressAliasTransactionBody.address);
     }
 
     /**

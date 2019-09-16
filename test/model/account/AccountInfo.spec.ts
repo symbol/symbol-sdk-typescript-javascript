@@ -23,6 +23,7 @@ import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {Mosaic} from '../../../src/model/mosaic/Mosaic';
 import {UInt64} from '../../../src/model/UInt64';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
+import { ActivityBucket } from '../../../src/model/account/ActivityBucket';
 
 describe('AccountInfo', () => {
 
@@ -33,6 +34,14 @@ describe('AccountInfo', () => {
                 addressHeight: new UInt64([1, 0]),
                 importance: new UInt64([405653170, 0]),
                 importanceHeight: new UInt64([6462, 0]),
+                accountType: 0,
+                linkedAccountKey: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
+                activityBucket: [{
+                    startHeight: '1000',
+                    totalFeesPaid: 100,
+                    beneficiaryCount: 1,
+                    rawScore: 20,
+                }],
                 mosaics: [{
                     amount: new UInt64([1830592442, 94387]),
                     id: new MosaicId([3646934825, 3576016193]),
@@ -40,21 +49,25 @@ describe('AccountInfo', () => {
                 publicKey: '846B4439154579A5903B1459C9CF69CB8153F6D0110A7A0ED61DE29AE4810BF2',
                 publicKeyHeight: new UInt64([13, 0]),
             },
-            meta: {},
         };
 
         const accountInfo = new AccountInfo(
-            accountInfoDTO.meta,
             accountInfoDTO.account.address,
             accountInfoDTO.account.addressHeight,
             accountInfoDTO.account.publicKey,
             accountInfoDTO.account.publicKeyHeight,
+            accountInfoDTO.account.accountType,
+            accountInfoDTO.account.linkedAccountKey,
+            accountInfoDTO.account.activityBucket.map((bucket) => new ActivityBucket(
+                bucket.startHeight,
+                bucket.totalFeesPaid,
+                bucket.beneficiaryCount,
+                bucket.rawScore,
+            )),
             accountInfoDTO.account.mosaics.map((mosaicDTO) => new Mosaic(mosaicDTO.id, mosaicDTO.amount)),
             accountInfoDTO.account.importance,
             accountInfoDTO.account.importanceHeight,
         );
-
-        expect(accountInfo.meta).to.be.equal(accountInfoDTO.meta);
         deepEqual(accountInfo.address, accountInfoDTO.account.address);
         deepEqual(accountInfo.addressHeight, accountInfoDTO.account.addressHeight);
         expect(accountInfo.publicKey).to.be.equal(accountInfoDTO.account.publicKey);

@@ -36,7 +36,7 @@ export class EmbeddedMosaicDefinitionTransactionBuilder extends EmbeddedTransact
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param nonce Mosaic nonce.
@@ -46,8 +46,8 @@ export class EmbeddedMosaicDefinitionTransactionBuilder extends EmbeddedTransact
      * @param duration Mosaic duration.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  nonce: MosaicNonceDto,  id: MosaicIdDto,  flags: number,  divisibility: number,  duration: BlockDurationDto) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  nonce: MosaicNonceDto,  id: MosaicIdDto,  flags: number,  divisibility: number,  duration: BlockDurationDto) {
+        super(signerPublicKey, version, type);
         // tslint:disable-next-line: max-line-length
         this.mosaicDefinitionTransactionBody = new MosaicDefinitionTransactionBodyBuilder(nonce, id, flags, divisibility, duration);
     }
@@ -66,7 +66,7 @@ export class EmbeddedMosaicDefinitionTransactionBuilder extends EmbeddedTransact
         const mosaicDefinitionTransactionBody = MosaicDefinitionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicDefinitionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedMosaicDefinitionTransactionBuilder(superObject.signer, superObject.version, superObject.type, mosaicDefinitionTransactionBody.nonce, mosaicDefinitionTransactionBody.id, mosaicDefinitionTransactionBody.flags, mosaicDefinitionTransactionBody.divisibility, mosaicDefinitionTransactionBody.duration);
+        return new EmbeddedMosaicDefinitionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, mosaicDefinitionTransactionBody.nonce, mosaicDefinitionTransactionBody.id, mosaicDefinitionTransactionBody.flags, mosaicDefinitionTransactionBody.divisibility, mosaicDefinitionTransactionBody.duration);
     }
 
     /**

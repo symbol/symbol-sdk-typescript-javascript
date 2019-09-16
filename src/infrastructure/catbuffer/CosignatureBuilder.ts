@@ -26,18 +26,18 @@ import { SignatureDto } from './SignatureDto';
 /** Cosignature attached to an aggregate transaction. */
 export class CosignatureBuilder {
     /** Cosigner public key. */
-    signer: KeyDto;
+    signerPublicKey: KeyDto;
     /** Cosigner signature. */
     signature: SignatureDto;
 
     /**
      * Constructor.
      *
-     * @param signer Cosigner public key.
+     * @param signerPublicKey Cosigner public key.
      * @param signature Cosigner signature.
      */
-    public constructor(signer: KeyDto,  signature: SignatureDto) {
-        this.signer = signer;
+    public constructor(signerPublicKey: KeyDto,  signature: SignatureDto) {
+        this.signerPublicKey = signerPublicKey;
         this.signature = signature;
     }
 
@@ -49,11 +49,11 @@ export class CosignatureBuilder {
      */
     public static loadFromBinary(payload: Uint8Array): CosignatureBuilder {
         const byteArray = Array.from(payload);
-        const signer = KeyDto.loadFromBinary(Uint8Array.from(byteArray));
-        byteArray.splice(0, signer.getSize());
+        const signerPublicKey = KeyDto.loadFromBinary(Uint8Array.from(byteArray));
+        byteArray.splice(0, signerPublicKey.getSize());
         const signature = SignatureDto.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, signature.getSize());
-        return new CosignatureBuilder(signer, signature);
+        return new CosignatureBuilder(signerPublicKey, signature);
     }
 
     /**
@@ -61,8 +61,8 @@ export class CosignatureBuilder {
      *
      * @return Cosigner public key.
      */
-    public getSigner(): KeyDto {
-        return this.signer;
+    public getSignerPublicKey(): KeyDto {
+        return this.signerPublicKey;
     }
 
     /**
@@ -81,7 +81,7 @@ export class CosignatureBuilder {
      */
     public getSize(): number {
         let size = 0;
-        size += this.signer.getSize();
+        size += this.signerPublicKey.getSize();
         size += this.signature.getSize();
         return size;
     }
@@ -93,8 +93,8 @@ export class CosignatureBuilder {
      */
     public serialize(): Uint8Array {
         let newArray = Uint8Array.from([]);
-        const signerBytes = this.signer.serialize();
-        newArray = GeneratorUtils.concatTypedArrays(newArray, signerBytes);
+        const signerPublicKeyBytes = this.signerPublicKey.serialize();
+        newArray = GeneratorUtils.concatTypedArrays(newArray, signerPublicKeyBytes);
         const signatureBytes = this.signature.serialize();
         newArray = GeneratorUtils.concatTypedArrays(newArray, signatureBytes);
         return newArray;

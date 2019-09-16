@@ -20,9 +20,9 @@ import { TransactionMapping } from '../core/utils/TransactionMapping';
 import { AccountHttp } from '../infrastructure/AccountHttp';
 import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
 import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
+import { CosignatoryModificationAction } from '../model/transaction/CosignatoryModificationAction';
 import { InnerTransaction } from '../model/transaction/InnerTransaction';
-import { ModifyMultisigAccountTransaction } from '../model/transaction/ModifyMultisigAccountTransaction';
-import { MultisigCosignatoryModificationType } from '../model/transaction/MultisigCosignatoryModificationType';
+import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
 import { SignedTransaction } from '../model/transaction/SignedTransaction';
 import { TransactionType } from '../model/transaction/TransactionType';
 
@@ -49,8 +49,8 @@ export class AggregateTransactionService {
          * Include both initiator & cosigners
          */
         const signers = (aggregateTransaction.cosignatures.map((cosigner) => cosigner.signer.publicKey));
-        if (signedTransaction.signer) {
-            signers.push(signedTransaction.signer);
+        if (signedTransaction.signerPublicKey) {
+            signers.push(signedTransaction.signerPublicKey);
         }
         return observableFrom(aggregateTransaction.innerTransactions).pipe(
             mergeMap((innerTransaction) => this.accountHttp.getMultisigAccountInfo(innerTransaction.signer.address)
@@ -98,8 +98,8 @@ export class AggregateTransactionService {
          * use minRemoval instead of minApproval for cosignatories validation.
          */
         if (innerTransaction.type === TransactionType.MODIFY_MULTISIG_ACCOUNT) {
-            if ((innerTransaction as ModifyMultisigAccountTransaction).modifications
-                    .find((modification) => modification.modificiationType === MultisigCosignatoryModificationType.Remove) !== undefined) {
+            if ((innerTransaction as MultisigAccountModificationTransaction).modifications
+                    .find((modification) => modification.modificiationType === CosignatoryModificationAction.Remove) !== undefined) {
                         isMultisigRemoval = true;
             }
         }

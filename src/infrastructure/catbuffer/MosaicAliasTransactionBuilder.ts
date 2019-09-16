@@ -40,7 +40,7 @@ export class MosaicAliasTransactionBuilder extends TransactionBuilder {
      * Constructor.
      *
      * @param signature Entity signature.
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param fee Transaction fee.
@@ -50,8 +50,8 @@ export class MosaicAliasTransactionBuilder extends TransactionBuilder {
      * @param mosaicId Aliased mosaic identifier.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signer: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  aliasAction: AliasActionDto,  namespaceId: NamespaceIdDto,  mosaicId: MosaicIdDto) {
-        super(signature, signer, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  aliasAction: AliasActionDto,  namespaceId: NamespaceIdDto,  mosaicId: MosaicIdDto) {
+        super(signature, signerPublicKey, version, type, fee, deadline);
         this.mosaicAliasTransactionBody = new MosaicAliasTransactionBodyBuilder(aliasAction, namespaceId, mosaicId);
     }
 
@@ -68,7 +68,7 @@ export class MosaicAliasTransactionBuilder extends TransactionBuilder {
         const mosaicAliasTransactionBody = MosaicAliasTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, mosaicAliasTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new MosaicAliasTransactionBuilder(superObject.signature, superObject.signer, superObject.version, superObject.type, superObject.fee, superObject.deadline, mosaicAliasTransactionBody.aliasAction, mosaicAliasTransactionBody.namespaceId, mosaicAliasTransactionBody.mosaicId);
+        return new MosaicAliasTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, mosaicAliasTransactionBody.aliasAction, mosaicAliasTransactionBody.namespaceId, mosaicAliasTransactionBody.mosaicId);
     }
 
     /**

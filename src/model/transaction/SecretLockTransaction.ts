@@ -51,7 +51,7 @@ export class SecretLockTransaction extends Transaction {
      * @param duration - The funds lock duration.
      * @param hashType - The hash algorithm secret is generated with.
      * @param secret - The proof hashed.
-     * @param recipient - The recipient of the funds.
+     * @param recipientAddress - The recipient address of the funds.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      *
@@ -62,7 +62,7 @@ export class SecretLockTransaction extends Transaction {
                          duration: UInt64,
                          hashType: HashType,
                          secret: string,
-                         recipient: Address,
+                         recipientAddress: Address,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): SecretLockTransaction {
         return new SecretLockTransaction(
@@ -74,7 +74,7 @@ export class SecretLockTransaction extends Transaction {
             duration,
             hashType,
             secret,
-            recipient,
+            recipientAddress,
         );
     }
 
@@ -87,7 +87,7 @@ export class SecretLockTransaction extends Transaction {
      * @param duration
      * @param hashType
      * @param secret
-     * @param recipient
+     * @param recipientAddress
      * @param signature
      * @param signer
      * @param transactionInfo
@@ -113,9 +113,9 @@ export class SecretLockTransaction extends Transaction {
                  */
                 public readonly secret: string,
                 /**
-                 * The recipient of the funds.
+                 * The recipientAddress of the funds.
                  */
-                public readonly recipient: Address,
+                public readonly recipientAddress: Address,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
@@ -137,7 +137,7 @@ export class SecretLockTransaction extends Transaction {
                                     signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedSecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             SecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
         const transaction = SecretLockTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
@@ -149,11 +149,12 @@ export class SecretLockTransaction extends Transaction {
             new UInt64(builder.getDuration().blockDuration),
             builder.getHashAlgorithm().valueOf(),
             Convert.uint8ToHex(builder.getSecret().hash256),
-            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipient().unresolvedAddress)),
+            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretLockTransactionBuilder).fee.amount),
         );
-        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
     }
 
     /**
@@ -207,7 +208,7 @@ export class SecretLockTransaction extends Transaction {
             new BlockDurationDto(this.duration.toDTO()),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientAddress.plain())),
         );
         return transactionBuilder.serialize();
     }
@@ -226,7 +227,7 @@ export class SecretLockTransaction extends Transaction {
             new BlockDurationDto(this.duration.toDTO()),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipient.plain())),
+            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientAddress.plain())),
         );
         return transactionBuilder.serialize();
     }

@@ -39,19 +39,19 @@ export class TransferTransactionBuilder extends TransactionBuilder {
      * Constructor.
      *
      * @param signature Entity signature.
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
-     * @param recipient Transaction recipient.
-     * @param message Transaction message.
+     * @param recipientAddress Recipient address.
+     * @param message Attached message.
      * @param mosaics Attached mosaics.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signer: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  recipient: UnresolvedAddressDto,  message: Uint8Array,  mosaics: UnresolvedMosaicBuilder[]) {
-        super(signature, signer, version, type, fee, deadline);
-        this.transferTransactionBody = new TransferTransactionBodyBuilder(recipient, message, mosaics);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  recipientAddress: UnresolvedAddressDto,  message: Uint8Array,  mosaics: UnresolvedMosaicBuilder[]) {
+        super(signature, signerPublicKey, version, type, fee, deadline);
+        this.transferTransactionBody = new TransferTransactionBodyBuilder(recipientAddress, message, mosaics);
     }
 
     /**
@@ -67,22 +67,22 @@ export class TransferTransactionBuilder extends TransactionBuilder {
         const transferTransactionBody = TransferTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, transferTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new TransferTransactionBuilder(superObject.signature, superObject.signer, superObject.version, superObject.type, superObject.fee, superObject.deadline, transferTransactionBody.recipient, transferTransactionBody.message, transferTransactionBody.mosaics);
+        return new TransferTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, transferTransactionBody.recipientAddress, transferTransactionBody.message, transferTransactionBody.mosaics);
     }
 
     /**
-     * Gets transaction recipient.
+     * Gets recipient address.
      *
-     * @return Transaction recipient.
+     * @return Recipient address.
      */
-    public getRecipient(): UnresolvedAddressDto {
-        return this.transferTransactionBody.getRecipient();
+    public getRecipientAddress(): UnresolvedAddressDto {
+        return this.transferTransactionBody.getRecipientAddress();
     }
 
     /**
-     * Gets transaction message.
+     * Gets attached message.
      *
-     * @return Transaction message.
+     * @return Attached message.
      */
     public getMessage(): Uint8Array {
         return this.transferTransactionBody.getMessage();

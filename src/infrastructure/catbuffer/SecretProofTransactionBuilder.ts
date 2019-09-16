@@ -40,20 +40,20 @@ export class SecretProofTransactionBuilder extends TransactionBuilder {
      * Constructor.
      *
      * @param signature Entity signature.
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param fee Transaction fee.
      * @param deadline Transaction deadline.
      * @param hashAlgorithm Hash algorithm.
      * @param secret Secret.
-     * @param recipient Recipient.
+     * @param recipientAddress Locked mosaic recipient address.
      * @param proof Proof data.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signer: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipient: UnresolvedAddressDto,  proof: Uint8Array) {
-        super(signature, signer, version, type, fee, deadline);
-        this.secretProofTransactionBody = new SecretProofTransactionBodyBuilder(hashAlgorithm, secret, recipient, proof);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipientAddress: UnresolvedAddressDto,  proof: Uint8Array) {
+        super(signature, signerPublicKey, version, type, fee, deadline);
+        this.secretProofTransactionBody = new SecretProofTransactionBodyBuilder(hashAlgorithm, secret, recipientAddress, proof);
     }
 
     /**
@@ -69,7 +69,7 @@ export class SecretProofTransactionBuilder extends TransactionBuilder {
         const secretProofTransactionBody = SecretProofTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, secretProofTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new SecretProofTransactionBuilder(superObject.signature, superObject.signer, superObject.version, superObject.type, superObject.fee, superObject.deadline, secretProofTransactionBody.hashAlgorithm, secretProofTransactionBody.secret, secretProofTransactionBody.recipient, secretProofTransactionBody.proof);
+        return new SecretProofTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, secretProofTransactionBody.hashAlgorithm, secretProofTransactionBody.secret, secretProofTransactionBody.recipientAddress, secretProofTransactionBody.proof);
     }
 
     /**
@@ -91,12 +91,12 @@ export class SecretProofTransactionBuilder extends TransactionBuilder {
     }
 
     /**
-     * Gets recipient.
+     * Gets locked mosaic recipient address.
      *
-     * @return Recipient.
+     * @return Locked mosaic recipient address.
      */
-    public getRecipient(): UnresolvedAddressDto {
-        return this.secretProofTransactionBody.getRecipient();
+    public getRecipientAddress(): UnresolvedAddressDto {
+        return this.secretProofTransactionBody.getRecipientAddress();
     }
 
     /**

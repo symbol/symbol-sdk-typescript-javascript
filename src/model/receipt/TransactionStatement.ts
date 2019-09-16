@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptSource } from './ReceiptSource';
 
@@ -35,7 +36,7 @@ export class TransactionStatement {
                 /**
                  * The block height.
                  */
-                public readonly height: number[],
+                public readonly height: UInt64,
                 /**
                  * The receipt source.
                  */

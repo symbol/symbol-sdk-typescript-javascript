@@ -42,13 +42,13 @@ export class AccountLinkTransaction extends Transaction {
     /**
      * Create a link account transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param remoteAccountKey - The public key of the remote account.
+     * @param remotePublicKey - The public key of the remote account.
      * @param linkAction - The account link action.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {AccountLinkTransaction}
      */
     public static create(deadline: Deadline,
-                         remoteAccountKey: string,
+                         remotePublicKey: string,
                          linkAction: LinkAction,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): AccountLinkTransaction {
@@ -56,7 +56,7 @@ export class AccountLinkTransaction extends Transaction {
             TransactionVersion.LINK_ACCOUNT,
             deadline,
             maxFee,
-            remoteAccountKey,
+            remotePublicKey,
             linkAction);
     }
 
@@ -65,7 +65,7 @@ export class AccountLinkTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param remoteAccountKey
+     * @param remotePublicKey
      * @param linkAction
      * @param signature
      * @param signer
@@ -78,7 +78,7 @@ export class AccountLinkTransaction extends Transaction {
                 /**
                  * The public key of the remote account.
                  */
-                public readonly remoteAccountKey: string,
+                public readonly remotePublicKey: string,
                 /**
                  * The account link action.
                  */
@@ -101,16 +101,17 @@ export class AccountLinkTransaction extends Transaction {
                                     signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedAccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
                         AccountLinkTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
         const transaction = AccountLinkTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO((builder as AccountLinkTransactionBuilder).getDeadline().timestamp),
-            Convert.uint8ToHex(builder.getRemoteAccountPublicKey().key),
+            Convert.uint8ToHex(builder.getRemotePublicKey().key),
             builder.getLinkAction().valueOf(),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountLinkTransactionBuilder).fee.amount),
         );
-        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
     }
 
     /**
@@ -144,7 +145,7 @@ export class AccountLinkTransaction extends Transaction {
             TransactionType.LINK_ACCOUNT.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new KeyDto(Convert.hexToUint8(this.remoteAccountKey)),
+            new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
             this.linkAction.valueOf(),
         );
         return transactionBuilder.serialize();
@@ -159,7 +160,7 @@ export class AccountLinkTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.LINK_ACCOUNT.valueOf(),
-            new KeyDto(Convert.hexToUint8(this.remoteAccountKey)),
+            new KeyDto(Convert.hexToUint8(this.remotePublicKey)),
             this.linkAction.valueOf(),
         );
         return transactionBuilder.serialize();

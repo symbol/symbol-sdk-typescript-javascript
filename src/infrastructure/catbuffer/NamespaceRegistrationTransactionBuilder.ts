@@ -40,7 +40,7 @@ export class NamespaceRegistrationTransactionBuilder extends TransactionBuilder 
      * Constructor.
      *
      * @param signature Entity signature.
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param fee Transaction fee.
@@ -51,8 +51,8 @@ export class NamespaceRegistrationTransactionBuilder extends TransactionBuilder 
      * @param name Namespace name.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signature: SignatureDto,  signer: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  id: NamespaceIdDto,  name: Uint8Array,  duration?: BlockDurationDto,  parentId?: NamespaceIdDto) {
-        super(signature, signer, version, type, fee, deadline);
+    public constructor(signature: SignatureDto,  signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  fee: AmountDto,  deadline: TimestampDto,  id: NamespaceIdDto,  name: Uint8Array,  duration?: BlockDurationDto,  parentId?: NamespaceIdDto) {
+        super(signature, signerPublicKey, version, type, fee, deadline);
         if ((duration && parentId) || (!duration && !parentId)) {
             throw new Error('Invalid conditional parameters');
         }
@@ -74,7 +74,7 @@ export class NamespaceRegistrationTransactionBuilder extends TransactionBuilder 
         const namespaceRegistrationTransactionBody = NamespaceRegistrationTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, namespaceRegistrationTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new NamespaceRegistrationTransactionBuilder(superObject.signature, superObject.signer, superObject.version, superObject.type, superObject.fee, superObject.deadline, namespaceRegistrationTransactionBody.id, namespaceRegistrationTransactionBody.name, namespaceRegistrationTransactionBody.duration, namespaceRegistrationTransactionBody.parentId);
+        return new NamespaceRegistrationTransactionBuilder(superObject.signature, superObject.signerPublicKey, superObject.version, superObject.type, superObject.fee, superObject.deadline, namespaceRegistrationTransactionBody.id, namespaceRegistrationTransactionBody.name, namespaceRegistrationTransactionBody.duration, namespaceRegistrationTransactionBody.parentId);
     }
 
     /**

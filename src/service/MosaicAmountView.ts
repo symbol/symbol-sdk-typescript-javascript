@@ -55,6 +55,6 @@ export class MosaicAmountView {
      * @returns {string}
      */
     public fullName(): string {
-        return this.mosaicInfo.mosaicId.toHex();
+        return this.mosaicInfo.id.toHex();
     }
 }

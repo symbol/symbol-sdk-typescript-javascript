@@ -72,9 +72,13 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<Transaction>
      */
     public getTransaction(transactionId: string): Observable<Transaction> {
-        return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(map((transactionDTO) => {
+        return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(
+            map((response: { response: ClientResponse; body: TransactionInfoDTO; } ) => {
+            const transactionDTO = response.body;
             return CreateTransactionFromDTO(transactionDTO);
-        }));
+        }),
+        catchError((error) =>  throwError(this.errorHandling(error))),
+        );
     }
 
     /**
@@ -111,8 +115,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
                     transactionStatusDTO.status,
                     transactionStatusDTO.group,
                     transactionStatusDTO.hash,
-                    transactionStatusDTO.deadline ? Deadline.createFromDTO(transactionStatusDTO.deadline) : undefined,
-                    transactionStatusDTO.height ? new UInt64(transactionStatusDTO.height) : undefined);
+                    transactionStatusDTO.deadline ?
+                    Deadline.createFromDTO(UInt64.fromNumericString(transactionStatusDTO.deadline).toDTO()) : undefined,
+                    transactionStatusDTO.height ? UInt64.fromNumericString(transactionStatusDTO.height) : undefined);
             }),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
@@ -136,8 +141,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
                         transactionStatusDTO.status,
                         transactionStatusDTO.group,
                         transactionStatusDTO.hash,
-                        transactionStatusDTO.deadline ? Deadline.createFromDTO(transactionStatusDTO.deadline) : undefined,
-                        transactionStatusDTO.height ? new UInt64(transactionStatusDTO.height) : undefined);
+                        transactionStatusDTO.deadline ?
+                            Deadline.createFromDTO(UInt64.fromNumericString(transactionStatusDTO.deadline).toDTO()) : undefined,
+                        transactionStatusDTO.height ? UInt64.fromNumericString(transactionStatusDTO.height) : undefined);
                 });
             }),
             catchError((error) =>  throwError(error.error.errorMessage)),
@@ -150,6 +156,9 @@ export class TransactionHttp extends Http implements TransactionRepository {
      * @returns Observable<TransactionAnnounceResponse>
      */
     public announce(signedTransaction: SignedTransaction): Observable<TransactionAnnounceResponse> {
+        if (signedTransaction.type === TransactionType.AGGREGATE_BONDED) {
+            throw new Error('Announcing aggregate bonded transaction should use \'announceAggregateBonded\'');
+        }
         return observableFrom(this.transactionRoutesApi.announceTransaction(signedTransaction)).pipe(
             map((response: { response: ClientResponse; body: AnnounceTransactionInfoDTO; } ) => {
                 const transactionAnnounceResponseDTO = response.body;
@@ -194,7 +203,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
     }
 
     public announceSync(signedTx: SignedTransaction): Observable<Transaction> {
-        const address = PublicAccount.createFromPublicKey(signedTx.signer, signedTx.networkType).address;
+        const address = PublicAccount.createFromPublicKey(signedTx.signerPublicKey, signedTx.networkType).address;
         const syncAnnounce = new SyncAnnounce(
             signedTx.payload,
             signedTx.hash,
@@ -229,15 +238,16 @@ export class TransactionHttp extends Http implements TransactionRepository {
      */
     public getTransactionEffectiveFee(transactionId: string): Observable<number> {
         return observableFrom(this.transactionRoutesApi.getTransaction(transactionId)).pipe(
-            mergeMap((transactionDTO) => {
+            mergeMap((response: { response: ClientResponse; body: TransactionInfoDTO; } ) => {
                 // parse transaction to take advantage of `size` getter overload
+                const transactionDTO = response.body;
                 const transaction = CreateTransactionFromDTO(transactionDTO);
                 const uintHeight = (transaction.transactionInfo as TransactionInfo).height;
 
                 // now read block details
                 return observableFrom(this.blockRoutesApi.getBlockByHeight(uintHeight.compact())).pipe(
-                map((response: { response: ClientResponse; body: BlockInfoDTO; } ) => {
-                    const blockDTO = response.body;
+                map((blockResponse: { response: ClientResponse; body: BlockInfoDTO; } ) => {
+                    const blockDTO = blockResponse.body;
                     // @see https://nemtech.github.io/concepts/transaction.html#fees
                     // effective_fee = feeMultiplier x transaction::size
                     return blockDTO.block.feeMultiplier * transaction.size;

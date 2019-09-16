@@ -25,10 +25,10 @@ import { MultisigAccountGraphInfo } from '../../src/model/account/MultisigAccoun
 import { MultisigAccountInfo } from '../../src/model/account/MultisigAccountInfo';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
+import { CosignatoryModificationAction } from '../../src/model/transaction/CosignatoryModificationAction';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
+import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
-import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { AggregateTransactionService } from '../../src/service/AggregateTransactionService';
@@ -270,12 +270,12 @@ describe('AggregateTransactionService', () => {
          * The validator should use minRemoval value rather than minApproval value
          * to determine if the act is complete or not
          */
-        const modifyMultisigTransaction = ModifyMultisigAccountTransaction.create(
+        const modifyMultisigTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(1, ChronoUnit.HOURS),
             1,
             1,
             [new MultisigCosignatoryModification(
-                MultisigCosignatoryModificationType.Remove,
+                CosignatoryModificationAction.Remove,
                 account1.publicAccount,
             )],
             NetworkType.MIJIN_TEST,

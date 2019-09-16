@@ -146,10 +146,10 @@ export abstract class Transaction {
      * @returns {Array.<*>} AggregateTransaction bytes
      */
     public aggregateTransaction(): number[] {
-        const signer = Convert.hexToUint8(this.signer!.publicKey);
+        const signerPublicKey = Convert.hexToUint8(this.signer!.publicKey);
         let resultBytes = Array.from(this.generateBytes());
         resultBytes.splice(0, 4 + 64 + 32);
-        resultBytes = Array.from(signer).concat(resultBytes);
+        resultBytes = Array.from(signerPublicKey).concat(resultBytes);
         resultBytes.splice(32 + 2 + 2, 16);
         return Array.from((new Uint8Array([
             (resultBytes.length + 4 & 0x000000ff),
@@ -249,7 +249,7 @@ export abstract class Transaction {
     public get size(): number {
         const byteSize = 4 // size
                         + 64 // signature
-                        + 32 // signer
+                        + 32 // signerPublicKey
                         + 2 // version
                         + 2 // type
                         + 8 // maxFee
@@ -277,13 +277,13 @@ export abstract class Transaction {
             type: this.type,
             networkType: this.networkType,
             version: this.versionToDTO(),
-            maxFee: this.maxFee.toDTO(),
-            deadline: this.deadline.toDTO(),
+            maxFee: this.maxFee.toString(),
+            deadline: this.deadline.toString(),
             signature: this.signature ? this.signature : '',
         };
 
         if (this.signer) {
-            Object.assign(commonTransactionObject, {signer: this.signer.publicKey});
+            Object.assign(commonTransactionObject, {signerPublicKey: this.signer.publicKey});
         }
 
         const childClassObject = SerializeTransactionToJSON(this);

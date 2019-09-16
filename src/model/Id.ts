@@ -35,7 +35,7 @@ export class Id extends UInt64 {
         const part1 = this.higher.toString(16);
         const part2 = this.lower.toString(16);
 
-        return this.pad(part1, 8) + this.pad(part2, 8);
+        return (this.pad(part1, 8) + this.pad(part2, 8)).toUpperCase();
     }
 
     /**

@@ -122,4 +122,31 @@ describe('Uint64', () => {
             });
         });
     });
+
+    describe('fromNumericString', () => {
+        it('should create Uint64 object from string', () => {
+            const value = '1000';
+            const uint64 = UInt64.fromNumericString(value);
+            expect(uint64.lower).to.be.equal(1000);
+
+            // To make sure new method works on existing tests
+            const value2 = '51110867862';
+            const uint64_2 = UInt64.fromNumericString(value2);
+            expect(uint64_2.lower).to.be.equal(3866227606);
+            expect(uint64_2.higher).to.be.equal(11);
+        });
+        it('should throw exception when creating Uint64 object from string', () => {
+            expect(() => { UInt64.fromNumericString('000012345678'); }).to.throw('Input string is not a valid numeric string');
+            expect(() => { UInt64.fromNumericString('ABC12345678'); }).to.throw('Input string is not a valid numeric string');
+        });
+    });
+
+    describe('toNuermicString', () => {
+        it('should return numeric string representation', () => {
+            const value = '1000';
+            const uint64 = UInt64.fromNumericString(value);
+
+            expect(uint64.toString()).to.be.equal(value);
+        });
+    });
 });

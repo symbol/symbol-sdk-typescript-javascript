@@ -34,7 +34,7 @@ export class EmbeddedNamespaceMetadataTransactionBuilder extends EmbeddedTransac
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param targetPublicKey Metadata target public key.
@@ -46,8 +46,8 @@ export class EmbeddedNamespaceMetadataTransactionBuilder extends EmbeddedTransac
      * @note when there is an existing value, new value is calculated as xor(previous-value, value).
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  targetNamespaceId: NamespaceIdDto,  valueSizeDelta: number,  value: Uint8Array) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  targetPublicKey: KeyDto,  scopedMetadataKey: number[],  targetNamespaceId: NamespaceIdDto,  valueSizeDelta: number,  value: Uint8Array) {
+        super(signerPublicKey, version, type);
         // tslint:disable-next-line: max-line-length
         this.namespaceMetadataTransactionBody = new NamespaceMetadataTransactionBodyBuilder(targetPublicKey, scopedMetadataKey, targetNamespaceId, valueSizeDelta, value);
     }
@@ -66,7 +66,7 @@ export class EmbeddedNamespaceMetadataTransactionBuilder extends EmbeddedTransac
         const namespaceMetadataTransactionBody = NamespaceMetadataTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, namespaceMetadataTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedNamespaceMetadataTransactionBuilder(superObject.signer, superObject.version, superObject.type, namespaceMetadataTransactionBody.targetPublicKey, namespaceMetadataTransactionBody.scopedMetadataKey, namespaceMetadataTransactionBody.targetNamespaceId, namespaceMetadataTransactionBody.valueSizeDelta, namespaceMetadataTransactionBody.value);
+        return new EmbeddedNamespaceMetadataTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, namespaceMetadataTransactionBody.targetPublicKey, namespaceMetadataTransactionBody.scopedMetadataKey, namespaceMetadataTransactionBody.targetNamespaceId, namespaceMetadataTransactionBody.valueSizeDelta, namespaceMetadataTransactionBody.value);
     }
 
     /**

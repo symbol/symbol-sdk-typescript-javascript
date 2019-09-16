@@ -35,15 +35,15 @@ export class EmbeddedAccountMosaicRestrictionTransactionBuilder extends Embedded
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param restrictionType Account restriction type.
      * @param modifications Account restriction modifications.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  restrictionType: AccountRestrictionTypeDto,  modifications: AccountMosaicRestrictionModificationBuilder[]) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  restrictionType: AccountRestrictionTypeDto,  modifications: AccountMosaicRestrictionModificationBuilder[]) {
+        super(signerPublicKey, version, type);
         // tslint:disable-next-line: max-line-length
         this.accountMosaicRestrictionTransactionBody = new AccountMosaicRestrictionTransactionBodyBuilder(restrictionType, modifications);
     }
@@ -62,7 +62,7 @@ export class EmbeddedAccountMosaicRestrictionTransactionBuilder extends Embedded
         const accountMosaicRestrictionTransactionBody = AccountMosaicRestrictionTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, accountMosaicRestrictionTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedAccountMosaicRestrictionTransactionBuilder(superObject.signer, superObject.version, superObject.type, accountMosaicRestrictionTransactionBody.restrictionType, accountMosaicRestrictionTransactionBody.modifications);
+        return new EmbeddedAccountMosaicRestrictionTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, accountMosaicRestrictionTransactionBody.restrictionType, accountMosaicRestrictionTransactionBody.modifications);
     }
 
     /**

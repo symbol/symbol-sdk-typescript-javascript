@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { AccountRestrictionModificationAction } from '../account/AccountRestrictionModificationAction';
 import { Address } from '../account/Address';
-import { RestrictionModificationType } from '../account/RestrictionModificationType';
 import { MosaicId } from '../mosaic/MosaicId';
 import { TransactionType } from './TransactionType';
 
@@ -30,7 +30,7 @@ export class AccountRestrictionModification<T> {
                 /**
                  * Modification type.
                  */
-                public readonly modificationType: RestrictionModificationType,
+                public readonly modificationType: AccountRestrictionModificationAction,
                 /**
                  * Modification value (Address, Mosaic or Transaction Type).
                  */
@@ -41,22 +41,22 @@ export class AccountRestrictionModification<T> {
     /**
      * Create an address filter for account restriction modification
      * @param modificationType - modification type. 0: Add, 1: Remove
-     * @param address - modification value (Address)
+     * @param value - modification value (Address)
      * @returns {AccountRestrictionModification}
      */
-    public static createForAddress(modificationType: RestrictionModificationType,
-                                   address: Address): AccountRestrictionModification<string> {
-        return new AccountRestrictionModification<string>(modificationType, address.plain());
+    public static createForAddress(modificationType: AccountRestrictionModificationAction,
+                                   value: Address): AccountRestrictionModification<string> {
+        return new AccountRestrictionModification<string>(modificationType, value.plain());
     }
     /**
      * Create an mosaic filter for account restriction modification
      * @param modificationType - modification type. 0: Add, 1: Remove
-     * @param mosaicId - modification value (Mosaic)
+     * @param value - modification value (Mosaic)
      * @returns {AccountRestrictionModification}
      */
-    public static createForMosaic(modificationType: RestrictionModificationType,
-                                  mosaicId: MosaicId): AccountRestrictionModification<number[]> {
-    return new AccountRestrictionModification<number[]>(modificationType, mosaicId.id.toDTO());
+    public static createForMosaic(modificationType: AccountRestrictionModificationAction,
+                                  value: MosaicId): AccountRestrictionModification<number[]> {
+    return new AccountRestrictionModification<number[]>(modificationType, value.id.toDTO());
     }
 
     /**
@@ -65,9 +65,9 @@ export class AccountRestrictionModification<T> {
      * @param operation - modification value (Transaction Type)
      * @returns {AccountRestrictionModification}
      */
-    public static createForOperation(modificationType: RestrictionModificationType,
-                                     operation: number): AccountRestrictionModification<TransactionType> {
-    return new AccountRestrictionModification<TransactionType>(modificationType, operation);
+    public static createForOperation(modificationType: AccountRestrictionModificationAction,
+                                     value: number): AccountRestrictionModification<TransactionType> {
+    return new AccountRestrictionModification<TransactionType>(modificationType, value);
     }
 
     /**
@@ -76,7 +76,7 @@ export class AccountRestrictionModification<T> {
     toDTO() {
         return {
             value: this.value,
-            type: this.modificationType,
+            modificationAction: this.modificationType,
         };
     }
 }

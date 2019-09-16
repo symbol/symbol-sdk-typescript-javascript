@@ -18,15 +18,15 @@ import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
 import {Convert as convert} from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
+import { AccountRestrictionModificationAction } from '../../src/model/account/AccountRestrictionModificationAction';
 import { AccountRestrictionType } from '../../src/model/account/AccountRestrictionType';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
-import { RestrictionModificationType } from '../../src/model/account/RestrictionModificationType';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
 import { MosaicProperties } from '../../src/model/mosaic/MosaicProperties';
-import { MosaicSupplyType } from '../../src/model/mosaic/MosaicSupplyType';
+import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
@@ -35,18 +35,18 @@ import { AccountRestrictionModification } from '../../src/model/transaction/Acco
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
 import { AddressAliasTransaction } from '../../src/model/transaction/AddressAliasTransaction';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
+import { CosignatoryModificationAction } from '../../src/model/transaction/CosignatoryModificationAction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { HashType } from '../../src/model/transaction/HashType';
 import { LinkAction } from '../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../src/model/transaction/LockFundsTransaction';
-import { ModifyMultisigAccountTransaction } from '../../src/model/transaction/ModifyMultisigAccountTransaction';
 import { MosaicAliasTransaction } from '../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/MosaicSupplyChangeTransaction';
+import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
-import { MultisigCosignatoryModificationType } from '../../src/model/transaction/MultisigCosignatoryModificationType';
+import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
 import { PlainMessage } from '../../src/model/transaction/PlainMessage';
-import { RegisterNamespaceTransaction } from '../../src/model/transaction/RegisterNamespaceTransaction';
 import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../src/model/transaction/SecretProofTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType' ;
@@ -71,14 +71,14 @@ describe('SerializeTransactionToJSON', () => {
 
         const json = accountLinkTransaction.toJSON();
 
-        expect(json.transaction.remoteAccountKey).to.be.equal(account.publicKey);
+        expect(json.transaction.remotePublicKey).to.be.equal(account.publicKey);
         expect(json.transaction.linkAction).to.be.equal(LinkAction.Link);
     });
 
     it('should create AccountRestrictionAddressTransaction', () => {
         const address = Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         const addressRestrictionFilter = AccountRestrictionModification.createForAddress(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             address,
         );
         const addressRestrictionTransaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -98,7 +98,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AccountRestrictionMosaicTransaction', () => {
         const mosaicId = new MosaicId([2262289484, 3405110546]);
         const mosaicRestrictionFilter = AccountRestrictionModification.createForMosaic(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             mosaicId,
         );
         const mosaicRestrictionTransaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
@@ -118,7 +118,7 @@ describe('SerializeTransactionToJSON', () => {
     it('should create AccountRestrictionOperationTransaction', () => {
         const operation = TransactionType.ADDRESS_ALIAS;
         const operationRestrictionFilter = AccountRestrictionModification.createForOperation(
-            RestrictionModificationType.Add,
+            AccountRestrictionModificationAction.Add,
             operation,
         );
         const operationRestrictionTransaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
@@ -175,9 +175,10 @@ describe('SerializeTransactionToJSON', () => {
             new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicProperties.create({
-                supplyMutable: false,
-                transferable: false,
-                divisibility: 3,
+                supplyMutable: true,
+                transferable: true,
+                divisibility: 5,
+                restrictable: true,
                 duration: UInt64.fromUint(1000),
             }),
             NetworkType.MIJIN_TEST,
@@ -186,10 +187,9 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicDefinitionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
-        expect(json.transaction.properties.length).to.be.equal(3);
-        expect(new UInt64(json.transaction.properties[1].value).compact()).to.be.equal(UInt64.fromUint(3).compact());
-        expect(new UInt64(json.transaction.properties[2].value).compact()).to.be.equal(UInt64.fromUint(1000).compact());
-        expect(new UInt64(json.transaction.properties[2].value).lower).to.be.equal(UInt64.fromUint(1000).lower);
+        expect(json.transaction.flags).to.be.equal(7);
+        expect(json.transaction.divisibility).to.be.equal(5);
+        expect(json.transaction.duration).to.be.equal('1000');
 
     });
 
@@ -199,9 +199,10 @@ describe('SerializeTransactionToJSON', () => {
             new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
             MosaicProperties.create({
-                supplyMutable: false,
+                supplyMutable: true,
                 transferable: false,
                 divisibility: 3,
+                duration: UInt64.fromUint(0),
             }),
             NetworkType.MIJIN_TEST,
         );
@@ -209,7 +210,8 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicDefinitionTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_DEFINITION);
-        expect(json.transaction.properties.length).to.be.equal(2);
+        expect(json.transaction.divisibility).to.be.equal(3);
+        expect(json.transaction.flags).to.be.equal(1);
 
     });
 
@@ -218,7 +220,7 @@ describe('SerializeTransactionToJSON', () => {
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
-            MosaicSupplyType.Increase,
+            MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
             NetworkType.MIJIN_TEST,
         );
@@ -226,7 +228,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicSupplyChangeTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_CHANGE);
-        expect(json.transaction.direction).to.be.equal(MosaicSupplyType.Increase);
+        expect(json.transaction.direction).to.be.equal(MosaicSupplyChangeAction.Increase);
 
     });
 
@@ -251,14 +253,14 @@ describe('SerializeTransactionToJSON', () => {
 
     it('should create SecretLockTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
-        const recipient = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
+        const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             NetworkCurrencyMosaic.createAbsolute(10),
             UInt64.fromUint(100),
             HashType.Op_Sha3_256,
             sha3_256.create().update(convert.hexToUint8(proof)).hex(),
-            recipient,
+            recipientAddress,
             NetworkType.MIJIN_TEST,
         );
 
@@ -290,12 +292,12 @@ describe('SerializeTransactionToJSON', () => {
     });
 
     it('should create ModifyMultiSigTransaction', () => {
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             2,
             1,
             [new MultisigCosignatoryModification(
-                MultisigCosignatoryModificationType.Add,
+                CosignatoryModificationAction.Add,
                 PublicAccount.createFromPublicKey('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24',
                     NetworkType.MIJIN_TEST),
             )],
@@ -372,8 +374,8 @@ describe('SerializeTransactionToJSON', () => {
         expect(json.transaction.hash).to.be.equal(signedTransaction.hash);
     });
 
-    it('should create RegisterNamespaceTransaction - Root', () => {
-        const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
+    it('should create NamespaceRegistrationTransaction - Root', () => {
+        const registerNamespaceTransaction = NamespaceRegistrationTransaction.createRootNamespace(
             Deadline.create(),
             'root-test-namespace',
             UInt64.fromUint(1000),
@@ -386,8 +388,8 @@ describe('SerializeTransactionToJSON', () => {
 
     });
 
-    it('should create RegisterNamespaceTransaction - Sub', () => {
-        const registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(
+    it('should create NamespaceRegistrationTransaction - Sub', () => {
+        const registerNamespaceTransaction = NamespaceRegistrationTransaction.createSubNamespace(
             Deadline.create(),
             'root-test-namespace',
             'parent-test-namespace',

@@ -35,17 +35,17 @@ export class EmbeddedTransferTransactionBuilder extends EmbeddedTransactionBuild
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
-     * @param recipient Transaction recipient.
-     * @param message Transaction message.
+     * @param recipientAddress Recipient address.
+     * @param message Attached message.
      * @param mosaics Attached mosaics.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  recipient: UnresolvedAddressDto,  message: Uint8Array,  mosaics: UnresolvedMosaicBuilder[]) {
-        super(signer, version, type);
-        this.transferTransactionBody = new TransferTransactionBodyBuilder(recipient, message, mosaics);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  recipientAddress: UnresolvedAddressDto,  message: Uint8Array,  mosaics: UnresolvedMosaicBuilder[]) {
+        super(signerPublicKey, version, type);
+        this.transferTransactionBody = new TransferTransactionBodyBuilder(recipientAddress, message, mosaics);
     }
 
     /**
@@ -61,22 +61,22 @@ export class EmbeddedTransferTransactionBuilder extends EmbeddedTransactionBuild
         const transferTransactionBody = TransferTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, transferTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedTransferTransactionBuilder(superObject.signer, superObject.version, superObject.type, transferTransactionBody.recipient, transferTransactionBody.message, transferTransactionBody.mosaics);
+        return new EmbeddedTransferTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, transferTransactionBody.recipientAddress, transferTransactionBody.message, transferTransactionBody.mosaics);
     }
 
     /**
-     * Gets transaction recipient.
+     * Gets recipient address.
      *
-     * @return Transaction recipient.
+     * @return Recipient address.
      */
-    public getRecipient(): UnresolvedAddressDto {
-        return this.transferTransactionBody.getRecipient();
+    public getRecipientAddress(): UnresolvedAddressDto {
+        return this.transferTransactionBody.getRecipientAddress();
     }
 
     /**
-     * Gets transaction message.
+     * Gets attached message.
      *
-     * @return Transaction message.
+     * @return Attached message.
      */
     public getMessage(): Uint8Array {
         return this.transferTransactionBody.getMessage();

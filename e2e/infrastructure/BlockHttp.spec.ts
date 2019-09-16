@@ -145,8 +145,7 @@ describe('BlockHttp', () => {
         it('should return Merkle Receipts', (done) => {
             blockHttp.getMerkleReceipts(chainHeight, blockReceiptHash)
                 .subscribe((merkleReceipts) => {
-                    expect(merkleReceipts.type).not.to.be.null;
-                    expect(merkleReceipts.payload).not.to.be.null;
+                    expect(merkleReceipts.merklePath).not.to.be.null;
                     done();
                 });
         });
@@ -155,8 +154,7 @@ describe('BlockHttp', () => {
         it('should return Merkle Transaction', (done) => {
             blockHttp.getMerkleTransaction(chainHeight, blockTransactionHash)
                 .subscribe((merkleTransactionss) => {
-                    expect(merkleTransactionss.type).not.to.be.null;
-                    expect(merkleTransactionss.payload).not.to.be.null;
+                    expect(merkleTransactionss.merklePath).not.to.be.null;
                     done();
                 });
         });

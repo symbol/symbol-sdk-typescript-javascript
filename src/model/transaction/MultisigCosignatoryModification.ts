@@ -15,7 +15,7 @@
  */
 
 import {PublicAccount} from '../account/PublicAccount';
-import {MultisigCosignatoryModificationType} from './MultisigCosignatoryModificationType';
+import {CosignatoryModificationAction} from './CosignatoryModificationAction';
 
 /**
  * Multisig cosignatory modifications are part of the NEM's multisig account system.
@@ -34,7 +34,7 @@ export class MultisigCosignatoryModification {
                 /**
                  * Multi-signature modification type.
                  */
-                public readonly modificiationType: MultisigCosignatoryModificationType,
+                public readonly modificiationType: CosignatoryModificationAction,
                 /**
                  * Cosignatory public account.
                  */

@@ -98,12 +98,12 @@ describe('NamespaceInfo', () => {
     it('should return the NamespaceId in string format', () => {
         const namespaceInfo = createRootFromDTO(rootNamespaceDTO);
 
-        expect(namespaceInfo.id.toHex()).to.be.equal('84b3552d375ffa4b');
+        expect(namespaceInfo.id.toHex()).to.be.equal('84B3552D375FFA4B');
     });
 
     it('should return the NamespaceId in string format for sub-namespace', () => {
         const namespaceInfo = createSubnamespaceFromDTO(subNamespaceDTO);
-        expect(namespaceInfo.id.toHex()).to.be.equal('f7ce33276a3288c1');
+        expect(namespaceInfo.id.toHex()).to.be.equal('F7CE33276A3288C1');
     });
 
     it('isRoot() should return true when the Namespace has type 0', () => {

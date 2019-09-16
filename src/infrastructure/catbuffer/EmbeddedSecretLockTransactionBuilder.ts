@@ -38,20 +38,20 @@ export class EmbeddedSecretLockTransactionBuilder extends EmbeddedTransactionBui
     /**
      * Constructor.
      *
-     * @param signer Entity signer's public key.
+     * @param signerPublicKey Entity signer's public key.
      * @param version Entity version.
      * @param type Entity type.
      * @param mosaic Locked mosaic.
      * @param duration Number of blocks for which a lock should be valid.
      * @param hashAlgorithm Hash algorithm.
      * @param secret Secret.
-     * @param recipient Locked mosaic recipient.
+     * @param recipientAddress Locked mosaic recipient address.
      */
     // tslint:disable-next-line: max-line-length
-    public constructor(signer: KeyDto,  version: number,  type: EntityTypeDto,  mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipient: UnresolvedAddressDto) {
-        super(signer, version, type);
+    public constructor(signerPublicKey: KeyDto,  version: number,  type: EntityTypeDto,  mosaic: UnresolvedMosaicBuilder,  duration: BlockDurationDto,  hashAlgorithm: LockHashAlgorithmDto,  secret: Hash256Dto,  recipientAddress: UnresolvedAddressDto) {
+        super(signerPublicKey, version, type);
         // tslint:disable-next-line: max-line-length
-        this.secretLockTransactionBody = new SecretLockTransactionBodyBuilder(mosaic, duration, hashAlgorithm, secret, recipient);
+        this.secretLockTransactionBody = new SecretLockTransactionBodyBuilder(mosaic, duration, hashAlgorithm, secret, recipientAddress);
     }
 
     /**
@@ -67,7 +67,7 @@ export class EmbeddedSecretLockTransactionBuilder extends EmbeddedTransactionBui
         const secretLockTransactionBody = SecretLockTransactionBodyBuilder.loadFromBinary(Uint8Array.from(byteArray));
         byteArray.splice(0, secretLockTransactionBody.getSize());
         // tslint:disable-next-line: max-line-length
-        return new EmbeddedSecretLockTransactionBuilder(superObject.signer, superObject.version, superObject.type, secretLockTransactionBody.mosaic, secretLockTransactionBody.duration, secretLockTransactionBody.hashAlgorithm, secretLockTransactionBody.secret, secretLockTransactionBody.recipient);
+        return new EmbeddedSecretLockTransactionBuilder(superObject.signerPublicKey, superObject.version, superObject.type, secretLockTransactionBody.mosaic, secretLockTransactionBody.duration, secretLockTransactionBody.hashAlgorithm, secretLockTransactionBody.secret, secretLockTransactionBody.recipientAddress);
     }
 
     /**
@@ -107,12 +107,12 @@ export class EmbeddedSecretLockTransactionBuilder extends EmbeddedTransactionBui
     }
 
     /**
-     * Gets locked mosaic recipient.
+     * Gets locked mosaic recipient address.
      *
-     * @return Locked mosaic recipient.
+     * @return Locked mosaic recipient address.
      */
-    public getRecipient(): UnresolvedAddressDto {
-        return this.secretLockTransactionBody.getRecipient();
+    public getRecipientAddress(): UnresolvedAddressDto {
+        return this.secretLockTransactionBody.getRecipientAddress();
     }
 
     /**

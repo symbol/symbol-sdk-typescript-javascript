@@ -21,7 +21,7 @@ export class CosignatureSignedTransaction {
     /**
      * @param parentHash
      * @param signature
-     * @param signer
+     * @param signerPublicKey
      */
     constructor(
                 /**
@@ -33,7 +33,7 @@ export class CosignatureSignedTransaction {
                  */
                 public readonly signature: string,
                 /**
-                 * The signer of the transaction.
+                 * The signer publicKey of the transaction.
                  */
-                public readonly signer: string) {}
+                public readonly signerPublicKey: string) {}
 }

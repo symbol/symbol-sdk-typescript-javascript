@@ -52,7 +52,7 @@ export class TransferTransaction extends Transaction {
     /**
      * Create a transfer transaction object
      * @param deadline - The deadline to include the transaction.
-     * @param recipient - The recipient of the transaction.
+     * @param recipientAddress - The recipient address of the transaction.
      * @param mosaics - The array of mosaics.
      * @param message - The transaction message.
      * @param networkType - The network type.
@@ -60,7 +60,7 @@ export class TransferTransaction extends Transaction {
      * @returns {TransferTransaction}
      */
     public static create(deadline: Deadline,
-                         recipient: Address | NamespaceId,
+                         recipientAddress: Address | NamespaceId,
                          mosaics: Mosaic[],
                          message: Message,
                          networkType: NetworkType,
@@ -69,7 +69,7 @@ export class TransferTransaction extends Transaction {
             TransactionVersion.TRANSFER,
             deadline,
             maxFee,
-            recipient,
+            recipientAddress,
             mosaics,
             message);
     }
@@ -79,7 +79,7 @@ export class TransferTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param recipient
+     * @param recipientAddress
      * @param mosaics
      * @param message
      * @param signature
@@ -91,9 +91,9 @@ export class TransferTransaction extends Transaction {
                 deadline: Deadline,
                 maxFee: UInt64,
                 /**
-                 * The address of the recipient.
+                 * The address of the recipient address.
                  */
-                public readonly recipient: Address | NamespaceId,
+                public readonly recipientAddress: Address | NamespaceId,
                 /**
                  * The array of Mosaic objects.
                  */
@@ -122,12 +122,12 @@ export class TransferTransaction extends Transaction {
             TransferTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const messageType = builder.getMessage()[0];
         const messageHex = Convert.uint8ToHex(builder.getMessage()).substring(2);
-        const signer = Convert.uint8ToHex(builder.getSigner().key);
+        const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
         const transaction = TransferTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as TransferTransactionBuilder).getDeadline().timestamp),
-            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipient().unresolvedAddress)),
+            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             builder.getMosaics().map((mosaic) => {
                 return new Mosaic(
                     new MosaicId(mosaic.mosaicId.unresolvedMosaicId),
@@ -139,7 +139,8 @@ export class TransferTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as TransferTransactionBuilder).fee.amount),
         );
-        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+        return isEmbedded ?
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
     }
 
     /**
@@ -149,13 +150,13 @@ export class TransferTransaction extends Transaction {
      */
     public recipientToString(): string {
 
-        if (this.recipient instanceof NamespaceId) {
+        if (this.recipientAddress instanceof NamespaceId) {
             // namespaceId recipient, return hexadecimal notation
-            return (this.recipient as NamespaceId).toHex();
+            return (this.recipientAddress as NamespaceId).toHex();
         }
 
         // address recipient
-        return (this.recipient as Address).plain();
+        return (this.recipientAddress as Address).plain();
     }
 
     /**
@@ -208,7 +209,7 @@ export class TransferTransaction extends Transaction {
         const byteSize = super.size;
 
         // recipient and number of mosaics are static byte size
-        const byteRecipient = 25;
+        const byteRecipientAddress = 25;
         const byteNumMosaics = 2;
 
         // read message payload size
@@ -217,7 +218,7 @@ export class TransferTransaction extends Transaction {
         // mosaicId / namespaceId are written on 8 bytes
         const byteMosaics = 8 * this.mosaics.length;
 
-        return byteSize + byteRecipient + byteNumMosaics + bytePayload + byteMosaics;
+        return byteSize + byteRecipientAddress + byteNumMosaics + bytePayload + byteMosaics;
     }
 
     /**

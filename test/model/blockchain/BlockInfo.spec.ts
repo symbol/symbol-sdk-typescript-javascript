@@ -34,7 +34,7 @@ describe('BlockInfo', () => {
                 previousBlockHash: '0000000000000000000000000000000000000000000000000000000000000000',
                 signature: '37351C8244AC166BE6664E3FA954E99A3239AC46E51E2B32CEA1C72DD0851100A7731868' +
                 'E932E1A9BEF8A27D48E1FFEE401E933EB801824373E7537E51733E0F',
-                signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 beneficiaryPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 timestamp: new UInt64([ 0, 0 ]),
                 type: 32768,
@@ -55,7 +55,7 @@ describe('BlockInfo', () => {
             blockDTO.meta.totalFee,
             blockDTO.meta.numTransactions,
             blockDTO.block.signature,
-            PublicAccount.createFromPublicKey(blockDTO.block.signer, network),
+            PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, network),
             network,
             parseInt(blockDTO.block.version.toString(16).substr(2, 2), 16), // Tx version
             blockDTO.block.type,
@@ -75,7 +75,7 @@ describe('BlockInfo', () => {
         deepEqual(blockInfo.totalFee, blockDTO.meta.totalFee);
         expect(blockInfo.numTransactions).to.be.equal(blockDTO.meta.numTransactions);
         expect(blockInfo.signature).to.be.equal(blockDTO.block.signature);
-        expect(blockInfo.signer.publicKey).to.be.equal(blockDTO.block.signer);
+        expect(blockInfo.signer.publicKey).to.be.equal(blockDTO.block.signerPublicKey);
         expect(blockInfo.networkType).to.be.equal(parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16));
         expect(blockInfo.version).to.be.equal(parseInt(blockDTO.block.version.toString(16).substr(2, 2), 16));
         expect(blockInfo.type).to.be.equal(blockDTO.block.type);
