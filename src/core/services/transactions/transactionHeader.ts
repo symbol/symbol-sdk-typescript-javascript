@@ -1,6 +1,6 @@
 import {Transaction, TransferTransaction, Address, TransactionType} from "nem2-sdk"
 import {transactionTag} from "@/config"
-import {formatNemDeadline} from "@/core/utils/utils"
+import {formatNemDeadline} from '@/core/utils'
 
 /**
  * Custom properties built from transaction headers

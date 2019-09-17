@@ -4,10 +4,12 @@ import {KlineQuery} from "@/core/query/klineQuery.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import LineChart from '@/common/vue/line-chart/LineChart.vue'
 import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
-import {isRefreshData, localSave, localRead} from '@/core/utils/utils.ts'
+import {
+    isRefreshData, localSave, localRead, formatNumber,
+    renderMosaics, renderMosaicNames, renderMosaicAmount
+} from '@/core/utils'
 import {networkStatusList} from '@/config/index.ts'
-import {formatNumber} from "@/core/utils/utils"
-import { TransactionType } from 'nem2-sdk'
+import { TransactionType, Mosaic } from 'nem2-sdk'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -20,7 +22,6 @@ export class MonitorDashBoardTs extends Vue {
     app: any
     activeAccount: any
     pageSize: number = 10
-
     highestPrice = 0
     riseRange: any = 0
     lowestPrice: any = 0
@@ -36,6 +37,9 @@ export class MonitorDashBoardTs extends Vue {
     networkStatusList = networkStatusList
     page: number = 1
     formatNumber = formatNumber
+    renderMosaics = renderMosaics
+    renderMosaicNames = renderMosaicNames
+    renderMosaicAmount = renderMosaicAmount
 
     get wallet() {
         return this.activeAccount.wallet
@@ -51,6 +55,10 @@ export class MonitorDashBoardTs extends Vue {
 
     get transactionList() {
         return this.activeAccount.transactionList
+    }
+
+    get mosaicList() {
+        return this.activeAccount.mosaics
     }
 
     get transferTransactionList() {
@@ -87,6 +95,10 @@ export class MonitorDashBoardTs extends Vue {
 
     get currentHeight() {
         return this.app.chainStatus.currentHeight
+    }
+
+    get currentXem() {
+        return this.activeAccount.currentXem
     }
 
     showDialog(transaction) {

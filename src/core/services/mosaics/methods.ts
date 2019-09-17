@@ -40,6 +40,10 @@ export const mosaicsAmountViewFromAddress = (node: string, address: Address): Pr
   })
 }
 
+/**
+ * 
+ * @param that Vue
+ */
 export const enrichMosaics = (that) => {
   return new Promise(async (resolve, reject) => {
       try {
@@ -47,14 +51,9 @@ export const enrichMosaics = (that) => {
           appMosaics.init(that.mosaicList)
           appMosaics.fromNamespaces(that.namespaceList, that.$store)
           const transferTransactionList = [...that.transactionList]
-              .filter(({rawTx})=>rawTx.type === TransactionType.TRANSFER)
+          .filter(({rawTx})=>rawTx.type === TransactionType.TRANSFER)
           appMosaics.fromTransactions(transferTransactionList, that.$store)
-          // @TODO: Check if the unnamed mosaics have aliases
-          await appMosaics.augmentTransactionsMosaics(
-              that.transactionList,
-              that.$store,
-          )
-          resolve(true)
+          resolve()
       } catch (error) {
           reject(error)
       }

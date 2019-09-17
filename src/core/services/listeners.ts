@@ -67,6 +67,7 @@ export class ChainListeners {
                             that.$store.getters.node,
                             that.$store.getters.currentXem,
                             that.$store,
+                            false
                         )
 
                         that.$Notice.success({
@@ -99,6 +100,7 @@ export class ChainListeners {
                             that.$store.getters.node,
                             that.$store.getters.currentXem,
                             that.$store,
+                            true
                         )
                         
                         that.$Notice.destroy()

@@ -3,7 +3,7 @@ import {market} from "@/core/api/logicApi.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import LineChart from '@/common/vue/line-chart-by-day/LineChartByDay.vue'
 import {isRefreshData, localSave, localRead, formatDate} from '@/core/utils/utils.ts'
-import {formatNumber} from "@/core/utils/utils"
+import {formatNumber} from '@/core/utils'
 
 @Component({
     components: {

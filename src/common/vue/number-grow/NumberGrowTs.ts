@@ -1,5 +1,5 @@
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {formatNumber} from "@/core/utils/utils"
+import {formatNumber} from '@/core/utils'
 
 @Component
 export class NumberGrowTs extends Vue {

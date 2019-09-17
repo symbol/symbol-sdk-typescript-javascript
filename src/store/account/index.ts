@@ -1,4 +1,4 @@
-import {Account, TransactionType} from 'nem2-sdk'
+import {Account} from 'nem2-sdk'
 import {nodeConfig} from "@/config/index.ts"
 import { FormattedTransaction } from '@/core/services/transactions'
 
@@ -64,7 +64,7 @@ export default {
             state.wallet = wallet
         },
         SET_MOSAICS(state: account, mosaics: any): void {
-            // set  mosaic hide list localstorage
+            // set  mosaic hide list localStorage
             state.mosaics = mosaics
         },
         SET_NAMESPACE(state: account, namespace: any[]): void {
@@ -106,7 +106,7 @@ export default {
             console.log(newStateTransactions, newTx, txIndex, newStateTransactions[txIndex], '8978987948645')
             if(txIndex > -1 && newStateTransactions[txIndex].isTxUnconfirmed) {
                 newStateTransactions.splice(txIndex, 1)
-            }
+            } 
             newStateTransactions.unshift(newTx)
             state.transactionList = newStateTransactions
         },

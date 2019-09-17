@@ -18,9 +18,14 @@
           :key="key"
           class="other_info"
         >
-          <div v-if="key !== 'transfer_type'">
+          <div v-if="key !== 'transfer_type' && key !== 'mosaic'">
             <span class="title">{{$t(key)}}</span>
             <span class="value overflow_ellipsis">{{value}}</span>
+          </div>
+          <div v-if="key === 'mosaic'">
+            <span class="title">{{$t(key)}}</span>
+            <span class="value overflow_ellipsis">{{ renderMosaics(value, mosaicList, currentXem) }}
+            </span>
           </div>
         </div>
         <!-- inner transaction -->
@@ -136,9 +141,12 @@
                 <img class="mosaic_action" v-else src="@/common/img/monitor/dash-board/dashboardMosaicIn.png"
                      alt="">
                 <span class="account overflow_ellipsis">{{c.infoFirst}}</span>
-                <span class="transfer_type overflow_ellipsis">{{c.infoSecond?c.infoSecond:null}}</span>
-                <span :class="['amount','overflow_ellipsis',!c.isReceipt?'orange':'blue']" v-if="c.infoThird">{{formatNumber(c.infoThird)}}</span>
-                <span v-else class="amount overflow_ellipsis">0</span>
+                <span class="transfer_type overflow_ellipsis">
+                    {{ renderMosaicNames(c.rawTx.mosaics, mosaicList, currentXem) }}
+                </span>
+                <span :class="['amount','overflow_ellipsis', !c.isReceipt?'orange':'blue']">
+                    {{ renderMosaicAmount(c.rawTx.mosaics, mosaicList) }}
+                </span>
                 <span class="date overflow_ellipsis">{{c.txHeader.time}}</span>
                 <img v-if="c.isTxUnconfirmed" src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
                      class="expand_mosaic_info">

@@ -1,10 +1,9 @@
+import {AliasActionType, Password} from "nem2-sdk"
+import {mapState} from "vuex"
 import {Message, formData} from "@/config/index.ts"
-import {AppWallet} from "@/core/utils/wallet.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
-import {mapState} from "vuex"
-import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
+import {getAbsoluteMosaicAmount, AppWallet} from '@/core/utils'
 
 @Component({
         computed: {...mapState({activeAccount: 'account'})},

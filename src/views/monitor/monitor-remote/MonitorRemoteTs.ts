@@ -4,7 +4,7 @@ import {AccountLinkTransaction, UInt64, LinkAction, Deadline, Password} from "ne
 import {AppWallet} from "@/core/utils/wallet.ts"
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 import {mapState} from "vuex"
-import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
+import {getAbsoluteMosaicAmount} from '@/core/utils'
 
 @Component({
     computed: {

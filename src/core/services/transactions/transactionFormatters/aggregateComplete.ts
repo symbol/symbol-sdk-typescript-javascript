@@ -1,5 +1,5 @@
 import {FormattedTransaction, iconMap, transactionFormatter} from '@/core/services/transactions'
-import {getRelativeMosaicAmount} from '@/core/utils/utils'
+import {getRelativeMosaicAmount} from '@/core/utils'
 import {Address, AggregateTransaction} from 'nem2-sdk'
 import {nodeConfig} from '@/config/index.ts';
 

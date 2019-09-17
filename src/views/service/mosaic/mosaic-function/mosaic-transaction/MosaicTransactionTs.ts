@@ -1,17 +1,10 @@
-import {Message, mosaicTransactionTypeList, formData} from "@/config/index.ts"
-import {multisigAccountInfo} from "@/core/utils/wallet.ts"
-import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
-import {formatSeconds, formatAddress} from '@/core/utils/utils.ts'
+import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/utils/wallet.ts'
-import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
 import {
     MosaicId,
     MosaicNonce,
     PublicAccount,
     Address,
-    Listener,
     MosaicDefinitionTransaction,
     MosaicProperties,
     Deadline,
@@ -19,8 +12,15 @@ import {
     MosaicSupplyChangeTransaction,
     MosaicSupplyType
 } from 'nem2-sdk'
-import {mapState} from "vuex"
-import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
+import {Message, mosaicTransactionTypeList, formData} from "@/config/index.ts"
+import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
+import {
+    formatSeconds, formatAddress, multisigAccountInfo, getAbsoluteMosaicAmount,
+    createBondedMultisigTransaction, createCompleteMultisigTransaction,
+} from '@/core/utils'
+import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
+
 
 @Component({
     components: {

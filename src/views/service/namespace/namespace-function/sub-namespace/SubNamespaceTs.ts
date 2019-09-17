@@ -1,14 +1,14 @@
-import {Message, bandedNamespace as BandedNamespaceList, subNamespaceTypeList} from "@/config/index.ts"
-import {formatAddress} from '@/core/utils/utils.ts'
-import {getNamespaces} from '@/core/utils/wallet.ts'
+import {Address} from "nem2-sdk"
+import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
+import {Message, bandedNamespace as BandedNamespaceList, subNamespaceTypeList} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
-import {Address} from "nem2-sdk"
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/utils/wallet"
-import {mapState} from "vuex"
-import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
+import {
+    getAbsoluteMosaicAmount, createBondedMultisigTransaction,
+    createCompleteMultisigTransaction, formatAddress, getNamespaces
+} from '@/core/utils'
 
 @Component({
     components: {

@@ -1,10 +1,10 @@
+import {mapState} from "vuex"
 import {Address, MosaicId} from "nem2-sdk"
-import {Component, Vue, Watch} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
 import MosaicUnAliasDialog from './mosaic-unAlias-dialog/MosaicUnAliasDialog.vue'
-import {mapState} from "vuex"
-import {formatNumber} from "@/core/utils/utils"
+import {formatNumber} from '@/core/utils'
 import {aliasType} from "@/config"
 
 @Component({

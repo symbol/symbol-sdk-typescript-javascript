@@ -1,9 +1,9 @@
 import {Message, formData, aliasType} from "@/config/index.ts"
-import {Mosaic, MosaicId, NamespaceHttp, Address, NamespaceId, UInt64} from 'nem2-sdk'
+import {Mosaic, MosaicId, Address, NamespaceId, UInt64} from 'nem2-sdk'
 import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {cloneData, getAbsoluteMosaicAmount} from '@/core/utils/utils'
+import {cloneData, getAbsoluteMosaicAmount} from '@/core/utils'
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
 import {standardFields} from '@/core/validation'
 import {mapState} from 'vuex'

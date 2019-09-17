@@ -3,7 +3,7 @@ import {Message} from "@/config/index.ts"
 import {TransactionType, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {AppWallet} from '@/core/utils/wallet.ts'
-import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
+import {getAbsoluteMosaicAmount} from '@/core/utils'
 
 @Component({
     computed: {...mapState({activeAccount: 'account'})},

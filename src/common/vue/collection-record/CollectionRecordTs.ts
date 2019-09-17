@@ -1,13 +1,11 @@
+import {TransactionType} from 'nem2-sdk'
+import {mapState} from "vuex"
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {
-    getCurrentMonthFirst,
-    getCurrentMonthLast,
-    formatNumber,
-    getRelativeMosaicAmount
-} from '@/core/utils/utils.ts'
-import {mapState} from "vuex"
+    getCurrentMonthFirst, getCurrentMonthLast, formatNumber,
+    renderMosaics, renderMosaicNames, renderMosaicAmount
+} from '@/core/utils'
 import {TransferType} from '@/config/index.ts'
-import {TransactionType} from 'nem2-sdk'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -23,7 +21,10 @@ export class CollectionRecordTs extends Vue {
     currentMonth: string = ''
     transactionDetails: any = []
     TransferType = TransferType
-
+    renderMosaics = renderMosaics
+    renderMosaicNames = renderMosaicNames
+    renderMosaicAmount = renderMosaicAmount
+    
     @Prop({
         default: () => {
             return 0
@@ -45,7 +46,7 @@ export class CollectionRecordTs extends Vue {
 
     get transferTransactionList() {
         const {transactionList} = this
-        return transactionList.filter(({rawTx}) => rawTx.type === TransactionType.TRANSFER)
+        return transactionList.filter(({rawTx})=> rawTx.type === TransactionType.TRANSFER)
     }
 
     get slicedConfirmedTransactionList() {
@@ -56,22 +57,12 @@ export class CollectionRecordTs extends Vue {
         if (!filteredByDate.length) return []
 
         return this.transactionType === TransferType.SENT
-            ? filteredByDate.filter(({txHeader}) => txHeader.tag === 'payment')
-            : filteredByDate.filter(({txHeader}) => txHeader.tag !== 'payment')
+        ? filteredByDate.filter(({txHeader}) => txHeader.tag === 'payment')
+        : filteredByDate.filter(({txHeader}) => txHeader.tag !== 'payment')
     }
-
-
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
-    }
-
-    get accountAddress() {
-        return this.activeAccount.wallet.address
-    }
-
-
-    get node() {
-        return this.activeAccount.node
+    
+    get mosaicList() {
+        return this.activeAccount.mosaics
     }
 
     get currentXem() {
@@ -113,6 +104,10 @@ export class CollectionRecordTs extends Vue {
             {
                 key: 'aims',
                 value: transaction.rawTx.recipient.address
+            },
+            {
+                key: 'mosaic',
+                value: transaction.rawTx.mosaics
             },
             // {
             //     key: 'mosaic',

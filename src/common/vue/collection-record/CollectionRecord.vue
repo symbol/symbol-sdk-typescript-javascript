@@ -11,9 +11,18 @@
         <span class="value">{{$t(transactionDetails[0].value)}}</span>
       </div>
       <div>
-        <div v-if="index !== 0" v-for="(t,index) in transactionDetails" class="other_info">
-          <span class="title">{{$t(t.key)}}</span>
-          <span class="value">{{t.value?t.value:'null'}}</span>
+        <div :key="index" v-for="(t, index) in transactionDetails" class="other_info">
+          <div v-if="index !== 0">
+            <div v-if="t.key !== 'mosaic'">
+              <span class="title">{{$t(t.key)}}</span>
+              <span class="value">{{t.value?t.value:'null'}}</span>
+            </div>
+            <div v-if="t.key === 'mosaic'">
+              <span class="title">{{$t(t.key)}}</span>
+              <span class="value overflow_ellipsis">{{ renderMosaics(t.value, mosaicList, currentXem) }}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </Modal>
@@ -47,6 +56,7 @@
       </div>
     </div>
 
+    <!-- @TODO: merge this block with the confirmed transaction one -->
     <div :class="['bottom_transfer_record_list','scroll']">
       <Spin v-if="transactionsLoading" size="large" fix />
       <div
@@ -58,11 +68,11 @@
         <img src="@/common/img/monitor/transaction/txUnConfirmed.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
-            <div class="top overflow_ellipsis">{{c.infoSecond}}</div>
+            <div class="top overflow_ellipsis">{{ renderMosaicNames(c.rawTx.mosaics, mosaicList, currentXem) }}</div>
             <div class="bottom overflow_ellipsis"> {{c.txHeader.time.slice(0, c.txHeader.time.length - 3)}}</div>
           </div>
           <div class="right">
-            <div class="top overflow_ellipsis">{{formatNumber(c.infoThird)}}</div>
+            <div class="top overflow_ellipsis">{{ renderMosaicAmount(c.rawTx.mosaics, mosaicList) }}</div>
             <div class="bottom overflow_ellipsis">
               {{formatNumber(c.txHeader.block)}}
             </div>
@@ -79,11 +89,11 @@
         <img src="@/common/img/monitor/transaction/txConfirmed.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
-            <div class="top overflow_ellipsis">{{c.infoSecond}}</div>
+            <div class="top overflow_ellipsis">{{ renderMosaicNames(c.rawTx.mosaics, mosaicList, currentXem) }}</div>
             <div class="bottom overflow_ellipsis"> {{c.txHeader.time.slice(0, c.txHeader.time.length - 3)}}</div>
           </div>
           <div class="right">
-            <div class="top overflow_ellipsis">{{formatNumber(c.infoThird)}}</div>
+            <div class="top overflow_ellipsis">{{ renderMosaicAmount(c.rawTx.mosaics, mosaicList) }}</div>
             <div class="bottom overflow_ellipsis">
               {{formatNumber(c.txHeader.block)}}
             </div>

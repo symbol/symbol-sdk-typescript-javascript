@@ -7,16 +7,24 @@
 <script lang="ts">
     import 'animate.css'
     import {mapState} from 'vuex'
-    import { asyncScheduler} from 'rxjs'
-    import {throttleTime} from 'rxjs/operators'
-    import {isWindows} from "@/config/index.ts"
-    import {localRead} from '@/core/utils/utils.ts'
-    import {AppWallet, getNamespaces} from '@/core/utils/wallet.ts'
-    import {checkInstall} from '@/core/utils/electron.ts'
-    import {Component, Vue} from 'vue-property-decorator'
+    import {from, interval, asyncScheduler, of} from 'rxjs'
+    import {toArray, flatMap, concatMap, map, tap, throttleTime, finalize, mergeMap} from 'rxjs/operators'
+    import {
+        Listener, NamespaceHttp, NamespaceId, Address, MosaicHttp, MosaicId,
+        MosaicService, AccountHttp, UInt64, MosaicInfo, MosaicAlias
+    } from "nem2-sdk"
+    import {isWindows, Message, nodeConfig} from "@/config/index.ts"
+    import {
+        localRead, getRelativeMosaicAmount, AppWallet, getMosaicList, getMosaicInfoList,
+        getNamespaces, checkInstall, getNetworkGenerationHash, getCurrentNetworkMosaic,
+    } from '@/core/utils'
+    import {AccountApiRxjs} from '@/core/api/AccountApiRxjs.ts'
+    import {ListenerApiRxjs} from '@/core/api/ListenerApiRxjs.ts'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
+    import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
     import {ChainListeners} from '@/core/services/listeners.ts'
-    import {getNetworkGenerationHash, getCurrentNetworkMosaic} from '@/core/utils/network.ts'
-    import { initMosaic, enrichMosaics, AppMosaics} from '@/core/services/mosaics'
+    import {aliasType} from '@/config/index.ts'
+    import {mosaicsAmountViewFromAddress, initMosaic, enrichMosaics, AppMosaics} from '@/core/services/mosaics'
     import {getMarketOpenPrice} from '@/core/services/marketData.ts'
     import {setTransactionList} from '@/core/services/transactions'
 
@@ -81,7 +89,7 @@
         get mosaicList() {
             return this.activeAccount.mosaics
         }
-
+        
         get transactionList() {
             // used in enrichMosaics
             return this.activeAccount.transactionList
@@ -102,15 +110,15 @@
                     this.$store.commit('SET_BALANCE_LOADING', true),
                     this.$store.commit('SET_MOSAICS_LOADING', true),
                 ])
-
-                const res = await Promise.all([
+    
+                const initMosaicsAndNamespaces = await Promise.all([
                     // @TODO make it an AppWallet methods
                     initMosaic(newWallet, this),
                     getNamespaces(newWallet.address, this.node),
                     setTransactionList(newWallet.address, this)
                 ])
 
-                this.$store.commit('SET_NAMESPACE', res[1] || [])
+                this.$store.commit('SET_NAMESPACE', initMosaicsAndNamespaces[1] || [])
                 enrichMosaics(this)
                 new AppWallet(newWallet).setMultisigStatus(this.node, this.$store)
 
@@ -122,7 +130,7 @@
                     this.chainListeners.switchAddress(newWallet.address)
                 }
             } catch (error) {
-                console.error(error, 'ERROR')
+                console.log("TCL: App -> onWalletChange -> error", error)
             }
         }
 
@@ -148,10 +156,9 @@
             await getNetworkGenerationHash(node, this)
             await getCurrentNetworkMosaic(node, this.$store)
 
-
             if (this.wallet && this.wallet.address) {
                 this.onWalletChange(this.wallet)
-            }
+            } 
             /**
              * START EVENTS LISTENERS
              */

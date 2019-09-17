@@ -1,11 +1,9 @@
 import './NamespaceEditDialog.less'
-import {Message, formData} from "@/config/index.ts"
-import {Password} from 'nem2-sdk'
-import {formatSeconds} from '@/core/utils/utils.ts'
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {createRootNamespace, AppWallet} from "@/core/utils/wallet.ts"
 import {mapState} from "vuex"
-import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
+import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Password} from 'nem2-sdk'
+import {Message, formData} from "@/config/index.ts"
+import {getAbsoluteMosaicAmount, createRootNamespace, AppWallet, formatSeconds} from '@/core/utils'
 
 @Component({
     computed: {

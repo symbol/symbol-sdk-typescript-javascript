@@ -11,7 +11,8 @@ export const formatAndSave = (  mosaicList,
                                 xemDivisibility,
                                 node,
                                 currentXem,
-                                store) => {
+                                store,
+                                confirmed: boolean) => {
     const formattedTransactions = transactionFormat(
         [transaction],
         address,
@@ -20,10 +21,17 @@ export const formatAndSave = (  mosaicList,
         node,
         currentXem,
     )
+    
+    if(confirmed) {
+        store.commit('ADD_CONFIRMED_TRANSACTION', formattedTransactions)
+        return
+    }
 
-    const appMosaics = AppMosaics()
-    appMosaics.init(mosaicList)
-    appMosaics.augmentNewTransactionsMosaics(formattedTransactions, store, {isTxUnconfirmed: transaction.isTxUnconfirmed || false})
+    store.commit('ADD_UNCONFIRMED_TRANSACTION', formattedTransactions)
+
+    // const appMosaics = AppMosaics()
+    // appMosaics.init(mosaicList)
+    // @TODO: extract mosaics
 }
 
 export const setTransactionList = (address, that) => {

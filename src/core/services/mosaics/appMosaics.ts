@@ -1,8 +1,8 @@
-import { MosaicAlias, MosaicId, UInt64, MosaicAmountView, MosaicDefinitionTransaction, MosaicInfo } from 'nem2-sdk'
-import {getRelativeMosaicAmount, localRead} from '@/core/utils/utils.ts'
-import { FormattedTransfer, FormattedTransaction } from '../transactions'
+import {MosaicAlias, MosaicId, UInt64, MosaicAmountView, MosaicDefinitionTransaction, MosaicInfo} from 'nem2-sdk'
+import {getRelativeMosaicAmount, localRead} from '@/core/utils'
+import {FormattedTransfer} from '../transactions'
 
-class AppMosaic {
+export class AppMosaic {
     hex: string
     amount: any
     balance?: number
@@ -10,6 +10,8 @@ class AppMosaic {
     height: UInt64
     mosaicInfo: MosaicInfo
     name: string
+    show: boolean
+    showInManage: boolean
 
     constructor(appMosaic?: {
         hex: string,
@@ -79,7 +81,7 @@ export const AppMosaics = () => ({
         const hideMosaicMap = wallets[0].hideMosaicMap
         if (!mosaic.hex) return
         if (!this.mosaics[mosaic.hex]) this.mosaics[mosaic.hex] = {}
-        Object.assign(this.mosaics[mosaic.hex], new AppMosaic(mosaic).get())
+        Object.assign(this.mosaics[mosaic.hex], new AppMosaic(mosaic))
         this.storeItems()
     },
 
@@ -108,7 +110,7 @@ export const AppMosaics = () => ({
                 hex: new MosaicId(namespace.alias.mosaicId).toHex(),
                 name: namespace.name,
             }))
-            this.addItems(items)
+        this.addItems(items)
     },
 
     fromMosaicAmountView(mosaic: MosaicAmountView, store: any): void {
@@ -140,84 +142,4 @@ export const AppMosaics = () => ({
             name,
         })
     },
-
-    // @TODO: refactor
-    augmentTransactionsMosaics(transactions: any, store: any): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const augmentedTransactionList = transactions
-                .map((tx: any) => {
-                    if (!(tx instanceof FormattedTransfer)) return tx
-                    const rawTx: any = tx.rawTx
-
-                    return {...tx, mosaics: rawTx.mosaics
-                        .map(mosaic => {
-                            const newMosaic = this.mosaics[mosaic.id.toHex()]
-                            if(!newMosaic) return mosaic
-                            return {...mosaic, ...newMosaic}
-                        })}})
-                .map(tx => {
-                    if(tx instanceof FormattedTransaction && !(tx instanceof FormattedTransfer)) return tx
-                    const mosaics: any = tx.mosaics
-                    return mosaics.length === 1 && mosaics[0] && mosaics[0].mosaicInfo
-                            ? {
-                                ...tx,
-                                infoSecond:  mosaics[0].name || mosaics[0].id.toHex(),
-                                infoThird: getRelativeMosaicAmount(
-                                    mosaics[0].amount.compact(),
-                                    mosaics[0].mosaicInfo.divisibility,
-                                ),
-                            }
-                            : tx
-                })
-
-                await store.commit('SET_TRANSACTION_LIST', augmentedTransactionList)
-                resolve()
-            } catch (error) {
-                reject(error)
-            }
-        })
-  },
-
-  // @TODO: refactor, pull out from here, rename
-  augmentNewTransactionsMosaics(transactions, store: any, {isTxUnconfirmed}): void {
-      try {
-        const augmentedTransactionList = transactions
-        .map((tx: any) => {
-            if (!(tx instanceof FormattedTransfer)) return tx
-            const rawTx: any = tx.rawTx
-
-            return {...tx, mosaics: rawTx.mosaics
-                .map(mosaic => {
-                    const newMosaic = this.mosaics[mosaic.id.toHex()]
-                    if(!newMosaic) return mosaic
-                    return {...mosaic, ...newMosaic}
-                })}})
-        .map((tx: any) => {
-            if(tx instanceof FormattedTransaction && !(tx instanceof FormattedTransfer)) return tx
-            const t: any = tx
-            const mosaics: any = t.mosaics
-            return mosaics.length === 1 && mosaics[0] && mosaics[0].mosaicInfo
-                    ? {
-                        ...tx,
-                        infoSecond:  mosaics[0].name || mosaics[0].id.toHex(),
-                        infoThird: getRelativeMosaicAmount(
-                            mosaics[0].amount.compact(),
-                            mosaics[0].mosaicInfo.divisibility,
-                        )
-                    }
-                    : tx
-        })
-
-        if(isTxUnconfirmed) {
-          store.commit('ADD_UNCONFIRMED_TRANSACTION', augmentedTransactionList)
-          return
-        }
-
-        store.commit('ADD_CONFIRMED_TRANSACTION', augmentedTransactionList)
-
-        } catch (error) {
-            console.error(error)
-        }
-    }
 })

@@ -53,9 +53,8 @@ export const transactionFormatter = ( transactionList: Array<Transaction>,
                                       node: string,
                                       currentXem: string) => {
 
-    // @TODO: first step: extract mosaics and addresses
-    // second step: augment mosaics in transaction
-    // third step: augment aliases in transactions
+    // @TODO: manage address aliases
+    // @TODO: extract mosaics and search for namespaces and mosaicInfo if needed
     const enrichedTransactions = transactionList
     return enrichedTransactions
         .map(transaction => transactionFactory().get( transaction,

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import i18n from '@/language/index.ts'
-import {Address, AliasActionType, Deadline, TransactionType, UInt64} from 'nem2-sdk'
+import {Address, AliasActionType, Deadline} from 'nem2-sdk'
 
 const vueInstance = new Vue({i18n})
 
@@ -337,13 +337,3 @@ export const getCurrentTimeZone = () => {
 }
 
 export const cloneData = object => JSON.parse(JSON.stringify(object))
-
-export const getRelativeMosaicAmount = (amount: number, divisibility: number) => {
-    if (!amount) return 0
-    return amount / Math.pow(10, divisibility)
-}
-
-export const getAbsoluteMosaicAmount = (amount: number, divisibility: number) => {
-    if (!amount) return 0
-    return amount * Math.pow(10, divisibility)
-}

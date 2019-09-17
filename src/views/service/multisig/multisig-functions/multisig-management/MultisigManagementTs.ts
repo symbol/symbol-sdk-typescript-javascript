@@ -1,11 +1,9 @@
-import {Message, formData} from "@/config/index.ts"
+import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     MultisigCosignatoryModificationType,
     MultisigCosignatoryModification,
     PublicAccount,
-    Listener,
     Address,
     Deadline,
     ModifyMultisigAccountTransaction,
@@ -14,10 +12,11 @@ import {
 import {
     createBondedMultisigTransaction,
     createCompleteMultisigTransaction,
-    multisigAccountInfo
-} from "@/core/utils/wallet.ts"
-import {mapState} from "vuex"
-import {getAbsoluteMosaicAmount} from "@/core/utils/utils"
+    multisigAccountInfo,
+    getAbsoluteMosaicAmount,
+} from "@/core/utils"
+import {Message, formData} from "@/config/index.ts"
+import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
 @Component({
     components: {
