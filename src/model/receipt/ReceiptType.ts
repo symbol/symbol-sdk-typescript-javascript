@@ -50,16 +50,20 @@ export enum ReceiptType {
      * The sender and recipient of the mosaicId and amount representing the cost of registering the mosaic.
      * It is recorded when a mosaic is registered.
      */
-    Mosaic_Rental_Fee = 0x134D,
+    Mosaic_Rental_Fee = 0x124D,
     /**
-     * The namespaceId expiring in this block. It is recorded when a namespace expires.
+     * The identifier of the namespace expiring in this block. It is recorded when the namespace lifetime elapses.
      */
     Namespace_Expired = 0x414E,
     /**
      * The sender and recipient of the mosaicId and amount representing the cost of extending the namespace.
      * It is recorded when a namespace is registered or its duration is extended.
      */
-    Namespace_Rental_Fee = 0x124E,
+    Namespace_Rental_Fee = 0x134E,
+    /**
+     * The identifier of the namespace deleted in this block. It is recorded when the namespace grace period elapses.
+     */
+    Namespace_Deleted = 0x424E,
     /**
      * The lockhash sender, mosaicId and amount locked. It is recorded when a valid HashLockTransaction is announced.
      */
