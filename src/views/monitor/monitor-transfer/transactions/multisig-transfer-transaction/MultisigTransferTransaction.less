@@ -49,44 +49,32 @@
     color: rgba(204, 204, 204, 1);
   }
 
-  .address {
+  .target {
     margin-bottom: 20px;
     height: 60px;
     position: relative;
 
-    .value {
-      span {
-        display: inline-block;
-        width: 60px;
-        height: 60px;
-        background-color: #4DC2BF;
-        color: white;
-        font-size: 20px;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 1);
-        text-align: center;
-      }
-    }
-
     .pointer {
-      display: inline-block;
+     position: absolute;
       width: 0.45rem;
       height: 0.45rem;
       background-color: #4DC2BF;
       font-size: 0.2rem;
       font-weight: 400;
       color: #ffffff;
+      right: 20px;
+      border-radius: 0 4px 4px 0;
       text-align: center;
     }
 
     .selections {
-      width: calc(100% - 105px);
+      width: calc(100% - 130px);
       background-color: white;
       border: 1px solid rgba(204, 204, 204, 1);
       position: absolute;
       z-index: 999;
       padding: 5px 0;
-      right: 0;
+      left: 110px;
       border-radius: 0 0 4px 4px;
       border-top: none;
       top: 60px;
@@ -107,6 +95,52 @@
         }
       }
     }
+
+    .value {
+
+
+      span {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        background-color: #4DC2BF;
+        color: white;
+        font-size: 20px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+        text-align: center;
+      }
+
+      input {
+        border-radius: 0;
+      }
+    }
+  }
+
+  .address {
+    margin-bottom: 20px;
+    height: 60px;
+    position: relative;
+
+    .value {
+      span {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        background-color: #4DC2BF;
+        color: white;
+        font-size: 20px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+        text-align: center;
+      }
+
+      input {
+        border-radius: 0;
+      }
+    }
+
+
   }
 
   .asset {
@@ -216,7 +250,6 @@
   height: 44px;
   position: relative;
   left: 10px;
-  bottom: 10px;
   border: 10px solid #20B5AC;
   background-color: #20B5AC;
   background-image: url("../../../../../common/img/wallet/wallet-detail/walletDetailAdd.png");

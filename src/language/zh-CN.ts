@@ -669,5 +669,7 @@ export const zh_CN = {
     Hide_expired_mosaic: '隐藏过期马赛克',
     Control: '控制权',
     unbind_alias: '解绑别名',
-    Restrictable: '限制性'
+    Restrictable: '限制性',
+    Please_select_public_key :'请选择账户公钥',
+    public:'公钥',
 }

@@ -7,7 +7,7 @@ export const formData = {
         lockFee: 10,
         aggregateFee: 1,
         mosaicTransferList: [],
-        isEncryption: true
+        isEncrypted: true
     },
     transferForm: {
         fee: 0.5,
