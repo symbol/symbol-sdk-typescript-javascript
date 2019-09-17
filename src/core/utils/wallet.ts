@@ -15,13 +15,10 @@ import CryptoJS from 'crypto-js'
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
-import {BlockApiRxjs} from "@/core/api/BlockApiRxjs.ts"
-import {formateNemTimestamp} from "@/core/utils/utils.ts"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
 import {createAccount} from "@/core/utils/hdWallet.ts"
 import {AppLock} from "@/core/utils/appLock"
-import { Store } from 'vuex'
 
 export class AppWallet {
     constructor(wallet?: {
@@ -249,7 +246,7 @@ export class AppWallet {
         newWalletList[newWalletIndex] = this
 
         store.commit('SET_WALLET_LIST', newWalletList)
-        if(store.state.account.address === this.address) store.commit('SET_WALLET', this)
+        if (store.state.account.address === this.address) store.commit('SET_WALLET', this)
         localSave('wallets', JSON.stringify(newWalletList))
     }
 
@@ -270,7 +267,7 @@ export class AppWallet {
             const message = that.$t(Message.SUCCESS)
             console.log(signature)
             new TransactionApiRxjs().announce(signature, node).subscribe(() => {
-                that.$Notice.success({title: message }) // quick fix
+                that.$Notice.success({title: message}) // quick fix
             })
         } catch (err) {
             console.error(err)
@@ -331,13 +328,14 @@ export const getNamespaces = async (address: string, node: string) => {
                 hex: item.namespaceInfo.id.toHex(),
                 value: namespaceName,
                 label: namespaceName,
+                namespaceInfo:item.namespaceInfo,
                 isActive: item.namespaceInfo.active,
                 alias: item.namespaceInfo.alias,
                 levels: item.namespaceInfo.levels.length,
-                name: namespaceName,
-                duration: item.namespaceInfo.endHeight.compact(),
+                endHeight: item.namespaceInfo.endHeight.compact(),
             }
             list.push(newObj)
+
         })
     })
     return list
@@ -374,7 +372,7 @@ export const getMosaicList = async (address: string, node: string) => {
     return mosaicList
 }
 
-export const getMosaicInfoList = async (node: string, mosaicList: Mosaic[],currentHeight:any,isShowExpired: boolean = true) => {
+export const getMosaicInfoList = async (node: string, mosaicList: Mosaic[], currentHeight: any, isShowExpired: boolean = true) => {
     let mosaicInfoList: MosaicInfo[] = []
 
 
@@ -391,8 +389,8 @@ export const getMosaicInfoList = async (node: string, mosaicList: Mosaic[],curre
                 }
             })
             return
-        }else{
-            mosaicInfoList = mosaics;
+        } else {
+            mosaicInfoList = mosaics
         }
     }).catch((_) => {
         return
@@ -400,7 +398,7 @@ export const getMosaicInfoList = async (node: string, mosaicList: Mosaic[],curre
     return mosaicInfoList
 }
 
-export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, currentXem:string): any => {
+export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, currentXem: string): any => {
     const mosaicListRst = mosaicList.map((mosaic: any) => {
         mosaic._amount = mosaic.amount.compact()
         mosaic.value = mosaic.id.toHex()

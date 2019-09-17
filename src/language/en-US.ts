@@ -685,6 +685,9 @@ export const en_US = {
     Not_encrypted: 'Not encrypted',
     all_unchecked: 'Uncheck all',
     Display_expired_mosaic:'Display expired mosaics',
-    Hide_expired_mosaic:'Hide expired mosaics'
+    Hide_expired_mosaic:'Hide expired mosaics',
+    Control:'Control',
+    unbind_alias:'unbind alias',
+    Restrictable:'Restrictable'
 
 }

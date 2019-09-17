@@ -2,7 +2,7 @@ import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
 import {mapState} from "vuex"
-import {aliasType} from '@/config/index.ts'
+import {aliasType, StatusString, namespaceGracePeriodDuration} from '@/config/index.ts'
 import {Address, MosaicId} from "nem2-sdk"
 import NamespaceUnAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-unAlias-dialog/NamespaceUnAliasDialog.vue'
@@ -37,13 +37,15 @@ export class NamespaceListTs extends Vue {
     aliasDialogItem = {}
     showMosaicAliasDialog = false
     isShowAddressAliasDialog = false
+    StatusString = StatusString
+    namespaceGracePeriodDuration = namespaceGracePeriodDuration
 
     get namespaceList() {
         const namespaceList = this.activeAccount.namespace.map((item) => {
             switch (item.alias.type) {
                 case (aliasType.noAlias):
-                    item.aliasTarget = 'no alias'
-                    item.aliasType = 'no alias'
+                    item.aliasTarget = StatusString.NO_ALIAS
+                    item.aliasType = StatusString.NO_ALIAS
                     item.isLinked = false
                     break
                 case (aliasType.addressAlias):
@@ -62,10 +64,6 @@ export class NamespaceListTs extends Vue {
         return namespaceList
     }
 
-    get currentHeight() {
-        return this.app.chainStatus.currentHeight
-    }
-
     get mosaics() {
         return this.activeAccount.mosaics
     }
@@ -81,7 +79,7 @@ export class NamespaceListTs extends Vue {
         appMosaics.init(mosaics)
         return appMosaics.getAvailableToBeLinked(currentHeight, address)
     }
-    
+
     get unlinkMosaicList() {
         const {mosaics, currentHeight} = this
         const {address} = this.wallet
@@ -90,7 +88,11 @@ export class NamespaceListTs extends Vue {
         return appMosaics.getAvailableToBeLinked(currentHeight, address)
     }
 
-    get nowBlockHeihgt() {
+    get namespaceLoading() {
+        return this.app.namespaceLoading
+    }
+
+    get currentHeight() {
         return this.app.chainStatus.currentHeight
     }
 
@@ -116,11 +118,12 @@ export class NamespaceListTs extends Vue {
     }
 
     computeDuration(namespaceInfo) {
-        const {duration, isActive} = namespaceInfo
+        const {endHeight, isActive} = namespaceInfo
+        const {currentHeight, namespaceGracePeriodDuration} = this
         if (!isActive) {
-            return 'Expired'
+            return StatusString.EXPIRED
         }
-        const expireTime = duration - this.nowBlockHeihgt > 0 ? duration - this.nowBlockHeihgt : 'not active'
+        const expireTime = endHeight - currentHeight > namespaceGracePeriodDuration ? endHeight - currentHeight : StatusString.EXPIRED
         return expireTime
     }
 
@@ -141,7 +144,7 @@ export class NamespaceListTs extends Vue {
     }
 
     durationToTime(duration) {
-        const durationNum = Number(duration - this.nowBlockHeihgt)
+        const durationNum = Number(duration - this.currentHeight)
         return formatSeconds(durationNum * 12)
     }
 

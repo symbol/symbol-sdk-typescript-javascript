@@ -24,12 +24,12 @@
           <span class="value">
               <Select v-if="typeList[0].isSelected " :placeholder="$t('select_parent_namespace')"
                       v-model="form.rootNamespaceName" class="select">
-                  <Option v-for="item in namespaceList" v-if="item.levels < 3" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  <Option v-for="item in activeNamespaceList"  :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
 
              <Select v-else :placeholder="$t('select_parent_namespace')" v-model="form.rootNamespaceName"
                      class="select">
-                  <Option v-for="item in multisigNamespaceList" v-if="item.levels < 3" :value="item.value"
+                  <Option v-for="item in multisigNamespaceList"  :value="item.value"
                           :key="item.value">{{ item.label }}</Option>
               </Select>
           </span>

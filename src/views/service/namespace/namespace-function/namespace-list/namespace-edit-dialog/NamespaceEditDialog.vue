@@ -14,7 +14,7 @@
         <div class="stepItem1">
           <Form :model="namespace">
             <FormItem :label="$t('namespace_name')">
-              <p class="namespaceTxt">{{currentNamespace.name}}</p>
+              <p class="namespaceTxt">{{currentNamespace.label}}</p>
             </FormItem>
             <FormItem :label="$t('duration')">
               <Input v-model="namespace.duration"

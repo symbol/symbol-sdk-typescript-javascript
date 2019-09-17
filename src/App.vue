@@ -89,7 +89,7 @@
         get mosaicList() {
             return this.activeAccount.mosaics
         }
-        
+
         get transactionList() {
             // used in enrichMosaics
             return this.activeAccount.transactionList
@@ -109,15 +109,16 @@
                     this.$store.commit('SET_TRANSACTIONS_LOADING', true),
                     this.$store.commit('SET_BALANCE_LOADING', true),
                     this.$store.commit('SET_MOSAICS_LOADING', true),
+                    this.$store.commit('SET_NAMESPACE_LOADING', true),
                 ])
-    
+
                 const initMosaicsAndNamespaces = await Promise.all([
                     // @TODO make it an AppWallet methods
                     initMosaic(newWallet, this),
                     getNamespaces(newWallet.address, this.node),
                     setTransactionList(newWallet.address, this)
                 ])
-
+                this.$store.commit('SET_NAMESPACE_LOADING', false)
                 this.$store.commit('SET_NAMESPACE', initMosaicsAndNamespaces[1] || [])
                 enrichMosaics(this)
                 new AppWallet(newWallet).setMultisigStatus(this.node, this.$store)
@@ -147,6 +148,7 @@
                 this.$store.commit('SET_TRANSACTIONS_LOADING', true),
                 this.$store.commit('SET_BALANCE_LOADING', true),
                 this.$store.commit('SET_MOSAICS_LOADING', true),
+                this.$store.commit('SET_NAMESPACE_LOADING', true),
             ])
 
             this.$Notice.config({duration: 4})
@@ -158,7 +160,7 @@
 
             if (this.wallet && this.wallet.address) {
                 this.onWalletChange(this.wallet)
-            } 
+            }
             /**
              * START EVENTS LISTENERS
              */

@@ -27,11 +27,11 @@ export class AppMosaic {
             this.expirationHeight = duration === 0
                 ? 'Forever' : this.mosaicInfo.height.compact() + duration
         }
-  }
+    }
 
-  get(): AppMosaic  {
-      return this
-  }
+    get(): AppMosaic {
+        return this
+    }
 }
 
 export const AppMosaics = () => ({
@@ -51,8 +51,7 @@ export const AppMosaics = () => ({
         return appMosaics
             .filter((mosaic: AppMosaic) => (!mosaic.name
                 && mosaic.mosaicInfo.owner.address.plain() === address
-                && mosaic.expirationHeight === 'Forever'
-                || currentHeight > mosaic.expirationHeight))
+                && (mosaic.expirationHeight === 'Forever' || currentHeight > mosaic.expirationHeight)))
     },
 
     getLinked(currentHeight: number, address: string): AppMosaic[] {
@@ -90,8 +89,8 @@ export const AppMosaics = () => ({
     },
 
     addNetworkMosaic(mosaic, store): void {
-      this.store = store
-      this.addItem(mosaic)
+        this.store = store
+        this.addItem(mosaic)
     },
 
     fromTransactions(transactions: FormattedTransfer[], store: any): void {

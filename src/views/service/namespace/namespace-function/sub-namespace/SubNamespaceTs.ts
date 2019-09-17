@@ -1,7 +1,12 @@
 import {Address} from "nem2-sdk"
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, bandedNamespace as BandedNamespaceList, subNamespaceTypeList} from "@/config/index.ts"
+import {
+    Message,
+    bandedNamespace as BandedNamespaceList,
+    subNamespaceTypeList,
+    namespaceGracePeriodDuration
+} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
@@ -9,6 +14,7 @@ import {
     getAbsoluteMosaicAmount, createBondedMultisigTransaction,
     createCompleteMultisigTransaction, formatAddress, getNamespaces
 } from '@/core/utils'
+import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 
 @Component({
     components: {
@@ -42,6 +48,7 @@ export class SubNamespaceTs extends Vue {
     }
     multisigPublickeyList = []
     typeList = subNamespaceTypeList
+    namespaceGracePeriodDuration = namespaceGracePeriodDuration
 
     get wallet() {
         return this.activeAccount.wallet
@@ -61,6 +68,18 @@ export class SubNamespaceTs extends Vue {
 
     get namespaceList() {
         return this.activeAccount.namespace ? this.activeAccount.namespace : []
+    }
+
+    get currentHeight() {
+        return this.app.chainStatus.currentHeight
+    }
+
+    get activeNamespaceList() {
+        const {currentHeight, namespaceGracePeriodDuration} = this
+        // @TODO handle namespace list loading state
+        return this.namespaceList
+            .filter(({alias, endHeight, levels}) => alias instanceof EmptyAlias && endHeight - currentHeight > namespaceGracePeriodDuration && levels < 3)
+            .map(alias => ({label: alias.label, value: alias.label}))
     }
 
     get xemDivisibility() {
@@ -131,20 +150,6 @@ export class SubNamespaceTs extends Vue {
             this.showErrorMessage(this.$t(Message.NAMESPACE_NULL_ERROR))
             return false
         }
-        // if (rootNamespaceName.length > 16) {
-        //     this.showErrorMessage(this.$t(Message.SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR))
-        //     return false
-        // }
-        //^[a-z].*
-        // if (!rootNamespaceName.match(/^[a-z].*/)) {
-        //     this.showErrorMessage(this.$t(Message.NAMESPACE_STARTING_ERROR))
-        //     return false
-        // }
-        //^[0-9a-zA-Z_-]*$
-        // if (!rootNamespaceName.match(/^[0-9a-zA-Z_-]*$/g)) {
-        //     this.showErrorMessage(this.$t(Message.NAMESPACE_FORMAT_ERROR))
-        //     return false
-        // }
         if (!subNamespaceName || !subNamespaceName.trim()) {
             this.showErrorMessage(this.$t(Message.NAMESPACE_NULL_ERROR))
             return false
@@ -245,20 +250,22 @@ export class SubNamespaceTs extends Vue {
 
     @Watch('form.multisigPublickey')
     async onMultisigPublickeyChange() {
-        const {node} = this
+        const {node, currentHeight} = this
         const {networkType} = this.wallet
         const {multisigPublickey} = this.form
         const address = Address.createFromPublicKey(multisigPublickey, networkType).toDTO().address
         if (multisigPublickey.length !== 64) {
             return
         }
-        this.multisigNamespaceList = await getNamespaces(address, node)
+        const msoaicList = await getNamespaces(address, node)
+        this.multisigNamespaceList = msoaicList
+            .filter(({alias, endHeight, levels}) => alias instanceof EmptyAlias && endHeight - currentHeight > namespaceGracePeriodDuration && levels < 3)
+            .map(alias => ({label: alias.label, value: alias.label}))
 
         const that = this
         new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
             that.currentMinApproval = multisigInfo.minApproval
         })
-
     }
 
 

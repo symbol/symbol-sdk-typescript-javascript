@@ -16,12 +16,11 @@
             <FormItem :label="$t('mosaic_ID')">
               <p class="mosaicTxt">{{unAliasItem.aliasTarget}}</p>
             </FormItem>
-            <FormItem :label="$t('binding_alias')">
-              <p class="mosaicTxt">{{unAliasItem.name}}</p>
+            <FormItem :label="$t('unbind_alias')">
+              <p class="mosaicTxt">{{unAliasItem.label}}</p>
             </FormItem>
             <FormItem :label="$t('fee')">
               <Input v-model="formItem.fee" number required placeholder=""></Input>
-<!--              <p class="tails">gas</p>-->
               <div class="tips">
                 {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
               </div>

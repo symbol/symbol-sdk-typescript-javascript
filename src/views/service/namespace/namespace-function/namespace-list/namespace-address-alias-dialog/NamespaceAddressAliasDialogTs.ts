@@ -1,4 +1,4 @@
-import {Message} from "@/config/index.ts"
+import {Message, StatusString} from "@/config/index.ts"
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
@@ -149,7 +149,7 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     }
 
     computeDuration(duration) {
-        let expireTime = duration - this.nowBlockHeihgt > 0 ? this.durationToTime(duration - this.nowBlockHeihgt) : 'Expired'
+        let expireTime = duration - this.nowBlockHeihgt > 0 ? this.durationToTime(duration - this.nowBlockHeihgt) : StatusString.EXPIRED
         return expireTime
     }
 

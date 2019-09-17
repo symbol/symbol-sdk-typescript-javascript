@@ -14,7 +14,7 @@
         <div class="stepItem1">
           <Form :model="formItem">
             <FormItem :label="$t('namespace')">
-              <p class="mosaicTxt">{{formItem.name}}</p>
+              <p class="mosaicTxt">{{formItem.label}}</p>
             </FormItem>
             <FormItem :label="$t('mosaic')">
               <Select v-model="formItem.mosaicHex" required>

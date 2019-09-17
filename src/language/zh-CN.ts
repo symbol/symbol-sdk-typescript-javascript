@@ -666,5 +666,8 @@ export const zh_CN = {
     Not_encrypted: '不加密',
     bondedFee: '绑定费用',
     Display_expired_mosaic: '显示隐藏马赛克',
-    Hide_expired_mosaic: '隐藏过期马赛克'
+    Hide_expired_mosaic: '隐藏过期马赛克',
+    Control: '控制权',
+    unbind_alias: '解绑别名',
+    Restrictable: '限制性'
 }

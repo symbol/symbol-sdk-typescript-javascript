@@ -1,5 +1,6 @@
 <template>
   <div class="mosaicList secondary_page_animate">
+    <Spin v-if="mosaicsLoading" size="large" fix class="absolute"></Spin>
     <div class="mosaicListBody scroll">
       <div class="listTit">
         <Row>
@@ -9,7 +10,8 @@
           <Col span="2">{{$t('mosaic_divisibility')}}</Col>
           <Col span="2">{{$t('transportability')}}</Col>
           <Col span="2">{{$t('variable_supply')}}</Col>
-          <Col span="5">{{$t('effective_time')}}</Col>
+          <Col span="2">{{$t('deadline')}}</Col>
+          <Col span="2">{{$t('Restrictable')}}</Col>
           <Col span="3">{{$t('alias')}}</Col>
           <Col span="2"></Col>
         </Row>
@@ -17,26 +19,36 @@
       <Spin v-if="false" size="large" fix class="absolute"></Spin>
       <div class="no_data" v-if="false">{{$t('no_data')}}</div>
       <div
-        v-for="(value, key) in filteredMosaics"
-        :key="key"
-        class="listItem"
+              v-for="(value, key) in filteredMosaics"
+              :key="key"
+              class="listItem"
       >
         <Row>
           <Col span="1">&nbsp;</Col>
           <Col span="4">{{value.hex}}</Col>
           <Col span="3">{{formatNumber(value.mosaicInfo.supply.compact())}}</Col>
           <Col span="2" style="padding-left: 20px">{{value.mosaicInfo.properties.divisibility}}</Col>
-          <Col span="2">{{value.mosaicInfo.properties.transferable}}</Col>
-          <Col span="2">{{value.mosaicInfo.properties.supplyMutable}}</Col>
-          <Col span="5">
+          <Col span="2">
+            <Icon v-if="value.mosaicInfo.properties.transferable" type="md-checkmark"/>
+            <Icon v-else type="md-close"/>
+          </Col>
+          <Col span="2">
+            <Icon v-if="value.mosaicInfo.properties.supplyMutable" type="md-checkmark"/>
+            <Icon v-else type="md-close"/>
+          </Col>
+          <Col span="2">
             {{computeDuration(value) <= 0 ? $t('overdue') : (computeDuration(value) === 'Forever'?
-              $t('forever') : formatNumber(computeDuration(value)))}}
+            $t('forever') : formatNumber(computeDuration(value)))}}
+          </Col>
+          <Col span="2">
+            <Icon v-if="value.mosaicInfo.isRestrictable()" type="md-checkmark"/>
+            <Icon v-else type="md-close"/>
           </Col>
           <Col span="3">{{value.name?value.name:'N/A'}}</Col>
           <Col span="2">
             <div
-              class="listFnDiv"
-              v-if="computeDuration(value) > 0 || computeDuration(value) === 'Forever'"
+                    class="listFnDiv"
+                    v-if="computeDuration(value) > 0 || computeDuration(value) === 'Forever'"
             >
               <Poptip placement="bottom">
                 <i class="moreFn"></i>

@@ -37,6 +37,13 @@ export class NamespaceUnAliasDialogTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
+    initForm() {
+        this.formItem = {
+            fee: 0.5,
+            password: ''
+        }
+    }
+
     mosaicAliasDialogCancel() {
         this.initForm()
         this.$emit('closeUnAliasDialog')
@@ -86,19 +93,19 @@ export class NamespaceUnAliasDialogTs extends Vue {
         const {node, generationHash, xemDivisibility} = this
         const {networkType} = this.getWallet
         const password = new Password(this.formItem.password)
-        let {fee, hex, name, aliasTarget} = this.formItem
+        let {fee, hex, name, id, aliasTarget} = this.formItem
         fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
-        
-        const transaction = aliasTarget.length === 40 // quickfix
+
+        const transaction = aliasTarget.length >= 40 // quickfix
             ? new NamespaceApiRxjs().addressAliasTransaction(
                 AliasActionType.Unlink,
-                new NamespaceId(name),
+                id,
                 Address.createFromRawAddress(aliasTarget),
                 networkType,
                 fee)
             : new NamespaceApiRxjs().mosaicAliasTransaction(
                 AliasActionType.Unlink,
-                new NamespaceId(name),
+                id,
                 new MosaicId(hex),
                 networkType,
                 fee)
@@ -113,12 +120,6 @@ export class NamespaceUnAliasDialogTs extends Vue {
         this.mosaicAliasDialogCancel()
     }
 
-    initForm() {
-        this.formItem = {
-            fee: .5,
-            password: ''
-        }
-    }
 
     // @TODO: use v-model
     @Watch('showUnAliasDialog')

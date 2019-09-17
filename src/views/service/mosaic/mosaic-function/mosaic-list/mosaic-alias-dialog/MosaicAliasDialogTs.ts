@@ -1,6 +1,6 @@
 import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {mapState} from "vuex"
-import {Message, formData} from "@/config/index.ts"
+import {Message, namespaceGracePeriodDuration,formData} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
@@ -20,6 +20,7 @@ export class MosaicAliasDialogTs extends Vue {
     show = false
     isCompleteForm = false
     mosaic: any = formData.mosaicAliasForm
+    namespaceGracePeriodDuration = namespaceGracePeriodDuration
 
     @Prop()
     showMosaicAliasDialog: boolean
@@ -46,11 +47,16 @@ export class MosaicAliasDialogTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
+    get currentHeight() {
+        return this.app.chainStatus.currentHeight
+    }
+
     get aliasNameList() {
+        const {currentHeight, namespaceGracePeriodDuration} = this
         // @TODO handle namespace list loading state
         return this.namespaceList
-            .filter(({alias}) => alias instanceof EmptyAlias)
-            .map(alias => ({label: alias.name, value: alias.name}))
+            .filter(({alias,endHeight}) => alias instanceof EmptyAlias && endHeight - currentHeight > namespaceGracePeriodDuration)
+            .map(alias => ({label: alias.label, value: alias.label}))
     }
 
     mosaicAliasDialogCancel() {
@@ -135,7 +141,7 @@ export class MosaicAliasDialogTs extends Vue {
             password: ''
         }
     }
-    
+
     // @TODO: use v-model
     @Watch('showMosaicAliasDialog')
     onShowMosaicAliasDialogChange() {
@@ -143,7 +149,7 @@ export class MosaicAliasDialogTs extends Vue {
         Object.assign(this.mosaic, this.itemMosaic)
     }
 
-    // @TODO: use v-model    
+    // @TODO: use v-model
     @Watch('mosaic', {immediate: true, deep: true})
     onFormItemChange() {
         const {aliasName, fee, password} = this.mosaic

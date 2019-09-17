@@ -1,7 +1,7 @@
 import {mapState} from "vuex"
 import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Message, formData} from "@/config/index.ts"
+import {Message, StatusString, formData} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount, AppWallet} from '@/core/utils'
 import {AppMosaics} from '@/core/services/mosaics'
@@ -60,8 +60,15 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
         const appMosaics = AppMosaics()
         appMosaics.init(mosaics)
         const availableToBeLinked = appMosaics.getAvailableToBeLinked(currentHeight, address)
+
         if (!availableToBeLinked.length) return []
-        return availableToBeLinked.map(({hex}) => ({label: hex, value: hex}))
+        return availableToBeLinked
+            .filter((item) => currentHeight < item.expirationHeight || item.expirationHeight == StatusString.FOREVER)
+            .map((item:any) => {
+                item.value = item.hex
+                item.label = item.hex
+                return item
+            })
     }
 
     mosaicAliasDialogCancel() {

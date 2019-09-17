@@ -16,6 +16,14 @@ import apostille1Icon from "@/common/img/service/apostille1.png"
 import apostille2Icon from "@/common/img/service/apostille2.png"
 import {echartsConfigure as echartsConfigureData} from '@/config/echarts.ts'
 
+export const StatusString = {
+    FOREVER:'Forever',
+    NO_ALIAS:'no alias',
+    EXPIRED:'Expired'
+}
+
+export const namespaceGracePeriodDuration = 2 * 30 * 24 * 60 * 60 / 12   // blocks
+
 export const echartsConfigure = echartsConfigureData
 
 export const formData = formDataObject

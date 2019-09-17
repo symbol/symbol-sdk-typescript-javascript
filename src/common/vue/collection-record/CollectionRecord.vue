@@ -60,10 +60,10 @@
     <div :class="['bottom_transfer_record_list','scroll']">
       <Spin v-if="transactionsLoading" size="large" fix />
       <div
-        v-for="(c, index) in unConfirmedTransactionList"
-        :key="`${index}ucf`"
-        class="transaction_record_item pointer"
-        @click="showDialog(c)"
+              v-for="(c, index) in unConfirmedTransactionList"
+              :key="`${index}ucf`"
+              class="transaction_record_item pointer"
+              @click="showDialog(c)"
       >
         <img src="@/common/img/monitor/transaction/txUnConfirmed.png" alt="">
         <div class="flex_content">
@@ -81,10 +81,10 @@
       </div>
 
       <div
-        v-for="(c, index) in slicedConfirmedTransactionList"
-        :key="`${index}cf`"
-        class="transaction_record_item pointer"
-        @click="showDialog(c)"
+              v-for="(c, index) in slicedConfirmedTransactionList"
+              :key="`${index}cf`"
+              class="transaction_record_item pointer"
+              @click="showDialog(c)"
       >
         <img src="@/common/img/monitor/transaction/txConfirmed.png" alt="">
         <div class="flex_content">
@@ -110,9 +110,7 @@
 
 <script lang="ts">
     import {CollectionRecordTs} from '@/common/vue/collection-record/CollectionRecordTs.ts'
-
     export default class CollectionRecord extends CollectionRecordTs {
-
     }
 </script>
 <style scoped lang="less">

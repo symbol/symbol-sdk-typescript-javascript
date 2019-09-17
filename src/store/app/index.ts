@@ -17,6 +17,7 @@ declare interface appInfo {
     balanceLoading: boolean,
     transactionsLoading: boolean,
     xemUsdPrice: Number,
+    namespaceLoading: boolean
 }
 
 export default {
@@ -38,7 +39,8 @@ export default {
         mosaicsLoading: false,
         balanceLoading: false,
         transactionsLoading: false,
-        xemUsdPrice: 0,
+        namespaceLoading: false,
+        xemUsdPrice: 0
     },
     getters: {},
     mutations: {
@@ -79,6 +81,9 @@ export default {
             state.chainStatus.currentBlockInfo = currentBlockInfo ? currentBlockInfo : state.chainStatus.currentBlockInfo
             state.chainStatus.signerPublicKey = signerPublicKey ? signerPublicKey : state.chainStatus.signerPublicKey
             state.chainStatus.nodeAmount = nodeAmount ? nodeAmount : state.chainStatus.nodeAmount
+        },
+        SET_NAMESPACE_LOADING(state: appInfo, namespaceLoading: boolean) {
+            state.namespaceLoading = namespaceLoading
         },
     }
 }

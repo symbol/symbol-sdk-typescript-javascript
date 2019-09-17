@@ -36,6 +36,11 @@ export class MosaicListTs extends Vue {
         return this.activeAccount.mosaics
     }
 
+    // get
+    get mosaicsLoading() {
+        return this.app.mosaicsLoading
+    }
+
     get currentXEM1() {
         return this.activeAccount.currentXEM1
     }
