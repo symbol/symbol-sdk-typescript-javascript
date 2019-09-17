@@ -1,6 +1,6 @@
 import { Mosaic, MosaicId, UInt64, Address, NamespaceId } from 'nem2-sdk'
 import {mapState} from "vuex"
-import {Message, formData, aliasType} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
@@ -14,6 +14,8 @@ import {
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs"
 import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
+import {aliasType} from "@/config/types";
+import {formData} from "@/config/formDto";
 
 @Component({
     components: {

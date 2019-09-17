@@ -28,7 +28,7 @@
     </Modal>
 
     <div class="top_title">
-      <span>{{transactionType === TransferType.RECEIVED
+      <span>{{transactionType === transferType.RECEIVED
           ? $t('collection_record') : $t('transfer_sent')}}</span>
       <div class="right" v-show="!isShowSearchDetail">
             <span class="select_date pointer">

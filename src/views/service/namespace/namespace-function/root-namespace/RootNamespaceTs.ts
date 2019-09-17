@@ -3,12 +3,14 @@ import { Address} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, bandedNamespace as BandedNamespaceList,rootNamespaceTypelist,formData} from "@/config/index.ts"
+import {Message, networkConfig} from "@/config/index.ts"
+import {rootNamespaceTypelist} from "@/config/view"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress,
     createBondedMultisigTransaction, createCompleteMultisigTransaction,
 } from '@/core/utils'
+import {formData} from "@/config/formDto";
 
 
 @Component({
@@ -19,7 +21,7 @@ import {
         ...mapState({
             activeAccount: 'account',
             app:'app'
-        }) 
+        })
     }
 })
 export class RootNamespaceTs extends Vue {
@@ -192,8 +194,8 @@ export class RootNamespaceTs extends Vue {
             this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
             return false
         }
-        //BandedNamespaceList
-        const flag = BandedNamespaceList.every((item) => {
+        //reservedRootNamespaceNames
+        const flag = networkConfig.reservedRootNamespaceNames.every((item) => {
             if (item == rootNamespaceName) {
                 this.showErrorMessage(this.$t(Message.NAMESPACE_USE_BANDED_WORD_ERROR))
                 return false

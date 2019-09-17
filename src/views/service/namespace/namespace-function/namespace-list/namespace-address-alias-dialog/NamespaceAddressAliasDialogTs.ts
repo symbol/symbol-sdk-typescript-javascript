@@ -1,10 +1,11 @@
-import {Message, StatusString} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
 import {AppWallet} from "@/core/utils/wallet.ts"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
+import {StatusString} from "@/config/view";
 
 @Component({
     computed: {

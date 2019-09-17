@@ -1,4 +1,4 @@
-export const timeZoneList = (() => {
+export const timeZoneListData = (() => {
     let list = [
         {
             value: 0,

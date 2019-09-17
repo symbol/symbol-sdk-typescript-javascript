@@ -16,7 +16,7 @@ export const formData = {
         mosaicTransferList: [],
         isEncrypted: true
     },
-    remoteForm : {
+    remoteForm: {
         remotePublickey: '',
         fee: 0.5,
         password: ''
@@ -98,5 +98,4 @@ export const formData = {
         password: '',
         checkPW: '',
     }
-
 }

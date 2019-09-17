@@ -15,8 +15,9 @@ import {
     multisigAccountInfo,
     getAbsoluteMosaicAmount,
 } from "@/core/utils"
-import {Message, formData} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {formData} from "@/config/formDto";
 
 @Component({
     components: {

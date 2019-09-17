@@ -1,9 +1,10 @@
-import {Component, Vue, Watch} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import SubNamespace from './namespace-function/sub-namespace/SubNamespace.vue'
 import RootNamespace from './namespace-function/root-namespace/RootNamespace.vue'
 import NamespaceList from './namespace-function/namespace-list/NamespaceList.vue'
-import {namespaceButtonList,StatusString} from '@/config/index.ts'
 import {mapState} from "vuex"
+import {namespaceButtonList} from "@/config/view";
+
 @Component({
     components: {
         RootNamespace,

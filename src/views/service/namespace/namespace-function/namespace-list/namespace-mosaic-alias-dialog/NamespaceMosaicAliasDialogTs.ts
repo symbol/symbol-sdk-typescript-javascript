@@ -1,10 +1,12 @@
 import {mapState} from "vuex"
 import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Message, StatusString, formData} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount, AppWallet} from '@/core/utils'
 import {AppMosaics} from '@/core/services/mosaics'
+import {formData} from "@/config/formDto";
+import {StatusString} from "@/config/view";
 
 @Component({
     computed: {

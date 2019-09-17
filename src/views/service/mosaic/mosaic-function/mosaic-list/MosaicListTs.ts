@@ -5,7 +5,7 @@ import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
 import MosaicUnAliasDialog from './mosaic-unAlias-dialog/MosaicUnAliasDialog.vue'
 import {formatNumber} from '@/core/utils'
-import {aliasType} from "@/config"
+import {aliasType} from "@/config/types";
 
 @Component({
     components: {

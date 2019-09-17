@@ -8,8 +8,8 @@ import {
     isRefreshData, localSave, localRead, formatNumber,
     renderMosaics, renderMosaicNames, renderMosaicAmount
 } from '@/core/utils'
-import {networkStatusList} from '@/config/index.ts'
-import { TransactionType, Mosaic } from 'nem2-sdk'
+import { TransactionType} from 'nem2-sdk'
+import {networkStatusList} from "@/config/view";
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},

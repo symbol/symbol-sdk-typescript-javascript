@@ -2,7 +2,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import WalletImportKeystore from '@/views/wallet/wallet-import-keystore/WalletImportKeystore.vue'
 import WalletImportMnemonic from '@/views/wallet/wallet-import-mnemonic/WalletImportMnemonic.vue'
 import WalletImportPrivatekey from '@/views/wallet/wallet-import-privatekey/WalletImportPrivatekey.vue'
-import {networkTypeList, walletImportNavagatorList} from '@/config/index.ts'
+import {networkTypeList, walletImportNavagatorList} from '@/config/view'
 
 @Component({
     components: {

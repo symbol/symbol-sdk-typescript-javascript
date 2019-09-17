@@ -87,7 +87,6 @@ export class informationTs extends Vue {
         this.scroll.target.scrollTop = 0
     }
 
-
     checkForm() {
         const {commentContent} = this
         if (!commentContent || commentContent.trim() == '') {

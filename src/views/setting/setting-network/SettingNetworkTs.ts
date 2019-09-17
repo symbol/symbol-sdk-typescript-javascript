@@ -1,5 +1,5 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {settingNetworkPointList, settingNetworkColorList} from '@/config/index.ts'
+import {settingNetworkPointList, settingNetworkColorList} from '@/config/view'
 
 @Component
 export class SettingNetworkTs extends Vue {

@@ -12,7 +12,8 @@ import {
     MosaicSupplyChangeTransaction,
     MosaicSupplyType
 } from 'nem2-sdk'
-import {Message, mosaicTransactionTypeList, formData} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
+import {mosaicTransactionTypeList} from "@/config/view"
 import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
 import {
     formatSeconds, formatAddress, multisigAccountInfo, getAbsoluteMosaicAmount,
@@ -20,6 +21,7 @@ import {
 } from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
+import {formData} from "@/config/formDto";
 
 
 @Component({

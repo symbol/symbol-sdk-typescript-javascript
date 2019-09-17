@@ -7,24 +7,17 @@
 <script lang="ts">
     import 'animate.css'
     import {mapState} from 'vuex'
-    import {from, interval, asyncScheduler, of} from 'rxjs'
-    import {toArray, flatMap, concatMap, map, tap, throttleTime, finalize, mergeMap} from 'rxjs/operators'
+    import {asyncScheduler} from 'rxjs'
+    import { throttleTime } from 'rxjs/operators'
+
+    import {isWindows} from "@/config/index.ts"
     import {
-        Listener, NamespaceHttp, NamespaceId, Address, MosaicHttp, MosaicId,
-        MosaicService, AccountHttp, UInt64, MosaicInfo, MosaicAlias
-    } from "nem2-sdk"
-    import {isWindows, Message, nodeConfig} from "@/config/index.ts"
-    import {
-        localRead, getRelativeMosaicAmount, AppWallet, getMosaicList, getMosaicInfoList,
+        localRead,  AppWallet,
         getNamespaces, checkInstall, getNetworkGenerationHash, getCurrentNetworkMosaic,
     } from '@/core/utils'
-    import {AccountApiRxjs} from '@/core/api/AccountApiRxjs.ts'
-    import {ListenerApiRxjs} from '@/core/api/ListenerApiRxjs.ts'
-    import {Component, Vue, Watch} from 'vue-property-decorator'
-    import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
+    import {Component, Vue} from 'vue-property-decorator'
     import {ChainListeners} from '@/core/services/listeners.ts'
-    import {aliasType} from '@/config/index.ts'
-    import {mosaicsAmountViewFromAddress, initMosaic, enrichMosaics, AppMosaics} from '@/core/services/mosaics'
+    import { initMosaic, enrichMosaics, AppMosaics} from '@/core/services/mosaics'
     import {getMarketOpenPrice} from '@/core/services/marketData.ts'
     import {setTransactionList} from '@/core/services/transactions'
 

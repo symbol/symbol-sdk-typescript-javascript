@@ -1,6 +1,6 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapState} from "vuex"
-import {communityPanelNavList} from '@/config/index.ts'
+import {communityPanelNavList} from '@/config/view'
 
 
 @Component({

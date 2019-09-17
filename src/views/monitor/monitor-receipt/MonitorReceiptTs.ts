@@ -3,9 +3,9 @@ import {QRCodeGenerator} from 'nem2-qr-library'
 import {copyTxt} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
-import {TransferType} from '@/config/index.ts'
 import {mapState} from "vuex"
-import {monitorRecaeiptMosaicList,monitorRecaeiptTransferTypeList} from '@/config/index.ts'
+import {monitorRecaeiptMosaicList,monitorRecaeiptTransferTypeList} from '@/config/view'
+import {transferType} from "@/config/types";
 @Component({
     components: {
         CollectionRecord
@@ -22,7 +22,7 @@ export class MonitorReceiptTs extends Vue {
     assetAmount = 0
     QRCode: string = ''
     transactionHash = ''
-    TransferType = TransferType
+    transferType = transferType
     isShowDialog = false
     mosaicList = monitorRecaeiptMosaicList
     transferTypeList = monitorRecaeiptTransferTypeList

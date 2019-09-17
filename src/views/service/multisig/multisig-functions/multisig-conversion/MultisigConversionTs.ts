@@ -7,10 +7,11 @@ import {
 } from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, formData} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {getAbsoluteMosaicAmount, createBondedMultisigTransaction} from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {formData} from "@/config/formDto";
 
 @Component({
     components: {

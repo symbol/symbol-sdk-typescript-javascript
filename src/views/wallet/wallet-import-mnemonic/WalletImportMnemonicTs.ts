@@ -1,8 +1,10 @@
-import {Message, networkTypeList, formData} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
 import {AppWallet} from '@/core/utils/wallet.ts'
 import {mapState} from 'vuex';
 import {Password} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
+import {networkTypeList} from "@/config/view";
+import {formData} from "@/config/formDto";
 
 @Component({
     computed: {

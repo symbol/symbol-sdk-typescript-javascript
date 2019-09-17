@@ -1,6 +1,6 @@
 import {Message} from "@/config/index.ts"
 import {AppWallet} from "@/core/utils/wallet.ts"
-import {copyTxt, localRead} from "@/core/utils/utils.ts"
+import {copyTxt} from "@/core/utils/utils.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {Password} from "nem2-sdk"
@@ -54,7 +54,7 @@ export class KeystoreDialogTs extends Vue {
                 break
         }
     }
-    
+
     async generateKeystore() {
         this.keystoreText = new AppWallet(this.getWallet).getKeystore()
         this.stepIndex = 2
@@ -89,7 +89,7 @@ export class KeystoreDialogTs extends Vue {
             })
             return false
         }
-        
+
         return true
     }
 

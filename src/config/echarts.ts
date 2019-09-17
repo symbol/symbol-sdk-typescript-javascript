@@ -1,4 +1,4 @@
-export const echartsConfigure = {
+export const echarts = {
     multisigMapOption: {
         tooltip: {
             alwaysShowContent: true,
@@ -63,8 +63,8 @@ export const echartsConfigure = {
                 name: 'vote',
                 type: 'pie',
                 data: [
-                    {value: 100, name: 'A 335 25%'},
-                    {value: 300, name: 'B 300 75%'},
+                    { value: 100, name: 'A 335 25%' },
+                    { value: 300, name: 'B 300 75%' },
                 ],
                 itemStyle: {
                     emphasis: {
@@ -79,4 +79,3 @@ export const echartsConfigure = {
         ]
     }
 }
-

@@ -1,5 +1,5 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {serviceSwitchFnList} from '@/config/index.ts'
+import {serviceSwitchFnList} from '@/config/view'
 
 @Component
 export class ServiceSwitchTs extends Vue {

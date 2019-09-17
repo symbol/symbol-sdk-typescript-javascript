@@ -2,7 +2,7 @@ import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
 import {mapState} from "vuex"
-import {aliasType, StatusString, namespaceGracePeriodDuration} from '@/config/index.ts'
+import {networkConfig} from '@/config/index.ts'
 import {Address, MosaicId} from "nem2-sdk"
 import NamespaceUnAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-unAlias-dialog/NamespaceUnAliasDialog.vue'
@@ -11,6 +11,8 @@ import NamespaceMosaicAliasDialog
 import NamespaceAddressAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-address-alias-dialog/NamespaceAddressAliasDialog.vue'
 import {AppMosaics} from '@/core/services/mosaics'
+import {aliasType} from "@/config/types";
+import { StatusString } from '@/config/view'
 
 @Component({
     components: {
@@ -38,7 +40,7 @@ export class NamespaceListTs extends Vue {
     showMosaicAliasDialog = false
     isShowAddressAliasDialog = false
     StatusString = StatusString
-    namespaceGracePeriodDuration = namespaceGracePeriodDuration
+    namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
 
     get namespaceList() {
         const namespaceList = this.activeAccount.namespace.map((item) => {

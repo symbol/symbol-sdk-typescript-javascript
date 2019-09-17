@@ -1,8 +1,9 @@
-import {Message, networkTypeList, importKeystoreDefault} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
 import {AppWallet} from '@/core/utils/wallet.ts'
 import {Password} from "nem2-sdk"
 import {mapState} from 'vuex'
 import {Component, Vue} from 'vue-property-decorator'
+import {importKeystoreDefault, networkTypeList} from "@/config/view";
 
 @Component({
     computed: {

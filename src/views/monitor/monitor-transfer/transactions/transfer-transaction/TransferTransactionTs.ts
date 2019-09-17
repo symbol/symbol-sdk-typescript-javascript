@@ -1,4 +1,4 @@
-import {Message, formData, aliasType} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
 import {Mosaic, MosaicId, Address, NamespaceId, UInt64} from 'nem2-sdk'
 import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
@@ -9,6 +9,8 @@ import {standardFields} from '@/core/validation'
 import {mapState} from 'vuex'
 import {NamespaceApiRxjs} from '@/core/api/NamespaceApiRxjs.ts'
 import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
+import {formData} from "@/config/formDto";
+import {aliasType} from "@/config/types";
 
 @Component({
     components: {CheckPWDialog, ErrorTooltip},
@@ -75,7 +77,7 @@ export default class TransferTransactionTs extends Vue {
         // instead of an empty array ([] = "no matching data" in the select dropdown)
         const {mosaics, currentHeight} = this
         if (this.mosaicsLoading || !mosaics) return []
-        
+
         const mosaicList: any = Object.values(this.mosaics)
         return [...mosaicList]
         .filter(({expirationHeight}) => expirationHeight === 'Forever' || currentHeight < expirationHeight)

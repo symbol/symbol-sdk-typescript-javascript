@@ -1,10 +1,10 @@
-import {localesMap, languageList} from "@/config/index.ts"
 import {localSave, localRead} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import GetStart from './login-view/get-start/GetStart.vue'
 import InputLock from './login-view/input-lock/InputLock.vue'
 import CreateLock from './login-view/create-lock/CreateLock.vue'
 import {mapState} from "vuex"
+import {languageList} from "@/config/view";
 
 @Component({
     components: {

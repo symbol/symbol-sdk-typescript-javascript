@@ -2,7 +2,7 @@ import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import WalletCreate from '@/views/wallet/wallet-create/WalletCreate.vue'
 import WalletCreated from '@/views/wallet/wallet-created/WalletCreated.vue'
 import WalletImport from '@/views/wallet/wallet-import/WalletImport.vue'
-import {walletFnNavList} from '@/config/index.ts'
+import {walletFnNavList} from '@/config/view'
 
 @Component({
     components: {

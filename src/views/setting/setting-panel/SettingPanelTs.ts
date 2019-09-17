@@ -1,5 +1,5 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {settingPanelNavigationBar} from '@/config/index.ts'
+import {settingPanelNavigationBar} from '@/config/view'
 
 @Component
 export class SettingPanelTs extends Vue {

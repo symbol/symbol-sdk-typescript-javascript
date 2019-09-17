@@ -1,6 +1,7 @@
-import {Message, networkTypeList} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {createMnemonic} from "@/core/utils/hdWallet.ts"
+import {networkTypeList} from "@/config/view";
 @Component
 export class WalletCreateTs extends Vue {
     formItem = {

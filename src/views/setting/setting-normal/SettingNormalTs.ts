@@ -1,7 +1,8 @@
-import {timeZoneListData, languageList} from '@/config/index.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import {localSave} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
+import {languageList} from "@/config/view";
+import {timeZoneListData} from "@/config/timeZone";
 
 @Component({
     computed: {...mapState({app: 'app'})},

@@ -20,7 +20,7 @@ export class FormattedRegisterNamespace extends FormattedTransaction {
           'root_namespace': tx.parentId ? tx.parentId.id.toHex() : '-',
           'sender': tx.signer.publicKey,
           'duration': tx.duration ? tx.duration.compact() : 0,
-          'rent': (tx.duration ? tx.duration.compact() : 0) / nodeConfig.GasToXemMultiple + nodeConfig.XEM,
+          'rent': (tx.duration ? tx.duration.compact() : 0) / nodeConfig.gas2xemRate + nodeConfig.XEM,
           'fee': getRelativeMosaicAmount(tx.maxFee.compact(), xemDivisibility) + nodeConfig.XEM,
           'block': this.txHeader.block,
           'hash': this.txHeader.hash,

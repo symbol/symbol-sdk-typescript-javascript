@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <CollectionRecord :transactionType="TransferType.RECEIVED" />
+    <CollectionRecord :transactionType="transferType.RECEIVED" />
   </div>
 </template>
 

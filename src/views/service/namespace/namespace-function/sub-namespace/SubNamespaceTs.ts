@@ -1,12 +1,8 @@
 import {Address} from "nem2-sdk"
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {
-    Message,
-    bandedNamespace as BandedNamespaceList,
-    subNamespaceTypeList,
-    namespaceGracePeriodDuration
-} from "@/config/index.ts"
+import {Message, networkConfig} from "@/config/index.ts"
+import {subNamespaceTypeList} from "@/config/view"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
@@ -48,7 +44,7 @@ export class SubNamespaceTs extends Vue {
     }
     multisigPublickeyList = []
     typeList = subNamespaceTypeList
-    namespaceGracePeriodDuration = namespaceGracePeriodDuration
+    namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
 
     get wallet() {
         return this.activeAccount.wallet
@@ -173,8 +169,8 @@ export class SubNamespaceTs extends Vue {
             return false
         }
 
-        //BandedNamespaceList
-        const subflag = BandedNamespaceList.every((item) => {
+        //reservedRootNamespaceNames
+        const subflag = networkConfig.reservedRootNamespaceNames.every((item) => {
             if (item == subNamespaceName) {
                 this.showErrorMessage(this.$t(Message.NAMESPACE_USE_BANDED_WORD_ERROR))
                 return false
@@ -259,7 +255,7 @@ export class SubNamespaceTs extends Vue {
         }
         const msoaicList = await getNamespaces(address, node)
         this.multisigNamespaceList = msoaicList
-            .filter(({alias, endHeight, levels}) => alias instanceof EmptyAlias && endHeight - currentHeight > namespaceGracePeriodDuration && levels < 3)
+            .filter(({alias, endHeight, levels}) => alias instanceof EmptyAlias && endHeight - currentHeight > networkConfig.namespaceGracePeriodDuration && levels < 3)
             .map(alias => ({label: alias.label, value: alias.label}))
 
         const that = this
