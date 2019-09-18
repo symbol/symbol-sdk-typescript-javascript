@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+import { NetworkType } from '../../model/blockchain/NetworkType';
 import { WalletAlgorithm } from '../../model/wallet/WalletAlgorithm';
 import { Convert as convert } from '../format/Convert';
 import { KeyPair } from './KeyPair';
-import * as utility from './Utilities';
 import { SignSchema } from './SignSchema';
+import * as utility from './Utilities';
+// tslint:disable-next-line: no-var-requires
 const CryptoJS = require('crypto-js');
 export class Crypto {
     /**
@@ -219,16 +221,16 @@ export class Crypto {
      * @param {string} msg - A text message
      * @param {Uint8Array} iv - An initialization vector
      * @param {Uint8Array} salt - A salt
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @param {NetworkType} networkType - Catapult network identifier
      * @return {string} - The encoded message
      */
-    public static _encode = (senderPriv, recipientPub, msg, iv, salt, signSchema: SignSchema = SignSchema.SHA3) => {
+    public static _encode = (senderPriv, recipientPub, msg, iv, salt, networkType: NetworkType) => {
         // Errors
         if (!senderPriv || !recipientPub || !msg || !iv || !salt) { throw new Error('Missing argument !'); }
         // Processing
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(senderPriv, signSchema);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(senderPriv, networkType);
         const pk = convert.hexToUint8(recipientPub);
-        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, salt, signSchema), 32);
+        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, salt, networkType), 32);
         const encIv = {
             iv: utility.ua2words(iv, 16),
         };
@@ -244,16 +246,16 @@ export class Crypto {
      * @param {string} senderPriv - A sender private key
      * @param {string} recipientPub - A recipient public key
      * @param {string} msg - A text message
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @param {NetworkType} networkType - Catapult network identifier
      * @return {string} - The encoded message
      */
-    public static encode = (senderPriv, recipientPub, msg, signSchema: SignSchema = SignSchema.SHA3) => {
+    public static encode = (senderPriv, recipientPub, msg, networkType: NetworkType) => {
         // Errors
         if (!senderPriv || !recipientPub || !msg) { throw new Error('Missing argument !'); }
         // Processing
         const iv = Crypto.randomBytes(16);
         const salt = Crypto.randomBytes(32);
-        const encoded = Crypto._encode(senderPriv, recipientPub, msg, iv, salt, signSchema);
+        const encoded = Crypto._encode(senderPriv, recipientPub, msg, iv, salt, networkType);
         // Result
         return encoded;
     }
@@ -264,16 +266,16 @@ export class Crypto {
      * @param {string} recipientPrivate - A recipient private key
      * @param {string} senderPublic - A sender public key
      * @param {Uint8Array} _payload - An encrypted message payload in bytes
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @param {NetworkType} networkType - Catapult network identifier
      * @return {string} - The decoded payload as hex
      */
-    public static _decode = (recipientPrivate, senderPublic, payload, iv, salt, signSchema: SignSchema = SignSchema.SHA3) => {
+    public static _decode = (recipientPrivate, senderPublic, payload, iv, salt, networkType: NetworkType) => {
         // Error
         if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
         // Processing
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(recipientPrivate, signSchema);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(recipientPrivate, networkType);
         const pk = convert.hexToUint8(senderPublic);
-        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, salt, signSchema), 32);
+        const encKey = utility.ua2words(KeyPair.deriveSharedKey(keyPair, pk, salt, networkType), 32);
         const encIv = {
             iv: utility.ua2words(iv, 16),
         };
@@ -291,10 +293,10 @@ export class Crypto {
      * @param {string} recipientPrivate - A recipient private key
      * @param {string} senderPublic - A sender public key
      * @param {string} _payload - An encrypted message payload
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @param {NetworkType} networkType - Catapult network identifier
      * @return {string} - The decoded payload as hex
      */
-    public static decode = (recipientPrivate, senderPublic, _payload, signSchema: SignSchema = SignSchema.SHA3) => {
+    public static decode = (recipientPrivate, senderPublic, _payload, networkType: NetworkType) => {
         // Error
         if (!recipientPrivate || !senderPublic || !_payload) { throw new Error('Missing argument !'); }
         // Processing
@@ -302,7 +304,7 @@ export class Crypto {
         const payload = new Uint8Array(binPayload.buffer, 48);
         const salt = new Uint8Array(binPayload.buffer, 0, 32);
         const iv = new Uint8Array(binPayload.buffer, 32, 16);
-        const decoded = Crypto._decode(recipientPrivate, senderPublic, payload, iv, salt, signSchema);
+        const decoded = Crypto._decode(recipientPrivate, senderPublic, payload, iv, salt, networkType);
         return decoded;
     }
 
@@ -315,5 +317,19 @@ export class Crypto {
     public static randomBytes = (length) => {
         const crypto = require('crypto');
         return crypto.randomBytes(length);
+    }
+
+    /**
+     * Resolve signature schema from given network type
+     *
+     * @param {NetworkType} networkType - Network type
+     *
+     * @return {SignSchema}
+     */
+    public static resolveNetworkType(networkType: NetworkType): SignSchema {
+        if (networkType === NetworkType.MAIN_NET || networkType === NetworkType.TEST_NET) {
+            return SignSchema.KECCAK;
+        }
+        return SignSchema.SHA3;
     }
 }

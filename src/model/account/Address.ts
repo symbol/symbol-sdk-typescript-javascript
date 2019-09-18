@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { SignSchema } from '../../core/crypto';
-import { Convert as convert, RawAddress as AddressLibrary} from '../../core/format';
+import { Convert, RawAddress } from '../../core/format';
 import {NetworkType} from '../blockchain/NetworkType';
 
 /**
@@ -26,15 +24,13 @@ export class Address {
      * Create from private key
      * @param publicKey - The account public key.
      * @param networkType - The NEM network type.
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {Address}
      */
     public static createFromPublicKey(publicKey: string,
-                                      networkType: NetworkType,
-                                      signSchema = SignSchema.SHA3): Address {
-        const publicKeyUint8 = convert.hexToUint8(publicKey);
-        const address = AddressLibrary
-            .addressToString(AddressLibrary.publicKeyToAddress(publicKeyUint8, networkType, signSchema));
+                                      networkType: NetworkType): Address {
+        const publicKeyUint8 = Convert.hexToUint8(publicKey);
+        const address = RawAddress
+            .addressToString(RawAddress.publicKeyToAddress(publicKeyUint8, networkType));
         return new Address(address, networkType);
     }
 
@@ -44,7 +40,7 @@ export class Address {
      *                  ex: SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3 or SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF3
      * @returns {Address}
      */
-    public static createFromRawAddress(rawAddress: string) {
+    public static createFromRawAddress(rawAddress: string): Address {
         let networkType: NetworkType;
         const addressTrimAndUpperCase: string = rawAddress
             .trim()
@@ -74,8 +70,8 @@ export class Address {
      * @return {Address}
      */
     public static createFromEncoded(encoded: string): Address {
-        return Address.createFromRawAddress(AddressLibrary
-            .addressToString(convert.hexToUint8(encoded)));
+        return Address.createFromRawAddress(RawAddress
+            .addressToString(Convert.hexToUint8(encoded)));
     }
 
     /**

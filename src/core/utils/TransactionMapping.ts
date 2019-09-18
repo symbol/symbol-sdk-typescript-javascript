@@ -35,12 +35,10 @@ export class TransactionMapping {
      * Create transaction class from payload binary.
      * @param {string} payload The transaction binary payload
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {Transaction | InnerTransaction} The transaction class.
      */
     public static createFromPayload(payload: string,
-                                    isEmbedded = false,
-                                    signSchema = SignSchema.SHA3): Transaction | InnerTransaction {
-        return CreateTransactionFromPayload(payload, isEmbedded, signSchema);
+                                    isEmbedded = false): Transaction | InnerTransaction {
+        return CreateTransactionFromPayload(payload, isEmbedded);
     }
 }

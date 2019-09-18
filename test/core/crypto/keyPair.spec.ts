@@ -15,12 +15,12 @@
  */
 import {expect} from 'chai';
 import {Crypto, KeyPair} from '../../../src/core/crypto';
-import { SignSchema } from '../../../src/core/crypto/SignSchema';
-import {Convert as convert} from '../../../src/core/format';
 import { Convert } from '../../../src/core/format/Convert';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 
 describe('key pair', () => {
-    const randomKeyPair = () => KeyPair.createKeyPairFromPrivateKeyString(convert.uint8ToHex(Crypto.randomBytes(32)));
+    const randomKeyPair = () =>
+        KeyPair.createKeyPairFromPrivateKeyString(Convert.uint8ToHex(Crypto.randomBytes(32)), NetworkType.MIJIN_TEST);
     const Private_Key_Size = 32;
     const Signature_Size = 64;
 
@@ -52,12 +52,12 @@ describe('key pair', () => {
                 const expectedPublicKey = Expected_Public_Keys[i];
 
                 // Act:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex, NetworkType.MIJIN_TEST);
 
                 // Assert:
                 const message = ` from ${privateKeyHex}`;
-                expect(convert.uint8ToHex(keyPair.publicKey), `public ${message}`).equal(expectedPublicKey);
-                expect(convert.uint8ToHex(keyPair.privateKey), `private ${message}`).equal(privateKeyHex);
+                expect(Convert.uint8ToHex(keyPair.publicKey), `public ${message}`).equal(expectedPublicKey);
+                expect(Convert.uint8ToHex(keyPair.privateKey), `private ${message}`).equal(privateKeyHex);
             }
         });
 
@@ -73,7 +73,7 @@ describe('key pair', () => {
             invalidPrivateKeys.forEach((privateKey) => {
                 // Assert:
                 expect(() => {
-                        KeyPair.createKeyPairFromPrivateKeyString(privateKey);
+                        KeyPair.createKeyPairFromPrivateKeyString(privateKey, NetworkType.MIJIN_TEST);
                     }, `from ${privateKey}`)
                     .to.throw('private key has unexpected size');
             });
@@ -107,16 +107,16 @@ describe('key pair', () => {
 
             for (let i = 0; i < Nis1_Private_Key.length; ++i) {
                 // Arrange:
-                const privateKeyHex = Nis1_Private_Key[i];
+                const privateKeyHex = Convert.uint8ToHex(Convert.hexToUint8Reverse(Nis1_Private_Key[i]));
                 const expectedPublicKey = Expected_Public_Keys[i];
 
                 // Act:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex, SignSchema.KECCAK_REVERSED_KEY);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex, NetworkType.TEST_NET);
 
                 // Assert:
                 const message = ` from ${privateKeyHex}`;
-                expect(convert.uint8ToHex(keyPair.publicKey).toUpperCase(), `public ${message}`).equal(expectedPublicKey.toUpperCase());
-                expect(convert.uint8ToHex(keyPair.privateKey).toUpperCase(), `private ${message}`).equal(privateKeyHex.toUpperCase());
+                expect(Convert.uint8ToHex(keyPair.publicKey).toUpperCase(), `public ${message}`).equal(expectedPublicKey.toUpperCase());
+                expect(Convert.uint8ToHex(keyPair.privateKey).toUpperCase(), `private ${message}`).equal(privateKeyHex.toUpperCase());
             }
         });
 
@@ -132,7 +132,7 @@ describe('key pair', () => {
             invalidPrivateKeys.forEach((privateKey) => {
                 // Assert:
                 expect(() => {
-                        KeyPair.createKeyPairFromPrivateKeyString(privateKey);
+                        KeyPair.createKeyPairFromPrivateKeyString(privateKey, NetworkType.MIJIN_TEST);
                     }, `from ${privateKey}`)
                     .to.throw('private key has unexpected size');
             });
@@ -170,12 +170,12 @@ describe('key pair', () => {
                 const expectedPublicKey = Expected_Public_Keys[i];
 
                 // Act:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex, NetworkType.MIJIN_TEST);
 
                 // Assert:
                 const message = ` from ${privateKeyHex}`;
-                expect(convert.uint8ToHex(keyPair.publicKey).toUpperCase(), `public ${message}`).equal(expectedPublicKey.toUpperCase());
-                expect(convert.uint8ToHex(keyPair.privateKey).toUpperCase(), `private ${message}`).equal(privateKeyHex.toUpperCase());
+                expect(Convert.uint8ToHex(keyPair.publicKey).toUpperCase(), `public ${message}`).equal(expectedPublicKey.toUpperCase());
+                expect(Convert.uint8ToHex(keyPair.privateKey).toUpperCase(), `private ${message}`).equal(privateKeyHex.toUpperCase());
             }
         });
 
@@ -191,7 +191,7 @@ describe('key pair', () => {
             invalidPrivateKeys.forEach((privateKey) => {
                 // Assert:
                 expect(() => {
-                        KeyPair.createKeyPairFromPrivateKeyString(privateKey);
+                        KeyPair.createKeyPairFromPrivateKeyString(privateKey, NetworkType.MIJIN_TEST);
                     }, `from ${privateKey}`)
                     .to.throw('private key has unexpected size');
             });
@@ -229,12 +229,12 @@ describe('key pair', () => {
                 const expectedPublicKey = Expected_Public_Keys[i];
 
                 // Act:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKeyHex, NetworkType.MIJIN_TEST);
 
                 // Assert:
                 const message = ` from ${privateKeyHex}`;
-                expect(convert.uint8ToHex(keyPair.publicKey).toUpperCase(), `public ${message}`).equal(expectedPublicKey.toUpperCase());
-                expect(convert.uint8ToHex(keyPair.privateKey).toUpperCase(), `private ${message}`).equal(privateKeyHex.toUpperCase());
+                expect(Convert.uint8ToHex(keyPair.publicKey).toUpperCase(), `public ${message}`).equal(expectedPublicKey.toUpperCase());
+                expect(Convert.uint8ToHex(keyPair.privateKey).toUpperCase(), `private ${message}`).equal(privateKeyHex.toUpperCase());
             }
         });
 
@@ -250,7 +250,7 @@ describe('key pair', () => {
             invalidPrivateKeys.forEach((privateKey) => {
                 // Assert:
                 expect(() => {
-                        KeyPair.createKeyPairFromPrivateKeyString(privateKey);
+                        KeyPair.createKeyPairFromPrivateKeyString(privateKey, NetworkType.MIJIN_TEST);
                     }, `from ${privateKey}`)
                     .to.throw('private key has unexpected size');
             });
@@ -286,18 +286,19 @@ describe('key pair', () => {
 
             for (let i = 0; i < Nis1_Private_Key.length; ++i) {
                 // Arrange:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Nis1_Private_Key[i], SignSchema.KECCAK_REVERSED_KEY);
+                const privateKey = Convert.uint8ToHex(Convert.hexToUint8Reverse(Nis1_Private_Key[i]));
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, NetworkType.TEST_NET);
                 const payload = Convert.hexToUint8(Nis1_Data[i]);
 
                 // Act:
-                const signature = KeyPair.sign(keyPair, payload, SignSchema.KECCAK_REVERSED_KEY);
+                const signature = KeyPair.sign(keyPair, payload, NetworkType.TEST_NET);
 
                 // Assert:
                 const message = ` from ${Nis1_Private_Key[i]}`;
-                expect(Convert.uint8ToHex(KeyPair.sign(keyPair, payload, SignSchema.KECCAK_REVERSED_KEY)).toUpperCase(),
+                expect(Convert.uint8ToHex(KeyPair.sign(keyPair, payload, NetworkType.TEST_NET)).toUpperCase(),
                     `private ${message}`).to.deep.equal(Expected_Signature[i].toUpperCase());
 
-                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, SignSchema.KECCAK_REVERSED_KEY);
+                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, NetworkType.TEST_NET);
                 expect(isVerified, `private ${message}`).to.equal(true);
             }
         });
@@ -330,17 +331,17 @@ describe('key pair', () => {
 
             for (let i = 0; i < Catapult_Private_Key.length; ++i) {
                 // Arrange:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Catapult_Private_Key[i], SignSchema.SHA3);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Catapult_Private_Key[i], NetworkType.MIJIN_TEST);
                 const payload = Convert.hexToUint8(Catapult_Data[i]);
 
                 // Act:
-                const signature = KeyPair.sign(keyPair, payload, SignSchema.SHA3);
+                const signature = KeyPair.sign(keyPair, payload, NetworkType.MIJIN_TEST);
 
                 // Assert:
                 const message = ` from ${Catapult_Private_Key[i]}`;
                 expect(Convert.uint8ToHex(signature).toUpperCase(),
                     `private ${message}`).to.deep.equal(Expected_Signature[i].toUpperCase());
-                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
+                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, NetworkType.MIJIN_TEST);
                 expect(isVerified, `private ${message}`).to.equal(true);
             }
         });
@@ -353,7 +354,7 @@ describe('key pair', () => {
             const payload = Crypto.randomBytes(100);
 
             // Act:
-            const signature = KeyPair.sign(keyPair, payload);
+            const signature = KeyPair.sign(keyPair, payload, NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(signature).to.not.deep.equal(new Uint8Array(Signature_Size));
@@ -361,14 +362,14 @@ describe('key pair', () => {
 
         it('returns same signature for same data signed by same key pairs', () => {
             // Arrange:
-            const privateKey = convert.uint8ToHex(Crypto.randomBytes(Private_Key_Size));
-            const keyPair1 = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
-            const keyPair2 = KeyPair.createKeyPairFromPrivateKeyString(privateKey);
+            const privateKey = Convert.uint8ToHex(Crypto.randomBytes(Private_Key_Size));
+            const keyPair1 = KeyPair.createKeyPairFromPrivateKeyString(privateKey, NetworkType.MIJIN_TEST);
+            const keyPair2 = KeyPair.createKeyPairFromPrivateKeyString(privateKey, NetworkType.MIJIN_TEST);
             const payload = Crypto.randomBytes(100);
 
             // Act:
-            const signature1 = KeyPair.sign(keyPair1, payload);
-            const signature2 = KeyPair.sign(keyPair2, payload);
+            const signature1 = KeyPair.sign(keyPair1, payload, NetworkType.MIJIN_TEST);
+            const signature2 = KeyPair.sign(keyPair2, payload, NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(signature2).to.deep.equal(signature1);
@@ -381,22 +382,13 @@ describe('key pair', () => {
             const payload = Crypto.randomBytes(100);
 
             // Act:
-            const signature1 = KeyPair.sign(keyPair1, payload);
-            const signature2 = KeyPair.sign(keyPair2, payload);
+            const signature1 = KeyPair.sign(keyPair1, payload, NetworkType.MIJIN_TEST);
+            const signature2 = KeyPair.sign(keyPair2, payload, NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(signature2).to.not.deep.equal(signature1);
         });
 
-        it('cannot sign unsupported data type', () => {
-            // Arrange:
-            const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Keys[0]);
-
-            // Assert:
-            expect(() => {
-                KeyPair.sign(keyPair, {});
-            }).to.throw('unsupported data type');
-        });
     });
 
     describe('verify', () => {
@@ -404,10 +396,10 @@ describe('key pair', () => {
             // Arrange:
             const keyPair = randomKeyPair();
             const payload = Crypto.randomBytes(100);
-            const signature = KeyPair.sign(keyPair, payload);
+            const signature = KeyPair.sign(keyPair, payload, NetworkType.MIJIN_TEST);
 
             // Act:
-            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
+            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(isVerified).to.equal(true);
@@ -418,10 +410,10 @@ describe('key pair', () => {
             const keyPair1 = randomKeyPair();
             const keyPair2 = randomKeyPair();
             const payload = Crypto.randomBytes(100);
-            const signature = KeyPair.sign(keyPair1, payload);
+            const signature = KeyPair.sign(keyPair1, payload, NetworkType.MIJIN_TEST);
 
             // Act:
-            const isVerified = KeyPair.verify(keyPair2.publicKey, payload, signature);
+            const isVerified = KeyPair.verify(keyPair2.publicKey, payload, signature, NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(isVerified).to.equal(false);
@@ -433,11 +425,11 @@ describe('key pair', () => {
             const payload = Crypto.randomBytes(100);
 
             for (let i = 0; i < Signature_Size; i += 4) {
-                const signature = KeyPair.sign(keyPair, payload);
+                const signature = KeyPair.sign(keyPair, payload, NetworkType.MIJIN_TEST);
                 signature[i] ^= 0xFF;
 
                 // Act:
-                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
+                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, NetworkType.MIJIN_TEST);
 
                 // Assert:
                 expect(isVerified, `signature modified at ${i}`).to.equal(false);
@@ -450,11 +442,11 @@ describe('key pair', () => {
             const payload = Crypto.randomBytes(44);
 
             for (let i = 0; i < payload.length; i += 4) {
-                const signature = KeyPair.sign(keyPair, payload);
+                const signature = KeyPair.sign(keyPair, payload, NetworkType.MIJIN_TEST);
                 payload[i] ^= 0xFF;
 
                 // Act:
-                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
+                const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, NetworkType.MIJIN_TEST);
 
                 // Assert:
                 expect(isVerified, `payload modified at ${i}`).to.equal(false);
@@ -468,10 +460,10 @@ describe('key pair', () => {
             keyPair.publicKey[keyPair.publicKey.length - 1] = 1;
 
             const payload = Crypto.randomBytes(100);
-            const signature = KeyPair.sign(keyPair, payload);
+            const signature = KeyPair.sign(keyPair, payload, NetworkType.MIJIN_TEST);
 
             // Act:
-            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
+            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(isVerified).to.equal(false);
@@ -481,14 +473,14 @@ describe('key pair', () => {
             // Arrange:
             const keyPair = randomKeyPair();
             const payload = Crypto.randomBytes(100);
-            const signature = KeyPair.sign(keyPair, payload);
+            const signature = KeyPair.sign(keyPair, payload, NetworkType.MIJIN_TEST);
 
             for (let i = 0; i < keyPair.publicKey.length; ++i) {
                 keyPair.publicKey[i] ^= 0xFF;
             }
 
             // Act:
-            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
+            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(isVerified).to.equal(false);
@@ -500,10 +492,10 @@ describe('key pair', () => {
             keyPair.publicKey.fill(0);
 
             const payload = Crypto.randomBytes(100);
-            const signature = KeyPair.sign(keyPair, payload);
+            const signature = KeyPair.sign(keyPair, payload, NetworkType.MIJIN_TEST);
 
             // Act:
-            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature);
+            const isVerified = KeyPair.verify(keyPair.publicKey, payload, signature, NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(isVerified).to.equal(false);
@@ -528,15 +520,15 @@ describe('key pair', () => {
             // Arrange:
             const keyPair = randomKeyPair();
             const payload = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
-            const canonicalSignature = KeyPair.sign(keyPair, payload);
+            const canonicalSignature = KeyPair.sign(keyPair, payload, NetworkType.MIJIN_TEST);
 
             // this is signature with group order added to 'encodedS' part of signature
             const nonCanonicalSignature = canonicalSignature.slice();
             scalarAddGroupOrder(nonCanonicalSignature.subarray(32));
 
             // Act:
-            const isCanonicalVerified = KeyPair.verify(keyPair.publicKey, payload, canonicalSignature);
-            const isNonCanonicalVerified = KeyPair.verify(keyPair.privateKey, payload, nonCanonicalSignature);
+            const isCanonicalVerified = KeyPair.verify(keyPair.publicKey, payload, canonicalSignature, NetworkType.MIJIN_TEST);
+            const isNonCanonicalVerified = KeyPair.verify(keyPair.privateKey, payload, nonCanonicalSignature, NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(isCanonicalVerified).to.equal(true);
@@ -573,14 +565,14 @@ describe('key pair', () => {
             for (let i = 0; i < Private_Keys.length; ++i) {
                 // Arrange:
                 const inputData = dataTransform(Input_Data[i]);
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Keys[i]);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Keys[i], NetworkType.MIJIN_TEST);
 
                 // Act:
-                const signature = KeyPair.sign(keyPair, inputData);
+                const signature = KeyPair.sign(keyPair, inputData, NetworkType.MIJIN_TEST);
 
                 // Assert:
                 const message = `signing with ${Private_Keys[i]}`;
-                expect(convert.uint8ToHex(signature), message).equal(Expected_Signatures[i]);
+                expect(Convert.uint8ToHex(signature), message).equal(Expected_Signatures[i]);
             }
         }
 
@@ -591,7 +583,7 @@ describe('key pair', () => {
 
         it('can sign test vectors as binary', () => {
             // Assert:
-            assertCanSignTestVectors((data) => convert.hexToUint8(data));
+            assertCanSignTestVectors((data) => Convert.hexToUint8(data));
         });
 
         function assertCanVerifyTestVectors(dataTransform) {
@@ -602,11 +594,11 @@ describe('key pair', () => {
             for (let i = 0; i < Private_Keys.length; ++i) {
                 // Arrange:
                 const inputData = dataTransform(Input_Data[i]);
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Keys[i]);
-                const signature = KeyPair.sign(keyPair, inputData);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Keys[i], NetworkType.MIJIN_TEST);
+                const signature = KeyPair.sign(keyPair, inputData, NetworkType.MIJIN_TEST);
 
                 // Act:
-                const isVerified = KeyPair.verify(keyPair.publicKey, inputData, signature);
+                const isVerified = KeyPair.verify(keyPair.publicKey, inputData, signature, NetworkType.MIJIN_TEST);
 
                 // Assert:
                 const message = `verifying with ${Private_Keys[i]}`;
@@ -621,7 +613,7 @@ describe('key pair', () => {
 
         it('can verify test vectors as binary', () => {
             // Assert:
-            assertCanVerifyTestVectors((data) => convert.hexToUint8(data));
+            assertCanVerifyTestVectors((data) => Convert.hexToUint8(data));
         });
     });
 
@@ -636,7 +628,7 @@ describe('key pair', () => {
 
             // Act:
             expect(() => {
-                    KeyPair.deriveSharedKey(keyPair, publicKey, salt);
+                    KeyPair.deriveSharedKey(keyPair, publicKey, salt, NetworkType.MIJIN_TEST);
                 })
                 .to.throw('salt has unexpected size');
         });
@@ -648,8 +640,8 @@ describe('key pair', () => {
             const salt = Crypto.randomBytes(Salt_Size);
 
             // Act:
-            const sharedKey1 = KeyPair.deriveSharedKey(keyPair1, keyPair2.publicKey, salt);
-            const sharedKey2 = KeyPair.deriveSharedKey(keyPair2, keyPair1.publicKey, salt);
+            const sharedKey1 = KeyPair.deriveSharedKey(keyPair1, keyPair2.publicKey, salt, NetworkType.MIJIN_TEST);
+            const sharedKey2 = KeyPair.deriveSharedKey(keyPair2, keyPair1.publicKey, salt, NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(sharedKey1).to.deep.equal(sharedKey2);
@@ -663,8 +655,8 @@ describe('key pair', () => {
             const salt = Crypto.randomBytes(Salt_Size);
 
             // Act:
-            const sharedKey1 = KeyPair.deriveSharedKey(keyPair, publicKey1, salt);
-            const sharedKey2 = KeyPair.deriveSharedKey(keyPair, publicKey2, salt);
+            const sharedKey1 = KeyPair.deriveSharedKey(keyPair, publicKey1, salt, NetworkType.MIJIN_TEST);
+            const sharedKey2 = KeyPair.deriveSharedKey(keyPair, publicKey2, salt, NetworkType.MIJIN_TEST);
 
             // Assert:
             expect(sharedKey1).to.not.deep.equal(sharedKey2);
@@ -672,15 +664,16 @@ describe('key pair', () => {
 
         it('can derive deterministic shared key from well known inputs', () => {
             // Arrange:
-            const keyPair = KeyPair.createKeyPairFromPrivateKeyString('8F545C2816788AB41D352F236D80DBBCBC34705B5F902EFF1F1D88327C7C1300');
-            const publicKey = convert.hexToUint8('BF684FB1A85A8C8091EE0442EDDB22E51683802AFA0C0E7C6FE3F3E3E87A8D72');
-            const salt = convert.hexToUint8('422C39DF16AAE42A74A5597D6EE2D59CFB4EEB6B3F26D98425B9163A03DAA3B5');
+            const keyPair = KeyPair.createKeyPairFromPrivateKeyString(
+                '8F545C2816788AB41D352F236D80DBBCBC34705B5F902EFF1F1D88327C7C1300', NetworkType.MIJIN_TEST);
+            const publicKey = Convert.hexToUint8('BF684FB1A85A8C8091EE0442EDDB22E51683802AFA0C0E7C6FE3F3E3E87A8D72');
+            const salt = Convert.hexToUint8('422C39DF16AAE42A74A5597D6EE2D59CFB4EEB6B3F26D98425B9163A03DAA3B5');
 
             // Act:
-            const sharedKey = KeyPair.deriveSharedKey(keyPair, publicKey, salt);
+            const sharedKey = KeyPair.deriveSharedKey(keyPair, publicKey, salt, NetworkType.MIJIN_TEST);
 
             // Assert:
-            expect(convert.uint8ToHex(sharedKey)).to.equal('007FD607264C64C7BB83509E7CFA96E0FEAF34A373CDA75FACAA4DE9E141257B');
+            expect(Convert.uint8ToHex(sharedKey)).to.equal('007FD607264C64C7BB83509E7CFA96E0FEAF34A373CDA75FACAA4DE9E141257B');
         });
     });
 
@@ -725,12 +718,13 @@ describe('key pair', () => {
 
             for (let i = 0; i < Nis1_Private_Key.length; ++i) {
                 // Arrange:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Nis1_Private_Key[i], SignSchema.KECCAK_REVERSED_KEY);
+                const privateKey = Convert.uint8ToHex(Convert.hexToUint8Reverse(Nis1_Private_Key[i]));
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, NetworkType.TEST_NET);
                 const publicKey = Convert.hexToUint8(Nis1_Public_Keys[i]);
                 const salt = Convert.hexToUint8(Nis1_Salt[i]);
 
                 // Act:
-                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, salt, SignSchema.KECCAK_REVERSED_KEY));
+                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, salt, NetworkType.TEST_NET));
 
                 // Assert:
                 const message = ` from ${Nis1_Private_Key[i]}`;
@@ -780,12 +774,12 @@ describe('key pair', () => {
 
             for (let i = 0; i < Private_Key.length; ++i) {
                 // Arrange:
-                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Key[i]);
+                const keyPair = KeyPair.createKeyPairFromPrivateKeyString(Private_Key[i], NetworkType.MIJIN_TEST);
                 const publicKey = Convert.hexToUint8(Public_Keys[i]);
                 const salt = Convert.hexToUint8(Salt[i]);
 
                 // Act:
-                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, salt));
+                const sharedKey = Convert.uint8ToHex(KeyPair.deriveSharedKey(keyPair, publicKey, salt, NetworkType.MIJIN_TEST));
 
                 // Assert:
                 const message = ` from ${Private_Key[i]}`;

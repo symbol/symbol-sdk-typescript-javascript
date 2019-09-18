@@ -83,9 +83,10 @@ export abstract class Transaction {
      * Generate transaction hash hex
      * @param {string} transactionPayload HexString Payload
      * @param {Array<number>} generationHashBuffer Network generation hash byte
+     * @param {NetworkType} networkType Catapult network identifier
      * @returns {string} Returns Transaction Payload hash
      */
-    public static createTransactionHash(transactionPayload: string, generationHashBuffer: number[]): string {
+    public static createTransactionHash(transactionPayload: string, generationHashBuffer: number[], networkType: NetworkType): string {
         const byteBuffer = Array.from(Convert.hexToUint8(transactionPayload));
         const signingBytes = byteBuffer
             .slice(4, 36)
@@ -97,7 +98,7 @@ export abstract class Transaction {
 
         const hash = new Uint8Array(32);
 
-        SHA3Hasher.func(hash, signingBytes, 32);
+        SHA3Hasher.func(hash, signingBytes, 32, networkType);
 
         return Convert.uint8ToHex(hash);
     }
@@ -117,15 +118,14 @@ export abstract class Transaction {
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account - The account to sign the transaction
      * @param generationHash - Network generation hash hex
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {SignedTransaction}
      */
-    public signWith(account: Account, generationHash: string, signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
+    public signWith(account: Account, generationHash: string): SignedTransaction {
         const generationHashBytes = Array.from(Convert.hexToUint8(generationHash));
         const byteBuffer = Array.from(this.generateBytes());
         const signingBytes = generationHashBytes.concat(byteBuffer.slice(4 + 64 + 32));
-        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey, signSchema);
-        const signature = Array.from(KeyPair.sign(account, new Uint8Array(signingBytes), signSchema));
+        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey, account.networkType);
+        const signature = Array.from(KeyPair.sign(account, new Uint8Array(signingBytes), account.networkType));
         const signedTransactionBuffer = byteBuffer
             .splice(0, 4)
             .concat(signature)
@@ -135,7 +135,7 @@ export abstract class Transaction {
         const payload = Convert.uint8ToHex(signedTransactionBuffer);
         return new SignedTransaction(
             payload,
-            Transaction.createTransactionHash(payload, generationHashBytes),
+            Transaction.createTransactionHash(payload, generationHashBytes, account.networkType),
             account.publicKey,
             this.type,
             this.networkType);

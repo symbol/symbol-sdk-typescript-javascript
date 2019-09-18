@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { SignSchema } from '../../core/crypto/SignSchema';
 import { Convert, RawAddress } from '../../core/format';
 import { AccountAddressRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionModificationBuilder';
 import { AccountAddressRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountAddressRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { EmbeddedAccountAddressRestrictionTransactionBuilder }from '../../infrastructure/catbuffer/EmbeddedAccountAddressRestrictionTransactionBuilder';
+import {
+    EmbeddedAccountAddressRestrictionTransactionBuilder,
+} from '../../infrastructure/catbuffer/EmbeddedAccountAddressRestrictionTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
@@ -89,12 +90,10 @@ export class AccountAddressRestrictionTransaction extends Transaction {
      * Create a transaction object from payload
      * @param {string} payload Binary payload
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {Transaction | InnerTransaction}
      */
     public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false,
-                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedAccountAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
                         AccountAddressRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
@@ -113,7 +112,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountAddressRestrictionTransactionBuilder).fee.amount),
         );
         return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

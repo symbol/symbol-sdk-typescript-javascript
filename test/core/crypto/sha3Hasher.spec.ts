@@ -16,6 +16,7 @@
 import {expect} from 'chai';
 import {SHA3Hasher as sha3Hasher} from '../../../src/core/crypto/SHA3Hasher';
 import {Convert as convert} from '../../../src/core/format';
+import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 
 describe('hasher', () => {
     const inputs = [
@@ -24,7 +25,7 @@ describe('hasher', () => {
         '41FB',
         '1F877C',
         'C1ECFDFC',
-        '9F2FCC7C90DE090D6B87CD7E9718C1EA6CB21118FC2D5DE9F97E5DB6AC1E9C10'
+        '9F2FCC7C90DE090D6B87CD7E9718C1EA6CB21118FC2D5DE9F97E5DB6AC1E9C10',
     ];
 
     function addSha3Tests(length, expectedOutputs) {
@@ -41,7 +42,7 @@ describe('hasher', () => {
 
                     // Act:
                     const hash = new Uint8Array(length);
-                    sha3Hasher.func(hash, inputBuffer, length);
+                    sha3Hasher.func(hash, inputBuffer, length, NetworkType.MIJIN_TEST);
 
                     // Assert:
                     expect(convert.uint8ToHex(hash), `hashing ${inputHex}`).equal(expectedHash);
@@ -60,7 +61,7 @@ describe('hasher', () => {
                     const inputBuffer = convert.hexToUint8(inputHex);
                     const expectedHash = expectedOutputs[i];
 
-                    const hasher = sha3Hasher.createHasher(length);
+                    const hasher = sha3Hasher.createHasher(length, NetworkType.MIJIN_TEST);
                     hasher.reset();
 
                     // Act: hash the input in two parts
@@ -80,7 +81,7 @@ describe('hasher', () => {
                 const inputHex = inputs[3];
                 const expectedHash = expectedOutputs[3];
 
-                const hasher = sha3Hasher.createHasher(length);
+                const hasher = sha3Hasher.createHasher(length, NetworkType.MIJIN_TEST);
                 hasher.reset();
 
                 // Act:
@@ -95,7 +96,7 @@ describe('hasher', () => {
 
             it('cannot hash unsupported data type', () => {
                 // Arrange:
-                const hasher = sha3Hasher.createHasher(length);
+                const hasher = sha3Hasher.createHasher(length, NetworkType.MIJIN_TEST);
                 hasher.reset();
 
                 // Act:
@@ -107,7 +108,7 @@ describe('hasher', () => {
                 const inputHex = inputs[3];
                 const expectedHash = expectedOutputs[3];
 
-                const hasher = sha3Hasher.createHasher(length);
+                const hasher = sha3Hasher.createHasher(length, NetworkType.MIJIN_TEST);
                 hasher.reset();
                 hasher.update('ABCD');
 

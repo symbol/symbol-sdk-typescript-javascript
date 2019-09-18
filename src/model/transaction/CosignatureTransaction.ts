@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyPair, SignSchema } from '../../core/crypto';
+import { KeyPair } from '../../core/crypto';
 import { Convert } from '../../core/format/Convert';
 import {Account} from '../account/Account';
 import {AggregateTransaction} from './AggregateTransaction';
@@ -50,19 +50,18 @@ export class CosignatureTransaction {
      * @param account - The signing account
      * @param payload - off transaction payload (aggregated transaction is unannounced)
      * @param generationHash - Network generation hash
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {CosignatureSignedTransaction}
      */
     public static signTransactionPayload(account: Account,
                                          payload: string,
-                                         generationHash: string,
-                                         signSchema: SignSchema = SignSchema.SHA3): CosignatureSignedTransaction {
+                                         generationHash: string): CosignatureSignedTransaction {
         /**
          * For aggregated complete transaction, cosignatories are gathered off chain announced.
          */
-        const transactionHash = Transaction.createTransactionHash(payload, Array.from(Convert.hexToUint8(generationHash)));
+        const transactionHash =
+            Transaction.createTransactionHash(payload, Array.from(Convert.hexToUint8(generationHash)), account.networkType);
         const hashBytes = Convert.hexToUint8(transactionHash);
-        const signature = KeyPair.sign(account, new Uint8Array(hashBytes), signSchema);
+        const signature = KeyPair.sign(account, new Uint8Array(hashBytes), account.networkType);
         return new CosignatureSignedTransaction(
             Convert.uint8ToHex(hashBytes),
             Convert.uint8ToHex(signature),
@@ -74,16 +73,15 @@ export class CosignatureTransaction {
      * @internal
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {CosignatureSignedTransaction}
      */
-    public signWith(account: Account, signSchema: SignSchema = SignSchema.SHA3): CosignatureSignedTransaction {
+    public signWith(account: Account): CosignatureSignedTransaction {
         if (!this.transactionToCosign.transactionInfo!.hash) {
             throw new Error('Transaction to cosign should be announced first');
         }
         const hash = this.transactionToCosign.transactionInfo!.hash;
         const hashBytes = Convert.hexToUint8(hash ? hash : '');
-        const signature = KeyPair.sign(account, new Uint8Array(hashBytes), signSchema);
+        const signature = KeyPair.sign(account, new Uint8Array(hashBytes), account.networkType);
         return new CosignatureSignedTransaction(
             hash ? hash : '',
             Convert.uint8ToHex(signature),

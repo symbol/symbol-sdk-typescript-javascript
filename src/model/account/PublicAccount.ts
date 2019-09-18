@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyPair, SignSchema } from '../../core/crypto';
+import { KeyPair } from '../../core/crypto';
 import { Convert as convert} from '../../core/format';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Address } from './Address';
@@ -47,14 +47,13 @@ export class PublicAccount {
      * Create a PublicAccount from a public key and network type.
      * @param publicKey Public key
      * @param networkType Network type
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {PublicAccount}
      */
-    static createFromPublicKey(publicKey: string, networkType: NetworkType, signSchema = SignSchema.SHA3): PublicAccount {
+    static createFromPublicKey(publicKey: string, networkType: NetworkType): PublicAccount {
         if (publicKey == null || (publicKey.length !== 64 && publicKey.length !== 66)) {
             throw new Error('Not a valid public key');
         }
-        const address = Address.createFromPublicKey(publicKey, networkType, signSchema);
+        const address = Address.createFromPublicKey(publicKey, networkType);
         return new PublicAccount(publicKey, address);
     }
 
@@ -63,10 +62,9 @@ export class PublicAccount {
      *
      * @param {string} data - The data to verify.
      * @param {string} signature - The signature to verify.
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {boolean}  - True if the signature is valid, false otherwise.
      */
-    public verifySignature(data: string, signature: string, signSchema: SignSchema = SignSchema.SHA3): boolean {
+    public verifySignature(data: string, signature: string): boolean {
         if (!signature) {
             throw new Error('Missing argument');
         }
@@ -84,7 +82,7 @@ export class PublicAccount {
         // Convert to Uint8Array
         const convertedData = convert.hexToUint8(convert.utf8ToHex(data));
 
-        return KeyPair.verify(convert.hexToUint8(this.publicKey), convertedData, convertedSignature, signSchema);
+        return KeyPair.verify(convert.hexToUint8(this.publicKey), convertedData, convertedSignature, this.address.networkType);
     }
 
     /**
@@ -92,7 +90,7 @@ export class PublicAccount {
      * @param publicAccount
      * @returns {boolean}
      */
-    equals(publicAccount: PublicAccount) {
+    equals(publicAccount: PublicAccount): boolean {
         return this.publicKey === publicAccount.publicKey && this.address.plain() === publicAccount.address.plain();
     }
 
