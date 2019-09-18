@@ -112,13 +112,12 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 mosaicId: (transaction as MosaicAliasTransaction).mosaicId.toHex(),
             };
         case TransactionType.MOSAIC_DEFINITION:
-            const properties = (transaction as MosaicDefinitionTransaction).mosaicProperties.toDTO();
             return {
                 nonce: (transaction as MosaicDefinitionTransaction).nonce,
                 mosaicId: (transaction as MosaicDefinitionTransaction).mosaicId.toHex(),
-                flags: properties.flags,
-                divisibility: properties.divisibility,
-                duration: properties.duration,
+                flags: (transaction as MosaicDefinitionTransaction).flags.getValue(),
+                divisibility: (transaction as MosaicDefinitionTransaction).divisibility,
+                duration: (transaction as MosaicDefinitionTransaction).duration.toString(),
             };
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
             return {

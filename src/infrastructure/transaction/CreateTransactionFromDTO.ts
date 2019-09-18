@@ -20,8 +20,8 @@ import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
 import {Id} from '../../model/Id';
 import {Mosaic} from '../../model/mosaic/Mosaic';
+import {MosaicFlags} from '../../model/mosaic/MosaicFlags';
 import {MosaicId} from '../../model/mosaic/MosaicId';
-import {MosaicProperties} from '../../model/mosaic/MosaicProperties';
 import {NamespaceId} from '../../model/namespace/NamespaceId';
 import {AccountAddressRestrictionTransaction} from '../../model/transaction/AccountAddressRestrictionTransaction';
 import { AccountLinkTransaction } from '../../model/transaction/AccountLinkTransaction';
@@ -163,11 +163,9 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.nonce,
             new MosaicId(transactionDTO.id),
-            new MosaicProperties(
-                transactionDTO.flags,
-                transactionDTO.divisibility,
-                UInt64.fromNumericString(transactionDTO.duration),
-            ),
+            new MosaicFlags(transactionDTO.flags),
+            transactionDTO.divisibility,
+            UInt64.fromNumericString(transactionDTO.duration),
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
                             extractNetworkType(transactionDTO.version)) : undefined,

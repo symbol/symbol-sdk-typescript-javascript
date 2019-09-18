@@ -28,10 +28,9 @@ import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
-import { MosaicFlags } from '../mosaic/MosaicFlag';
+import { MosaicFlags } from '../mosaic/MosaicFlags';
 import { MosaicId } from '../mosaic/MosaicId';
 import { MosaicNonce } from '../mosaic/MosaicNonce';
-import { MosaicProperties } from '../mosaic/MosaicProperties';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
@@ -51,7 +50,9 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @param deadline - The deadline to include the transaction.
      * @param nonce - The mosaic nonce ex: MosaicNonce.createRandom().
      * @param mosaicId - The mosaic id ex: new MosaicId([481110499, 231112638]).
-     * @param mosaicProperties - The mosaic properties.
+     * @param flags - The mosaic flags.
+     * @param divisibility - The mosaic divicibility.
+     * @param duration - The mosaic duration.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicDefinitionTransaction}
@@ -59,7 +60,9 @@ export class MosaicDefinitionTransaction extends Transaction {
     public static create(deadline: Deadline,
                          nonce: MosaicNonce,
                          mosaicId: MosaicId,
-                         mosaicProperties: MosaicProperties,
+                         flags: MosaicFlags,
+                         divisibility: number,
+                         duration: UInt64,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): MosaicDefinitionTransaction {
         return new MosaicDefinitionTransaction(networkType,
@@ -68,7 +71,9 @@ export class MosaicDefinitionTransaction extends Transaction {
             maxFee,
             nonce,
             mosaicId,
-            mosaicProperties,
+            flags,
+            divisibility,
+            duration,
         );
     }
 
@@ -99,7 +104,15 @@ export class MosaicDefinitionTransaction extends Transaction {
                 /**
                  * The mosaic properties.
                  */
-                public readonly mosaicProperties: MosaicProperties,
+                public readonly flags: MosaicFlags,
+                /**
+                 * Mosaic divisibility
+                 */
+                public readonly divisibility: number,
+                /**
+                 * Mosaic duration, 0 value for eternal mosaic
+                 */
+                public readonly duration: UInt64 = UInt64.fromUint(0),
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
@@ -125,13 +138,12 @@ export class MosaicDefinitionTransaction extends Transaction {
                 (builder as MosaicDefinitionTransactionBuilder).getDeadline().timestamp),
             new MosaicNonce(builder.getNonce().serialize()),
             new MosaicId(builder.getId().mosaicId),
-            MosaicProperties.create({
-                supplyMutable: (builder.getFlags() & 1) === 1,
-                transferable: (builder.getFlags() & 2) === 2,
-                divisibility: builder.getDivisibility(),
-                restrictable: (builder.getFlags() & 4) === 4,
-                duration: new UInt64(builder.getDuration().blockDuration),
-            }),
+            MosaicFlags.create(
+                (builder.getFlags() & 1) === 1,
+                (builder.getFlags() & 2) === 2,
+                (builder.getFlags() & 4) === 4),
+            builder.getDivisibility(),
+            new UInt64(builder.getDuration().blockDuration),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicDefinitionTransactionBuilder).fee.amount),
         );
@@ -161,28 +173,6 @@ export class MosaicDefinitionTransaction extends Transaction {
     }
 
     /**
-     * @description get the calculated mosaic flag value
-     * @returns {number}
-     * @memberof MosaicDefinitionTransaction
-     */
-    public getMosaicFlagValue(): number {
-        let flag = MosaicFlags.NONE;
-        if (this.mosaicProperties.supplyMutable === true) {
-            flag += MosaicFlags.SUPPLY_MUTABLE;
-        }
-
-        if (this.mosaicProperties.transferable === true) {
-            flag += MosaicFlags.TRANSFERABLE;
-        }
-
-        if (this.mosaicProperties.restrictable === true) {
-            flag += MosaicFlags.RESTRICTABLE;
-        }
-
-        return flag.valueOf();
-    }
-
-    /**
      * @description Get mosaic nonce int value
      * @returns {number}
      * @memberof MosaicDefinitionTransaction
@@ -208,10 +198,9 @@ export class MosaicDefinitionTransaction extends Transaction {
             new TimestampDto(this.deadline.toDTO()),
             new MosaicNonceDto(this.getMosaicNonceIntValue()),
             new MosaicIdDto(this.mosaicId.id.toDTO()),
-            this.getMosaicFlagValue(),
-            this.mosaicProperties.divisibility,
-            new BlockDurationDto(this.mosaicProperties.duration ?
-                    this.mosaicProperties.duration.toDTO() : UInt64.fromUint(0).toDTO()),
+            this.flags.getValue(),
+            this.divisibility,
+            new BlockDurationDto(this.duration.toDTO()),
         );
         return transactionBuilder.serialize();
     }
@@ -227,10 +216,9 @@ export class MosaicDefinitionTransaction extends Transaction {
             TransactionType.MOSAIC_DEFINITION.valueOf(),
             new MosaicNonceDto(this.getMosaicNonceIntValue()),
             new MosaicIdDto(this.mosaicId.id.toDTO()),
-            this.getMosaicFlagValue(),
-            this.mosaicProperties.divisibility,
-            new BlockDurationDto(this.mosaicProperties.duration ?
-                    this.mosaicProperties.duration.toDTO() : UInt64.fromUint(0).toDTO()),
+            this.flags.getValue(),
+            this.divisibility,
+            new BlockDurationDto(this.duration.toDTO()),
         );
         return transactionBuilder.serialize();
     }

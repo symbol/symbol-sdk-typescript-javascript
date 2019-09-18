@@ -23,9 +23,9 @@ import { AccountRestrictionType } from '../../src/model/account/AccountRestricti
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { MosaicProperties } from '../../src/model/mosaic/MosaicProperties';
 import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
@@ -174,13 +174,9 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(),
             new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
-            MosaicProperties.create({
-                supplyMutable: true,
-                transferable: true,
-                divisibility: 5,
-                restrictable: true,
-                duration: UInt64.fromUint(1000),
-            }),
+            MosaicFlags.create(true, true, true),
+            5,
+            UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
         );
 
@@ -198,12 +194,9 @@ describe('SerializeTransactionToJSON', () => {
             Deadline.create(),
             new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
-            MosaicProperties.create({
-                supplyMutable: true,
-                transferable: false,
-                divisibility: 3,
-                duration: UInt64.fromUint(0),
-            }),
+            MosaicFlags.create(true, false),
+            3,
+            UInt64.fromUint(0),
             NetworkType.MIJIN_TEST,
         );
 

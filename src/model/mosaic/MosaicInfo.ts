@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {PublicAccount} from '../account/PublicAccount';
-import {UInt64} from '../UInt64';
-import {MosaicId} from './MosaicId';
-import {MosaicProperties} from './MosaicProperties';
+import { PublicAccount } from '../account/PublicAccount';
+import { UInt64 } from '../UInt64';
+import { MosaicFlags } from './MosaicFlags';
+import { MosaicId } from './MosaicId';
 
 /**
  * The mosaic info structure describes a mosaic.
@@ -55,26 +55,18 @@ export class MosaicInfo {
                  */
                 public readonly revision: number,
                 /**
-                 * The mosaic properties.
+                 * The mosaic flags.
                  */
-                private readonly properties: MosaicProperties,
+                public readonly flags: MosaicFlags,
+                /**
+                 * Mosaic divisibility
+                 */
+                public readonly divisibility: number,
+                /**
+                 * Mosaic duration
+                 */
+                public readonly duration: UInt64,
             ) {
-    }
-
-    /**
-     * Mosaic divisibility
-     * @returns {number}
-     */
-    public get divisibility(): number {
-        return this.properties.divisibility;
-    }
-
-    /**
-     * Mosaic duration
-     * @returns {UInt64}
-     */
-    public get duration(): UInt64 {
-        return this.properties.duration;
     }
 
     /**
@@ -82,7 +74,7 @@ export class MosaicInfo {
      * @returns {boolean}
      */
     public isSupplyMutable(): boolean {
-        return this.properties.supplyMutable;
+        return this.flags.supplyMutable;
     }
 
     /**
@@ -90,7 +82,7 @@ export class MosaicInfo {
      * @returns {boolean}
      */
     public isTransferable(): boolean {
-        return this.properties.transferable;
+        return this.flags.transferable;
     }
 
     /**
@@ -98,6 +90,6 @@ export class MosaicInfo {
      * @returns {boolean}
      */
     public isRestrictable(): boolean {
-        return this.properties.restrictable;
+        return this.flags.restrictable;
     }
 }

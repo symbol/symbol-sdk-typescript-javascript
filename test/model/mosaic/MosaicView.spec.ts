@@ -17,9 +17,9 @@
 import {expect} from 'chai';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicInfo} from '../../../src/model/mosaic/MosaicInfo';
-import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
 import {UInt64} from '../../../src/model/UInt64';
 import {MosaicView} from '../../../src/service/MosaicView';
 
@@ -34,13 +34,9 @@ describe('MosaicView', () => {
             new UInt64([1, 0]), // height
             PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF', NetworkType.MIJIN_TEST),
             1, // revision
-            MosaicProperties.create({
-                supplyMutable: true,
-                transferable: true,
-                divisibility: 2,
-                restrictable: true,
-                duration: UInt64.fromUint(1000),
-            }));
+            MosaicFlags.create(true, true, true),
+            2,
+            UInt64.fromUint(1000));
     });
 
     it('should createComplete a Mosaic View', () => {
