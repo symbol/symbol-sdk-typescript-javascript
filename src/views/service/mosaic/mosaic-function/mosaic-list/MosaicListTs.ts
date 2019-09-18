@@ -36,11 +36,6 @@ export class MosaicListTs extends Vue {
         return this.activeAccount.mosaics
     }
 
-    // get
-    get mosaicsLoading() {
-        return this.app.mosaicsLoading
-    }
-
     get currentXEM1() {
         return this.activeAccount.currentXEM1
     }
@@ -67,6 +62,10 @@ export class MosaicListTs extends Vue {
 
     get nowBlockHeihgt() {
         return this.app.chainStatus.currentHeight
+    }
+
+    get mosaicsLoading() {
+        return this.app.mosaicsLoading
     }
 
     get namespaceMap() {

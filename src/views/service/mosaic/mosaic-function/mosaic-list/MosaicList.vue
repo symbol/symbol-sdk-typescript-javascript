@@ -1,6 +1,5 @@
 <template>
   <div class="mosaicList secondary_page_animate">
-    <Spin v-if="mosaicsLoading" size="large" fix class="absolute"></Spin>
     <div class="mosaicListBody scroll">
       <div class="listTit">
         <Row>
@@ -16,7 +15,7 @@
           <Col span="2"></Col>
         </Row>
       </div>
-      <Spin v-if="false" size="large" fix class="absolute"></Spin>
+      <Spin v-if="mosaicsLoading" size="large" fix class="absolute"></Spin>
       <div class="no_data" v-if="false">{{$t('no_data')}}</div>
       <div
               v-for="(value, key) in filteredMosaics"

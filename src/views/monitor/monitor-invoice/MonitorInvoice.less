@@ -1,0 +1,174 @@
+.qr_content {
+  margin-top: 15px;
+  height: calc(100% - 70px);
+
+  .left_container {
+    display: flex;
+    width: 880px;
+    height: 390px;
+    background-color: white;
+    float: left;
+    .qr_info {
+      margin-top: 90px;
+      margin-left: 30px;
+      width: 580px;
+      display: flex;
+      flex-direction: column;
+      height: auto;
+    }
+    .amount {
+      font-size: 20px;
+      color: #20B5AC;
+    }
+
+    img {
+      margin-left: 60px;
+      margin-top: 80px;
+      width: 200px;
+      height: 200px;
+    }
+
+    .address_text {
+      margin-top: 15px;
+      color: #222222;
+      width: 560px;
+    }
+    .notes {
+      width: 560px;
+      min-height: 75px;
+      word-wrap:break-word;
+    }
+
+    .qr_button {
+      display: flex;
+      width: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      span {
+        color: white;
+        line-height: 40px;
+        text-align: center;
+        font-size: 14px;
+        display: inline-block;
+        width: 120px;
+        height: 40px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        background-color: #20B5AC;
+      }
+    }
+  }
+
+  .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
+  .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+    padding-left: 20px;
+  }
+
+  textarea {
+    padding: 10px 20px;
+  }
+  .modal {
+    float: left;
+    margin-top: 4px;
+    height: calc(100% - 394px);
+    width: 880px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    .modal_title {
+      height: 70px;
+      width: 100%;
+      border-bottom: 1px solid #eee;
+      padding-left:30px;
+      line-height: 70px;
+      font-size: 15px;
+      color: #222222;
+    }
+    .asset {
+      position: relative;
+      margin-top: 50px;
+      display: flex;
+      line-height: 43px;
+      font-size: 12px;
+      .title {
+        display: block;
+        width: 120px;
+        height: 100%;
+        text-align: right;
+        margin-left: 50px;
+      }
+      .asset_type {
+        padding: 1px;
+        position: absolute;
+        top: 0px;
+        left: 204px;
+        border:1px solid #ccc;
+        border-radius: 2px;
+        outline: none;
+        width: 240px;
+        height: 46px;
+        padding-top: 10px;
+        font-size: 12px;
+      }
+      input {
+        outline: none;
+        box-shadow:none;
+      }
+      .amount_input {
+        font-size: 12px;
+        padding-left: 10px;
+        width: 280px;
+        height: 46px;
+        outline: none;
+        margin-left: 315px;
+        border-radius: 4px;
+        border:1px solid #ccc;
+      }
+    }
+    .remark {
+      position: relative;
+      margin-top:30px;
+      display: flex;
+      line-height: 76px;
+      .title {
+        display: block;
+        width: 120px;
+        height: 100%;
+        text-align: right;
+        margin-left: 50px;
+      }
+      textarea {
+        position: absolute;
+        top: 10px;
+        left: 188px;
+        width: 560px;
+        height: 76px;
+        margin-left: 15px;
+        border:1px solid #ccc;
+        overflow: auto;
+        line-height: 30px;
+      }
+    }
+    .remark_length{
+      position: absolute;
+      top: 28px;
+      left: 770px;
+    }
+    .send_button {
+      width: 160px;
+      height: 50px;
+      margin: 40px auto;
+      border: 1px solid #20B5AC;
+      background-color: #20B5AC;
+      border-radius: 25px;
+      text-align: center;
+      line-height: 50px;
+      font-size: 12px;
+      color: #fff;
+    }
+  }
+}
+
+

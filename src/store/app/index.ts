@@ -36,10 +36,10 @@ export default {
             signerPublicKey: '',
             nodeAmount: 4
         },
-        mosaicsLoading: false,
+        mosaicsLoading: true,
         balanceLoading: false,
         transactionsLoading: false,
-        namespaceLoading: false,
+        namespaceLoading: true,
         xemUsdPrice: 0
     },
     getters: {},

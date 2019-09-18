@@ -28,10 +28,10 @@ const routers = [
                         // @ts-ignore
                         component: () => import('@/views/monitor/monitor-transfer/MonitorTransfer.vue')
                     }, {
-                        path: '/receipt',
-                        name: 'receipt',
+                        path: '/invoice',
+                        name: 'invoice',
                         // @ts-ignore
-                        component: () => import('@/views/monitor/monitor-receipt/MonitorReceipt.vue')
+                        component: () => import('@/views/monitor/monitor-invoice/MonitorInvoice.vue')
                     }, {
                         path: '/remote',
                         name: 'remote',

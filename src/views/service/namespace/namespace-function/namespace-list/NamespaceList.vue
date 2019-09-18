@@ -16,7 +16,7 @@
         <span class="type">{{$t('type')}}</span>
         <span class="more"></span>
       </div>
-
+      <Spin v-if="mosaicsLoading" size="large" fix class="absolute"></Spin>
       <div class="table_body">
         <div class="table_body_item radius" v-if="n" v-for="n in namespaceList">
           <span class="namesapce_name overflow_ellipsis">{{n.label}}</span>

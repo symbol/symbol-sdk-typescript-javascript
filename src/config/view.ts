@@ -216,9 +216,9 @@ export const monitorPanelNavigatorList = [
         path: 'transfer'
     },
     {
-        name: 'receive',
+        name: 'Invoice',
         isSelect: false,
-        path: 'receipt'
+        path: 'invoice'
     },
 
     {

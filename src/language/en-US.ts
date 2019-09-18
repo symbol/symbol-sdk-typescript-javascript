@@ -144,7 +144,7 @@ export const en_US = {
     QR_code_generation_failed: 'QR code generation failed',
     //monitor-remote
     Remote_title_recipt: 'Accumulated delegated harvesting income',
-    select_all:'Select all',
+    select_all: 'Select all',
     Remote_state: 'Current state',
     Remote_pubulic_pik: 'Remote public key',
     Remote_question: 'Related issues',
@@ -171,7 +171,7 @@ export const en_US = {
     remote_modal_place2: 'Please enter your wallet password',
     Unlink_now: 'Unlink now',
     Link_now: 'Link now',
-    Accumulated_delegated_harvesting_income_is_not_yet_open:' Accumulated delegated harvesting income is not yet open',
+    Accumulated_delegated_harvesting_income_is_not_yet_open: ' Accumulated delegated harvesting income is not yet open',
     //monitor-relogin
     welcome_back_to_the_CATAPULT_beta: 'WELCOME BACK TO THE CATAPULT BETA',
     welcome_to_the_CATAPULT_beta: 'WELCOME TO USE THE CATAPULT BETA',
@@ -217,7 +217,7 @@ export const en_US = {
     canel: 'Cancel',
 
     //setting-panel
-    change_password:'Change password',
+    change_password: 'Change password',
     general_settings: 'General settings',
     lock_password: 'Lock password',
     network_settings: 'Network settings',
@@ -668,10 +668,10 @@ export const en_US = {
     LABEL_confirm_password: 'Confirm your new password',
     PLACEHOLDER_confirm_password: 'Confirm new  password',
     cipher: 'Cipher',
-
+    Please_enter_the_correct_number: 'Please enter the correct number',
     HINT_cipher_hint1: 'Should be between 1 and 32 chars.',
 
-    PLACEHOLDER_cipher_hint:'Enter hint',
+    PLACEHOLDER_cipher_hint: 'Enter hint',
     amount: 'Amount',
     Node_connection_succeeded: 'Node connection succeeded',
 
@@ -686,10 +686,16 @@ export const en_US = {
     encryption: 'Encrypted',
     Not_encrypted: 'Not encrypted',
     all_unchecked: 'Uncheck all',
-    Display_expired_mosaic:'Display expired mosaics',
-    Hide_expired_mosaic:'Hide expired mosaics',
-    Control:'Control',
-    unbind_alias:'unbind alias',
-    Restrictable:'Restrictable'
-
+    Display_expired_mosaic: 'Display expired mosaics',
+    Hide_expired_mosaic: 'Hide expired mosaics',
+    Please_enter_notes: 'Please enter remarks',
+    Invoice: 'Invoice',
+    Please_enter_the_amount_of_transfer: 'Please enter the amount of transfer',
+    Notes_should_not_exceed_25_character: 'Notes should not exceed 25 Characters',
+    please_choose_mosaic: 'Please choose mosaic',
+    Control: 'Control',
+    unbind_alias: 'Unbind alias',
+    Restrictable: 'Restrictable',
+    Please_enter_mosaic_hex_or_alias: 'Please enter mosaic hex or @mosaic alias (@nem.xem)',
+    mosaic_alias_not_exist:'Mosaic alias not exist'
 }
