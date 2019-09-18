@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import {expect} from 'chai';
-import { SignSchema } from '../../../src/core/crypto';
 import {
     Convert as convert,
     RawAddress as address,
@@ -22,8 +21,6 @@ import {
 import { NetworkType } from '../../../src/model/model';
 
 const Address_Decoded_Size = 25;
-const Network_Mijin_Identifier = 0x60;
-const Network_Public_Test_Identifier = 0x98;
 
 describe('address', () => {
     describe('stringToAddress', () => {
@@ -43,7 +40,7 @@ describe('address', () => {
             const decoded = address.stringToAddress(encoded);
 
             // Assert:
-            expect(address.isValidAddress(decoded)).to.equal(true);
+            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
 
@@ -51,7 +48,7 @@ describe('address', () => {
             // Assert:
             assertCannotCreateAddress(
                 'NC5J5DI2URIC4H3T3IMXQS25PWQWZIPEV6EV7LASABCDEFGH',
-                'NC5J5DI2URIC4H3T3IMXQS25PWQWZIPEV6EV7LASABCDEFGH does not represent a valid encoded address'
+                'NC5J5DI2URIC4H3T3IMXQS25PWQWZIPEV6EV7LASABCDEFGH does not represent a valid encoded address',
             );
         });
 
@@ -84,25 +81,25 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('3485D98EFD7EB07ADAFCFD1A157D89DE2796A95E780813C0258AF3F5F84ED8CB');
 
             // Act:
-            const decoded = address.publicKeyToAddress(publicKey, Network_Mijin_Identifier);
+            const decoded = address.publicKeyToAddress(publicKey, NetworkType.MIJIN);
 
             // Assert:
-            expect(decoded[0]).to.equal(Network_Mijin_Identifier);
-            expect(address.isValidAddress(decoded)).to.equal(true);
+            expect(decoded[0]).to.equal(NetworkType.MIJIN);
+            expect(address.isValidAddress(decoded, NetworkType.MIJIN)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
 
         it('can create address from public key for custom network', () => {
             // Arrange:
-            const expectedHex = '9823BB7C3C089D996585466380EDBDC19D495918484BF7E997';
+            const expectedHex = '9023BB7C3C089D996585466380EDBDC19D495918486F4F86A7';
             const publicKey = convert.hexToUint8('3485D98EFD7EB07ADAFCFD1A157D89DE2796A95E780813C0258AF3F5F84ED8CB');
 
             // Act:
-            const decoded = address.publicKeyToAddress(publicKey, Network_Public_Test_Identifier);
+            const decoded = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
 
             // Assert:
-            expect(decoded[0]).to.equal(Network_Public_Test_Identifier);
-            expect(address.isValidAddress(decoded)).to.equal(true);
+            expect(decoded[0]).to.equal(NetworkType.MIJIN_TEST);
+            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(expectedHex);
         });
 
@@ -111,11 +108,11 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('3485D98EFD7EB07ADAFCFD1A157D89DE2796A95E780813C0258AF3F5F84ED8CB');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey, Network_Mijin_Identifier);
-            const decoded2 = address.publicKeyToAddress(publicKey, Network_Mijin_Identifier);
+            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
+            const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
 
             // Assert:
-            expect(address.isValidAddress(decoded1)).to.equal(true);
+            expect(address.isValidAddress(decoded1, NetworkType.MIJIN_TEST)).to.equal(true);
             expect(decoded1).to.deep.equal(decoded2);
         });
 
@@ -125,12 +122,12 @@ describe('address', () => {
             const publicKey2 = convert.hexToUint8('b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey1, Network_Mijin_Identifier);
-            const decoded2 = address.publicKeyToAddress(publicKey2, Network_Mijin_Identifier);
+            const decoded1 = address.publicKeyToAddress(publicKey1, NetworkType.MIJIN_TEST);
+            const decoded2 = address.publicKeyToAddress(publicKey2, NetworkType.MIJIN_TEST);
 
             // Assert:
-            expect(address.isValidAddress(decoded1)).to.equal(true);
-            expect(address.isValidAddress(decoded2)).to.equal(true);
+            expect(address.isValidAddress(decoded1, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded2, NetworkType.MIJIN_TEST)).to.equal(true);
             expect(decoded1).to.not.deep.equal(decoded2);
         });
 
@@ -139,12 +136,12 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf');
 
             // Act:
-            const decoded1 = address.publicKeyToAddress(publicKey, Network_Mijin_Identifier);
-            const decoded2 = address.publicKeyToAddress(publicKey, Network_Public_Test_Identifier);
+            const decoded1 = address.publicKeyToAddress(publicKey, NetworkType.MIJIN_TEST);
+            const decoded2 = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
 
             // Assert:
-            expect(address.isValidAddress(decoded1)).to.equal(true);
-            expect(address.isValidAddress(decoded2)).to.equal(true);
+            expect(address.isValidAddress(decoded1, NetworkType.MIJIN_TEST)).to.equal(true);
+            expect(address.isValidAddress(decoded2, NetworkType.TEST_NET)).to.equal(true);
             expect(decoded1).to.not.deep.equal(decoded2);
         });
 
@@ -154,11 +151,11 @@ describe('address', () => {
             const publicKey = convert.hexToUint8('3485D98EFD7EB07ADAFCFD1A157D89DE2796A95E780813C0258AF3F5F84ED8CB');
 
             // Act:
-            const decoded = address.publicKeyToAddress(publicKey, Network_Public_Test_Identifier, 1);
+            const decoded = address.publicKeyToAddress(publicKey, NetworkType.TEST_NET);
 
             // Assert:
-            expect(decoded[0]).to.equal(Network_Public_Test_Identifier);
-            expect(address.isValidAddress(decoded, SignSchema.KECCAK_REVERSED_KEY)).to.equal(true);
+            expect(decoded[0]).to.equal(NetworkType.TEST_NET);
+            expect(address.isValidAddress(decoded, NetworkType.TEST_NET)).to.equal(true);
             expect(convert.uint8ToHex(decoded)).to.equal(keccakHex);
             expect(convert.uint8ToHex(decoded)).not.to.equal(nonKeccakHex);
         });
@@ -171,7 +168,7 @@ describe('address', () => {
             const decoded = convert.hexToUint8(validHex);
 
             // Assert:
-            expect(address.isValidAddress(decoded)).to.equal(true);
+            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(true);
         });
 
         it('returns false for address with invalid checksum', () => {
@@ -181,7 +178,7 @@ describe('address', () => {
             decoded[Address_Decoded_Size - 1] ^= 0xff; // ruin checksum
 
             // Assert:
-            expect(address.isValidAddress(decoded)).to.equal(false);
+            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(false);
         });
 
         it('returns false for address with invalid hash', () => {
@@ -191,7 +188,7 @@ describe('address', () => {
             decoded[5] ^= 0xff; // ruin ripemd160 hash
 
             // Assert:
-            expect(address.isValidAddress(decoded)).to.equal(false);
+            expect(address.isValidAddress(decoded, NetworkType.MIJIN_TEST)).to.equal(false);
         });
     });
 
@@ -201,7 +198,7 @@ describe('address', () => {
             const encoded = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDFG';
 
             // Assert:
-            expect(address.isValidEncodedAddress(encoded)).to.equal(true);
+            expect(address.isValidEncodedAddress(encoded, NetworkType.MIJIN_TEST)).to.equal(true);
         });
 
         it('returns false for invalid encoded address', () => {
@@ -209,7 +206,7 @@ describe('address', () => {
             const encoded = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDFH';
 
             // Assert:
-            expect(address.isValidEncodedAddress(encoded)).to.equal(false);
+            expect(address.isValidEncodedAddress(encoded, NetworkType.MIJIN_TEST)).to.equal(false);
         });
 
         it('returns false for encoded address with wrong length', () => {
@@ -217,7 +214,7 @@ describe('address', () => {
             const encoded = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDFGABC';
 
             // Assert:
-            expect(address.isValidEncodedAddress(encoded)).to.equal(false);
+            expect(address.isValidEncodedAddress(encoded, NetworkType.MIJIN_TEST)).to.equal(false);
         });
 
         it('adding leading or trailing white space invalidates encoded address', () => {
@@ -225,9 +222,9 @@ describe('address', () => {
             const encoded = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDFG';
 
             // Assert:
-            expect(address.isValidEncodedAddress(`   \t    ${encoded}`)).to.equal(false);
-            expect(address.isValidEncodedAddress(`${encoded}   \t    `)).to.equal(false);
-            expect(address.isValidEncodedAddress(`   \t    ${encoded}   \t    `)).to.equal(false);
+            expect(address.isValidEncodedAddress(`   \t    ${encoded}`, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(address.isValidEncodedAddress(`${encoded}   \t    `, NetworkType.MIJIN_TEST)).to.equal(false);
+            expect(address.isValidEncodedAddress(`   \t    ${encoded}   \t    `, NetworkType.MIJIN_TEST)).to.equal(false);
         });
     });
 
@@ -263,7 +260,7 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MAIN_NET, SignSchema.KECCAK_REVERSED_KEY));
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MAIN_NET));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -304,48 +301,7 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET, SignSchema.KECCAK_REVERSED_KEY));
-
-                // Assert:
-                const message = ` from ${publicKeyHex}`;
-                expect(result.toUpperCase(), `public ${message}`).equal(expectedAddress.toUpperCase());
-            }
-        });
-    });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
-     */
-    describe('NIS1 test vector [MIJIN] - PublicKey to Address', () => {
-        it('can create Address from NIS public Key', () => {
-            // Arrange:
-            const Public_Keys = [
-                'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
-                '96eb2a145211b1b7ab5f0d4b14f8abc8d695c7aee31a3cfc2d4881313c68eea3',
-                '2d8425e4ca2d8926346c7a7ca39826acd881a8639e81bd68820409c6e30d142a',
-                '4feed486777ed38e44c489c7c4e93a830e4c4a907fa19a174e630ef0f6ed0409',
-                '83ee32e4e145024d29bca54f71fa335a98b3e68283f1a3099c4d4ae113b53e54',
-            ];
-
-            const Addresses = [
-                'MDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5LDT7JHT',
-                'MABHFGE5ORQD3LE4O6B7JUFN47ECOFBFAQ4XDSJH',
-                'MAVOZX4HDVOAR4W6K4WJHWPD3MOFU27DFEVDXFMY',
-                'MBZ6JK5YOCU6UPSSZ5D3G27UHAPHTY5HDSWBYUNP',
-                'MCQW2P5DNZ5BBXQVGS367DQ4AHC3RXOEVHTXSIR6',
-            ];
-
-            // Sanity:
-            expect(Public_Keys.length).equal(Addresses.length);
-
-            for (let i = 0; i < Public_Keys.length; ++i) {
-                // Arrange:
-                const publicKeyHex = Public_Keys[i];
-                const expectedAddress = Addresses[i];
-
-                // Act:
-                const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN, SignSchema.KECCAK_REVERSED_KEY));
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -369,11 +325,11 @@ describe('address', () => {
             ];
 
             const Addresses = [
-                'NDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN7DBVFHB',
-                'NC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEFP5QME7',
-                'NCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VW7RKW7K',
-                'NBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFO7NUCOM',
-                'NA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJFMMIEEQ',
+                'MDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN5YHHZMD',
+                'MC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEEZ6ADFH',
+                'MCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VUHV7FNU',
+                'MBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFN4NBABW',
+                'MA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJEMAYYMV',
             ];
 
             // Sanity:
@@ -386,7 +342,7 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MAIN_NET));
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;
@@ -410,11 +366,11 @@ describe('address', () => {
             ];
 
             const Addresses = [
-                'TDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN6Q33DFP',
-                'TC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEHM5K3P3',
-                'TCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VXFNZO4N',
-                'TBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFOEM2TCJ',
-                'TA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJFLBWZH3',
+                'SDIPRQMB3HT7A6ZKV7HOHJQM7JHX6H3FN5EIRD3D',
+                'SC65QJI4OWTUFJNQ2IDVOMUTE7IDI2EGEGTDOMI3',
+                'SCBC4VAQBVSB4J5J2PTFM7OUY5CYDL33VVLQRCX6',
+                'SBLW3CQPBGPCFAXG4XM5GDEVLPESCPDPFNJYN46J',
+                'SA5RDU36TKBTW4KVSSPD7PT5YTUMD7OIJGV24AZM',
             ];
 
             // Sanity:
@@ -427,7 +383,7 @@ describe('address', () => {
 
                 // Act:
                 const result = address.addressToString(
-                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.TEST_NET));
+                        address.publicKeyToAddress(convert.hexToUint8(publicKeyHex), NetworkType.MIJIN_TEST));
 
                 // Assert:
                 const message = ` from ${publicKeyHex}`;

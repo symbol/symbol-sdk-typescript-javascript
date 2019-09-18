@@ -46,13 +46,11 @@ import { TransactionBuilder } from '../catbuffer/TransactionBuilder';
  * @internal
  * @param payload - The transaction binary data
  * @param isEmbedded - Is the transaction an embedded inner transaction
- * @param signSchema - The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
  * @returns {Transaction | InnerTransaction}
  * @constructor
  */
 export const CreateTransactionFromPayload = (payload: string,
-                                             isEmbedded = false,
-                                             signSchema = SignSchema.SHA3): Transaction | InnerTransaction => {
+                                             isEmbedded = false): Transaction | InnerTransaction => {
     const transactionBuilder = isEmbedded ? EmbeddedTransactionBuilder.loadFromBinary(convert.hexToUint8(payload)) :
         TransactionBuilder.loadFromBinary(convert.hexToUint8(payload));
     const type = transactionBuilder.getType().valueOf();
@@ -62,48 +60,48 @@ export const CreateTransactionFromPayload = (payload: string,
         case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
             switch (type) {
                 case TransactionType.ACCOUNT_RESTRICTION_ADDRESS:
-                    return AccountAddressRestrictionTransaction.createFromPayload(payload, isEmbedded, signSchema);
+                    return AccountAddressRestrictionTransaction.createFromPayload(payload, isEmbedded);
                 case TransactionType.ACCOUNT_RESTRICTION_MOSAIC:
-                    return AccountMosaicRestrictionTransaction.createFromPayload(payload, isEmbedded, signSchema);
+                    return AccountMosaicRestrictionTransaction.createFromPayload(payload, isEmbedded);
                 case TransactionType.ACCOUNT_RESTRICTION_OPERATION:
-                    return AccountOperationRestrictionTransaction.createFromPayload(payload, isEmbedded, signSchema);
+                    return AccountOperationRestrictionTransaction.createFromPayload(payload, isEmbedded);
             }
             throw new Error ('Account restriction transaction type not recognised.');
         case TransactionType.LINK_ACCOUNT:
-            return AccountLinkTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return AccountLinkTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ADDRESS_ALIAS:
-            return AddressAliasTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return AddressAliasTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_ALIAS:
-            return MosaicAliasTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return MosaicAliasTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_DEFINITION:
-            return MosaicDefinitionTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return MosaicDefinitionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
-            return MosaicSupplyChangeTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return MosaicSupplyChangeTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.REGISTER_NAMESPACE:
-            return NamespaceRegistrationTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return NamespaceRegistrationTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.TRANSFER:
-            return TransferTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return TransferTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.SECRET_LOCK:
-            return SecretLockTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return SecretLockTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.SECRET_PROOF:
-            return SecretProofTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return SecretProofTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MODIFY_MULTISIG_ACCOUNT:
-            return MultisigAccountModificationTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return MultisigAccountModificationTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.LOCK:
-            return LockFundsTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return LockFundsTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_GLOBAL_RESTRICTION:
-            return MosaicGlobalRestrictionTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return MosaicGlobalRestrictionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
-            return MosaicAddressRestrictionTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return MosaicAddressRestrictionTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.ACCOUNT_METADATA_TRANSACTION:
-            return AccountMetadataTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return AccountMetadataTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.MOSAIC_METADATA_TRANSACTION:
-            return MosaicMetadataTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return MosaicMetadataTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.NAMESPACE_METADATA_TRANSACTION:
-            return NamespaceMetadataTransaction.createFromPayload(payload, isEmbedded, signSchema);
+            return NamespaceMetadataTransaction.createFromPayload(payload, isEmbedded);
         case TransactionType.AGGREGATE_COMPLETE:
         case TransactionType.AGGREGATE_BONDED:
-            return AggregateTransaction.createFromPayload(payload, signSchema);
+            return AggregateTransaction.createFromPayload(payload);
         default:
             throw new Error ('Transaction type not implemented yet.');
         }

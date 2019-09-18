@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { SignSchema } from '../../core/crypto/SignSchema';
 import { Convert } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedNamespaceMetadataTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedNamespaceMetadataTransactionBuilder';
@@ -121,12 +120,10 @@ export class NamespaceMetadataTransaction extends Transaction {
      * Create a transaction object from payload
      * @param {string} payload Binary payload
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {Transaction | InnerTransaction}
      */
     public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false,
-                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedNamespaceMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             NamespaceMetadataTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
@@ -143,7 +140,7 @@ export class NamespaceMetadataTransaction extends Transaction {
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as NamespaceMetadataTransactionBuilder).fee.amount),
         );
         return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

@@ -17,7 +17,6 @@
 import {expect} from 'chai';
 import {Address} from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
-import { SignSchema } from '../../../src/core/crypto';
 
 describe('Address', () => {
     const publicKey = 'c2f93346e27ce6ad1a9f8f5e3066f8326593a406bdf357acb041e2f9ab402efe'.toUpperCase();
@@ -41,30 +40,21 @@ describe('Address', () => {
 
     it('createComplete an address given publicKey + NetworkType.MAIN_NET', () => {
         const address = Address.createFromPublicKey(publicKey, NetworkType.MAIN_NET);
-        expect(address.plain()).to.be.equal('NCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPQUJ2ZML');
+        expect(address.plain()).not.to.be.equal('NDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5JFXJ4R4');
         expect(address.networkType).to.be.equal(NetworkType.MAIN_NET);
     });
 
     it('createComplete an address given publicKey + NetworkType.TEST_NET', () => {
         const address = Address.createFromPublicKey(publicKey, NetworkType.TEST_NET);
-        expect(address.plain()).to.be.equal('TCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPSDRSFRF');
+        expect(address.plain()).not.to.be.equal('TDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5KZPFMK2');
         expect(address.networkType).to.be.equal(NetworkType.TEST_NET);
     });
 
     /**
      * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
      */
-    it('createComplete an address given publicKey + NetworkType.MIJIN using NIS1 schema', () => {
-        const address = Address.createFromPublicKey(NIS_PublicKey, NetworkType.MIJIN, SignSchema.KECCAK_REVERSED_KEY);
-        expect(address.plain()).to.be.equal('MDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5LDT7JHT');
-        expect(address.networkType).to.be.equal(NetworkType.MIJIN);
-    });
-
-    /**
-     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
-     */
     it('createComplete an address given publicKey + NetworkType.MAIN_NET using NIS1 schema', () => {
-        const address = Address.createFromPublicKey(NIS_PublicKey, NetworkType.MAIN_NET, SignSchema.KECCAK_REVERSED_KEY);
+        const address = Address.createFromPublicKey(NIS_PublicKey, NetworkType.MAIN_NET);
         expect(address.plain()).to.be.equal('NDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5JFXJ4R4');
         expect(address.networkType).to.be.equal(NetworkType.MAIN_NET);
     });
@@ -73,7 +63,7 @@ describe('Address', () => {
      * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
      */
     it('createComplete an address given publicKey + NetworkType.TEST_NET using NIS1 schema', () => {
-        const address = Address.createFromPublicKey(NIS_PublicKey, NetworkType.TEST_NET, SignSchema.KECCAK_REVERSED_KEY);
+        const address = Address.createFromPublicKey(NIS_PublicKey, NetworkType.TEST_NET);
         expect(address.plain()).to.be.equal('TDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5KZPFMK2');
         expect(address.networkType).to.be.equal(NetworkType.TEST_NET);
     });

@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-import { SignSchema } from '../../core/crypto/SignSchema';
 import { Convert } from '../../core/format';
-import { AccountOperationRestrictionModificationBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
-import { AccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
+import {
+    AccountOperationRestrictionModificationBuilder,
+} from '../../infrastructure/catbuffer/AccountOperationRestrictionModificationBuilder';
+import {
+    AccountOperationRestrictionTransactionBuilder,
+} from '../../infrastructure/catbuffer/AccountOperationRestrictionTransactionBuilder';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { EmbeddedAccountOperationRestrictionTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedAccountOperationRestrictionTransactionBuilder';
+import {
+    EmbeddedAccountOperationRestrictionTransactionBuilder,
+} from '../../infrastructure/catbuffer/EmbeddedAccountOperationRestrictionTransactionBuilder';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
@@ -87,12 +92,10 @@ export class AccountOperationRestrictionTransaction extends Transaction {
      * Create a transaction object from payload
      * @param {string} payload Binary payload
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {Transaction | InnerTransaction}
      */
     public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false,
-                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedAccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             AccountOperationRestrictionTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signer = Convert.uint8ToHex(builder.getSignerPublicKey().key);
@@ -110,7 +113,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AccountOperationRestrictionTransactionBuilder).fee.amount),
         );
-        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType, signSchema)) : transaction;
+        return isEmbedded ? transaction.toAggregate(PublicAccount.createFromPublicKey(signer, networkType)) : transaction;
     }
 
     /**

@@ -16,7 +16,8 @@
 
 import { keccak256, sha3_256 } from 'js-sha3';
 import RIPEMD160 = require('ripemd160');
-import { SignSchema } from '../crypto';
+import { Crypto, SignSchema} from '../crypto';
+import { SHA3Hasher } from '../crypto/SHA3Hasher';
 import { Base32 } from './Base32';
 import { Convert } from './Convert';
 import { RawArray } from './RawArray';
@@ -75,13 +76,12 @@ export class RawAddress {
      * Converts a public key to a decoded address for a specific network.
      * @param {Uint8Array} publicKey The public key.
      * @param {number} networkIdentifier The network identifier.
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {Uint8Array} The decoded address corresponding to the inputs.
      */
     public static publicKeyToAddress = (publicKey: Uint8Array,
-                                        networkIdentifier: number,
-                                        signSchema: SignSchema = SignSchema.SHA3): Uint8Array => {
+                                        networkIdentifier: number): Uint8Array => {
         // step 1: sha3 hash of the public key
+        const signSchema = Crypto.resolveNetworkType(networkIdentifier);
         const publicKeyHash = signSchema === SignSchema.SHA3 ? sha3_256.arrayBuffer(publicKey) : keccak256.arrayBuffer(publicKey);
 
         // step 2: ripemd160 hash of (1)
@@ -96,6 +96,7 @@ export class RawAddress {
         const hash = signSchema === SignSchema.SHA3 ?
             sha3_256.arrayBuffer(decodedAddress.subarray(0, RawAddress.constants.sizes.ripemd160 + 1)) :
             keccak256.arrayBuffer(decodedAddress.subarray(0, RawAddress.constants.sizes.ripemd160 + 1));
+
         RawArray.copy(decodedAddress, RawArray.uint8View(hash),
             RawAddress.constants.sizes.checksum, RawAddress.constants.sizes.ripemd160 + 1);
 
@@ -105,10 +106,11 @@ export class RawAddress {
     /**
      * Determines the validity of a decoded address.
      * @param {Uint8Array} decoded The decoded address.
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @param {number} networkIdentifier The network identifier.
      * @returns {boolean} true if the decoded address is valid, false otherwise.
      */
-    public static isValidAddress = (decoded: Uint8Array, signSchema: SignSchema = SignSchema.SHA3): boolean => {
+    public static isValidAddress = (decoded: Uint8Array, networkIdentifier: number): boolean => {
+        const signSchema = Crypto.resolveNetworkType(networkIdentifier);
         const hash = signSchema === SignSchema.SHA3 ? sha3_256.create() : keccak256.create();
         const checksumBegin = RawAddress.constants.sizes.addressDecoded - RawAddress.constants.sizes.checksum;
         hash.update(decoded.subarray(0, checksumBegin));
@@ -120,16 +122,17 @@ export class RawAddress {
     /**
      * Determines the validity of an encoded address string.
      * @param {string} encoded The encoded address string.
+     * @param {number} networkIdentifier The network identifier.
      * @returns {boolean} true if the encoded address string is valid, false otherwise.
      */
-    public static isValidEncodedAddress = (encoded: string): boolean => {
+    public static isValidEncodedAddress = (encoded: string, networkIdentifier: number): boolean => {
         if (RawAddress.constants.sizes.addressEncoded !== encoded.length) {
             return false;
         }
 
         try {
             const decoded = RawAddress.stringToAddress(encoded);
-            return RawAddress.isValidAddress(decoded);
+            return RawAddress.isValidAddress(decoded, networkIdentifier);
         } catch (err) {
             return false;
         }
