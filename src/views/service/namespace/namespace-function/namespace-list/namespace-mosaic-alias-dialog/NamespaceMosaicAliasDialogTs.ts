@@ -41,7 +41,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     }
 
     get namespaceList() {
-        return this.activeAccount.namespace
+        return this.activeAccount.namespaces
     }
 
     get xemDivisibility() {
@@ -57,12 +57,10 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     }
 
     get unlinkMosaicList() {
-        const {mosaics, currentHeight} = this
+        const {currentHeight} = this
         const {address} = this.wallet
-        const appMosaics = AppMosaics()
-        appMosaics.init(mosaics)
-        const availableToBeLinked = appMosaics.getAvailableToBeLinked(currentHeight, address)
-
+        const availableToBeLinked = AppMosaics()
+            .getAvailableToBeLinked(currentHeight, address, this.$store)
         if (!availableToBeLinked.length) return []
         return availableToBeLinked
             .filter((item) => currentHeight < item.expirationHeight || item.expirationHeight == StatusString.FOREVER)

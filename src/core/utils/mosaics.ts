@@ -1,5 +1,5 @@
 import {Mosaic} from "nem2-sdk"
-import {AppMosaic} from '../services/mosaics/appMosaics'
+import {AppMosaic} from '@/core/model'
 
 /**
  * Transforms an array of mosaics to an inline representation,
@@ -15,10 +15,10 @@ export const renderMosaics = (mosaics: Mosaic[],
     const items = mosaics
         .map((mosaic) => {
             const hex = mosaic.id.toHex()
-            if (!mosaicList[hex] || !mosaicList[hex].mosaicInfo) return
+            if (!mosaicList[hex] || !mosaicList[hex].properties) return
             const appMosaic = mosaicList[hex]
             const name = appMosaic.name || appMosaic.hex
-            const amount = getRelativeMosaicAmount(mosaic.amount.compact(), appMosaic.mosaicInfo.divisibility)
+            const amount = getRelativeMosaicAmount(mosaic.amount.compact(), appMosaic.properties.divisibility)
                 .toLocaleString()
             return {name, amount}
         })
@@ -44,23 +44,24 @@ export const renderMosaics = (mosaics: Mosaic[],
  * @param mosaicList
  * @param currentXem
  */
-export const renderMosaicNames = (mosaics: Mosaic[],
-                                  mosaicList: AppMosaic[],
-                                  currentXem: string): string => {
-    const items = mosaics
-        .map(mosaic => {
-            const hex = mosaic.id.toHex()
-            if (!mosaicList[hex] || !mosaicList[hex].mosaicInfo) return
-            const appMosaic = mosaicList[hex]
-            return appMosaic.name || appMosaic.hex
-        })
-        .filter(x => x)
-    if (!items.length) return 'nem.xem'
-    const networkMosaicIndex = items.indexOf(currentXem)
-    if (networkMosaicIndex <= 0) return items.join(', ')
-    const networkMosaic = items.splice(networkMosaicIndex, 1)
-    items.unshift(networkMosaic[0])
-    return items.join(', ')
+export const renderMosaicNames = ( mosaics: Mosaic[],
+                                   mosaicList: AppMosaic[],
+                                   currentXem: string): string => {
+  const items = mosaics
+    .map(mosaic => {
+        const hex = mosaic.id.toHex()
+        if(!mosaicList[hex]) return
+        const appMosaic = mosaicList[hex]
+        return appMosaic.name || appMosaic.hex
+    })
+    .filter(x => x)
+
+  if (!items.length) return 'N/A'
+  const networkMosaicIndex = items.indexOf(currentXem)
+  if (networkMosaicIndex <= 0) return items.join(', ')
+  const networkMosaic = items.splice(networkMosaicIndex, 1)
+  items.unshift(networkMosaic[0])
+  return items.join(', ')
 }
 
 /**
@@ -69,13 +70,13 @@ export const renderMosaicNames = (mosaics: Mosaic[],
  * @param mosaicList
  */
 export const renderMosaicAmount = (mosaics: Mosaic[], mosaicList: AppMosaic[]): string => {
-    if (mosaics.length > 1) return 'mix'
-    if (mosaics.length < 1) return '0'  // error while mosaic list length < 0
-    const hex = mosaics[0].id.toHex()
-    if (!mosaicList[hex] || !mosaicList[hex].mosaicInfo) return 'Loading...'
-    const appMosaic = mosaicList[hex]
-    return getRelativeMosaicAmount(mosaics[0].amount.compact(), appMosaic.mosaicInfo.divisibility)
-        .toLocaleString()
+  if(!mosaics.length) return '0'
+  if(mosaics.length > 1) return 'mix' 
+  const hex = mosaics[0].id.toHex()
+  if(!mosaicList[hex] || !mosaicList[hex].properties) return 'Loading...'
+  const appMosaic = mosaicList[hex]
+  return getRelativeMosaicAmount(mosaics[0].amount.compact(), appMosaic.properties.divisibility)
+      .toLocaleString()
 }
 
 export const getRelativeMosaicAmount = (amount: number, divisibility: number): number => {

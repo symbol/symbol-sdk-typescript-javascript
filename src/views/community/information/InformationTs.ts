@@ -217,7 +217,11 @@ export class informationTs extends Vue {
     }
 
     async mounted() {
-        await this.getArticleByPage()
-        this.currentArticle = this.articleList[0]
+        try {
+            await this.getArticleByPage()
+            this.currentArticle = this.articleList[0] 
+        } catch (error) {
+            console.error("informationTs -> mounted -> error", error)
+        }
     }
 }

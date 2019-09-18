@@ -28,10 +28,6 @@ export const formatAndSave = (  mosaicList,
     }
 
     store.commit('ADD_UNCONFIRMED_TRANSACTION', formattedTransactions)
-
-    // const appMosaics = AppMosaics()
-    // appMosaics.init(mosaicList)
-    // @TODO: extract mosaics
 }
 
 export const setTransactionList = (address, that) => {

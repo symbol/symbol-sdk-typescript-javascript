@@ -35,7 +35,7 @@ export class WalletAliasTs extends Vue {
     }
 
     get namespaceList() {
-        return this.activeAccount.namespace
+        return this.activeAccount.namespaces
     }
 
     get generationHash() {
@@ -46,7 +46,7 @@ export class WalletAliasTs extends Vue {
         return this.activeAccount.node
     }
 
-    get nowBlockHeihgt() {
+    get nowBlockHeight() {
         return this.app.chainStatus.currentHeight
     }
 
@@ -150,7 +150,7 @@ export class WalletAliasTs extends Vue {
     }
 
     computeDuration(duration) {
-        let expireTime = duration - this.nowBlockHeihgt > 0 ? this.durationToTime(duration - this.nowBlockHeihgt) : 'Expired'
+        let expireTime = duration - this.nowBlockHeight > 0 ? this.durationToTime(duration - this.nowBlockHeight) : 'Expired'
         return expireTime
     }
 

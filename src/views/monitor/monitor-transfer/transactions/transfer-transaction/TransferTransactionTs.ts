@@ -80,7 +80,9 @@ export default class TransferTransactionTs extends Vue {
 
         const mosaicList: any = Object.values(this.mosaics)
         return [...mosaicList]
-        .filter(({expirationHeight}) => expirationHeight === 'Forever' || currentHeight < expirationHeight)
+        .filter(mosaic => mosaic.balance && mosaic.balance > 0
+            && mosaic.expirationHeight === 'Forever'
+            || currentHeight < mosaic.expirationHeight)
         .map(({name, balance, hex}) => ({
             label: `${name||hex} (${balance.toLocaleString()})`,
             value: hex,
@@ -103,7 +105,7 @@ export default class TransferTransactionTs extends Vue {
 
     addMosaic() {
         const {currentMosaic, mosaics, currentAmount} = this
-        const {divisibility} = mosaics[currentMosaic].mosaicInfo.properties
+        const {divisibility} = mosaics[currentMosaic].properties
         this.formModel.mosaicTransferList
             .push(
                 new Mosaic(

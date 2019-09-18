@@ -26,13 +26,13 @@
           <Col span="1">&nbsp;</Col>
           <Col span="4">{{value.hex}}</Col>
           <Col span="3">{{formatNumber(value.mosaicInfo.supply.compact())}}</Col>
-          <Col span="2" style="padding-left: 20px">{{value.mosaicInfo.properties.divisibility}}</Col>
+          <Col span="2" style="padding-left: 20px">{{value.properties.divisibility}}</Col>
           <Col span="2">
-            <Icon v-if="value.mosaicInfo.properties.transferable" type="md-checkmark"/>
+            <Icon v-if="value.properties.transferable" type="md-checkmark"/>
             <Icon v-else type="md-close"/>
           </Col>
           <Col span="2">
-            <Icon v-if="value.mosaicInfo.properties.supplyMutable" type="md-checkmark"/>
+            <Icon v-if="value.properties.supplyMutable" type="md-checkmark"/>
             <Icon v-else type="md-close"/>
           </Col>
           <Col span="2">
@@ -40,7 +40,7 @@
             $t('forever') : formatNumber(computeDuration(value)))}}
           </Col>
           <Col span="2">
-            <Icon v-if="value.mosaicInfo.isRestrictable()" type="md-checkmark"/>
+            <Icon v-if="value.isRestrictable" type="md-checkmark"/>
             <Icon v-else type="md-close"/>
           </Col>
           <Col span="3">{{value.name?value.name:'N/A'}}</Col>

@@ -1,5 +1,5 @@
 import {mapState} from "vuex"
-import {Address, MosaicId} from "nem2-sdk"
+import {Address, MosaicId, UInt64} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
@@ -60,7 +60,7 @@ export class MosaicListTs extends Vue {
         return this.activeAccount.wallet
     }
 
-    get nowBlockHeihgt() {
+    get nowBlockHeight() {
         return this.app.chainStatus.currentHeight
     }
 
@@ -70,7 +70,7 @@ export class MosaicListTs extends Vue {
 
     get namespaceMap() {
         let namespaceMap = {}
-        this.activeAccount.namespace.forEach((item) => {
+        this.activeAccount.namespaces.forEach((item) => {
             switch (item.alias.type) {
                 case (aliasType.addressAlias):
                     //@ts-ignore
@@ -86,13 +86,14 @@ export class MosaicListTs extends Vue {
     get filteredMosaics() {
         const mosaics: any = Object.values(this.mosaics)
         return [...mosaics].filter(mosaic => (
+            mosaic.mosaicInfo &&
             mosaic.mosaicInfo.owner.publicKey === this.accountPublicKey
         ))
     }
 
     showCheckDialog() {
         this.showCheckPWDialog = true
-    }
+    }  
 
     formatNumber(number) {
         return formatNumber(number)
@@ -138,8 +139,9 @@ export class MosaicListTs extends Vue {
         this.showMosaicEditDialog = false
     }
     computeDuration(item) {
+        if (!item.mosaicInfo) return 'Loading...'
         const {properties, height} = item.mosaicInfo
         if (properties.duration.compact() === 0) return 'Forever'
-        return (height.compact() + properties.duration.compact()) - this.nowBlockHeihgt
+        return (height.compact() + properties.duration.compact()) - this.nowBlockHeight
     }
 }

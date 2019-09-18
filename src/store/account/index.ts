@@ -1,6 +1,7 @@
 import {Account} from 'nem2-sdk'
 import {nodeConfig} from "@/config/index.ts"
-import { FormattedTransaction } from '@/core/services/transactions'
+import {FormattedTransaction} from '@/core/services/transactions'
+import {AppMosaic} from '@/core/model'
 
 declare interface account {
     node: string,
@@ -9,13 +10,14 @@ declare interface account {
     currentXEM1: string,
     account: Account,
     wallet: any,
-    mosaics: any[],
-    namespace: any[],
+    mosaics: Record<string, AppMosaic>,
+    namespaces: any[],
     errorTx: Array<any>,
     addressAliasMap: any,
     generationHash: string,
     xemDivisibility: number
     transactionList: FormattedTransaction[],
+    networkMosaic: AppMosaic,
 }
 
 export default {
@@ -26,12 +28,13 @@ export default {
         account: {},
         wallet: {},
         mosaics: {},
-        namespace: [],
+        namespaces: [],
         errorTx: [],
         addressAliasMap: {},
         generationHash: '',
         xemDivisibility: 6,
-        transactionList: []
+        transactionList: [],
+        networkMosaic: null,
     },
     getters: {
         wallet(state) {
@@ -64,11 +67,51 @@ export default {
             state.wallet = wallet
         },
         SET_MOSAICS(state: account, mosaics: any): void {
-            // set  mosaic hide list localStorage
             state.mosaics = mosaics
         },
-        SET_NAMESPACE(state: account, namespace: any[]): void {
-            state.namespace = namespace
+        UPDATE_MOSAICS(state: account, mosaics: AppMosaic[]): void {
+            const mosaicList = state.mosaics
+            mosaics.forEach((mosaic: AppMosaic) => {
+                if (!mosaic.hex) return
+                const {hex} = mosaic
+                if (!mosaicList[hex]) mosaicList[hex] = new AppMosaic({hex})
+                Object.assign(mosaicList[mosaic.hex], mosaic)
+            })
+        },
+        /**
+         * @TODO: refactor
+         * This mutation is not watched by the appMosaics plugin
+         */
+        UPDATE_MOSAICS_INFO(state: account, mosaics: AppMosaic[]): void {
+            const mosaicList = state.mosaics
+            mosaics.forEach((mosaic: AppMosaic) => {
+                if (!mosaic.hex) return
+                const {hex} = mosaic
+                if (!mosaicList[hex]) mosaicList[hex] = new AppMosaic({hex})
+                Object.assign(mosaicList[mosaic.hex], mosaic)
+            })
+        },
+        /**
+         * @TODO: refactor
+         * This mutation is not watched by the appMosaics plugin
+         */
+        UPDATE_MOSAICS_NAMESPACES(state: account, mosaics: AppMosaic[]): void {
+            const mosaicList = state.mosaics
+            mosaics.forEach((mosaic: AppMosaic) => {
+                if (!mosaic.hex) return
+                const {hex} = mosaic
+                if (!mosaicList[hex]) mosaicList[hex] = new AppMosaic({hex})
+                Object.assign(mosaicList[mosaic.hex], mosaic)
+            })
+        },
+        RESET_MOSAIC(state: account) {
+            state.mosaics = {}
+        },
+        SET_NETWORK_MOSAIC(state: account, mosaic: AppMosaic) {
+            state.networkMosaic = mosaic
+        },
+        SET_NAMESPACES(state: account, namespaces: any[]): void {
+            state.namespaces = namespaces
         },
         SET_NODE(state: account, node: string): void {
             state.node = node
@@ -103,15 +146,16 @@ export default {
             const newStateTransactions = [...state.transactionList]
             const txIndex = newStateTransactions
                 .findIndex(({txHeader}) => newTx.txHeader.hash === txHeader.hash)
-            console.log(newStateTransactions, newTx, txIndex, newStateTransactions[txIndex], '8978987948645')
+            
             if(txIndex > -1 && newStateTransactions[txIndex].isTxUnconfirmed) {
                 newStateTransactions.splice(txIndex, 1)
             } 
+            
             newStateTransactions.unshift(newTx)
             state.transactionList = newStateTransactions
         },
         SET_CURRENT_XEM(state: account, currentXem: string) {
             state.currentXem = currentXem
-        }
+        },
     },
 }

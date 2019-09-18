@@ -38,7 +38,7 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     }
 
     get namespaceList() {
-        return this.activeAccount.namespace
+        return this.activeAccount.namespaces
     }
 
     get generationHash() {
@@ -49,7 +49,7 @@ export class NamespaceAddressAliasDialogTs extends Vue {
         return this.activeAccount.node
     }
 
-    get nowBlockHeihgt() {
+    get nowBlockHeight() {
         return this.app.chainStatus.currentHeight
     }
 
@@ -150,7 +150,7 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     }
 
     computeDuration(duration) {
-        let expireTime = duration - this.nowBlockHeihgt > 0 ? this.durationToTime(duration - this.nowBlockHeihgt) : StatusString.EXPIRED
+        let expireTime = duration - this.nowBlockHeight > 0 ? this.durationToTime(duration - this.nowBlockHeight) : 'Expired'
         return expireTime
     }
 
@@ -165,11 +165,4 @@ export class NamespaceAddressAliasDialogTs extends Vue {
         this.isShowDialog = this.isShowAddressAliasDialog
         this.formItem.alias = this.addressAliasItem.name
     }
-
-    // @Watch('formItem', {immediate: true, deep: true})
-    // onFormItemChange() {
-    //     const {address, alias, password, fee} = this.formItem
-    //     // isCompleteForm
-    //     this.isCompleteForm = address !== '' && alias !== '' && password !== '' && fee > 0
-    // }
 }

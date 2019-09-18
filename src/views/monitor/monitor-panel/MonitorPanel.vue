@@ -33,9 +33,8 @@
               <div class="mosaicList secondary_page_animate">
                 <div
                   class="mosaic_data"
-                  v-for="(mosaic, index) in mosaicList"
+                  v-for="(mosaic, index) in filteredList"
                   :key="index"
-                  v-if="mosaic.show"
                 >
                   <span class="img_container">
                     <img v-if="index == 0" src="@/common/img/monitor/monitorMosaicIcon.png" alt="">
@@ -43,7 +42,7 @@
                   </span>
                   <span class="mosaic_name">{{mosaic.name || mosaic.hex}}</span>
                   <span class="mosaic_value">
-                    <div>{{formatNumber(mosaic.balance)}}</div>
+                    <div>{{formatNumber(mosaic.balance || 0)}}</div>
                   </span>
                 </div>
               </div>
@@ -63,8 +62,8 @@
             <div class="mosaicList">
                 <div class="toggle_all_checked ">
                   <span @click="toggleAllChecked()">
-                    <div :class="['choose',  ischecked ? 'true' : 'false']"></div>
-                    {{ !ischecked ? $t('select_all'):$t('all_unchecked')}}
+                    <div :class="['choose',  isChecked ? 'true' : 'false']"></div>
+                    {{ !isChecked ? $t('select_all'):$t('all_unchecked')}}
                   </span>
                   <span @click="toggleShowExpired()">
                     <div :class="['choose',  showExpiredMosaics ? 'true' : 'false']"></div>
@@ -73,13 +72,13 @@
                 </div>
               <div
                   :class="['mosaic_data',index == 0?'padding_top_0':'']"
-                  v-for="(mosaic, index) in filteredList"
+                  v-for="(mosaic, index) in mosaicList"
                   :key="index"
                   class="mosaic_data pointer"
                   @click="toggleShowMosaic(mosaic)"
                 >
                 <span class="namege_img "  >
-                  <img class="small_icon " :src="mosaic.show?monitorSeleted:monitorUnselected">
+                 <img class="small_icon " :src="mosaic.hide?monitorUnselected:monitorSeleted">
                   <img v-if="index == 0" class="mosaicIcon"
                         src="@/common/img/monitor/monitorMosaicIcon.png">
                   <img v-else class="mosaicIcon" src="@/common/img/monitor/mosaicDefault.png">

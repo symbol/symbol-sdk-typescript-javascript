@@ -423,4 +423,3 @@ export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, currentXem:
     }
     return mosaicListRst
 }
-

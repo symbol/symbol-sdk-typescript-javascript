@@ -1,7 +1,7 @@
 import {QueryParams, TransactionType, NamespaceService, NamespaceHttp} from "nem2-sdk"
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import {Message} from "@/config/index.ts"
-import {AppMosaics} from '@/core/services/mosaics/appMosaics'
+import {AppMosaic} from '@/core/model'
 
 export const getNetworkGenerationHash = async (node: string, that: any): Promise<void> => {
   try {
@@ -40,8 +40,9 @@ export const getCurrentNetworkMosaic = async (currentNode: string, store: any) =
         const networkNamespace = await new NamespaceService(new NamespaceHttp(currentNode))
             .namespace(mosaicAliasTx.namespaceId).toPromise()
             
-        const appMosaics = AppMosaics()
-        appMosaics.fromGetCurrentNetworkMosaic(mosaicDefinitionTx, networkNamespace.name, store)
+        const appMosaic = AppMosaic.fromGetCurrentNetworkMosaic(mosaicDefinitionTx, networkNamespace.name)
+        await store.commit('UPDATE_MOSAICS', [appMosaic])
+        store.commit('SET_NETWORK_MOSAIC', appMosaic)
         store.commit('SET_CURRENT_XEM', networkNamespace.name)
 
     } catch (error) {

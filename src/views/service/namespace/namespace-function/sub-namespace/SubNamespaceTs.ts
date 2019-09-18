@@ -63,7 +63,7 @@ export class SubNamespaceTs extends Vue {
     }
 
     get namespaceList() {
-        return this.activeAccount.namespace ? this.activeAccount.namespace : []
+        return this.activeAccount.namespaces ? this.activeAccount.namespaces : []
     }
 
     get currentHeight() {

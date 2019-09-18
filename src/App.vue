@@ -12,15 +12,16 @@
 
     import {isWindows} from "@/config/index.ts"
     import {
-        localRead,  AppWallet,
-        getNamespaces, checkInstall, getNetworkGenerationHash, getCurrentNetworkMosaic,
+        localRead, AppWallet, getNamespaces, checkInstall,
+        getNetworkGenerationHash, getCurrentNetworkMosaic,
     } from '@/core/utils'
     import {Component, Vue} from 'vue-property-decorator'
     import {ChainListeners} from '@/core/services/listeners.ts'
-    import { initMosaic, enrichMosaics, AppMosaics} from '@/core/services/mosaics'
+    import {mosaicsAmountViewFromAddress, initMosaic} from '@/core/services/mosaics'
+    import {AppMosaic} from '@/core/model'
     import {getMarketOpenPrice} from '@/core/services/marketData.ts'
     import {setTransactionList} from '@/core/services/transactions'
-
+    
     @Component({
         computed: {
             ...mapState({activeAccount: 'account', app: 'app'}),
@@ -56,7 +57,7 @@
         }
 
         get namespaceList() {
-            return this.activeAccount.namespace
+            return this.activeAccount.namespaces
         }
 
         get preBlockInfo() {
@@ -93,7 +94,6 @@
             const walletListFromStorage: any = localRead('wallets') !== '' ? JSON.parse(localRead('wallets')) : false
             if (!walletListFromStorage || !walletListFromStorage.length) return
             AppWallet.switchWallet(walletListFromStorage[0].address, walletListFromStorage, this.$store)
-
         }
 
         async onWalletChange(newWallet) {
@@ -105,15 +105,25 @@
                     this.$store.commit('SET_NAMESPACE_LOADING', true),
                 ])
 
+                //@TODO: moove from there
+                const mosaicListFromStorage = localRead(newWallet.address)
+                const parsedMosaicListFromStorage = mosaicListFromStorage === ''
+                    ? false : JSON.parse(mosaicListFromStorage)
+                
+                if (mosaicListFromStorage) await this.$store.commit('SET_MOSAICS', parsedMosaicListFromStorage)
+
                 const initMosaicsAndNamespaces = await Promise.all([
                     // @TODO make it an AppWallet methods
                     initMosaic(newWallet, this),
                     getNamespaces(newWallet.address, this.node),
                     setTransactionList(newWallet.address, this)
                 ])
-                this.$store.commit('SET_NAMESPACE_LOADING', false)
-                this.$store.commit('SET_NAMESPACE', initMosaicsAndNamespaces[1] || [])
-                enrichMosaics(this)
+
+                this.$store.commit('SET_NAMESPACES', initMosaicsAndNamespaces[1] || [])
+                await Promise.all([
+                    this.$store.commit('SET_MOSAICS_LOADING', false),
+                    this.$store.commit('SET_NAMESPACE_LOADING', false),
+                ])
                 new AppWallet(newWallet).setMultisigStatus(this.node, this.$store)
 
                 if (!this.chainListeners) {
@@ -124,7 +134,7 @@
                     this.chainListeners.switchAddress(newWallet.address)
                 }
             } catch (error) {
-                console.log("TCL: App -> onWalletChange -> error", error)
+                console.error("App -> onWalletChange -> error", error)
             }
         }
 
@@ -172,10 +182,10 @@
                  * On Wallet Change
                  */
                 if (oldValue.address !== undefined && newValue.address !== oldValue.address) {
-                    const appMosaics = AppMosaics()
-                    appMosaics.reset(this.$store)
-                    const networkMosaic = {hex: this.currentXEM1, name: this.currentXem}
-                    appMosaics.addNetworkMosaic(networkMosaic, this.$store)
+                    this.$store.commit('RESET_MOSAICS')
+                    this.$store.commit('UPDATE_MOSAICS', [new AppMosaic({
+                        hex: this.currentXEM1, name: this.currentXem
+                    })])
                     this.onWalletChange(newValue)
                 }
             })

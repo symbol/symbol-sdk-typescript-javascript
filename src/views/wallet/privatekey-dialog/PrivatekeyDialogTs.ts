@@ -60,7 +60,7 @@ export class PrivatekeyDialogTs extends Vue {
             this.stepIndex = 1
             this.wallet.privatekey = privateKey.toString().toUpperCase()
         } catch (e) {
-            console.log(e)
+            console.error(e)
             this.$Notice.destroy()
             this.$Notice.error({
                 title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''

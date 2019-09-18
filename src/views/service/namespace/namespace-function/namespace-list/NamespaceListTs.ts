@@ -43,7 +43,7 @@ export class NamespaceListTs extends Vue {
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
 
     get namespaceList() {
-        const namespaceList = this.activeAccount.namespace.map((item) => {
+        const namespaceList = this.activeAccount.namespaces.map((item) => {
             switch (item.alias.type) {
                 case (aliasType.noAlias):
                     item.aliasTarget = StatusString.NO_ALIAS
@@ -75,19 +75,15 @@ export class NamespaceListTs extends Vue {
     }
 
     get availableMosaics() {
-        const {mosaics, currentHeight} = this
+        const {currentHeight} = this
         const {address} = this.wallet
-        const appMosaics = AppMosaics()
-        appMosaics.init(mosaics)
-        return appMosaics.getAvailableToBeLinked(currentHeight, address)
+        return AppMosaics().getAvailableToBeLinked(currentHeight, address, this.$store)
     }
 
     get unlinkMosaicList() {
-        const {mosaics, currentHeight} = this
+        const {currentHeight} = this
         const {address} = this.wallet
-        const appMosaics = AppMosaics()
-        appMosaics.init(mosaics)
-        return appMosaics.getAvailableToBeLinked(currentHeight, address)
+        return AppMosaics().getAvailableToBeLinked(currentHeight, address, this.$store)
     }
 
     get namespaceLoading() {
@@ -149,5 +145,4 @@ export class NamespaceListTs extends Vue {
         const durationNum = Number(duration - this.currentHeight)
         return formatSeconds(durationNum * 12)
     }
-
 }
