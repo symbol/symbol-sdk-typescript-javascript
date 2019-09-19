@@ -74,16 +74,6 @@ export class SHA3Hasher {
     }
 
     /**
-     * Create a hasher instance with given payload bytes and return hash array buffer.
-     * @param {Uint8Array} payload Payload in bytes.
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
-     * @returns {ArrayBuffer}
-     */
-    public static getHashArrayBuffer(payload: Uint8Array, signSchema: SignSchema): ArrayBuffer {
-        return signSchema === SignSchema.SHA3 ? sha3_256.arrayBuffer(payload) : keccak256.arrayBuffer(payload);
-    }
-
-    /**
      * Resolve signature schema from given network type
      *
      * @param {NetworkType} networkType - Network type
