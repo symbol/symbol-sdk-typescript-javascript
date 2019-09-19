@@ -1,6 +1,6 @@
 import {Transaction, TransferTransaction, Address, TransactionType} from "nem2-sdk"
 import {transactionTag} from "@/config"
-import {formatNemDeadline} from '@/core/utils'
+import {formatNemDeadline, getRelativeMosaicAmount} from '@/core/utils'
 
 /**
  * Custom properties built from transaction headers
@@ -35,7 +35,7 @@ export class TransactionHeader {
    */
   hash: string
 
-  constructor(transaction: Transaction, address: Address) {
+  constructor(transaction: Transaction, address: Address, currentXem: string, xemDivisibility: number) {
      this.isReceipt = transaction instanceof TransferTransaction
         && transaction.recipient instanceof Address // @TODO: handle namespaceId
         && transaction.recipient.plain()  === address.plain()
@@ -45,6 +45,7 @@ export class TransactionHeader {
      this.date = new Date(this.time)
      this.block = transaction.transactionInfo.height.compact()
      this.hash = transaction.transactionInfo.hash
+     this.fee = getRelativeMosaicAmount(transaction.maxFee.compact(), xemDivisibility)
   }
 
   getTag(tx: Transaction) {

@@ -2,20 +2,19 @@ import {mapState} from "vuex"
 import {market} from "@/core/api/logicApi.ts"
 import {KlineQuery} from "@/core/query/klineQuery.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import LineChart from '@/common/vue/line-chart/LineChart.vue'
-import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
-import {
-    isRefreshData, localSave, localRead, formatNumber,
-    renderMosaics, renderMosaicNames, renderMosaicAmount
-} from '@/core/utils'
-import { TransactionType} from 'nem2-sdk'
+import {isRefreshData, localSave, localRead, formatNumber} from '@/core/utils'
 import {networkStatusList} from "@/config/view";
+
+import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
+import LineChart from '@/common/vue/line-chart/LineChart.vue'
+import TransactionList from '@/views/monitor/monitor-transaction-list/TransactionList.vue'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
     components: {
         LineChart,
-        numberGrow
+        numberGrow,
+        TransactionList,
     }
 })
 export class MonitorDashBoardTs extends Vue {
@@ -27,19 +26,9 @@ export class MonitorDashBoardTs extends Vue {
     lowestPrice: any = 0
     averagePrice: any = 0
     updateAnimation = ''
-    isShowDialog = false
-    isShowInnerDialog = false
-    currentInnerTransaction = {}
-    receiptList = []
-    isShowTransferTransactions = true
-    transactionDetails: any = {}
-    isLoadingModalDetailsInfo = false
     networkStatusList = networkStatusList
     page: number = 1
     formatNumber = formatNumber
-    renderMosaics = renderMosaics
-    renderMosaicNames = renderMosaicNames
-    renderMosaicAmount = renderMosaicAmount
 
     get wallet() {
         return this.activeAccount.wallet
@@ -47,46 +36,6 @@ export class MonitorDashBoardTs extends Vue {
 
     get xemUsdPrice() {
         return this.app.xemUsdPrice
-    }
-
-    get transactionsLoading() {
-        return this.app.transactionsLoading
-    }
-
-    get transactionList() {
-        return this.activeAccount.transactionList
-    }
-
-    get mosaicList() {
-        return this.activeAccount.mosaics
-    }
-
-    get transferTransactionList() {
-        const {transactionList} = this
-        return [...transactionList].filter(({rawTx})=>rawTx.type === TransactionType.TRANSFER)
-    }
-
-    get receiptTransactionList() {
-        const {transactionList} = this
-        return [...transactionList].filter(({rawTx})=>rawTx.type !== TransactionType.TRANSFER)
-    }
-
-    get slicedReceiptsLists() {
-        const start = (this.page - 1) * this.pageSize
-        const end = this.page * this.pageSize
-        return [...this.receiptTransactionList].slice(start, end)
-    }
-
-    get slicedTransferList() {
-        const start = (this.page - 1) * this.pageSize
-        const end = this.page * this.pageSize
-        return [...this.transferTransactionList].slice(start, end)
-    }
-
-    get selectedListLength() {
-        return this.isShowTransferTransactions
-            ? this.transferTransactionList.length
-            : this.receiptTransactionList.length
     }
 
     get chainStatus() {
@@ -99,27 +48,6 @@ export class MonitorDashBoardTs extends Vue {
 
     get currentXem() {
         return this.activeAccount.currentXem
-    }
-
-    showDialog(transaction) {
-        this.isShowDialog = true
-        this.transactionDetails = transaction
-    }
-
-    showInnerDialog(currentInnerTransaction) {
-        this.isShowInnerDialog = true
-        this.currentInnerTransaction = currentInnerTransaction
-    }
-
-    // @COSMETIC: page names as constants would be better than true false
-    switchTransactionPanel(flag) {
-        this.isShowTransferTransactions = flag
-    }
-
-    // @TODO: Changing tab should reset the newly selected tab's pagination to 1
-    // @TODO: Scroll to top of the list when changing page
-    async changePage(page) {
-        this.page = page
     }
 
     // @TODO: review

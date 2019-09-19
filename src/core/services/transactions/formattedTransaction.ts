@@ -12,7 +12,7 @@ export abstract class FormattedTransaction {
 
     constructor(transaction: any, address: Address, currentXem: string, xemDivisibility: number) {
         this.rawTx = transaction
-        this.txHeader = new TransactionHeader(transaction, address)
+        this.txHeader = new TransactionHeader(transaction, address, currentXem, xemDivisibility)
         this.isTxUnconfirmed = transaction.isTxUnconfirmed || false // @TODO: don't add key to Transaction
         return this
     }

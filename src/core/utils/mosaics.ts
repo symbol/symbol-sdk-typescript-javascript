@@ -29,11 +29,11 @@ export const renderMosaics = (mosaics: Mosaic[],
     const networkMosaicIndex = items.findIndex(({name}) => name === currentXem)
 
     if (networkMosaicIndex <= 0) {
-        return items.map(({name, amount}) => `${name} (${amount})`).join(', ')
+        return items.map(({name, amount}) => `${amount} [${name}]`).join(', ')
     }
     const networkMosaic = items.splice(networkMosaicIndex, 1)
     items.unshift(networkMosaic[0])
-    return items.map(({name, amount}) => `${name} (${amount})`).join(', ')
+    return items.map(({name, amount}) => `${amount} [${name}]`).join(', ')
 }
 
 /**

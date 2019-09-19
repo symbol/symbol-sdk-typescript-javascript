@@ -8,16 +8,20 @@ import dashboardModify from '@/common/img/monitor/dash-board/dashboardModify.png
 import dashboardMosaicAlias from '@/common/img/monitor/dash-board/dashboardMosaicAlias.png';
 import dashboardNamespace from '@/common/img/monitor/dash-board/dashboardNamespace.png';
 import dashboardSecret from '@/common/img/monitor/dash-board/dashboardSecret.png';
+import transferSent from '@/common/img/monitor/dash-board/dashboardMosaicOut.png'
+import transferReceived from '@/common/img/monitor/dash-board/dashboardMosaicIn.png'
 
 export const iconMap = {
-    dashboardAddressAlias: dashboardAddressAlias,
-    dashboardAggregate: dashboardAggregate,
-    dashboardDefinition: dashboardDefinition,
-    dashboardFilter: dashboardFilter,
-    dashboardLinkAccount: dashboardLinkAccount,
-    dashboardLock: dashboardLock,
-    dashboardModify: dashboardModify,
-    dashboardMosaicAlias: dashboardMosaicAlias,
-    dashboardNamespace: dashboardNamespace,
-    dashboardSecret: dashboardSecret
+    dashboardAddressAlias,
+    dashboardAggregate,
+    dashboardDefinition,
+    dashboardFilter,
+    dashboardLinkAccount,
+    dashboardLock,
+    dashboardModify,
+    dashboardMosaicAlias,
+    dashboardNamespace,
+    dashboardSecret,
+    transferSent,
+    transferReceived,
 };
