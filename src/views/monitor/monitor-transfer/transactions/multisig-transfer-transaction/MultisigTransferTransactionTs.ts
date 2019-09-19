@@ -50,8 +50,8 @@ export class MultisigTransferTransactionTs extends Vue {
     formItem = formData.multisigTransferForm
     standardFields: object = standardFields
     app: any
-    mosaicList = []
     isMultisig = false
+    multisigMosaicList = []
 
     get addressAliasMap() {
         const addressAliasMap = this.activeAccount.addressAliasMap
@@ -111,39 +111,57 @@ export class MultisigTransferTransactionTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    get selfMosaicList() {
+    get mosaicList() {
         // @TODO: would be better to return a loading indicator
         // instead of an empty array ([] = "no matching data" in the select dropdown)
-        const {mosaics, currentHeight} = this
+        const {mosaics, currentHeight, multisigMosaicList, isMultisig} = this
+
+        if (isMultisig) {
+            return multisigMosaicList
+        }
+
         if (this.mosaicsLoading || !mosaics) return []
 
         const mosaicList: any = Object.values(this.mosaics)
         return [...mosaicList]
-            .filter(({expirationHeight}) => expirationHeight === 'Forever' || currentHeight < expirationHeight)
-            .map(({name, balance, hex}) => ({
-                label: `${name || hex} (${balance.toLocaleString()})`,
-                value: hex,
-            }))
+        .filter(mosaic => mosaic.balance && mosaic.balance > 0
+            && mosaic.expirationHeight === 'Forever'
+            || currentHeight < mosaic.expirationHeight)
+        .map(({name, balance, hex}) => ({
+            label: `${name||hex} (${balance.toLocaleString()})`,
+            value: hex,
+        }))
     }
 
 
     initForm() {
+        const multisigPublickey = this.getWallet.publicKey
+
         this.formItem = {
             address: '',
             mosaicTransferList: [],
             remark: '',
-            multisigPublickey: '',
+            multisigPublickey,
             innerFee: 1,
             lockFee: 10,
             isEncrypted: true,
             aggregateFee: 1,
         }
+        this.resetFields()
     }
 
-
     addMosaic() {
-        const {currentMosaic, currentAmount} = this
-        this.formItem.mosaicTransferList.push(new Mosaic(new MosaicId(currentMosaic), UInt64.fromUint(currentAmount)))
+        const {currentMosaic, mosaics, currentAmount} = this
+        const {divisibility} = mosaics[currentMosaic].properties
+        this.formItem.mosaicTransferList
+            .push(
+                new Mosaic(
+                    new MosaicId(currentMosaic),
+                    UInt64.fromUint(
+                        getAbsoluteMosaicAmount(currentAmount, divisibility)
+                    )
+                )
+            )
     }
 
     removeMosaic(index) {
@@ -174,7 +192,7 @@ export class MultisigTransferTransactionTs extends Vue {
 
     showDialog() {
         const {accountPublicKey, isMultisig} = this
-        let {address, remark, mosaicTransferList, isEncrypted, innerFee, lockFee, aggregateFee, multisigPublickey} = this.formItem
+        let {address, remark, mosaicTransferList, isEncrypted, innerFee, lockFee, aggregateFee} = this.formItem
         const publicKey = isMultisig ? accountPublicKey : '(self)' + accountPublicKey
 
         this.transactionDetail = {
@@ -204,6 +222,7 @@ export class MultisigTransferTransactionTs extends Vue {
         let {address, remark, innerFee, mosaicTransferList, isEncrypted} = this.formItem
         const {xemDivisibility, networkType} = this
         innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
             innerFee,
@@ -219,12 +238,10 @@ export class MultisigTransferTransactionTs extends Vue {
         if (this.currentMinApproval == 0) {
             return
         }
-        const that = this
-        const {networkType, node, xemDivisibility} = this
+        const {networkType, xemDivisibility} = this
         let {address, innerFee, aggregateFee, mosaicTransferList, isEncrypted, remark, multisigPublickey} = this.formItem
         innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
         aggregateFee = getAbsoluteMosaicAmount(aggregateFee, xemDivisibility)
-
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
             innerFee,
@@ -253,26 +270,27 @@ export class MultisigTransferTransactionTs extends Vue {
         this.transactionList = [aggregateTransaction]
     }
 
-    getMultisigAccountList() {
-        const that = this
-        if (!this.getWallet.address) return
-        const {address} = this.getWallet
-        const {node, networkType, accountPublicKey, accountAddress} = this
-        that.multisigPublickeyList.push({
-            value: accountPublicKey,
-            label: '(self)' + accountPublicKey
-        })
-        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
+    async getMultisigAccountList() {
+        try {
+            if (!this.getWallet.address) return
+            const {address} = this.getWallet
+            const {node} = this
+
+            const multisigInfo = await new MultisigApiRxjs()
+                .getMultisigAccountInfo(address, node).toPromise()
+            
             if (multisigInfo.multisigAccounts.length == 0) {
-                that.isShowPanel = false
+                this.isShowPanel = false
                 return
             }
-            that.multisigPublickeyList.push(...multisigInfo.multisigAccounts.map((item: any) => {
+            this.multisigPublickeyList.push(...multisigInfo.multisigAccounts.map((item: any) => {
                 item.value = item.publicKey
                 item.label = item.publicKey
                 return item
             }))
-        })
+        } catch (error) {
+            console.error("getMultisigAccountList -> error", error)
+        }
     }
 
     async checkForm() {
@@ -315,11 +333,10 @@ export class MultisigTransferTransactionTs extends Vue {
         })
     }
 
-    async initMosaic(accountAddress: string) {
-        const that = this
+    async initMultisigAccountMosaic(accountAddress: string) {
         const {currentXEM1, node, currentXem} = this
         const mosaicList: Mosaic[] = await getMosaicList(accountAddress, node)
-        that.mosaicList = await buildMosaicList(mosaicList, currentXEM1, currentXem)
+        this.multisigMosaicList = await buildMosaicList(mosaicList, currentXEM1, currentXem)
     }
 
 
@@ -359,27 +376,53 @@ export class MultisigTransferTransactionTs extends Vue {
 
 
     @Watch('formItem.multisigPublickey')
-    async onMultisigPublickeyChange() {
-        const {multisigPublickey} = this.formItem
-        if (multisigPublickey == this.accountPublicKey) {
+    async onMultisigPublickeyChange(newPublicKey) {
+        if (!newPublicKey) return
+        this.multisigMosaicList = []
+
+        if (newPublicKey == this.accountPublicKey) {
             this.isMultisig = false
-            this.mosaicList = this.selfMosaicList
             return
         }
+
         this.isMultisig = true
         const that = this
         const {node, networkType} = this
-        let address = Address.createFromPublicKey(multisigPublickey, networkType).toDTO().address
-        await this.initMosaic(address)
+        const address = Address.createFromPublicKey(newPublicKey, networkType).toDTO().address
+
+        await this.initMultisigAccountMosaic(address)
         new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
             that.currentMinApproval = multisigInfo.minApproval
             that.currentCosignatoryList = multisigInfo.cosignatories
         })
     }
 
+    setMainPublicKey() {
+        const multisigPublickey = this.activeAccount.wallet.publicKey
+        this.multisigPublickeyList = [{
+            value: multisigPublickey,
+            label: '(self)' + multisigPublickey
+        }]
+    }
+
+    @Watch('getWallet', {deep: true})
+    async onWalletChange(newVal, oldVal) {
+        if (!newVal.publicKey) return
+        const multisigPublickey = newVal.publicKey
+        if (multisigPublickey !== oldVal.publicKey) {
+            this.setMainPublicKey()
+            this.initForm()
+            this.getMultisigAccountList()
+        } 
+    }     
+
+    resetFields() {
+        this.$nextTick(() => this.$validator.reset())
+    }
 
     // @TODO: set this function at a higher level and put the multisig wallet list in the store
-    mounted() {
+    async mounted() {
+        this.setMainPublicKey()
         this.getMultisigAccountList()
         this.initForm()
     }

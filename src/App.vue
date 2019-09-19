@@ -134,6 +134,10 @@
                     this.chainListeners.switchAddress(newWallet.address)
                 }
             } catch (error) {
+                this.$store.commit('SET_TRANSACTIONS_LOADING', false),
+                this.$store.commit('SET_BALANCE_LOADING', false),
+                this.$store.commit('SET_MOSAICS_LOADING', false),
+                this.$store.commit('SET_NAMESPACE_LOADING', false),
                 console.error("App -> onWalletChange -> error", error)
             }
         }

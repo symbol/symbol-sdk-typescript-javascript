@@ -4,9 +4,14 @@
       <div class="address flex_center">
         <span class="title">{{$t('public')}}</span>
         <span class="value radius flex_center">
-        <Select placeholder="" v-model="formItem.multisigPublickey" :placeholder="$t('Please_select_public_key')"
-                class="asset_type">
-         <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        <Select
+          v-model="formItem.multisigPublickey"
+          :placeholder="$t('Please_select_public_key')"
+          class="asset_type"
+        >
+          <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">
+            {{ item.label }}
+          </Option>
        </Select>
       </span>
       </div>
@@ -99,6 +104,23 @@
                         :placeholder="$t('please_enter_a_comment')"></textarea>
             </span>
       </div>
+
+      <div>
+        <span class="title">{{$t('remark_type')}}</span>
+        <span>
+          <span class="encryption_container">{{$t('encryption')}}</span>
+          <span
+              @click="formItem.isEncrypted = false"
+              :class="['encryption_item',formItem.isEncrypted?'encryption':'not_encryption']"
+          />
+          <span class="not_encryption_container">{{$t('Not_encrypted')}}</span>
+          <span
+              @click="formItem.isEncrypted = true"
+              :class="['encryption_item',formItem.isEncrypted?'not_encryption':'encryption']"
+          />
+        </span>
+      </div>
+
       <div class="fee flex_center">
         <span class="title">{{$t('inner_fee')}}</span>
         <span class="value radius flex_center">
@@ -107,22 +129,7 @@
       </div>
       <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
 
-      <div>
-        <span class="title">{{$t('encryption')}}</span>
 
-        <span>
-          <span class="encryption_container">{{$t('encryption')}}</span><span
-                @click="formItem.isEncrypted = false"
-                :class="['encryption_item',formItem.isEncrypted?'encryption':'not_encryption']">
-        </span>
-
-          <span class="not_encryption_container">{{$t('Not_encrypted')}}</span>
-          <span
-                  @click="formItem.isEncrypted = true"
-                  :class="['encryption_item',formItem.isEncrypted?'not_encryption':'encryption']">
-        </span>
-      </span>
-      </div>
       <div v-if="isMultisig">
         <div class="fee flex_center">
           <span class="title">{{$t('bonded_fee')}}</span>
@@ -161,7 +168,6 @@
 
 <script lang="ts">
     import {MultisigTransferTransactionTs} from '@/views/monitor/monitor-transfer/transactions/multisig-transfer-transaction/MultisigTransferTransactionTs.ts'
-
     export default class MultisigTransferTransaction extends MultisigTransferTransactionTs {
 
     }
