@@ -15,7 +15,7 @@
  */
 
 import {LocalDateTime} from 'js-joda';
-import {Crypto, KeyPair} from '../../core/crypto';
+import {Crypto, KeyPair, SHA3Hasher} from '../../core/crypto';
 import { Convert as convert} from '../../core/format';
 import {Account} from '../account/Account';
 import {Address} from '../account/Address';
@@ -65,7 +65,8 @@ export class SimpleWallet extends Wallet {
         const hashKey = convert.uint8ToHex(randomBytesArray); // TODO: derive private key correctly
 
         // Create KeyPair from hash key
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey, network);
+        const signSchema = SHA3Hasher.resolveSignSchema(network);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey, signSchema);
 
         // Create address from public key
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);
@@ -91,7 +92,8 @@ export class SimpleWallet extends Wallet {
                                 privateKey: string,
                                 network: NetworkType): SimpleWallet {
         // Create KeyPair from hash key
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, network);
+        const signSchema = SHA3Hasher.resolveSignSchema(network);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, signSchema);
 
         // Create address from public key
         const address = Address.createFromPublicKey(convert.uint8ToHex(keyPair.publicKey), network);

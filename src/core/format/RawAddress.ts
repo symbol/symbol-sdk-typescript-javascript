@@ -16,7 +16,7 @@
 
 import { keccak256, sha3_256 } from 'js-sha3';
 import RIPEMD160 = require('ripemd160');
-import { Crypto, SignSchema} from '../crypto';
+import { SignSchema} from '../crypto';
 import { SHA3Hasher } from '../crypto/SHA3Hasher';
 import { Base32 } from './Base32';
 import { Convert } from './Convert';
@@ -81,7 +81,7 @@ export class RawAddress {
     public static publicKeyToAddress = (publicKey: Uint8Array,
                                         networkIdentifier: number): Uint8Array => {
         // step 1: sha3 hash of the public key
-        const signSchema = Crypto.resolveNetworkType(networkIdentifier);
+        const signSchema = SHA3Hasher.resolveSignSchema(networkIdentifier);
         const publicKeyHash = signSchema === SignSchema.SHA3 ? sha3_256.arrayBuffer(publicKey) : keccak256.arrayBuffer(publicKey);
 
         // step 2: ripemd160 hash of (1)
@@ -110,7 +110,7 @@ export class RawAddress {
      * @returns {boolean} true if the decoded address is valid, false otherwise.
      */
     public static isValidAddress = (decoded: Uint8Array, networkIdentifier: number): boolean => {
-        const signSchema = Crypto.resolveNetworkType(networkIdentifier);
+        const signSchema = SHA3Hasher.resolveSignSchema(networkIdentifier);
         const hash = signSchema === SignSchema.SHA3 ? sha3_256.create() : keccak256.create();
         const checksumBegin = RawAddress.constants.sizes.addressDecoded - RawAddress.constants.sizes.checksum;
         hash.update(decoded.subarray(0, checksumBegin));

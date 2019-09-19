@@ -672,11 +672,11 @@ export const cleanup = (arr) => {
     }
 };
 
-export const crypto_shared_key_hash = (shared, pk, sk, hashfunc, networkType) => {
+export const crypto_shared_key_hash = (shared, pk, sk, hashfunc, signSchema) => {
     const d = new Uint8Array(64);
     const p = [gf(), gf(), gf(), gf()];
 
-    hashfunc(d, sk, 32, networkType);
+    hashfunc(d, sk, 32, signSchema);
     d[0] &= 248;
     d[31] &= 127;
     d[31] |= 64;

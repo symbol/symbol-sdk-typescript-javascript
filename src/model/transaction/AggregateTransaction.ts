@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyPair } from '../../core/crypto';
+import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { AggregateBondedTransactionBuilder } from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
 import { AggregateCompleteTransactionBuilder } from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
@@ -209,7 +209,8 @@ export class AggregateTransaction extends Transaction {
         const transactionHashBytes = Convert.hexToUint8(signedTransaction.hash);
         let signedPayload = signedTransaction.payload;
         cosignatories.forEach((cosigner) => {
-            const signature = KeyPair.sign(cosigner, transactionHashBytes, cosigner.networkType);
+            const signSchema = SHA3Hasher.resolveSignSchema(cosigner.networkType);
+            const signature = KeyPair.sign(cosigner, transactionHashBytes, signSchema);
             signedPayload += cosigner.publicKey + Convert.uint8ToHex(signature);
         });
 
