@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyPair } from '../../core/crypto';
+import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert as convert} from '../../core/format';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Address } from './Address';
@@ -81,8 +81,8 @@ export class PublicAccount {
 
         // Convert to Uint8Array
         const convertedData = convert.hexToUint8(convert.utf8ToHex(data));
-
-        return KeyPair.verify(convert.hexToUint8(this.publicKey), convertedData, convertedSignature, this.address.networkType);
+        const signSchema = SHA3Hasher.resolveSignSchema(this.address.networkType);
+        return KeyPair.verify(convert.hexToUint8(this.publicKey), convertedData, convertedSignature, signSchema);
     }
 
     /**

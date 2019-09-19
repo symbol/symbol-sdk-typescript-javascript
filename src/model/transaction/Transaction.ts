@@ -97,8 +97,8 @@ export abstract class Transaction {
                 .splice(4 + 64 + 32, byteBuffer.length));
 
         const hash = new Uint8Array(32);
-
-        SHA3Hasher.func(hash, signingBytes, 32, networkType);
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
+        SHA3Hasher.func(hash, signingBytes, 32, signSchema);
 
         return Convert.uint8ToHex(hash);
     }
@@ -122,10 +122,11 @@ export abstract class Transaction {
      */
     public signWith(account: Account, generationHash: string): SignedTransaction {
         const generationHashBytes = Array.from(Convert.hexToUint8(generationHash));
+        const signSchema = SHA3Hasher.resolveSignSchema(account.networkType);
         const byteBuffer = Array.from(this.generateBytes());
         const signingBytes = generationHashBytes.concat(byteBuffer.slice(4 + 64 + 32));
-        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey, account.networkType);
-        const signature = Array.from(KeyPair.sign(account, new Uint8Array(signingBytes), account.networkType));
+        const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey, signSchema);
+        const signature = Array.from(KeyPair.sign(account, new Uint8Array(signingBytes), signSchema));
         const signedTransactionBuffer = byteBuffer
             .splice(0, 4)
             .concat(signature)

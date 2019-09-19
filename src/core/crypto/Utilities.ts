@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { NetworkType } from '../../model/blockchain/NetworkType';
+
 import { RawArray as array } from '../format';
 import * as nacl from './nacl_catapult';
 import { SHA3Hasher as sha3Hasher } from './SHA3Hasher';
+import { SignSchema } from './SignSchema';
 export const CryptoJS = require('crypto-js');
 export const Key_Size = 32;
 export const Signature_Size = 64;
@@ -74,9 +75,9 @@ export const catapult_crypto = (function() {
         d[31] |= 64;
     }
 
-    function prepareForScalarMult(sk, hashfunc, networkType: NetworkType) {
+    function prepareForScalarMult(sk, hashfunc, signSchema: SignSchema) {
         const d = new Uint8Array(Hash_Size);
-        hashfunc(d, sk, Hash_Size, networkType);
+        hashfunc(d, sk, Hash_Size, signSchema);
         clamp(d);
         return d;
     }
@@ -108,9 +109,9 @@ export const catapult_crypto = (function() {
     })();
 
     return {
-        extractPublicKey: (sk, hashfunc, networkType: NetworkType) => {
+        extractPublicKey: (sk, hashfunc, signSchema: SignSchema) => {
             const c = nacl;
-            const d = prepareForScalarMult(sk, hashfunc, networkType);
+            const d = prepareForScalarMult(sk, hashfunc, signSchema);
 
             const p = [c.gf(), c.gf(), c.gf(), c.gf()];
             const pk = new Uint8Array(Key_Size);
@@ -201,9 +202,9 @@ export const catapult_crypto = (function() {
             return 0 === c.crypto_verify_32(signature, 0, t, 0);
         },
 
-        deriveSharedKey: (salt, sk, pk, hashfunc, networkType: NetworkType) => {
+        deriveSharedKey: (salt, sk, pk, hashfunc, signSchema: SignSchema) => {
             const c = nacl;
-            const d = prepareForScalarMult(sk, hashfunc, networkType);
+            const d = prepareForScalarMult(sk, hashfunc, signSchema);
 
             // sharedKey = pack(p = d (derived from sk) * q (derived from pk))
             const q = [c.gf(), c.gf(), c.gf(), c.gf()];
@@ -218,7 +219,7 @@ export const catapult_crypto = (function() {
             }
             // return the hash of the result
             const sharedKeyHash = new Uint8Array(Key_Size);
-            hashfunc(sharedKeyHash, sharedKey, Key_Size, networkType);
+            hashfunc(sharedKeyHash, sharedKey, Key_Size, signSchema);
             return sharedKeyHash;
         },
     };

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Crypto} from '../../core/crypto';
+import {Crypto, SHA3Hasher} from '../../core/crypto';
 import {PublicAccount} from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import {Message} from './Message';
@@ -43,11 +43,12 @@ export class EncryptedMessage extends Message {
      * @return {EncryptedMessage}
      */
     public static create(message: string, recipientPublicAccount: PublicAccount, privateKey, networkType: NetworkType) {
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         return new EncryptedMessage(
             Crypto.encode(privateKey,
                           recipientPublicAccount.publicKey,
                           message,
-                          networkType).toUpperCase(),
+                          signSchema).toUpperCase(),
             recipientPublicAccount);
     }
 
@@ -71,10 +72,11 @@ export class EncryptedMessage extends Message {
                           privateKey,
                           recipientPublicAccount: PublicAccount,
                           networkType: NetworkType): PlainMessage {
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         return new PlainMessage(this.decodeHex(
                 Crypto.decode(privateKey,
                               recipientPublicAccount.publicKey,
                               encryptMessage.payload,
-                              networkType)));
+                              signSchema)));
     }
 }

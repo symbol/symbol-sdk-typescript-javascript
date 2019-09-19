@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 import {expect} from 'chai';
-import {Crypto} from '../../../src/core/crypto';
+import {Crypto, SignSchema} from '../../../src/core/crypto';
 import {Convert as convert} from '../../../src/core/format';
-import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { WalletAlgorithm } from '../../../src/model/wallet/WalletAlgorithm';
 
 const CryptoJS = require('crypto-js');
@@ -341,11 +340,11 @@ describe('crypto tests', () => {
         const senderPriv = 'E1C8521608F4896CA26A0C2DE739310EA4B06861D126CF4D6922064678A1969B';
         const recipientPublic = '12AAD2D33020C3EAE12592875CD7D2FF54A61DD03C1FAADB84A083D41F75C229';
         const message = 'NEM is awesome !';
-        const encryptedMessage = Crypto.encode(senderPriv, recipientPublic, message, NetworkType.MIJIN_TEST);
+        const encryptedMessage = Crypto.encode(senderPriv, recipientPublic, message, SignSchema.SHA3);
         const senderPublic = '9F784BF20318AE3CA6246C0EC2207FE095FFF7A84B6787E7E3C2CE4C3B92A2EA';
         const recipientPriv = 'A22A4BBF126A2D7D7ECE823174DFD184C5DE0FDE4CB2075D30CFA409F7EF8908';
         const expectedMessage = 'NEM is awesome !';
-        const decrypted = Crypto.decode(recipientPriv, senderPublic, encryptedMessage, NetworkType.MIJIN_TEST);
+        const decrypted = Crypto.decode(recipientPriv, senderPublic, encryptedMessage, SignSchema.SHA3);
 
         expect(decrypted).equal(convert.utf8ToHex(expectedMessage));
     });
@@ -354,11 +353,11 @@ describe('crypto tests', () => {
         const senderPriv = 'E1C8521608F4896CA26A0C2DE739310EA4B06861D126CF4D6922064678A1969B';
         const recipientPublic = '12AAD2D33020C3EAE12592875CD7D2FF54A61DD03C1FAADB84A083D41F75C229';
         const message = 'NEM is awesome !';
-        const encryptedMessage = Crypto.encode(senderPriv, recipientPublic, message, NetworkType.MIJIN_TEST);
+        const encryptedMessage = Crypto.encode(senderPriv, recipientPublic, message, SignSchema.SHA3);
         const senderPublic = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
         const recipientPriv = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
         const expectedMessage = 'NEM is awesome !';
-        const decrypted = Crypto.decode(recipientPriv, senderPublic, encryptedMessage, NetworkType.MIJIN_TEST);
+        const decrypted = Crypto.decode(recipientPriv, senderPublic, encryptedMessage, SignSchema.SHA3);
 
         expect(decrypted).not.equal(convert.utf8ToHex(expectedMessage));
     });

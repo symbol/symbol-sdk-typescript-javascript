@@ -15,6 +15,7 @@
  */
 
 import {Crypto, KeyPair} from '../../core/crypto';
+import {SHA3Hasher} from '../../core/crypto/SHA3Hasher';
 import {Convert, RawAddress} from '../../core/format';
 import {NetworkType} from '../blockchain/NetworkType';
 import {AggregateTransaction} from '../transaction/AggregateTransaction';
@@ -61,7 +62,8 @@ export class Account {
      */
     public static createFromPrivateKey(privateKey: string,
                                        networkType: NetworkType): Account {
-        const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, networkType);
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
+        const keyPair: IKeyPair = KeyPair.createKeyPairFromPrivateKeyString(privateKey, signSchema);
         const address = RawAddress.addressToString(
             RawAddress.publicKeyToAddress(keyPair.publicKey, networkType));
         return new Account(
@@ -82,7 +84,8 @@ export class Account {
         const hashKey = Convert.uint8ToHex(randomBytesArray);
 
         // Create KeyPair from hash key
-        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey, networkType);
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
+        const keyPair = KeyPair.createKeyPairFromPrivateKeyString(hashKey, signSchema);
 
         const address = Address.createFromPublicKey(Convert.uint8ToHex(keyPair.publicKey), networkType);
         return new Account(address, keyPair);
@@ -197,7 +200,7 @@ export class Account {
     public signData(data: string): string {
         return Convert.uint8ToHex(KeyPair.sign(this.keyPair,
                             Convert.hexToUint8(Convert.utf8ToHex(data)),
-                            this.networkType,
+                            SHA3Hasher.resolveSignSchema(this.networkType),
                         ));
     }
 }
