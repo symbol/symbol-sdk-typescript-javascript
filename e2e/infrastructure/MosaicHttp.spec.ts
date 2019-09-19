@@ -18,9 +18,9 @@ import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructu
 import {MosaicHttp} from '../../src/infrastructure/MosaicHttp';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
-import { MosaicProperties } from '../../src/model/mosaic/MosaicProperties';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import {NamespaceId} from '../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../src/model/transaction/Deadline';
@@ -74,12 +74,9 @@ describe('MosaicHttp', () => {
                 Deadline.create(),
                 nonce,
                 mosaicId,
-                MosaicProperties.create({
-                    supplyMutable: true,
-                    transferable: true,
-                    divisibility: 3,
-                    duration: UInt64.fromUint(0),
-                }),
+                MosaicFlags.create(true, true, false),
+                3,
+                UInt64.fromUint(0),
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);

@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-import {UInt64} from '../UInt64';
-
 /**
- * Mosaic properties model
+ * Mosaic flags model
  */
-export class MosaicProperties {
+export class MosaicFlags {
 
     /**
      * The creator can choose between a definition that allows a mosaic supply change at a later point or an immutable supply.
@@ -47,22 +45,7 @@ export class MosaicProperties {
      * @param divisibility
      * @param duration
      */
-    constructor(flags: number,
-                /**
-                 * The divisibility determines up to what decimal place the mosaic can be divided into.
-                 * Thus a divisibility of 3 means that a mosaic can be divided into smallest parts of 0.001 mosaics
-                 * i.e. milli mosaics is the smallest sub-unit.
-                 * When transferring mosaics via a transfer transaction the quantity transferred
-                 * is given in multiples of those smallest parts.
-                 * The divisibility must be in the range of 0 and 6. The default value is "0".
-                 */
-                public readonly divisibility: number,
-                /**
-                 * The duration in blocks a mosaic will be available.
-                 * After the duration finishes mosaic is inactive and can be renewed.
-                 * Duration is optional when defining the mosaic
-                 */
-                public readonly duration: UInt64) {
+    constructor(flags: number) {
         let binaryFlags = '00' + (flags >>> 0).toString(2);
         binaryFlags = binaryFlags.substr(binaryFlags.length - 3, 3);
         this.supplyMutable = binaryFlags[2] === '1';
@@ -72,19 +55,25 @@ export class MosaicProperties {
 
     /**
      * Static constructor function with default parameters
-     * @returns {MosaicProperties}
-     * @param params
+     * @returns {MosaicFlags}
+     * @param supplyMutable
+     * @param transferable
+     * @param restrictable
      */
-    public static create(params: {
+    public static create(
         supplyMutable: boolean,
         transferable: boolean,
-        divisibility: number,
-        duration: UInt64,
-        restrictable?: boolean,
-    }) {
-        const restrictable = params.restrictable ? 4 : 0;
-        const flags = (params.supplyMutable ? 1 : 0) + (params.transferable ? 2 : 0) + restrictable;
-        return new MosaicProperties(flags, params.divisibility, params.duration);
+        restrictable: boolean = false ): MosaicFlags {
+        const flags = (supplyMutable ? 1 : 0) + (transferable ? 2 : 0) + (restrictable ? 4 : 0);
+        return new MosaicFlags(flags);
+    }
+
+    /**
+     * Get mosaic flag value in number
+     * @returns {number}
+     */
+    public getValue(): number {
+        return (this.supplyMutable ? 1 : 0) + (this.transferable ? 2 : 0) + (this.restrictable ? 4 : 0);
     }
 
     /**
@@ -92,9 +81,7 @@ export class MosaicProperties {
      */
     toDTO() {
         return {
-            flags: (this.supplyMutable ? 1 : 0) + (this.transferable ? 2 : 0) + (this.transferable ? 4 : 0),
-            divisibility: this.divisibility,
-            duration: this.duration ? this.duration.toString() : '0',
+            flags: this.getValue(),
         };
     }
 }
