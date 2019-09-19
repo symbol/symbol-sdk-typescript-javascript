@@ -73,6 +73,7 @@ export const CreateReceiptFromDTO = (receiptDTO, networkType): Receipt => {
             return createBalanceTransferReceipt(receiptDTO, networkType);
         case ReceiptType.Mosaic_Expired:
         case ReceiptType.Namespace_Expired:
+        case ReceiptType.Namespace_Deleted:
             return  createArtifactExpiryReceipt(receiptDTO);
         case ReceiptType.Inflation:
             return createInflationReceipt(receiptDTO);

@@ -162,7 +162,7 @@ describe('Receipt', () => {
     it('should createComplete a balance transfer receipt - Mosaic Rental Fee', () => {
         const receiptDTO = {
             version: 1,
-            type: 4941,
+            type: 4685,
             senderPublicKey: account.publicKey,
             recipientAddress: '9103B60AAF2762688300000000000000000000000000000000',
             mosaicId: '941299B2B7E1291C',
