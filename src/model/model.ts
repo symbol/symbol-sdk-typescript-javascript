@@ -50,7 +50,7 @@ export * from './mosaic/MosaicInfo';
 export * from './mosaic/MosaicId';
 export * from './mosaic/MosaicNonce';
 export * from './mosaic/MosaicSupplyChangeAction';
-export * from './mosaic/MosaicProperties';
+export * from './mosaic/MosaicFlags';
 export * from '../service/MosaicView';
 export * from '../service/MosaicAmountView';
 export * from './mosaic/NetworkCurrencyMosaic';

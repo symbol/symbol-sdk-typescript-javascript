@@ -18,10 +18,10 @@ import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map, mergeMap} from 'rxjs/operators';
 import {PublicAccount} from '../model/account/PublicAccount';
+import {MosaicFlags} from '../model/mosaic/MosaicFlags';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import {MosaicInfo} from '../model/mosaic/MosaicInfo';
 import { MosaicNames } from '../model/mosaic/MosaicNames';
-import {MosaicProperties} from '../model/mosaic/MosaicProperties';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import {UInt64} from '../model/UInt64';
@@ -64,29 +64,15 @@ export class MosaicHttp extends Http implements MosaicRepository {
                 this.mosaicRoutesApi.getMosaic(mosaicId.toHex())).pipe(
                     map((response: { response: ClientResponse; body: MosaicInfoDTO; } ) => {
                         const mosaicInfoDTO = response.body;
-                        let mosaicFlag;
-                        let divisibility;
-                        let duration;
-                        if (mosaicInfoDTO.mosaic.flags) {
-                            mosaicFlag = mosaicInfoDTO.mosaic.flags;
-                        }
-                        if (mosaicInfoDTO.mosaic.divisibility) {
-                            divisibility = mosaicInfoDTO.mosaic.divisibility;
-                        }
-                        if (mosaicInfoDTO.mosaic.duration) {
-                            duration = mosaicInfoDTO.mosaic.duration;
-                        }
                         return new MosaicInfo(
                             new MosaicId(mosaicInfoDTO.mosaic.id),
                             UInt64.fromNumericString(mosaicInfoDTO.mosaic.supply),
                             UInt64.fromNumericString(mosaicInfoDTO.mosaic.startHeight),
                             PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
                             mosaicInfoDTO.mosaic.revision,
-                            new MosaicProperties(
-                                mosaicFlag,
-                                divisibility,
-                                UInt64.fromNumericString(duration),
-                            ),
+                            new MosaicFlags(mosaicInfoDTO.mosaic.flags),
+                            mosaicInfoDTO.mosaic.divisibility,
+                            UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
                     );
                 }),
                 catchError((error) =>  throwError(this.errorHandling(error))),
@@ -109,29 +95,15 @@ export class MosaicHttp extends Http implements MosaicRepository {
                     map((response: { response: ClientResponse; body: MosaicInfoDTO[]; }) => {
                         const mosaicInfosDTO = response.body;
                         return mosaicInfosDTO.map((mosaicInfoDTO) => {
-                            let mosaicFlag;
-                            let divisibility;
-                            let duration;
-                            if (mosaicInfoDTO.mosaic.flags) {
-                                mosaicFlag = mosaicInfoDTO.mosaic.flags;
-                            }
-                            if (mosaicInfoDTO.mosaic.divisibility) {
-                                divisibility = mosaicInfoDTO.mosaic.divisibility;
-                            }
-                            if (mosaicInfoDTO.mosaic.duration) {
-                                duration = mosaicInfoDTO.mosaic.duration;
-                            }
                             return new MosaicInfo(
                                 new MosaicId(mosaicInfoDTO.mosaic.id),
                                 UInt64.fromNumericString(mosaicInfoDTO.mosaic.supply),
                                 UInt64.fromNumericString(mosaicInfoDTO.mosaic.startHeight),
                                 PublicAccount.createFromPublicKey(mosaicInfoDTO.mosaic.ownerPublicKey, networkType),
                                 mosaicInfoDTO.mosaic.revision,
-                                new MosaicProperties(
-                                    mosaicFlag,
-                                    divisibility,
-                                    UInt64.fromNumericString(duration),
-                                ),
+                                new MosaicFlags(mosaicInfoDTO.mosaic.flags),
+                                mosaicInfoDTO.mosaic.divisibility,
+                                UInt64.fromNumericString(mosaicInfoDTO.mosaic.duration),
                             );
                         });
                     }),

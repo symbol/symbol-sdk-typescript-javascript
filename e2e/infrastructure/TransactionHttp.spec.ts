@@ -29,9 +29,9 @@ import { AccountRestrictionModificationAction } from '../../src/model/account/Ac
 import { AccountRestrictionType } from '../../src/model/account/AccountRestrictionType';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
+import {MosaicFlags} from '../../src/model/mosaic/MosaicFlags';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
 import {MosaicNonce} from '../../src/model/mosaic/MosaicNonce';
-import {MosaicProperties} from '../../src/model/mosaic/MosaicProperties';
 import { MosaicRestrictionType } from '../../src/model/mosaic/MosaicRestrictionType';
 import {MosaicSupplyChangeAction} from '../../src/model/mosaic/MosaicSupplyChangeAction';
 import {NetworkCurrencyMosaic} from '../../src/model/mosaic/NetworkCurrencyMosaic';
@@ -143,23 +143,20 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 nonce,
                 mosaicId,
-                MosaicProperties.create({
-                    supplyMutable: true,
-                    transferable: true,
-                    divisibility: 3,
-                    restrictable: true,
-                    duration: UInt64.fromUint(1000),
-                }),
+                MosaicFlags.create( true, true, true),
+                3,
+                UInt64.fromUint(1000),
                 NetworkType.MIJIN_TEST,
             );
             const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: MosaicDefinitionTransaction) => {
                 expect(transaction.mosaicId, 'MosaicId').not.to.be.undefined;
                 expect(transaction.nonce, 'Nonce').not.to.be.undefined;
-                expect(transaction.mosaicProperties.divisibility, 'Divisibility').not.to.be.undefined;
-                expect(transaction.mosaicProperties.duration, 'Duration').not.to.be.undefined;
-                expect(transaction.mosaicProperties.supplyMutable, 'SupplyMutable').not.to.be.undefined;
-                expect(transaction.mosaicProperties.transferable, 'Transferable').not.to.be.undefined;
+                expect(transaction.divisibility, 'Divisibility').not.to.be.undefined;
+                expect(transaction.duration, 'Duration').not.to.be.undefined;
+                expect(transaction.flags.supplyMutable, 'SupplyMutable').not.to.be.undefined;
+                expect(transaction.flags.transferable, 'Transferable').not.to.be.undefined;
+                expect(transaction.flags.restrictable, 'Restrictable').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {
@@ -186,13 +183,9 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 nonce,
                 MosaicId.createFromNonce(nonce, account.publicAccount),
-                MosaicProperties.create({
-                    supplyMutable: true,
-                    transferable: true,
-                    divisibility: 3,
-                    duration: UInt64.fromUint(0),
-                    restrictable: true,
-                }),
+                MosaicFlags.create( true, true, true),
+                3,
+                UInt64.fromUint(0),
                 NetworkType.MIJIN_TEST,
             );
             const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),

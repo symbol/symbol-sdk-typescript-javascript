@@ -22,9 +22,9 @@ import {Account} from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
-import {MosaicProperties} from '../../../src/model/mosaic/MosaicProperties';
 import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
@@ -147,13 +147,9 @@ describe('AggregateTransaction', () => {
             Deadline.create(),
             new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
             new MosaicId(UInt64.fromUint(1).toDTO()), // ID
-            MosaicProperties.create({
-                supplyMutable: true,
-                transferable: true,
-                divisibility: 3,
-                restrictable: true,
-                duration: UInt64.fromUint(1000),
-            }),
+            MosaicFlags.create(true, true, true),
+            3,
+            UInt64.fromUint(1000),
             NetworkType.MIJIN_TEST,
         );
 
