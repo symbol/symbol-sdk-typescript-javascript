@@ -152,7 +152,7 @@ export const encodeBlock = (input, inputOffset, output, outputOffset) => {
 };
 
 export const Char_To_Decoded_Char_Map = () => {
-    const builder = this.createBuilder();
+    const builder = createBuilder();
     builder.addRange('A', 'Z', 0);
     builder.addRange('2', '7', 26);
     return builder.map;
