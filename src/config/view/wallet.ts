@@ -14,11 +14,7 @@ export const walletFnNavConfig = [
 ]
 
 export const walletImportNavagatorConfig = [
-    {
-        title: 'mnemonic',
-        name: 'walletImportMnemonic',
-        isSelected: true
-    }, {
+   {
         title: 'privatekey',
         name: 'walletImportPrivatekey',
         isSelected: false

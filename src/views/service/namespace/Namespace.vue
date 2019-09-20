@@ -1,5 +1,5 @@
 <template>
-  <div class="namespace_container secondary_page_animate">
+  <div class="namespace_container">
     <div class="top_navigator radius">
       <span
         v-for="(b,index) in buttonList"

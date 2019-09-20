@@ -9,11 +9,10 @@
     import {mapState} from 'vuex'
     import {asyncScheduler} from 'rxjs'
     import {throttleTime} from 'rxjs/operators'
-
     import {isWindows} from "@/config/index.ts"
     import {
         AppWallet,
-        checkInstall, getCurrentNetworkMosaic, getNamespaces,
+        checkInstall, getCurrentBlockHeight, getCurrentNetworkMosaic, getNamespaces,
         getNetworkGenerationHash,
         getObjectLength,
         getTopValueInObject, localRead,
@@ -159,10 +158,19 @@
             }
         }
 
+
+
+        checkIfWalletExist() {
+            if (!this.wallet.address) {
+                this.$router.push('login')
+            }
+        }
+
         /**
          * Add namespaces and divisibility to transactions and balances
          */
         async mounted() {
+            this.checkIfWalletExist()
             const {accountName} = this
             // need init at start
             await this.setWalletsList()
@@ -180,6 +188,7 @@
             const {node} = this
 
             getMarketOpenPrice(this)
+            await getCurrentBlockHeight(node, this.$store)
             await getNetworkGenerationHash(node, this)
             await getCurrentNetworkMosaic(node, this.$store)
 
@@ -198,7 +207,7 @@
                  * On Wallet Change
                  */
                 if (oldValue.address === undefined || newValue.address !== undefined
-                || oldValue.address !== undefined && newValue.address !== oldValue.address) {
+                    || oldValue.address !== undefined && newValue.address !== oldValue.address) {
                     this.$store.commit('RESET_MOSAICS')
                     this.$store.commit('UPDATE_MOSAICS', [new AppMosaic({
                         hex: this.currentXEM1, name: this.currentXem

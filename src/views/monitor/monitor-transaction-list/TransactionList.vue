@@ -98,15 +98,15 @@
               <img class="mosaic_action" :src="c.icon" alt="" />
 
               <!-- SECOND COLUMN -->
-              <div class="col2">
+              <div class="col2 overflow_ellipsis">
                 <span
-                  class="col2-item"
+                  class="col2-item overflow_ellipsis"
                 >
                     {{ c.rawTx.signer.address.plain() }}
                 </span>
                 <span
                   v-if="c.rawTx.type === TransactionType.TRANSFER"
-                  class="col2-item bottom"
+                  class="col2-item bottom overflow_ellipsis"
                 >
                     -> {{ c.rawTx.recipient.address }}
                 </span>
@@ -119,7 +119,7 @@
               </div>
 
               <!-- THIRD COLUMN -->
-              <div class="col3">
+              <div class="col3 overflow_ellipsis">
                 <span
                   :class="[!c.isReceipt ? 'green' : 'red', 'overflow_ellipsis']"
                   v-if="c.rawTx.type === TransactionType.TRANSFER"

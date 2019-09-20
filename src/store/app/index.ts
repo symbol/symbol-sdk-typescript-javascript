@@ -48,9 +48,9 @@ export default {
     },
     getters: {},
     mutations: {
-        RESET_APP(state: appInfo){
+        RESET_APP(state: appInfo) {
             state.hasWallet = false
-            state.mnemonic= ''
+            state.mnemonic = ''
             state.walletList = []
         },
         SET_CURRENT_PANEL_INDEX(state: appInfo, index: any) {
@@ -91,6 +91,9 @@ export default {
             state.chainStatus.signerPublicKey = signerPublicKey ? signerPublicKey : state.chainStatus.signerPublicKey
             state.chainStatus.nodeAmount = nodeAmount ? nodeAmount : state.chainStatus.nodeAmount
 
+        },
+        SET_CHAIN_HEIGHT(state: appInfo, chainHeight: number) {
+            state.chainStatus.currentHeight = chainHeight || 0
         },
         SET_NAMESPACE_LOADING(state: appInfo, namespaceLoading: boolean) {
             state.namespaceLoading = namespaceLoading

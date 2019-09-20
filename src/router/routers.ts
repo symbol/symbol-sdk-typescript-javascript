@@ -80,45 +80,6 @@ const routers = [
                     },
                 ]
             },
-            // {
-            //     path: '/servicePanel',
-            //     name: 'servicePanel',
-            //     redirect: '/namespace',
-            //     meta: {
-            //         //     disabled: true,
-            //     },
-            //     // @ts-ignore
-            //     component: () => import('@/views/service/service-panel/ServicePanel.vue'),
-            //     children: [
-            //         {
-            //             path: '/onDev',
-            //             name: 'onDev',
-            //             // @ts-ignore
-            //             component: () => import('@/views/other/on-development/OnDevelopment.vue')
-            //         }, {
-            //             path: '/namespace',
-            //             name: 'namespace',
-            //             // @ts-ignore
-            //             component: () => import('@/views/service/namespace/Namespace.vue')
-            //         }, {
-            //             path: '/mosaic',
-            //             name: 'mosaic',
-            //             // @ts-ignore
-            //             component: () => import('@/views/service/mosaic/Mosaic.vue')
-            //         }, {
-            //             path: '/multisigApi',
-            //             name: 'multisigApi',
-            //             // @ts-ignore
-            //             component: () => import('@/views/service/multisig/Multisig.vue')
-            //         },
-            //         {
-            //             path: '/apostille',
-            //             name: 'apostille',
-            //             // @ts-ignore
-            //             component: () => import('@/views/service/apostille/Apostille.vue')
-            //         },
-            //     ]
-            // },
 
             {
                 path: '/mosaic',

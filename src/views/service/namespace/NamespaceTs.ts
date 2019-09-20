@@ -38,4 +38,6 @@ export class NamespaceTs extends Vue {
         list[index].isSelected = true
         this.buttonList = list
     }
+
+
 }

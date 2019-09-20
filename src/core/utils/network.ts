@@ -2,6 +2,8 @@ import {QueryParams, TransactionType, NamespaceService, NamespaceHttp} from "nem
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import {Message} from "@/config/index.ts"
 import {AppMosaic} from '@/core/model'
+import {WebClient} from "@/core/utils/web"
+import {apiServerConfig} from "@/config/index"
 
 export const getNetworkGenerationHash = async (node: string, that: any): Promise<void> => {
     try {
@@ -48,4 +50,19 @@ export const getCurrentNetworkMosaic = async (currentNode: string, store: any) =
     } catch (error) {
         store.commit('SET_IS_NODE_HEALTHY', false)
     }
+}
+
+// TODO nedd remove from here
+export const getCurrentBlockHeight = async (currentNode: string, store: any) => {
+    const resStr = await WebClient.request('', {
+        url: `${currentNode}/chain/height`,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    }).catch(
+        store.commit('SET_CHAIN_HEIGHT', 0)
+    )
+    const height = resStr ? JSON.parse(resStr + '').height[0] : 0
+    store.commit('SET_CHAIN_HEIGHT', height)
 }

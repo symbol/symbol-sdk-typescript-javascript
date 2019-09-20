@@ -97,7 +97,7 @@ export class MonitorInvoiceTs extends Vue {
         return [...mosaicList]
             .filter(({expirationHeight}) => expirationHeight === 'Forever' || currentHeight < expirationHeight)
             .map(({name, balance, hex}) => ({
-                label: `${name || hex} (${balance.toLocaleString()})`,
+                label: `${name || hex} (${balance ? balance.toLocaleString() : 0})`,
                 value: hex,
             }))
     }
