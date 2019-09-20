@@ -717,5 +717,12 @@ export const en_US = {
     account_password: 'account password',
     hint: 'hint',
     path: 'path',
-    hd_wallet_path_error:'HD wallet path error'
+    hd_wallet_path_error:'HD wallet path error',
+
+    unconfirmed: 'unconfirmed',
+    from_to_action: 'From/To (action)',
+    amount_asset: 'Amount (asset)',
+    confirmations_height: 'Confirmations/Height',
+    hash_deadline: 'Hash/Deadline',
+    transaction_record: 'Transaction records'
 }

@@ -70,7 +70,7 @@ export class TransactionListTs extends Vue {
         const {currentHeight} = this
         if (!currentHeight) return height
         const confirmations = currentHeight - height
-        if (confirmations > 500) return height //@TODO 500 shouldn't be hardcoded
+        if (confirmations > 500) return height.toLocaleString() //@TODO 500 shouldn't be hardcoded
         return `${confirmations} / ${height.toLocaleString()}`
     }
 
