@@ -1,9 +1,9 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {settingPanelNavigationBar} from '@/config/view'
+import {settingPanelNavigationBarConfig} from "@/config/view/setting";
 
 @Component
 export class SettingPanelTs extends Vue {
-    navagatorList = settingPanelNavigationBar
+    navagatorList = settingPanelNavigationBarConfig
     currentHeadText = ''
 
     jumpToView(n, index) {

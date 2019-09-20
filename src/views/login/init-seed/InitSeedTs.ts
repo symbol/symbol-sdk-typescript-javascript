@@ -1,9 +1,9 @@
-import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {networkTypeList, walletFnNavList} from "@/config/view"
+import {Component, Vue} from 'vue-property-decorator'
 import AccountImportMnemonic from '@/views/login/init-seed/account-import-mnemonic/AccountImportMnemonic.vue'
 import AccountCreateMnemonic from '@/views/login/init-seed/account-create-mnemonic/AccountCreateMnemonic.vue'
 import SeedCreatedGuide from '@/views/login/init-seed/seed-created-guide/SeedCreatedGuide.vue'
 import {mapState} from "vuex"
+import { walletFnNavConfig } from '@/config/view/wallet'
 
 @Component({
     components: {
@@ -22,7 +22,7 @@ export class InitSeedTs extends Vue {
     createForm = {}
     activeAccount: any
     walletCreated = false
-    navList = walletFnNavList
+    navList = walletFnNavConfig
 
     get accountName() {
         return this.activeAccount.accountName

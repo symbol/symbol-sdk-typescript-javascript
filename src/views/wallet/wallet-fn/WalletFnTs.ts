@@ -2,7 +2,7 @@ import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import WalletCreate from '@/views/wallet/wallet-create/WalletCreate.vue'
 import WalletCreated from '@/views/wallet/wallet-created/WalletCreated.vue'
 import WalletImport from '@/views/wallet/wallet-import/WalletImport.vue'
-import {walletFnNavList} from '@/config/view'
+import { walletFnNavConfig } from '@/config/view/wallet'
 
 @Component({
     components: {
@@ -15,7 +15,7 @@ export class WalletFnTs extends Vue {
     Index = 0
     createForm = {}
     walletCreated = false
-    navList = walletFnNavList
+    navList = walletFnNavConfig
 
     @Prop()
     tabIndex: any

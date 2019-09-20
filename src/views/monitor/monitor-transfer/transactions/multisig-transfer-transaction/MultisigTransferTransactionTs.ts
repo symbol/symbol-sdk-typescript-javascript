@@ -1,4 +1,4 @@
-import {Mosaic, MosaicId, UInt64, Address, NamespaceId} from 'nem2-sdk'
+import {Mosaic, MosaicId, UInt64, Address, NamespaceId, AliasType} from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Message} from "@/config/index.ts"
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
@@ -14,10 +14,9 @@ import {
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs"
 import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
-import {aliasType} from "@/config/types"
-import {formData} from "@/config/formDto"
 import {standardFields} from "@/core/validation"
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
+import { formDataConfig } from '@/config/view/form'
 
 @Component({
     components: {
@@ -47,7 +46,7 @@ export class MultisigTransferTransactionTs extends Vue {
     currentAmount: number = 0
     multisigPublickeyList: any = []
     isAddressMapNull = true
-    formItem = formData.multisigTransferForm
+    formItem = formDataConfig.multisigTransferForm
     standardFields: object = standardFields
     app: any
     isMultisig = false
@@ -351,7 +350,7 @@ export class MultisigTransferTransactionTs extends Vue {
         let flag = false
         try {
             const namespaceInfo: any = await new NamespaceApiRxjs().getNamespace(namespaceId, node).toPromise()
-            if (namespaceInfo.alias.type === aliasType.addressAlias) {
+            if (namespaceInfo.alias.type === AliasType.Address) {
                 //@ts-ignore
                 that.formModel.address = Address.createFromEncoded(namespaceInfo.alias.address).address
             }

@@ -3,9 +3,9 @@ import {mapState} from 'vuex'
 import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {Password, Account} from "nem2-sdk"
-import {networkTypeList} from "@/config/view"
-import {formData} from "@/config/formDto"
 import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {formDataConfig} from '@/config/view/form'
+import {networkTypeConfig} from '@/config/view/setting'
 
 @Component({
     computed: {
@@ -22,10 +22,10 @@ export class WalletImportPrivatekeyTs extends Vue {
     activeAccount: any
     app: any
     account = {}
-    form = formData.walletImportPrivateKeyForm
-    networkType = networkTypeList
+    form = formDataConfig.walletImportPrivateKeyForm
+    networkType = networkTypeConfig
     showCheckPWDialog = false
-    NetworkTypeList = networkTypeList
+    NetworkTypeList = networkTypeConfig
 
     get getNode() {
         return this.activeAccount.node

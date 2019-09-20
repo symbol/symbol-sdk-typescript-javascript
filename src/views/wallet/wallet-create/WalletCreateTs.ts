@@ -1,6 +1,5 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {networkTypeList} from "@/config/view"
 import {NetworkType, Password} from "nem2-sdk"
 import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {AppAccounts} from '@/core/model'
@@ -8,6 +7,7 @@ import {mapState} from "vuex"
 import {AppWallet} from '@/core/utils/wallet.ts'
 import {createSubWalletByPath} from "@/core/utils/hdWallet.ts"
 import {networkConfig} from '@/config/index.ts'
+import {networkTypeConfig} from '@/config/view/setting'
 
 @Component({
     components: {
@@ -27,7 +27,7 @@ export class WalletCreateTs extends Vue {
         walletName: 'wallet-create',
         path: `m/44'/43'/1'/0/0`
     }
-    networkTypeList = networkTypeList
+    networkTypeList = networkTypeConfig
 
     showCheckPWDialog = false
 

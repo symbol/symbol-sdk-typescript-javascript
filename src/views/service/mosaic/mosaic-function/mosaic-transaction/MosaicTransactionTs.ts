@@ -13,7 +13,6 @@ import {
     MosaicSupplyType
 } from 'nem2-sdk'
 import {Message} from "@/config/index.ts"
-import {mosaicTransactionTypeList} from "@/config/view"
 import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
 import {
     formatSeconds, formatAddress, multisigAccountInfo, getAbsoluteMosaicAmount,
@@ -21,7 +20,8 @@ import {
 } from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
-import {formData} from "@/config/formDto";
+import {formDataConfig} from "@/config/view/form";
+import { mosaicTransactionTypeConfig } from '@/config/view/mosaic'
 
 
 @Component({
@@ -50,8 +50,8 @@ export class MosaicTransactionTs extends Vue {
     showMosaicAliasDialog = false
     isCompleteForm = true
     multisigPublickeyList = []
-    typeList = mosaicTransactionTypeList
-    formItem: any = formData.mosaicTransactionForm
+    typeList = mosaicTransactionTypeConfig
+    formItem: any = formDataConfig.mosaicTransactionForm
 
     get wallet() {
         return this.activeAccount.wallet

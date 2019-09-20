@@ -1,6 +1,6 @@
 import {NetworkType} from "nem2-sdk"
 
-export const formData = {
+export const formDataConfig = {
     multisigTransferForm: {
         address: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
         remark: '',
@@ -96,4 +96,5 @@ export const formData = {
         networkType: NetworkType.MIJIN_TEST,
         walletName: 'wallet-privateKey',
     }
+
 }

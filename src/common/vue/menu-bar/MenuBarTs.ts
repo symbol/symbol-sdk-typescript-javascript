@@ -4,13 +4,14 @@ import {AppWallet} from '@/core/utils/wallet'
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
-import {localRead, localSave} from "@/core/utils/utils.ts"
+import {localSave} from "@/core/utils/utils.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/core/utils/electron.ts'
 import {mapState} from 'vuex'
-import {languageList, nodeList} from "@/config/view"
-import {languageType} from "@/config/types"
 import {NetworkType} from "nem2-sdk"
+import {languageConfig} from "@/config/view/language";
+import {LanguageType} from "@/model/LanguageType";
+import {nodeListConfig} from "@/config/view/node";
 
 @Component({
     computed: {
@@ -27,7 +28,7 @@ export class MenuBarTs extends Vue {
     isShowNodeList = false
     isWindows = isWindows
     inputNodeValue = ''
-    nodeList = nodeList
+    nodeList = nodeListConfig
     isNowWindowMax = false
     isShowDialog = true
     activePanelList = [false, false, false, false, false, false, false,]
@@ -35,8 +36,8 @@ export class MenuBarTs extends Vue {
     monitorUnselected = monitorUnselected
     accountAddress = ''
     txStatusListener = null
-    languageList = languageList
-    localesMap = languageType
+    languageList = languageConfig
+    localesMap = LanguageType
 
     get isNodeHealthy() {
         return this.app.isNodeHealthy

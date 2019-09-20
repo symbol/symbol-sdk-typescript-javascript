@@ -1,7 +1,8 @@
 import {Component, Vue} from 'vue-property-decorator'
 import MosaicList from './mosaic-function/mosaic-list/MosaicList.vue'
 import MosaicTransaction from './mosaic-function/mosaic-transaction/MosaicTransaction.vue'
-import {mosaicButtonList} from "@/config/view";
+import {mosaicButtonConfig} from "@/config/view/mosaic";
+
 
 @Component({
     components: {
@@ -10,7 +11,7 @@ import {mosaicButtonList} from "@/config/view";
     }
 })
 export class MosaicTs extends Vue {
-    buttonList = mosaicButtonList
+    buttonList = mosaicButtonConfig
 
     switchButton(index) {
         let list = this.buttonList

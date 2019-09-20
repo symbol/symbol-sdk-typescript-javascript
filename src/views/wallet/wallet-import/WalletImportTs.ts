@@ -1,7 +1,8 @@
 import {Component, Vue} from 'vue-property-decorator'
 import WalletImportKeystore from '@/views/wallet/wallet-import-keystore/WalletImportKeystore.vue'
 import WalletImportPrivatekey from '@/views/wallet/wallet-import-privatekey/WalletImportPrivatekey.vue'
-import {networkTypeList, walletImportNavagatorList} from '@/config/view'
+import { networkTypeConfig } from '@/config/view/setting'
+import { walletImportNavagatorConfig } from '@/config/view/wallet'
 
 @Component({
     components: {
@@ -12,8 +13,8 @@ import {networkTypeList, walletImportNavagatorList} from '@/config/view'
 export class WalletImportTs extends Vue {
     tabIndex = 0
     currentTab = 'mnemonic'
-    netType = networkTypeList
-    navagatorList = walletImportNavagatorList
+    netType = networkTypeConfig
+    navagatorList = walletImportNavagatorConfig
     currentHeadText = ''
     mnemonic = {
         mnemonic: '',

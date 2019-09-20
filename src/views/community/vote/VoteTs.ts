@@ -5,8 +5,8 @@ import {alphabet, Message} from '@/config/index.ts'
 import {vote} from '@/core/api/logicApi.ts'
 import {mapState} from "vuex"
 import {formatDate} from '@/core/utils/utils.ts'
-import {voteActionList, voteFilterList, voteSelectionList} from "@/config/view"
-import {voteType} from "@/config/types"
+import {voteActionConfig, voteFilterConfig, voteSelectionConfig} from "@/config/view/vote";
+import {VoteType} from "@/model/VoteType";
 
 @Component({
         components: {
@@ -31,14 +31,14 @@ export class VoteTs extends Vue {
     showCheckPWDialog = false
     isLoadingConfirmedTx = true
     alphabet = alphabet
-    voteFilterList = voteFilterList
+    voteFilterList = voteFilterConfig
     spinShow = true
-    voteActionList = voteActionList
+    voteActionList = voteActionConfig
     voteList = []
     selections = []
     offset = 0
     isVoted = true
-    voteType = voteType
+    voteType = VoteType
     formItem = {
         title: '',
         content: '',
@@ -46,7 +46,7 @@ export class VoteTs extends Vue {
         endtime: formatDate(new Date().valueOf() + 200000000),
         starttime: formatDate(new Date().valueOf()),
         fee: '',
-        optionList: voteSelectionList
+        optionList: voteSelectionConfig
     }
 
     get publicKey() {

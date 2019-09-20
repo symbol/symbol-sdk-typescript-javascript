@@ -3,7 +3,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
 import {mapState} from "vuex"
 import {networkConfig} from '@/config/index.ts'
-import {Address, MosaicId} from "nem2-sdk"
+import {Address, MosaicId, AliasType} from "nem2-sdk"
 import NamespaceUnAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-unAlias-dialog/NamespaceUnAliasDialog.vue'
 import NamespaceMosaicAliasDialog
@@ -11,8 +11,7 @@ import NamespaceMosaicAliasDialog
 import NamespaceAddressAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-address-alias-dialog/NamespaceAddressAliasDialog.vue'
 import {AppMosaics} from '@/core/services/mosaics'
-import {aliasType} from "@/config/types";
-import { StatusString } from '@/config/view'
+import {MosaicNamespaceStatusType} from "@/model/MosaicNamespaceStatusType";
 
 @Component({
     components: {
@@ -39,24 +38,24 @@ export class NamespaceListTs extends Vue {
     aliasDialogItem = {}
     showMosaicAliasDialog = false
     isShowAddressAliasDialog = false
-    StatusString = StatusString
+    StatusString = MosaicNamespaceStatusType
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
 
     get namespaceList() {
         const namespaceList = this.activeAccount.namespaces.map((item) => {
             switch (item.alias.type) {
-                case (aliasType.noAlias):
-                    item.aliasTarget = StatusString.NO_ALIAS
-                    item.aliasType = StatusString.NO_ALIAS
+                case (AliasType.None):
+                    item.aliasTarget = MosaicNamespaceStatusType.NOALIAS
+                    item.aliasType = MosaicNamespaceStatusType.NOALIAS
                     item.isLinked = false
                     break
-                case (aliasType.addressAlias):
+                case (AliasType.Address):
                     //@ts-ignore
                     item.aliasTarget = Address.createFromEncoded(item.alias.address).address
                     item.aliasType = 'address'
                     item.isLinked = true
                     break
-                case (aliasType.mosaicAlias):
+                case (AliasType.Mosaic):
                     item.aliasTarget = new MosaicId(item.alias.mosaicId).toHex()
                     item.aliasType = 'mosaic'
                     item.isLinked = true
@@ -124,9 +123,9 @@ export class NamespaceListTs extends Vue {
         const {endHeight, isActive} = namespaceInfo
         const {currentHeight, namespaceGracePeriodDuration} = this
         if (!isActive) {
-            return StatusString.EXPIRED
+            return MosaicNamespaceStatusType.EXPIRED
         }
-        const expireTime = endHeight - currentHeight > namespaceGracePeriodDuration ? endHeight - currentHeight : StatusString.EXPIRED
+        const expireTime = endHeight - currentHeight > namespaceGracePeriodDuration ? endHeight - currentHeight : MosaicNamespaceStatusType.EXPIRED
         return expireTime
     }
 

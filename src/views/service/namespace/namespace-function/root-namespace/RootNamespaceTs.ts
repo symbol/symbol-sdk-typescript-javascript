@@ -4,13 +4,13 @@ import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {Message, networkConfig} from "@/config/index.ts"
-import {rootNamespaceTypelist} from "@/config/view"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress,
     createBondedMultisigTransaction, createCompleteMultisigTransaction,
 } from '@/core/utils'
-import {formData} from "@/config/formDto"
+import { formDataConfig } from '@/config/view/form'
+import {rootNamespaceTypeConfig} from "@/config/view/namespace";
 
 
 @Component({
@@ -35,8 +35,8 @@ export class RootNamespaceTs extends Vue {
     transactionList = []
     otherDetails: any = {}
     multisigPublickeyList: Array<any> = []
-    typeList = rootNamespaceTypelist
-    form = formData.rootNamespaceForm
+    typeList = rootNamespaceTypeConfig
+    form = formDataConfig.rootNamespaceForm
 
 
     get generationHash() {

@@ -4,7 +4,8 @@ import monitorSeleted from '@/common/img/monitor/monitorSeleted.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
 import {copyTxt, formatXEMamount, formatNumber, localRead, localSave} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
-import {monitorPanelNavigatorList} from '@/config/view'
+import {monitorPanelNavigatorConfig} from "@/config/view/monitor";
+
 
 @Component({
     computed: {
@@ -26,7 +27,7 @@ export class MonitorPanelTs extends Vue {
     isChecked = true
     monitorSeleted = monitorSeleted
     monitorUnselected = monitorUnselected
-    navigatorList: any = monitorPanelNavigatorList
+    navigatorList: any = monitorPanelNavigatorConfig
 
     get xemUsdPrice() {
         return this.app.xemUsdPrice

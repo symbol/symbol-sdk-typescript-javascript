@@ -5,7 +5,8 @@ import {AppWallet} from "@/core/utils/wallet.ts"
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
-import {formData} from "@/config/formDto";
+import {formDataConfig} from "@/config/view/form";
+
 
 @Component({
     computed: {
@@ -21,7 +22,7 @@ export class MonitorRemoteTs extends Vue {
     isLinkToRemote = false
     isShowDialog = false
     remotePublickey = ''
-    formItem: any = formData.remoteForm
+    formItem: any = formDataConfig.remoteForm
 
     get getWallet() {
         return this.activeAccount.wallet

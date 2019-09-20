@@ -3,7 +3,8 @@ import MultisigMap from './multisig-functions/multisig-map/MultisigMap.vue'
 import MultisigCosign from './multisig-functions/multisig-cosign/MultisigCosign.vue'
 import MultisigConversion from './multisig-functions/multisig-conversion/MultisigConversion.vue'
 import MultisigManagement from './multisig-functions/multisig-management/MultisigManagement.vue'
-import {multisigButtonList} from "@/config/view";
+import {multisigButtonConfig} from "@/config/view/multisig";
+
 
 @Component({
     components: {
@@ -15,7 +16,7 @@ import {multisigButtonList} from "@/config/view";
 })
 export class MultisigTs extends Vue {
 
-    buttonList = multisigButtonList
+    buttonList = multisigButtonConfig
 
     switchButton(index) {
         let list = this.buttonList

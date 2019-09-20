@@ -2,7 +2,8 @@ import {Component, Vue} from 'vue-property-decorator'
 import ApostilleAudit from './apostille-function/apostille-audit/ApostilleAudit.vue'
 import ApostilleCreate from './apostille-function/apostille-create/ApostilleCreate.vue'
 import ApostilleHistory from './apostille-function/apostille-history/ApostilleHistory.vue'
-import {apostilleButtonList} from "@/config/view";
+import {apostilleButtonConfig} from "@/config/view/apostille";
+
 
 @Component({
     components: {
@@ -12,7 +13,7 @@ import {apostilleButtonList} from "@/config/view";
     }
 })
 export class ApostilleTs extends Vue {
-    buttonList = apostilleButtonList
+    buttonList = apostilleButtonConfig
 
     switchButton(index) {
         let list = this.buttonList

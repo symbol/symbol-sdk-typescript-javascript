@@ -3,11 +3,10 @@ import {market} from "@/core/api/logicApi.ts"
 import {KlineQuery} from "@/core/query/klineQuery.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {isRefreshData, localSave, localRead, formatNumber} from '@/core/utils'
-import {networkStatusList} from "@/config/view";
-
 import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
 import LineChart from '@/common/vue/line-chart/LineChart.vue'
 import TransactionList from '@/views/monitor/monitor-transaction-list/TransactionList.vue'
+import {networkStatusConfig} from '@/config/view/setting'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -26,7 +25,7 @@ export class MonitorDashBoardTs extends Vue {
     lowestPrice: any = 0
     averagePrice: any = 0
     updateAnimation = ''
-    networkStatusList = networkStatusList
+    networkStatusList = networkStatusConfig
     page: number = 1
     formatNumber = formatNumber
 

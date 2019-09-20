@@ -1,9 +1,9 @@
-import {localSave, localRead, getObjectLength} from '@/core/utils/utils.ts'
+import {localSave} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import GetStart from './login-view/get-start/GetStart.vue'
 import InputLock from './login-view/input-lock/InputLock.vue'
 import {mapState} from "vuex"
-import {languageList} from "@/config/view"
+import {languageConfig} from "@/config/view/language";
 
 @Component({
     components: {
@@ -18,7 +18,7 @@ import {languageList} from "@/config/view"
 })
 export class LoginTs extends Vue {
     app: any
-    languageList = languageList
+    languageList = languageConfig
     isShowDialog = true
     indexShowList = [true, false]
 

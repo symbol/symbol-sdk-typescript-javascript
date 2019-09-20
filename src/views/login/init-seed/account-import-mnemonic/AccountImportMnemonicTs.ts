@@ -3,15 +3,11 @@ import {AppWallet} from '@/core/utils/wallet.ts'
 import {mapState} from 'vuex'
 import {Password} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
-import {networkTypeList} from "@/config/view"
-import {formData} from "@/config/formDto"
-import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {AppLock, createMnemonic} from "@/core/utils"
+import {formDataConfig} from "@/config/view/form";
+import {networkTypeConfig} from '@/config/view/setting';
+import {AppLock} from "@/core/utils";
 
 @Component({
-    components: {
-        CheckPasswordDialog
-    },
     computed: {
         ...mapState({
             activeAccount: 'account',
@@ -22,8 +18,8 @@ import {AppLock, createMnemonic} from "@/core/utils"
 export class AccountImportMnemonicTs extends Vue {
     activeAccount: any
     app: any
-    form = formData.walletImportMnemonicForm
-    NetworkTypeList = networkTypeList
+    form = formDataConfig.walletImportMnemonicForm
+    NetworkTypeList = networkTypeConfig
     account = {}
     showCheckPWDialog = false
 
@@ -70,6 +66,18 @@ export class AccountImportMnemonicTs extends Vue {
             })
             return false
         }
+        // if (!this.form.password || this.form.password.length < 8) {
+        //     this.$Notice.error({
+        //         title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
+        //     })
+        //     return false
+        // }
+        // if (this.form.password !== this.form.checkPW) {
+        //     this.$Notice.error({
+        //         title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''
+        //     })
+        //     return false
+        // }
         if (!this.form.mnemonic || this.form.mnemonic === '' || this.form.mnemonic.split(' ').length != 12) {
             this.$Notice.error({
                 title: this.$t(Message.MNENOMIC_INPUT_ERROR) + ''

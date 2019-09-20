@@ -5,7 +5,7 @@ import {
     getCurrentMonthFirst, getCurrentMonthLast, formatNumber,
     renderMosaics, renderMosaicNames, renderMosaicAmount
 } from '@/core/utils'
-import {transferType} from "@/config/types"
+import {TransferType} from "@/model/TransferType";
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -20,7 +20,7 @@ export class CollectionRecordTs extends Vue {
     currentMonthFirst: number = 0
     currentMonth: string = ''
     transactionDetails: any = []
-    transferType = transferType
+    transferType = TransferType
     renderMosaics = renderMosaics
     renderMosaicNames = renderMosaicNames
     renderMosaicAmount = renderMosaicAmount
@@ -56,7 +56,7 @@ export class CollectionRecordTs extends Vue {
                 && item.txHeader.date <= currentMonthLast && item.txHeader.date >= currentMonthFirst))
         if (!filteredByDate.length) return []
 
-        return this.transactionType === transferType.SENT
+        return this.transactionType === TransferType.SENT
         ? filteredByDate.filter(({txHeader}) => txHeader.tag === 'payment')
         : filteredByDate.filter(({txHeader}) => txHeader.tag !== 'payment')
     }

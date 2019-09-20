@@ -1,11 +1,10 @@
 import {mapState} from "vuex"
-import {Address, MosaicId, UInt64} from "nem2-sdk"
+import {Address, AliasType, MosaicId} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
 import MosaicUnAliasDialog from './mosaic-unAlias-dialog/MosaicUnAliasDialog.vue'
 import {formatNumber} from '@/core/utils'
-import {aliasType} from "@/config/types";
 
 @Component({
     components: {
@@ -72,11 +71,11 @@ export class MosaicListTs extends Vue {
         let namespaceMap = {}
         this.activeAccount.namespaces.forEach((item) => {
             switch (item.alias.type) {
-                case (aliasType.addressAlias):
+                case (AliasType.Address):
                     //@ts-ignore
                     namespaceMap[Address.createFromEncoded(item.alias.address).address] = item
                     break
-                case (aliasType.mosaicAlias):
+                case (AliasType.Mosaic):
                     namespaceMap[new MosaicId(item.alias.mosaicId).toHex()] = item
             }
         })
@@ -93,7 +92,7 @@ export class MosaicListTs extends Vue {
 
     showCheckDialog() {
         this.showCheckPWDialog = true
-    }  
+    }
 
     formatNumber(number) {
         return formatNumber(number)

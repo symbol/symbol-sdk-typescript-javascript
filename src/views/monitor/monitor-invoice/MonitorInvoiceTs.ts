@@ -4,12 +4,10 @@ import {copyTxt} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 import {mapState} from "vuex"
-import {Address, Mosaic, MosaicId, NamespaceId, UInt64} from "nem2-sdk"
+import { MosaicId, NamespaceId, AliasType} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
-import {} from "@/config/index"
-import {aliasType} from "@/config/types"
-import {monitorRecaeiptTransferTypeList} from "@/config/view"
-import {transferType} from "@/config/types"
+import {TransferType} from "@/model/TransferType";
+import {monitorRecaeiptTransferTypeConfig} from "@/config/view/monitor";
 
 @Component({
     components: {
@@ -33,9 +31,9 @@ export class MonitorInvoiceTs extends Vue {
     notes = ''
     QRCode: string = ''
     transactionHash = ''
-    TransferType = transferType
+    TransferType = TransferType
     isShowDialog = false
-    transferTypeList = monitorRecaeiptTransferTypeList
+    transferTypeList = monitorRecaeiptTransferTypeConfig
     app: any
     qrInfo = {
         mosaicHex: '-',
@@ -125,7 +123,7 @@ export class MonitorInvoiceTs extends Vue {
             let flag = false
             try {
                 const namespaceInfo: any = await new NamespaceApiRxjs().getNamespace(namespaceId, node).toPromise()
-                if (namespaceInfo.alias.type === aliasType.mosaicAlias) {
+                if (namespaceInfo.alias.type === AliasType.Mosaic) {
                     //@ts-ignore
                     that.formItem.mosaicHex = new MosaicId(namespaceInfo.alias.mosaicId).toHex()
                 }

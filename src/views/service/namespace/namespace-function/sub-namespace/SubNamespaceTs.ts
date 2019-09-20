@@ -2,7 +2,6 @@ import {Address} from "nem2-sdk"
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {Message, networkConfig} from "@/config/index.ts"
-import {subNamespaceTypeList} from "@/config/view"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
@@ -11,6 +10,8 @@ import {
     createCompleteMultisigTransaction, formatAddress, getNamespaces
 } from '@/core/utils'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
+import {subNamespaceTypeConfig} from "@/config/view/namespace";
+
 
 @Component({
     components: {
@@ -43,7 +44,7 @@ export class SubNamespaceTs extends Vue {
         lockFee: 10,
     }
     multisigPublickeyList = []
-    typeList = subNamespaceTypeList
+    typeList = subNamespaceTypeConfig
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
 
     get wallet() {

@@ -5,7 +5,8 @@ import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {getAbsoluteMosaicAmount, AppWallet} from '@/core/utils'
-import {formData} from "@/config/formDto";
+import {formDataConfig} from "@/config/view/form";
+
 
 @Component({
     computed: {
@@ -20,7 +21,7 @@ export class MosaicAliasDialogTs extends Vue {
     app: any
     show = false
     isCompleteForm = false
-    mosaic: any = formData.mosaicAliasForm
+    mosaic: any = formDataConfig.mosaicAliasForm
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
 
     @Prop()

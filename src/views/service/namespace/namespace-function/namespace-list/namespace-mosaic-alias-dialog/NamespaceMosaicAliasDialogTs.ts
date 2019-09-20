@@ -5,8 +5,8 @@ import {Message} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount, AppWallet} from '@/core/utils'
 import {AppMosaics} from '@/core/services/mosaics'
-import {formData} from "@/config/formDto";
-import {StatusString} from "@/config/view";
+import {MosaicNamespaceStatusType} from "@/model/MosaicNamespaceStatusType";
+import {formDataConfig} from "@/config/view/form";
 
 @Component({
     computed: {
@@ -21,7 +21,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     app: any
     show = false
     isCompleteForm = false
-    formItem: any = formData.mosaicAliasForm
+    formItem: any = formDataConfig.mosaicAliasForm
 
     @Prop()
     showMosaicAliasDialog: boolean
@@ -66,7 +66,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
             .getAvailableToBeLinked(currentHeight, address, this.$store)
         if (!availableToBeLinked.length) return []
         return availableToBeLinked
-            .filter((item) => currentHeight < item.expirationHeight || item.expirationHeight == StatusString.FOREVER)
+            .filter((item) => currentHeight < item.expirationHeight || item.expirationHeight == MosaicNamespaceStatusType.FOREVER)
             .map((item:any) => {
                 item.value = item.hex
                 item.label = item.hex

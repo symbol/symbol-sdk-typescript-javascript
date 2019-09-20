@@ -11,7 +11,7 @@ import {Message} from "@/config/index.ts"
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {getAbsoluteMosaicAmount, createBondedMultisigTransaction} from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {formData} from "@/config/formDto"
+import { formDataConfig } from '@/config/view/form'
 
 @Component({
     components: {
@@ -32,7 +32,7 @@ export class MultisigConversionTs extends Vue {
     transactionDetail = {}
     otherDetails = {}
     transactionList = []
-    formItem = formData.multisigConversionForm
+    formItem = formDataConfig.multisigConversionForm
 
     get publickey() {
         return this.activeAccount.wallet.publicKey

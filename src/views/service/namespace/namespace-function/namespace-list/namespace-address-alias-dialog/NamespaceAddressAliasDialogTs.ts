@@ -5,7 +5,6 @@ import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem
 import {AppWallet} from "@/core/utils/wallet.ts"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
-import {StatusString} from "@/config/view";
 
 @Component({
     computed: {

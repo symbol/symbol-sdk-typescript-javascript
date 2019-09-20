@@ -4,7 +4,7 @@ import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Password} from 'nem2-sdk'
 import {Message} from "@/config/index.ts"
 import {getAbsoluteMosaicAmount, createRootNamespace, AppWallet, formatSeconds} from '@/core/utils'
-import {formData} from "@/config/formDto";
+import {formDataConfig} from "@/config/view/form";
 
 @Component({
     computed: {
@@ -19,7 +19,7 @@ export class NamespaceEditDialogTs extends Vue {
     isCompleteForm = false
     stepIndex = 0
     durationIntoDate: string = '0'
-    namespace = formData.namesapceEditForm
+    namespace = formDataConfig.namesapceEditForm
 
     @Prop({default: false})
     showNamespaceEditDialog: boolean

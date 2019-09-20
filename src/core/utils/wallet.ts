@@ -19,7 +19,8 @@ import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
 import {createSubWalletByPath} from "@/core/utils/hdWallet.ts"
 import {AppLock} from "@/core/utils/appLock"
-import {createType, coinType} from "@/config/types"
+import {CreateWalletType} from "@/model/CreateWalletType";
+import {CoinType} from "@/model/CoinType";
 
 export class AppWallet {
     constructor(wallet?: {
@@ -59,7 +60,7 @@ export class AppWallet {
             this.publicKey = Account.createFromPrivateKey(privateKey, networkType).publicKey
             this.networkType = networkType
             this.active = true
-            this.accountTitle = this.generateWalletTitle(createType.privateKey, coinType.xem, NetworkType[networkType])
+            this.accountTitle = this.generateWalletTitle(CreateWalletType.privateKey, CoinType.xem, NetworkType[networkType])
             this.addNewWalletToList(store)
             return this
         } catch (error) {
@@ -85,7 +86,7 @@ export class AppWallet {
             this.networkType = networkType
             this.active = true
             this.path = path
-            this.accountTitle = this.generateWalletTitle(createType.seed, coinType.xem, NetworkType[networkType])
+            this.accountTitle = this.generateWalletTitle(CreateWalletType.seed, CoinType.xem, NetworkType[networkType])
             this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
             this.addNewWalletToList(store)
             return this
@@ -113,7 +114,7 @@ export class AppWallet {
             this.networkType = networkType
             this.active = true
             this.path = path
-            this.accountTitle = this.generateWalletTitle(createType.seed, coinType.xem, NetworkType[networkType])
+            this.accountTitle = this.generateWalletTitle(CreateWalletType.seed, CoinType.xem, NetworkType[networkType])
             this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
             accountMap[accountName].seed = this.encryptedMnemonic
             localSave('accountMap', JSON.stringify(accountMap))
@@ -135,7 +136,7 @@ export class AppWallet {
             const words = CryptoJS.enc.Base64.parse(keystoreStr)
             const keystore = words.toString(CryptoJS.enc.Utf8)
             this.simpleWallet = JSON.parse(keystore)
-            this.accountTitle = this.generateWalletTitle(createType.keyStore, coinType.xem, NetworkType[networkType])
+            this.accountTitle = this.generateWalletTitle(CreateWalletType.keyStore, CoinType.xem, NetworkType[networkType])
             const {privateKey} = this.getAccount(password)
             this.createFromPrivateKey(name, password, privateKey, networkType, store)
             return this

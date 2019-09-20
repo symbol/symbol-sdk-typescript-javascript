@@ -1,8 +1,7 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {RestrictionApiRxjs} from '@/core/api/RestrictionApiRxjs.ts'
 import {Message} from "@/config/index.ts"
-import {transactionTypeList} from "@/config/view"
-import { AppWallet} from "@/core/utils/wallet"
+import {AppWallet} from "@/core/utils/wallet"
 import {mapState} from "vuex"
 import {
     Account,
@@ -15,12 +14,13 @@ import {
     Address, MosaicId,
     Password
 } from "nem2-sdk"
+import { transactionTypeConfig } from '@/config/view/transaction'
 
 @Component({
     computed: {...mapState({activeAccount: 'account'})},
 })
 export class WalletFilterTs extends Vue {
-    entityTypeList = transactionTypeList
+    entityTypeList = transactionTypeConfig
     aliasList = []
     activeAccount: any
     isShowDialog = false
@@ -84,8 +84,8 @@ export class WalletFilterTs extends Vue {
         }
         if (this.filterTypeList[2]) {
             this.formItem.filterList.unshift({
-                label: this.$t(this.currentFilter) + '(' + transactionTypeList[this.currentFilter].value + ')',
-                value: transactionTypeList[this.currentFilter].value,
+                label: this.$t(this.currentFilter) + '(' + transactionTypeConfig[this.currentFilter].value + ')',
+                value: transactionTypeConfig[this.currentFilter].value,
                 modificationType
             })
             return

@@ -3,7 +3,7 @@ import SubNamespace from './namespace-function/sub-namespace/SubNamespace.vue'
 import RootNamespace from './namespace-function/root-namespace/RootNamespace.vue'
 import NamespaceList from './namespace-function/namespace-list/NamespaceList.vue'
 import {mapState} from "vuex"
-import {namespaceButtonList} from "@/config/view";
+import {namespaceButtonConfig} from "@/config/view/namespace";
 
 @Component({
     components: {
@@ -18,7 +18,7 @@ import {namespaceButtonList} from "@/config/view";
     }
 })
 export class NamespaceTs extends Vue {
-    buttonList = namespaceButtonList
+    buttonList = namespaceButtonConfig
     activeAccount:any
 
     get node() {

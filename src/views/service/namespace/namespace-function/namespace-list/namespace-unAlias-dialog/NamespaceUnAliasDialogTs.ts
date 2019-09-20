@@ -4,7 +4,7 @@ import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Message} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount, AppWallet} from '@/core/utils'
-import {formData} from "@/config/formDto";
+import {formDataConfig} from "@/config/view/form";
 
 @Component({
         computed: {...mapState({activeAccount: 'account'})},
@@ -15,7 +15,7 @@ export class NamespaceUnAliasDialogTs extends Vue {
     show = false
     isCompleteForm = false
     aliasNameList: any[] = []
-    formItem: any = formData.mosaicUnaliasForm
+    formItem: any = formDataConfig.mosaicUnaliasForm
 
     @Prop()
     showUnAliasDialog: boolean

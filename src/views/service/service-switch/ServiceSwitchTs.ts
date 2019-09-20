@@ -1,9 +1,10 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {serviceSwitchFnList} from '@/config/view'
+import { serviceSwitchFnConfig } from '@/config/view/wallet'
+
 
 @Component
 export class ServiceSwitchTs extends Vue {
-    serviceFnList =serviceSwitchFnList
+    serviceFnList =serviceSwitchFnConfig
 
     nowIcon(item) {
         return item.active ? item.iconActive : item.iconDefault

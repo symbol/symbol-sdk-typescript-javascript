@@ -1,8 +1,8 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {createMnemonic} from "@/core/utils/hdWallet.ts"
-import {networkTypeList} from "@/config/view"
 import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {networkTypeConfig} from '@/config/view/setting'
 
 @Component({
     components: {
@@ -16,7 +16,7 @@ export class AccountCreateMnemonicTs extends Vue {
         seed: ''
     }
     showCheckPWDialog = false
-    networkTypeList = networkTypeList
+    networkTypeList = networkTypeConfig
 
     checkInput() {
         if (!this.formItem.currentNetType || this.formItem.currentNetType == '') {

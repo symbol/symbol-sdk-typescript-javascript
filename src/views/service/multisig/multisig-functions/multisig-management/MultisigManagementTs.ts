@@ -17,7 +17,7 @@ import {
 } from "@/core/utils"
 import {Message} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {formData} from "@/config/formDto";
+import {formDataConfig} from "@/config/view/form";
 
 @Component({
     components: {
@@ -46,7 +46,7 @@ export class MultisigManagementTs extends Vue {
     MultisigCosignatoryModificationType = MultisigCosignatoryModificationType
     publickeyList = []
 
-    formItem = formData.multisigManagementForm
+    formItem = formDataConfig.multisigManagementForm
 
     get currentXEM1() {
         return this.activeAccount.currentXEM1

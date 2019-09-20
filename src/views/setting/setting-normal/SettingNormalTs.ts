@@ -1,15 +1,15 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {localSave} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
-import {languageList} from "@/config/view";
-import {timeZoneListData} from "@/config/timeZone";
+import {timeZoneListData} from "@/config/view/timeZone";
+import {languageConfig} from "@/config/view/language";
 
 @Component({
     computed: {...mapState({app: 'app'})},
 })
 export class SettingNormalTs extends Vue {
     app: any
-    languageList: any = languageList
+    languageList: any = languageConfig
     coin = 'USD'
     timeZoneListData = timeZoneListData
     coinList = [

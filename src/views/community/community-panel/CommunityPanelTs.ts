@@ -1,6 +1,6 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapState} from "vuex"
-import {communityPanelNavList} from '@/config/view'
+import {communityPanelNavConfig} from "@/config/view/community";
 
 
 @Component({
@@ -13,7 +13,7 @@ import {communityPanelNavList} from '@/config/view'
 export class CommunityPanelTs extends Vue {
     walletList = []
     app: any
-    navList = communityPanelNavList
+    navList = communityPanelNavConfig
 
     get nowWalletList() {
         return this.app.walletList

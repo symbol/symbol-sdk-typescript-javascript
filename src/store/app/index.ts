@@ -1,5 +1,5 @@
-import {nodeList} from '@/config/view.ts'
 import {networkConfig} from '@/config/index.ts'
+import {nodeListConfig} from "@/config/view/node";
 
 declare interface appInfo {
     timeZone: number,
@@ -38,7 +38,7 @@ export default {
             numTransactions: 0,
             currentBlockInfo: {},
             signerPublicKey: '',
-            nodeAmount: nodeList.length
+            nodeAmount: nodeListConfig.length
         },
         mosaicsLoading: true,
         balanceLoading: false,
