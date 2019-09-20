@@ -8,20 +8,23 @@
     import 'animate.css'
     import {mapState} from 'vuex'
     import {asyncScheduler} from 'rxjs'
-    import { throttleTime } from 'rxjs/operators'
+    import {throttleTime} from 'rxjs/operators'
 
     import {isWindows} from "@/config/index.ts"
     import {
-        localRead, AppWallet, getNamespaces, checkInstall,
-        getNetworkGenerationHash, getCurrentNetworkMosaic,
+        AppWallet,
+        checkInstall, getCurrentNetworkMosaic, getNamespaces,
+        getNetworkGenerationHash,
+        getObjectLength,
+        getTopValueInObject, localRead,
     } from '@/core/utils'
-    import {Component, Vue} from 'vue-property-decorator'
+    import {Component, Vue, Watch} from 'vue-property-decorator'
     import {ChainListeners} from '@/core/services/listeners.ts'
-    import {mosaicsAmountViewFromAddress, initMosaic} from '@/core/services/mosaics'
-    import {AppMosaic} from '@/core/model'
+    import {initMosaic} from '@/core/services/mosaics'
     import {getMarketOpenPrice} from '@/core/services/marketData.ts'
     import {setTransactionList} from '@/core/services/transactions'
-    
+    import {AppMosaic} from '@/core/model'
+
     @Component({
         computed: {
             ...mapState({activeAccount: 'account', app: 'app'}),
@@ -89,14 +92,23 @@
             return this.activeAccount.transactionList
         }
 
+        get accountName() {
+            return this.activeAccount.accountName
+        }
+
         // @TODO: move out from there
         async setWalletsList() {
-            const walletListFromStorage: any = localRead('wallets') !== '' ? JSON.parse(localRead('wallets')) : false
-            if (!walletListFromStorage || !walletListFromStorage.length) return
-            AppWallet.switchWallet(walletListFromStorage[0].address, walletListFromStorage, this.$store)
+            const {accountName} = this
+            if (!accountName) return
+            const accountMapFromStorage: any = localRead('accountMap') !== '' ? JSON.parse(localRead('accountMap')) : false
+            if (!accountMapFromStorage || !getObjectLength(accountMapFromStorage)) return
+            const wallets = getTopValueInObject(accountMapFromStorage)['wallets']
+            AppWallet.switchWallet(wallets[0].address, wallets, this.$store)
+
         }
 
         async onWalletChange(newWallet) {
+            // reset tx list
             try {
                 await Promise.all([
                     this.$store.commit('SET_TRANSACTIONS_LOADING', true),
@@ -109,7 +121,7 @@
                 const mosaicListFromStorage = localRead(newWallet.address)
                 const parsedMosaicListFromStorage = mosaicListFromStorage === ''
                     ? false : JSON.parse(mosaicListFromStorage)
-                
+
                 if (mosaicListFromStorage) await this.$store.commit('SET_MOSAICS', parsedMosaicListFromStorage)
 
                 const initMosaicsAndNamespaces = await Promise.all([
@@ -125,7 +137,6 @@
                     this.$store.commit('SET_NAMESPACE_LOADING', false),
                 ])
                 new AppWallet(newWallet).setMultisigStatus(this.node, this.$store)
-
                 if (!this.chainListeners) {
                     this.chainListeners = new ChainListeners(this, newWallet.address, this.node)
                     this.chainListeners.start()
@@ -134,11 +145,24 @@
                     this.chainListeners.switchAddress(newWallet.address)
                 }
             } catch (error) {
-                this.$store.commit('SET_TRANSACTIONS_LOADING', false),
-                this.$store.commit('SET_BALANCE_LOADING', false),
-                this.$store.commit('SET_MOSAICS_LOADING', false),
-                this.$store.commit('SET_NAMESPACE_LOADING', false),
+                this.$store.commit('SET_TRANSACTIONS_LOADING', false)
+                this.$store.commit('SET_BALANCE_LOADING', false)
+                this.$store.commit('SET_MOSAICS_LOADING', false)
+                this.$store.commit('SET_NAMESPACE_LOADING', false)
+                if (!this.chainListeners) {
+                    this.chainListeners = new ChainListeners(this, newWallet.address, this.node)
+                    this.chainListeners.start()
+                } else {
+                    this.chainListeners.switchAddress(newWallet.address)
+                }
                 console.error("App -> onWalletChange -> error", error)
+            }
+        }
+
+        @Watch('wallet.address')
+        onWalletAddressChange() {
+            if (this.wallet && this.wallet.address) {
+                this.onWalletChange(this.wallet)
             }
         }
 
@@ -146,6 +170,7 @@
          * Add namespaces and divisibility to transactions and balances
          */
         async mounted() {
+            const {accountName} = this
             // need init at start
             await this.setWalletsList()
             /**
@@ -212,7 +237,6 @@
                             } catch (error) {
                                 console.error(error)
                             }
-
                         } else {
                             this.chainListeners.switchEndpoint(node)
                         }

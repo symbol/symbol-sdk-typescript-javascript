@@ -37,8 +37,8 @@ const confirmLockValidator = (context) => {
     return context.Validator.extend(
         CUSTOM_VALIDATORS_NAMES.confirmLock,
         (password, [otherField]) => new Promise((resolve) => {
-            const cipher = getOtherFieldValue(otherField, context)
-            if (!new AppLock().verifyLock(password, cipher)) resolve({valid: false})
+            const passwordCipher = getOtherFieldValue(otherField, context)
+            if (AppLock.decryptString(passwordCipher, password) !== password) resolve({valid: false})
             resolve({valid: password})
         }),
         {hasTarget: true},

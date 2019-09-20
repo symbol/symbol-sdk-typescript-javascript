@@ -11,12 +11,10 @@
           {{$t('import')}}{{$t(currentHeadText)}}
         </div>
         <div class="main_view">
-          <WalletImportMnemonic v-if="tabIndex === 0" @toWalletDetails="toWalletDetails"
-                                @closeImport="closeImport"></WalletImportMnemonic>
-          <WalletImportPrivatekey v-else-if="tabIndex === 1" @toWalletDetails="toWalletDetails"
-                                  @closeImport="closeImport"></WalletImportPrivatekey>
-          <WalletImportKeystore v-else-if="tabIndex === 2" @toWalletDetails="toWalletDetails"
+          <WalletImportKeystore v-if="tabIndex === 1" @toWalletDetails="toWalletDetails"
                                 @closeImport="closeImport"></WalletImportKeystore>
+          <WalletImportPrivatekey v-else-if="tabIndex === 0" @toWalletDetails="toWalletDetails"
+                                  @closeImport="closeImport"></WalletImportPrivatekey>
         </div>
       </div>
     </div>

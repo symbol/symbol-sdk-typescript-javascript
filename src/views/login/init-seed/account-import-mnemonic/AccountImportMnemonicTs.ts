@@ -1,12 +1,17 @@
 import {Message} from "@/config/index.ts"
 import {AppWallet} from '@/core/utils/wallet.ts'
-import {mapState} from 'vuex';
+import {mapState} from 'vuex'
 import {Password} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
-import {networkTypeList} from "@/config/view";
-import {formData} from "@/config/formDto";
+import {networkTypeList} from "@/config/view"
+import {formData} from "@/config/formDto"
+import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {AppLock, createMnemonic} from "@/core/utils"
 
 @Component({
+    components: {
+        CheckPasswordDialog
+    },
     computed: {
         ...mapState({
             activeAccount: 'account',
@@ -14,12 +19,13 @@ import {formData} from "@/config/formDto";
         })
     }
 })
-export class WalletImportMnemonicTs extends Vue {
+export class AccountImportMnemonicTs extends Vue {
     activeAccount: any
     app: any
     form = formData.walletImportMnemonicForm
     NetworkTypeList = networkTypeList
     account = {}
+    showCheckPWDialog = false
 
     get getNode() {
         return this.activeAccount.node
@@ -35,7 +41,20 @@ export class WalletImportMnemonicTs extends Vue {
 
     submit() {
         if (!this.checkImport()) return
-        this.importWallet()
+        this.showCheckPWDialog = true
+
+    }
+
+    checkEnd(password) {
+        if (!password) return
+        const {mnemonic} = this.form
+        const seed = AppLock.encryptString(mnemonic, password)
+        this.$store.commit('SET_MNEMONIC', seed)
+        this.importWallet(password)
+    }
+
+    closeCheckPWDialog() {
+        this.showCheckPWDialog = true
     }
 
     checkImport() {
@@ -51,18 +70,6 @@ export class WalletImportMnemonicTs extends Vue {
             })
             return false
         }
-        if (!this.form.password || this.form.password.length < 8) {
-            this.$Notice.error({
-                title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
-            })
-            return false
-        }
-        if (this.form.password !== this.form.checkPW) {
-            this.$Notice.error({
-                title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''
-            })
-            return false
-        }
         if (!this.form.mnemonic || this.form.mnemonic === '' || this.form.mnemonic.split(' ').length != 12) {
             this.$Notice.error({
                 title: this.$t(Message.MNENOMIC_INPUT_ERROR) + ''
@@ -72,22 +79,23 @@ export class WalletImportMnemonicTs extends Vue {
         return true
     }
 
-    importWallet() {
-      try {
-        new AppWallet().createFromMnemonic(
-          this.form.walletName,
-          new Password(this.form.password),
-          this.form.mnemonic,
-          this.form.networkType,
-          this.$store
-        )
-        this.toWalletDetails()
-      } catch (error) {
-        console.error(error)
-        this.$Notice.error({
-            title: this.$t(Message.OPERATION_FAILED_ERROR) + ''
-        })
-      }
+    importWallet(password) {
+        const {walletName, mnemonic, networkType} = this.form
+        try {
+            new AppWallet().createFromMnemonic(
+                walletName,
+                new Password(password),
+                mnemonic,
+                networkType,
+                this.$store
+            )
+            this.toWalletDetails()
+        } catch (error) {
+            console.error(error)
+            this.$Notice.error({
+                title: this.$t(Message.OPERATION_FAILED_ERROR) + ''
+            })
+        }
     }
 
     toWalletDetails() {
@@ -95,10 +103,10 @@ export class WalletImportMnemonicTs extends Vue {
             title: this['$t']('Imported_wallet_successfully') + ''
         })
         this.$store.commit('SET_HAS_WALLET', true)
-        this.$emit('toWalletDetails')
+        this.$router.push('dashBoard')
     }
 
     toBack() {
-        this.$emit('closeImport')
+        this.$router.push('initAccount')
     }
 }

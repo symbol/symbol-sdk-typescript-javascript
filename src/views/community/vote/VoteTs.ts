@@ -5,8 +5,8 @@ import {alphabet, Message} from '@/config/index.ts'
 import {vote} from '@/core/api/logicApi.ts'
 import {mapState} from "vuex"
 import {formatDate} from '@/core/utils/utils.ts'
-import {voteActionList, voteFilterList, voteSelectionList} from "@/config/view";
-import {voteType} from "@/config/types";
+import {voteActionList, voteFilterList, voteSelectionList} from "@/config/view"
+import {voteType} from "@/config/types"
 
 @Component({
         components: {
@@ -36,6 +36,7 @@ export class VoteTs extends Vue {
     voteActionList = voteActionList
     voteList = []
     selections = []
+    offset = 0
     isVoted = true
     voteType = voteType
     formItem = {
@@ -73,14 +74,14 @@ export class VoteTs extends Vue {
     }
 
     switchVote(index) {
-        let list = this.voteList
+        let list = this.currentVoteList
         this.currentVote = list[index]
         list = list.map((item) => {
             item.isSelect = false
             return item
         })
         list[index].isSelect = true
-        this.voteList = list
+        this.currentVoteList = list
     }
 
     addSelection() {
@@ -157,7 +158,7 @@ export class VoteTs extends Vue {
 
     getVoteList() {
         const that = this
-        vote.list({limit: '20', offset: '0'}).then((res) => {
+        vote.list({limit: '500', offset: '0'}).then((res) => {
             const result = JSON.parse(res.rst)
             let voteList = result.rows
             const resultList = voteList.map((item) => {
@@ -173,9 +174,9 @@ export class VoteTs extends Vue {
                 return item
 
             })
-            that.currentVoteList.push(...resultList)
+            that.currentVoteList = resultList
             if (!that.currentVote.id) {
-                that.voteList[0].isSelect = true
+                that.currentVoteList[0].isSelect = true
                 that.currentVote = that.currentVoteList[0]
             }
         })
@@ -267,10 +268,22 @@ export class VoteTs extends Vue {
         })
     }
 
+    automaticLoadingVote() {
+        // const allHeight = this.$refs.voteListContainer['scrollHeight']
+        // const scrollHeight = this.$refs.voteListContainer['offsetHeight'] + this.$refs.voteListContainer['scrollTop']
+        // if (allHeight <= scrollHeight) {
+        //     this.getVoteList()
+        // }
+    }
+
     mounted() {
         this.currentVoteFilter = this.voteFilterList[0].value
         this.currentTimestamp = Number((new Date()).valueOf() / 1000).toFixed(0)
         this.currentVoteList = this.voteList
+    }
+
+    created() {
+        this.getVoteList()
     }
 }
 

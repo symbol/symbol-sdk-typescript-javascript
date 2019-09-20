@@ -1,15 +1,13 @@
-import {localSave, localRead} from '@/core/utils/utils.ts'
+import {localSave, localRead, getObjectLength} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import GetStart from './login-view/get-start/GetStart.vue'
 import InputLock from './login-view/input-lock/InputLock.vue'
-import CreateLock from './login-view/create-lock/CreateLock.vue'
 import {mapState} from "vuex"
-import {languageList} from "@/config/view";
+import {languageList} from "@/config/view"
 
 @Component({
     components: {
         GetStart,
-        CreateLock,
         InputLock
     },
     computed: {
@@ -19,10 +17,10 @@ import {languageList} from "@/config/view";
     }
 })
 export class LoginTs extends Vue {
-    app:any
+    app: any
     languageList = languageList
     isShowDialog = true
-    indexShowList = [true, false, false]
+    indexShowList = [true, false]
 
     switchLanguage(language) {
         // @ts-ignore
@@ -44,12 +42,8 @@ export class LoginTs extends Vue {
     }
 
     showIndexView(index) {
-        let list = [false, false, false]
-        if (index != 0 && localRead('lock')) {
-            list[2] = true
-        } else {
-            list[index] = true
-        }
+        let list = [false, false]
+        list[index] = true
         this.indexShowList = list
     }
 
@@ -57,11 +51,6 @@ export class LoginTs extends Vue {
         if (this.$route.params.index) {
             this.showIndexView(this.$route.params.index)
             return
-        }
-        const wallets = localRead('wallets')
-        const walletList = wallets ? JSON.parse(wallets) : []
-        if (walletList.length >= 1) {
-            this.showIndexView(2)
         }
     }
 

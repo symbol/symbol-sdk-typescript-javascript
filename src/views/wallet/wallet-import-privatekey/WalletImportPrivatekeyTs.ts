@@ -1,10 +1,11 @@
 import {AppWallet} from '@/core/utils/wallet.ts'
-import {mapState} from 'vuex';
+import {mapState} from 'vuex'
 import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {Password, Account} from "nem2-sdk"
-import {networkTypeList} from "@/config/view";
-import {formData} from "@/config/formDto";
+import {networkTypeList} from "@/config/view"
+import {formData} from "@/config/formDto"
+import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
 @Component({
     computed: {
@@ -12,6 +13,9 @@ import {formData} from "@/config/formDto";
             activeAccount: 'account',
             app: 'app'
         })
+    },
+    components: {
+        CheckPasswordDialog
     }
 })
 export class WalletImportPrivatekeyTs extends Vue {
@@ -20,7 +24,7 @@ export class WalletImportPrivatekeyTs extends Vue {
     account = {}
     form = formData.walletImportPrivateKeyForm
     networkType = networkTypeList
-
+    showCheckPWDialog = false
     NetworkTypeList = networkTypeList
 
     get getNode() {
@@ -35,37 +39,43 @@ export class WalletImportPrivatekeyTs extends Vue {
         return this.app.walletList
     }
 
-    importWallet() {
-      try {
-        new AppWallet().createFromPrivateKey(
-          this.form.walletName,
-          new Password(this.form.password),
-          this.form.privateKey,
-          this.form.networkType,
-          this.$store
-        )
-        this.toWalletDetails()
-      } catch (error) {
-        console.error(error)
-        this.$Notice.error({
-            title: this.$t(Message.OPERATION_FAILED_ERROR) + ''
-        })
-      }
+    submit() {
+        if (!this.checkImport()) return
+        this.showCheckPWDialog = true
+    }
+
+    checkEnd(password) {
+        if (!password) return
+        this.importWallet(password)
+    }
+
+    closeCheckPWDialog() {
+        this.showCheckPWDialog = false
+    }
+
+    importWallet(password) {
+        const {walletName, privateKey, networkType} = this.form
+        try {
+            new AppWallet().createFromPrivateKey(
+                walletName,
+                new Password(password),
+                privateKey,
+                networkType,
+                this.$store
+            )
+            this.toWalletDetails()
+        } catch (error) {
+            console.error(error)
+            this.$Notice.error({
+                title: this.$t(Message.OPERATION_FAILED_ERROR) + ''
+            })
+        }
     }
 
     checkImport() {
-        const {walletName, password, privateKey, checkPW} = this.form
+        const {walletName, privateKey,} = this.form
         if (!walletName || walletName == '') {
             this.showNotice(this.$t(Message.WALLET_NAME_INPUT_ERROR))
-            return false
-        }
-
-        if (!password || password.length < 8) {
-            this.showNotice(this.$t(Message.PASSWORD_SETTING_INPUT_ERROR))
-            return false
-        }
-        if (password !== checkPW) {
-            this.showNotice(this.$t(Message.INCONSISTENT_PASSWORD_ERROR))
             return false
         }
         return true

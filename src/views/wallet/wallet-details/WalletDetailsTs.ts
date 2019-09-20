@@ -34,7 +34,7 @@ export class WalletDetailsTs extends Vue {
     showMnemonicDialog: boolean = false
     showKeystoreDialog: boolean = false
     showPrivatekeyDialog: boolean = false
-    functionShowList = [true, false, false]
+    functionShowList = [true, false]
 
     get wallet() {
         return this.activeAccount.wallet
@@ -55,7 +55,7 @@ export class WalletDetailsTs extends Vue {
 
     // @TODO
     changeMnemonicDialog() {
-        if (!this.wallet['mnemonicEnCodeObj'] || this.wallet['mnemonicEnCodeObj']['ciphertext']) {
+        if (!this.wallet['encryptedMnemonic']) {
             this.$Notice.warning({
                 title: this.$t('no_mnemonic') + ''
             })

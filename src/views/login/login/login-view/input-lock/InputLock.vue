@@ -27,12 +27,21 @@
     </div>
 
     <form @submit.prevent="validateForm('input-lock')">
+
+      <Select v-model="formItem.currentAccountName"
+              class="select_wallet">
+        <Option v-for="walletName in accountList" :value="walletName.value" :key="walletName.value">{{
+          walletName.label}}
+        </Option>
+      </Select>
+
+
       <div class="bottom_input">
         <input
                 data-vv-name="password"
-                v-model="password"
+                v-model="formItem.password"
                 type="password"
-                :placeholder="$t('lock_password')"
+                :placeholder="$t('account_password')"
                 v-validate="passwordFieldValidation"
         >
         <input
@@ -41,7 +50,7 @@
                 v-validate=''
                 style="display:none"
         >
-        <img @click="submit" src="@/common/img/login/loginJump.png" alt="">
+        <img @click="submit" src="@/common/img/login/loginClickToIn.png" alt="">
       </div>
     </form>
 
@@ -54,16 +63,15 @@
       <!--      <span class="clear_cache pointer" v-show="isShowPrompt">{{$t('clear_cache')}}</span>-->
     </div>
 
-
   </div>
 </template>
 
 <script lang="ts">
     import {InputLockTs} from '@/views/login/login/login-view/input-lock/InputLockTs.ts'
+    import "./InputLock.less"
 
     export default class InputLock extends InputLockTs {
     }
 </script>
 <style scoped lang="less">
-  @import "./InputLock.less";
 </style>

@@ -15,29 +15,27 @@
             <p class="formItemTxt">
               {{$t('The_name_of_the_wallet_can_be_convenient_for_you_to_use_you_can_distinguish_different_wallets_etc_for_better_management_after_entering_the_system_you_can_also_modify_the_wallet_details')}}</p>
             <Input v-model="formItem.walletName"
-                   :placeholder="$t('Please_enter_the_name_of_the_wallet')" />
+                   :placeholder="$t('Please_enter_the_name_of_the_wallet')"/>
           </FormItem>
-          <FormItem :label="$t('set_password')">
-            <p class="formItemTxt">
-              {{$t('This_password_is_used_to_encrypt_your_private_key')}}</p>
-            <p class="formItemTxt">
-              {{$t('password_hint', {min: 8})}}</p>
-            <Input v-model="formItem.password" type="password" required
-                   :placeholder="$t('please_set_your_wallet_password')" />
-          </FormItem>
-          <FormItem :label="$t('repeat_the_password')">
-            <Input v-model="formItem.checkPW" type="password" required
-                   :placeholder="$t('please_enter_your_password_again')" />
+          <FormItem :label="$t('set_wallet_path')">
+            <Input v-model="formItem.path" required
+                   :placeholder="$t('please_set_your_wallet_path')"/>
           </FormItem>
           <FormItem>
             <div class="clear">
               <Button class="prev" type="default" @click="toBack">{{$t('back')}}</Button>
-              <Button class="right" type="success" @click="createWallet">{{$t('next')}}</Button>
+              <Button class="right" type="success" @click="submit">{{$t('next')}}</Button>
             </div>
           </FormItem>
         </Form>
       </div>
     </div>
+    <CheckPasswordDialog
+            :showCheckPWDialog="showCheckPWDialog"
+            :isOnlyCheckPassword="true"
+            @closeCheckPWDialog="closeCheckPWDialog"
+            @checkEnd="checkEnd"
+    ></CheckPasswordDialog>
   </div>
 </template>
 

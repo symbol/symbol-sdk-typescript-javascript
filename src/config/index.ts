@@ -1,4 +1,4 @@
-import { TransactionType } from 'nem2-sdk'
+import {TransactionType} from 'nem2-sdk'
 
 export const isWindows = require('./packge.ts').isWin32
 
@@ -37,13 +37,14 @@ export const Message = {
     UPDATE_SUCCESS: 'update_completed',
     NODE_CONNECTION_SUCCEEDED: 'Node_connection_succeeded',
     PLEASE_ENTER_THE_CORRECT_NUMBER: 'Please_enter_the_correct_number',
-    NOTES_SHOULD_NOT_EXCEED_25_CHARACTER:'Notes_should_not_exceed_25_character',
+    NOTES_SHOULD_NOT_EXCEED_25_CHARACTER: 'Notes_should_not_exceed_25_character',
 
     PLEASE_SET_WALLET_PASSWORD_INFO: 'please_set_your_wallet_password',
     PLEASE_ENTER_MNEMONIC_INFO: 'Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct',
     PLEASE_SWITCH_NETWORK: 'walletCreateNetTypeRemind',
     NO_MNEMONIC_INFO: 'no_mnemonic',
-
+    ACCOUNT_NAME_INPUT_ERROR:'accountCreateWalletNameRemind',
+    ACCOUNT_NAME_EXISTS_ERROR: 'Account_name_already_exists',
     WALLET_NAME_INPUT_ERROR: 'walletCreateWalletNameRemind',
     PASSWORD_CREATE_ERROR: 'createLockPWRemind',
     INCONSISTENT_PASSWORD_ERROR: 'createLockCheckPWRemind',
@@ -86,7 +87,8 @@ export const Message = {
     KEYSTORE_DECRYPTION_FAILED: 'Keystore_decryption_failed',
     MOSAIC_LIST_NULL_ERROR: 'The_mosaic_to_be_sent_is_empty',
     ADDRESS_ALIAS_NOT_EXIST_ERROR: 'address_alias_not_exist',
-    MOSAIC_ALIAS_NOT_EXIST_ERROR: 'mosaic_alias_not_exist'
+    MOSAIC_ALIAS_NOT_EXIST_ERROR: 'mosaic_alias_not_exist',
+    HD_WALLET_PATH_ERROR:'hd_wallet_path_error'
 }
 
 export const nodeConfig = {
@@ -98,6 +100,7 @@ export const nodeConfig = {
 }
 
 export const networkConfig = {
+    currentGenerateTime:12,
     publicKey: "",
     generationHash: "",
     enableVerifiableState: true,
@@ -146,6 +149,7 @@ export const networkConfig = {
     maxNamespaceDuration: "365d",
     namespaceGracePeriodDuration: 432000,//s
     reservedRootNamespaceNames: ["xem", "nem", "user", "account", "org", "com", "biz", "net", "edu", "mil", "gov", "info"],
+    testMnemonicStirng:'this is a test string his is a test string this is',
     namespaceRentalFeeSinkPublicKey: "3E82E1C1E4A75ADAA3CBA8C101C3CD31D9817A2EB966EB3B511FB2ED45B8E262",
     rootNamespaceRentalFeePerBlock: 1000000,
     childNamespaceRentalFee: 100,

@@ -1,7 +1,6 @@
 import {PublicAccount, NetworkType} from "nem2-sdk"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {transactionFormat} from '@/core/services/transactions'
-import {AppMosaics} from '@/core/services/mosaics/appMosaics'
 
 // @TODO: refactor
 export const formatAndSave = (  mosaicList,

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import i18n from '@/language/index.ts'
-import {Address, AliasActionType, Deadline} from 'nem2-sdk'
+import {Address, AliasActionType, Deadline, TransactionType, UInt64} from 'nem2-sdk'
 
 const vueInstance = new Vue({i18n})
 
@@ -79,7 +79,7 @@ export const copyTxt = (txt) => {
 export const formatNumber = (number) => {
     {
         if (!/^(\+|-)?(\d+)(\.\d+)?$/.test(number)) {
-            return number
+            return 0
         }
         var a = RegExp.$1, b = RegExp.$2, c = RegExp.$3
         // @ts-ignore
@@ -133,6 +133,15 @@ export const localRemove = (key) => {
     localStorage.removeItem(key)
 }
 
+// add k-v in localStorageName map
+export const localAddInMap = (localStorageName: string, key: string, value: object) => {
+    const dataMapStr = localRead(localStorageName)
+    let dataMapObject = dataMapStr ? JSON.parse(dataMapStr) : {}
+    dataMapObject[key] = value
+    const dataSaveStr = JSON.stringify(dataMapObject)
+    localSave(localStorageName, dataSaveStr)
+}
+
 export const sessionSave = (key, value) => {
     sessionStorage.setItem(key, value)
 }
@@ -145,6 +154,9 @@ export const sessionRemove = (key) => {
     sessionStorage.removeItem(key)
 }
 
+export const getObjectLength = (targetObject) => {
+    return Object.keys(targetObject).length
+}
 export const formatDate = (timestamp) => {
     const now = new Date(Number(timestamp))
     let year = now.getFullYear()
@@ -337,3 +349,7 @@ export const getCurrentTimeZone = () => {
 }
 
 export const cloneData = object => JSON.parse(JSON.stringify(object))
+
+export const getTopValueInObject = (object: any) => {
+    return Object.values(object)[0]
+}

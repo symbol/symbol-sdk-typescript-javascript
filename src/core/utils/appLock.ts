@@ -28,16 +28,19 @@ export class AppLock {
      * @param {string} password
      * @returns {string}
      */
-    private createLock = (password: string): string => PasswordBasedCipher
-        .encrypt(defaultAlgo, APP_LOCK_PHRASE_WORD_ARRAY, password).toString()
+    private createLock = (password: string): string => PasswordBasedCipher.encrypt(defaultAlgo, APP_LOCK_PHRASE_WORD_ARRAY, password).toString()
 
-    /**
-     * @description Stores a new cipher in localStorage
-     * @param {string} password
-     */
-    public storeLock = (password: string, hint: string): void => {
-        const cipher = this.createLock(password)
-        localSave('lock', new StoredCipher(cipher, hint).create())
+    public saveNewPassword = (newEncryptedMnemonic: string, newCipherPassword: string, accountName) => {
+        let accountMap = JSON.parse(localRead('accountMap'))
+        accountMap[accountName].password = newCipherPassword
+        accountMap[accountName].encryptedMnemonic =
+            accountMap[accountName].wallets.forEach((item) => {
+                if (item.encryptedMnemonic) {
+                    item.encryptedMnemonic = newEncryptedMnemonic
+                }
+                return item
+            })
+        localSave('accountMap', JSON.stringify(accountMap))
     }
 
     /**
@@ -66,8 +69,8 @@ export class AppLock {
      * @description Returns a cipher from localStorage
      * @returns {StoredCipher}
      */
-    public getLock = (): StoredCipher => {
-        return JSON.parse(localRead('lock'))
+    public getCipherPassword = (accountName): StoredCipher => {
+        return JSON.parse(localRead('accountMap'))[accountName]['password']
     }
 
     /**

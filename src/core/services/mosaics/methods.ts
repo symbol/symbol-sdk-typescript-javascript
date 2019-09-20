@@ -8,33 +8,33 @@ import {AppMosaic} from '@/core/model'
  * https://github.com/nemtech/nem2-sdk-typescript-javascript/issues/247
  */
 export const mosaicsAmountViewFromAddress = (node: string, address: Address): Promise<MosaicAmountView[]> => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const accountHttp = new AccountHttp(node)
-      const mosaicHttp = new MosaicHttp(node)
-      const mosaicService = new MosaicService(accountHttp, mosaicHttp)
+    return new Promise(async (resolve, reject) => {
+        try {
+            const accountHttp = new AccountHttp(node)
+            const mosaicHttp = new MosaicHttp(node)
+            const mosaicService = new MosaicService(accountHttp, mosaicHttp)
 
-      const accountInfo = await accountHttp.getAccountInfo(address).toPromise()
-      if(!accountInfo.mosaics.length) return []
+            const accountInfo = await accountHttp.getAccountInfo(address).toPromise()
+            if (!accountInfo.mosaics.length) return []
 
-      const mosaics = accountInfo.mosaics.map(mosaic => mosaic)
-      const mosaicIds = mosaics.map(({id}) => new MosaicId(id.toHex()))
-      const mosaicViews = await mosaicService.mosaicsView(mosaicIds).toPromise()
+            const mosaics = accountInfo.mosaics.map(mosaic => mosaic)
+            const mosaicIds = mosaics.map(({id}) => new MosaicId(id.toHex()))
+            const mosaicViews = await mosaicService.mosaicsView(mosaicIds).toPromise()
 
-      const mosaicAmountViews = mosaics
-        .map(mosaic => {
-          const mosaicView = mosaicViews
-           .find(({mosaicInfo}) => mosaicInfo.mosaicId.toHex() === mosaic.id.toHex())
+            const mosaicAmountViews = mosaics
+                .map(mosaic => {
+                    const mosaicView = mosaicViews
+                        .find(({mosaicInfo}) => mosaicInfo.mosaicId.toHex() === mosaic.id.toHex())
 
-          if(mosaicView === undefined) throw new Error('A MosaicView was not found')
-          return new MosaicAmountView(mosaicView.mosaicInfo, mosaic.amount)
-        })
+                    if (mosaicView === undefined) throw new Error('A MosaicView was not found')
+                    return new MosaicAmountView(mosaicView.mosaicInfo, mosaic.amount)
+                })
 
-      resolve(mosaicAmountViews)
-    } catch (error) {
-      reject(error)
-    }
-  })
+            resolve(mosaicAmountViews)
+        } catch (error) {
+            reject(error)
+        }
+    })
 }
 
 export const initMosaic = (wallet, that) => {

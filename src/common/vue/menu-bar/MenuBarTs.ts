@@ -4,12 +4,13 @@ import {AppWallet} from '@/core/utils/wallet'
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
-import {localSave} from "@/core/utils/utils.ts"
+import {localRead, localSave} from "@/core/utils/utils.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/core/utils/electron.ts'
 import {mapState} from 'vuex'
-import {languageList, nodeList} from "@/config/view";
-import {languageType} from "@/config/types";
+import {languageList, nodeList} from "@/config/view"
+import {languageType} from "@/config/types"
+import {NetworkType} from "nem2-sdk"
 
 @Component({
     computed: {
@@ -20,6 +21,7 @@ import {languageType} from "@/config/types";
     }
 })
 export class MenuBarTs extends Vue {
+    NetworkType = NetworkType
     app: any
     activeAccount: any
     isShowNodeList = false
@@ -28,7 +30,7 @@ export class MenuBarTs extends Vue {
     nodeList = nodeList
     isNowWindowMax = false
     isShowDialog = true
-    activePanelList = [false, false, false, false, false]
+    activePanelList = [false, false, false, false, false, false, false,]
     monitorSeleted = monitorSeleted
     monitorUnselected = monitorUnselected
     accountAddress = ''
@@ -77,6 +79,10 @@ export class MenuBarTs extends Vue {
     get currentWalletAddress() {
         if (!this.wallet) return false
         return this.activeAccount.wallet.address
+    }
+
+    get accountName() {
+        return this.activeAccount.accountName
     }
 
     set currentWalletAddress(newActiveWalletAddress) {
@@ -133,11 +139,10 @@ export class MenuBarTs extends Vue {
 
     accountQuit() {
         this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
+        this.$store.commit('RESET_APP')
+        this.$store.commit('RESET_ACCOUNT')
         this.$router.push({
-            name: "login",
-            params: {
-                index: '2'
-            }
+            name: "login"
         })
     }
 

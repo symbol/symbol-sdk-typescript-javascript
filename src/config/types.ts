@@ -19,3 +19,13 @@ export const aliasType = {
     mosaicAlias: 1,
     addressAlias: 2
 }
+
+export const createType = {
+    keyStore:'Ks',
+    privateKey:'Pk',
+    seed:'Seed'
+}
+
+export const coinType = {
+    xem:'xem',
+}

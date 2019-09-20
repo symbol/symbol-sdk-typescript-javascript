@@ -10,29 +10,31 @@
     </Tooltip>
     <div class="field_container">
       <Tooltip
-        :always="errored"
-        :disabled="!errored"
-        :content="displayedError"
-        placement="bottom-start"
+              :always="errored"
+              :disabled="!errored"
+              :content="displayedError"
+              placement="bottom-start"
       >
         <div class="gray_content" :style="errored ? 'border-color:red' : ''">
-            <input
-              class="absolute"
-              :type="fieldType"
-              :placeholder="$t(placeholder)"
-              :data-vv-as="$t(fieldName)"
-              :data-vv-name="fieldName"
-              v-validate="validation"
-              v-model="formModel[fieldName]"
-            />
+          <input
+                  class="absolute"
+                  :type="fieldType"
+                  :placeholder="$t(placeholder)"
+                  :data-vv-as="$t(fieldName)"
+                  :data-vv-name="fieldName"
+                  v-validate="validation"
+                  v-model="formModel[fieldName]"
+          />
         </div>
       </Tooltip>
     </div>
   </div>
 </template>
 <script lang="ts">
-  import {FormInputTs} from './FormInputTs'
-  export default class FormInput extends FormInputTs {}
+    import {FormInputTs} from './FormInputTs'
+
+    export default class FormInput extends FormInputTs {
+    }
 </script>
 <style scoped lang="less">
   @import "FormInput.less";

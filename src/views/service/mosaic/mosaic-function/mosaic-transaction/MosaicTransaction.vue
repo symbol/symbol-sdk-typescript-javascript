@@ -123,12 +123,13 @@
         </div>
       </div>
     </div>
-    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog"
-                   @closeCheckPWDialog="closeCheckPWDialog"
-                   @checkEnd="checkEnd"
-                   :transactionDetail="transactionDetail"
-                   :transactionList=transactionList
-                   :otherDetails="otherDetails"
+    <CheckPWDialog
+            :showCheckPWDialog="showCheckPWDialog"
+            @closeCheckPWDialog="closeCheckPWDialog"
+            @checkEnd="checkEnd"
+            :transactionDetail="transactionDetail"
+            :transactionList=transactionList
+            :otherDetails="otherDetails"
     ></CheckPWDialog>
   </div>
 </template>

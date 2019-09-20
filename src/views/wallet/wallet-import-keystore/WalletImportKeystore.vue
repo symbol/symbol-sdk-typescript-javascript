@@ -48,34 +48,19 @@
                    :placeholder="$t('set_the_wallet_name')">
           </div>
         </li>
-
-        <li>
-          {{$t('set_password')}}
-          <div class="tips">
-            {{$t('This_password_is_used_to_encrypt_your_private_key_keystore')}}
-          </div>
-          <p class="formItemTxt">{{$t('password_hint', {min: 8})}}</p>
-          <div class="gray_content">
-            <input class="absolute" v-model="formItem.walletPassword" type="password"
-                   :placeholder="$t('please_set_your_password')">
-          </div>
-        </li>
-
-        <li>
-          {{$t('confirm_password')}}
-          <div class="gray_content">
-            <input class="absolute" type="password" v-model="formItem.walletPasswordAgain"
-                   :placeholder="$t('please_enter_your_wallet_password_again')">
-          </div>
-        </li>
       </ul>
-
-
     </div>
     <div class="bottom_button ">
       <span class="back left pointer" @click="toBack"> {{$t('back')}}</span>
       <span class="import right" @click="submit">{{$t('import')}}</span>
     </div>
+
+    <CheckPasswordDialog
+            :showCheckPWDialog="showCheckPWDialog"
+            :isOnlyCheckPassword="true"
+            @closeCheckPWDialog="closeCheckPWDialog"
+            @checkEnd="checkEnd"
+    ></CheckPasswordDialog>
   </div>
 
 </template>

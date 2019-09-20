@@ -74,6 +74,10 @@ export class NamespaceListTs extends Vue {
         return this.activeAccount.wallet
     }
 
+    get accountName(){
+        return this.activeAccount.accountName
+    }
+
     get availableMosaics() {
         const {currentHeight} = this
         const {address} = this.wallet
@@ -84,6 +88,7 @@ export class NamespaceListTs extends Vue {
         const {currentHeight} = this
         const {address} = this.wallet
         return AppMosaics().getAvailableToBeLinked(currentHeight, address, this.$store)
+
     }
 
     get namespaceLoading() {

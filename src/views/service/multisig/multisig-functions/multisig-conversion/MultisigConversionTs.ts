@@ -11,7 +11,7 @@ import {Message} from "@/config/index.ts"
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {getAbsoluteMosaicAmount, createBondedMultisigTransaction} from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {formData} from "@/config/formDto";
+import {formData} from "@/config/formDto"
 
 @Component({
     components: {
@@ -214,6 +214,7 @@ export class MultisigConversionTs extends Vue {
             networkType,
             UInt64.fromUint(innerFee)
         )
+        console.log(modifyMultisigAccountTransaction, 'modifyMultisigAccountTransaction')
         const aggregateTransaction = createBondedMultisigTransaction(
             [modifyMultisigAccountTransaction],
             publickey,

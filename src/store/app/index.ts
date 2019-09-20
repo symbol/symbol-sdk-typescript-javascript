@@ -1,3 +1,6 @@
+import {nodeList} from '@/config/view.ts'
+import {networkConfig} from '@/config/index.ts'
+
 declare interface appInfo {
     timeZone: number,
     locale: string,
@@ -30,11 +33,12 @@ export default {
         isNodeHealthy: false,
         mnemonic: '',
         chainStatus: {
+            currentGenerateTime: networkConfig.currentGenerateTime,
             currentHeight: 0,
             numTransactions: 0,
             currentBlockInfo: {},
             signerPublicKey: '',
-            nodeAmount: 4
+            nodeAmount: nodeList.length
         },
         mosaicsLoading: true,
         balanceLoading: false,
@@ -44,6 +48,11 @@ export default {
     },
     getters: {},
     mutations: {
+        RESET_APP(state: appInfo){
+            state.hasWallet = false
+            state.mnemonic= ''
+            state.walletList = []
+        },
         SET_CURRENT_PANEL_INDEX(state: appInfo, index: any) {
             state.currentPanelIndex = index
         },
@@ -81,6 +90,7 @@ export default {
             state.chainStatus.currentBlockInfo = currentBlockInfo ? currentBlockInfo : state.chainStatus.currentBlockInfo
             state.chainStatus.signerPublicKey = signerPublicKey ? signerPublicKey : state.chainStatus.signerPublicKey
             state.chainStatus.nodeAmount = nodeAmount ? nodeAmount : state.chainStatus.nodeAmount
+
         },
         SET_NAMESPACE_LOADING(state: appInfo, namespaceLoading: boolean) {
             state.namespaceLoading = namespaceLoading

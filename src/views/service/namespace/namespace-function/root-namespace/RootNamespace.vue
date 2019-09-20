@@ -73,7 +73,6 @@
             <span class="key">{{$t('inner_fee')}}</span>
             <span class="value">
               <input type="text" v-model="form.innerFee" :placeholder="$t('inner_fee')">
-<!--            <span class="end_label">gas</span>-->
           </span>
             <div class="tips">
               {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -84,7 +83,6 @@
             <span class="key">{{$t('bonded_fee')}}</span>
             <span class="value">
               <input type="text" v-model="form.aggregateFee" :placeholder="$t('bonded_fee')">
-<!--            <span class="end_label">gas</span>-->
           </span>
             <div class="tips">
               {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}

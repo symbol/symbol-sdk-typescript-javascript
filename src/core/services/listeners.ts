@@ -1,4 +1,4 @@
-import {Address, Listener} from "nem2-sdk";
+import {Address, Listener} from "nem2-sdk"
 import {filter} from 'rxjs/operators'
 import {formatAndSave} from '@/core/services/transactions'
 
@@ -10,7 +10,7 @@ export class ChainListeners {
 
     constructor(app: any, address: string, endpoint: string) {
         this.app = app
-        this.address = address
+        this.address = address || ''
         this.node = endpoint.replace('http', 'ws')
     }
 
@@ -58,6 +58,10 @@ export class ChainListeners {
                     .unconfirmedAdded(Address.createFromRawAddress(this.address))
                     .pipe(filter((transaction: any) => transaction.transactionInfo !== undefined))
                     .subscribe(transaction => {
+                        that.$Notice.success({
+                            title: receivedTransactionMessage, // quickfix
+                            duration: 20,
+                        })
                         formatAndSave(
                             that.$store.getters.mosaicList,
                             {...transaction, isTxUnconfirmed: true},
@@ -70,10 +74,7 @@ export class ChainListeners {
                             false
                         )
 
-                        that.$Notice.success({
-                            title: receivedTransactionMessage, // quickfix
-                            duration: 20,
-                        })
+
                     })
             })
 
@@ -91,6 +92,11 @@ export class ChainListeners {
                     .confirmed(Address.createFromRawAddress(this.address))
                     .pipe(filter((transaction: any) => transaction.transactionInfo !== undefined))
                     .subscribe((transaction) => {
+                        that.$Notice.destroy()
+                        that.$Notice.success({
+                            title: receivedTransactionMessage, // quickfix
+                            duration: 4,
+                        })
                         formatAndSave(
                             that.$store.getters.mosaicList,
                             transaction,
@@ -102,12 +108,6 @@ export class ChainListeners {
                             that.$store,
                             true
                         )
-                        
-                        that.$Notice.destroy()
-                        that.$Notice.success({
-                            title: receivedTransactionMessage, // quickfix
-                            duration: 4,
-                        })
                     })
             })
 
@@ -157,4 +157,5 @@ export class ChainListeners {
                     })
             })
     }
+
 }

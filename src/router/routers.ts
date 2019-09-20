@@ -70,12 +70,7 @@ const routers = [
                                 name: 'walletImportKeystore',
                                 // @ts-ignore
                                 component: () => import('@/views/wallet/wallet-import-keystore/WalletImportKeystore.vue'),
-                            }, {
-                                path: '/walletImportMnemonic',
-                                name: 'walletImportMnemonic',
-                                // @ts-ignore
-                                component: () => import('@/views/wallet/wallet-import-mnemonic/WalletImportMnemonic.vue'),
-                            }, {
+                            },{
                                 path: '/walletImportPrivatekey',
                                 name: 'walletImportPrivatekey',
                                 // @ts-ignore
@@ -85,45 +80,63 @@ const routers = [
                     },
                 ]
             },
+            // {
+            //     path: '/servicePanel',
+            //     name: 'servicePanel',
+            //     redirect: '/namespace',
+            //     meta: {
+            //         //     disabled: true,
+            //     },
+            //     // @ts-ignore
+            //     component: () => import('@/views/service/service-panel/ServicePanel.vue'),
+            //     children: [
+            //         {
+            //             path: '/onDev',
+            //             name: 'onDev',
+            //             // @ts-ignore
+            //             component: () => import('@/views/other/on-development/OnDevelopment.vue')
+            //         }, {
+            //             path: '/namespace',
+            //             name: 'namespace',
+            //             // @ts-ignore
+            //             component: () => import('@/views/service/namespace/Namespace.vue')
+            //         }, {
+            //             path: '/mosaic',
+            //             name: 'mosaic',
+            //             // @ts-ignore
+            //             component: () => import('@/views/service/mosaic/Mosaic.vue')
+            //         }, {
+            //             path: '/multisigApi',
+            //             name: 'multisigApi',
+            //             // @ts-ignore
+            //             component: () => import('@/views/service/multisig/Multisig.vue')
+            //         },
+            //         {
+            //             path: '/apostille',
+            //             name: 'apostille',
+            //             // @ts-ignore
+            //             component: () => import('@/views/service/apostille/Apostille.vue')
+            //         },
+            //     ]
+            // },
+
             {
-                path: '/servicePanel',
-                name: 'servicePanel',
-                redirect: '/namespace',
-                meta: {
-                    //     disabled: true,
-                },
+                path: '/mosaic',
+                name: 'mosaic',
                 // @ts-ignore
-                component: () => import('@/views/service/service-panel/ServicePanel.vue'),
-                children: [
-                    {
-                        path: '/onDev',
-                        name: 'onDev',
-                        // @ts-ignore
-                        component: () => import('@/views/other/on-development/OnDevelopment.vue')
-                    }, {
-                        path: '/namespace',
-                        name: 'namespace',
-                        // @ts-ignore
-                        component: () => import('@/views/service/namespace/Namespace.vue')
-                    }, {
-                        path: '/mosaic',
-                        name: 'mosaic',
-                        // @ts-ignore
-                        component: () => import('@/views/service/mosaic/Mosaic.vue')
-                    }, {
-                        path: '/multisigApi',
-                        name: 'multisigApi',
-                        // @ts-ignore
-                        component: () => import('@/views/service/multisig/Multisig.vue')
-                    },
-                    {
-                        path: '/apostille',
-                        name: 'apostille',
-                        // @ts-ignore
-                        component: () => import('@/views/service/apostille/Apostille.vue')
-                    },
-                ]
+                component: () => import('@/views/service/mosaic/Mosaic.vue')
+            },{
+                path: '/namespace',
+                name: 'namespace',
+                // @ts-ignore
+                component: () => import('@/views/service/namespace/Namespace.vue')
+            },{
+                path: '/multisigApi',
+                name: 'multisigApi',
+                // @ts-ignore
+                component: () => import('@/views/service/multisig/Multisig.vue')
             },
+
 
             {
                 path: '/communityPanel',
@@ -181,7 +194,19 @@ const routers = [
                 path: '/login',
                 name: 'login',
                 component: () => import('@/views/login/login/Login.vue'),
-            }
+            }, {
+                path: '/createAccount',
+                name: 'createAccount',
+                component: () => import('@/views/login/create-account/CreateAccount.vue'),
+            }, {
+                path: '/initAccount',
+                name: 'initAccount',
+                component: () => import('@/views/login/init-account/InitAccount.vue'),
+            }, {
+                path: '/initSeed',
+                name: 'initSeed',
+                component: () => import('@/views/login/init-seed/InitSeed.vue'),
+            },
         ]
     },
 ]

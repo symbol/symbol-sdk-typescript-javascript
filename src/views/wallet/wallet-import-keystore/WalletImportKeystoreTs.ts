@@ -3,7 +3,8 @@ import {AppWallet} from '@/core/utils/wallet.ts'
 import {Password} from "nem2-sdk"
 import {mapState} from 'vuex'
 import {Component, Vue} from 'vue-property-decorator'
-import {importKeystoreDefault, networkTypeList} from "@/config/view";
+import {importKeystoreDefault, networkTypeList} from "@/config/view"
+import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
 @Component({
     computed: {
@@ -11,6 +12,9 @@ import {importKeystoreDefault, networkTypeList} from "@/config/view";
             activeAccount: 'account',
             app: 'app'
         })
+    },
+    components: {
+        CheckPasswordDialog
     }
 })
 export class WalletImportKeystoreTs extends Vue {
@@ -20,7 +24,7 @@ export class WalletImportKeystoreTs extends Vue {
     fileList = []
     NetworkTypeList = networkTypeList
     formItem = importKeystoreDefault
-
+    showCheckPWDialog = false
 
     get getNode() {
         return this.activeAccount.node
@@ -34,16 +38,25 @@ export class WalletImportKeystoreTs extends Vue {
         return this.app.walletList
     }
 
-    submit() {
-        if (!this.checkForm()) return
-        this.importWallet()
+    checkEnd(password) {
+        if (!password) return
+        this.importWallet(password)
     }
 
-    importWallet() {
+    closeCheckPWDialog() {
+        this.showCheckPWDialog = false
+    }
+
+    submit() {
+        if (!this.checkForm()) return
+        this.showCheckPWDialog = true
+    }
+
+    importWallet(password) {
         try {
             new AppWallet().createFromKeystore(
                 this.formItem.walletName,
-                new Password(this.formItem.walletPassword),
+                new Password(password),
                 this.formItem.keystoreStr,
                 this.formItem.networkType,
                 this.$store
@@ -64,24 +77,13 @@ export class WalletImportKeystoreTs extends Vue {
     }
 
     async checkForm() {
-        const {keystoreStr, networkType, walletName, walletPassword, walletPasswordAgain} = this.formItem
+        const {keystoreStr, networkType, walletName} = this.formItem
         if (networkType == 0) {
             this.showErrorNotice(Message.PLEASE_SWITCH_NETWORK)
             return false
         }
         if (!walletName || walletName == '') {
             this.showErrorNotice(Message.WALLET_NAME_INPUT_ERROR)
-            return false
-        }
-        if (!walletPassword || walletPassword.length < 8) {
-            this.showErrorNotice(Message.PASSWORD_SETTING_INPUT_ERROR)
-            return false
-        }
-
-        if (walletPassword != walletPasswordAgain) {
-            this.$Notice.error({
-                title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''
-            })
             return false
         }
         return true

@@ -2,7 +2,7 @@ import {mapState} from 'vuex'
 import {AppWallet} from '@/core/utils/wallet.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import DeleteWalletCheck from './delete-wallet-check/DeleteWalletCheck.vue'
-import {formatXEMamount, formatNumber} from '@/core/utils/utils.ts'
+import {formatXEMamount, formatNumber, localRead} from '@/core/utils/utils.ts'
 
 @Component({
     components: {DeleteWalletCheck},
@@ -20,13 +20,18 @@ export class WalletSwitchTs extends Vue {
     deleteIndex = -1
     deletecurrent = -1
     walletToDelete: AppWallet | boolean = false
-  
+
     get walletList() {
         return this.app.walletList
     }
 
     get wallet() {
         return this.activeAccount.wallet
+    }
+
+
+    get currentXEM1() {
+        return this.activeAccount.currentXEM1
     }
 
     closeCheckPWDialog() {
@@ -45,10 +50,11 @@ export class WalletSwitchTs extends Vue {
         return formatXEMamount(text)
     }
 
-    getWalletBalance(index) {
-        const {balance} = this.walletList[index]
-        if (!balance || balance === 0) return 0
-        return this.formatXEMamount(balance)
+    getWalletBalance(address) {
+        const {currentXEM1} = this
+        const accountMosaic = localRead(address) ? JSON.parse(localRead(address)) : {}
+        const resultMosaic = accountMosaic[currentXEM1] ? accountMosaic[currentXEM1].balance : 0
+        return this.formatXEMamount(resultMosaic)
     }
 
     toImport() {

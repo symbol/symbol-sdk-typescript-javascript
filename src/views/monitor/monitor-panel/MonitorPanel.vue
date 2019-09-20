@@ -14,13 +14,11 @@
         <div class="split"></div>
         <div class="XEM_amount overflow_ellipsis">
           <span>XEM</span>
-          <span class="amount">{{formatNumber(Number(formatXEMamount(XEMamount))?formatXEMamount(XEMamount + ''):0)}}</span>
+          <span class="amount">{{mosaicList[0]?formatNumber(mosaicList[0].balance):0}}</span>
         </div>
-        <div class="exchange">${{formatNumber(XEMamount*xemUsdPrice?(XEMamount*xemUsdPrice).toFixed(2).toLocaleString():'0.00')}}</div>
-        <!-- @TODO: Account Alias (update when method available) -->
-        <!--<div class="account_alias" v-show="isShowAccountAlias">
-          {{$t('alias')}}：wallet.name
-        </div>-->
+        <div class="exchange">
+          ${{mosaicList[0]?formatNumber(mosaicList[0].balance*xemUsdPrice):0}}
+        </div>
       </div>
       <div class="bottom_account_info radius" ref="bottomAccountInfo">
         <div v-if="isShowAccountInfo" class="mosaicListWrap">
@@ -51,7 +49,8 @@
 
           <!--        sevral      -->
           <div v-if="isShowManageMosaicIcon" class="searchMosaic secondary_page_animate">
-            <img src="@/common/img/monitor/monitorLeftArrow.png" class="asset_setting_tit pointer" @click="showMosaicMap" alt="">
+            <img src="@/common/img/monitor/monitorLeftArrow.png" class="asset_setting_tit pointer"
+                 @click="showMosaicMap" alt="">
             <div class="input_outter">
 
               <img src="@/common/img/monitor/monitorSearchIcon.png" alt="">
@@ -60,16 +59,16 @@
 
             </div>
             <div class="mosaicList">
-                <div class="toggle_all_checked ">
+              <div class="toggle_all_checked ">
                   <span @click="toggleAllChecked()">
                     <div :class="['choose',  isChecked ? 'true' : 'false']"></div>
                     {{ !isChecked ? $t('select_all'):$t('all_unchecked')}}
                   </span>
-                  <span @click="toggleShowExpired()">
+                <span @click="toggleShowExpired()">
                     <div :class="['choose',  showExpiredMosaics ? 'true' : 'false']"></div>
                     {{$t('Display_expired_mosaic')}}
                   </span>
-                </div>
+              </div>
               <div
                   :class="['mosaic_data',index == 0?'padding_top_0':'']"
                   v-for="(mosaic, index) in mosaicList"
@@ -80,7 +79,7 @@
                 <span class="namege_img "  >
                  <img class="small_icon " :src="mosaic.hide?monitorUnselected:monitorSeleted">
                   <img v-if="index == 0" class="mosaicIcon"
-                        src="@/common/img/monitor/monitorMosaicIcon.png">
+                       src="@/common/img/monitor/monitorMosaicIcon.png">
                   <img v-else class="mosaicIcon" src="@/common/img/monitor/mosaicDefault.png">
                 </span>
                 <span class="mosaic_name">{{mosaic.name || mosaic.hex}}</span>
@@ -100,10 +99,10 @@
     <div class="monitor_panel_right_container">
       <div class="top_navidator radius">
         <span
-          :class="[n.isSelect?'active_navigator':'','outter_container',n.disabled?'disabled':'pointer']"
-          @click="switchPanel(index)"
-          v-for="(n,index) in navigatorList"
-          :key="index"
+                :class="[n.isSelect?'active_navigator':'','outter_container',n.disabled?'disabled':'pointer']"
+                @click="switchPanel(index)"
+                v-for="(n,index) in navigatorList"
+                :key="index"
         >
           <span class="inner_container absolute">{{$t(n.name)}}</span>
           <span class="line">|</span>
@@ -112,7 +111,7 @@
       <div class="bottom_router_view">
         <router-view/>
       </div>
-      <div class="transaction_status radius" />
+      <div class="transaction_status radius"/>
     </div>
   </div>
 </template>

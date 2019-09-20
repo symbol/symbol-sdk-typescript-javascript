@@ -1,4 +1,4 @@
-import { TransactionType, NetworkType } from 'nem2-sdk'
+import {TransactionType, NetworkType} from 'nem2-sdk'
 import dashboardBlockHeight from "@/common/img/monitor/dash-board/dashboardBlockHeight.png"
 import dashboardBlockTime from "@/common/img/monitor/dash-board/dashboardBlockTime.png"
 import dashboardPointAmount from "@/common/img/monitor/dash-board/dashboardPointAmount.png"
@@ -147,7 +147,7 @@ export const nodeList = [
         value: 'http://13.114.200.132:3000',
         name: 'jp-5',
         url: '13.114.200.132',
-        isSelected: false,
+        isSelected: true,
     },
     {
         value: 'http://52.194.207.217:3000',
@@ -159,8 +159,8 @@ export const nodeList = [
 
 //communityPanelNavList
 export const communityPanelNavList = [
-    { name: 'news', to: '/information', active: true },
-    { name: 'vote', to: '/vote', active: false, },
+    {name: 'news', to: '/information', active: true},
+    {name: 'vote', to: '/vote', active: false,},
 ]
 
 //voteFilterList
@@ -450,15 +450,11 @@ export const settingPanelNavigationBar = [
 
 //wallet
 export const walletFnNavList = [
-    { name: 'create', to: '/walletCreate', active: true },
-    { name: 'import', to: '/walletImportKeystore', active: false },
+    {name: 'create', to: '/walletCreate', active: true},
+    {name: 'import', to: '/walletImportKeystore', active: false},
 ]
 export const walletImportNavagatorList = [
     {
-        title: 'mnemonic',
-        name: 'walletImportMnemonic',
-        isSelected: true
-    }, {
         title: 'privatekey',
         name: 'walletImportPrivatekey',
         isSelected: false
@@ -471,16 +467,14 @@ export const walletImportNavagatorList = [
 export const importKeystoreDefault = {
     walletName: 'keystore-wallet',
     networkType: NetworkType.MIJIN_TEST,
-    keystoreStr: 'eyJuYW1lIjoiMzIxMzIxMzEyIiwiY2lwaGVydGV4dCI6eyJ3b3JkcyI6Wzg1NDY0MjkyNSwyMDMwOTQ2OTg5LC0xMTYzOTM0MCwxMjYzMTEzOTQyLDE1OTgyNzY0MjMsLTEzNDMwODUyMDgsLTEwMTM2MDI4NzAsMTIxNDI5ODg2LC0xNTkyNDUzNzg0LDE1OTU5OTEwMDYsLTEwMzkxMTQ1NjQsNzI4MjgxODc3XSwic2lnQnl0ZXMiOjQ4fSwiaXYiOnsidHlwZSI6IkJ1ZmZlciIsImRhdGEiOlsxODAsMTk2LDIyNywxNjYsMTc4LDIzNSw4OSwxNDUsMjI4LDY2LDExMiw2MSwyNCwyNSwzOCwxNjZdfSwibmV0d29ya1R5cGUiOjE0NCwiYWRkcmVzcyI6IlNBVUE1SlFSUDJGQk5QQU8zRlFJUlRKUlM1UEhKVjdDTFpTT1lMS0YiLCJwdWJsaWNLZXkiOiI2MjMyM0JDMkQwNzVDRDgxNUU0QTcxQjE4NzQ3MDhDOEVBQUVGRUMyOTVDNkYxQTgyRTZCOTE4MjJCQjJEREJCIiwibW5lbW9uaWNFbkNvZGVPYmoiOnt9fQ==',
-    walletPassword: '',
-    walletPasswordAgain: '',
-    keystorePassword: '111111'
+    keystoreStr: 'eyJuYW1lIjoid2FsbGV0LXByaXZhdGVLZXkiLCJuZXR3b3JrIjoxNDQsImFkZHJlc3MiOnsiYWRkcmVzcyI6IlNBVUE1SlFSUDJGQk5QQU8zRlFJUlRKUlM1UEhKVjdDTFpTT1lMS0YiLCJuZXR3b3JrVHlwZSI6MTQ0fSwiY3JlYXRpb25EYXRlIjoiMjAxOS0wOS0xOFQxNzowMzowNC4xNjUiLCJzY2hlbWEiOiJzaW1wbGVfdjEiLCJlbmNyeXB0ZWRQcml2YXRlS2V5Ijp7ImVuY3J5cHRlZEtleSI6ImJlZDYyZjU3MzAyYTRhZjE2ZTc0NWExNmMwYjUzMTczY2QzMzczNTRhODk1OTZiOTg5MjY1MGU2NDNjYTRjMGRlMGViMTRiM2YxYWEyOWQyNTM0ZWVkNzhkYzMwZmU4ZSIsIml2IjoiNUY2MEJEMDRFNDc0RDJCNjAwRUM5Qzc2MzcyNENDQTQifX0=',
+    keystorePassword: '123123123'
 }
 
 export const StatusString = {
-    FOREVER:'Forever',
-    NO_ALIAS:'no alias',
-    EXPIRED:'Expired'
+    FOREVER: 'Forever',
+    NO_ALIAS: 'no alias',
+    EXPIRED: 'Expired'
 }
 
 

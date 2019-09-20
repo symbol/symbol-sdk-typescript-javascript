@@ -8,7 +8,7 @@ declare interface account {
     // @TODO: the currentXem should be renamed
     currentXem: string,
     currentXEM1: string,
-    account: Account,
+    account: Account | any,
     wallet: any,
     mosaics: Record<string, AppMosaic>,
     namespaces: any[],
@@ -17,6 +17,7 @@ declare interface account {
     generationHash: string,
     xemDivisibility: number
     transactionList: FormattedTransaction[],
+    accountName: string
     networkMosaic: AppMosaic,
 }
 
@@ -34,7 +35,7 @@ export default {
         generationHash: '',
         xemDivisibility: 6,
         transactionList: [],
-        networkMosaic: null,
+        accountName: '',
     },
     getters: {
         wallet(state) {
@@ -60,6 +61,16 @@ export default {
         }
     },
     mutations: {
+        RESET_ACCOUNT(state: account) {
+            state.account = {}
+            state.wallet = {}
+            state.mosaics = {}
+            state.namespaces = []
+            state.addressAliasMap = {}
+            state.transactionList = []
+            state.accountName = ''
+        }
+        ,
         SET_ACCOUNT(state: account, account: Account): void {
             state.account = account
         },
@@ -146,16 +157,19 @@ export default {
             const newStateTransactions = [...state.transactionList]
             const txIndex = newStateTransactions
                 .findIndex(({txHeader}) => newTx.txHeader.hash === txHeader.hash)
-            
-            if(txIndex > -1 && newStateTransactions[txIndex].isTxUnconfirmed) {
+
+            if (txIndex > -1 && newStateTransactions[txIndex].isTxUnconfirmed) {
                 newStateTransactions.splice(txIndex, 1)
-            } 
-            
+            }
+
             newStateTransactions.unshift(newTx)
             state.transactionList = newStateTransactions
         },
         SET_CURRENT_XEM(state: account, currentXem: string) {
             state.currentXem = currentXem
+        },
+        SET_ACCOUNT_NAME(state: account, accountName: string) {
+            state.accountName = accountName
         },
     },
 }

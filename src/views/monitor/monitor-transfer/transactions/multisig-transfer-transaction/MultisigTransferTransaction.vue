@@ -5,9 +5,9 @@
         <span class="title">{{$t('public')}}</span>
         <span class="value radius flex_center">
         <Select
-          v-model="formItem.multisigPublickey"
-          :placeholder="$t('Please_select_public_key')"
-          class="asset_type"
+                v-model="formItem.multisigPublickey"
+                :placeholder="$t('Please_select_public_key')"
+                class="asset_type"
         >
           <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">
             {{ item.label }}
@@ -110,13 +110,13 @@
         <span>
           <span class="encryption_container">{{$t('encryption')}}</span>
           <span
-              @click="formItem.isEncrypted = false"
-              :class="['encryption_item',formItem.isEncrypted?'encryption':'not_encryption']"
+                  @click="formItem.isEncrypted = false"
+                  :class="['encryption_item',formItem.isEncrypted?'encryption':'not_encryption']"
           />
           <span class="not_encryption_container">{{$t('Not_encrypted')}}</span>
           <span
-              @click="formItem.isEncrypted = true"
-              :class="['encryption_item',formItem.isEncrypted?'not_encryption':'encryption']"
+                  @click="formItem.isEncrypted = true"
+                  :class="['encryption_item',formItem.isEncrypted?'not_encryption':'encryption']"
           />
         </span>
       </div>
@@ -155,12 +155,13 @@
         {{$t('send')}}
       </div>
 
-      <CheckPWDialog :transactionDetail='transactionDetail'
-                     @closeCheckPWDialog="closeCheckPWDialog"
-                     @checkEnd="checkEnd"
-                     :showCheckPWDialog="showCheckPWDialog"
-                     :otherDetails='otherDetails'
-                     :transactionList="transactionList"
+      <CheckPWDialog
+              :transactionDetail='transactionDetail'
+              @closeCheckPWDialog="closeCheckPWDialog"
+              @checkEnd="checkEnd"
+              :showCheckPWDialog="showCheckPWDialog"
+              :otherDetails='otherDetails'
+              :transactionList="transactionList"
       ></CheckPWDialog>
     </form>
   </div>
@@ -168,6 +169,7 @@
 
 <script lang="ts">
     import {MultisigTransferTransactionTs} from '@/views/monitor/monitor-transfer/transactions/multisig-transfer-transaction/MultisigTransferTransactionTs.ts'
+
     export default class MultisigTransferTransaction extends MultisigTransferTransactionTs {
 
     }

@@ -1,49 +1,82 @@
 import {Component, Vue, Provide, Watch} from 'vue-property-decorator'
 import {Message} from "@/config"
-import {cloneData} from '@/core/utils'
+import {cloneData, localRead} from '@/core/utils'
 import {standardFields} from '@/core/validation'
 import {AppLock} from '@/core/utils/appLock'
 import FormInput from '@/views/other/forms/input/FormInput.vue'
+import {mapState} from "vuex"
 
-@Component({components: {FormInput}})
+@Component(
+    {
+        components: {FormInput},
+        computed: {
+            ...mapState({
+                activeAccount: 'account',
+                app: 'app'
+            })
+        }
+    }
+)
 export class SettingLockTs extends Vue {
     @Provide() validator: any = this.$validator
-
+    activeAccount: any
     errors: any
     cypher: string
     submitDisabled: boolean = false
-
-    formFields = {
+    formModel = {
         previousPassword: standardFields.previousPassword.default,
         newPassword: standardFields.previousPassword.default,
         confirmPassword: standardFields.previousPassword.default,
-        cipher: new AppLock().getLock().cipher,
+        cipher: '',
         hint: standardFields.hint.default,
     }
-
-    formModel = cloneData(this.formFields)
 
     @Watch('errors')
     onErrorsChanged() {
         this.submitDisabled = this.errors.items.length > 0
     }
 
+    get accountName() {
+        return this.activeAccount.accountName
+    }
+
+    get mnemonic() {
+        const {accountName} = this
+        return JSON.parse(localRead('accountMap'))[accountName].seed
+    }
+
+
     resetFields() {
-        this.formModel = cloneData(this.formFields)
+        const {accountName} = this
+        this.formModel = {
+            previousPassword: standardFields.previousPassword.default,
+            newPassword: standardFields.previousPassword.default,
+            confirmPassword: standardFields.previousPassword.default,
+            cipher: new AppLock().getCipherPassword(accountName) + '',
+            hint: standardFields.hint.default,
+        }
     }
 
     submit() {
+        const {previousPassword, newPassword, hint} = this.formModel
+        const {accountName, mnemonic} = this
+        const that = this
         this.$validator
             .validate()
             .then((valid) => {
                 if (!valid) return
-                const {newPassword, hint} = this.formModel
-                new AppLock().storeLock(newPassword, hint)
+                const newCipherPassword = AppLock.encryptString(newPassword, newPassword)
+                const encryptedMnemonic = AppLock.encryptString(AppLock.decryptString(mnemonic, previousPassword), newPassword)
+                // refresh password localstorage  and jump to start page
+                new AppLock().saveNewPassword(encryptedMnemonic, newCipherPassword, accountName)
                 this.resetFields()
-                this.formModel.cipher = new AppLock().getLock().cipher
                 this.$Notice.success({
                     title: this.$t(Message.SUCCESS) + ''
                 })
             })
+    }
+
+    created() {
+        this.resetFields()
     }
 }

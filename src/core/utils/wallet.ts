@@ -17,8 +17,9 @@ import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
-import {createAccount} from "@/core/utils/hdWallet.ts"
+import {createSubWalletByPath} from "@/core/utils/hdWallet.ts"
 import {AppLock} from "@/core/utils/appLock"
+import {createType, coinType} from "@/config/types"
 
 export class AppWallet {
     constructor(wallet?: {
@@ -38,6 +39,13 @@ export class AppWallet {
     balance: number | 0
     isMultisig: boolean | undefined
     encryptedMnemonic: string | undefined
+    path: string
+    accountTitle: string
+
+
+    generateWalletTitle(createType: string, coinType: string, netType: string) {
+        return `${createType}-${coinType}-${netType}`
+    }
 
     createFromPrivateKey(name: string,
                          password: Password,
@@ -51,7 +59,7 @@ export class AppWallet {
             this.publicKey = Account.createFromPrivateKey(privateKey, networkType).publicKey
             this.networkType = networkType
             this.active = true
-
+            this.accountTitle = this.generateWalletTitle(createType.privateKey, coinType.xem, NetworkType[networkType])
             this.addNewWalletToList(store)
             return this
         } catch (error) {
@@ -59,21 +67,56 @@ export class AppWallet {
         }
     }
 
-    createFromMnemonic(name: string,
-                       password: Password,
-                       mnemonic: string,
-                       networkType: NetworkType,
-                       store: any): AppWallet {
+    createFromPath(
+        name: string,
+        password: Password,
+        path: string,
+        networkType: NetworkType,
+        store: any): AppWallet {
         try {
-            const account = createAccount(mnemonic)
-            this.simpleWallet = SimpleWallet
-                .createFromPrivateKey(name, password, account.privateKey, networkType)
+            const accountName = store.state.account.accountName
+            let accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
+            const mnemonic = AppLock.decryptString(accountMap[accountName].seed, password.value)
+            const account = createSubWalletByPath(mnemonic, path)
+            this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, account.privateKey, networkType)
             this.name = name
             this.address = this.simpleWallet.address.plain()
             this.publicKey = account.publicKey
             this.networkType = networkType
             this.active = true
+            this.path = path
+            this.accountTitle = this.generateWalletTitle(createType.seed, coinType.xem, NetworkType[networkType])
             this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
+            this.addNewWalletToList(store)
+            return this
+        } catch (error) {
+            console.log(error)
+            throw new Error(error)
+        }
+    }
+
+    createFromMnemonic(
+        name: string,
+        password: Password,
+        mnemonic: string,
+        networkType: NetworkType,
+        store: any): AppWallet {
+        try {
+            const path = `m/44'/43'/1'/0/0`
+            const accountName = store.state.account.accountName
+            const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
+            const account = createSubWalletByPath(mnemonic, path)  // need put in configure
+            this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, account.privateKey, networkType)
+            this.name = name
+            this.address = this.simpleWallet.address.plain()
+            this.publicKey = account.publicKey
+            this.networkType = networkType
+            this.active = true
+            this.path = path
+            this.accountTitle = this.generateWalletTitle(createType.seed, coinType.xem, NetworkType[networkType])
+            this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
+            accountMap[accountName].seed = this.encryptedMnemonic
+            localSave('accountMap', JSON.stringify(accountMap))
             this.addNewWalletToList(store)
             return this
         } catch (error) {
@@ -92,6 +135,7 @@ export class AppWallet {
             const words = CryptoJS.enc.Base64.parse(keystoreStr)
             const keystore = words.toString(CryptoJS.enc.Utf8)
             this.simpleWallet = JSON.parse(keystore)
+            this.accountTitle = this.generateWalletTitle(createType.keyStore, coinType.xem, NetworkType[networkType])
             const {privateKey} = this.getAccount(password)
             this.createFromPrivateKey(name, password, privateKey, networkType, store)
             return this
@@ -145,8 +189,10 @@ export class AppWallet {
     }
 
     addNewWalletToList(store: any): void {
-        const localData: any[] = localRead('wallets') === ''
-            ? [] : JSON.parse(localRead('wallets'))
+        const accountName = store.state.account.accountName
+        const accountMap = localRead('accountMap') === ''
+            ? {} : JSON.parse(localRead('accountMap'))
+        const localData = accountMap[accountName].wallets
 
         this.style = this.style || `walletItem_bg_${String(Number(localData.length) % 3)}`
 
@@ -164,11 +210,16 @@ export class AppWallet {
 
     delete(store: any, that: any) {
         const list = [...store.state.app.walletList]
+        const accountName = store.state.account.accountName
+        const accountMap = localRead('accountMap') === ''
+            ? {} : JSON.parse(localRead('accountMap'))
+
         const walletIndex = list.findIndex(({address}) => address === this.address)
         if (walletIndex === -1) throw new Error('The wallet was not found in the list')
         list.splice(walletIndex, 1)
         store.commit('SET_WALLET_LIST', list)
-        localSave('wallets', JSON.stringify(list))
+        accountMap[accountName].wallets = list
+        localSave('accountMap', JSON.stringify(accountMap))
 
         if (list.length < 1) {
             store.commit('SET_HAS_WALLET', false)
@@ -190,6 +241,10 @@ export class AppWallet {
         const newWalletIndex = walletList.findIndex(({address}) => address === newActiveWalletAddress)
         if (newWalletIndex === -1) throw new Error('wallet not found when switching')
 
+        const accountName = store.state.account.accountName
+        const accountMap = localRead('accountMap') === ''
+            ? {} : JSON.parse(localRead('accountMap'))
+
         let newWallet = walletList[newWalletIndex]
         newWallet.active = true
 
@@ -203,7 +258,9 @@ export class AppWallet {
 
         store.commit('SET_WALLET_LIST', walletListToStore)
         store.commit('SET_WALLET', newWallet)
-        localSave('wallets', JSON.stringify(walletListToStore))
+
+        accountMap[accountName].wallets = walletListToStore
+        localSave('accountMap', JSON.stringify(accountMap))
     }
 
     async getAccountBalance(networkCurrencies: any, node: string): Promise<number> {
@@ -233,8 +290,10 @@ export class AppWallet {
     }
 
     updateWallet(store: any) {
-        const localData: any[] = localRead('wallets') === ''
-            ? [] : JSON.parse(localRead('wallets'))
+        const accountName = store.state.account.accountName
+        const accountMap = localRead('accountMap') === ''
+            ? {} : JSON.parse(localRead('accountMap'))
+        const localData: any[] = accountMap.wallets
 
         if (!localData.length) throw new Error('error at update wallet, no wallets in storage')
 
@@ -247,7 +306,8 @@ export class AppWallet {
 
         store.commit('SET_WALLET_LIST', newWalletList)
         if (store.state.account.address === this.address) store.commit('SET_WALLET', this)
-        localSave('wallets', JSON.stringify(newWalletList))
+        accountMap[accountName].wallets = newWalletList
+        localSave('accountMap', JSON.stringify(accountMap))
     }
 
     async setMultisigStatus(node: string, store: any): Promise<void> {
@@ -265,6 +325,7 @@ export class AppWallet {
             const account = this.getAccount(password)
             const signature = account.sign(transactionList[0], generationHash)
             const message = that.$t(Message.SUCCESS)
+            console.log(transactionList)
             console.log(signature)
             new TransactionApiRxjs().announce(signature, node).subscribe(() => {
                 that.$Notice.success({title: message}) // quick fix
@@ -328,7 +389,7 @@ export const getNamespaces = async (address: string, node: string) => {
                 hex: item.namespaceInfo.id.toHex(),
                 value: namespaceName,
                 label: namespaceName,
-                namespaceInfo:item.namespaceInfo,
+                namespaceInfo: item.namespaceInfo,
                 isActive: item.namespaceInfo.active,
                 alias: item.namespaceInfo.alias,
                 levels: item.namespaceInfo.levels.length,
@@ -382,10 +443,10 @@ export const getMosaicInfoList = async (node: string, mosaicList: Mosaic[], curr
     await new MosaicApiRxjs().getMosaics(node, mosaicIds).toPromise().then(mosaics => {
         if (!isShowExpired) {
             mosaics.map((mosaic) => {
-                const duration = mosaic['properties'].duration.compact();
-                const createHeight = mosaic.height.compact();
-                if (duration ===0 || duration + createHeight > Number(currentHeight)) {
-                    mosaicInfoList.push(mosaic);
+                const duration = mosaic['properties'].duration.compact()
+                const createHeight = mosaic.height.compact()
+                if (duration === 0 || duration + createHeight > Number(currentHeight)) {
+                    mosaicInfoList.push(mosaic)
                 }
             })
             return

@@ -2,6 +2,7 @@ import {MosaicAlias, MosaicId, MosaicHttp, Namespace} from 'nem2-sdk'
 import {FormattedTransfer, FormattedTransaction, FormattedAggregateComplete} from '../transactions'
 import {flatMap, map, toArray} from 'rxjs/operators'
 import {AppMosaic} from '@/core/model'
+import {localRead} from "@/core/utils"
 
 export const AppMosaics = () => ({
     store: null,
@@ -24,7 +25,7 @@ export const AppMosaics = () => ({
                 && mosaic.expirationHeight === 'Forever'
                 || currentHeight > mosaic.expirationHeight))
     },
-    
+
     getItemsWithoutProperties(mosaics: Record<string, AppMosaic>): MosaicId[] {
         return Object.values(mosaics)
             .filter(({properties}) => !properties)
@@ -33,7 +34,7 @@ export const AppMosaics = () => ({
 
     async updateMosaicInfo(mosaics: Record<string, AppMosaic>, node: string): Promise<AppMosaic[]> {
         const toUpdate = this.getItemsWithoutProperties(mosaics)
-        
+
         if (!toUpdate.length) return
         const updatedMosaics = await new MosaicHttp(node)
             .getMosaics(toUpdate)
@@ -45,7 +46,14 @@ export const AppMosaics = () => ({
             .toPromise()
         return updatedMosaics
     },
-    
+
+    addItem(mosaic): void {
+        if (!mosaic.hex) return
+        if (!this.mosaics[mosaic.hex]) this.mosaics[mosaic.hex] = {}
+        Object.assign(this.mosaics[mosaic.hex], new AppMosaic(mosaic))
+        this.storeItems()
+    },
+
     fromTransactions(transactions: FormattedTransfer[]) {
         const allMosaics = transactions.map(x => this.extractMosaicsFromTransaction(x))
         const allMosaicsFlat1 = [].concat(...allMosaics).map(mosaic => mosaic)
@@ -57,7 +65,7 @@ export const AppMosaics = () => ({
 
     extractMosaicsFromTransaction(transaction: FormattedTransaction): any[] {
         if (transaction instanceof FormattedAggregateComplete
-                && transaction.formattedInnerTransactions) {
+            && transaction.formattedInnerTransactions) {
             return transaction.formattedInnerTransactions
                 .map(t => this.extractMosaicsFromTransaction(t))
         }
@@ -65,6 +73,9 @@ export const AppMosaics = () => ({
         if (tx.mosaic) return tx.mosaic
         if (tx.mosaics) return tx.mosaics
         if (tx.mosaicId) return tx.mosaicId
+    },
+    addItems(mosaics): void {
+        mosaics.forEach(mosaic => this.addItem(mosaic))
     },
 
     fromNamespaces(namespaces: Namespace[]): AppMosaic[] {

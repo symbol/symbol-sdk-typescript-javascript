@@ -4,20 +4,20 @@ import {Message} from "@/config/index.ts"
 import {AppMosaic} from '@/core/model'
 
 export const getNetworkGenerationHash = async (node: string, that: any): Promise<void> => {
-  try {
-    const block = await new BlockApiRxjs().getBlockByHeight(node, 1).toPromise()
-    that.$store.commit('SET_IS_NODE_HEALTHY', true)
-    that.$Notice.success({
-        title: that.$t(Message.NODE_CONNECTION_SUCCEEDED) + ''
-    })
-    that.$store.commit('SET_GENERATION_HASH', block.generationHash)
-  } catch (error) {
-    console.error(error)
-    that.$Notice.error({
-        title: that.$t(Message.NODE_CONNECTION_ERROR) + ''
-    })
-    that.$store.commit('SET_IS_NODE_HEALTHY', false)
-  }
+    try {
+        const block = await new BlockApiRxjs().getBlockByHeight(node, 1).toPromise()
+        that.$store.commit('SET_IS_NODE_HEALTHY', true)
+        that.$Notice.success({
+            title: that.$t(Message.NODE_CONNECTION_SUCCEEDED) + ''
+        })
+        that.$store.commit('SET_GENERATION_HASH', block.generationHash)
+    } catch (error) {
+        console.error(error)
+        that.$Notice.error({
+            title: that.$t(Message.NODE_CONNECTION_ERROR) + ''
+        })
+        that.$store.commit('SET_IS_NODE_HEALTHY', false)
+    }
 }
 
 /**
@@ -29,7 +29,7 @@ export const getNetworkGenerationHash = async (node: string, that: any): Promise
 export const getCurrentNetworkMosaic = async (currentNode: string, store: any) => {
     try {
         const genesisBlockInfoList = await new BlockApiRxjs()
-        .getBlockTransactions(currentNode, 1, new QueryParams(100)).toPromise()
+            .getBlockTransactions(currentNode, 1, new QueryParams(100)).toPromise()
 
         const mosaicDefinitionTx: any = genesisBlockInfoList.find(({type}) => type === TransactionType.MOSAIC_DEFINITION)
         const mosaicAliasTx: any = genesisBlockInfoList.find(({type}) => type === TransactionType.MOSAIC_ALIAS)
@@ -39,7 +39,7 @@ export const getCurrentNetworkMosaic = async (currentNode: string, store: any) =
 
         const networkNamespace = await new NamespaceService(new NamespaceHttp(currentNode))
             .namespace(mosaicAliasTx.namespaceId).toPromise()
-            
+
         const appMosaic = AppMosaic.fromGetCurrentNetworkMosaic(mosaicDefinitionTx, networkNamespace.name)
         await store.commit('UPDATE_MOSAICS', [appMosaic])
         store.commit('SET_NETWORK_MOSAIC', appMosaic)

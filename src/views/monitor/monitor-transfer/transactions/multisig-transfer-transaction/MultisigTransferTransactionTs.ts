@@ -14,8 +14,8 @@ import {
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs"
 import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
-import {aliasType} from "@/config/types";
-import {formData} from "@/config/formDto";
+import {aliasType} from "@/config/types"
+import {formData} from "@/config/formDto"
 import {standardFields} from "@/core/validation"
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
 
@@ -124,13 +124,13 @@ export class MultisigTransferTransactionTs extends Vue {
 
         const mosaicList: any = Object.values(this.mosaics)
         return [...mosaicList]
-        .filter(mosaic => mosaic.balance && mosaic.balance > 0
-            && mosaic.expirationHeight === 'Forever'
-            || currentHeight < mosaic.expirationHeight)
-        .map(({name, balance, hex}) => ({
-            label: `${name||hex} (${balance.toLocaleString()})`,
-            value: hex,
-        }))
+            .filter(mosaic => mosaic.balance && mosaic.balance > 0
+                && mosaic.expirationHeight === 'Forever'
+                || currentHeight < mosaic.expirationHeight)
+            .map(({name, balance, hex}) => ({
+                label: `${name || hex} (${balance.toLocaleString()})`,
+                value: hex,
+            }))
     }
 
 
@@ -202,7 +202,7 @@ export class MultisigTransferTransactionTs extends Vue {
             "mosaic": mosaicTransferList.map(item => {
                 return item.id.id.toHex() + `(${item.amount.compact()})`
             }).join(','),
-            "fee": innerFee + lockFee + aggregateFee + 'XEM',
+            "fee": isMultisig ? innerFee + lockFee + aggregateFee + 'XEM' : innerFee + 'XEM',
             "remarks": remark,
             "encryption": isEncrypted,
         }
@@ -222,7 +222,7 @@ export class MultisigTransferTransactionTs extends Vue {
         let {address, remark, innerFee, mosaicTransferList, isEncrypted} = this.formItem
         const {xemDivisibility, networkType} = this
         innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
-        
+
         const transaction = new TransactionApiRxjs().transferTransaction(
             networkType,
             innerFee,
@@ -278,7 +278,7 @@ export class MultisigTransferTransactionTs extends Vue {
 
             const multisigInfo = await new MultisigApiRxjs()
                 .getMultisigAccountInfo(address, node).toPromise()
-            
+
             if (multisigInfo.multisigAccounts.length == 0) {
                 this.isShowPanel = false
                 return
@@ -413,8 +413,8 @@ export class MultisigTransferTransactionTs extends Vue {
             this.setMainPublicKey()
             this.initForm()
             this.getMultisigAccountList()
-        } 
-    }     
+        }
+    }
 
     resetFields() {
         this.$nextTick(() => this.$validator.reset())

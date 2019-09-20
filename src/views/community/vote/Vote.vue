@@ -19,7 +19,7 @@
 
     <div class="show_exists_vote_list" v-show="voteActionList[0].isSelect">
       <div class="bottom_vote_list">
-        <div class="left  scroll left_article_list">
+        <div class="left  scroll left_article_list" ref="voteListContainer" @scroll="automaticLoadingVote">
 
           <div @click="switchVote(index)" v-for="(v,index) in currentVoteList"
                :class="['article_summary_item',v.isSelect?'selected':'','pointer']">
@@ -57,7 +57,7 @@
             <div class="content">{{currentVote.content}}</div>
             <div class="selection">
               <RadioGroup v-model="sigleSelection" v-if="!currentVote.isMultiple">
-                <Radio v-for="(i,index) in selections" :label="i.id" :key="i">
+                <Radio v-for="(i,index) in selections" :label="i.id">
                   {{alphabet[index] + ' : '+i.name}}
                 </Radio>
               </RadioGroup>
@@ -168,7 +168,7 @@
         <!--        </span>-->
         <!--        </div>-->
         <div class="tips red right">
-          {{$t('the_default_is')}}:0.5XEM，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
+          {{$t('the_default_is')}}:50000gas，{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
         </div>
 
         <div class="create_button" @click="submitCreatVote">

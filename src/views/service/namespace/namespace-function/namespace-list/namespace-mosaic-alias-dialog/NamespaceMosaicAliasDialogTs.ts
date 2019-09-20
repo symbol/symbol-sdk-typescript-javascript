@@ -56,6 +56,9 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
         return this.app.chainStatus.currentHeight
     }
 
+    get accountName(){
+        return this.activeAccount.accountName
+    }
     get unlinkMosaicList() {
         const {currentHeight} = this
         const {address} = this.wallet
