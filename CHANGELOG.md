@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.2] - 20-09-2019
+
+**Milestone**: Elephant.3
+
+- Added Metadata Transactions (Account, Mosaic and Namespace).
+- Added new account restriction type to support `Outgoing` addresses and transaction types.
+- Catbuffer builder codes fully implemented. Flatbuffer codes removed.
+- Models and services updated to be compatible with latest server (milestone Elephant: patch-3) schema updates.
+- Refactored `Uint64` to support `UInt64 to/from: numeric/hex string`.
+- Refactored `Signature Schema` to support both `NIS1` and `Catapult`. `Network idendifier` is now used to identify `Signature Schema` on model level. PrivateKey reversal has been removed for `NIS1` schema.
+- Added new `Namespace Pruned` receipt type.
+- Added new static method `addTransactions` to `AggregateTransction` to support offline embedded transactions' manipulation.
+- Mosaic definition / info model refactored with `MosaicProperties` removed.
+- Various bugs fixed in http repositories.
+- Various bugs fixed in model and core components
+
 ## [0.13.1] - 26-Jul-2019
 
 **Milestone**: Elephant
@@ -161,7 +177,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Alpaca
 
 - Initial code release.
-[0.13.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.0...v0.13.1
+[0.13.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.1...v0.13.2
+[0.13.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.4...v0.13.0
 [0.12.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.3...v0.12.4
 [0.12.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.2...v0.12.3

@@ -5,14 +5,14 @@
 [![Coverage Status](https://coveralls.io/repos/github/nemtech/nem2-sdk-typescript-javascript/badge.svg?branch=travis-ci)](https://coveralls.io/github/nemtech/nem2-sdk-typescript-javascript?branch=travis-ci)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-The official nem2-sdk for TypeScript and JavaScript, available for browsers, mobile applications, and NodeJS, to work 
+The official nem2-sdk for TypeScript and JavaScript, available for browsers, mobile applications, and NodeJS, to work
 with the NEM2 (a.k.a Catapult)
 
 ## Important Notes
 
-### _Elephant_ Network Compatibility (catapult-server@0.5.0.1)
+### _Elephant_ Network Compatibility (catapult-server@0.7.0.1)
 
-Due to a network upgrade with [catapult-server@elephant](https://github.com/nemtech/catapult-server/releases/tag/v0.5.0.1) version, **it is recommended to use this package's 0.13.1 version and upwards to use this package with Elephant versioned networks**.
+Due to a network upgrade with [catapult-server@elephant3](https://github.com/nemtech/catapult-server/releases/tag/v0.7.0.1) version, **it is recommended to use this package's 0.13.2 version and upwards to use this package with Elephant versioned networks**.
 
 The upgrade to this package's [version v0.13.1](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.13.1) is mandatory for **elephant compatibility**.
 
