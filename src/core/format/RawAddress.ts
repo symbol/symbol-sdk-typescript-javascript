@@ -16,6 +16,7 @@
 
 import { keccak256, sha3_256 } from 'js-sha3';
 import RIPEMD160 = require('ripemd160');
+import { NetworkType } from '../../model/blockchain/NetworkType';
 import { SignSchema} from '../crypto';
 import { SHA3Hasher } from '../crypto/SHA3Hasher';
 import { Base32 } from './Base32';
@@ -75,13 +76,13 @@ export class RawAddress {
     /**
      * Converts a public key to a decoded address for a specific network.
      * @param {Uint8Array} publicKey The public key.
-     * @param {number} networkIdentifier The network identifier.
+     * @param {NetworkType} networkType The network identifier.
      * @returns {Uint8Array} The decoded address corresponding to the inputs.
      */
     public static publicKeyToAddress = (publicKey: Uint8Array,
-                                        networkIdentifier: number): Uint8Array => {
+                                        networkType: NetworkType): Uint8Array => {
         // step 1: sha3 hash of the public key
-        const signSchema = SHA3Hasher.resolveSignSchema(networkIdentifier);
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         const publicKeyHash = signSchema === SignSchema.SHA3 ? sha3_256.arrayBuffer(publicKey) : keccak256.arrayBuffer(publicKey);
 
         // step 2: ripemd160 hash of (1)
@@ -89,7 +90,7 @@ export class RawAddress {
 
         // step 3: add network identifier byte in front of (2)
         const decodedAddress = new Uint8Array(RawAddress.constants.sizes.addressDecoded);
-        decodedAddress[0] = networkIdentifier;
+        decodedAddress[0] = networkType;
         RawArray.copy(decodedAddress, ripemdHash, RawAddress.constants.sizes.ripemd160, 1);
 
         // step 4: concatenate (3) and the checksum of (3)
@@ -106,11 +107,11 @@ export class RawAddress {
     /**
      * Determines the validity of a decoded address.
      * @param {Uint8Array} decoded The decoded address.
-     * @param {number} networkIdentifier The network identifier.
+     * @param {NetworkType} networkType The network identifier.
      * @returns {boolean} true if the decoded address is valid, false otherwise.
      */
-    public static isValidAddress = (decoded: Uint8Array, networkIdentifier: number): boolean => {
-        const signSchema = SHA3Hasher.resolveSignSchema(networkIdentifier);
+    public static isValidAddress = (decoded: Uint8Array, networkType: NetworkType): boolean => {
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         const hash = signSchema === SignSchema.SHA3 ? sha3_256.create() : keccak256.create();
         const checksumBegin = RawAddress.constants.sizes.addressDecoded - RawAddress.constants.sizes.checksum;
         hash.update(decoded.subarray(0, checksumBegin));
@@ -122,17 +123,17 @@ export class RawAddress {
     /**
      * Determines the validity of an encoded address string.
      * @param {string} encoded The encoded address string.
-     * @param {number} networkIdentifier The network identifier.
+     * @param {NetworkType} networkType The network identifier.
      * @returns {boolean} true if the encoded address string is valid, false otherwise.
      */
-    public static isValidEncodedAddress = (encoded: string, networkIdentifier: number): boolean => {
+    public static isValidEncodedAddress = (encoded: string, networkType: NetworkType): boolean => {
         if (RawAddress.constants.sizes.addressEncoded !== encoded.length) {
             return false;
         }
 
         try {
             const decoded = RawAddress.stringToAddress(encoded);
-            return RawAddress.isValidAddress(decoded, networkIdentifier);
+            return RawAddress.isValidAddress(decoded, networkType);
         } catch (err) {
             return false;
         }
