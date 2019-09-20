@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { SignSchema } from '../../core/crypto/SignSchema';
 import { Convert, RawAddress } from '../../core/format';
 import { AddressAliasTransactionBuilder } from '../../infrastructure/catbuffer/AddressAliasTransactionBuilder';
 import { AddressDto } from '../../infrastructure/catbuffer/AddressDto';
@@ -107,12 +106,10 @@ export class AddressAliasTransaction extends Transaction {
      * Create a transaction object from payload
      * @param {string} payload Binary payload
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {Transaction | InnerTransaction}
      */
     public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false,
-                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedAddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             AddressAliasTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
@@ -127,7 +124,7 @@ export class AddressAliasTransaction extends Transaction {
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as AddressAliasTransactionBuilder).fee.amount),
         );
         return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

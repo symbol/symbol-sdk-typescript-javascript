@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SignSchema } from '../../core/crypto/SignSchema';
 import { Convert, Convert as convert, RawAddress } from '../../core/format';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
 import { EmbeddedSecretLockTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretLockTransactionBuilder';
-import { EntityTypeDto } from '../../infrastructure/catbuffer/EntityTypeDto';
 import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
 import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SecretLockTransactionBuilder } from '../../infrastructure/catbuffer/SecretLockTransactionBuilder';
@@ -129,12 +127,10 @@ export class SecretLockTransaction extends Transaction {
      * Create a transaction object from payload
      * @param {string} payload Binary payload
      * @param {Boolean} isEmbedded Is embedded transaction (Default: false)
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {Transaction | InnerTransaction}
      */
     public static createFromPayload(payload: string,
-                                    isEmbedded: boolean = false,
-                                    signSchema: SignSchema = SignSchema.SHA3): Transaction | InnerTransaction {
+                                    isEmbedded: boolean = false): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedSecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             SecretLockTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
@@ -154,7 +150,7 @@ export class SecretLockTransaction extends Transaction {
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretLockTransactionBuilder).fee.amount),
         );
         return isEmbedded ?
-            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType, signSchema)) : transaction;
+            transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
     }
 
     /**

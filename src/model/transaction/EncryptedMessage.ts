@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import {Crypto, SignSchema} from '../../core/crypto';
+import {Crypto, SHA3Hasher} from '../../core/crypto';
 import {PublicAccount} from '../account/PublicAccount';
+import { NetworkType } from '../blockchain/NetworkType';
 import {Message} from './Message';
 import {MessageType} from './MessageType';
 import {PlainMessage} from './PlainMessage';
@@ -38,12 +39,16 @@ export class EncryptedMessage extends Message {
      * @param message - Plain message to be encrypted
      * @param recipientPublicAccount - Recipient public account
      * @param privateKey - Sender private key
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @param {NetworkType} networkType - Catapult network type
      * @return {EncryptedMessage}
      */
-    public static create(message: string, recipientPublicAccount: PublicAccount, privateKey, signSchema: SignSchema = SignSchema.SHA3) {
+    public static create(message: string, recipientPublicAccount: PublicAccount, privateKey, networkType: NetworkType) {
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         return new EncryptedMessage(
-            Crypto.encode(privateKey, recipientPublicAccount.publicKey, message, signSchema).toUpperCase(),
+            Crypto.encode(privateKey,
+                          recipientPublicAccount.publicKey,
+                          message,
+                          signSchema).toUpperCase(),
             recipientPublicAccount);
     }
 
@@ -60,14 +65,18 @@ export class EncryptedMessage extends Message {
      * @param encryptMessage - Encrypted message to be decrypted
      * @param privateKey - Recipient private key
      * @param recipientPublicAccount - Sender public account
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @param {NetworkType} networkType - Catapult network type
      * @return {PlainMessage}
      */
     public static decrypt(encryptMessage: EncryptedMessage,
                           privateKey,
                           recipientPublicAccount: PublicAccount,
-                          signSchema: SignSchema = SignSchema.SHA3): PlainMessage {
+                          networkType: NetworkType): PlainMessage {
+        const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         return new PlainMessage(this.decodeHex(
-                Crypto.decode(privateKey, recipientPublicAccount.publicKey, encryptMessage.payload, signSchema)));
+                Crypto.decode(privateKey,
+                              recipientPublicAccount.publicKey,
+                              encryptMessage.payload,
+                              signSchema)));
     }
 }

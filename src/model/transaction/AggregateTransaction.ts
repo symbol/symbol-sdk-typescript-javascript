@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { KeyPair, SignSchema } from '../../core/crypto';
+import { KeyPair, SHA3Hasher } from '../../core/crypto';
 import { Convert } from '../../core/format';
 import { AggregateBondedTransactionBuilder } from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
 import { AggregateCompleteTransactionBuilder } from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
@@ -31,7 +31,6 @@ import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';
 import { CosignatureSignedTransaction } from './CosignatureSignedTransaction';
-import { CosignatureTransaction } from './CosignatureTransaction';
 import { Deadline } from './Deadline';
 import { InnerTransaction } from './InnerTransaction';
 import { SignedTransaction } from './SignedTransaction';
@@ -127,10 +126,9 @@ export class AggregateTransaction extends Transaction {
     /**
      * Create a transaction object from payload
      * @param {string} payload Binary payload
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {AggregateTransaction}
      */
-    public static createFromPayload(payload: string, signSchema: SignSchema = SignSchema.SHA3): AggregateTransaction {
+    public static createFromPayload(payload: string): AggregateTransaction {
         /**
          * Get transaction type from the payload hex
          * As buffer uses separate builder class for Complete and bonded
@@ -162,14 +160,14 @@ export class AggregateTransaction extends Transaction {
         const consignatures = consignatureArray ? consignatureArray.map((cosignature) =>
                     new AggregateTransactionCosignature(
                         cosignature.substring(64, 192),
-                        PublicAccount.createFromPublicKey(cosignature.substring(0, 64), networkType, signSchema),
+                        PublicAccount.createFromPublicKey(cosignature.substring(0, 64), networkType),
                 )) : [];
 
         return type === TransactionType.AGGREGATE_COMPLETE ?
             AggregateTransaction.createComplete(
                 Deadline.createFromDTO(builder.deadline.timestamp),
                 embeddedTransactionArray.map((transactionRaw) => {
-                    return CreateTransactionFromPayload(transactionRaw, true, signSchema) as InnerTransaction;
+                    return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
                 }),
                 networkType,
                 consignatures,
@@ -177,7 +175,7 @@ export class AggregateTransaction extends Transaction {
             ) : AggregateTransaction.createBonded(
                 Deadline.createFromDTO(builder.deadline.timestamp),
                 embeddedTransactionArray.map((transactionRaw) => {
-                    return CreateTransactionFromPayload(transactionRaw, true, signSchema) as InnerTransaction;
+                    return CreateTransactionFromPayload(transactionRaw, true) as InnerTransaction;
                 }),
                 networkType,
                 consignatures,
@@ -202,17 +200,16 @@ export class AggregateTransaction extends Transaction {
      * @param initiatorAccount - Initiator account
      * @param cosignatories - The array of accounts that will cosign the transaction
      * @param generationHash - Network generation hash hex
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @returns {SignedTransaction}
      */
     public signTransactionWithCosignatories(initiatorAccount: Account,
                                             cosignatories: Account[],
-                                            generationHash: string,
-                                            signSchema: SignSchema = SignSchema.SHA3): SignedTransaction {
-        const signedTransaction = this.signWith(initiatorAccount, generationHash, signSchema);
+                                            generationHash: string): SignedTransaction {
+        const signedTransaction = this.signWith(initiatorAccount, generationHash);
         const transactionHashBytes = Convert.hexToUint8(signedTransaction.hash);
         let signedPayload = signedTransaction.payload;
         cosignatories.forEach((cosigner) => {
+            const signSchema = SHA3Hasher.resolveSignSchema(cosigner.networkType);
             const signature = KeyPair.sign(cosigner, transactionHashBytes, signSchema);
             signedPayload += cosigner.publicKey + Convert.uint8ToHex(signature);
         });
@@ -235,14 +232,12 @@ export class AggregateTransaction extends Transaction {
      * @param initiatorAccount - Initiator account
      * @param {CosignatureSignedTransaction[]} cosignatureSignedTransactions - Array of cosigned transaction
      * @param generationHash - Network generation hash hex
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
      * @return {SignedTransaction}
      */
     public signTransactionGivenSignatures(initiatorAccount: Account,
                                           cosignatureSignedTransactions: CosignatureSignedTransaction[],
-                                          generationHash: string,
-                                          signSchema: SignSchema= SignSchema.SHA3): SignedTransaction {
-        const signedTransaction = this.signWith(initiatorAccount, generationHash, signSchema);
+                                          generationHash: string): SignedTransaction {
+        const signedTransaction = this.signWith(initiatorAccount, generationHash);
         let signedPayload = signedTransaction.payload;
         cosignatureSignedTransactions.forEach((cosignedTransaction) => {
             signedPayload += cosignedTransaction.signerPublicKey + cosignedTransaction.signature;

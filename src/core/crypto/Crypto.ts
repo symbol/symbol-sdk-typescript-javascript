@@ -17,8 +17,9 @@
 import { WalletAlgorithm } from '../../model/wallet/WalletAlgorithm';
 import { Convert as convert } from '../format/Convert';
 import { KeyPair } from './KeyPair';
-import * as utility from './Utilities';
 import { SignSchema } from './SignSchema';
+import * as utility from './Utilities';
+// tslint:disable-next-line: no-var-requires
 const CryptoJS = require('crypto-js');
 export class Crypto {
     /**
@@ -219,10 +220,10 @@ export class Crypto {
      * @param {string} msg - A text message
      * @param {Uint8Array} iv - An initialization vector
      * @param {Uint8Array} salt - A salt
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      * @return {string} - The encoded message
      */
-    public static _encode = (senderPriv, recipientPub, msg, iv, salt, signSchema: SignSchema = SignSchema.SHA3) => {
+    public static _encode = (senderPriv, recipientPub, msg, iv, salt, signSchema: SignSchema) => {
         // Errors
         if (!senderPriv || !recipientPub || !msg || !iv || !salt) { throw new Error('Missing argument !'); }
         // Processing
@@ -244,10 +245,10 @@ export class Crypto {
      * @param {string} senderPriv - A sender private key
      * @param {string} recipientPub - A recipient public key
      * @param {string} msg - A text message
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      * @return {string} - The encoded message
      */
-    public static encode = (senderPriv, recipientPub, msg, signSchema: SignSchema = SignSchema.SHA3) => {
+    public static encode = (senderPriv, recipientPub, msg, signSchema: SignSchema) => {
         // Errors
         if (!senderPriv || !recipientPub || !msg) { throw new Error('Missing argument !'); }
         // Processing
@@ -264,10 +265,10 @@ export class Crypto {
      * @param {string} recipientPrivate - A recipient private key
      * @param {string} senderPublic - A sender public key
      * @param {Uint8Array} _payload - An encrypted message payload in bytes
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      * @return {string} - The decoded payload as hex
      */
-    public static _decode = (recipientPrivate, senderPublic, payload, iv, salt, signSchema: SignSchema = SignSchema.SHA3) => {
+    public static _decode = (recipientPrivate, senderPublic, payload, iv, salt, signSchema: SignSchema) => {
         // Error
         if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
         // Processing
@@ -290,19 +291,19 @@ export class Crypto {
      *
      * @param {string} recipientPrivate - A recipient private key
      * @param {string} senderPublic - A sender public key
-     * @param {string} _payload - An encrypted message payload
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK_REVERSED_KEY / SHA3)
+     * @param {string} payload - An encrypted message payload
+     * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      * @return {string} - The decoded payload as hex
      */
-    public static decode = (recipientPrivate, senderPublic, _payload, signSchema: SignSchema = SignSchema.SHA3) => {
+    public static decode = (recipientPrivate, senderPublic, payload, signSchema: SignSchema) => {
         // Error
-        if (!recipientPrivate || !senderPublic || !_payload) { throw new Error('Missing argument !'); }
+        if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
         // Processing
-        const binPayload = convert.hexToUint8(_payload);
-        const payload = new Uint8Array(binPayload.buffer, 48);
+        const binPayload = convert.hexToUint8(payload);
+        const payloadBuffer = new Uint8Array(binPayload.buffer, 48);
         const salt = new Uint8Array(binPayload.buffer, 0, 32);
         const iv = new Uint8Array(binPayload.buffer, 32, 16);
-        const decoded = Crypto._decode(recipientPrivate, senderPublic, payload, iv, salt, signSchema);
+        const decoded = Crypto._decode(recipientPrivate, senderPublic, payloadBuffer, iv, salt, signSchema);
         return decoded;
     }
 

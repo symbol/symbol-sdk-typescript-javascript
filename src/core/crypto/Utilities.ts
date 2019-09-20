@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { RawArray as array } from '../format';
 import * as nacl from './nacl_catapult';
 import { SHA3Hasher as sha3Hasher } from './SHA3Hasher';

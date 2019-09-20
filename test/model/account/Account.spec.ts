@@ -15,9 +15,9 @@
  */
 
 import {expect} from 'chai';
-import { SignSchema } from '../../../src/core/crypto';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import { Convert } from '../../../src/core/format/Convert';
 
 describe('Account', () => {
     const accountInformation = {
@@ -35,13 +35,16 @@ describe('Account', () => {
 
     /**
      * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-keys-nis1.json
+     * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
      */
     it('should be created via private key using NIS1 schema', () => {
-        const account = Account.createFromPrivateKey('575dbb3062267eff57c970a336ebbc8fbcfe12c5bd3ed7bc11eb0481d7704ced',
-            NetworkType.MIJIN_TEST, SignSchema.KECCAK_REVERSED_KEY);
+        const privateKey =
+            Convert.uint8ToHex(Convert.hexToUint8Reverse('575dbb3062267eff57c970a336ebbc8fbcfe12c5bd3ed7bc11eb0481d7704ced'));
+        const account = Account.createFromPrivateKey(privateKey,
+            NetworkType.TEST_NET);
         expect(account.publicKey.toUpperCase()).to.be.
             equal('c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844'.toUpperCase());
-        expect(account.address.plain()).to.be.equal('SDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5JGDTV3S');
+        expect(account.address.plain()).to.be.equal('TDD2CT6LQLIYQ56KIXI3ENTM6EK3D44P5KZPFMK2');
     });
 
     it('should throw exception when the private key is not valid', () => {
@@ -58,7 +61,7 @@ describe('Account', () => {
     });
 
     it('should generate a new account using NIS1 schema', () => {
-        const account = Account.generateNewAccount(NetworkType.MIJIN_TEST, SignSchema.KECCAK_REVERSED_KEY);
+        const account = Account.generateNewAccount(NetworkType.TEST_NET);
         expect(account.publicKey).to.not.be.equal(undefined);
         expect(account.privateKey).to.not.be.equal(undefined);
         expect(account.address).to.not.be.equal(undefined);
@@ -90,24 +93,22 @@ describe('Account', () => {
         it('utf-8 - NIS1', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.MIJIN_TEST,
-                SignSchema.KECCAK_REVERSED_KEY,
+                NetworkType.TEST_NET,
             );
             const publicAccount = account.publicAccount;
-            const signed = account.signData('catapult rocks!', SignSchema.KECCAK_REVERSED_KEY);
-            expect(publicAccount.verifySignature('catapult rocks!', signed, SignSchema.KECCAK_REVERSED_KEY))
+            const signed = account.signData('catapult rocks!');
+            expect(publicAccount.verifySignature('catapult rocks!', signed))
                 .to.be.true;
         });
 
         it('hexa - NIS1', () => {
             const account = Account.createFromPrivateKey(
                 'AB860ED1FE7C91C02F79C02225DAC708D7BD13369877C1F59E678CC587658C47',
-                NetworkType.MIJIN_TEST,
-                SignSchema.KECCAK_REVERSED_KEY,
+                NetworkType.TEST_NET,
             );
             const publicAccount = account.publicAccount;
-            const signed = account.signData('0xAA', SignSchema.KECCAK_REVERSED_KEY);
-            expect(publicAccount.verifySignature('0xAA', signed, SignSchema.KECCAK_REVERSED_KEY))
+            const signed = account.signData('0xAA');
+            expect(publicAccount.verifySignature('0xAA', signed))
                 .to.be.true;
         });
     });
