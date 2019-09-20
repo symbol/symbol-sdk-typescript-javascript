@@ -6,7 +6,7 @@ import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vu
 import {mapState} from "vuex"
 import { MosaicId, NamespaceId, AliasType} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
-import {TransferType} from "@/model/TransferType";
+import {TransferType} from "@/core/model/TransferType";
 import {monitorRecaeiptTransferTypeConfig} from "@/config/view/monitor";
 
 @Component({

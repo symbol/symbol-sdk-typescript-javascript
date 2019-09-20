@@ -19,8 +19,8 @@ import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
 import {createSubWalletByPath} from "@/core/utils/hdWallet.ts"
 import {AppLock} from "@/core/utils/appLock"
-import {CreateWalletType} from "@/model/CreateWalletType";
-import {CoinType} from "@/model/CoinType";
+import {CreateWalletType} from "@/core/model/CreateWalletType";
+import {CoinType} from "@/core/model/CoinType";
 
 export class AppWallet {
     constructor(wallet?: {

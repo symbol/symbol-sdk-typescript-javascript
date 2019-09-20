@@ -1,6 +1,6 @@
 import {Account} from 'nem2-sdk'
 import {nodeConfig} from "@/config/index.ts"
-import {FormattedTransaction} from '@/core/services/transactions'
+import {FormattedTransaction} from '@/core/model'
 import {AppMosaic} from '@/core/model'
 
 declare interface account {

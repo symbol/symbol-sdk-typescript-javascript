@@ -1,9 +1,9 @@
-import {FormattedTransaction, iconMap} from '@/core/services/transactions'
+import {FormattedTransaction} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
 import {Address, Transaction} from 'nem2-sdk'
 import {nodeConfig} from '@/config/index.ts';
 
-export class FormattedMosaicSupplyChange extends FormattedTransaction {
+export class FormattedMosaicAlias extends FormattedTransaction {
     dialogDetailMap: any
     icon: any
 
@@ -12,13 +12,12 @@ export class FormattedMosaicSupplyChange extends FormattedTransaction {
                 currentXem: string,
                 xemDivisibility: number) {
           super(tx, address, currentXem, xemDivisibility)
-          this.icon = iconMap.dashboardDefinition
 
           this.dialogDetailMap = {
-            'transfer_type': this.txHeader.tag,
-            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), xemDivisibility) + nodeConfig.XEM,
-            'block': this.txHeader.block,
-            'hash': this.txHeader.hash,
+              'transfer_type': this.txHeader.tag,
+              'fee': getRelativeMosaicAmount(tx.maxFee.compact(), xemDivisibility) + nodeConfig.XEM,
+              'block': this.txHeader.block,
+              'hash': this.txHeader.hash,
           }
     }
 }

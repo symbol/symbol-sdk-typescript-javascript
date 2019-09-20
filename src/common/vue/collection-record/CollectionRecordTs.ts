@@ -5,16 +5,18 @@ import {
     getCurrentMonthFirst, getCurrentMonthLast, formatNumber,
     renderMosaics, renderMosaicNames, renderMosaicAmount
 } from '@/core/utils'
-import {TransferType} from "@/model/TransferType";
+import {FormattedTransaction} from '@/core/model'
+import TransactionModal from '@/views/monitor/monitor-transaction-modal/TransactionModal.vue'
+import {TransferType} from "@/core/model/TransferType";
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
+    components: { TransactionModal },
 })
 export class CollectionRecordTs extends Vue {
     activeAccount: any
     app: any
     transactionHash = ''
-    isShowDialog = false
     isShowSearchDetail = false
     currentMonthLast: any = 0
     currentMonthFirst: number = 0
@@ -25,6 +27,9 @@ export class CollectionRecordTs extends Vue {
     renderMosaicNames = renderMosaicNames
     renderMosaicAmount = renderMosaicAmount
 
+    showDialog: boolean = false
+    activeTransaction: FormattedTransaction = null
+    
     @Prop({
         default: () => {
             return 0
@@ -88,48 +93,6 @@ export class CollectionRecordTs extends Vue {
     // @TODO: move to formatTransactions
     formatNumber(number) {
         return formatNumber(number)
-    }
-
-    showDialog(transaction) {
-        this.isShowDialog = true
-        this.transactionDetails = [
-            {
-                key: 'transfer_type',
-                value: transaction.isReceipt ? 'receipt' : 'payment'
-            },
-            {
-                key: 'from',
-                value: transaction.rawTx.signer.address.address
-            },
-            {
-                key: 'aims',
-                value: transaction.rawTx.recipient.address
-            },
-            {
-                key: 'mosaic',
-                value: transaction.rawTx.mosaics
-            },
-            // {
-            //     key: 'mosaic',
-            //     value: transaction.mosaic ? transaction.mosaic : null
-            // },
-            {
-                key: 'fee',
-                value: transaction.dialogDetailMap.fee
-            },
-            {
-                key: 'block',
-                value: transaction.txHeader.block
-            },
-            {
-                key: 'hash',
-                value: transaction.txHeader.hash
-            },
-            {
-                key: 'message',
-                value: transaction.rawTx.message.payload || 'N/A'
-            }
-        ]
     }
 
     // @TODO: the current month should probably be set at app creation to the store

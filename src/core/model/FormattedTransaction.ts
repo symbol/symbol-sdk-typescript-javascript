@@ -1,4 +1,4 @@
-import {TransactionHeader} from '@/core/services/transactions'
+import {TransactionHeader} from '@/core/model'
 import {Transaction, Address} from 'nem2-sdk'
 
 /**

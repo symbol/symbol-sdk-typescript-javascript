@@ -2,7 +2,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 import MultisigTransferTransaction from './transactions/multisig-transfer-transaction/MultisigTransferTransaction.vue'
 import {mapState} from "vuex"
-import {TransferType} from "@/model/TransferType";
+import {TransferType} from "@/core/model/TransferType";
 import { monitorTransferTransferTypeConfig } from '@/config/view/monitor'
 
 

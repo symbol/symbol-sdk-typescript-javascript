@@ -1,31 +1,10 @@
 <template>
   <div class="right_record radius">
-
-    <Modal
-            :title="$t('transaction_detail')"
-            v-model="isShowDialog"
-            :transfer="false"
-            class-name="dash_board_dialog">
-      <div class="transfer_type" v-if="transactionDetails.length > 0">
-        <span class="title">{{$t(transactionDetails[0].key)}}</span>
-        <span class="value">{{$t(transactionDetails[0].value)}}</span>
-      </div>
-      <div>
-        <div :key="index" v-for="(t, index) in transactionDetails" class="other_info">
-          <div v-if="index !== 0">
-            <div v-if="t.key !== 'mosaic'">
-              <span class="title">{{$t(t.key)}}</span>
-              <span class="value">{{t.value?t.value:'null'}}</span>
-            </div>
-            <div v-if="t.key === 'mosaic'">
-              <span class="title">{{$t(t.key)}}</span>
-              <span class="value overflow_ellipsis">{{ renderMosaics(t.value, mosaicList, currentXem) }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Modal>
+    <TransactionModal
+      :visible="showDialog"
+      :activeTransaction="activeTransaction"
+      @close="showDialog = false"
+    /> 
 
     <div class="top_title">
       <span>{{transactionType === transferType.RECEIVED
@@ -63,7 +42,7 @@
               v-for="(c, index) in unConfirmedTransactionList"
               :key="`${index}ucf`"
               class="transaction_record_item pointer"
-              @click="showDialog(c)"
+              @click="showDialog = true; activeTransaction = c"
       >
         <img src="@/common/img/monitor/transaction/txUnConfirmed.png" alt="">
         <div class="flex_content">
@@ -84,7 +63,7 @@
               v-for="(c, index) in slicedConfirmedTransactionList"
               :key="`${index}cf`"
               class="transaction_record_item pointer"
-              @click="showDialog(c)"
+              @click="showDialog = true; activeTransaction = c"
       >
         <img src="@/common/img/monitor/transaction/txConfirmed.png" alt="">
         <div class="flex_content">

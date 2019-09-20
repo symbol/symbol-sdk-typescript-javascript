@@ -1,4 +1,4 @@
-import {FormattedTransaction, iconMap} from '@/core/services/transactions'
+import {FormattedTransaction} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
 import {Address, RegisterNamespaceTransaction} from 'nem2-sdk'
 import {nodeConfig} from '@/config/index.ts';
@@ -12,7 +12,6 @@ export class FormattedRegisterNamespace extends FormattedTransaction {
                currentXem: string,
                xemDivisibility: number) {
       super(tx, address, currentXem, xemDivisibility)
-        this.icon = iconMap.dashboardNamespace
 
         this.dialogDetailMap = {
           'transfer_type': this.txHeader.tag,

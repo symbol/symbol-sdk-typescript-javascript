@@ -6,7 +6,7 @@ import {vote} from '@/core/api/logicApi.ts'
 import {mapState} from "vuex"
 import {formatDate} from '@/core/utils/utils.ts'
 import {voteActionConfig, voteFilterConfig, voteSelectionConfig} from "@/config/view/vote";
-import {VoteType} from "@/model/VoteType";
+import {VoteType} from "@/core/model/VoteType";
 
 @Component({
         components: {

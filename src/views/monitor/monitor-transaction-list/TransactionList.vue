@@ -1,71 +1,10 @@
 <template>
   <div class="transaction-list-container radius">
-    <Modal
-            :title="$t('transaction_detail')"
-            v-model="isShowDialog"
-            :transfer="false"
-            class-name="dash_board_dialog scroll">
-      <Spin v-if="isLoadingModalDetailsInfo" size="large" fix class="absolute"></Spin>
-      <div class="transfer_type ">
-        <span class="title">{{$t('transfer_type')}}</span>
-        <span class="value overflow_ellipsis">
-          {{transactionDetails.dialogDetailMap ? $t(transactionDetails.dialogDetailMap.transfer_type) :'-'}}
-        </span>
-      </div>
-      <div>
-        <div
-          v-for="(value, key) in transactionDetails.dialogDetailMap"
-          :key="key"
-          class="other_info"
-        >
-          <div v-if="key !== 'transfer_type' && key !== 'mosaic'">
-            <span class="title">{{$t(key)}}</span>
-            <span class="value overflow_ellipsis">{{value}}</span>
-          </div>
-          <div v-if="key === 'mosaic'">
-            <span class="title">{{$t(key)}}</span>
-            <span class="value overflow_ellipsis">{{ renderMosaics(value, mosaicList, currentXem) }}
-            </span>
-          </div>
-        </div>
-        <!-- inner transaction -->
-        <div v-if="transactionDetails.formattedInnerTransactions">
-          <span class=" title"> {{$t('inner_transaction')}}</span>
-          <div
-            v-for="(innerTransaction, index) in transactionDetails.formattedInnerTransactions"
-            :key="index"
-            class="inner_transaction"
-          >
-            <span class="pointer value" @click="showInnerDialog(innerTransaction)">{{$t(innerTransaction.dialogDetailMap.transfer_type)}}</span>
-          </div>
-        </div>
-      </div>
-    </Modal>
-
-    <Modal
-            :title="$t('transaction_detail')"
-            v-model="isShowInnerDialog"
-            :transfer="false"
-            class-name="dash_board_dialog inner_dialog scroll">
-
-      <div class="transfer_type ">
-        <span class="title overflow_ellipsis">{{$t('transfer_type')}}</span>
-        <span class="value overflow_ellipsis">{{currentInnerTransaction.dialogDetailMap
-          ? $t(currentInnerTransaction.dialogDetailMap.transfer_type) :'-'}}</span>
-      </div>
-      <div>
-          <div
-            v-for="(value, key) in currentInnerTransaction.dialogDetailMap"
-            class="other_info"
-            :key="key"
-          >
-          <div v-if="key !=='transfer_type'">
-            <span class="title overflow_ellipsis">{{$t(key)}}</span>
-            <span class="value overflow_ellipsis">{{value}}</span>
-          </div>
-        </div>
-      </div>
-    </Modal>
+    <TransactionModal
+      :visible="showDialog"
+      :activeTransaction="activeTransaction"
+      @close="showDialog = false"
+    /> 
 
     <div class="bottom_transactions radius scroll" ref="bottomTransactions">
       <div class="splite_page">
@@ -90,12 +29,12 @@
             <div class="table_body hide_scroll" ref="confirmedTableBody">
               <div
                 class="table_item pointer"
-                @click="showDialog(c,true)"
+                @click="showDialog = true; activeTransaction = c"
                 v-for="(c, index) in slicedTransactionList"
                 :key="index"
               >
               <!-- FIRST COLUMN -->
-              <img class="mosaic_action" :src="c.icon" alt="" />
+              <img class="mosaic_action" :src="c.txHeader.icon" alt="" />
 
               <!-- SECOND COLUMN -->
               <div class="col2 overflow_ellipsis">

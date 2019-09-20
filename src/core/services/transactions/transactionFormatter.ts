@@ -16,7 +16,7 @@ import {
     FormattedModifyAccountRestrictionMosaic,
     FormattedModifyAccountRestrictionOperation,
     FormattedLinkAccount,
-} from '@/core/services/transactions'
+} from '@/core/model'
 
 const transactionFactory = () => ({
     router: {

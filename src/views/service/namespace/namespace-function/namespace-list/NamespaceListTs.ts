@@ -11,7 +11,7 @@ import NamespaceMosaicAliasDialog
 import NamespaceAddressAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-address-alias-dialog/NamespaceAddressAliasDialog.vue'
 import {AppMosaics} from '@/core/services/mosaics'
-import {MosaicNamespaceStatusType} from "@/model/MosaicNamespaceStatusType";
+import {MosaicNamespaceStatusType} from "@/core/model/MosaicNamespaceStatusType";
 
 @Component({
     components: {

@@ -1,26 +1,17 @@
-import {FormattedTransaction, iconMap, transactionFormatter} from '@/core/services/transactions'
+import {FormattedTransaction} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
-import {Address, AggregateTransaction} from 'nem2-sdk'
+import {Address, AccountLinkTransaction} from 'nem2-sdk'
 import {nodeConfig} from '@/config/index.ts';
 
-export class FormattedAggregateComplete extends FormattedTransaction {
+export class FormattedLinkAccount extends FormattedTransaction {
     dialogDetailMap: any
     icon: any
-    formattedInnerTransactions: FormattedTransaction[]
 
-    constructor(  tx: AggregateTransaction,
+    constructor(  tx: AccountLinkTransaction,
                   address: Address,
                   currentXem: string,
                   xemDivisibility: number) {
         super(tx, address, currentXem, xemDivisibility)
-        this.icon = iconMap.dashboardAggregate
-        this.formattedInnerTransactions = transactionFormatter(
-            tx.innerTransactions,
-            address,
-            'currentXem',
-            xemDivisibility,
-            'node',
-            currentXem)
 
         this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,

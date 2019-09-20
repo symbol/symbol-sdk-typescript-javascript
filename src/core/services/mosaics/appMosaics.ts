@@ -1,5 +1,5 @@
 import {MosaicAlias, MosaicId, MosaicHttp, Namespace} from 'nem2-sdk'
-import {FormattedTransfer, FormattedTransaction, FormattedAggregateComplete} from '../transactions'
+import {FormattedTransfer, FormattedTransaction, FormattedAggregateComplete} from '@/core/model'
 import {flatMap, map, toArray} from 'rxjs/operators'
 import {AppMosaic} from '@/core/model'
 

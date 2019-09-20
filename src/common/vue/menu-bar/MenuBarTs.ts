@@ -10,7 +10,7 @@ import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/core/utils/
 import {mapState} from 'vuex'
 import {NetworkType} from "nem2-sdk"
 import {languageConfig} from "@/config/view/language";
-import {LanguageType} from "@/model/LanguageType";
+import {LanguageType} from "@/core/model/LanguageType";
 import {nodeListConfig} from "@/config/view/node";
 
 @Component({

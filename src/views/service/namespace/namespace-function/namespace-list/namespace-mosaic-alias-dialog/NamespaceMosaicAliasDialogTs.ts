@@ -5,7 +5,7 @@ import {Message} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount, AppWallet} from '@/core/utils'
 import {AppMosaics} from '@/core/services/mosaics'
-import {MosaicNamespaceStatusType} from "@/model/MosaicNamespaceStatusType";
+import {MosaicNamespaceStatusType} from "@/core/model/MosaicNamespaceStatusType";
 import {formDataConfig} from "@/config/view/form";
 
 @Component({

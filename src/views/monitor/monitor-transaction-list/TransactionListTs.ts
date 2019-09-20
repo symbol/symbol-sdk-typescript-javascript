@@ -1,29 +1,27 @@
+import {TransactionType} from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue} from 'vue-property-decorator'
 import {formatNumber, renderMosaics} from '@/core/utils'
-import {TransactionType} from 'nem2-sdk'
-import {networkStatusConfig} from '@/config/view/setting'
+import {FormattedTransaction} from '@/core/model';
+import TransactionModal from '@/views/monitor/monitor-transaction-modal/TransactionModal.vue'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
+    components: { TransactionModal },
 })
 export class TransactionListTs extends Vue {
     app: any
     activeAccount: any
     pageSize: number = 10
     highestPrice = 0
-    isShowDialog = false
-    isShowInnerDialog = false
-    currentInnerTransaction = {}
-    receiptList = []
-    isShowTransferTransactions = true
-    transactionDetails: any = {}
     isLoadingModalDetailsInfo = false
-    networkStatusList = networkStatusConfig
     page: number = 1
     formatNumber = formatNumber
     renderMosaics = renderMosaics
     TransactionType = TransactionType
+
+    showDialog: boolean = false
+    activeTransaction: FormattedTransaction = null
 
     get wallet() {
         return this.activeAccount.wallet
@@ -53,16 +51,6 @@ export class TransactionListTs extends Vue {
 
     get currentXem() {
         return this.activeAccount.currentXem
-    }
-
-    showDialog(transaction) {
-        this.isShowDialog = true
-        this.transactionDetails = transaction
-    }
-
-    showInnerDialog(currentInnerTransaction) {
-        this.isShowInnerDialog = true
-        this.currentInnerTransaction = currentInnerTransaction
     }
 
     // @TODO: move out from there
