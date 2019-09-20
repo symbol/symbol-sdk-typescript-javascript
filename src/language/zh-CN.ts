@@ -103,7 +103,7 @@ export const zh_CN = {
     price: '价格',
     quantity: '数量',
 
-    //monitpr-panel
+    //monitor-panel
     wallet_balance: '钱包余额',
     asset_setting: '资产设置',
     search_for_asset_name: '搜索资产名',
@@ -131,15 +131,15 @@ export const zh_CN = {
     collection_record: '收款记录',
     enter_asset_type_alias_or_address_search: '输入交易hash搜索',
     ordinary_transfer: '普通转账',
-    Multisign_transfer: '多签转账',
+    Multisig_transfer: '多签转账',
     crosschain_transfer: '跨链转账',
     aggregate_transfer: '聚合转账',
     QR_code_generation_failed: '二维码生成失败',
 
     //monitor-remote
-    Remote_title_recipt: '累积委托收益量',
+    Remote_title_receipt: '累积委托收益量',
     Remote_state: '当前状态',
-    Remote_pubulic_pik: '远程公钥',
+    Remote_public_key: '远程公钥',
     Remote_question: '相关问题',
     Remote_ques1: '1、 怎么获得收益？',
     remote_ques1_rep: '帐户开启委托收获，就是将其重要性分数将转移到远程帐户。远程帐户继承了原始帐户的重要性，实现在线远程“挖矿”，收集收获的奖励。',
@@ -151,11 +151,11 @@ export const zh_CN = {
     remote_list_col3: '收获费用',
     remote_list_col4: '时间',
     remote_no_data: '暂无数据',
-    remote_repaly: '委托收获',
+    remote_replay: '委托收获',
     remote_modal_pul: '远程公钥',
     remote_modal_price: '费用',
-    reomte_modal_pass: '密码',
-    remote_modal_comfire: '确认',
+    remote_modal_pass: '密码',
+    remote_modal_confirm: '确认',
     remote_modal_cancel: '取消',
     remote_modal_place1: '请输入或粘贴远程公钥',
     remote_modal_place2: '请输入钱包密码',
@@ -201,8 +201,8 @@ export const zh_CN = {
 
     // setting network
     save: '保存',
-    // front end need change: canel--->cancel
-    canel: '取消',
+    // front end need change: cancel--->cancel
+    cancel: '取消',
 
     //setting-panel
     general_settings: '常规设置',
@@ -219,7 +219,6 @@ export const zh_CN = {
     currency_setting: '货币设置',
     Time_zone_setting: '时区设置',
     account_name: '账户名',
-    the_default_is_Number: '默认为Nember',
     confirm: '确认',
 
 
@@ -234,7 +233,7 @@ export const zh_CN = {
     severability: '可分割性',
     please_enter_separability: '请输入可分性',
     transmittable: '可传输',
-    variable_upply: '可变供应量',
+    variable_supply: '可变供应量',
     duration_permanent: '是否永久存在',
     other_information: '其他信息',
     duration: '持续时间',
@@ -247,7 +246,6 @@ export const zh_CN = {
     available_quantity: '可供应量',
     mosaic_divisibility: '可分性',
     transportability: '可传输性',
-    variable_supply: '可变供应量',
     effective_time: '有效时间(块)',
     overdue: '已过期',
     forever: '永远',
@@ -300,7 +298,7 @@ export const zh_CN = {
     multi_signature: '多重签名',
     apostille: '公证',
     address_book: '地址簿',
-    instant_xchanges: 'Instant Exchanges',
+    instant_exchanges: 'Instant Exchanges',
 
 
     //import
@@ -308,10 +306,8 @@ export const zh_CN = {
     privatekey: '私钥',
     keystore: 'keystore',
     import: '导入',
-    mnemonic_describle: '助记词为一个12个单词的种子文件，通过导入本种子文件，可以帮你恢复钱包，请妥善保管和注意保密。',
     input_mnemonic: '输入助记词',
     enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word: '输入12个单词，请注意顺序，每个单词之间用一个空格隔开',
-    mnemonic_describle_tips: '此密码为钱包密码，在你支付的时候会被使用，如果此密码忘记，可以用助记词恢复钱包。',
     back: '返回',
     the_private_key_is_a_string_of_256_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe: '私钥是一串256位的随机字符串组成，是账户的绝对控制权，请妥善保管。',
     private_key_string: '私钥字符串',
@@ -320,11 +316,11 @@ export const zh_CN = {
     This_password_is_a_private_key_password_and_will_be_used_when_you_pay: '此密码为钱包密码，在你支付的时候会被使用，如果此密码忘记，可以用私钥恢复钱包。',
     please_set_your_password: '请设置密码',
     please_enter_your_wallet_password_again: '请再次输入钱包密码',
-    keyStore_describle: 'KeyStore是私钥被加密过后的存储文件, 在导入此文件时,需要你的KeyStore密码方可成功',
+    keyStore_description: 'KeyStore是私钥被加密过后的存储文件, 在导入此文件时,需要你的KeyStore密码方可成功',
     keystore_string: 'keystore字符串',
     keystore_text: 'keystore文本',
-    keystore_describle_text: '此密码为KeyStore解密密码',
-    keystore_describle_import: '从你的电脑中，在下方输入框中粘贴KeyStore字符串',
+    keystore_description_text: '此密码为KeyStore解密密码',
+    keystore_description_import: '从你的电脑中，在下方输入框中粘贴KeyStore字符串',
 
 
     //create lock pw
@@ -447,7 +443,7 @@ export const zh_CN = {
     Nemwallet_can_not_recover_your_mnemonic: 'Nemwallet无法恢复您的助记词',
     Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct: '请输入助记词，确保助记词是正确的',
     Mnemonic_inconsistency: '助记词不一致',
-    craete_account: '创建账户',
+    create_account: '创建账户',
     //wallet details
     Keystore_decryption_failed: 'keystore解密失败',
     Basic_information: '基本信息',
@@ -468,7 +464,7 @@ export const zh_CN = {
     Modify_the_private_key_wallet_password: '修改钱包密码',
     status: '状态',
     operating: '操作',
-    binded: '已绑定',
+    bound: '已绑定',
     No_alias_yet: '暂无别名',
     Successfully_imported_wallet: '成功导入钱包',
     Set_password_input_error: '设置密码输入错误!',
@@ -544,7 +540,7 @@ export const zh_CN = {
     create_apostille: '创建公证',
     audit_apostille: '审核公证',
     apostille_history: '公证历史',
-    apotille_transaction: '公证事务',
+    apostille_transaction: '公证事务',
     tag: '标签',
     Please_enter_the_label_before_filling_in_the_label: '请输入标签，输入密码后才可填写标签',
     hash_algorithm: 'Hash算法',
@@ -579,7 +575,7 @@ export const zh_CN = {
     Set_the_password_prompts: '设置密码提示',
     skip: '跳过',
     forget_password: '忘记密码',
-    passowrd_prompt: '密码提示',
+    password_prompt: '密码提示',
     XEM_market_trend_nearly_24_hours: 'XEM行情走势（近24小时）',
     This_password_will_be_used_for_all_transactions_in_your_wallet_account_Please_remember_your_password_and_keep_it_safe: '1、钱包账户里的所有交易都会使用此密码， 请记住你的密码并妥善保管。',
     The_password_setting_requirement_is_not_less_than_six_digits_The_more_complicated_the_recommendation_the_better_the_security_of_your_wallet: '2、密码设置要求，不低于六位数字，建议 越复杂越好，有利于你钱包的安全性！',
@@ -598,7 +594,7 @@ export const zh_CN = {
     illegal_publickey: '存在不合法的账户公钥',
     min_approval_amount_illegal: 'Min approval 必须为数字',
     min_removal_amount_illegal: 'Min removal 必须为数字',
-    currrent: '当前',
+    current: '当前',
     min_removal_delta: '最小剔除人数的变化量',
     min_approval_delta: '最小同意人数的变化量',
     There_are_no_more_accounts_under_this_account: '此账户下暂无多签账户',
@@ -621,7 +617,7 @@ export const zh_CN = {
     Namespace_cannot_use_forbidden_words: 'Namespace 不能使用禁止的单词',
     clear_cache: '重置账户',
     We_will_clear_your_cache_reset_account_password_please_make_sure_your_wallet_is_safely_backed_up: '我们将清除你的缓存重置账号密码，请确保你的钱包已经安全备份',
-    confirm_infomation: '信息确认',
+    confirm_information: '信息确认',
     please_input_new_account_name: '输入新的账户名',
     Locking_passwords_as_a_form_of_program_protection: '锁定密码作为程序的保护验证形式。 一旦被遗忘，就不会有任何恢复。 请记住您的锁定密码。',
     delete_wallet_tip: '请注意，您正在删除钱包%{walletName},删除钱包后将删除改钱包数据，请务必确保钱包已备份。 若无妥善备份，删除钱包后将无法找回钱包，请谨慎处理该操作。 同时，为了确保是本人操作，请输入钱包密码。',

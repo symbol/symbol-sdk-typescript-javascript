@@ -154,7 +154,7 @@
       </div>
 
       <div class="button_content">
-        <span class="cancel pointer radius" @click="isShowDialog=false">{{$t('canel')}}</span>
+        <span class="cancel pointer radius" @click="isShowDialog=false">{{$t('cancel')}}</span>
         <span class=" confirm pointer radius" @click="confirmInput">{{$t('confirm')}}</span>
       </div>
     </Modal>

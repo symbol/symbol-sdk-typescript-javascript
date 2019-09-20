@@ -36,7 +36,7 @@ export const monitorRecaeiptTransferTypeConfig = [
         isSelect: true,
         disabled: false
     }, {
-        name: 'Multisign_transfer',
+        name: 'Multisig_transfer',
         isSelect: false,
         disabled: false
     }, {
@@ -56,7 +56,7 @@ export const monitorTransferTransferTypeConfig = [
         isSelect: true,
         disabled: false
     }, {
-        name: 'Multisign_transfer',
+        name: 'Multisig_transfer',
         isSelect: false,
         disabled: false
     }, {

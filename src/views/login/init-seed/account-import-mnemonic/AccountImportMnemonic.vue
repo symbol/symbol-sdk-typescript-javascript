@@ -2,7 +2,7 @@
   <div>
     <div class="mnemonic">
       <div class="page_import_title">{{$t('Import_mnemonic')}}</div>
-      <div class="describle">{{$t('mnemonic_describle')}}</div>
+      <div class="describle">{{$t('mnemonic_description')}}</div>
       <ul>
         <li>
           <div class="title_info">

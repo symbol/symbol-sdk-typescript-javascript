@@ -2,7 +2,7 @@
   <div class="remote_board_container secondary_page_animate">
     <div class="top_network_info radius scroll" style="display: block;">
       <div class="remote_total">
-        <strong class="trend"> {{$t('Remote_title_recipt')}}</strong>
+        <strong class="trend"> {{$t('Remote_title_receipt')}}</strong>
         <div class="num_class">
           <span class="trend_red"> {{$t('Accumulated_delegated_harvesting_income_is_not_yet_open')}}</span>
         </div>
@@ -18,7 +18,7 @@
 
           </div>
           <div class="top_class_div">
-            <span class="remote_public_key">{{$t('Remote_pubulic_pik')}}：</span>
+            <span class="remote_public_key">{{$t('Remote_public_key')}}：</span>
             <span>{{remotePublickey?remotePublickey:'no remote account'}}</span>
           </div>
         </div>
@@ -75,7 +75,7 @@
     </div>
 
     <Modal
-            :title="$t('remote_repaly')"
+            :title="$t('remote_replay')"
             v-model="isShowDialog"
             :transfer="false"
             class-name="dash_board_dialog">
@@ -101,7 +101,7 @@
 
 
       <div class="new_model_btn">
-        <span class="modal_btn pointer radius" @click="confirmInput">{{$t('remote_modal_comfire')}}</span>
+        <span class="modal_btn pointer radius" @click="confirmInput">{{$t('remote_modal_confirm')}}</span>
       </div>
     </Modal>
 

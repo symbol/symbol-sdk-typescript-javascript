@@ -2,12 +2,12 @@
 
   <div>
     <div class="keystore">
-      <div class="describle">{{$t('keyStore_describle')}}</div>
+      <div class="describle">{{$t('keyStore_description')}}</div>
       <ul>
         <li>
           {{$t('keystore_string')}}
           <div class="tips">
-            {{$t('keystore_describle_import')}}
+            {{$t('keystore_description_import')}}
           </div>
           <!--          TODO LOAD FILE-->
           <!--          <div class="gray_content">-->
@@ -24,7 +24,7 @@
         <li>
           {{$t('input_keystore_password')}}
           <div class="tips">
-            {{$t('keystore_describle_text')}}
+            {{$t('keystore_description_text')}}
           </div>
           <div class="gray_content">
             <input class="absolute" v-model="formItem.keystorePassword" type="password"

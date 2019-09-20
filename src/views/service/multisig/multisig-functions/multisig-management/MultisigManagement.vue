@@ -37,7 +37,7 @@
 
         <div class="property_amount">
         <span class="form_item input_min_approval">
-          <div class="title">{{$t('min_approval_delta')}} ( {{$t('currrent')}} min approval : {{currentMinApproval }} )</div>
+          <div class="title">{{$t('min_approval_delta')}} ( {{$t('current')}} min approval : {{currentMinApproval }} )</div>
           <div class="manage_cosigner">
             <input type="text" v-model="formItem.minApprovalDelta"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')"
@@ -49,7 +49,7 @@
         </span>
 
           <span class="form_item input_min_delete">
-          <div class="title">{{$t('min_removal_delta')}} ( {{$t('currrent')}}  min removal : {{currentMinRemoval }} )</div>
+          <div class="title">{{$t('min_removal_delta')}} ( {{$t('current')}}  min removal : {{currentMinRemoval }} )</div>
           <div class="manage_cosigner">
             <input type="text" v-model="formItem.minRemovalDelta"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')"

@@ -195,7 +195,7 @@ export class MultisigTransferTransactionTs extends Vue {
         const publicKey = isMultisig ? accountPublicKey : '(self)' + accountPublicKey
 
         this.transactionDetail = {
-            "transaction_type": isMultisig ? 'Multisign_transfer' : 'ordinary_transfer',
+            "transaction_type": isMultisig ? 'Multisig_transfer' : 'ordinary_transfer',
             "Public_account": publicKey,
             "transfer_target": address,
             "mosaic": mosaicTransferList.map(item => {

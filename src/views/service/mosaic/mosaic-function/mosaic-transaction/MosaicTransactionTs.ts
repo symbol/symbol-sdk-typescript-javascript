@@ -146,7 +146,7 @@ export class MosaicTransactionTs extends Vue {
             "duration": duration,
             "fee": innerFee,
             'transmittable': transferable,
-            'variable_upply': supplyMutable,
+            'variable_supply': supplyMutable,
             "duration_permanent": permanent,
             "restrictable": restrictable
         }

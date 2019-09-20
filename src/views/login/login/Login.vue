@@ -9,7 +9,7 @@
     </div>
     <div class="create_account_container">
       <span class="line">|</span>
-      <span class="create_account pointer" @click="$router.push('createAccount')">{{$t('craete_account')}}</span>
+      <span class="create_account pointer" @click="$router.push('createAccount')">{{$t('create_account')}}</span>
     </div>
     <div class="fix_contnet">
       <GetStart @showIndexView="showIndexView" v-if="indexShowList[0]"></GetStart>

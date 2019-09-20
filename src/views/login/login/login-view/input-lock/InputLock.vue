@@ -55,11 +55,11 @@
     </form>
 
     <div class="password_prompt_text">
-      <span v-if="isShowPrompt"> {{$t('passowrd_prompt')}}：{{cipherHint}}</span>
+      <span v-if="isShowPrompt"> {{$t('password_prompt')}}：{{cipherHint}}</span>
     </div>
 
     <div class="password_prompt">
-      {{$t('forget_password')}}？ <span @click="showPrompt" class="pointer click_to_show_prompt">{{$t('passowrd_prompt')}}</span>
+      {{$t('forget_password')}}？ <span @click="showPrompt" class="pointer click_to_show_prompt">{{$t('password_prompt')}}</span>
       <!--      <span class="clear_cache pointer" v-show="isShowPrompt">{{$t('clear_cache')}}</span>-->
     </div>
 

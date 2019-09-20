@@ -37,7 +37,7 @@
       <div class="bottom_button">
         <!--        //TODO-->
         <span class="save_button un_click">{{$t('save')}}</span>
-        <span class="cancel_button pointer">{{$t('canel')}}</span>
+        <span class="cancel_button pointer">{{$t('cancel')}}</span>
       </div>
     </div>
 

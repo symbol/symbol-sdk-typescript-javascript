@@ -7,7 +7,7 @@
             :transfer="false"
             @on-cancel="checkPasswordDialogCancel">
       <div slot="header" class="checkPWDialogHeader">
-        <span class="title">{{$t('confirm_infomation')}}</span>
+        <span class="title">{{$t('confirm_information')}}</span>
       </div>
       <div class="checkPWDialogBody">
         <div class="stepItem1">

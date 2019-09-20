@@ -1,7 +1,7 @@
 <template>
   <div class="apostille_create_container secondary_page_animate">
     <div class="content_head_title">
-      {{$t('apotille_transaction')}}
+      {{$t('apostille_transaction')}}
     </div>
 
     <div class="main_panel">
