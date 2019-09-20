@@ -125,9 +125,9 @@ export class MultisigTransferTransactionTs extends Vue {
         const mosaicList: any = Object.values(this.mosaics)
         return [...mosaicList]
             .filter(mosaic => mosaic.balance && mosaic.balance > 0
-                && mosaic.expirationHeight === 'Forever'
-                || currentHeight < mosaic.expirationHeight)
-            .map(({name, balance, hex}) => ({
+                && (mosaic.expirationHeight === 'Forever'
+                || currentHeight < mosaic.expirationHeight))
+            .map(({name, balance, hex}) =>  ({ 
                 label: `${name || hex} (${balance.toLocaleString()})`,
                 value: hex,
             }))
