@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.13.2] - 20-09-2019
+## [0.13.2] - 20-Sep-2019
 
 **Milestone**: Elephant.3
 
