@@ -18,7 +18,10 @@ import {RawUInt64 as UInt64Library} from '../../core/format';
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
-import {Id} from '../../model/Id';
+import { EncryptedMessage } from '../../model/message/EncryptedMessage';
+import { MessageType } from '../../model/message/MessageType';
+import { PersistentHarvestingDelegationMessage } from '../../model/message/PersistentHarvestingDelegationMessage';
+import {EmptyMessage, PlainMessage} from '../../model/message/PlainMessage';
 import {Mosaic} from '../../model/mosaic/Mosaic';
 import {MosaicFlags} from '../../model/mosaic/MosaicFlags';
 import {MosaicId} from '../../model/mosaic/MosaicId';
@@ -34,9 +37,7 @@ import {AggregateTransaction} from '../../model/transaction/AggregateTransaction
 import {AggregateTransactionCosignature} from '../../model/transaction/AggregateTransactionCosignature';
 import {AggregateTransactionInfo} from '../../model/transaction/AggregateTransactionInfo';
 import {Deadline} from '../../model/transaction/Deadline';
-import { EncryptedMessage } from '../../model/transaction/EncryptedMessage';
 import {LockFundsTransaction} from '../../model/transaction/LockFundsTransaction';
-import { MessageType } from '../../model/transaction/MessageType';
 import { MosaicAddressRestrictionTransaction } from '../../model/transaction/MosaicAddressRestrictionTransaction';
 import {MosaicAliasTransaction} from '../../model/transaction/MosaicAliasTransaction';
 import {MosaicDefinitionTransaction} from '../../model/transaction/MosaicDefinitionTransaction';
@@ -47,7 +48,6 @@ import {MultisigAccountModificationTransaction} from '../../model/transaction/Mu
 import {MultisigCosignatoryModification} from '../../model/transaction/MultisigCosignatoryModification';
 import { NamespaceMetadataTransaction } from '../../model/transaction/NamespaceMetadataTransaction';
 import {NamespaceRegistrationTransaction} from '../../model/transaction/NamespaceRegistrationTransaction';
-import {EmptyMessage, PlainMessage} from '../../model/transaction/PlainMessage';
 import {SecretLockTransaction} from '../../model/transaction/SecretLockTransaction';
 import {SecretProofTransaction} from '../../model/transaction/SecretProofTransaction';
 import {SignedTransaction} from '../../model/transaction/SignedTransaction';
@@ -524,6 +524,8 @@ const extractMessage = (message: any): PlainMessage | EncryptedMessage => {
                                                     PlainMessage.create(message.payload);
         } else if (message.type === MessageType.EncryptedMessage) {
             msgObj = EncryptedMessage.createFromPayload(message.payload);
+        } else if (message.type === MessageType.PersistentHarvestingDelegationMessage) {
+            msgObj = PersistentHarvestingDelegationMessage.createFromPayload(message.payload);
         }
     }
     return msgObj;

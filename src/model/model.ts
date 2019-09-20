@@ -90,6 +90,13 @@ export * from './receipt/ResolutionType';
 export * from './receipt/InflationReceipt';
 export * from './receipt/Statement';
 
+// Message
+export * from './message/PersistentHarvestingDelegationMessage';
+export * from './message/EncryptedMessage';
+export * from './message/Message';
+export * from './message/PlainMessage';
+export * from './message/MessageMarker';
+export * from './message/MessageType';
 // Transaction
 export * from './transaction/AccountLinkTransaction';
 export * from './transaction/AccountRestrictionTransaction';
@@ -105,20 +112,18 @@ export * from './transaction/AliasTransaction';
 export * from './transaction/CosignatureSignedTransaction';
 export * from './transaction/CosignatureTransaction';
 export * from './transaction/Deadline';
-export * from './transaction/EncryptedMessage';
+export * from './transaction/PersistentDelegationRequestTransaction';
 export * from './transaction/HashLockTransaction';
 export * from './transaction/HashType';
 export * from './transaction/InnerTransaction';
 export * from './transaction/LinkAction';
 export * from './transaction/LockFundsTransaction';
-export * from './transaction/Message';
 export * from './transaction/MultisigAccountModificationTransaction';
 export * from './transaction/MosaicAliasTransaction';
 export * from './transaction/MosaicDefinitionTransaction';
 export * from './transaction/MosaicSupplyChangeTransaction';
 export * from './transaction/MultisigCosignatoryModification';
 export * from './transaction/CosignatoryModificationAction';
-export * from './transaction/PlainMessage';
 export * from './transaction/NamespaceRegistrationTransaction';
 export * from './transaction/SecretLockTransaction';
 export * from './transaction/SecretProofTransaction';

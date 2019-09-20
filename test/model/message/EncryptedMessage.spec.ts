@@ -16,8 +16,8 @@
 
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
+import {EncryptedMessage} from '../../../src/model/message/EncryptedMessage';
 import { Deadline, NetworkCurrencyMosaic, NetworkType, TransferTransaction } from '../../../src/model/model';
-import {EncryptedMessage} from '../../../src/model/transaction/EncryptedMessage';
 
 describe('EncryptedMessage', () => {
 

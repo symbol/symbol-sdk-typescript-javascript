@@ -29,16 +29,16 @@ import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/Unresolved
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
+import { EncryptedMessage } from '../message/EncryptedMessage';
+import { Message } from '../message/Message';
+import { MessageType } from '../message/MessageType';
+import { PlainMessage } from '../message/PlainMessage';
 import { Mosaic } from '../mosaic/Mosaic';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
-import { EncryptedMessage } from './EncryptedMessage';
 import { InnerTransaction } from './InnerTransaction';
-import { Message } from './Message';
-import { MessageType } from './MessageType';
-import { PlainMessage } from './PlainMessage';
 import { Transaction } from './Transaction';
 import { TransactionInfo } from './TransactionInfo';
 import { TransactionType } from './TransactionType';
@@ -49,7 +49,10 @@ import { TransactionVersion } from './TransactionVersion';
  */
 export class TransferTransaction extends Transaction {
     /**
-     * Create a transfer transaction object
+     * Create a transfer transaction object.
+     *
+     * - This method can also be used to create PersistentDelegationRequestTransaction
+     * with `PersistentHarvestingDelegationMessage` provided.
      * @param deadline - The deadline to include the transaction.
      * @param recipientAddress - The recipient address of the transaction.
      * @param mosaics - The array of mosaics.
@@ -105,6 +108,7 @@ export class TransferTransaction extends Transaction {
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
         super(TransactionType.TRANSFER, networkType, version, deadline, maxFee, signature, signer, transactionInfo);
+        this.validate();
     }
 
     /**
@@ -138,6 +142,20 @@ export class TransferTransaction extends Transaction {
         );
         return isEmbedded ?
             transaction.toAggregate(PublicAccount.createFromPublicKey(signerPublicKey, networkType)) : transaction;
+    }
+
+    /**
+     * Validate Transfer transaction creation with provided message
+     * @internal
+     */
+    protected validate() {
+        if (this.message.type === MessageType.PersistentHarvestingDelegationMessage) {
+            if (this.mosaics.length > 0) {
+                throw new Error('PersistentDelegationRequestTransaction should be created without Mosaic');
+            } else if (! /^[0-9a-fA-F]{208}$/.test(this.message.payload)) {
+                throw new Error('PersistentDelegationRequestTransaction message is invalid');
+            }
+        }
     }
 
     /**
@@ -175,9 +193,12 @@ export class TransferTransaction extends Transaction {
      * @returns {Uint8Array}
      */
     public getMessageBuffer(): Uint8Array {
-        const payloadBuffer = Convert.hexToUint8(Convert.utf8ToHex(this.message.payload));
+        const messgeHex = this.message.type === MessageType.PersistentHarvestingDelegationMessage ?
+            this.message.payload : Convert.utf8ToHex(this.message.payload);
+        const payloadBuffer = Convert.hexToUint8(messgeHex);
         const typeBuffer = GeneratorUtils.uintToBuffer(this.message.type, 1);
-        return GeneratorUtils.concatTypedArrays(typeBuffer, payloadBuffer);
+        return this.message.type === MessageType.PersistentHarvestingDelegationMessage ?
+            payloadBuffer : GeneratorUtils.concatTypedArrays(typeBuffer, payloadBuffer);
     }
 
     /**

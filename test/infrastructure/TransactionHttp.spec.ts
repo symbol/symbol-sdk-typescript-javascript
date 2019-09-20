@@ -18,9 +18,9 @@ import {expect} from 'chai';
 import {TransactionHttp} from '../../src/infrastructure/TransactionHttp';
 import {Address} from '../../src/model/account/Address';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import {PlainMessage} from '../../src/model/message/PlainMessage';
 import {AggregateTransaction} from '../../src/model/transaction/AggregateTransaction';
 import {Deadline} from '../../src/model/transaction/Deadline';
-import {PlainMessage} from '../../src/model/transaction/PlainMessage';
 import {TransferTransaction} from '../../src/model/transaction/TransferTransaction';
 import {NIS2_URL, TestingAccount} from '../conf/conf.spec';
 
