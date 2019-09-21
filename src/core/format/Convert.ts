@@ -175,6 +175,27 @@ export class Convert {
     }
 
     /**
+     * Convert UTF-8 string to Uint8Array
+     * @param {string} input - An string with UTF-8 encoding
+     * @return {Uint8Array}
+     */
+    public static utf8ToUint8 = (input: string): Uint8Array => {
+        const hex = Convert.utf8ToHex(Convert.rstr2utf8(input));
+        return Convert.hexToUint8(hex);
+    }
+
+    /**
+     * Convert Uint8Array to string with UTF-8 encoding
+     * @param {Uint8Array} input - An UTF-8 string
+     * @return {string}
+     */
+    public static uint8ToUtf8 = (input: Uint8Array): string => {
+        // return new TextDecoder().decode(input);
+        const hex = Convert.uint8ToHex(input);
+        return Convert.decodeHex(hex);
+    }
+
+    /**
      * @internal decode hex to uft8 string
      * @param hex - Hex input
      * @returns {string}

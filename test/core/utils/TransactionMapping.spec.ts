@@ -17,7 +17,7 @@
 import {deepEqual} from 'assert';
 import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
-import {Convert as convert} from '../../../src/core/format';
+import { Convert } from '../../../src/core/format';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import { Account } from '../../../src/model/account/Account';
 import { AccountRestrictionModificationAction } from '../../../src/model/account/AccountRestrictionModificationAction';
@@ -348,7 +348,7 @@ describe('TransactionMapping - createFromPayload', () => {
             NetworkCurrencyMosaic.createAbsolute(10),
             UInt64.fromUint(100),
             HashType.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
         );
@@ -370,7 +370,7 @@ describe('TransactionMapping - createFromPayload', () => {
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
             HashType.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
             NetworkType.MIJIN_TEST,
@@ -586,10 +586,9 @@ describe('TransactionMapping - createFromPayload', () => {
             account.publicKey,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
-
         const signedTx = accountMetadataTransaction.signWith(account, generationHash);
 
         const transaction = TransactionMapping.createFromPayload(signedTx.payload) as AccountMetadataTransaction;
@@ -598,7 +597,7 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
+        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
     });
 
     it('should create MosaicMetadataTransaction', () => {
@@ -608,7 +607,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
@@ -621,7 +620,7 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetMosaicId.toHex()).to.be.equal(new MosaicId([2262289484, 3405110546]).toHex());
-        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
+        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
     });
 
     it('should create NamespaceMetadataTransaction', () => {
@@ -631,7 +630,7 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
@@ -644,7 +643,7 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId([2262289484, 3405110546]).toHex());
-        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
+        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
     });
 });
 
@@ -867,7 +866,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             NetworkCurrencyMosaic.createAbsolute(10),
             UInt64.fromUint(100),
             HashType.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             recipientAddress,
             NetworkType.MIJIN_TEST,
         );
@@ -885,7 +884,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
             HashType.Op_Sha3_256,
-            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
             account.address,
             proof,
             NetworkType.MIJIN_TEST,
@@ -896,7 +895,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
         expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
-        expect(transaction.secret).to.be.equal(sha3_256.create().update(convert.hexToUint8(proof)).hex());
+        expect(transaction.secret).to.be.equal(sha3_256.create().update(Convert.hexToUint8(proof)).hex());
         deepEqual(transaction.recipientAddress, account.address);
         expect(transaction.proof).to.be.equal(proof);
 
@@ -1070,7 +1069,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             account.publicKey,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
@@ -1081,7 +1080,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
+        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
     });
 
     it('should create MosaicMetadataTransaction', () => {
@@ -1091,7 +1090,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
@@ -1103,7 +1102,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetMosaicId.toHex()).to.be.equal(new MosaicId([2262289484, 3405110546]).toHex());
-        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
+        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
     });
 
     it('should create NamespaceMetadataTransaction', () => {
@@ -1113,7 +1112,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
@@ -1125,6 +1124,6 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.scopedMetadataKey.toString()).to.be.equal(UInt64.fromUint(1000).toString());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId([2262289484, 3405110546]).toHex());
-        expect(convert.uint8ToHex(transaction.value)).to.be.equal(convert.uint8ToHex(new Uint8Array(10)));
+        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
     });
 });
