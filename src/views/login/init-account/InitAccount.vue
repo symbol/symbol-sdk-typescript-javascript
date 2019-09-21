@@ -7,7 +7,7 @@
           <img src="@/common/img/login/guide-into/guideIntoCreate.png">
         </div>
         <p class="createTit">{{$t('create_now')}}</p>
-        <p class="createTxt">{{$t('this_will_create_a_new_wallet_and_a_new_torrent_file')}}</p>
+        <p class="createTxt">{{$t('this_will_create_a_new_torrent_file')}}</p>
         <div class="button pointer" @click="jumpToOtherPage(0)">
           {{$t('create_wallet')}}
           <div/>
@@ -19,7 +19,7 @@
           <img src="@/common/img/login/guide-into/guideIntoImport.png">
         </div>
         <p class="importTit">{{$t('existing_wallet')}}</p>
-        <p class="importTxt">{{$t('import_text')}}</p>
+        <p class="importTxt">{{$t('import_text_only_mnemonic')}}</p>
         <div class="button pointer" @click="jumpToOtherPage(1)">{{$t('import_wallet')}}</div>
       </div>
 
