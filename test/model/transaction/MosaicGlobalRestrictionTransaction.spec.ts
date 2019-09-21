@@ -37,13 +37,13 @@ describe('MosaicGlobalRestrictionTransaction', () => {
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
             mosaicId,
-            referenceMosaicId,
             UInt64.fromUint(1),
             UInt64.fromUint(9),
             MosaicRestrictionType.EQ,
             UInt64.fromUint(8),
             MosaicRestrictionType.GE,
             NetworkType.MIJIN_TEST,
+            referenceMosaicId,
         );
 
         expect(mosaicGlobalRestrictionTransaction.mosaicId.toHex()).to.be.equal(mosaicId.toHex());
