@@ -37,9 +37,9 @@ describe('MosaicAddressRestrictionTransaction', () => {
             mosaicId,
             UInt64.fromUint(1),
             account.address,
-            UInt64.fromUint(9),
             UInt64.fromUint(8),
             NetworkType.MIJIN_TEST,
+            UInt64.fromUint(9),
         );
         expect(mosaicAddressRestrictionTransaction.mosaicId.toHex()).to.be.equal(mosaicId.toHex());
         expect(mosaicAddressRestrictionTransaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(1).toHex());

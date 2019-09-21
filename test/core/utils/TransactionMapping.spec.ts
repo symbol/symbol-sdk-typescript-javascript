@@ -534,7 +534,6 @@ describe('TransactionMapping - createFromPayload', () => {
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
             new MosaicId(UInt64.fromUint(1).toDTO()),
-            new MosaicId(UInt64.fromUint(0).toDTO()),
             UInt64.fromUint(4444),
             UInt64.fromUint(0),
             MosaicRestrictionType.NONE,
@@ -564,8 +563,8 @@ describe('TransactionMapping - createFromPayload', () => {
             UInt64.fromUint(4444),
             account.address,
             UInt64.fromUint(0),
-            UInt64.fromUint(0),
             NetworkType.MIJIN_TEST,
+            UInt64.fromUint(0),
         );
 
         const signedTx = mosaicAddressRestrictionTransaction.signWith(account, generationHash);
@@ -1019,7 +1018,6 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
             new MosaicId(UInt64.fromUint(1).toDTO()),
-            new MosaicId(UInt64.fromUint(0).toDTO()),
             UInt64.fromUint(4444),
             UInt64.fromUint(0),
             MosaicRestrictionType.NONE,
@@ -1048,8 +1046,8 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             UInt64.fromUint(4444),
             account.address,
             UInt64.fromUint(0),
-            UInt64.fromUint(0),
             NetworkType.MIJIN_TEST,
+            UInt64.fromUint(0),
         );
 
         const transaction =
