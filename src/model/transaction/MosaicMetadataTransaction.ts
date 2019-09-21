@@ -44,7 +44,8 @@ export class MosaicMetadataTransaction extends Transaction {
      * @param scopedMetadataKey - Metadata key scoped to source, target and type.
      * @param targetMosaicId - Target mosaic identifier.
      * @param valueSizeDelta - Change in value size in bytes.
-     * @param value - Difference between the previous value and new value.
+     * @param value - String value with UTF-8 encoding
+     *                Difference between the previous value and new value.
      *                You can calculate value as xor(previous-value, new-value).
      *                If there is no previous value, use directly the new value.
      * @param maxFee - (Optional) Max fee defined by the sender
@@ -55,7 +56,7 @@ export class MosaicMetadataTransaction extends Transaction {
                          scopedMetadataKey: UInt64,
                          targetMosaicId: MosaicId,
                          valueSizeDelta: number,
-                         value: Uint8Array,
+                         value: string,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): MosaicMetadataTransaction {
         return new MosaicMetadataTransaction(networkType,
@@ -104,9 +105,10 @@ export class MosaicMetadataTransaction extends Transaction {
                  */
                 public readonly valueSizeDelta: number,
                 /**
+                 * String value with UTF-8 encoding.
                  * Difference between the previous value and new value.
                  */
-                public readonly value: Uint8Array,
+                public readonly value: string,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
@@ -134,7 +136,7 @@ export class MosaicMetadataTransaction extends Transaction {
             new UInt64(builder.getScopedMetadataKey()),
             new MosaicId(builder.getTargetMosaicId().unresolvedMosaicId),
             builder.getValueSizeDelta(),
-            builder.getValue(),
+            Convert.uint8ToUtf8(builder.getValue()),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicMetadataTransactionBuilder).fee.amount),
         );
@@ -180,7 +182,7 @@ export class MosaicMetadataTransaction extends Transaction {
             this.scopedMetadataKey.toDTO(),
             new UnresolvedMosaicIdDto(this.targetMosaicId.id.toDTO()),
             this.valueSizeDelta,
-            this.value,
+            Convert.utf8ToUint8(this.value),
         );
         return transactionBuilder.serialize();
     }
@@ -198,7 +200,7 @@ export class MosaicMetadataTransaction extends Transaction {
             this.scopedMetadataKey.toDTO(),
             new UnresolvedMosaicIdDto(this.targetMosaicId.id.toDTO()),
             this.valueSizeDelta,
-            this.value,
+            Convert.utf8ToUint8(this.value),
         );
         return transactionBuilder.serialize();
     }

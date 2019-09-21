@@ -219,8 +219,8 @@ describe('TransactionHttp', () => {
                 Deadline.create(),
                 account.publicKey,
                 UInt64.fromUint(5),
-                1,
-                new Uint8Array(11),
+                10,
+                Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
             );
 
@@ -264,7 +264,7 @@ describe('TransactionHttp', () => {
                 UInt64.fromUint(5),
                 mosaicId,
                 10,
-                new Uint8Array(10),
+                Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
             );
 
@@ -376,7 +376,7 @@ describe('TransactionHttp', () => {
                 UInt64.fromUint(5),
                 namespaceId,
                 10,
-                new Uint8Array(10),
+                Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
             );
 

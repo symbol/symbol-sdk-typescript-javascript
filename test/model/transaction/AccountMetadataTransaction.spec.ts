@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { AccountMetadataTransaction } from '../../../src/model/transaction/AccountMetadataTransaction';
@@ -35,7 +36,7 @@ describe('AccountMetadataTransaction', () => {
             account.publicKey,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
@@ -49,7 +50,7 @@ describe('AccountMetadataTransaction', () => {
             account.publicKey,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
             new UInt64([1, 0]),
         );
@@ -64,7 +65,7 @@ describe('AccountMetadataTransaction', () => {
             account.publicKey,
             UInt64.fromUint(1000),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
@@ -83,7 +84,7 @@ describe('AccountMetadataTransaction', () => {
                 account.publicKey,
                 UInt64.fromUint(1000),
                 1,
-                new Uint8Array(1025),
+                Convert.uint8ToUtf8(new Uint8Array(1025)),
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw(Error, 'The maximum value size is 1024');
@@ -96,7 +97,7 @@ describe('AccountMetadataTransaction', () => {
                 account.publicKey,
                 UInt64.fromUint(1000),
                 1,
-                new Uint8Array(10),
+                Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
             );
             expect(accountMetadataTransaction.size).to.be.equal(172);
