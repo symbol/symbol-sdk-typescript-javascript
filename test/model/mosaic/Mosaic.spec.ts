@@ -16,8 +16,8 @@
 
 import {deepEqual} from 'assert';
 import {Mosaic} from '../../../src/model/mosaic/Mosaic';
-import {UInt64} from '../../../src/model/UInt64';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
+import {UInt64} from '../../../src/model/UInt64';
 
 describe('Mosaic', () => {
 

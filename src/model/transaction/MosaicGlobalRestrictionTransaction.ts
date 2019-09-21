@@ -89,16 +89,20 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
     }
 
     /**
-     * @param networkType
-     * @param version
-     * @param deadline
-     * @param maxFee
-     * @param mosaicNonce
-     * @param mosaicId
-     * @param mosaicProperties
-     * @param signature
-     * @param signer
-     * @param transactionInfo
+     * @param networkType - The network type
+     * @param version - The transaction version
+     * @param deadline - The deadline to include the transaction.
+     * @param maxFee - (Optional) Max fee defined by the sender
+     * @param mosaicId - The mosaic id ex: new MosaicId([481110499, 231112638]).
+     * @param referenceMosaicId - The mosaic id providing the restriction key.
+     * @param restrictionKey - The restriction key.
+     * @param previousRestrictionValue - The previous restriction value.
+     * @param previousRestrictionType - The previous restriction type.
+     * @param newRestrictionValue - The new restriction value.
+     * @param previousRestrictionType - The previous restriction tpye.
+     * @param signature - The transaction signature
+     * @param signer - The signer
+     * @param transactionInfo - The transaction info
      */
     constructor(networkType: NetworkType,
                 version: number,

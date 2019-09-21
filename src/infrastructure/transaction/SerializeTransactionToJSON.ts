@@ -130,7 +130,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             const registerNamespaceParentId = (transaction as NamespaceRegistrationTransaction).parentId;
 
             const jsonObject = {
-                namespaceType: (transaction as NamespaceRegistrationTransaction).namespaceType,
+                registrationType: (transaction as NamespaceRegistrationTransaction).registrationType,
                 namespaceName: (transaction as NamespaceRegistrationTransaction).namespaceName,
                 id: (transaction as NamespaceRegistrationTransaction).namespaceId.toHex(),
             };
