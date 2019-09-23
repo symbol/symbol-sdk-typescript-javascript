@@ -1,5 +1,4 @@
 import {
-    Listener,
     MultisigCosignatoryModification,
     MultisigCosignatoryModificationType,
     PublicAccount,
@@ -92,7 +91,7 @@ export class MultisigConversionTs extends Vue {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
         const {address} = this.wallet
-        const {publickeyList, minApproval, minRemoval, bondedFee, lockFee, innerFee} = this.formItem
+        const {publickeyList, minApproval, minRemoval, lockFee, innerFee} = this.formItem
         this.transactionDetail = {
             "address": address,
             "min_approval": minApproval,
@@ -103,8 +102,8 @@ export class MultisigConversionTs extends Vue {
         this.otherDetails = {
             lockFee: lockFee
         }
-        this.initForm()
         this.sendMultisignConversionTransaction()
+        this.initForm()
         this.showCheckPWDialog = true
     }
 
@@ -200,7 +199,6 @@ export class MultisigConversionTs extends Vue {
         bondedFee = getAbsoluteMosaicAmount(bondedFee, xemDivisibility)
         innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
         const {networkType, node, publickey} = this
-        const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         const multisigCosignatoryModificationList = publickeyList.map(cosigner => new MultisigCosignatoryModification(
             MultisigCosignatoryModificationType.Add,
             PublicAccount.createFromPublicKey(cosigner, networkType),

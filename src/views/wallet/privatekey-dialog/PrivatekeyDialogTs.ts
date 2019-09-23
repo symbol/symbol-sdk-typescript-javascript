@@ -1,6 +1,7 @@
 import {QRCodeGenerator} from 'nem2-qr-library'
 import {Password} from 'nem2-sdk'
 import {AppWallet} from '@/core/utils/wallet.ts'
+import {copyTxt} from "@/core/utils/utils.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Message} from "@/config"
 import {mapState} from "vuex"
@@ -82,6 +83,16 @@ export class PrivatekeyDialogTs extends Vue {
                 this.stepIndex = 3
                 break
         }
+    }
+
+    copyPrivatekey() {
+        copyTxt(this.wallet.privatekey).then((data) => {
+            this.$Notice.success({
+                title: this.$t(Message.COPY_SUCCESS) + ''
+            })
+        }).catch((error) => {
+            console.log(error)
+        })
     }
 
     checkInput() {
