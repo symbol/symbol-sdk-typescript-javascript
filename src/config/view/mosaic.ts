@@ -16,10 +16,11 @@ export const mosaicButtonConfig: Array<{
     isSelected: boolean
 }> = [
         {
-            name: 'create_mosaic',
-            isSelected: true
-        }, {
             name: 'mosaic_list',
+            isSelected: true
+        },
+        {
+            name: 'create_mosaic',
             isSelected: false
-        }
+        } 
     ]

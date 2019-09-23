@@ -14,9 +14,9 @@
     <div class="sub_function_container scroll radius">
 
       <div class="right_panel">
-        <RootNamespace v-if="buttonList[0].isSelected" />
-        <SubNamespace v-if="buttonList[1].isSelected" />
-        <NamespaceList v-if="buttonList[2].isSelected" />
+        <NamespaceList v-if="buttonList[0].isSelected" />
+        <RootNamespace v-if="buttonList[1].isSelected" />
+        <SubNamespace v-if="buttonList[2].isSelected" />
       </div>
     </div>
 

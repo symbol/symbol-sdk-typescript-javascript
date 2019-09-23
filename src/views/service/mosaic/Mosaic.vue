@@ -10,8 +10,8 @@
     <div class="sub_function_container scroll radius">
 
       <div class="right_panel">
-        <MosaicTransaction v-if="buttonList[0].isSelected"></MosaicTransaction>
-        <MosaicList v-if="buttonList[1].isSelected"></MosaicList>
+        <MosaicList v-if="buttonList[0].isSelected"></MosaicList>
+        <MosaicTransaction v-if="buttonList[1].isSelected"></MosaicTransaction>
       </div>
     </div>
   </div>

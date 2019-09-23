@@ -23,13 +23,13 @@ export const rootNamespaceTypeConfig = [
 
 export const namespaceButtonConfig = [
     {
-        name: 'Create_namespace',
+        name: 'Namespace_list',
         isSelected: true
     }, {
-        name: 'Create_subNamespace',
+        name: 'Create_namespace',
         isSelected: false
     }, {
-        name: 'Namespace_list',
+        name: 'Create_subNamespace',
         isSelected: false
     }
 ]

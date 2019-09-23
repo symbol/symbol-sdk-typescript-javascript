@@ -416,7 +416,6 @@ export const zh_CN = {
     password_hint: '最少%{min}个字符',
     please_set_your_wallet_password: '请输入设置的密码',
     please_enter_your_password_again: '请再次输入你设置的密码',
-    repeat_the_password: '重复密码',
     walletCreateNetTypeRemind: '请选择钱包网络! ',
     walletCreateWalletNameRemind: '钱包名输入错误! ',
     accountCreateWalletNameRemind: '账户名输入错误! ',

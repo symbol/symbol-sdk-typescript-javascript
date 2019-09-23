@@ -57,7 +57,13 @@ export class WalletCreatedTs extends Vue {
         wordSpan.onclick = () => {
             this.$refs['mnemonicWordDiv']['removeChild'](wordSpan)
         }
-        this.$refs['mnemonicWordDiv']['append'](wordSpan)
+        const inputArray = this
+            .$refs['mnemonicWordDiv']['innerText']
+            .replace(' ', '')
+            .split("\n")
+        
+        const wordInInputArray = inputArray.find(x => x === word)
+        if (wordInInputArray === undefined) this.$refs['mnemonicWordDiv']['append'](wordSpan)
     }
 
     checkMnemonic() {
