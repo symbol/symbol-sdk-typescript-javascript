@@ -7,7 +7,7 @@ localVue.use(VueRouter)
 localVue.use(iView);
 const router = new VueRouter()
 // @ts-ignore
-import MultisigTransferTransaction from '@/views/monitor/monitor-transfer/transactions/multisig-transfer-transaction/MultisigTransferTransaction.vue'
+import MultisigTransferTransaction from '../../src/views/monitor/monitor-transfer/transactions/MultisigTransferTransaction.vue'
 
 
 describe('MultisigTransferTransaction', () => {

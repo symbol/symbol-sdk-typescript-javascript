@@ -55,7 +55,7 @@
     position: relative;
 
     .pointer {
-     position: absolute;
+      position: absolute;
       width: 0.45rem;
       height: 0.45rem;
       background-color: #4DC2BF;
@@ -139,8 +139,6 @@
         border-radius: 0;
       }
     }
-
-
   }
 
   .asset {
@@ -229,92 +227,90 @@
     margin-top: 39px;
     margin-bottom: 20px;
   }
-}
 
-.no_multisign {
-  width: auto;
-  height: 50px;
-  color: #999;
-  text-align: center;
-  line-height: 50px;
-  margin: 40px 0 0 0;
-}
-
-.xem_amount {
-  text-align: right;
-}
-
-.add_mosaic_button {
-  display: inline-block;
-  width: 40px;
-  height: 44px;
-  position: relative;
-  left: 10px;
-  border: 10px solid #20B5AC;
-  background-color: #20B5AC;
-  background-image: url("../../../../../common/img/wallet/wallet-detail/walletDetailAdd.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-.encryption_item {
-  margin-left: 10px;
-  margin-top: 20px;
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  border-radius: 10px;
-  background-size: contain;
-  background-position: center;
-  margin-left: 10px;
-  margin-right: 30px;
-  background-repeat: no-repeat;
-}
-
-.encryption {
-  background-image: url("../../../../../common/img/monitor/transaction/txUnselected.png");
-}
-
-.not_encryption {
-  background-image: url("../../../../../common/img/monitor/transaction/txSelected.png");
-}
-
-encryption_container {
-  margin-right: 20px;
-  display: flex;
-  align-items: center;
-}
-
-
-.mosaic_list_container {
-  width: 560px;
-  height: 150px;
-  color: #999;
-  padding: 20px 10px 10px 10px;
-  margin-left: 110px;
-  border: 1px solid #ccc;
-  overflow: hidden;
-  
-  .mosaic_list_item {
-    padding: 10px 0;
-    background: rgba(247, 251, 252, 1);
-    margin-bottom: 10px;
+  .no_multisign {
+    width: auto;
+    height: 50px;
+    color: #999;
+    text-align: center;
+    line-height: 50px;
+    margin: 40px 0 0 0;
   }
 
-  .scroll {
-    margin: 0 5px;
-    height: 190px;
+  .xem_amount {
+    text-align: right;
   }
 
-  span {
+  .add_mosaic_button {
     display: inline-block;
+    width: 40px;
+    height: 44px;
+    position: relative;
+    left: 10px;
+    border: 10px solid #20B5AC;
+    background-color: #20B5AC;
+    background-image: url("../../../../common/img/wallet/wallet-detail/walletDetailAdd.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
   }
 
-  .mosaic_name {
-    width: 280px;
-    padding-left: 50px;
+  .encryption_item {
+    margin-left: 10px;
+    margin-top: 20px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 10px;
+    background-size: contain;
+    background-position: center;
+    margin-left: 10px;
+    margin-right: 30px;
+    background-repeat: no-repeat;
   }
+
+  .encryption {
+    background-image: url("../../../../common/img/monitor/transaction/txUnselected.png");
+  }
+
+  .not_encryption {
+    background-image: url("../../../../common/img/monitor/transaction/txSelected.png");
+  }
+
+  encryption_container {
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+
+  .mosaic_list_container {
+    width: 560px;
+    height: 190px;
+    color: #999;
+    padding: 20px 10px 10px 10px;
+    margin-left: 110px;
+    border: 1px solid #ccc;
+
+    .mosaic_list_item {
+      padding: 5px 0;
+      background: rgba(247, 251, 252, 1);
+      margin-bottom: 5px;
+    }
+
+    .scroll {
+      margin: 0 5px;
+      height: 190px;
+    }
+
+    span {
+      display: inline-block;
+    }
+
+    .mosaic_name {
+      width: 280px;
+      padding-left: 50px;
+    }
 
   .mosaic_amount {
     width: 150px;
@@ -322,14 +318,20 @@ encryption_container {
 
   .icon_delete {
     display: inline-block;
-    background-image: url("../../../../../common/img/wallet/wallet-detail/walletDetailsdelete.png");
+    background-image: url("../../../../common/img/wallet/wallet-detail/walletDetailsdelete.png");
     background-repeat: no-repeat;
     background-size: contain;
     width: 15px;
     height: 15px;
   }
 
-  .icon_delete:hover {
-    background-image: url("../../../../../common/img/wallet/wallet-detail/walletDetailsdeleteHover.png");
+    .icon_delete:hover {
+      background-image: url("../../../../common/img/wallet/wallet-detail/walletDetailsdeleteHover.png");
+    }
+  }
+
+  .mosaic_list_item_container {
+    max-height: 120px;
   }
 }
+

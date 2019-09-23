@@ -71,7 +71,7 @@
         </span>
       </div>
 
-      <div class="mosaic_list_container radius ">
+      <div class="mosaic_list_container radius  ">
         <ErrorTooltip fieldName="mosaicListLength" placementOverride="top">
           <input
                   data-vv-name="mosaicListLength"
@@ -89,10 +89,14 @@
           <div class="no_data" v-if="formItem.mosaicTransferList.length <1">
             {{$t('no_data')}}
           </div>
-          <div class="mosaic_list_item radius" v-for="(m,index) in formItem.mosaicTransferList">
-            <span class="mosaic_name overflow_ellipsis">{{m.id.id.toHex()}}</span>
-            <span class="mosaic_amount overflow_ellipsis">{{m.amount.compact()}}</span>
-            <span class="icon_delete" @click="removeMosaic(index)"></span>
+          <div class="mosaic_list_item_container scroll">
+
+            <div class="mosaic_list_item radius" v-for="(m,index) in formItem.mosaicTransferList">
+              <span class="mosaic_name overflow_ellipsis">{{m.id.id.toHex()}}</span>
+              <span class="mosaic_amount overflow_ellipsis">{{m.amount.compact()}}</span>
+              <span class="icon_delete" @click="removeMosaic(index)"></span>
+            </div>
+
           </div>
         </div>
       </div>
@@ -168,13 +172,13 @@
 </template>
 
 <script lang="ts">
-    import {MultisigTransferTransactionTs} from '@/views/monitor/monitor-transfer/transactions/multisig-transfer-transaction/MultisigTransferTransactionTs.ts'
+    import {TransactionFormTs} from '@/views/monitor/monitor-transfer/transactions/TransactionFormTs.ts'
 
-    export default class MultisigTransferTransaction extends MultisigTransferTransactionTs {
+    export default class MultisigTransferTransaction extends TransactionFormTs {
 
     }
 
 </script>
 <style scoped lang="less">
-  @import "MultisigTransferTransaction.less";
+  @import "TransactionForm.less";
 </style>

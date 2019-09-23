@@ -1,7 +1,7 @@
 import {Mosaic, MosaicId, UInt64, Address, NamespaceId, AliasType} from 'nem2-sdk'
 import {mapState} from "vuex"
-import {Message} from "@/config/index.ts"
-import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
+import {Message} from "@/config"
+import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.js'
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
@@ -30,7 +30,7 @@ import { formDataConfig } from '@/config/view/form'
         })
     },
 })
-export class MultisigTransferTransactionTs extends Vue {
+export class TransactionFormTs extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: any
     isShowPanel = true
@@ -126,7 +126,7 @@ export class MultisigTransferTransactionTs extends Vue {
             .filter(mosaic => mosaic.balance && mosaic.balance > 0
                 && (mosaic.expirationHeight === 'Forever'
                 || currentHeight < mosaic.expirationHeight))
-            .map(({name, balance, hex}) =>  ({ 
+            .map(({name, balance, hex}) =>  ({
                 label: `${name || hex} (${balance.toLocaleString()})`,
                 value: hex,
             }))
