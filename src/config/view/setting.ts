@@ -53,8 +53,8 @@ export const settingPanelNavigationBarConfig: Array<{
             name: 'settingNormal',
             isSelected: true
         }, {
-            navigatorTitle: 'change_password',
-            title: 'lock_password',
+            navigatorTitle: 'account_password',
+            title: 'account_password',
             name: 'settingLock',
             isSelected: false
         }, {

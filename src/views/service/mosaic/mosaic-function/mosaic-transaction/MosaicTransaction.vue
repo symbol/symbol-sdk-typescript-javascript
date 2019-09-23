@@ -50,9 +50,6 @@
           <Checkbox class="check_box_item" v-model="formItem.transferable">{{$t('transmittable')}}</Checkbox>
           <Checkbox class="check_box_item" v-model="formItem.supplyMutable">{{$t('variable_supply')}}</Checkbox>
           <Checkbox class="check_box_item" v-model="formItem.permanent">{{$t('duration_permanent')}}</Checkbox>
-        </div>
-
-        <div class="check_box">
           <Checkbox class="check_box_item" v-model="formItem.restrictable">{{$t('restrictable')}}</Checkbox>
         </div>
 

@@ -697,11 +697,11 @@ export const zh_CN = {
     hint: '密码提示',
     path: '钱包路径',
     hd_wallet_path_error: 'HD 钱包路径输入错误',
-
     unconfirmed: '未确认',
     from_to_action: '发起/接受（行为）',
     amount_asset: '数量（资产）',
     confirmations_height: '已确认块/高度',
     hash_deadline: 'hash/期限',
-    transaction_record: '交易记录'
+    transaction_record: '交易记录',
+    import_mnemonic: '导入助记词'
 }

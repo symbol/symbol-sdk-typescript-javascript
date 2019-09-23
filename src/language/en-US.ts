@@ -710,17 +710,16 @@ export const en_US = {
     set_wallet_path: 'Set wallet path',
     please_set_your_wallet_path: 'Please set your wallet path',
     please_accurately_copy_the_hd_wallet_path: 'Please accurately copy the hd-wallet path',
-
     Please_choose_account_name: 'Please choose account name',
-    account_password: 'account password',
-    hint: 'hint',
-    path: 'path',
+    account_password: 'Account password',
+    hint: 'Hint',
+    path: 'Path',
     hd_wallet_path_error:'HD wallet path error',
-
     unconfirmed: 'unconfirmed',
     from_to_action: 'From/To (action)',
     amount_asset: 'Amount (asset)',
     confirmations_height: 'Confirmations/Height',
     hash_deadline: 'Hash/Deadline',
-    transaction_record: 'Transaction records'
+    transaction_record: 'Transaction records',
+    import_mnemonic:'import mnemonic'
 }
