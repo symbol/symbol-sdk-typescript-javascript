@@ -103,7 +103,7 @@
 
 <style scoped lang="less">
   @import "./MenuCommon.less";
-  @import "./MenuBarWindows.less";
   @import "./MenuBarMac.less";
+  @import "./MenuBarWindows.less";
 </style>
 

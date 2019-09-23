@@ -133,23 +133,20 @@
         float: left;
         position: relative;
         width: 509px;
-        padding-left: 44px;
+        padding-left: 70px;
       }
-
       .col3-header {
         float: left;
         position: relative;
-        width: 282px;
-        padding-left: 11px;
+        width: 158px;
+        padding-left:30px;
         overflow: hidden;
       }
-
       .col4-header {
         float: left;
         position: relative;
         text-align: right;
-        width: 155px;
-        padding-right: 19px;
+        width: 160px;
       }
 
       .col5-header {
@@ -158,7 +155,7 @@
         width: 270px;
         padding-right: 55px;
         text-align: right;
-    }
+      }
 
       span {
         color: #999999;
@@ -206,29 +203,27 @@
           background: rgba(247, 251, 252, 1);
           border-radius: 4px;
           margin-bottom: 5px;
-          padding: 5px 0;
+          padding: 5px 0 5px 20px;
           box-sizing: border-box;
           position: relative;
           clear: both;
           height: 70px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: row;
 
-          img {
-            position: absolute;
-          }
 
           .mosaic_action {
             width: 20px;
             height: 20px;
-            left: 10px;
-            margin-top: 17px;
           }
 
           .col2 {
-            left: 40px;
-            position: relative;
-            float: left;
-            width: 511px;
-
+            text-align: left;
+            margin-left: 30px;
+            width: 480px;
+            padding-right: 20px;
             .col2-item {
               position: relative;
               width: 100%;
@@ -250,38 +245,32 @@
           }
 
           .col3 {
-            position: relative;
-            float: left;
-            width: 282px;
-
+            width: 100px;
             .red {
               color: #e74d41;
+              width: 100%;
             }
 
             .green {
               color: #2db3ad;
+              width: 100%;
+              display: inline-block;
+
             }
 
-            .overflow_ellipsis {
-              overflow: hidden;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-            }
           }
 
           .col4 {
-            position: relative;
-            float: left;
-            width: 135px;
+            width: 205px;
             padding-right: 0;
-            text-align: right;
+            text-align: center;
           }
 
           .col5 {
             position: relative;
             float: left;
-            width: 270px;
-            text-align: right;
+            width: 350px;
+            text-align: left;
             padding-right: 37px;
 
             .item {
@@ -301,12 +290,8 @@
           }
 
           .col6 {
-            position: relative;
-            float: left;
             width: 50px;
-            position: absolute;
             right: 30px;
-            margin-top: 5px;
             color: #3e80cd
           }
 
@@ -427,13 +412,8 @@
 
 .red {
   color: #F65C5C;
-  margin-left: 10px;
 }
 
-.green {
-  color: green;
-  margin-left: 10px;
-}
 
 .long {
   width: 500px !important;

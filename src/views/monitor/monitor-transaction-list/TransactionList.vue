@@ -1,10 +1,10 @@
 <template>
   <div class="transaction-list-container radius">
     <TransactionModal
-      :visible="showDialog"
-      :activeTransaction="activeTransaction"
-      @close="showDialog = false"
-    /> 
+            :visible="showDialog"
+            :activeTransaction="activeTransaction"
+            @close="showDialog = false"
+    />
 
     <div class="bottom_transactions radius scroll" ref="bottomTransactions">
       <div class="splite_page">
@@ -28,80 +28,82 @@
             <Spin v-if="transactionsLoading" size="large" fix class="absolute"></Spin>
             <div class="table_body hide_scroll" ref="confirmedTableBody">
               <div
-                class="table_item pointer"
-                @click="showDialog = true; activeTransaction = c"
-                v-for="(c, index) in slicedTransactionList"
-                :key="index"
+                      class="table_item pointer "
+                      @click="showDialog = true; activeTransaction = c"
+                      v-for="(c, index) in slicedTransactionList"
+                      :key="index"
               >
-              <!-- FIRST COLUMN -->
-              <img class="mosaic_action" :src="c.txHeader.icon" alt="" />
+                <!-- FIRST COLUMN -->
+                <img class="mosaic_action" :src="c.txHeader.icon" alt=""/>
 
-              <!-- SECOND COLUMN -->
-              <div class="col2 overflow_ellipsis">
+                <!-- SECOND COLUMN -->
+                <div class="col2 overflow_ellipsis">
                 <span
-                  class="col2-item overflow_ellipsis"
+                        class="col2-item overflow_ellipsis"
                 >
                     {{ c.rawTx.signer.address.plain() }}
                 </span>
-                <span
-                  v-if="c.rawTx.type === TransactionType.TRANSFER"
-                  class="col2-item bottom overflow_ellipsis"
-                >
+                  <span
+                          v-if="c.rawTx.type === TransactionType.TRANSFER"
+                          class="col2-item bottom overflow_ellipsis"
+                  >
                     -> {{ c.rawTx.recipient.address }}
                 </span>
-                <span
-                  v-if="c.rawTx.type !== TransactionType.TRANSFER"
-                  class="col2-item bottom tag"
-                >
+                  <span
+                          v-if="c.rawTx.type !== TransactionType.TRANSFER"
+                          class="col2-item bottom tag"
+                  >
                     -> {{ c.txHeader.tag }}
                 </span>
-              </div>
+                </div>
 
-              <!-- THIRD COLUMN -->
-              <div class="col3 overflow_ellipsis">
+                <!-- THIRD COLUMN -->
+                <div class="col3">
                 <span
-                  :class="[!c.isReceipt ? 'green' : 'red', 'overflow_ellipsis']"
-                  v-if="c.rawTx.type === TransactionType.TRANSFER"
+                        :class="['overflow_ellipsis',!c.isReceipt ? 'green' : 'red']"
+                        v-if="c.rawTx.type === TransactionType.TRANSFER"
                 >
                     {{ renderMosaics(c.rawTx.mosaics, mosaicList, currentXem) }}
                 </span>
-                <span
-                  class="red"
-                  v-if="c.rawTx.type !== TransactionType.TRANSFER"
-                >
+                  <span
+                          class="red "
+                          v-if="c.rawTx.type !== TransactionType.TRANSFER"
+                  >
                     - {{ c.txHeader.fee }}
                 </span>
-              </div>
+                </div>
 
-              <!-- FOURTH COLUMN -->
-              <div class="col4">
+                <!-- FOURTH COLUMN -->
+                <div class="col4">
                 <span v-if="!c.isTxUnconfirmed" class="col4">
                   {{ renderHeightAndConfirmation(c.txHeader.block) }}
                 </span>
-                <span v-if="c.isTxUnconfirmed" class="col4">
+                  <span v-if="c.isTxUnconfirmed" class="col4">
                   {{ $t('unconfirmed') }}
                 </span>
-              </div>
-
-              <!-- FIFTH COLUMN -->
-              <div class="col5">
-                <span class="item"> {{ miniHash(c.txHeader.hash) }} </span>
-                <span class="item bottom">{{c.txHeader.time}}</span>
-              </div>
-
-              <!-- SIXTH COLUMN -->
-              <div class="col6">
-                <img
-                  v-if="c.isTxUnconfirmed"
-                  src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
-                  class="expand_mosaic_info"
-                />
-                <img
-                  v-if="!c.isTxUnconfirmed"
-                  src="@/common/img/monitor/dash-board/dashboardConfirmed.png"
-                  class="expand_mosaic_info"
-                />
                 </div>
+
+                <!-- FIFTH COLUMN -->
+                <div class="col5">
+                  <span class="item"> {{ miniHash(c.txHeader.hash) }} </span>
+                  <span class="item bottom">{{c.txHeader.time}}</span>
+                </div>
+
+                <!-- SIXTH COLUMN -->
+                <div class="col6">
+                  <img
+                          v-if="c.isTxUnconfirmed"
+                          src="@/common/img/monitor/dash-board/dashboardUnconfirmed.png"
+                          class="expand_mosaic_info"
+                  />
+                  <img
+                          v-if="!c.isTxUnconfirmed"
+                          src="@/common/img/monitor/dash-board/dashboardConfirmed.png"
+                          class="expand_mosaic_info"
+                  />
+                </div>
+
+
                 <div class="no_data" v-if="!transactionList.length">
                   {{$t('no_confirmed_transactions')}}
                 </div>

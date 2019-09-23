@@ -166,7 +166,7 @@ export const en_US = {
     remote_modal_pass: 'password',
     remote_modal_confirm: 'confirm',
     remote_modal_cancel: 'cancel',
-    public:'From',
+    public: 'From',
     remote_modal_place1: 'Please enter or paste a remote public key',
     remote_modal_place2: 'Please enter your wallet password',
     Unlink_now: 'Unlink now',

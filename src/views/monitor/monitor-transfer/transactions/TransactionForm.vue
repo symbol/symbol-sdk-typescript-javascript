@@ -2,7 +2,7 @@
   <div class="transfer" @click="isShowSubAlias=false">
     <form @submit.prevent="validateForm('transfer-transaction')">
       <div class="address flex_center">
-        <span class="title">{{$t('public')}}</span>
+        <span class="title">{{$t('sender')}}</span>
         <span class="value radius flex_center">
         <Select
                 v-model="formItem.multisigPublickey"

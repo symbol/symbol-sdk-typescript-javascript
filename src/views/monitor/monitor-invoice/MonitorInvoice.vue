@@ -4,7 +4,7 @@
     <div class="left_container radius">
       <img id="qrImg" :src="QRCode" alt="">
       <div class="qr_info">
-        <div class="amount">{{qrInfo.mosaicAmount}}({{qrInfo.mosaicHex}})</div>
+        <div class="amount">{{qrInfo.mosaicHex}} : {{qrInfo.mosaicAmount}}</div>
         <div class="address_text" id="address_text">
           {{accountAddress}}
         </div>

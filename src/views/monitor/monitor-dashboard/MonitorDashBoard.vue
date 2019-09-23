@@ -27,7 +27,7 @@
           <span :class="['descript',index==1? 'long':'']">{{$t(n.descript)}}</span>
           <span :class="['data','overflow_ellipsis', updateAnimation]">
             <numberGrow v-if="index !== 4" :value="chainStatus[n.variable]"></numberGrow>
-            <span v-else>...{{chainStatus[n.variable].substr(-5,5)}}</span>
+            <span v-else>...{{chainStatus[n.variable].substr(-4,4)}}</span>
           </span>
         </div>
       </div>
