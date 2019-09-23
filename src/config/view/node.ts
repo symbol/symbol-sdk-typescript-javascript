@@ -11,4 +11,10 @@ export const nodeListConfig: Array<{ value: string, name: string, url: string, i
         url: '52.194.207.217',
         isSelected: false,
     },
+    {
+        value: 'http://47.107.245.217:3000',
+        name: 'api-node-cn-0',
+        url: '47.107.245.217',
+        isSelected: true,
+    },
 ]

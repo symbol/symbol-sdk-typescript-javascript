@@ -1,7 +1,7 @@
 import {FormattedTransaction} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
 import {Address, LockFundsTransaction} from 'nem2-sdk'
-import {nodeConfig} from '@/config/index.ts';
+import {defaultNetworkConfig} from '@/config/index.ts';
 
 export class FormattedLock extends FormattedTransaction {
     dialogDetailMap: any
@@ -18,7 +18,7 @@ export class FormattedLock extends FormattedTransaction {
               'mosaic_ID': currentXem + ("(" + tx.mosaic.id.toHex() + ")"),
               'quantity': tx.mosaic.amount.compact(),
               'timestamp': this.txHeader.time,
-              'fee': getRelativeMosaicAmount(tx.maxFee.compact(), xemDivisibility) + nodeConfig.XEM,
+              'fee': getRelativeMosaicAmount(tx.maxFee.compact(), xemDivisibility) + defaultNetworkConfig.XEM,
               'block': this.txHeader.block,
               'hash': this.txHeader.hash,
           }

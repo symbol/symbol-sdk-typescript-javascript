@@ -353,7 +353,7 @@ export const en_US = {
     wallet_name: 'Wallet name',
     switch_point: 'Switch Node',
     current_point: 'Current Node',
-    please_enter_a_custom_nod_address: 'Please input Node url',
+    please_enter_a_custom_nod_address: 'The default port is 3000',
     point_null_error: 'Node null error',
     //check pw dialog
     please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe: 'Please enter your wallet password to ensure your own operation and keep your wallet safe.',

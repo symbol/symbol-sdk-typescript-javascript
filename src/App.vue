@@ -188,8 +188,8 @@
             const {node} = this
 
             getMarketOpenPrice(this)
-            await getCurrentBlockHeight(node, this.$store)
             await getNetworkGenerationHash(node, this)
+            await getCurrentBlockHeight(node, this.$store)
             await getCurrentNetworkMosaic(node, this.$store)
 
             if (this.wallet && this.wallet.address) {

@@ -1,7 +1,7 @@
 import {FormattedTransaction} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
 import {Address, RegisterNamespaceTransaction} from 'nem2-sdk'
-import {nodeConfig} from '@/config/index.ts';
+import {defaultNetworkConfig} from '@/config/index.ts';
 
 export class FormattedRegisterNamespace extends FormattedTransaction {
   dialogDetailMap: any
@@ -19,8 +19,8 @@ export class FormattedRegisterNamespace extends FormattedTransaction {
           'root_namespace': tx.parentId ? tx.parentId.id.toHex() : '-',
           'sender': tx.signer.publicKey,
           'duration': tx.duration ? tx.duration.compact() : 0,
-          'rent': (tx.duration ? tx.duration.compact() : 0) / nodeConfig.gas2xemRate + nodeConfig.XEM,
-          'fee': getRelativeMosaicAmount(tx.maxFee.compact(), xemDivisibility) + nodeConfig.XEM,
+          'rent': (tx.duration ? tx.duration.compact() : 0) / defaultNetworkConfig.gas2xemRate + defaultNetworkConfig.XEM,
+          'fee': getRelativeMosaicAmount(tx.maxFee.compact(), xemDivisibility) + defaultNetworkConfig.XEM,
           'block': this.txHeader.block,
           'hash': this.txHeader.hash,
        }

@@ -1,7 +1,8 @@
 import {Account} from 'nem2-sdk'
-import {nodeConfig} from "@/config/index.ts"
+import {defaultNetworkConfig} from "@/config/index"
 import {FormattedTransaction} from '@/core/model'
 import {AppMosaic} from '@/core/model'
+import {nodeListConfig} from "@/config/view/node"
 
 declare interface account {
     node: string,
@@ -23,9 +24,9 @@ declare interface account {
 
 export default {
     state: {
-        node: nodeConfig.node,
-        currentXem: nodeConfig.currentXem,
-        currentXEM1: nodeConfig.currentXEM1,
+        node: nodeListConfig.find((node) => node.isSelected).value,
+        currentXem: defaultNetworkConfig.currentXem,
+        currentXEM1: defaultNetworkConfig.currentXEM1,
         account: {},
         wallet: {},
         mosaics: {},

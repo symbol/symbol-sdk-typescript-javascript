@@ -7,6 +7,7 @@ import {apiServerConfig} from "@/config/index"
 
 export const getNetworkGenerationHash = async (node: string, that: any): Promise<void> => {
     try {
+        that.$store.commit('SET_IS_NODE_HEALTHY', false)
         const block = await new BlockApiRxjs().getBlockByHeight(node, 1).toPromise()
         that.$store.commit('SET_IS_NODE_HEALTHY', true)
         that.$Notice.success({

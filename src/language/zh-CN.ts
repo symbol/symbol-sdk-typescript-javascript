@@ -351,7 +351,7 @@ export const zh_CN = {
     wallet_name: '账户名',
     switch_point: '选择节点',
     current_point: '当前节点',
-    please_enter_a_custom_nod_address: '请输入自定义节点地址',
+    please_enter_a_custom_nod_address: '默认端口为3000',
     point_null_error: '节点数据不可为空',
     //check pw dialog
     please_enter_your_wallet_password_to_ensure_your_own_operation_and_keep_your_wallet_safe: '请输入钱包密码，以确保为本人操作，保证你的钱包安全',

@@ -91,8 +91,7 @@ export const Message = {
     HD_WALLET_PATH_ERROR:'hd_wallet_path_error'
 }
 
-export const nodeConfig = {
-    node: 'http://13.114.200.132:3000',
+export const defaultNetworkConfig = {
     currentXem: 'nem.xem',
     currentXEM1: '',
     XEM: 'XEM',

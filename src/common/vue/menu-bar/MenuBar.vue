@@ -22,6 +22,7 @@
         <span class="account_name overflow_ellipsis">{{accountName}}</span>
       </div>
     </div>
+
     <div class="top_window">
       <div class="nem_logo_wrap">
         <div class="nem_logo">
@@ -39,6 +40,7 @@
         </div>
         <div class="app_controller clear">
           <div :class="[isNodeHealthy?'point_healthy':'point_unhealthy']">
+
             <Poptip placement="bottom-end">
               <i class="pointer point" @click="toggleNodeList"/>
               <span class="network_type_text" v-if="wallet">
@@ -46,21 +48,25 @@
               </span>
               <div slot="title" class="title">{{$t('current_point')}}：{{node}}</div>
               <div slot="content">
-                <div
-                        @click="selectEndpoint(index)"
-                        class="point_item pointer"
-                        v-for="(p,index) in nodeList"
-                        :key="`sep${index}`"
-                >
-                  <img :src="p.isSelected ? monitorSeleted : monitorUnselected">
-                  <span>{{p.name}} ({{p.url}})</span>
-                </div>
+                <div class="node_list">
+                  <div class="node_list_container scroll">
+                    <div
+                            @click="selectEndpoint(index)"
+                            class="point_item pointer"
+                            v-for="(p,index) in nodeList"
+                            :key="`sep${index}`"
+                    >
+                      <img :src="p.isSelected ? monitorSeleted : monitorUnselected">
+                      <span>{{p.name}} ({{p.value}})</span>
+                    </div>
+                  </div>
 
-                <div class="input_point point_item">
-                  <input v-model="inputNodeValue" type="text" :placeholder="$t('please_enter_a_custom_nod_address')">
-                  <span @click="changeEndpointByInput" class="sure_button radius pointer">+</span>
-                </div>
+                  <div class="input_point point_item">
 
+                    <input v-model="inputNodeValue" type="text" :placeholder="$t('please_enter_a_custom_nod_address')">
+                    <span @click="changeEndpointByInput" class="sure_button radius pointer">+</span>
+                  </div>
+                </div>
               </div>
             </Poptip>
           </div>
@@ -96,6 +102,7 @@
 </script>
 
 <style scoped lang="less">
+  @import "./MenuCommon.less";
   @import "./MenuBarWindows.less";
   @import "./MenuBarMac.less";
 </style>
