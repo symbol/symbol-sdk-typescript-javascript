@@ -6,6 +6,7 @@
   padding: 30px;
   border-radius: 4px;
   overflow-y: auto;
+  overflow-x: hidden;
 
   .walletSwitchHead {
     height: 30px;
@@ -44,17 +45,7 @@
     border-top: 1px solid rgba(230, 230, 230, 1);
     padding: 30px 0;
     margin: 45px auto 0;
-    //background: rgba(255, 255, 255, 1);
 
-    //div {
-    //  height: 20px;
-    //  line-height: 20px;
-    //  text-align: center;
-    //  font-size: 14px;
-    //  font-weight: 400;
-    //  color: #20B5AC;
-    //  cursor: pointer;
-    //}
     .createBtn,
     .importBtn {
       border: 1px solid rgba(38, 180, 176, 1);
@@ -78,7 +69,10 @@
   }
 
   .walletList {
-    margin-top: 20px;
+    height: calc(100% - 150px);
+    width: 410px;
+    padding-top: 10px;
+
 
     .walletItem {
       width: 380px;
@@ -161,10 +155,10 @@
         }
 
         .optionItem {
+          margin: 5px 0;
           height: 22px;
           line-height: 18px;
           padding: 2px;
-
           i {
             display: inline-block;
             width: 16px;
@@ -188,6 +182,9 @@
             position: relative;
             top: -2px;
           }
+          .green {
+            color: #26B4B0;
+          }
         }
       }
     }
@@ -195,14 +192,13 @@
     .walletItem.active {
       color: #FFFFFF;
       background-size: 100% 100%;
-      width: 390px;
       height: 120px;
       background-repeat: no-repeat;
 
 
       .walletName {
         color: #FFFFFF;
-        font-size:12px;
+        font-size: 12px;
       }
 
       .walletAmount {
@@ -220,41 +216,46 @@
       }
     }
   }
+
   .active:after {
     display: none;
   }
 }
 
-
 .walletItem_bg_0 {
+  transition:width .2s;
   background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal1.png");
-
+  width: 400px !important;
+  position: relative;
+  box-shadow: 0px 0px 7px 0px rgba(20, 119, 149, 0.75);
 }
 
 .walletItem_bg_0.active {
-  width: 410px !important;
+  width: 400px !important;
   position: relative;
   box-shadow: 0px 0px 7px 0px rgba(20, 119, 149, 0.75);
 }
 
 
 .walletItem_bg_1 {
+  transition:width .5s;
   background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal2.png");
 }
 
 .walletItem_bg_1.active {
-  width: 410px !important;
+  width: 400px !important;
   position: relative;
   box-shadow: 0px 0px 7px 0px rgba(227, 112, 49, 0.75);
 }
 
 
 .walletItem_bg_2 {
+  transition:width .1s;
   background-image: url("../../../common/img/wallet/wallet-detail/walletDetailBgNormal3.png");
 }
 
 .walletItem_bg_2.active {
-  width: 410px !important;
+  width: 400px !important;
   position: relative;
   box-shadow: 0px 0px 7px 0px rgba(51, 45, 36.75);
 }

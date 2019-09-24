@@ -9,7 +9,7 @@ import {AppWallet} from "@/core/model"
         ...mapState({activeAccount: 'account'})
     }
 })
-export class DeleteWalletCheckTs extends Vue {
+export class TheWalletDeleteTs extends Vue {
     activeAccount: any
     stepIndex = 0
     show = false
@@ -29,6 +29,7 @@ export class DeleteWalletCheckTs extends Vue {
     }
 
     checkPasswordDialogCancel() {
+        this.$emit('closeCheckPWDialog')
     }
 
     submit() {

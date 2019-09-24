@@ -1,20 +1,25 @@
-import { NetworkType } from "nem2-sdk";
-import mosaic1Icon from "@/common/img/service/mosaic1.png";
-import mosaic2Icon from "@/common/img/service/mosaic2.png";
-import multisign1Icon from "@/common/img/service/multisign1.png";
-import multisign2Icon from "@/common/img/service/multisign2.png";
-import namespace1Icon from "@/common/img/service/namespace1.png";
-import namespace2Icon from "@/common/img/service/namespace2.png";
-import apostille1Icon from "@/common/img/service/apostille1.png";
-import apostille2Icon from "@/common/img/service/apostille2.png";
+import {NetworkType} from "nem2-sdk"
+import mosaic1Icon from "@/common/img/service/mosaic1.png"
+import mosaic2Icon from "@/common/img/service/mosaic2.png"
+import multisign1Icon from "@/common/img/service/multisign1.png"
+import multisign2Icon from "@/common/img/service/multisign2.png"
+import namespace1Icon from "@/common/img/service/namespace1.png"
+import namespace2Icon from "@/common/img/service/namespace2.png"
+import apostille1Icon from "@/common/img/service/apostille1.png"
+import apostille2Icon from "@/common/img/service/apostille2.png"
 
 export const walletFnNavConfig = [
-    { name: 'create', to: '/walletCreate', active: true },
-    { name: 'import', to: '/walletImportKeystore', active: false },
+    {name: 'create', to: '/walletCreate', active: true},
+    {name: 'import', to: '/walletImportKeystore', active: false},
 ]
 
-export const walletImportNavagatorConfig = [
-   {
+export const walletStyleSheetType = {
+    seedWallet: 'walletItem_bg_1',
+    otherWallet: 'walletItem_bg_2',
+    activeWallet: 'walletItem_bg_0'
+}
+export const walletImportNavigatorConfig = [
+    {
         title: 'privatekey',
         name: 'walletImportPrivatekey',
         isSelected: false
@@ -28,7 +33,7 @@ export const walletImportNavagatorConfig = [
 export const importKeystoreConfig = {
     walletName: 'keystore-wallet',
     networkType: NetworkType.MIJIN_TEST,
-    keystoreStr: 'eyJuYW1lIjoiMzIxMzIxMzEyIiwiY2lwaGVydGV4dCI6eyJ3b3JkcyI6Wzg1NDY0MjkyNSwyMDMwOTQ2OTg5LC0xMTYzOTM0MCwxMjYzMTEzOTQyLDE1OTgyNzY0MjMsLTEzNDMwODUyMDgsLTEwMTM2MDI4NzAsMTIxNDI5ODg2LC0xNTkyNDUzNzg0LDE1OTU5OTEwMDYsLTEwMzkxMTQ1NjQsNzI4MjgxODc3XSwic2lnQnl0ZXMiOjQ4fSwiaXYiOnsidHlwZSI6IkJ1ZmZlciIsImRhdGEiOlsxODAsMTk2LDIyNywxNjYsMTc4LDIzNSw4OSwxNDUsMjI4LDY2LDExMiw2MSwyNCwyNSwzOCwxNjZdfSwibmV0d29ya1R5cGUiOjE0NCwiYWRkcmVzcyI6IlNBVUE1SlFSUDJGQk5QQU8zRlFJUlRKUlM1UEhKVjdDTFpTT1lMS0YiLCJwdWJsaWNLZXkiOiI2MjMyM0JDMkQwNzVDRDgxNUU0QTcxQjE4NzQ3MDhDOEVBQUVGRUMyOTVDNkYxQTgyRTZCOTE4MjJCQjJEREJCIiwibW5lbW9uaWNFbkNvZGVPYmoiOnt9fQ==',
+    keystoreStr: 'eyJuYW1lIjoid2FsbGV0LXByaXZhdGVLZXkiLCJuZXR3b3JrIjoxNDQsImFkZHJlc3MiOnsiYWRkcmVzcyI6IlNETEdMRFROSVAyS0VZSlpPSFBBVjZZQktSUTVaUlJETEpHUjVIM1UiLCJuZXR3b3JrVHlwZSI6MTQ0fSwiY3JlYXRpb25EYXRlIjoiMjAxOS0wOS0yM1QxNzozNToxNi4xOTUiLCJzY2hlbWEiOiJzaW1wbGVfdjEiLCJlbmNyeXB0ZWRQcml2YXRlS2V5Ijp7ImVuY3J5cHRlZEtleSI6IjNlYTc2ZTEzNmE0ZmRhODY1M2E0NTRmMDQ5Mjc3NzgxMDkyZTA0M2Q2YWUxYTA2OTFmNjViNGJhYTM2ZTBkYzVlZTQ5YzBiZGQ0ZmNkMWJhNDRlNDI2MTU0OTc5NjNkNiIsIml2IjoiNjU2REQ5NUJGMTQ5MzQ3NEE5ODkyMUU5MDNGQzcwREYifX0=',
     walletPassword: '',
     walletPasswordAgain: '',
     keystorePassword: '111111'

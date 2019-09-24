@@ -265,6 +265,7 @@ export const zh_CN = {
     alias_selection: '别名选择',
     password: '密码',
     please_enter_your_wallet_password: '请输入钱包密码',
+    please_enter_your_new_wallet_name: '请输入新钱包名',
     bind: '绑定',
     mosaic_alias_operation: '马赛克别名操作',
     binding_success: '绑定成功',
@@ -703,5 +704,6 @@ export const zh_CN = {
     confirmations_height: '已确认块/高度',
     hash_deadline: 'hash/期限',
     transaction_record: '交易记录',
-    import_mnemonic: '导入助记词'
+    import_mnemonic: '导入助记词',
+    update_wallet_name:'修改'
 }

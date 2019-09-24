@@ -264,6 +264,7 @@ export const en_US = {
     alias_selection: 'Alias selection',
     password: 'Password',
     please_enter_your_wallet_password: 'Please enter your wallet password',
+    please_enter_your_new_wallet_name: 'Please enter your new wallet name',
     bind: 'Bind',
     mosaic_alias_operation: 'Mosaic alias operation',
     binding_success: 'Binding success',
@@ -715,11 +716,15 @@ export const en_US = {
     hint: 'Hint',
     path: 'Path',
     hd_wallet_path_error:'HD wallet path error',
-    unconfirmed: 'unconfirmed',
+    unconfirmed: 'Unconfirmed',
     from_to_action: 'From/To (action)',
     amount_asset: 'Amount (asset)',
     confirmations_height: 'Confirmations/Height',
     hash_deadline: 'Hash/Deadline',
     transaction_record: 'Transaction records',
-    import_mnemonic:'import mnemonic'
+    import_mnemonic:'Import mnemonic',
+    update_wallet_name:'Update',
+    namespace_filter:'filter',
+    namespace_expired: 'expired',
+    namespace_Not_expired: 'Not expired'
 }

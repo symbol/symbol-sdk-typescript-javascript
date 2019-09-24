@@ -4,7 +4,7 @@ import monitorSeleted from '@/common/img/monitor/monitorSeleted.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
 import {copyTxt, formatXEMamount, formatNumber, localRead, localSave} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
-import {monitorPanelNavigatorConfig} from "@/config/view/monitor";
+import {monitorPanelNavigatorConfig} from "@/config/view/monitor"
 
 
 @Component({

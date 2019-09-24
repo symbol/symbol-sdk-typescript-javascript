@@ -1,11 +1,14 @@
 import {mapState} from 'vuex'
 import {Component, Vue} from 'vue-property-decorator'
-import DeleteWalletCheck from './delete-wallet-check/DeleteWalletCheck.vue'
+import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
 import {formatXEMamount, formatNumber, localRead} from '@/core/utils/utils.ts'
 import {AppWallet} from "@/core/model"
+import {CreateWalletType} from "@/core/model/CreateWalletType"
+import {walletStyleSheetType} from '@/config/view/wallet.ts'
+import TheWalletUpdate from '@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdate.vue'
 
 @Component({
-    components: {DeleteWalletCheck},
+    components: {TheWalletDelete, TheWalletUpdate},
     computed: {
         ...mapState({
             activeAccount: 'account',
@@ -20,18 +23,41 @@ export class WalletSwitchTs extends Vue {
     deleteIndex = -1
     deletecurrent = -1
     walletToDelete: AppWallet | boolean = false
+    thirdTimestamp = 0
+    walletStyleSheetType = walletStyleSheetType
+    showUpdateDialog = false
+    walletToUpdate = {}
 
     get walletList() {
-        return this.app.walletList
+        let {walletList} = this.app
+        walletList.sort((a, b) => {
+            return b.createTimestamp - a.createTimestamp
+        })
+        return walletList.map(item => {
+            const walletType = item.accountTitle.substring(0, item.accountTitle.indexOf('-'))
+            switch (walletType) {
+                case CreateWalletType.keyStore:
+                case CreateWalletType.privateKey:
+                    item.stylesheet = walletStyleSheetType.otherWallet
+                    break
+                case CreateWalletType.seed:
+                    item.stylesheet = walletStyleSheetType.seedWallet
+                    break
+            }
+            return item
+        })
     }
 
     get wallet() {
         return this.activeAccount.wallet
     }
 
-
     get currentXEM1() {
         return this.activeAccount.currentXEM1
+    }
+
+    closeUpdateDialog() {
+        this.showUpdateDialog = false
     }
 
     closeCheckPWDialog() {

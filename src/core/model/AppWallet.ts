@@ -2,25 +2,22 @@ import {Message} from "@/config/index.ts"
 import {localRead, localSave} from "@/core/utils/utils.ts"
 import {
     Account,
-    Address,
     Crypto,
     NetworkType,
     Transaction,
     SimpleWallet,
     Password,
     WalletAlgorithm,
-    Listener, Mosaic, MosaicInfo
+    Listener,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
-import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
-import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
 import {createSubWalletByPath} from "@/core/utils/hdWallet.ts"
 import {AppLock} from "@/core/utils/appLock"
-import {CreateWalletType} from "@/core/model/CreateWalletType";
-import {CoinType} from "@/core/model/CoinType";
+import {CreateWalletType} from "@/core/model/CreateWalletType"
+import {CoinType} from "@/core/model/CoinType"
 
 export class AppWallet {
     constructor(wallet?: {
@@ -42,6 +39,7 @@ export class AppWallet {
     encryptedMnemonic: string | undefined
     path: string
     accountTitle: string
+    createTimestamp: number
 
 
     generateWalletTitle(createType: string, coinType: string, netType: string) {
@@ -60,7 +58,8 @@ export class AppWallet {
             this.publicKey = Account.createFromPrivateKey(privateKey, networkType).publicKey
             this.networkType = networkType
             this.active = true
-            this.accountTitle = this.generateWalletTitle(CreateWalletType.privateKey, CoinType.xem, NetworkType[networkType])
+            this.createTimestamp = new Date().valueOf()
+            this.accountTitle = this.accountTitle || this.generateWalletTitle(CreateWalletType.privateKey, CoinType.xem, NetworkType[networkType])
             this.addNewWalletToList(store)
             return this
         } catch (error) {
@@ -85,6 +84,7 @@ export class AppWallet {
             this.publicKey = account.publicKey
             this.networkType = networkType
             this.active = true
+            this.createTimestamp = new Date().valueOf()
             this.path = path
             this.accountTitle = this.generateWalletTitle(CreateWalletType.seed, CoinType.xem, NetworkType[networkType])
             this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
@@ -113,6 +113,7 @@ export class AppWallet {
             this.publicKey = account.publicKey
             this.networkType = networkType
             this.active = true
+            this.createTimestamp = new Date().valueOf()
             this.path = path
             this.accountTitle = this.generateWalletTitle(CreateWalletType.seed, CoinType.xem, NetworkType[networkType])
             this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
@@ -248,7 +249,6 @@ export class AppWallet {
 
         let newWallet = walletList[newWalletIndex]
         newWallet.active = true
-
         let newWalletList = [...walletList]
         newWalletList
             .filter(wallet => wallet.address !== newActiveWalletAddress)
@@ -289,6 +289,26 @@ export class AppWallet {
             // do nothing
         }
     }
+
+    updateWalletName(
+        accountName: string,
+        newWalletName: string,
+        walletAddress: string,
+        store: any
+    ) {
+        let accountMap = JSON.parse(localRead('accountMap'))
+        accountMap[accountName]['wallets'].every((item, index) => {
+            if (item.address == walletAddress) {
+                accountMap[accountName]['wallets'][index].name = newWalletName
+                return false
+            }
+            return true
+        })
+
+        localSave('accountMap', JSON.stringify(accountMap))
+        store.commit('SET_WALLET_LIST', accountMap[accountName]['wallets'])
+    }
+
 
     updateWallet(store: any) {
         const accountName = store.state.account.accountName
