@@ -54,9 +54,9 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @param mosaicId - The mosaic id ex: new MosaicId([481110499, 231112638]).
      * @param restrictionKey - The restriction key.
      * @param targetAddress - The affected unresolved address.
-     * @param previousRestrictionValue - The previous restriction value.
      * @param newRestrictionValue - The new restriction value.
      * @param networkType - The network type.
+     * @param previousRestrictionValue - (Optional) The previous restriction value.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicAddressRestrictionTransaction}
      */
@@ -64,9 +64,9 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
                          mosaicId: MosaicId,
                          restrictionKey: UInt64,
                          targetAddress: Address,
-                         previousRestrictionValue: UInt64,
                          newRestrictionValue: UInt64,
                          networkType: NetworkType,
+                         previousRestrictionValue: UInt64 = UInt64.fromHex('FFFFFFFFFFFFFFFF'),
                          maxFee: UInt64 = new UInt64([0, 0])): MosaicAddressRestrictionTransaction {
         return new MosaicAddressRestrictionTransaction(networkType,
             TransactionVersion.MOSAIC_ADDRESS_RESTRICTION,
@@ -143,9 +143,9 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             new MosaicId(builder.getMosaicId().unresolvedMosaicId),
             new UInt64(builder.getRestrictionKey()),
             Address.createFromEncoded(Convert.uint8ToHex(builder.getTargetAddress().unresolvedAddress)),
-            new UInt64(builder.getPreviousRestrictionValue()),
             new UInt64(builder.getNewRestrictionValue()),
             networkType,
+            new UInt64(builder.getPreviousRestrictionValue()),
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicAddressRestrictionTransactionBuilder).fee.amount),
         );
         return isEmbedded ?

@@ -357,4 +357,49 @@ describe('convert', () => {
             }
         });
     });
+
+    describe('utf8ToUni8', () => {
+        it('should convert numeric string to Uint8Array', () => {
+            const actual = '123456789';
+            // Act:
+            const uint = convert.utf8ToUint8(actual);
+
+            // Assert:
+            expect(uint.length).to.be.equal(actual.length);
+            expect(uint[0]).to.be.equal(49);
+            expect(uint[8]).to.be.equal(57);
+        });
+
+        it('should convert utf string to Uint8Array', () => {
+            const actual = 'test';
+            // Act:
+            const uint = convert.utf8ToUint8(actual);
+
+            // Assert:
+            expect(uint.length).to.be.equal(actual.length);
+            expect(convert.uint8ToHex(uint)).to.be.equal('74657374');
+        });
+    });
+
+    describe('uint8ToUtf8', () => {
+        it('should convert Uint8Array to numericString', () => {
+            const expected = '123456789';
+            const actual = convert.utf8ToUint8(expected);
+            // Act:
+            const result = convert.uint8ToUtf8(actual);
+
+            // Assert:
+            expect(result).to.be.equal(expected);
+        });
+
+        it('should convert Uint8Array to utf8 string ', () => {
+            const expected = 'test';
+            const actual = convert.utf8ToUint8(expected);
+            // Act:
+            const result = convert.uint8ToUtf8(actual);
+
+            // Assert:
+            expect(result).to.be.equal(expected);
+        });
+    });
 });

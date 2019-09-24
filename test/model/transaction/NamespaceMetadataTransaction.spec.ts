@@ -15,6 +15,7 @@
  */
 
 import { expect } from 'chai';
+import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
@@ -37,7 +38,7 @@ describe('NamespaceMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
@@ -52,7 +53,7 @@ describe('NamespaceMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
             new UInt64([1, 0]),
         );
@@ -68,7 +69,7 @@ describe('NamespaceMetadataTransaction', () => {
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            new Uint8Array(10),
+            Convert.uint8ToUtf8(new Uint8Array(10)),
             NetworkType.MIJIN_TEST,
         );
 
@@ -89,7 +90,7 @@ describe('NamespaceMetadataTransaction', () => {
                 UInt64.fromUint(1000),
                 new NamespaceId([2262289484, 3405110546]),
                 1,
-                new Uint8Array(1025),
+                Convert.uint8ToUtf8(new Uint8Array(1025)),
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw(Error, 'The maximum value size is 1024');
@@ -103,7 +104,7 @@ describe('NamespaceMetadataTransaction', () => {
                 UInt64.fromUint(1000),
                 new NamespaceId([2262289484, 3405110546]),
                 1,
-                new Uint8Array(10),
+                Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
             );
             expect(namespaceMetadataTransaction.size).to.be.equal(180);
