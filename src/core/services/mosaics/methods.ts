@@ -43,6 +43,7 @@ export const initMosaic = (wallet, that) => {
     const address = Address.createFromRawAddress(wallet.address)
 
     return new Promise(async (resolve, reject) => {
+        console.log('initMosaic called')
         try {
             const mosaicAmountViews = await mosaicsAmountViewFromAddress(node, address)
             const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))

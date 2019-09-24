@@ -82,13 +82,14 @@ export default {
             state.mosaics = mosaics
         },
         UPDATE_MOSAICS(state: account, mosaics: AppMosaic[]): void {
-            const mosaicList = state.mosaics
+            const mosaicList = {...state.mosaics}
             mosaics.forEach((mosaic: AppMosaic) => {
                 if (!mosaic.hex) return
                 const {hex} = mosaic
                 if (!mosaicList[hex]) mosaicList[hex] = new AppMosaic({hex})
                 Object.assign(mosaicList[mosaic.hex], mosaic)
             })
+            state.mosaics = mosaicList
         },
         /**
          * @TODO: refactor
