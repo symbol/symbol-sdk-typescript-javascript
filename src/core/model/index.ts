@@ -1,6 +1,7 @@
 export * from './FormattedTransaction'
 export * from './AppAccount'
 export * from './AppMosaic'
+export * from './AppWallet'
 export * from './CoinType'
 export * from './CreateWalletType'
 export * from './LanguageType'

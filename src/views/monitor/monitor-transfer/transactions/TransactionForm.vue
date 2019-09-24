@@ -10,7 +10,7 @@
                 class="asset_type"
         >
           <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">
-            {{ item.label }}
+            {{ item.label.substring(0,20) }}******{{item.label.substr(-20,20) }}
           </Option>
        </Select>
       </span>

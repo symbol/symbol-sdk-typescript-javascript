@@ -3,7 +3,6 @@ import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import {Message} from "@/config/index.ts"
 import {AppMosaic} from '@/core/model'
 import {WebClient} from "@/core/utils/web"
-import {apiServerConfig} from "@/config/index"
 
 export const getNetworkGenerationHash = async (node: string, that: any): Promise<void> => {
     try {

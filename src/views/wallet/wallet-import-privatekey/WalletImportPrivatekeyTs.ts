@@ -1,4 +1,3 @@
-import {AppWallet} from '@/core/utils/wallet.ts'
 import {mapState} from 'vuex'
 import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
@@ -6,6 +5,7 @@ import {Password, Account} from "nem2-sdk"
 import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {formDataConfig} from '@/config/view/form'
 import {networkTypeConfig} from '@/config/view/setting'
+import {AppWallet} from "@/core/model"
 
 @Component({
     computed: {

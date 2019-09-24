@@ -7,10 +7,10 @@ import {Message, networkConfig} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress,
-    createBondedMultisigTransaction, createCompleteMultisigTransaction,
 } from '@/core/utils'
 import { formDataConfig } from '@/config/view/form'
 import {rootNamespaceTypeConfig} from "@/config/view/namespace";
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/model"
 
 
 @Component({

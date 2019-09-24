@@ -10,14 +10,12 @@ import {
     UInt64
 } from 'nem2-sdk'
 import {
-    createBondedMultisigTransaction,
-    createCompleteMultisigTransaction,
-    multisigAccountInfo,
     getAbsoluteMosaicAmount,
 } from "@/core/utils"
 import {Message} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {formDataConfig} from "@/config/view/form";
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, multisigAccountInfo} from "@/core/model"
 
 @Component({
     components: {

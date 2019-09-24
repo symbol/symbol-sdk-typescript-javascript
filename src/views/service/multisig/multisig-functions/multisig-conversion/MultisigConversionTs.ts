@@ -8,9 +8,10 @@ import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {Message} from "@/config/index.ts"
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
-import {getAbsoluteMosaicAmount, createBondedMultisigTransaction} from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import { formDataConfig } from '@/config/view/form'
+import {createBondedMultisigTransaction} from "@/core/model"
+import {getAbsoluteMosaicAmount} from "@/core/utils"
 
 @Component({
     components: {

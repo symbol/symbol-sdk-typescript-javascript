@@ -4,7 +4,6 @@ import GuideInto from '@/views/login/guide-into/GuideInto.vue'
 import WalletFn from '@/views/wallet/wallet-fn/WalletFn.vue'
 import WalletSwitch from '@/views/wallet/wallet-switch/WalletSwitch.vue'
 import WalletDetails from '@/views/wallet/wallet-details/WalletDetails.vue'
-import {getNamespaces} from "@/core/utils/wallet.ts"
 import {mapState} from "vuex"
 
 @Component({

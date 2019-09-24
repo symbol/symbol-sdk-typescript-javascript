@@ -3,8 +3,9 @@ import {mapState} from "vuex"
 import {Message} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {getAbsoluteMosaicAmount, AppWallet} from '@/core/utils'
+import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
+import {AppWallet} from "@/core/model"
 
 
 @Component({

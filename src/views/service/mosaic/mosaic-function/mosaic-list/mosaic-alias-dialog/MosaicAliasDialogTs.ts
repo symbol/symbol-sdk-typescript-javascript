@@ -4,8 +4,9 @@ import {Message,networkConfig} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
-import {getAbsoluteMosaicAmount, AppWallet} from '@/core/utils'
+import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
+import {AppWallet} from "@/core/model"
 
 
 @Component({

@@ -3,8 +3,9 @@ import {mapState} from "vuex"
 import {Password} from 'nem2-sdk'
 import {Message, networkConfig} from "@/config/index.ts"
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
-import {getAbsoluteMosaicAmount, AppWallet} from '@/core/utils'
+import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
+import {AppWallet} from "@/core/model"
 
 @Component({
     computed: {

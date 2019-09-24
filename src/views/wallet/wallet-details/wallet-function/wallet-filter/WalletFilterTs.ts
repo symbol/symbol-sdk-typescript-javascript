@@ -1,7 +1,6 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {RestrictionApiRxjs} from '@/core/api/RestrictionApiRxjs.ts'
 import {Message} from "@/config/index.ts"
-import {AppWallet} from "@/core/utils/wallet"
 import {mapState} from "vuex"
 import {
     Account,
@@ -15,6 +14,7 @@ import {
     Password
 } from "nem2-sdk"
 import { transactionTypeConfig } from '@/config/view/transaction'
+import {AppWallet} from "@/core/model"
 
 @Component({
     computed: {...mapState({activeAccount: 'account'})},

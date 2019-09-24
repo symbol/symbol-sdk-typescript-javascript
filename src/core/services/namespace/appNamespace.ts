@@ -1,4 +1,4 @@
-import {Alias, NamespaceId, NamespaceInfo} from "nem2-sdk"
+import { Alias, NamespaceId, NamespaceInfo} from "nem2-sdk"
 
 class AppNamespace {
     alias: Alias
@@ -8,9 +8,9 @@ class AppNamespace {
     id: NamespaceId
     isLinked: boolean
     name: string
-    namespaceInfo:NamespaceInfo
+    namespaceInfo: NamespaceInfo
 
-    constructor(currentBlockHeight:number,appNamespace?: {
+    constructor(currentBlockHeight: number, appNamespace?: {
         alias: Alias
         aliasTarget: string
         duration: number
@@ -18,7 +18,7 @@ class AppNamespace {
         id: NamespaceId
         isLinked: boolean
         name: string
-        namespaceInfo:NamespaceInfo
+        namespaceInfo: NamespaceInfo
     }) {
         Object.assign(this, appNamespace)
     }
@@ -37,3 +37,5 @@ export const AppNamespaces = () => ({
     },
 
 })
+
+

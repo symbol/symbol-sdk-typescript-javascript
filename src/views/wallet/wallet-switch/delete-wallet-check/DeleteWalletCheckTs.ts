@@ -1,8 +1,8 @@
 import {Password} from 'nem2-sdk'
-import {AppWallet} from '@/core/utils/wallet.ts'
 import {Message} from "@/config/index.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from 'vuex'
+import {AppWallet} from "@/core/model"
 
 @Component({
     computed: {

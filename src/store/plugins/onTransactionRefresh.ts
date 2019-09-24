@@ -1,7 +1,7 @@
 import {TransactionType, Address} from 'nem2-sdk'
-import {getNamespaces} from '@/core/utils'
 import {mosaicsAmountViewFromAddress} from '@/core/services'
 import {AppMosaic} from '@/core/model'
+import {getNamespaces} from "@/core/services/namespace"
 
 
 const txTypeToGetNamespaces = [
@@ -35,7 +35,7 @@ export const onTransactionRefreshModule = (store) => {
         if (txTypeToGetNamespaces.includes(txType)) {
           const namespaces = await getNamespaces(address, node)
           store.commit('SET_NAMESPACES', namespaces)
-        }  
+        }
      } catch (error) {
       console.error(error)
      }

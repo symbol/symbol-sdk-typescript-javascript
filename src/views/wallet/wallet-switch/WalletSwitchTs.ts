@@ -1,8 +1,8 @@
 import {mapState} from 'vuex'
-import {AppWallet} from '@/core/utils/wallet.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import DeleteWalletCheck from './delete-wallet-check/DeleteWalletCheck.vue'
 import {formatXEMamount, formatNumber, localRead} from '@/core/utils/utils.ts'
+import {AppWallet} from "@/core/model"
 
 @Component({
     components: {DeleteWalletCheck},

@@ -1,9 +1,9 @@
-import {AppWallet} from "@/core/utils/wallet.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {Password} from "nem2-sdk"
 import {AppLock} from '@/core/utils/appLock'
 import {randomMnemonicWord} from "@/core/utils/hdWallet.ts"
+import {AppWallet} from "@/core/model"
 
 @Component({
     computed: {
@@ -114,7 +114,7 @@ export class MnemonicDialogTs extends Vue {
             .$refs['mnemonicWordDiv']['innerText']
             .replace(' ', '')
             .split("\n")
-        
+
         const wordInInputArray = inputArray.find(x => x === word)
         if (wordInInputArray === undefined) this.$refs['mnemonicWordDiv']['append'](wordSpan)
     }

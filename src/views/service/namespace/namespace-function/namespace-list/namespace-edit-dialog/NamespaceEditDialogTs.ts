@@ -3,8 +3,10 @@ import {mapState} from "vuex"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Password} from 'nem2-sdk'
 import {Message} from "@/config/index.ts"
-import {getAbsoluteMosaicAmount, createRootNamespace, AppWallet, formatSeconds} from '@/core/utils'
+import {getAbsoluteMosaicAmount,formatSeconds} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
+import {AppWallet} from "@/core/model"
+import {createRootNamespace} from "@/core/services/namespace"
 
 @Component({
     computed: {

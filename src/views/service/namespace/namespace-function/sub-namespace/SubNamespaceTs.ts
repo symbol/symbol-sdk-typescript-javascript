@@ -5,9 +5,11 @@ import {Message, networkConfig} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
-import { getAbsoluteMosaicAmount, createBondedMultisigTransaction, createCompleteMultisigTransaction, formatAddress, getNamespaces } from '@/core/utils'
+import { getAbsoluteMosaicAmount, formatAddress } from '@/core/utils'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {subNamespaceTypeConfig} from "@/config/view/namespace";
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/model"
+import {getNamespaces} from "@/core/services/namespace"
 
 
 @Component({

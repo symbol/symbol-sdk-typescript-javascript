@@ -56,7 +56,6 @@
       </div>
     </div>
 
-    <CollectionRecord :transactionType="TransferType.RECEIVED"/>
   </div>
 </template>
 

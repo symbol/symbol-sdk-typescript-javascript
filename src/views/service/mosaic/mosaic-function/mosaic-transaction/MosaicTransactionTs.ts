@@ -15,13 +15,13 @@ import {
 import {Message} from "@/config/index.ts"
 import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
 import {
-    formatSeconds, formatAddress, multisigAccountInfo, getAbsoluteMosaicAmount,
-    createBondedMultisigTransaction, createCompleteMultisigTransaction,
+    formatSeconds, formatAddress, getAbsoluteMosaicAmount,
 } from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
 import {formDataConfig} from "@/config/view/form";
 import { mosaicTransactionTypeConfig } from '@/config/view/mosaic'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, multisigAccountInfo} from "@/core/model"
 
 
 @Component({

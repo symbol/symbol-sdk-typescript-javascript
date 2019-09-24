@@ -1,6 +1,5 @@
 import routers from '@/router/routers.ts'
 import {Message, isWindows} from "@/config/index.ts"
-import {AppWallet} from '@/core/utils/wallet'
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import monitorSeleted from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
@@ -13,6 +12,7 @@ import {languageConfig} from "@/config/view/language"
 import {LanguageType} from "@/core/model/LanguageType"
 import {nodeListConfig} from "@/config/view/node"
 import {getCurrentBlockHeight, getCurrentNetworkMosaic, getNetworkGenerationHash} from "@/core/utils"
+import {AppWallet} from "@/core/model"
 
 @Component({
     computed: {

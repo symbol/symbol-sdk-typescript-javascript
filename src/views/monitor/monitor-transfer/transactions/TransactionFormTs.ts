@@ -5,10 +5,6 @@ import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.js'
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
-    createBondedMultisigTransaction,
-    createCompleteMultisigTransaction,
-    getMosaicList,
-    buildMosaicList,
     getAbsoluteMosaicAmount
 } from "@/core/utils"
 import {TransactionApiRxjs} from "@/core/api/TransactionApiRxjs"
@@ -16,7 +12,12 @@ import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
 import {standardFields} from "@/core/validation"
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
-import { formDataConfig } from '@/config/view/form'
+import {formDataConfig} from '@/config/view/form'
+import {
+    createBondedMultisigTransaction,
+    createCompleteMultisigTransaction,
+} from "@/core/model"
+import {buildMosaicList, getMosaicList} from "@/core/services/mosaics"
 
 @Component({
     components: {
@@ -125,8 +126,8 @@ export class TransactionFormTs extends Vue {
         return [...mosaicList]
             .filter(mosaic => mosaic.balance && mosaic.balance > 0
                 && (mosaic.expirationHeight === 'Forever'
-                || currentHeight < mosaic.expirationHeight))
-            .map(({name, balance, hex}) =>  ({
+                    || currentHeight < mosaic.expirationHeight))
+            .map(({name, balance, hex}) => ({
                 label: `${name || hex} (${balance.toLocaleString()})`,
                 value: hex,
             }))
@@ -152,15 +153,26 @@ export class TransactionFormTs extends Vue {
     addMosaic() {
         const {currentMosaic, mosaics, currentAmount} = this
         const {divisibility} = mosaics[currentMosaic].properties
-        this.formItem.mosaicTransferList
-            .push(
-                new Mosaic(
-                    new MosaicId(currentMosaic),
-                    UInt64.fromUint(
-                        getAbsoluteMosaicAmount(currentAmount, divisibility)
-                    )
+        const {mosaicTransferList} = this.formItem
+        // TODO check if mosaic exsted
+
+        // if (
+        //     mosaicTransferList.find((item, index, array) => {
+        //         if (item.id.toHex() == currentMosaic) {
+        //
+        //         }
+        //         return item.id.toHex() == currentMosaic
+        //     })
+        // )
+        //     return
+        mosaicTransferList.push(
+            new Mosaic(
+                new MosaicId(currentMosaic),
+                UInt64.fromUint(
+                    getAbsoluteMosaicAmount(currentAmount, divisibility)
                 )
             )
+        )
     }
 
     removeMosaic(index) {

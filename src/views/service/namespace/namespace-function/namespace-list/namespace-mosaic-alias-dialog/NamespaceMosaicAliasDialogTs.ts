@@ -3,10 +3,11 @@ import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Message} from "@/config/index.ts"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
-import {getAbsoluteMosaicAmount, AppWallet} from '@/core/utils'
+import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {AppMosaics} from '@/core/services/mosaics'
 import {MosaicNamespaceStatusType} from "@/core/model/MosaicNamespaceStatusType";
 import {formDataConfig} from "@/config/view/form";
+import {AppWallet} from "@/core/model"
 
 @Component({
     computed: {
