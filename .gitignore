@@ -88,3 +88,4 @@ modules.xml
 dist/
 ts-docs
 docs/
+.vscode/launch.json
