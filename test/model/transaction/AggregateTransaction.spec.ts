@@ -22,6 +22,7 @@ import {Account} from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import {PlainMessage} from '../../../src/model/message/PlainMessage';
 import {MosaicFlags} from '../../../src/model/mosaic/MosaicFlags';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
@@ -37,7 +38,6 @@ import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/Mosa
 import {MultisigAccountModificationTransaction} from '../../../src/model/transaction/MultisigAccountModificationTransaction';
 import {MultisigCosignatoryModification} from '../../../src/model/transaction/MultisigCosignatoryModification';
 import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
-import {PlainMessage} from '../../../src/model/transaction/PlainMessage';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import {TransferTransaction} from '../../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../../src/model/UInt64';

@@ -18,10 +18,10 @@ import {expect} from 'chai';
 import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
 import {Account} from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { PlainMessage } from '../../../src/model/message/PlainMessage';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
 import {CosignatureTransaction} from '../../../src/model/transaction/CosignatureTransaction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
-import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import {TestingAccount} from '../../conf/conf.spec';
 

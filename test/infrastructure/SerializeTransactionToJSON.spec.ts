@@ -23,6 +23,7 @@ import { AccountRestrictionType } from '../../src/model/account/AccountRestricti
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { MosaicFlags } from '../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../src/model/mosaic/MosaicNonce';
@@ -46,7 +47,6 @@ import { MosaicSupplyChangeTransaction } from '../../src/model/transaction/Mosai
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
 import { NamespaceRegistrationTransaction } from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import { SecretLockTransaction } from '../../src/model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../src/model/transaction/SecretProofTransaction';
 import { TransactionType } from '../../src/model/transaction/TransactionType' ;

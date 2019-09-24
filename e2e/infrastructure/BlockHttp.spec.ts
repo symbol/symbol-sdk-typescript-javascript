@@ -20,9 +20,9 @@ import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructu
 import {QueryParams} from '../../src/infrastructure/QueryParams';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { Deadline } from '../../src/model/transaction/Deadline';
-import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import { Transaction } from '../../src/model/transaction/Transaction';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 
