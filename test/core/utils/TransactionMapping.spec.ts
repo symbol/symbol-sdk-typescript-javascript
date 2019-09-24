@@ -509,7 +509,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as NamespaceRegistrationTransaction;
 
-        expect(transaction.namespaceType).to.be.equal(NamespaceRegistrationType.RootNamespace);
+        expect(transaction.registrationType).to.be.equal(NamespaceRegistrationType.RootNamespace);
         expect(transaction.namespaceName).to.be.equal('root-test-namespace');
 
     });
@@ -526,7 +526,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as NamespaceRegistrationTransaction;
 
-        expect(transaction.namespaceType).to.be.equal(NamespaceRegistrationType.SubNamespace);
+        expect(transaction.registrationType).to.be.equal(NamespaceRegistrationType.SubNamespace);
         expect(transaction.namespaceName).to.be.equal('root-test-namespace');
     });
 

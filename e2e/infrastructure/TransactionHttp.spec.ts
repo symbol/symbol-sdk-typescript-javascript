@@ -315,7 +315,7 @@ describe('TransactionHttp', () => {
             listener.confirmed(account.address).subscribe((transaction: NamespaceRegistrationTransaction) => {
                 expect(transaction.namespaceId, 'NamespaceId').not.to.be.undefined;
                 expect(transaction.namespaceName, 'NamespaceName').not.to.be.undefined;
-                expect(transaction.namespaceType, 'NamespaceRegistrationType').not.to.be.undefined;
+                expect(transaction.registrationType, 'RegistrationType').not.to.be.undefined;
                 done();
             });
             listener.status(account.address).subscribe((error) => {

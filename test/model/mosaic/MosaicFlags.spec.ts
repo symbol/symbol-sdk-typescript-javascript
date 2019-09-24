@@ -22,14 +22,7 @@ import {UInt64} from '../../../src/model/UInt64';
 describe('MosaicFlags', () => {
 
     it('should createComplete an MosaicFlags object with constructor', () => {
-        const propertiesDTO = {
-            flags: 7,
-            divisibility: 3,
-            duration: '1000',
-        };
-
         const mosaicFlags = new MosaicFlags(7);
-
         expect(mosaicFlags.supplyMutable).to.be.equal(true);
         expect(mosaicFlags.transferable).to.be.equal(true);
         expect(mosaicFlags.restrictable).to.be.equal(true);
