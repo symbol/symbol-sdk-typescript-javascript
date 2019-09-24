@@ -32,6 +32,7 @@ import { NamespaceId } from '../model/namespace/NamespaceId';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {Transaction} from '../model/transaction/Transaction';
+import { UInt64 } from '../model/UInt64';
 import {AccountRepository} from './AccountRepository';
 import { AccountInfoDTO,
          AccountNamesDTO,
@@ -45,7 +46,6 @@ import {Http} from './Http';
 import {NetworkHttp} from './NetworkHttp';
 import {QueryParams} from './QueryParams';
 import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
-import { UInt64 } from '../model/UInt64';
 
 /**
  * Account http repository.

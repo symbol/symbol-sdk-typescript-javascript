@@ -30,7 +30,6 @@ import {Wallet} from './Wallet';
 export class SimpleWallet extends Wallet {
 
     /**
-     * @internal
      * @param name
      * @param network
      * @param address

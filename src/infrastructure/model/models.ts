@@ -92,7 +92,6 @@ export * from './mosaicDefinitionTransactionDTO';
 export * from './mosaicIds';
 export * from './mosaicInfoDTO';
 export * from './mosaicNamesDTO';
-export * from './mosaicPropertiesDTO';
 export * from './mosaicRestrictionTypeEnum';
 export * from './mosaicSupplyChangeActionEnum';
 export * from './mosaicSupplyChangeTransactionBodyDTO';
@@ -239,7 +238,6 @@ import { MosaicDefinitionTransactionDTO } from './mosaicDefinitionTransactionDTO
 import { MosaicIds } from './mosaicIds';
 import { MosaicInfoDTO } from './mosaicInfoDTO';
 import { MosaicNamesDTO } from './mosaicNamesDTO';
-import { MosaicPropertiesDTO } from './mosaicPropertiesDTO';
 import { MosaicRestrictionTypeEnum } from './mosaicRestrictionTypeEnum';
 import { MosaicSupplyChangeActionEnum } from './mosaicSupplyChangeActionEnum';
 import { MosaicSupplyChangeTransactionBodyDTO } from './mosaicSupplyChangeTransactionBodyDTO';
@@ -406,7 +404,6 @@ let typeMap: {[index: string]: any} = {
     "MosaicIds": MosaicIds,
     "MosaicInfoDTO": MosaicInfoDTO,
     "MosaicNamesDTO": MosaicNamesDTO,
-    "MosaicPropertiesDTO": MosaicPropertiesDTO,
     "MosaicSupplyChangeTransactionBodyDTO": MosaicSupplyChangeTransactionBodyDTO,
     "MosaicSupplyChangeTransactionDTO": MosaicSupplyChangeTransactionDTO,
     "MosaicsNamesDTO": MosaicsNamesDTO,

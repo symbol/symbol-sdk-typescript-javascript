@@ -23,7 +23,6 @@ import { WalletAlgorithm } from './WalletAlgorithm';
  */
 export class EncryptedPrivateKey {
     /**
-     * @internal
      * @param encryptedKey
      * @param iv
      */
@@ -40,15 +39,14 @@ export class EncryptedPrivateKey {
     }
 
     /**
-     * @internal
      * Decrypt an encrypted private key
      * @param password
      */
-    decrypt(password: Password): string {
+    public decrypt(password: Password): string {
         const common = {
             password: password.value,
             privateKey: '',
-        }
+        };
         const wallet = {
             encrypted: this.encryptedKey,
             iv: this.iv,

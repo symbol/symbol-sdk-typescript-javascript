@@ -85,9 +85,12 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param mosaicNonce
      * @param mosaicId
-     * @param mosaicProperties
+     * @param signature
+     * @param restrictionKey
+     * @param targetAddress
+     * @param previousRestrictionValue
+     * @param newRestrictionValue
      * @param signature
      * @param signer
      * @param transactionInfo

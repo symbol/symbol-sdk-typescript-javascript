@@ -81,9 +81,11 @@ export class MosaicDefinitionTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param mosaicNonce
+     * @param nonce
      * @param mosaicId
-     * @param mosaicProperties
+     * @param flags
+     * @param divisibility
+     * @param duration
      * @param signature
      * @param signer
      * @param transactionInfo

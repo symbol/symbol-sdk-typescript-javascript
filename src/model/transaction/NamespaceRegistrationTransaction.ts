@@ -108,7 +108,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
      * @param version
      * @param deadline
      * @param maxFee
-     * @param namespaceType
+     * @param registrationType
      * @param namespaceName
      * @param namespaceId
      * @param duration
@@ -124,7 +124,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
                 /**
                  * The namespace type could be namespace or sub namespace
                  */
-                public readonly namespaceType: NamespaceRegistrationType,
+                public readonly registrationType: NamespaceRegistrationType,
                 /**
                  * The namespace name
                  */
@@ -158,10 +158,10 @@ export class NamespaceRegistrationTransaction extends Transaction {
                                     isEmbedded: boolean = false): Transaction | InnerTransaction {
         const builder = isEmbedded ? EmbeddedNamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload)) :
             NamespaceRegistrationTransactionBuilder.loadFromBinary(Convert.hexToUint8(payload));
-        const namespaceType = builder.getRegistrationType().valueOf();
+        const registrationType = builder.getRegistrationType().valueOf();
         const signerPublicKey = Convert.uint8ToHex(builder.getSignerPublicKey().key);
         const networkType = Convert.hexToUint8(builder.getVersion().toString(16))[0];
-        const transaction = namespaceType === NamespaceRegistrationType.RootNamespace ?
+        const transaction = registrationType === NamespaceRegistrationType.RootNamespace ?
             NamespaceRegistrationTransaction.createRootNamespace(
                 isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                     (builder as NamespaceRegistrationTransactionBuilder).getDeadline().timestamp),
@@ -210,7 +210,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
         const signerBuffer = new Uint8Array(32);
         const signatureBuffer = new Uint8Array(64);
         let transactionBuilder: NamespaceRegistrationTransactionBuilder;
-        if (this.namespaceType === NamespaceRegistrationType.RootNamespace) {
+        if (this.registrationType === NamespaceRegistrationType.RootNamespace) {
             transactionBuilder = new NamespaceRegistrationTransactionBuilder(
                 new SignatureDto(signatureBuffer),
                 new KeyDto(signerBuffer),
@@ -246,7 +246,7 @@ export class NamespaceRegistrationTransaction extends Transaction {
      */
     protected generateEmbeddedBytes(): Uint8Array {
         let transactionBuilder: EmbeddedNamespaceRegistrationTransactionBuilder;
-        if (this.namespaceType === NamespaceRegistrationType.RootNamespace) {
+        if (this.registrationType === NamespaceRegistrationType.RootNamespace) {
             transactionBuilder = new EmbeddedNamespaceRegistrationTransactionBuilder(
                 new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
                 this.versionToDTO(),
