@@ -25,8 +25,6 @@
  * Do not edit the class manually.
  */
 
-import { MosaicPropertiesDTO } from './mosaicPropertiesDTO';
-
 export class MosaicDTO {
     /**
     * Mosaic identifier.
