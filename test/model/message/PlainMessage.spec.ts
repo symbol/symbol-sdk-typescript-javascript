@@ -15,7 +15,7 @@
  */
 
 import {expect} from 'chai';
-import {EmptyMessage, PlainMessage} from '../../../src/model/transaction/PlainMessage';
+import {EmptyMessage, PlainMessage} from '../../../src/model/message/PlainMessage';
 
 describe('PlainMessage', () => {
 

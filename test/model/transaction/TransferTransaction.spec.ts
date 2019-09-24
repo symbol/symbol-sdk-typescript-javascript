@@ -18,10 +18,12 @@ import { expect } from 'chai';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { MessageType } from '../../../src/model/message/MessageType';
+import { PersistentHarvestingDelegationMessage } from '../../../src/model/message/PersistentHarvestingDelegationMessage';
+import { PlainMessage } from '../../../src/model/message/PlainMessage';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../../src/model/transaction/Deadline';
-import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
@@ -29,6 +31,8 @@ import { TestingAccount } from '../../conf/conf.spec';
 describe('TransferTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+    const harvesterPublicKey = '8A78C9E9B0E59D0F74C0D47AB29FBD523C706293A3FA9CD9FE0EEB2C10EA924A';
+    const messageMarker = 'FECC71C764BFE598';
     before(() => {
         account = TestingAccount;
     });
@@ -218,5 +222,77 @@ describe('TransferTransaction', () => {
         )).to.be.equal(
             '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000100746573742D6D657373616765' +
             '44B262C46CEABB8500E1F50500000000');
+    });
+
+    it('should create Transafer transaction for persistent harvesting delegation request transaction', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PersistentHarvestingDelegationMessage.create(harvesterPublicKey, account.privateKey, NetworkType.MIJIN_TEST),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(transferTransaction.message.type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
+    });
+
+    it('should createComplete an persistentDelegationRequestTransaction object and sign it', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PersistentHarvestingDelegationMessage.create(harvesterPublicKey, account.privateKey, NetworkType.MIJIN_TEST),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(transferTransaction.message.payload.length).to.be.equal(192 + messageMarker.length);
+        expect(transferTransaction.message.payload.includes(messageMarker)).to.be.true;
+        expect(transferTransaction.mosaics.length).to.be.equal(0);
+        expect(transferTransaction.recipientAddress).to.be.instanceof(Address);
+        expect((transferTransaction.recipientAddress as Address).plain())
+            .to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
+
+        const signedTransaction = transferTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(
+            240,
+            signedTransaction.payload.length,
+        ).includes(transferTransaction.message.payload)).to.be.true;
+    });
+
+    it('should throw exception with mosaic provided when creating persistentDelegationRequestTransaction', () => {
+        expect(() => {
+            TransferTransaction.create(
+                Deadline.create(),
+                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+                [NetworkCurrencyMosaic.createRelative(100)],
+                PersistentHarvestingDelegationMessage.create(harvesterPublicKey, account.privateKey, NetworkType.MIJIN_TEST),
+                NetworkType.MIJIN_TEST,
+            );
+        }).to.throw(Error, 'PersistentDelegationRequestTransaction should be created without Mosaic');
+    });
+
+    it('should throw exception with invalid message when creating persistentDelegationRequestTransaction', () => {
+        expect(() => {
+            TransferTransaction.create(
+                Deadline.create(),
+                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+                [NetworkCurrencyMosaic.createRelative(100)],
+                PersistentHarvestingDelegationMessage.create('abc', account.privateKey, NetworkType.MIJIN_TEST),
+                NetworkType.MIJIN_TEST,
+            );
+        }).to.throw();
+    });
+
+    it('should throw exception with invalid private key when creating persistentDelegationRequestTransaction', () => {
+        expect(() => {
+            TransferTransaction.create(
+                Deadline.create(),
+                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+                [NetworkCurrencyMosaic.createRelative(100)],
+                PersistentHarvestingDelegationMessage.create(harvesterPublicKey, 'abc', NetworkType.MIJIN_TEST),
+                NetworkType.MIJIN_TEST,
+            );
+        }).to.throw();
     });
 });

@@ -1,0 +1,44 @@
+/*
+ * Copyright 2019 NEM
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { Address } from '../account/Address';
+import { NetworkType } from '../blockchain/NetworkType';
+import { PersistentHarvestingDelegationMessage } from '../message/PersistentHarvestingDelegationMessage';
+import { UInt64 } from '../UInt64';
+import { Deadline } from './Deadline';
+import { TransferTransaction } from './TransferTransaction';
+
+export class PersistentDelegationRequestTransaction extends TransferTransaction {
+    /**
+     * Create a PersistentDelegationRequestTransaction with special message payload
+     * for presistent harvesting delegation unlocking
+     * @param deadline - The deadline to include the transaction.
+     * @param HarvestePublicKey - The harvester public key
+     * @param senderPrivateKey - The sender's private key
+     * @param networkType - The network type.
+     * @param maxFee - (Optional) Max fee defined by the sender
+     * @returns {TransferTransaction}
+     */
+    public static createPersistentDelegationRequestTransaction(
+                    deadline: Deadline,
+                    HarvestePublicKey: string,
+                    senderPrivateKey: string,
+                    networkType: NetworkType,
+                    maxFee: UInt64 = new UInt64([0, 0])): PersistentDelegationRequestTransaction {
+        const message = PersistentHarvestingDelegationMessage.create(HarvestePublicKey, senderPrivateKey, networkType);
+        return super.create(deadline, Address.createFromPublicKey(HarvestePublicKey, networkType), [], message, networkType, maxFee);
+    }
+}

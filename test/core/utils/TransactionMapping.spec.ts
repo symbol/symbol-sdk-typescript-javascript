@@ -25,6 +25,9 @@ import { AccountRestrictionType } from '../../../src/model/account/AccountRestri
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
+import { EncryptedMessage } from '../../../src/model/message/EncryptedMessage';
+import { MessageType } from '../../../src/model/message/MessageType';
+import { PlainMessage } from '../../../src/model/message/PlainMessage';
 import { MosaicFlags } from '../../../src/model/mosaic/MosaicFlags';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { MosaicNonce } from '../../../src/model/mosaic/MosaicNonce';
@@ -44,11 +47,9 @@ import { AddressAliasTransaction } from '../../../src/model/transaction/AddressA
 import { AggregateTransaction } from '../../../src/model/transaction/AggregateTransaction';
 import { CosignatoryModificationAction } from '../../../src/model/transaction/CosignatoryModificationAction';
 import { Deadline } from '../../../src/model/transaction/Deadline';
-import { EncryptedMessage } from '../../../src/model/transaction/EncryptedMessage';
 import { HashType } from '../../../src/model/transaction/HashType';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { LockFundsTransaction } from '../../../src/model/transaction/LockFundsTransaction';
-import { MessageType } from '../../../src/model/transaction/MessageType';
 import { MosaicAddressRestrictionTransaction } from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
 import { MosaicAliasTransaction } from '../../../src/model/transaction/MosaicAliasTransaction';
 import { MosaicDefinitionTransaction } from '../../../src/model/transaction/MosaicDefinitionTransaction';
@@ -59,7 +60,6 @@ import { MultisigAccountModificationTransaction } from '../../../src/model/trans
 import { MultisigCosignatoryModification } from '../../../src/model/transaction/MultisigCosignatoryModification';
 import { NamespaceMetadataTransaction } from '../../../src/model/transaction/NamespaceMetadataTransaction';
 import { NamespaceRegistrationTransaction } from '../../../src/model/transaction/NamespaceRegistrationTransaction';
-import { PlainMessage } from '../../../src/model/transaction/PlainMessage';
 import { SecretLockTransaction } from '../../../src/model/transaction/SecretLockTransaction';
 import { SecretProofTransaction } from '../../../src/model/transaction/SecretProofTransaction';
 import { TransactionType } from '../../../src/model/transaction/TransactionType' ;

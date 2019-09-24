@@ -19,6 +19,7 @@ import { Convert as convert } from '../format/Convert';
 import { KeyPair } from './KeyPair';
 import { SignSchema } from './SignSchema';
 import * as utility from './Utilities';
+
 // tslint:disable-next-line: no-var-requires
 const CryptoJS = require('crypto-js');
 export class Crypto {
@@ -223,7 +224,12 @@ export class Crypto {
      * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      * @return {string} - The encoded message
      */
-    public static _encode = (senderPriv, recipientPub, msg, iv, salt, signSchema: SignSchema) => {
+    public static _encode = (senderPriv: string,
+                             recipientPub: string,
+                             msg: string,
+                             iv: Uint8Array,
+                             salt: Uint8Array,
+                             signSchema: SignSchema): string => {
         // Errors
         if (!senderPriv || !recipientPub || !msg || !iv || !salt) { throw new Error('Missing argument !'); }
         // Processing
@@ -233,7 +239,7 @@ export class Crypto {
         const encIv = {
             iv: utility.ua2words(iv, 16),
         };
-        const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Hex.parse(convert.utf8ToHex(msg)), encKey, encIv);
+        const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Hex.parse(msg), encKey, encIv);
         // Result
         const result = convert.uint8ToHex(salt) + convert.uint8ToHex(iv) + CryptoJS.enc.Hex.stringify(encrypted.ciphertext);
         return result;
@@ -246,15 +252,20 @@ export class Crypto {
      * @param {string} recipientPub - A recipient public key
      * @param {string} msg - A text message
      * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
+     * @param {boolean} isHexString - Is payload string a hexadecimal string (default = false)
      * @return {string} - The encoded message
      */
-    public static encode = (senderPriv, recipientPub, msg, signSchema: SignSchema) => {
+    public static encode = (senderPriv: string,
+                            recipientPub: string,
+                            msg: string,
+                            signSchema: SignSchema,
+                            isHexString: boolean = false): string => {
         // Errors
         if (!senderPriv || !recipientPub || !msg) { throw new Error('Missing argument !'); }
         // Processing
         const iv = Crypto.randomBytes(16);
         const salt = Crypto.randomBytes(32);
-        const encoded = Crypto._encode(senderPriv, recipientPub, msg, iv, salt, signSchema);
+        const encoded = Crypto._encode(senderPriv, recipientPub, isHexString ? msg : convert.utf8ToHex(msg), iv, salt, signSchema);
         // Result
         return encoded;
     }
@@ -264,11 +275,18 @@ export class Crypto {
      *
      * @param {string} recipientPrivate - A recipient private key
      * @param {string} senderPublic - A sender public key
-     * @param {Uint8Array} _payload - An encrypted message payload in bytes
+     * @param {Uint8Array} payload - An encrypted message payload in bytes
+     * @param {Uint8Array} iv - 16-byte AES initialization vector
+     * @param {Uint8Array} salt - 32-byte salt
      * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      * @return {string} - The decoded payload as hex
      */
-    public static _decode = (recipientPrivate, senderPublic, payload, iv, salt, signSchema: SignSchema) => {
+    public static _decode = (recipientPrivate: string,
+                             senderPublic: string,
+                             payload: Uint8Array,
+                             iv: Uint8Array,
+                             salt: Uint8Array,
+                             signSchema: SignSchema): string => {
         // Error
         if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
         // Processing
@@ -292,10 +310,13 @@ export class Crypto {
      * @param {string} recipientPrivate - A recipient private key
      * @param {string} senderPublic - A sender public key
      * @param {string} payload - An encrypted message payload
-     * @param {SignSchema} signSchema The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
+     * @param {SignSchema} signSchema - The Sign Schema. (KECCAK(NIS1) / SHA3(Catapult))
      * @return {string} - The decoded payload as hex
      */
-    public static decode = (recipientPrivate, senderPublic, payload, signSchema: SignSchema) => {
+    public static decode = (recipientPrivate: string,
+                            senderPublic: string,
+                            payload: string,
+                            signSchema: SignSchema): string => {
         // Error
         if (!recipientPrivate || !senderPublic || !payload) { throw new Error('Missing argument !'); }
         // Processing

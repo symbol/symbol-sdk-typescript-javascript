@@ -24,12 +24,12 @@ import { Address } from '../../src/model/account/Address';
 import { MultisigAccountGraphInfo } from '../../src/model/account/MultisigAccountGraphInfo';
 import { MultisigAccountInfo } from '../../src/model/account/MultisigAccountInfo';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { AggregateTransaction } from '../../src/model/transaction/AggregateTransaction';
 import { CosignatoryModificationAction } from '../../src/model/transaction/CosignatoryModificationAction';
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
-import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { AggregateTransactionService } from '../../src/service/AggregateTransactionService';
 

@@ -42,7 +42,10 @@ export class EncryptedMessage extends Message {
      * @param {NetworkType} networkType - Catapult network type
      * @return {EncryptedMessage}
      */
-    public static create(message: string, recipientPublicAccount: PublicAccount, privateKey, networkType: NetworkType) {
+    public static create(message: string,
+                         recipientPublicAccount: PublicAccount,
+                         privateKey: string,
+                         networkType: NetworkType): EncryptedMessage {
         const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         return new EncryptedMessage(
             Crypto.encode(privateKey,

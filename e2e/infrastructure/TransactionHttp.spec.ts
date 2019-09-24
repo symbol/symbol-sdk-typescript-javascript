@@ -28,6 +28,7 @@ import {Account} from '../../src/model/account/Account';
 import { AccountRestrictionModificationAction } from '../../src/model/account/AccountRestrictionModificationAction';
 import { AccountRestrictionType } from '../../src/model/account/AccountRestrictionType';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Mosaic } from '../../src/model/mosaic/Mosaic';
 import {MosaicFlags} from '../../src/model/mosaic/MosaicFlags';
 import {MosaicId} from '../../src/model/mosaic/MosaicId';
@@ -61,7 +62,6 @@ import { MosaicMetadataTransaction } from '../../src/model/transaction/MosaicMet
 import {MosaicSupplyChangeTransaction} from '../../src/model/transaction/MosaicSupplyChangeTransaction';
 import { NamespaceMetadataTransaction } from '../../src/model/transaction/NamespaceMetadataTransaction';
 import {NamespaceRegistrationTransaction} from '../../src/model/transaction/NamespaceRegistrationTransaction';
-import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import {SecretLockTransaction} from '../../src/model/transaction/SecretLockTransaction';
 import {SecretProofTransaction} from '../../src/model/transaction/SecretProofTransaction';
 import { SignedTransaction } from '../../src/model/transaction/SignedTransaction';

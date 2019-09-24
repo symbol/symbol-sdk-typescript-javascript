@@ -20,6 +20,7 @@ import { Listener } from '../../src/infrastructure/Listener';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
 import { Account } from '../../src/model/account/Account';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
+import { PlainMessage } from '../../src/model/message/PlainMessage';
 import { Mosaic, UInt64 } from '../../src/model/model';
 import { MosaicId } from '../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
@@ -29,7 +30,6 @@ import { CosignatoryModificationAction } from '../../src/model/transaction/Cosig
 import { Deadline } from '../../src/model/transaction/Deadline';
 import { MultisigAccountModificationTransaction } from '../../src/model/transaction/MultisigAccountModificationTransaction';
 import { MultisigCosignatoryModification } from '../../src/model/transaction/MultisigCosignatoryModification';
-import { PlainMessage } from '../../src/model/transaction/PlainMessage';
 import { TransferTransaction } from '../../src/model/transaction/TransferTransaction';
 import { TransactionUtils } from './TransactionUtils';
 
