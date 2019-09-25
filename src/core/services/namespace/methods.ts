@@ -1,5 +1,6 @@
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
 import {Address} from "nem2-sdk"
+import {MosaicNamespaceStatusType} from "@/core/model/MosaicNamespaceStatusType"
 
 export const getNamespaces = async (address: string, node: string) => {
     let list = []
@@ -49,4 +50,55 @@ export const createRootNamespace = (namespaceName, duration, networkType, maxFee
 
 export const createSubNamespace = (rootNamespaceName, subNamespaceName, networkType, maxFee) => {
     return new NamespaceApiRxjs().createdSubNamespace(subNamespaceName, rootNamespaceName, networkType, maxFee)
+}
+
+export const sortByduration = (list) => {
+    return list.sort((a, b) => {
+        return b.endHeight - a.endHeight
+    })
+}
+export const sortByName = (list) => {
+    let namespaceMap = {}
+    let nameList = []
+    list.forEach(item => {
+        namespaceMap[item.label] = item
+    })
+    nameList = list.map(item => item.label).sort()
+    return nameList.map((item) => {
+        return namespaceMap[item]
+    })
+}
+
+export const sortByOwnerShip = (list) => {
+    return list.sort((a, b) => {
+        return b.isLinked
+    })
+}
+
+export const sortByBindType = (list) => {
+    let namespaceMap = {}
+    let nameList = []
+    list.forEach(item => {
+        namespaceMap[item.aliasType] = item
+    })
+    nameList = list.map(item => item.aliasType).sort((a, b) => {
+        return MosaicNamespaceStatusType.NOALIAS !== a.aliasType
+    })
+    return nameList.map((item) => {
+        return namespaceMap[item]
+    })
+}
+
+export const sortByBindInfo = (list) => {
+    let namespaceMap = {}
+    let nameList = []
+    list.forEach(item => {
+        namespaceMap[item.aliasTarget] = item
+    })
+    nameList = list.map(item => item.aliasTarget).sort((a, b) => {
+        return MosaicNamespaceStatusType.NOALIAS !== a.aliasTarget
+    })
+    return nameList.map((item) => {
+        return namespaceMap[item]
+    })
 }

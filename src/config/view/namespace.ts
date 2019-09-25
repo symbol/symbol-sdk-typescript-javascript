@@ -2,14 +2,14 @@ export const subNamespaceTypeConfig: Array<{
     name: string,
     isSelected: boolean
 }> = [
-        {
-            name: 'ordinary_account',
-            isSelected: true
-        }, {
-            name: 'multi_sign_account',
-            isSelected: false
-        }
-    ]
+    {
+        name: 'ordinary_account',
+        isSelected: true
+    }, {
+        name: 'multi_sign_account',
+        isSelected: false
+    }
+]
 
 export const rootNamespaceTypeConfig = [
     {
@@ -33,3 +33,12 @@ export const namespaceButtonConfig = [
         isSelected: false
     }
 ]
+
+export const namespaceSortType = {
+    byName: 1,
+    byDuration: 2,
+    byOwnerShip: 3,
+    byBindType: 4,
+    byBindInfo: 5
+
+}

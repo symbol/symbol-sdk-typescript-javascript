@@ -7,7 +7,7 @@
 <script lang="ts">
     import echarts from 'echarts'
     import {Component, Vue, Watch, Prop} from 'vue-property-decorator'
-    import {echarts as echartsConfigure} from '@/config/view/echarts.js'
+    import {echarts as echartsConfigure} from '@/config/view/echarts.ts'
 
     @Component
     export default class PieChart extends Vue {

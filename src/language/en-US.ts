@@ -408,7 +408,6 @@ export const en_US = {
     keep_it_in_a_safe_place_on_the_isolated_network_private_key: 'Keep it in a safe place on the isolated network. Do not share and store private key in a networked environment, such as emails, photo albums, social applications, etc.',
     please_accurately_copy_the_secure_backup_private_key: 'Please accurately copy the secure backup private key',
     display_private_key_QR_code: 'Display QR code',
-    copy_private_key: 'Copy private key',
     display_private_key: 'Private Key',
     This_password_is_used_to_encrypt_your_private_key_keystore: 'This password is your wallet and the decryption password when exporting the keystore again. Please avoid using an overly simple password.',
     // wallet create
@@ -576,7 +575,7 @@ export const en_US = {
     second_floor: 'Second floor',
     third_floor: 'Third floor',
     Harvester: 'Harvester',
-    create_account:'Create',
+    create_account: 'Create',
     // login
     WELCOME_TO_CATAPULT_NANO_WALLET: 'WELCOME TO CATAPULT-WALLET',
     This_is_a_distributed_desktop_wallet_based_on_catapult_come_and_explore_the_wonderful_journey_of_catapult: 'This is a distributed desktop wallet based on catapult. come and explore the wonderful journey of catapult.',
@@ -715,16 +714,18 @@ export const en_US = {
     account_password: 'Account password',
     hint: 'Hint',
     path: 'Path',
-    hd_wallet_path_error:'HD wallet path error',
+    hd_wallet_path_error: 'HD wallet path error',
     unconfirmed: 'Unconfirmed',
     from_to_action: 'From/To (action)',
     amount_asset: 'Amount (asset)',
     confirmations_height: 'Confirmations/Height',
     hash_deadline: 'Hash/Deadline',
     transaction_record: 'Transaction records',
-    import_mnemonic:'Import mnemonic',
-    update_wallet_name:'Update',
-    namespace_filter:'filter',
-    namespace_expired: 'expired',
-    namespace_Not_expired: 'Not expired'
+    import_mnemonic: 'Import mnemonic',
+    update_wallet_name: 'Update',
+    namespace_filter: 'Filter',
+    namespace_expired: 'Expired',
+    namespace_Not_expired: 'Not expired',
+    Hide_expired_namespaces: 'Expired namespaces',
+    Mosaic_alias:'Mosaic alias'
 }

@@ -1,7 +1,7 @@
 import {Mosaic, MosaicId, UInt64, Address, NamespaceId, AliasType} from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Message} from "@/config"
-import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.js'
+import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
