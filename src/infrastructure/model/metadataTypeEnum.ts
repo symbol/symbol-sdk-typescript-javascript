@@ -25,28 +25,12 @@
  * Do not edit the class manually.
  */
 
-import { SourceDTO } from './sourceDTO';
 
-export class ResolutionEntryDTO {
-    'source': SourceDTO;
-    'resolved': any;
-
-    static discriminator: string | undefined = undefined;
-
-    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "source",
-            "baseName": "source",
-            "type": "SourceDTO"
-        },
-        {
-            "name": "resolved",
-            "baseName": "resolved",
-            "type": "any"
-        }    ];
-
-    static getAttributeTypeMap() {
-        return ResolutionEntryDTO.attributeTypeMap;
-    }
+/**
+* Metadata type: * 0 - Account. * 1 - Mosaic. * 2 - Namespace. 
+*/
+export enum MetadataTypeEnum {
+    NUMBER_0 = <any> 0,
+    NUMBER_1 = <any> 1,
+    NUMBER_2 = <any> 2
 }
-

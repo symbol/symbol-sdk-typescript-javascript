@@ -26,59 +26,59 @@
  */
 
 
-export class MosaicDefinitionTransactionBodyDTO {
+export class MosaicAddressRestrictionTransactionBodyDTO {
     /**
-    * Random nonce used to generate the mosaic id.
+    * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
     */
-    'nonce': number;
+    'mosaicId': string;
     /**
-    * Mosaic identifier.
+    * Restriction key relative to the reference mosaic identifier.
     */
-    'id': string;
+    'restrictionKey': string;
     /**
-    * - 0x00 (none) - No flags present. - 0x01 (supplyMutable) - Mosaic supports supply changes even when mosaic owner owns partial supply. - 0x02 (transferable) - Mosaic supports transfers between arbitrary accounts. When not set, mosaic can only be transferred to and from mosaic owner. - 0x04 (restrictable) - Mosaic supports custom restrictions configured by mosaic owner. 
+    * Address decoded. If the bit 0 of byte 0 is not set (like in 0x90), then it is a regular address. Else (e.g. 0x91) it represents a namespace id which starts at byte 1. 
     */
-    'flags': number;
+    'targetAddress': string;
     /**
-    * Determines up to what decimal place the mosaic can be divided. Divisibility of 3 means that a mosaic can be divided into smallest parts of 0.001 mosaics. The divisibility must be in the range of 0 and 6. 
+    * Previous restriction value.
     */
-    'divisibility': number;
+    'previousRestrictionValue': string;
     /**
-    * Duration expressed in number of blocks.
+    * New restriction value.
     */
-    'duration': string;
+    'newRestrictionValue': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "nonce",
-            "baseName": "nonce",
-            "type": "number"
-        },
-        {
-            "name": "id",
-            "baseName": "id",
+            "name": "mosaicId",
+            "baseName": "mosaicId",
             "type": "string"
         },
         {
-            "name": "flags",
-            "baseName": "flags",
-            "type": "number"
+            "name": "restrictionKey",
+            "baseName": "restrictionKey",
+            "type": "string"
         },
         {
-            "name": "divisibility",
-            "baseName": "divisibility",
-            "type": "number"
+            "name": "targetAddress",
+            "baseName": "targetAddress",
+            "type": "string"
         },
         {
-            "name": "duration",
-            "baseName": "duration",
+            "name": "previousRestrictionValue",
+            "baseName": "previousRestrictionValue",
+            "type": "string"
+        },
+        {
+            "name": "newRestrictionValue",
+            "baseName": "newRestrictionValue",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return MosaicDefinitionTransactionBodyDTO.attributeTypeMap;
+        return MosaicAddressRestrictionTransactionBodyDTO.attributeTypeMap;
     }
 }
 

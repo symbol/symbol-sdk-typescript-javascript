@@ -25,28 +25,57 @@
  * Do not edit the class manually.
  */
 
-import { SourceDTO } from './sourceDTO';
 
-export class ResolutionEntryDTO {
-    'source': SourceDTO;
-    'resolved': any;
+export class AccountMetadataTransactionBodyDTO {
+    'targetPublicKey': string;
+    /**
+    * Metadata key scoped to source, target and type.
+    */
+    'scopedMetadataKey': string;
+    /**
+    * Change in value size in bytes.
+    */
+    'valueSizeDelta': number;
+    /**
+    * Value size in bytes.
+    */
+    'valueSize': number;
+    /**
+    * When there is an existing value, the new value is calculated as xor(previous-value, value).
+    */
+    'value': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "source",
-            "baseName": "source",
-            "type": "SourceDTO"
+            "name": "targetPublicKey",
+            "baseName": "targetPublicKey",
+            "type": "string"
         },
         {
-            "name": "resolved",
-            "baseName": "resolved",
-            "type": "any"
+            "name": "scopedMetadataKey",
+            "baseName": "scopedMetadataKey",
+            "type": "string"
+        },
+        {
+            "name": "valueSizeDelta",
+            "baseName": "valueSizeDelta",
+            "type": "number"
+        },
+        {
+            "name": "valueSize",
+            "baseName": "valueSize",
+            "type": "number"
+        },
+        {
+            "name": "value",
+            "baseName": "value",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return ResolutionEntryDTO.attributeTypeMap;
+        return AccountMetadataTransactionBodyDTO.attributeTypeMap;
     }
 }
 
