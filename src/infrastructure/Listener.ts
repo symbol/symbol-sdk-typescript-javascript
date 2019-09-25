@@ -409,11 +409,9 @@ export class Listener {
     private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
         let isCosignatoryAdded = false;
         if (transaction instanceof MultisigAccountModificationTransaction) {
-            transaction.modifications.forEach((_: MultisigCosignatoryModification) => {
-                if (_.modificiationType === CosignatoryModificationAction.Add && _.cosignatoryPublicAccount.address.equals(address)) {
-                    isCosignatoryAdded = true;
-                }
-            });
+            isCosignatoryAdded = transaction.modifications.find((_: MultisigCosignatoryModification) =>
+                _.modificiationType === CosignatoryModificationAction.Add &&
+                _.cosignatoryPublicAccount.address.equals(address)) !== undefined;
         }
         return isCosignatoryAdded;
     }
