@@ -5,5 +5,6 @@
 export enum CreateWalletType {
     keyStore = 'Ks',
     privateKey = 'Pk',
-    seed = 'Seed'
+    seed = 'Seed',
+    trezor= 'Trezor'
 }

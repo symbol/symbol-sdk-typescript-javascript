@@ -1,5 +1,6 @@
 import {networkConfig} from '@/config/index.ts'
 import {nodeListConfig} from "@/config/view/node";
+import { localRead } from "@/core/utils";
 
 declare interface appInfo {
     timeZone: number,
@@ -45,8 +46,9 @@ export default {
         balanceLoading: false,
         transactionsLoading: false,
         namespaceLoading: true,
+        xemUsdPrice: 0,
         multisigLoading: true,
-        xemUsdPrice: 0
+        _ENABLE_TREZOR_: localRead("_ENABLE_TREZOR_") === "true"
     },
     getters: {},
     mutations: {

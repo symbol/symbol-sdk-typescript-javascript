@@ -7,18 +7,14 @@ import namespace1Icon from "@/common/img/service/namespace1.png"
 import namespace2Icon from "@/common/img/service/namespace2.png"
 import apostille1Icon from "@/common/img/service/apostille1.png"
 import apostille2Icon from "@/common/img/service/apostille2.png"
+import { localRead } from "@/core/utils"
 
-export const walletFnNavConfig = [
-    {name: 'create', to: '/walletCreate', active: true},
-    {name: 'import', to: '/walletImportKeystore', active: false},
+const _walletFnNavConfig = [
+    { name: 'create', to: '/walletCreate', active: true },
+    { name: 'import', to: '/walletImportKeystore', active: false }
 ]
 
-export const walletStyleSheetType = {
-    seedWallet: 'walletItem_bg_1',
-    otherWallet: 'walletItem_bg_2',
-    activeWallet: 'walletItem_bg_0'
-}
-export const walletImportNavigatorConfig = [
+const _walletImportNavigatorConfig = [
     {
         title: 'privatekey',
         name: 'walletImportPrivatekey',
@@ -29,6 +25,29 @@ export const walletImportNavigatorConfig = [
         isSelected: false
     }
 ]
+
+if(localRead("_ENABLE_TREZOR_") === "true") {
+    _walletFnNavConfig.push({
+        name: 'hardware',
+        to: '/walletImportHardware',
+        active: false
+    })
+    _walletImportNavigatorConfig.push({
+        title: 'hardware',
+        name: 'walletImportHardware',
+        isSelected: false
+    })
+}
+
+export const walletFnNavConfig = _walletFnNavConfig;
+
+export const walletImportNavigatorConfig = _walletImportNavigatorConfig;
+
+export const walletStyleSheetType = {
+    seedWallet: 'walletItem_bg_1',
+    otherWallet: 'walletItem_bg_2',
+    activeWallet: 'walletItem_bg_0'
+}
 
 export const importKeystoreConfig = {
     walletName: 'keystore-wallet',

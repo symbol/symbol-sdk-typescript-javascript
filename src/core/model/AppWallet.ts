@@ -39,6 +39,7 @@ export class AppWallet {
     encryptedMnemonic: string | undefined
     path: string
     accountTitle: string
+    sourceType: string
     createTimestamp: number
 
     generateWalletTitle(createType: string, coinType: string, netType: string) {
@@ -57,6 +58,7 @@ export class AppWallet {
             this.publicKey = Account.createFromPrivateKey(privateKey, networkType).publicKey
             this.networkType = networkType
             this.active = true
+            this.sourceType = CreateWalletType.privateKey
             this.createTimestamp = new Date().valueOf()
             this.accountTitle = this.accountTitle || this.generateWalletTitle(CreateWalletType.privateKey, CoinType.xem, NetworkType[networkType])
             this.addNewWalletToList(store)
@@ -86,6 +88,7 @@ export class AppWallet {
             this.createTimestamp = new Date().valueOf()
             this.path = path
             this.accountTitle = this.generateWalletTitle(CreateWalletType.seed, CoinType.xem, NetworkType[networkType])
+            this.sourceType = CreateWalletType.seed
             this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
             this.addNewWalletToList(store)
             return this
@@ -115,8 +118,35 @@ export class AppWallet {
             this.createTimestamp = new Date().valueOf()
             this.path = path
             this.accountTitle = this.generateWalletTitle(CreateWalletType.seed, CoinType.xem, NetworkType[networkType])
+            this.sourceType = CreateWalletType.seed
             this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
             accountMap[accountName].seed = this.encryptedMnemonic
+            localSave('accountMap', JSON.stringify(accountMap))
+            this.addNewWalletToList(store)
+            return this
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    createFromTrezor(
+        name: string,
+        networkType: NetworkType,
+        path: string,
+        publicKey: string,
+        address: string,
+        store: any): AppWallet {
+        try {
+            const accountName = store.state.account.accountName
+            const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
+            this.name = name
+            this.address = address
+            this.publicKey = publicKey
+            this.networkType = networkType
+            this.active = true
+            this.path = path
+            this.accountTitle = this.generateWalletTitle(CreateWalletType.trezor, CoinType.xem, NetworkType[networkType])
+            this.sourceType = CreateWalletType.trezor
             localSave('accountMap', JSON.stringify(accountMap))
             this.addNewWalletToList(store)
             return this
@@ -137,6 +167,7 @@ export class AppWallet {
             const keystore = words.toString(CryptoJS.enc.Utf8)
             this.simpleWallet = JSON.parse(keystore)
             this.accountTitle = this.generateWalletTitle(CreateWalletType.keyStore, CoinType.xem, NetworkType[networkType])
+            this.sourceType = CreateWalletType.keyStore
             const {privateKey} = this.getAccount(password)
             this.createFromPrivateKey(name, password, privateKey, networkType, store)
             return this

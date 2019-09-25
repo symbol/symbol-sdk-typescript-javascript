@@ -50,6 +50,7 @@ export const Message = {
     INCONSISTENT_PASSWORD_ERROR: 'createLockCheckPWRemind',
     PASSWORD_HIT_SETTING_ERROR: 'createLockPWTxtRemind',
     WRONG_PASSWORD_ERROR: 'password_error',
+    WRONG_WALLET_NAME_ERROR: 'wrong_wallet_name_error',
     MOSAIC_NAME_NULL_ERROR: 'mosaic_name_can_not_be_null',
     QR_GENERATION_ERROR: 'QR_code_generation_failed',
     ADDRESS_FORMAT_ERROR: 'address_format_error',

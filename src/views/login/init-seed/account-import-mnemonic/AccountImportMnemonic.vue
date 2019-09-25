@@ -37,10 +37,10 @@
         </li>
       </ul>
 
-    </div>
-    <div class="bottom_button ">
-      <span class="back left" @click="toBack"> {{$t('back')}}</span>
-      <span class="import right" @click="submit">{{$t('import')}}</span>
+      <div class="bottom_button ">
+        <span class="back left" @click="toBack"> {{$t('back')}}</span>
+        <span class="import right" @click="submit">{{$t('import')}}</span>
+      </div>
     </div>
     <CheckPasswordDialog
             :showCheckPWDialog="showCheckPWDialog"
@@ -49,7 +49,6 @@
             @checkEnd="checkEnd"
     ></CheckPasswordDialog>
   </div>
-
 </template>
 
 <script lang="ts">

@@ -95,6 +95,10 @@ export const formDataConfig = {
         privateKey: 'FB628AF4276F696AD1FA85B7AB1E49CFD896E5EC85000E3179EEEA59717DD8DE',
         networkType: NetworkType.MIJIN_TEST,
         walletName: 'wallet-privateKey',
+    },
+    trezorImportForm: {
+        networkType: 0,
+        accountIndex: 0,
+        walletName: 'Trezor Wallet'
     }
-
 }

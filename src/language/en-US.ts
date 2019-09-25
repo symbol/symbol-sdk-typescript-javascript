@@ -34,6 +34,8 @@ export const en_US = {
     successful_operation: 'Request succeeded',
     operation_failed: 'Request Failed',
     address_alias_not_exist: 'Address alias not exist',
+    wrong_wallet_name_error: 'Wallet name is incorrect',
+
     // vote
     over: 'Over',
     initiation_address: 'Initiation address',
@@ -53,6 +55,7 @@ export const en_US = {
     // the_more_you_set_the_cost_the_higher_the_processing_priority: 'Increasing the fee makes the transaction processing quicker.(1000000 gas = 1.0xem)',
     the_more_you_set_the_cost_the_higher_the_processing_priority: '',
     create: 'Create',
+    hardware: 'Hardware',
     all: 'All',
     processing: 'Processing',
     already_involved: 'Voted',
@@ -265,6 +268,7 @@ export const en_US = {
     alias_selection: 'Alias selection',
     password: 'Password',
     please_enter_your_wallet_password: 'Please enter your wallet password',
+    please_confirm_your_wallet_name: 'Please confirm your wallet name',
     please_enter_your_new_wallet_name: 'Please enter your new wallet name',
     bind: 'Bind',
     mosaic_alias_operation: 'Mosaic alias operation',
@@ -712,6 +716,14 @@ export const en_US = {
     set_wallet_path: 'Set wallet path',
     please_set_your_wallet_path: 'Please set your wallet path',
     please_accurately_copy_the_hd_wallet_path: 'Please accurately copy the hd-wallet path',
+
+    //trezor
+    connect_trezor_title: 'Connect to a Trezor Hardware Wallet',
+    connect_trezor_prompt: 'Connect to Trezor',
+    connect_trezor_description: 'Import a wallet from a Trezor device',
+    trezor_description: 'Trezor will keep your private keys secure and only expose them for signing transactions',
+    choose_account_index: 'Choose account index (0 - 1,000,000)',
+
     Please_choose_account_name: 'Please choose account name',
     account_password: 'Account password',
     hint: 'Hint',

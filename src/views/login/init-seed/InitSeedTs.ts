@@ -1,6 +1,8 @@
 import {Component, Vue} from 'vue-property-decorator'
 import AccountImportMnemonic from '@/views/login/init-seed/account-import-mnemonic/AccountImportMnemonic.vue'
 import AccountCreateMnemonic from '@/views/login/init-seed/account-create-mnemonic/AccountCreateMnemonic.vue'
+import AccountImportHardware from '@/views/login/init-seed/account-import-hardware/AccountImportHardware.vue'
+
 import SeedCreatedGuide from '@/views/login/init-seed/seed-created-guide/SeedCreatedGuide.vue'
 import {mapState} from "vuex"
 import { walletFnNavConfig } from '@/config/view/wallet'
@@ -9,6 +11,7 @@ import { walletFnNavConfig } from '@/config/view/wallet'
     components: {
         AccountImportMnemonic,
         AccountCreateMnemonic,
+        AccountImportHardware,
         SeedCreatedGuide
     },
     computed: {
@@ -31,7 +34,7 @@ export class InitSeedTs extends Vue {
     isCreated(form) {
         this.createForm = form
         this.walletCreated = true
-        this.updatePageIndex(2)
+        this.updatePageIndex(-1)
     }
 
     updatePageIndex(index) {

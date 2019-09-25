@@ -18,10 +18,10 @@
           <p class="checkRemind">
             {{$t('delete_wallet_tip', {walletName :getWallet.name})}}
             {{$t('delete_wallet_tip')}}</p>
-          <Form :model="wallet">
+          <Form :model="confirmation">
             <FormItem>
-              <Input v-model="wallet.password" type="password" required
-                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
+              <Input v-model="confirmation.value" type="password" required
+                     :placeholder="$t(confirmationPrompt)"></Input>
             </FormItem>
             <FormItem>
               <Button type="success" @click="submit"> {{$t('confirm')}}</Button>
