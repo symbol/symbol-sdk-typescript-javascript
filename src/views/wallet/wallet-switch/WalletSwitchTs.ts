@@ -5,8 +5,7 @@ import {formatXEMamount, formatNumber, localRead} from '@/core/utils/utils.ts'
 import {AppWallet} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {walletStyleSheetType} from '@/config/view/wallet.ts'
-import TheWalletUpdate from '@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdate.vue'
-
+import TheWalletUpdate from "@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdate.vue"
 @Component({
     components: {TheWalletDelete, TheWalletUpdate},
     computed: {
@@ -25,8 +24,6 @@ export class WalletSwitchTs extends Vue {
     walletToDelete: AppWallet | boolean = false
     thirdTimestamp = 0
     walletStyleSheetType = walletStyleSheetType
-    showUpdateDialog = false
-    walletToUpdate = {}
 
     get walletList() {
         let {walletList} = this.app
@@ -52,12 +49,9 @@ export class WalletSwitchTs extends Vue {
         return this.activeAccount.wallet
     }
 
+
     get currentXEM1() {
         return this.activeAccount.currentXEM1
-    }
-
-    closeUpdateDialog() {
-        this.showUpdateDialog = false
     }
 
     closeCheckPWDialog() {
