@@ -1,6 +1,6 @@
 import {Component, Vue} from 'vue-property-decorator'
 import MultisigMap from './multisig-functions/multisig-map/MultisigMap.vue'
-import MultisigCosign from './multisig-functions/multisig-cosign/MultisigCosign.vue'
+// import MultisigCosign from './multisig-functions/multisig-cosign/MultisigCosign.vue'
 import MultisigConversion from './multisig-functions/multisig-conversion/MultisigConversion.vue'
 import MultisigManagement from './multisig-functions/multisig-management/MultisigManagement.vue'
 import {multisigButtonConfig} from "@/config/view/multisig";
@@ -11,7 +11,7 @@ import {multisigButtonConfig} from "@/config/view/multisig";
         MultisigMap,
         MultisigConversion,
         MultisigManagement,
-        MultisigCosign
+        // MultisigCosign
     }
 })
 export class MultisigTs extends Vue {

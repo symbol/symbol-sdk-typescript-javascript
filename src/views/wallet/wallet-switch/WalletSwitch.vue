@@ -19,7 +19,7 @@
           </Col>
           <Col span="9">
             <div @click.stop>
-              <p class="walletTypeTxt">{{item.isMultisig ? $t('Public_account') : ''}}</p>
+              <p class="walletTypeTxt">{{isMultisig(item.address) ? $t('Public_account') : ''}}</p>
               <div class="options">
                 <Poptip placement="bottom">
                   <img src="@/common/img/wallet/moreActive.png">

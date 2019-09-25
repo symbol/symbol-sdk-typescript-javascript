@@ -58,6 +58,7 @@ export const initMosaic = (wallet, that) => {
             const mosaicAmountViews = await mosaicsAmountViewFromAddress(node, address)
             const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
             await store.commit('UPDATE_MOSAICS', appMosaics)
+            // @TODO: update account balance should not be necessary anymore
             new AppWallet(wallet).updateAccountBalance(mosaicList[currentXEM1].balance, store)
             await Promise.all([
                 store.commit('SET_BALANCE_LOADING', false),

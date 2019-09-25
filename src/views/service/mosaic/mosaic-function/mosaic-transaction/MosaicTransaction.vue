@@ -33,9 +33,9 @@
         </div>
 
         <div class="form_item">
-          <span class="key">{{$t('severability')}}</span>
+          <span class="key">{{$t('mosaic_divisibility')}}</span>
           <span class="value">
-            <input v-model="formItem.divisibility" type="text" :placeholder="$t('severability')">
+            <input v-model="formItem.divisibility" type="text" :placeholder="$t('mosaic_divisibility')">
             <span class="number_controller">
               <img @click="addSeverabilityAmount " class="pointer"
                    src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>

@@ -1,6 +1,6 @@
 import {copyTxt} from '@/core/utils/utils.ts'
 import {QRCodeGenerator} from 'nem2-qr-library'
-import {Address} from 'nem2-sdk'
+import {Address, MultisigAccountInfo} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import WalletAlias from './wallet-function/wallet-alias/WalletAlias.vue'
 import WalletFilter from './wallet-function/wallet-filter/WalletFilter.vue'
@@ -9,6 +9,7 @@ import MnemonicDialog from '@/views/wallet/mnemonic-dialog/MnemonicDialog.vue'
 import PrivatekeyDialog from '@/views/wallet/privatekey-dialog/PrivatekeyDialog.vue'
 import WalletUpdatePassword from './wallet-function/wallet-update-password/WalletUpdatePassword.vue'
 import {mapState} from "vuex"
+import {AppWallet} from '@/core/model'
 
 @Component({
     components: {
@@ -36,8 +37,14 @@ export class WalletDetailsTs extends Vue {
     showPrivatekeyDialog: boolean = false
     functionShowList = [true, false]
 
-    get wallet() {
+    get wallet(): AppWallet {
         return this.activeAccount.wallet
+    }
+
+    get isMultisig(): boolean {
+        const multisigAccountInfo: MultisigAccountInfo = this.activeAccount.multisigAccountInfo[this.wallet.address]
+        if (!multisigAccountInfo) return false
+        return multisigAccountInfo.cosignatories.length > 0
     }
 
     get getAddress() {

@@ -1,4 +1,3 @@
-import {localRead} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import GuideInto from '@/views/login/guide-into/GuideInto.vue'
 import WalletFn from '@/views/wallet/wallet-fn/WalletFn.vue'

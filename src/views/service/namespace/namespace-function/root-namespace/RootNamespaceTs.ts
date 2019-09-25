@@ -1,7 +1,6 @@
 import {mapState} from "vuex"
-import {Address} from "nem2-sdk"
+import {PublicAccount, MultisigAccountInfo} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
-import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {Message, networkConfig} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
@@ -34,7 +33,6 @@ export class RootNamespaceTs extends Vue {
     showCheckPWDialog = false
     transactionList = []
     otherDetails: any = {}
-    multisigPublickeyList: Array<any> = []
     typeList = rootNamespaceTypeConfig
     form = formDataConfig.rootNamespaceForm
 
@@ -69,6 +67,30 @@ export class RootNamespaceTs extends Vue {
             aggregateFee: .5,
             lockFee: 10
         }
+    }
+    
+    get multisigAccountInfo(): MultisigAccountInfo {
+        return this.activeAccount.multisigAccountInfo[this.wallet.address]
+    }
+    
+    get accountPublicKey(): string {
+        return this.activeAccount.wallet.publicKey
+    }
+    
+    get multisigAccounts(): PublicAccount[] {
+        return this.multisigAccountInfo ? this.multisigAccountInfo.multisigAccounts : []
+    }
+    
+    get multisigPublickeyList(): any {
+        const {multisigAccounts} = this
+        const {accountPublicKey} = this
+        const mainPublicKeyItem = {
+            value: accountPublicKey,
+            label: '(self)' + accountPublicKey
+        }
+
+        return [mainPublicKeyItem, ...multisigAccounts
+            .map(({publicKey}) => ({value: publicKey, label: publicKey}))]
     }
 
     formatAddress(address) {
@@ -209,34 +231,10 @@ export class RootNamespaceTs extends Vue {
         return flag
     }
 
-
-    getMultisigAccountList() {
-        if (!this.wallet) return
-        const that = this
-        const {address, node} = this
-        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
-            that.multisigPublickeyList = multisigInfo.multisigAccounts.map((item: any) => {
-                item.value = item.publicKey
-                item.label = item.publicKey
-                return item
-            })
-        })
-    }
-
-    @Watch('form.multisigPublickey')
-    async onMultisigPublickeyChange() {
-        const that = this
-        const {networkType} = this.wallet
-        const {node} = this
-        const {multisigPublickey} = this.form
-        if (multisigPublickey.length !== 64) {
-            return
-        }
-        const address = Address.createFromPublicKey(multisigPublickey, networkType).toDTO().address
-        // @TODO: catch error
-        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
-            that.currentMinApproval = multisigInfo.minApproval
-        })
+    @Watch('formItem.multisigPublickey')
+    onMultisigPublickeyChange(newPublicKey, oldPublicKey) {
+        if (!newPublicKey || newPublicKey === oldPublicKey) return
+        this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', newPublicKey)
     }
 
     showErrorMessage(message) {
@@ -293,10 +291,5 @@ export class RootNamespaceTs extends Vue {
             return
         }
         this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && aggregateFee + '' !== '' && lockFee + '' !== '' && innerFee + '' !== '' && multisigPublickey && multisigPublickey.length === 64
-    }
-
-    // @TODO: manage it at a higher level, put account list in the sore
-    mounted() {
-        this.getMultisigAccountList()
     }
 }

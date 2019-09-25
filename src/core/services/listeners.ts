@@ -19,6 +19,7 @@ export class ChainListeners {
     confirmedTxListener: Listener
     txStatusListener: Listener
     newBlocksListener: Listener
+    multisigConfirmedListener: Listener
 
     start() {
         console.log(`starting chain listener for ${this.address} on ${this.node}`)
@@ -44,6 +45,30 @@ export class ChainListeners {
         this.node = endpoint.replace('http', 'ws')
         console.log(`ChainListeners switchEndpoint to ${this.node}`)
         this.chainListener()
+    }
+
+    switchMultisigConfirmedListener(address: string): void {
+        this.multisigConfirmedListener && this.multisigConfirmedListener.close()
+        const that = this.app
+        const receivedTransactionMessage = that.$t('Multisig_Transaction_Reception')
+        const multisigAccountAddress = address
+
+        this.multisigConfirmedListener = new Listener(this.node, WebSocket)
+        this.multisigConfirmedListener
+            .open()
+            .then(() => {
+                this.confirmedTxListener
+                    .confirmed(Address.createFromRawAddress(multisigAccountAddress))
+                    .pipe(filter((transaction: any) => transaction.transactionInfo !== undefined))
+                    .subscribe((transaction) => {
+                        that.$store.commit('ADD_CONFIRMED_MULTISIG_ACCOUNT_TRANSACTION', {address, transaction})
+                        that.$Notice.destroy()
+                        that.$Notice.success({
+                            title: receivedTransactionMessage, // quickfix
+                            duration: 4,
+                        })
+                    })
+            })
     }
 
     unconfirmedListener(): void {

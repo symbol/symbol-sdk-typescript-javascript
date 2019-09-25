@@ -1,2 +1,3 @@
-export * from '@/core/services/transactions'
-export * from '@/core/services/mosaics'
+export * from './transactions'
+export * from './mosaics'
+export * from './namespace'

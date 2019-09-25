@@ -1,47 +1,20 @@
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
-import {Address} from "nem2-sdk"
+import {NamespaceHttp, Address} from 'nem2-sdk';
+import {AppNamespace} from '@/core/model';
 import {MosaicNamespaceStatusType} from "@/core/model/MosaicNamespaceStatusType"
 
-export const getNamespaces = async (address: string, node: string) => {
-    let list = []
-    let namespace = {}
-    await new NamespaceApiRxjs().getNamespacesFromAccount(
-        Address.createFromRawAddress(address),
-        node
-    ).then((namespacesFromAccount) => {
-        namespacesFromAccount.result.namespaceList
-            .sort((a, b) => {
-                return a['namespaceInfo']['depth'] - b['namespaceInfo']['depth']
-            }).map((item, index) => {
-            if (!item) {
-                return
-            }
-            if (!namespace.hasOwnProperty(item.namespaceInfo.id.toHex())) {
-                namespace[item.namespaceInfo.id.toHex()] = item.namespaceName
-            } else {
-                return
-            }
-            let namespaceName = ''
-            item.namespaceInfo.levels.map((item, index) => {
-                namespaceName += namespace[item.id.toHex()] + '.'
-            })
-            namespaceName = namespaceName.slice(0, namespaceName.length - 1)
-            const newObj = {
-                id: item.namespaceInfo.id,
-                hex: item.namespaceInfo.id.toHex(),
-                value: namespaceName,
-                label: namespaceName,
-                namespaceInfo: item.namespaceInfo,
-                isActive: item.namespaceInfo.active,
-                alias: item.namespaceInfo.alias,
-                levels: item.namespaceInfo.levels.length,
-                endHeight: item.namespaceInfo.endHeight.compact(),
-            }
-            list.push(newObj)
-
-        })
-    })
-    return list
+export const getNamespacesFromAddress = async ( address: string,
+                                                node: string): Promise<AppNamespace[]> => {
+  try {
+    const namespaceHttp = new NamespaceHttp(node)
+    const accountAddress = Address.createFromRawAddress(address)
+    const namespaceInfo = await namespaceHttp.getNamespacesFromAccount(accountAddress).toPromise()
+    const namespaceIds = namespaceInfo.map(nsInfo => nsInfo.id)
+    const namespaceNames = await namespaceHttp.getNamespacesName(namespaceIds).toPromise()
+    return namespaceInfo.map(nsInfo => AppNamespace.fromNamespaceInfo(nsInfo, namespaceNames))
+  } catch (error) {
+    throw new Error(error)
+  }
 }
 
 export const createRootNamespace = (namespaceName, duration, networkType, maxFee) => {

@@ -5,7 +5,6 @@ import {mapState} from "vuex"
 import {TransferType} from "@/core/model/TransferType";
 import { monitorTransferTransferTypeConfig } from '@/config/view/monitor'
 
-
 @Component({
     components: {
         MultisigTransferTransaction,

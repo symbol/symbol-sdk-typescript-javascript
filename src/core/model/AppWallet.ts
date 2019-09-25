@@ -9,6 +9,7 @@ import {
     Password,
     WalletAlgorithm,
     Listener,
+    MultisigAccountInfo,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
@@ -35,12 +36,10 @@ export class AppWallet {
     active: boolean | undefined
     style: string | undefined
     balance: number | 0
-    isMultisig: boolean | undefined
     encryptedMnemonic: string | undefined
     path: string
     accountTitle: string
     createTimestamp: number
-
 
     generateWalletTitle(createType: string, coinType: string, netType: string) {
         return `${createType}-${coinType}-${netType}`
@@ -314,8 +313,7 @@ export class AppWallet {
         const accountName = store.state.account.accountName
         const accountMap = localRead('accountMap') === ''
             ? {} : JSON.parse(localRead('accountMap'))
-        const localData: any[] = accountMap.wallets
-
+        const localData: any[] = accountMap[accountName].wallets
         if (!localData.length) throw new Error('error at update wallet, no wallets in storage')
 
         let newWalletList = [...localData]
@@ -333,11 +331,12 @@ export class AppWallet {
 
     async setMultisigStatus(node: string, store: any): Promise<void> {
         try {
-            await new AccountApiRxjs().getMultisigAccountInfo(this.address, node).toPromise()
-            this.isMultisig = true
-            this.updateWallet(store)
+            const multisigAccountInfo = await new AccountApiRxjs().getMultisigAccountInfo(this.address, node).toPromise()
+            store.commit('SET_MULTISIG_ACCOUNT_INFO', {address: this.address, multisigAccountInfo})
+            store.commit('SET_MULTISIG_LOADING', false)
         } catch (error) {
-            // Do nothing
+            store.commit('SET_MULTISIG_ACCOUNT_INFO', {address: this.address, multisigAccountInfo: null} )
+            store.commit('SET_MULTISIG_LOADING', false)
         }
     }
 
@@ -379,12 +378,6 @@ export class AppWallet {
             currentXEM1,
         )
     }
-}
-
-export const multisigAccountInfo = (address, node) => {
-    return new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
-        return multisigInfo
-    })
 }
 
 export const createBondedMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, fee: number) => {

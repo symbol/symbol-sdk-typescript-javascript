@@ -8,7 +8,7 @@
             <p>
               <span class="tit">{{$t('Wallet_type')}}</span>
               <span class="walletType" v-if="wallet">
-                {{wallet.isMultisig ? $t('Public_account'):$t('Private_account')}}
+                {{isMultisig ? $t('Public_account'):$t('Private_account')}}
               </span>
             </p>
             <p>

@@ -134,7 +134,7 @@
       <span class="xem_tips">{{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}</span>
 
 
-      <div v-if="isMultisig">
+      <div v-if="isSelectedAccountMultisig">
         <div class="fee flex_center">
           <span class="title">{{$t('bonded_fee')}}</span>
           <span class="value radius flex_center">

@@ -18,10 +18,9 @@ import {
     formatSeconds, formatAddress, getAbsoluteMosaicAmount,
 } from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
 import {formDataConfig} from "@/config/view/form";
 import { mosaicTransactionTypeConfig } from '@/config/view/mosaic'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, multisigAccountInfo} from "@/core/model"
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/model"
 
 
 @Component({
@@ -142,7 +141,7 @@ export class MosaicTransactionTs extends Vue {
         this.transactionDetail = {
             "address": address,
             "supply": supply,
-            "severability": divisibility,
+            "mosaic_divisibility": divisibility,
             "duration": duration,
             "fee": innerFee,
             'transmittable': transferable,
@@ -331,47 +330,12 @@ export class MosaicTransactionTs extends Vue {
         this.showCheckDialog()
     }
 
-
-    getMultisigAccountList() {
-        const that = this
-        if (!this.wallet) return
-        const {address, node} = this
-        new MultisigApiRxjs().getMultisigAccountInfo(address, node).subscribe((multisigInfo) => {
-            that.multisigPublickeyList = multisigInfo.multisigAccounts.map((item: any) => {
-                item.value = item.publicKey
-                item.label = item.publicKey
-                return item
-            })
-        })
-    }
-
     @Watch('formItem.multisigPublickey')
-    async onMultisigPublickeyChange() {
-        const that = this
-        const {multisigPublickey} = this.formItem
-        if (multisigPublickey.length !== 64) {
-            return
-        }
-        if (multisigPublickey.length !== 64) {
-            return
-        }
-        const {node, networkType} = this
-        let address = Address.createFromPublicKey(multisigPublickey, networkType)['address']
-        const multisigInfo = multisigAccountInfo(address, node)
-        that.currentMinApproval = multisigInfo['minApproval']
-
+    @Watch('formItem.multisigPublickey')
+    onMultisigPublickeyChange(newPublicKey, oldPublicKey) {
+        if (!newPublicKey || newPublicKey === oldPublicKey) return
+        this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', newPublicKey)
     }
-
-    // @Watch('formItem', {immediate: true, deep: true})
-    // onFormItemChange() {
-    //     const {supply, divisibility, duration, innerFee, aggregateFee, lockFee, multisigPublickey} = this.formItem
-    //     // isCompleteForm
-    //     if (this.typeList[0].isSelected) {
-    //         this.isCompleteForm = supply !== '' && divisibility !== '' && duration !== '' && innerFee !== ''
-    //         return
-    //     }
-    //     this.isCompleteForm = supply !== '' && divisibility !== '' && duration !== '' && innerFee !== '' && aggregateFee !== '' && lockFee !== '' && multisigPublickey && multisigPublickey.length === 64
-    // }
 
     initData() {
         this.durationChange()
@@ -391,11 +355,5 @@ export class MosaicTransactionTs extends Vue {
             this.formItem.duration = 0
         }
         this.durationIntoDate = formatSeconds(duration * 12)
-    }
-
-    mounted() {
-        this.initData()
-        // @TODO multisig account list at higher level
-        this.getMultisigAccountList()
     }
 }

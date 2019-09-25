@@ -1,8 +1,9 @@
-import {Account} from 'nem2-sdk'
+import {Account, Transaction, MultisigAccountInfo} from 'nem2-sdk'
 import {defaultNetworkConfig} from "@/config/index"
-import {FormattedTransaction} from '@/core/model'
+import {FormattedTransaction, AddressAndTransaction, AppNamespace, AddressAndNamespaces, AddressAndMosaics, AddressAndMultisigInfo} from '@/core/model'
 import {AppMosaic} from '@/core/model'
 import {nodeListConfig} from "@/config/view/node"
+import Vue from 'vue'
 
 declare interface account {
     node: string,
@@ -20,6 +21,11 @@ declare interface account {
     transactionList: FormattedTransaction[],
     accountName: string
     networkMosaic: AppMosaic,
+    activeMultisigAccount: string,
+    multisigAccountsMosaics: Record<string, AppMosaic[]>,
+    multisigAccountsNamespaces: Record<string, AppNamespace[]>,
+    multisigAccountsTransactions: Record<string, Transaction[]>,
+    multisigAccountInfo: Record<string, MultisigAccountInfo[]>,
 }
 
 export default {
@@ -37,6 +43,11 @@ export default {
         xemDivisibility: 6,
         transactionList: [],
         accountName: '',
+        activeMultisigAccount: null,
+        multisigAccountsMosaics: {},
+        multisigAccountsNamespaces: {},
+        multisigAccountsTransactions: {},
+        multisigAccountInfo: {},
     },
     getters: {
         wallet(state) {
@@ -172,6 +183,33 @@ export default {
         },
         SET_ACCOUNT_NAME(state: account, accountName: string) {
             state.accountName = accountName
+        },
+        SET_MULTISIG_ACCOUNT_INFO(state:account, addressAndMultisigInfo: AddressAndMultisigInfo) {
+              const {address, multisigAccountInfo} = addressAndMultisigInfo
+              Vue.set(state.multisigAccountInfo, address, multisigAccountInfo)
+        },
+        SET_ACTIVE_MULTISIG_ACCOUNT(state: account, publicKey: string) {
+            if (publicKey === state.wallet.publicKey) {
+              state.activeMultisigAccount = null
+              return
+            }
+            state.activeMultisigAccount = publicKey
+        },
+        ADD_CONFIRMED_MULTISIG_ACCOUNT_TRANSACTION( state: account,
+                                                    addressAndTransaction: AddressAndTransaction) {
+            const {address, transaction} = addressAndTransaction
+            const list = {...state.multisigAccountsTransactions}
+            if (!list[address]) list[address] = []
+            list[address].unshift(transaction)
+            Vue.set(state.multisigAccountsTransactions, address, list)
+        },
+        SET_MULTISIG_ACCOUNT_NAMESPACES( state: account, addressAndNamespaces: AddressAndNamespaces) {
+            const {address, namespaces} = addressAndNamespaces
+            Vue.set(state.multisigAccountsNamespaces, address, namespaces)
+        },
+        SET_MULTISIG_ACCOUNT_MOSAICS( state: account, addressAndMosaics: AddressAndMosaics) {
+            const {address, mosaics} = addressAndMosaics
+            Vue.set(state.multisigAccountsMosaics, address, mosaics)
         },
     },
 }

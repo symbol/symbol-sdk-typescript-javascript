@@ -26,7 +26,6 @@ import {getAbsoluteMosaicAmount} from "@/core/utils"
 export class MultisigConversionTs extends Vue {
     activeAccount: any
     currentAddress = ''
-    isMultisig = false
     isCompleteForm = false
     showCheckPWDialog = false
     transactionDetail = {}
@@ -48,6 +47,10 @@ export class MultisigConversionTs extends Vue {
 
     get address() {
         return this.activeAccount.wallet.address
+    }
+
+    get isMultisig() {
+        return this.activeAccount.wallet.multisigAccountInfo ? true : false
     }
 
     get node() {
@@ -179,20 +182,6 @@ export class MultisigConversionTs extends Vue {
         }
     }
 
-    getMultisigAccountList() {
-        const that = this
-        if (!this.wallet) return
-        const {node, address} = this
-        new MultisigApiRxjs().getMultisigAccountInfo(
-            address,
-            node
-        ).subscribe((multisigInfo) => {
-            if (multisigInfo.cosignatories.length !== 0) {
-                that.isMultisig = true
-            }
-        })
-    }
-
     sendMultisignConversionTransaction() {
         const {xemDivisibility} = this
         // here lock fee should be relative param
@@ -232,10 +221,5 @@ export class MultisigConversionTs extends Vue {
         // isCompleteForm
         this.isCompleteForm = publickeyList.length !== 0 && minApproval + '' !== '' && minRemoval + '' !== '' && innerFee + '' !== '' && bondedFee + '' !== '' && lockFee + '' !== ''
         return
-    }
-
-    // @TODO multisig account list at higher level
-    mounted() {
-        this.getMultisigAccountList()
     }
 }
