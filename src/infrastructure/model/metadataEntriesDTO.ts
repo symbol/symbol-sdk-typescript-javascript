@@ -25,28 +25,25 @@
  * Do not edit the class manually.
  */
 
-import { SourceDTO } from './sourceDTO';
+import { MetadataDTO } from './metadataDTO';
 
-export class ResolutionEntryDTO {
-    'source': SourceDTO;
-    'resolved': any;
+export class MetadataEntriesDTO {
+    /**
+    * Array of account metadata.
+    */
+    'metadataEntries': Array<MetadataDTO>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "source",
-            "baseName": "source",
-            "type": "SourceDTO"
-        },
-        {
-            "name": "resolved",
-            "baseName": "resolved",
-            "type": "any"
+            "name": "metadataEntries",
+            "baseName": "metadataEntries",
+            "type": "Array<MetadataDTO>"
         }    ];
 
     static getAttributeTypeMap() {
-        return ResolutionEntryDTO.attributeTypeMap;
+        return MetadataEntriesDTO.attributeTypeMap;
     }
 }
 

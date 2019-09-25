@@ -26,59 +26,65 @@
  */
 
 
-export class MosaicDefinitionTransactionBodyDTO {
+export class NamespaceMetadataTransactionBodyDTO {
+    'targetPublicKey': string;
     /**
-    * Random nonce used to generate the mosaic id.
+    * Metadata key scoped to source, target and type.
     */
-    'nonce': number;
+    'scopedMetadataKey': string;
     /**
-    * Mosaic identifier.
+    * Namespace identifier.
     */
-    'id': string;
+    'targetNamespaceId'?: string;
     /**
-    * - 0x00 (none) - No flags present. - 0x01 (supplyMutable) - Mosaic supports supply changes even when mosaic owner owns partial supply. - 0x02 (transferable) - Mosaic supports transfers between arbitrary accounts. When not set, mosaic can only be transferred to and from mosaic owner. - 0x04 (restrictable) - Mosaic supports custom restrictions configured by mosaic owner. 
+    * Change in value size in bytes.
     */
-    'flags': number;
+    'valueSizeDelta': number;
     /**
-    * Determines up to what decimal place the mosaic can be divided. Divisibility of 3 means that a mosaic can be divided into smallest parts of 0.001 mosaics. The divisibility must be in the range of 0 and 6. 
+    * Value size in bytes.
     */
-    'divisibility': number;
+    'valueSize': number;
     /**
-    * Duration expressed in number of blocks.
+    * When there is an existing value, the new value is calculated as xor(previous-value, value).
     */
-    'duration': string;
+    'value': string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "nonce",
-            "baseName": "nonce",
-            "type": "number"
-        },
-        {
-            "name": "id",
-            "baseName": "id",
+            "name": "targetPublicKey",
+            "baseName": "targetPublicKey",
             "type": "string"
         },
         {
-            "name": "flags",
-            "baseName": "flags",
+            "name": "scopedMetadataKey",
+            "baseName": "scopedMetadataKey",
+            "type": "string"
+        },
+        {
+            "name": "targetNamespaceId",
+            "baseName": "targetNamespaceId",
+            "type": "string"
+        },
+        {
+            "name": "valueSizeDelta",
+            "baseName": "valueSizeDelta",
             "type": "number"
         },
         {
-            "name": "divisibility",
-            "baseName": "divisibility",
+            "name": "valueSize",
+            "baseName": "valueSize",
             "type": "number"
         },
         {
-            "name": "duration",
-            "baseName": "duration",
+            "name": "value",
+            "baseName": "value",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return MosaicDefinitionTransactionBodyDTO.attributeTypeMap;
+        return NamespaceMetadataTransactionBodyDTO.attributeTypeMap;
     }
 }
 
