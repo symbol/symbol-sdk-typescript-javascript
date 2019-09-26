@@ -1,11 +1,11 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
-import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
-import {AppWallet} from "@/core/model"
+import {AppWallet, readLocaAlias, saveLocaAlias} from "@/core/model"
+import {networkConfig} from "@/config/index"
 
 @Component({
     computed: {
@@ -16,6 +16,7 @@ import {AppWallet} from "@/core/model"
     }
 })
 export class WalletAliasTs extends Vue {
+    pageSize = 5
     activeAccount: any
     app: any
     isShowDialog = false
@@ -23,15 +24,21 @@ export class WalletAliasTs extends Vue {
     showCheckPWDialog = false
     isCompleteForm = true
     aliasListIndex = -1
+    aliasActionTypeList = []
+    aliasList = []
+    currentPage = 1
     formItem = {
         address: '',
         alias: '',
-        fee: 1,
-        password: ''
+        tag: ''
     }
 
     get getWallet() {
         return this.activeAccount.wallet
+    }
+
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
     }
 
     get namespaceList() {
@@ -46,27 +53,23 @@ export class WalletAliasTs extends Vue {
         return this.activeAccount.node
     }
 
-    get nowBlockHeight() {
+    get currentHeight() {
         return this.app.chainStatus.currentHeight
     }
 
-    get aliasList() {
-        return this.namespaceList.filter(namespace => namespace.alias instanceof AddressAlias)
-    }
-
-    get aliasActionTypeList() {
-        return this.namespaceList.filter(namespace => namespace.alias instanceof EmptyAlias)
-    }
 
     showUnLink(index) {
         this.aliasListIndex = index
         this.formItem = {
             address: this.aliasList[index].alias.address,
-            alias: this.aliasList[index].name,
-            fee: 1,
-            password: ''
+            alias: '',
+            tag: ''
         }
         this.isShowDialog = true
+    }
+
+    handleChange(page) {
+        this.currentPage = page
     }
 
     closeModel() {
@@ -75,39 +78,18 @@ export class WalletAliasTs extends Vue {
         this.formItem = {
             address: '',
             alias: '',
-            fee: 1,
-            password: ''
+            tag: ''
         }
     }
 
     checkForm(): boolean {
-        const {address, alias, fee, password} = this.formItem
+        const {address, alias} = this.formItem
         if (address.length < 40) {
             this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
             return false
         }
         if (!(alias || alias.trim())) {
             this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
-            return false
-        }
-        if (!(password || password.trim())) {
-            this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
-            return false
-        }
-        if ((!Number(fee) && Number(fee) !== 0) || Number(fee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
-            return false
-        }
-
-        if (password.length < 8) {
-            this.showErrorMessage(this.$t('password_error') + '')
-            return false
-        }
-
-        const validPassword = new AppWallet(this.getWallet).checkPassword(new Password(password))
-
-        if (!validPassword) {
-            this.showErrorMessage(this.$t('password_error') + '')
             return false
         }
         return true
@@ -123,47 +105,50 @@ export class WalletAliasTs extends Vue {
     submit() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
-        if (this.aliasListIndex >= 0) {
-            this.addressAlias(false)
-        } else {
-            this.addressAlias(true)
-        }
+        this.addAliasToLocalStorage()
     }
 
-    addressAlias(type) {
-        let transaction = new NamespaceApiRxjs().addressAliasTransaction(
-            type ? AliasActionType.Link : AliasActionType.Unlink,
-            new NamespaceId(this.formItem.alias),
-            Address.createFromRawAddress(this.formItem.address),
-            this.getWallet.networkType,
-            this.formItem.fee
-        )
-        const {node, generationHash} = this
-        const password = new Password(this.formItem.password)
-
-        new AppWallet(this.getWallet).signAndAnnounceNormal(password, node, generationHash, [transaction], this)
+    addAliasToLocalStorage() {
+        const {address, tag, alias} = this.formItem
+        saveLocaAlias(
+            this.getWallet.address,
+            {
+                tag: tag,
+                alias: alias,
+                address: address
+            })
         this.closeModel()
+        this.initLocalAlias()
     }
 
     formatAddress(address) {
         return formatAddress(address)
     }
 
-    computeDuration(duration) {
-        let expireTime = duration - this.nowBlockHeight > 0 ? this.durationToTime(duration - this.nowBlockHeight) : 'Expired'
+    computeDuration(endHeight) {
+        let expireTime = endHeight > this.currentHeight ? this.durationToTime(endHeight - this.currentHeight - networkConfig.namespaceGracePeriodDuration) : 'Expired'
         return expireTime
     }
 
     durationToTime(duration) {
         const durationNum = Number(duration)
         return formatSeconds(durationNum * 12)
-
     }
 
-    // @Watch('formItem', {immediate: true, deep: true})
-    // onFormItemChange() {
-    //     const {address, alias, password, fee} = this.formItem
-    //     // isCompleteForm
-    //     this.isCompleteForm = address !== '' && alias !== '' && password !== '' && fee > 0
-    // }
+    initLocalAlias() {
+        this.currentPage = 1
+        const addressBook = readLocaAlias(this.getWallet.address)
+        this.aliasList = addressBook && addressBook.aliasMap ? Object.values(addressBook.aliasMap) : []
+    }
+
+    @Watch('getWallet.address')
+    onAddressChange() {
+        this.initLocalAlias()
+    }
+
+
+    mounted() {
+        this.initLocalAlias()
+    }
+
 }

@@ -169,8 +169,8 @@ export default {
         },
         SET_ACTIVE_MULTISIG_ACCOUNT(state: StoreAccount, publicKey: string) {
             if (publicKey === state.wallet.publicKey) {
-              state.activeMultisigAccount = null
-              return
+                state.activeMultisigAccount = null
+                return
             }
             state.activeMultisigAccount = publicKey
         },
@@ -190,5 +190,8 @@ export default {
             const {address, mosaics} = addressAndMosaics
             Vue.set(state.multisigAccountsMosaics, address, mosaics)
         },
+        SET_WALLET_IMPORTANCE(state: StoreAccount, importance: number) {
+            state.wallet.importance = importance
+        }
     },
 }

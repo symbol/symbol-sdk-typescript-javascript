@@ -84,14 +84,7 @@ export class WalletSwitchTs extends Vue {
     formatXEMamount(text) {
         return formatXEMamount(text)
     }
-
-    getWalletBalance(address) {
-        const {currentXEM1} = this
-        const accountMosaic = localRead(address) ? JSON.parse(localRead(address)) : {}
-        const resultMosaic = accountMosaic[currentXEM1] ? accountMosaic[currentXEM1].balance : 0
-        return this.formatXEMamount(resultMosaic)
-    }
-
+    
     toImport() {
         this.$emit('toImport')
     }

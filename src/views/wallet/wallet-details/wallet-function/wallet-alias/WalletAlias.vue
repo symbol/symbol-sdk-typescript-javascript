@@ -1,6 +1,6 @@
 <template>
   <div class="aliasTable">
-    <Modal :title="aliasListIndex >= 0?$t('unbind'): $t('binding_alias')"
+    <Modal :title="aliasListIndex >= 0?$t('unbind'): $t('Add_to_local_address_book')"
            v-model="isShowDialog"
            :transfer="false"
            @on-cancel="closeModel"
@@ -15,43 +15,29 @@
       </div>
 
       <div class="input_content">
+        <div class="title">{{$t('tag')}}</div>
+        <div class="input_area">
+          <input v-model="formItem.tag" :placeholder="$t('tag')">
+        </div>
+      </div>
+
+      <div class="input_content">
         <div class="title">{{$t('alias')}}</div>
         <div class="input_area">
-          <p v-if="aliasListIndex >= 0" class="unLinkP">{{formItem.alias}}</p>
-          <i-select v-model="formItem.alias" v-else :placeholder="$t('alias_selection')">
-            <i-option v-for="(item,index) in aliasActionTypeList" :key="index" :value="item.value">
-              {{ item.label }}
-            </i-option>
-          </i-select>
-        </div>
-      </div>
-
-      <div class="input_content">
-        <div class="title">{{$t('fee')}}</div>
-        <div class="input_area">
-          <input type="text" v-model="formItem.fee" :placeholder="$t('alias_selection')">
-          <span class="tip">XEM</span>
-        </div>
-      </div>
-
-      <div class="input_content">
-        <div class="title">{{$t('password')}}</div>
-        <div class="input_area">
-          <input type="password" v-model="formItem.password" :placeholder="$t('please_enter_your_wallet_password')">
+          <input v-model="formItem.alias" :placeholder="$t('address_alias')">
         </div>
       </div>
 
       <div class="button_content">
         <span class="cancel pointer" @click="closeModel">{{$t('cancel')}}</span>
-        <span :class="['cancel', 'checkBtn', isCompleteForm?'pointer':'not_allowed']" @click="submit()">{{aliasListIndex >= 0?$t('unbind'):$t('bind')}}</span>
+        <span :class="['cancel', 'checkBtn', isCompleteForm?'pointer':'not_allowed']" @click="submit()">{{aliasListIndex >= 0?$t('unbind'):$t('add')}}</span>
       </div>
     </Modal>
 
     <div class="tableTit">
       <Row>
-        <Col span="4">{{$t('namespace')}}</Col>
-        <Col span="12">{{$t('address')}}</Col>
-        <Col span="3">{{$t('validity_period')}}</Col>
+        <Col span="4">{{$t('tag')}}</Col>
+        <Col span="12">{{$t('address')}}({{$t('alias')}})</Col>
         <Col span="4">
           <span class="right alias_delete pointer" @click="isShowDeleteIcon = !isShowDeleteIcon"></span>
           <span class=" right alias_add pointer" @click="isShowDialog=true"></span>
@@ -60,20 +46,25 @@
       </Row>
     </div>
     <div class="table_body">
-      <div class="tableCell" v-for="(item,index) in aliasList" :key="index" v-if="aliasList.length>0">
+      <div class="tableCell"
+           v-for="(item,index) in aliasList.slice((currentPage-1)*pageSize,(currentPage)*pageSize)"
+           :key="index"
+           v-if="aliasList.length>0">
         <Row>
-          <Col span="4">{{item.name}}</Col>
-<!--          <Col span="12">{{formatAddress(item.alias.address)}}</Col>-->
-          <Col span="12">{{item.alias.address}}</Col>
-          <Col span="5">{{computeDuration(item.duration) === 'Expired' ? $t('overdue') :
-            computeDuration(item.duration)}}
+          <Col span="4">{{item.tag}}</Col>
+          <Col span="12">{{item.address}}
+            <span class="alias_name">(<span class="green">{{item.alias}}</span>)</span>
           </Col>
+
           <Col span="3">
             <span v-show="isShowDeleteIcon"
                   @click="showUnLink(index)"
                   class="delete_icon pointer"></span>
           </Col>
         </Row>
+      </div>
+      <div class="page_list_container">
+        <Page :total="aliasList.length" :page-size="pageSize" @on-change="handleChange"></Page>
       </div>
     </div>
 
@@ -85,12 +76,13 @@
 
 <script lang="ts">
     //@ts-ignore
-    import {WalletAliasTs} from '@/views/wallet/wallet-details/wallet-function/wallet-alias/WalletAliasTs.ts';
+    import {WalletAliasTs} from '@/views/wallet/wallet-details/wallet-function/wallet-alias/WalletAliasTs.ts'
+    import "./WalletAlias.less"
 
     export default class WalletAlias extends WalletAliasTs {
 
     }
 </script>
 <style lang="less">
-  @import "WalletAlias.less";
+
 </style>

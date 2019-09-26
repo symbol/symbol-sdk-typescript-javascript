@@ -12,7 +12,7 @@
             <div>
               <p class="walletName">{{item.accountTitle}}-{{item.name}}</p>
               <p class="walletAmount overflow_ellipsis">
-                {{formatNumber(getWalletBalance(item.address))}}
+                {{formatNumber(item.balance)}}
                 &nbsp;<span class="tails">XEM</span>
               </p>
             </div>

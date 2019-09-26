@@ -10,6 +10,15 @@
               <span class="walletType" v-if="wallet">
                 {{isMultisig ? $t('Public_account'):$t('Private_account')}}
               </span>
+
+              <span class="tit">{{$t('importance')}}</span>
+              <span v-if="wallet">
+                <span v-if="importance != 0">
+                  {{importance.substring(0,1)+'.'+importance.substring(1)}}*10
+                  <sup>{{(importance+'').length-1}}</sup>
+                </span>
+                <span v-else>0</span>
+              </span>
             </p>
             <p>
               <span class="tit" v-if="wallet&&wallet.path">{{$t('path')}}</span>
@@ -28,10 +37,11 @@
                       src="@/common/img/wallet/copyIcon.png"></i>
             </p>
             <p>
-              <span class="tit">{{$t('publickey')}}</span>
-              <span class="walletPublicKey">{{wallet.publicKey}}</span>
-              <i class="copyIcon" @click="copy(wallet.publicKey)"><img
-                      src="@/common/img/wallet/copyIcon.png"></i>
+              <span class="tit">{{$t('alias')}}</span>
+              <!--              <span class=" alias_delete pointer"></span>-->
+              <span class="  alias_add pointer" @click="isShowBindDialog=true"></span>
+
+              <span class="walletPublicKey">{{getSelfAlias.join(',')||'-'}}</span>
             </p>
           </div>
         </Col>
@@ -46,17 +56,27 @@
     <div class="fnAndBackup radius">
       <h6>{{$t('Function_and_backup')}}</h6>
       <div class="backupDiv clear">
-        <div class="Mnemonic left" @click="changeMnemonicDialog">
+        <div class="Mnemonic pointer left" @click="changeMnemonicDialog">
           <i><img src="@/common/img/wallet/auxiliaries.png"></i>
           <span>{{$t('Export_mnemonic')}}</span>
         </div>
-        <div class="privateKey left" @click="changePrivatekeyDialog">
+        <div class="privateKey pointer left" @click="changePrivatekeyDialog">
           <i><img src="@/common/img/wallet/privatekey.png"></i>
           <span>{{$t('Export_private_key')}}</span>
         </div>
-        <div class="Keystore left" @click="changeKeystoreDialog">
+        <div class="Keystore pointer left" @click="changeKeystoreDialog">
           <i><img src="@/common/img/wallet/keystore.png"></i>
           <span>{{$t('Export_Keystore')}}</span>
+        </div>
+        <!--TODO -->
+        <div class="other un_click left" @click="">
+          <i><img src="@/common/img/wallet/wallet-detail/walletDetailsFilter.png"></i>
+          <span>{{$t('Filter_management')}}</span>
+        </div>
+
+        <div class="other un_click left" @click="">
+          <i><img src="@/common/img/wallet/wallet-detail/walletDetailsMetaData.png"></i>
+          <span>{{$t('meta_data')}}</span>
         </div>
       </div>
     </div>
@@ -64,7 +84,7 @@
       <div class="accountFnNav">
         <ul class="navList clear">
           <li :class="['left',functionShowList[0]?'active':''] " @click="showFunctionIndex(0)">
-            {{$t('Alias_settings')}}
+            {{$t('contact_list')}}
           </li>
           <!--restrict-->
           <!--          <li :class="['left',functionShowList[1]?'active':''] " @click="showFunctionIndex(1)">-->
@@ -76,11 +96,13 @@
       <!--      <WalletFilter v-if="functionShowList[1]"></WalletFilter>-->
     </div>
     <MnemonicDialog :showMnemonicDialog="showMnemonicDialog"
-                    @closeMnemonicDialog="closeMnemonicDialog"></MnemonicDialog>
+                    @closeMnemonicDialog="closeMnemonicDialog"/>
     <PrivatekeyDialog :showPrivatekeyDialog="showPrivatekeyDialog"
-                      @closePrivatekeyDialog="closePrivatekeyDialog"></PrivatekeyDialog>
+                      @closePrivatekeyDialog="closePrivatekeyDialog"/>
     <KeystoreDialog :showKeystoreDialog="showKeystoreDialog"
-                    @closeKeystoreDialog="closeKeystoreDialog"></KeystoreDialog>
+                    @closeKeystoreDialog="closeKeystoreDialog"/>
+    <TheBindForm :isShowBindDialog='isShowBindDialog'
+                 @closeBindDialog="closeBindDialog"/>
   </div>
 </template>
 

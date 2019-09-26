@@ -1,11 +1,13 @@
 import {Message} from "@/config/index.ts"
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
 import {AppWallet} from "@/core/model"
-import {getAbsoluteMosaicAmount, getRelativeMosaicAmount} from "@/core/utils"
+import {networkConfig} from "@/config/index"
+import {getAbsoluteMosaicAmount} from "@/core/utils"
 
 @Component({
     computed: {
@@ -15,26 +17,31 @@ import {getAbsoluteMosaicAmount, getRelativeMosaicAmount} from "@/core/utils"
         })
     }
 })
-export class NamespaceAddressAliasDialogTs extends Vue {
+export class TheBindFormTs extends Vue {
     activeAccount: any
     app: any
     isShowDialog = false
+    isShowDeleteIcon = false
+    showCheckPWDialog = false
     isCompleteForm = true
     aliasListIndex = -1
     formItem = {
         address: '',
         alias: '',
-        fee: .5,
+        fee: 1,
         password: ''
     }
 
     @Prop()
-    isShowAddressAliasDialog: boolean
-    @Prop()
-    addressAliasItem: any
+    isShowBindDialog: boolean
+
 
     get getWallet() {
         return this.activeAccount.wallet
+    }
+
+    get xemDivisibility() {
+        return this.activeAccount.xemDivisibility
     }
 
     get namespaceList() {
@@ -49,7 +56,7 @@ export class NamespaceAddressAliasDialogTs extends Vue {
         return this.activeAccount.node
     }
 
-    get nowBlockHeight() {
+    get currentHeight() {
         return this.app.chainStatus.currentHeight
     }
 
@@ -57,9 +64,11 @@ export class NamespaceAddressAliasDialogTs extends Vue {
         return this.namespaceList.filter(namespace => namespace.alias instanceof AddressAlias)
     }
 
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
+    get aliasActionTypeList() {
+        const {currentHeight} = this
+        return this.namespaceList.filter(namespace => namespace.alias instanceof EmptyAlias && namespace.endHeight - currentHeight > networkConfig.namespaceGracePeriodDuration)
     }
+
 
     showUnLink(index) {
         this.aliasListIndex = index
@@ -73,8 +82,7 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     }
 
     closeModel() {
-        this.$emit('closeAddressAliasDialog')
-        this.isShowDialog = false
+        this.$emit('closeBindDialog')
         this.aliasListIndex = -1
         this.formItem = {
             address: '',
@@ -141,11 +149,10 @@ export class NamespaceAddressAliasDialogTs extends Vue {
             new NamespaceId(this.formItem.alias),
             Address.createFromRawAddress(this.formItem.address),
             this.getWallet.networkType,
-            this.formItem.fee
+            fee
         )
         const {node, generationHash} = this
         const password = new Password(this.formItem.password)
-
         new AppWallet(this.getWallet).signAndAnnounceNormal(password, node, generationHash, [transaction], this)
         this.closeModel()
     }
@@ -154,20 +161,26 @@ export class NamespaceAddressAliasDialogTs extends Vue {
         return formatAddress(address)
     }
 
-    computeDuration(duration) {
-        let expireTime = duration - this.nowBlockHeight > 0 ? this.durationToTime(duration - this.nowBlockHeight) : 'Expired'
+    computeDuration(endHeight) {
+        let expireTime = endHeight > this.currentHeight ? this.durationToTime(endHeight - this.currentHeight - networkConfig.namespaceGracePeriodDuration) : 'Expired'
         return expireTime
     }
 
     durationToTime(duration) {
         const durationNum = Number(duration)
         return formatSeconds(durationNum * 12)
-
     }
 
-    @Watch('isShowAddressAliasDialog')
-    onShowMosaicAliasDialogChange() {
-        this.isShowDialog = this.isShowAddressAliasDialog
-        this.formItem.alias = this.addressAliasItem.name
+    closeDialog() {
+        this.$emit('closeBindDialog')
     }
+
+    @Watch('isShowBindDialog')
+    onIsShowBindDialogChange() {
+        this.isShowDialog = this.isShowBindDialog
+    }
+    mounted(){
+        this.formItem.address = this.getWallet.address
+    }
+
 }

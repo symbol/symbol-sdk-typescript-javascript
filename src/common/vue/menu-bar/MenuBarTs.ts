@@ -105,6 +105,11 @@ export class MenuBarTs extends Vue {
         minWindow()
     }
 
+    removeNode(index) {
+        this.nodeList.splice(index, 1)
+        localSave('nodeList', JSON.stringify(this.nodeList))
+    }
+
     async selectEndpoint(index) {
         if (this.node == this.nodeList[index].value) return
         this.nodeList.forEach(item => item.isSelected = false)
@@ -116,17 +121,29 @@ export class MenuBarTs extends Vue {
         await getCurrentNetworkMosaic(node, this.$store)
     }
 
-    // @TODO: vee-validate
-    changeEndpointByInput() {
-        // let inputValue = this.inputNodeValue
+    checkNodeInput() {
         let {nodeList, inputNodeValue} = this
         if (inputNodeValue == '') {
             this.$Message.destroy()
             this.$Message.error(this['$t'](Message.NODE_NULL_ERROR))
-            return
+            return false
         }
+        const flag = nodeList.find(item => item.url == inputNodeValue)
+        if (flag) {
+            this.$Message.destroy()
+            this.$Message.error(this['$t'](Message.NODE_EXISTS_ERROR))
+            return false
+        }
+        return true
+    }
+
+
+    // @TODO: vee-validate
+    changeEndpointByInput() {
+        let {nodeList, inputNodeValue} = this
+        if (!this.checkNodeInput()) return
         nodeList.push({
-            value: `http://${inputNodeValue}`,
+            value: `${inputNodeValue}`,
             name: inputNodeValue,
             url: inputNodeValue,
             isSelected: false,

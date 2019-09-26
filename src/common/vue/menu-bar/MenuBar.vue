@@ -57,12 +57,13 @@
                             :key="`sep${index}`"
                     >
                       <img :src="p.isSelected ? monitorSeleted : monitorUnselected">
-                      <span>{{p.name}} ({{p.value}})</span>
+                      <span>{{p.value}}</span>
+                      <img class="remove_icon" @click.stop="removeNode(index)"
+                           src="@/common/img/service/multisig/multisigDelete.png" alt="">
                     </div>
                   </div>
 
                   <div class="input_point point_item">
-
                     <input v-model="inputNodeValue" type="text" :placeholder="$t('please_enter_a_custom_nod_address')">
                     <span @click="changeEndpointByInput" class="sure_button radius pointer">+</span>
                   </div>

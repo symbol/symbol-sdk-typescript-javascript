@@ -9,7 +9,7 @@ import {
     Password,
     WalletAlgorithm,
     Listener,
-    MultisigAccountInfo,
+    MultisigAccountInfo, Id,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
@@ -19,6 +19,7 @@ import {createSubWalletByPath} from "@/core/utils/hdWallet.ts"
 import {AppLock} from "@/core/utils/appLock"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {CoinType} from "@/core/model/CoinType"
+import {WebClient} from "@/core/utils"
 
 export class AppWallet {
     constructor(wallet?: {
@@ -366,7 +367,7 @@ export class AppWallet {
             store.commit('SET_MULTISIG_ACCOUNT_INFO', {address: this.address, multisigAccountInfo})
             store.commit('SET_MULTISIG_LOADING', false)
         } catch (error) {
-            store.commit('SET_MULTISIG_ACCOUNT_INFO', {address: this.address, multisigAccountInfo: null} )
+            store.commit('SET_MULTISIG_ACCOUNT_INFO', {address: this.address, multisigAccountInfo: null})
             store.commit('SET_MULTISIG_LOADING', false)
         }
     }
@@ -417,4 +418,47 @@ export const createBondedMultisigTransaction = (transaction: Array<Transaction>,
 
 export const createCompleteMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, fee: number) => {
     return new MultisigApiRxjs().completeMultisigTransaction(networkType, fee, multisigPublickey, transaction)
+}
+
+export const getCurrentImportance = async (store: any) => {
+    const {address} = store.state.account.wallet
+    const {node} = store.state.account
+    const resStr = await WebClient.request('', {
+        url: `${node}/account/${address}`,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    }).catch(
+        store.commit('SET_WALLET_IMPORTANCE', 0)
+    )
+    const importance = JSON.parse(resStr + '').account ? new Id(JSON.parse(resStr + '').account.importance).compact() : 0
+    store.commit('SET_WALLET_IMPORTANCE', Number(importance))
+}
+
+export const saveLocaAlias = (
+    address: string,
+    aliasObject: {
+        tag: string,
+        alias: string,
+        address: string
+    }) => {
+    const addressBookData = localRead('addressBook')
+    let addressBook = addressBookData ? JSON.parse(addressBookData) : {}
+    addressBook[address] = addressBook[address] || {}
+    addressBook[address]['aliasMap'] = addressBook[address]['aliasMap'] || {}
+    addressBook[address]['aliasMap'][aliasObject.alias] = aliasObject
+
+    addressBook[address]['tagMap'] = addressBook[address]['tagMap'] || {}
+    addressBook[address]['tagMap'][aliasObject.tag] = addressBook[address]['tagMap'][aliasObject.tag] || []
+    addressBook[address]['tagMap'][aliasObject.tag].push(aliasObject.alias)
+
+    localSave('addressBook', JSON.stringify(addressBook))
+}
+
+
+export const readLocaAlias = (address: string) => {
+    const addressBookData = localRead('addressBook')
+    if (!addressBookData) return {}
+    return JSON.parse(addressBookData)[address]
 }

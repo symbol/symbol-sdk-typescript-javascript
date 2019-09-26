@@ -37,6 +37,7 @@
 
   .input_point {
     padding-top: 20px;
+
     .connection_letter {
       font-size: 18px;
       color: #ddd;
@@ -65,12 +66,14 @@
       color: white;
     }
   }
+
   .node_list_container {
     max-height: 160px;
   }
 
   .node_list {
     height: 250px;
+
     .ivu-input {
       border: none;
     }
@@ -93,6 +96,8 @@
     }
 
     span {
+      text-align: left;
+      width: 300px;
       font-size: 20px;
     }
   }
@@ -337,27 +342,33 @@
     height: 100%;
   }
 
+  .fade-enter-active {
+    transition: all .2s ease;
+    -webkit-transition: all .2s ease;
+  }
+
+  .fade-leave-active {
+    transition: all .3s ease;
+    -webkit-transition: all .3s ease;
+  }
+
+  .fade-enter {
+    transform: translateX(50px);
+    -webkit-transform: translateX(50px);
+    opacity: 0;
+  }
+
+  .fade-leave-active {
+    opacity: 0;
+  }
+
+  .remove_icon {
+    margin-left: 10px;
+  }
+
+  .remove_icon:hover {
+    opacity: .5;
+
+  }
 
 }
-
-.fade-enter-active {
-  transition: all .2s ease;
-  -webkit-transition: all .2s ease;
-}
-
-.fade-leave-active {
-  transition: all .3s ease;
-  -webkit-transition: all .3s ease;
-}
-
-.fade-enter {
-  transform: translateX(50px);
-  -webkit-transform: translateX(50px);
-  opacity: 0;
-}
-
-.fade-leave-active {
-  opacity: 0;
-}
-
-
