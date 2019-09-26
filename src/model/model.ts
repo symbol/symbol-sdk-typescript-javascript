@@ -58,6 +58,11 @@ export * from './mosaic/NetworkHarvestMosaic';
 export * from './mosaic/MosaicNames';
 export * from './mosaic/MosaicRestrictionType';
 
+// Mosaic
+export * from './metadata/Metadata';
+export * from './metadata/MetadataEntry';
+export * from './metadata/MetadataType';
+
 // Namespace
 export * from '../service/Namespace';
 export * from './namespace/AliasType';
