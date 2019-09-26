@@ -20,6 +20,7 @@ export * from './ChainHttp';
 export * from './DiagnosticHttp';
 export * from './Http';
 export * from './MosaicHttp';
+export * from './MetadataHttp';
 export * from './NamespaceHttp';
 export * from './TransactionHttp';
 export * from './Listener';
