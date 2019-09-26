@@ -3,7 +3,7 @@ import {mapState} from "vuex"
 import {Password} from "nem2-sdk"
 import {AppLock} from '@/core/utils/appLock'
 import {randomMnemonicWord} from "@/core/utils/hdWallet.ts"
-import {AppWallet} from "@/core/model"
+import {AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -13,7 +13,7 @@ import {AppWallet} from "@/core/model"
     }
 })
 export class MnemonicDialogTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     show = false
     stepIndex = 0
     mnemonic = ''

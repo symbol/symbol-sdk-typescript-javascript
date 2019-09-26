@@ -4,6 +4,7 @@ import MultisigTransferTransaction from '@/views/monitor/monitor-transfer/transa
 import {mapState} from "vuex"
 import {TransferType} from "@/core/model/TransferType";
 import { monitorTransferTransferTypeConfig } from '@/config/view/monitor'
+import {StoreAccount} from "@/core/model"
 
 @Component({
     components: {
@@ -17,7 +18,7 @@ import { monitorTransferTransferTypeConfig } from '@/config/view/monitor'
     }
 })
 export class MonitorTransferTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     transferType = TransferType
     transferTypeList = monitorTransferTransferTypeConfig
     currentPrice = 0

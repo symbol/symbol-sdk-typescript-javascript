@@ -1,14 +1,14 @@
 import {mapState} from "vuex"
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {renderMosaics} from '@/core/utils'
-import {FormattedTransaction} from '@/core/model';
+import {FormattedTransaction, AppInfo, StoreAccount} from '@/core/model';
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
 })
 export class TransactionModalTs extends Vue {
-    app: any
-    activeAccount: any
+    app: AppInfo
+    activeAccount: StoreAccount
     isShowInnerDialog = false
     currentInnerTransaction = {}
     renderMosaics = renderMosaics

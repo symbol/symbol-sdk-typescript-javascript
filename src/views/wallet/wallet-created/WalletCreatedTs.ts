@@ -3,7 +3,7 @@ import {Password} from "nem2-sdk"
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {randomMnemonicWord} from "@/core/utils/hdWallet.ts"
 import {mapState} from "vuex"
-import {AppWallet} from "@/core/model"
+import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -14,8 +14,8 @@ import {AppWallet} from "@/core/model"
     }
 })
 export class WalletCreatedTs extends Vue {
-    app:any
-    activeAccount:any
+    app:AppInfo
+    activeAccount:StoreAccount
     tags = 0
     mosaics = []
     storeWallet = {}

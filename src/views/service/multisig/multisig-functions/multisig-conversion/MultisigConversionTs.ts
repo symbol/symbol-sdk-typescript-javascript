@@ -10,7 +10,7 @@ import {Message} from "@/config/index.ts"
 import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import { formDataConfig } from '@/config/view/form'
-import {createBondedMultisigTransaction} from "@/core/model"
+import {createBondedMultisigTransaction, StoreAccount} from "@/core/model"
 import {getAbsoluteMosaicAmount} from "@/core/utils"
 
 @Component({
@@ -24,7 +24,7 @@ import {getAbsoluteMosaicAmount} from "@/core/utils"
     }
 })
 export class MultisigConversionTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     currentAddress = ''
     isCompleteForm = false
     showCheckPWDialog = false

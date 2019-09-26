@@ -9,7 +9,7 @@ import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
 import {standardFields} from "@/core/validation"
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppMosaic, AppWallet} from "@/core/model"
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppMosaic, AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {formDataConfig} from '@/config/view/form'
 
 @Component({
@@ -26,7 +26,8 @@ import {formDataConfig} from '@/config/view/form'
 })
 export class TransactionFormTs extends Vue {
     @Provide() validator: any = this.$validator
-    activeAccount: any
+    activeAccount: StoreAccount
+    app: AppInfo
     isShowPanel = true
     transactionList = []
     transactionDetail = {}
@@ -40,7 +41,6 @@ export class TransactionFormTs extends Vue {
     isAddressMapNull = true
     formItem = formDataConfig.multisigTransferForm
     standardFields: object = standardFields
-    app: any
     getRelativeMosaicAmount = getRelativeMosaicAmount
 
     get addressAliasMap() {

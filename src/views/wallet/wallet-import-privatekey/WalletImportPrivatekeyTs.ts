@@ -5,7 +5,7 @@ import {Password, Account} from "nem2-sdk"
 import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {formDataConfig} from '@/config/view/form'
 import {networkTypeConfig} from '@/config/view/setting'
-import {AppWallet} from "@/core/model"
+import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -19,8 +19,8 @@ import {AppWallet} from "@/core/model"
     }
 })
 export class WalletImportPrivatekeyTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     account = {}
     form = formDataConfig.walletImportPrivateKeyForm
     networkType = networkTypeConfig

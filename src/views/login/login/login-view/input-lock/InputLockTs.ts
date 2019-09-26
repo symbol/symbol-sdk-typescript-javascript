@@ -1,9 +1,9 @@
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {AppLock, StoredCipher} from '@/core/utils/appLock'
 import {standardFields} from '@/core/validation'
 import {mapState} from "vuex"
 import {localRead, getObjectLength, getTopValueInObject} from "@/core/utils/utils"
 import {Message} from "@/config"
+import {AppInfo, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -14,10 +14,10 @@ import {Message} from "@/config"
     }
 })
 export class InputLockTs extends Vue {
-    app: any
+    app: AppInfo
+    activeAccount: StoreAccount
     passwordFieldValidation = standardFields.previousPassword.validation
     cipher: string = ''
-    activeAccount: any
     cipherHint: string = ''
     errors: any
     activeError: string = ''

@@ -5,7 +5,7 @@ import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
 import {copyTxt, formatXEMamount, formatNumber, localRead, localSave} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
 import {monitorPanelNavigatorConfig} from "@/config/view/monitor"
-
+import {AppInfo, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -16,8 +16,8 @@ import {monitorPanelNavigatorConfig} from "@/config/view/monitor"
     }
 })
 export class MonitorPanelTs extends Vue {
-    app: any
-    activeAccount: any
+    app: AppInfo
+    activeAccount: StoreAccount
     mosaic: string
     mosaicName = ''
     showExpiredMosaics = false

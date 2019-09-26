@@ -9,6 +9,7 @@ import {
     AggregateTransaction
 } from "nem2-sdk"
 import {mapState} from "vuex"
+import {StoreAccount} from "@/core/model"
 
 // this component is for tesing multisig
 @Component({
@@ -19,7 +20,7 @@ import {mapState} from "vuex"
     }
 })
 export class MultisigCosignTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     privatekey = ''
     publickey = ''
     aggregatedTransactionList: Array<AggregateTransaction> = []

@@ -7,6 +7,7 @@ import numberGrow from '@/common/vue/number-grow/NumberGrow.vue'
 import LineChart from '@/common/vue/line-chart/LineChart.vue'
 import TransactionList from '@/views/monitor/monitor-transaction-list/TransactionList.vue'
 import {networkStatusConfig} from '@/config/view/setting'
+import {AppInfo, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -17,8 +18,8 @@ import {networkStatusConfig} from '@/config/view/setting'
     }
 })
 export class MonitorDashBoardTs extends Vue {
-    app: any
-    activeAccount: any
+    app: AppInfo
+    activeAccount: StoreAccount
     pageSize: number = 10
     highestPrice = 0
     riseRange: any = 0

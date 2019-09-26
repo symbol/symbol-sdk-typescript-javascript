@@ -4,6 +4,7 @@ import GetStart from './login-view/get-start/GetStart.vue'
 import InputLock from './login-view/input-lock/InputLock.vue'
 import {mapState} from "vuex"
 import {languageConfig} from "@/config/view/language"
+import {AppInfo} from "@/core/model"
 
 @Component({
     components: {
@@ -17,7 +18,7 @@ import {languageConfig} from "@/config/view/language"
     }
 })
 export class LoginTs extends Vue {
-    app: any
+    app: AppInfo
     languageList = languageConfig
     isShowDialog = true
     indexShowList = [true, false]

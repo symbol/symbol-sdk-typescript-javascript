@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {NetworkType, Password} from "nem2-sdk"
 import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {AppAccounts, AppWallet} from '@/core/model'
+import {AppAccounts, AppWallet, StoreAccount} from '@/core/model'
 import {mapState} from "vuex"
 import {createSubWalletByPath} from "@/core/utils/hdWallet.ts"
 import {networkConfig} from '@/config/index.ts'
@@ -15,12 +15,11 @@ import {networkTypeConfig} from '@/config/view/setting'
     computed: {
         ...mapState({
             activeAccount: 'account',
-            app: 'app'
         })
     }
 })
 export class WalletCreateTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     formItem = {
         currentNetType: NetworkType.MIJIN_TEST,
         walletName: 'wallet-create',

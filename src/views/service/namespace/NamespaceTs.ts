@@ -4,6 +4,7 @@ import RootNamespace from './namespace-function/root-namespace/RootNamespace.vue
 import NamespaceList from './namespace-function/namespace-list/NamespaceList.vue'
 import {mapState} from "vuex"
 import {namespaceButtonConfig} from "@/config/view/namespace";
+import {StoreAccount} from "@/core/model"
 
 @Component({
     components: {
@@ -19,7 +20,7 @@ import {namespaceButtonConfig} from "@/config/view/namespace";
 })
 export class NamespaceTs extends Vue {
     buttonList = namespaceButtonConfig
-    activeAccount:any
+    activeAccount:StoreAccount
 
     get node() {
         return this.activeAccount.node

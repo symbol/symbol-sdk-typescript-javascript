@@ -1,32 +1,11 @@
-import {Account, Transaction, MultisigAccountInfo} from 'nem2-sdk'
-import {defaultNetworkConfig} from "@/config/index"
-import {FormattedTransaction, AddressAndTransaction, AppNamespace, AddressAndNamespaces, AddressAndMosaics, AddressAndMultisigInfo} from '@/core/model'
-import {AppMosaic} from '@/core/model'
-import {nodeListConfig} from "@/config/view/node"
 import Vue from 'vue'
-
-declare interface account {
-    node: string,
-    // @TODO: the currentXem should be renamed
-    currentXem: string,
-    currentXEM1: string,
-    account: Account | any,
-    wallet: any,
-    mosaics: Record<string, AppMosaic>,
-    namespaces: any[],
-    errorTx: Array<any>,
-    addressAliasMap: any,
-    generationHash: string,
-    xemDivisibility: number
-    transactionList: FormattedTransaction[],
-    accountName: string
-    networkMosaic: AppMosaic,
-    activeMultisigAccount: string,
-    multisigAccountsMosaics: Record<string, AppMosaic[]>,
-    multisigAccountsNamespaces: Record<string, AppNamespace[]>,
-    multisigAccountsTransactions: Record<string, Transaction[]>,
-    multisigAccountInfo: Record<string, MultisigAccountInfo[]>,
-}
+import {Account} from 'nem2-sdk'
+import {defaultNetworkConfig} from "@/config/index"
+import {
+  AddressAndTransaction, AddressAndNamespaces, AddressAndMosaics,
+  AddressAndMultisigInfo, StoreAccount, AppMosaic,
+} from '@/core/model'
+import {nodeListConfig} from "@/config/view/node"
 
 export default {
     state: {
@@ -73,7 +52,7 @@ export default {
         }
     },
     mutations: {
-        RESET_ACCOUNT(state: account) {
+        RESET_ACCOUNT(state: StoreAccount) {
             state.account = {}
             state.wallet = {}
             state.mosaics = {}
@@ -83,16 +62,16 @@ export default {
             state.accountName = ''
         }
         ,
-        SET_ACCOUNT(state: account, account: Account): void {
+        SET_ACCOUNT(state: StoreAccount, account: Account): void {
             state.account = account
         },
-        SET_WALLET(state: account, wallet: any): void {
+        SET_WALLET(state: StoreAccount, wallet: any): void {
             state.wallet = wallet
         },
-        SET_MOSAICS(state: account, mosaics: any): void {
+        SET_MOSAICS(state: StoreAccount, mosaics: any): void {
             state.mosaics = mosaics
         },
-        UPDATE_MOSAICS(state: account, mosaics: AppMosaic[]): void {
+        UPDATE_MOSAICS(state: StoreAccount, mosaics: AppMosaic[]): void {
             const mosaicList = {...state.mosaics}
             mosaics.forEach((mosaic: AppMosaic) => {
                 if (!mosaic.hex) return
@@ -106,7 +85,7 @@ export default {
          * @TODO: refactor
          * This mutation is not watched by the appMosaics plugin
          */
-        UPDATE_MOSAICS_INFO(state: account, mosaics: AppMosaic[]): void {
+        UPDATE_MOSAICS_INFO(state: StoreAccount, mosaics: AppMosaic[]): void {
             const mosaicList = state.mosaics
             mosaics.forEach((mosaic: AppMosaic) => {
                 if (!mosaic.hex) return
@@ -119,7 +98,7 @@ export default {
          * @TODO: refactor
          * This mutation is not watched by the appMosaics plugin
          */
-        UPDATE_MOSAICS_NAMESPACES(state: account, mosaics: AppMosaic[]): void {
+        UPDATE_MOSAICS_NAMESPACES(state: StoreAccount, mosaics: AppMosaic[]): void {
             const mosaicList = state.mosaics
             mosaics.forEach((mosaic: AppMosaic) => {
                 if (!mosaic.hex) return
@@ -128,43 +107,43 @@ export default {
                 Object.assign(mosaicList[mosaic.hex], mosaic)
             })
         },
-        RESET_MOSAICS(state: account) {
+        RESET_MOSAICS(state: StoreAccount) {
             state.mosaics = {}
         },
-        SET_NETWORK_MOSAIC(state: account, mosaic: AppMosaic) {
+        SET_NETWORK_MOSAIC(state: StoreAccount, mosaic: AppMosaic) {
             state.networkMosaic = mosaic
         },
-        SET_NAMESPACES(state: account, namespaces: any[]): void {
+        SET_NAMESPACES(state: StoreAccount, namespaces: any[]): void {
             state.namespaces = namespaces
         },
-        SET_NODE(state: account, node: string): void {
+        SET_NODE(state: StoreAccount, node: string): void {
             state.node = node
         },
-        SET_GENERATION_HASH(state: account, generationHash: string): void {
+        SET_GENERATION_HASH(state: StoreAccount, generationHash: string): void {
             state.generationHash = generationHash
         },
-        SET_ERROR_TEXT(state: account, errorTx: Array<any>): void {
+        SET_ERROR_TEXT(state: StoreAccount, errorTx: Array<any>): void {
             state.errorTx = errorTx
         },
-        SET_CURRENT_XEM_1(state: account, currentXEM1: string): void {
+        SET_CURRENT_XEM_1(state: StoreAccount, currentXEM1: string): void {
             state.currentXEM1 = currentXEM1
         },
-        SET_ADDRESS_ALIAS_MAP(state: account, addressAliasMap: any): void {
+        SET_ADDRESS_ALIAS_MAP(state: StoreAccount, addressAliasMap: any): void {
             state.addressAliasMap = addressAliasMap
         },
-        SET_XEM_DIVISIBILITY(state: account, xemDivisibility: number) {
+        SET_XEM_DIVISIBILITY(state: StoreAccount, xemDivisibility: number) {
             state.xemDivisibility = xemDivisibility
         },
-        SET_WALLET_BALANCE(state: account, balance: number) {
+        SET_WALLET_BALANCE(state: StoreAccount, balance: number) {
             state.wallet.balance = balance
         },
-        SET_TRANSACTION_LIST(state: account, list: any[]) {
+        SET_TRANSACTION_LIST(state: StoreAccount, list: any[]) {
             state.transactionList = list
         },
-        ADD_UNCONFIRMED_TRANSACTION(state: account, txList: any) {
+        ADD_UNCONFIRMED_TRANSACTION(state: StoreAccount, txList: any) {
             state.transactionList.unshift(txList[0])
         },
-        ADD_CONFIRMED_TRANSACTION(state: account, txList: any) {
+        ADD_CONFIRMED_TRANSACTION(state: StoreAccount, txList: any) {
             // @TODO merge or separate these 2 lists in different objects
             const newTx = txList[0]
             const newStateTransactions = [...state.transactionList]
@@ -178,24 +157,24 @@ export default {
             newStateTransactions.unshift(newTx)
             state.transactionList = newStateTransactions
         },
-        SET_CURRENT_XEM(state: account, currentXem: string) {
+        SET_CURRENT_XEM(state: StoreAccount, currentXem: string) {
             state.currentXem = currentXem
         },
-        SET_ACCOUNT_NAME(state: account, accountName: string) {
+        SET_ACCOUNT_NAME(state: StoreAccount, accountName: string) {
             state.accountName = accountName
         },
-        SET_MULTISIG_ACCOUNT_INFO(state:account, addressAndMultisigInfo: AddressAndMultisigInfo) {
+        SET_MULTISIG_ACCOUNT_INFO(state:StoreAccount, addressAndMultisigInfo: AddressAndMultisigInfo) {
               const {address, multisigAccountInfo} = addressAndMultisigInfo
               Vue.set(state.multisigAccountInfo, address, multisigAccountInfo)
         },
-        SET_ACTIVE_MULTISIG_ACCOUNT(state: account, publicKey: string) {
+        SET_ACTIVE_MULTISIG_ACCOUNT(state: StoreAccount, publicKey: string) {
             if (publicKey === state.wallet.publicKey) {
               state.activeMultisigAccount = null
               return
             }
             state.activeMultisigAccount = publicKey
         },
-        ADD_CONFIRMED_MULTISIG_ACCOUNT_TRANSACTION( state: account,
+        ADD_CONFIRMED_MULTISIG_ACCOUNT_TRANSACTION( state: StoreAccount,
                                                     addressAndTransaction: AddressAndTransaction) {
             const {address, transaction} = addressAndTransaction
             const list = {...state.multisigAccountsTransactions}
@@ -203,11 +182,11 @@ export default {
             list[address].unshift(transaction)
             Vue.set(state.multisigAccountsTransactions, address, list)
         },
-        SET_MULTISIG_ACCOUNT_NAMESPACES( state: account, addressAndNamespaces: AddressAndNamespaces) {
+        SET_MULTISIG_ACCOUNT_NAMESPACES( state: StoreAccount, addressAndNamespaces: AddressAndNamespaces) {
             const {address, namespaces} = addressAndNamespaces
             Vue.set(state.multisigAccountsNamespaces, address, namespaces)
         },
-        SET_MULTISIG_ACCOUNT_MOSAICS( state: account, addressAndMosaics: AddressAndMosaics) {
+        SET_MULTISIG_ACCOUNT_MOSAICS( state: StoreAccount, addressAndMosaics: AddressAndMosaics) {
             const {address, mosaics} = addressAndMosaics
             Vue.set(state.multisigAccountsMosaics, address, mosaics)
         },

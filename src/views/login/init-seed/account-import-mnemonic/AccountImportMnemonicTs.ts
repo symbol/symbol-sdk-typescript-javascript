@@ -5,7 +5,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {formDataConfig} from "@/config/view/form";
 import {networkTypeConfig} from '@/config/view/setting';
 import {AppLock} from "@/core/utils";
-import {AppWallet} from "@/core/model"
+import {AppInfo, StoreAccount, AppWallet} from "@/core/model"
 
 @Component({
     computed: {
@@ -16,8 +16,8 @@ import {AppWallet} from "@/core/model"
     }
 })
 export class AccountImportMnemonicTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     form = formDataConfig.walletImportMnemonicForm
     NetworkTypeList = networkTypeConfig
     account = {}

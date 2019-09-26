@@ -26,7 +26,7 @@
     import {getMarketOpenPrice} from '@/core/services/marketData.ts'
     import {setTransactionList} from '@/core/services/transactions'
     import {getNamespacesFromAddress} from '@/core/services'
-    import {AppMosaic, AppWallet} from '@/core/model'
+    import {AppMosaic, AppWallet, AppInfo, StoreAccount} from '@/core/model'
     import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
 
     @Component({
@@ -36,8 +36,8 @@
     })
     export default class App extends Vue {
         isWindows = isWindows
-        activeAccount: any
-        app: any
+        activeAccount: StoreAccount
+        app: AppInfo
         unconfirmedTxListener = null
         confirmedTxListener = null
         txStatusListener = null
@@ -69,10 +69,6 @@
 
         get namespaceList() {
             return this.activeAccount.namespaces
-        }
-
-        get preBlockInfo() {
-            return this.app.chainStatus.preBlockInfo
         }
 
         get currentBlockInfo() {

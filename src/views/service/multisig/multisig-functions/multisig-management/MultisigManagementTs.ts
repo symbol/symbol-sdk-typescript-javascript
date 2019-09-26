@@ -14,7 +14,7 @@ import {
 import {Message} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {formDataConfig} from "@/config/view/form";
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from "@/core/model"
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount} from "@/core/model"
 
 @Component({
     components: {
@@ -27,7 +27,7 @@ import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from
     }
 })
 export class MultisigManagementTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     isShowPanel = true
     transactionList = []
     currentPublickey = ''

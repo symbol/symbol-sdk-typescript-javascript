@@ -1,10 +1,11 @@
 import {Component, Vue, Provide, Watch} from 'vue-property-decorator'
 import {Message} from "@/config"
-import {cloneData, localRead} from '@/core/utils'
+import {localRead} from '@/core/utils'
 import {standardFields} from '@/core/validation'
 import {AppLock} from '@/core/utils/appLock'
 import FormInput from '@/views/other/forms/input/FormInput.vue'
 import {mapState} from "vuex"
+import {StoreAccount} from "@/core/model"
 
 @Component(
     {
@@ -12,14 +13,13 @@ import {mapState} from "vuex"
         computed: {
             ...mapState({
                 activeAccount: 'account',
-                app: 'app'
             })
         }
     }
 )
 export class SettingLockTs extends Vue {
     @Provide() validator: any = this.$validator
-    activeAccount: any
+    activeAccount: StoreAccount
     errors: any
     cypher: string
     submitDisabled: boolean = false

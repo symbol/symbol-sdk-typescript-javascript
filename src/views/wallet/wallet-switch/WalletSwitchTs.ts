@@ -2,11 +2,12 @@ import {mapState} from 'vuex'
 import {Component, Vue} from 'vue-property-decorator'
 import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
 import {formatXEMamount, formatNumber, localRead} from '@/core/utils/utils.ts'
-import {AppWallet} from "@/core/model"
+import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {walletStyleSheetType} from '@/config/view/wallet.ts'
 import {MultisigAccountInfo} from 'nem2-sdk'
 import TheWalletUpdate from "@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdate.vue"
+
 @Component({
     components: {TheWalletDelete, TheWalletUpdate},
     computed: {
@@ -17,8 +18,8 @@ import TheWalletUpdate from "@/views/wallet/wallet-switch/the-wallet-update/TheW
     }
 })
 export class WalletSwitchTs extends Vue {
-    app: any
-    activeAccount: any
+    app: AppInfo
+    activeAccount: StoreAccount
     showCheckPWDialog = false
     deleteIndex = -1
     deletecurrent = -1

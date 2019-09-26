@@ -9,7 +9,7 @@ import MnemonicDialog from '@/views/wallet/mnemonic-dialog/MnemonicDialog.vue'
 import PrivatekeyDialog from '@/views/wallet/privatekey-dialog/PrivatekeyDialog.vue'
 import WalletUpdatePassword from './wallet-function/wallet-update-password/WalletUpdatePassword.vue'
 import {mapState} from "vuex"
-import {AppWallet} from '@/core/model'
+import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 
 @Component({
     components: {
@@ -28,8 +28,8 @@ import {AppWallet} from '@/core/model'
     }
 })
 export class WalletDetailsTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     aliasList = []
     QRCode: string = ''
     showMnemonicDialog: boolean = false

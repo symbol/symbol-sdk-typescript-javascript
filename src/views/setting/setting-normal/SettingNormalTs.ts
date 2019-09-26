@@ -3,12 +3,13 @@ import {localSave} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
 import {timeZoneListData} from "@/config/view/timeZone";
 import {languageConfig} from "@/config/view/language";
+import {AppInfo} from "@/core/model"
 
 @Component({
     computed: {...mapState({app: 'app'})},
 })
 export class SettingNormalTs extends Vue {
-    app: any
+    app: AppInfo
     languageList: any = languageConfig
     coin = 'USD'
     timeZoneListData = timeZoneListData

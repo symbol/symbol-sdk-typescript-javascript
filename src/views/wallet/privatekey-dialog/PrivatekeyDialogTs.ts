@@ -4,7 +4,7 @@ import {copyTxt} from "@/core/utils/utils.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Message} from "@/config"
 import {mapState} from "vuex"
-import {AppWallet} from "@/core/model"
+import {AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -17,7 +17,7 @@ export class PrivatekeyDialogTs extends Vue {
     QRCode = ''
     show = false
     stepIndex = 0
-    activeAccount: any
+    activeAccount: StoreAccount
     wallet = {
         password: '',
         privatekey: ''

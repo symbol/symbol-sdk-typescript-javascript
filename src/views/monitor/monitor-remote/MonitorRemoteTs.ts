@@ -5,8 +5,7 @@ import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
-import {AppWallet} from "@/core/model"
-
+import {AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -16,7 +15,7 @@ import {AppWallet} from "@/core/model"
     }
 })
 export class MonitorRemoteTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     isLinked = false
     harvestBlockList = []
     isLinkToRemote = false

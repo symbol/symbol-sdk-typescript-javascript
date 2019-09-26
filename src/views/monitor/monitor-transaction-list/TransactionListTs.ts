@@ -2,7 +2,7 @@ import {TransactionType} from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue} from 'vue-property-decorator'
 import {formatNumber, renderMosaics} from '@/core/utils'
-import {FormattedTransaction} from '@/core/model';
+import {FormattedTransaction, AppInfo, StoreAccount} from '@/core/model';
 import TransactionModal from '@/views/monitor/monitor-transaction-modal/TransactionModal.vue'
 
 @Component({
@@ -10,8 +10,8 @@ import TransactionModal from '@/views/monitor/monitor-transaction-modal/Transact
     components: { TransactionModal },
 })
 export class TransactionListTs extends Vue {
-    app: any
-    activeAccount: any
+    app: AppInfo
+    activeAccount: StoreAccount
     pageSize: number = 10
     highestPrice = 0
     isLoadingModalDetailsInfo = false

@@ -4,7 +4,7 @@ import {blog} from "@/core/api/logicApi.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {mapState} from "vuex"
-
+import {AppInfo, StoreAccount} from '@/core/model'
 @Component({
     components: {
         CheckPWDialog
@@ -17,8 +17,8 @@ import {mapState} from "vuex"
     }
 })
 export class informationTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     startPage = 0
     articleList = []
     commentList = []

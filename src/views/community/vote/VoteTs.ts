@@ -7,6 +7,7 @@ import {mapState} from "vuex"
 import {formatDate} from '@/core/utils/utils.ts'
 import {voteActionConfig, voteFilterConfig, voteSelectionConfig} from "@/config/view/vote";
 import {VoteType} from "@/core/model/VoteType";
+import {StoreAccount} from '@/core/model'
 
 @Component({
         components: {
@@ -22,7 +23,7 @@ import {VoteType} from "@/core/model/VoteType";
 )
 export class VoteTs extends Vue {
     currentVote: any = {}
-    activeAccount: any
+    activeAccount: StoreAccount
     sigleSelection = ''
     currentVoteList = []
     currentVoteFilter = 0
