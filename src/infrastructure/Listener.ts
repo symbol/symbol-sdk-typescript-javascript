@@ -126,16 +126,16 @@ export class Listener {
                             channelName: ListenerChannelName.block, message: new BlockInfo(
                                 message.meta.hash,
                                 message.meta.generationHash,
-                                message.meta.totalFee ? new UInt64(message.meta.totalFee) : new UInt64([0, 0]),
+                                message.meta.totalFee ? UInt64.fromNumericString(message.meta.totalFee) : new UInt64([0, 0]),
                                 message.meta.numTransactions,
                                 message.block.signature,
                                 PublicAccount.createFromPublicKey(message.block.signerPublicKey, networkType),
                                 networkType,
                                 parseInt(message.block.version.toString(16).substr(2, 2), 16), // Tx version
                                 message.block.type,
-                                new UInt64(message.block.height),
-                                new UInt64(message.block.timestamp),
-                                new UInt64(message.block.difficulty),
+                                UInt64.fromNumericString(message.block.height),
+                                UInt64.fromNumericString(message.block.timestamp),
+                                UInt64.fromNumericString(message.block.difficulty),
                                 message.block.feeMultiplier,
                                 message.block.previousBlockHash,
                                 message.block.blockTransactionsHash,
@@ -151,13 +151,13 @@ export class Listener {
                                 message.status,
                                 Deadline.createFromDTO(message.deadline)),
                         });
-                    } else if (message.meta) {
-                        this.messageSubject.next({channelName: message.meta.channelName, message: message.meta.hash});
                     } else if (message.parentHash) {
                         this.messageSubject.next({
                             channelName: ListenerChannelName.cosignature,
                             message: new CosignatureSignedTransaction(message.parentHash, message.signature, message.signerPublicKey),
                         });
+                    } else if (message.meta && message.meta.hash) {
+                        this.messageSubject.next({channelName: message.meta.channelName, message: message.meta.hash});
                     }
                 };
             } else {
@@ -371,7 +371,8 @@ export class Listener {
                 }
             });
             transaction.innerTransactions.map((innerTransaction: InnerTransaction) => {
-                if (this.transactionHasSignerOrReceptor(innerTransaction, address)) {
+                if (this.transactionHasSignerOrReceptor(innerTransaction, address) ||
+                    this.accountAddedToMultiSig(innerTransaction, address)) {
                     transactionFromAddress = true;
                 }
             });
@@ -405,14 +406,11 @@ export class Listener {
      * @param address - Address
      * @returns boolean
      */
-    // tslint:disable-next-line:adjacent-overload-signatures
     private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
         if (transaction instanceof MultisigAccountModificationTransaction) {
-            transaction.modifications.map((_: MultisigCosignatoryModification) => {
-                if (_.modificiationType === CosignatoryModificationAction.Add && _.cosignatoryPublicAccount.address.equals(address)) {
-                    return true;
-                }
-            });
+            return transaction.modifications.find((_: MultisigCosignatoryModification) =>
+                _.modificiationType === CosignatoryModificationAction.Add &&
+                _.cosignatoryPublicAccount.address.equals(address)) !== undefined;
         }
         return false;
     }

@@ -58,7 +58,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      * @param previousRestrictionValue - The previous restriction value.
      * @param previousRestrictionType - The previous restriction type.
      * @param newRestrictionValue - The new restriction value.
-     * @param previousRestrictionType - The previous restriction tpye.
+     * @param newRestrictionType - The new restriction tpye.
      * @param networkType - The network type.
      * @param referenceMosaicId - (Optional) The mosaic id providing the restriction key.
      * @param maxFee - (Optional) Max fee defined by the sender
