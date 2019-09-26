@@ -24,7 +24,7 @@
         computed: {
             ...mapState({
                 activeAccount: 'account',
-                app: 'app', 
+                app: 'app',
             })
         }
     })
@@ -58,7 +58,7 @@
 
         copyAddress(params) {
             const that = this
-            if (!params.data.address) return 
+            if (!params.data.address) return
             copyTxt(params.data.address.address).then(() => {
                 that.$Notice.destroy()
                 that.$Notice.success(

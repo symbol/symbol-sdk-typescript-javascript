@@ -51,8 +51,8 @@ export class TransactionFormTs extends Vue {
         }
         this.isAddressMapNull = true
         return addressAliasMap
-    } 
-    
+    }
+
     get isSelectedAccountMultisig(): boolean {
         return this.activeAccount.activeMultisigAccount ? true : false
     }
@@ -156,7 +156,7 @@ export class TransactionFormTs extends Vue {
         // @TODO: would be better to return a loading indicator
         // instead of an empty array ([] = "no matching data" in the select dropdown)
         const {mosaics, currentHeight, multisigMosaicList, isSelectedAccountMultisig} = this
-        const mosaicMap = isSelectedAccountMultisig ? multisigMosaicList : mosaics 
+        const mosaicMap = isSelectedAccountMultisig ? multisigMosaicList : mosaics
         const mosaicList: any = Object.values(mosaicMap)
         // @TODO: refactor, make it an AppMosaic method
         return [...mosaicList]
@@ -388,7 +388,7 @@ export class TransactionFormTs extends Vue {
             })
         }
         this.initForm()
-    } 
+    }
 
 
     @Watch('formItem.multisigPublickey')

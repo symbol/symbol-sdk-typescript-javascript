@@ -1,158 +1,271 @@
 .namespace_list_container {
-  padding: 20px 30px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
+  height: 100%;
+
+  .left_container {
+    float: left;
+    width: 1110px;
+    height: 100%;
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    position: relative;
 
 
-  .top_text {
-    width: 100%;
+    .tips_icon {
+      position: absolute;
+      right: 20px;
+      top: 20px;
 
-    .head_title {
-      color: #F65C5C;
-      font-size: 16px;
-      line-height: 30px;
+      .tip_text {
+        padding: 5px 5px;
 
-    }
-
-    .tips {
-      font-size: 16px;
-      font-weight: bold;
-      color: #222222;
-      line-height: 30px;
-    }
-  }
-
-  .namespace_list_table {
-    width: calc(100% - 10px);
-
-
-    .table_head,
-    .table_body_item {
-      height: 60px;
-      font-size: 14px;
-      font-weight: 400;
-      color: rgba(153, 153, 153, 1);
-      position: relative;
-      display: flex;
-      align-items: center;
-      color: #222222;
-      background: rgba(247, 251, 252, 1);
-      margin: 5px 0;
-
-      span {
-        display: inline-block;
-      }
-
-      img {
-        width: 20px;
-        height: 4px;
-      }
-
-      .namesapce_name {
-        padding-left: 87px;
-        width: 300px;
-      }
-
-      .is_active {
-        width: 150px;
-      }
-
-      .link {
-        width: 100px;
-      }
-
-      .type {
-        width: 400px;
-      }
-
-      .duration {
-        width: 180px;
-      }
-
-      .more {
-        width: 80px;
-      }
-
-      .searchList {
-        float: right;
-        position: absolute;
-        top: 15px;
-        right: 100px;
-
-        span:hover {
-          cursor: pointer;
+        p {
+          margin-top: 10px;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 25px;
+          color: rgba(255, 255, 255, 1);
         }
       }
 
-      .dropList {
-        height: 40px;
-        margin-left: 100px;
+      .ivu-poptip-body-content {
+        white-space: normal;
+      }
+
+      .ivu-poptip-arrow:after {
+        border-bottom-color: #26B4B0;
+      }
+
+      .ivu-poptip-inner {
+        background-color: #26B4B0;
+        color: white;
+      }
+
+      .ivu-poptip-title:after {
+        display: none;
+      }
+
+      img {
+        width: 29px;
       }
     }
 
-    .table_head {
-      background: none;
+    .top_text {
+      width: 100%;
+
+      .head_title {
+        font-size: 20px;
+        font-weight: 500;
+        color: rgba(51, 51, 51, 1);
+      }
+
+      .tips {
+        font-size: 16px;
+        font-weight: 500;
+        color: rgba(51, 51, 51, 1);
+        margin-top: 15px;
+      }
     }
 
-    .moreFn {
-      display: inline-block;
-      width: 20px;
-      height: 5px;
-      padding: 10px 10px;
-      background-image: url("../../../../../common/img/service/moreFn.png");
-      background-size: 100% 20%;
-      background-repeat: no-repeat;
-      background-position-y: 10px;
-      cursor: pointer;
-    }
+    .namespace_list_table {
+      width: calc(100% - 10px);
 
-    .poptip_container {
-      position: absolute;
-      z-index: 999;
 
-      .refresh_sub_container {
-        width: 80px;
+      .table_body_item {
+        box-shadow: 0px 1px 7px rgba(0, 0, 0, 0.05);
+      }
 
-        .fnItem {
+      .table_head,
+      .table_body_item {
+        height: 50px;
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(153, 153, 153, 1);
+        position: relative;
+        display: flex;
+        align-items: center;
+        color: #222222;
+        margin: 10px 0;
+
+        img {
+          width: 20px;
+          height: 4px;
+        }
+
+        span {
+          display: inline-block;
+        }
+
+
+        .namesapce_name {
+          padding-left: 30px;
+          width: 350px;
+        }
+
+        .is_active {
+          width: 170px;
+        }
+
+        .link {
+          width: 170px;
+        }
+
+        .type {
+          width: 450px;
+        }
+
+        .duration {
+          width: 230px;
+        }
+
+        .more {
           width: 80px;
-          padding: 3px 5px;
-          display: flex;
-          align-items: center;
-          font-size: 14px;
-          font-weight: 400;
-          color: rgba(102, 102, 102, 1);
+        }
 
-          img {
-            width: 14px;
-            height: 18px;
-            margin-right: 10px;
+        .searchList {
+          float: right;
+          position: absolute;
+          top: 15px;
+          right: 100px;
+
+          span:hover {
+            cursor: pointer;
+          }
+        }
+
+        .dropList {
+          height: 40px;
+          margin-left: 100px;
+        }
+      }
+
+      .moreFn {
+        display: inline-block;
+        width: 20px;
+        height: 5px;
+        padding: 10px 10px;
+        background-image: url("../../../../../common/img/service/moreFn.png");
+        background-size: 100% 20%;
+        background-repeat: no-repeat;
+        background-position-y: 10px;
+        cursor: pointer;
+        position: relative;
+        bottom: 10px;
+      }
+
+      .poptip_container {
+        position: absolute;
+        z-index: 999;
+
+        .ivu-poptip-popper {
+          top: unset !important;
+          bottom: 40px !important;
+          right: 120px;
+
+        }
+
+        .ivu-poptip-inner {
+          width: 180px;
+        }
+
+        .refresh_sub_container {
+          width: 80px;
+
+          .fnItem {
+            width: 80px;
+            padding: 3px 5px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(102, 102, 102, 1);
+
+            img {
+              width: 14px;
+              height: 18px;
+              margin-right: 10px;
+            }
           }
         }
       }
-    }
 
-    .namespace_filter {
-      display: flex;
-      align-items: center;
-      img {
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
+      .namespace_filter {
+        display: flex;
+        align-items: center;
+        width: 200px;
+
+        img {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px;
+        }
       }
     }
+
+    .page_list_container {
+      display: flex;
+      position: absolute;
+      left: 450px;
+      bottom: 20px;
+      justify-content: center;
+    }
+
+    .ivu-page-prev,
+    .ivu-page-item {
+      border: none;
+    }
+
+    .ivu-page-item-active a,
+    .ivu-page-item-active:hover a {
+      color: #26B4B0;
+    }
+
+    .ivu-page-next, .ivu-page-prev {
+      display: none;
+    }
   }
 
-  .page_list_container {
-    display: flex;
+  .right_continer {
+    float: left;
+    background-color: white;
+    height: 100%;
+    margin-left: 27px;
+    width: 628px;
+    padding: 21px 54px;
+
+    .right_continer_head {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 20px;
+      color: rgba(51, 51, 51, 1);
+    }
+
+    .second_head {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 20px;
+      color: rgba(51, 51, 51, 1);
+      margin-top: 37px;
+    }
+
+    p {
+      font-size: 16px;
+      font-weight: 500;
+      color: rgba(51, 51, 51, 1);
+      margin-bottom: 10px;
+      line-height: 30px;
+    }
+
+    .green {
+      color: #20B5AC;
+    }
+  }
+
+  .ivu-icon-md-arrow-dropdown {
+    font-size: 30px;
     position: absolute;
-    bottom: 30px;
-    justify-content: center;
+    top: 10px;
+    color: #26B4B0;
   }
-
-  .active_sort_type {
-    color: #18b566;
-  }
-
 }

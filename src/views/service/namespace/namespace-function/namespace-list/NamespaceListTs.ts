@@ -47,7 +47,9 @@ export class NamespaceListTs extends Vue {
     namespaceSortType = namespaceSortType
     currentNamespacelist = []
     currentSortType = ''
-    isShowExpiredNamesapce = false
+    isShowExpiredNamesapce = true
+    isShowMosaicAlias = false
+    dataLength = 0
 
     get namespaceList() {
         const namespaceList = this.activeAccount.namespaces.map((item) => {
@@ -198,9 +200,19 @@ export class NamespaceListTs extends Vue {
         this.isShowExpiredNamesapce = !isShowExpiredNamesapce
     }
 
-    created() {
+    @Watch('namespaceList', {deep: true})
+    onNamespaceListChange() {
+
+        this.initNamespace()
+    }
+
+    initNamespace() {
         this.getSortType(namespaceSortType.byDuration)
         this.toggleIsShowExpiredNamesapce()
+    }
+
+    mounted() {
+        this.initNamespace()
     }
 
 }
