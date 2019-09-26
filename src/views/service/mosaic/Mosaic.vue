@@ -7,7 +7,7 @@
       </span>
     </div>
 
-    <div class="sub_function_container scroll radius">
+    <div class="sub_function_container radius">
 
       <div class="right_panel">
         <MosaicList v-if="buttonList[0].isSelected"></MosaicList>

@@ -25,6 +25,9 @@ export class WalletSwitchTs extends Vue {
     walletToDelete: AppWallet | boolean = false
     thirdTimestamp = 0
     walletStyleSheetType = walletStyleSheetType
+    showUpdateDialog = false
+    walletToUpdate = {}
+
 
     get walletList() {
         let {walletList} = this.app
@@ -59,6 +62,10 @@ export class WalletSwitchTs extends Vue {
         const multisigAccountInfo: MultisigAccountInfo = this.activeAccount.multisigAccountInfo[address]
         if (!multisigAccountInfo) return false
         return multisigAccountInfo.cosignatories.length > 0
+    }
+
+    closeUpdateDialog() {
+        this.showUpdateDialog = false
     }
 
     closeCheckPWDialog() {

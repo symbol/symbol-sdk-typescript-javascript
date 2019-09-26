@@ -1,10 +1,23 @@
 import {mapState} from "vuex"
 import {Address, AliasType, MosaicId} from "nem2-sdk"
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
 import MosaicUnAliasDialog from './mosaic-unAlias-dialog/MosaicUnAliasDialog.vue'
 import {formatNumber} from '@/core/utils'
+import {mosaicSortType} from "@/config/view/mosaic"
+import {
+    sortById,
+    sortBySupply,
+    sortByDivisibility,
+    sortByTransferable,
+    sortBySupplyMutable,
+    sortByDuration,
+    sortByRestrictable,
+    sortByAlias
+} from '@/core/services/mosaics/methods.ts'
+import {networkConfig} from "@/config"
+import {MosaicNamespaceStatusType} from "@/core/model"
 
 @Component({
     components: {
@@ -19,13 +32,20 @@ export class MosaicListTs extends Vue {
     app: any
     isLoadingConfirmedTx = false
     currentTab: number = 0
+    currentPage: number = 1
+    pageSize: number = networkConfig.namespaceListSize
     rootNameList: any[] = []
+    screenMosaic: any = {}
     showCheckPWDialog = false
     showMosaicEditDialog = false
     showMosaicAliasDialog = false
     showMosaicUnAliasDialog = false
     mosaicMapInfo: any = {}
     selectedMosaic: any = {}
+    currentSortType = mosaicSortType.byId
+    mosaicSortType = mosaicSortType
+    currentMosaicList = []
+    isShowExpiredMosaic = false
 
     get currentXem() {
         return this.activeAccount.currentXem
@@ -41,10 +61,6 @@ export class MosaicListTs extends Vue {
 
     get generationHash() {
         return this.activeAccount.generationHash
-    }
-
-    get accountPublicKey() {
-        return this.activeAccount.wallet.publicKey
     }
 
     get accountAddress() {
@@ -82,21 +98,23 @@ export class MosaicListTs extends Vue {
         return namespaceMap
     }
 
-    get filteredMosaics() {
-        const mosaics: any = Object.values(this.mosaics)
-        return [...mosaics].filter(mosaic => (
-            mosaic.mosaicInfo &&
-            mosaic.mosaicInfo.owner.publicKey === this.accountPublicKey
-        ))
+
+    get currentHeight() {
+        return this.app.chainStatus.currentHeight
     }
 
     showCheckDialog() {
         this.showCheckPWDialog = true
     }
 
+    toggleChange(page) {
+        this.currentPage = page
+    }
+
     formatNumber(number) {
         return formatNumber(number)
     }
+
 
     closeCheckPWDialog() {
         this.showCheckPWDialog = false
@@ -137,10 +155,65 @@ export class MosaicListTs extends Vue {
     closeMosaicEditDialog(item) {
         this.showMosaicEditDialog = false
     }
+
     computeDuration(item) {
         if (!item.mosaicInfo) return 'Loading...'
         const {properties, height} = item.mosaicInfo
         if (properties.duration.compact() === 0) return 'Forever'
         return (height.compact() + properties.duration.compact()) - this.nowBlockHeight
     }
+
+    getSortType(type) {
+        this.currentSortType = type
+        const currentMosaicList = [...this.currentMosaicList]
+        switch (type) {
+            case mosaicSortType.byId:
+                this.currentMosaicList = sortById(currentMosaicList)
+                break
+            case mosaicSortType.byDuration:
+                this.currentMosaicList = sortByDuration(currentMosaicList)
+                break
+            case mosaicSortType.byAlias:
+                this.currentMosaicList = sortByAlias(currentMosaicList)
+                break
+            case mosaicSortType.byRestrictable:
+                this.currentMosaicList = sortByRestrictable(currentMosaicList)
+                break
+            case mosaicSortType.bySupply:
+                this.currentMosaicList = sortBySupply(currentMosaicList)
+                break
+            case mosaicSortType.byTransferable:
+                this.currentMosaicList = sortByTransferable(currentMosaicList)
+                break
+            case mosaicSortType.byDivisibility:
+                this.currentMosaicList = sortByDivisibility(currentMosaicList)
+                break
+            case mosaicSortType.bySupplyMutable:
+                this.currentMosaicList = sortBySupplyMutable(currentMosaicList)
+                break
+        }
+    }
+
+    toggleIsShowExpiredMosaic() {
+        const {isShowExpiredMosaic, currentHeight} = this
+        const list = Object.values(this.mosaics)
+        this.currentMosaicList = list.filter((item: any) => isShowExpiredMosaic || item.expirationHeight == MosaicNamespaceStatusType.FOREVER || item.expirationHeight > currentHeight)
+        this.isShowExpiredMosaic = !isShowExpiredMosaic
+    }
+
+    intiMosaics() {
+        this.getSortType(this.currentSortType)
+        this.currentMosaicList = Object.values(this.mosaics)
+    }
+
+    @Watch('mosaics', {deep: true})
+    onMosiacsChange() {
+        this.intiMosaics()
+    }
+
+    mounted() {
+        this.intiMosaics()
+    }
+
+
 }

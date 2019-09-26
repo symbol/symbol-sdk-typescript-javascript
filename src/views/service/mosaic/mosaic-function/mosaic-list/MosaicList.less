@@ -1,124 +1,314 @@
 .mosaicList {
   height: 100%;
 
-  .mosaicListBody {
-    padding: 41px 30px;
-    height: calc(100% - 20px);
+  .left_container {
     position: relative;
+    float: left;
+    width: 1110px;
+    padding: 21px 40px;
+    height: 100%;
+    background-color: white;
 
-    .no_data {
+    .mosaic_head_title {
       font-size: 20px;
-      color: #ccc;
-      text-align: center;
-      margin-top: 100px;
+      font-weight: 500;
+      line-height: 20px;
+      color: rgba(51, 51, 51, 1);
     }
 
-    .listTit {
-      height: 52px;
-      font-size: 14px;
-      line-height: 52px;
-      font-weight: 400;
-      color: #999999;
+    .mosaic_head_title_info {
+      font-size: 16px;
+      margin-top: 15px;
+      font-weight: 500;
+      line-height: 30px;
+      color: rgba(51, 51, 51, 1);
+    }
 
-      .ivu-col {
-        white-space: nowrap;
-        padding-left: 10px;
+    .screen {
+      position: absolute;
+      right: 150px;
+      z-index: 100;
+
+      a {
+        color: #20B5AC;
       }
     }
 
-    .listItem {
-      height: 60px;
-      line-height: 60px;
-      margin: 5px 0;
-      color: #222222;
-      font-size: 14px;
-      font-weight: 400;
-      background: #F7FBFC;
-      border-radius: 4px;
+    .page {
+      position: absolute;
+      top: 600px;
+      left: 400px;
+      width: 30%;
+      margin: 20px auto;
 
-      .ivu-col {
-        white-space: nowrap;
-        padding-left: 11px;
+      li:hover {
+        border-color: #20B5AC;
+        color: #20B5AC;
+      }
 
-        .color1 {
-          color: #999999;
+      li:hover a {
+        color: #20B5AC;
+      }
+
+      .ivu-page-item-active {
+        border-color: #20B5AC;
+        color: #20B5AC;
+      }
+
+      .ivu-page-item-active a {
+        color: #20B5AC;
+      }
+    }
+
+    .mosaicListBody {
+      height: calc(100% - 20px);
+      position: relative;
+      margin-top: 10px;
+
+      .no_data {
+        font-size: 20px;
+        color: #ccc;
+        text-align: center;
+        margin-top: 100px;
+      }
+
+      .listTit {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 52px;
+        color: rgba(153, 153, 153, 1);
+        height: 52px;
+        color: #999999;
+        width: 988px;
+        padding-left: 20px;
+
+        .mosaic_id {
+          margin-left: 20px;
+        }
+        .available_quantity {
+          margin-left: 120px;
         }
 
-        .color2 {
-          color: #F65C5C;
+        .mosaic_divisibility {
+          margin-left: 115px;
         }
 
-        .listFnDiv {
-          font-size: 14px;
+        .transportability {
+          margin-left: 30px;
+        }
 
-          .ivu-poptip-rel {
-            height: 60px;
-            line-height: 60px;
+        .variable_supply {
+          margin-left: 30px;
+        }
 
-            .moreFn {
-              display: inline-block;
-              width: 20px;
-              height: 5px;
-              padding: 10px 10px;
-              background-image: url("../../../../../common/img/service/moreFn.png");
-              background-size: 100% 20%;
-              background-repeat: no-repeat;
-              background-position-y: 10px;
-              transform: translateY(5px);
-              cursor: pointer;
+        .deadline {
+          margin-left: 30px;
+        }
+
+        .Restrictable {
+          margin-left: 10px;
+        }
+        .alias {
+          margin-left: 30px;
+        }
+        .ivu-col {
+          white-space: nowrap;
+        }
+      }
+
+      .listItem {
+        height: 50px;
+        line-height: 50px;
+        width: 988px;
+        color: #222222;
+        font-size: 14px;
+        font-weight: 400;
+        border-radius: 4px;
+        margin: 10px;
+        box-shadow: 0px 1px 7px rgba(0, 0, 0, 0.05);
+
+
+
+        span {
+          display: inline-block;
+        }
+        .mosaic_id {
+          width: 180px;
+          padding-left: 30px;
+        }
+
+        .available_quantity {
+         margin-left: 52px;
+          width: 140px;
+        }
+
+        .mosaic_divisibility {
+          margin-left: 30px;
+          width: 50px;
+        }
+
+        .transportability {
+          margin-left: 30px;
+          width: 50px;
+        }
+
+        .variable_supply {
+          width: 50px;
+          margin-left: 30px;
+        }
+
+        .deadline {
+          width: 50px;
+          margin-left: 40px;
+        }
+
+        .Restrictable {
+          margin-left: 45px;
+        }
+
+        .alias {
+          width: 50px;
+          margin-left: 60px;
+        }
+
+        .poptip {
+          width: 80px;
+          position: relative;
+        }
+
+        .ivu-col {
+          white-space: nowrap;
+          padding-left: 11px;
+
+          .color1 {
+            color: #999999;
+          }
+
+          .color2 {
+            color: #F65C5C;
+          }
+
+          .listFnDiv {
+            position: relative;
+            font-size: 14px;
+
+            .ivu-poptip-rel {
+              height: 50px;
+              line-height: 50px;
             }
-          }
 
-          .ivu-poptip-popper {
-            min-width: -webkit-fill-available;
-          }
 
-          .ivu-poptip-body-content {
-            overflow: inherit;
+            .ivu-poptip-popper {
+              min-width: -webkit-fill-available;
+            }
 
-            .updateFn {
-              .fnItem {
-                margin-bottom: 8px;
-                cursor: pointer;
-              }
+            .ivu-poptip-body-content {
+              overflow: inherit;
 
-              .fnItem:first-of-type {
-                margin-top: 3px;
-              }
 
-              .fnItem:last-of-type {
-                margin-bottom: 3px;
-              }
+              .updateFn {
+                .fnItem {
+                  margin-bottom: 8px;
+                  cursor: pointer;
+                }
 
-              i {
-                display: inline-block;
-                width: 18px;
-                height: 16px;
-                margin-right: 13px;
-                vertical-align: middle;
+                .fnItem:first-of-type {
+                  margin-top: 3px;
+                }
 
-                img {
+                .fnItem:last-of-type {
+                  margin-bottom: 3px;
+                }
+
+                i {
                   display: inline-block;
-                  width: 100%;
-                  height: 100%;
+                  width: 18px;
+                  height: 16px;
+                  margin-right: 13px;
+                  vertical-align: middle;
+
+                  img {
+                    display: inline-block;
+                    width: 100%;
+                    height: 100%;
+                  }
+                }
+
+                span {
+                  display: inline-block;
+                  font-size: 14px;
+                  font-weight: 400;
+                  color: #666666;
+                  vertical-align: middle;
+                }
+
+                .tails {
+                  color: #20B5AC;
                 }
               }
-
-              span {
-                display: inline-block;
-                font-size: 14px;
-                font-weight: 400;
-                color: #666666;
-                vertical-align: middle;
-              }
-
-              .tails {
-                color: #20B5AC;
-              }
             }
           }
         }
       }
     }
+
+    .active_sort_type {
+      color: rgba(32, 181, 172, 1);
+      font-size: 30px;
+      position: relative;
+      bottom: 2px;
+    }
+
+    .mosaic_filter {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .right_container {
+    padding: 21px 54px;
+    float: left;
+    width: 628px;
+    height: 100%;
+    background-color: white;
+    margin-left: 27px;
+    p {
+      margin-bottom: 17px;
+      font-weight:500;
+      line-height:30px;
+      color:rgba(51,51,51,1);
+      font-size:16px;
+    }
+    .right_container_title {
+      font-size:20px;
+    }
+    .green_text{
+      color: #20B5AC;
+    }
+  }
+  .moreFn {
+    display: inline-block;
+    width: 20px;
+    height: 5px;
+    padding: 10px 10px;
+    margin-left: 50px;
+    background-image: url("../../../../../common/img/service/moreFn.png");
+    background-size: 100% 20%;
+    background-repeat: no-repeat;
+    background-position-y: 10px;
+    transform: translateY(5px);
+    cursor: pointer;
+    z-index: 0;
+  }
+  .ivu-page-prev,
+  .ivu-page-item {
+    border: none;
+  }
+  .ivu-page-item-active a,
+  .ivu-page-item-active:hover a {
+    color: #26B4B0;
+  }
+  .ivu-page-next, .ivu-page-prev {
+    display: none;
   }
 }

@@ -25,6 +25,7 @@ export const zh_CN = {
     remaining: '剩余',
     word: '字',
     publish: '发表',
+    screen: '筛选',
     anonymous_user: '匿名用户',
     no_comment_yet: '暂无评论',
     successful_operation: '操作成功',
@@ -711,5 +712,12 @@ export const zh_CN = {
     namespace_Not_expired: '未过期',
     update_wallet_name:'修改',
     Hide_expired_namespaces:'过期命名空间',
-    Mosaic_alias:'马赛克别名'
+    Mosaic_alias:'马赛克别名',
+    NEM_mosaic:'NEM马赛克',
+    mosaic_assets:'马赛克（数字资产）',
+    describe:'描述',
+    mosaic_describe_text:'马赛克是NEM区块链上的数字资产，也可以表示一组不变的相同事物， 是使智能资产系统独特而灵活的一部分。 可以是令牌TOKEN，也可以是专属的资产集合，例如奖励积分，股票， 签名，状态标志，投票或者其他流量性资产。',
+    attribute:'属性',
+    mosaic_attribute_text:'每个马赛克都有一个唯一的ID和一组可配置的属性，这让它能适应很 多场景而变得非常灵活。',
+    mosaic_attribute_text_2:'可以为其绑定特定的命名空间，让其更具可读性和使用性。'
 }

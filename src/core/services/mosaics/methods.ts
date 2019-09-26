@@ -8,7 +8,7 @@ import {
     Mosaic,
     MosaicInfo
 } from 'nem2-sdk'
-import {AppMosaic, AppWallet} from '@/core/model'
+import {AppMosaic, AppWallet, MosaicNamespaceStatusType} from '@/core/model'
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs"
 import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
 
@@ -132,4 +132,62 @@ export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, currentXem:
         })
     }
     return mosaicListRst
+}
+
+export const sortById = (list) => {
+    let mosaicMap = {}
+    let mosaicList = []
+    list.forEach(item => {
+        mosaicMap[item.hex] = item
+    })
+    mosaicList = list.map(item => item.hex).sort()
+    return mosaicList.map((item) => {
+        return mosaicMap[item]
+    })
+}
+//mosaicInfo
+//supply
+
+export const sortBySupply = (list) => {
+    return list.sort((a, b) => {
+        if (!b.mosaicInfo || !a.mosaicInfo) return 1
+        return b.mosaicInfo.supply.compact() - a.mosaicInfo.supply.compact()
+    })
+}
+
+export const sortByDivisibility = (list) => {
+    return list.sort((a, b) => {
+        return b.mosaicInfo.properties.divisibility - a.mosaicInfo.properties.divisibility
+    })
+}
+
+export const sortByTransferable = (list) => {
+    return list.sort((a, b) => {
+        return b.mosaicInfo.properties.transferable
+    })
+}
+
+export const sortBySupplyMutable = (list) => {
+    return list.sort((a, b) => {
+        return b.mosaicInfo.properties.supplyMutable
+    })
+}
+export const sortByDuration = (list) => {
+    return list.sort((a, b) => {
+        if (MosaicNamespaceStatusType.FOREVER == a.expirationHeight) {
+            return false
+        }
+        return b.expirationHeight - a.expirationHeight
+    })
+}
+export const sortByRestrictable = (list) => {
+    return list.sort((a, b) => {
+        return b.mosaicInfo.properties.supplyMutable.restrictable
+    })
+}
+export const sortByAlias = (list) => {
+    return list.sort((a, b) => {
+        return b.name && a.name
+    })
+    return list
 }

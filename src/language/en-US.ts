@@ -741,5 +741,12 @@ export const en_US = {
     namespace_expired: 'Expired',
     namespace_Not_expired: 'Not expired',
     Hide_expired_namespaces: 'Expired namespaces',
-    Mosaic_alias:'Mosaic alias'
+    Mosaic_alias:'Mosaic alias',
+    NEM_mosaic:'NEM Mosaic',
+    mosaic_assets:'Mosaic (digital assets)',
+    describe:'Describe',
+    mosaic_describe_text:'A mosaic could be a token, but it could also be a collection of more specialized assets such as reward points, shares of stock, signatures, status flags, votes or even other currencies.',
+    attribute:'Attribute',
+    mosaic_attribute_text:'Each mosaic has a unique identifier and a set of configurable properties, This makes it very flexible to adapt to many scenarios.',
+    mosaic_attribute_text_2:'You can bind a specific namespace to make it more readable and usable.'
 }
