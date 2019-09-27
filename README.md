@@ -12,9 +12,9 @@ with the NEM2 (a.k.a Catapult)
 
 ### _Elephant_ Network Compatibility (catapult-server@0.7.0.1)
 
-Due to a network upgrade with [catapult-server@elephant3](https://github.com/nemtech/catapult-server/releases/tag/v0.7.0.1) version, **it is recommended to use this package's 0.13.2 version and upwards to use this package with Elephant versioned networks**.
+Due to a network upgrade with [catapult-server@elephant3](https://github.com/nemtech/catapult-server/releases/tag/v0.7.0.1) version, **it is recommended to use this package's 0.13.3 version and upwards to use this package with Elephant versioned networks**.
 
-The upgrade to this package's [version v0.13.2](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.13.2) is mandatory for **elephant compatibility**.
+The upgrade to this package's [version v0.13.3](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.13.3) is mandatory for **elephant compatibility**.
 
 ### _Dragon_ Network Compatibility (catapult-server@0.4.0.1)
 
