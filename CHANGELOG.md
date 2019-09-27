@@ -17,6 +17,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Made `EncryptedPrivateKey` class public
 - Made `createFromRawAddress` in `Address` class public
 - Fixed a few JSDoc issues
+- Fixed NPM audit vulnerabilities
 
 ## [0.13.2] - 20-Sep-2019
 
