@@ -86,7 +86,6 @@ export * from './messageTypeEnum';
 export * from './metadataDTO';
 export * from './metadataEntriesDTO';
 export * from './metadataEntryDTO';
-export * from './metadataMetaDTO';
 export * from './metadataTypeEnum';
 export * from './modelError';
 export * from './mosaic';
@@ -248,7 +247,6 @@ import { MessageTypeEnum } from './messageTypeEnum';
 import { MetadataDTO } from './metadataDTO';
 import { MetadataEntriesDTO } from './metadataEntriesDTO';
 import { MetadataEntryDTO } from './metadataEntryDTO';
-import { MetadataMetaDTO } from './metadataMetaDTO';
 import { MetadataTypeEnum } from './metadataTypeEnum';
 import { ModelError } from './modelError';
 import { Mosaic } from './mosaic';
@@ -431,7 +429,6 @@ let typeMap: {[index: string]: any} = {
     "MetadataDTO": MetadataDTO,
     "MetadataEntriesDTO": MetadataEntriesDTO,
     "MetadataEntryDTO": MetadataEntryDTO,
-    "MetadataMetaDTO": MetadataMetaDTO,
     "ModelError": ModelError,
     "Mosaic": Mosaic,
     "MosaicAddressRestrictionTransactionBodyDTO": MosaicAddressRestrictionTransactionBodyDTO,

@@ -35,6 +35,8 @@ export enum ReceiptTypeEnum {
     NUMBER_8515 = <any> 8515,
     NUMBER_8776 = <any> 8776,
     NUMBER_9032 = <any> 9032,
+    NUMBER_8786 = <any> 8786,
+    NUMBER_9042 = <any> 9042,
     NUMBER_12616 = <any> 12616,
     NUMBER_12626 = <any> 12626,
     NUMBER_16717 = <any> 16717,

@@ -26,19 +26,18 @@
  */
 
 import { MetadataEntryDTO } from './metadataEntryDTO';
-import { MetadataMetaDTO } from './metadataMetaDTO';
 
 export class MetadataDTO {
-    'meta': MetadataMetaDTO;
+    'id': string;
     'metadataEntry': MetadataEntryDTO;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "meta",
-            "baseName": "meta",
-            "type": "MetadataMetaDTO"
+            "name": "id",
+            "baseName": "id",
+            "type": "string"
         },
         {
             "name": "metadataEntry",

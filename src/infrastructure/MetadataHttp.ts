@@ -251,7 +251,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                 targetId = undefined;
         }
         return new Metadata(
-            metadata.meta.id,
+            metadata.id,
             new MetadataEntry(
                 metadataEntry.compositeHash,
                 metadataEntry.senderPublicKey,
