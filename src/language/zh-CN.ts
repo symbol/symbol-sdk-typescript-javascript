@@ -705,7 +705,7 @@ export const zh_CN = {
     from_to_action: '发起/接受（行为）',
     amount_asset: '数量（资产）',
     confirmations_height: '已确认块/高度',
-    hash_deadline: 'hash/期限',
+    hash_date: 'hash/日期',
     transaction_record: '交易记录',
     import_mnemonic: '导入助记词',
     namespace_filter: '筛选',

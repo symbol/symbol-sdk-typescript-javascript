@@ -10,8 +10,9 @@ export class FormattedModifyMultisigAccount extends FormattedTransaction {
     constructor( tx: Transaction,
                 address: Address,
                 currentXem: string,
-                xemDivisibility: number) {
-          super(tx, address, currentXem, xemDivisibility)
+                xemDivisibility: number,
+                store: any) {
+          super(tx, address, currentXem, xemDivisibility, store)
 
           this.dialogDetailMap = {
               'transfer_type': this.txHeader.tag,

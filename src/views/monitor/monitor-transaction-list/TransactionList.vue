@@ -22,7 +22,7 @@
             <div class="col2-header"><span>{{$t('from_to_action')}}</span></div>
             <div class="col3-header"><span>{{$t('amount_asset')}}</span></div>
             <div class="col4-header"><span>{{$t('confirmations_height')}}</span></div>
-            <div class="col5-header"><span>{{$t('hash_deadline')}}</span></div>
+            <div class="col5-header"><span>{{$t('hash_date')}}</span></div>
           </div>
           <div class="confirmed_transactions">
             <Spin v-if="transactionsLoading" size="large" fix class="absolute"></Spin>

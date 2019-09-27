@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import i18n from '@/language/index.ts'
-import {Address, AliasActionType, Deadline, TransactionType, UInt64} from 'nem2-sdk'
+import {Address, AliasActionType, Deadline} from 'nem2-sdk'
 
 const vueInstance = new Vue({i18n})
 
@@ -243,11 +243,10 @@ export const addZero = function (number) {
     return number
 }
 
-export const formatNemDeadline = function (deadline) {
-    const dateTime = deadline.value._date
-    const dayTime = deadline.value._time
-    const date = `${addZero(dateTime._year)}-${addZero(dateTime._month)}-${addZero(dateTime._day)} `
-    const time = ` ${addZero(dayTime._hour)}:${addZero(dayTime._minute)}:${addZero(dayTime._second)}`
+export const formatTimestamp = (timestamp: number): string => {
+    const d = new Date(timestamp)
+    const date = `${addZero(d.getFullYear())}-${addZero(d.getMonth() + 1)}-${addZero(d.getDate())} `
+    const time = ` ${addZero(d.getHours())}:${addZero(d.getMinutes())}:${addZero(d.getSeconds())}`
     return date + time
 }
 
@@ -259,7 +258,6 @@ export const covertOffset = (timestamp, offset) => {
     const currentZone = new Date().getTimezoneOffset() / 60
     return timestamp + (currentZone - offset) * 1000 * 60 * 60
 }
-
 
 export const formatAddress = function (address) {
     if (!address) return

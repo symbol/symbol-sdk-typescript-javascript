@@ -97,11 +97,12 @@ export const defaultNetworkConfig = {
     currentXem: 'nem.xem',
     currentXEM1: '',
     XEM: 'XEM',
-    gas2xemRate: 20000   //  1xem=20000gas
+    gas2xemRate: 20000,   //  1xem=20000gas
+    networkConfirmations: 10,
 }
 
 export const networkConfig = {
-    currentGenerateTime: 12,
+    targetBlockTime: 12,
     publicKey: "",
     generationHash: "",
     enableVerifiableState: true,

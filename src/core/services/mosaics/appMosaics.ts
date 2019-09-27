@@ -1,5 +1,5 @@
 import {MosaicAlias, MosaicId, MosaicHttp, Namespace} from 'nem2-sdk'
-import {FormattedTransfer, FormattedTransaction, FormattedAggregateComplete} from '@/core/model'
+import {FormattedTransfer, FormattedTransaction, FormattedAggregateComplete, AppNamespace} from '@/core/model'
 import {flatMap, map, toArray} from 'rxjs/operators'
 import {AppMosaic} from '@/core/model'
 
@@ -34,7 +34,7 @@ export const AppMosaics = () => ({
     async updateMosaicInfo(mosaics: Record<string, AppMosaic>, node: string): Promise<AppMosaic[]> {
         const toUpdate = this.getItemsWithoutProperties(mosaics)
 
-        if (!toUpdate.length) return
+        if (!Object.keys(toUpdate).length) return
         const updatedMosaics = await new MosaicHttp(node)
             .getMosaics(toUpdate)
             .pipe(
@@ -65,6 +65,12 @@ export const AppMosaics = () => ({
         if (tx.mosaic) return tx.mosaic
         if (tx.mosaics) return tx.mosaics
         if (tx.mosaicId) return tx.mosaicId
+    },
+    
+    fromAppNamespaces(namespaces: AppNamespace[]): AppMosaic[] {
+        return namespaces
+          .filter(({alias}) => alias instanceof MosaicAlias)
+          .map(namespace => AppMosaic.fromNamespace(namespace))
     },
 
     fromNamespaces(namespaces: Namespace[]): AppMosaic[] {

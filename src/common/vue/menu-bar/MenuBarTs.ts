@@ -116,9 +116,6 @@ export class MenuBarTs extends Vue {
         this.nodeList[index].isSelected = true
         const node = this.nodeList[index].value
         this.$store.commit('SET_NODE', this.nodeList[index].value)
-        await getNetworkGenerationHash(node, this)
-        await getCurrentBlockHeight(node, this.$store)
-        await getCurrentNetworkMosaic(node, this.$store)
     }
 
     checkNodeInput() {

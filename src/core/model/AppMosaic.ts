@@ -63,7 +63,7 @@ export class AppMosaic {
      })
  }
 
- static fromNamespace(namespace: any): AppMosaic {
+ static fromNamespace(namespace: any): AppMosaic { // @TODO: AppNamespace as input
      const id: any = namespace.alias.mosaicId //@TODO change after SDK update
      return new AppMosaic({
          hex: new MosaicId(id).toHex(),

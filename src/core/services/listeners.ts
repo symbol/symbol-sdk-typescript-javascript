@@ -1,7 +1,7 @@
 import {Address, Listener} from "nem2-sdk"
 import {filter} from 'rxjs/operators'
 import {formatAndSave} from '@/core/services/transactions'
-
+import {ChainStatus} from '@/core/model'
 export class ChainListeners {
     private readonly app: any
     private node: string
@@ -173,12 +173,7 @@ export class ChainListeners {
                 this.newBlocksListener
                     .newBlock()
                     .subscribe(block => {
-                        store.commit('SET_CHAIN_STATUS', {
-                            numTransactions: block.numTransactions ? block.numTransactions : 0,
-                            signerPublicKey: block.signer.publicKey,
-                            currentHeight: block.height.compact(),
-                            currentBlockInfo: block,
-                        })
+                        store.commit('SET_CHAIN_STATUS', new ChainStatus(block))
                     })
             })
     }

@@ -1,7 +1,9 @@
-import { Transaction, MultisigAccountInfo  } from 'nem2-sdk';
-import { AppNamespace } from './AppNamespace';
-import { AppMosaic } from './AppMosaic';
-import { FormattedTransaction } from './FormattedTransaction';
+import {Transaction, MultisigAccountInfo} from 'nem2-sdk';
+import {AppNamespace} from './AppNamespace';
+import {AppMosaic} from './AppMosaic';
+import {FormattedTransaction} from './FormattedTransaction';
+import {ChainStatus} from '.';
+
 export interface AddressAndTransaction {
   address: string
   transaction: Transaction
@@ -39,7 +41,7 @@ export interface StoreAccount {
     accountName: string
     networkMosaic: AppMosaic,
     activeMultisigAccount: string,
-    multisigAccountsMosaics: Record<string, AppMosaic[]>,
+    multisigAccountsMosaics: Record<string, Record<string, AppMosaic>>,
     multisigAccountsNamespaces: Record<string, AppNamespace[]>,
     multisigAccountsTransactions: Record<string, Transaction[]>,
     multisigAccountInfo: Record<string, MultisigAccountInfo>,
@@ -53,13 +55,7 @@ export interface AppInfo {
     hasWallet: boolean,
     isNodeHealthy: boolean,
     mnemonic: string,
-    chainStatus: {
-        currentHeight: number,
-        numTransactions: number,
-        currentBlockInfo: any,
-        signerPublicKey?: string,
-        nodeAmount?: number
-    },
+    chainStatus: ChainStatus,
     mosaicsLoading: boolean,
     balanceLoading: boolean,
     transactionsLoading: boolean,

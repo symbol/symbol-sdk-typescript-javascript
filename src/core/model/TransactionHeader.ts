@@ -1,7 +1,8 @@
-import {Transaction, TransferTransaction, Address, TransactionType} from "nem2-sdk"
+import {Transaction, TransferTransaction, Address, TransactionType, InnerTransaction} from "nem2-sdk"
 import {transactionTag} from "@/config"
-import {formatNemDeadline, getRelativeMosaicAmount} from '@/core/utils'
+import {getRelativeMosaicAmount} from '@/core/utils'
 import {transferIcons, transactionTypeToIcon} from '@/common/img/monitor/icons'
+import {ChainStatus} from './ChainStatus'
 
 /**
  * Custom properties built from transaction headers
@@ -36,23 +37,28 @@ export class TransactionHeader {
    */
   hash: string
 
-  /**
+  /** 
    * icon
-   */
+   */ 
   icon:any
 
-  constructor(transaction: Transaction, address: Address, currentXem: string, xemDivisibility: number) {
+  constructor(transaction: Transaction, address: Address, currentXem: string, xemDivisibility: number, store: any) {
      this.isReceipt = transaction instanceof TransferTransaction
         && transaction.recipient instanceof Address // @TODO: handle namespaceId
         && transaction.recipient.plain()  === address.plain()
-      
+
+      const chainStatus: ChainStatus = store.getters.chainStatus
+
      this.tag = this.getTag(transaction)
-     this.time = formatNemDeadline(transaction.deadline) 
-     this.date = new Date(this.time)
-     this.block = transaction.transactionInfo.height.compact()
-     this.hash = transaction.transactionInfo.hash
      this.fee = getRelativeMosaicAmount(transaction.maxFee.compact(), xemDivisibility)
      this.icon = this.getIcon(transaction)
+
+     if (transaction.transactionInfo) {
+          this.block = transaction.transactionInfo.height.compact()
+          this.time = chainStatus.getTimeFromBlockNumber(this.block)
+          this.date = new Date(this.time)
+          this.hash = transaction.transactionInfo.hash
+     }
   }
 
   getTag(tx: Transaction) {

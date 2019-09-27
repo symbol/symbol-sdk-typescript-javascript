@@ -12,16 +12,17 @@ export class FormattedAggregateComplete extends FormattedTransaction {
     constructor(  tx: AggregateTransaction,
                   address: Address,
                   currentXem: string,
-                  xemDivisibility: number) {
-        super(tx, address, currentXem, xemDivisibility)
+                  xemDivisibility: number,
+                  store: any) {
+        super(tx, address, currentXem, xemDivisibility, store)
 
-        this.formattedInnerTransactions = transactionFormatter(
-            tx.innerTransactions,
-            address,
-            'currentXem',
-            xemDivisibility,
-            'node',
-            currentXem)
+        this.formattedInnerTransactions = transactionFormatter( tx.innerTransactions,
+                                                                address,
+                                                                'currentXem',
+                                                                xemDivisibility,
+                                                                'node',
+                                                                currentXem,
+                                                                store)
 
         this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,

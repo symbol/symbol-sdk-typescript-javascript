@@ -38,11 +38,15 @@ const transactionFactory = () => ({
         [TransactionType.LINK_ACCOUNT] : FormattedLinkAccount,
     },
 
-    get(transaction: Transaction, address: Address, currentXem: string, xemDivisibility: number) {
+    get(  transaction: Transaction,
+          address: Address,
+          currentXem: string,
+          xemDivisibility: number,
+          store: any) {
         const {type} = transaction
         const formatter = this.router[type]
         if (!formatter) throw new Error(`no formatter found for transaction type ${type}`)
-        return new formatter(transaction, address, currentXem, xemDivisibility)
+        return new formatter(transaction, address, currentXem, xemDivisibility, store)
     }
 })
 
@@ -51,14 +55,15 @@ export const transactionFormatter = ( transactionList: Array<Transaction>,
                                       currentXEM: string,
                                       xemDivisibility: number,
                                       node: string,
-                                      currentXem: string) => {
+                                      currentXem: string,
+                                      store: any) => {
 
     // @TODO: manage address aliases
-    // @TODO: extract mosaics and search for namespaces and mosaicInfo if needed
     const enrichedTransactions = transactionList
     return enrichedTransactions
         .map(transaction => transactionFactory().get( transaction,
                                                       accountAddress,
                                                       currentXem,
-                                                      xemDivisibility))
+                                                      xemDivisibility,
+                                                      store))
 }

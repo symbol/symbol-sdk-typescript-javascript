@@ -106,12 +106,12 @@ export const networkStatusConfig: Array<{
             icon: dashboardBlockTime,
             descript: 'average_block_time',
             data: 12,
-            variable: 'currentGenerateTime'
+            variable: 'targetBlockTime'
         }, {
             icon: dashboardPointAmount,
             descript: 'point',
             data: 4,
-            variable: 'nodeAmount'
+            variable: 'nodeNumber'
         }, {
             icon: dashboardTransactionAmount,
             descript: 'number_of_transactions',

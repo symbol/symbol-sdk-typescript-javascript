@@ -186,9 +186,18 @@ export default {
             const {address, namespaces} = addressAndNamespaces
             Vue.set(state.multisigAccountsNamespaces, address, namespaces)
         },
-        SET_MULTISIG_ACCOUNT_MOSAICS( state: StoreAccount, addressAndMosaics: AddressAndMosaics) {
+        UPDATE_MULTISIG_ACCOUNT_MOSAICS(state: StoreAccount, addressAndMosaics: AddressAndMosaics): void {
             const {address, mosaics} = addressAndMosaics
-            Vue.set(state.multisigAccountsMosaics, address, mosaics)
+            const mosaicList = {...state.multisigAccountsMosaics[address]}
+
+            console.log(mosaics, address, 'UPDATE_MULTISIG_ACCOUNT_MOSAICS', mosaicList)
+            mosaics.forEach((mosaic: AppMosaic) => {
+                if (!mosaic.hex) return
+                const {hex} = mosaic
+                if (!mosaicList[hex]) mosaicList[hex] = new AppMosaic({hex})
+                Object.assign(mosaicList[mosaic.hex], mosaic)
+            })
+            Vue.set(state.multisigAccountsMosaics, address, mosaicList)
         },
         SET_WALLET_IMPORTANCE(state: StoreAccount, importance: number) {
             state.wallet.importance = importance

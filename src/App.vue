@@ -22,7 +22,7 @@
     } from '@/core/utils'
     import {Component, Vue} from 'vue-property-decorator'
     import {ChainListeners} from '@/core/services/listeners.ts'
-    import {initMosaic, mosaicsAmountViewFromAddress} from '@/core/services/mosaics'
+    import {initMosaic, mosaicsAmountViewFromAddress, AppMosaics} from '@/core/services/mosaics'
     import {getMarketOpenPrice} from '@/core/services/marketData.ts'
     import {setTransactionList} from '@/core/services/transactions'
     import {getNamespacesFromAddress} from '@/core/services'
@@ -42,7 +42,6 @@
         confirmedTxListener = null
         txStatusListener = null
         chainListeners: ChainListeners = null
-
         get node(): string {
             return this.activeAccount.node
         }
@@ -69,10 +68,6 @@
 
         get namespaceList() {
             return this.activeAccount.namespaces
-        }
-
-        get currentBlockInfo() {
-            return this.app.chainStatus.currentBlockInfo
         }
 
         get currentNode() {
@@ -185,17 +180,23 @@
                 ])
 
                 const appNamespaces = promises[0] 
+                // @TODO: refactor
                 const mosaicAmountViews = promises[1]
                 const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
-
-                Promise.all([
-                    this.$store.commit('SET_MULTISIG_ACCOUNT_MOSAICS', {
+                
+                await Promise.all([
+                    this.$store.commit('UPDATE_MULTISIG_ACCOUNT_MOSAICS', {
                       address, mosaics: appMosaics,
                     }),
                     this.$store.commit('SET_MULTISIG_ACCOUNT_NAMESPACES', {
                       address, namespaces: appNamespaces,
                     }),
                 ])
+
+                const appMosaicsFromNamespaces = await AppMosaics().fromAppNamespaces(appNamespaces)
+                await this.$store.commit('UPDATE_MULTISIG_ACCOUNT_MOSAICS', {
+                      address, mosaics: appMosaicsFromNamespaces,
+                })
             } catch (error) {
                 throw new Error(error) 
             }
@@ -299,6 +300,7 @@
                                 await getNetworkGenerationHash(node, this)
                                 // @TODO: Handle generationHash change
                                 await getCurrentNetworkMosaic(node, this.$store)
+                                await getCurrentBlockHeight(node, this.$store)
                                 this.chainListeners = new ChainListeners(this, this.wallet.address, node)
                                 this.chainListeners.start()
                             } catch (error) {

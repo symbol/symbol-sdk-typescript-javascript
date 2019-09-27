@@ -68,11 +68,11 @@ export class TransactionFormTs extends Vue {
           : null
     }
 
-    get multisigMosaicList(): AppMosaic[] {
+    get multisigMosaicList(): Record<string, AppMosaic> {
         const {activeMultisigAccountAddress} = this
         const {multisigAccountsMosaics} = this.activeAccount
-        if (!activeMultisigAccountAddress) return []
-        return multisigAccountsMosaics[activeMultisigAccountAddress] || []
+        if (!activeMultisigAccountAddress) return {}
+        return multisigAccountsMosaics[activeMultisigAccountAddress] || {}
     }
 
     get currentMinApproval(): number {

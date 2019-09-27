@@ -735,7 +735,7 @@ export const en_US = {
     from_to_action: 'From/To (action)',
     amount_asset: 'Amount (asset)',
     confirmations_height: 'Confirmations/Height',
-    hash_deadline: 'Hash/Deadline',
+    hash_date: 'Hash/Date',
     transaction_record: 'Transaction records',
     import_mnemonic: 'Import mnemonic',
     update_wallet_name: 'Update',

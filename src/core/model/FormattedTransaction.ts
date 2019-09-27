@@ -9,10 +9,11 @@ export abstract class FormattedTransaction {
     txHeader: TransactionHeader
     txBody: any
     isTxUnconfirmed: boolean
-
-    constructor(transaction: any, address: Address, currentXem: string, xemDivisibility: number) {
+    store: any
+  
+    constructor(transaction: any, address: Address, currentXem: string, xemDivisibility: number, store: any) {
         this.rawTx = transaction
-        this.txHeader = new TransactionHeader(transaction, address, currentXem, xemDivisibility)
+        this.txHeader = new TransactionHeader(transaction, address, currentXem, xemDivisibility, store)
         this.isTxUnconfirmed = transaction.isTxUnconfirmed || false // @TODO: don't add key to Transaction
         return this
     }

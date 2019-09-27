@@ -1,6 +1,6 @@
 import {PublicAccount, NetworkType} from "nem2-sdk"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
-import {transactionFormat} from '@/core/services/transactions'
+import {transactionFormat} from './formatting'
 
 // @TODO: refactor
 export const formatAndSave = (  mosaicList,
@@ -19,6 +19,7 @@ export const formatAndSave = (  mosaicList,
         xemDivisibility,
         node,
         currentXem,
+        store,
     )
     
     if(confirmed) {
@@ -51,6 +52,7 @@ export const setTransactionList = (address, that) => {
                 context.xemDivisibility,
                 context.node,
                 context.currentXem,
+                context.$store,
             )
         await that.$store.commit('SET_TRANSACTION_LIST', txList)
         that.$store.commit('SET_TRANSACTIONS_LOADING', false)

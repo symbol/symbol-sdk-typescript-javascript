@@ -4,7 +4,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {formatNumber, renderMosaics} from '@/core/utils'
 import {FormattedTransaction, AppInfo, StoreAccount} from '@/core/model';
 import TransactionModal from '@/views/monitor/monitor-transaction-modal/TransactionModal.vue'
-
+import {defaultNetworkConfig} from '@/config/index'
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
     components: { TransactionModal },
@@ -58,8 +58,9 @@ export class TransactionListTs extends Vue {
         const {currentHeight} = this
         if (!currentHeight) return height
         const confirmations = currentHeight - height
-        if (confirmations > 500) return height.toLocaleString() //@TODO 500 shouldn't be hardcoded
-        return `${confirmations} / ${height.toLocaleString()}`
+        const {networkConfirmations} = defaultNetworkConfig
+        if (confirmations > networkConfirmations) return height.toLocaleString()
+        return `(${confirmations}/${networkConfirmations}) - ${height.toLocaleString()}`
     }
 
     // @TODO: move out from there

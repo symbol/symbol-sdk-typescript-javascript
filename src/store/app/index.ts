@@ -1,7 +1,5 @@
-import {networkConfig} from '@/config/index.ts'
-import {nodeListConfig} from "@/config/view/node";
+import {AppInfo, ChainStatus} from '@/core/model'
 import {localRead} from "@/core/utils";
-import {AppInfo} from '@/core/model'
 
 export default {
     state: {
@@ -12,14 +10,7 @@ export default {
         hasWallet: false,
         isNodeHealthy: false,
         mnemonic: '',
-        chainStatus: {
-            currentGenerateTime: networkConfig.currentGenerateTime,
-            currentHeight: 0,
-            numTransactions: 0,
-            currentBlockInfo: {},
-            signerPublicKey: '',
-            nodeAmount: nodeListConfig.length
-        },
+        chainStatus: ChainStatus.getDefault(),
         mosaicsLoading: true,
         balanceLoading: false,
         transactionsLoading: false,
@@ -28,7 +19,11 @@ export default {
         multisigLoading: true,
         _ENABLE_TREZOR_: localRead("_ENABLE_TREZOR_") === "true"
     },
-    getters: {},
+    getters: {
+        chainStatus(state) {
+            return state.chainStatus
+        },
+    },
     mutations: {
         RESET_APP(state: AppInfo) {
             state.hasWallet = false
@@ -68,16 +63,11 @@ export default {
         SET_XEM_USD_PRICE(state: AppInfo, value: number) {
             state.xemUsdPrice = value
         },
-        SET_CHAIN_STATUS(state: AppInfo, chainStatus: any) {
-            const {currentHeight, numTransactions, currentBlockInfo, signerPublicKey, nodeAmount} = chainStatus
-            state.chainStatus.currentHeight = currentHeight ? currentHeight : state.chainStatus.currentHeight
-            state.chainStatus.numTransactions = numTransactions ? numTransactions : state.chainStatus.numTransactions
-            state.chainStatus.currentBlockInfo = currentBlockInfo ? currentBlockInfo : state.chainStatus.currentBlockInfo
-            state.chainStatus.signerPublicKey = signerPublicKey ? signerPublicKey : state.chainStatus.signerPublicKey
-            state.chainStatus.nodeAmount = nodeAmount ? nodeAmount : state.chainStatus.nodeAmount
-
+        SET_CHAIN_STATUS(state: AppInfo, chainStatus: ChainStatus) {
+            state.chainStatus = chainStatus
         },
         SET_CHAIN_HEIGHT(state: AppInfo, chainHeight: number) {
+            // @TODO: deprecate in favour of SET_CHAIN_STATUS
             state.chainStatus.currentHeight = chainHeight || 0
         },
         SET_NAMESPACE_LOADING(state: AppInfo, namespaceLoading: boolean) {
