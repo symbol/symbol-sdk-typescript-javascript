@@ -129,6 +129,7 @@ export const zh_CN = {
     remarks: '备注',
     generate_QR_code: '生成二维码',
     copy_address: '复制地址',
+    copy_private_key: '复制私钥',
     copy_QR_code: '复制二维码',
     collection_record: '收款记录',
     enter_asset_type_alias_or_address_search: '输入交易hash搜索',
@@ -732,6 +733,6 @@ export const zh_CN = {
     importance: '重要性',
     Add_to_local_address_book: '添加到本地地址簿',
     contact_list: '通信录',
-    meta_data: 'MetaData',
+    meta_data: 'Metadata',
     node_exists_error: '节点已存在'
 }

@@ -1,7 +1,7 @@
-import {QRCodeGenerator} from 'nem2-qr-library'
-import {Password} from 'nem2-sdk'
+import {AccountQR} from 'nem2-qr-library'
+import {Password, Account} from 'nem2-sdk'
 import {copyTxt} from "@/core/utils/utils.ts"
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Message} from "@/config"
 import {mapState} from "vuex"
 import {AppWallet, StoreAccount} from "@/core/model"
@@ -15,7 +15,6 @@ import {AppWallet, StoreAccount} from "@/core/model"
 })
 export class PrivatekeyDialogTs extends Vue {
     QRCode = ''
-    show = false
     stepIndex = 0
     activeAccount: StoreAccount
     wallet = {
@@ -25,6 +24,16 @@ export class PrivatekeyDialogTs extends Vue {
 
     @Prop()
     showPrivatekeyDialog: boolean
+
+    get show() {
+        return this.showPrivatekeyDialog
+    }
+
+    set show(val) {
+        if (!val) {
+            this.$emit('close')
+        }
+    }
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -56,8 +65,6 @@ export class PrivatekeyDialogTs extends Vue {
             const {privateKey} = new AppWallet(this.getWallet)
                 .getAccount(new Password(this.wallet.password))
 
-            this.stepIndex = 1
-            this.wallet.password = ''
             this.stepIndex = 1
             this.wallet.privatekey = privateKey.toString().toUpperCase()
         } catch (e) {
@@ -116,15 +123,8 @@ export class PrivatekeyDialogTs extends Vue {
     createQRCode() {
         const {networkType} = this.getWallet
         const {generationHash} = this
-        const object = {privateKey: this.wallet.privatekey}
-        this.QRCode = QRCodeGenerator
-            .createExportObject(object, networkType, generationHash)
-            .toBase64()
-    }
-
-    // @TODO: use v-model
-    @Watch('showPrivatekeyDialog')
-    onShowPrivatekeyDialogChange() {
-        this.show = this.showPrivatekeyDialog
+        const {password, privatekey} = this.wallet
+        const account = Account.createFromPrivateKey(privatekey, networkType)  
+        this.QRCode = new AccountQR(account, new Password(password), networkType, generationHash).toBase64()
     }
 }

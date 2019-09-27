@@ -73,8 +73,10 @@
           <p class="mnemonicWords">{{mnemonic}}</p>
           <p class="tit">{{$t('please_accurately_copy_the_hd_wallet_path')}}</p>
           <p class="path mnemonicWords">{{path}}</p>
+          <div class="QRCodeImg">
+            <img :src="QRCode">
+          </div>
           <div class="buttons_container">
-
             <Button type="success" @click="exportMnemonic">
               {{$t('next')}}
               <Icon class="next" type="ios-arrow-round-forward"/>

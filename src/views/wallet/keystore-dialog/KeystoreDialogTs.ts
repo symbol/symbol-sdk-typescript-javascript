@@ -1,6 +1,6 @@
 import {Message} from "@/config/index.ts"
 import {copyTxt} from "@/core/utils/utils.ts"
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {Password} from "nem2-sdk"
 import {AppWallet, StoreAccount} from "@/core/model"
@@ -15,7 +15,6 @@ import {AppWallet, StoreAccount} from "@/core/model"
 export class KeystoreDialogTs extends Vue {
     activeAccount: StoreAccount
     stepIndex = 0
-    show = false
     QRCode = ''
     keystoreText = ''
     wallet = {
@@ -25,6 +24,15 @@ export class KeystoreDialogTs extends Vue {
     @Prop()
     showKeystoreDialog: boolean
 
+    get show() {
+        return this.showKeystoreDialog
+    }
+
+    set show(val) {
+        if (!val) {
+            this.$emit('close')
+        }
+    }
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -105,11 +113,5 @@ export class KeystoreDialogTs extends Vue {
         }).catch((error) => {
             console.log(error)
         })
-    }
-
-    // @TODO: use v-model
-    @Watch('showKeystoreDialog')
-    onShowKeystoreDialogChange() {
-        this.show = this.showKeystoreDialog
     }
 }

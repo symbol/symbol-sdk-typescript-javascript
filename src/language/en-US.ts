@@ -138,6 +138,7 @@ export const en_US = {
     remarks: 'Remarks',
     generate_QR_code: 'Generate QR code',
     copy_address: 'Copy address',
+    copy_private_key: 'Copy private key',
     copy_QR_code: 'Copy QR code',
     collection_record: 'Transfers received',
     enter_asset_type_alias_or_address_search: 'Enter transaction hash search',
@@ -475,7 +476,7 @@ export const en_US = {
     Export_private_key: 'Export private key',
     Export_Keystore: 'Export Keystore',
     Alias_settings: 'Alias settings',
-    Filter_management: 'Restriction',
+    Filter_management: 'Restrictions',
     Subaddress_management: 'Sub-address ',
     Modify_the_private_key_wallet_password: 'Modify password',
     status: 'Status',
@@ -761,6 +762,6 @@ export const en_US = {
     Used_to_bind_a_wallet_address: 'Used to bind a wallet address as its transfer alias; used to set up an account filter; used to bind a Mosaic ID.',
     Add_to_local_address_book: 'Add to local address book',
     contact_list: 'contact list',
-    meta_data: 'MetaData',
+    meta_data: 'Metadata',
     node_exists_error: 'Node already exists'
 }
