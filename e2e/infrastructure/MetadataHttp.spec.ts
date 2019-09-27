@@ -275,9 +275,9 @@ describe('MetadataHttp', () => {
                     expect(metadata.length).to.be.greaterThan(0);
                     expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
                     expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.privateKey);
+                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
                     expect(metadata[0].metadataEntry.targetId).to.be.undefined;
-                    expect(metadata[0].metadataEntry.value).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
+                    expect(Convert.decodeHex(metadata[0].metadataEntry.value)).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
                     expect(metadata[0].metadataEntry.valueSize).to.be.equal(10);
                     done();
                 });
@@ -291,9 +291,9 @@ describe('MetadataHttp', () => {
                     expect(metadata.length).to.be.greaterThan(0);
                     expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
                     expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.privateKey);
+                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
                     expect(metadata[0].metadataEntry.targetId).to.be.undefined;
-                    expect(metadata[0].metadataEntry.value).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
+                    expect(Convert.decodeHex(metadata[0].metadataEntry.value)).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
                     expect(metadata[0].metadataEntry.valueSize).to.be.equal(10);
                     done();
                 });
@@ -306,9 +306,9 @@ describe('MetadataHttp', () => {
                 .subscribe((metadata) => {
                     expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
                     expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.privateKey);
+                    expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
                     expect(metadata.metadataEntry.targetId).to.be.undefined;
-                    expect(metadata.metadataEntry.value).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
+                    expect(Convert.decodeHex(metadata.metadataEntry.value)).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
                     expect(metadata.metadataEntry.valueSize).to.be.equal(10);
                     done();
                 });
@@ -322,9 +322,9 @@ describe('MetadataHttp', () => {
                     expect(metadata.length).to.be.greaterThan(0);
                     expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
                     expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.privateKey);
+                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
                     expect((metadata[0].metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
-                    expect(metadata[0].metadataEntry.value).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
+                    expect(Convert.decodeHex(metadata[0].metadataEntry.value)).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
                     expect(metadata[0].metadataEntry.valueSize).to.be.equal(10);
                     done();
                 });
@@ -338,9 +338,9 @@ describe('MetadataHttp', () => {
                     expect(metadata.length).to.be.greaterThan(0);
                     expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
                     expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.privateKey);
+                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
                     expect((metadata[0].metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
-                    expect(metadata[0].metadataEntry.value).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
+                    expect(Convert.decodeHex(metadata[0].metadataEntry.value)).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
                     expect(metadata[0].metadataEntry.valueSize).to.be.equal(10);
                     done();
                 });
@@ -353,9 +353,9 @@ describe('MetadataHttp', () => {
                 .subscribe((metadata) => {
                     expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
                     expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.privateKey);
+                    expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
                     expect((metadata.metadataEntry.targetId as MosaicId).toHex()).to.be.equal(mosaicId.toHex());
-                    expect(metadata.metadataEntry.value).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
+                    expect(Convert.decodeHex(metadata.metadataEntry.value)).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
                     expect(metadata.metadataEntry.valueSize).to.be.equal(10);
                     done();
                 });
@@ -369,9 +369,9 @@ describe('MetadataHttp', () => {
                     expect(metadata.length).to.be.greaterThan(0);
                     expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
                     expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.privateKey);
+                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
                     expect((metadata[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
-                    expect(metadata[0].metadataEntry.value).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
+                    expect(Convert.decodeHex(metadata[0].metadataEntry.value)).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
                     expect(metadata[0].metadataEntry.valueSize).to.be.equal(10);
                     done();
                 });
@@ -385,9 +385,9 @@ describe('MetadataHttp', () => {
                     expect(metadata.length).to.be.greaterThan(0);
                     expect(metadata[0].metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
                     expect(metadata[0].metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.privateKey);
+                    expect(metadata[0].metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
                     expect((metadata[0].metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
-                    expect(metadata[0].metadataEntry.value).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
+                    expect(Convert.decodeHex(metadata[0].metadataEntry.value)).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
                     expect(metadata[0].metadataEntry.valueSize).to.be.equal(10);
                     done();
                 });
@@ -400,9 +400,9 @@ describe('MetadataHttp', () => {
                 .subscribe((metadata) => {
                     expect(metadata.metadataEntry.scopedMetadataKey.toString()).to.be.equal('5');
                     expect(metadata.metadataEntry.senderPublicKey).to.be.equal(account.publicKey);
-                    expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.privateKey);
+                    expect(metadata.metadataEntry.targetPublicKey).to.be.equal(account.publicKey);
                     expect((metadata.metadataEntry.targetId as NamespaceId).toHex()).to.be.equal(namespaceId.toHex());
-                    expect(metadata.metadataEntry.value).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
+                    expect(Convert.decodeHex(metadata.metadataEntry.value)).to.be.equal(Convert.uint8ToUtf8(new Uint8Array(10)));
                     expect(metadata.metadataEntry.valueSize).to.be.equal(10);
                     done();
                 });
