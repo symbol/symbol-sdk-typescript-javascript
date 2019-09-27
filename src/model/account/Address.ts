@@ -64,7 +64,6 @@ export class Address {
     }
 
     /**
-     * @internal
      * Create an Address from a given encoded address.
      * @param {string} encoded
      * @return {Address}
