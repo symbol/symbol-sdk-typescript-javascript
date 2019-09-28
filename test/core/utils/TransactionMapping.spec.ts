@@ -1067,7 +1067,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             account.publicKey,
             UInt64.fromUint(1000),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            'Test Value',
             NetworkType.MIJIN_TEST,
         );
 
@@ -1078,7 +1078,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
-        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
+        expect(transaction.value).to.be.equal('Test Value');
     });
 
     it('should create MosaicMetadataTransaction', () => {
@@ -1088,7 +1088,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             UInt64.fromUint(1000),
             new MosaicId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            'Test Value',
             NetworkType.MIJIN_TEST,
         );
 
@@ -1100,7 +1100,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.scopedMetadataKey.toHex()).to.be.equal(UInt64.fromUint(1000).toHex());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetMosaicId.toHex()).to.be.equal(new MosaicId([2262289484, 3405110546]).toHex());
-        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
+        expect(transaction.value).to.be.equal('Test Value');
     });
 
     it('should create NamespaceMetadataTransaction', () => {
@@ -1110,7 +1110,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             UInt64.fromUint(1000),
             new NamespaceId([2262289484, 3405110546]),
             1,
-            Convert.uint8ToUtf8(new Uint8Array(10)),
+            'Test Value',
             NetworkType.MIJIN_TEST,
         );
 
@@ -1122,6 +1122,6 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.scopedMetadataKey.toString()).to.be.equal(UInt64.fromUint(1000).toString());
         expect(transaction.valueSizeDelta).to.be.equal(1);
         expect(transaction.targetNamespaceId.toHex()).to.be.equal(new NamespaceId([2262289484, 3405110546]).toHex());
-        expect(Convert.uint8ToHex(transaction.value)).to.be.equal(Convert.uint8ToHex(new Uint8Array(10)));
+        expect(transaction.value).to.be.equal('Test Value');
     });
 });
