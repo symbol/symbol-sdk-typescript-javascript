@@ -163,8 +163,8 @@ describe('MetadataHttp', () => {
                 Deadline.create(),
                 account.publicKey,
                 UInt64.fromUint(5),
-                10,
-                Convert.uint8ToUtf8(new Uint8Array(10)),
+                23,
+                `Test account meta value`,
                 NetworkType.MIJIN_TEST,
             );
 
@@ -201,8 +201,8 @@ describe('MetadataHttp', () => {
                 account.publicKey,
                 UInt64.fromUint(5),
                 mosaicId,
-                10,
-                Convert.uint8ToUtf8(new Uint8Array(10)),
+                22,
+                `Test mosaic meta value`,
                 NetworkType.MIJIN_TEST,
             );
 
@@ -239,8 +239,8 @@ describe('MetadataHttp', () => {
                 account.publicKey,
                 UInt64.fromUint(5),
                 namespaceId,
-                10,
-                Convert.uint8ToUtf8(new Uint8Array(10)),
+                25,
+                `Test namespace meta value`,
                 NetworkType.MIJIN_TEST,
             );
 
