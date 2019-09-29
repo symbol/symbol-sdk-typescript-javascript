@@ -19,7 +19,6 @@ export const voteFilterConfig: Array<{
             label: 'finished'
         }
     ]
-
 export const voteSelectionConfig = [
     {
         description: '1'

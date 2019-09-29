@@ -2,12 +2,13 @@ import {TransactionType} from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue} from 'vue-property-decorator'
 import {formatNumber, renderMosaics} from '@/core/utils'
-import {FormattedTransaction, AppInfo, StoreAccount} from '@/core/model';
+import {FormattedTransaction, AppInfo, StoreAccount} from '@/core/model'
 import TransactionModal from '@/views/monitor/monitor-transaction-modal/TransactionModal.vue'
 import {defaultNetworkConfig} from '@/config/index'
+
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
-    components: { TransactionModal },
+    components: {TransactionModal},
 })
 export class TransactionListTs extends Vue {
     app: AppInfo
@@ -19,7 +20,7 @@ export class TransactionListTs extends Vue {
     formatNumber = formatNumber
     renderMosaics = renderMosaics
     TransactionType = TransactionType
-
+    scroll: any
     showDialog: boolean = false
     activeTransaction: FormattedTransaction = null
 
@@ -65,12 +66,20 @@ export class TransactionListTs extends Vue {
 
     // @TODO: move out from there
     miniHash(hash: string): string {
-        return `${hash.substring(0, 18).toLowerCase()}...${hash.substring(49).toLowerCase()}`;
+        return `${hash.substring(0, 18).toLowerCase()}...${hash.substring(49).toLowerCase()}`
     }
 
     // @TODO: Changing tab should reset the newly selected tab's pagination to 1
-    // @TODO: Scroll to top of the list when changing page
     async changePage(page) {
         this.page = page
+        this.scrollTop()
+    }
+
+    divScroll(div) {
+        this.scroll = div
+    }
+
+    scrollTop() {
+        this.scroll.target.scrollTop = 0
     }
 }

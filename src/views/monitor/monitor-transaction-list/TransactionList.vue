@@ -6,7 +6,7 @@
             @close="showDialog = false"
     />
 
-    <div class="bottom_transactions radius scroll" ref="bottomTransactions">
+    <div class="bottom_transactions radius scroll" >
       <div class="splite_page">
         <span>{{$t('total')}}：{{transactionList.length}} {{$t('data')}}</span>
         <Page @on-change="changePage" :total="transactionList.length" class="page_content"/>
@@ -26,7 +26,7 @@
           </div>
           <div class="confirmed_transactions">
             <Spin v-if="transactionsLoading" size="large" fix class="absolute"></Spin>
-            <div class="table_body hide_scroll" ref="confirmedTableBody">
+            <div class="table_body hide_scroll" @scroll="divScroll" ref="confirmedTableBody">
               <div
                       class="table_item pointer "
                       @click="showDialog = true; activeTransaction = c"
