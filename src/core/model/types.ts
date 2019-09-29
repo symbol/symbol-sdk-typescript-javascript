@@ -21,7 +21,7 @@ export interface AddressAndMosaics {
 
 export interface AddressAndMultisigInfo {
     address: string
-    multisigAccountInfo: MultisigAccountInfo 
+    multisigAccountInfo: MultisigAccountInfo
 }
 
 export interface StoreAccount {
@@ -61,5 +61,7 @@ export interface AppInfo {
     transactionsLoading: boolean,
     xemUsdPrice: Number,
     namespaceLoading: boolean
-    multisigLoading: boolean
+    multisigLoading: boolean,
+    isUiDisabled: boolean,
+    uiDisabledMessage: string
 }

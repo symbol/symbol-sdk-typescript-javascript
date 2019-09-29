@@ -17,7 +17,9 @@ export default {
         namespaceLoading: true,
         xemUsdPrice: 0,
         multisigLoading: true,
-        _ENABLE_TREZOR_: localRead("_ENABLE_TREZOR_") === "true"
+        _ENABLE_TREZOR_: localRead("_ENABLE_TREZOR_") === "true",
+        isUiDisabled: false,
+        uiDisabledMessage: ''
     },
     getters: {
         chainStatus(state) {
@@ -73,5 +75,9 @@ export default {
         SET_NAMESPACE_LOADING(state: AppInfo, namespaceLoading: boolean) {
             state.namespaceLoading = namespaceLoading
         },
+        SET_UI_DISABLED(state: AppInfo, { isDisabled, message }: { isDisabled: boolean, message: string}) {
+            state.isUiDisabled = isDisabled;
+            state.uiDisabledMessage = message;
+        }
     }
 }

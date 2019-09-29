@@ -1,6 +1,7 @@
 <template>
   <div id="app" :class="[isWindows?'windows':'mac']">
     <router-view/>
+    <DisabledUiOverlay/>
   </div>
 </template>
 
@@ -28,11 +29,16 @@
     import {getNamespacesFromAddress} from '@/core/services'
     import {AppMosaic, AppWallet, AppInfo, StoreAccount} from '@/core/model'
     import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
+    import DisabledUiOverlay from '@/common/vue/disabled-ui-overlay/DisabledUiOverlay.vue';
+
 
     @Component({
         computed: {
             ...mapState({activeAccount: 'account', app: 'app'}),
         },
+        components: {
+            DisabledUiOverlay
+        }
     })
     export default class App extends Vue {
         isWindows = isWindows
@@ -138,7 +144,7 @@
                 ])
 
                 new AppWallet(newWallet).setMultisigStatus(this.node, this.$store)
-                
+
                 if (!this.chainListeners) {
                     this.chainListeners = new ChainListeners(this, newWallet.address, this.node)
                     this.chainListeners.start()
@@ -179,11 +185,11 @@
                     mosaicsAmountViewFromAddress(node, accountAddress),
                 ])
 
-                const appNamespaces = promises[0] 
+                const appNamespaces = promises[0]
                 // @TODO: refactor
                 const mosaicAmountViews = promises[1]
                 const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
-                
+
                 await Promise.all([
                     this.$store.commit('UPDATE_MULTISIG_ACCOUNT_MOSAICS', {
                       address, mosaics: appMosaics,
@@ -198,7 +204,7 @@
                       address, mosaics: appMosaicsFromNamespaces,
                 })
             } catch (error) {
-                throw new Error(error) 
+                throw new Error(error)
             }
         }
 
