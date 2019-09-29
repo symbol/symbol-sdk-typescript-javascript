@@ -463,6 +463,7 @@ export const en_US = {
     Public_wallet: 'Public wallet',
     Wallet_name: 'Name',
     Wallet_address: 'Address',
+    Wallet_public_key: 'Public Key',
     publickey: 'PublicKey',
     Address_QR_code: 'Address QR code',
     Function_and_backup: 'Backup',

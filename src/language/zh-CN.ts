@@ -455,6 +455,7 @@ export const zh_CN = {
     Public_wallet: '公共钱包',
     Wallet_name: '钱包名',
     Wallet_address: '钱包地址',
+    Wallet_public_key: '公钥',
     publickey: '公钥',
     Address_QR_code: '地址二维码',
     Function_and_backup: '功能与备份',
