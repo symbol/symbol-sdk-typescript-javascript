@@ -1,7 +1,7 @@
 import {mapState} from 'vuex'
 import {Component, Vue} from 'vue-property-decorator'
 import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
-import {formatXemAmount, formatNumber, localRead} from '@/core/utils/utils.ts'
+import {formatNumber, formatXemAmount, localRead} from '@/core/utils/utils.ts'
 import {AppWallet, AppInfo, StoreAccount, AppAccounts} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {walletStyleSheetType} from '@/config/view/wallet.ts'
@@ -27,7 +27,6 @@ export class WalletSwitchTs extends Vue {
     showUpdateDialog = false
     showCheckPWDialog = false
     deleteIndex = -1
-    deletecurrent = -1
     walletToDelete: AppWallet | boolean = false
     thirdTimestamp = 0
     walletStyleSheetType = walletStyleSheetType
@@ -37,7 +36,7 @@ export class WalletSwitchTs extends Vue {
     get walletList() {
         let {walletList} = this.app
         walletList.sort((a, b) => {
-            return b.createTimestamp - a.createTimestamp
+            return a.createTimestamp - b.createTimestamp
         })
         return walletList.map(item => {
             const walletType = item.accountTitle.substring(0, item.accountTitle.indexOf('-'))

@@ -328,18 +328,18 @@ export const formatSeconds = function (second) {
 
 }
 
-export const formatXemAmount = (XEMamount) => {
-    if (!Number(XEMamount)) return '0'
-    XEMamount = XEMamount + ''
-    if (XEMamount.includes('.')) {
-        const decimal = XEMamount.split('.')[1]
+export const formatXemAmount = (xemAmount) => {
+    if (!Number(xemAmount)) return '0'
+    xemAmount = xemAmount + ''
+    if (xemAmount.includes('.')) {
+        const decimal = xemAmount.split('.')[1]
         if (decimal.length > 2) {
-            return Number(XEMamount).toFixed(2)
+            return Number(xemAmount).toFixed(2)
         } else {
-            return XEMamount
+            return xemAmount
         }
     } else {
-        return XEMamount
+        return xemAmount
     }
 }
 
