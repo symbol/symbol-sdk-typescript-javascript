@@ -3,18 +3,18 @@ import {settingPanelNavigationBarConfig} from "@/config/view/setting";
 
 @Component
 export class SettingPanelTs extends Vue {
-    navagatorList = settingPanelNavigationBarConfig
+    navigatorList = settingPanelNavigationBarConfig
     currentHeadText = ''
 
     jumpToView(n, index) {
-        if (this.navagatorList[index].disabled) return
-        let list = this.navagatorList
+        if (this.navigatorList[index].disabled) return
+        let list = this.navigatorList
         list.map((item) => {
             item.isSelected = false
             return item
         })
         list[index].isSelected = true
-        this.navagatorList = list
+        this.navigatorList = list
         this.currentHeadText = n.navigatorTitle
         this.$router.push({
             name: n.name
@@ -22,7 +22,7 @@ export class SettingPanelTs extends Vue {
     }
 
     created() {
-        this.jumpToView(this.navagatorList[0], 0)
+        this.jumpToView(this.navigatorList[0], 0)
     }
 
 }

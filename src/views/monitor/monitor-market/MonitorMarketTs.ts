@@ -37,7 +37,7 @@ export class MonitorMarketTs extends Vue {
 
     }
 
-    async searchByasset() {
+    async searchByAsset() {
         // TODO
     }
 

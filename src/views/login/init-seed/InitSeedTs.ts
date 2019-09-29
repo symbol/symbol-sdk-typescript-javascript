@@ -4,11 +4,14 @@ import AccountCreateMnemonic from '@/views/login/init-seed/account-create-mnemon
 import AccountImportHardware from '@/views/login/init-seed/account-import-hardware/AccountImportHardware.vue'
 import SeedCreatedGuide from '@/views/login/init-seed/seed-created-guide/SeedCreatedGuide.vue'
 import {mapState} from "vuex"
-import { walletFnNavConfig } from '@/config/view/wallet'
+import {walletFnNavConfig} from '@/config/view/wallet'
 import {StoreAccount} from "@/core/model"
+import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import {AppLock, createMnemonic} from "@/core/utils"
 
 @Component({
     components: {
+        CheckPasswordDialog,
         AccountImportMnemonic,
         AccountCreateMnemonic,
         AccountImportHardware,
@@ -26,13 +29,22 @@ export class InitSeedTs extends Vue {
     createForm = {}
     walletCreated = false
     navList = walletFnNavConfig
+    showCheckPWDialog = false
 
     get accountName() {
         return this.activeAccount.accountName
     }
 
-    isCreated(form) {
-        this.createForm = form
+
+    createNewMnemonic() {
+        this.showCheckPWDialog = true
+    }
+
+    closeCheckPWDialog() {
+        this.showCheckPWDialog = false
+    }
+
+    isCreated() {
         this.walletCreated = true
         this.updatePageIndex(-1)
     }
@@ -57,10 +69,38 @@ export class InitSeedTs extends Vue {
                 this.navList[i].active = false
             }
         }
-        this.pageIndex = index
+        // create to input password
+        if (index == 0) {
+            this.showCheckPWDialog = true
+            return
+        }
+        this.pageIndex = 1
     }
 
+    checkEnd(password) {
+        if (!password) return
+
+        const seed = createMnemonic()
+        this.$store.commit('SET_MNEMONIC', AppLock.encryptString(seed, password))
+        this.createForm = {
+            password,
+            seed,
+        }
+        this.pageIndex = -1
+        this.showCheckPWDialog = false
+
+    }
+
+
     created() {
+        if (this.$route.params.seed) {
+            this.createForm = {
+                seed: this.$route.params.seed,
+                password: this.$route.params.password
+            }
+            this.isCreated()
+            return
+        }
         const initType = Number(this.$route.params.initType) || 0
         this.goToPage(this.navList[initType], initType)
     }

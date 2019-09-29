@@ -16,7 +16,7 @@ export class WalletImportTs extends Vue {
     tabIndex = 0
     currentTab = 'mnemonic'
     netType = networkTypeConfig
-    navagatorList = walletImportNavigatorConfig
+    navigatorList = walletImportNavigatorConfig
     currentHeadText = ''
     mnemonic = {
         mnemonic: '',
@@ -34,13 +34,13 @@ export class WalletImportTs extends Vue {
 
 
     jumpToView(n, index) {
-        let list = this.navagatorList
+        let list = this.navigatorList
         list.map((item) => {
             item.isSelected = false
             return item
         })
         list[index].isSelected = true
-        this.navagatorList = list
+        this.navigatorList = list
         this.currentHeadText = n.title
         this.tabIndex = index
     }
@@ -98,7 +98,7 @@ export class WalletImportTs extends Vue {
     }
 
     mounted() {
-        this.jumpToView(this.navagatorList[0], 0)
-        this.currentHeadText = this.navagatorList[0].title
+        this.jumpToView(this.navigatorList[0], 0)
+        this.currentHeadText = this.navigatorList[0].title
     }
 }

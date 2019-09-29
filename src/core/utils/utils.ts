@@ -77,16 +77,18 @@ export const copyTxt = (txt) => {
 }
 
 export const formatNumber = (number) => {
-    {
-        if (!/^(\+|-)?(\d+)(\.\d+)?$/.test(number)) {
-            return 0
-        }
-        var a = RegExp.$1, b = RegExp.$2, c = RegExp.$3
-        // @ts-ignore
-        var re = new RegExp('').compile("(\\d)(\\d{3})(,|$)")
-        while (re.test(b)) b = b.replace(re, "$1,$2$3")
-        return a + "" + b + "" + c
+    number = Number(number)
+    if (number > 1) {
+        number = number.toFixed(2)
     }
+    if (!/^(\+|-)?(\d+)(\.\d+)?$/.test(number)) {
+        return 0
+    }
+    var a = RegExp.$1, b = RegExp.$2, c = RegExp.$3
+    // @ts-ignore
+    var re = new RegExp('').compile("(\\d)(\\d{3})(,|$)")
+    while (re.test(b)) b = b.replace(re, "$1,$2$3")
+    return a + "" + b + "" + c
 }
 
 export const strToHexCharCode = (str) => {
@@ -326,7 +328,7 @@ export const formatSeconds = function (second) {
 
 }
 
-export const formatXEMamount = (XEMamount) => {
+export const formatXemAmount = (XEMamount) => {
     if (!Number(XEMamount)) return '0'
     XEMamount = XEMamount + ''
     if (XEMamount.includes('.')) {

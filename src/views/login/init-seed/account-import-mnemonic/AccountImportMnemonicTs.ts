@@ -2,10 +2,11 @@ import {Message} from "@/config/index.ts"
 import {mapState} from 'vuex'
 import {Password} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
-import {formDataConfig} from "@/config/view/form";
-import {networkTypeConfig} from '@/config/view/setting';
-import {AppLock} from "@/core/utils";
+import {formDataConfig} from "@/config/view/form"
+import {networkTypeConfig} from '@/config/view/setting'
+import {AppLock} from "@/core/utils"
 import {AppInfo, StoreAccount, AppWallet} from "@/core/model"
+import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
 @Component({
     computed: {
@@ -13,6 +14,9 @@ import {AppInfo, StoreAccount, AppWallet} from "@/core/model"
             activeAccount: 'account',
             app: 'app'
         })
+    },
+    components: {
+        CheckPasswordDialog
     }
 })
 export class AccountImportMnemonicTs extends Vue {
@@ -50,7 +54,7 @@ export class AccountImportMnemonicTs extends Vue {
     }
 
     closeCheckPWDialog() {
-        this.showCheckPWDialog = true
+        this.showCheckPWDialog = false
     }
 
     checkImport() {
@@ -66,18 +70,6 @@ export class AccountImportMnemonicTs extends Vue {
             })
             return false
         }
-        // if (!this.form.password || this.form.password.length < 8) {
-        //     this.$Notice.error({
-        //         title: this.$t(Message.PASSWORD_SETTING_INPUT_ERROR) + ''
-        //     })
-        //     return false
-        // }
-        // if (this.form.password !== this.form.checkPW) {
-        //     this.$Notice.error({
-        //         title: this.$t(Message.INCONSISTENT_PASSWORD_ERROR) + ''
-        //     })
-        //     return false
-        // }
         if (!this.form.mnemonic || this.form.mnemonic === '' || this.form.mnemonic.split(' ').length != 12) {
             this.$Notice.error({
                 title: this.$t(Message.MNENOMIC_INPUT_ERROR) + ''
@@ -97,6 +89,7 @@ export class AccountImportMnemonicTs extends Vue {
                 networkType,
                 this.$store
             )
+            // TODO import 10 wallets or only used wallet
             this.toWalletDetails()
         } catch (error) {
             console.error(error)
@@ -115,6 +108,6 @@ export class AccountImportMnemonicTs extends Vue {
     }
 
     toBack() {
-        this.$router.push('initAccount')
+        this.$router.back()
     }
 }

@@ -17,11 +17,11 @@
               @updatePageIndex="updatePageIndex"
       >
       </SeedCreatedGuide>
-      <AccountCreateMnemonic
-              v-if="pageIndex === 0"
-              @isCreated="isCreated"
-              @updatePageIndex="updatePageIndex">
-      </AccountCreateMnemonic>
+<!--      <AccountCreateMnemonic-->
+<!--              v-if="pageIndex === 0"-->
+<!--              @isCreated="isCreated"-->
+<!--              @updatePageIndex="updatePageIndex">-->
+<!--      </AccountCreateMnemonic>-->
       <AccountImportMnemonic
               v-if="pageIndex === 1"
               @updatePageIndex="updatePageIndex"
@@ -33,6 +33,12 @@
       >
       </AccountImportHardware>
     </div>
+    <CheckPasswordDialog
+            :showCheckPWDialog="showCheckPWDialog"
+            :isOnlyCheckPassword="true"
+            @closeCheckPWDialog="closeCheckPWDialog"
+            @checkEnd="checkEnd"
+    ></CheckPasswordDialog>
   </div>
 </template>
 

@@ -20,12 +20,12 @@
                 <span v-else>0</span>
               </span>
             </p>
-            <p>
-              <span class="tit" v-if="wallet&&wallet.path">{{$t('path')}}</span>
-              <span>
-                {{wallet.path}}
-              </span>
-            </p>
+<!--            <p>-->
+<!--              <span class="tit" v-if="wallet&&wallet.path">{{$t('path')}}</span>-->
+<!--              <span>-->
+<!--                {{wallet.path}}-->
+<!--              </span>-->
+<!--            </p>-->
             <p>
               <span class="tit">{{$t('Wallet_name')}}</span>
               <span class="walletName" v-if="wallet">{{wallet.name}}</span>
@@ -83,7 +83,7 @@
     <div class="accountFn radius" ref="accountFn">
       <div class="accountFnNav">
         <ul class="navList clear">
-          <li :class="['left',functionShowList[0]?'active':''] " @click="showFunctionIndex(0)">
+          <li class="left" @click="showFunctionIndex(0)">
             {{$t('contact_list')}}
           </li>
           <!--restrict-->

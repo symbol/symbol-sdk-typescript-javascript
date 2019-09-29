@@ -90,7 +90,8 @@ export const Message = {
     ADDRESS_ALIAS_NOT_EXIST_ERROR: 'address_alias_not_exist',
     MOSAIC_ALIAS_NOT_EXIST_ERROR: 'mosaic_alias_not_exist',
     HD_WALLET_PATH_ERROR: 'hd_wallet_path_error',
-    NODE_EXISTS_ERROR:'node_exists_error'
+    NODE_EXISTS_ERROR:'node_exists_error',
+    SEED_WALLET_OVERFLOW_ERROR:'seed_wallet_can_not_be_more_than_10'
 }
 
 export const defaultNetworkConfig = {
@@ -158,7 +159,8 @@ export const networkConfig = {
     maxAccountRestrictionValues: 512,
     maxMosaicRestrictionValues: 20,
     maxMessageSize: 1024,
-    namespaceListSize: 9
+    namespaceListSize: 9,
+    seedWalletMaxAmount:10
 }
 
 

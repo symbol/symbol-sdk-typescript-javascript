@@ -68,7 +68,7 @@ export class WalletDetailsTs extends Vue {
     }
 
     get importance() {
-        return this.activeAccount.wallet.importance + '0'
+        return this.activeAccount.wallet.importance ? this.activeAccount.wallet.importance + '0' : 0
     }
 
     get getSelfAlias() {

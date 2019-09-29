@@ -36,7 +36,7 @@ export class AccountCreateMnemonicTs extends Vue {
     }
 
     closeCheckPWDialog() {
-        this.showCheckPWDialog = true
+        this.showCheckPWDialog = false
     }
 
     createWallet() {

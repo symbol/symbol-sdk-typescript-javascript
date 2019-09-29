@@ -61,9 +61,7 @@ export class AccountImportHardwareTs extends Vue {
 
         if(publicKeyResult.success) {
             const { publicKey, serializedPath } = publicKeyResult.payload;
-
             const addressArray = RawAddress.publicKeyToAddress(publicKey, networkType);
-
             const addressString = addressArray
             .reduce((accumulated, chunk) => `${accumulated}${chunk.toString(16)}`, "");
 

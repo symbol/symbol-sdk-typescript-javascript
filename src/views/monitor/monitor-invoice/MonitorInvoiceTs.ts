@@ -173,7 +173,7 @@ export class MonitorInvoiceTs extends Vue {
         const QRCodeData = {
             type: 1002,
             address: this.accountAddress,
-            mosiacHex: mosaicHex,
+            mosaicHex: mosaicHex,
             mosaicAmount: mosaicAmount,
             remarks: remarks
         }
@@ -197,7 +197,7 @@ export class MonitorInvoiceTs extends Vue {
     }
 
 
-    swicthTransferType(index) {
+    switchTransferType(index) {
         const list: any = this.transferTypeList
         if (list[index].disabled) {
             return
@@ -225,7 +225,7 @@ export class MonitorInvoiceTs extends Vue {
     createQRCode() {
         if (!this.getWallet.address) return
         const {generationHash, networkType} = this
-        const QRCodeData = {publickKey: this.accountPublicKey}
+        const QRCodeData = {publicKey: this.accountPublicKey}
         this.QRCode = QRCodeGenerator
             .createExportObject(QRCodeData, networkType, generationHash)
             .toBase64()

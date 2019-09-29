@@ -49,8 +49,6 @@ export class WalletCreateTs extends Vue {
         } catch (e) {
             this.$Notice.error({title: this.$t(Message.HD_WALLET_PATH_ERROR) + ''})
         }
-
-
     }
 
     submit() {

@@ -462,3 +462,13 @@ export const readLocaAlias = (address: string) => {
     if (!addressBookData) return {}
     return JSON.parse(addressBookData)[address]
 }
+export const removeLink = (aliasObject,address) => {
+    //address:"SC7EFRV23LC6NTPUPFZ7KCWO24SBY6XPY6OUHFQX"
+    // alias:"dio"
+    // tag:"tag"
+    const {alias,tag} = aliasObject
+    const addressBook = JSON.parse(localRead('addressBook'))
+    delete addressBook[address].aliasMap[alias]
+    addressBook[address].tagMap[tag].splice(addressBook[address].tagMap[tag].indexOf(alias),1)
+    localSave('addressBook', JSON.stringify(addressBook))
+}

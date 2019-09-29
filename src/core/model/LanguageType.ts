@@ -1,4 +1,3 @@
-
 /**
  * Enum containing language type constants.
  */
@@ -13,5 +12,11 @@ export enum LanguageType {
      * Language en-US type.
      * @type {string}
      */
-    'en-US' = 'English'
+        'en-US' = 'English',
+
+    /**
+     * Language jp-JP type.
+     * @type {string}
+     */
+        // 'jp-JP' = '日本語'
 }

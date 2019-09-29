@@ -4,7 +4,7 @@ import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
-import {AppWallet, readLocaAlias, saveLocaAlias} from "@/core/model"
+import {AppWallet, readLocaAlias, removeLink, saveLocaAlias} from "@/core/model"
 import {networkConfig} from "@/config/index"
 
 @Component({
@@ -101,7 +101,10 @@ export class WalletAliasTs extends Vue {
             title: message
         })
     }
-
+    removeLink(aliasObject){
+        removeLink(aliasObject, this.getWallet.address)
+        this.initLocalAlias()
+    }
     submit() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return

@@ -201,7 +201,6 @@ export const en_US = {
     password_error: 'Password error',
     transaction_hash_error: 'Transaction hash error',
 
-
     //setting-about
     privacy_policy: 'Privacy policy',
     terms_of_use: 'Terms of use',
@@ -295,7 +294,6 @@ export const en_US = {
     is_active: 'active',
     true: 'true',
     false: 'false',
-
     input_space_name: 'Input space name',
     the_duration_is_calculated_in_blocks_one_block_is_12_seconds: 'The duration is calculated in blocks one block is 12 seconds.',
     space_list: 'Space list',
@@ -392,8 +390,6 @@ export const en_US = {
     copy: 'Copy',
     Display_Keystore_QR_code: 'Display QR code',
     Show_Keystore: 'Show Keystore',
-
-    //
     export_mnemonic: 'Export mnemonic',
     backup_mnemonic: 'Backup mnemonic',
     confirm_backup: 'Confirm backup',
@@ -453,7 +449,6 @@ export const en_US = {
     Nemwallet_can_not_recover_your_mnemonic: 'The wallet can\'t recover your mnemonic',
     Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct: 'Please enter a mnemonic to ensure that the mnemonic is correct',
     Mnemonic_inconsistency: 'Mnemonic inconsistency',
-
     bind_mosaic: 'bind mosaic',
     bind_address: 'bind address',
 
@@ -464,7 +459,6 @@ export const en_US = {
     restrictable: 'Restrictable',
     pre_week: 'PreWeek',
     yesterday: 'Yesterday',
-
     Wallet_type: 'Type',
     Public_wallet: 'Public wallet',
     Wallet_name: 'Name',
@@ -498,9 +492,7 @@ export const en_US = {
     createLockPWRemind: 'Password setting error',
     createLockCheckPWRemind: 'Two passwords are inconsistent',
     createLockPWTxtRemind: 'Password hint error',
-
     no_mnemonic: 'No mnemonic',
-
 
     //multi-sig Api
     map: 'Map',
@@ -709,6 +701,9 @@ export const en_US = {
     set_the_account_name: 'Set the account name',
     set_password_8_char: 'Set password (at least 8 characters)',
     back_to_home_page: 'Back',
+    The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide_1: 'The wallet terminal will use the HD-WALLET protocol to provide convenient wallet management. The account default wallet will be a helper wallet; ',
+    The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide_2: ' follow one account, one seed(mnemonic), one password principle; ',
+    The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide_3: 'therefore, there can be multiple wallet lists under one account. , with account password management, once you forget the password, you can restore the wallet by importing mnemonics; you can easily switch to other accounts on the startup page of the program.',
     The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide: 'The wallet terminal will use the HD-WALLET protocol to provide convenient wallet management. The account default wallet will be a helper wallet; follow one account, one seed, one password principle; therefore, there can be multiple wallet lists under one account. , with account password management, once you forget the password, you can restore the wallet by importing mnemonics; you can easily switch to other accounts on the startup page of the program.',
     Account_name_already_exists: 'Account name already exists',
     WLT_file: 'WLT file（Hardware）',
@@ -725,7 +720,6 @@ export const en_US = {
     connect_trezor_description: 'Import a wallet from a Trezor device',
     trezor_description: 'Trezor will keep your private keys secure and only expose them for signing transactions',
     choose_account_index: 'Choose account index (0 - 1,000,000)',
-
     Please_choose_account_name: 'Please choose account name',
     account_password: 'Account password',
     hint: 'Hint',
@@ -751,7 +745,7 @@ export const en_US = {
     attribute: 'Attribute',
     mosaic_attribute_text: 'Each mosaic has a unique identifier and a set of configurable properties, This makes it very flexible to adapt to many scenarios.',
     mosaic_attribute_text_2: 'You can bind a specific namespace to make it more readable and usable.',
-    importance: 'importance',
+    importance: 'Importance',
     Under_the_current_wallet: 'Under the current wallet, namespace and sub-namespace asset list, transaction management list',
     define: 'Define',
     A_namespace_starts_with_a_name_that_you_choose_similar_to_an_internet_domain_name: 'A namespace starts with a name that you choose, similar to an internet domain name. ',
@@ -761,7 +755,14 @@ export const en_US = {
     scenes_to_be_used: 'Scenes to be used',
     Used_to_bind_a_wallet_address: 'Used to bind a wallet address as its transfer alias; used to set up an account filter; used to bind a Mosaic ID.',
     Add_to_local_address_book: 'Add to local address book',
-    contact_list: 'contact list',
-    meta_data: 'Metadata',
-    node_exists_error: 'Node already exists'
+    contact_list: 'Contact list',
+    meta_data: 'MetaData',
+    node_exists_error: 'Node already exists',
+
+    ////////////////////////////////0927
+    seed_wallet_can_not_be_more_than_10: 'The number of wallets created in this account has reached the limit. Please change your account to create a new wallet.',
+    create_or_import: 'Craete or Import',
+    create_sub_wallet: 'Create sub wallet',
+    Import_private_key: 'Import private key',
+    copy_mnemonic: 'copy menmonic',
 }

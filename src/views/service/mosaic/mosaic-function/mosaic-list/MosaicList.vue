@@ -91,7 +91,11 @@
               <Icon v-if="value.isRestrictable" type="md-checkmark"/>
               <Icon v-else type="md-close"/>
             </span>
-            <span class="alias"> {{value.name?value.name:'N/A'}}</span>
+
+            <span class="alias">
+              {{value.name?value.name:'N/A'}}
+            </span>
+
             <span class="poptip">
               <div
                       class="listFnDiv"
@@ -119,7 +123,7 @@
             </span>
           </Row>
         </div>
-        <div class="page_container">
+        <div class="page_container ">
           <Page
                   class="page"
                   :total="currentMosaicList.length"
@@ -150,7 +154,6 @@
 <script lang="ts">
     import {MosaicListTs} from '@/views/service/mosaic/mosaic-function/mosaic-list/MosaicListTs.ts'
     import "./MosaicList.less"
-    import {Deadline} from 'nem2-sdk'
 
     export default class MosaicList extends MosaicListTs {
 

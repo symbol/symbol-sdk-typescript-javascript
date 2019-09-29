@@ -2,7 +2,7 @@
   <div class="walletImportWrap scroll radius">
     <div class="seeting_main_container">
       <div class="left_navigator left">
-        <div class="navigator_item pointer" @click="jumpToView(n,index)" v-for="(n,index) in navagatorList">
+        <div class="navigator_item pointer" @click="jumpToView(n,index)" v-for="(n,index) in navigatorList">
           <span :class="n.isSelected ? 'selected_title':''">{{$t(n.title)}}</span>
         </div>
       </div>

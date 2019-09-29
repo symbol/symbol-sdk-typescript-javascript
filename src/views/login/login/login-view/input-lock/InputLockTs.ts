@@ -90,7 +90,12 @@ export class InputLockTs extends Vue {
         this.$store.commit('SET_ACCOUNT_NAME', currentAccountName)
         // no seed
         if (!accountMap[currentAccountName].seed) {
-            this.$router.push('initAccount')
+            this.$router.push({
+                name: 'initSeed',
+                params: {
+                    initType: '1'
+                }
+            })
             return
         }
 

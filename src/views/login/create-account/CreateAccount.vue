@@ -3,7 +3,11 @@
     <div class="createDiv">
       <div class="createForm">
         <p class="formTit">{{$t('Create_an_account_and_password')}}</p>
-        <p class="title_describe">{{$t('The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide')}}</p>
+        <p class="title_describe">
+          {{$t('The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide_1')}}
+          <span class="bolder_text">{{$t('The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide_2')}}</span>
+          {{$t('The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide_3')}}
+        </p>
         <Form :model="formItem" label-position="top">
 
           <ul>
@@ -13,7 +17,14 @@
               </FormItem>
             </li>
             <li>
-
+              <FormItem :label="$t('choose_network')">
+                <Select :placeholder="$t('choose_network')" v-model="formItem.currentNetType" required>
+                  <Option :value="item.value" v-for="(item,index) in networkTypeList" :key="index">{{item.label}}
+                  </Option>
+                </Select>
+              </FormItem>
+            </li>
+            <li>
               <FormItem :label="$t('set_password_8_char')">
                 <Input v-model="formItem.password" type="password" required
                        :placeholder="$t('please_set_your_wallet_password')"/>

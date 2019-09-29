@@ -2,6 +2,8 @@ import {Component, Vue} from 'vue-property-decorator'
 import {Message} from "@/config"
 import {AppLock} from "@/core/utils"
 import {AppAccounts, AppAccount} from '@/core/model'
+import {networkTypeConfig} from "@/config/view/setting"
+import {NetworkType} from "nem2-sdk"
 
 @Component
 export class CreateAccountTs extends Vue {
@@ -9,8 +11,10 @@ export class CreateAccountTs extends Vue {
         accountName: '',
         password: '',
         passwordAgain: '',
-        hint: ''
+        hint: '',
+        currentNetType: NetworkType.MIJIN_TEST,
     }
+    networkTypeList = networkTypeConfig
 
     checkInput() {
         const {accountName, password, passwordAgain} = this.formItem
@@ -36,14 +40,19 @@ export class CreateAccountTs extends Vue {
 
     createAccount() {
         const appAccounts = AppAccounts()
-        let {accountName, password, hint} = this.formItem
+        let {accountName, password, currentNetType, hint} = this.formItem
         if (!this.checkInput()) return
         password = AppLock.encryptString(password, password)
-        const appAccount = new AppAccount(accountName, [], password, hint)
+        const appAccount = new AppAccount(accountName, [], password, hint, currentNetType)
         appAccounts.saveAccountInLocalStorage(appAccount)
         this.$Notice.success({title: this.$t(Message.OPERATION_SUCCESS) + ''})
         this.$store.commit('SET_ACCOUNT_NAME', accountName)
-        this.$router.push('initAccount')
+        this.$router.push({
+            name: 'initSeed',
+            params: {
+                initType: '1'
+            }
+        })
     }
 
     toBack() {

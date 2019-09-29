@@ -1,4 +1,5 @@
 import {localRead, localSave} from "@/core/utils"
+import {NetworkType} from "nem2-sdk"
 
 export class AppAccount {
     accountName: string
@@ -6,18 +7,21 @@ export class AppAccount {
     password: string
     hint: string
     seed: string
+    currentNetType:NetworkType
 
     constructor(
         accountName: string,
         wallets: Array<any>,
         password: string,
         hint: string,
+        currentNetType:NetworkType,
         seed?: string
     ) {
         this.accountName = accountName
         this.wallets = wallets
         this.password = password
         this.hint = hint
+        this.currentNetType = currentNetType
         this.seed = seed ? seed : ''
     }
 

@@ -39,8 +39,8 @@
         <Col span="4">{{$t('tag')}}</Col>
         <Col span="12">{{$t('address')}}({{$t('alias')}})</Col>
         <Col span="4">
-          <span class="right alias_delete pointer" @click="isShowDeleteIcon = !isShowDeleteIcon"></span>
-          <span class=" right alias_add pointer" @click="isShowDialog=true"></span>
+          <!--          <span class="right alias_delete pointer" @click="isShowDeleteIcon = !isShowDeleteIcon"></span>-->
+          <span class=" right icon_add pointer" @click="isShowDialog=true"></span>
         </Col>
 
       </Row>
@@ -57,9 +57,9 @@
           </Col>
 
           <Col span="3">
-            <span v-show="isShowDeleteIcon"
-                  @click="showUnLink(index)"
-                  class="delete_icon pointer"></span>
+            <span
+                    @click="removeLink(item)"
+                    class="delete_icon pointer"></span>
           </Col>
         </Row>
       </div>

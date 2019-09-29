@@ -103,7 +103,7 @@
       </div>
 
       <div class="page_list_container">
-        <Page :total="currentNamespacelist.length" :page-size="pageSize" @on-change="handleChange"></Page>
+        <Page class="page_list" :total="currentNamespacelist.length" :page-size="pageSize" @on-change="handleChange"></Page>
       </div>
     </div>
 

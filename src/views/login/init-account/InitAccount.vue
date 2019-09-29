@@ -8,7 +8,7 @@
         </div>
         <p class="createTit">{{$t('create_now')}}</p>
         <p class="createTxt">{{$t('this_will_create_a_new_torrent_file')}}</p>
-        <div class="button pointer" @click="jumpToOtherPage(0)">
+        <div class="button pointer" @click="createNewMnemonic()">
           {{$t('create_wallet')}}
           <div/>
         </div>
@@ -40,6 +40,7 @@
         <div class="button disabled un_click" @click="">{{$t('import_wallet')}}</div>
       </div>
     </div>
+
   </div>
 </template>
 

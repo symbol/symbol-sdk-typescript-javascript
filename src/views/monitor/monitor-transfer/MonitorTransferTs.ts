@@ -43,7 +43,7 @@ export class MonitorTransferTs extends Vue {
 
     }
 
-    swicthTransferType(index) {
+    switchTransferType(index) {
         const list: any = this.transferTypeList
         if (list[index].disabled) {
             return

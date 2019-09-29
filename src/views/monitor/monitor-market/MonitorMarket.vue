@@ -32,7 +32,7 @@
               <input @click.stop v-model="assetType" type="text" class="absolute"
                      :placeholder="$t('please_enter_the_asset_type')">
             </span>
-            <span class="search_btn pointer" @click.stop="searchByasset">{{$t('search')}}</span>
+            <span class="search_btn pointer" @click.stop="searchByAsset">{{$t('search')}}</span>
           </div>
         </div>
         <div class="bottom_new_transactions  scroll">
