@@ -1,13 +1,12 @@
 import {mapState} from "vuex"
 import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Message} from "@/config/index.ts"
+import {Message, defaultNetworkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {AppMosaics} from '@/core/services/mosaics'
 import {MosaicNamespaceStatusType} from "@/core/model/MosaicNamespaceStatusType";
-import {formDataConfig} from "@/config/view/form";
-import {AppWallet} from "@/core/model"
+import {AppWallet, StoreAccount, AppInfo, AppMosaic, DefaultFee, AppNamespace} from "@/core/model"
 
 @Component({
     computed: {
@@ -18,18 +17,29 @@ import {AppWallet} from "@/core/model"
     }
 })
 export class NamespaceMosaicAliasDialogTs extends Vue {
-    activeAccount: any
-    app: any
-    show = false
+    activeAccount: StoreAccount
+    app: AppInfo
     isCompleteForm = false
-    formItem: any = formDataConfig.mosaicAliasForm
+    formItems = formDataConfig.mosaicAliasForm
+    XEM: string = defaultNetworkConfig.XEM
 
     @Prop()
     showMosaicAliasDialog: boolean
-    @Prop()
-    itemMosaic: any
 
-    get wallet() {
+    @Prop()
+    activeNamespace: AppNamespace
+
+    get show() {
+        return this.showMosaicAliasDialog
+    }
+
+    set show(val) {
+        if (!val) {
+            this.$emit('close')
+        }
+    }
+
+    get wallet(): AppWallet {
         return this.activeAccount.wallet
     }
 
@@ -39,10 +49,6 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
 
     get node() {
         return this.activeAccount.node
-    }
-
-    get namespaceList() {
-        return this.activeAccount.namespaces
     }
 
     get xemDivisibility() {
@@ -60,6 +66,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     get accountName(){
         return this.activeAccount.accountName
     }
+
     get unlinkMosaicList() {
         const {currentHeight} = this
         const {address} = this.wallet
@@ -75,9 +82,14 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
             })
     }
 
-    mosaicAliasDialogCancel() {
-        this.initForm()
-        this.$emit('closeMosaicAliasDialog')
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
+    }
+
+    get feeAmount() {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
     }
 
     submit() {
@@ -87,35 +99,23 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     }
 
     checkInfo() {
-        const {formItem} = this
+        const {formItems} = this
 
-        if (formItem.fee === 0) {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
-        if (formItem.mosaicHex === '') {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
-        if (formItem.password === '') {
+        if (formItems.password === '') {
             this.$Notice.error({
                 title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
             })
             return false
         }
 
-        if (formItem.password.length < 8) {
+        if (formItems.password.length < 8) {
             this.$Notice.error({
                 title: '' + this.$t('password_error')
             })
             return false
         }
 
-        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(formItem.password))
+        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(formItems.password))
 
         if (!validPassword) {
             this.$Notice.error({
@@ -127,47 +127,30 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     }
 
     async updateMosaic() {
-        const {node, generationHash, xemDivisibility} = this
+        const {node, generationHash, xemDivisibility, feeAmount} = this
         const {networkType} = this.wallet
-        let {fee, name, mosaicHex} = this.formItem
-        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
-        const password = new Password(this.formItem.password)
-        let transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
+        const {name} = this.activeNamespace
+        const {mosaicName, password} = this.formItems
+        const transaction = new NamespaceApiRxjs().mosaicAliasTransaction(
             AliasActionType.Link,
             new NamespaceId(name),
-            new MosaicId(mosaicHex),
+            new MosaicId(mosaicName),
             networkType,
-            fee
+            feeAmount
         )
-        this.initForm()
         new AppWallet(this.wallet)
-            .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
-        this.updatedMosaicAlias()
-    }
-
-    updatedMosaicAlias() {
+            .signAndAnnounceNormal(new Password(password), node, generationHash, [transaction], this)
+        this.initForm()
         this.show = false
-        this.mosaicAliasDialogCancel()
     }
 
     initForm() {
-        this.formItem = {
-            mosaicHex: '',
-            fee: .5,
-            password: ''
-        }
+        this.formItems = formDataConfig.mosaicAliasForm
     }
 
-    @Watch('showMosaicAliasDialog')
-    onShowMosaicAliasDialogChange() {
-        this.show = this.showMosaicAliasDialog
-        Object.assign(this.formItem, this.itemMosaic)
-    }
-
-    @Watch('formItem', {immediate: true, deep: true})
-    onFormItemChange() {
-        const {mosaicHex, fee, password} = this.formItem
-        // isCompleteForm
-        this.isCompleteForm = mosaicHex !== '' && fee > 0 && password !== ''
+    @Watch('formItems', {deep: true})
+    onFormItemsChange() {
+        const {password} = this.formItems
+        this.isCompleteForm = password !== ''
     }
 }

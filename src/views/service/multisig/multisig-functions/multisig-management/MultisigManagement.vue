@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="multisig_management_container secondary_page_animate" @click="showSubpublickeyList = false">
+    <div class="multisig_management_container secondary_page_animate" @click="showSubPublicKeyList = false">
       <div class="container_head_title">{{$t('Edit_co_signers_and_signature_thresholds')}}</div>
       <div class="edit_form">
         <div class="form_item">
           <div class="title">{{$t('Public_account')}}</div>
-          <Select v-model="formItem.multisigPublickey" class="select" :placeholder="$t('publickey')">
-            <Option v-for="item in publickeyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Select v-model="formItems.multisigPublicKey" class="select" :placeholder="$t('publicKey')">azdazdza
+            <Option v-for="item in publicKeyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
 
@@ -14,15 +14,15 @@
           <div class="title">{{$t('cosigner')}}</div>
           <div class="manage_cosigner">
           <span class="input_container">
-            <input type="text" v-model="currentPublickey" :placeholder="$t('Wallet_account_address_or_alias')"
+            <input type="text" v-model="currentPublicKey" :placeholder="$t('Wallet_account_address_or_alias')"
                    class="radius">
-            <span class="switch_container pointer" @click.stop="showSubpublickeyList = !showSubpublickeyList">
+            <span class="switch_container pointer" @click.stop="showSubPublicKeyList = !showSubPublicKeyList">
               <Tooltip :content="$t('Choose_a_co_signer')" theme="light">
                 <span class="switch_cosigner"></span>
               </Tooltip>
             </span>
-            <div class="sub_list radius" v-if="showSubpublickeyList">
-              <div @click="currentPublickey = i.value" class="sub_list_item pointer" v-for="i in existsCosignerList">{{i.value}}</div>
+            <div class="sub_list radius" v-if="showSubPublicKeyList">
+              <div @click="currentPublicKey = i.value" class="sub_list_item pointer" v-for="i in existsCosignerList">{{i.value}}</div>
             </div>
           </span>
             <span @click="addCosigner(MultisigCosignatoryModificationType.Add)"
@@ -39,7 +39,7 @@
         <span class="form_item input_min_approval">
           <div class="title">{{$t('min_approval_delta')}} ( {{$t('current')}} min approval : {{currentMinApproval }} )</div>
           <div class="manage_cosigner">
-            <input type="text" v-model="formItem.minApprovalDelta"
+            <input type="text" v-model="formItems.minApprovalDelta"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')"
                    class="radius">
           </div>
@@ -51,7 +51,7 @@
           <span class="form_item input_min_delete">
           <div class="title">{{$t('min_removal_delta')}} ( {{$t('current')}}  min removal : {{currentMinRemoval }} )</div>
           <div class="manage_cosigner">
-            <input type="text" v-model="formItem.minRemovalDelta"
+            <input type="text" v-model="formItems.minRemovalDelta"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')"
                    class="radius">
           </div>
@@ -65,9 +65,9 @@
         <div class="form_item input_fee">
           <div class="title">{{$t('inner_fee')}}</div>
           <div class="manage_cosigner">
-            <input type="text" v-model="formItem.innerFee" placeholder=".5" class="radius">
+            <input type="text" v-model="formItems.innerFee" placeholder=".5" class="radius">
 <!--            <span class="xem_container">gas</span>-->
-<!--            <span class="xem_amount">{{formItem.innerFee / 1000000}} xem </span>-->
+<!--            <span class="xem_amount">{{formItems.innerFee / 1000000}} xem </span>-->
           </div>
           <div class="input_describe">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -79,9 +79,9 @@
           <div class="form_item input_fee">
             <div class="title">{{$t('bonded_fee')}}</div>
             <div class="manage_cosigner">
-              <input type="text" v-model="formItem.bondedFee" placeholder=".5" class="radius">
+              <input type="text" v-model="formItems.bondedFee" placeholder=".5" class="radius">
 <!--              <span class="xem_container">gas</span>-->
-<!--              <span class="xem_amount">{{formItem.bondedFee / 1000000}} xem </span>-->
+<!--              <span class="xem_amount">{{formItems.bondedFee / 1000000}} xem </span>-->
             </div>
             <div class="input_describe">
               {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -92,9 +92,9 @@
           <div class="form_item input_fee">
             <div class="title">{{$t('lock_fee')}}</div>
             <div class="manage_cosigner">
-              <input type="text" v-model="formItem.lockFee" placeholder=".5" class="radius">
+              <input type="text" v-model="formItems.lockFee" placeholder=".5" class="radius">
 <!--              <span class="xem_container">gas</span>-->
-<!--              <span class="xem_amount">{{formItem.lockFee / 1000000}} xem </span>-->
+<!--              <span class="xem_amount">{{formItems.lockFee / 1000000}} xem </span>-->
             </div>
             <div class="input_describe">
               {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
@@ -113,11 +113,11 @@
             <span class="delate">{{$t('delete')}}</span>
           </div>
           <div class="list_body scroll">
-            <div class="please_add_address" v-if="formItem.cosignerList.length == 0">{{$t('please_add_publickey')}}
+            <div class="please_add_address" v-if="formItems.cosignerList.length == 0">{{$t('please_add_publickey')}}
             </div>
 
-            <div class="list_item radius" v-for="(i,index) in formItem.cosignerList">
-              <span class="address_alias">{{i.publickey}}</span>
+            <div class="list_item radius" v-for="(i,index) in formItems.cosignerList">
+              <span class="address_alias">{{i.publicKey}}</span>
               <span class="action">{{i.type == MultisigCosignatoryModificationType.Add ? $t('add'):$t('cut_back')}}</span>
               <img class="delate pointer" @click="removeCosigner(index)"
                    src="@/common/img/service/multisig/multisigDelete.png" alt="">

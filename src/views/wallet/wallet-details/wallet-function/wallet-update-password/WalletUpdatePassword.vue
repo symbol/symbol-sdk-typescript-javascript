@@ -5,17 +5,17 @@
 
       <div class="input_content">
         <span>{{$t('old_password')}}</span>
-        <input type="password" v-model="formItem.prePassword" :placeholder="$t('please_enter_the_original_password')">
+        <input type="password" v-model="formItems.prePassword" :placeholder="$t('please_enter_the_original_password')">
       </div>
 
       <div class="input_content">
         <span>{{$t('new_password')}}</span>
-        <input type="password" v-model="formItem.newPassword" :placeholder="$t('please_enter_a_new_password')">
+        <input type="password" v-model="formItems.newPassword" :placeholder="$t('please_enter_a_new_password')">
       </div>
 
       <div class="input_content">
         <span>{{$t('Confirm_the_password')}}</span>
-        <input type="password" v-model="formItem.repeatPassword"
+        <input type="password" v-model="formItems.repeatPassword"
                :placeholder="$t('please_enter_your_new_password_again')">
       </div>
 

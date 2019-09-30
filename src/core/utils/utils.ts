@@ -293,8 +293,8 @@ export const isRefreshData = function (localstorageName, refreshTime, borderline
     return false
 }
 
-export const formatSeconds = function (second) {
-    if (!second && second !== 0) return 0
+export const formatSeconds = function (second): string {
+    if (!second && second !== 0) return ''
     let d = 0, h = 0, m = 0
 
     if (second > 86400) {
@@ -325,7 +325,6 @@ export const formatSeconds = function (second) {
     }
 
     return result
-
 }
 
 export const formatXemAmount = (xemAmount) => {

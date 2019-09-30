@@ -1,29 +1,39 @@
-import {AliasActionType, NamespaceId, MosaicId, Password, Address} from "nem2-sdk"
+import {AliasActionType, MosaicId, Password, Address} from "nem2-sdk"
 import {mapState} from "vuex"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Message} from "@/config/index.ts"
+import {Message, defaultNetworkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
-import {formDataConfig} from "@/config/view/form";
-import {AppWallet} from "@/core/model"
+import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
 
 @Component({
         computed: {...mapState({activeAccount: 'account'})},
     }
 )
 export class NamespaceUnAliasDialogTs extends Vue {
-    activeAccount: any
-    show = false
+    activeAccount: StoreAccount
     isCompleteForm = false
     aliasNameList: any[] = []
-    formItem: any = formDataConfig.mosaicUnaliasForm
+    formItems = formDataConfig.mosaicUnAliasForm
+    XEM: string = defaultNetworkConfig.XEM
 
     @Prop()
     showUnAliasDialog: boolean
-    @Prop()
-    unAliasItem: any
 
-    get getWallet() {
+    @Prop()
+    activeNamespace: AppNamespace
+
+    get show() {
+        return this.showUnAliasDialog
+    }
+  
+    set show(val) {
+        if (!val) {
+            this.$emit('close')
+        }
+    }
+
+    get wallet(): AppWallet {
         return this.activeAccount.wallet
     }
 
@@ -39,16 +49,23 @@ export class NamespaceUnAliasDialogTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
+    }
+
+    get feeAmount() {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
+
     initForm() {
-        this.formItem = {
-            fee: 0.5,
-            password: ''
-        }
+        this.formItems = formDataConfig.mosaicUnAliasForm
     }
 
     mosaicAliasDialogCancel() {
         this.initForm()
-        this.$emit('closeUnAliasDialog')
+        this.show = false
     }
 
     submit() {
@@ -58,29 +75,23 @@ export class NamespaceUnAliasDialogTs extends Vue {
     }
 
     checkInfo() {
-        const {formItem} = this
+        const {formItems} = this
 
-        if (formItem.fee === 0) {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
-        if (formItem.password === '') {
+        if (formItems.password === '') {
             this.$Notice.error({
                 title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
             })
             return false
         }
 
-        if (formItem.password.length < 8) {
+        if (formItems.password.length < 8) {
             this.$Notice.error({
                 title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
             })
             return false
         }
 
-        const validPassword = new AppWallet(this.getWallet).checkPassword(new Password(formItem.password))
+        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(formItems.password))
 
         if (!validPassword) {
             this.$Notice.error({
@@ -92,48 +103,33 @@ export class NamespaceUnAliasDialogTs extends Vue {
     }
 
     async updateMosaic() {
-        const {node, generationHash, xemDivisibility} = this
-        const {networkType} = this.getWallet
-        const password = new Password(this.formItem.password)
-        let {fee, hex, name, id, aliasTarget} = this.formItem
-        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
-
+        const {node, generationHash, feeAmount} = this
+        const {networkType} = this.wallet
+        const password = new Password(this.formItems.password)
+        const {hex, id, aliasTarget} = this.activeNamespace
+        console.log(aliasTarget.length >= 40, 'aliasTarget.length >= 40aliasTarget.length >= 40aliasTarget.length >= 40')
         const transaction = aliasTarget.length >= 40 // quickfix
             ? new NamespaceApiRxjs().addressAliasTransaction(
                 AliasActionType.Unlink,
                 id,
                 Address.createFromRawAddress(aliasTarget),
                 networkType,
-                fee)
+                feeAmount)
             : new NamespaceApiRxjs().mosaicAliasTransaction(
                 AliasActionType.Unlink,
                 id,
-                new MosaicId(hex),
+                new MosaicId(aliasTarget),
                 networkType,
-                fee)
-        new AppWallet(this.getWallet)
+                feeAmount)
+        new AppWallet(this.wallet)
             .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
         this.initForm()
-        this.updatedMosaicAlias()
-    }
-
-    updatedMosaicAlias() {
-        this.show = false
         this.mosaicAliasDialogCancel()
     }
 
-
-    // @TODO: use v-model
-    @Watch('showUnAliasDialog')
-    onShowUnAliasDialogChange() {
-        this.show = this.showUnAliasDialog
-        Object.assign(this.formItem, this.unAliasItem)
-    }
-
-    @Watch('formItem', {immediate: true, deep: true})
-    onFormItemChange() {
-        const {fee, password} = this.formItem
-        // isCompleteForm
-        this.isCompleteForm = fee > 0 && password !== ''
+    @Watch('formItems', {deep: true})
+    onformItemsChange() {
+        const {password} = this.formItems
+        this.isCompleteForm = password !== ''
     }
 }

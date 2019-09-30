@@ -7,7 +7,6 @@ export class FormattedTransfer extends FormattedTransaction {
     infoSecond: string
     infoThird: any
     dialogDetailMap: any
-    icon: any // @TODO: move icons to header
 
     constructor(    tx: TransferTransaction,
                     address: Address,

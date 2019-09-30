@@ -11,8 +11,7 @@ import {NetworkType} from "nem2-sdk"
 import {languageConfig} from "@/config/view/language"
 import {LanguageType} from "@/core/model/LanguageType"
 import {nodeListConfig} from "@/config/view/node"
-import {getCurrentBlockHeight, getCurrentNetworkMosaic, getNetworkGenerationHash} from "@/core/utils"
-import {AppWallet} from "@/core/model"
+import {StoreAccount, AppWallet, AppInfo} from "@/core/model"
 
 @Component({
     computed: {
@@ -24,9 +23,9 @@ import {AppWallet} from "@/core/model"
 })
 export class MenuBarTs extends Vue {
     NetworkType = NetworkType
-    app: any
+    app: AppInfo
     nodeList = []
-    activeAccount: any
+    activeAccount: StoreAccount
     isShowNodeList = false
     isWindows = isWindows
     inputNodeValue = ''
@@ -86,7 +85,6 @@ export class MenuBarTs extends Vue {
     get accountName() {
         return this.activeAccount.accountName
     }
-
 
     set currentWalletAddress(newActiveWalletAddress) {
         AppWallet.switchWallet(newActiveWalletAddress, this.walletList, this.$store)

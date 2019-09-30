@@ -1,7 +1,7 @@
 export interface VoteQuery {
     title: string;
     address: string;
-    initiator: string;  // account publickey
+    initiator: string;  // account publicKey
     content: string;
     type: number;   // 0=>radio   1=>multiple
     timestamp: number;

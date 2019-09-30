@@ -65,3 +65,8 @@ export interface AppInfo {
     isUiDisabled: boolean,
     uiDisabledMessage: string
 }
+
+export interface DefaultFee {
+    speed: string,
+    value: number,
+}

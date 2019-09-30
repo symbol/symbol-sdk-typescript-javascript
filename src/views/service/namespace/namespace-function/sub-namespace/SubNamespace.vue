@@ -1,19 +1,24 @@
 <template>
   <div class="namespace_transaction_container secondary_page_animate">
-    <div class="left_switch_type">
-      <div class="type_list_item " v-for="(b,index) in typeList">
-        <span :class="['name',b.isSelected?'active':'','pointer']" @click="switchType(index)">{{$t(b.name)}}</span>
-      </div>
-    </div>
-
     <div class="right_panel">
       <div class="namespace_transaction">
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>
-          <span class="value" v-if="typeList[0].isSelected &&wallet">{{formatAddress(wallet.address)}}</span>
-          <Select v-if="typeList[1].isSelected" :placeholder="$t('publickey')" v-model="form.multisigPublickey"
-                  class="select">
-            <Option v-for="item in multisigPublickeyList" :value="item.value" :key="item.value">{{ item.label }}
+          <span
+            v-if="!hasMultisigAccounts"
+            class="value"
+          >{{ formatAddress(wallet.address) }}
+          </span>
+          <Select
+            v-if="hasMultisigAccounts"
+            :placeholder="$t('publicKey')"
+            v-model="formItems.multisigPublicKey"
+            class="fee-select"
+          >
+            <Option
+              v-for="item in multisigPublicKeyList"
+              :value="item.publicKey" :key="item.publicKey"
+            >{{ item.address }}
             </Option>
           </Select>
         </div>
@@ -22,15 +27,9 @@
         <div class="form_item">
           <span class="key">{{$t('parent_namespace')}}</span>
           <span class="value">
-              <Select v-if="typeList[0].isSelected " :placeholder="$t('select_parent_namespace')"
-                      v-model="form.rootNamespaceName" class="select">
+              <Select :placeholder="$t('select_parent_namespace')"
+                      v-model="formItems.rootNamespaceName" class="select">
                   <Option v-for="item in activeNamespaceList"  :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-
-             <Select v-else :placeholder="$t('select_parent_namespace')" v-model="form.rootNamespaceName"
-                     class="select">
-                  <Option v-for="item in multisigNamespaceList"  :value="item.value"
-                          :key="item.value">{{ item.label }}</Option>
               </Select>
           </span>
         </div>
@@ -38,7 +37,7 @@
         <div class="form_item">
           <span class="key">{{$t('Subspace')}}</span>
           <span class="value">
-              <input type="text" v-model="form.subNamespaceName" :placeholder="$t('Input_space_name')">
+              <input type="text" v-model="formItems.subNamespaceName" :placeholder="$t('Input_space_name')">
           </span>
           <div class="tips">
             <div>
@@ -56,40 +55,26 @@
         </div>
 
         <div class="form_item">
-          <span class="key">{{$t('inner_fee')}}</span>
-          <span class="value">
-              <input type="text" v-model="form.innerFee" :placeholder="$t('inner_fee')">
-<!--            <span class="end_label">gas</span>-->
-          </span>
-          <div class="tips">
-            {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-          </div>
-        </div>
-
-        <div class="form_item" v-if="typeList[1].isSelected">
-          <span class="key">{{$t('bonded_fee')}}</span>
-          <span class="value">
-              <input type="text" v-model="form.aggregateFee" :placeholder="$t('bonded_fee')">
-<!--            <span class="end_label">gas</span>-->
-          </span>
-          <div class="tips">
-            {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-          </div>
-        </div>
-
-        <div class="form_item" v-if="typeList[1].isSelected">
-          <span class="key">{{$t('lock_fee')}}</span>
-          <span class="value">
-              <input type="text" v-model="form.lockFee" :placeholder="$t('lock_fee')">
-<!--            <span class="end_label">gas</span>-->
-          </span>
+          <span class="key">{{$t('fee')}}</span>
+          <Select
+                  class="fee-select"
+                  data-vv-name="fee"
+                  v-model="formItems.feeSpeed"
+                  v-validate="'required'"
+                  :data-vv-as="$t('fee')"
+                  :placeholder="$t('fee')"
+          >
+            <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
+              {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
+            </Option>
+          </Select>
           <div class="tips">
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
           </div>
         </div>
 
         <div :class="['create_button',isCompleteForm?'pointer':'not_allowed']"
-             @click="createTransaction">
+             @click="submit()">
           {{$t('create')}}
         </div>
       </div>
@@ -100,8 +85,7 @@
                    :transactionDetail="transactionDetail"
                    :transactionList="transactionList"
                    :otherDetails="otherDetails"
-    ></CheckPWDialog>
-
+    />
   </div>
 </template>
 

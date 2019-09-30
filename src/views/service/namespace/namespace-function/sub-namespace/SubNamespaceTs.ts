@@ -1,13 +1,12 @@
-import {Address, PublicAccount, MultisigAccountInfo} from "nem2-sdk"
-import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {mapState} from "vuex"
+import {Address, PublicAccount, MultisigAccountInfo, NetworkType} from "nem2-sdk"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, networkConfig} from "@/config/index.ts"
+import {Message, networkConfig, formDataConfig, defaultNetworkConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
-import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {getAbsoluteMosaicAmount, formatAddress} from '@/core/utils'
-import {subNamespaceTypeConfig} from "@/config/view/namespace";
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppNamespace} from "@/core/model"
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppNamespace, StoreAccount, AppInfo, AppWallet, DefaultFee} from "@/core/model"
+import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+
 @Component({
     components: {
         CheckPWDialog
@@ -20,8 +19,8 @@ import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppN
     }
 })
 export class SubNamespaceTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     durationIntoDate = 0
     isCompleteForm = true
     showCheckPWDialog = false
@@ -29,54 +28,74 @@ export class SubNamespaceTs extends Vue {
     transactionDetail = {}
     transactionList = []
     currentMinApproval = -1
-    form = {
-        rootNamespaceName: '',
-        subNamespaceName: '',
-        multisigPublickey: '',
-        innerFee: .5,
-        aggregateFee: .5,
-        lockFee: 10,
-    }
-
-    typeList = subNamespaceTypeConfig
+    formItems = formDataConfig.subNamespaceForm
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
+    formatAddress = formatAddress
+    XEM: string = defaultNetworkConfig.XEM
 
-    get wallet() {
+    get wallet(): AppWallet {
         return this.activeAccount.wallet
     }
 
-    get generationHash() {
-        return this.activeAccount.generationHash
+    get activeMultisigAccount(): string {
+        return this.activeAccount.activeMultisigAccount
     }
 
-    get node() {
-        return this.activeAccount.node
+    get activeMultisigAddress(): string {
+        const {activeMultisigAccount} = this.activeAccount
+        return activeMultisigAccount
+            ? Address.createFromPublicKey(activeMultisigAccount, this.wallet.networkType).plain()
+            : null
+    }
+    
+    get announceInLock(): boolean {
+        const {activeMultisigAccount, networkType} = this
+        if (!this.activeMultisigAccount) return false
+        const address = Address.createFromPublicKey(activeMultisigAccount, networkType).plain()
+        return this.activeAccount.multisigAccountInfo[address].minApproval > 1
     }
 
-    get address() {
+    get multisigInfo(): MultisigAccountInfo {
+        const {address} = this.wallet
+        return this.activeAccount.multisigAccountInfo[address]
+    }
+
+    get hasMultisigAccounts(): boolean {
+        if (!this.multisigInfo) return false
+        return this.multisigInfo.multisigAccounts.length > 0
+    }
+
+    get multisigPublicKeyList(): {publicKey: string, address: string}[] {
+        if (!this.hasMultisigAccounts) return null
+        return [
+          {
+            publicKey: this.accountPublicKey,
+            address: `(self) ${formatAddress(this.address)}`,
+          },
+          ...this.multisigInfo.multisigAccounts
+            .map(({publicKey}) => ({
+                publicKey,
+                address: formatAddress(Address.createFromPublicKey(publicKey, this.networkType).plain())
+            })),
+        ]
+    }
+
+    get address(): string {
         return this.activeAccount.wallet.address
     }
 
-    get namespaceList() {
-        return this.activeAccount.namespaces ? this.activeAccount.namespaces : []
+    get networkType(): NetworkType {
+        return this.activeAccount.wallet.networkType
     }
 
-    get currentHeight() {
+    get currentHeight(): number {
         return this.app.chainStatus.currentHeight
     }
 
-    get activeNamespaceList() {
-        const {currentHeight, namespaceGracePeriodDuration} = this
-        // @TODO handle namespace list loading state
-        return this.namespaceList
-            .filter(({alias, endHeight, levels}) => alias instanceof EmptyAlias && endHeight - currentHeight > namespaceGracePeriodDuration && levels < 3)
-            .map(alias => ({label: alias.label, value: alias.label}))
-    }
-
-    get xemDivisibility() {
+    get xemDivisibility(): number {
         return this.activeAccount.xemDivisibility
     }
-    
+
     get accountPublicKey(): string {
         return this.activeAccount.wallet.publicKey
     }
@@ -89,52 +108,55 @@ export class SubNamespaceTs extends Vue {
         return this.multisigAccountInfo ? this.multisigAccountInfo.multisigAccounts : []
     }
 
-    get multisigPublickeyList(): any {
-        const {multisigAccounts} = this
-        const {accountPublicKey} = this
-        const mainPublicKeyItem = {
-            value: accountPublicKey,
-            label: '(self)' + accountPublicKey
-        }
-
-        return [mainPublicKeyItem, ...multisigAccounts
-            .map(({publicKey}) => ({value: publicKey, label: publicKey}))]
-    }
-
-    get activeMultisigAddress(): string {
-        const {activeMultisigAccount} = this.activeAccount
-        return activeMultisigAccount
-            ? Address.createFromPublicKey(activeMultisigAccount, this.wallet.networkType).plain()
-            : null
-    }
-  
-    get multisigNamespaceList(): any {
-        const {currentHeight, namespaceGracePeriodDuration, activeMultisigAddress} = this
-        if (!activeMultisigAddress) return []
-        const namespaces: AppNamespace[] = this.activeAccount.multisigAccountsNamespaces[activeMultisigAddress]
-        console.log(this.activeAccount.multisigAccountsNamespaces, 'YYYYYYYYY', namespaces, activeMultisigAddress)
+    get namespaceList(): {label: string, value: string}[] {
+        const {currentHeight, namespaceGracePeriodDuration} = this
+        const {namespaces} = this.activeAccount
         if (!namespaces) return []
+
+        // @TODO: refactor and make it an AppNamespace method
         return namespaces
-            .filter(({alias, endHeight, levels}) => alias instanceof EmptyAlias
-                && endHeight - currentHeight > namespaceGracePeriodDuration && levels < 3)
+            .filter(({alias, endHeight, levels}) => (endHeight - currentHeight > namespaceGracePeriodDuration && levels < 3))
             .map(alias => ({label: alias.label, value: alias.label}))
     }
 
-    formatAddress(address) {
-        return formatAddress(address)
+    get multisigNamespaceList(): {label: string, value: string}[] {
+        const {currentHeight, namespaceGracePeriodDuration, activeMultisigAddress} = this
+        if (!activeMultisigAddress) return []
+        const namespaces: AppNamespace[] = this.activeAccount.multisigAccountsNamespaces[activeMultisigAddress]
+        if (!namespaces) return []
+
+        // @TODO: refactor and make it an AppNamespace method
+        return namespaces
+            .filter(({alias, endHeight, levels}) => (endHeight - currentHeight > namespaceGracePeriodDuration && levels < 3))
+            .map(alias => ({label: alias.label, value: alias.label}))
     }
 
-    switchType(index) {
-        let list = this.typeList
-        list = list.map((item) => {
-            item.isSelected = false
-            return item
-        })
-        list[index].isSelected = true
-        this.typeList = list
+    get activeNamespaceList(): {label: string, value: string}[] {
+        const {activeMultisigAddress} = this
+        console.log(activeMultisigAddress, 'activeMultisigAddressactiveMultisigAddressactiveMultisigAddressactiveMultisigAddress')
+        // @TODO handle namespace list loading state
+        return activeMultisigAddress ? this.multisigNamespaceList : this.namespaceList
     }
 
-    async checkEnd(isPasswordRight) {
+    get defaultFees(): DefaultFee[] {
+        if (!this.activeMultisigAccount) return DEFAULT_FEES[FEE_GROUPS.SINGLE]
+        if (!this.announceInLock) return DEFAULT_FEES[FEE_GROUPS.DOUBLE]
+        if (this.announceInLock) return DEFAULT_FEES[FEE_GROUPS.TRIPLE]
+    }
+
+    get feeAmount(): number {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
+
+    get feeDivider(): number {
+        if (!this.activeMultisigAccount) return 1
+        if (!this.announceInLock) return 2
+        if (this.announceInLock) return 3
+    }
+
+    async checkEnd(isPasswordRight): Promise<void> {
         if (!isPasswordRight) {
             this.$Notice.destroy()
             this.$Notice.error({
@@ -143,26 +165,25 @@ export class SubNamespaceTs extends Vue {
         }
     }
 
-    showErrorMessage(message) {
+    showErrorMessage(message): void {
         this.$Notice.destroy()
         this.$Notice.error({
             title: message
         })
     }
 
-    createByMultisig() {
-        const that = this
-        let {aggregateFee, multisigPublickey} = this.form
+    createByMultisig(): void{
+        let {feeAmount, feeDivider} = this
+        let {multisigPublicKey} = this.formItems
         const {networkType} = this.wallet
-        const {xemDivisibility} = this
         const rootNamespaceTransaction = this.createSubNamespace()
-        aggregateFee = getAbsoluteMosaicAmount(aggregateFee, xemDivisibility)
-        if (that.currentMinApproval > 1) {
+
+        if (this.announceInLock) {
             const aggregateTransaction = createBondedMultisigTransaction(
                 [rootNamespaceTransaction],
-                multisigPublickey,
+                multisigPublicKey,
                 networkType,
-                aggregateFee
+                feeAmount / feeDivider
             )
 
             this.transactionList = [aggregateTransaction]
@@ -170,15 +191,15 @@ export class SubNamespaceTs extends Vue {
         }
         const aggregateTransaction = createCompleteMultisigTransaction(
             [rootNamespaceTransaction],
-            multisigPublickey,
+            multisigPublicKey,
             networkType,
-            aggregateFee
+            feeAmount / feeDivider
         )
         this.transactionList = [aggregateTransaction]
     }
 
     checkForm(): boolean {
-        const {rootNamespaceName, innerFee, subNamespaceName} = this.form
+        const {rootNamespaceName, subNamespaceName} = this.formItems
 
         if (!rootNamespaceName || !rootNamespaceName.trim()) {
             this.showErrorMessage(this.$t(Message.NAMESPACE_NULL_ERROR))
@@ -192,71 +213,64 @@ export class SubNamespaceTs extends Vue {
             this.showErrorMessage(this.$t(Message.SUB_NAMESPACE_LENGTH_LONGER_THAN_64_ERROR))
             return false
         }
-        //^[a-z].*
         if (!subNamespaceName.match(/^[a-z].*/)) {
             this.showErrorMessage(this.$t(Message.NAMESPACE_STARTING_ERROR))
             return false
         }
-        //^[0-9a-zA-Z_-]*$
         if (!subNamespaceName.match(/^[0-9a-zA-Z_-]*$/g)) {
             this.showErrorMessage(this.$t(Message.NAMESPACE_FORMAT_ERROR))
             return false
         }
-        if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR))
-            return false
-        }
 
-        //reservedRootNamespaceNames
-        const subflag = networkConfig.reservedRootNamespaceNames.every((item) => {
+        const subFlag = networkConfig.reservedRootNamespaceNames.every((item) => {
             if (item == subNamespaceName) {
-                this.showErrorMessage(this.$t(Message.NAMESPACE_USE_BANDED_WORD_ERROR))
+                this.showErrorMessage(this.$t(Message.NAMESPACE_USE_BANNED_WORD_ERROR))
                 return false
             }
             return true
         })
-        return subflag
+        return subFlag
     }
 
     createSubNamespace() {
-        let {rootNamespaceName, subNamespaceName, innerFee} = this.form
-        const {xemDivisibility} = this
-        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
+        let {rootNamespaceName, subNamespaceName} = this.formItems
+        const {feeAmount, feeDivider} = this
         const {networkType} = this.wallet
         return new NamespaceApiRxjs().createdSubNamespace(
             subNamespaceName,
             rootNamespaceName,
             networkType,
-            innerFee
+            feeAmount / feeDivider
         )
     }
 
     initForm() {
-        this.form = {
-            rootNamespaceName: '',
-            subNamespaceName: '',
-            multisigPublickey: '',
-            innerFee: .5,
-            aggregateFee: .5,
-            lockFee: 10,
-        }
+        this.formItems = formDataConfig.subNamespaceForm
     }
 
     closeCheckPWDialog() {
         this.showCheckPWDialog = false
     }
-
-    createTransaction() {
+    
+    submit() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
-        const {rootNamespaceName, innerFee, subNamespaceName} = this.form
+        const {rootNamespaceName, subNamespaceName} = this.formItems
+        const {feeAmount, feeDivider} = this
         this.transactionDetail = {
             "namespace": rootNamespaceName,
-            "innerFee": innerFee,
+            "innerFee": feeAmount/feeDivider,
             "sub_namespace": subNamespaceName,
-            "fee": innerFee
+            "fee": feeAmount/feeDivider
         }
-        if (this.typeList[0].isSelected) {
+
+        if (this.announceInLock) {
+            this.otherDetails = {
+                lockFee: feeAmount / 3
+            }
+        }
+
+        if (!this.hasMultisigAccounts) {
             this.createBySelf()
         } else {
             this.createByMultisig()
@@ -269,22 +283,26 @@ export class SubNamespaceTs extends Vue {
         this.transactionList = [transaction]
     }
 
-    @Watch('form.multisigPublickey')
-    onMultisigPublickeyChange(newPublicKey, oldPublicKey) {
+    @Watch('formItems.multisigPublicKey')
+    onMultisigPublicKeyChange(newPublicKey, oldPublicKey) {
         if (!newPublicKey || newPublicKey === oldPublicKey) return
         this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', newPublicKey)
     }
 
-    @Watch('form', {immediate: true, deep: true})
+    @Watch('formItems', {deep: true})
     onFormItemChange() {
-        const {rootNamespaceName, innerFee, subNamespaceName, multisigPublickey} = this.form
+        const {rootNamespaceName, subNamespaceName, multisigPublicKey} = this.formItems
 
         // isCompleteForm
-        if (this.typeList[0].isSelected) {
-            this.isCompleteForm = innerFee + '' !== '' && rootNamespaceName !== '' && subNamespaceName !== ''
+        if (!this.hasMultisigAccounts) {
+            this.isCompleteForm = rootNamespaceName !== '' && subNamespaceName !== ''
             return
         }
-        this.isCompleteForm = innerFee + '' !== '' && rootNamespaceName !== '' && subNamespaceName !== '' && multisigPublickey && multisigPublickey.length === 64
+        this.isCompleteForm = rootNamespaceName !== '' && subNamespaceName !== '' && multisigPublicKey && multisigPublicKey.length === 64
         this.isCompleteForm = true
+    }
+
+    mounted() {
+        this.formItems.multisigPublicKey = this.accountPublicKey
     }
 }

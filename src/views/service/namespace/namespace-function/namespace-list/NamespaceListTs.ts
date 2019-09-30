@@ -1,19 +1,19 @@
+import {Address, MosaicId, AliasType} from "nem2-sdk"
+import {mapState} from "vuex"
 import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Watch, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
-import {mapState} from "vuex"
-import {networkConfig} from '@/config/index.ts'
-import {Address, MosaicId, AliasType} from "nem2-sdk"
+import {networkConfig, namespaceSortType} from '@/config'
+import {AppMosaics} from '@/core/services/mosaics'
+import {sortByBindType, sortByduration, sortByName, sortByOwnerShip, sortByBindInfo} from "@/core/services/namespace"
+import {StoreAccount, AppInfo, MosaicNamespaceStatusType} from "@/core/model"
+
 import NamespaceUnAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-unAlias-dialog/NamespaceUnAliasDialog.vue'
 import NamespaceMosaicAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-mosaic-alias-dialog/NamespaceMosaicAliasDialog.vue'
 import NamespaceAddressAliasDialog
     from '@/views/service/namespace/namespace-function/namespace-list/namespace-address-alias-dialog/NamespaceAddressAliasDialog.vue'
-import {AppMosaics} from '@/core/services/mosaics'
-import {MosaicNamespaceStatusType} from "@/core/model/MosaicNamespaceStatusType"
-import {sortByBindInfo, sortByBindType, sortByduration, sortByName, sortByOwnerShip} from "@/core/services/namespace"
-import {namespaceSortType} from "@/config/view/namespace"
 
 @Component({
     components: {
@@ -32,8 +32,8 @@ import {namespaceSortType} from "@/config/view/namespace"
 })
 
 export class NamespaceListTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     currentNamespace = ''
     pageSize: number = networkConfig.namespaceListSize
     page: number = 1
@@ -45,14 +45,14 @@ export class NamespaceListTs extends Vue {
     StatusString = MosaicNamespaceStatusType
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
     namespaceSortType = namespaceSortType
-    currentNamespacelist = []
+    currentNamespaceList = []
     currentSortType = ''
-    isShowExpirednamespace = true
+    isShowExpiredNamespace = true
     isShowMosaicAlias = false
     dataLength = 0
 
-    get namespaceList() {
-        const namespaceList = this.activeAccount.namespaces.map((item) => {
+    get NamespaceList() {
+        const NamespaceList = this.activeAccount.namespaces.map((item) => {
             switch (item.alias.type) {
                 case (AliasType.None):
                     item.aliasTarget = MosaicNamespaceStatusType.NOALIAS
@@ -72,7 +72,7 @@ export class NamespaceListTs extends Vue {
             }
             return item
         })
-        return namespaceList
+        return NamespaceList
 
     }
 
@@ -95,14 +95,13 @@ export class NamespaceListTs extends Vue {
     }
 
     get currentNamespaceListByPage() {
-        return this.currentNamespacelist.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
+        return this.currentNamespaceList.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
     }
 
     get unlinkMosaicList() {
         const {currentHeight} = this
         const {address} = this.wallet
         return AppMosaics().getAvailableToBeLinked(currentHeight, address, this.$store)
-
     }
 
     get namespaceLoading() {
@@ -115,46 +114,29 @@ export class NamespaceListTs extends Vue {
 
     getSortType(type) {
         this.currentSortType = type
-        const currentNamespacelist = [...this.currentNamespacelist]
+        const currentNamespaceList = [...this.currentNamespaceList]
         switch (type) {
             case namespaceSortType.byName:
-                this.currentNamespacelist = sortByName(currentNamespacelist)
+                this.currentNamespaceList = sortByName(currentNamespaceList)
                 break
             case namespaceSortType.byDuration:
-                this.currentNamespacelist = sortByduration(currentNamespacelist)
+                this.currentNamespaceList = sortByduration(currentNamespaceList)
                 break
             case namespaceSortType.byBindInfo:
-                this.currentNamespacelist = sortByBindInfo(currentNamespacelist)
+                this.currentNamespaceList = sortByBindInfo(currentNamespaceList)
                 break
             case namespaceSortType.byBindType:
-                this.currentNamespacelist = sortByBindType(currentNamespacelist)
+                this.currentNamespaceList = sortByBindType(currentNamespaceList)
                 break
             case namespaceSortType.byOwnerShip:
-                this.currentNamespacelist = sortByOwnerShip(currentNamespacelist)
+                this.currentNamespaceList = sortByOwnerShip(currentNamespaceList)
                 break
         }
-    }
-
-
-    closeMosaicAliasDialog() {
-        this.showMosaicAliasDialog = false
-    }
-
-    closeUnAliasDialog() {
-        this.showUnAliasDialog = false
     }
 
     showEditDialog(namespaceName) {
         this.currentNamespace = namespaceName
         this.showNamespaceEditDialog = true
-    }
-
-    closeNamespaceEditDialog() {
-        this.showNamespaceEditDialog = false
-    }
-
-    closeAddressAliasDialog() {
-        this.isShowAddressAliasDialog = false
     }
 
     computeDuration(namespaceInfo) {
@@ -163,7 +145,7 @@ export class NamespaceListTs extends Vue {
         if (!isActive) {
             return MosaicNamespaceStatusType.EXPIRED
         }
-        const expireTime = endHeight - currentHeight > namespaceGracePeriodDuration ? endHeight - currentHeight : MosaicNamespaceStatusType.EXPIRED
+        const expireTime = endHeight - currentHeight - namespaceGracePeriodDuration > 0 ? endHeight - currentHeight - namespaceGracePeriodDuration : MosaicNamespaceStatusType.EXPIRED
         return expireTime
     }
 
@@ -180,11 +162,11 @@ export class NamespaceListTs extends Vue {
     showAddressLinkDialog(aliasItem) {
         this.isShowAddressAliasDialog = true
         this.aliasDialogItem = aliasItem
-
     }
 
     durationToTime(duration) {
-        const durationNum = Number(duration - this.currentHeight)
+        const {namespaceGracePeriodDuration} = this
+        const durationNum = Number(duration - this.currentHeight - namespaceGracePeriodDuration)
         return formatSeconds(durationNum * 12)
     }
 
@@ -192,27 +174,26 @@ export class NamespaceListTs extends Vue {
         this.page = page
     }
 
-    toggleIsShowExpirednamespace() {
-        const {isShowExpirednamespace} = this
+    toggleIsShowExpiredNamespace() {
+        const {isShowExpiredNamespace} = this
         const {currentHeight, namespaceGracePeriodDuration} = this
-        const list = [...this.namespaceList]
-        this.currentNamespacelist = list.filter(item => isShowExpirednamespace || item.endHeight - currentHeight > namespaceGracePeriodDuration)
-        this.isShowExpirednamespace = !isShowExpirednamespace
+        const list = [...this.NamespaceList]
+        this.currentNamespaceList = list.filter(item => isShowExpiredNamespace || item.endHeight - currentHeight > namespaceGracePeriodDuration)
+        this.isShowExpiredNamespace = !isShowExpiredNamespace
     }
 
+    // @TODO: probably unnecessary
     @Watch('namespaceList', {deep: true})
     onNamespaceListChange() {
-
         this.initNamespace()
     }
 
     initNamespace() {
         this.getSortType(namespaceSortType.byDuration)
-        this.toggleIsShowExpirednamespace()
+        this.toggleIsShowExpiredNamespace()
     }
 
     mounted() {
         this.initNamespace()
     }
-
 }

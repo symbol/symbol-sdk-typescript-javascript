@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {mapState} from 'vuex';
 import {Password} from 'nem2-sdk'
-import {AppWallet} from "@/core/model"
+import {StoreAccount, AppInfo, AppWallet} from "@/core/model"
 
 @Component({
     computed: {
@@ -13,9 +13,9 @@ import {AppWallet} from "@/core/model"
     }
 })
 export class WalletUpdatePasswordTs extends Vue {
-    activeAccount: any
-    app: any
-    formItem = {
+    activeAccount: StoreAccount
+    app: AppInfo
+    formItems = {
         prePassword: '',
         newPassword: '',
         repeatPassword: '',
@@ -33,7 +33,7 @@ export class WalletUpdatePasswordTs extends Vue {
 
     checkInfo() {
         // @TODO check password VeeValidate
-        const {prePassword, newPassword, repeatPassword} = this.formItem
+        const {prePassword, newPassword, repeatPassword} = this.formItems
 
         if (prePassword == '' || newPassword == '' || repeatPassword == '') {
             this.showNotice('' + this.$t(Message.INPUT_EMPTY_ERROR))
@@ -62,8 +62,8 @@ export class WalletUpdatePasswordTs extends Vue {
     }
 
     updatePassword() {
-        const oldPassword = new Password(this.formItem.prePassword)
-        const newPassword = new Password(this.formItem.newPassword)
+        const oldPassword = new Password(this.formItems.prePassword)
+        const newPassword = new Password(this.formItems.newPassword)
         new AppWallet(this.getWallet).updatePassword(oldPassword, newPassword, this.$store)
 
         this.init()
@@ -73,15 +73,15 @@ export class WalletUpdatePasswordTs extends Vue {
     }
 
     init() {
-        this.formItem.prePassword = ''
-        this.formItem.newPassword = ''
-        this.formItem.repeatPassword = ''
+        this.formItems.prePassword = ''
+        this.formItems.newPassword = ''
+        this.formItems.repeatPassword = ''
         this.privateKey = ''
     }
 
-    @Watch('formItem', {immediate: true, deep: true})
-    onFormItemChange() {
-        const {prePassword, newPassword, repeatPassword} = this.formItem
+    @Watch('formItems', {immediate: true, deep: true})
+    onformItemsChange() {
+        const {prePassword, newPassword, repeatPassword} = this.formItems
         this.isCompleteForm = prePassword !== '' && newPassword !== '' && repeatPassword !== ''
     }
 

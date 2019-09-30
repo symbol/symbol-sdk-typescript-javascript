@@ -455,7 +455,7 @@ export const jp_JP = {
     Wallet_name: 'ウォレット名',
     Wallet_address: 'ウォレットの住所',
     Wallet_public_key: '公開鍵',
-    publickey: '公開鍵',
+    publicKey: '公開鍵',
     Address_QR_code: 'アドレス二次元コード',
     Function_and_backup: '機能とバックアップ',
     Export_mnemonic: '助記語をエクスポート',

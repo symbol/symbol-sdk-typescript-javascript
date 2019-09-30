@@ -1,9 +1,6 @@
-import {Password} from 'nem2-sdk'
-import {Message} from "@/config/index.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from 'vuex'
-import {AppWallet} from "@/core/model"
-import {localRead, localSave} from "@/core/utils"
+import {AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -11,7 +8,7 @@ import {localRead, localSave} from "@/core/utils"
     }
 })
 export class TheWalletUpdateTs extends Vue {
-    activeAccount: any
+    activeAccount: StoreAccount
     stepIndex = 0
     show = false
     wallet = {

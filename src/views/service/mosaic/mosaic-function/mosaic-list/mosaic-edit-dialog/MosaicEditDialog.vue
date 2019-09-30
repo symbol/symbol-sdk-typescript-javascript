@@ -12,44 +12,43 @@
       </div>
       <div class="mosaicEditDialogBody">
         <div class="stepItem1">
-          <Form :model="mosaic" v-if="mosaic.hex">
+          <Form :model="formItems">
             <FormItem :label="$t('mosaic_ID')">
-              <p class="mosaicTxt">{{mosaic.hex.toString().toUpperCase()}}</p>
+              <p class="mosaicTxt">{{itemMosaic.hex.toString().toUpperCase()}}</p>
             </FormItem>
             <FormItem :label="$t('alias')">
-              <p class="mosaicTxt">{{mosaic.name?mosaic.name:'no data'}}</p>
+              <p class="mosaicTxt">{{itemMosaic.name ? itemMosaic.name : 'no data'}}</p>
             </FormItem>
             <FormItem :label="$t('existing_supply')">
               <p class="mosaicTxt">{{supply}}</p>
             </FormItem>
             <FormItem class="update_type" :label="$t('change_type')">
-              <RadioGroup v-model="mosaic.supplyType" @on-change="changeSupply">
-                <Radio :label="1" :disabled="!mosaic.supplyMutable">{{$t('increase')}}</Radio>
-                <Radio :label="0" :disabled="!mosaic.supplyMutable">{{$t('cut_back')}}</Radio>
+              <RadioGroup v-model="formItems.supplyType" @on-change="changeSupply">
+                <Radio :label="1" :disabled="!itemMosaic.properties.supplyMutable">{{$t('increase')}}</Radio>
+                <Radio :label="0" :disabled="!itemMosaic.properties.supplyMutable">{{$t('cut_back')}}</Radio>
               </RadioGroup>
             </FormItem>
             <FormItem :label="$t('change_amount')">
-              <Input v-model="mosaic.changeDelta" required
+              <Input v-model="formItems.delta" required
                      type="number"
-                     :disabled="!mosaic.supplyMutable"
+                     :disabled="!itemMosaic.properties.supplyMutable"
                      :placeholder="$t('please_enter_the_amount_of_change')"
                      @input="changeSupply"
-              ></Input>
-              <p class="tails">XEM</p>
+              />
             </FormItem>
             <FormItem :label="$t('post_change_supply')">
-              <p class="mosaicTxt">{{changedSupply}}XEM</p>
+              <p class="mosaicTxt">{{changedSupply}}</p>
             </FormItem>
-            <FormItem :label="$t('fee')">
-              <Input v-model="mosaic.fee" required placeholder="0.5"></Input>
-<!--              <p class="tails">gas</p>-->
-              <div class="tips">
-                {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-              </div>
+            <FormItem :label="$t('fee')" class="fee">
+              <Select v-model="formItems.feeSpeed" required>
+              <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
+                {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
+              </Option>
+              </Select>
             </FormItem>
             <FormItem :label="$t('password')">
-              <Input v-model="mosaic.password" type="password" required
-                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
+              <Input v-model="formItems.password" type="password" required
+                     :placeholder="$t('please_enter_your_wallet_password')" />
             </FormItem>
             <FormItem class="button_update">
               <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="submit">

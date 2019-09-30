@@ -11,16 +11,6 @@ export const subNamespaceTypeConfig: Array<{
     }
 ]
 
-export const rootNamespaceTypeConfig = [
-    {
-        name: 'ordinary_account',
-        isSelected: true
-    }, {
-        name: 'multi_sign_account',
-        isSelected: false
-    }
-]
-
 export const namespaceButtonConfig = [
     {
         name: 'Namespace_list',

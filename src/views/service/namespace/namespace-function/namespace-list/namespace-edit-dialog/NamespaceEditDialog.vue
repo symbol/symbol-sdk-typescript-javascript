@@ -12,28 +12,35 @@
       </div>
       <div class="namespaceEditDialogBody">
         <div class="stepItem1">
-          <Form :model="namespace">
+          <Form :model="formItems">
             <FormItem :label="$t('namespace_name')">
               <p class="namespaceTxt">{{currentNamespace.label}}</p>
             </FormItem>
             <FormItem :label="$t('duration')">
-              <Input v-model="namespace.duration"
+              <Input v-model="formItems.duration"
                      number
                      required
                      @input="changeXEMRentFee"
-                     :placeholder="$t('enter_the_number_of_blocks_integer')"></Input>
+                     :placeholder="$t('enter_the_number_of_blocks_integer')" />
               <p class="tails">{{$t('validity_period')}}：{{durationIntoDate}}</p>
             </FormItem>
             <FormItem :label="$t('fee')">
-              <Input v-model="namespace.fee" number required placeholder=""></Input>
-<!--              <p class="tails">gas</p>-->
-              <div class="tips">
-                {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-              </div>
+              <Select
+                      class="fee-select"
+                      data-vv-name="fee"
+                      v-model="formItems.feeSpeed"
+                      v-validate="'required'"
+                      :data-vv-as="$t('fee')"
+                      :placeholder="$t('fee')"
+              >
+                <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
+                  {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
+                </Option>
+              </Select>
             </FormItem>
             <FormItem :label="$t('password')">
-              <Input v-model="namespace.password" type="password" required
-                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
+              <Input v-model="formItems.password" type="password" required
+                     :placeholder="$t('please_enter_your_wallet_password')" />
             </FormItem>
             <FormItem>
               <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="submit">

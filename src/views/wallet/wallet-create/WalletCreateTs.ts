@@ -71,7 +71,7 @@ export class WalletCreateTs extends Vue {
             return false
         }
         try {
-            createSubWalletByPath(networkConfig.testMnemonicStirng, path)
+            createSubWalletByPath(networkConfig.testMnemonicString, path)
             return true
         } catch (e) {
             this.$Notice.error({title: this.$t(Message.HD_WALLET_PATH_ERROR) + ''})

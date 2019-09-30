@@ -5,10 +5,14 @@ export const multisigButtonConfig: Array<{
         {
             name: 'convert',
             isSelected: false
-        }, {
-            name: 'manage',
-            isSelected: false
-        }, {
+        },
+        
+        // {
+        //     name: 'manage',
+        //     isSelected: false
+        // },
+        
+        {
             name: 'map',
             isSelected: true
         },

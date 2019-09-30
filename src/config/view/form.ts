@@ -1,31 +1,23 @@
 import {NetworkType} from "nem2-sdk"
+import {FEE_SPEEDS} from '@/config'
 
 export const formDataConfig = {
-    multisigTransferForm: {
-        address: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
-        remark: '',
-        multisigPublickey: '',
-        innerFee: 1,
-        lockFee: 10,
-        aggregateFee: 1,
-        mosaicTransferList: [],
-        isEncrypted: true
-    },
     transferForm: {
-        fee: 0.5,
+        recipient: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
         remark: '',
-        address: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
+        multisigPublicKey: '',
+        feeSpeed: FEE_SPEEDS.NORMAL,
         mosaicTransferList: [],
         isEncrypted: true
     },
     remoteForm: {
-        remotePublickey: '',
-        fee: 0.5,
+        remotePublicKey: '',
+        feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
     mosaicAliasForm: {
-        aliasName: '',
-        fee: 0.5,
+        mosaicName: '',
+        feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
     mosaicEditForm: {
@@ -35,11 +27,16 @@ export const formDataConfig = {
         supplyType: 1,
         changeDelta: 0,
         duration: '',
-        fee: 0.5,
+        feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
-    mosaicUnaliasForm: {
-        fee: 0.5,
+    mosaicUnAliasForm: {
+        feeSpeed: FEE_SPEEDS.NORMAL,
+        password: ''
+    },
+    addressAliasForm: {
+        address: '',
+        feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
     mosaicTransactionForm: {
@@ -50,41 +47,39 @@ export const formDataConfig = {
         supplyMutable: true,
         permanent: false,
         duration: 1000,
-        innerFee: 0.5,
-        aggregateFee: 0.5,
-        lockFee: 0.5,
-        multisigPublickey: ''
+        feeSpeed: FEE_SPEEDS.NORMAL,
+        multisigPublicKey: ''
     },
     multisigConversionForm: {
-        publickeyList: [],
+        publicKeyList: [],
         minApproval: 1,
         minRemoval: 1,
-        bondedFee: 1,
-        lockFee: 10,
-        innerFee: 1
+        feeSpeed: FEE_SPEEDS.NORMAL,
     },
     multisigManagementForm: {
         minApprovalDelta: 0,
         minRemovalDelta: 0,
-        bondedFee: 1,
-        lockFee: 10,
-        innerFee: 1,
+        feeSpeed: FEE_SPEEDS.NORMAL,
         cosignerList: [],
-        multisigPublickey: ''
+        multisigPublicKey: ''
     },
     namespaceEditForm: {
         name: '',
         duration: 0,
-        fee: 0.5,
+        feeSpeed: FEE_SPEEDS.NORMAL,
         password: ''
     },
     rootNamespaceForm: {
         duration: 1000,
         rootNamespaceName: '',
-        multisigPublickey: '',
-        innerFee: 0.5,
-        aggregateFee: 0.5,
-        lockFee: 0.5
+        multisigPublicKey: '',
+        feeSpeed: FEE_SPEEDS.NORMAL,
+    },
+    subNamespaceForm: {
+        rootNamespaceName: '',
+        subNamespaceName: '',
+        multisigPublicKey: '',
+        feeSpeed: FEE_SPEEDS.NORMAL,
     },
     walletImportMnemonicForm: {
         mnemonic: '',

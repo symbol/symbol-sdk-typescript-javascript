@@ -1,75 +1,97 @@
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
-import {Password} from 'nem2-sdk'
-import {Message, networkConfig} from "@/config/index.ts"
-import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs.ts"
+import {Password, NetworkType, MosaicSupplyChangeTransaction, Deadline, UInt64, MosaicId} from 'nem2-sdk'
+import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig, formDataConfig} from "@/config/index.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
-import {formDataConfig} from "@/config/view/form";
-import {AppWallet} from "@/core/model"
+import {AppWallet, AppMosaic, DefaultFee, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
         ...mapState({activeAccount: 'account'})
     }
-
 })
 export class MosaicEditDialogTs extends Vue {
-    show = false
-    activeAccount: any
+    activeAccount: StoreAccount
     isCompleteForm = false
     changedSupply = 0
     totalSupply = networkConfig.maxMosaicAtomicUnits
-    mosaic: any = formDataConfig.mosaicEditForm
+    formItems = formDataConfig.mosaicEditForm
+    XEM = defaultNetworkConfig.XEM
 
     @Prop()
     showMosaicEditDialog: boolean
 
     @Prop()
-    itemMosaic: any
-
-    get selectedMosaic() {
-        return this.itemMosaic
+    itemMosaic: AppMosaic
+  
+    get show() {
+        return this.showMosaicEditDialog
     }
 
-    get supply() {
-        return this.mosaic['supply']
+    set show(val) {
+        if (!val) {
+            this.$emit('close')
+        }
     }
 
-    get wallet() {
+    get supply(): number {
+        return this.itemMosaic.mosaicInfo.supply.compact()
+    }
+
+    get wallet(): AppWallet {
         return this.activeAccount.wallet
     }
 
-    get generationHash() {
+    get generationHash(): string {
         return this.activeAccount.generationHash
     }
 
-    get node() {
+    get node(): string {
         return this.activeAccount.node
     }
 
-    get xemDivisibility() {
+    get xemDivisibility(): number {
         return this.activeAccount.xemDivisibility
+    }
+
+    get mosaicId(): string {
+      return this.itemMosaic.hex
+    }
+    
+    get networkType(): NetworkType {
+        return this.wallet.networkType
+    }
+
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
+    }
+
+    get feeAmount(): number {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
     }
 
     mosaicEditDialogCancel() {
         this.initForm()
-        this.$emit('closeMosaicEditDialog')
+        this.show = false
     }
 
+    // @TODO: make get newSupply() instead
     changeSupply() {
-        this.mosaic.changeDelta = Math.abs(this.mosaic.changeDelta)
+        this.formItems.delta = Math.abs(this.formItems.delta)
         let supply = 0
-        if (this.mosaic.supplyType === 1) {
-            supply = Number(this.mosaic.changeDelta) + Number(this.supply)
-            if (supply > this.totalSupply * Math.pow(10, this.mosaic['_divisibility'])) {
-                supply = this.totalSupply * Math.pow(10, this.mosaic['_divisibility'])
-                this.mosaic.changeDelta = supply - this.supply
+        if (this.formItems.supplyType === 1) {
+            supply = Number(this.formItems.delta) + Number(this.supply)
+            if (supply > this.totalSupply * Math.pow(10, this.formItems['_divisibility'])) {
+                supply = this.totalSupply * Math.pow(10, this.formItems['_divisibility'])
+                this.formItems.delta = supply - this.supply
             }
         } else {
-            supply = this.supply - this.mosaic.changeDelta
+            supply = this.supply - this.formItems.delta
             if (supply <= 0) {
                 supply = 0
-                this.mosaic.changeDelta = this.supply
+                this.formItems.delta = this.supply
             }
         }
 
@@ -77,35 +99,29 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     checkInfo() {
-        const {mosaic} = this
+        const {formItems} = this
 
-        if (mosaic.fee === 0) {
+        if (formItems.delta === 0) {
             this.$Notice.error({
                 title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
             })
             return false
         }
-        if (mosaic.changeDelta === 0) {
-            this.$Notice.error({
-                title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
-            })
-            return false
-        }
-        if (mosaic.password === '') {
+        if (formItems.password === '') {
             this.$Notice.error({
                 title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
             })
             return false
         }
 
-        if (mosaic.password.length < 8) {
+        if (formItems.password.length < 8) {
             this.$Notice.error({
                 title: '' + Message.WRONG_PASSWORD_ERROR
             })
             return false
         }
 
-        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(mosaic.password))
+        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(formItems.password))
 
         if (!validPassword) {
             this.$Notice.error({
@@ -123,60 +139,37 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     updateMosaic() {
-        const {node, generationHash, xemDivisibility} = this
-        const password = new Password(this.mosaic.password)
-        let {mosaicId, changeDelta, supplyType, networkType, fee} = this.mosaic
-        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
-        const transaction = new MosaicApiRxjs().mosaicSupplyChange(
-            mosaicId,
-            changeDelta,
-            supplyType,
-            networkType,
-            fee
-        )
-        this.show = false
-        new AppWallet(this.wallet)
-            .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
-    }
+        const {node, generationHash, feeAmount, mosaicId, networkType} = this
+        const password = new Password(this.formItems.password)
+        const {delta, supplyType} = this.formItems
 
-    updatedMosaic() {
-        this.show = false
-        this.mosaicEditDialogCancel()
-        this.$Notice.success({
-            title: this.$t('mosaic_operation') + '',
-            desc: this.$t('update_completed') + ''
-        })
+        new AppWallet(this.wallet).signAndAnnounceNormal(
+            password,
+            node,
+            generationHash,
+            [
+                  MosaicSupplyChangeTransaction.create(
+                      Deadline.create(),
+                      new MosaicId(mosaicId),
+                      supplyType,
+                      UInt64.fromUint(delta),
+                      networkType,
+                      UInt64.fromUint(feeAmount)
+                  )
+            ],
+            this,
+        )
+
+        this.mosaicEditDialogCancel
     }
 
     initForm() {
-        this.mosaic = {
-            id: '',
-            aliasName: '',
-            delta: 0,
-            supplyType: 1,
-            changeDelta: 0,
-            duration: '',
-            fee: .5,
-            password: ''
-        }
+        this.formItems = formDataConfig.mosaicEditForm
     }
 
-    // @TODO: use v-model
-    @Watch('showMosaicEditDialog')
-    onShowMosaicEditDialogChange() {
-        this.show = this.showMosaicEditDialog
-        Object.assign(this.mosaic, this.selectedMosaic)
-    }
-
-    // @TODO: use v-model
-    @Watch('selectedMosaic')
-    onSelectMosaicChange() {
-        Object.assign(this.mosaic, this.selectedMosaic)
-    }
-
-    @Watch('mosaic', {immediate: true, deep: true})
+    @Watch('formItems', {deep: true})
     onFormItemChange() {
-        const {delta, fee, password} = this.mosaic
-        this.isCompleteForm = parseInt(delta.toString()) >= 0 && fee > 0 && password !== ''
+        const {delta, password} = this.formItems
+        this.isCompleteForm = parseInt(delta.toString()) >= 0 && password !== ''
     }
 }

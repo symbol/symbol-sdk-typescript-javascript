@@ -9,8 +9,8 @@
 
     <div class="sub_function_container scroll">
       <MultisigConversion v-if="buttonList[0].isSelected"></MultisigConversion>
-      <MultisigManagement v-if="buttonList[1].isSelected"></MultisigManagement>
-      <MultisigMap v-if="buttonList[2].isSelected"></MultisigMap>
+      <!-- <MultisigManagement v-if="buttonList[1].isSelected"></MultisigManagement> -->
+      <MultisigMap v-if="buttonList[1].isSelected"></MultisigMap>
       <!-- <MultisigCosign v-if="buttonList[3].isSelected"></MultisigCosign> -->
     </div>
   </div>

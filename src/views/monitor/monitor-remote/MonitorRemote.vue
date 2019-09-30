@@ -19,7 +19,7 @@
           </div>
           <div class="top_class_div">
             <span class="remote_public_key">{{$t('Remote_public_key')}}：</span>
-            <span>{{remotePublickey?remotePublickey:'no remote account'}}</span>
+            <span>{{remotePublicKey?remotePublicKey:'no remote account'}}</span>
           </div>
         </div>
       </div>
@@ -83,20 +83,29 @@
 
       <div class="gray_input_content">
         <span class="title">{{$t('remote_modal_pul')}}</span>
-        <input type="text" v-model="formItem.remotePublickey" :placeholder="$t('remote_modal_place1')">
+        <input type="text" v-model="formItems.remotePublicKey" :placeholder="$t('remote_modal_place1')">
       </div>
-
       <div class="gray_input_content">
         <span class="title">{{$t('fee')}}</span>
-        <input type="text" v-model="formItem.fee" :placeholder="$t('fee')">
-        <!--        <span class="gas">gas</span>-->
-      </div>
+          <span class="type value radius flex_center">
+              <Select
+                  data-vv-name="mosaic"
+                  v-model="formItems.feeSpeed"
+                  v-validate="'required'"
+                  :data-vv-as="$t('fee')"
+                  :placeholder="$t('fee')"
+              >
+              <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
+                {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
+              </Option>
+          </Select>
+          </span>
 
+      </div>
 
       <div class="gray_input_content">
         <span class="title">{{$t('password')}}</span>
-        <input type="password" v-model="formItem.password" :placeholder="$t('remote_modal_place2')">
-
+        <input type="password" v-model="formItems.password" :placeholder="$t('remote_modal_place2')">
       </div>
 
 

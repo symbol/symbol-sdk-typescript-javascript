@@ -5,9 +5,9 @@ import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
-import {AppWallet} from "@/core/model"
 import {networkConfig} from "@/config/index"
 import {getAbsoluteMosaicAmount} from "@/core/utils"
+import {StoreAccount, AppInfo, AppWallet} from "@/core/model"
 
 @Component({
     computed: {
@@ -18,8 +18,8 @@ import {getAbsoluteMosaicAmount} from "@/core/utils"
     }
 })
 export class TheBindFormTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     isShowDialog = false
     isShowDeleteIcon = false
     showCheckPWDialog = false
@@ -44,7 +44,7 @@ export class TheBindFormTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    get namespaceList() {
+    get NamespaceList() {
         return this.activeAccount.namespaces
     }
 
@@ -61,12 +61,12 @@ export class TheBindFormTs extends Vue {
     }
 
     get aliasList() {
-        return this.namespaceList.filter(namespace => namespace.alias instanceof AddressAlias)
+        return this.NamespaceList.filter(namespace => namespace.alias instanceof AddressAlias)
     }
 
     get aliasActionTypeList() {
         const {currentHeight} = this
-        return this.namespaceList.filter(namespace => namespace.alias instanceof EmptyAlias && namespace.endHeight - currentHeight > networkConfig.namespaceGracePeriodDuration)
+        return this.NamespaceList.filter(namespace => namespace.alias instanceof EmptyAlias && namespace.endHeight - currentHeight > networkConfig.namespaceGracePeriodDuration)
     }
 
 

@@ -21,11 +21,11 @@ export class MultisigApiRxjs {
     bondedMultisigTransaction(
         networkType: NetworkType,
         fee: number,
-        multisigPublickey: string,
+        multisigPublicKey: string,
         transaction: Array<Transaction>
     ) {
         transaction = transaction.map((item) => {
-            item = item.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))
+            item = item.toAggregate(PublicAccount.createFromPublicKey(multisigPublicKey, networkType))
             return item
         })
         return AggregateTransaction.createBonded(
@@ -41,10 +41,10 @@ export class MultisigApiRxjs {
     completeMultisigTransaction(
         networkType: NetworkType,
         fee: number,
-        multisigPublickey: string,
+        multisigPublicKey: string,
         transaction: Array<Transaction>) {
         transaction = transaction.map((item) => {
-            item = item.toAggregate(PublicAccount.createFromPublicKey(multisigPublickey, networkType))
+            item = item.toAggregate(PublicAccount.createFromPublicKey(multisigPublicKey, networkType))
             return item
         })
         return AggregateTransaction.createComplete(

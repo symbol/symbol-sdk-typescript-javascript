@@ -3,7 +3,7 @@ import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vu
 import MultisigTransferTransaction from '@/views/monitor/monitor-transfer/transactions/TransactionForm.vue'
 import {mapState} from "vuex"
 import {TransferType} from "@/core/model/TransferType";
-import { monitorTransferTransferTypeConfig } from '@/config/view/monitor'
+import {monitorTransferTransferTypeConfig} from '@/config/view/monitor'
 import {StoreAccount} from "@/core/model"
 
 @Component({

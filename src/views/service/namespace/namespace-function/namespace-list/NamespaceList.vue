@@ -19,7 +19,7 @@
       </div>
       <div class="namespace_list_table">
         <div class="table_head">
-        <span @click="getSortType(namespaceSortType.byName)" class="namespace_name">
+        <span @click="getSortType(namespaceSortType.byName)" class="Namespace_name">
           {{$t('namespace_name')}}
           <Icon v-if="namespaceSortType.byName == currentSortType" class="active_sort_type" type="md-arrow-dropdown"/>
         </span>
@@ -44,19 +44,13 @@
                    type="md-arrow-dropdown"/>
         </span>
           <span class="more"></span>
-          <!--       this is   a  filter-->
-          <!--          <div class="namespace_filter" @click="toggleIsShowExpirednamespace()">-->
-          <!--            <img v-if="!isShowExpirednamespace" src="@/common/img/window/windowSelected.png">-->
-          <!--            <img v-else src="@/common/img/window/windowUnselected.png">-->
-          <!--            <span>{{$t('Hide_expired_namespaces')}}</span>-->
-          <!--          </div>-->
         </div>
         <Spin v-if="namespaceLoading" size="large" fix class="absolute"></Spin>
         <div class="table_body ">
-          <div class=" radius"
-               v-for=" n in currentNamespaceListByPage">
+          <div class=" radius" :key="`ns${index}`"
+               v-for="(n, index) in currentNamespaceListByPage">
             <div v-if="n" class="table_body_item">
-              <span class="namespace_name overflow_ellipsis">{{n.label}}</span>
+              <span class="Namespace_name overflow_ellipsis">{{n.label}}</span>
               <span class="duration overflow_ellipsis">
               {{computeDuration(n) === StatusString.EXPIRED ? $t('overdue') : durationToTime(n.endHeight)}}
             </span>
@@ -103,7 +97,7 @@
       </div>
 
       <div class="page_list_container">
-        <Page class="page_list" :total="currentNamespacelist.length" :page-size="pageSize" @on-change="handleChange"></Page>
+        <Page class="page_list" :total="currentNamespaceList.length" :page-size="pageSize" @on-change="handleChange"></Page>
       </div>
     </div>
 
@@ -120,25 +114,32 @@
     </div>
 
     <NamespaceEditDialog
+            v-if="showNamespaceEditDialog"
             :currentNamespace="currentNamespace"
             :showNamespaceEditDialog="showNamespaceEditDialog"
-            @closeNamespaceEditDialog='closeNamespaceEditDialog'/>
+            @close='showNamespaceEditDialog = false'
+    />
 
     <NamespaceUnAliasDialog
+            v-if="showUnAliasDialog"
             :showUnAliasDialog="showUnAliasDialog"
-            :unAliasItem="aliasDialogItem"
-            @closeUnAliasDialog="closeUnAliasDialog"/>
+            :activeNamespace="aliasDialogItem"
+            @close="showUnAliasDialog = false"
+    />
 
     <NamespaceMosaicAliasDialog
+            v-if="showMosaicAliasDialog"
             :showMosaicAliasDialog="showMosaicAliasDialog"
-            :itemMosaic="aliasDialogItem"
-            @closeMosaicAliasDialog="closeMosaicAliasDialog"/>
+            :activeNamespace="aliasDialogItem"
+            @close="showMosaicAliasDialog = false"
+    />
 
     <NamespaceAddressAliasDialog
+            v-if="isShowAddressAliasDialog"
             :isShowAddressAliasDialog="isShowAddressAliasDialog"
-            :addressAliasItem="aliasDialogItem"
-            @closeAddressAliasDialog="closeAddressAliasDialog"/>
-
+            :activeNamespace="aliasDialogItem"
+            @close="isShowAddressAliasDialog = false"
+    />
   </div>
 </template>
 

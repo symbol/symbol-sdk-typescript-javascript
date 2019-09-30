@@ -7,8 +7,8 @@
     </div>
 
     <div>
-      publickey
-      <input v-model="publickey" type="text">
+      publicKey
+      <input v-model="publicKey" type="text">
     </div>
 
 

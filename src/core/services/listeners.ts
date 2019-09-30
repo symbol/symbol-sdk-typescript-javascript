@@ -2,8 +2,9 @@ import {Address, Listener} from "nem2-sdk"
 import {filter} from 'rxjs/operators'
 import {formatAndSave} from '@/core/services/transactions'
 import {ChainStatus} from '@/core/model'
+
 export class ChainListeners {
-    private readonly app: any
+    private readonly app: any //@TODO: rename and type
     private node: string
     // @TODO address as Address
     private address: string

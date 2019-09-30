@@ -13,16 +13,16 @@ import {
     Address, MosaicId,
     Password
 } from "nem2-sdk"
-import { transactionTypeConfig } from '@/config/view/transaction'
-import {AppWallet} from "@/core/model"
+import {transactionTypeConfig} from '@/config/view/transaction'
+import {AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {...mapState({activeAccount: 'account'})},
 })
 export class WalletFilterTs extends Vue {
+    activeAccount: StoreAccount
     entityTypeList = transactionTypeConfig
     aliasList = []
-    activeAccount: any
     isShowDialog = false
     isShowDeleteIcon = false
     currentAlias: any = false
@@ -40,7 +40,7 @@ export class WalletFilterTs extends Vue {
         password: '',
     }
 
-    namespaceList = []
+    NamespaceList = []
 
     clearCurrentFilter() {
         this.currentFilter = ''

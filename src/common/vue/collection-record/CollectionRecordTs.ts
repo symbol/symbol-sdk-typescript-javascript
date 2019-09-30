@@ -5,17 +5,17 @@ import {
     getCurrentMonthFirst, getCurrentMonthLast, formatNumber,
     renderMosaics, renderMosaicNames, renderMosaicAmount
 } from '@/core/utils'
-import {FormattedTransaction} from '@/core/model'
 import TransactionModal from '@/views/monitor/monitor-transaction-modal/TransactionModal.vue'
 import {TransferType} from "@/core/model/TransferType";
+import {StoreAccount, AppInfo, FormattedTransaction} from "@/core/model"
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
     components: { TransactionModal },
 })
 export class CollectionRecordTs extends Vue {
-    activeAccount: any
-    app: any
+    activeAccount: StoreAccount
+    app: AppInfo
     transactionHash = ''
     isShowSearchDetail = false
     currentMonthLast: any = 0
@@ -58,7 +58,7 @@ export class CollectionRecordTs extends Vue {
         const {currentMonthFirst, currentMonthLast, transferTransactionList} = this
         const filteredByDate = [...transferTransactionList]
             .filter(item => (!item.isTxUnconfirmed
-                && item.txHeader.date <= currentMonthLast && item.txHeader.date >= currentMonthFirst))
+                && item.txHeader.date <= currentMonthLast && item.txHeader.date.getDate() >= currentMonthFirst))
         if (!filteredByDate.length) return []
 
         return this.transactionType === TransferType.SENT

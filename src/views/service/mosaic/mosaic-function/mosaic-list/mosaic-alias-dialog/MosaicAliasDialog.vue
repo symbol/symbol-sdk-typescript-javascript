@@ -12,25 +12,32 @@
       </div>
       <div class="mosaicAliasDialogBody">
         <div class="stepItem1">
-          <Form :model="mosaic">
+          <Form :model="formItems">
             <FormItem :label="$t('mosaic_ID')">
-              <p class="mosaicTxt">{{mosaic.hex}}</p>
+              <p class="mosaicTxt">{{itemMosaic.hex}}</p>
             </FormItem>
             <FormItem :label="$t('alias_selection')">
-              <Select v-model="mosaic.aliasName" required>
+              <Select v-model="formItems.aliasName" required>
                 <Option :value="item.value" v-for="(item, index) in aliasNameList" :key="index">{{item.label}}</Option>
               </Select>
             </FormItem>
             <FormItem :label="$t('fee')">
-              <Input v-model="mosaic.fee" number required placeholder=""></Input>
-<!--              <p class="tails">gas</p>-->
-              <div class="tips">
-                {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-              </div>
+              <Select
+                      class="fee-select"
+                      data-vv-name="fee"
+                      v-model="formItems.feeSpeed"
+                      v-validate="'required'"
+                      :data-vv-as="$t('fee')"
+                      :placeholder="$t('fee')"
+              >
+                <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
+                  {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
+                </Option>
+              </Select>
             </FormItem>
             <FormItem :label="$t('password')">
-              <Input v-model="mosaic.password" type="password" required
-                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
+              <Input v-model="formItems.password" type="password" required
+                     :placeholder="$t('please_enter_your_wallet_password')" />
             </FormItem>
             <FormItem class="button_update">
               <Button type="success" :class="[isCompleteForm?'pointer':'not_allowed']" @click="submit">{{$t('bind')}}</Button>

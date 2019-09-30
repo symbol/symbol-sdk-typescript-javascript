@@ -411,12 +411,12 @@ export class AppWallet {
     }
 }
 
-export const createBondedMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, fee: number) => {
-    return new MultisigApiRxjs().bondedMultisigTransaction(networkType, fee, multisigPublickey, transaction)
+export const createBondedMultisigTransaction = (transaction: Array<Transaction>, multisigPublicKey: string, networkType: NetworkType, fee: number) => {
+    return new MultisigApiRxjs().bondedMultisigTransaction(networkType, fee, multisigPublicKey, transaction)
 }
 
-export const createCompleteMultisigTransaction = (transaction: Array<Transaction>, multisigPublickey: string, networkType: NetworkType, fee: number) => {
-    return new MultisigApiRxjs().completeMultisigTransaction(networkType, fee, multisigPublickey, transaction)
+export const createCompleteMultisigTransaction = (transaction: Array<Transaction>, multisigPublicKey: string, networkType: NetworkType, fee: number) => {
+    return new MultisigApiRxjs().completeMultisigTransaction(networkType, fee, multisigPublicKey, transaction)
 }
 
 export const getCurrentImportance = async (store: any) => {

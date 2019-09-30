@@ -19,6 +19,7 @@
     import multisignCosignerIcon from '@/common/img/service/multisig/multisignCosignerIcon.png'
     import multisignMultisignerIcon from '@/common/img/service/multisig/multisignMultisignerIcon.png'
     import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
+    import {StoreAccount, AppInfo, FormattedTransaction} from "@/core/model"
 
     @Component({
         computed: {
@@ -29,9 +30,9 @@
         }
     })
     export default class LineChart extends Vue {
+        activeAccount: StoreAccount
+        app: AppInfo
         dom: any = {}
-        activeAccount: any
-        app: any
         spinShow = true
         notMultisigNorCosigner = true
         option = echartsConfigure.multisigMapOption

@@ -106,7 +106,7 @@ export class NamespaceApiRxjs {
         })
         return {
             result: {
-                namespaceList: namespaces
+                NamespaceList: namespaces
             }
         }
     }

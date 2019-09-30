@@ -1,7 +1,7 @@
 <template>
   <div class="aliasTable">
     <Modal :title="aliasListIndex >= 0?$t('unbind'): $t('binding_alias')"
-           v-model="isShowDialog"
+           v-model="show"
            :transfer="false"
            @on-cancel="closeModel"
            class="alias_bind_dialog">
@@ -9,30 +9,38 @@
       <div class="input_content">
         <div class="title">{{$t('address')}}</div>
         <div class="input_area">
-          <p v-if="aliasListIndex >= 0" class="unLinkP">{{formItem.address}}</p>
-          <input type="text" v-model="formItem.address" v-else>
+          <p v-if="aliasListIndex >= 0" class="unLinkP">{{formItems.address}}</p>
+          <input type="text" v-model="formItems.address" v-else>
         </div>
       </div>
 
       <div class="input_content">
         <div class="title">{{$t('alias')}}</div>
         <div class="input_area">
-          {{addressAliasItem.label}}
+          {{activeNamespace.label}}
         </div>
       </div>
 
       <div class="input_content">
         <div class="title">{{$t('fee')}}</div>
-        <div class="input_area">
-          <input type="text" v-model="formItem.fee" :placeholder="$t('alias_selection')">
-          <span class="tip">XEM</span>
-        </div>
+        <Select
+                class="fee-select"
+                data-vv-name="fee"
+                v-model="formItems.feeSpeed"
+                v-validate="'required'"
+                :data-vv-as="$t('fee')"
+                :placeholder="$t('fee')"
+        >
+          <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
+            {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
+          </Option>
+        </Select>
       </div>
 
       <div class="input_content">
         <div class="title">{{$t('password')}}</div>
         <div class="input_area">
-          <input type="password" v-model="formItem.password" :placeholder="$t('please_enter_your_wallet_password')">
+          <input type="password" v-model="formItems.password" :placeholder="$t('please_enter_your_wallet_password')">
         </div>
       </div>
 

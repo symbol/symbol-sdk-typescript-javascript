@@ -23,7 +23,7 @@
           </div>
           <div class="input_content">
             <input type="text" class="radius"
-                   v-model="formItem.minApproval"
+                   v-model="formItems.minApproval"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')">
           </div>
         </span>
@@ -35,67 +35,43 @@
           </div>
           <div class="input_content">
             <input type="text" class="radius"
-                   v-model="formItem.minRemoval"
+                   v-model="formItems.minRemoval"
                    :placeholder="$t('Please_set_the_minimum_number_of_signatures_number_of_co_signers')">
           </div>
         </span>
         </div>
 
         <div class="multisig_property_fee">
-        <span class="gray_content">
-          <div class="title">{{$t('inner_fee')}}</div>
-          <div class="title_describe">
-            {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-          </div>
-          <div class="input_content">
-            <input type="text" v-model="formItem.innerFee" class="radius" placeholder="0.050000">
-            <!--            <span class="XEM_tag">gas </span>-->
-            <!--            <span class="xem_amount">{{formItem.innerFee / 1000000}} xem </span>-->
-          </div>
-        </span>
-        </div>
-
-        <div class="multisig_property_fee">
-        <span class="gray_content">
-          <div class="title">{{$t('bonded_fee')}}</div>
-          <div class="title_describe">
-            {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-          </div>
-          <div class="input_content">
-            <input type="text" v-model="formItem.bondedFee" class="radius" placeholder="0.050000">
-          </div>
-        </span>
-        </div>
-
-
-        <div class="multisig_property_fee">
-        <span class="gray_content">
-          <div class="title">{{$t('lock_fee')}}</div>
-          <div class="title_describe">
-            {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
-          </div>
-          <div class="input_content">
-            <input type="text" v-model="formItem.lockFee" class="radius" placeholder="0.050000">
-          </div>
-        </span>
+          <Select
+                  data-vv-name="fee"
+                  class="select"
+                  v-model="formItems.feeSpeed"
+                  v-validate="'required'"
+                  :data-vv-as="$t('fee')"
+                  :placeholder="$t('fee')"
+          >
+            <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
+              {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
+            </Option>
+          </Select>
         </div>
 
         <div class="cosigner_list">
           <div class="head_title">{{$t('Operation_list')}}</div>
           <div class="list_container radius">
             <div class="list_head">
-              <span class="address_alias">{{$t('publickey')}}/{{$t('alias')}}</span>
+              <span class="address_alias">{{$t('publicKey')}}/{{$t('alias')}}</span>
               <span class="action">{{$t('operating')}}</span>
               <span class="delate">{{$t('delete')}}</span>
             </div>
             <div class="list_body scroll">
-              <div class="please_add_address" v-if="formItem.publickeyList.length == 0">{{$t('please_add_publickey')}}
+              <div class="please_add_address" v-if="formItems.publicKeyList.length == 0">{{$t('please_add_publickey')}}
               </div>
 
-              <div class="list_item radius" v-for="(i,index) in formItem.publickeyList">
+              <div class="list_item radius" v-for="(i,index) in formItems.publicKeyList">
                 <span class="address_alias">{{i}}</span>
                 <span class="action">{{$t('add')}}</span>
-                <img class="delate pointer" @click="deleteAdress(index)"
+                <img class="delate pointer" @click="deleteAddress(index)"
                      src="@/common/img/service/multisig/multisigDelete.png" alt="">
               </div>
             </div>

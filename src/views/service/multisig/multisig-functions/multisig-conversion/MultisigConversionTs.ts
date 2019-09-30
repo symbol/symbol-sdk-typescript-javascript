@@ -6,12 +6,10 @@ import {
 } from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message} from "@/config/index.ts"
-import {MultisigApiRxjs} from '@/core/api/MultisigApiRxjs.ts'
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import { formDataConfig } from '@/config/view/form'
-import {createBondedMultisigTransaction, StoreAccount} from "@/core/model"
-import {getAbsoluteMosaicAmount} from "@/core/utils"
+import {createBondedMultisigTransaction, StoreAccount, DefaultFee, AppWallet} from "@/core/model"
+import {getAbsoluteMosaicAmount, formatAddress} from "@/core/utils"
 
 @Component({
     components: {
@@ -31,9 +29,15 @@ export class MultisigConversionTs extends Vue {
     transactionDetail = {}
     otherDetails = {}
     transactionList = []
-    formItem = formDataConfig.multisigConversionForm
+    formItems = formDataConfig.multisigConversionForm
+    XEM: string = defaultNetworkConfig.XEM
+    formatAddress = formatAddress
 
-    get publickey() {
+    get wallet(): AppWallet {
+        return this.activeAccount.wallet
+    }
+
+    get publicKey() {
         return this.activeAccount.wallet.publicKey
     }
 
@@ -45,10 +49,6 @@ export class MultisigConversionTs extends Vue {
         return this.activeAccount.wallet.networkType
     }
 
-    get address() {
-        return this.activeAccount.wallet.address
-    }
-
     get multisigInfo(): MultisigAccountInfo {
         const {address} = this.wallet
         return this.activeAccount.multisigAccountInfo[address]
@@ -58,27 +58,39 @@ export class MultisigConversionTs extends Vue {
         if (!this.multisigInfo) return false
         return this.multisigInfo.cosignatories.length > 0
     }
-    get node() {
-        return this.activeAccount.node
+
+    get address(): string {
+        return this.activeAccount.wallet.address
     }
 
-    get wallet() {
-        return this.activeAccount.wallet
-    }
-
-    get xemDivisibility() {
+    get xemDivisibility(): number {
         return this.activeAccount.xemDivisibility
     }
 
+    get node(): string {
+        return this.activeAccount.node
+    }
+
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.TRIPLE]
+    } 
+  
+    get announceInLock(): boolean {
+        return true
+    }
+  
+    get feeAmount(): number {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
+
+    get feeDivider(): number {
+        return 3
+    }
+    
     initForm() {
-        this.formItem = {
-            publickeyList: [],
-            minApproval: 1,
-            minRemoval: 1,
-            bondedFee: 1,
-            lockFee: 10,
-            innerFee: 1
-        }
+        this.formItems = formDataConfig.multisigConversionForm
     }
 
     addAddress() {
@@ -87,12 +99,12 @@ export class MultisigConversionTs extends Vue {
             this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
             return
         }
-        this.formItem.publickeyList.push(currentAddress)
+        this.formItems.publicKeyList.push(currentAddress)
         this.currentAddress = ''
     }
 
-    deleteAdress(index) {
-        this.formItem.publickeyList.splice(index, 1)
+    deleteAddress(index) {
+        this.formItems.publicKeyList.splice(index, 1)
     }
 
     confirmInput() {
@@ -100,18 +112,19 @@ export class MultisigConversionTs extends Vue {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
         const {address} = this.wallet
-        const {publickeyList, minApproval, minRemoval, lockFee, innerFee} = this.formItem
+        const {publicKeyList, minApproval, minRemoval} = this.formItems
+        const {feeAmount} = this 
         this.transactionDetail = {
             "address": address,
             "min_approval": minApproval,
             "min_removal": minRemoval,
-            "cosigner": publickeyList.join(','),
-            "fee": innerFee
+            "cosigner": publicKeyList.join(','),
+            "fee": feeAmount / Math.pow(10, this.xemDivisibility)
         }
         this.otherDetails = {
-            lockFee: lockFee
+            lockFee: feeAmount
         }
-        this.sendMultisignConversionTransaction()
+        this.sendMultisigConversionTransaction()
         this.initForm()
         this.showCheckPWDialog = true
     }
@@ -124,8 +137,8 @@ export class MultisigConversionTs extends Vue {
     }
 
     checkForm(): boolean {
-        let {publickeyList, minApproval, minRemoval, bondedFee, lockFee, innerFee} = this.formItem
-        if (publickeyList.length < 1) {
+        let {publicKeyList, minApproval, minRemoval} = this.formItems
+        if (publicKeyList.length < 1) {
             this.showErrorMessage(this.$t(Message.CO_SIGNER_NULL_ERROR) + '')
             return false
         }
@@ -149,29 +162,15 @@ export class MultisigConversionTs extends Vue {
             this.showErrorMessage(this.$t(Message.MAX_REMOVAL_MORE_THAN_10_ERROR) + '')
             return false
         }
-        if ((!Number(innerFee) && Number(innerFee) !== 0) || Number(innerFee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
-            return false
-        }
 
-        if ((!Number(bondedFee) && Number(bondedFee) !== 0) || Number(bondedFee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
-            return false
-        }
-
-        if ((!Number(lockFee) && Number(lockFee) !== 0) || Number(lockFee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
-            return false
-        }
-
-        const publickeyFlag = publickeyList.every((item) => {
+        const publicKeyFlag = publicKeyList.every((item) => {
             if (item.trim().length !== 64) {
-                this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + '')
+                this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLIC_KEY_ERROR) + '')
                 return false
             }
             return true
         })
-        return publickeyFlag
+        return publicKeyFlag
     }
 
     closeCheckPWDialog() {
@@ -187,14 +186,14 @@ export class MultisigConversionTs extends Vue {
         }
     }
 
-    sendMultisignConversionTransaction() {
-        const {xemDivisibility} = this
+    sendMultisigConversionTransaction() {
         // here lock fee should be relative param
-        let {publickeyList, minApproval, minRemoval, lockFee, bondedFee, innerFee} = this.formItem
-        bondedFee = getAbsoluteMosaicAmount(bondedFee, xemDivisibility)
-        innerFee = getAbsoluteMosaicAmount(innerFee, xemDivisibility)
-        const {networkType, node, publickey} = this
-        const multisigCosignatoryModificationList = publickeyList.map(cosigner => new MultisigCosignatoryModification(
+        let {publicKeyList, minApproval, minRemoval} = this.formItems
+        const {feeAmount} = this
+        const bondedFee = feeAmount/3
+        const innerFee = feeAmount/3
+        const {networkType, publicKey} = this
+        const multisigCosignatoryModificationList = publicKeyList.map(cosigner => new MultisigCosignatoryModification(
             MultisigCosignatoryModificationType.Add,
             PublicAccount.createFromPublicKey(cosigner, networkType),
         ))
@@ -210,21 +209,22 @@ export class MultisigConversionTs extends Vue {
         console.log(modifyMultisigAccountTransaction, 'modifyMultisigAccountTransaction')
         const aggregateTransaction = createBondedMultisigTransaction(
             [modifyMultisigAccountTransaction],
-            publickey,
+            publicKey,
             networkType,
             bondedFee,
         )
         this.otherDetails = {
-            lockFee
+            lockFee: feeAmount/3
         }
         this.transactionList = [aggregateTransaction]
     }
 
-    @Watch('formItem', {immediate: true, deep: true})
+    @Watch('formItems', {immediate: true, deep: true})
     onFormItemChange() {
-        const {publickeyList, minApproval, minRemoval, bondedFee, lockFee, innerFee} = this.formItem
+        const {publicKeyList, minApproval, minRemoval} = this.formItems
+        const {feeAmount} = this
         // isCompleteForm
-        this.isCompleteForm = publickeyList.length !== 0 && minApproval + '' !== '' && minRemoval + '' !== '' && innerFee + '' !== '' && bondedFee + '' !== '' && lockFee + '' !== ''
+        this.isCompleteForm = publicKeyList.length !== 0 && minApproval + '' !== '' && minRemoval + '' !== '' && feeAmount + '' !== ''
         return
     }
 }

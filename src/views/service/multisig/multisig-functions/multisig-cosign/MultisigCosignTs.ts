@@ -22,7 +22,7 @@ import {StoreAccount} from "@/core/model"
 export class MultisigCosignTs extends Vue {
     activeAccount: StoreAccount
     privatekey = ''
-    publickey = ''
+    publicKey = ''
     aggregatedTransactionList: Array<AggregateTransaction> = []
 
     get networkType() {
@@ -38,11 +38,11 @@ export class MultisigCosignTs extends Vue {
     }
 
     async getCosignTransactions() {
-        const {publickey, node} = this
+        const {publicKey, node} = this
         const accountHttp = new AccountHttp(node)
 
         const publicAccount = PublicAccount.createFromPublicKey(
-            publickey,
+            publicKey,
             NetworkType.MIJIN_TEST,
         )
         this.aggregatedTransactionList = await accountHttp.aggregateBondedTransactions(publicAccount).toPromise()
@@ -50,7 +50,7 @@ export class MultisigCosignTs extends Vue {
 
     cosignTransaction(index) {
 
-        const {publickey, node, privatekey} = this
+        const {publicKey, node, privatekey} = this
         const endpoint = node
         const account = Account.createFromPrivateKey(privatekey, NetworkType.MIJIN_TEST)
         const transactionHttp = new TransactionHttp(endpoint)

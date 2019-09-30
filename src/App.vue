@@ -73,7 +73,7 @@
             return this.activeAccount.currentXEM1
         }
 
-        get namespaceList() {
+        get NamespaceList() {
             return this.activeAccount.namespaces
         }
 
@@ -122,6 +122,7 @@
                     this.$store.commit('SET_MOSAICS_LOADING', true),
                     this.$store.commit('SET_NAMESPACE_LOADING', true),
                     this.$store.commit('SET_MULTISIG_LOADING', true),
+                    this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', null),
                 ])
 
                 //@TODO: move from there

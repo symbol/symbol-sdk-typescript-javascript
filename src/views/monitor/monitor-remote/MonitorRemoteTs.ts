@@ -1,11 +1,10 @@
-import {Message} from "@/config/index.ts"
+import {Message, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig, formDataConfig} from "@/config"
 import {Component, Vue} from 'vue-property-decorator'
 import {AccountLinkTransaction, UInt64, LinkAction, Deadline, Password} from "nem2-sdk"
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
-import {formDataConfig} from "@/config/view/form";
-import {AppWallet, StoreAccount} from "@/core/model"
+import {AppWallet, StoreAccount, DefaultFee} from "@/core/model"
 
 @Component({
     computed: {
@@ -20,8 +19,9 @@ export class MonitorRemoteTs extends Vue {
     harvestBlockList = []
     isLinkToRemote = false
     isShowDialog = false
-    remotePublickey = ''
-    formItem: any = formDataConfig.remoteForm
+    remotePublicKey = ''
+    formItems = formDataConfig.remoteForm
+    XEM = defaultNetworkConfig.XEM
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -47,16 +47,18 @@ export class MonitorRemoteTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    initForm() {
-        this.formItem = {
-            remotePublickey: '',
-            fee: 0.5,
-            password: ''
-        }
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
     }
 
-    changePage() {
+    get feeAmount() {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
 
+    initForm() {
+        this.formItems = formDataConfig.remoteForm
     }
 
     modalCancel() {
@@ -77,20 +79,15 @@ export class MonitorRemoteTs extends Vue {
     }
 
     checkForm(): boolean {
-        const {remotePublickey, fee, password} = this.formItem
-        if (remotePublickey.length !== 64) {
-            this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + '')
-            return false
-        }
-        if ((!Number(fee) && Number(fee) !== 0) || Number(fee) < 0) {
-            this.showErrorMessage(this.$t(Message.FEE_LESS_THAN_0_ERROR) + '')
+        const {remotePublicKey, password} = this.formItems
+        if (remotePublicKey.length !== 64) {
+            this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLIC_KEY_ERROR) + '')
             return false
         }
         if (!password || password.trim() == '') {
             this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
             return false
         }
-
         if (password.length < 8) {
             this.showErrorMessage(this.$t('password_error') + '')
             return false
@@ -111,22 +108,21 @@ export class MonitorRemoteTs extends Vue {
     }
 
     sendTransaction() {
-        let {remotePublickey, fee, password} = this.formItem
-        const {generationHash, node, networkType, xemDivisibility, isLinked} = this
-        console.log(fee, xemDivisibility)
-        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
+        const {remotePublicKey, password} = this.formItems
+        const {generationHash, node, networkType, isLinked} = this
+        const {feeAmount} = this
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
-            remotePublickey,
+            remotePublicKey,
             isLinked ? LinkAction.Unlink : LinkAction.Link,
             networkType,
-            UInt64.fromUint(fee)
+            UInt64.fromUint(feeAmount)
         )
         new AppWallet(this.getWallet).signAndAnnounceNormal(new Password(password), node, generationHash, [accountLinkTransaction], this)
         this.modalCancel()
     }
 
-    toggleSwitch(status) {
+    toggleSwitch() {
         this.isShowDialog = true
     }
 
@@ -137,15 +133,15 @@ export class MonitorRemoteTs extends Vue {
         const that = this
         const {address, node} = this
         new AccountApiRxjs().getLinkedPublickey(node, address).subscribe((resStr: string) => {
-                that.remotePublickey = ''
+                that.remotePublicKey = ''
                 if (JSON.parse(resStr) && JSON.parse(resStr).account && JSON.parse(resStr).account.linkedAccountKey) {
                     let linkedPublicKey = JSON.parse(resStr).account.linkedAccountKey
-                    that.remotePublickey = Buffer.from(linkedPublicKey, 'base64').toString('hex').toUpperCase()
+                    that.remotePublicKey = Buffer.from(linkedPublicKey, 'base64').toString('hex').toUpperCase()
                 }
-                that.remotePublickey = ''
-                if (Number(that.remotePublickey) != 0) {
+                that.remotePublicKey = ''
+                if (Number(that.remotePublicKey) != 0) {
                     // switch on
-                    that.formItem.remotePublickey = that.remotePublickey
+                    that.formItems.remotePublicKey = that.remotePublicKey
                     that.isLinked = true
                     return
                 }

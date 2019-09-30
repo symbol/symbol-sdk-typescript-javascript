@@ -2,10 +2,9 @@ import './NamespaceEditDialog.less'
 import {mapState} from "vuex"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Password} from 'nem2-sdk'
-import {Message} from "@/config/index.ts"
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig} from "@/config/index.ts"
 import {getAbsoluteMosaicAmount,formatSeconds} from '@/core/utils'
-import {formDataConfig} from "@/config/view/form";
-import {AppWallet} from "@/core/model"
+import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
 import {createRootNamespace} from "@/core/services/namespace"
 
 @Component({
@@ -16,26 +15,29 @@ import {createRootNamespace} from "@/core/services/namespace"
     }
 })
 export class NamespaceEditDialogTs extends Vue {
-    activeAccount: any
-    show = false
-    isCompleteForm = false
+    activeAccount: StoreAccount
+    isCompleteForm = true
     stepIndex = 0
     durationIntoDate: string = '0'
-    namespace = formDataConfig.namespaceEditForm
+    XEM: string = defaultNetworkConfig.XEM
+    formItems = formDataConfig.namespaceEditForm
 
     @Prop({default: false})
     showNamespaceEditDialog: boolean
 
+    @Prop()
+    currentNamespace: AppNamespace
 
-    @Prop({
-        default: {
-            name: '',
-            duration: ''
+    get show() {
+        return this.showNamespaceEditDialog
+    }
+
+    set show(val) {
+        if (!val) {
+            this.$emit('close')
         }
-    })
-    currentNamespace: any
-
-    get wallet() {
+    }
+    get wallet(): AppWallet {
         return this.activeAccount.wallet
     }
 
@@ -51,9 +53,19 @@ export class NamespaceEditDialogTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
+    get defaultFees(): DefaultFee[] {
+        return DEFAULT_FEES[FEE_GROUPS.SINGLE]
+    }
+
+    get feeAmount() {
+        const {feeSpeed} = this.formItems
+        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+    }
+
     namespaceEditDialogCancel() {
         this.initForm()
-        this.$emit('closeNamespaceEditDialog')
+        this.show = false
     }
 
     submit() {
@@ -63,35 +75,35 @@ export class NamespaceEditDialogTs extends Vue {
     }
 
     changeXEMRentFee() {
-        const duration = Number(this.namespace.duration)
+        const duration = Number(this.formItems.duration)
         if (Number.isNaN(duration)) {
-            this.namespace.duration = 0
+            this.formItems.duration = 0
             this.durationIntoDate = '0'
             return
         }
         if (duration * 12 >= 60 * 60 * 24 * 365) {
             this.$Message.error(Message.DURATION_MORE_THAN_1_YEARS_ERROR)
-            this.namespace.duration = 0
+            this.formItems.duration = 0
         }
         this.durationIntoDate = formatSeconds(duration * 12) + ''
     }
 
     checkInfo() {
-        const {namespace} = this
-        if (namespace.password === '' || namespace.duration === 0 || namespace.fee === 0) {
+        const {formItems} = this
+        if (formItems.password === '' || formItems.duration === 0) {
             this.$Notice.error({
                 title: '' + this.$t(Message.INPUT_EMPTY_ERROR)
             })
             return false
         }
-        if (namespace.password.length < 8) {
+        if (formItems.password.length < 8) {
             this.$Notice.error({
                 title: '' + this.$t('password_error')
             })
             return false
         }
 
-        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(namespace.password))
+        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(formItems.password))
 
         if (!validPassword) {
             this.$Notice.error({
@@ -103,15 +115,14 @@ export class NamespaceEditDialogTs extends Vue {
     }
 
     async updateMosaic() {
-        let {fee, duration} = this.namespace
-        const {node, generationHash, xemDivisibility} = this
-        const password = new Password(this.namespace.password)
-        fee = getAbsoluteMosaicAmount(fee, xemDivisibility)
+        const {duration} = this.formItems
+        const {node, generationHash, feeAmount} = this
+        const password = new Password(this.formItems.password)
         const transaction = createRootNamespace(
             this.currentNamespace.name,
             duration,
             this.wallet.networkType,
-            fee
+            feeAmount
         )
         new AppWallet(this.wallet)
             .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
@@ -125,24 +136,13 @@ export class NamespaceEditDialogTs extends Vue {
     }
 
     initForm() {
-        this.namespace = {
-            name: '',
-            duration: 0,
-            fee: 50000,
-            password: ''
-        }
+        this.formItems = formDataConfig.namespaceEditForm
         this.durationIntoDate = '0'
     }
 
-    @Watch('showNamespaceEditDialog')
-    onShowNamespaceEditDialogChange() {
-        this.show = this.showNamespaceEditDialog
-    }
-
-    @Watch('namespace', {immediate: true, deep: true})
+    @Watch('formItems', {deep: true})
     onFormItemChange() {
-        const {name, duration, fee, password} = this.namespace
-        // isCompleteForm
-        this.isCompleteForm = name !== '' && duration > 0 && fee > 0 && password !== ''
+        const {duration, password} = this.formItems
+        this.isCompleteForm = duration > 0 && password !== ''
     }
 }

@@ -1,10 +1,29 @@
 .remote_board_container {
   height: calc(100% - 70px);
 
+  .flex_center {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    line-height: 45px;
+    height: 45px;
+    width: 600px;
+  }
+
+  .type {
+    width: 190px;
+    display: inline-block;
+  }
+
+  .value {
+    width: 560px;
+    overflow: hidden;
+    height: 45px;
+    border: 1px solid rgba(204, 204, 204, 1);
+  }
 
   .ivu-switch {
     margin-left: 20px;
-
   }
 
   .ivu-switch-checked {
