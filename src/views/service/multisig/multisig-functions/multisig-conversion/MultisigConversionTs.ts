@@ -2,7 +2,7 @@ import {
     MultisigCosignatoryModification,
     MultisigCosignatoryModificationType,
     PublicAccount,
-    ModifyMultisigAccountTransaction, Deadline, UInt64,
+    ModifyMultisigAccountTransaction, Deadline, UInt64, MultisigAccountInfo,
 } from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
@@ -49,10 +49,15 @@ export class MultisigConversionTs extends Vue {
         return this.activeAccount.wallet.address
     }
 
-    get isMultisig() {
-        return this.activeAccount.wallet.multisigAccountInfo ? true : false
+    get multisigInfo(): MultisigAccountInfo {
+        const {address} = this.wallet
+        return this.activeAccount.multisigAccountInfo[address]
     }
 
+    get isMultisig(): boolean {
+        if (!this.multisigInfo) return false
+        return this.multisigInfo.cosignatories.length > 0
+    }
     get node() {
         return this.activeAccount.node
     }

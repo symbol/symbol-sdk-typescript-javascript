@@ -42,6 +42,7 @@ export class AppWallet {
     accountTitle: string
     sourceType: string
     createTimestamp: number
+    importance: number
 
     generateWalletTitle(createType: string, coinType: string, netType: string) {
         return `${createType}-${coinType}-${netType}`

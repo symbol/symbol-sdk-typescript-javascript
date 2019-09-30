@@ -54,7 +54,7 @@ export default {
     mutations: {
         RESET_ACCOUNT(state: StoreAccount) {
             state.account = {}
-            state.wallet = {}
+            state.wallet = null
             state.mosaics = {}
             state.namespaces = []
             state.addressAliasMap = {}
