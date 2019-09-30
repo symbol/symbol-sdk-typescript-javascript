@@ -179,7 +179,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
      */
     public getNamespaceMetadata(namespaceId: NamespaceId, queryParams?: QueryParams): Observable<Metadata[]> {
         return observableFrom(
-            this.metadataRoutesApi.getMosaicMetadata(namespaceId.toHex(),
+            this.metadataRoutesApi.getNamespaceMetadata(namespaceId.toHex(),
                                                      this.queryParams(queryParams).pageSize,
                                                      this.queryParams(queryParams).id,
                                                      this.queryParams(queryParams).order)).pipe(
@@ -201,7 +201,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
      */
     public getNamespaceMetadataByKey(namespaceId: NamespaceId, key: string): Observable<Metadata[]> {
         return observableFrom(
-            this.metadataRoutesApi.getMosaicMetadataByKey(namespaceId.toHex(), key)).pipe(
+            this.metadataRoutesApi.getNamespaceMetadataByKey(namespaceId.toHex(), key)).pipe(
             map((response: { response: ClientResponse; body: MetadataEntriesDTO; }) => {
                 const metadataEntriesDTO = response.body;
                 return metadataEntriesDTO.metadataEntries.map((metadataEntry) => {

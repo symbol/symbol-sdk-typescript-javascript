@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import {Convert as convert} from '../../core/format';
-import {RawUInt64 as UInt64Library} from '../../core/format';
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
