@@ -49,7 +49,7 @@ export class WalletPanelTs extends Vue {
     }
 
     toWalletDetails() {
-        this.$router.replace({path: '/monitorPanel'})
+        this.$router.replace({path: '/walletPanel'})
         this.toMethod = false
     }
 
