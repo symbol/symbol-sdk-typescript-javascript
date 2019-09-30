@@ -1,11 +1,11 @@
 <template>
   <div>
     <Modal
-      v-model="show"
-      v-if="activeTransaction"
-      :title="$t('transaction_detail')"
-      :transfer="false"
-      class-name="dash_board_dialog scroll"
+            v-model="show"
+            v-if="activeTransaction"
+            :title="$t('transaction_detail')"
+            :transfer="false"
+            class-name="dash_board_dialog scroll"
     >
       <div class="transfer_type ">
         <span class="title">{{$t('transfer_type')}}</span>
@@ -15,9 +15,9 @@
       </div>
       <div>
         <div
-          v-for="(value, key) in activeTransaction.dialogDetailMap"
-          :key="key"
-          class="other_info"
+                v-for="(value, key) in activeTransaction.dialogDetailMap"
+                :key="key"
+                class="other_info"
         >
           <div v-if="key !== 'transfer_type' && key !== 'mosaic'">
             <span class="title">{{$t(key)}}</span>
@@ -25,7 +25,12 @@
           </div>
           <div v-if="key === 'mosaic'">
             <span class="title">{{$t(key)}}</span>
-            <span class="value overflow_ellipsis">{{ renderMosaics(value, mosaicList, currentXem) }}
+            <span class="value overflow_ellipsis">
+              <span v-for="r in renderMosaicsReturnList(value, mosaicList, currentXem)">
+                <span :class="[r.ownerPublicKey == publicKey?'green':'','mosaic_item']">
+                  {{r.name}} [{{r.amount}}]
+                </span>
+              </span>
             </span>
           </div>
         </div>
@@ -33,13 +38,13 @@
         <div v-if="activeTransaction.formattedInnerTransactions">
           <span class=" title"> {{$t('inner_transaction')}}</span>
           <div
-            v-for="(innerTransaction, index) in activeTransaction.formattedInnerTransactions"
-            :key="index"
-            class="inner_transaction"
+                  v-for="(innerTransaction, index) in activeTransaction.formattedInnerTransactions"
+                  :key="index"
+                  class="inner_transaction"
           >
             <span
-              class="pointer value"
-              @click="showInnerDialog(innerTransaction)"
+                    class="pointer value"
+                    @click="showInnerDialog(innerTransaction)"
             >
               {{$t(innerTransaction.dialogDetailMap.transfer_type)}}
             </span>
@@ -50,10 +55,10 @@
 
 
     <Modal
-      :title="$t('transaction_detail')"
-      v-model="isShowInnerDialog"
-      :transfer="false"
-      class-name="dash_board_dialog inner_dialog scroll"
+            :title="$t('transaction_detail')"
+            v-model="isShowInnerDialog"
+            :transfer="false"
+            class-name="dash_board_dialog inner_dialog scroll"
     >
       <div class="transfer_type ">
         <span class="title overflow_ellipsis">{{$t('transfer_type')}}</span>
@@ -62,9 +67,9 @@
       </div>
       <div>
         <div
-          v-for="(value, key) in currentInnerTransaction.dialogDetailMap"
-          class="other_info"
-          :key="key"
+                v-for="(value, key) in currentInnerTransaction.dialogDetailMap"
+                class="other_info"
+                :key="key"
         >
           <div v-if="key !== 'transfer_type' && key !== 'mosaic'">
             <span class="title">{{$t(key)}}</span>
@@ -72,7 +77,12 @@
           </div>
           <div v-if="key === 'mosaic'">
             <span class="title">{{$t(key)}}</span>
-            <span class="value overflow_ellipsis">{{ renderMosaics(value, mosaicList, currentXem) }}
+            <span class="value overflow_ellipsis">
+              <span v-for="r in  renderMosaics(value, mosaicList, currentXem)">
+                <span :class="[r.ownerPublicKey == publicKey?'green':'','mosaic_item']">
+                  {{r.name}} [{{r.amount}}]
+                </span>
+              </span>
             </span>
           </div>
         </div>

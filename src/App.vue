@@ -48,6 +48,7 @@
         confirmedTxListener = null
         txStatusListener = null
         chainListeners: ChainListeners = null
+
         get node(): string {
             return this.activeAccount.node
         }
@@ -123,13 +124,11 @@
                     this.$store.commit('SET_MULTISIG_LOADING', true),
                 ])
 
-                //@TODO: moove from there
+                //@TODO: move from there
                 const mosaicListFromStorage = localRead(newWallet.address)
                 const parsedMosaicListFromStorage = mosaicListFromStorage === ''
                     ? false : JSON.parse(mosaicListFromStorage)
-
                 if (mosaicListFromStorage) await this.$store.commit('SET_MOSAICS', parsedMosaicListFromStorage)
-
                 const initMosaicsAndNamespaces = await Promise.all([
                     // @TODO make it an AppWallet methods
                     initMosaic(newWallet, this),
@@ -192,16 +191,16 @@
 
                 await Promise.all([
                     this.$store.commit('UPDATE_MULTISIG_ACCOUNT_MOSAICS', {
-                      address, mosaics: appMosaics,
+                        address, mosaics: appMosaics,
                     }),
                     this.$store.commit('SET_MULTISIG_ACCOUNT_NAMESPACES', {
-                      address, namespaces: appNamespaces,
+                        address, namespaces: appNamespaces,
                     }),
                 ])
 
                 const appMosaicsFromNamespaces = await AppMosaics().fromAppNamespaces(appNamespaces)
                 await this.$store.commit('UPDATE_MULTISIG_ACCOUNT_MOSAICS', {
-                      address, mosaics: appMosaicsFromNamespaces,
+                    address, mosaics: appMosaicsFromNamespaces,
                 })
             } catch (error) {
                 throw new Error(error)
@@ -230,6 +229,7 @@
                 })
             }
         }
+
         /**
          * Add namespaces and divisibility to transactions and balances
          */

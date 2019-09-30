@@ -69,8 +69,7 @@
         <div
                 v-for="(value, index) in currentMosaicList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
                 :key="index"
-                class="listItem"
-        >
+                :class="['listItem',value.mosaicInfo.owner.publicKey == publicKey?'owned_mosaic':'']">
           <Row>
             <span class="mosaic_id">{{value.hex}}</span>
             <span class="available_quantity">{{value.mosaicInfo?formatNumber(value.mosaicInfo.supply.compact()):0}}</span>
@@ -99,7 +98,7 @@
             <span class="poptip">
               <div
                       class="listFnDiv"
-                      v-if="computeDuration(value) > 0 || computeDuration(value) === 'Forever'"
+                      v-if="value.mosaicInfo.owner.publicKey == publicKey &&(computeDuration(value) > 0 || computeDuration(value) === 'Forever')"
               >
                 <Poptip placement="bottom">
                   <i class="moreFn"></i>

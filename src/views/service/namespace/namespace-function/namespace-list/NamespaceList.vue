@@ -19,7 +19,7 @@
       </div>
       <div class="namespace_list_table">
         <div class="table_head">
-        <span @click="getSortType(namespaceSortType.byName)" class="namesapce_name">
+        <span @click="getSortType(namespaceSortType.byName)" class="namespace_name">
           {{$t('namespace_name')}}
           <Icon v-if="namespaceSortType.byName == currentSortType" class="active_sort_type" type="md-arrow-dropdown"/>
         </span>
@@ -45,8 +45,8 @@
         </span>
           <span class="more"></span>
           <!--       this is   a  filter-->
-          <!--          <div class="namespace_filter" @click="toggleIsShowExpiredNamesapce()">-->
-          <!--            <img v-if="!isShowExpiredNamesapce" src="@/common/img/window/windowSelected.png">-->
+          <!--          <div class="namespace_filter" @click="toggleIsShowExpirednamespace()">-->
+          <!--            <img v-if="!isShowExpirednamespace" src="@/common/img/window/windowSelected.png">-->
           <!--            <img v-else src="@/common/img/window/windowUnselected.png">-->
           <!--            <span>{{$t('Hide_expired_namespaces')}}</span>-->
           <!--          </div>-->
@@ -56,7 +56,7 @@
           <div class=" radius"
                v-for=" n in currentNamespaceListByPage">
             <div v-if="n" class="table_body_item">
-              <span class="namesapce_name overflow_ellipsis">{{n.label}}</span>
+              <span class="namespace_name overflow_ellipsis">{{n.label}}</span>
               <span class="duration overflow_ellipsis">
               {{computeDuration(n) === StatusString.EXPIRED ? $t('overdue') : durationToTime(n.endHeight)}}
             </span>
@@ -107,8 +107,8 @@
       </div>
     </div>
 
-    <div class="right_continer radius">
-      <p class="right_continer_head">{{$t('namespace')}}</p>
+    <div class="right_container radius">
+      <p class="right_container_head">{{$t('namespace')}}</p>
       <p class="second_head">{{$t('define')}}</p>
       <p class="green">{{$t('A_namespace_starts_with_a_name_that_you_choose_similar_to_an_internet_domain_name')}}</p>
       <p class="second_head">{{$t('Namespace_description')}}</p>

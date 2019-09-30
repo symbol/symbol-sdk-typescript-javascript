@@ -21,7 +21,7 @@ export class NamespaceEditDialogTs extends Vue {
     isCompleteForm = false
     stepIndex = 0
     durationIntoDate: string = '0'
-    namespace = formDataConfig.namesapceEditForm
+    namespace = formDataConfig.namespaceEditForm
 
     @Prop({default: false})
     showNamespaceEditDialog: boolean

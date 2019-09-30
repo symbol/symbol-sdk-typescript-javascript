@@ -98,6 +98,9 @@ export class MosaicListTs extends Vue {
         return namespaceMap
     }
 
+    get publicKey() {
+        return this.activeAccount.wallet.publicKey
+    }
 
     get currentHeight() {
         return this.app.chainStatus.currentHeight

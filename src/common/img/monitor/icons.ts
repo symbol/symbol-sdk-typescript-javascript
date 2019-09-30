@@ -8,9 +8,9 @@ import dashboardLock from '@/common/img/monitor/dash-board/dashboardOther.png';
 import dashboardModify from '@/common/img/monitor/dash-board/dashboardMultisig.png';
 import dashboardMosaicAlias from '@/common/img/monitor/dash-board/dashboardOther.png';
 import dashboardNamespace from '@/common/img/monitor/dash-board/dashboardOther.png';
-import dashboardSecret from '@/common/img/monitor/dash-board/dashboardOther.png';
-import transferSent from '@/common/img/monitor/dash-board/dashboardTransfer.png'
-import transferReceived from '@/common/img/monitor/dash-board/dashboardTransfer.png'
+import dashboardSecret from '@/common/img/monitor/dash-board/dashboardMosaicOut.png';
+import transferSent from '@/common/img/monitor/dash-board/dashboardMosaicOut.png'
+import transferReceived from '@/common/img/monitor/dash-board/dashboardMosaicIn.png'
 
 export const transferIcons = {
     transferReceived,

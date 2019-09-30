@@ -201,6 +201,6 @@ export default {
         },
         SET_WALLET_IMPORTANCE(state: StoreAccount, importance: number) {
             state.wallet.importance = importance
-        }
+        },
     },
 }

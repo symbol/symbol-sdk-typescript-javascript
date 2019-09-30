@@ -4,7 +4,7 @@ import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
-import {AppWallet, readLocaAlias, removeLink, saveLocaAlias} from "@/core/model"
+import {AppWallet, readLocalAlias, removeLink, saveLocalAlias} from "@/core/model"
 import {networkConfig} from "@/config/index"
 
 @Component({
@@ -113,7 +113,7 @@ export class WalletAliasTs extends Vue {
 
     addAliasToLocalStorage() {
         const {address, tag, alias} = this.formItem
-        saveLocaAlias(
+        saveLocalAlias(
             this.getWallet.address,
             {
                 tag: tag,
@@ -140,7 +140,7 @@ export class WalletAliasTs extends Vue {
 
     initLocalAlias() {
         this.currentPage = 1
-        const addressBook = readLocaAlias(this.getWallet.address)
+        const addressBook = readLocalAlias(this.getWallet.address)
         this.aliasList = addressBook && addressBook.aliasMap ? Object.values(addressBook.aliasMap) : []
     }
 

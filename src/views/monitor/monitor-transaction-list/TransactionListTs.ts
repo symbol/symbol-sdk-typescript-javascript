@@ -66,7 +66,7 @@ export class TransactionListTs extends Vue {
 
     // @TODO: move out from there
     miniHash(hash: string): string {
-        return `${hash.substring(0, 18).toLowerCase()}...${hash.substring(49).toLowerCase()}`
+        return `${hash.substring(0, 18).toLowerCase()}***${hash.substring(42).toLowerCase()}`
     }
 
     // @TODO: Changing tab should reset the newly selected tab's pagination to 1

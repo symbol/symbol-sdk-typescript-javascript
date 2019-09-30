@@ -9,7 +9,14 @@ import {MessageType} from "nem2-sdk/dist/src/model/transaction/MessageType"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
 import {standardFields} from "@/core/validation"
 import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppMosaic, AppWallet, AppInfo, StoreAccount} from "@/core/model"
+import {
+    createBondedMultisigTransaction,
+    createCompleteMultisigTransaction,
+    AppMosaic,
+    AppWallet,
+    AppInfo,
+    StoreAccount
+} from "@/core/model"
 import {formDataConfig} from '@/config/view/form'
 
 @Component({
@@ -62,10 +69,10 @@ export class TransactionFormTs extends Vue {
     }
 
     get activeMultisigAccountAddress(): string {
-      const {activeMultisigAccount} = this
-      return activeMultisigAccount
-          ? Address.createFromPublicKey(activeMultisigAccount, this.getWallet.networkType).plain()
-          : null
+        const {activeMultisigAccount} = this
+        return activeMultisigAccount
+            ? Address.createFromPublicKey(activeMultisigAccount, this.getWallet.networkType).plain()
+            : null
     }
 
     get multisigMosaicList(): Record<string, AppMosaic> {
@@ -316,7 +323,6 @@ export class TransactionFormTs extends Vue {
     }
 
 
-
     async checkForm() {
         const {address, innerFee, mosaicTransferList, lockFee, aggregateFee, multisigPublickey} = this.formItem
 
@@ -367,9 +373,9 @@ export class TransactionFormTs extends Vue {
         const namespaceId = new NamespaceId(addressAlias.substring(1))
         try {
             const namespaceInfo: any = await new NamespaceApiRxjs().getNamespace(namespaceId, node).toPromise()
-            if (namespaceInfo.alias.type === AliasType.Address) {
+            if (namespaceInfo.alias.type == AliasType.Address) {
                 //@ts-ignore
-                that.formModel.address = Address.createFromEncoded(namespaceInfo.alias.address).address
+                that.formItem.address = Address.createFromEncoded(namespaceInfo.alias.address).toDTO().address
             }
         } catch (e) {
             console.log(e)

@@ -6,7 +6,7 @@
             @close="showDialog = false"
     />
 
-    <div class="bottom_transactions radius scroll" >
+    <div class="bottom_transactions radius scroll">
       <div class="splite_page">
         <span>{{$t('total')}}：{{transactionList.length}} {{$t('data')}}</span>
         <Page @on-change="changePage" :total="transactionList.length" class="page_content"/>

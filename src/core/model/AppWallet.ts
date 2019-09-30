@@ -9,7 +9,7 @@ import {
     Password,
     WalletAlgorithm,
     Listener,
-    MultisigAccountInfo, Id,
+    MultisigAccountInfo, Id, AccountHttp, Address,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
@@ -271,6 +271,7 @@ export class AppWallet {
         // this.$emit('hasWallet')
     }
 
+
     static switchWallet(newActiveWalletAddress: string, walletList: any, store: any) {
         const newWalletIndex = walletList.findIndex(({address}) => address === newActiveWalletAddress)
         if (newWalletIndex === -1) throw new Error('wallet not found when switching')
@@ -296,16 +297,13 @@ export class AppWallet {
         localSave('accountMap', JSON.stringify(accountMap))
     }
 
-    async getAccountBalance(networkCurrencies: any, node: string): Promise<number> {
+    static async getAccountInfo(store): Promise<any> {
         try {
-            const accountInfo = await new AccountApiRxjs()
-                .getAccountInfo(this.address, node)
+            const accountInfo = await new AccountHttp(store.state.account.node)
+                .getAccountInfo(Address.createFromRawAddress(store.state.account.wallet.address))
                 .toPromise()
-            if (!accountInfo.mosaics.length) return 0
-            const xemIndex = accountInfo.mosaics
-                .findIndex(mosaic => networkCurrencies.indexOf(mosaic.id.toHex()) > -1)
-            if (xemIndex === -1) return 0
-            return accountInfo.mosaics[xemIndex].amount.compact() / 1000000
+            store.commit('SET_ACCOUNT_INFO', accountInfo)
+            return accountInfo
         } catch (error) {
             return 0
         }
@@ -437,7 +435,7 @@ export const getCurrentImportance = async (store: any) => {
     store.commit('SET_WALLET_IMPORTANCE', Number(importance))
 }
 
-export const saveLocaAlias = (
+export const saveLocalAlias = (
     address: string,
     aliasObject: {
         tag: string,
@@ -458,18 +456,15 @@ export const saveLocaAlias = (
 }
 
 
-export const readLocaAlias = (address: string) => {
+export const readLocalAlias = (address: string) => {
     const addressBookData = localRead('addressBook')
     if (!addressBookData) return {}
     return JSON.parse(addressBookData)[address]
 }
-export const removeLink = (aliasObject,address) => {
-    //address:"SC7EFRV23LC6NTPUPFZ7KCWO24SBY6XPY6OUHFQX"
-    // alias:"dio"
-    // tag:"tag"
-    const {alias,tag} = aliasObject
+export const removeLink = (aliasObject, address) => {
+    const {alias, tag} = aliasObject
     const addressBook = JSON.parse(localRead('addressBook'))
     delete addressBook[address].aliasMap[alias]
-    addressBook[address].tagMap[tag].splice(addressBook[address].tagMap[tag].indexOf(alias),1)
+    addressBook[address].tagMap[tag].splice(addressBook[address].tagMap[tag].indexOf(alias), 1)
     localSave('addressBook', JSON.stringify(addressBook))
 }

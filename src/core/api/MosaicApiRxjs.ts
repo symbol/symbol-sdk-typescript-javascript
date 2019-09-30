@@ -21,7 +21,7 @@ export class MosaicApiRxjs {
         return new MosaicId(uintArray)
     }
 
-    getcurrentXEM() {
+    getCurrentXEM() {
         return NetworkCurrencyMosaic.createRelative(0)
     }
 
