@@ -64,10 +64,6 @@ export class CheckPasswordDialogTs extends Vue {
         return this.activeAccount.xemDivisibility
     }
 
-    get mnemonicCipher() {
-        return this.activeAccount.mnemonic
-    }
-
     get accountName() {
         return this.activeAccount.accountName
     }

@@ -79,7 +79,7 @@ export class MenuBarTs extends Vue {
     }
 
     get currentWalletAddress() {
-        if (!this.wallet) return false
+        if (!this.wallet) return null
         return this.activeAccount.wallet.address
     }
 
