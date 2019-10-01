@@ -37,7 +37,6 @@ import { Deadline } from '../../src/model/transaction/Deadline';
 import { MosaicAddressRestrictionTransaction } from '../../src/model/transaction/MosaicAddressRestrictionTransaction';
 import { MosaicDefinitionTransaction } from '../../src/model/transaction/MosaicDefinitionTransaction';
 import { MosaicGlobalRestrictionTransaction } from '../../src/model/transaction/MosaicGlobalRestrictionTransaction';
-import { Transaction } from '../../src/model/transaction/Transaction';
 import { UInt64 } from '../../src/model/UInt64';
 
 describe('RestrictionHttp', () => {
@@ -259,10 +258,10 @@ describe('RestrictionHttp', () => {
     describe('getMosaicAddressRestriction', () => {
         it('should call getMosaicAddressRestriction successfully', (done) => {
             setTimeout(() => {
-                restrictionHttp.getMosaicAddressRestriction(mosaicId, accountAddress).subscribe((mosaicRestriction) => {
+                restrictionHttp.getMosaicAddressRestriction(mosaicId, account3.address).subscribe((mosaicRestriction) => {
                     deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.ADDRESS);
-                    deepEqual(mosaicRestriction.targetAddress.plain(), accountAddress.plain());
+                    deepEqual(mosaicRestriction.targetAddress.plain(), account3.address.plain());
                     deepEqual(mosaicRestriction.restrictions[0].get(UInt64.fromUint(60641).toHex()), UInt64.fromUint(2).toString());
                     done();
                 });
@@ -273,10 +272,10 @@ describe('RestrictionHttp', () => {
     describe('getMosaicAddressRestrictions', () => {
         it('should call getMosaicAddressRestrictions successfully', (done) => {
             setTimeout(() => {
-                restrictionHttp.getMosaicAddressRestrictions(mosaicId, [accountAddress]).subscribe((mosaicRestriction) => {
+                restrictionHttp.getMosaicAddressRestrictions(mosaicId, [account3.address]).subscribe((mosaicRestriction) => {
                     deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.ADDRESS);
-                    deepEqual(mosaicRestriction[0].targetAddress.plain(), accountAddress.plain());
+                    deepEqual(mosaicRestriction[0].targetAddress.plain(), account3.address.plain());
                     deepEqual(mosaicRestriction[0].restrictions[0].get(UInt64.fromUint(60641).toHex()), UInt64.fromUint(2).toString());
                     done();
                 });
@@ -290,7 +289,12 @@ describe('RestrictionHttp', () => {
                 restrictionHttp.getMosaicGlobalRestriction(mosaicId).subscribe((mosaicRestriction) => {
                     deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.GLOBAL);
-                    deepEqual(mosaicRestriction.restrictions[0].get(UInt64.fromUint(60641).toHex()), UInt64.fromUint(2).toString());
+                    deepEqual(mosaicRestriction.restrictions[0].get(UInt64.fromUint(60641).toHex())!.referenceMosaicId.toHex(),
+                        new MosaicId(UInt64.fromUint(0).toHex()).toHex());
+                    deepEqual(mosaicRestriction.restrictions[0].get(UInt64.fromUint(60641).toHex())!.restrictionType,
+                        MosaicRestrictionType.GE);
+                    deepEqual(mosaicRestriction.restrictions[0].get(UInt64.fromUint(60641).toHex())!.restrictionValue.toString(),
+                        UInt64.fromUint(0).toString());
                     done();
                 });
             }, 1000);
@@ -303,10 +307,54 @@ describe('RestrictionHttp', () => {
                 restrictionHttp.getMosaicGlobalRestrictions([mosaicId]).subscribe((mosaicRestriction) => {
                     deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.GLOBAL);
-                    deepEqual(mosaicRestriction[0].restrictions[0].get(UInt64.fromUint(60641).toHex()), UInt64.fromUint(2).toString());
+                    deepEqual(mosaicRestriction[0].restrictions[0].get(UInt64.fromUint(60641).toHex())!.referenceMosaicId.toHex(),
+                        new MosaicId(UInt64.fromUint(0).toHex()).toHex());
+                    deepEqual(mosaicRestriction[0].restrictions[0].get(UInt64.fromUint(60641).toHex())!.restrictionType,
+                        MosaicRestrictionType.GE);
+                    deepEqual(mosaicRestriction[0].restrictions[0].get(UInt64.fromUint(60641).toHex())!.restrictionValue.toString(),
+                        UInt64.fromUint(0).toString());
                     done();
                 });
             }, 1000);
+        });
+    });
+
+    /**
+     * =========================
+     * House Keeping
+     * =========================
+     */
+    describe('Remove test AccountRestriction - Address', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('Announce AccountRestrictionTransaction', (done) => {
+            const addressPropertyFilter = AccountRestrictionModification.createForAddress(
+                AccountRestrictionModificationAction.Remove,
+                account3.address,
+            );
+            const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
+                Deadline.create(),
+                AccountRestrictionType.AllowIncomingAddress,
+                [addressPropertyFilter],
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = addressModification.signWith(account, generationHash);
+            listener.confirmed(account.address).subscribe(() => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
         });
     });
 });

@@ -90,7 +90,8 @@ export * from './metadataTypeEnum';
 export * from './modelError';
 export * from './mosaic';
 export * from './mosaicAddressRestrictionDTO';
-export * from './mosaicAddressRestrictionRestrictionsDTO';
+export * from './mosaicAddressRestrictionEntryDTO';
+export * from './mosaicAddressRestrictionEntryWrapperDTO';
 export * from './mosaicAddressRestrictionTransactionBodyDTO';
 export * from './mosaicAddressRestrictionTransactionDTO';
 export * from './mosaicAliasTransactionBodyDTO';
@@ -99,8 +100,9 @@ export * from './mosaicDTO';
 export * from './mosaicDefinitionTransactionBodyDTO';
 export * from './mosaicDefinitionTransactionDTO';
 export * from './mosaicGlobalRestrictionDTO';
-export * from './mosaicGlobalRestrictionRestrictionsDTO';
-export * from './mosaicGlobalRestrictionRestrictionsItemDTO';
+export * from './mosaicGlobalRestrictionEntryDTO';
+export * from './mosaicGlobalRestrictionEntryRestrictionDTO';
+export * from './mosaicGlobalRestrictionEntryWrapperDTO';
 export * from './mosaicGlobalRestrictionTransactionBodyDTO';
 export * from './mosaicGlobalRestrictionTransactionDTO';
 export * from './mosaicIds';
@@ -108,6 +110,7 @@ export * from './mosaicInfoDTO';
 export * from './mosaicMetadataTransactionBodyDTO';
 export * from './mosaicMetadataTransactionDTO';
 export * from './mosaicNamesDTO';
+export * from './mosaicRestrictionEntryTypeEnum';
 export * from './mosaicRestrictionTypeEnum';
 export * from './mosaicSupplyChangeActionEnum';
 export * from './mosaicSupplyChangeTransactionBodyDTO';
@@ -256,7 +259,8 @@ import { MetadataTypeEnum } from './metadataTypeEnum';
 import { ModelError } from './modelError';
 import { Mosaic } from './mosaic';
 import { MosaicAddressRestrictionDTO } from './mosaicAddressRestrictionDTO';
-import { MosaicAddressRestrictionRestrictionsDTO } from './mosaicAddressRestrictionRestrictionsDTO';
+import { MosaicAddressRestrictionEntryDTO } from './mosaicAddressRestrictionEntryDTO';
+import { MosaicAddressRestrictionEntryWrapperDTO } from './mosaicAddressRestrictionEntryWrapperDTO';
 import { MosaicAddressRestrictionTransactionBodyDTO } from './mosaicAddressRestrictionTransactionBodyDTO';
 import { MosaicAddressRestrictionTransactionDTO } from './mosaicAddressRestrictionTransactionDTO';
 import { MosaicAliasTransactionBodyDTO } from './mosaicAliasTransactionBodyDTO';
@@ -265,8 +269,9 @@ import { MosaicDTO } from './mosaicDTO';
 import { MosaicDefinitionTransactionBodyDTO } from './mosaicDefinitionTransactionBodyDTO';
 import { MosaicDefinitionTransactionDTO } from './mosaicDefinitionTransactionDTO';
 import { MosaicGlobalRestrictionDTO } from './mosaicGlobalRestrictionDTO';
-import { MosaicGlobalRestrictionRestrictionsDTO } from './mosaicGlobalRestrictionRestrictionsDTO';
-import { MosaicGlobalRestrictionRestrictionsItemDTO } from './mosaicGlobalRestrictionRestrictionsItemDTO';
+import { MosaicGlobalRestrictionEntryDTO } from './mosaicGlobalRestrictionEntryDTO';
+import { MosaicGlobalRestrictionEntryRestrictionDTO } from './mosaicGlobalRestrictionEntryRestrictionDTO';
+import { MosaicGlobalRestrictionEntryWrapperDTO } from './mosaicGlobalRestrictionEntryWrapperDTO';
 import { MosaicGlobalRestrictionTransactionBodyDTO } from './mosaicGlobalRestrictionTransactionBodyDTO';
 import { MosaicGlobalRestrictionTransactionDTO } from './mosaicGlobalRestrictionTransactionDTO';
 import { MosaicIds } from './mosaicIds';
@@ -274,6 +279,7 @@ import { MosaicInfoDTO } from './mosaicInfoDTO';
 import { MosaicMetadataTransactionBodyDTO } from './mosaicMetadataTransactionBodyDTO';
 import { MosaicMetadataTransactionDTO } from './mosaicMetadataTransactionDTO';
 import { MosaicNamesDTO } from './mosaicNamesDTO';
+import { MosaicRestrictionEntryTypeEnum } from './mosaicRestrictionEntryTypeEnum';
 import { MosaicRestrictionTypeEnum } from './mosaicRestrictionTypeEnum';
 import { MosaicSupplyChangeActionEnum } from './mosaicSupplyChangeActionEnum';
 import { MosaicSupplyChangeTransactionBodyDTO } from './mosaicSupplyChangeTransactionBodyDTO';
@@ -351,6 +357,7 @@ let enumsMap: {[index: string]: any} = {
         "LockHashAlgorithmEnum": LockHashAlgorithmEnum,
         "MessageTypeEnum": MessageTypeEnum,
         "MetadataTypeEnum": MetadataTypeEnum,
+        "MosaicRestrictionEntryTypeEnum": MosaicRestrictionEntryTypeEnum,
         "MosaicRestrictionTypeEnum": MosaicRestrictionTypeEnum,
         "MosaicSupplyChangeActionEnum": MosaicSupplyChangeActionEnum,
         "NamespaceRegistrationTypeEnum": NamespaceRegistrationTypeEnum,
@@ -442,7 +449,8 @@ let typeMap: {[index: string]: any} = {
     "ModelError": ModelError,
     "Mosaic": Mosaic,
     "MosaicAddressRestrictionDTO": MosaicAddressRestrictionDTO,
-    "MosaicAddressRestrictionRestrictionsDTO": MosaicAddressRestrictionRestrictionsDTO,
+    "MosaicAddressRestrictionEntryDTO": MosaicAddressRestrictionEntryDTO,
+    "MosaicAddressRestrictionEntryWrapperDTO": MosaicAddressRestrictionEntryWrapperDTO,
     "MosaicAddressRestrictionTransactionBodyDTO": MosaicAddressRestrictionTransactionBodyDTO,
     "MosaicAddressRestrictionTransactionDTO": MosaicAddressRestrictionTransactionDTO,
     "MosaicAliasTransactionBodyDTO": MosaicAliasTransactionBodyDTO,
@@ -451,8 +459,9 @@ let typeMap: {[index: string]: any} = {
     "MosaicDefinitionTransactionBodyDTO": MosaicDefinitionTransactionBodyDTO,
     "MosaicDefinitionTransactionDTO": MosaicDefinitionTransactionDTO,
     "MosaicGlobalRestrictionDTO": MosaicGlobalRestrictionDTO,
-    "MosaicGlobalRestrictionRestrictionsDTO": MosaicGlobalRestrictionRestrictionsDTO,
-    "MosaicGlobalRestrictionRestrictionsItemDTO": MosaicGlobalRestrictionRestrictionsItemDTO,
+    "MosaicGlobalRestrictionEntryDTO": MosaicGlobalRestrictionEntryDTO,
+    "MosaicGlobalRestrictionEntryRestrictionDTO": MosaicGlobalRestrictionEntryRestrictionDTO,
+    "MosaicGlobalRestrictionEntryWrapperDTO": MosaicGlobalRestrictionEntryWrapperDTO,
     "MosaicGlobalRestrictionTransactionBodyDTO": MosaicGlobalRestrictionTransactionBodyDTO,
     "MosaicGlobalRestrictionTransactionDTO": MosaicGlobalRestrictionTransactionDTO,
     "MosaicIds": MosaicIds,

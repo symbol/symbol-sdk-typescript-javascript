@@ -25,35 +25,52 @@
  * Do not edit the class manually.
  */
 
-export class MosaicGlobalRestrictionRestrictionsItemDTO {
-    'referenceMosaicId': string;
+import { MosaicAddressRestrictionEntryDTO } from './mosaicAddressRestrictionEntryDTO';
+
+export class MosaicAddressRestrictionEntryWrapperDTO {
+    'compositeHash': string;
+    'entryType': number;
     /**
-    * Restriction value.
+    * Mosaic identifier.
     */
-    'restrictionValue': string;
-    'restrictionType': number;
+    'mosaicId': string;
+    /**
+    * Decoded address.
+    */
+    'targetAddress': string;
+    'restrictions': Array<MosaicAddressRestrictionEntryDTO>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "referenceMosaicId",
-            "baseName": "referenceMosaicId",
+            "name": "compositeHash",
+            "baseName": "compositeHash",
             "type": "string"
         },
         {
-            "name": "restrictionValue",
-            "baseName": "restrictionValue",
-            "type": "string"
-        },
-        {
-            "name": "restrictionType",
-            "baseName": "restrictionType",
+            "name": "entryType",
+            "baseName": "entryType",
             "type": "number"
+        },
+        {
+            "name": "mosaicId",
+            "baseName": "mosaicId",
+            "type": "string"
+        },
+        {
+            "name": "targetAddress",
+            "baseName": "targetAddress",
+            "type": "string"
+        },
+        {
+            "name": "restrictions",
+            "baseName": "restrictions",
+            "type": "Array<MosaicAddressRestrictionEntryDTO>"
         }    ];
 
     static getAttributeTypeMap() {
-        return MosaicGlobalRestrictionRestrictionsItemDTO.attributeTypeMap;
+        return MosaicAddressRestrictionEntryWrapperDTO.attributeTypeMap;
     }
 }
 

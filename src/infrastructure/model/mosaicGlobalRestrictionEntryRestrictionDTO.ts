@@ -26,32 +26,38 @@
  */
 
 
-export class MosaicAddressRestrictionRestrictionsDTO {
+export class MosaicGlobalRestrictionEntryRestrictionDTO {
     /**
-    * Restriction key.
+    * Mosaic identifier.
     */
-    'key': string;
+    'referenceMosaicId': string;
     /**
     * Restriction value.
     */
-    'value': string;
+    'restrictionValue': string;
+    'restrictionType': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "key",
-            "baseName": "key",
+            "name": "referenceMosaicId",
+            "baseName": "referenceMosaicId",
             "type": "string"
         },
         {
-            "name": "value",
-            "baseName": "value",
+            "name": "restrictionValue",
+            "baseName": "restrictionValue",
             "type": "string"
+        },
+        {
+            "name": "restrictionType",
+            "baseName": "restrictionType",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return MosaicAddressRestrictionRestrictionsDTO.attributeTypeMap;
+        return MosaicGlobalRestrictionEntryRestrictionDTO.attributeTypeMap;
     }
 }
 

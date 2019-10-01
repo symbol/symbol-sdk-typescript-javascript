@@ -25,22 +25,31 @@
  * Do not edit the class manually.
  */
 
-import { MosaicGlobalRestrictionEntryWrapperDTO } from './mosaicGlobalRestrictionEntryWrapperDTO';
+import { MosaicGlobalRestrictionEntryRestrictionDTO } from './mosaicGlobalRestrictionEntryRestrictionDTO';
 
-export class MosaicGlobalRestrictionDTO {
-    'mosaicRestrictionEntry': MosaicGlobalRestrictionEntryWrapperDTO;
+export class MosaicGlobalRestrictionEntryDTO {
+    /**
+    * Restriction key.
+    */
+    'key': string;
+    'restriction': MosaicGlobalRestrictionEntryRestrictionDTO;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "mosaicRestrictionEntry",
-            "baseName": "mosaicRestrictionEntry",
-            "type": "MosaicGlobalRestrictionEntryWrapperDTO"
+            "name": "key",
+            "baseName": "key",
+            "type": "string"
+        },
+        {
+            "name": "restriction",
+            "baseName": "restriction",
+            "type": "MosaicGlobalRestrictionEntryRestrictionDTO"
         }    ];
 
     static getAttributeTypeMap() {
-        return MosaicGlobalRestrictionDTO.attributeTypeMap;
+        return MosaicGlobalRestrictionEntryDTO.attributeTypeMap;
     }
 }
 

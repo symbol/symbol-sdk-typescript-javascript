@@ -88,11 +88,11 @@ describe('MosaicRestrictions', () => {
             mosaicId: '85BBEA6CC462B244',
             restrictions: [{
                 key: 'testKey',
-                restriction: [{
+                restriction: {
                     referenceMosaicId: '85BBEA6CC462B244',
                     restrictionValue: '123',
                     restrictionType: 1,
-                }],
+                },
             }],
         };
 
@@ -101,15 +101,13 @@ describe('MosaicRestrictions', () => {
             mosaicGlobalRestrictionDTO.entryType,
             new MosaicId(mosaicGlobalRestrictionDTO.mosaicId),
             mosaicGlobalRestrictionDTO.restrictions.map((item) => {
-                const keyValue = new Map<string, MosaicGlobalRestrictionItem[]>();
+                const keyValue = new Map<string, MosaicGlobalRestrictionItem>();
                 return keyValue.set(item.key,
-                    item.restriction.map((t) => {
-                        return new MosaicGlobalRestrictionItem(
-                            new MosaicId(t.referenceMosaicId),
-                            t.restrictionValue,
-                            t.restrictionType,
-                        );
-                    }));
+                                    new MosaicGlobalRestrictionItem(
+                                        new MosaicId(item.restriction.referenceMosaicId),
+                                        item.restriction.restrictionValue,
+                                        item.restriction.restrictionType,
+                                    ));
             }),
         );
 
@@ -118,9 +116,8 @@ describe('MosaicRestrictions', () => {
         expect(mosaicGlobalRestriction.mosaicId.toHex()).to.be.equal('85BBEA6CC462B244');
         expect(mosaicGlobalRestriction.restrictions.length).to.be.equal(1);
         expect(mosaicGlobalRestriction.restrictions[0].get('testKey')).to.not.be.equal(undefined);
-        expect(mosaicGlobalRestriction.restrictions[0].get('testKey')!.length).to.be.equal(1);
-        expect(mosaicGlobalRestriction.restrictions[0].get('testKey')![0].referenceMosaicId.toHex()).to.be.equal('85BBEA6CC462B244');
-        expect(mosaicGlobalRestriction.restrictions[0].get('testKey')![0].restrictionValue).to.be.equal('123');
-        expect(mosaicGlobalRestriction.restrictions[0].get('testKey')![0].restrictionType).to.be.equal(MosaicRestrictionType.EQ);
+        expect(mosaicGlobalRestriction.restrictions[0].get('testKey')!.referenceMosaicId.toHex()).to.be.equal('85BBEA6CC462B244');
+        expect(mosaicGlobalRestriction.restrictions[0].get('testKey')!.restrictionValue).to.be.equal('123');
+        expect(mosaicGlobalRestriction.restrictions[0].get('testKey')!.restrictionType).to.be.equal(MosaicRestrictionType.EQ);
     });
 });

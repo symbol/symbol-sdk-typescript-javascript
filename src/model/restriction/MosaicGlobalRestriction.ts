@@ -46,7 +46,7 @@ export class MosaicGlobalRestriction {
                 /**
                  * Mosaic restriction items
                  */
-                public readonly restrictions: Array<Map<string, MosaicGlobalRestrictionItem[]>>) {
+                public readonly restrictions: Array<Map<string, MosaicGlobalRestrictionItem>>) {
 
     }
 }

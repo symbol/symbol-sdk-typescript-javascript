@@ -99,7 +99,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
         return observableFrom(
             this.restrictionRoutesApi.getMosaicAddressRestriction(mosaicId.toHex(), address.plain())).pipe(
                 map((response: { response: ClientResponse; body: MosaicAddressRestrictionDTO; }) => {
-                    const payload = response.body;
+                    const payload = response.body.mosaicRestrictionEntry;
                     const restirctionItems = new Map<string, string>();
                     return new MosaicAddressRestriction(
                         payload.compositeHash,
@@ -133,11 +133,11 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                     return mosaicAddressRestrictionsDTO.map((payload) => {
                         const restirctionItems = new Map<string, string>();
                         return new MosaicAddressRestriction(
-                            payload.compositeHash,
-                            payload.entryType,
-                            new MosaicId(payload.mosaicId),
-                            Address.createFromEncoded(payload.targetAddress),
-                            payload.restrictions.map((restriction) => {
+                            payload.mosaicRestrictionEntry.compositeHash,
+                            payload.mosaicRestrictionEntry.entryType,
+                            new MosaicId(payload.mosaicRestrictionEntry.mosaicId),
+                            Address.createFromEncoded(payload.mosaicRestrictionEntry.targetAddress),
+                            payload.mosaicRestrictionEntry.restrictions.map((restriction) => {
                                 return restirctionItems.set(restriction.key, restriction.value);
                             }),
                         );
@@ -157,21 +157,19 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
         return observableFrom(
             this.restrictionRoutesApi.getMosaicGlobalRestriction(mosaicId.toHex())).pipe(
                 map((response: { response: ClientResponse; body: MosaicGlobalRestrictionDTO; }) => {
-                    const payload = response.body;
-                    const restirctionItems = new Map<string, MosaicGlobalRestrictionItem[]>();
+                    const payload = response.body.mosaicRestrictionEntry;
+                    const restirctionItems = new Map<string, MosaicGlobalRestrictionItem>();
                     return new MosaicGlobalRestriction(
                         payload.compositeHash,
-                        payload.entryType,
+                        payload.entryType.valueOf(),
                         new MosaicId(payload.mosaicId),
                         payload.restrictions.map((restriction) => {
                             return restirctionItems.set(restriction.key,
-                                                        restriction.restriction.map((item) => {
-                                                            return new MosaicGlobalRestrictionItem(
-                                                                new MosaicId(item.referenceMosaicId),
-                                                                item.restrictionValue,
-                                                                item.restrictionType,
-                                                            );
-                                                        }));
+                                                        new MosaicGlobalRestrictionItem(
+                                                            new MosaicId(restriction.restriction.referenceMosaicId),
+                                                            restriction.restriction.restrictionValue,
+                                                            restriction.restriction.restrictionType,
+                                                        ));
                         }),
                     );
                 }),
@@ -194,20 +192,18 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                 map((response: { response: ClientResponse; body: MosaicGlobalRestrictionDTO[]; }) => {
                     const mosaicGlobalRestrictionsDTO = response.body;
                     return mosaicGlobalRestrictionsDTO.map((payload) => {
-                        const restirctionItems = new Map<string, MosaicGlobalRestrictionItem[]>();
+                        const restirctionItems = new Map<string, MosaicGlobalRestrictionItem>();
                         return new MosaicGlobalRestriction(
-                            payload.compositeHash,
-                            payload.entryType,
-                            new MosaicId(payload.mosaicId),
-                            payload.restrictions.map((restriction) => {
+                            payload.mosaicRestrictionEntry.compositeHash,
+                            payload.mosaicRestrictionEntry.entryType.valueOf(),
+                            new MosaicId(payload.mosaicRestrictionEntry.mosaicId),
+                            payload.mosaicRestrictionEntry.restrictions.map((restriction) => {
                                 return restirctionItems.set(restriction.key,
-                                                            restriction.restriction.map((item) => {
-                                                                return new MosaicGlobalRestrictionItem(
-                                                                    new MosaicId(item.referenceMosaicId),
-                                                                    item.restrictionValue,
-                                                                    item.restrictionType,
-                                                                );
-                                                            }));
+                                    new MosaicGlobalRestrictionItem(
+                                        new MosaicId(restriction.restriction.referenceMosaicId),
+                                        restriction.restriction.restrictionValue,
+                                        restriction.restriction.restrictionType,
+                                    ));
                             }),
                         );
                     });

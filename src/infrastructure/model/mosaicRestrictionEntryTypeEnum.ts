@@ -25,22 +25,11 @@
  * Do not edit the class manually.
  */
 
-import { MosaicGlobalRestrictionEntryWrapperDTO } from './mosaicGlobalRestrictionEntryWrapperDTO';
 
-export class MosaicGlobalRestrictionDTO {
-    'mosaicRestrictionEntry': MosaicGlobalRestrictionEntryWrapperDTO;
-
-    static discriminator: string | undefined = undefined;
-
-    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "mosaicRestrictionEntry",
-            "baseName": "mosaicRestrictionEntry",
-            "type": "MosaicGlobalRestrictionEntryWrapperDTO"
-        }    ];
-
-    static getAttributeTypeMap() {
-        return MosaicGlobalRestrictionDTO.attributeTypeMap;
-    }
+/**
+* - 0 - Mosaic address restriction. - 1 - Mosaic global restriction. 
+*/
+export enum MosaicRestrictionEntryTypeEnum {
+    NUMBER_0 = <any> 0,
+    NUMBER_1 = <any> 1
 }
-

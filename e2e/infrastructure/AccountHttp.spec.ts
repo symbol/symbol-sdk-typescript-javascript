@@ -186,39 +186,6 @@ describe('AccountHttp', () => {
         });
     });
 
-    describe('Setup Test AccountAddressRestriction', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-
-        it('Announce AccountRestrictionTransaction', (done) => {
-            const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-                AccountRestrictionModificationAction.Add,
-                account3.address,
-            );
-            const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                Deadline.create(),
-                AccountRestrictionType.AllowIncomingAddress,
-                [addressPropertyFilter],
-                NetworkType.MIJIN_TEST,
-            );
-            const signedTransaction = addressModification.signWith(account, generationHash);
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
-        });
-    });
     describe('Setup test multisig account', () => {
         let listener: Listener;
         before (() => {
@@ -281,28 +248,6 @@ describe('AccountHttp', () => {
                     expect(accountsInfo[0].publicKey).to.be.equal(accountPublicKey);
                     done();
                 });
-        });
-    });
-
-    describe('getAccountRestrictions', () => {
-        it('should call getAccountRestrictions successfully', (done) => {
-            setTimeout(() => {
-                restrictionHttp.getAccountRestrictions(accountAddress).subscribe((accountRestrictions) => {
-                    deepEqual(accountRestrictions.accountRestrictions.address, accountAddress);
-                    done();
-                });
-            }, 1000);
-        });
-    });
-
-    describe('getAccountRestrictionsFromAccounts', () => {
-        it('should call getAccountRestrictionsFromAccounts successfully', (done) => {
-            setTimeout(() => {
-                restrictionHttp.getAccountRestrictionsFromAccounts([accountAddress]).subscribe((accountRestrictions) => {
-                    deepEqual(accountRestrictions[0]!.accountRestrictions.address, accountAddress);
-                    done();
-                });
-            }, 1000);
         });
     });
 
@@ -400,39 +345,6 @@ describe('AccountHttp', () => {
             );
             const signedTransaction = addressAliasTransaction.signWith(account, generationHash);
 
-            listener.confirmed(account.address).subscribe(() => {
-                done();
-            });
-            listener.status(account.address).subscribe((error) => {
-                console.log('Error:', error);
-                assert(false);
-                done();
-            });
-            transactionHttp.announce(signedTransaction);
-        });
-    });
-    describe('Remove test AccountRestriction - Address', () => {
-        let listener: Listener;
-        before (() => {
-            listener = new Listener(config.apiUrl);
-            return listener.open();
-        });
-        after(() => {
-            return listener.close();
-        });
-
-        it('Announce AccountRestrictionTransaction', (done) => {
-            const addressPropertyFilter = AccountRestrictionModification.createForAddress(
-                AccountRestrictionModificationAction.Remove,
-                account3.address,
-            );
-            const addressModification = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-                Deadline.create(),
-                AccountRestrictionType.AllowIncomingAddress,
-                [addressPropertyFilter],
-                NetworkType.MIJIN_TEST,
-            );
-            const signedTransaction = addressModification.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe(() => {
                 done();
             });
