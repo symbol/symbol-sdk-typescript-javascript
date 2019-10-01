@@ -89,6 +89,8 @@ export * from './metadataEntryDTO';
 export * from './metadataTypeEnum';
 export * from './modelError';
 export * from './mosaic';
+export * from './mosaicAddressRestrictionDTO';
+export * from './mosaicAddressRestrictionRestrictionsDTO';
 export * from './mosaicAddressRestrictionTransactionBodyDTO';
 export * from './mosaicAddressRestrictionTransactionDTO';
 export * from './mosaicAliasTransactionBodyDTO';
@@ -96,6 +98,9 @@ export * from './mosaicAliasTransactionDTO';
 export * from './mosaicDTO';
 export * from './mosaicDefinitionTransactionBodyDTO';
 export * from './mosaicDefinitionTransactionDTO';
+export * from './mosaicGlobalRestrictionDTO';
+export * from './mosaicGlobalRestrictionRestrictionsDTO';
+export * from './mosaicGlobalRestrictionRestrictionsItemDTO';
 export * from './mosaicGlobalRestrictionTransactionBodyDTO';
 export * from './mosaicGlobalRestrictionTransactionDTO';
 export * from './mosaicIds';
@@ -250,6 +255,8 @@ import { MetadataEntryDTO } from './metadataEntryDTO';
 import { MetadataTypeEnum } from './metadataTypeEnum';
 import { ModelError } from './modelError';
 import { Mosaic } from './mosaic';
+import { MosaicAddressRestrictionDTO } from './mosaicAddressRestrictionDTO';
+import { MosaicAddressRestrictionRestrictionsDTO } from './mosaicAddressRestrictionRestrictionsDTO';
 import { MosaicAddressRestrictionTransactionBodyDTO } from './mosaicAddressRestrictionTransactionBodyDTO';
 import { MosaicAddressRestrictionTransactionDTO } from './mosaicAddressRestrictionTransactionDTO';
 import { MosaicAliasTransactionBodyDTO } from './mosaicAliasTransactionBodyDTO';
@@ -257,6 +264,9 @@ import { MosaicAliasTransactionDTO } from './mosaicAliasTransactionDTO';
 import { MosaicDTO } from './mosaicDTO';
 import { MosaicDefinitionTransactionBodyDTO } from './mosaicDefinitionTransactionBodyDTO';
 import { MosaicDefinitionTransactionDTO } from './mosaicDefinitionTransactionDTO';
+import { MosaicGlobalRestrictionDTO } from './mosaicGlobalRestrictionDTO';
+import { MosaicGlobalRestrictionRestrictionsDTO } from './mosaicGlobalRestrictionRestrictionsDTO';
+import { MosaicGlobalRestrictionRestrictionsItemDTO } from './mosaicGlobalRestrictionRestrictionsItemDTO';
 import { MosaicGlobalRestrictionTransactionBodyDTO } from './mosaicGlobalRestrictionTransactionBodyDTO';
 import { MosaicGlobalRestrictionTransactionDTO } from './mosaicGlobalRestrictionTransactionDTO';
 import { MosaicIds } from './mosaicIds';
@@ -431,6 +441,8 @@ let typeMap: {[index: string]: any} = {
     "MetadataEntryDTO": MetadataEntryDTO,
     "ModelError": ModelError,
     "Mosaic": Mosaic,
+    "MosaicAddressRestrictionDTO": MosaicAddressRestrictionDTO,
+    "MosaicAddressRestrictionRestrictionsDTO": MosaicAddressRestrictionRestrictionsDTO,
     "MosaicAddressRestrictionTransactionBodyDTO": MosaicAddressRestrictionTransactionBodyDTO,
     "MosaicAddressRestrictionTransactionDTO": MosaicAddressRestrictionTransactionDTO,
     "MosaicAliasTransactionBodyDTO": MosaicAliasTransactionBodyDTO,
@@ -438,6 +450,9 @@ let typeMap: {[index: string]: any} = {
     "MosaicDTO": MosaicDTO,
     "MosaicDefinitionTransactionBodyDTO": MosaicDefinitionTransactionBodyDTO,
     "MosaicDefinitionTransactionDTO": MosaicDefinitionTransactionDTO,
+    "MosaicGlobalRestrictionDTO": MosaicGlobalRestrictionDTO,
+    "MosaicGlobalRestrictionRestrictionsDTO": MosaicGlobalRestrictionRestrictionsDTO,
+    "MosaicGlobalRestrictionRestrictionsItemDTO": MosaicGlobalRestrictionRestrictionsItemDTO,
     "MosaicGlobalRestrictionTransactionBodyDTO": MosaicGlobalRestrictionTransactionBodyDTO,
     "MosaicGlobalRestrictionTransactionDTO": MosaicGlobalRestrictionTransactionDTO,
     "MosaicIds": MosaicIds,

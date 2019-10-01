@@ -25,7 +25,7 @@ import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
 import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
 import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
 import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { AccountRestrictionType } from '../account/AccountRestrictionType';
+import { AccountRestrictionType } from '../restriction/AccountRestrictionType';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';

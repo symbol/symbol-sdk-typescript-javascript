@@ -16,8 +16,8 @@
 
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
-import { AccountRestriction } from '../../../src/model/account/AccountRestriction';
-import { AccountRestrictionType } from '../../../src/model/account/AccountRestrictionType';
+import { AccountRestriction } from '../../../src/model/restriction/AccountRestriction';
+import { AccountRestrictionType } from '../../../src/model/restriction/AccountRestrictionType';
 import { Address } from '../../../src/model/account/Address';
 describe('AccountRestriction', () => {
 

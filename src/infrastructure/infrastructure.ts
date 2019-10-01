@@ -27,4 +27,5 @@ export * from './Listener';
 export * from './QueryParams';
 export * from './NetworkHttp';
 export * from './NodeHttp';
+export * from './RestrictionHttp';
 export * from './transaction/NamespaceMosaicIdGenerator';

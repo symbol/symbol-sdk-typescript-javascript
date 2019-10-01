@@ -20,7 +20,6 @@ import {catchError, map, mergeMap} from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import {AccountInfo} from '../model/account/AccountInfo';
 import { AccountNames } from '../model/account/AccountNames';
-import { AccountRestrictionsInfo } from '../model/account/AccountRestrictionsInfo';
 import { ActivityBucket } from '../model/account/ActivityBucket';
 import {Address} from '../model/account/Address';
 import {MultisigAccountGraphInfo} from '../model/account/MultisigAccountGraphInfo';
@@ -30,6 +29,7 @@ import {Mosaic} from '../model/mosaic/Mosaic';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { NamespaceName } from '../model/namespace/NamespaceName';
+import { AccountRestrictionsInfo } from '../model/restriction/AccountRestrictionsInfo';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {Transaction} from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
@@ -103,42 +103,6 @@ export class AccountHttp extends Http implements AccountRepository {
                 );
             }),
             catchError((error) =>  throwError(this.errorHandling(error))),
-        );
-    }
-
-    /**
-     * Get Account restrictions.
-     * @param publicAccount public account
-     * @returns Observable<AccountRestrictionsInfo>
-     */
-    public getAccountRestrictions(address: Address): Observable<AccountRestrictionsInfo> {
-        return observableFrom(this.accountRoutesApi.getAccountRestrictions(address.plain()))
-            .pipe(map((response: { response: ClientResponse; body: AccountRestrictionsInfoDTO; }) => {
-                const accountRestrictions = response.body;
-                return DtoMapping.extractAccountRestrictionFromDto(accountRestrictions);
-            }),
-            catchError((error) =>  throwError(this.errorHandling(error))),
-        );
-    }
-
-    /**
-     * Get Account restrictions.
-     * @param address list of addresses
-     * @returns Observable<AccountRestrictionsInfo[]>
-     */
-    public getAccountRestrictionsFromAccounts(addresses: Address[]): Observable<AccountRestrictionsInfo[]> {
-        const accountIds = {
-            addresses: addresses.map((address) => address.plain()),
-        };
-        return observableFrom(
-            this.accountRoutesApi.getAccountRestrictionsFromAccounts(accountIds))
-                .pipe(map((response: { response: ClientResponse; body: AccountRestrictionsInfoDTO[]; }) => {
-                    const accountRestrictions = response.body;
-                    return accountRestrictions.map((restriction) => {
-                        return DtoMapping.extractAccountRestrictionFromDto(restriction);
-                    });
-                }),
-                catchError((error) =>  throwError(error)),
         );
     }
 

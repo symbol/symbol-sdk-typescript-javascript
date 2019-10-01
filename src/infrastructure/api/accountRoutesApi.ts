@@ -31,7 +31,6 @@ import http = require('http');
 /* tslint:disable:no-unused-locals */
 import { AccountIds } from '../model/accountIds';
 import { AccountInfoDTO } from '../model/accountInfoDTO';
-import { AccountRestrictionsInfoDTO } from '../model/accountRestrictionsInfoDTO';
 import { AccountsNamesDTO } from '../model/accountsNamesDTO';
 import { ModelError } from '../model/modelError';
 import { MultisigAccountGraphInfoDTO } from '../model/multisigAccountGraphInfoDTO';
@@ -249,113 +248,6 @@ export class AccountRoutesApi {
                         reject(error);
                     } else {
                         body = ObjectSerializer.deserialize(body, "Array<MultisigAccountGraphInfoDTO>");
-                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve({ response: response, body: body });
-                        } else {
-                            reject({ response: response, body: body });
-                        }
-                    }
-                });
-            });
-        });
-    }
-    /**
-     * Returns the account restrictions for a given account. 
-     * @summary Get the account restrictions
-     * @param accountId Account public key or address.
-     */
-    public async getAccountRestrictions (accountId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: AccountRestrictionsInfoDTO;  }> {
-        const localVarPath = this.basePath + '/account/{accountId}/restrictions'
-            .replace('{' + 'accountId' + '}', encodeURIComponent(String(accountId)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'accountId' is not null or undefined
-        if (accountId === null || accountId === undefined) {
-            throw new Error('Required parameter accountId was null or undefined when calling getAccountRestrictions.');
-        }
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<{ response: http.ClientResponse; body: AccountRestrictionsInfoDTO;  }>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "AccountRestrictionsInfoDTO");
-                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                            resolve({ response: response, body: body });
-                        } else {
-                            reject({ response: response, body: body });
-                        }
-                    }
-                });
-            });
-        });
-    }
-    /**
-     * Returns the account restrictions for a given array of addresses.
-     * @summary Get account restrictions for given array of addresses
-     * @param accountIds 
-     */
-    public async getAccountRestrictionsFromAccounts (accountIds?: AccountIds, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: Array<AccountRestrictionsInfoDTO>;  }> {
-        const localVarPath = this.basePath + '/account/restrictions';
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        let localVarFormParams: any = {};
-
-        (<any>Object).assign(localVarHeaderParams, options.headers);
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-            body: ObjectSerializer.serialize(accountIds, "AccountIds")
-        };
-
-        let authenticationPromise = Promise.resolve();
-        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
-        return authenticationPromise.then(() => {
-            if (Object.keys(localVarFormParams).length) {
-                if (localVarUseFormData) {
-                    (<any>localVarRequestOptions).formData = localVarFormParams;
-                } else {
-                    localVarRequestOptions.form = localVarFormParams;
-                }
-            }
-            return new Promise<{ response: http.ClientResponse; body: Array<AccountRestrictionsInfoDTO>;  }>((resolve, reject) => {
-                localVarRequest(localVarRequestOptions, (error, response, body) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        body = ObjectSerializer.deserialize(body, "Array<AccountRestrictionsInfoDTO>");
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {

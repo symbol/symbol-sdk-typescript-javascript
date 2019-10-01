@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AccountRestrictionType } from '../account/AccountRestrictionType';
+import { AccountRestrictionType } from '../restriction/AccountRestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
 import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionTransaction } from './AccountAddressRestrictionTransaction';

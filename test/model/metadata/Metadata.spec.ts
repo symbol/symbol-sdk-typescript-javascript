@@ -16,12 +16,11 @@
 
 import {deepEqual} from 'assert';
 import { Account } from '../../../src/model/account/Account';
+import { Metadata } from '../../../src/model/metadata/Metadata';
 import { MetadataEntry } from '../../../src/model/metadata/MetadataEntry';
 import { MetadataType } from '../../../src/model/metadata/MetadataType';
-import { MosaicId, NamespaceId } from '../../../src/model/model';
 import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { Metadata } from '../../../src/model/metadata/Metadata';
 
 describe('Metadata', () => {
     let account: Account;

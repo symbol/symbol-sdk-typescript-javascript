@@ -13,27 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AccountRestriction } from './AccountRestriction';
-import { Address } from './Address';
-/**
- * Account restrictions structure describes restriction information for an account.
- */
-export class AccountRestrictions {
+export enum MosaicRestrictionEntryType {
+    /**
+     * Mosaic address restriction
+     */
+    ADDRESS = 0,
 
     /**
-     * Constructor
-     * @param address
-     * @param restrictions
+     * Mosaic global restriction
      */
-    constructor(
-                /**
-                 * Account Address
-                 */
-                public readonly address: Address,
-                /**
-                 * Restrictions.
-                 */
-                public readonly restrictions: AccountRestriction[]) {
-
-    }
+    GLOBAL = 1,
 }

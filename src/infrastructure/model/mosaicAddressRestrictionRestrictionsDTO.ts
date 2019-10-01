@@ -25,14 +25,16 @@
  * Do not edit the class manually.
  */
 
-import { MetadataDTO } from './metadataDTO';
 
-export class KeyMetadataEntryDTO {
-    'key': number;
+export class MosaicAddressRestrictionRestrictionsDTO {
     /**
-    * Array of metadata entry objects.
+    * Restriction key.
     */
-    'metadata': Array<MetadataDTO>;
+    'key': string;
+    /**
+    * Restriction value.
+    */
+    'value': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -40,16 +42,16 @@ export class KeyMetadataEntryDTO {
         {
             "name": "key",
             "baseName": "key",
-            "type": "number"
+            "type": "string"
         },
         {
-            "name": "metadata",
-            "baseName": "metadata",
-            "type": "Array<MetadataDTO>"
+            "name": "value",
+            "baseName": "value",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return KeyMetadataEntryDTO.attributeTypeMap;
+        return MosaicAddressRestrictionRestrictionsDTO.attributeTypeMap;
     }
 }
 
