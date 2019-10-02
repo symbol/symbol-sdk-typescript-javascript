@@ -84,13 +84,27 @@ const routers = [
             {
                 path: '/mosaic',
                 name: 'mosaic',
-                // @ts-ignore
                 component: () => import('@/views/service/mosaic/Mosaic.vue')
             },{
                 path: '/namespace',
                 name: 'namespace',
-                // @ts-ignore
-                component: () => import('@/views/service/namespace/Namespace.vue')
+                redirect: '/namespaceList',
+                component: () => import('@/views/service/namespace/Namespace.vue'),
+                children: [
+                    {
+                        path: '/namespaceList',
+                        name: 'Namespace_list',
+                        component: () => import('@/views/service/namespace/namespace-function/namespace-list/NamespaceList.vue')
+                    }, {
+                        path: '/createNamespace',
+                        name: 'Create_namespace',
+                        component: () => import('@/views/service/namespace/namespace-function/root-namespace/RootNamespace.vue')
+                    }, {
+                        path: '/createSubNamespace',
+                        name: 'Create_subNamespace',
+                        component: () => import('@/views/service/namespace/namespace-function/sub-namespace/SubNamespace.vue')
+                    },
+                ]
             },{
                 path: '/multisigApi',
                 name: 'multisigApi',

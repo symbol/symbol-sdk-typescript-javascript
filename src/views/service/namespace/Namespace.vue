@@ -1,35 +1,31 @@
 <template>
   <div class="namespace_container">
     <div class="top_navigator radius">
-      <span
-              v-for="(b,index) in buttonList"
-              :key="index"
-              class="button_list_item "
-      >
-        <span :class="['name',b.isSelected?'active':'','pointer']" @click="switchButton(index)">{{$t(b.name)}}</span>
-        <span class="line" v-if="index !== (buttonList.length -1) ">|</span>
-      </span>
+      <span class='button_list_item'>
+        <span
+          :class="['name', $route.path === '/namespaceList' ?'active':'','pointer']" 
+          @click="$router.push('namespaceList')"
+        >{{$t('Namespace_list')}}</span>
+        <span
+          :class="['name', $route.path === '/createNamespace' ?'active':'','pointer']" 
+          @click="$router.push('createNamespace')"
+        >{{$t('Create_namespace')}}</span>
+        <span
+          :class="['name', $route.path === '/createSubNamespace' ?'active':'','pointer']" 
+          @click="$router.push('createSubNamespace')"
+        >{{$t('Create_subNamespace')}}</span>
+    </span>
     </div>
-
     <div class="sub_function_container scroll radius">
-      <NamespaceList v-if="buttonList[0].isSelected"/>
-      <RootNamespace v-if="buttonList[1].isSelected"/>
-      <SubNamespace v-if="buttonList[2].isSelected"/>
+      <router-view />
     </div>
-
-
   </div>
 </template>
 
 <script lang="ts">
-    // @ts-ignore
-    import {NamespaceTs} from '@/views/service/namespace/NamespaceTs.ts'
-
-    export default class Namespace extends NamespaceTs {
-
+    export default {
+        name: 'namespace'
     }
-
-
 </script>
 
 <style scoped lang="less">
