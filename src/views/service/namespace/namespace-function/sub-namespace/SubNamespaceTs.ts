@@ -133,7 +133,6 @@ export class SubNamespaceTs extends Vue {
 
     get activeNamespaceList(): {label: string, value: string}[] {
         const {activeMultisigAddress} = this
-        console.log(activeMultisigAddress, 'activeMultisigAddressactiveMultisigAddressactiveMultisigAddressactiveMultisigAddress')
         // @TODO handle namespace list loading state
         return activeMultisigAddress ? this.multisigNamespaceList : this.namespaceList
     }

@@ -23,12 +23,3 @@ export const namespaceButtonConfig = [
         isSelected: false
     }
 ]
-
-export const namespaceSortType = {
-    byName: 1,
-    byDuration: 2,
-    byOwnerShip: 3,
-    byBindType: 4,
-    byBindInfo: 5
-
-}

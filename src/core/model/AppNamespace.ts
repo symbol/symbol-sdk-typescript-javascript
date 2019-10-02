@@ -3,7 +3,8 @@ import { NamespaceId, NamespaceInfo, Alias, NamespaceName } from 'nem2-sdk'
 export class AppNamespace {
   aliasTarget: string
   // duration: number
-  // isLinked: boolean
+  aliasType: string
+  isLinked: boolean
   constructor(   public id: NamespaceId,
                  public hex: string,
                  public value: string,

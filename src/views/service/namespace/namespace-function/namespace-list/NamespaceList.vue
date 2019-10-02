@@ -19,47 +19,78 @@
       </div>
       <div class="namespace_list_table">
         <div class="table_head">
-        <span @click="getSortType(namespaceSortType.byName)" class="Namespace_name">
-          {{$t('namespace_name')}}
-          <Icon v-if="namespaceSortType.byName == currentSortType" class="active_sort_type" type="md-arrow-dropdown"/>
-        </span>
-          <span @click="getSortType(namespaceSortType.byDuration)" class="duration">
-          {{$t('duration')}}
-             <Icon v-if="namespaceSortType.byDuration == currentSortType" class="active_sort_type"
-                   type="md-arrow-dropdown"/>
-        </span>
-          <span @click="getSortType(namespaceSortType.byOwnerShip)" class="is_active">
-          {{$t('Control')}}
-             <Icon v-if="namespaceSortType.byOwnerShip == currentSortType" class="active_sort_type"
-                   type="md-arrow-dropdown"/>
-        </span>
-          <span @click="getSortType(namespaceSortType.byBindType)" class="link">
-          {{$t('link')}}
-             <Icon v-if="namespaceSortType.byBindType == currentSortType" class="active_sort_type"
-                   type="md-arrow-dropdown"/>
-        </span>
-          <span @click="getSortType(namespaceSortType.byBindInfo)" class="type">
-          {{$t('type')}}
-             <Icon v-if="namespaceSortType.byBindInfo == currentSortType" class="active_sort_type"
-                   type="md-arrow-dropdown"/>
-        </span>
+          <span
+            class="Namespace_name"
+            @click="namespaceSortType = namespaceSortTypes.byName;
+                sortDirection = !sortDirection"
+          >{{$t('namespace_name')}}
+            <Icon
+              v-if="namespaceSortType === namespaceSortTypes.byName"
+              class="active_sort_type"
+              type="md-arrow-dropdown"
+            />
+          </span>
+          <span
+            class="duration"
+            @click="namespaceSortType = namespaceSortTypes.byDuration;
+                sortDirection = !sortDirection"
+          >{{$t('duration')}}
+            <Icon
+              v-if="namespaceSortType === namespaceSortTypes.byDuration"
+              class="active_sort_type"
+              type="md-arrow-dropdown"
+            />
+          </span>
+          <!-- <span
+            class="is_active"
+            @click="namespaceSortType = namespaceSortTypes.byOwnerShip;
+                sortDirection = !sortDirection"
+          >{{$t('Control')}}
+            <Icon
+              v-if="namespaceSortType === namespaceSortTypes.byOwnerShip"
+              class="active_sort_type"
+              type="md-arrow-dropdown"
+            />
+          </span> -->
+          <span
+            class="link"
+            @click="namespaceSortType = namespaceSortTypes.byBindType;
+                sortDirection = !sortDirection"
+          >{{$t('link')}}
+            <Icon
+              v-if="namespaceSortType === namespaceSortTypes.byBindType"
+              class="active_sort_type"
+              type="md-arrow-dropdown"
+            />
+          </span>
+          <span 
+            @click="namespaceSortType = namespaceSortTypes.byBindType;
+                sortDirection = !sortDirection"
+            class="type"
+          >{{$t('type')}}
+             <Icon
+              v-if="namespaceSortType === namespaceSortTypes.byBindInfo"
+              class="active_sort_type"
+              type="md-arrow-dropdown"
+            />
+          </span>
           <span class="more"></span>
         </div>
         <Spin v-if="namespaceLoading" size="large" fix class="absolute"></Spin>
         <div class="table_body ">
           <div class=" radius" :key="`ns${index}`"
-               v-for="(n, index) in currentNamespaceListByPage">
+               v-for="(n, index) in paginatedNamespaceList">
             <div v-if="n" class="table_body_item">
               <span class="Namespace_name overflow_ellipsis">{{n.label}}</span>
               <span class="duration overflow_ellipsis">
               {{computeDuration(n) === StatusString.EXPIRED ? $t('overdue') : durationToTime(n.endHeight)}}
             </span>
-              <span class="is_active overflow_ellipsis">
-            <Icon v-if="n.isActive" type="md-checkmark"/>
-            <Icon v-else type="md-close"/>
-            </span>
-              <span class="link overflow_ellipsis">{{n.aliasType}}</span>
-              <span class="type overflow_ellipsis">{{n.aliasTarget}}</span>
+            <!-- <span class="is_active overflow_ellipsis">
+              <Icon v-if="n.isActive" type="md-checkmark"/>
+              <Icon v-else type="md-close"/>
+            </span> -->
+              <span class="link overflow_ellipsis">{{$t(getAliasType(n))}}</span>
+              <span class="type overflow_ellipsis">{{getAliasTarget(n)}}</span>
               <span class="more overflow_ellipsis">
             <Poptip class="poptip_container" placement="top-end">
               <i class="moreFn"></i>
@@ -90,14 +121,14 @@
           </span>
             </div>
           </div>
-          <div v-if="currentNamespaceListByPage.length == 0" class="noData">
+          <div v-if="namespaceList.length == 0" class="noData">
             <p>{{$t('no_data')}}</p>
           </div>
         </div>
       </div>
 
       <div class="page_list_container">
-        <Page class="page_list" :total="currentNamespaceList.length" :page-size="pageSize" @on-change="handleChange"></Page>
+        <Page class="page_list" :total="namespaceList.length" :page-size="pageSize" @on-change="handleChange"></Page>
       </div>
     </div>
 
