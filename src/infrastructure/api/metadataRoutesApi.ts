@@ -94,7 +94,7 @@ export class MetadataRoutesApi {
      * @param ordering Ordering criteria: * -id - Descending order by id. * id - Ascending order by id. 
      */
     public async getAccountMetadata (accountId: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: MetadataEntriesDTO;  }> {
-        const localVarPath = this.basePath + '/account/{accountId}/metadata'
+        const localVarPath = this.basePath + '/metadata/account/{accountId}'
             .replace('{' + 'accountId' + '}', encodeURIComponent(String(accountId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -163,7 +163,7 @@ export class MetadataRoutesApi {
      * @param key Metadata key.
      */
     public async getAccountMetadataByKey (accountId: string, key: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: MetadataEntriesDTO;  }> {
-        const localVarPath = this.basePath + '/account/{accountId}/metadata/{key}'
+        const localVarPath = this.basePath + '/metadata/account/{accountId}/key/{key}'
             .replace('{' + 'accountId' + '}', encodeURIComponent(String(accountId)))
             .replace('{' + 'key' + '}', encodeURIComponent(String(key)));
         let localVarQueryParameters: any = {};
@@ -227,7 +227,7 @@ export class MetadataRoutesApi {
      * @param publicKey Account public key
      */
     public async getAccountMetadataByKeyAndSender (accountId: string, key: string, publicKey: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: MetadataDTO;  }> {
-        const localVarPath = this.basePath + '/account/{accountId}/metadata/{key}/sender/{publicKey}'
+        const localVarPath = this.basePath + '/metadata/account/{accountId}/key/{key}/sender/{publicKey}'
             .replace('{' + 'accountId' + '}', encodeURIComponent(String(accountId)))
             .replace('{' + 'key' + '}', encodeURIComponent(String(key)))
             .replace('{' + 'publicKey' + '}', encodeURIComponent(String(publicKey)));
@@ -298,7 +298,7 @@ export class MetadataRoutesApi {
      * @param ordering Ordering criteria: * -id - Descending order by id. * id - Ascending order by id. 
      */
     public async getMosaicMetadata (mosaicId: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: MetadataEntriesDTO;  }> {
-        const localVarPath = this.basePath + '/mosaic/{mosaicId}/metadata'
+        const localVarPath = this.basePath + '/metadata/mosaic/{mosaicId}'
             .replace('{' + 'mosaicId' + '}', encodeURIComponent(String(mosaicId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -367,7 +367,7 @@ export class MetadataRoutesApi {
      * @param key Metadata key.
      */
     public async getMosaicMetadataByKey (mosaicId: string, key: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: MetadataEntriesDTO;  }> {
-        const localVarPath = this.basePath + '/mosaic/{mosaicId}/metadata/{key}'
+        const localVarPath = this.basePath + '/metadata/mosaic/{mosaicId}/key/{key}'
             .replace('{' + 'mosaicId' + '}', encodeURIComponent(String(mosaicId)))
             .replace('{' + 'key' + '}', encodeURIComponent(String(key)));
         let localVarQueryParameters: any = {};
@@ -431,7 +431,7 @@ export class MetadataRoutesApi {
      * @param publicKey Account public key
      */
     public async getMosaicMetadataByKeyAndSender (mosaicId: string, key: string, publicKey: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: MetadataDTO;  }> {
-        const localVarPath = this.basePath + '/mosaic/{mosaicId}/metadata/{key}/sender/{publicKey}'
+        const localVarPath = this.basePath + '/metadata/mosaic/{mosaicId}/key/{key}/sender/{publicKey}'
             .replace('{' + 'mosaicId' + '}', encodeURIComponent(String(mosaicId)))
             .replace('{' + 'key' + '}', encodeURIComponent(String(key)))
             .replace('{' + 'publicKey' + '}', encodeURIComponent(String(publicKey)));
@@ -502,7 +502,7 @@ export class MetadataRoutesApi {
      * @param ordering Ordering criteria: * -id - Descending order by id. * id - Ascending order by id. 
      */
     public async getNamespaceMetadata (namespaceId: string, pageSize?: number, id?: string, ordering?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: MetadataEntriesDTO;  }> {
-        const localVarPath = this.basePath + '/namespace/{namespaceId}/metadata'
+        const localVarPath = this.basePath + '/metadata/namespace/{namespaceId}'
             .replace('{' + 'namespaceId' + '}', encodeURIComponent(String(namespaceId)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -571,7 +571,7 @@ export class MetadataRoutesApi {
      * @param key Metadata key.
      */
     public async getNamespaceMetadataByKey (namespaceId: string, key: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: MetadataEntriesDTO;  }> {
-        const localVarPath = this.basePath + '/namespace/{namespaceId}/metadata/{key}'
+        const localVarPath = this.basePath + '/metadata/namespace/{namespaceId}/key/{key}'
             .replace('{' + 'namespaceId' + '}', encodeURIComponent(String(namespaceId)))
             .replace('{' + 'key' + '}', encodeURIComponent(String(key)));
         let localVarQueryParameters: any = {};
@@ -635,7 +635,7 @@ export class MetadataRoutesApi {
      * @param publicKey Account public key
      */
     public async getNamespaceMetadataByKeyAndSender (namespaceId: string, key: string, publicKey: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.ClientResponse; body: MetadataDTO;  }> {
-        const localVarPath = this.basePath + '/namespace/{namespaceId}/metadata/{key}/sender/{publicKey}'
+        const localVarPath = this.basePath + '/metadata/namespace/{namespaceId}/key/{key}/sender/{publicKey}'
             .replace('{' + 'namespaceId' + '}', encodeURIComponent(String(namespaceId)))
             .replace('{' + 'key' + '}', encodeURIComponent(String(key)))
             .replace('{' + 'publicKey' + '}', encodeURIComponent(String(publicKey)));

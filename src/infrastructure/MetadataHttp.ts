@@ -17,6 +17,7 @@
 import { ClientResponse } from 'http';
 import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
+import { Convert } from '../core/format/Convert';
 import { Address } from '../model/account/Address';
 import { Metadata } from '../model/metadata/Metadata';
 import { MetadataEntry } from '../model/metadata/MetadataEntry';
@@ -259,7 +260,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                 UInt64.fromHex(metadataEntry.scopedMetadataKey),
                 metadataEntry.metadataType.valueOf(),
                 metadataEntry.valueSize,
-                metadataEntry.value,
+                Convert.decodeHex(metadataEntry.value),
                 targetId,
             ),
         );
