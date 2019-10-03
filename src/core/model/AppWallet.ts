@@ -371,6 +371,35 @@ export class AppWallet {
         }
     }
 
+    async getAccountBalance(store: any): Promise<AppWallet> {
+        try {
+            const {node, currentXEM1, xemDivisibility} = store.getters
+
+            const accountInfo = await new AccountApiRxjs()
+                .getAccountInfo(this.address, node)
+                .toPromise()
+
+            if (!accountInfo.mosaics.length) {
+                this.balance = 0
+                return this
+            }
+
+            const xemIndex = accountInfo.mosaics
+                .findIndex(mosaic => mosaic.id.toHex() === currentXEM1)
+
+            if (xemIndex === -1)  {
+                this.balance = 0
+                return this
+            }
+
+            this.balance = accountInfo.mosaics[xemIndex].amount.compact() / Math.pow(10, xemDivisibility)
+            return this
+        } catch (error) {
+            this.balance = 0
+            return this
+        }
+    }
+
     signAndAnnounceNormal(password: Password, node: string, generationHash: string, transactionList: Array<any>, that: any): void {
         try {
             const account = this.getAccount(password)

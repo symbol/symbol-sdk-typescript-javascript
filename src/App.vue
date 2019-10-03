@@ -26,7 +26,7 @@
     import {initMosaic, mosaicsAmountViewFromAddress, AppMosaics} from '@/core/services/mosaics'
     import {getMarketOpenPrice} from '@/core/services/marketData.ts'
     import {setTransactionList} from '@/core/services/transactions'
-    import {getNamespacesFromAddress} from '@/core/services'
+    import {getNamespacesFromAddress, setWalletsBalances} from '@/core/services'
     import {AppMosaic, AppWallet, AppInfo, StoreAccount} from '@/core/model'
     import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
     import DisabledUiOverlay from '@/common/vue/disabled-ui-overlay/DisabledUiOverlay.vue';
@@ -98,19 +98,30 @@
             return this.activeAccount.transactionList
         }
 
-        get accountName() {
+        get accountName(): string {
             return this.activeAccount.accountName
+        }
+
+        get accountMap() {
+            return localRead('accountMap') ? JSON.parse(localRead('accountMap')) : null
         }
 
         // @TODO: move out from there
         async setWalletsList() {
-            const {accountName} = this
-            if (!accountName) return
-            const accountMapFromStorage: any = localRead('accountMap') !== '' ? JSON.parse(localRead('accountMap')) : false
-            if (!accountMapFromStorage || !getObjectLength(accountMapFromStorage)) return
-            const wallets = getTopValueInObject(accountMapFromStorage)['wallets']
-            AppWallet.switchWallet(wallets[0].address, wallets, this.$store)
+            try {
+                // @TODO: quick fix, to review when refactoring wallets
+                const {accountName, accountMap} = this
+                if (!accountMap) return
+                const currentAccountName = accountName && accountName !== ''
+                    ? accountName : getTopValueInObject(accountMap)['accountName']
 
+                if (!currentAccountName || currentAccountName === '') return
+                await this.$store.commit('SET_ACCOUNT_NAME', currentAccountName)
+                const wallets = getTopValueInObject(accountMap)['wallets']
+                AppWallet.switchWallet(wallets[0].address, wallets, this.$store)
+            } catch (error) {
+                console.error(error)
+            }
         }
 
         async onWalletChange(newWallet) {
@@ -231,17 +242,20 @@
             }
         }
 
-        /**
-         * Add namespaces and divisibility to transactions and balances
-         */
         async mounted() {
-            this.checkIfWalletExist()
-            const {accountName} = this
-            // need init at start
+            const {accountName, node} = this
+            this.checkIfWalletExist() // @TODO: move out when refactoring wallets
+
+            // @TODO: refactor
+            await Promise.all([
+                getNetworkGenerationHash(node, this),
+                getCurrentBlockHeight(node, this.$store),
+                getCurrentNetworkMosaic(node, this.$store),
+            ])
+
             await this.setWalletsList()
-            /**
-             * On app initialisation
-             */
+            setWalletsBalances(this.$store)
+
             await Promise.all([
                 this.$store.commit('SET_TRANSACTIONS_LOADING', true),
                 this.$store.commit('SET_BALANCE_LOADING', true),
@@ -250,16 +264,8 @@
             ])
 
             this.$Notice.config({duration: 4})
-            const {node} = this
 
             getMarketOpenPrice(this)
-
-            // @TODO: refactor
-            await Promise.all([
-                getNetworkGenerationHash(node, this),
-                getCurrentBlockHeight(node, this.$store),
-                getCurrentNetworkMosaic(node, this.$store),
-            ])
 
             if (this.wallet && this.wallet.address) {
                 this.onWalletChange(this.wallet)
@@ -290,9 +296,18 @@
                 if (!newValue) return
 
                 if (oldValue !== newValue) {
+                    setWalletsBalances(this.$store)
                     this.onActiveMultisigAccountChange(newValue)
                     this.getMultisigAccountMultisigAccountInfo(newValue)
                 }
+            })
+
+            this.$watchAsObservable('accountName')
+                .pipe(
+                    throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
+                ).subscribe(({newValue, oldValue}) => {
+                if (!newValue) return
+                if (oldValue !== newValue) setWalletsBalances(this.$store)
             })
 
             this.$store.subscribe(async (mutation, state) => {

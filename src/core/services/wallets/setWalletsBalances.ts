@@ -1,0 +1,29 @@
+import {AppWallet} from '@/core/model'
+import {localSave, localRead} from '@/core/utils'
+
+export const setWalletsBalances = async (store: any): Promise<void> => {
+    try {
+        const {walletList, wallet, accountName} = store.getters
+        const appWalletsWithBalance = await Promise.all(
+            [...walletList].map(wallet => new AppWallet(wallet).getAccountBalance(store))
+        )
+
+        const activeWalletWithBalance = appWalletsWithBalance.find(w => w.address === wallet.address)
+        
+        if (activeWalletWithBalance === undefined) {
+            throw new Error('an active wallet was not found in the wallet list')
+        }
+
+        store.commit('SET_WALLET_LIST', appWalletsWithBalance)
+        store.commit('SET_WALLET', activeWalletWithBalance)
+        
+        // @TODO: make a standard method when refactoring wallets
+        const localList = localRead('accountMap')
+        const listToUpdate = localList === '' ? {} : JSON.parse(localList)
+        if (!listToUpdate[accountName]) throw new Error
+        listToUpdate[accountName].wallets = appWalletsWithBalance
+        localSave('accountMap', JSON.stringify(listToUpdate))
+    } catch (error) {
+        console.error(error)
+    }
+}

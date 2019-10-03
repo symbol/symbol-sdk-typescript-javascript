@@ -49,6 +49,9 @@ export default {
         },
         transactions(state) {
             return state.transactionList
+        },
+        accountName(state) {
+            return state.accountName
         }
     },
     mutations: {

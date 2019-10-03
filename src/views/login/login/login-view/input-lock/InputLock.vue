@@ -28,7 +28,7 @@
 
     <form @submit.prevent="validateForm('input-lock')">
 
-      <Select v-model="formItem.currentAccountName"
+      <Select v-model="formItems.currentAccountName"
               class="select_wallet">
         <Option v-for="walletName in accountList" :value="walletName.value" :key="walletName.value">{{
           walletName.label}}
@@ -39,7 +39,7 @@
       <div class="bottom_input">
         <input
                 data-vv-name="password"
-                v-model="formItem.password"
+                v-model="formItems.password"
                 type="password"
                 :placeholder="$t('account_password')"
                 v-validate="passwordFieldValidation"

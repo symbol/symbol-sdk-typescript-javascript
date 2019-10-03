@@ -25,6 +25,9 @@ export default {
         chainStatus(state) {
             return state.chainStatus
         },
+        walletList(state) {
+            return state.walletList
+        },
     },
     mutations: {
         RESET_APP(state: AppInfo) {

@@ -25,7 +25,7 @@ export class InputLockTs extends Vue {
     currentText: string = ''
     isShowClearCache: boolean = false
     walletMap: any = {}
-    formItem = {
+    formItems = {
         currentAccountName: '',
         password: ''
     }
@@ -57,7 +57,7 @@ export class InputLockTs extends Vue {
 
     jumpToDashBoard() {
         const {accountMap} = this
-        const {currentAccountName} = this.formItem
+        const {currentAccountName} = this.formItems
         if (getObjectLength(currentAccountName) == 0 || !accountMap[currentAccountName].seed) {
             this.$router.push('initSeed')
             return
@@ -76,7 +76,7 @@ export class InputLockTs extends Vue {
     }
 
     submit() {
-        const {currentAccountName} = this.formItem
+        const {currentAccountName} = this.formItems
         const {accountMap} = this
         const that = this
         if (this.errors.items.length > 0) {
@@ -87,7 +87,7 @@ export class InputLockTs extends Vue {
             this.showErrorNotice(Message.ACCOUNT_NAME_INPUT_ERROR)
             return
         }
-        this.$store.commit('SET_ACCOUNT_NAME', currentAccountName)
+
         // no seed
         if (!accountMap[currentAccountName].seed) {
             this.$router.push({
@@ -117,9 +117,11 @@ export class InputLockTs extends Vue {
     }
 
 
-    @Watch('formItem.currentAccountName')
-    onWalletChange() {
-        const {currentAccountName} = this.formItem
+    @Watch('formItems.currentAccountName')
+    onWalletChange(newVal, oldVal) {
+        if (newVal === oldVal) return
+        const {currentAccountName} = this.formItems
+        this.$store.commit('SET_ACCOUNT_NAME', currentAccountName)
         const {accountMap} = this
         if (!accountMap[currentAccountName]) return
         this.cipher = accountMap[currentAccountName].password
@@ -127,15 +129,10 @@ export class InputLockTs extends Vue {
     }
 
 
-    created() {
+    mounted() {
         const {accountMap} = this
-        this.formItem.currentAccountName = getTopValueInObject(accountMap)['accountName']
-    }
-
-    clearCache() {
-        // localRead remove
-        // localRemove('lock')
-        // localRemove('wallets')
-        // localRemove('loglevel:webpack-dev-server')
+        const accountName = getTopValueInObject(accountMap)['accountName']
+        this.formItems.currentAccountName = accountName
+        if (accountName) this.$store.commit('SET_ACCOUNT_NAME', accountName)
     }
 }
