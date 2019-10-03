@@ -101,14 +101,15 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                 map((response: { response: ClientResponse; body: MosaicAddressRestrictionDTO; }) => {
                     const payload = response.body.mosaicRestrictionEntry;
                     const restirctionItems = new Map<string, string>();
+                    payload.restrictions.forEach((restriction) => {
+                        restirctionItems.set(restriction.key, restriction.value);
+                    });
                     return new MosaicAddressRestriction(
                         payload.compositeHash,
                         payload.entryType,
                         new MosaicId(payload.mosaicId),
                         Address.createFromEncoded(payload.targetAddress),
-                        payload.restrictions.map((restriction) => {
-                            return restirctionItems.set(restriction.key, restriction.value);
-                        }),
+                        restirctionItems,
                     );
                 }),
                 catchError((error) =>  throwError(error)),
@@ -132,14 +133,15 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                     const mosaicAddressRestrictionsDTO = response.body;
                     return mosaicAddressRestrictionsDTO.map((payload) => {
                         const restirctionItems = new Map<string, string>();
+                        payload.mosaicRestrictionEntry.restrictions.forEach((restriction) => {
+                            restirctionItems.set(restriction.key, restriction.value);
+                        });
                         return new MosaicAddressRestriction(
                             payload.mosaicRestrictionEntry.compositeHash,
                             payload.mosaicRestrictionEntry.entryType,
                             new MosaicId(payload.mosaicRestrictionEntry.mosaicId),
                             Address.createFromEncoded(payload.mosaicRestrictionEntry.targetAddress),
-                            payload.mosaicRestrictionEntry.restrictions.map((restriction) => {
-                                return restirctionItems.set(restriction.key, restriction.value);
-                            }),
+                            restirctionItems,
                         );
                     });
                 }),
@@ -159,18 +161,18 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                 map((response: { response: ClientResponse; body: MosaicGlobalRestrictionDTO; }) => {
                     const payload = response.body.mosaicRestrictionEntry;
                     const restirctionItems = new Map<string, MosaicGlobalRestrictionItem>();
+                    payload.restrictions.forEach((restriction) =>
+                        restirctionItems.set(restriction.key,
+                                        new MosaicGlobalRestrictionItem(
+                                            new MosaicId(restriction.restriction.referenceMosaicId),
+                                            restriction.restriction.restrictionValue,
+                                            restriction.restriction.restrictionType,
+                    )));
                     return new MosaicGlobalRestriction(
                         payload.compositeHash,
                         payload.entryType.valueOf(),
                         new MosaicId(payload.mosaicId),
-                        payload.restrictions.map((restriction) => {
-                            return restirctionItems.set(restriction.key,
-                                                        new MosaicGlobalRestrictionItem(
-                                                            new MosaicId(restriction.restriction.referenceMosaicId),
-                                                            restriction.restriction.restrictionValue,
-                                                            restriction.restriction.restrictionType,
-                                                        ));
-                        }),
+                        restirctionItems,
                     );
                 }),
                 catchError((error) =>  throwError(error)),
@@ -193,18 +195,18 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                     const mosaicGlobalRestrictionsDTO = response.body;
                     return mosaicGlobalRestrictionsDTO.map((payload) => {
                         const restirctionItems = new Map<string, MosaicGlobalRestrictionItem>();
+                        payload.mosaicRestrictionEntry.restrictions.forEach((restriction) =>
+                            restirctionItems.set(restriction.key,
+                                            new MosaicGlobalRestrictionItem(
+                                                new MosaicId(restriction.restriction.referenceMosaicId),
+                                                restriction.restriction.restrictionValue,
+                                                restriction.restriction.restrictionType,
+                        )));
                         return new MosaicGlobalRestriction(
                             payload.mosaicRestrictionEntry.compositeHash,
                             payload.mosaicRestrictionEntry.entryType.valueOf(),
                             new MosaicId(payload.mosaicRestrictionEntry.mosaicId),
-                            payload.mosaicRestrictionEntry.restrictions.map((restriction) => {
-                                return restirctionItems.set(restriction.key,
-                                    new MosaicGlobalRestrictionItem(
-                                        new MosaicId(restriction.restriction.referenceMosaicId),
-                                        restriction.restriction.restrictionValue,
-                                        restriction.restriction.restrictionType,
-                                    ));
-                            }),
+                            restirctionItems,
                         );
                     });
                 }),

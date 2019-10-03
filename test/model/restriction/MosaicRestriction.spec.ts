@@ -49,18 +49,16 @@ describe('MosaicRestrictions', () => {
             mosaicAddressRestrictionDTO.entryType,
             new MosaicId(mosaicAddressRestrictionDTO.mosaicId),
             Address.createFromEncoded(mosaicAddressRestrictionDTO.targetAddress),
-            mosaicAddressRestrictionDTO.restrictions.map((item) => {
-                const keyValue = new Map<string, string>();
-                return keyValue.set(item.key, item.value);
-            }),
+            new Map<string, string>().set(mosaicAddressRestrictionDTO.restrictions[0].key,
+                                          mosaicAddressRestrictionDTO.restrictions[0].value),
         );
 
         expect(mosaicAddressRestriction.compositeHash).to.be.equal(hash);
         expect(mosaicAddressRestriction.entryType).to.be.equal(MosaicRestrictionEntryType.ADDRESS);
         expect(mosaicAddressRestriction.targetAddress.plain())
             .to.be.equal(Address.createFromEncoded('9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142').plain());
-        expect(mosaicAddressRestriction.restrictions.length).to.be.equal(1);
-        expect(mosaicAddressRestriction.restrictions[0].get('testKey')).to.not.be.equal(undefined);
+        expect(mosaicAddressRestriction.restrictions.size).to.be.equal(1);
+        expect(mosaicAddressRestriction.restrictions.get('testKey')).to.not.be.equal(undefined);
     });
 
     it('should createComplete an MosaicGlobalRestrictionItem object', () => {
@@ -100,24 +98,23 @@ describe('MosaicRestrictions', () => {
             mosaicGlobalRestrictionDTO.compositeHash,
             mosaicGlobalRestrictionDTO.entryType,
             new MosaicId(mosaicGlobalRestrictionDTO.mosaicId),
-            mosaicGlobalRestrictionDTO.restrictions.map((item) => {
-                const keyValue = new Map<string, MosaicGlobalRestrictionItem>();
-                return keyValue.set(item.key,
-                                    new MosaicGlobalRestrictionItem(
-                                        new MosaicId(item.restriction.referenceMosaicId),
-                                        item.restriction.restrictionValue,
-                                        item.restriction.restrictionType,
-                                    ));
-            }),
+            new Map<string, MosaicGlobalRestrictionItem>().set(
+                mosaicGlobalRestrictionDTO.restrictions[0].key,
+                new MosaicGlobalRestrictionItem(
+                    new MosaicId(mosaicGlobalRestrictionDTO.restrictions[0].restriction.referenceMosaicId),
+                    mosaicGlobalRestrictionDTO.restrictions[0].restriction.restrictionValue,
+                    mosaicGlobalRestrictionDTO.restrictions[0].restriction.restrictionType,
+                ),
+            ),
         );
 
         expect(mosaicGlobalRestriction.compositeHash).to.be.equal(hash);
         expect(mosaicGlobalRestriction.entryType).to.be.equal(MosaicRestrictionEntryType.ADDRESS);
         expect(mosaicGlobalRestriction.mosaicId.toHex()).to.be.equal('85BBEA6CC462B244');
-        expect(mosaicGlobalRestriction.restrictions.length).to.be.equal(1);
-        expect(mosaicGlobalRestriction.restrictions[0].get('testKey')).to.not.be.equal(undefined);
-        expect(mosaicGlobalRestriction.restrictions[0].get('testKey')!.referenceMosaicId.toHex()).to.be.equal('85BBEA6CC462B244');
-        expect(mosaicGlobalRestriction.restrictions[0].get('testKey')!.restrictionValue).to.be.equal('123');
-        expect(mosaicGlobalRestriction.restrictions[0].get('testKey')!.restrictionType).to.be.equal(MosaicRestrictionType.EQ);
+        expect(mosaicGlobalRestriction.restrictions.size).to.be.equal(1);
+        expect(mosaicGlobalRestriction.restrictions.get('testKey')).to.not.be.equal(undefined);
+        expect(mosaicGlobalRestriction.restrictions.get('testKey')!.referenceMosaicId.toHex()).to.be.equal('85BBEA6CC462B244');
+        expect(mosaicGlobalRestriction.restrictions.get('testKey')!.restrictionValue).to.be.equal('123');
+        expect(mosaicGlobalRestriction.restrictions.get('testKey')!.restrictionType).to.be.equal(MosaicRestrictionType.EQ);
     });
 });

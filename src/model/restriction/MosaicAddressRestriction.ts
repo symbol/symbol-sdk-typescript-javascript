@@ -50,7 +50,7 @@ export class MosaicAddressRestriction {
                 /**
                  * Mosaic restriction items
                  */
-                public readonly restrictions: Array<Map<string, string>>) {
+                public readonly restrictions: Map<string, string>) {
 
     }
 }
