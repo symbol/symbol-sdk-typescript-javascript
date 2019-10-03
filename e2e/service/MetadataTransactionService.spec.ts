@@ -1,4 +1,5 @@
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
+import { Convert } from '../../src/core/format/Convert';
 import { Listener } from '../../src/infrastructure/Listener';
 import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
@@ -225,14 +226,14 @@ describe('MetadataTransactionService', () => {
                     MetadataType.Mosaic,
                     targetAccount.publicAccount,
                     key.toHex(),
-                    newValue + '1',
+                    newValue + 'delta',
                     targetAccount.publicAccount,
                     mosaicId,
                 ).subscribe((transaction: MosaicMetadataTransaction) => {
                     expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
                     expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                    expect(transaction.valueSizeDelta).to.be.equal(1);
-                    expect(transaction.value).to.be.equal(newValue + '1');
+                    expect(transaction.valueSizeDelta).to.be.equal(5);
+                    expect(transaction.value).to.be.equal(newValue + 'delta');
                     expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
                     expect(transaction.targetMosaicId.toHex()).to.be.equal(mosaicId.toHex());
                     done();
@@ -247,17 +248,58 @@ describe('MetadataTransactionService', () => {
                     MetadataType.Namespace,
                     targetAccount.publicAccount,
                     key.toHex(),
-                    newValue + '1',
+                    newValue + 'delta',
                     targetAccount.publicAccount,
                     namespaceId,
                 ).subscribe((transaction: NamespaceMetadataTransaction) => {
                     expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
                     expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                    expect(transaction.valueSizeDelta).to.be.equal(1);
-                    expect(transaction.value).to.be.equal(newValue + '1');
+                    expect(transaction.valueSizeDelta).to.be.equal(5);
+                    expect(transaction.value).to.be.equal(newValue + 'delta');
                     expect(transaction.targetPublicKey).to.be.equal(targetAccount.publicKey);
                     expect(transaction.targetNamespaceId.toHex()).to.be.equal(namespaceId.toHex());
                     done();
+            });
+        });
+    });
+
+    describe('Announce transaction through service', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('should create MosaicMetadataTransaction and announce', (done) => {
+            const metaDataService = new MetadataTransactionService(metadataHttp);
+
+            return metaDataService.createMetadataTransaction(
+                    deadline,
+                    NetworkType.MIJIN_TEST,
+                    MetadataType.Mosaic,
+                    targetAccount.publicAccount,
+                    key.toHex(),
+                    newValue + 'delta',
+                    targetAccount.publicAccount,
+                    mosaicId,
+                ).subscribe((transaction: MosaicMetadataTransaction) => {
+                    const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        [transaction.toAggregate(targetAccount.publicAccount)],
+                        NetworkType.MIJIN_TEST,
+                        [],
+                    );
+                    const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
+                    listener.confirmed(targetAccount.address).subscribe(() => {
+                        done();
+                    });
+                    listener.status(targetAccount.address).subscribe((error) => {
+                        console.log('Error:', error);
+                        assert(false);
+                        done();
+                    });
+                    transactionHttp.announce(signedTransaction);
             });
         });
     });
