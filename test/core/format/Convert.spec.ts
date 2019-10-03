@@ -223,7 +223,7 @@ describe('convert', () => {
             const actual = convert.utf8ToHex('test words |@#¢∞¬÷“”≠[]}{–');
 
             // Assert:
-            expect(actual).to.equal('7465737420776f726473207c4023c2a2e2889ec2acc3b7e2809ce2809de289a05b5d7d7be28093');
+            expect(actual).to.equal('7465737420776F726473207C4023C2A2E2889EC2ACC3B7E2809CE2809DE289A05B5D7D7BE28093');
         });
 
         it('utf8 text to hex', () => {
@@ -231,7 +231,7 @@ describe('convert', () => {
             const actual = convert.utf8ToHex('先秦兩漢');
 
             // Assert:
-            expect(actual).to.equal('e58588e7a7a6e585a9e6bca2');
+            expect(actual).to.equal('E58588E7A7A6E585A9E6BCA2');
         });
 
         it('utf8 text to hex with control char', () => {
@@ -239,7 +239,7 @@ describe('convert', () => {
             const actual = convert.utf8ToHex(String.fromCodePoint(0x0f) + ' Hello World!');
 
             // Assert:
-            expect(actual).to.equal('0f2048656c6c6f20576f726c6421');
+            expect(actual).to.equal('0F2048656C6C6F20576F726C6421');
         });
     });
 

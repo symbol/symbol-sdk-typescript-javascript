@@ -325,7 +325,7 @@ export class Crypto {
         const salt = new Uint8Array(binPayload.buffer, 0, 32);
         const iv = new Uint8Array(binPayload.buffer, 32, 16);
         const decoded = Crypto._decode(recipientPrivate, senderPublic, payloadBuffer, iv, salt, signSchema);
-        return decoded;
+        return decoded.toUpperCase();
     }
 
     /**

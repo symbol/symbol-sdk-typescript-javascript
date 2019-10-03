@@ -39,6 +39,7 @@ describe('MetadataTransactionService', () => {
     let metadataTransactionService: MetadataTransactionService;
     const key = '85BBEA6CC462B244';
     const value = 'TEST';
+    const deltaValue = 'dalta';
     const targetIdHex = '941299B2B7E1291C';
 
     before(() => {
@@ -64,13 +65,13 @@ describe('MetadataTransactionService', () => {
                                                              MetadataType.Account,
                                                              account.publicAccount,
                                                              key,
-                                                             value + '1',
+                                                             value + deltaValue,
                                                              account.publicAccount)
             .subscribe((transaction: AccountMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA_TRANSACTION);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key);
-                expect(transaction.value).to.be.equal(value + '1');
-                expect(transaction.valueSizeDelta).to.be.equal(1);
+                expect(transaction.value).to.be.equal(value + deltaValue);
+                expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
                 expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
                 done();
         });
@@ -82,15 +83,15 @@ describe('MetadataTransactionService', () => {
                                                              MetadataType.Mosaic,
                                                              account.publicAccount,
                                                              key,
-                                                             value + '1',
+                                                             value + deltaValue,
                                                              account.publicAccount,
                                                              new MosaicId(targetIdHex))
             .subscribe((transaction: MosaicMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key);
-                expect(transaction.value).to.be.equal(value + '1');
+                expect(transaction.value).to.be.equal(value + deltaValue);
                 expect(transaction.targetMosaicId.toHex()).to.be.equal(targetIdHex);
-                expect(transaction.valueSizeDelta).to.be.equal(1);
+                expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
                 expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
                 done();
         });
@@ -102,15 +103,15 @@ describe('MetadataTransactionService', () => {
                                                              MetadataType.Namespace,
                                                              account.publicAccount,
                                                              key,
-                                                             value + '1',
+                                                             value + deltaValue,
                                                              account.publicAccount,
                                                              NamespaceId.createFromEncoded(targetIdHex))
             .subscribe((transaction: NamespaceMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key);
-                expect(transaction.value).to.be.equal(value + '1');
+                expect(transaction.value).to.be.equal(value + deltaValue);
                 expect(transaction.targetNamespaceId.toHex()).to.be.equal(targetIdHex);
-                expect(transaction.valueSizeDelta).to.be.equal(1);
+                expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
                 expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
                 done();
         });
@@ -123,7 +124,7 @@ describe('MetadataTransactionService', () => {
                                                                 99,
                                                                 account.publicAccount,
                                                                 key,
-                                                                value + '1',
+                                                                value + deltaValue,
                                                                 account.publicAccount);
         }).to.throw(Error, 'Metadata type invalid');
     });
@@ -135,7 +136,7 @@ describe('MetadataTransactionService', () => {
                                                                 MetadataType.Mosaic,
                                                                 account.publicAccount,
                                                                 key,
-                                                                value + '1',
+                                                                value + deltaValue,
                                                                 account.publicAccount);
         }).to.throw(Error, 'TargetId for MosaicMetadataTransaction is invalid');
     });
@@ -147,7 +148,7 @@ describe('MetadataTransactionService', () => {
                                                                 MetadataType.Namespace,
                                                                 account.publicAccount,
                                                                 key,
-                                                                value + '1',
+                                                                value + deltaValue,
                                                                 account.publicAccount);
         }).to.throw(Error, 'TargetId for NamespaceMetadataTransaction is invalid');
     });
