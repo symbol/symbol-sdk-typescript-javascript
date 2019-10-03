@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { AccountRestrictionModificationAction } from '../restriction/AccountRestrictionModificationAction';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
+import { AccountRestrictionModificationAction } from '../restriction/AccountRestrictionModificationAction';
 import { TransactionType } from './TransactionType';
 
 export class AccountRestrictionModification<T> {

@@ -127,7 +127,10 @@ export class DiagnosticRoutesApi {
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {
-                            reject({ response: response, body: body });
+                            reject({ response: {
+                                                 statusCode: response.statusCode,
+                                                 statusMessage: response.statusMessage,
+                                               }, body });
                         }
                     }
                 });
@@ -176,7 +179,10 @@ export class DiagnosticRoutesApi {
                         if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                             resolve({ response: response, body: body });
                         } else {
-                            reject({ response: response, body: body });
+                            reject({ response: {
+                                                 statusCode: response.statusCode,
+                                                 statusMessage: response.statusMessage,
+                                               }, body });
                         }
                     }
                 });

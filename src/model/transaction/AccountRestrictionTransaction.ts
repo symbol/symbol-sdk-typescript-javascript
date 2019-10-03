@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { AccountRestrictionType } from '../restriction/AccountRestrictionType';
 import { NetworkType } from '../blockchain/NetworkType';
+import { AccountRestrictionType } from '../restriction/AccountRestrictionType';
 import { UInt64 } from '../UInt64';
 import { AccountAddressRestrictionTransaction } from './AccountAddressRestrictionTransaction';
 import { AccountMosaicRestrictionTransaction } from './AccountMosaicRestrictionTransaction';
@@ -72,7 +72,7 @@ export class AccountRestrictionTransaction {
         networkType: NetworkType,
         maxFee: UInt64 = new UInt64([0, 0]),
     ): AccountMosaicRestrictionTransaction {
-        if (![AccountRestrictionType.AllowMosaic,AccountRestrictionType.BlockMosaic].includes(restrictionType)) {
+        if (![AccountRestrictionType.AllowMosaic, AccountRestrictionType.BlockMosaic].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
         return AccountMosaicRestrictionTransaction.create(
