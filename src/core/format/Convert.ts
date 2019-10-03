@@ -171,7 +171,7 @@ export class Convert {
         for (let i = 0; i < rawString.length; i++) {
             result += rawString.charCodeAt(i).toString(16).padStart(2, '0');
         }
-        return result;
+        return result.toUpperCase();
     }
 
     /**
@@ -210,5 +210,25 @@ export class Convert {
         } catch (e) {
             return str;
         }
+    }
+
+    /**
+     * Generate xor for two byte arrays and return in hex string
+     * @param value1 - Value 1 bytes
+     * @param value2  - Value 2 bytes
+     * @return {string} - delta value in Hex
+     */
+    public static xor(value1: Uint8Array, value2: Uint8Array): string {
+        const buffer1 = Buffer.from(value1.buffer as ArrayBuffer);
+        const buffer2 = Buffer.from(value2.buffer as ArrayBuffer);
+        const length = Math.max(buffer1.length, buffer2.length);
+        const delta: number[] = [];
+        for (let i = 0; i < length; ++i) {
+            const xorBuffer = buffer1[i] ^ buffer2[i];
+            if (xorBuffer !== 0) {
+                delta.push(xorBuffer);
+            }
+        }
+        return Convert.uint8ToHex(Uint8Array.from(delta));
     }
 }
