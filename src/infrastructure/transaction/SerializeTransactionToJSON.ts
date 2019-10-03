@@ -191,7 +191,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 scopedMetadataKey: (transaction as AccountMetadataTransaction).scopedMetadataKey.toHex(),
                 valueSizeDelta: (transaction as AccountMetadataTransaction).valueSizeDelta,
                 valueSize: (transaction as AccountMetadataTransaction).value.length,
-                value: (transaction as AccountMetadataTransaction).value,
+                value: Convert.utf8ToHex((transaction as AccountMetadataTransaction).value),
 
             };
         case TransactionType.MOSAIC_METADATA_TRANSACTION:
@@ -201,7 +201,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 valueSizeDelta: (transaction as MosaicMetadataTransaction).valueSizeDelta,
                 targetMosaicId: (transaction as MosaicMetadataTransaction).targetMosaicId.id.toHex(),
                 valueSize: (transaction as MosaicMetadataTransaction).value.length,
-                value: (transaction as MosaicMetadataTransaction).value,
+                value: Convert.utf8ToHex((transaction as MosaicMetadataTransaction).value),
 
             };
         case TransactionType.NAMESPACE_METADATA_TRANSACTION:
@@ -211,7 +211,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
                 valueSizeDelta: (transaction as NamespaceMetadataTransaction).valueSizeDelta,
                 targetNamespaceId: (transaction as NamespaceMetadataTransaction).targetNamespaceId.id.toHex(),
                 valueSize: (transaction as NamespaceMetadataTransaction).value.length,
-                value: (transaction as NamespaceMetadataTransaction).value,
+                value: Convert.utf8ToHex((transaction as NamespaceMetadataTransaction).value),
 
             };
         default:

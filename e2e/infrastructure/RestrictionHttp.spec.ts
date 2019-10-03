@@ -54,6 +54,7 @@ describe('RestrictionHttp', () => {
     let restrictionHttp: RestrictionHttp;
     let transactionHttp: TransactionHttp;
     let mosaicId: MosaicId;
+    let referenceMosaicId: MosaicId;
     let generationHash: string;
     let config;
 
@@ -122,6 +123,40 @@ describe('RestrictionHttp', () => {
         });
     });
 
+    describe('MosaicDefinitionTransaction', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('standalone', (done) => {
+            const nonce = MosaicNonce.createRandom();
+            referenceMosaicId = MosaicId.createFromNonce(nonce, account.publicAccount);
+            const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+                Deadline.create(),
+                nonce,
+                referenceMosaicId,
+                MosaicFlags.create( true, true, true),
+                3,
+                UInt64.fromUint(1000),
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = mosaicDefinitionTransaction.signWith(account, generationHash);
+            listener.confirmed(account.address).subscribe(() => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
     describe('Setup Test AccountAddressRestriction', () => {
         let listener: Listener;
         before (() => {
@@ -156,7 +191,42 @@ describe('RestrictionHttp', () => {
         });
     });
 
-    describe('MosaicGlobalRestrictionTransaction', () => {
+    describe('MosaicGlobalRestrictionTransaction - Reference', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('standalone', (done) => {
+            const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
+                Deadline.create(),
+                referenceMosaicId,
+                UInt64.fromUint(60641),
+                UInt64.fromUint(0),
+                MosaicRestrictionType.NONE,
+                UInt64.fromUint(0),
+                MosaicRestrictionType.GE,
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
+
+            listener.confirmed(account.address).subscribe(() => {
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
+    describe('MosaicGlobalRestrictionTransaction - with referenceMosaicId', () => {
         let listener: Listener;
         before (() => {
             listener = new Listener(config.apiUrl);
@@ -176,6 +246,8 @@ describe('RestrictionHttp', () => {
                 UInt64.fromUint(0),
                 MosaicRestrictionType.GE,
                 NetworkType.MIJIN_TEST,
+                // TODO:
+                // referenceMosaicId,
             );
             const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
 
@@ -262,7 +334,7 @@ describe('RestrictionHttp', () => {
                     deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.ADDRESS);
                     deepEqual(mosaicRestriction.targetAddress.plain(), account3.address.plain());
-                    deepEqual(mosaicRestriction.restrictions[0].get(UInt64.fromUint(60641).toHex()), UInt64.fromUint(2).toString());
+                    deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
                     done();
                 });
             }, 1000);
@@ -276,7 +348,7 @@ describe('RestrictionHttp', () => {
                     deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.ADDRESS);
                     deepEqual(mosaicRestriction[0].targetAddress.plain(), account3.address.plain());
-                    deepEqual(mosaicRestriction[0].restrictions[0].get(UInt64.fromUint(60641).toHex()), UInt64.fromUint(2).toString());
+                    deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString()), UInt64.fromUint(2).toString());
                     done();
                 });
             }, 1000);
@@ -289,11 +361,11 @@ describe('RestrictionHttp', () => {
                 restrictionHttp.getMosaicGlobalRestriction(mosaicId).subscribe((mosaicRestriction) => {
                     deepEqual(mosaicRestriction.mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction.entryType, MosaicRestrictionEntryType.GLOBAL);
-                    deepEqual(mosaicRestriction.restrictions[0].get(UInt64.fromUint(60641).toHex())!.referenceMosaicId.toHex(),
+                    deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
                         new MosaicId(UInt64.fromUint(0).toHex()).toHex());
-                    deepEqual(mosaicRestriction.restrictions[0].get(UInt64.fromUint(60641).toHex())!.restrictionType,
+                    deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
                         MosaicRestrictionType.GE);
-                    deepEqual(mosaicRestriction.restrictions[0].get(UInt64.fromUint(60641).toHex())!.restrictionValue.toString(),
+                    deepEqual(mosaicRestriction.restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
                         UInt64.fromUint(0).toString());
                     done();
                 });
@@ -307,11 +379,11 @@ describe('RestrictionHttp', () => {
                 restrictionHttp.getMosaicGlobalRestrictions([mosaicId]).subscribe((mosaicRestriction) => {
                     deepEqual(mosaicRestriction[0].mosaicId.toHex(), mosaicId.toHex());
                     deepEqual(mosaicRestriction[0].entryType, MosaicRestrictionEntryType.GLOBAL);
-                    deepEqual(mosaicRestriction[0].restrictions[0].get(UInt64.fromUint(60641).toHex())!.referenceMosaicId.toHex(),
+                    deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.referenceMosaicId.toHex(),
                         new MosaicId(UInt64.fromUint(0).toHex()).toHex());
-                    deepEqual(mosaicRestriction[0].restrictions[0].get(UInt64.fromUint(60641).toHex())!.restrictionType,
+                    deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionType,
                         MosaicRestrictionType.GE);
-                    deepEqual(mosaicRestriction[0].restrictions[0].get(UInt64.fromUint(60641).toHex())!.restrictionValue.toString(),
+                    deepEqual(mosaicRestriction[0].restrictions.get(UInt64.fromUint(60641).toString())!.restrictionValue.toString(),
                         UInt64.fromUint(0).toString());
                     done();
                 });
