@@ -10,7 +10,7 @@
         <Row>
           <Col span="15">
             <div>
-              <p class="walletName">{{item.accountTitle}}-{{item.name}}</p>
+              <p class="walletName">{{item.name}}</p>
               <p class="walletAmount overflow_ellipsis">
                 {{formatNumber(item.balance)}}
                 &nbsp;<span class="tails">XEM</span>

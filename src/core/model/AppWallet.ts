@@ -9,7 +9,7 @@ import {
     Password,
     WalletAlgorithm,
     Listener,
-    MultisigAccountInfo, Id, AccountHttp, Address,
+    Id, AccountHttp, Address,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
@@ -18,7 +18,6 @@ import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {createSubWalletByPath} from "@/core/utils/hdWallet.ts"
 import {AppLock} from "@/core/utils/appLock"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
-import {CoinType} from "@/core/model/CoinType"
 import {WebClient} from "@/core/utils"
 
 export class AppWallet {
@@ -39,7 +38,6 @@ export class AppWallet {
     balance: number | 0
     encryptedMnemonic: string | undefined
     path: string
-    accountTitle: string
     sourceType: string
     createTimestamp: number
     importance: number
@@ -62,7 +60,6 @@ export class AppWallet {
             this.active = true
             this.sourceType = CreateWalletType.privateKey
             this.createTimestamp = new Date().valueOf()
-            this.accountTitle = this.accountTitle || this.generateWalletTitle(CreateWalletType.privateKey, CoinType.xem, NetworkType[networkType])
             this.addNewWalletToList(store)
             return this
         } catch (error) {
@@ -89,7 +86,6 @@ export class AppWallet {
             this.active = true
             this.createTimestamp = new Date().valueOf()
             this.path = path
-            this.accountTitle = this.generateWalletTitle(CreateWalletType.seed, CoinType.xem, NetworkType[networkType])
             this.sourceType = CreateWalletType.seed
             this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
             this.addNewWalletToList(store)
@@ -119,7 +115,6 @@ export class AppWallet {
             this.active = true
             this.createTimestamp = new Date().valueOf()
             this.path = path
-            this.accountTitle = this.generateWalletTitle(CreateWalletType.seed, CoinType.xem, NetworkType[networkType])
             this.sourceType = CreateWalletType.seed
             this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
             accountMap[accountName].seed = this.encryptedMnemonic
@@ -139,7 +134,6 @@ export class AppWallet {
         address: string,
         store: any): AppWallet {
         try {
-            const accountName = store.state.account.accountName
             const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
             this.name = name
             this.address = address
@@ -147,7 +141,6 @@ export class AppWallet {
             this.networkType = networkType
             this.active = true
             this.path = path
-            this.accountTitle = this.generateWalletTitle(CreateWalletType.trezor, CoinType.xem, NetworkType[networkType])
             this.sourceType = CreateWalletType.trezor
             localSave('accountMap', JSON.stringify(accountMap))
             this.addNewWalletToList(store)
@@ -168,7 +161,6 @@ export class AppWallet {
             const words = CryptoJS.enc.Base64.parse(keystoreStr)
             const keystore = words.toString(CryptoJS.enc.Utf8)
             this.simpleWallet = JSON.parse(keystore)
-            this.accountTitle = this.generateWalletTitle(CreateWalletType.keyStore, CoinType.xem, NetworkType[networkType])
             this.sourceType = CreateWalletType.keyStore
             const {privateKey} = this.getAccount(password)
             this.createFromPrivateKey(name, password, privateKey, networkType, store)

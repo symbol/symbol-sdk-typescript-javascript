@@ -39,11 +39,9 @@ export class WalletSwitchTs extends Vue {
         walletList.sort((a, b) => {
             return a.createTimestamp - b.createTimestamp
         })
-        // this.$refs.walletScroll["scrollTop"] = 100
-        return walletList.map((item, index) => {
 
-            const walletType = item.accountTitle.substring(0, item.accountTitle.indexOf('-'))
-            switch (walletType) {
+        return walletList.map(item => {
+            switch (item.sourceType) {
                 case CreateWalletType.keyStore:
                 case CreateWalletType.privateKey:
                     item.stylesheet = walletStyleSheetType.otherWallet
