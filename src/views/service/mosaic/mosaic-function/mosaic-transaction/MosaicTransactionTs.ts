@@ -19,10 +19,9 @@ import {
     formatSeconds, formatAddress, getAbsoluteMosaicAmount,
 } from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {defaultNetworkConfig, formDataConfig, Message, DEFAULT_FEES, FEE_GROUPS} from '@/config'
+import {defaultNetworkConfig, Message,formDataConfig, DEFAULT_FEES, FEE_GROUPS} from '@/config'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, AppWallet, DefaultFee} from "@/core/model"
 import {NETWORK_PARAMS} from '@/core/validation'
-
 @Component({
     components: {
         CheckPWDialog
@@ -317,16 +316,16 @@ export class MosaicTransactionTs extends Vue {
     @Watch('formItems.supply')
     onSupplyChange(newVal) {
         const {MAX_MOSAIC_ATOMIC_UNITS} = NETWORK_PARAMS
-        if (newVal > MAX_MOSAIC_ATOMIC_UNITS) this.formItems.supply = MAX_MOSAIC_ATOMIC_UNITS 
-        if (newVal < 0) this.formItems.supply = 0 
+        if (newVal > MAX_MOSAIC_ATOMIC_UNITS) this.formItems.supply = MAX_MOSAIC_ATOMIC_UNITS
+        if (newVal < 0) this.formItems.supply = 0
     }
 
     // @TODO: Quickfix before vee-validate
     @Watch('formItems.divisibility')
     onDivisibilityChange(newVal) {
         const {MAX_MOSAIC_DIVISIBILITY} = NETWORK_PARAMS
-        if (newVal > MAX_MOSAIC_DIVISIBILITY) this.formItems.divisibility = MAX_MOSAIC_DIVISIBILITY 
-        if (newVal < 0) this.formItems.divisibility = 0 
+        if (newVal > MAX_MOSAIC_DIVISIBILITY) this.formItems.divisibility = MAX_MOSAIC_DIVISIBILITY
+        if (newVal < 0) this.formItems.divisibility = 0
     }
 
     mounted() {

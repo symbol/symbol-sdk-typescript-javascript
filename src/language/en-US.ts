@@ -144,7 +144,7 @@ export const en_US = {
     enter_asset_type_alias_or_address_search: 'Enter transaction hash search',
     ordinary_transfer: 'Transfer',
     Multi_sig_transfer: 'Multisig transfer',
-    crosschain_transfer: 'Cross-chain',
+    cross_chain_transfer: 'Cross-chain',
     aggregate_transfer: 'Aggregate',
     QR_code_generation_failed: 'QR code generation failed',
     //monitor-remote
@@ -183,10 +183,10 @@ export const en_US = {
     this_is_a_distributed_desktop_wallet_based_on_CATAPULT_I_wish_you_a_pleasant_trip: 'This is a distributed desktop wallet based on CATAPULT ,I wish you a pleasant trip.',
     send_and_receive_XEM_almost_instantly_in_just_1_minute: 'Send and receive XEM almost instantly in just 1 minute !',
     provides_an_editable_chain_on_protocol_in_a_multi_signature_account_which_is_the_best_way_to_store_funds_and_achieve_a_common_account: 'Provides an editable on-chain protocol in a multi signature account ,which is the best way to store funds and manage a common account.',
-    a_namespace_is_a_domain_name_that_stores_mosaics_Each_namespace_is_unique_within_a_blockchain_and_mosaics_can_be_defined_and_authenticated_on_a_multi_level_sub_namespace: 'Namespaces are unique domain names on the block chain. They can be used as addresses and mosaics aliases.',
+    a_namespace_is_a_domain_name_that_stores_mosaics_Each_namespace_is_unique_within_a_block_chain_and_mosaics_can_be_defined_and_authenticated_on_a_multi_level_sub_namespace: 'Namespaces are unique domain names on the block chain. They can be used as addresses and mosaics aliases.',
     NEM_Mosaic_is_a_smart_asset_with_rich_attributes_and_features_To_create_a_mosaic_you_must_provision_the_root_namespace_for_your_account: 'Mosaics are smart assets with rich attributes and features.',
     entrusted_harvesting_is_a_way_to_achieve_remote_online_mining_without_having_to_keep_the_original_account_open: 'Delegated harvesting is a way to mine coins without keeping the main wallet open on a remote server.',
-    use_the_NEM_Apostille_service_to_create_blockchain_notarized_timestamps_to_track_and_audit_file_authentication_status: 'Apostille enables notarizing and checking the authenticity of files notarized on the NEM block chain.',
+    use_the_NEM_Apostille_service_to_create_block_chain_notarized_timestamps_to_track_and_audit_file_authentication_status: 'Apostille enables notarizing and checking the authenticity of files notarized on the NEM block chain.',
     assign_tags_to_addresses_to_easily_track_contacts: 'Assign tags to addresses to easily track contacts.',
     use_Changelly_and_ShapeShift_widgets_to_buy_XEM_at_the_best_rates: 'Use Changelly and ShapeShift widgets to buy XEM at the best rates !',
 
@@ -446,7 +446,7 @@ export const en_US = {
     Don_not_share_mnemonics_with_anyone: 'Don\'t share mnemonics with anyone',
     Beware_of_phishing_Nano_wallet_does_not_naturally_ask_you_to_enter_a_mnemonic: 'Beware of phishing! Wallet does not naturally ask you to enter a mnemonic.',
     If_you_need_to_back_up_your_mnemonics_again_you_can_find_them_in_Wallet_Management_Wallet_Details_Export_Mnemonics: 'If you need to back up your mnemonics again, you can find them in Wallet Management - Wallet Details - Export Mnemonics.',
-    Nemwallet_can_not_recover_your_mnemonic: 'The wallet can\'t recover your mnemonic',
+    Nem_wallet_can_not_recover_your_mnemonic: 'The wallet can\'t recover your mnemonic',
     Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct: 'Please enter a mnemonic to ensure that the mnemonic is correct',
     Mnemonic_inconsistency: 'Mnemonic inconsistency',
     bind_mosaic: 'bind mosaic',
@@ -621,7 +621,7 @@ export const en_US = {
     Namespace_cannot_be_a_null_or_empty_string: 'Namespace cannot be a null or empty string',
     The_root_namespace_cannot_be_longer_than_16: 'The root namespace cannot be longer than 16',
     The_sub_namespace_cannot_be_longer_than_16: 'The sub namespace cannot be longer than 64',
-    Namespace_must_start_with_a_letter: 'Namespace must start with a letter',
+    Namespace_must_start_with_a_letter: 'Namespace must start with  a small case letter',
     Namespace_can_only_contain_numbers_letters_and_other: 'Namespace can only contain numbers, letters, _ and -',
     Namespace_cannot_use_forbidden_words: 'Namespace cannot use forbidden words',
     clear_cache: 'Clear cache',
@@ -629,7 +629,7 @@ export const en_US = {
     confirm_information: 'Confirm information',
     please_input_new_account_name: 'Please input new account name',
     Locking_passwords_as_a_form_of_program_protection: 'Locking passwords as a form of program protection verification.Once forgotten, there will be no recovery. Please remember your Lock password.',
-    delete_wallet_tip: 'Be careful! You\'re deleting wallet %{walletName} After changing the wallet, the wallet data will be deleted. Make sure the wallet is backed up. If you do not properly back up, you will not be able to retrieve your wallet after deleting your wallet. Please handle this operation carefully. Also, in order to ensure that I am operating, please enter the wallet password.',
+    delete_wallet_tip: 'Be careful! You\'re deleting wallet %{walletName} .Make sure the wallet is backed up. If you do not properly back up, you will not be able to retrieve your wallet after deleting your wallet. Please handle this operation carefully. Also, in order to ensure that I am operating, please enter the wallet password.',
     delete_wallet: 'Delete wallet',
 
 
@@ -766,8 +766,10 @@ export const en_US = {
     FAST: 'Fast',
     ////////////////////////////////0927
     seed_wallet_can_not_be_more_than_10: 'The number of wallets created in this account has reached the limit. Please change your account to create a new wallet.',
-    create_or_import: 'Craete or Import',
+    create_or_import: 'Create or Import',
     create_sub_wallet: 'Create sub wallet',
     Import_private_key: 'Import private key',
-    copy_mnemonic: 'copy menmonic',
+    copy_mnemonic: 'copy mnemonic',
+    Harvesting: 'Harvesting',
+    ILLEGAL_PUBLICKEY_ERROR:'public key format error'
 }

@@ -1,6 +1,6 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import monitorSeleted from '@/common/img/monitor/monitorSeleted.png'
+import monitorSelected from '@/common/img/monitor/monitorSelected.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
 import {copyTxt, formatXemAmount, formatNumber, localRead, localSave} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
@@ -25,7 +25,7 @@ export class MonitorPanelTs extends Vue {
     // isShowAccountAlias = false @TODO: Account Alias (update when method available)
     isShowManageMosaicIcon = false
     isChecked = true
-    monitorSeleted = monitorSeleted
+    monitorSelected = monitorSelected
     monitorUnselected = monitorUnselected
     navigatorList: any = monitorPanelNavigatorConfig
 

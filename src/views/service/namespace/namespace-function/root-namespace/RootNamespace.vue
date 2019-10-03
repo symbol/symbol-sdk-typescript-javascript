@@ -77,7 +77,7 @@
             {{$t('the_more_you_set_the_cost_the_higher_the_processing_priority')}}
           </div>
         </div>
-    
+
         <div :class="['create_button ',isCompleteForm?'pointer':'not_allowed']" @click="createTransaction">
           {{$t('create')}}
         </div>

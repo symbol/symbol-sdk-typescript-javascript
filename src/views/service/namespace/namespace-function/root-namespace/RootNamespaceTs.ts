@@ -2,7 +2,7 @@ import {mapState} from "vuex"
 import {PublicAccount, MultisigAccountInfo, NetworkType, Address} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig} from "@/config"
+import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig, formDataConfig} from "@/config"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress,
@@ -96,15 +96,15 @@ export class RootNamespaceTs extends Vue {
     initForm(): void {
         this.formItems = formDataConfig.rootNamespaceForm
     }
-    
+
     get multisigAccountInfo(): MultisigAccountInfo {
         return this.activeAccount.multisigAccountInfo[this.wallet.address]
     }
-    
+
     get accountPublicKey(): string {
         return this.activeAccount.wallet.publicKey
     }
-    
+
     get multisigAccounts(): PublicAccount[] {
         return this.multisigAccountInfo ? this.multisigAccountInfo.multisigAccounts : []
     }
@@ -262,7 +262,7 @@ export class RootNamespaceTs extends Vue {
             this.showCheckPWDialog = true
             return
         }
-    
+
         this.createBySelf()
         this.showCheckPWDialog = true
     }
@@ -287,7 +287,7 @@ export class RootNamespaceTs extends Vue {
         if (!newPublicKey || newPublicKey === oldPublicKey) return
         this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', newPublicKey)
     }
-  
+
     @Watch('formItems', {immediate: true, deep: true})
     onFormItemChange() {
         const {duration, rootNamespaceName, multisigPublicKey} = this.formItems

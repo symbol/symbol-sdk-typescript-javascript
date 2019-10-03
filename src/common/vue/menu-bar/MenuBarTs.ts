@@ -1,7 +1,7 @@
 import routers from '@/router/routers.ts'
 import {Message, isWindows} from "@/config/index.ts"
 import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
-import monitorSeleted from '@/common/img/window/windowSelected.png'
+import monitorSelected from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
 import {localRead, localSave} from "@/core/utils/utils.ts"
 import {Component, Vue} from 'vue-property-decorator'
@@ -32,7 +32,7 @@ export class MenuBarTs extends Vue {
     isNowWindowMax = false
     isShowDialog = true
     activePanelList = [false, false, false, false, false, false, false,]
-    monitorSeleted = monitorSeleted
+    monitorSelected = monitorSelected
     monitorUnselected = monitorUnselected
     accountAddress = ''
     txStatusListener = null

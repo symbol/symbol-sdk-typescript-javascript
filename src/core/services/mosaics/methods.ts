@@ -134,7 +134,7 @@ export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, currentXem:
     return mosaicListRst
 }
 
-export const sortById = (list) => {
+export const sortByMosaicId = (list) => {
     let mosaicMap = {}
     let mosaicList = []
     list.forEach(item => {
@@ -148,31 +148,31 @@ export const sortById = (list) => {
 //mosaicInfo
 //supply
 
-export const sortBySupply = (list) => {
+export const sortByMosaicSupply = (list) => {
     return list.sort((a, b) => {
         if (!b.mosaicInfo || !a.mosaicInfo) return 1
         return b.mosaicInfo.supply.compact() - a.mosaicInfo.supply.compact()
     })
 }
 
-export const sortByDivisibility = (list) => {
+export const sortByMosaicDivisibility = (list) => {
     return list.sort((a, b) => {
         return b.mosaicInfo.properties.divisibility - a.mosaicInfo.properties.divisibility
     })
 }
 
-export const sortByTransferable = (list) => {
+export const sortByMosaicTransferable = (list) => {
     return list.sort((a, b) => {
         return b.mosaicInfo.properties.transferable
     })
 }
 
-export const sortBySupplyMutable = (list) => {
+export const sortByMosaicSupplyMutable = (list) => {
     return list.sort((a, b) => {
         return b.mosaicInfo.properties.supplyMutable
     })
 }
-export const sortByDuration = (list) => {
+export const sortByMosaicDuration = (list) => {
     return list.sort((a, b) => {
         if (MosaicNamespaceStatusType.FOREVER == a.expirationHeight) {
             return false
@@ -180,12 +180,12 @@ export const sortByDuration = (list) => {
         return b.expirationHeight - a.expirationHeight
     })
 }
-export const sortByRestrictable = (list) => {
+export const sortByMosaicRestrictable = (list) => {
     return list.sort((a, b) => {
         return b.mosaicInfo.properties.supplyMutable.restrictable
     })
 }
-export const sortByAlias = (list) => {
+export const sortByMosaicAlias = (list) => {
     return list.sort((a, b) => {
         return b.name && a.name
     })

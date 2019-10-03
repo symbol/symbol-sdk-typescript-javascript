@@ -77,7 +77,7 @@
                   @click="toggleShowMosaic(mosaic)"
                 >
                 <span class="namege_img "  >
-                 <img class="small_icon " :src="mosaic.hide?monitorUnselected:monitorSeleted">
+                 <img class="small_icon " :src="mosaic.hide?monitorUnselected:monitorSelected">
                   <img v-if="index == 0" class="mosaicIcon"
                        src="@/common/img/monitor/monitorMosaicIcon.png">
                   <img v-else class="mosaicIcon" src="@/common/img/monitor/mosaicDefault.png">

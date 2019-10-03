@@ -79,7 +79,7 @@ export const serviceSwitchFnConfig = [
         to: '/namespace',
         iconDefault: namespace1Icon,
         iconActive: namespace2Icon,
-        introduce: 'a_namespace_is_a_domain_name_that_stores_mosaics_Each_namespace_is_unique_within_a_blockchain_and_mosaics_can_be_defined_and_authenticated_on_a_multi_level_sub_namespace',
+        introduce: 'a_namespace_is_a_domain_name_that_stores_mosaics_Each_namespace_is_unique_within_a_block_chain_and_mosaics_can_be_defined_and_authenticated_on_a_multi_level_sub_namespace',
         active: false
     },
     {

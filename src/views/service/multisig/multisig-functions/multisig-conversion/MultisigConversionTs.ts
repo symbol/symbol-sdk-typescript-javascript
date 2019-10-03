@@ -6,7 +6,7 @@ import {
 } from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig} from "@/config/index.ts"
+import {Message, formDataConfig,DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {createBondedMultisigTransaction, StoreAccount, DefaultFee, AppWallet} from "@/core/model"
 import {getAbsoluteMosaicAmount, formatAddress} from "@/core/utils"
@@ -73,12 +73,12 @@ export class MultisigConversionTs extends Vue {
 
     get defaultFees(): DefaultFee[] {
         return DEFAULT_FEES[FEE_GROUPS.TRIPLE]
-    } 
-  
+    }
+
     get announceInLock(): boolean {
         return true
     }
-  
+
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
@@ -88,7 +88,7 @@ export class MultisigConversionTs extends Vue {
     get feeDivider(): number {
         return 3
     }
-    
+
     initForm() {
         this.formItems = formDataConfig.multisigConversionForm
     }
@@ -113,7 +113,7 @@ export class MultisigConversionTs extends Vue {
         if (!this.checkForm()) return
         const {address} = this.wallet
         const {publicKeyList, minApproval, minRemoval} = this.formItems
-        const {feeAmount} = this 
+        const {feeAmount} = this
         this.transactionDetail = {
             "address": address,
             "min_approval": minApproval,

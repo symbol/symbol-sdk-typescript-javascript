@@ -1,7 +1,7 @@
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {Password, NetworkType, MosaicSupplyChangeTransaction, Deadline, UInt64, MosaicId} from 'nem2-sdk'
-import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig, formDataConfig} from "@/config/index.ts"
+import {Message,formDataConfig, networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig} from "@/config/index.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {AppWallet, AppMosaic, DefaultFee, StoreAccount} from "@/core/model"
 
@@ -23,7 +23,7 @@ export class MosaicEditDialogTs extends Vue {
 
     @Prop()
     itemMosaic: AppMosaic
-  
+
     get show() {
         return this.showMosaicEditDialog
     }
@@ -57,7 +57,7 @@ export class MosaicEditDialogTs extends Vue {
     get mosaicId(): string {
       return this.itemMosaic.hex
     }
-    
+
     get networkType(): NetworkType {
         return this.wallet.networkType
     }

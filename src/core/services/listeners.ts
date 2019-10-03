@@ -85,7 +85,7 @@ export class ChainListeners {
                     .pipe(filter((transaction: any) => transaction.transactionInfo !== undefined))
                     .subscribe(transaction => {
                         that.$Notice.success({
-                            title: receivedTransactionMessage, // quickfix
+                            title: receivedTransactionMessage, // quick fix
                             duration: 20,
                         })
                         formatAndSave(
@@ -99,8 +99,6 @@ export class ChainListeners {
                             that.$store,
                             false
                         )
-
-
                     })
             })
 
@@ -120,7 +118,7 @@ export class ChainListeners {
                     .subscribe((transaction) => {
                         that.$Notice.destroy()
                         that.$Notice.success({
-                            title: receivedTransactionMessage, // quickfix
+                            title: receivedTransactionMessage, // quick fix
                             duration: 4,
                         })
                         formatAndSave(

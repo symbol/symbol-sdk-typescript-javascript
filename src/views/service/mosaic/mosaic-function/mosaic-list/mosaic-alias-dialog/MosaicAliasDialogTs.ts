@@ -1,7 +1,7 @@
 import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {mapState} from "vuex"
-import {Message, networkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig} from "@/config"
+import {Message, formDataConfig,networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {getAbsoluteMosaicAmount} from '@/core/utils'
@@ -25,20 +25,20 @@ export class MosaicAliasDialogTs extends Vue {
 
     @Prop()
     showMosaicAliasDialog: boolean
-  
+
     @Prop()
     itemMosaic: AppMosaic
 
     get show() {
         return this.showMosaicAliasDialog
     }
-  
+
     set show(val) {
         if (!val) {
             this.$emit('close')
         }
     }
-  
+
     get wallet() {
         return this.activeAccount.wallet
     }

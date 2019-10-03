@@ -32,12 +32,13 @@ const routers = [
                         name: 'invoice',
                         // @ts-ignore
                         component: () => import('@/views/monitor/monitor-invoice/MonitorInvoice.vue')
-                    }, {
-                        path: '/remote',
-                        name: 'remote',
-                        // @ts-ignore
-                        component: () => import('@/views/monitor/monitor-remote/MonitorRemote.vue')
                     },
+                    // {
+                    //     path: '/remote',
+                    //     name: 'remote',
+                    //     // @ts-ignore
+                    //     component: () => import('@/views/monitor/monitor-remote/MonitorRemote.vue')
+                    // },
 
                 ]
             },

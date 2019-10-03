@@ -6,18 +6,15 @@ import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
 import MosaicUnAliasDialog from './mosaic-unAlias-dialog/MosaicUnAliasDialog.vue'
 import {formatNumber} from '@/core/utils'
 import {mosaicSortType} from "@/config/view/mosaic"
-import {
-    sortById,
-    sortBySupply,
-    sortByDivisibility,
-    sortByTransferable,
-    sortBySupplyMutable,
-    sortByDuration,
-    sortByRestrictable,
-    sortByAlias
-} from '@/core/services/mosaics/methods.ts'
 import {networkConfig} from "@/config"
 import {MosaicNamespaceStatusType, StoreAccount, AppInfo, AppMosaic} from "@/core/model"
+import {
+    sortByMosaicAlias, sortByMosaicDivisibility,
+    sortByMosaicDuration,
+    sortByMosaicId, sortByMosaicRestrictable,
+    sortByMosaicSupply, sortByMosaicSupplyMutable,
+    sortByMosaicTransferable
+} from "@/core/services"
 
 @Component({
     components: {
@@ -143,28 +140,28 @@ export class MosaicListTs extends Vue {
         const currentMosaicList = [...this.currentMosaicList]
         switch (type) {
             case mosaicSortType.byId:
-                this.currentMosaicList = sortById(currentMosaicList)
+                this.currentMosaicList = sortByMosaicId(currentMosaicList)
                 break
             case mosaicSortType.byDuration:
-                this.currentMosaicList = sortByDuration(currentMosaicList)
+                this.currentMosaicList = sortByMosaicDuration(currentMosaicList)
                 break
             case mosaicSortType.byAlias:
-                this.currentMosaicList = sortByAlias(currentMosaicList)
+                this.currentMosaicList = sortByMosaicAlias(currentMosaicList)
                 break
             case mosaicSortType.byRestrictable:
-                this.currentMosaicList = sortByRestrictable(currentMosaicList)
+                this.currentMosaicList = sortByMosaicRestrictable(currentMosaicList)
                 break
             case mosaicSortType.bySupply:
-                this.currentMosaicList = sortBySupply(currentMosaicList)
+                this.currentMosaicList = sortByMosaicSupply(currentMosaicList)
                 break
             case mosaicSortType.byTransferable:
-                this.currentMosaicList = sortByTransferable(currentMosaicList)
+                this.currentMosaicList = sortByMosaicTransferable(currentMosaicList)
                 break
             case mosaicSortType.byDivisibility:
-                this.currentMosaicList = sortByDivisibility(currentMosaicList)
+                this.currentMosaicList = sortByMosaicDivisibility(currentMosaicList)
                 break
             case mosaicSortType.bySupplyMutable:
-                this.currentMosaicList = sortBySupplyMutable(currentMosaicList)
+                this.currentMosaicList = sortByMosaicSupplyMutable(currentMosaicList)
                 break
         }
     }

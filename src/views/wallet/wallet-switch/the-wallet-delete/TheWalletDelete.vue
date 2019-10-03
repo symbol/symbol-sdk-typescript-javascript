@@ -16,8 +16,7 @@
             <img src="@/common/img/wallet/walletDeleteIcon.png">
           </div>
           <p class="checkRemind">
-            {{$t('delete_wallet_tip', {walletName :getWallet.name})}}
-            {{$t('delete_wallet_tip')}}</p>
+            {{$t('delete_wallet_tip', {walletName :getWallet.name})}}</p>
           <Form :model="confirmation">
             <FormItem>
               <Input v-model="confirmation.value" type="password" required

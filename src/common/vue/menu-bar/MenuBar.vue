@@ -56,7 +56,7 @@
                             v-for="(p,index) in nodeList"
                             :key="`sep${index}`"
                     >
-                      <img :src="p.isSelected ? monitorSeleted : monitorUnselected">
+                      <img :src="p.isSelected ? monitorSelected : monitorUnselected">
                       <span>{{p.value}}</span>
                       <img class="remove_icon" @click.stop="removeNode(index)"
                            src="@/common/img/service/multisig/multisigDelete.png" alt="">

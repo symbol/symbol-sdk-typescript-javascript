@@ -31,7 +31,6 @@
     import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
     import DisabledUiOverlay from '@/common/vue/disabled-ui-overlay/DisabledUiOverlay.vue';
 
-
     @Component({
         computed: {
             ...mapState({activeAccount: 'account', app: 'app'}),
@@ -155,7 +154,6 @@
                 ])
 
                 new AppWallet(newWallet).setMultisigStatus(this.node, this.$store)
-
                 if (!this.chainListeners) {
                     this.chainListeners = new ChainListeners(this, newWallet.address, this.node)
                     this.chainListeners.start()

@@ -32,13 +32,16 @@ export class WalletSwitchTs extends Vue {
     walletStyleSheetType = walletStyleSheetType
     walletToUpdate = {}
     pathToCreate = ''
+    scroll: any
 
     get walletList() {
         let {walletList} = this.app
         walletList.sort((a, b) => {
             return a.createTimestamp - b.createTimestamp
         })
-        return walletList.map(item => {
+        // this.$refs.walletScroll["scrollTop"] = 100
+        return walletList.map((item, index) => {
+
             const walletType = item.accountTitle.substring(0, item.accountTitle.indexOf('-'))
             switch (walletType) {
                 case CreateWalletType.keyStore:
@@ -151,6 +154,10 @@ export class WalletSwitchTs extends Vue {
         } catch (error) {
             throw new Error(error)
         }
+    }
 
+    mounted() {
+        // scroll to current wallet
+        this.$refs.walletScroll["scrollTop"] = this.walletList.findIndex(item => item.active) * 40
     }
 }

@@ -5,7 +5,7 @@ import {
   Deadline,
   PlainMessage} from 'nem2-sdk'
 import {mapState} from "vuex"
-import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig} from "@/config"
+import {Message, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig, formDataConfig} from "@/config"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress} from "@/core/utils"
@@ -62,7 +62,7 @@ export class TransactionFormTs extends Vue {
         const address = Address.createFromPublicKey(activeMultisigAccount, networkType).plain()
         return this.activeAccount.multisigAccountInfo[address].minApproval > 1
     }
-  
+
     get defaultFees(): DefaultFee[] {
         if (!this.activeMultisigAccount) return DEFAULT_FEES[FEE_GROUPS.SINGLE]
         if (!this.announceInLock) return DEFAULT_FEES[FEE_GROUPS.DOUBLE]

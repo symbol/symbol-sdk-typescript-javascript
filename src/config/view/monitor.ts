@@ -18,11 +18,11 @@ export const monitorPanelNavigatorConfig: Array<{
             isSelect: false,
             path: 'invoice'
         },
-        {
-            name: 'remote',
-            isSelect: false,
-            path: 'remote',
-        },
+        // {
+        //     name: 'remote',
+        //     isSelect: false,
+        //     path: 'remote',
+        // },
         {
             name: 'market',
             isSelect: false,
@@ -30,7 +30,7 @@ export const monitorPanelNavigatorConfig: Array<{
         },
     ]
 
-export const monitorRecaeiptTransferTypeConfig = [
+export const monitorReceiptTransferTypeConfig = [
     {
         name: 'ordinary_transfer',
         isSelect: true,
@@ -40,7 +40,7 @@ export const monitorRecaeiptTransferTypeConfig = [
         isSelect: false,
         disabled: false
     }, {
-        name: 'crosschain_transfer',
+        name: 'cross_chain_transfer',
         isSelect: false,
         disabled: true
     }, {
@@ -60,7 +60,7 @@ export const monitorTransferTransferTypeConfig = [
         isSelect: false,
         disabled: false
     }, {
-        name: 'crosschain_transfer',
+        name: 'cross_chain_transfer',
         isSelect: false,
         disabled: true
     }, {

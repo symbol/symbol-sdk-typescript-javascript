@@ -1,6 +1,7 @@
 import {NetworkType} from "nem2-sdk"
 import {FEE_SPEEDS} from '@/config'
 
+
 export const formDataConfig = {
     transferForm: {
         recipient: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',

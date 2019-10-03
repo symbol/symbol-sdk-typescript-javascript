@@ -64,7 +64,7 @@
                 {{$t('Beware_of_phishing_Nano_wallet_does_not_naturally_ask_you_to_enter_a_mnemonic')}}</p>
               <p class="remindItem">
                 {{$t('If_you_need_to_back_up_your_mnemonics_again_you_can_find_them_in_Wallet_Management_Wallet_Details_Export_Mnemonics')}}</p>
-              <p class="remindItem">{{$t('Nemwallet_can_not_recover_your_mnemonic')}}</p>
+              <p class="remindItem">{{$t('Nem_wallet_can_not_recover_your_mnemonic')}}</p>
             </div>
           </Col>
         </Row>

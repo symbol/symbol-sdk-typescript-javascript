@@ -7,7 +7,7 @@ import {mapState} from "vuex"
 import {MosaicId, NamespaceId, AliasType} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
 import {TransferType} from "@/core/model/TransferType"
-import {monitorRecaeiptTransferTypeConfig} from "@/config/view/monitor"
+import {monitorReceiptTransferTypeConfig} from "@/config/view/monitor"
 import {AppInfo, StoreAccount} from "@/core/model"
 
 @Component({
@@ -35,7 +35,7 @@ export class MonitorInvoiceTs extends Vue {
     transactionHash = ''
     TransferType = TransferType
     isShowDialog = false
-    transferTypeList = monitorRecaeiptTransferTypeConfig
+    transferTypeList = monitorReceiptTransferTypeConfig
     qrInfo = {
         mosaicHex: this.$store.state.account.currentXem || defaultNetworkConfig.currentXem,
         mosaicAmount: 0,

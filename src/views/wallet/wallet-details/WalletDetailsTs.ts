@@ -12,6 +12,7 @@ import {mapState} from "vuex"
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {getCurrentImportance} from '@/core/model/AppWallet.ts'
 import TheBindForm from '@/views/wallet/wallet-details/wallet-function/the-bind-form/TheBindForm.vue'
+import WalletHarvesting from '@/views/wallet/wallet-details/wallet-function/wallet-harvesting/WalletHarvesting.vue'
 
 @Component({
     components: {
@@ -21,7 +22,8 @@ import TheBindForm from '@/views/wallet/wallet-details/wallet-function/the-bind-
         KeystoreDialog,
         WalletAlias,
         WalletFilter,
-        WalletUpdatePassword
+        WalletUpdatePassword,
+        WalletHarvesting
     },
     computed: {
         ...mapState({
@@ -151,4 +153,5 @@ export class WalletDetailsTs extends Vue {
     mounted() {
         this.init()
     }
+
 }

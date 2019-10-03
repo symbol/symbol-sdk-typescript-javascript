@@ -125,28 +125,26 @@
 
       .other,
       .Mnemonic,
-      .privateKey,
-      .Keystore,
-      .Other {
+      .privateKey {
         height: 53px;
         line-height: 53px;
         margin-right: 100px;
         display: flex;
         align-items: center;
+      }
 
-        i {
+      i {
+        display: inline-block;
+        width: 48px;
+        height: 42px;
+        margin-right: 0px;
+        vertical-align: middle;
+
+        img {
           display: inline-block;
-          width: 48px;
-          height: 42px;
-          margin-right: 0px;
-          vertical-align: middle;
-
-          img {
-            display: inline-block;
-            width: 30px;
-            position: relative;
-            left: 10px;
-          }
+          width: 30px;
+          position: relative;
+          left: 10px;
         }
       }
     }
@@ -155,6 +153,7 @@
       span {
         color: #ccc;
       }
+
       img {
         top: 5px;
         opacity: .5;
@@ -178,50 +177,51 @@
 
     .accountFnNav {
       width: 100%;
-      height: 60px;
-      line-height: 60px;
+      height: 50px;
       border-radius: 8px;
       background-color: #fff;
       position: relative;
-      margin-bottom: 20px;
 
       .navList {
         height: 100%;
 
         li {
-          height: 100%;
-          margin-left: 30px;
-          line-height: 60px;
-          font-size: 16px;
+          margin-top: 15px;
+          padding-right:80px;
+          height:20px;
+          margin-left: 80px;
+          font-size: 12px;
           font-weight: 400;
-          color: #222222;
+          color: #333;
           text-align: left;
           position: relative;
           cursor: pointer;
+          display: flex;
+          align-items: center;
+          border-right: 1px solid #eee;
+
+          img {
+            display: inline-block;
+            width: 20px;
+            margin-right: 8px;
+          }
+
         }
 
-        li:before {
-          display: block;
-          content: '';
-          width: 1Px;
-          height: 14px;
-          background: #CCCCCC;
-          position: absolute;
-          top: 23px;
+        li:last-of-type {
+          border-right:none;
         }
-
-        li:first-of-type:before {
-          display: none;
+        .other {
+          cursor: not-allowed;
         }
 
         .active {
           font-size: 16px;
-          font-weight: bold;
           color: #20B5AC;
         }
 
         .active:after {
-          display: block;
+          display: none;
           content: '';
           width: 30px;
           height: 4Px;
@@ -238,17 +238,15 @@
   .alias_add,
   .alias_delete {
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    background: rgba(38, 180, 176, 1);
+    width: 40px;
+    height: 40px;
     border-radius: 4px;
-    background-image: url("../../../common/img/wallet/wallet-detail/walletDetailAdd.png");
+    background-image: url("../../../common/img/wallet/wallet-detail/linkIcon2.png");
     background-size: 60%;
     background-position: center center;
     background-repeat: no-repeat;
     margin-right: 20px;
     position: relative;
-    top: 5px;
   }
 
   .alias_delete {
@@ -257,5 +255,9 @@
     background-size: 60%;
     background-position: center center;
     background-repeat: no-repeat;
+  }
+  .link_text {
+    display: flex;
+    align-items: center;
   }
 }
