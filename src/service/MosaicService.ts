@@ -15,10 +15,9 @@
  */
 
 import { Observable, of as observableOf } from 'rxjs';
-import { filter, first, map, mergeMap, take, toArray } from 'rxjs/operators';
+import { map, mergeMap, toArray } from 'rxjs/operators';
 import { AccountHttp } from '../infrastructure/AccountHttp';
 import { MosaicHttp } from '../infrastructure/MosaicHttp';
-import { NamespaceHttp } from '../infrastructure/NamespaceHttp';
 import { Address } from '../model/account/Address';
 import { MosaicInfo } from '../model/model';
 import { Mosaic } from '../model/mosaic/Mosaic';
@@ -62,14 +61,20 @@ export class MosaicService {
      * @returns {Observable<MosaicAmountView[]>}
      */
     mosaicsAmountView(mosaics: Mosaic[]): Observable<MosaicAmountView[]> {
-        return observableOf(mosaics).pipe(
-            mergeMap((_) => _),
-            mergeMap((mosaic: Mosaic) => this.mosaicsView([new MosaicId(mosaic.id.id.toDTO())]).pipe(
-                filter((_) => _.length !== 0),
-                map<MosaicView[], MosaicAmountView>((mosaicViews) => {
-                    return new MosaicAmountView(mosaicViews[0].mosaicInfo, mosaic.amount);
-                }),
-            toArray())));
+        const mosaicIds = mosaics.map((mosaic) => {
+            return new MosaicId(mosaic.id.toHex());
+        });
+        return this.mosaicsView(mosaicIds).pipe(
+            map((mosaicViews) => {
+                const results: MosaicAmountView[] = [];
+                mosaicViews.forEach((view) => {
+                    const mosaic = mosaics.find((m) => m.id.toHex() === view.mosaicInfo.id.toHex());
+                    if (mosaic) {
+                        results.push(new MosaicAmountView(view.mosaicInfo, mosaic.amount));
+                    }
+                });
+                return results;
+            }));
     }
 
     /**
