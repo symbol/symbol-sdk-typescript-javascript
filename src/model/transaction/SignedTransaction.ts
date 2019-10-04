@@ -22,7 +22,6 @@ import {NetworkType} from '../blockchain/NetworkType';
  */
 export class SignedTransaction {
     /**
-     * @internal
      * @param payload
      * @param hash
      * @param signer
