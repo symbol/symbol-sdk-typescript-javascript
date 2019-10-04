@@ -16,11 +16,11 @@
 
 import {deepEqual} from 'assert';
 import {expect} from 'chai';
-import { AccountRestriction } from '../../../src/model/account/AccountRestriction';
-import { AccountRestrictionModificationAction } from '../../../src/model/account/AccountRestrictionModificationAction';
-import { AccountRestrictions } from '../../../src/model/account/AccountRestrictions';
-import { AccountRestrictionType } from '../../../src/model/account/AccountRestrictionType';
 import {Address} from '../../../src/model/account/Address';
+import { AccountRestriction } from '../../../src/model/restriction/AccountRestriction';
+import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
+import { AccountRestrictions } from '../../../src/model/restriction/AccountRestrictions';
+import { AccountRestrictionType } from '../../../src/model/restriction/AccountRestrictionType';
 
 describe('AccountRestrictions', () => {
 

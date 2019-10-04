@@ -18,7 +18,7 @@ import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
-import { MosaicRestrictionType } from '../../../src/model/mosaic/MosaicRestrictionType';
+import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicGlobalRestrictionTransaction} from '../../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import {UInt64} from '../../../src/model/UInt64';

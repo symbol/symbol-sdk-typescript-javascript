@@ -25,10 +25,10 @@
  * Do not edit the class manually.
  */
 
-import { AddressMosaicRestrictionTransactionBodyDTO } from './addressMosaicRestrictionTransactionBodyDTO';
+import { AccountMetadataTransactionBodyDTO } from './accountMetadataTransactionBodyDTO';
 import { EmbeddedTransactionDTO } from './embeddedTransactionDTO';
 
-export class EmbeddedAddressMosaicRestrictionTransactionDTO {
+export class EmbeddedAccountMetadataTransactionTransactionDTO {
     'signerPublicKey': string;
     /**
     * Entity version. The higher byte represents the network identifier: * 0x68 (MAIN_NET) - Public main network. * 0x98 (TEST_NET) - Public test network. * 0x60 (MIJIN) - Private network. * 0x90 (MIJIN_TEST) - Private test network. 
@@ -43,26 +43,23 @@ export class EmbeddedAddressMosaicRestrictionTransactionDTO {
     * Duration expressed in number of blocks.
     */
     'deadline': string;
+    'targetPublicKey': string;
     /**
-    * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
+    * Metadata key scoped to source, target and type.
     */
-    'mosaicId': string;
+    'scopedMetadataKey': string;
     /**
-    * Restriction key relative to the reference mosaic identifier.
+    * Change in value size in bytes.
     */
-    'restrictionKey': string;
+    'valueSizeDelta': number;
     /**
-    * Address decoded. If the bit 0 of byte 0 is not set (like in 0x90), then it is a regular address. Else (e.g. 0x91) it represents a namespace id which starts at byte 1. 
+    * Value size in bytes.
     */
-    'targetAddress': string;
+    'valueSize': number;
     /**
-    * Previous restriction value.
+    * When there is an existing value, the new value is calculated as xor(previous-value, value).
     */
-    'previousRestrictionValue': string;
-    /**
-    * New restriction value.
-    */
-    'newRestrictionValue': string;
+    'value': string;
 
     static discriminator: string | undefined = undefined;
 
@@ -93,33 +90,33 @@ export class EmbeddedAddressMosaicRestrictionTransactionDTO {
             "type": "string"
         },
         {
-            "name": "mosaicId",
-            "baseName": "mosaicId",
+            "name": "targetPublicKey",
+            "baseName": "targetPublicKey",
             "type": "string"
         },
         {
-            "name": "restrictionKey",
-            "baseName": "restrictionKey",
+            "name": "scopedMetadataKey",
+            "baseName": "scopedMetadataKey",
             "type": "string"
         },
         {
-            "name": "targetAddress",
-            "baseName": "targetAddress",
-            "type": "string"
+            "name": "valueSizeDelta",
+            "baseName": "valueSizeDelta",
+            "type": "number"
         },
         {
-            "name": "previousRestrictionValue",
-            "baseName": "previousRestrictionValue",
-            "type": "string"
+            "name": "valueSize",
+            "baseName": "valueSize",
+            "type": "number"
         },
         {
-            "name": "newRestrictionValue",
-            "baseName": "newRestrictionValue",
+            "name": "value",
+            "baseName": "value",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return EmbeddedAddressMosaicRestrictionTransactionDTO.attributeTypeMap;
+        return EmbeddedAccountMetadataTransactionTransactionDTO.attributeTypeMap;
     }
 }
 

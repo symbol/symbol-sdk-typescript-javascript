@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { AccountRestriction } from '../../model/account/AccountRestriction';
-import { AccountRestrictions } from '../../model/account/AccountRestrictions';
-import { AccountRestrictionsInfo } from '../../model/account/AccountRestrictionsInfo';
-import { AccountRestrictionType } from '../../model/account/AccountRestrictionType';
 import { Address } from '../../model/account/Address';
 import { MosaicId } from '../../model/mosaic/MosaicId';
+import { AccountRestriction } from '../../model/restriction/AccountRestriction';
+import { AccountRestrictions } from '../../model/restriction/AccountRestrictions';
+import { AccountRestrictionsInfo } from '../../model/restriction/AccountRestrictionsInfo';
+import { AccountRestrictionType } from '../../model/restriction/AccountRestrictionType';
 
 export class DtoMapping {
 

@@ -27,7 +27,7 @@
 
 import { MosaicRestrictionTypeEnum } from './mosaicRestrictionTypeEnum';
 
-export class GlobalMosaicRestrictionTransactionBodyDTO {
+export class MosaicGlobalRestrictionTransactionBodyDTO {
     /**
     * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
     */
@@ -91,7 +91,7 @@ export class GlobalMosaicRestrictionTransactionBodyDTO {
         }    ];
 
     static getAttributeTypeMap() {
-        return GlobalMosaicRestrictionTransactionBodyDTO.attributeTypeMap;
+        return MosaicGlobalRestrictionTransactionBodyDTO.attributeTypeMap;
     }
 }
 

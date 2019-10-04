@@ -25,40 +25,37 @@
  * Do not edit the class manually.
  */
 
+import { MosaicAddressRestrictionEntryDTO } from './mosaicAddressRestrictionEntryDTO';
 
-export class AddressMosaicRestrictionTransactionBodyDTO {
+export class MosaicAddressRestrictionEntryWrapperDTO {
+    'compositeHash': string;
+    'entryType': number;
     /**
-    * Mosaic identifier. If the most significant bit of byte 0 is set, a namespaceId (alias) is used instead of the real  mosaic identifier. 
+    * Mosaic identifier.
     */
     'mosaicId': string;
     /**
-    * Restriction key relative to the reference mosaic identifier.
-    */
-    'restrictionKey': string;
-    /**
-    * Address decoded. If the bit 0 of byte 0 is not set (like in 0x90), then it is a regular address. Else (e.g. 0x91) it represents a namespace id which starts at byte 1. 
+    * Decoded address.
     */
     'targetAddress': string;
-    /**
-    * Previous restriction value.
-    */
-    'previousRestrictionValue': string;
-    /**
-    * New restriction value.
-    */
-    'newRestrictionValue': string;
+    'restrictions': Array<MosaicAddressRestrictionEntryDTO>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "mosaicId",
-            "baseName": "mosaicId",
+            "name": "compositeHash",
+            "baseName": "compositeHash",
             "type": "string"
         },
         {
-            "name": "restrictionKey",
-            "baseName": "restrictionKey",
+            "name": "entryType",
+            "baseName": "entryType",
+            "type": "number"
+        },
+        {
+            "name": "mosaicId",
+            "baseName": "mosaicId",
             "type": "string"
         },
         {
@@ -67,18 +64,13 @@ export class AddressMosaicRestrictionTransactionBodyDTO {
             "type": "string"
         },
         {
-            "name": "previousRestrictionValue",
-            "baseName": "previousRestrictionValue",
-            "type": "string"
-        },
-        {
-            "name": "newRestrictionValue",
-            "baseName": "newRestrictionValue",
-            "type": "string"
+            "name": "restrictions",
+            "baseName": "restrictions",
+            "type": "Array<MosaicAddressRestrictionEntryDTO>"
         }    ];
 
     static getAttributeTypeMap() {
-        return AddressMosaicRestrictionTransactionBodyDTO.attributeTypeMap;
+        return MosaicAddressRestrictionEntryWrapperDTO.attributeTypeMap;
     }
 }
 

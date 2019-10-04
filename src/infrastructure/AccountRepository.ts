@@ -16,15 +16,13 @@
 
 import {Observable} from 'rxjs';
 import {AccountInfo} from '../model/account/AccountInfo';
+import { AccountNames } from '../model/account/AccountNames';
 import {Address} from '../model/account/Address';
 import {MultisigAccountGraphInfo} from '../model/account/MultisigAccountGraphInfo';
 import {MultisigAccountInfo} from '../model/account/MultisigAccountInfo';
-import {PublicAccount} from '../model/account/PublicAccount';
 import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
 import {Transaction} from '../model/transaction/Transaction';
 import {QueryParams} from './QueryParams';
-import {AccountRestrictionsInfo} from "../model/account/AccountRestrictionsInfo";
-import { AccountNames } from '../model/account/AccountNames';
 
 /**
  * Account interface repository.
@@ -54,20 +52,6 @@ export interface AccountRepository {
      * @return Observable<AccountNames>
      */
     getAccountsNames(accountIds: Address[]): Observable<AccountNames[]>;
-
-    /**
-     * Gets Account restrictions.
-     * @param publicAccount public account
-     * @returns Observable<AccountRestrictionsInfo>
-     */
-    getAccountRestrictions(address: Address): Observable<AccountRestrictionsInfo>;
-
-    /**
-     * Gets Account restrictions.
-     * @param address list of addresses
-     * @returns Observable<AccountRestrictionsInfo[]>
-     */
-    getAccountRestrictionsFromAccounts(addresses: Address[]): Observable<AccountRestrictionsInfo[]>;
 
     /**
      * Gets a MultisigAccountInfo for an account.

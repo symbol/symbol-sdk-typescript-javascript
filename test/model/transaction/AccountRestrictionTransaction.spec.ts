@@ -16,8 +16,8 @@
 
 import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
-import { AccountRestrictionModificationAction } from '../../../src/model/account/AccountRestrictionModificationAction';
-import { AccountRestrictionType } from '../../../src/model/account/AccountRestrictionType';
+import { AccountRestrictionModificationAction } from '../../../src/model/restriction/AccountRestrictionModificationAction';
+import { AccountRestrictionType } from '../../../src/model/restriction/AccountRestrictionType';
 import {Address} from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import {Convert as convert} from '../../core/format';
-import {RawUInt64 as UInt64Library} from '../../core/format';
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
@@ -383,7 +382,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.targetPublicKey,
-            UInt64.fromNumericString(transactionDTO.scopedMetadataKey),
+            UInt64.fromHex(transactionDTO.scopedMetadataKey),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
             transactionDTO.signature,
@@ -398,7 +397,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.targetPublicKey,
-            UInt64.fromNumericString(transactionDTO.scopedMetadataKey),
+            UInt64.fromHex(transactionDTO.scopedMetadataKey),
             new MosaicId(transactionDTO.targetMosaicId),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
@@ -414,7 +413,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.targetPublicKey,
-            UInt64.fromNumericString(transactionDTO.scopedMetadataKey),
+            UInt64.fromHex(transactionDTO.scopedMetadataKey),
             NamespaceId.createFromEncoded(transactionDTO.targetNamespaceId),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),

@@ -26,11 +26,6 @@ export * from './account/Address';
 export * from './account/MultisigAccountGraphInfo';
 export * from './account/MultisigAccountInfo';
 export * from './account/PublicAccount';
-export * from './account/AccountRestrictions';
-export * from './account/AccountRestrictionsInfo';
-export * from './account/AccountRestriction';
-export * from './account/AccountRestrictionModificationAction';
-export * from './account/AccountRestrictionType';
 export * from './account/AccountNames';
 
 // Blockchain
@@ -56,7 +51,11 @@ export * from '../service/MosaicAmountView';
 export * from './mosaic/NetworkCurrencyMosaic';
 export * from './mosaic/NetworkHarvestMosaic';
 export * from './mosaic/MosaicNames';
-export * from './mosaic/MosaicRestrictionType';
+
+// Mosaic
+export * from './metadata/Metadata';
+export * from './metadata/MetadataEntry';
+export * from './metadata/MetadataType';
 
 // Namespace
 export * from '../service/Namespace';
@@ -89,6 +88,18 @@ export * from './receipt/TransactionStatement';
 export * from './receipt/ResolutionType';
 export * from './receipt/InflationReceipt';
 export * from './receipt/Statement';
+
+//Restriction
+export * from './restriction/AccountRestrictions';
+export * from './restriction/AccountRestrictionsInfo';
+export * from './restriction/AccountRestriction';
+export * from './restriction/AccountRestrictionModificationAction';
+export * from './restriction/AccountRestrictionType';
+export * from './restriction/MosaicRestrictionType';
+export * from './restriction/MosaicAddressRestriction';
+export * from './restriction/MosaicGlobalRestriction';
+export * from './restriction/MosaicGlobalRestrictionItem';
+export * from './restriction/MosaicRestrictionEntryType';
 
 // Message
 export * from './message/PersistentHarvestingDelegationMessage';

@@ -188,30 +188,30 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.ACCOUNT_METADATA_TRANSACTION:
             return {
                 targetPublicKey: (transaction as AccountMetadataTransaction).targetPublicKey,
-                scopedMetadataKey: (transaction as AccountMetadataTransaction).scopedMetadataKey.toString(),
+                scopedMetadataKey: (transaction as AccountMetadataTransaction).scopedMetadataKey.toHex(),
                 valueSizeDelta: (transaction as AccountMetadataTransaction).valueSizeDelta,
                 valueSize: (transaction as AccountMetadataTransaction).value.length,
-                value: Convert.uint8ToHex((transaction as AccountMetadataTransaction).value),
+                value: Convert.utf8ToHex((transaction as AccountMetadataTransaction).value),
 
             };
         case TransactionType.MOSAIC_METADATA_TRANSACTION:
             return {
                 targetPublicKey: (transaction as MosaicMetadataTransaction).targetPublicKey,
-                scopedMetadataKey: (transaction as MosaicMetadataTransaction).scopedMetadataKey.toString(),
+                scopedMetadataKey: (transaction as MosaicMetadataTransaction).scopedMetadataKey.toHex(),
                 valueSizeDelta: (transaction as MosaicMetadataTransaction).valueSizeDelta,
                 targetMosaicId: (transaction as MosaicMetadataTransaction).targetMosaicId.id.toHex(),
                 valueSize: (transaction as MosaicMetadataTransaction).value.length,
-                value: Convert.uint8ToHex((transaction as MosaicMetadataTransaction).value),
+                value: Convert.utf8ToHex((transaction as MosaicMetadataTransaction).value),
 
             };
         case TransactionType.NAMESPACE_METADATA_TRANSACTION:
             return {
                 targetPublicKey: (transaction as NamespaceMetadataTransaction).targetPublicKey,
-                scopedMetadataKey: (transaction as NamespaceMetadataTransaction).scopedMetadataKey.toString(),
+                scopedMetadataKey: (transaction as NamespaceMetadataTransaction).scopedMetadataKey.toHex(),
                 valueSizeDelta: (transaction as NamespaceMetadataTransaction).valueSizeDelta,
                 targetNamespaceId: (transaction as NamespaceMetadataTransaction).targetNamespaceId.id.toHex(),
                 valueSize: (transaction as NamespaceMetadataTransaction).value.length,
-                value: Convert.uint8ToHex((transaction as NamespaceMetadataTransaction).value),
+                value: Convert.utf8ToHex((transaction as NamespaceMetadataTransaction).value),
 
             };
         default:

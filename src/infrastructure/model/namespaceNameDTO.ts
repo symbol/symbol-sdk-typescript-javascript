@@ -34,7 +34,7 @@ export class NamespaceNameDTO {
     /**
     * Namespace identifier.
     */
-    'namespaceId': string;
+    'id': string;
     /**
     * Namespace name.
     */
@@ -49,8 +49,8 @@ export class NamespaceNameDTO {
             "type": "string"
         },
         {
-            "name": "namespaceId",
-            "baseName": "namespaceId",
+            "name": "id",
+            "baseName": "id",
             "type": "string"
         },
         {

@@ -42,7 +42,7 @@ export class ResolutionEntryDTO {
         {
             "name": "resolved",
             "baseName": "resolved",
-            "type": "AnyOfstringstring"
+            "type": "any"
         }    ];
 
     static getAttributeTypeMap() {
