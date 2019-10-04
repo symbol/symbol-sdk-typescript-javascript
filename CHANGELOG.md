@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.4] - 04-Oct-2019
+
+**Milestone**: Elephant.3 / Fuschicho
+
+- Added `Metadata` rest api endpoints and DTOs
+- Added `MosaicRestriction` rest api endpoints and DTOs
+- Added `MetadataTransactionService` which eases the meta data transaction creation without knowing previous meta data values
+- Added `MosaicRestrictionTransactionService` which eases the mosaic restriction transaction creation without knowing previous restriction details.
+- Changed `MetadataTransaction` and `Metadata state` value to use raw string (utf8 encoding).
+- Fixed  `Namespace/Names` endpoint issue
+- Fixed `Mosaic` endpoint issue
+- Improved unit and e2e tests
+
 ## [0.13.3] - 27-Sep-2019
 
 **Milestone**: Elephant.3
@@ -193,6 +206,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Alpaca
 
 - Initial code release.
+[0.13.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.3...v0.13.4
+[0.13.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.2...v0.13.3
 [0.13.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.1...v0.13.2
 [0.13.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.12.4...v0.13.0
