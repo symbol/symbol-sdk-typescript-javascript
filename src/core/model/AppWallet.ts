@@ -1,3 +1,4 @@
+import {Store} from 'vuex';
 import {Message} from "@/config/index.ts"
 import {localRead, localSave} from "@/core/utils/utils.ts"
 import {
@@ -9,7 +10,7 @@ import {
     Password,
     WalletAlgorithm,
     Listener,
-    Id, AccountHttp, Address,
+    Id, AccountHttp, Address, AggregateTransaction,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
@@ -19,6 +20,7 @@ import {createSubWalletByPath} from "@/core/utils/hdWallet.ts"
 import {AppLock} from "@/core/utils/appLock"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {WebClient} from "@/core/utils"
+import {AppState} from './types';
 
 export class AppWallet {
     constructor(wallet?: {
@@ -50,7 +52,7 @@ export class AppWallet {
                          password: Password,
                          privateKey: string,
                          networkType: NetworkType,
-                         store: any): AppWallet {
+                         store: Store<AppState>): AppWallet {
         try {
             this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, privateKey, networkType)
             this.name = name
@@ -72,7 +74,7 @@ export class AppWallet {
         password: Password,
         path: string,
         networkType: NetworkType,
-        store: any): AppWallet {
+        store: Store<AppState>): AppWallet {
         try {
             const accountName = store.state.account.accountName
             let accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
@@ -101,7 +103,7 @@ export class AppWallet {
         password: Password,
         mnemonic: string,
         networkType: NetworkType,
-        store: any): AppWallet {
+        store: Store<AppState>): AppWallet {
         try {
             const path = `m/44'/43'/1'/0/0`
             const accountName = store.state.account.accountName
@@ -132,7 +134,7 @@ export class AppWallet {
         path: string,
         publicKey: string,
         address: string,
-        store: any): AppWallet {
+        store: Store<AppState>): AppWallet {
         try {
             const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
             this.name = name
@@ -154,7 +156,7 @@ export class AppWallet {
                        password: Password,
                        keystoreStr: string,
                        networkType: NetworkType,
-                       store: any): AppWallet {
+                       store: Store<AppState>): AppWallet {
         try {
             this.name = name
             this.networkType = networkType
@@ -205,7 +207,7 @@ export class AppWallet {
         }
     }
 
-    updatePassword(oldPassword: Password, newPassword: Password, store: any): void {
+    updatePassword(oldPassword: Password, newPassword: Password, store: Store<AppState>): void {
         const account = this.getAccount(oldPassword)
         this.createFromPrivateKey(this.name,
             newPassword,
@@ -214,7 +216,7 @@ export class AppWallet {
             store)
     }
 
-    addNewWalletToList(store: any): void {
+    addNewWalletToList(store: Store<AppState>): void {
         const accountName = store.state.account.accountName
         const accountMap = localRead('accountMap') === ''
             ? {} : JSON.parse(localRead('accountMap'))
@@ -234,7 +236,7 @@ export class AppWallet {
         AppWallet.switchWallet(this.address, [this, ...dataToStore], store)
     }
 
-    delete(store: any, that: any) {
+    delete(store: Store<AppState>, that: any) {
         const list = [...store.state.app.walletList]
         const accountName = store.state.account.accountName
         const accountMap = localRead('accountMap') === ''
@@ -264,7 +266,7 @@ export class AppWallet {
     }
 
 
-    static switchWallet(newActiveWalletAddress: string, walletList: any, store: any) {
+    static switchWallet(newActiveWalletAddress: string, walletList: any, store: Store<AppState>) {
         const newWalletIndex = walletList.findIndex(({address}) => address === newActiveWalletAddress)
         if (newWalletIndex === -1) throw new Error('wallet not found when switching')
 
@@ -289,8 +291,9 @@ export class AppWallet {
         localSave('accountMap', JSON.stringify(accountMap))
     }
 
-    static async getAccountInfo(store): Promise<any> {
+    static async getAccountInfo(store: Store<AppState>): Promise<any> {
         try {
+            console.log(store, '33333333333333333')
             const accountInfo = await new AccountHttp(store.state.account.node)
                 .getAccountInfo(Address.createFromRawAddress(store.state.account.wallet.address))
                 .toPromise()
@@ -301,7 +304,7 @@ export class AppWallet {
         }
     }
 
-    async updateAccountBalance(balance: number, store: any): Promise<void> {
+    async updateAccountBalance(balance: number, store: Store<AppState>): Promise<void> {
         try {
             this.balance = balance
             this.updateWallet(store)
@@ -316,7 +319,7 @@ export class AppWallet {
         accountName: string,
         newWalletName: string,
         walletAddress: string,
-        store: any
+        store: Store<AppState>
     ) {
         let accountMap = JSON.parse(localRead('accountMap'))
         accountMap[accountName]['wallets'].every((item, index) => {
@@ -332,7 +335,7 @@ export class AppWallet {
     }
 
 
-    updateWallet(store: any) {
+    updateWallet(store: Store<AppState>) {
         const accountName = store.state.account.accountName
         const accountMap = localRead('accountMap') === ''
             ? {} : JSON.parse(localRead('accountMap'))
@@ -347,12 +350,12 @@ export class AppWallet {
         newWalletList[newWalletIndex] = this
 
         store.commit('SET_WALLET_LIST', newWalletList)
-        if (store.state.account.address === this.address) store.commit('SET_WALLET', this)
+        if (store.state.account.wallet.address === this.address) store.commit('SET_WALLET', this)
         accountMap[accountName].wallets = newWalletList
         localSave('accountMap', JSON.stringify(accountMap))
     }
 
-    async setMultisigStatus(node: string, store: any): Promise<void> {
+    async setMultisigStatus(node: string, store: Store<AppState>): Promise<void> {
         try {
             const multisigAccountInfo = await new AccountApiRxjs().getMultisigAccountInfo(this.address, node).toPromise()
             store.commit('SET_MULTISIG_ACCOUNT_INFO', {address: this.address, multisigAccountInfo})
@@ -363,9 +366,9 @@ export class AppWallet {
         }
     }
 
-    async getAccountBalance(store: any): Promise<AppWallet> {
+    async getAccountBalance(store: Store<AppState>): Promise<AppWallet> {
         try {
-            const {node, currentXEM1, xemDivisibility} = store.getters
+            const {node, networkCurrency} = store.state.account
 
             const accountInfo = await new AccountApiRxjs()
                 .getAccountInfo(this.address, node)
@@ -377,14 +380,14 @@ export class AppWallet {
             }
 
             const xemIndex = accountInfo.mosaics
-                .findIndex(mosaic => mosaic.id.toHex() === currentXEM1)
+                .findIndex(mosaic => mosaic.id.toHex() === networkCurrency.hex)
 
             if (xemIndex === -1)  {
                 this.balance = 0
                 return this
             }
 
-            this.balance = accountInfo.mosaics[xemIndex].amount.compact() / Math.pow(10, xemDivisibility)
+            this.balance = accountInfo.mosaics[xemIndex].amount.compact() / Math.pow(10, networkCurrency.divisibility)
             return this
         } catch (error) {
             this.balance = 0
@@ -407,28 +410,23 @@ export class AppWallet {
         }
     }
 
-    signAndAnnounceBonded = (
-        password: Password,
-        lockFee: number,
-        node: string,
-        generationHash: string,
-        transactionList: Array<any>,
-        currentXEM1: string,
-        networkType: NetworkType,
-    ) => {
+    // @TODO: review
+    signAndAnnounceBonded = ( password: Password,
+                              lockFee: number,
+                              transactions: AggregateTransaction[],
+                              store: Store<AppState>) => {
+        const {node} = store.state.account
+        
         const account = this.getAccount(password)
-        const aggregateTransaction = transactionList[0]
+        const aggregateTransaction = transactions[0]
+        // @TODO: review listener management
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-        new TransactionApiRxjs().announceBondedWithLock(
-            aggregateTransaction,
-            account,
-            listener,
-            node,
-            generationHash,
-            networkType,
-            lockFee,
-            currentXEM1,
-        )
+        new TransactionApiRxjs().announceBondedWithLock(  aggregateTransaction,
+                                                          account,
+                                                          listener,
+                                                          node,
+                                                          lockFee,
+                                                          store)
     }
 }
 
@@ -440,7 +438,7 @@ export const createCompleteMultisigTransaction = (transaction: Array<Transaction
     return new MultisigApiRxjs().completeMultisigTransaction(networkType, fee, multisigPublicKey, transaction)
 }
 
-export const getCurrentImportance = async (store: any) => {
+export const getCurrentImportance = async (store: Store<AppState>) => {
     const {address} = store.state.account.wallet
     const {node} = store.state.account
     const resStr = await WebClient.request('', {
@@ -449,9 +447,7 @@ export const getCurrentImportance = async (store: any) => {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-    }).catch(
-        store.commit('SET_WALLET_IMPORTANCE', 0)
-    )
+    }).catch(_ => store.commit('SET_WALLET_IMPORTANCE', 0))
     const importance = JSON.parse(resStr + '').account ? new Id(JSON.parse(resStr + '').account.importance).compact() : 0
     store.commit('SET_WALLET_IMPORTANCE', Number(importance))
 }

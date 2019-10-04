@@ -89,13 +89,7 @@ export class ChainListeners {
                             duration: 20,
                         })
                         formatAndSave(
-                            that.$store.getters.mosaicList,
                             {...transaction, isTxUnconfirmed: true},
-                            that.$store.getters.wallet.address,
-                            that.$store.getters.currentXEM1,
-                            that.$store.getters.xemDivisibility,
-                            that.$store.getters.node,
-                            that.$store.getters.currentXem,
                             that.$store,
                             false
                         )
@@ -122,13 +116,7 @@ export class ChainListeners {
                             duration: 4,
                         })
                         formatAndSave(
-                            that.$store.getters.mosaicList,
                             transaction,
-                            that.$store.getters.wallet.address,
-                            that.$store.getters.currentXEM1,
-                            that.$store.getters.xemDivisibility,
-                            that.$store.getters.node,
-                            that.$store.getters.currentXem,
                             that.$store,
                             true
                         )

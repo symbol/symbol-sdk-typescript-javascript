@@ -1,12 +1,12 @@
 import {Message} from "@/config/index.ts"
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import {AccountLinkTransaction, UInt64, LinkAction, Deadline, Password} from "nem2-sdk"
 import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
 import {AppWallet, DefaultFee, StoreAccount} from "@/core/model"
-import {DEFAULT_FEES, defaultNetworkConfig, FEE_GROUPS} from "@/config/index";
+import {DEFAULT_FEES, FEE_GROUPS} from "@/config/index";
 
 @Component({
   computed: {
@@ -17,15 +17,18 @@ import {DEFAULT_FEES, defaultNetworkConfig, FEE_GROUPS} from "@/config/index";
 })
 export class WalletHarvestingTs extends Vue {
   activeAccount: StoreAccount
-  isLinked = false
   harvestBlockList = []
   isLinkToRemote = false
   isShowDialog = false
-  remotePublicKey = ''
-  formItems = {...formDataConfig.remoteForm}
-  XEM: string = defaultNetworkConfig.XEM
-  get getWallet() {
+  formItems = formDataConfig.remoteForm
+  remotePublicKey: string = null
+
+  get wallet() {
     return this.activeAccount.wallet
+  }
+
+  get networkCurrency() {
+    return this.activeAccount.networkCurrency
   }
 
   get generationHash() {
@@ -44,26 +47,41 @@ export class WalletHarvestingTs extends Vue {
     return this.activeAccount.wallet.networkType
   }
 
-    get feeAmount(): number {
-        const {feeSpeed} = this.formItems
-        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
-    }
+  get feeAmount(): number {
+      const {feeSpeed} = this.formItems
+      const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+      return getAbsoluteMosaicAmount(feeAmount, this.activeAccount.networkCurrency.divisibility)
+  }
 
   get address() {
     return this.activeAccount.wallet.address
   }
+  
+  // @TODO: refactor harvesting: move to store
+  async getRemotePublicKey(): Promise<void> {
+      try {
+          const {address, node} = this
+          const resStr: any = await new AccountApiRxjs().getLinkedPublickey(node, address).toPromise()
 
-  get xemDivisibility() {
-    return this.activeAccount.xemDivisibility
+      if (JSON.parse(resStr) && JSON.parse(resStr).account && JSON.parse(resStr).account.linkedAccountKey) {
+          const {linkedAccountKey} = JSON.parse(resStr).account
+          const publicKey = Buffer.from(linkedAccountKey, 'base64').toString('hex').toUpperCase()
+          this.remotePublicKey = Number(publicKey) !== 0 ? publicKey : null 
+          return
+      }
+          this.remotePublicKey = null
+      } catch (error) {
+          console.error(error)
+          this.remotePublicKey = null
+      }
+  }
+
+  get isLinked(): boolean {
+      return this.remotePublicKey !== null
   }
 
   initForm() {
     this.formItems = formDataConfig.remoteForm
-  }
-
-  changePage() {
-
   }
 
   modalCancel() {
@@ -84,7 +102,8 @@ export class WalletHarvestingTs extends Vue {
   }
 
   checkForm(): boolean {
-    const {remotePublicKey, password} = this.formItems
+    const {remotePublicKey} = this
+    const {password} = this.formItems
     const {feeAmount} = this
     if (remotePublicKey.length !== 64) {
       this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + '')
@@ -104,7 +123,7 @@ export class WalletHarvestingTs extends Vue {
       return false
     }
 
-    const validPassword = new AppWallet(this.getWallet).checkPassword(new Password(password))
+    const validPassword = new AppWallet(this.wallet).checkPassword(new Password(password))
 
     if (!validPassword) {
       this.showErrorMessage(this.$t('password_error') + '')
@@ -119,9 +138,9 @@ export class WalletHarvestingTs extends Vue {
   }
 
   sendTransaction() {
-    const {feeAmount} = this
-    let {remotePublicKey, password} = this.formItems
-    const {generationHash, node, networkType, xemDivisibility, isLinked} = this
+    const {feeAmount, remotePublicKey} = this
+    const {password} = this.formItems
+    const {generationHash, node, networkType, isLinked} = this
     const accountLinkTransaction = AccountLinkTransaction.create(
       Deadline.create(),
       remotePublicKey,
@@ -129,7 +148,7 @@ export class WalletHarvestingTs extends Vue {
       networkType,
       UInt64.fromUint(feeAmount)
     )
-    new AppWallet(this.getWallet).signAndAnnounceNormal(new Password(password), node, generationHash, [accountLinkTransaction], this)
+    new AppWallet(this.wallet).signAndAnnounceNormal(new Password(password), node, generationHash, [accountLinkTransaction], this)
     this.modalCancel()
   }
 
@@ -137,30 +156,14 @@ export class WalletHarvestingTs extends Vue {
     this.isShowDialog = true
   }
 
-  getLinkPublicKey() {
-    if (!this.getWallet.address) {
-      return
-    }
-    const that = this
-    const {address, node} = this
-    new AccountApiRxjs().getLinkedPublickey(node, address).subscribe((resStr: string) => {
-        that.remotePublicKey = ''
-        if (JSON.parse(resStr) && JSON.parse(resStr).account && JSON.parse(resStr).account.linkedAccountKey) {
-          let linkedPublicKey = JSON.parse(resStr).account.linkedAccountKey
-          that.remotePublicKey = Buffer.from(linkedPublicKey, 'base64').toString('hex').toUpperCase()
-        }
-        that.remotePublicKey = ''
-        if (Number(that.remotePublicKey) != 0) {
-          // switch on
-          that.formItems.remotePublicKey = that.remotePublicKey
-          that.isLinked = true
-          return
-        }
-      }
-    )
-  }
+  // @TODO: refactor harvesting: move to store
+  mounted() { this.getRemotePublicKey() }
 
-  mounted() {
-    this.getLinkPublicKey()
+  // @TODO: refactor harvesting: move to store
+  @Watch('address')
+  onAddressChange(newVal, oldVal) {
+      if (newVal && newVal !== oldVal) {
+          this.getRemotePublicKey() 
+      }
   }
 }

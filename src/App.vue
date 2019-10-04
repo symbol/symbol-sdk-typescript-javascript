@@ -43,58 +43,22 @@
         isWindows = isWindows
         activeAccount: StoreAccount
         app: AppInfo
-        unconfirmedTxListener = null
-        confirmedTxListener = null
-        txStatusListener = null
         chainListeners: ChainListeners = null
 
-        get node(): string {
+        get node() {
             return this.activeAccount.node
         }
 
-        get accountPublicKey() {
-            return this.activeAccount.wallet.publicKey
-        }
-
-        get wallet(): any {
+        get wallet() {
             return this.activeAccount.wallet
-        }
-
-        get activeMultisigAccount(): string {
-            return this.activeAccount.activeMultisigAccount
-        }
-
-        get currentXem() {
-            return this.activeAccount.currentXem
-        }
-
-        get currentXEM1(): string {
-            return this.activeAccount.currentXEM1
-        }
-
-        get NamespaceList() {
-            return this.activeAccount.namespaces
-        }
-
-        get currentNode() {
-            return this.activeAccount.node
-        }
-
-        get xemDivisibility() {
-            return this.activeAccount.xemDivisibility
         }
 
         get accountAddress() {
             return this.activeAccount.wallet.address
         }
 
-        get mosaicList() {
-            return this.activeAccount.mosaics
-        }
-
-        get transactionList() {
-            // used in enrichMosaics
-            return this.activeAccount.transactionList
+        get networkCurrency() {
+            return this.activeAccount.networkCurrency
         }
 
         get accountName(): string {
@@ -142,9 +106,9 @@
                 if (mosaicListFromStorage) await this.$store.commit('SET_MOSAICS', parsedMosaicListFromStorage)
                 const initMosaicsAndNamespaces = await Promise.all([
                     // @TODO make it an AppWallet methods
-                    initMosaic(newWallet, this),
+                    initMosaic(newWallet, this.$store),
                     getNamespacesFromAddress(newWallet.address, this.node),
-                    setTransactionList(newWallet.address, this)
+                    setTransactionList(this.$store)
                 ])
 
                 this.$store.commit('SET_NAMESPACES', initMosaicsAndNamespaces[1] || [])
@@ -218,7 +182,7 @@
         }
 
         checkIfWalletExist() {
-            if (!this.wallet.address) {
+            if (!this.wallet || !this.wallet.address) {
                 this.$router.push('login')
             }
         }
@@ -247,7 +211,7 @@
             // @TODO: refactor
             await Promise.all([
                 getNetworkGenerationHash(node, this),
-                getCurrentBlockHeight(node, this.$store),
+                getCurrentBlockHeight(this.$store),
                 getCurrentNetworkMosaic(node, this.$store),
             ])
 
@@ -280,14 +244,15 @@
                 if (oldValue.address === undefined || newValue.address !== undefined
                     || oldValue.address !== undefined && newValue.address !== oldValue.address) {
                     this.$store.commit('RESET_MOSAICS')
+                    // @TODO: check if it is neessary
                     this.$store.commit('UPDATE_MOSAICS', [new AppMosaic({
-                        hex: this.currentXEM1, name: this.currentXem
+                        hex: this.networkCurrency.hex, name: this.networkCurrency.name
                     })])
                     this.onWalletChange(newValue)
                 }
             })
 
-            this.$watchAsObservable('activeMultisigAccount')
+            this.$watchAsObservable('activeAccount.activeMultisigAccount')
                 .pipe(
                     throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
                 ).subscribe(({newValue, oldValue}) => {
@@ -320,7 +285,7 @@
                                 await getNetworkGenerationHash(node, this)
                                 // @TODO: Handle generationHash change
                                 await getCurrentNetworkMosaic(node, this.$store)
-                                await getCurrentBlockHeight(node, this.$store)
+                                await getCurrentBlockHeight(this.$store)
                                 this.chainListeners = new ChainListeners(this, this.wallet.address, node)
                                 this.chainListeners.start()
                             } catch (error) {

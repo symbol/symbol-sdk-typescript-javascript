@@ -41,24 +41,8 @@ export class MonitorPanelTs extends Vue {
         return this.app.mosaicsLoading
     }
 
-    get getWallet() {
-        return this.activeAccount.wallet
-    }
-
-    get XEMamount() {
-        return this.activeAccount.wallet.balance
-    }
-
     get address() {
         return this.activeAccount.wallet.address
-    }
-
-    get node() {
-        return this.activeAccount.node
-    }
-
-    get currentXEM1() {
-        return this.activeAccount.currentXEM1
     }
 
     get mosaicMap() {

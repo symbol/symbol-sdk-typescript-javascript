@@ -19,7 +19,7 @@ import {
     formatSeconds, formatAddress, getAbsoluteMosaicAmount,
 } from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {defaultNetworkConfig, Message,formDataConfig, DEFAULT_FEES, FEE_GROUPS} from '@/config'
+import {formDataConfig, Message, DEFAULT_FEES, FEE_GROUPS} from '@/config'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, AppWallet, DefaultFee} from "@/core/model"
 import {NETWORK_PARAMS} from '@/core/validation'
 @Component({
@@ -41,7 +41,6 @@ export class MosaicTransactionTs extends Vue {
     transactionList = []
     isCompleteForm = true
     formItems = formDataConfig.mosaicTransactionForm
-    XEM: string = defaultNetworkConfig.XEM
     formatAddress = formatAddress
 
     get wallet(): AppWallet {
@@ -96,8 +95,8 @@ export class MosaicTransactionTs extends Vue {
         return this.activeAccount.wallet.address
     }
 
-    get xemDivisibility(): number {
-        return this.activeAccount.xemDivisibility
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
     }
 
     get node(): string {
@@ -113,7 +112,7 @@ export class MosaicTransactionTs extends Vue {
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
     get feeDivider(): number {
@@ -162,13 +161,13 @@ export class MosaicTransactionTs extends Vue {
 
     showCheckDialog() {
         const {supply, divisibility, transferable, permanent, supplyMutable, restrictable, duration} = this.formItems
-        const {address, feeAmount, xemDivisibility} = this
+        const {address, feeAmount, networkCurrency} = this
         this.transactionDetail = {
             "address": address,
             "supply": supply,
             "mosaic_divisibility": divisibility,
             "duration": duration,
-            "fee": feeAmount / Math.pow(10,xemDivisibility),
+            "fee": feeAmount / Math.pow(10, networkCurrency.divisibility),
             'transmittable': transferable,
             'variable_supply': supplyMutable,
             "duration_permanent": permanent,

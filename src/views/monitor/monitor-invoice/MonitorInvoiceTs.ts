@@ -1,4 +1,4 @@
-import {defaultNetworkConfig, Message} from "@/config/index.ts"
+import {Message} from "@/config/index.ts"
 import {QRCodeGenerator} from 'nem2-qr-library'
 import {copyTxt} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
@@ -36,19 +36,10 @@ export class MonitorInvoiceTs extends Vue {
     TransferType = TransferType
     isShowDialog = false
     transferTypeList = monitorReceiptTransferTypeConfig
-    qrInfo = {
-        mosaicHex: this.$store.state.account.currentXem || defaultNetworkConfig.currentXem,
-        mosaicAmount: 0,
-        remarks: '',
-    }
     formItem = {
         mosaicHex: '',
         mosaicAmount: 0,
         remarks: '',
-    }
-
-    get accountPublicKey() {
-        return this.activeAccount.wallet.publicKey
     }
 
     get accountAddress() {
@@ -58,11 +49,6 @@ export class MonitorInvoiceTs extends Vue {
     get node() {
         return this.activeAccount.node
     }
-
-    get currentXem() {
-        return this.activeAccount.currentXem
-    }
-
 
     get getWallet() {
         return this.activeAccount.wallet
@@ -101,6 +87,15 @@ export class MonitorInvoiceTs extends Vue {
                 label: `${name || hex} (${balance ? balance.toLocaleString() : 0})`,
                 value: hex,
             }))
+    }
+
+    // @TODO: review
+    qrInfo() {
+        return  {
+            mosaicHex: this.activeAccount.networkCurrency.hex,
+            mosaicAmount: this.formItem.mosaicAmount,
+            remarks: this.formItem.remarks,
+        }
     }
 
     async checkForm() {
@@ -180,8 +175,6 @@ export class MonitorInvoiceTs extends Vue {
         this.QRCode = QRCodeGenerator
             .createExportObject(QRCodeData, networkType, generationHash)
             .toBase64()
-
-        this.qrInfo = this.formItem
     }
 
 
@@ -225,7 +218,7 @@ export class MonitorInvoiceTs extends Vue {
     createQRCode() {
         if (!this.getWallet.address) return
         const {generationHash, networkType} = this
-        const QRCodeData = {publicKey: this.accountPublicKey}
+        const QRCodeData = {publicKey: this.getWallet.publicKey}
         this.QRCode = QRCodeGenerator
             .createExportObject(QRCodeData, networkType, generationHash)
             .toBase64()

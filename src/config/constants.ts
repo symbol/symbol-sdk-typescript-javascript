@@ -1,5 +1,5 @@
 import {TransactionType} from 'nem2-sdk'
-import { DefaultFee } from '@/core/model'
+import { DefaultFee, NetworkCurrency } from '@/core/model'
 
 export const isWindows = require('./packge.ts').isWin32
 
@@ -126,12 +126,17 @@ export const DEFAULT_FEES: Record <string, DefaultFee[]> = {
     ],
 }
 
+const defaultNetworkMosaic: NetworkCurrency = {
+    hex: '',
+    divisibility: 1,
+    ticker: '',
+    name: '',
+}
+
 export const defaultNetworkConfig = {
-    currentXem: 'nem.xem',
-    currentXEM1: '',
-    XEM: 'XEM',
     gas2xemRate: 20000,   //  1xem=20000gas
     networkConfirmations: 10,
+    defaultNetworkMosaic,
 }
 
 export const networkConfig = {

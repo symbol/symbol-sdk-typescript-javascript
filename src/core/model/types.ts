@@ -24,11 +24,15 @@ export interface AddressAndMultisigInfo {
     multisigAccountInfo: MultisigAccountInfo
 }
 
+export interface NetworkCurrency {
+    hex: string,
+    divisibility: number,
+    ticker: string,
+    name: string,
+}
+
 export interface StoreAccount {
     node: string,
-    // @TODO: the currentXem should be renamed
-    currentXem: string,
-    currentXEM1: string,
     account: Account | any,
     wallet: AppWallet,
     mosaics: Record<string, AppMosaic>,
@@ -36,15 +40,14 @@ export interface StoreAccount {
     errorTx: Array<any>,
     addressAliasMap: any,
     generationHash: string,
-    xemDivisibility: number
     transactionList: FormattedTransaction[],
     accountName: string
-    networkMosaic: AppMosaic,
     activeMultisigAccount: string,
     multisigAccountsMosaics: Record<string, Record<string, AppMosaic>>,
     multisigAccountsNamespaces: Record<string, AppNamespace[]>,
     multisigAccountsTransactions: Record<string, Transaction[]>,
     multisigAccountInfo: Record<string, MultisigAccountInfo>,
+    networkCurrency: NetworkCurrency,
 }
 
 export interface AppInfo {
@@ -63,7 +66,13 @@ export interface AppInfo {
     namespaceLoading: boolean
     multisigLoading: boolean,
     isUiDisabled: boolean,
-    uiDisabledMessage: string
+    uiDisabledMessage: string,
+    _ENABLE_TREZOR_: boolean,
+}
+
+export interface AppState {
+    app: AppInfo,
+    account: StoreAccount,
 }
 
 export interface DefaultFee {

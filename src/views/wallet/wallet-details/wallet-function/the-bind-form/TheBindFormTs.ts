@@ -40,10 +40,6 @@ export class TheBindFormTs extends Vue {
         return this.activeAccount.wallet
     }
 
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
-    }
-
     get NamespaceList() {
         return this.activeAccount.namespaces
     }
@@ -143,7 +139,7 @@ export class TheBindFormTs extends Vue {
     }
 
     addressAlias(type) {
-        const fee = getAbsoluteMosaicAmount(this.formItem.fee, this.xemDivisibility)
+        const fee = getAbsoluteMosaicAmount(this.formItem.fee, this.activeAccount.networkCurrency.divisibility)
         let transaction = new NamespaceApiRxjs().addressAliasTransaction(
             type ? AliasActionType.Link : AliasActionType.Unlink,
             new NamespaceId(this.formItem.alias),

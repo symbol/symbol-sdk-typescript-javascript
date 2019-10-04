@@ -1,6 +1,7 @@
-import {FormattedTransaction} from '@/core/model'
+import {FormattedTransaction, AppState} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
-import {Address, TransferTransaction} from 'nem2-sdk'
+import {TransferTransaction} from 'nem2-sdk'
+import {Store} from 'vuex';
 
 export class FormattedTransfer extends FormattedTransaction {
     infoFirst: string
@@ -9,11 +10,9 @@ export class FormattedTransfer extends FormattedTransaction {
     dialogDetailMap: any
 
     constructor(    tx: TransferTransaction,
-                    address: Address,
-                    currentXem: string,
-                    xemDivisibility: number,
-                    store: any) {
-        super(tx, address, currentXem, xemDivisibility, store)
+                    store: Store<AppState>) {
+        super(tx, store)
+        const {networkCurrency} = store.state.account
 
         const {rawTx}: any = this
         this.infoFirst = this.txHeader.isReceipt ? rawTx.signer.address.plain() : rawTx.recipient.address
@@ -22,7 +21,7 @@ export class FormattedTransfer extends FormattedTransaction {
             'transfer_type': this.txHeader.tag,
             'from': this.infoFirst,
             'mosaic': rawTx.mosaics,
-            'fee': getRelativeMosaicAmount(rawTx.maxFee.compact(), xemDivisibility) + 'XEM',
+            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + networkCurrency.ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
             'message': rawTx.message.payload

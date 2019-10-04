@@ -46,10 +46,6 @@ export class MonitorDashBoardTs extends Vue {
         return this.app.chainStatus.currentHeight
     }
 
-    get currentXem() {
-        return this.activeAccount.currentXem
-    }
-
     // @TODO: review
     async getMarketPrice() {
         if (!isRefreshData('oneWeekPrice', 1000 * 60 * 60 * 24, new Date().getHours())) {

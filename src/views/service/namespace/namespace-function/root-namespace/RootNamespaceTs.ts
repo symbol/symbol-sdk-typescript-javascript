@@ -2,7 +2,7 @@ import {mapState} from "vuex"
 import {PublicAccount, MultisigAccountInfo, NetworkType, Address} from "nem2-sdk"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig, formDataConfig} from "@/config"
+import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress,
@@ -30,7 +30,6 @@ export class RootNamespaceTs extends Vue {
     transactionList = []
     otherDetails: any = {}
     formItems = formDataConfig.rootNamespaceForm
-    XEM: string = defaultNetworkConfig.XEM
     formatAddress = formatAddress
 
     get wallet(): AppWallet {
@@ -81,8 +80,8 @@ export class RootNamespaceTs extends Vue {
         return this.activeAccount.wallet.networkType
     }
 
-    get xemDivisibility(): number {
-        return this.activeAccount.xemDivisibility
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
     }
 
     get generationHash(): string {
@@ -118,7 +117,7 @@ export class RootNamespaceTs extends Vue {
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
     get feeDivider(): number {
@@ -241,14 +240,14 @@ export class RootNamespaceTs extends Vue {
     createTransaction() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
-        const {feeAmount, xemDivisibility} = this
+        const {feeAmount} = this
         const {address} = this.wallet
         const {duration, rootNamespaceName} = this.formItems
         this.transactionDetail = {
             "address": address,
             "duration": duration,
             "namespace": rootNamespaceName,
-            "fee": feeAmount / Math.pow(10, xemDivisibility),
+            "fee": feeAmount / Math.pow(10, this.networkCurrency.divisibility),
         }
 
         if (this.announceInLock) {

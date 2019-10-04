@@ -16,7 +16,9 @@ import {
     FormattedModifyAccountRestrictionMosaic,
     FormattedModifyAccountRestrictionOperation,
     FormattedLinkAccount,
+    AppState,
 } from '@/core/model'
+import { Store } from 'vuex'
 
 const transactionFactory = () => ({
     router: {
@@ -39,31 +41,19 @@ const transactionFactory = () => ({
     },
 
     get(  transaction: Transaction,
-          address: Address,
-          currentXem: string,
-          xemDivisibility: number,
-          store: any) {
+          store: Store<AppState>) {
         const {type} = transaction
         const formatter = this.router[type]
         if (!formatter) throw new Error(`no formatter found for transaction type ${type}`)
-        return new formatter(transaction, address, currentXem, xemDivisibility, store)
+        return new formatter(transaction, store)
     }
 })
 
 export const transactionFormatter = ( transactionList: Array<Transaction>,
-                                      accountAddress: Address,
-                                      currentXEM: string,
-                                      xemDivisibility: number,
-                                      node: string,
-                                      currentXem: string,
-                                      store: any) => {
+                                      store: Store<AppState>) => {
 
     // @TODO: manage address aliases
     const enrichedTransactions = transactionList
     return enrichedTransactions
-        .map(transaction => transactionFactory().get( transaction,
-                                                      accountAddress,
-                                                      currentXem,
-                                                      xemDivisibility,
-                                                      store))
+        .map(transaction => transactionFactory().get(transaction,store))
 }

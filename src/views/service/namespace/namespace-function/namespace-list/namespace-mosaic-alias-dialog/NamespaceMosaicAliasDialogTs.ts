@@ -1,7 +1,7 @@
 import {mapState} from "vuex"
 import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Message, defaultNetworkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
+import {Message, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {AppMosaics} from '@/core/services/mosaics'
@@ -21,7 +21,6 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     app: AppInfo
     isCompleteForm = false
     formItems = formDataConfig.mosaicAliasForm
-    XEM: string = defaultNetworkConfig.XEM
 
     @Prop()
     showMosaicAliasDialog: boolean
@@ -51,8 +50,8 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
         return this.activeAccount.node
     }
 
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
     }
 
     get mosaics() {
@@ -89,7 +88,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     get feeAmount() {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
     submit() {
@@ -127,7 +126,7 @@ export class NamespaceMosaicAliasDialogTs extends Vue {
     }
 
     async updateMosaic() {
-        const {node, generationHash, xemDivisibility, feeAmount} = this
+        const {node, generationHash, feeAmount} = this
         const {networkType} = this.wallet
         const {name} = this.activeNamespace
         const {mosaicName, password} = this.formItems

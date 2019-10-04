@@ -1,6 +1,6 @@
 import {AliasActionType, Password, NamespaceId, MosaicId} from "nem2-sdk"
 import {mapState} from "vuex"
-import {Message, DEFAULT_FEES, FEE_GROUPS,formDataConfig, defaultNetworkConfig} from "@/config"
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {getAbsoluteMosaicAmount} from '@/core/utils'
@@ -15,7 +15,6 @@ export class MosaicUnAliasDialogTs extends Vue {
     isCompleteForm = false
     aliasNameList: any[] = []
     formItems = formDataConfig.mosaicUnAliasForm
-    XEM = defaultNetworkConfig.XEM
 
     @Prop()
     showMosaicUnAliasDialog: boolean
@@ -45,10 +44,6 @@ export class MosaicUnAliasDialogTs extends Vue {
         return this.activeAccount.node
     }
 
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
-    }
-
     get defaultFees(): DefaultFee[] {
         return DEFAULT_FEES[FEE_GROUPS.SINGLE]
     }
@@ -56,7 +51,7 @@ export class MosaicUnAliasDialogTs extends Vue {
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.activeAccount.networkCurrency.divisibility)
     }
 
     mosaicAliasDialogCancel() {

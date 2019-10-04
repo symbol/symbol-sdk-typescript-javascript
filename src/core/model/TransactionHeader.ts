@@ -3,6 +3,8 @@ import {transactionTag} from "@/config"
 import {getRelativeMosaicAmount} from '@/core/utils'
 import {transferIcons, transactionTypeToIcon} from '@/common/img/monitor/icons'
 import {ChainStatus} from './ChainStatus'
+import {AppState} from './types'
+import {Store} from 'vuex'
 
 /**
  * Custom properties built from transaction headers
@@ -42,15 +44,17 @@ export class TransactionHeader {
    */ 
   icon:any
 
-  constructor(transaction: Transaction, address: Address, currentXem: string, xemDivisibility: number, store: any) {
+  constructor(transaction: Transaction, store: Store<AppState>) {
+      const {wallet, networkCurrency} = store.state.account
+
      this.isReceipt = transaction instanceof TransferTransaction
         && transaction.recipient instanceof Address // @TODO: handle namespaceId
-        && transaction.recipient.plain()  === address.plain()
+        && transaction.recipient.plain()  === wallet.address
 
-      const chainStatus: ChainStatus = store.getters.chainStatus
+      const chainStatus: ChainStatus = store.state.app.chainStatus
 
      this.tag = this.getTag(transaction)
-     this.fee = getRelativeMosaicAmount(transaction.maxFee.compact(), xemDivisibility)
+     this.fee = getRelativeMosaicAmount(transaction.maxFee.compact(), networkCurrency.divisibility)
      this.icon = this.getIcon(transaction)
 
      if (transaction.transactionInfo) {

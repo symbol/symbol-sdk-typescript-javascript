@@ -35,10 +35,6 @@ export class WalletAliasTs extends Vue {
         return this.activeAccount.wallet
     }
 
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
-    }
-
     get NamespaceList() {
         return this.activeAccount.namespaces
     }

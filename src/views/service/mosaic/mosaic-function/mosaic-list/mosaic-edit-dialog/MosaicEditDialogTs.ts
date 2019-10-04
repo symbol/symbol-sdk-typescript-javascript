@@ -1,7 +1,7 @@
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {Password, NetworkType, MosaicSupplyChangeTransaction, Deadline, UInt64, MosaicId} from 'nem2-sdk'
-import {Message,formDataConfig, networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig} from "@/config/index.ts"
+import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config/index.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {AppWallet, AppMosaic, DefaultFee, StoreAccount} from "@/core/model"
 
@@ -16,7 +16,6 @@ export class MosaicEditDialogTs extends Vue {
     changedSupply = 0
     totalSupply = networkConfig.maxMosaicAtomicUnits
     formItems = formDataConfig.mosaicEditForm
-    XEM = defaultNetworkConfig.XEM
 
     @Prop()
     showMosaicEditDialog: boolean
@@ -50,8 +49,8 @@ export class MosaicEditDialogTs extends Vue {
         return this.activeAccount.node
     }
 
-    get xemDivisibility(): number {
-        return this.activeAccount.xemDivisibility
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
     }
 
     get mosaicId(): string {
@@ -69,7 +68,7 @@ export class MosaicEditDialogTs extends Vue {
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
     mosaicEditDialogCancel() {

@@ -44,36 +44,15 @@ export class MosaicListTs extends Vue {
     currentMosaicList = []
     isShowExpiredMosaic = false
 
-    get currentXem() {
-        return this.activeAccount.currentXem
-    }
-
     get mosaics() {
         return this.activeAccount.mosaics
     }
 
-    get currentXEM1() {
-        return this.activeAccount.currentXEM1
-    }
-
-    get generationHash() {
-        return this.activeAccount.generationHash
-    }
-
-    get accountAddress() {
-        return this.activeAccount.wallet.address
-    }
-
-    get node() {
-        return this.activeAccount.node
-    }
-
-    get getWallet() {
-        return this.activeAccount.wallet
-    }
-
-    get nowBlockHeight() {
+    get currentHeight() {
         return this.app.chainStatus.currentHeight
+    }
+    get publicKey() {
+        return this.activeAccount.wallet.publicKey
     }
 
     get mosaicsLoading() {
@@ -95,14 +74,6 @@ export class MosaicListTs extends Vue {
         return namespaceMap
     }
 
-    get publicKey() {
-        return this.activeAccount.wallet.publicKey
-    }
-
-    get currentHeight() {
-        return this.app.chainStatus.currentHeight
-    }
-
     toggleChange(page) {
         this.currentPage = page
     }
@@ -121,7 +92,6 @@ export class MosaicListTs extends Vue {
         this.showMosaicUnAliasDialog = true
     }
 
-
     showEditDialog(item) {
         this.selectedMosaic = item
         this.showMosaicEditDialog = true
@@ -132,7 +102,7 @@ export class MosaicListTs extends Vue {
         if (!item.mosaicInfo) return 'Loading...'
         const {properties, height} = item.mosaicInfo
         if (properties.duration.compact() === 0) return 'Forever'
-        return (height.compact() + properties.duration.compact()) - this.nowBlockHeight
+        return (height.compact() + properties.duration.compact()) - this.currentHeight
     }
 
     getSortType(type) {

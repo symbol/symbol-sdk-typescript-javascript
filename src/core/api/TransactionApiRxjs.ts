@@ -14,6 +14,8 @@ import {
 } from 'nem2-sdk'
 import {filter, mergeMap} from "rxjs/operators"
 import {from as observableFrom} from "rxjs"
+import {Store} from 'vuex'
+import {AppState} from '@/core/model'
 
 export class TransactionApiRxjs {
 
@@ -129,15 +131,16 @@ export class TransactionApiRxjs {
                            account: Account,
                            listener: Listener,
                            node: string,
-                           generationHash: string,
-                           networkType,
-                           fee,
-                           mosaicHex: string) {
+                           fee: number,
+                           store: Store<AppState>) {
+        const {wallet, networkCurrency, generationHash} = store.state.account
+        const {networkType} = wallet
+
         const transactionHttp = new TransactionHttp(node)
         const signedTransaction = account.sign(aggregateTransaction, generationHash)
         const hashLockTransaction = HashLockTransaction.create(
             Deadline.create(),
-            new Mosaic(new MosaicId(mosaicHex), UInt64.fromUint(10000000)),
+            new Mosaic(new MosaicId(networkCurrency.hex), UInt64.fromUint(10000000)), // @TODO: amount should not be hardcoded
             UInt64.fromUint(480),
             signedTransaction,
             networkType,

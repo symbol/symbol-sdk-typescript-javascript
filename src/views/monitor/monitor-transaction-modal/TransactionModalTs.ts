@@ -29,14 +29,6 @@ export class TransactionModalTs extends Vue {
         }
     }
 
-    get mosaicList() {
-        return this.activeAccount.mosaics
-    }
-
-    get currentXem() {
-        return this.activeAccount.currentXem
-    }
-
     get publicKey() {
         return this.activeAccount.wallet.publicKey
     }

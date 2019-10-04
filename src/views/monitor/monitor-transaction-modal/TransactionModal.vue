@@ -26,7 +26,7 @@
           <div v-if="key === 'mosaic'">
             <span class="title">{{$t(key)}}</span>
             <span class="value overflow_ellipsis">
-              <span v-for="r in renderMosaicsReturnList(value, mosaicList, currentXem)">
+              <span v-for="(r, index) in renderMosaicsReturnList(value, $store)" :key="index">
                 <span :class="[r.ownerPublicKey == publicKey?'green':'','mosaic_item']">
                   {{r.name}} [{{r.amount}}]
                 </span>
@@ -78,7 +78,7 @@
           <div v-if="key === 'mosaic'">
             <span class="title">{{$t(key)}}</span>
             <span class="value overflow_ellipsis">
-              <span v-for="r in  renderMosaics(value, mosaicList, currentXem)">
+              <span v-for="(r, index) in renderMosaics(value, $store)" :key="index">
                 <span :class="[r.ownerPublicKey == publicKey?'green':'','mosaic_item']">
                   {{r.name}} [{{r.amount}}]
                 </span>

@@ -1,9 +1,11 @@
-import {AppWallet} from '@/core/model'
+import {AppWallet, AppState} from '@/core/model'
 import {localSave, localRead} from '@/core/utils'
+import { Store } from 'vuex'
 
-export const setWalletsBalances = async (store: any): Promise<void> => {
+export const setWalletsBalances = async (store: Store<AppState>): Promise<void> => {
     try {
-        const {walletList, wallet, accountName} = store.getters
+        const {wallet, accountName} = store.state.account
+        const {walletList} = store.state.app
         const appWalletsWithBalance = await Promise.all(
             [...walletList].map(wallet => new AppWallet(wallet).getAccountBalance(store))
         )

@@ -1,7 +1,7 @@
 import {mapState} from "vuex"
 import {Address, PublicAccount, MultisigAccountInfo, NetworkType} from "nem2-sdk"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, networkConfig, formDataConfig,defaultNetworkConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
+import {Message, networkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount, formatAddress} from '@/core/utils'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppNamespace, StoreAccount, AppInfo, AppWallet, DefaultFee} from "@/core/model"
@@ -30,7 +30,6 @@ export class SubNamespaceTs extends Vue {
     formItems = formDataConfig.subNamespaceForm
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
     formatAddress = formatAddress
-    XEM: string = defaultNetworkConfig.XEM
 
     get wallet(): AppWallet {
         return this.activeAccount.wallet
@@ -91,8 +90,8 @@ export class SubNamespaceTs extends Vue {
         return this.app.chainStatus.currentHeight
     }
 
-    get xemDivisibility(): number {
-        return this.activeAccount.xemDivisibility
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
     }
 
     get accountPublicKey(): string {
@@ -145,7 +144,7 @@ export class SubNamespaceTs extends Vue {
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
     get feeDivider(): number {

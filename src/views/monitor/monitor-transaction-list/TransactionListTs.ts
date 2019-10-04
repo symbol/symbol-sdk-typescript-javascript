@@ -50,10 +50,6 @@ export class TransactionListTs extends Vue {
         return this.app.chainStatus.currentHeight
     }
 
-    get currentXem() {
-        return this.activeAccount.currentXem
-    }
-
     // @TODO: move out from there
     renderHeightAndConfirmation(height) {
         const {currentHeight} = this

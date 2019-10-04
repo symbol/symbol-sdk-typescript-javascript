@@ -25,18 +25,6 @@ export class AccountImportMnemonicTs extends Vue {
     account = {}
     showCheckPWDialog = false
 
-    get getNode() {
-        return this.activeAccount.node
-    }
-
-    get currentXEM1() {
-        return this.activeAccount.currentXEM1
-    }
-
-    get walletList() {
-        return this.app.walletList
-    }
-
     submit() {
         if (!this.checkImport()) return
         this.showCheckPWDialog = true

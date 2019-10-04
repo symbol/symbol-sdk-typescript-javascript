@@ -6,7 +6,7 @@ import {
 } from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {Message, formDataConfig,DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig} from "@/config/index.ts"
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config/index.ts"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {createBondedMultisigTransaction, StoreAccount, DefaultFee, AppWallet} from "@/core/model"
 import {getAbsoluteMosaicAmount, formatAddress} from "@/core/utils"
@@ -30,7 +30,6 @@ export class MultisigConversionTs extends Vue {
     otherDetails = {}
     transactionList = []
     formItems = formDataConfig.multisigConversionForm
-    XEM: string = defaultNetworkConfig.XEM
     formatAddress = formatAddress
 
     get wallet(): AppWallet {
@@ -41,8 +40,8 @@ export class MultisigConversionTs extends Vue {
         return this.activeAccount.wallet.publicKey
     }
 
-    get currentXEM1() {
-        return this.activeAccount.currentXEM1
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
     }
 
     get networkType() {
@@ -63,10 +62,6 @@ export class MultisigConversionTs extends Vue {
         return this.activeAccount.wallet.address
     }
 
-    get xemDivisibility(): number {
-        return this.activeAccount.xemDivisibility
-    }
-
     get node(): string {
         return this.activeAccount.node
     }
@@ -82,7 +77,7 @@ export class MultisigConversionTs extends Vue {
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
     get feeDivider(): number {
@@ -119,7 +114,7 @@ export class MultisigConversionTs extends Vue {
             "min_approval": minApproval,
             "min_removal": minRemoval,
             "cosigner": publicKeyList.join(','),
-            "fee": feeAmount / Math.pow(10, this.xemDivisibility)
+            "fee": feeAmount / Math.pow(10, this.networkCurrency.divisibility)
         }
         this.otherDetails = {
             lockFee: feeAmount

@@ -1,7 +1,7 @@
 import {AliasActionType, MosaicId, Password, Address} from "nem2-sdk"
 import {mapState} from "vuex"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Message, defaultNetworkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
+import {Message, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
@@ -15,7 +15,6 @@ export class NamespaceUnAliasDialogTs extends Vue {
     isCompleteForm = false
     aliasNameList: any[] = []
     formItems = formDataConfig.mosaicUnAliasForm
-    XEM: string = defaultNetworkConfig.XEM
 
     @Prop()
     showUnAliasDialog: boolean
@@ -45,8 +44,8 @@ export class NamespaceUnAliasDialogTs extends Vue {
         return this.activeAccount.node
     }
 
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
     }
 
     get defaultFees(): DefaultFee[] {
@@ -56,7 +55,7 @@ export class NamespaceUnAliasDialogTs extends Vue {
     get feeAmount() {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
     initForm() {

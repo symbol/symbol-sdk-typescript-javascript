@@ -1,24 +1,13 @@
-import {PublicAccount, NetworkType} from "nem2-sdk"
+import {PublicAccount, NetworkType, Address, Transaction} from "nem2-sdk"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {transactionFormat} from './formatting'
+import {AppState} from '@/core/model'
+import {Store} from 'vuex'
 
 // @TODO: refactor
-export const formatAndSave = (  mosaicList,
-                                transaction,
-                                address,
-                                currentXEM1,
-                                xemDivisibility,
-                                node,
-                                currentXem,
-                                store,
-                                confirmed: boolean) => {
+export const formatAndSave = (transaction: Transaction, store: Store<AppState>, confirmed: boolean) => {
     const formattedTransactions = transactionFormat(
         [transaction],
-        address,
-        currentXEM1,
-        xemDivisibility,
-        node,
-        currentXem,
         store,
     )
     
@@ -30,12 +19,11 @@ export const formatAndSave = (  mosaicList,
     store.commit('ADD_UNCONFIRMED_TRANSACTION', formattedTransactions)
 }
 
-export const setTransactionList = (address, that) => {
-    const context = that
-    let {accountPublicKey, node} = that
-    if (!accountPublicKey || accountPublicKey.length < 64) return
-    const publicAccount = PublicAccount
-        .createFromPublicKey(accountPublicKey, NetworkType.MIJIN_TEST)
+export const setTransactionList = (store: Store<AppState>) => {
+    const {wallet, node} = store.state.account
+    const {address, publicKey} = wallet
+    const {networkType} = Address.createFromRawAddress(address)
+    const publicAccount = PublicAccount.createFromPublicKey(publicKey, networkType)
 
     new TransactionApiRxjs().transactions(
         publicAccount,
@@ -45,17 +33,9 @@ export const setTransactionList = (address, that) => {
         node,
     ).subscribe(async (transactionList) => {
         try {
-        const txList = transactionFormat(
-                transactionList,
-                address,
-                context.currentXEM1,
-                context.xemDivisibility,
-                context.node,
-                context.currentXem,
-                context.$store,
-            )
-        await that.$store.commit('SET_TRANSACTION_LIST', txList)
-        that.$store.commit('SET_TRANSACTIONS_LOADING', false)
+            const txList = transactionFormat(transactionList, store)
+            store.commit('SET_TRANSACTION_LIST', txList)
+            store.commit('SET_TRANSACTIONS_LOADING', false)
         } catch (error) {
             console.error(error)
         }

@@ -5,12 +5,9 @@ import {
     MosaicService,
     MosaicHttp,
     MosaicId,
-    Mosaic,
-    MosaicInfo
 } from 'nem2-sdk'
-import {AppMosaic, AppWallet, MosaicNamespaceStatusType} from '@/core/model'
-import {AccountApiRxjs} from "@/core/api/AccountApiRxjs"
-import {MosaicApiRxjs} from "@/core/api/MosaicApiRxjs"
+import {AppMosaic, AppWallet, MosaicNamespaceStatusType, AppState} from '@/core/model'
+import {Store} from 'vuex'
 
 /**
  * Custom implementation for performance gains
@@ -47,19 +44,17 @@ export const mosaicsAmountViewFromAddress = (node: string, address: Address): Pr
     })
 }
 
-export const initMosaic = (wallet, that) => {
-    const {node, mosaicList, currentXEM1} = that
-    const store = that.$store
+export const initMosaic = (wallet: AppWallet, store: Store<AppState>) => {
+    const {node, mosaics, networkCurrency} = store.state.account
     const address = Address.createFromRawAddress(wallet.address)
 
     return new Promise(async (resolve, reject) => {
-        console.log('initMosaic called')
         try {
             const mosaicAmountViews = await mosaicsAmountViewFromAddress(node, address)
             const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
             await store.commit('UPDATE_MOSAICS', appMosaics)
             // @TODO: update account balance should not be necessary anymore
-            new AppWallet(wallet).updateAccountBalance(mosaicList[currentXEM1].balance, store)
+            new AppWallet(wallet).updateAccountBalance(mosaics[networkCurrency.hex].balance, store)
             await Promise.all([
                 store.commit('SET_BALANCE_LOADING', false),
                 store.commit('SET_MOSAICS_LOADING', false),
@@ -70,68 +65,6 @@ export const initMosaic = (wallet, that) => {
             reject(error)
         }
     })
-}
-
-export const getMosaicList = async (address: string, node: string) => {
-    let mosaicList: Mosaic[] = []
-    await new AccountApiRxjs().getAccountInfo(address, node).toPromise().then(accountInfo => {
-        mosaicList = accountInfo.mosaics
-    }).catch((_) => {
-        return
-    })
-    return mosaicList
-}
-
-export const getMosaicInfoList = async (node: string, mosaicList: Mosaic[], currentHeight: any, isShowExpired: boolean = true) => {
-    let mosaicInfoList: MosaicInfo[] = []
-
-
-    let mosaicIds: any = mosaicList.map((item) => {
-        return item.id
-    })
-    await new MosaicApiRxjs().getMosaics(node, mosaicIds).toPromise().then(mosaics => {
-        if (!isShowExpired) {
-            mosaics.map((mosaic) => {
-                const duration = mosaic['properties'].duration.compact()
-                const createHeight = mosaic.height.compact()
-                if (duration === 0 || duration + createHeight > Number(currentHeight)) {
-                    mosaicInfoList.push(mosaic)
-                }
-            })
-            return
-        } else {
-            mosaicInfoList = mosaics
-        }
-    }).catch((_) => {
-        return
-    })
-    return mosaicInfoList
-}
-
-export const buildMosaicList = (mosaicList: Mosaic[], coin1: string, currentXem: string): any => {
-    const mosaicListRst = mosaicList.map((mosaic: any) => {
-        mosaic._amount = mosaic.amount.compact()
-        mosaic.value = mosaic.id.toHex()
-        if (mosaic.value == coin1) {
-            mosaic.label = currentXem + ' (' + mosaic._amount + ')'
-        } else {
-            mosaic.label = mosaic.id.toHex() + ' (' + mosaic._amount + ')'
-        }
-        return mosaic
-    })
-    let isCoinExist = mosaicListRst.every((mosaic) => {
-        if (mosaic.value == coin1) {
-            return false
-        }
-        return true
-    })
-    if (isCoinExist) {
-        mosaicListRst.unshift({
-            value: coin1,
-            label: 'nem.xem'
-        })
-    }
-    return mosaicListRst
 }
 
 export const sortByMosaicId = (list) => {

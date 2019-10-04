@@ -27,18 +27,6 @@ export class WalletImportKeystoreTs extends Vue {
     formItem = importKeystoreConfig
     showCheckPWDialog = false
 
-    get getNode() {
-        return this.activeAccount.node
-    }
-
-    get currentXEM1() {
-        return this.activeAccount.currentXEM1
-    }
-
-    get walletList() {
-        return this.app.walletList
-    }
-
     checkEnd(password) {
         if (!password) return
         this.importWallet(password)
@@ -78,7 +66,7 @@ export class WalletImportKeystoreTs extends Vue {
     }
 
     async checkForm() {
-        const {keystoreStr, networkType, walletName} = this.formItem
+        const {networkType, walletName} = this.formItem
         if (networkType == 0) {
             this.showErrorNotice(Message.PLEASE_SWITCH_NETWORK)
             return false

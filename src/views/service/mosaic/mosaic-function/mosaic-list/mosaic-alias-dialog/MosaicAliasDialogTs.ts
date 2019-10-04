@@ -1,7 +1,7 @@
 import {AliasActionType, NamespaceId, MosaicId, Password} from "nem2-sdk"
 import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {mapState} from "vuex"
-import {Message, formDataConfig,networkConfig, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig} from "@/config"
+import {Message, networkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {getAbsoluteMosaicAmount} from '@/core/utils'
@@ -21,7 +21,6 @@ export class MosaicAliasDialogTs extends Vue {
     isCompleteForm = false
     formItems = formDataConfig.mosaicAliasForm
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
-    XEM: string = defaultNetworkConfig.XEM
 
     @Prop()
     showMosaicAliasDialog: boolean
@@ -55,8 +54,8 @@ export class MosaicAliasDialogTs extends Vue {
         return this.activeAccount.namespaces
     }
 
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
     }
 
     get currentHeight() {
@@ -78,7 +77,7 @@ export class MosaicAliasDialogTs extends Vue {
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
     mosaicAliasDialogCancel() {
@@ -129,7 +128,6 @@ export class MosaicAliasDialogTs extends Vue {
         const {node, generationHash, itemMosaic, feeAmount} = this
         let {mosaicName} = this.formItems
         const {hex} = itemMosaic
-        console.log(hex, mosaicName, 'hex, aliasNamehex, aliasNamehex, mosaicName')
         const {networkType} = this.wallet
         const password = new Password(this.formItems.password)
         let transaction = new NamespaceApiRxjs().mosaicAliasTransaction(

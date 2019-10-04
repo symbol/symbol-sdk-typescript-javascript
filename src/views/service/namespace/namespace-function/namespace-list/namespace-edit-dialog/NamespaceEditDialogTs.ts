@@ -19,7 +19,6 @@ export class NamespaceEditDialogTs extends Vue {
     isCompleteForm = true
     stepIndex = 0
     durationIntoDate: string = '0'
-    XEM: string = defaultNetworkConfig.XEM
     formItems = formDataConfig.namespaceEditForm
 
     @Prop({default: false})
@@ -49,8 +48,8 @@ export class NamespaceEditDialogTs extends Vue {
         return this.activeAccount.node
     }
 
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
     }
 
     get defaultFees(): DefaultFee[] {
@@ -60,7 +59,7 @@ export class NamespaceEditDialogTs extends Vue {
     get feeAmount() {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
     namespaceEditDialogCancel() {

@@ -2,13 +2,12 @@ import {mapState} from 'vuex'
 import {Component, Vue} from 'vue-property-decorator'
 import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
 import {formatNumber, formatXemAmount, localRead} from '@/core/utils/utils.ts'
-import {AppWallet, AppInfo, StoreAccount, AppAccounts} from "@/core/model"
+import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {walletStyleSheetType} from '@/config/view/wallet.ts'
 import {MultisigAccountInfo, Password} from 'nem2-sdk'
 import TheWalletUpdate from "@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdate.vue"
 import {Message, networkConfig} from "@/config"
-import {AppLock} from "@/core/utils"
 import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 
 @Component({
@@ -60,10 +59,6 @@ export class WalletSwitchTs extends Vue {
 
     get accountName() {
         return this.activeAccount.accountName
-    }
-
-    get currentXEM1() {
-        return this.activeAccount.currentXEM1
     }
 
     get cipherMnemonic() {
@@ -138,8 +133,6 @@ export class WalletSwitchTs extends Vue {
         if (!password) return
         const {accountName, pathToCreate, cipherMnemonic} = this
         const currentNetType = JSON.parse(localRead('accountMap'))[accountName].currentNetType
-        const seed = AppLock.decryptString(cipherMnemonic, password)
-        const appAccounts = AppAccounts()
         try {
             new AppWallet().createFromPath(
                 'seedWallet-' + pathToCreate.substr(-1),

@@ -43,32 +43,12 @@ export class MultisigManagementTs extends Vue {
     publicKeyList = []
     formItems = formDataConfig.multisigManagementForm
 
-    get currentXEM1() {
-        return this.activeAccount.currentXEM1
-    }
-
     get publicKey() {
         return this.activeAccount.wallet.publicKey
     }
 
     get networkType() {
         return this.activeAccount.wallet.networkType
-    }
-
-    get generationHash() {
-        return this.activeAccount.generationHash
-    }
-
-    get address() {
-        return this.activeAccount.wallet.address
-    }
-
-    get node() {
-        return this.activeAccount.node
-    }
-
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
     }
 
     get defaultFees(): DefaultFee[] {
@@ -78,7 +58,7 @@ export class MultisigManagementTs extends Vue {
     get feeAmount() {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.activeAccount.networkCurrency.divisibility)
     }
   
     addCosigner(flag) {

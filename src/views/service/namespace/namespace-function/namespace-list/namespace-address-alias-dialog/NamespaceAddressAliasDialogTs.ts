@@ -1,7 +1,7 @@
 import {mapState} from "vuex"
 import {Address, AddressAlias, AliasActionType, NamespaceId, Password} from "nem2-sdk"
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {Message, defaultNetworkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
 import {formatSeconds, getAbsoluteMosaicAmount} from "@/core/utils"
 import {AppWallet, StoreAccount, AppInfo, DefaultFee, AppNamespace} from "@/core/model"
@@ -20,7 +20,6 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     isCompleteForm = true
     aliasListIndex = -1
     formItems = formDataConfig.addressAliasForm
-    XEM: string = defaultNetworkConfig.XEM
 
     @Prop()
     isShowAddressAliasDialog: boolean
@@ -62,8 +61,8 @@ export class NamespaceAddressAliasDialogTs extends Vue {
         return this.NamespaceList.filter(namespace => namespace.alias instanceof AddressAlias)
     }
 
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
     }
 
     get defaultFees(): DefaultFee[] {
@@ -73,7 +72,7 @@ export class NamespaceAddressAliasDialogTs extends Vue {
     get feeAmount() {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
     closeModel() {

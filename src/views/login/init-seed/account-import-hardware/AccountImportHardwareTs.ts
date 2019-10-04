@@ -24,18 +24,6 @@ export class AccountImportHardwareTs extends Vue {
     // based on number of existing trezor accounts
     trezorForm = formDataConfig.trezorImportForm
 
-    get getNode() {
-        return this.activeAccount.node
-    }
-
-    get currentXEM1() {
-        return this.activeAccount.currentXEM1
-    }
-
-    get walletList() {
-        return this.app.walletList
-    }
-
     toWalletDetails() {
         this.$Notice.success({
             title: this['$t']('Imported_wallet_successfully') + ''

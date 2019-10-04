@@ -69,10 +69,6 @@ export class CollectionRecordTs extends Vue {
         return this.activeAccount.mosaics
     }
 
-    get currentXem() {
-        return this.activeAccount.currentXem
-    }
-
     get currentHeight() {
         return this.app.chainStatus.currentHeight
     }

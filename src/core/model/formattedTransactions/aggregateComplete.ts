@@ -1,8 +1,8 @@
-import {FormattedTransaction, } from '@/core/model'
+import {FormattedTransaction, AppState, } from '@/core/model'
 import {transactionFormatter} from '@/core/services'
 import {getRelativeMosaicAmount} from '@/core/utils'
-import {Address, AggregateTransaction} from 'nem2-sdk'
-import {defaultNetworkConfig} from '@/config/index.ts';
+import {AggregateTransaction} from 'nem2-sdk'
+import {Store} from 'vuex';
 
 export class FormattedAggregateComplete extends FormattedTransaction {
     dialogDetailMap: any
@@ -10,23 +10,16 @@ export class FormattedAggregateComplete extends FormattedTransaction {
     formattedInnerTransactions: FormattedTransaction[]
 
     constructor(  tx: AggregateTransaction,
-                  address: Address,
-                  currentXem: string,
-                  xemDivisibility: number,
-                  store: any) {
-        super(tx, address, currentXem, xemDivisibility, store)
+                  store: Store<AppState>) {
+        super(tx, store)
+        const {networkCurrency} = store.state.account
 
         this.formattedInnerTransactions = transactionFormatter( tx.innerTransactions,
-                                                                address,
-                                                                'currentXem',
-                                                                xemDivisibility,
-                                                                'node',
-                                                                currentXem,
                                                                 store)
-
+        
         this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,
-            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), xemDivisibility) + defaultNetworkConfig.XEM,
+            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + networkCurrency.ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
         }

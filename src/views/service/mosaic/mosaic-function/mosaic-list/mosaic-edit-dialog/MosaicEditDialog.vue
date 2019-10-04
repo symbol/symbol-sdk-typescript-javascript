@@ -42,7 +42,7 @@
             <FormItem :label="$t('fee')" class="fee">
               <Select v-model="formItems.feeSpeed" required>
               <Option v-for="item in defaultFees" :value="item.speed" :key="item.speed">
-                {{$t(item.speed)}} {{ `(${item.value} ${XEM})` }}
+                {{$t(item.speed)}} {{ `(${item.value} ${networkCurrency.ticker})` }}
               </Option>
               </Select>
             </FormItem>

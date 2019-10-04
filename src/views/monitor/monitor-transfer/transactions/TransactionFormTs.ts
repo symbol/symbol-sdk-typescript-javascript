@@ -1,11 +1,11 @@
 import {
   Mosaic, MosaicId, UInt64, Address, NamespaceId,
-  MultisigAccountInfo, PublicAccount, TransferTransaction,
+  MultisigAccountInfo, TransferTransaction,
   Message as Msg,
   Deadline,
   PlainMessage} from 'nem2-sdk'
 import {mapState} from "vuex"
-import {Message, DEFAULT_FEES, FEE_GROUPS, defaultNetworkConfig, formDataConfig} from "@/config"
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress} from "@/core/utils"
@@ -43,7 +43,6 @@ export class TransactionFormTs extends Vue {
     formItems = formDataConfig.transferForm
     standardFields: object = standardFields
     getRelativeMosaicAmount = getRelativeMosaicAmount
-    XEM: string = defaultNetworkConfig.XEM
     formatAddress = formatAddress
 
     get addressAliasMap() {
@@ -69,10 +68,14 @@ export class TransactionFormTs extends Vue {
         if (this.announceInLock) return DEFAULT_FEES[FEE_GROUPS.TRIPLE]
     }
 
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
+    }
+
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
-        return getAbsoluteMosaicAmount(feeAmount, this.xemDivisibility)
+        return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
     get feeDivider(): number {
@@ -144,10 +147,6 @@ export class TransactionFormTs extends Vue {
         return this.activeAccount.wallet.publicKey
     }
 
-    get currentXEM1() {
-        return this.activeAccount.currentXEM1
-    }
-
     get wallet(): AppWallet {
         return this.activeAccount.wallet
     }
@@ -171,10 +170,6 @@ export class TransactionFormTs extends Vue {
 
     get currentHeight() {
         return this.app.chainStatus.currentHeight
-    }
-
-    get xemDivisibility() {
-        return this.activeAccount.xemDivisibility
     }
 
     get recipient(): Address | NamespaceId {
@@ -248,7 +243,7 @@ export class TransactionFormTs extends Vue {
 
     showDialog() {
         const {accountPublicKey, isSelectedAccountMultisig, feeAmount} = this
-        const {remark, mosaicTransferList, isEncrypted, recipient} = this.formItems
+        const {remark, mosaicTransferList, recipient} = this.formItems
         const publicKey = isSelectedAccountMultisig ? accountPublicKey : '(self)' + accountPublicKey
 
         this.transactionDetail = {
@@ -258,7 +253,7 @@ export class TransactionFormTs extends Vue {
             "mosaic": mosaicTransferList.map(item => {
                 return item.id.id.toHex() + `(${item.amount.compact()})`
             }).join(','),
-            "fee": feeAmount + 'XEM',
+            "fee": feeAmount + ' ' + this.networkCurrency.ticker,
             "remarks": remark,
         }
 
