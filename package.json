@@ -1,6 +1,6 @@
 {
   "name": "nem2-sdk",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "description": "Reactive Nem2 sdk for typescript and javascript",
   "scripts": {
     "pretest": "npm run build",
