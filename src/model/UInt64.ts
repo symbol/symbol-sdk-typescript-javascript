@@ -60,12 +60,24 @@ export class UInt64 {
      * @returns {module:coders/uint64~uint64} The uint64 representation of the input.
      */
     public static fromNumericString(input: string): UInt64 {
-        const input_long = Long.fromString(input, true);
-        if (! /^\d+$/.test(input) || (input.substr(0, 1) === '0' && input.length > 1) || !Long.isLong(input_long)) {
+        if (!UInt64.isLongNumericString(input)) {
             throw new Error('Input string is not a valid numeric string');
         }
-
+        const input_long = Long.fromString(input, true);
         return new UInt64([input_long.getLowBitsUnsigned(), input_long.getHighBitsUnsigned()]);
+    }
+
+    /**
+     * Check if input string is a numeric string or not
+     * @param {string} input A string.
+     * @returns {boolean}
+     */
+    public static isLongNumericString(input: string): boolean {
+        const input_long = Long.fromString(input, true);
+        if (! /^\d+$/.test(input) || (input.substr(0, 1) === '0' && input.length > 1) || !Long.isLong(input_long)) {
+            return false;
+        }
+        return true;
     }
     /**
      * Constructor

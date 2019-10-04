@@ -149,4 +149,20 @@ describe('Uint64', () => {
             expect(uint64.toString()).to.be.equal(value);
         });
     });
+
+    describe('isLongNumericString', () => {
+        it('should return false', () => {
+            const value = 'aaa';
+            const result = UInt64.isLongNumericString(value);
+
+            expect(result).to.be.false;
+        });
+
+        it('should return true', () => {
+            const value = '1000';
+            const result = UInt64.isLongNumericString(value);
+
+            expect(result).to.be.true;
+        });
+    });
 });
