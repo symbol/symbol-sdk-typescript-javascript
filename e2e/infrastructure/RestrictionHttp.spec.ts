@@ -15,7 +15,7 @@
  */
 
 import {deepEqual} from 'assert';
-import {assert} from 'chai';
+import {assert, expect} from 'chai';
 import {AccountHttp} from '../../src/infrastructure/AccountHttp';
 import { Listener, TransactionHttp } from '../../src/infrastructure/infrastructure';
 import { RestrictionHttp } from '../../src/infrastructure/RestrictionHttp';
@@ -309,7 +309,7 @@ describe('RestrictionHttp', () => {
         it('should call getAccountRestrictions successfully', (done) => {
             setTimeout(() => {
                 restrictionHttp.getAccountRestrictions(accountAddress).subscribe((accountRestrictions) => {
-                    deepEqual(accountRestrictions.accountRestrictions.address, accountAddress);
+                    expect(accountRestrictions.length).to.be.greaterThan(0);
                     done();
                 });
             }, 1000);
@@ -320,7 +320,7 @@ describe('RestrictionHttp', () => {
         it('should call getAccountRestrictionsFromAccounts successfully', (done) => {
             setTimeout(() => {
                 restrictionHttp.getAccountRestrictionsFromAccounts([accountAddress]).subscribe((accountRestrictions) => {
-                    deepEqual(accountRestrictions[0]!.accountRestrictions.address, accountAddress);
+                    deepEqual(accountRestrictions[0]!.address, accountAddress);
                     done();
                 });
             }, 1000);
