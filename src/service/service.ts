@@ -17,3 +17,5 @@
 export * from './NamespaceService';
 export * from './MosaicService';
 export * from './AggregateTransactionService';
+export * from './MetadataTransactionService';
+export * from './MosaicRestrictionTransactionService';
