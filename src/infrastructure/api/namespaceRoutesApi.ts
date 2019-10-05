@@ -140,7 +140,7 @@ export class NamespaceRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -209,7 +209,7 @@ export class NamespaceRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -263,7 +263,7 @@ export class NamespaceRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -322,7 +322,7 @@ export class NamespaceRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });

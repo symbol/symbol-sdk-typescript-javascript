@@ -86,7 +86,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                         return DtoMapping.extractAccountRestrictionFromDto(restriction).accountRestrictions;
                     });
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -114,7 +114,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                         restirctionItems,
                     );
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -147,7 +147,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                         );
                     });
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -177,7 +177,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                         restirctionItems,
                     );
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -212,7 +212,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                         );
                     });
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 }

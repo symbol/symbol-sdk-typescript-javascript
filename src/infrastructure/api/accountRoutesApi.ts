@@ -142,7 +142,7 @@ export class AccountRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -201,7 +201,7 @@ export class AccountRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -260,7 +260,7 @@ export class AccountRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
 
                         reject();
@@ -316,7 +316,7 @@ export class AccountRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -370,7 +370,7 @@ export class AccountRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -444,7 +444,7 @@ export class AccountRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -518,7 +518,7 @@ export class AccountRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -592,7 +592,7 @@ export class AccountRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -666,7 +666,7 @@ export class AccountRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -740,7 +740,7 @@ export class AccountRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });

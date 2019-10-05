@@ -146,7 +146,7 @@ export class TransactionHttp extends Http implements TransactionRepository {
                         transactionStatusDTO.height ? UInt64.fromNumericString(transactionStatusDTO.height) : undefined);
                 });
             }),
-            catchError((error) =>  throwError(error.error.errorMessage)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 

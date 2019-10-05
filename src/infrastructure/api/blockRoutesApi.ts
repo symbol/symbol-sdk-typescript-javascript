@@ -140,7 +140,7 @@ export class BlockRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -199,7 +199,7 @@ export class BlockRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -273,7 +273,7 @@ export class BlockRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -339,7 +339,7 @@ export class BlockRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -405,7 +405,7 @@ export class BlockRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -471,7 +471,7 @@ export class BlockRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
