@@ -139,7 +139,7 @@ export class MosaicRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -198,7 +198,7 @@ export class MosaicRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -257,7 +257,7 @@ export class MosaicRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });

@@ -141,7 +141,7 @@ export class RestrictionRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -195,7 +195,7 @@ export class RestrictionRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -261,7 +261,7 @@ export class RestrictionRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -322,7 +322,7 @@ export class RestrictionRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -381,7 +381,7 @@ export class RestrictionRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
@@ -440,7 +440,7 @@ export class RestrictionRoutesApi {
                             reject({ response: {
                                                  statusCode: response.statusCode,
                                                  statusMessage: response.statusMessage,
-                                               }, body });
+                                               }, body: response.body });
                         }
                     }
                 });
