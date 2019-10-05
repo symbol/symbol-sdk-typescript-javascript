@@ -15,28 +15,24 @@
  */
 import {Address} from '../account/Address';
 import {Alias} from './Alias';
+import { AliasType } from './AliasType';
 
 /**
  * The AddressAlias structure describes address aliases
  *
  * @since 0.10.2
  */
-export class AddressAlias implements Alias {
+export class AddressAlias extends Alias {
 
     /**
      * Create AddressAlias object
-     *
-     * @param type
      * @param content
      */
     constructor(/**
-                 * The alias type
-                 */
-                public readonly type: number,
-                /**
                  * The alias address
                  */
                 public readonly address: Address) {
+        super(AliasType.Address, address, undefined);
     }
 
     /**
