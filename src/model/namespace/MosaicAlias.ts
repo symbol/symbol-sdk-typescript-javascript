@@ -15,28 +15,24 @@
  */
 import {MosaicId} from '../mosaic/MosaicId';
 import {Alias} from './Alias';
+import { AliasType } from './AliasType';
 
 /**
  * The MosaicAlias structure describe mosaic aliases
  *
  * @since 0.10.2
  */
-export class MosaicAlias implements Alias {
+export class MosaicAlias extends Alias {
 
     /**
      * Create AddressAlias object
-     *
-     * @param type
      * @param mosaicId
      */
     constructor(/**
-                 * The alias type
-                 */
-                public readonly type: number,
-                /**
                  * The alias address
                  */
                 public readonly mosaicId: MosaicId) {
+        super(AliasType.Mosaic, undefined, mosaicId);
     }
 
     /**

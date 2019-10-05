@@ -55,30 +55,30 @@ describe('Alias', () => {
     });
 
     it('should create a AddressAlias object', () => {
-        const alias = new AddressAlias(addressAliasDTO.type, addressAliasDTO.address);
+        const alias = new AddressAlias( addressAliasDTO.address);
         expect(alias.type).to.be.equal(AliasType.Address);
         expect(alias.address).to.be.equal(addressAliasDTO.address);
     });
 
     it('should create a MosaicAlias object', () => {
-        const alias = new MosaicAlias(mosaicAliasDTO.type, mosaicAliasDTO.mosaicId);
+        const alias = new MosaicAlias(mosaicAliasDTO.mosaicId);
         expect(alias.type).to.be.equal(AliasType.Mosaic);
         expect(alias.mosaicId).to.be.equal(mosaicAliasDTO.mosaicId);
     });
 
     it('should compare addresses in AddressAlias.equals()', () => {
-        const alias1 = new AddressAlias(addressAliasDTO.type, addressAliasDTO.address);
-        const alias2 = new AddressAlias(addressAliasDTO.type, addressAliasDTO.address);
-        const alias3 = new AddressAlias(addressAliasDTO.type, address2);
+        const alias1 = new AddressAlias(addressAliasDTO.address);
+        const alias2 = new AddressAlias(addressAliasDTO.address);
+        const alias3 = new AddressAlias(address2);
 
         expect(alias1.equals(alias2)).to.be.equal(true);
         expect(alias1.equals(alias3)).to.be.equal(false);
     });
 
     it('should compare mosaicIds in MosaicAlias.equals()', () => {
-        const alias1 = new MosaicAlias(mosaicAliasDTO.type, mosaicAliasDTO.mosaicId);
-        const alias2 = new MosaicAlias(mosaicAliasDTO.type, mosaicAliasDTO.mosaicId);
-        const alias3 = new MosaicAlias(mosaicAliasDTO.type, new MosaicId([481110498, 231112637]));
+        const alias1 = new MosaicAlias(mosaicAliasDTO.mosaicId);
+        const alias2 = new MosaicAlias(mosaicAliasDTO.mosaicId);
+        const alias3 = new MosaicAlias(new MosaicId([481110498, 231112637]));
 
         expect(alias1.equals(alias2)).to.be.equal(true);
         expect(alias1.equals(alias3)).to.be.equal(false);

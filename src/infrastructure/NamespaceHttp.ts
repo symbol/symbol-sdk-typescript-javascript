@@ -270,9 +270,9 @@ export class NamespaceHttp extends Http implements NamespaceRepository {
      */
     private extractAlias(namespace: any): Alias {
         if (namespace.alias && namespace.alias.type === AliasType.Mosaic) {
-            return new MosaicAlias(namespace.alias.type, namespace.alias.mosaicId);
+            return new MosaicAlias(namespace.alias.mosaicId);
         } else if (namespace.alias && namespace.alias.type === AliasType.Address) {
-            return new AddressAlias(namespace.alias.type, namespace.alias.address);
+            return new AddressAlias(namespace.alias.address);
         }
 
         return new EmptyAlias();

@@ -96,7 +96,7 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
                 UInt64.fromNumericString(statementDTO.height),
                 Address.createFromEncoded(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
-                    return new ResolutionEntry(new AddressAlias(AliasType.Address, Address.createFromEncoded(entry.resolved)),
+                    return new ResolutionEntry(new AddressAlias(Address.createFromEncoded(entry.resolved)),
                         new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
                 }),
             );
@@ -105,7 +105,7 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
                 UInt64.fromNumericString(statementDTO.height),
                 new MosaicId(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
-                    return new ResolutionEntry(new MosaicAlias(AliasType.Mosaic, new MosaicId(entry.resolved)),
+                    return new ResolutionEntry(new MosaicAlias(new MosaicId(entry.resolved)),
                         new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
                 }),
             );
