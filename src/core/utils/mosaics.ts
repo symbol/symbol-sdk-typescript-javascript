@@ -2,35 +2,6 @@ import {Mosaic} from "nem2-sdk"
 import {AppMosaic, AppState} from '@/core/model'
 import {Store} from 'vuex'
 
-// @TODO: rename
-export const renderMosaicsReturnList = (
-    mosaics: Mosaic[],
-    store: Store<AppState>): any => {
-    const mosaicList = store.state.account.mosaics
-    const items = mosaics
-        .map((mosaic) => {
-            const hex = mosaic.id.toHex()
-            if (!mosaicList[hex] || !mosaicList[hex].properties) return
-            const appMosaic = mosaicList[hex]
-            const name = appMosaic.name || appMosaic.hex
-            const amount = getRelativeMosaicAmount(mosaic.amount.compact(), appMosaic.properties.divisibility)
-                .toLocaleString()
-            const ownerPublicKey = mosaicList[hex].mosaicInfo.owner.publicKey
-            return {name, ownerPublicKey, amount}
-        })
-        .filter(x => x)
-    if (!items.length) return 'Loading...'
-
-    const networkMosaicIndex = items.findIndex(({name}) => name === store.state.account.networkCurrency.hex)
-
-    if (networkMosaicIndex <= 0) {
-        return items
-    }
-    const networkCurrency = items.splice(networkMosaicIndex, 1)
-    items.unshift(networkCurrency[0])
-    return items
-}
-
 /**
  * Transforms an array of mosaics to an inline representation,
  * setting networkCurrency as the first item
@@ -42,16 +13,15 @@ export const renderMosaics = (
     mosaics: Mosaic[],
     store: Store<AppState>): any => {
     const mosaicList = store.state.account.mosaics
+
     const items = mosaics
         .map((mosaic) => {
             const hex = mosaic.id.toHex()
-            // const owner = mosaic.mosaicInfo.owner.publicKey
             if (!mosaicList[hex] || !mosaicList[hex].properties) return
             const appMosaic = mosaicList[hex]
             const name = appMosaic.name || appMosaic.hex
             const amount = getRelativeMosaicAmount(mosaic.amount.compact(), appMosaic.properties.divisibility)
                 .toLocaleString()
-            const ownerPublicKey = mosaicList[hex].mosaicInfo.owner.publicKey
             return {name, amount}
         })
         .filter(x => x)
@@ -59,13 +29,11 @@ export const renderMosaics = (
     if (!items.length) return 'Loading...'
 
     const networkMosaicIndex = items.findIndex(({name}) => name === store.state.account.networkCurrency.hex)
-
     if (networkMosaicIndex <= 0) {
         return items.map(({name, amount}) => `${amount} [${name}]`).join(', ')
     }
     const networkCurrency = items.splice(networkMosaicIndex, 1)
     items.unshift(networkCurrency[0])
-    // return items
     return items.map(({name, amount}) => `${amount} [${name}]`).join(', ')
 }
 

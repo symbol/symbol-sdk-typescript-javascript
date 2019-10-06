@@ -10,8 +10,8 @@ import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress} from "@/core/utils"
 import {standardFields, isAddress} from "@/core/validation"
-import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction, AppMosaic, AppWallet, AppInfo, StoreAccount, DefaultFee} from "@/core/model"
+import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
     components: {
@@ -59,7 +59,10 @@ export class TransactionFormTs extends Vue {
         const {activeMultisigAccount, networkType} = this
         if (!this.activeMultisigAccount) return false
         const address = Address.createFromPublicKey(activeMultisigAccount, networkType).plain()
-        return this.activeAccount.multisigAccountInfo[address].minApproval > 1
+        // @TODO: Do a loading system
+        const multisigInfo = this.activeAccount.multisigAccountInfo[address]
+        if (!multisigInfo) return false
+        return multisigInfo.minApproval > 1
     }
 
     get defaultFees(): DefaultFee[] {
@@ -253,7 +256,7 @@ export class TransactionFormTs extends Vue {
             "mosaic": mosaicTransferList.map(item => {
                 return item.id.id.toHex() + `(${item.amount.compact()})`
             }).join(','),
-            "fee": feeAmount + ' ' + this.networkCurrency.ticker,
+            "fee": feeAmount / Math.pow(10, this.networkCurrency.divisibility) + ' ' + this.networkCurrency.ticker,
             "remarks": remark,
         }
 

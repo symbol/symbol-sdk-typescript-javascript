@@ -99,9 +99,19 @@
           </div>
           <div class="mosaic_list_item_container scroll">
 
-            <div class="mosaic_list_item radius" v-for="(m,index) in formItems.mosaicTransferList">
-              <span class="mosaic_name overflow_ellipsis">{{mosaics[m.id.id.toHex()].name||m.id.id.toHex()}}</span>
-              <span class="mosaic_amount overflow_ellipsis">{{getRelativeMosaicAmount(m.amount.compact(), mosaics[m.id.id.toHex()].properties.divisibility)}}</span>
+            <div
+              v-for="(m,index) in formItems.mosaicTransferList"
+              :key="index"
+              class="mosaic_list_item radius"
+            >
+              <span class="mosaic_name overflow_ellipsis">{{mosaics[m.id.id.toHex()]
+                  ? mosaics[m.id.id.toHex()].name : m.id.id.toHex()}}
+              </span>
+              <span class="mosaic_amount overflow_ellipsis">{{getRelativeMosaicAmount(
+                m.amount.compact(), mosaics[m.id.id.toHex()]
+                ? mosaics[m.id.id.toHex()].properties.divisibility : 1)
+              }}</span>
+              <!-- @TODO: remove quick fix after handling cat.harvest -->
               <span class="icon_delete" @click="removeMosaic(index)"></span>
             </div>
 

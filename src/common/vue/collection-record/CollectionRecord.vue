@@ -13,11 +13,15 @@
             <span class="select_date pointer">
               <div class="month_value">
                 <img src="@/common/img/monitor/market/marketCalendar.png" alt="">
-              <span>{{currentMonth}}</span>
+              <span>{{ displayedDate }}</span>
               </div>
               <div class="date_selector">
-                <DatePicker @on-change="changeCurrentMonth" type="month" placeholder="" :value="currentMonth"
-                            style="width: 70px"></DatePicker>
+                <DatePicker
+                    v-model="chosenDate"
+                    type="month"
+                    placeholder=""
+                    style="width: 70px"
+                />
               </div>
             </span>
         <span class="search_input un_click" @click.stop="">

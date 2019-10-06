@@ -1,6 +1,5 @@
 import routers from '@/router/routers.ts'
 import {Message, isWindows} from "@/config/index.ts"
-import {BlockApiRxjs} from '@/core/api/BlockApiRxjs.ts'
 import monitorSelected from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
 import {localRead, localSave} from "@/core/utils/utils.ts"
@@ -167,13 +166,6 @@ export class MenuBarTs extends Vue {
         this.$store.commit('RESET_ACCOUNT')
         this.$router.push({
             name: "login"
-        })
-    }
-
-    async getGenerationHash(node) {
-        const that = this
-        await new BlockApiRxjs().getBlockByHeight(node, 1).subscribe((blockInfo) => {
-            that.$store.commit('SET_GENERATION_HASH', blockInfo.generationHash)
         })
     }
 

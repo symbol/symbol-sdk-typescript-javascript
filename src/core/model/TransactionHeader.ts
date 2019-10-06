@@ -45,13 +45,13 @@ export class TransactionHeader {
   icon:any
 
   constructor(transaction: Transaction, store: Store<AppState>) {
-      const {wallet, networkCurrency} = store.state.account
-
+        const {networkCurrency, wallet} = store.state.account
+    
      this.isReceipt = transaction instanceof TransferTransaction
-        && transaction.recipient instanceof Address // @TODO: handle namespaceId
-        && transaction.recipient.plain()  === wallet.address
-
-      const chainStatus: ChainStatus = store.state.app.chainStatus
+        && transaction.recipientAddress instanceof Address // @TODO: handle namespaceId
+        && transaction.recipientAddress.plain() === wallet.address
+      
+      const {chainStatus} = store.state.app
 
      this.tag = this.getTag(transaction)
      this.fee = getRelativeMosaicAmount(transaction.maxFee.compact(), networkCurrency.divisibility)

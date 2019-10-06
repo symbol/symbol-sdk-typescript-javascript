@@ -47,7 +47,7 @@
                           v-if="c.rawTx.type === TransactionType.TRANSFER"
                           class="col2-item bottom overflow_ellipsis"
                   >
-                    -> {{ c.rawTx.recipient.address || c.rawTx.recipient.id.toHex() }}
+                    -> {{ c.rawTx.recipientAddress.address || c.rawTx.recipientAddress.id.toHex() }}
                 </span>
                   <span
                           v-if="c.rawTx.type !== TransactionType.TRANSFER"

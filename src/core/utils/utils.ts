@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import i18n from '@/language/index.ts'
-import {Address, AliasActionType, Deadline} from 'nem2-sdk'
+import {Address, AliasAction, Deadline} from 'nem2-sdk'
 
 const vueInstance = new Vue({i18n})
 
@@ -230,7 +230,7 @@ export const formatNamespaces = (namespacesInfo, blockHeight) => namespacesInfo.
             isExpandMore: false,
             namespaceName: name,
             aliasActionType:
-                ns.namespaceInfo.alias.type === 0 ? AliasActionType.Link : AliasActionType.Unlink,
+                ns.namespaceInfo.alias.type === 0 ? AliasAction.Link : AliasAction.Unlink,
             currentAliasType: ns.namespaceInfo.alias.type,
             currentAlias: ns.namespaceInfo.alias.type === 0 ? '' : aliasText
         }
@@ -266,16 +266,15 @@ export const formatAddress = function (address) {
     return Address.createFromRawAddress(address).pretty()
 }
 
-export const getCurrentMonthFirst = function (date) {
+export const getCurrentMonthFirst = function (date: Date): Date {
     date.setDate(1)
     return date
 }
 
-export const getCurrentMonthLast = function (date) {
+export const getCurrentMonthLast = function (date: Date): Date {
     let currentMonth = date.getMonth()
     let nextMonth = ++currentMonth
     let nextMonthFirstDay = new Date(date.getFullYear(), nextMonth, 1)
-    let oneDay = 1000 * 60 * 60 * 24
     return new Date(Number(nextMonthFirstDay))
 }
 

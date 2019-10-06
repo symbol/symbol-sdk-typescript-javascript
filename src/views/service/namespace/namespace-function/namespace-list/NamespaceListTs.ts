@@ -1,26 +1,17 @@
-import {Address, MosaicId, AliasType} from "nem2-sdk"
+import {Address, MosaicId, AliasType, NamespaceInfo} from "nem2-sdk"
 import {mapState} from "vuex"
 import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
 import {networkConfig} from '@/config'
-import {AppMosaics, sortNamespaceList, namespaceSortTypes} from '@/core/services'
+import {sortNamespaceList, namespaceSortTypes} from '@/core/services'
 import {StoreAccount, AppInfo, MosaicNamespaceStatusType, AppNamespace} from "@/core/model"
-
-import NamespaceUnAliasDialog
-    from '@/views/service/namespace/namespace-function/namespace-list/namespace-unAlias-dialog/NamespaceUnAliasDialog.vue'
-import NamespaceMosaicAliasDialog
-    from '@/views/service/namespace/namespace-function/namespace-list/namespace-mosaic-alias-dialog/NamespaceMosaicAliasDialog.vue'
-import NamespaceAddressAliasDialog
-    from '@/views/service/namespace/namespace-function/namespace-list/namespace-address-alias-dialog/NamespaceAddressAliasDialog.vue'
+import Alias from '@/views/forms/alias/Alias.vue'
 
 @Component({
     components: {
         NamespaceEditDialog,
-        NamespaceUnAliasDialog,
-        NamespaceMosaicAliasDialog,
-        NamespaceAddressAliasDialog
-
+        Alias,
     },
     computed: {
         ...mapState({
@@ -33,14 +24,10 @@ import NamespaceAddressAliasDialog
 export class NamespaceListTs extends Vue {
     activeAccount: StoreAccount
     app: AppInfo
-    currentNamespace = ''
     pageSize: number = networkConfig.namespaceListSize
     page: number = 1
     showNamespaceEditDialog = false
-    showUnAliasDialog = false
-    aliasDialogItem = {}
-    showMosaicAliasDialog = false
-    isShowAddressAliasDialog = false
+    showAliasDialog = false
     StatusString = MosaicNamespaceStatusType
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
     namespaceSortTypes = namespaceSortTypes
@@ -50,6 +37,10 @@ export class NamespaceListTs extends Vue {
     isShowMosaicAlias = false
     dataLength = 0
     sortDirection: boolean = false
+    bind: boolean = false
+    namespace: AppNamespace = null
+    mosaic: string = null
+    address: string = null
 
     get mosaics() {
         return this.activeAccount.mosaics
@@ -61,13 +52,6 @@ export class NamespaceListTs extends Vue {
 
     get accountName() {
         return this.activeAccount.accountName
-    }
-
-    // @TODO: Returning a boolean might be more appropriate
-    get availableMosaics() {
-        const {currentHeight} = this
-        const {address} = this.wallet
-        return AppMosaics().getAvailableToBeLinked(currentHeight, address, this.$store)
     }
 
     get namespaces(): AppNamespace[] {
@@ -85,12 +69,6 @@ export class NamespaceListTs extends Vue {
             .slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
     }
 
-    get unlinkMosaicList() {
-        const {currentHeight} = this
-        const {address} = this.wallet
-        return AppMosaics().getAvailableToBeLinked(currentHeight, address, this.$store)
-    }
-
     get namespaceLoading() {
         return this.app.namespaceLoading
     }
@@ -99,40 +77,49 @@ export class NamespaceListTs extends Vue {
         return this.app.chainStatus.currentHeight
     }
 
-    showEditDialog(namespaceName) {
-        this.currentNamespace = namespaceName
+    showEditDialog(namespace: AppNamespace) {
+        this.namespace = namespace
         this.showNamespaceEditDialog = true
     }
 
-    computeDuration(namespaceInfo) {
-        const {endHeight, isActive} = namespaceInfo
+    // @TODO: refactor
+    computeDuration(namespace: AppNamespace): number | MosaicNamespaceStatusType.EXPIRED {
+        const {endHeight, isActive} = namespace
+        
         const {currentHeight, namespaceGracePeriodDuration} = this
         if (!isActive) {
             return MosaicNamespaceStatusType.EXPIRED
         }
-        const expireTime = endHeight - currentHeight - namespaceGracePeriodDuration > 0 ? endHeight - currentHeight - namespaceGracePeriodDuration : MosaicNamespaceStatusType.EXPIRED
+        const expireTime = endHeight - currentHeight + namespaceGracePeriodDuration > 0
+            ? endHeight - currentHeight + namespaceGracePeriodDuration
+            : MosaicNamespaceStatusType.EXPIRED
+
         return expireTime
     }
 
-    showUnlinkDialog(aliasItem) {
-        this.showUnAliasDialog = true
-        this.aliasDialogItem = aliasItem
-    }
-
-    showMosaicLinkDialog(aliasItem) {
-        this.showMosaicAliasDialog = true
-        this.aliasDialogItem = aliasItem
-    }
-
-    showAddressLinkDialog(aliasItem) {
-        this.isShowAddressAliasDialog = true
-        this.aliasDialogItem = aliasItem
-    }
-
+    // @TODO: refactor
     durationToTime(duration) {
         const {namespaceGracePeriodDuration} = this
-        const durationNum = Number(duration - this.currentHeight - namespaceGracePeriodDuration)
+        const durationNum = Number(duration - this.currentHeight + namespaceGracePeriodDuration)
         return formatSeconds(durationNum * 12)
+    }
+
+    unbindItem(namespace: AppNamespace) {
+        this.showAliasDialog = true
+        this.bind = false
+        // @ts-ignore
+        this.address = namespace.alias.address ? namespace.alias.address : null
+        // @ts-ignore
+        this.mosaic = namespace.alias.mosaicId ? namespace.alias.mosaicId : null
+        this.namespace = namespace
+    }
+
+    bindItem(namespace: AppNamespace) {
+        this.showAliasDialog = true
+        this.bind = true
+        this.address = null
+        this.mosaic = null
+        this.namespace = namespace
     }
 
     getAliasType(namespace: AppNamespace): string {
@@ -144,9 +131,11 @@ export class NamespaceListTs extends Vue {
     
     getAliasTarget(namespace: AppNamespace): string {
         const {alias} = namespace
-        //@ts-ignore @TODO: check when on E3
-        if (alias.type === AliasType.Address) return Address.createFromEncoded(alias.address).pretty()
-        if (alias.type === AliasType.Address) return alias.mosaicId.toHex()
+        if (alias.type === AliasType.Address) return Address
+                //@ts-ignore // @TODO: SDK quick fix
+                .createFromEncoded(alias.address).pretty()
+        // @ts-ignore // @TODO: SDK quick fix
+        if (alias.type === AliasType.Mosaic) return alias.mosaicId
         return ''
     }
 

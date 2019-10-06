@@ -13,7 +13,7 @@
 
         <div class="split"></div>
         <div class="XEM_amount overflow_ellipsis">
-          <span>XEM</span>
+          <span>{{ticker}}</span>
           <span class="amount">{{mosaicList[0]?formatNumber(mosaicList[0].balance):0}}</span>
         </div>
         <div class="exchange">

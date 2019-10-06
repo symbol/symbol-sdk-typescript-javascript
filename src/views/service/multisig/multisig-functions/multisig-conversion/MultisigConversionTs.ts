@@ -1,8 +1,11 @@
 import {
     MultisigCosignatoryModification,
-    MultisigCosignatoryModificationType,
+    MultisigAccountModificationTransaction,
+    CosignatoryModificationAction,
     PublicAccount,
-    ModifyMultisigAccountTransaction, Deadline, UInt64, MultisigAccountInfo,
+    Deadline,
+    UInt64,
+    MultisigAccountInfo,
 } from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
@@ -184,16 +187,18 @@ export class MultisigConversionTs extends Vue {
     sendMultisigConversionTransaction() {
         // here lock fee should be relative param
         let {publicKeyList, minApproval, minRemoval} = this.formItems
-        const {feeAmount} = this
-        const bondedFee = feeAmount/3
-        const innerFee = feeAmount/3
+        const {feeAmount, feeDivider} = this
+        const bondedFee = feeAmount / feeDivider
+        const innerFee = feeAmount / feeDivider
         const {networkType, publicKey} = this
-        const multisigCosignatoryModificationList = publicKeyList.map(cosigner => new MultisigCosignatoryModification(
-            MultisigCosignatoryModificationType.Add,
-            PublicAccount.createFromPublicKey(cosigner, networkType),
-        ))
 
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+        const multisigCosignatoryModificationList = publicKeyList
+            .map(cosigner => new MultisigCosignatoryModification(
+                CosignatoryModificationAction.Add,
+                PublicAccount.createFromPublicKey(cosigner, networkType),
+            ))
+
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             minApproval,
             minRemoval,
@@ -201,13 +206,14 @@ export class MultisigConversionTs extends Vue {
             networkType,
             UInt64.fromUint(innerFee)
         )
-        console.log(modifyMultisigAccountTransaction, 'modifyMultisigAccountTransaction')
+
         const aggregateTransaction = createBondedMultisigTransaction(
             [modifyMultisigAccountTransaction],
             publicKey,
             networkType,
             bondedFee,
         )
+
         this.otherDetails = {
             lockFee: feeAmount/3
         }

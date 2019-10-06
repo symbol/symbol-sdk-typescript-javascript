@@ -1,10 +1,11 @@
 import { NamespaceId, NamespaceInfo, Alias, NamespaceName } from 'nem2-sdk'
+import { EmptyAlias } from 'nem2-sdk/dist/src/model/namespace/EmptyAlias'
 
+// @TODO: review model
 export class AppNamespace {
   aliasTarget: string
-  // duration: number
   aliasType: string
-  isLinked: boolean
+
   constructor(   public id: NamespaceId,
                  public hex: string,
                  public value: string,
@@ -46,4 +47,8 @@ export class AppNamespace {
       .map((namespaceName: NamespaceName) => namespaceName.name)
       .join('.');  
    }
+
+  isLinked(): boolean {
+    return !(this.alias instanceof EmptyAlias)
+  }
 }

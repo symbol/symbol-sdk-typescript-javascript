@@ -1,4 +1,4 @@
-  import {TransactionType} from 'nem2-sdk';
+import {TransactionType} from 'nem2-sdk';
 import dashboardAggregate from '@/common/img/monitor/dash-board/dashboardAggregate.png';
 import dashboardMultisig from '@/common/img/monitor/dash-board/dashboardMultisig.png';
 import dashboardOther from '@/common/img/monitor/dash-board/dashboardOther.png';
@@ -22,8 +22,13 @@ export const transactionTypeToIcon = {
     [TransactionType.LOCK] : dashboardOther,
     [TransactionType.SECRET_LOCK] : dashboardOther,
     [TransactionType.SECRET_PROOF] : dashboardOther,
-    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS] : dashboardOther,
-    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC] : dashboardOther,
-    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION] : dashboardOther,
+    [TransactionType.ACCOUNT_RESTRICTION_ADDRESS] : dashboardOther,
+    [TransactionType.ACCOUNT_RESTRICTION_MOSAIC] : dashboardOther,
+    [TransactionType.ACCOUNT_RESTRICTION_OPERATION] : dashboardOther,
     [TransactionType.LINK_ACCOUNT] : dashboardOther,
+    [TransactionType.MOSAIC_ADDRESS_RESTRICTION] : dashboardOther,
+    [TransactionType.MOSAIC_GLOBAL_RESTRICTION] : dashboardOther,
+    [TransactionType.ACCOUNT_METADATA_TRANSACTION] : dashboardOther,
+    [TransactionType.MOSAIC_METADATA_TRANSACTION] : dashboardOther,
+    [TransactionType.NAMESPACE_METADATA_TRANSACTION] : dashboardOther,
 }

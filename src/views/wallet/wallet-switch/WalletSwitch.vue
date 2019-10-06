@@ -13,7 +13,7 @@
               <p class="walletName">{{item.name}}</p>
               <p class="walletAmount overflow_ellipsis">
                 {{formatNumber(item.balance)}}
-                &nbsp;<span class="tails">XEM</span>
+                &nbsp;<span class="tails">{{ networkCurrency.ticker }}</span>
               </p>
             </div>
           </Col>

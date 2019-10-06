@@ -18,24 +18,22 @@ export class CollectionRecordTs extends Vue {
     app: AppInfo
     transactionHash = ''
     isShowSearchDetail = false
-    currentMonthLast: Date
-    currentMonthFirst: Date
-    currentMonth: string = ''
+    chosenDate: Date = new Date()
     transactionDetails: any = []
     transferType = TransferType
     renderMosaics = renderMosaics
     renderMosaicNames = renderMosaicNames
     renderMosaicAmount = renderMosaicAmount
-
+    formatNumber = formatNumber  // @TODO: move to formatTransactions
     showDialog: boolean = false
     activeTransaction: FormattedTransaction = null
 
     @Prop({
         default: () => {
-            return 0
+            return TransferType.SENT
         }
     })
-    transactionType
+    transactionType: number
 
     get wallet() {
         return this.activeAccount.wallet
@@ -56,8 +54,12 @@ export class CollectionRecordTs extends Vue {
 
     get slicedConfirmedTransactionList() {
         const {currentMonthFirst, currentMonthLast, transferTransactionList} = this
+
         const filteredByDate = [...transferTransactionList]
-            .filter(item => (!item.isTxUnconfirmed && item.txHeader.date.getTime() <= currentMonthLast.getTime()  && item.txHeader.date.getTime() >= currentMonthFirst.getTime() ))
+            .filter(item => (!item.isTxUnconfirmed
+                && item.txHeader.date.getTime() <= currentMonthLast.getTime()
+                && item.txHeader.date.getTime() >= currentMonthFirst.getTime()))
+
         if (!filteredByDate.length) return []
 
         return this.transactionType === TransferType.SENT
@@ -77,39 +79,20 @@ export class CollectionRecordTs extends Vue {
         return this.transferTransactionList.filter(({isTxUnconfirmed}) => isTxUnconfirmed)
     }
 
-    hideSearchDetail() {
-        this.isShowSearchDetail = false
+    get currentMonthFirst(): Date {
+        return getCurrentMonthFirst(this.chosenDate)
     }
 
-    changeCurrentMonth(e) {
-        this.currentMonth = e
+    get currentMonthLast(): Date {
+        return getCurrentMonthLast(this.chosenDate)
     }
-
-    // @TODO: move to formatTransactions
-    formatNumber(number) {
-        return formatNumber(number)
-    }
-
-    // @TODO: the current month should probably be set at app creation to the store
-    // And defaulted from the store in here
-    setCurrentMonth() {
-        this.currentMonth = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1)
+    
+    get displayedDate(): string {
+        return this.$moment(this.chosenDate).format('YYYY MMM')
     }
 
     @Watch('wallet.address')
     onGetWalletChange() {
-        this.setCurrentMonth()
-    }
-
-    // month filter
-    @Watch('currentMonth')
-    onCurrentMonthChange() {
-        const currentMonth = new Date(this.currentMonth)
-        this.currentMonthFirst = getCurrentMonthFirst(currentMonth)
-        this.currentMonthLast = getCurrentMonthLast(currentMonth)
-    }
-
-    mounted() {
-        this.setCurrentMonth()
+        this.chosenDate = new Date()
     }
 }

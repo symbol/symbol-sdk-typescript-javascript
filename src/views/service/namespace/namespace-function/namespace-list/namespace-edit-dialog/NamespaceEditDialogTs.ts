@@ -2,7 +2,7 @@ import './NamespaceEditDialog.less'
 import {mapState} from "vuex"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Password} from 'nem2-sdk'
-import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig} from "@/config/index.ts"
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig} from "@/config"
 import {getAbsoluteMosaicAmount,formatSeconds} from '@/core/utils'
 import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
 import {createRootNamespace} from "@/core/services/namespace"

@@ -31,7 +31,7 @@ export const mosaicsAmountViewFromAddress = (node: string, address: Address): Pr
             const mosaicAmountViews = mosaics
                 .map(mosaic => {
                     const mosaicView = mosaicViews
-                        .find(({mosaicInfo}) => mosaicInfo.mosaicId.toHex() === mosaic.id.toHex())
+                        .find(({mosaicInfo}) => mosaicInfo.id.toHex() === mosaic.id.toHex())
 
                     if (mosaicView === undefined) throw new Error('A MosaicView was not found')
                     return new MosaicAmountView(mosaicView.mosaicInfo, mosaic.amount)
@@ -52,13 +52,12 @@ export const initMosaic = (wallet: AppWallet, store: Store<AppState>) => {
         try {
             const mosaicAmountViews = await mosaicsAmountViewFromAddress(node, address)
             const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
-            await store.commit('UPDATE_MOSAICS', appMosaics)
-            // @TODO: update account balance should not be necessary anymore
-            new AppWallet(wallet).updateAccountBalance(mosaics[networkCurrency.hex].balance, store)
-            await Promise.all([
-                store.commit('SET_BALANCE_LOADING', false),
-                store.commit('SET_MOSAICS_LOADING', false),
-            ])
+            store.commit('UPDATE_MOSAICS', appMosaics)
+            // @TODO: update account balance should not be necessary anymore.
+            const balance: number = mosaics[networkCurrency.hex] ? mosaics[networkCurrency.hex].balance: 0
+            new AppWallet(wallet).updateAccountBalance(balance, store)
+            store.commit('SET_BALANCE_LOADING', false)
+            store.commit('SET_MOSAICS_LOADING', false)
             resolve(true)
         } catch (error) {
             store.commit('SET_MOSAICS_LOADING', false)

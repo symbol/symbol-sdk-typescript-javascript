@@ -4,12 +4,12 @@
     <div class="left_container radius">
       <img id="qrImg" :src="QRCode" alt="">
       <div class="qr_info">
-        <div class="amount">{{qrInfo.mosaicHex}} : {{qrInfo.mosaicAmount}}</div>
+        <div class="amount">{{formItems.mosaicHex}} : {{formItems.mosaicAmount}}</div>
         <div class="address_text" id="address_text">
           {{accountAddress}}
         </div>
         <div class="notes">
-          {{qrInfo.remarks}}
+          {{formItems.remarks}}
         </div>
         <div class="qr_button ">
           <span class="radius pointer" @click="copyAddress">{{$t('copy_address')}}</span>
@@ -27,7 +27,7 @@
         <span class="value radius flex_center">
 
           <AutoComplete
-                  v-model="formItem.mosaicHex"
+                  v-model="formItems.mosaicHex"
                   :filter-method="filterMethod"
                   :placeholder="$t('Please_enter_mosaic_hex_or_alias')"
                   class="asset_type"
@@ -39,20 +39,17 @@
 
         </span>
         <span class="value radius flex_center">
-          <input class="amount_input" type="text" @change="onChange" v-model="formItem.mosaicAmount"
+          <input class="amount_input" type="text" @change="onChange" v-model="formItems.mosaicAmount"
                  :placeholder="$t('Please_enter_the_amount_of_transfer')">
         </span>
       </div>
       <div class="remark flex_center">
         <span class="title">{{$t('remarks')}}</span>
         <span class=" textarea_container flex_center value radius ">
-          <textarea v-model="formItem.remarks" :placeholder="$t('Please_enter_notes')" refs="textarea"
+          <textarea v-model="formItems.remarks" :placeholder="$t('Please_enter_notes')" refs="textarea"
                     @keyup="checkLength"></textarea>
         </span>
-        <span class="remark_length">{{formItem.remarks.length}}/25</span>
-      </div>
-      <div @click="generateQR()" class="send_button pointer">
-        {{$t('generate_QR_code')}}
+        <span class="remark_length">{{formItems.remarks.length}}/25</span>
       </div>
     </div>
 

@@ -1,20 +1,22 @@
-import {FormattedTransaction, AppState} from '@/core/model'
+import {FormattedTransaction} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
 import {Transaction} from 'nem2-sdk'
+import {AppState} from '../types';
 import {Store} from 'vuex';
 
-export class FormattedModifyAccountRestrictionOperation extends FormattedTransaction {
+export class FormattedMosaicMetadataTransaction extends FormattedTransaction {
     dialogDetailMap: any
     icon: any
 
-    constructor(  tx: Transaction,
-                  store: Store<AppState>) {
+    constructor(    tx: Transaction,
+                    store: Store<AppState>) {
         super(tx, store)
         const {networkCurrency} = store.state.account
+        const {divisibility, ticker} = networkCurrency
 
         this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,
-            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + networkCurrency.ticker,
+            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), divisibility) + ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
         }

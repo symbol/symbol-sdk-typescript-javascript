@@ -15,7 +15,7 @@ export class FormattedTransfer extends FormattedTransaction {
         const {networkCurrency} = store.state.account
 
         const {rawTx}: any = this
-        this.infoFirst = this.txHeader.isReceipt ? rawTx.signer.address.plain() : rawTx.recipient.address
+        this.infoFirst = this.txHeader.isReceipt ? rawTx.signer.address.plain() : rawTx.recipientAddress.address
             
         this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,

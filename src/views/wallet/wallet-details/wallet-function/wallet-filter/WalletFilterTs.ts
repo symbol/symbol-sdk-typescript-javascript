@@ -1,15 +1,14 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {RestrictionApiRxjs} from '@/core/api/RestrictionApiRxjs.ts'
 import {Message} from "@/config/index.ts"
 import {mapState} from "vuex"
 import {
     Account,
-    RestrictionType,
+    AccountRestrictionType,
     AccountRestrictionTransaction,
     Deadline,
     UInt64,
     AccountRestrictionModification,
-    RestrictionModificationType,
+    AccountRestrictionModificationAction,
     Address, MosaicId,
     Password
 } from "nem2-sdk"
@@ -26,15 +25,15 @@ export class WalletFilterTs extends Vue {
     isShowDialog = false
     isShowDeleteIcon = false
     currentAlias: any = false
-    RestrictionModificationType = RestrictionModificationType
+    AccountRestrictionModificationAction = AccountRestrictionModificationAction
     currentTitle = 'add_address'
     currentFilter: any = ''
     filterTypeList = [true, false]
     titleList = ['add_address', 'add_mosaic']
-    RestrictionType = RestrictionType
+    AccountRestrictionType = AccountRestrictionType
     showRestrictionType = true
     formItem = {
-        filterType: RestrictionType.AllowAddress,
+        filterType: AccountRestrictionType.AllowIncomingAddress,
         filterList: [],
         fee: .5,
         password: '',
@@ -46,6 +45,9 @@ export class WalletFilterTs extends Vue {
         this.currentFilter = ''
     }
 
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
+    }
 
     get node() {
         return this.activeAccount.node
@@ -71,7 +73,7 @@ export class WalletFilterTs extends Vue {
     initForm() {
         this.currentFilter = ''
         this.formItem = {
-            filterType: RestrictionType.AllowAddress,
+            filterType: AccountRestrictionType.AllowIncomingAddress,
             filterList: [],
             fee: .5,
             password: '',
@@ -108,15 +110,15 @@ export class WalletFilterTs extends Vue {
         this.filterTypeList = [false, false, false]
         this.filterTypeList[index] = true
         if (index === 0) {
-            this.formItem.filterType = RestrictionType.AllowAddress
+            this.formItem.filterType = AccountRestrictionType.AllowIncomingAddress
             return
         }
         if (index === 1) {
-            this.formItem.filterType = RestrictionType.AllowMosaic
+            this.formItem.filterType = AccountRestrictionType.AllowMosaic
             return
         }
         if (index === 2) {
-            this.formItem.filterType = RestrictionType.AllowTransaction
+            this.formItem.filterType = AccountRestrictionType.AllowIncomingTransactionType
             return
         }
     }
@@ -228,28 +230,17 @@ export class WalletFilterTs extends Vue {
         const {networkType} = this.getWallet
         const account = Account.createFromPrivateKey(privatekey, networkType)
         switch (filterType) {
-            case RestrictionType.AllowAddress:
-            case RestrictionType.BlockAddress:
+            case AccountRestrictionType.AllowIncomingAddress:
+            case AccountRestrictionType.BlockIncomingAddress:
                 this.generateAddressRestriction(account)
                 break
-            case RestrictionType.AllowMosaic:
-            case RestrictionType.BlockMosaic:
+            case AccountRestrictionType.AllowMosaic:
+            case AccountRestrictionType.BlockMosaic:
                 this.generateMosaicRestriction(account)
                 break
-            case RestrictionType.AllowTransaction:
-            case RestrictionType.BlockTransaction:
+            case AccountRestrictionType.AllowIncomingTransactionType:
+            case AccountRestrictionType.BlockIncomingTransactionType:
                 break
         }
     }
-
-    getAccountRestriction() {
-        // TODO update while sdk complete
-        if (!this.wallet) {
-            return
-        }
-        const {node, address} = this
-        new RestrictionApiRxjs().getRestrictionInfo(node, address).subscribe((restrictionInfo) => {
-        })
-    }
-
 }

@@ -13,9 +13,10 @@ import {isWindows} from "@/config/index.ts"
 import {resetFontSize} from '@/core/utils/electron.ts'
 import VeeValidate from 'vee-validate'
 import locale from 'iview/dist/locale/en-US'
+import moment from 'vue-moment'
 
 Vue.use(iView, {locale})
-Vue.use(require('vue-moment'))
+Vue.use(moment as any)
 Vue.use(Router)
 Vue.use(VueRx)
 //Introduced the global

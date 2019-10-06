@@ -89,32 +89,6 @@ export class TransactionApiRxjs {
 
     }
 
-    transactions(publicAccount: PublicAccount,
-                 queryParams: any,
-                 node: string) {
-        return observableFrom(new AccountHttp(node).transactions(publicAccount, queryParams))
-    }
-
-    incomingTransactions(publicAccount: PublicAccount,
-                         queryParams: any,
-                         node: string) {
-        return observableFrom(new AccountHttp(node).incomingTransactions(publicAccount, queryParams))
-    }
-
-    outgoingTransactions(publicAccount: PublicAccount,
-                         queryParams: any,
-                         node: string) {
-
-        return observableFrom(new AccountHttp(node).outgoingTransactions(publicAccount, queryParams))
-    }
-
-    unconfirmedTransactions(publicAccount: PublicAccount,
-                            queryParams: any,
-                            node: string) {
-
-        return observableFrom(new AccountHttp(node).unconfirmedTransactions(publicAccount, queryParams))
-    }
-
     getAggregateBondedTransactions(publicAccount: any,
                                    queryParams: any,
                                    node: string) {

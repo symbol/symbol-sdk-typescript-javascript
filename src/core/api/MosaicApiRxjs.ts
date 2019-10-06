@@ -5,13 +5,14 @@ import {
     MosaicId,
     NamespaceMosaicIdGenerator,
     AggregateTransaction,
-    MosaicProperties,
     UInt64,
     MosaicSupplyChangeTransaction,
     MosaicHttp,
     Convert,
     NetworkCurrencyMosaic,
-    MosaicSupplyType, PublicAccount
+    MosaicSupplyChangeAction,
+    PublicAccount,
+    MosaicFlags
 } from 'nem2-sdk'
 import {from as observableFrom} from "rxjs"
 
@@ -55,20 +56,17 @@ export class MosaicApiRxjs {
             Deadline.create(),
             mosaicNonce,
             mosaicId,
-            MosaicProperties.create({
-                supplyMutable: supplyMutable,
-                transferable: transferable,
-                divisibility: divisibility,
-                duration: duration ? UInt64.fromUint(duration) : undefined,
-                restrictable: restrictable
-            }),
+            MosaicFlags.create(supplyMutable, transferable, restrictable),
+            divisibility,
+            duration ? UInt64.fromUint(duration) : undefined,
             netWorkType,
             maxFee ? UInt64.fromUint(maxFee) : undefined
         )
+
         const mosaicSupplyChangeTx = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicDefinitionTx.mosaicId,
-            MosaicSupplyType.Increase,
+            MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(supply),
             netWorkType
         )
@@ -86,13 +84,13 @@ export class MosaicApiRxjs {
 
     mosaicSupplyChange(mosaicId: any,
                        delta: number,
-                       MosaicSupplyType: number,
+                       MosaicSupplyChangeAction: number,
                        networkType: number,
                        maxFee?: number) {
         return MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
-            MosaicSupplyType,
+            MosaicSupplyChangeAction,
             UInt64.fromUint(delta),
             networkType,
             maxFee ? UInt64.fromUint(maxFee) : undefined
@@ -106,6 +104,4 @@ export class MosaicApiRxjs {
     getMosaicsNames(node: string, mosaicIds: any[]) {
         return observableFrom(new MosaicHttp(node).getMosaicsNames(mosaicIds))
     }
-
-
 }

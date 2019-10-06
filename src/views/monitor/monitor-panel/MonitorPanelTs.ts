@@ -28,11 +28,16 @@ export class MonitorPanelTs extends Vue {
     monitorSelected = monitorSelected
     monitorUnselected = monitorUnselected
     navigatorList: any = monitorPanelNavigatorConfig
+    formatXemAmount = formatXemAmount
 
     get xemUsdPrice() {
         return this.app.xemUsdPrice
     }
 
+    get ticker() {
+        return this.activeAccount.networkCurrency.ticker
+    }
+    
     get balanceLoading() {
         return this.app.balanceLoading
     }
@@ -135,7 +140,6 @@ export class MonitorPanelTs extends Vue {
     }
 
     toggleShowMosaic(mosaic) {
-        const {accountName} = this
         const accountMap = JSON.parse(localRead('accountMap'))
         let wallets = accountMap.wallets
         const updatedList: any = {...this.mosaicMap}
@@ -170,10 +174,6 @@ export class MonitorPanelTs extends Vue {
     showErrorMessage(message) {
         this.$Notice.destroy()
         this.$Notice.error({title: this.$t(message) + ''})
-    }
-
-    formatXemAmount(text) {
-        return formatXemAmount(text)
     }
 
     mounted() {

@@ -6,7 +6,6 @@
         <p class="head_title">{{$t('Namespace_and_Sub_Namespace')}}</p>
         <p class="tips">{{$t('Under_the_current_wallet')}}</p>
       </div>
-
       <div class="tips_icon">
         <Poptip width="290" placement="bottom">
           <img src="@/common/img/service/namespace/namespaceTipIcon.png" alt="">
@@ -83,7 +82,8 @@
             <div v-if="n" class="table_body_item">
               <span class="Namespace_name overflow_ellipsis">{{n.label}}</span>
               <span class="duration overflow_ellipsis">
-              {{computeDuration(n) === StatusString.EXPIRED ? $t('overdue') : durationToTime(n.endHeight)}}
+              {{computeDuration(n) === StatusString.EXPIRED
+                  ? $t('overdue') : durationToTime(n.endHeight)}}
             </span>
             <!-- <span class="is_active overflow_ellipsis">
               <Icon v-if="n.isActive" type="md-checkmark"/>
@@ -95,26 +95,26 @@
             <Poptip class="poptip_container" placement="top-end">
               <i class="moreFn"></i>
               <div slot="content" max-width="150" class="refresh_sub_container">
-                <span class="fnItem pointer" v-if="n.levels === 1" @click="showEditDialog(n)">
+                <span class="fnItem pointer" v-if="n.levels === 1" @click.stop="showEditDialog(n)">
                   <img src="@/common/img/service/namespace/namespaceRefresh.png">
                   <span>{{$t('update')}}</span>
                 </span>
-               <span v-if="n.isLinked && computeDuration(n) !== StatusString.EXPIRED&&unlinkMosaicList.length"
-                     class="fnItem pointer" @click="showUnlinkDialog(n)">
+               <span
+                    v-if="n.isLinked() && computeDuration(n) !== StatusString.EXPIRED"
+                    class="fnItem pointer"
+                    @click.stop="unbindItem(n)"
+                >
                 <img src="@/common/img/service/namespace/namespaceRefresh.png">
                 <span>{{$t('unbind')}}</span>
               </span>
 
-              <span v-if="!n.isLinked && computeDuration(n) !== StatusString.EXPIRED  && availableMosaics.length"
-                    class="fnItem pointer"
-                    @click="showMosaicLinkDialog(n)">
+              <span
+                  v-if="!n.isLinked() && computeDuration(n) !== StatusString.EXPIRED"
+                  class="fnItem pointer"
+                  @click.stop="bindItem(n)"
+              >
                 <img src="@/common/img/service/namespace/namespaceRefresh.png">
-                <span>{{$t('bind_mosaic')}}</span>
-              </span>
-                  <span v-if="!n.isLinked&& computeDuration(n) !== StatusString.EXPIRED " class="fnItem pointer"
-                        @click="showAddressLinkDialog(n)">
-                <img src="@/common/img/service/namespace/namespaceRefresh.png">
-                <span>{{$t('bind_address')}}</span>
+                <span>{{$t('bind')}}</span>
               </span>
           </div>
           </Poptip>
@@ -143,33 +143,21 @@
       <p class="second_head">{{$t('scenes_to_be_used')}}</p>
       <p>{{$t('Used_to_bind_a_wallet_address')}}</p>
     </div>
-
     <NamespaceEditDialog
             v-if="showNamespaceEditDialog"
-            :currentNamespace="currentNamespace"
+            :currentNamespace="namespace"
             :showNamespaceEditDialog="showNamespaceEditDialog"
             @close='showNamespaceEditDialog = false'
     />
-
-    <NamespaceUnAliasDialog
-            v-if="showUnAliasDialog"
-            :showUnAliasDialog="showUnAliasDialog"
-            :activeNamespace="aliasDialogItem"
-            @close="showUnAliasDialog = false"
-    />
-
-    <NamespaceMosaicAliasDialog
-            v-if="showMosaicAliasDialog"
-            :showMosaicAliasDialog="showMosaicAliasDialog"
-            :activeNamespace="aliasDialogItem"
-            @close="showMosaicAliasDialog = false"
-    />
-
-    <NamespaceAddressAliasDialog
-            v-if="isShowAddressAliasDialog"
-            :isShowAddressAliasDialog="isShowAddressAliasDialog"
-            :activeNamespace="aliasDialogItem"
-            @close="isShowAddressAliasDialog = false"
+    <Alias
+        v-if="showAliasDialog"
+        :visible="showAliasDialog"
+        :bind="bind"
+        :fromNamespace="true"
+        :namespace="namespace"
+        :mosaic="mosaic"
+        :address="address"
+        @close="showAliasDialog = false"
     />
   </div>
 </template>

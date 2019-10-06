@@ -97,22 +97,34 @@
 
             <span class="poptip">
               <div
-                      class="listFnDiv"
-                      v-if="value.mosaicInfo.owner.publicKey == publicKey &&(computeDuration(value) > 0 || computeDuration(value) === 'Forever')"
+                v-if="value.mosaicInfo.owner.publicKey == publicKey
+                    &&  (computeDuration(value) > 0
+                      || computeDuration(value) === 'Forever')"
+                class="listFnDiv"
               >
                 <Poptip placement="bottom">
                   <i class="moreFn"></i>
                   <div slot="content" class="updateFn">
-                    <p class="fnItem" @click="showEditDialog(value)" v-if="value.properties.supplyMutable">
+                    <p
+                      v-if="value.properties.supplyMutable"
+                      class="fnItem"
+                      @click="showEditDialog(value)"
+                    >
                       <i><img src="@/common/img/service/updateMsaioc.png"></i>
                       <span class="">{{$t('modify_supply')}}</span>
                     </p>
-                    <p class="fnItem" @click="showAliasDialog(value)">
+                    <p
+                      class="fnItem"
+                      @click="bindItem(value)"
+                    >
                       <i><img src="@/common/img/service/setAlias.png"></i>
                       <span>{{$t('binding_alias')}}</span>
                     </p>
-
-                    <p class="fnItem" @click="showUnAliasDialog(value)" v-if="value.name">
+                    <p
+                      v-if="value.name"
+                      class="fnItem"
+                      @click="unbindItem(value)"
+                    >
                       <i><img src="@/common/img/service/clearAlias.png"></i>
                       <span>{{$t('unbind')}}</span>
                     </p>
@@ -141,17 +153,15 @@
       <p class="green_text">{{$t('mosaic_attribute_text')}}</p>
       <p>{{$t('mosaic_attribute_text_2')}}</p>
     </div>
-    <MosaicAliasDialog
-        v-if="showMosaicAliasDialog"
-        :showMosaicAliasDialog="showMosaicAliasDialog"
-        :itemMosaic="selectedMosaic"
-        @close="showMosaicAliasDialog = false"
-    />
-    <MosaicUnAliasDialog
-        v-if="showMosaicUnAliasDialog"
-        :showMosaicUnAliasDialog="showMosaicUnAliasDialog"
-        :itemMosaic="selectedMosaic"
-        @close="showMosaicUnAliasDialog = false"
+    <Alias
+        v-if="showAliasDialog"
+        :visible="showAliasDialog"
+        :bind="bind"
+        :fromNamespace="false"
+        :namespace="namespace"
+        :mosaic="mosaic"
+        :address="address"
+        @close="showAliasDialog = false"
     />
     <EditDialog
         v-if="showMosaicEditDialog"

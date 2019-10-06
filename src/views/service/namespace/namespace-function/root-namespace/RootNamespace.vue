@@ -56,7 +56,7 @@
 
         <div class="form_item XEM_rent_fee" v-if="false">
           <span class="key">{{$t('rent')}}</span>
-          <span class="value">{{Number(formItems.duration)}}{{ XEM}}</span>
+          <span class="value">{{Number(formItems.duration)}}{{ networkCurrency.ticker }}</span>
         </div>
 
         <div class="form_item">

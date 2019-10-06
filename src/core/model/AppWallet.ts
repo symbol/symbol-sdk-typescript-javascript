@@ -1,6 +1,4 @@
 import {Store} from 'vuex';
-import {Message} from "@/config/index.ts"
-import {localRead, localSave} from "@/core/utils/utils.ts"
 import {
     Account,
     Crypto,
@@ -13,13 +11,11 @@ import {
     Id, AccountHttp, Address, AggregateTransaction,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
-import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
+import {Message, networkConfig} from "@/config"
 import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
-import {createSubWalletByPath} from "@/core/utils/hdWallet.ts"
-import {AppLock} from "@/core/utils/appLock"
-import {CreateWalletType} from "@/core/model/CreateWalletType"
-import {WebClient} from "@/core/utils"
+import {AppLock, localRead, localSave, createSubWalletByPath} from "@/core/utils"
+import {CreateWalletType} from "@/core/model"
 import {AppState} from './types';
 
 export class AppWallet {
@@ -43,6 +39,7 @@ export class AppWallet {
     sourceType: string
     createTimestamp: number
     importance: number
+    linkedAccountKey: string
 
     generateWalletTitle(createType: string, coinType: string, netType: string) {
         return `${createType}-${coinType}-${netType}`
@@ -105,7 +102,7 @@ export class AppWallet {
         networkType: NetworkType,
         store: Store<AppState>): AppWallet {
         try {
-            const path = `m/44'/43'/1'/0/0`
+            const path = `m/44'/43'/0'/0'/0`
             const accountName = store.state.account.accountName
             const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
             const account = createSubWalletByPath(mnemonic, path)  // need put in configure
@@ -291,16 +288,18 @@ export class AppWallet {
         localSave('accountMap', JSON.stringify(accountMap))
     }
 
-    static async getAccountInfo(store: Store<AppState>): Promise<any> {
+    async setAccountInfo(store: Store<AppState>): Promise<void> {
         try {
-            console.log(store, '33333333333333333')
+            const {EMPTY_LINKED_ACCOUNT_KEY} = networkConfig
             const accountInfo = await new AccountHttp(store.state.account.node)
                 .getAccountInfo(Address.createFromRawAddress(store.state.account.wallet.address))
                 .toPromise()
-            store.commit('SET_ACCOUNT_INFO', accountInfo)
-            return accountInfo
+            this.importance = accountInfo.importance.compact()
+            this.linkedAccountKey = accountInfo.linkedAccountKey === EMPTY_LINKED_ACCOUNT_KEY
+                ? null : accountInfo.linkedAccountKey
+            this.updateWallet(store)
         } catch (error) {
-            return 0
+            console.error("AppWallet -> setAccountInfo -> error", error)
         }
     }
 
@@ -357,7 +356,9 @@ export class AppWallet {
 
     async setMultisigStatus(node: string, store: Store<AppState>): Promise<void> {
         try {
-            const multisigAccountInfo = await new AccountApiRxjs().getMultisigAccountInfo(this.address, node).toPromise()
+            const multisigAccountInfo = await new AccountHttp(node)
+                .getMultisigAccountInfo(Address.createFromRawAddress(this.address)).toPromise()
+
             store.commit('SET_MULTISIG_ACCOUNT_INFO', {address: this.address, multisigAccountInfo})
             store.commit('SET_MULTISIG_LOADING', false)
         } catch (error) {
@@ -370,8 +371,8 @@ export class AppWallet {
         try {
             const {node, networkCurrency} = store.state.account
 
-            const accountInfo = await new AccountApiRxjs()
-                .getAccountInfo(this.address, node)
+            const accountInfo = await new AccountHttp(node)
+                .getAccountInfo(Address.createFromRawAddress(this.address))
                 .toPromise()
 
             if (!accountInfo.mosaics.length) {
@@ -436,20 +437,6 @@ export const createBondedMultisigTransaction = (transaction: Array<Transaction>,
 
 export const createCompleteMultisigTransaction = (transaction: Array<Transaction>, multisigPublicKey: string, networkType: NetworkType, fee: number) => {
     return new MultisigApiRxjs().completeMultisigTransaction(networkType, fee, multisigPublicKey, transaction)
-}
-
-export const getCurrentImportance = async (store: Store<AppState>) => {
-    const {address} = store.state.account.wallet
-    const {node} = store.state.account
-    const resStr = await WebClient.request('', {
-        url: `${node}/account/${address}`,
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    }).catch(_ => store.commit('SET_WALLET_IMPORTANCE', 0))
-    const importance = JSON.parse(resStr + '').account ? new Id(JSON.parse(resStr + '').account.importance).compact() : 0
-    store.commit('SET_WALLET_IMPORTANCE', Number(importance))
 }
 
 export const saveLocalAlias = (

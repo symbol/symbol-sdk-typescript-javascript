@@ -101,8 +101,15 @@
                       @closePrivatekeyDialog="closePrivatekeyDialog"/>
     <KeystoreDialog :showKeystoreDialog="showKeystoreDialog"
                     @closeKeystoreDialog="closeKeystoreDialog"/>
-    <TheBindForm :isShowBindDialog='isShowBindDialog'
-                 @closeBindDialog="closeBindDialog"/>
+    <Alias
+      v-if="isShowBindDialog"
+      :visible='isShowBindDialog'
+      :bind="!getSelfAlias.length"
+      :fromNamespace="false"
+      :mosaic="null"
+      :address="getAddress"
+      @close="closeBindDialog"
+    />
   </div>
 </template>
 

@@ -23,7 +23,7 @@ export class WalletCreateTs extends Vue {
     formItem = {
         currentNetType: NetworkType.MIJIN_TEST,
         walletName: 'wallet-create',
-        path: `m/44'/43'/1'/0/0`
+        path: `m/44'/43'/0'/0'/0'`
     }
     networkTypeList = networkTypeConfig
 

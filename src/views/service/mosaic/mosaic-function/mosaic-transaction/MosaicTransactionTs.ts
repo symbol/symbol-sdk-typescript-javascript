@@ -5,11 +5,11 @@ import {
     MosaicNonce,
     PublicAccount,
     MosaicDefinitionTransaction,
-    MosaicProperties,
+    MosaicFlags,
     Deadline,
     UInt64,
     MosaicSupplyChangeTransaction,
-    MosaicSupplyType,
+    MosaicSupplyChangeAction,
     MultisigAccountInfo,
     Address,
     NetworkType
@@ -229,29 +229,27 @@ export class MosaicTransactionTs extends Vue {
 
     createByMultisig() {
         const {networkType, feeAmount} = this
-        const {supply, divisibility, transferable, supplyMutable, duration, multisigPublicKey} = this.formItems
+        const {supply, divisibility, transferable, supplyMutable, duration, multisigPublicKey, restrictable} = this.formItems
         const innerFee = feeAmount / this.feeDivider
         const aggregateFee = feeAmount / this.feeDivider
         const nonce = MosaicNonce.createRandom()
         const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(multisigPublicKey, this.wallet.networkType))
-        const mosaicDefinitionTx = MosaicDefinitionTransaction.create(
-            Deadline.create(),
-            nonce,
-            mosaicId,
-            MosaicProperties.create({
-                supplyMutable: supplyMutable,
-                transferable: transferable,
-                divisibility: divisibility,
-                duration: duration ? UInt64.fromUint(duration) : undefined
-            }),
-            networkType,
-            innerFee ? UInt64.fromUint(innerFee) : undefined
-        )
+        const mosaicDefinitionTx = MosaicDefinitionTransaction
+            .create(
+                Deadline.create(),
+                nonce,
+                mosaicId,
+                MosaicFlags.create(supplyMutable, transferable, restrictable), 
+                divisibility,
+                duration ? UInt64.fromUint(duration) : undefined,
+                networkType,
+                innerFee ? UInt64.fromUint(innerFee) : undefined
+            )
 
         const mosaicSupplyChangeTx = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicDefinitionTx.mosaicId,
-            MosaicSupplyType.Increase,
+            MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(supply),
             networkType
         )
@@ -276,7 +274,7 @@ export class MosaicTransactionTs extends Vue {
     }
 
     checkForm() {
-        const {supply, divisibility, duration, multisigPublicKey} = this.formItems
+        const {supply, divisibility, duration} = this.formItems
         // common check
         if (!Number(supply) || supply < 0) {
             this.$Notice.error({

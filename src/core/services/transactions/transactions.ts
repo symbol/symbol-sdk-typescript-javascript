@@ -1,4 +1,4 @@
-import {PublicAccount, NetworkType, Address, Transaction} from "nem2-sdk"
+import {Address, Transaction, AccountHttp, QueryParams} from "nem2-sdk"
 import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {transactionFormat} from './formatting'
 import {AppState} from '@/core/model'
@@ -19,25 +19,19 @@ export const formatAndSave = (transaction: Transaction, store: Store<AppState>, 
     store.commit('ADD_UNCONFIRMED_TRANSACTION', formattedTransactions)
 }
 
-export const setTransactionList = (store: Store<AppState>) => {
-    const {wallet, node} = store.state.account
-    const {address, publicKey} = wallet
-    const {networkType} = Address.createFromRawAddress(address)
-    const publicAccount = PublicAccount.createFromPublicKey(publicKey, networkType)
-
-    new TransactionApiRxjs().transactions(
-        publicAccount,
-        {
-        pageSize: 100
-        },
-        node,
-    ).subscribe(async (transactionList) => {
-        try {
+export const setTransactionList = (address: string, store: Store<AppState>): void => {
+    const {node} = store.state.account
+    new AccountHttp(node)
+        .transactions(
+            Address.createFromRawAddress(address),
+            new QueryParams(100),
+    ).subscribe(
+        (transactionList: Transaction[]) => {
             const txList = transactionFormat(transactionList, store)
             store.commit('SET_TRANSACTION_LIST', txList)
             store.commit('SET_TRANSACTIONS_LOADING', false)
-        } catch (error) {
-            console.error(error)
-        }
-    })
+        },
+        (error) => console.error("setTransactionList -> error", error)
+    )
+    
 }

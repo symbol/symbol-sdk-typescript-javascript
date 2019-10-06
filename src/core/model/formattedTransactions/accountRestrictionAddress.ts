@@ -3,7 +3,7 @@ import {getRelativeMosaicAmount} from '@/core/utils'
 import {Transaction} from 'nem2-sdk'
 import {Store} from 'vuex'
 
-export class FormattedModifyAccountRestrictionAddress extends FormattedTransaction {
+export class FormattedAccountRestrictionAddress extends FormattedTransaction {
   dialogDetailMap: any
   icon: any
 

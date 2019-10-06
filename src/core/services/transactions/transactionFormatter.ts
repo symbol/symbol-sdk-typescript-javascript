@@ -1,4 +1,4 @@
-import {Transaction, Address, TransactionType} from 'nem2-sdk'
+import {Transaction, TransactionType} from 'nem2-sdk'
 import {
     FormattedTransfer,
     FormattedRegisterNamespace,
@@ -12,10 +12,15 @@ import {
     FormattedLock,
     FormattedSecretLock,
     FormattedSecretProof,
-    FormattedModifyAccountRestrictionAddress,
-    FormattedModifyAccountRestrictionMosaic,
-    FormattedModifyAccountRestrictionOperation,
+    FormattedAccountRestrictionAddress,
+    FormattedAccountRestrictionMosaic,
+    FormattedAccountRestrictionOperation,
     FormattedLinkAccount,
+    FormattedMosaicAddressRestriction,
+    FormattedMosaicGlobalRestriction,
+    FormattedAccountMetadataTransaction,
+    FormattedMosaicMetadataTransaction,
+    FormattedNamespaceMetadataTransaction,
     AppState,
 } from '@/core/model'
 import { Store } from 'vuex'
@@ -34,10 +39,15 @@ const transactionFactory = () => ({
         [TransactionType.LOCK] : FormattedLock,
         [TransactionType.SECRET_LOCK] : FormattedSecretLock,
         [TransactionType.SECRET_PROOF] : FormattedSecretProof,
-        [TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS] : FormattedModifyAccountRestrictionAddress,
-        [TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC] : FormattedModifyAccountRestrictionMosaic,
-        [TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION] : FormattedModifyAccountRestrictionOperation,
+        [TransactionType.ACCOUNT_RESTRICTION_ADDRESS] : FormattedAccountRestrictionAddress,
+        [TransactionType.ACCOUNT_RESTRICTION_MOSAIC] : FormattedAccountRestrictionMosaic,
+        [TransactionType.ACCOUNT_RESTRICTION_OPERATION] : FormattedAccountRestrictionOperation,
         [TransactionType.LINK_ACCOUNT] : FormattedLinkAccount,
+        [TransactionType.MOSAIC_ADDRESS_RESTRICTION] : FormattedMosaicAddressRestriction,
+        [TransactionType.MOSAIC_GLOBAL_RESTRICTION] : FormattedMosaicGlobalRestriction,
+        [TransactionType.ACCOUNT_METADATA_TRANSACTION] : FormattedAccountMetadataTransaction,
+        [TransactionType.MOSAIC_METADATA_TRANSACTION] : FormattedMosaicMetadataTransaction,
+        [TransactionType.NAMESPACE_METADATA_TRANSACTION] : FormattedNamespaceMetadataTransaction,
     },
 
     get(  transaction: Transaction,

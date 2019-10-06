@@ -14,21 +14,26 @@ export const apiServerConfig = {
 export const transactionTag = {
     RECEIPT: 'receipt',
     PAYMENT: 'payment',
-    [TransactionType.REGISTER_NAMESPACE]: 'register_namespace',
-    [TransactionType.ADDRESS_ALIAS]: 'address_alias',
-    [TransactionType.MOSAIC_ALIAS]: 'mosaic_alias',
-    [TransactionType.MOSAIC_DEFINITION]: 'mosaic_definition',
-    [TransactionType.MOSAIC_SUPPLY_CHANGE]: 'mosaic_supply_change',
-    [TransactionType.MODIFY_MULTISIG_ACCOUNT]: 'modify_multisig_account',
-    [TransactionType.AGGREGATE_COMPLETE]: 'aggregate_complete',
-    [TransactionType.AGGREGATE_BONDED]: 'aggregate_bonded',
-    [TransactionType.LOCK]: 'lock',
-    [TransactionType.SECRET_LOCK]: 'secret_lock',
-    [TransactionType.SECRET_PROOF]: 'secret_proof',
-    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS]: 'modify_account_property_address',
-    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC]: 'modify_account_property_mosaic',
-    [TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION]: 'modify_account_property_entity_type',
-    [TransactionType.LINK_ACCOUNT]: 'link_account'
+    [TransactionType.REGISTER_NAMESPACE] : 'register_namespace',
+    [TransactionType.ADDRESS_ALIAS] : 'address_alias',
+    [TransactionType.MOSAIC_ALIAS] : 'mosaic_alias',
+    [TransactionType.MOSAIC_DEFINITION] : 'mosaic_definition',
+    [TransactionType.MOSAIC_SUPPLY_CHANGE] : 'mosaic_supply_change',
+    [TransactionType.MODIFY_MULTISIG_ACCOUNT] : 'modify_multisig_account',
+    [TransactionType.AGGREGATE_COMPLETE] : 'aggregate_complete',
+    [TransactionType.AGGREGATE_BONDED] : 'aggregate_bonded',
+    [TransactionType.LOCK] : 'lock',
+    [TransactionType.SECRET_LOCK] : 'secret_lock',
+    [TransactionType.SECRET_PROOF] : 'secret_proof',
+    [TransactionType.ACCOUNT_RESTRICTION_ADDRESS] : 'account_restriction_address',
+    [TransactionType.ACCOUNT_RESTRICTION_MOSAIC] : 'account_restriction_mosaic',
+    [TransactionType.ACCOUNT_RESTRICTION_OPERATION] : 'account_restriction_operation',
+    [TransactionType.LINK_ACCOUNT] : 'link_account',
+    [TransactionType.MOSAIC_ADDRESS_RESTRICTION] : 'mosaic_address_restriction',
+    [TransactionType.MOSAIC_GLOBAL_RESTRICTION] : 'mosaic_global_restriction',
+    [TransactionType.ACCOUNT_METADATA_TRANSACTION] : 'account_metadata_transaction',
+    [TransactionType.MOSAIC_METADATA_TRANSACTION] : 'mosaic_metadata_transaction',
+    [TransactionType.NAMESPACE_METADATA_TRANSACTION] : 'namespace_metadata_transaction',
 }
 
 export const Message = {
@@ -37,7 +42,7 @@ export const Message = {
     OPERATION_SUCCESS: 'successful_operation',
     UPDATE_SUCCESS: 'update_completed',
     NODE_CONNECTION_SUCCEEDED: 'Node_connection_succeeded',
-    PLEASE_ENTER_THE_CORRECT_NUMBER: 'Please_enter_the_correct_number',
+    PLEASE_ENTER_A_CORRECT_NUMBER: 'Please_enter_a_correct_number',
     NOTES_SHOULD_NOT_EXCEED_25_CHARACTER: 'Notes_should_not_exceed_25_character',
 
     PLEASE_SET_WALLET_PASSWORD_INFO: 'please_set_your_wallet_password',
@@ -197,5 +202,6 @@ export const networkConfig = {
     maxMosaicRestrictionValues: 20,
     maxMessageSize: 1024,
     namespaceListSize: 9,
-    seedWalletMaxAmount:10
+    seedWalletMaxAmount:10,
+    EMPTY_LINKED_ACCOUNT_KEY: '0000000000000000000000000000000000000000000000000000000000000000',
 }

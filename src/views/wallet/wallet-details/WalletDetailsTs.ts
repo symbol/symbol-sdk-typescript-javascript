@@ -8,22 +8,21 @@ import KeystoreDialog from '@/views/wallet/keystore-dialog/KeystoreDialog.vue'
 import MnemonicDialog from '@/views/wallet/mnemonic-dialog/MnemonicDialog.vue'
 import PrivatekeyDialog from '@/views/wallet/privatekey-dialog/PrivatekeyDialog.vue'
 import WalletUpdatePassword from './wallet-function/wallet-update-password/WalletUpdatePassword.vue'
+import WalletHarvesting from '@/views/wallet/wallet-details/wallet-function/wallet-harvesting/WalletHarvesting.vue'
 import {mapState} from "vuex"
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
-import {getCurrentImportance} from '@/core/model/AppWallet.ts'
-import TheBindForm from '@/views/wallet/wallet-details/wallet-function/the-bind-form/TheBindForm.vue'
-import WalletHarvesting from '@/views/wallet/wallet-details/wallet-function/wallet-harvesting/WalletHarvesting.vue'
+import Alias from '@/views/forms/alias/Alias.vue'
 
 @Component({
     components: {
-        TheBindForm,
+        Alias,
         MnemonicDialog,
         PrivatekeyDialog,
         KeystoreDialog,
         WalletAlias,
         WalletFilter,
         WalletUpdatePassword,
-        WalletHarvesting
+        WalletHarvesting,
     },
     computed: {
         ...mapState({
@@ -53,7 +52,8 @@ export class WalletDetailsTs extends Vue {
         return multisigAccountInfo.cosignatories.length > 0
     }
 
-    get getAddress() {
+    // @TODO: false should not be an option, if false occurs, then it is a reactivity bug
+    get getAddress(): string | false {
         return this.activeAccount.wallet ? this.activeAccount.wallet.address : false
     }
 
@@ -73,13 +73,13 @@ export class WalletDetailsTs extends Vue {
         return this.activeAccount.wallet.importance ? this.activeAccount.wallet.importance + '0' : 0
     }
 
-    get getSelfAlias() {
-        const {currentHeight} = this
+    // @TODO: this should return a string, not an array
+    get getSelfAlias(): string[] {
         return this.NamespaceList
             .filter(namespace =>
                 namespace.alias instanceof AddressAlias &&
-                //@ts-ignore
-                Address.createFromEncoded(namespace.alias.address).address == this.getAddress
+                // @ts-ignore // @TODO: E3 review
+                Address.createFromEncoded(namespace.alias.address).plain() === this.getAddress
             )
             .map(item => item.label)
     }
@@ -138,7 +138,6 @@ export class WalletDetailsTs extends Vue {
 
     init() {
         this.setQRCode(this.getAddress)
-        getCurrentImportance(this.$store)
     }
 
     closeBindDialog() {

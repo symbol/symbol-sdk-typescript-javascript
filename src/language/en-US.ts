@@ -139,7 +139,7 @@ export const en_US = {
     generate_QR_code: 'Generate QR code',
     copy_address: 'Copy address',
     copy_private_key: 'Copy private key',
-    copy_QR_code: 'Copy QR code',
+    copy_QR_code: 'download',
     collection_record: 'Transfers received',
     enter_asset_type_alias_or_address_search: 'Enter transaction hash search',
     ordinary_transfer: 'Transfer',
@@ -449,8 +449,6 @@ export const en_US = {
     Nem_wallet_can_not_recover_your_mnemonic: 'The wallet can\'t recover your mnemonic',
     Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct: 'Please enter a mnemonic to ensure that the mnemonic is correct',
     Mnemonic_inconsistency: 'Mnemonic inconsistency',
-    bind_mosaic: 'bind mosaic',
-    bind_address: 'bind address',
 
     //wallet details
     Basic_information: 'Basic information',
@@ -643,12 +641,16 @@ export const en_US = {
     aggregate_bonded: 'Aggregate Bonded',
     lock: 'Lock',
     secret_lock: 'Secret lock',
-    //secret_proof
     secret_proof: 'Secret proof',
+    link_account: 'Link account',
     modify_account_property_address: 'Address restriction',
     modify_account_property_mosaic: 'Mosaic restriction',
     modify_account_property_entity_type: 'Entity restriction',
-    link_account: 'Link account',
+    mosaic_address_restriction: 'mosaic address restriction',
+    mosaic_global_restriction: 'mosaic global restriction',
+    account_metadata_transaction: 'account metadata transaction',
+    mosaic_metadata_transaction: 'mosaic metadata transaction',
+    namespace_metadata_transaction: 'namespace metadata transaction',
     please_choose_entity_type: 'Please choose entity type',
     Node_connection_failed: 'Node connection failed',
     // Forms
@@ -667,7 +669,7 @@ export const en_US = {
     LABEL_confirm_password: 'Confirm your new password',
     PLACEHOLDER_confirm_password: 'Confirm new  password',
     cipher: 'Cipher',
-    Please_enter_the_correct_number: 'Please enter the correct number',
+    Please_enter_a_correct_number: 'Please enter a correct number',
     HINT_cipher_hint1: 'Should be between 1 and 32 chars.',
 
     PLACEHOLDER_cipher_hint: 'Enter hint',
@@ -771,5 +773,6 @@ export const en_US = {
     Import_private_key: 'Import private key',
     copy_mnemonic: 'copy mnemonic',
     Harvesting: 'Harvesting',
-    ILLEGAL_PUBLICKEY_ERROR:'public key format error'
+    ILLEGAL_PUBLICKEY_ERROR:'public key format error',
+    Alias_type: 'Alias type',
 }

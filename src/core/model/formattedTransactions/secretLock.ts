@@ -1,13 +1,13 @@
 import {FormattedTransaction, AppState} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
-import {RegisterNamespaceTransaction} from 'nem2-sdk'
+import {Transaction} from 'nem2-sdk'
 import {Store} from 'vuex';
 
 export class FormattedSecretLock extends FormattedTransaction {
     dialogDetailMap: any
     icon: any
 
-    constructor(  tx: RegisterNamespaceTransaction,
+    constructor(  tx: Transaction,
                   store: Store<AppState>) {
         super(tx, store)
         const {networkCurrency} = store.state.account

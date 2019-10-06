@@ -112,8 +112,10 @@ export class SubNamespaceTs extends Vue {
         if (!namespaces) return []
 
         // @TODO: refactor and make it an AppNamespace method
+        // @TODO: namespace level hardcoded
         return namespaces
-            .filter(({alias, endHeight, levels}) => (endHeight - currentHeight > namespaceGracePeriodDuration && levels < 3))
+            .filter(({endHeight, levels}) => (levels < 3
+                && endHeight - currentHeight + namespaceGracePeriodDuration > 0))
             .map(alias => ({label: alias.label, value: alias.label}))
     }
 
@@ -125,7 +127,8 @@ export class SubNamespaceTs extends Vue {
 
         // @TODO: refactor and make it an AppNamespace method
         return namespaces
-            .filter(({alias, endHeight, levels}) => (endHeight - currentHeight > namespaceGracePeriodDuration && levels < 3))
+            .filter(({endHeight, levels}) => (levels < 3
+                && endHeight - currentHeight + namespaceGracePeriodDuration > 0))
             .map(alias => ({label: alias.label, value: alias.label}))
     }
 

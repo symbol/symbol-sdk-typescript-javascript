@@ -1,4 +1,5 @@
 import { TransactionType } from "nem2-sdk";
+// @TODO: redundant with transactionTag
 
 export const transactionTypeConfig = {
     'transfer': {
@@ -52,15 +53,15 @@ export const transactionTypeConfig = {
     },
     'modify_account_property_address': {
         label: 'modify_account_property_address',
-        value: TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS
+        value: TransactionType.ACCOUNT_RESTRICTION_ADDRESS
     },
     'modify_account_property_mosaic': {
         label: 'modify_account_property_address',
-        value: TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC
+        value: TransactionType.ACCOUNT_RESTRICTION_MOSAIC
     },
     'modify_account_property_entity_type': {
         label: 'modify_account_property_entity_type',
-        value: TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION
+        value: TransactionType.ACCOUNT_RESTRICTION_OPERATION
     },
     'link_account': {
         label: 'link_account',

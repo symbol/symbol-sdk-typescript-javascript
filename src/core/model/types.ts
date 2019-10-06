@@ -36,7 +36,7 @@ export interface StoreAccount {
     account: Account | any,
     wallet: AppWallet,
     mosaics: Record<string, AppMosaic>,
-    namespaces: any[],
+    namespaces: AppNamespace[],
     errorTx: Array<any>,
     addressAliasMap: any,
     generationHash: string,
@@ -47,7 +47,15 @@ export interface StoreAccount {
     multisigAccountsNamespaces: Record<string, AppNamespace[]>,
     multisigAccountsTransactions: Record<string, Transaction[]>,
     multisigAccountInfo: Record<string, MultisigAccountInfo>,
+    /**
+     *  The network currency, to be used for fees management,
+     *  formatting, defaulting...
+     */
     networkCurrency: NetworkCurrency,
+    /**
+     * This property is ONLY for mosaic list initialization purposes
+     */
+    networkMosaics: Record<string, AppMosaic>,
 }
 
 export interface AppInfo {

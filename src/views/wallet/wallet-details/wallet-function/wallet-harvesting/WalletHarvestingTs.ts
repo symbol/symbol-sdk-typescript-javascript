@@ -1,7 +1,6 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {AccountLinkTransaction, UInt64, LinkAction, Deadline, Password} from "nem2-sdk"
-import {AccountApiRxjs} from "@/core/api/AccountApiRxjs.ts"
 import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form";
@@ -25,6 +24,10 @@ export class WalletHarvestingTs extends Vue {
 
   get wallet() {
     return this.activeAccount.wallet
+  }
+
+  get linkedAccountKey() {
+      return this.wallet.linkedAccountKey
   }
 
   get networkCurrency() {
@@ -57,25 +60,6 @@ export class WalletHarvestingTs extends Vue {
     return this.activeAccount.wallet.address
   }
   
-  // @TODO: refactor harvesting: move to store
-  async getRemotePublicKey(): Promise<void> {
-      try {
-          const {address, node} = this
-          const resStr: any = await new AccountApiRxjs().getLinkedPublickey(node, address).toPromise()
-
-      if (JSON.parse(resStr) && JSON.parse(resStr).account && JSON.parse(resStr).account.linkedAccountKey) {
-          const {linkedAccountKey} = JSON.parse(resStr).account
-          const publicKey = Buffer.from(linkedAccountKey, 'base64').toString('hex').toUpperCase()
-          this.remotePublicKey = Number(publicKey) !== 0 ? publicKey : null 
-          return
-      }
-          this.remotePublicKey = null
-      } catch (error) {
-          console.error(error)
-          this.remotePublicKey = null
-      }
-  }
-
   get isLinked(): boolean {
       return this.remotePublicKey !== null
   }
@@ -154,16 +138,5 @@ export class WalletHarvestingTs extends Vue {
 
   toggleSwitch(status) {
     this.isShowDialog = true
-  }
-
-  // @TODO: refactor harvesting: move to store
-  mounted() { this.getRemotePublicKey() }
-
-  // @TODO: refactor harvesting: move to store
-  @Watch('address')
-  onAddressChange(newVal, oldVal) {
-      if (newVal && newVal !== oldVal) {
-          this.getRemotePublicKey() 
-      }
   }
 }

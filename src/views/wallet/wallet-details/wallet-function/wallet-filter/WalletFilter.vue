@@ -13,19 +13,19 @@
 
           <div class="input_area">
             <input type="text" :placeholder="$t('address')" v-model="currentFilter">
-            <span class="icon_add radius pointer tip" @click="addFilterItem(RestrictionModificationType.Add)"></span>
+            <span class="icon_add radius pointer tip" @click="addFilterItem(AccountRestrictionModificationAction.Add)"></span>
             <span class="icon_remove radius pointer tip"
-                  @click="addFilterItem(RestrictionModificationType.Remove)"></span>
+                  @click="addFilterItem(AccountRestrictionModificationAction.Remove)"></span>
           </div>
 
         </div>
 
         <div class="property_type" v-if="showRestrictionType">
           <RadioGroup v-model="formItem.filterType">
-            <Radio :label="RestrictionType.AllowAddress">
+            <Radio :label="AccountRestrictionType.AllowIncomingAddress">
               <span>allow</span>
             </Radio>
-            <Radio :label="RestrictionType.BlockAddress">
+            <Radio :label="AccountRestrictionType.BlockIncomingAddress">
               <span>block</span>
             </Radio>
           </RadioGroup>
@@ -35,7 +35,7 @@
           <div class="title">{{$t('fee')}}</div>
           <div class="input_area">
             <input type="text" v-model="formItem.fee" :placeholder="$t('alias_selection')">
-            <span class="tip">XEM</span>
+            <span class="tip">{{ networkCurrency.ticker }}</span>
           </div>
         </div>
         <div class="input_content">
@@ -62,18 +62,18 @@
           <div class="title">{{$t('mosaic')}}</div>
           <div class="input_area">
             <input v-model="currentFilter" type="text" :placeholder="$t('mosaic')">
-            <span class="icon_add radius pointer tip" @click="addFilterItem(RestrictionModificationType.Add)"></span>
+            <span class="icon_add radius pointer tip" @click="addFilterItem(AccountRestrictionModificationAction.Add)"></span>
             <span class="icon_remove radius pointer tip"
-                  @click="addFilterItem(RestrictionModificationType.Remove)"></span>
+                  @click="addFilterItem(AccountRestrictionModificationAction.Remove)"></span>
           </div>
         </div>
 
         <div class="property_type" v-if="showRestrictionType">
           <RadioGroup v-model="formItem.filterType">
-            <Radio :label="RestrictionType.AllowMosaic">
+            <Radio :label="AccountRestrictionType.AllowMosaic">
               <span>allow</span>
             </Radio>
-            <Radio :label="RestrictionType.BlockTransaction">
+            <Radio :label="AccountRestrictionType.BlockIncomingTransactionType">
               <span>block</span>
             </Radio>
           </RadioGroup>
@@ -83,7 +83,7 @@
           <div class="title">{{$t('fee')}}</div>
           <div class="input_area">
             <input type="text" v-model="formItem.fee" :placeholder="$t('alias_selection')">
-            <span class="tip">XEM</span>
+            <span class="tip">{{ networkCurrency.ticker }}</span>
           </div>
         </div>
         <div class="input_content">
@@ -115,17 +115,17 @@
 
             <span>{{currentFilter?entityTypeList[currentFilter].value:''}}</span>
 
-            <span class="icon_add radius pointer tip" @click="addFilterItem(RestrictionModificationType.Add)"></span>
+            <span class="icon_add radius pointer tip" @click="addFilterItem(AccountRestrictionModificationAction.Add)"></span>
             <span class="icon_remove radius pointer tip"
-                  @click="addFilterItem(RestrictionModificationType.Remove)"></span>
+                  @click="addFilterItem(AccountRestrictionModificationAction.Remove)"></span>
           </div>
         </div>
         <div class="property_type" v-if="showRestrictionType">
           <RadioGroup v-model="formItem.filterType">
-            <Radio :label="RestrictionType.AllowTransaction">
+            <Radio :label="AccountRestrictionType.AllowIncomingTransactionType">
               <span>allow</span>
             </Radio>
-            <Radio :label="RestrictionType.BlockTransaction">
+            <Radio :label="AccountRestrictionType.BlockIncomingTransactionType">
               <span>block</span>
             </Radio>
           </RadioGroup>
@@ -134,7 +134,7 @@
           <div class="title">{{$t('fee')}}</div>
           <div class="input_area">
             <input type="text" v-model="formItem.fee" :placeholder="$t('alias_selection')">
-            <span class="tip">XEM</span>
+            <span class="tip">{{ networkCurrency.ticker }}</span>
           </div>
         </div>
         <div class="input_content">

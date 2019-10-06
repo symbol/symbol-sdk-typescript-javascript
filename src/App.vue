@@ -7,26 +7,19 @@
 
 <script lang="ts">
     import 'animate.css'
-    import {Address} from 'nem2-sdk'
+    import {Address, AccountHttp} from 'nem2-sdk'
     import {mapState} from 'vuex'
     import {asyncScheduler} from 'rxjs'
     import {throttleTime} from 'rxjs/operators'
     import {isWindows} from "@/config/index.ts"
-    import {
-        checkInstall,
-        getCurrentBlockHeight,
-        getCurrentNetworkMosaic,
-        getNetworkGenerationHash,
-        getObjectLength,
-        getTopValueInObject,
-        localRead,
-    } from '@/core/utils'
+    import {checkInstall, getObjectLength, getTopValueInObject, localRead} from '@/core/utils'
     import {Component, Vue} from 'vue-property-decorator'
-    import {ChainListeners} from '@/core/services/listeners.ts'
-    import {initMosaic, mosaicsAmountViewFromAddress, AppMosaics} from '@/core/services/mosaics'
-    import {getMarketOpenPrice} from '@/core/services/marketData.ts'
-    import {setTransactionList} from '@/core/services/transactions'
-    import {getNamespacesFromAddress, setWalletsBalances} from '@/core/services'
+    import {
+        initMosaic, mosaicsAmountViewFromAddress, AppMosaics,
+        getCurrentBlockHeight, getCurrentNetworkMosaic, getNetworkGenerationHash,
+        getMarketOpenPrice, setTransactionList, getNamespacesFromAddress,
+        setWalletsBalances, ChainListeners,
+    } from '@/core/services'
     import {AppMosaic, AppWallet, AppInfo, StoreAccount} from '@/core/model'
     import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
     import DisabledUiOverlay from '@/common/vue/disabled-ui-overlay/DisabledUiOverlay.vue';
@@ -90,14 +83,15 @@
         async onWalletChange(newWallet) {
             // reset tx list
             try {
-                await Promise.all([
-                    this.$store.commit('SET_TRANSACTIONS_LOADING', true),
-                    this.$store.commit('SET_BALANCE_LOADING', true),
-                    this.$store.commit('SET_MOSAICS_LOADING', true),
-                    this.$store.commit('SET_NAMESPACE_LOADING', true),
-                    this.$store.commit('SET_MULTISIG_LOADING', true),
-                    this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', null),
-                ])
+                this.$store.commit('SET_TRANSACTIONS_LOADING', true)
+                this.$store.commit('SET_BALANCE_LOADING', true)
+                this.$store.commit('SET_MOSAICS_LOADING', true)
+                this.$store.commit('SET_NAMESPACE_LOADING', true)
+                this.$store.commit('SET_MULTISIG_LOADING', true)
+                this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', null)
+                this.$store.commit('SET_TRANSACTION_LIST', [])
+                this.$store.commit('RESET_MOSAICS')
+                this.$store.commit('SET_NAMESPACES', [])
 
                 //@TODO: move from there
                 const mosaicListFromStorage = localRead(newWallet.address)
@@ -108,16 +102,17 @@
                     // @TODO make it an AppWallet methods
                     initMosaic(newWallet, this.$store),
                     getNamespacesFromAddress(newWallet.address, this.node),
-                    setTransactionList(this.$store)
+                    setTransactionList(newWallet.address, this.$store)
                 ])
 
                 this.$store.commit('SET_NAMESPACES', initMosaicsAndNamespaces[1] || [])
-                await Promise.all([
-                    this.$store.commit('SET_MOSAICS_LOADING', false),
-                    this.$store.commit('SET_NAMESPACE_LOADING', false),
-                ])
+                this.$store.commit('SET_MOSAICS_LOADING', false)
+                this.$store.commit('SET_NAMESPACE_LOADING', false)
+                
+                const appWallet = new AppWallet(newWallet)
+                appWallet.setMultisigStatus(this.node, this.$store)
+                appWallet.setAccountInfo(this.$store)
 
-                new AppWallet(newWallet).setMultisigStatus(this.node, this.$store)
                 if (!this.chainListeners) {
                     this.chainListeners = new ChainListeners(this, newWallet.address, this.node)
                     this.chainListeners.start()
@@ -128,21 +123,11 @@
                 this.chainListeners.switchAddress(newWallet.address)
             } catch (error) {
                 console.error("App -> onWalletChange -> error", error)
-                Promise.all([
-                    this.$store.commit('SET_TRANSACTIONS_LOADING', false),
-                    this.$store.commit('SET_BALANCE_LOADING', false),
-                    this.$store.commit('SET_MOSAICS_LOADING', false),
-                    this.$store.commit('SET_NAMESPACE_LOADING', false),
-                    this.$store.commit('SET_MULTISIG_LOADING', false),
-                ])
-
-                if (!this.chainListeners) {
-                    this.chainListeners = new ChainListeners(this, newWallet.address, this.node)
-                    this.chainListeners.start()
-                    return
-                }
-
-                this.chainListeners.switchAddress(newWallet.address)
+                this.$store.commit('SET_TRANSACTIONS_LOADING', false)
+                this.$store.commit('SET_BALANCE_LOADING', false)
+                this.$store.commit('SET_MOSAICS_LOADING', false)
+                this.$store.commit('SET_NAMESPACE_LOADING', false)
+                this.$store.commit('SET_MULTISIG_LOADING', false)
             }
         }
 
@@ -150,6 +135,8 @@
             try {
                 const {node} = this
                 const {networkType} = this.wallet
+
+                // @TODO: Fix one single address type to be used as param
                 const accountAddress = Address.createFromPublicKey(publicKey, networkType)
                 const address = accountAddress.plain()
 
@@ -163,17 +150,15 @@
                 const mosaicAmountViews = promises[1]
                 const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
 
-                await Promise.all([
-                    this.$store.commit('UPDATE_MULTISIG_ACCOUNT_MOSAICS', {
-                        address, mosaics: appMosaics,
-                    }),
-                    this.$store.commit('SET_MULTISIG_ACCOUNT_NAMESPACES', {
-                        address, namespaces: appNamespaces,
-                    }),
-                ])
+                this.$store.commit('UPDATE_MULTISIG_ACCOUNT_MOSAICS', {
+                    address, mosaics: appMosaics,
+                })
+                this.$store.commit('SET_MULTISIG_ACCOUNT_NAMESPACES', {
+                    address, namespaces: appNamespaces,
+                })
 
                 const appMosaicsFromNamespaces = await AppMosaics().fromAppNamespaces(appNamespaces)
-                await this.$store.commit('UPDATE_MULTISIG_ACCOUNT_MOSAICS', {
+                this.$store.commit('UPDATE_MULTISIG_ACCOUNT_MOSAICS', {
                     address, mosaics: appMosaicsFromNamespaces,
                 })
             } catch (error) {
@@ -192,8 +177,10 @@
             const accountAddress = Address.createFromPublicKey(publicKey, networkType).plain()
 
             try {
-                const multisigAccountInfo = await new MultisigApiRxjs()
-                    .getMultisigAccountInfo(accountAddress, this.node).toPromise()
+                const multisigAccountInfo = await new AccountHttp(this.node)
+                    .getMultisigAccountInfo(Address.createFromRawAddress(accountAddress))
+                    .toPromise()
+
                 this.$store.commit('SET_MULTISIG_ACCOUNT_INFO', {
                     address: accountAddress, multisigAccountInfo,
                 })
@@ -208,22 +195,26 @@
             const {accountName, node} = this
             this.checkIfWalletExist() // @TODO: move out when refactoring wallets
 
-            // @TODO: refactor
-            await Promise.all([
-                getNetworkGenerationHash(node, this),
-                getCurrentBlockHeight(this.$store),
-                getCurrentNetworkMosaic(node, this.$store),
-            ])
+            try {
+                // @TODO: refactor
+                await Promise.all([
+                    getNetworkGenerationHash(node, this),
+                    getCurrentBlockHeight(this.$store),
+                    getCurrentNetworkMosaic(node, this.$store),
+                ])
 
-            await this.setWalletsList()
-            setWalletsBalances(this.$store)
+                await this.setWalletsList()
+                setWalletsBalances(this.$store)
 
-            await Promise.all([
-                this.$store.commit('SET_TRANSACTIONS_LOADING', true),
-                this.$store.commit('SET_BALANCE_LOADING', true),
-                this.$store.commit('SET_MOSAICS_LOADING', true),
-                this.$store.commit('SET_NAMESPACE_LOADING', true),
-            ])
+                await Promise.all([
+                    this.$store.commit('SET_TRANSACTIONS_LOADING', true),
+                    this.$store.commit('SET_BALANCE_LOADING', true),
+                    this.$store.commit('SET_MOSAICS_LOADING', true),
+                    this.$store.commit('SET_NAMESPACE_LOADING', true),
+                ])
+            } catch (error) {
+                console.log("TCL: App -> mounted -> error", error)
+            }
 
             this.$Notice.config({duration: 4})
 
@@ -241,13 +232,8 @@
                 /**
                  * On Wallet Change
                  */
-                if (oldValue.address === undefined || newValue.address !== undefined
+                if (oldValue.address === undefined && newValue.address !== undefined
                     || oldValue.address !== undefined && newValue.address !== oldValue.address) {
-                    this.$store.commit('RESET_MOSAICS')
-                    // @TODO: check if it is neessary
-                    this.$store.commit('UPDATE_MOSAICS', [new AppMosaic({
-                        hex: this.networkCurrency.hex, name: this.networkCurrency.name
-                    })])
                     this.onWalletChange(newValue)
                 }
             })

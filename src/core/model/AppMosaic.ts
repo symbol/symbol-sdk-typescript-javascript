@@ -1,8 +1,14 @@
 import {
- MosaicId, UInt64, MosaicAmountView, MosaicDefinitionTransaction,
- MosaicInfo, MosaicProperties, Namespace,
+ MosaicId,
+ UInt64,
+ MosaicAmountView,
+ MosaicDefinitionTransaction,
+ MosaicInfo,
+ Mosaic,
 } from 'nem2-sdk'
+import {MosaicProperties} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
+
 
 export class AppMosaic {
  hex: string
@@ -31,28 +37,34 @@ export class AppMosaic {
          this.expirationHeight = duration === 0
              ? 'Forever' : this.mosaicInfo.height.compact() + duration
 
-         this.properties = MosaicProperties.create({
-             supplyMutable: this.mosaicInfo.isSupplyMutable(),
-             transferable: this.mosaicInfo.isTransferable(),
-             divisibility: this.mosaicInfo.divisibility,
-             duration: this.mosaicInfo.duration,
-             restrictable: this.mosaicInfo.isRestrictable(),
-         })
+         this.properties = new MosaicProperties(
+             this.mosaicInfo.isSupplyMutable(),
+             this.mosaicInfo.isTransferable(),
+             this.mosaicInfo.divisibility,
+             this.mosaicInfo.duration.compact(),
+             this.mosaicInfo.isRestrictable(),
+         )
      }
  }
 
  static fromGetCurrentNetworkMosaic( mosaicDefinitionTransaction: MosaicDefinitionTransaction,
                                      name: string): AppMosaic {
-     const {mosaicId, mosaicProperties} = mosaicDefinitionTransaction
-     return new AppMosaic({
+ const {mosaicId} = mosaicDefinitionTransaction
+ return new AppMosaic({
          hex: mosaicId.toHex(),
-         properties: mosaicProperties,
+         properties: new MosaicProperties(
+            mosaicDefinitionTransaction.flags.supplyMutable,
+            mosaicDefinitionTransaction.flags.transferable,
+            mosaicDefinitionTransaction.divisibility,
+            mosaicDefinitionTransaction.duration.compact(),
+            mosaicDefinitionTransaction.flags.restrictable,
+         ),
          name,
      })
  }
  
  static fromMosaicAmountView(mosaic: MosaicAmountView): AppMosaic {
-     const mosaicHex = mosaic.mosaicInfo.mosaicId.toHex()
+     const mosaicHex = mosaic.mosaicInfo.id.toHex()
      return new AppMosaic({
          ...mosaic,
          hex: mosaicHex,

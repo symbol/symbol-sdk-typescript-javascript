@@ -65,6 +65,10 @@ export class WalletSwitchTs extends Vue {
         return this.app.mnemonic
     }
 
+    get networkCurrency() {
+        return this.activeAccount.networkCurrency
+    }
+
     isMultisig(address: string): boolean {
         const multisigAccountInfo: MultisigAccountInfo = this.activeAccount.multisigAccountInfo[address]
         if (!multisigAccountInfo) return false
@@ -125,7 +129,7 @@ export class WalletSwitchTs extends Vue {
             return false
         })
         pathToCreate = flag ? seedPathList.length : pathToCreate
-        this.pathToCreate = `m/44'/43'/1'/0/` + pathToCreate
+        this.pathToCreate = `m/44'/43'/0'/0/` + pathToCreate
         this.showCheckPWDialog = true
     }
 

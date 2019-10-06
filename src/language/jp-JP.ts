@@ -61,7 +61,7 @@ export const jp_JP = {
     number_of_voters: '投票数',
     yes: 'はい',
     no: 'いいえ',
-    Please_enter_the_correct_number: '正しい数値を入力してください',
+    Please_enter_a_correct_number: '正しい数値を入力してください',
     Please_enter_the_amount_of_transfer: '転送量を入力してください',
     Please_enter_notes: 'メッセージを入力してください',
     transaction_details: 'トランザクション詳細',

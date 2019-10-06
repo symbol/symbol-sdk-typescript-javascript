@@ -2,12 +2,10 @@ import {mapState} from "vuex"
 import {Address, AliasType, MosaicId} from "nem2-sdk"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
-import MosaicAliasDialog from './mosaic-alias-dialog/MosaicAliasDialog.vue'
-import MosaicUnAliasDialog from './mosaic-unAlias-dialog/MosaicUnAliasDialog.vue'
 import {formatNumber} from '@/core/utils'
 import {mosaicSortType} from "@/config/view/mosaic"
 import {networkConfig} from "@/config"
-import {MosaicNamespaceStatusType, StoreAccount, AppInfo, AppMosaic} from "@/core/model"
+import {MosaicNamespaceStatusType, StoreAccount, AppInfo, AppMosaic, AppNamespace} from "@/core/model"
 import {
     sortByMosaicAlias, sortByMosaicDivisibility,
     sortByMosaicDuration,
@@ -15,11 +13,11 @@ import {
     sortByMosaicSupply, sortByMosaicSupplyMutable,
     sortByMosaicTransferable
 } from "@/core/services"
+import Alias from '@/views/forms/alias/Alias.vue'
 
 @Component({
     components: {
-        MosaicAliasDialog,
-        MosaicUnAliasDialog,
+        Alias,
         EditDialog
     },
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -44,6 +42,12 @@ export class MosaicListTs extends Vue {
     currentMosaicList = []
     isShowExpiredMosaic = false
 
+    showAliasDialog: boolean = false
+    bind: boolean = false
+    namespace: AppNamespace = null
+    mosaic: string = null
+    address: string = null
+
     get mosaics() {
         return this.activeAccount.mosaics
     }
@@ -64,10 +68,11 @@ export class MosaicListTs extends Vue {
         this.activeAccount.namespaces.forEach((item) => {
             switch (item.alias.type) {
                 case (AliasType.Address):
-                    //@ts-ignore
+                    //@ts-ignore @TODO: E3 review
                     namespaceMap[Address.createFromEncoded(item.alias.address).address] = item
                     break
                 case (AliasType.Mosaic):
+                    //@ts-ignore @TODO: E3 review
                     namespaceMap[new MosaicId(item.alias.mosaicId).toHex()] = item
             }
         })
@@ -82,30 +87,37 @@ export class MosaicListTs extends Vue {
         return formatNumber(number)
     }
 
-    showAliasDialog(item) {
-        this.selectedMosaic = item
-        this.showMosaicAliasDialog = true
+    bindItem(mosaic: AppMosaic) {
+        this.bind = true
+        this.namespace = null
+        this.mosaic = mosaic.hex
+        this.address = null
+        this.showAliasDialog = true
     }
 
-    showUnAliasDialog(item) {
-        this.selectedMosaic = item
-        this.showMosaicUnAliasDialog = true
+    unbindItem(mosaic: AppMosaic) {
+        const {namespaces} = this.activeAccount
+        this.bind = false
+        this.namespace = namespaces.find(({name}) => name === mosaic.name)
+        this.mosaic = mosaic.hex
+        this.address = null
+        this.showAliasDialog = true
     }
 
-    showEditDialog(item) {
+    showEditDialog(item: AppMosaic) {
         this.selectedMosaic = item
         this.showMosaicEditDialog = true
     }
 
-
-    computeDuration(item) {
+    computeDuration(item: AppMosaic) {
         if (!item.mosaicInfo) return 'Loading...'
-        const {properties, height} = item.mosaicInfo
-        if (properties.duration.compact() === 0) return 'Forever'
-        return (height.compact() + properties.duration.compact()) - this.currentHeight
+        const {properties, mosaicInfo} = item
+        const duration = properties.duration
+        if (duration === 0) return 'Forever'
+        return (mosaicInfo.height.compact() + duration) - this.currentHeight
     }
 
-    getSortType(type) {
+    getSortType(type: number) {
         this.currentSortType = type
         const currentMosaicList = [...this.currentMosaicList]
         switch (type) {
@@ -149,7 +161,7 @@ export class MosaicListTs extends Vue {
     }
 
     @Watch('mosaics', {deep: true})
-    onMosiacsChange() {
+    onMosaicChange() {
         this.intiMosaics()
     }
 

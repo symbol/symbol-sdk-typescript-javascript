@@ -2,12 +2,15 @@ import {TransactionType, Address} from 'nem2-sdk'
 import {mosaicsAmountViewFromAddress} from '@/core/services'
 import {AppMosaic, AppWallet, AppState} from '@/core/model'
 import {getNamespacesFromAddress} from '@/core/services'
-import {Store} from 'vuex'
 
 const txTypeToGetNamespaces = [
   TransactionType.REGISTER_NAMESPACE,
   TransactionType.MOSAIC_ALIAS,
   TransactionType.ADDRESS_ALIAS,
+]
+
+const txTypeToSetAccountInfo = [
+   TransactionType.LINK_ACCOUNT,
 ]
 
 /**
@@ -26,19 +29,27 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
      try {
         const {node, networkCurrency} = state.account
         const {address} = state.account.wallet
+        const appWallet = new AppWallet(state.account.wallet)
         const accountAddress = Address.createFromRawAddress(address)
+
         const mosaicAmountViews = await mosaicsAmountViewFromAddress(node, accountAddress)
         const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
         const ownedNetworkCurrency = appMosaics.find(({hex}) => hex === networkCurrency.hex)
         const balance = ownedNetworkCurrency === undefined ? 0 : ownedNetworkCurrency.balance
-        new AppWallet(state.account.wallet).updateAccountBalance(balance, store)
+
+        appWallet.updateAccountBalance(balance, store)
         store.commit('UPDATE_MOSAICS', appMosaics)
+
         const txType = mutation.payload[0].rawTx.type
 
         if (txTypeToGetNamespaces.includes(txType)) {
-          const namespaces = await getNamespacesFromAddress(address, node)
-          store.commit('SET_NAMESPACES', namespaces)
-        }  
+            const namespaces = await getNamespacesFromAddress(address, node)
+            store.commit('SET_NAMESPACES', namespaces)
+        }
+
+         if (txTypeToSetAccountInfo.includes(txType)) {
+            appWallet.setAccountInfo(store)
+         }
      } catch (error) {
         console.error(error)
      }

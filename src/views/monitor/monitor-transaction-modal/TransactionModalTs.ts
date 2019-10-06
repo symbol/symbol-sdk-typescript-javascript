@@ -1,6 +1,6 @@
 import {mapState} from "vuex"
 import {Component, Vue, Prop} from 'vue-property-decorator'
-import {renderMosaics, renderMosaicsReturnList} from '@/core/utils'
+import {renderMosaics} from '@/core/utils'
 import {FormattedTransaction, AppInfo, StoreAccount} from '@/core/model'
 
 @Component({
@@ -12,7 +12,6 @@ export class TransactionModalTs extends Vue {
     isShowInnerDialog = false
     currentInnerTransaction = {}
     renderMosaics = renderMosaics
-    renderMosaicsReturnList = renderMosaicsReturnList
     @Prop({default: false})
     visible: boolean
 

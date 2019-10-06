@@ -1,4 +1,4 @@
-import {MosaicSupplyType, NetworkType} from 'nem2-sdk'
+import {MosaicSupplyChangeAction, NetworkType} from 'nem2-sdk'
 
 export const NETWORK_PARAMS = {
     DEFAULT_NETWORK_TYPE: 'MIJIN_TEST',
@@ -26,7 +26,7 @@ export const NETWORK_PARAMS = {
 }
 
 export const SDK_PARAMS = {
-    mosaicSupplyTypes: Object.keys(MosaicSupplyType)
+    mosaicSupplyChangeActions: Object.keys(MosaicSupplyChangeAction)
         .filter(key => Number.isNaN(parseFloat(key))),
     availableNetworkTypes: Object.keys(NetworkType)
         .filter(key => Number.isNaN(parseFloat(key)))

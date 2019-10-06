@@ -1,10 +1,11 @@
 import Vue from 'vue'
-import {GetterTree, MutationTree} from 'vuex'
+import {MutationTree} from 'vuex'
 import {Account} from 'nem2-sdk'
 import {defaultNetworkConfig} from "@/config/index"
 import {
   AddressAndTransaction, AddressAndNamespaces, AddressAndMosaics,
-  AddressAndMultisigInfo, StoreAccount, AppMosaic, NetworkCurrency, AppState,
+  AddressAndMultisigInfo, StoreAccount, AppMosaic, NetworkCurrency,
+  AppWallet, AppNamespace,
 } from '@/core/model'
 import {nodeListConfig} from "@/config/view/node"
 
@@ -25,6 +26,15 @@ const state: StoreAccount = {
     multisigAccountsTransactions: {},
     multisigAccountInfo: {},
     networkCurrency: defaultNetworkConfig.defaultNetworkMosaic,
+    networkMosaics: {},
+}
+
+const updateMosaics = (state: StoreAccount, mosaics: AppMosaic[]) => {
+    mosaics.forEach((mosaic: AppMosaic) => {
+        const {hex} = mosaic
+        const storeMosaic = state.mosaics[hex] || {}
+        Vue.set(state.mosaics, hex, {...storeMosaic, ...mosaic})
+    })
 }
 
 const mutations: MutationTree<StoreAccount> = {
@@ -36,60 +46,42 @@ const mutations: MutationTree<StoreAccount> = {
         state.addressAliasMap = {}
         state.transactionList = []
         state.accountName = ''
-    }
-    ,
+    },
     SET_ACCOUNT(state: StoreAccount, account: Account): void {
         state.account = account
     },
-    SET_WALLET(state: StoreAccount, wallet: any): void {
+    SET_WALLET(state: StoreAccount, wallet: AppWallet): void {
         state.wallet = wallet
     },
-    SET_MOSAICS(state: StoreAccount, mosaics: any): void {
+    SET_MOSAICS(state: StoreAccount, mosaics: Record<string, AppMosaic>): void {
         state.mosaics = mosaics
     },
+    SET_NETWORK_MOSAICS(state: StoreAccount, mosaics: AppMosaic[]): void {
+        state.networkMosaics = {}
+        mosaics.forEach(mosaic => state.networkMosaics[mosaic.hex] = mosaic)
+    },
     UPDATE_MOSAICS(state: StoreAccount, mosaics: AppMosaic[]): void {
-        const mosaicList = {...state.mosaics}
-        mosaics.forEach((mosaic: AppMosaic) => {
-            if (!mosaic.hex) return
-            const {hex} = mosaic
-            if (!mosaicList[hex]) mosaicList[hex] = new AppMosaic({hex})
-            Object.assign(mosaicList[mosaic.hex], mosaic)
-        })
-        state.mosaics = mosaicList
+        updateMosaics(state, mosaics)
     },
     /**
-     * @TODO: refactor
-     * This mutation is not watched by the appMosaics plugin
+     * This mutation's purpose is to not be watched by the appMosaics plugin
      */
     UPDATE_MOSAICS_INFO(state: StoreAccount, mosaics: AppMosaic[]): void {
-        const mosaicList = state.mosaics
-        mosaics.forEach((mosaic: AppMosaic) => {
-            if (!mosaic.hex) return
-            const {hex} = mosaic
-            if (!mosaicList[hex]) mosaicList[hex] = new AppMosaic({hex})
-            Object.assign(mosaicList[mosaic.hex], mosaic)
-        })
+        updateMosaics(state, mosaics)
     },
     /**
-     * @TODO: refactor
-     * This mutation is not watched by the appMosaics plugin
+     * This mutation's purpose is to not be watched by the appMosaics plugin
      */
     UPDATE_MOSAICS_NAMESPACES(state: StoreAccount, mosaics: AppMosaic[]): void {
-        const mosaicList = state.mosaics
-        mosaics.forEach((mosaic: AppMosaic) => {
-            if (!mosaic.hex) return
-            const {hex} = mosaic
-            if (!mosaicList[hex]) mosaicList[hex] = new AppMosaic({hex})
-            Object.assign(mosaicList[mosaic.hex], mosaic)
-        })
+        updateMosaics(state, mosaics)
     },
     RESET_MOSAICS(state: StoreAccount) {
-        state.mosaics = {}
+        state.mosaics = {...state.networkMosaics}
     },
-    SET_NETWORK_MOSAIC(state: StoreAccount, mosaic: NetworkCurrency) {
+    SET_NETWORK_CURRENCY(state: StoreAccount, mosaic: NetworkCurrency) {
         state.networkCurrency = mosaic
     },
-    SET_NAMESPACES(state: StoreAccount, namespaces: any[]): void {
+    SET_NAMESPACES(state: StoreAccount, namespaces: AppNamespace[]): void {
         state.namespaces = namespaces
     },
     SET_NODE(state: StoreAccount, node: string): void {
@@ -165,9 +157,6 @@ const mutations: MutationTree<StoreAccount> = {
             Object.assign(mosaicList[mosaic.hex], mosaic)
         })
         Vue.set(state.multisigAccountsMosaics, address, mosaicList)
-    },
-    SET_WALLET_IMPORTANCE(state: StoreAccount, importance: number) {
-        state.wallet.importance = importance
     },
 }
 

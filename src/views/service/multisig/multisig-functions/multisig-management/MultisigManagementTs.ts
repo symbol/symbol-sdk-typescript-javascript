@@ -1,11 +1,11 @@
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {
-    MultisigCosignatoryModificationType,
+    MultisigAccountModificationTransaction,
+    CosignatoryModificationAction,
     MultisigCosignatoryModification,
     PublicAccount,
     Deadline,
-    ModifyMultisigAccountTransaction,
     UInt64
 } from 'nem2-sdk'
 import {
@@ -38,8 +38,8 @@ export class MultisigManagementTs extends Vue {
     existsCosignerList = [{}]
     showCheckPWDialog = false
     currentCosignatoryList = []
+    CosignatoryModificationAction = CosignatoryModificationAction
     showSubPublicKeyList = false
-    MultisigCosignatoryModificationType = MultisigCosignatoryModificationType
     publicKeyList = []
     formItems = formDataConfig.multisigManagementForm
 
@@ -104,14 +104,14 @@ export class MultisigManagementTs extends Vue {
     createCompleteModifyTransaction() {
         let {multisigPublicKey, cosignerList, minApprovalDelta, minRemovalDelta} = this.formItems
         const {networkType, feeAmount} = this
+
+        const multisigCosignatoryModificationList = cosignerList
+            .map(cosigner => new MultisigCosignatoryModification(
+                cosigner.type,
+                PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
+            ))
         const innerFee = feeAmount / 3
-
-        const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
-            cosigner.type,
-            PublicAccount.createFromPublicKey(cosigner.publicKey, networkType),
-        ))
-
-        const modifyMultisigAccountTx = ModifyMultisigAccountTransaction.create(
+        const modifyMultisigAccountTx = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             Number(minApprovalDelta),
             Number(minRemovalDelta),
@@ -133,11 +133,12 @@ export class MultisigManagementTs extends Vue {
         const {networkType, publicKey, feeAmount} = this
         const innerFee = feeAmount / 3
         const bondedFee = feeAmount / 3
-        const multisigCosignatoryModificationList = cosignerList.map(cosigner => new MultisigCosignatoryModification(
-            cosigner.type,
-            PublicAccount.createFromPublicKey(cosigner.publicKey, networkType),
-        ))
-        const modifyMultisigAccountTransaction = ModifyMultisigAccountTransaction.create(
+        const multisigCosignatoryModificationList = cosignerList
+            .map(cosigner => new MultisigCosignatoryModification(
+                cosigner.type,
+                PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
+            ))
+        const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             Number(minApprovalDelta),
             Number(minRemovalDelta),
@@ -204,7 +205,7 @@ export class MultisigManagementTs extends Vue {
             return true
         }
         const publicKeyFlag = cosignerList.every((item) => {
-            if (item.type == MultisigCosignatoryModificationType.Add) {
+            if (item.type == CosignatoryModificationAction.Add) {
                 this.hasAddCosigner = true
             }
 
