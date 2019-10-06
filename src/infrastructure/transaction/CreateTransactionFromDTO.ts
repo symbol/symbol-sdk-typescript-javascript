@@ -495,7 +495,7 @@ export const extractMosaics = (mosaics: any): Mosaic[] => {
     return mosaics.map((mosaicDTO) => {
 
         // convert ID to UInt8 bytes array and get first byte (most significant byte)
-        const bytes = convert.hexToUint8(mosaicDTO.id).reverse();
+        const bytes = convert.hexToUint8(mosaicDTO.id);
         const byte0 = bytes[0];
 
         // if most significant bit of byte 0 is set, then we have a namespaceId
