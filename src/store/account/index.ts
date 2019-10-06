@@ -30,6 +30,7 @@ const state: StoreAccount = {
 }
 
 const updateMosaics = (state: StoreAccount, mosaics: AppMosaic[]) => {
+    if(!mosaics) return // @TODO: quick fix
     mosaics.forEach((mosaic: AppMosaic) => {
         const {hex} = mosaic
         const storeMosaic = state.mosaics[hex] || {}

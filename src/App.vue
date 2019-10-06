@@ -213,7 +213,7 @@
                     this.$store.commit('SET_NAMESPACE_LOADING', true),
                 ])
             } catch (error) {
-                console.log("TCL: App -> mounted -> error", error)
+                console.error("App -> mounted -> error", error)
             }
 
             this.$Notice.config({duration: 4})

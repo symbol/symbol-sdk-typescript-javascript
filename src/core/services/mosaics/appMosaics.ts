@@ -20,7 +20,7 @@ export const AppMosaics = () => ({
     async updateMosaicInfo(mosaics: Record<string, AppMosaic>, node: string): Promise<AppMosaic[]> {
         const toUpdate = this.getItemsWithoutProperties(mosaics)
 
-        if (!Object.keys(toUpdate).length) return
+        if (toUpdate.length) return
         const updatedMosaics = await new MosaicHttp(node)
             .getMosaics(toUpdate)
             .pipe(
@@ -29,7 +29,7 @@ export const AppMosaics = () => ({
                 toArray(),
             )
             .toPromise()
-        return updatedMosaics
+        return updatedMosaics || []
     },
 
     getItemsWithoutProperties(mosaics: Record<string, AppMosaic>): MosaicId[] {
@@ -45,9 +45,7 @@ export const AppMosaics = () => ({
      * @param transactions 
      */
     fromTransactions(transactions: Transaction[]): {appMosaics: AppMosaic[], namespaceIds: NamespaceId[]} {
-    console.log("TCL: transactions", transactions)
         const allMosaics = transactions.map(x => this.extractMosaicsFromTransaction(x))
-        console.log("TCL: allMosaics", allMosaics)
         const allMosaicsFlat1 = [].concat(...allMosaics).map(mosaic => mosaic)
         const allMosaicsFlat2 = [].concat(...allMosaicsFlat1).map(mosaic => mosaic)
 
@@ -61,13 +59,10 @@ export const AppMosaics = () => ({
         
         const namespaceHex = allNamespaceIds.map(({ hex }) => hex)
         const mosaicIdsNoDuplicate = allMosaicIds.filter((el, i, a) => i === a.indexOf(el))
-        console.log("TCL: mosaicIdsNoDuplicate", mosaicIdsNoDuplicate)
         const namespaceHexNoDuplicate = namespaceHex.filter((el, i, a) => i === a.indexOf(el))
-        console.log("TCL: namespaceHexNoDuplicate", namespaceHexNoDuplicate)
         const namespaceIds = namespaceHexNoDuplicate 
                                 .map(x => allNamespaceIds
                                         .find(({ hex }) => hex === x).id)
-        console.log("TCL: namespaceIds", namespaceIds)
         return {
             appMosaics: mosaicIdsNoDuplicate.map(x => new AppMosaic({hex: x})),
             namespaceIds
