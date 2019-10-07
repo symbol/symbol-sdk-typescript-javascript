@@ -71,7 +71,6 @@ export class CosignatureTransaction {
     }
 
     /**
-     * @internal
      * Serialize and sign transaction creating a new SignedTransaction
      * @param account
      * @returns {CosignatureSignedTransaction}
