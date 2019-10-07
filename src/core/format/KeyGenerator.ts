@@ -23,14 +23,12 @@ export class KeyGenerator {
      * @param {string} input Input string
      * @returns {UInt64} Deterministic uint64 value for the given string
      */
-    public static fromString(input: string): UInt64 {
+    public static generateUInt64Key(input: string): UInt64 {
         if (input.length === 0) {
             throw Error(`Input must not be empty`);
         }
-        if (input.length > 1024) {
-            throw Error(`Input exceeds 1024 characters (has ${input.length})`);
-        }
-        const hex = sha3_256(input)
-        return UInt64.fromHex(hex.substr(0, 16))
+        const buf = sha3_256.arrayBuffer(input);
+        const result = new Uint32Array(buf);
+        return new UInt64([result[0], (result[1] | 0x80000000) >>> 0]);
     }
 }

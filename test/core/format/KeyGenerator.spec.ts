@@ -20,20 +20,20 @@ import { KeyGenerator } from '../../../src/core/format/KeyGenerator';
 describe('key generator', () => {
     describe('generate key from string', () => {
         it('throws if input is empty', () => {
-            expect(() => KeyGenerator.fromString('')).to.throw(Error, 'Input must not be empty');
+            expect(() => KeyGenerator.generateUInt64Key('')).to.throw(Error, 'Input must not be empty');
         })
         it('returns UInt64', () => {
-            expect(KeyGenerator.fromString('a')).to.be.instanceOf(UInt64);
+            expect(KeyGenerator.generateUInt64Key('a')).to.be.instanceOf(UInt64);
         })
         it('generates correct keys', () => {
-            expect(KeyGenerator.fromString('a').toHex()).to.equal('80084BF2FBA02475');
+            expect(KeyGenerator.generateUInt64Key('a').toHex()).to.equal('F524A0FBF24B0880');
         })
         it('generates keys deterministically', () => {
-            expect(KeyGenerator.fromString('abc').toHex()).to.equal('3A985DA74FE225B2');
-            expect(KeyGenerator.fromString('abc').toHex()).to.equal('3A985DA74FE225B2');
-            expect(KeyGenerator.fromString('def').toHex()).to.equal('8E0D8F672252ACB0');
-            expect(KeyGenerator.fromString('def').toHex()).to.equal('8E0D8F672252ACB0');
-            expect(KeyGenerator.fromString('abc').toHex()).to.equal('3A985DA74FE225B2');
+            expect(KeyGenerator.generateUInt64Key('abc').toHex()).to.equal('B225E24FA75D983A');
+            expect(KeyGenerator.generateUInt64Key('abc').toHex()).to.equal('B225E24FA75D983A');
+            expect(KeyGenerator.generateUInt64Key('def').toHex()).to.equal('B0AC5222678F0D8E');
+            expect(KeyGenerator.generateUInt64Key('def').toHex()).to.equal('B0AC5222678F0D8E');
+            expect(KeyGenerator.generateUInt64Key('abc').toHex()).to.equal('B225E24FA75D983A');
         })
     })
 });
