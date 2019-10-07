@@ -60,7 +60,7 @@ export class MetadataTransactionService {
                                      networkType: NetworkType,
                                      metadataType: MetadataType,
                                      targetPublicAccount: PublicAccount,
-                                     key: string,
+                                     key: UInt64,
                                      value: string,
                                      senderPublicAccount: PublicAccount,
                                      targetId?: MosaicId | NamespaceId,
@@ -123,19 +123,19 @@ export class MetadataTransactionService {
     private createAccountMetadataTransaction(deadline: Deadline,
                                              networkType: NetworkType,
                                              targetPublicKey: string,
-                                             key: string,
+                                             key: UInt64,
                                              value: string,
                                              senderPublicKey: string,
                                              maxFee: UInt64): Observable<AccountMetadataTransaction> {
         return this.metadataHttp.getAccountMetadataByKeyAndSender(Address.createFromPublicKey(targetPublicKey, networkType),
-                                                                  key, senderPublicKey)
+                                                                  key.toHex(), senderPublicKey)
             .pipe(map((metadata: Metadata) => {
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                 const newValueBytes = Convert.utf8ToUint8(value);
                 return AccountMetadataTransaction.create(
                     deadline,
                     targetPublicKey,
-                    UInt64.fromHex(key),
+                    key,
                     newValueBytes.length - currentValueByte.length,
                     value,
                     networkType,
@@ -148,7 +148,7 @@ export class MetadataTransactionService {
                     return of(AccountMetadataTransaction.create(
                         deadline,
                         targetPublicKey,
-                        UInt64.fromHex(key),
+                        key,
                         newValueBytes.length,
                         value,
                         networkType,
@@ -175,19 +175,19 @@ export class MetadataTransactionService {
                                             networkType: NetworkType,
                                             targetPublicKey: string,
                                             mosaicId: MosaicId,
-                                            key: string,
+                                            key: UInt64,
                                             value: string,
                                             senderPublicKey: string,
                                             maxFee: UInt64): Observable<MosaicMetadataTransaction> {
         return this.metadataHttp.getMosaicMetadataByKeyAndSender(mosaicId,
-                                                                  key, senderPublicKey)
+                                                                  key.toHex(), senderPublicKey)
             .pipe(map((metadata: Metadata) => {
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                 const newValueBytes = Convert.utf8ToUint8(value);
                 return MosaicMetadataTransaction.create(
                     deadline,
                     targetPublicKey,
-                    UInt64.fromHex(key),
+                    key,
                     mosaicId,
                     newValueBytes.length - currentValueByte.length,
                     value,
@@ -201,7 +201,7 @@ export class MetadataTransactionService {
                     return of(MosaicMetadataTransaction.create(
                         deadline,
                         targetPublicKey,
-                        UInt64.fromHex(key),
+                        key,
                         mosaicId,
                         newValueBytes.length,
                         value,
@@ -229,19 +229,19 @@ export class MetadataTransactionService {
                                                networkType: NetworkType,
                                                targetPublicKey: string,
                                                namespaceId: NamespaceId,
-                                               key: string,
+                                               key: UInt64,
                                                value: string,
                                                senderPublicKey: string,
                                                maxFee: UInt64): Observable<NamespaceMetadataTransaction> {
         return this.metadataHttp.getNamespaceMetadataByKeyAndSender(namespaceId,
-                                                                  key, senderPublicKey)
+                                                                  key.toHex(), senderPublicKey)
             .pipe(map((metadata: Metadata) => {
                 const currentValueByte = Convert.utf8ToUint8(metadata.metadataEntry.value);
                 const newValueBytes = Convert.utf8ToUint8(value);
                 return NamespaceMetadataTransaction.create(
                     deadline,
                     targetPublicKey,
-                    UInt64.fromHex(key),
+                    key,
                     namespaceId,
                     newValueBytes.length - currentValueByte.length,
                     value,
@@ -255,7 +255,7 @@ export class MetadataTransactionService {
                     return of(NamespaceMetadataTransaction.create(
                         deadline,
                         targetPublicKey,
-                        UInt64.fromHex(key),
+                        key,
                         namespaceId,
                         newValueBytes.length,
                         value,
