@@ -1,4 +1,3 @@
-import routers from '@/router/routers.ts'
 import {Message, isWindows} from "@/config/index.ts"
 import monitorSelected from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
@@ -8,9 +7,9 @@ import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/core/utils/
 import {mapState} from 'vuex'
 import {NetworkType} from "nem2-sdk"
 import {languageConfig} from "@/config/view/language"
-import {LanguageType} from "@/core/model/LanguageType"
 import {nodeListConfig} from "@/config/view/node"
-import {StoreAccount, AppWallet, AppInfo} from "@/core/model"
+import {StoreAccount, AppWallet, AppInfo, Endpoint} from "@/core/model"
+import routes from '@/router/routers'
 
 @Component({
     computed: {
@@ -21,22 +20,31 @@ import {StoreAccount, AppWallet, AppInfo} from "@/core/model"
     }
 })
 export class MenuBarTs extends Vue {
-    NetworkType = NetworkType
     app: AppInfo
-    nodeList = []
+    nodeList: Endpoint[] = [] // @TODO: review node list
     activeAccount: StoreAccount
-    isShowNodeList = false
+    showNodeList: boolean = false
     isWindows = isWindows
     inputNodeValue = ''
     isNowWindowMax = false
-    isShowDialog = true
-    activePanelList = [false, false, false, false, false, false, false,]
     monitorSelected = monitorSelected
     monitorUnselected = monitorUnselected
-    accountAddress = ''
-    txStatusListener = null
     languageList = languageConfig
-    localesMap = LanguageType
+    
+    get routes() {
+        return routes[0].children
+            .filter(({ meta }) => meta.clickable)
+            .map(({ path, meta }) => ({path, meta}))
+    }
+
+    // @ROUTING
+    accountQuit() {
+        this.$store.commit('RESET_APP')
+        this.$store.commit('RESET_ACCOUNT')
+        this.$router.push({
+            name: "login"
+        })
+    }
 
     get isNodeHealthy() {
         return this.app.isNodeHealthy
@@ -50,26 +58,17 @@ export class MenuBarTs extends Vue {
         return this.app.walletList || []
     }
 
-    get currentPanelIndex() {
-        return this.app.currentPanelIndex
-    }
-
     get networkType() {
-        return this.activeAccount.wallet.networkType
+        return NetworkType[this.activeAccount.wallet.networkType]
     }
 
     get node() {
         return this.activeAccount.node
     }
 
-    get currentNode() {
-        return this.activeAccount.node
-    }
-
     get language() {
         return this.$i18n.locale
     }
-
 
     set language(lang) {
         this.$i18n.locale = lang
@@ -131,7 +130,6 @@ export class MenuBarTs extends Vue {
         return true
     }
 
-
     // @TODO: vee-validate
     changeEndpointByInput() {
         let {nodeList, inputNodeValue} = this
@@ -144,29 +142,6 @@ export class MenuBarTs extends Vue {
         })
         this.nodeList = nodeList
         localSave('nodeList', JSON.stringify(nodeList))
-    }
-
-    toggleNodeList() {
-        this.isShowNodeList = !this.isShowNodeList
-    }
-
-    switchPanel(index) {
-        if (!this.app.walletList.length) return
-        const routerIcon = routers[0].children
-        this.$router.push({
-            params: {},
-            name: routerIcon[index].name
-        })
-        this.$store.commit('SET_CURRENT_PANEL_INDEX', index)
-    }
-
-    accountQuit() {
-        this.$store.commit('SET_CURRENT_PANEL_INDEX', 0)
-        this.$store.commit('RESET_APP')
-        this.$store.commit('RESET_ACCOUNT')
-        this.$router.push({
-            name: "login"
-        })
     }
 
     initNodeList() {

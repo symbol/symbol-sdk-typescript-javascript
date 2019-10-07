@@ -71,11 +71,13 @@ export class WalletPanelTs extends Vue {
         return newObj
     }
 
+    // @ROUTING
     noHasWallet() {
         this.toCreate()
         this.$store.commit('SET_HAS_WALLET', false)
     }
 
+    // @ROUTING
     setDefaultPage() {
         const name = this.$route.params['name']
         if (name == 'walletImportKeystore') {
@@ -86,13 +88,13 @@ export class WalletPanelTs extends Vue {
         }
     }
 
+    // @ROUTING: 
     // @TODO: probably not the best way
-    setLeftSwitchIcon() {
-        this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
-    }
+    // setLeftSwitchIcon() {
+    //     this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
+    // }
 
     mounted() {
-        this.setLeftSwitchIcon()
         this.setDefaultPage()
     }
 }

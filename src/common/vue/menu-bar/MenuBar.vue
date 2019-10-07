@@ -8,11 +8,21 @@
 
     <div class="left_navigator">
       <div class="navigator_icon">
-        <div :key="index"
-             :class="[currentPanelIndex == index ? 'active_panel' : '',!walletList.length?'un_click':'pointer']"
-             @click="switchPanel(index)"
-             v-for="(a,index) in activePanelList">
-          <span :class="['absolute', currentPanelIndex == index ? 'active_icon' : '']"></span>
+        <div
+          v-for="(route, index) in routes"
+          :key="index"
+          :class="[
+              $route.matched.map(({path}) => path).includes(route.path) ? 'active_panel' : '',
+              !walletList.length ? 'un_click' : 'pointer',
+          ]"
+          @click="$router.push(route.path)"
+        >
+          <span
+            :style="$route.matched.map(({path}) => path).includes(route.path)
+              ? { backgroundImage: `url('${route.meta.activeIcon}')` }
+              : { backgroundImage: `url('${route.meta.icon}')` }"
+            class="absolute"
+          />
         </div>
       </div>
 
@@ -42,9 +52,9 @@
           <div :class="[isNodeHealthy?'point_healthy':'point_unhealthy']">
 
             <Poptip placement="bottom-end">
-              <i class="pointer point" @click="toggleNodeList"/>
+              <i class="pointer point" @click="showNodeList = !showNodeList"/>
               <span class="network_type_text" v-if="wallet">
-                {{ NetworkType[networkType]}}
+                {{ networkType }}
               </span>
               <div slot="title" class="title">{{$t('current_point')}}：{{node}}</div>
               <div slot="content">

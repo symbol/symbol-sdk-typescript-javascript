@@ -12,8 +12,7 @@
       <span class="create_account pointer" @click="$router.push('createAccount')">{{$t('create_or_import')}}</span>
     </div>
     <div class="fix_contnet">
-      <GetStart @showIndexView="showIndexView" v-if="indexShowList[0]"></GetStart>
-      <InputLock @showIndexView="showIndexView" v-if="indexShowList[1]"></InputLock>
+      <router-view />
     </div>
   </div>
 </template>

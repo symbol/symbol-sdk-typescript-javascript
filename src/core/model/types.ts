@@ -61,7 +61,6 @@ export interface StoreAccount {
 export interface AppInfo {
     timeZone: number,
     locale: string,
-    currentPanelIndex: number,
     walletList: any[]
     hasWallet: boolean,
     isNodeHealthy: boolean,
@@ -86,4 +85,11 @@ export interface AppState {
 export interface DefaultFee {
     speed: string,
     value: number,
+}
+
+export interface Endpoint {
+    value: string,
+    name: string,
+    url: string,
+    isSelected: boolean
 }

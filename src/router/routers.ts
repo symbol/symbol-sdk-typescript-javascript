@@ -1,3 +1,5 @@
+import {leftBarIcons} from '@/common/img/window'
+
 const routers = [
     {
         path: '/',
@@ -9,7 +11,11 @@ const routers = [
                 path: '/monitorPanel',
                 name: 'monitorPanel',
                 redirect: '/dashBoard',
-                meta: {},
+                meta: {
+                    clickable: true,
+                    icon: leftBarIcons.windowDashboard,
+                    activeIcon: leftBarIcons.windowDashboardActive,
+                },
                 component: () => import('@/views/monitor/monitor-panel/MonitorPanel.vue'),
                 children: [
                     {
@@ -39,7 +45,11 @@ const routers = [
                 path: '/walletPanel',
                 name: 'walletPanel',
                 redirect: '/walletCreate',
-                meta: {},
+                meta: {
+                    clickable: true,
+                    icon: leftBarIcons.windowWallet,
+                    activeIcon: leftBarIcons.windowWalletActive,
+                },
                 // @ts-ignore
                 component: () => import('@/views/wallet/wallet-panel/WalletPanel.vue'),
                 children: [
@@ -74,14 +84,23 @@ const routers = [
                     },
                 ]
             },
-
             {
                 path: '/mosaic',
                 name: 'mosaic',
+                meta: {
+                    clickable: true,
+                    icon: leftBarIcons.windowMosaic,
+                    activeIcon: leftBarIcons.windowMosaicActive,
+                },
                 component: () => import('@/views/service/mosaic/Mosaic.vue')
             },{
                 path: '/namespace',
                 name: 'namespace',
+                meta: {
+                    clickable: true,
+                    icon: leftBarIcons.windowNamespace,
+                    activeIcon: leftBarIcons.windowNamespaceActive,
+                },
                 redirect: '/namespaceList',
                 component: () => import('@/views/service/namespace/Namespace.vue'),
                 children: [
@@ -102,16 +121,22 @@ const routers = [
             },{
                 path: '/multisigApi',
                 name: 'multisigApi',
-                // @ts-ignore
+                meta: {
+                    clickable: true,
+                    icon: leftBarIcons.windowMultisig,
+                    activeIcon: leftBarIcons.windowMultisigActive,
+                },
                 component: () => import('@/views/service/multisig/Multisig.vue')
             },
-
-
             {
                 path: '/communityPanel',
                 name: 'communityPanel',
                 redirect: '/information',
-                meta: {},
+                meta: {
+                    clickable: true,
+                    icon: leftBarIcons.windowCommunity,
+                    activeIcon: leftBarIcons.windowCommunityActive,
+                },
                 // @ts-ignore
                 component: () => import('@/views/community/community-panel/CommunityPanel.vue'),
                 children: [
@@ -132,7 +157,11 @@ const routers = [
                 path: '/settingPanel',
                 name: 'settingPanel',
                 redirect: '/settingNormal',
-                // @ts-ignore
+                meta: {
+                    clickable: true,
+                    icon: leftBarIcons.windowSetting,
+                    activeIcon: leftBarIcons.windowSettingActive,
+                },
                 component: () => import('@/views/setting/setting-panel/SettingPanel.vue'),
                 children: [
                     {
@@ -162,18 +191,34 @@ const routers = [
             {
                 path: '/login',
                 name: 'login',
+                redirect: '/inputLock',
+                meta: {clickable: false},
                 component: () => import('@/views/login/login/Login.vue'),
+                children: [
+                    {
+                        path: '/getStarted',
+                        name: 'Get_started',
+                        component: () => import('@/views/login/login/login-view/get-start/GetStart.vue')
+                    }, {
+                        path: '/inputLock',
+                        name: 'Input_lock',
+                        component: () => import('@/views/login/login/login-view/input-lock/InputLock.vue')
+                    },
+                ]
             }, {
                 path: '/createAccount',
                 name: 'createAccount',
+                meta: {clickable: false},
                 component: () => import('@/views/login/create-account/CreateAccount.vue'),
             }, {
                 path: '/initAccount',
                 name: 'initAccount',
+                meta: {clickable: false},
                 component: () => import('@/views/login/init-account/InitAccount.vue'),
             }, {
                 path: '/initSeed',
                 name: 'initSeed',
+                meta: {clickable: false},
                 component: () => import('@/views/login/init-seed/InitSeed.vue'),
             },
         ]

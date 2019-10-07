@@ -1,4 +1,6 @@
-export const nodeListConfig: Array<{ value: string, name: string, url: string, isSelected: boolean }> = [
+import {Endpoint} from '@/core/model'
+
+export const nodeListConfig: Endpoint[] = [
     {
         value: 'http://fenix.nemesis.land:3000',
         name: 'nemesis',
