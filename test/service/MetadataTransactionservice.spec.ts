@@ -37,7 +37,7 @@ import { TestingAccount } from '../conf/conf.spec';
 describe('MetadataTransactionService', () => {
     let account: Account;
     let metadataTransactionService: MetadataTransactionService;
-    const key = '85BBEA6CC462B244';
+    const key = UInt64.fromHex('85BBEA6CC462B244');
     const value = 'TEST';
     const deltaValue = 'dalta';
     const targetIdHex = '941299B2B7E1291C';
@@ -47,13 +47,13 @@ describe('MetadataTransactionService', () => {
         const mockMetadataHttp = mock(MetadataHttp);
 
         when(mockMetadataHttp
-            .getAccountMetadataByKeyAndSender(deepEqual(account.address), key, account.publicKey))
+            .getAccountMetadataByKeyAndSender(deepEqual(account.address), key.toHex(), account.publicKey))
             .thenReturn(observableOf(mockMetadata(MetadataType.Account)));
         when(mockMetadataHttp
-            .getMosaicMetadataByKeyAndSender(deepEqual(new MosaicId(targetIdHex)), key, account.publicKey))
+            .getMosaicMetadataByKeyAndSender(deepEqual(new MosaicId(targetIdHex)), key.toHex(), account.publicKey))
                 .thenReturn(observableOf(mockMetadata(MetadataType.Mosaic)));
         when(mockMetadataHttp
-            .getNamespaceMetadataByKeyAndSender(deepEqual(NamespaceId.createFromEncoded(targetIdHex)), key, account.publicKey))
+            .getNamespaceMetadataByKeyAndSender(deepEqual(NamespaceId.createFromEncoded(targetIdHex)), key.toHex(), account.publicKey))
             .thenReturn(observableOf(mockMetadata(MetadataType.Namespace)));
         const metadataHttp = instance(mockMetadataHttp);
         metadataTransactionService = new MetadataTransactionService(metadataHttp);
@@ -69,7 +69,7 @@ describe('MetadataTransactionService', () => {
                                                              account.publicAccount)
             .subscribe((transaction: AccountMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA_TRANSACTION);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
                 expect(transaction.value).to.be.equal(value + deltaValue);
                 expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
                 expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
@@ -88,7 +88,7 @@ describe('MetadataTransactionService', () => {
                                                              new MosaicId(targetIdHex))
             .subscribe((transaction: MosaicMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
                 expect(transaction.value).to.be.equal(value + deltaValue);
                 expect(transaction.targetMosaicId.toHex()).to.be.equal(targetIdHex);
                 expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
@@ -108,7 +108,7 @@ describe('MetadataTransactionService', () => {
                                                              NamespaceId.createFromEncoded(targetIdHex))
             .subscribe((transaction: NamespaceMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
-                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key);
+                expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
                 expect(transaction.value).to.be.equal(value + deltaValue);
                 expect(transaction.targetNamespaceId.toHex()).to.be.equal(targetIdHex);
                 expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
@@ -169,7 +169,7 @@ describe('MetadataTransactionService', () => {
                 '5E628EA59818D97AA4118780D9A88C5512FCE7A21C195E1574727EFCE5DF7C0D',
                 account.publicKey,
                 account.publicKey,
-                UInt64.fromHex(key),
+                key,
                 MetadataType.Account,
                 4,
                 value,
