@@ -1,6 +1,6 @@
 import {copyTxt} from '@/core/utils/utils.ts'
-import {QRCodeGenerator} from 'nem2-qr-library'
-import {Address, AddressAlias, MultisigAccountInfo} from 'nem2-sdk'
+import {ContactQR} from 'nem2-qr-library'
+import {Address, AddressAlias, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import WalletAlias from './wallet-function/wallet-alias/WalletAlias.vue'
 import WalletFilter from './wallet-function/wallet-filter/WalletFilter.vue'
@@ -35,7 +35,6 @@ export class WalletDetailsTs extends Vue {
     activeAccount: StoreAccount
     app: AppInfo
     aliasList = []
-    QRCode: string = ''
     showMnemonicDialog: boolean = false
     showKeystoreDialog: boolean = false
     showPrivatekeyDialog: boolean = false
@@ -121,11 +120,13 @@ export class WalletDetailsTs extends Vue {
         this.showKeystoreDialog = false
     }
 
-    setQRCode(address) {
-        if (!address || address.length < 40) return
-        const {networkType} = Address.createFromRawAddress(address)
-        const {generationHash} = this
-        this.QRCode = QRCodeGenerator.createExportObject({address}, networkType, generationHash).toBase64()
+    get QRCode(): string {
+        return new ContactQR(
+            this.wallet.name,
+            PublicAccount.createFromPublicKey(this.wallet.publicKey, this.wallet.networkType),
+            this.wallet.networkType,
+            this.activeAccount.generationHash,
+        ).toBase64()
     }
 
     copy(txt) {
@@ -136,21 +137,7 @@ export class WalletDetailsTs extends Vue {
         })
     }
 
-    init() {
-        this.setQRCode(this.getAddress)
-    }
-
     closeBindDialog() {
         this.isShowBindDialog = false
     }
-
-    @Watch('getAddress')
-    onGetAddressChange() {
-        this.init()
-    }
-
-    mounted() {
-        this.init()
-    }
-
 }
