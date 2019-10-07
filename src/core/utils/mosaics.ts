@@ -28,7 +28,7 @@ export const renderMosaics = (
 
     if (!items.length) return 'Loading...'
 
-    const networkMosaicIndex = items.findIndex(({name}) => name === store.state.account.networkCurrency.hex)
+    const networkMosaicIndex = items.findIndex(({name}) => name === store.state.account.networkCurrency.name)
     if (networkMosaicIndex <= 0) {
         return items.map(({name, amount}) => `${amount} [${name}]`).join(', ')
     }

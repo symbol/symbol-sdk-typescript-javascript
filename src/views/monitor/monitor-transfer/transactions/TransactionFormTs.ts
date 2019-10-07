@@ -332,7 +332,7 @@ export class TransactionFormTs extends Vue {
             this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLIC_KEY_ERROR))
             return false
         }
-        if (recipient.length < 1 || recipient.length > 40) {
+        if (!recipient) {
             this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
             return false
         }
