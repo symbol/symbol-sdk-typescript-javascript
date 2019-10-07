@@ -25,11 +25,6 @@ describe('key generator', () => {
         it('returns UInt64', () => {
             expect(KeyGenerator.fromString('a')).to.be.instanceOf(UInt64);
         })
-        it('throws if input has invalid format', () => {
-            expect(() => KeyGenerator.fromString('$abc')).to.throw(Error, '');
-            expect(() => KeyGenerator.fromString('ab-c')).to.throw(Error, '');
-            expect(() => KeyGenerator.fromString('abc.')).to.throw(Error, '');
-        })
         it('generates correct keys', () => {
             expect(KeyGenerator.fromString('a').toHex()).to.equal('80084BF2FBA02475');
         })

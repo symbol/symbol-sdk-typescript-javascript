@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,16 @@ import { sha3_256 } from 'js-sha3';
 
 export class KeyGenerator {
     /**
+     * Generate UInt64 from a string
+     * @param {string} input Input string
      * @returns {UInt64} Deterministic uint64 value for the given string
      */
-    public static fromString(input: string) {
+    public static fromString(input: string): UInt64 {
         if (input.length === 0) {
             throw Error(`Input must not be empty`);
         }
         if (input.length > 1024) {
             throw Error(`Input exceeds 1024 characters (has ${input.length})`);
-        }
-        const format = /^[a-zA-Z0-9_]+$/gm;
-        if (input.match(format) === null) {
-            throw Error(`Input has invalid format (accepted characters: a-z, A-Z, 0-9, _)`);
         }
         const hex = sha3_256(input)
         return UInt64.fromHex(hex.substr(0, 16))
