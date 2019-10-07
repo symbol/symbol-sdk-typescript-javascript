@@ -1,4 +1,3 @@
-import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
 import {NamespaceHttp, Address} from 'nem2-sdk'
 import {AppNamespace} from '@/core/model'
 
@@ -22,14 +21,6 @@ export const getNamespacesFromAddress = async (address: string,
     } catch (error) {
         throw new Error(error)
     }
-}
-
-export const createRootNamespace = (namespaceName, duration, networkType, maxFee) => {
-    return new NamespaceApiRxjs().createdRootNamespace(namespaceName, duration, networkType, maxFee)
-}
-
-export const createSubNamespace = (rootNamespaceName, subNamespaceName, networkType, maxFee) => {
-    return new NamespaceApiRxjs().createdSubNamespace(subNamespaceName, rootNamespaceName, networkType, maxFee)
 }
 
 const sortByDuration = (list: AppNamespace[], direction: boolean): AppNamespace[] => {

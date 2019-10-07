@@ -1,7 +1,8 @@
-import {TransactionType, Address} from 'nem2-sdk'
-import {mosaicsAmountViewFromAddress} from '@/core/services'
+import {TransactionType, Address, AggregateTransaction, Transaction} from 'nem2-sdk'
 import {AppMosaic, AppWallet, AppState} from '@/core/model'
-import {getNamespacesFromAddress} from '@/core/services'
+import {
+   getNamespacesFromAddress, getTransactionTypesFromAggregate, mosaicsAmountViewFromAddress
+} from '@/core/services'
 
 const txTypeToGetNamespaces = [
   TransactionType.REGISTER_NAMESPACE,
@@ -40,14 +41,18 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
         appWallet.updateAccountBalance(balance, store)
         store.commit('UPDATE_MOSAICS', appMosaics)
 
-        const txType = mutation.payload[0].rawTx.type
+        const transaction: Transaction = mutation.payload[0].rawTx
 
-        if (txTypeToGetNamespaces.includes(txType)) {
+        const transactionTypes: TransactionType[] = transaction instanceof AggregateTransaction
+            ? getTransactionTypesFromAggregate(transaction)
+            : [transaction.type]
+
+        if (txTypeToGetNamespaces.some(a => transactionTypes.some(b => b === a))) {
             const namespaces = await getNamespacesFromAddress(address, node)
             store.commit('SET_NAMESPACES', namespaces)
         }
 
-         if (txTypeToSetAccountInfo.includes(txType)) {
+         if (txTypeToSetAccountInfo.some(a => transactionTypes.some(b => b === a))) {
             appWallet.setAccountInfo(store)
          }
      } catch (error) {

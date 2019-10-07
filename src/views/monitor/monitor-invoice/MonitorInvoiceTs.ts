@@ -4,8 +4,7 @@ import {copyTxt} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 import {mapState} from "vuex"
-import {MosaicId, NamespaceId, AliasType, TransferTransaction, Deadline, Address, NetworkType, Mosaic, UInt64, PlainMessage} from "nem2-sdk"
-import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs"
+import {MosaicId, TransferTransaction, Deadline, Address, Mosaic, UInt64, PlainMessage} from "nem2-sdk"
 import {TransferType} from "@/core/model/TransferType"
 import {monitorReceiptTransferTypeConfig} from "@/config/view/monitor"
 import {AppInfo, StoreAccount} from "@/core/model"
@@ -100,32 +99,15 @@ export class MonitorInvoiceTs extends Vue {
     }
 
     async checkForm() {
-        const that = this
-        const {node} = this
         let {mosaicAmount, mosaicHex} = this.formItems
         mosaicAmount = Number(mosaicAmount)
         if ((!Number(mosaicAmount) && Number(mosaicAmount) !== 0) || Number(mosaicAmount) < 0) {
             this.showErrorMessage(this.$t(Message.AMOUNT_LESS_THAN_0_ERROR))
             return false
         }
-        if (mosaicHex.indexOf('@') === -1) {
-            try {
-                new MosaicId(mosaicHex)
-            } catch (e) {
-                this.showErrorMessage(this.$t(Message.MOSAIC_HEX_FORMAT_ERROR))
-                return false
-            }
-        } else {
-            const namespaceId = new NamespaceId(mosaicHex.substring(1))
-            try {
-                const namespaceInfo: any = await new NamespaceApiRxjs().getNamespace(namespaceId, node).toPromise()
-                if (namespaceInfo.alias.type === AliasType.Mosaic) {
-                    that.formItems.mosaicHex = new MosaicId(namespaceInfo.alias.mosaicId).toHex()
-                }
-            } catch (e) {
-                this.showErrorMessage(this.$t(Message.MOSAIC_ALIAS_NOT_EXIST_ERROR))
-                return false
-            }
+        if (mosaicHex === '') {
+            this.showErrorMessage(this.$t(Message.MOSAIC_LIST_NULL_ERROR))
+            return false
         }
         return true
     }

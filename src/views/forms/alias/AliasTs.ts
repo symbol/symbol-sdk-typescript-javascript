@@ -1,8 +1,7 @@
 import { Message, formDataConfig, defaultNetworkConfig, DEFAULT_FEES, FEE_GROUPS } from "@/config/index.ts"
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { EmptyAlias } from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
-import { NamespaceApiRxjs } from "@/core/api/NamespaceApiRxjs.ts"
-import { Address, AddressAlias, AliasAction, NamespaceId, Password, Transaction, MosaicId } from "nem2-sdk"
+import { Address, AliasAction, NamespaceId, Password, Transaction, MosaicId, AddressAliasTransaction, Deadline, UInt64, MosaicAliasTransaction } from "nem2-sdk"
 import { mapState } from "vuex"
 import { networkConfig } from "@/config/index"
 import { getAbsoluteMosaicAmount } from "@/core/utils"
@@ -195,22 +194,24 @@ export class AliasTs extends Vue {
 
   transaction(): Transaction {
     const { alias, feeAmount, bindType, bindTypes, aliasAction, target } = this
+    const { networkType } = this.wallet
 
     return bindType === bindTypes.address
-        ? new NamespaceApiRxjs().addressAliasTransaction(
-          aliasAction,
-          new NamespaceId(alias),
-          Address.createFromRawAddress(target),
-          this.wallet.networkType,
-          feeAmount
+        ? AddressAliasTransaction.create(
+            Deadline.create(),
+            aliasAction,
+            new NamespaceId(alias),
+            Address.createFromRawAddress(target),
+            networkType,
+            UInt64.fromUint(feeAmount),
         )
-
-        : new NamespaceApiRxjs().mosaicAliasTransaction(
-          aliasAction,
-          new NamespaceId(alias),
-          new MosaicId(target),
-          this.wallet.networkType,
-          feeAmount
+        : MosaicAliasTransaction.create(
+            Deadline.create(),
+            aliasAction,
+            new NamespaceId(alias),
+            new MosaicId(target),
+            networkType,
+            UInt64.fromUint(feeAmount),
         )
   }
 

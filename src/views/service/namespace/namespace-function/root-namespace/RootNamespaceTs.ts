@@ -1,13 +1,17 @@
 import {mapState} from "vuex"
-import {PublicAccount, MultisigAccountInfo, NetworkType, Address} from "nem2-sdk"
-import {NamespaceApiRxjs} from "@/core/api/NamespaceApiRxjs.ts"
+import {
+    PublicAccount, MultisigAccountInfo, NetworkType, Address,
+    NamespaceRegistrationTransaction, UInt64, Deadline,
+} from "nem2-sdk"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress,
 } from '@/core/utils'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, AppInfo, DefaultFee, AppWallet} from "@/core/model"
+import {StoreAccount, AppInfo, DefaultFee, AppWallet} from "@/core/model"
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
+
 @Component({
     components: {
         CheckPWDialog
@@ -126,29 +130,39 @@ export class RootNamespaceTs extends Vue {
         if (this.announceInLock) return 3
     }
 
+    createRootNamespace(): NamespaceRegistrationTransaction {
+        const {networkType} =  this.wallet
+        const {rootNamespaceName, duration} = this.formItems
+        const {feeAmount, feeDivider} = this
+
+        return NamespaceRegistrationTransaction
+            .createRootNamespace(
+                Deadline.create(),
+                rootNamespaceName,
+                UInt64.fromUint(duration),
+                networkType,
+                UInt64.fromUint(feeAmount/feeDivider),
+            )
+    }
+
     async createBySelf() {
-        let transaction = this.createRootNamespace()
-        this.transactionList = [transaction]
+        this.transactionList = [this.createRootNamespace()]
     }
 
     createByMultisig() {
         const {feeAmount} = this
-        let {duration, rootNamespaceName, multisigPublicKey} = this.formItems
+        const {multisigPublicKey} = this.formItems
         const {networkType} = this.wallet
-        const aggregateFee = feeAmount/3
-        const innerFee = feeAmount/3
-        const rootNamespaceTransaction = new NamespaceApiRxjs().createdRootNamespace(
-            rootNamespaceName,
-            duration,
-            networkType,
-            innerFee
-        )
+        const fee = feeAmount/3
+
+        const rootNamespaceTransaction = this.createRootNamespace()
+
         if (this.announceInLock) {
             const aggregateTransaction = createBondedMultisigTransaction(
                 [rootNamespaceTransaction],
                 multisigPublicKey,
                 networkType,
-                aggregateFee
+                fee,
             )
 
             this.transactionList = [aggregateTransaction]
@@ -158,7 +172,7 @@ export class RootNamespaceTs extends Vue {
             [rootNamespaceTransaction],
             multisigPublicKey,
             networkType,
-            aggregateFee
+            fee,
         )
         this.transactionList = [aggregateTransaction]
     }
@@ -170,13 +184,6 @@ export class RootNamespaceTs extends Vue {
                 title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
             })
         }
-    }
-
-    createRootNamespace() {
-        const {networkType} =  this.wallet
-        const {rootNamespaceName, duration} = this.formItems
-        const {feeAmount} = this
-        return new NamespaceApiRxjs().createdRootNamespace(rootNamespaceName, duration, networkType, feeAmount)
     }
 
     closeCheckPWDialog() {

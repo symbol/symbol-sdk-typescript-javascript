@@ -3,20 +3,18 @@ import {
     Account,
     Crypto,
     NetworkType,
-    Transaction,
     SimpleWallet,
     Password,
     WalletAlgorithm,
     Listener,
-    Id, AccountHttp, Address, AggregateTransaction,
+    AccountHttp, Address, AggregateTransaction, TransactionHttp,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
 import {Message, networkConfig} from "@/config"
-import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs.ts"
-import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {AppLock, localRead, localSave, createSubWalletByPath} from "@/core/utils"
 import {CreateWalletType} from "@/core/model"
 import {AppState} from './types';
+import {announceBondedWithLock} from '@/core/services'
 
 export class AppWallet {
     constructor(wallet?: {
@@ -397,18 +395,15 @@ export class AppWallet {
     }
 
     signAndAnnounceNormal(password: Password, node: string, generationHash: string, transactionList: Array<any>, that: any): void {
-        try {
             const account = this.getAccount(password)
             const signature = account.sign(transactionList[0], generationHash)
             const message = that.$t(Message.SUCCESS)
             console.log(transactionList)
             console.log(signature)
-            new TransactionApiRxjs().announce(signature, node).subscribe(() => {
-                that.$Notice.success({title: message}) // quick fix
-            })
-        } catch (err) {
-            console.error(err)
-        }
+            new TransactionHttp(node).announce(signature).subscribe(
+                _ => that.$Notice.success({title: message}),
+                error => { throw new Error(error) }
+            )
     }
 
     // @TODO: review
@@ -422,21 +417,13 @@ export class AppWallet {
         const aggregateTransaction = transactions[0]
         // @TODO: review listener management
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-        new TransactionApiRxjs().announceBondedWithLock(  aggregateTransaction,
-                                                          account,
-                                                          listener,
-                                                          node,
-                                                          lockFee,
-                                                          store)
+        announceBondedWithLock( aggregateTransaction,
+                                account,
+                                listener,
+                                node,
+                                lockFee,
+                                store)
     }
-}
-
-export const createBondedMultisigTransaction = (transaction: Array<Transaction>, multisigPublicKey: string, networkType: NetworkType, fee: number) => {
-    return new MultisigApiRxjs().bondedMultisigTransaction(networkType, fee, multisigPublicKey, transaction)
-}
-
-export const createCompleteMultisigTransaction = (transaction: Array<Transaction>, multisigPublicKey: string, networkType: NetworkType, fee: number) => {
-    return new MultisigApiRxjs().completeMultisigTransaction(networkType, fee, multisigPublicKey, transaction)
 }
 
 export const saveLocalAlias = (

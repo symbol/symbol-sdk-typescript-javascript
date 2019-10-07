@@ -1,11 +1,10 @@
 import './NamespaceEditDialog.less'
 import {mapState} from "vuex"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {Password} from 'nem2-sdk'
-import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, defaultNetworkConfig} from "@/config"
+import {Password, NamespaceRegistrationTransaction, Deadline, UInt64} from 'nem2-sdk'
+import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {getAbsoluteMosaicAmount,formatSeconds} from '@/core/utils'
 import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
-import {createRootNamespace} from "@/core/services/namespace"
 
 @Component({
     computed: {
@@ -117,12 +116,15 @@ export class NamespaceEditDialogTs extends Vue {
         const {duration} = this.formItems
         const {node, generationHash, feeAmount} = this
         const password = new Password(this.formItems.password)
-        const transaction = createRootNamespace(
-            this.currentNamespace.name,
-            duration,
-            this.wallet.networkType,
-            feeAmount
-        )
+        const transaction = NamespaceRegistrationTransaction
+            .createRootNamespace(
+                Deadline.create(),
+                this.currentNamespace.name,
+                UInt64.fromUint(duration),
+                this.wallet.networkType,
+                UInt64.fromUint(feeAmount),
+            )
+        
         new AppWallet(this.wallet)
             .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
         this.initForm()

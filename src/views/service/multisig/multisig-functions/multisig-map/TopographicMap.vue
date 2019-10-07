@@ -18,7 +18,6 @@
     import multisignSelfIcon from '@/common/img/service/multisig/multisignSelfIcon.png'
     import multisignCosignerIcon from '@/common/img/service/multisig/multisignCosignerIcon.png'
     import multisignMultisignerIcon from '@/common/img/service/multisig/multisignMultisignerIcon.png'
-    import {MultisigApiRxjs} from "@/core/api/MultisigApiRxjs"
     import {StoreAccount, AppInfo, FormattedTransaction} from "@/core/model"
 
     @Component({

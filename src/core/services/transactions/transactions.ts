@@ -1,5 +1,4 @@
 import {Address, Transaction, AccountHttp, QueryParams} from "nem2-sdk"
-import {TransactionApiRxjs} from '@/core/api/TransactionApiRxjs.ts'
 import {transactionFormat} from './formatting'
 import {AppState} from '@/core/model'
 import {Store} from 'vuex'

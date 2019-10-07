@@ -13,7 +13,8 @@ import {
 } from "@/core/utils"
 import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, DefaultFee} from "@/core/model"
+import {StoreAccount, DefaultFee} from "@/core/model"
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
 
 @Component({
     components: {

@@ -12,16 +12,17 @@ import {
     MosaicSupplyChangeAction,
     MultisigAccountInfo,
     Address,
-    NetworkType
+    NetworkType, AggregateTransaction
 } from 'nem2-sdk'
-import {MosaicApiRxjs} from '@/core/api/MosaicApiRxjs.ts'
 import {
     formatSeconds, formatAddress, getAbsoluteMosaicAmount,
 } from '@/core/utils'
 import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
 import {formDataConfig, Message, DEFAULT_FEES, FEE_GROUPS} from '@/config'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction, StoreAccount, AppWallet, DefaultFee} from "@/core/model"
+import {StoreAccount, AppWallet, DefaultFee} from "@/core/model"
 import {NETWORK_PARAMS} from '@/core/validation'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
+
 @Component({
     components: {
         CheckPWDialog
@@ -166,11 +167,10 @@ export class MosaicTransactionTs extends Vue {
             "address": address,
             "supply": supply,
             "mosaic_divisibility": divisibility,
-            "duration": duration,
+            "duration": permanent ? 'permanent' : duration,
             "fee": feeAmount / Math.pow(10, networkCurrency.divisibility),
             'transmittable': transferable,
             'variable_supply': supplyMutable,
-            "duration_permanent": permanent,
             "restrictable": restrictable
         }
 
@@ -201,76 +201,92 @@ export class MosaicTransactionTs extends Vue {
             })
         }
     }
-
-    createBySelf() {
-        let {accountPublicKey, networkType, feeAmount} = this
-        let {supply, divisibility, transferable, supplyMutable, duration, restrictable} = this.formItems
-        const that = this
-        const nonce = MosaicNonce.createRandom()
-        const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, networkType)
-        const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(accountPublicKey, this.wallet.networkType))
-        const fee = feeAmount
-        this.transactionList = [
-            new MosaicApiRxjs().createMosaic(
-                nonce,
-                mosaicId,
-                supplyMutable,
-                transferable,
-                Number(divisibility),
-                this.formItems.permanent ? undefined : Number(duration),
-                networkType,
-                supply,
-                publicAccount,
-                restrictable,
-                Number(fee))
-        ]
-        that.initForm()
+ 
+    get publicKey(): string {
+        const {activeMultisigAccount, accountPublicKey} = this
+        return activeMultisigAccount ? activeMultisigAccount : accountPublicKey
     }
 
-    createByMultisig() {
-        const {networkType, feeAmount} = this
-        const {supply, divisibility, transferable, supplyMutable, duration, multisigPublicKey, restrictable} = this.formItems
-        const innerFee = feeAmount / this.feeDivider
-        const aggregateFee = feeAmount / this.feeDivider
+    mosaicDefinitionAndSupplyChange(): [ MosaicDefinitionTransaction, MosaicSupplyChangeTransaction ] {
+        let {publicKey, networkType, feeAmount, feeDivider} = this
+        let {supply, divisibility, transferable, supplyMutable, duration, restrictable, permanent} = this.formItems
+
+        const publicAccount = PublicAccount.createFromPublicKey(publicKey, networkType)
         const nonce = MosaicNonce.createRandom()
-        const mosaicId = MosaicId.createFromNonce(nonce, PublicAccount.createFromPublicKey(multisigPublicKey, this.wallet.networkType))
-        const mosaicDefinitionTx = MosaicDefinitionTransaction
-            .create(
-                Deadline.create(),
-                nonce,
-                mosaicId,
-                MosaicFlags.create(supplyMutable, transferable, restrictable), 
-                divisibility,
-                duration ? UInt64.fromUint(duration) : undefined,
-                networkType,
-                innerFee ? UInt64.fromUint(innerFee) : undefined
-            )
+        const fee = feeAmount / feeDivider
+        const mosaicId = MosaicId.createFromNonce(nonce, publicAccount)
+
+        const mosaicDefinitionTx =  MosaicDefinitionTransaction.create(
+            Deadline.create(),
+            nonce,
+            mosaicId,
+            MosaicFlags.create(supplyMutable, transferable, restrictable),
+            divisibility,
+            permanent ? undefined : UInt64.fromUint(duration),
+            networkType,
+            UInt64.fromUint(fee),
+        )
 
         const mosaicSupplyChangeTx = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
-            mosaicDefinitionTx.mosaicId,
+            mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(supply),
-            networkType
+            networkType,
         )
 
-        if (this.announceInLock) {
-            const aggregateTransaction = createBondedMultisigTransaction(
-                [mosaicDefinitionTx, mosaicSupplyChangeTx],
-                multisigPublicKey,
+        return [mosaicDefinitionTx, mosaicSupplyChangeTx]
+    }
+
+    createBySelf() {
+        const {accountPublicKey, networkType, mosaicDefinitionAndSupplyChange} = this
+        const publicAccount = PublicAccount.createFromPublicKey(accountPublicKey, networkType)
+        const fee = this.feeAmount / this.feeDivider
+        
+        const transactions = mosaicDefinitionAndSupplyChange()
+        const [mosaicDefinitionTx] = transactions
+        const [, mosaicSupplyChangeTx] = transactions
+
+        this.transactionList = [
+            AggregateTransaction.createComplete(
+                Deadline.create(),
+                [
+                    mosaicDefinitionTx.toAggregate(publicAccount),
+                    mosaicSupplyChangeTx.toAggregate(publicAccount)
+                ],
                 networkType,
-                aggregateFee
+                [],
+                UInt64.fromUint(fee)
             )
-            this.transactionList = [aggregateTransaction]
+        ]
+
+        this.initForm()
+    }
+
+    createByMultisig() {
+        const {networkType, feeAmount, publicKey, mosaicDefinitionAndSupplyChange} = this
+        const aggregateFee = feeAmount / this.feeDivider
+
+        if (this.announceInLock) {
+            this.transactionList = [
+                createBondedMultisigTransaction(
+                    mosaicDefinitionAndSupplyChange(),
+                    publicKey,
+                    networkType,
+                    aggregateFee
+                )
+            ]
             return
         }
-        const aggregateTransaction = createCompleteMultisigTransaction(
-            [mosaicDefinitionTx, mosaicSupplyChangeTx],
-            multisigPublicKey,
-            networkType,
-            aggregateFee,
-        )
-        this.transactionList = [aggregateTransaction]
+
+        this.transactionList = [
+            createCompleteMultisigTransaction(
+                mosaicDefinitionAndSupplyChange(),
+                publicKey,
+                networkType,
+                aggregateFee,
+            )
+        ]
     }
 
     checkForm() {
