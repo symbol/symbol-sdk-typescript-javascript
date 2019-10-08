@@ -221,7 +221,10 @@ export class {{classname}} {
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                         resolve({ response, body });
                     } else {
-                        reject({ response, body });
+                        reject({ response: {
+                            statusCode: response.statusCode,
+                            statusMessage: response.statusMessage,
+                        }, body: response.body });
                     }
                 }
             });
