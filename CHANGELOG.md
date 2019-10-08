@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.14.0] - 08-Oct-2019
+
+**Milestone**: Fuschicho
+
+- Added `KeyGenerator` class for generating UInt64 Keys from string.
+- Fixed `MosaicAmountView` issue. Now return observable of array.
+- Optimised `Account restriction` endpoints by returning simple payload.
+- Fixed http repository `error handling` issues.
+- Fixed bugs in `Alias` interface.
+- Fixed `MosaicId significant byte` not detected properly in TransactionPayload.
+- Fixed only `MIJIN_TEST` network type allowed in NetworkTypeHttp.
+- Applied latest OpenAPI doc (`v0.7.19`).
+- Changed `SignedTransaction` class constructor to public.
+- Changed `MosaicRestrictionKey` format to be Hexadecimal.
+- Other small fixes.
+
 ## [0.13.4] - 04-Oct-2019
 
 **Milestone**: Elephant.3 / Fuschicho
@@ -206,6 +222,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Alpaca
 
 - Initial code release.
+[0.14.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.4...v0.14.0
 [0.13.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.3...v0.13.4
 [0.13.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.2...v0.13.3
 [0.13.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.1...v0.13.2
