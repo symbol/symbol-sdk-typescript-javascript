@@ -45,6 +45,11 @@
             return this.activeAccount.wallet
         }
 
+        get address() {
+            if (!this.wallet) return null
+            return this.wallet.address
+        }
+
         get accountAddress() {
             return this.activeAccount.wallet.address
         }
@@ -165,12 +170,6 @@
             }
         }
 
-        checkIfWalletExist() {
-            if (!this.wallet || !this.wallet.address) {
-                this.$router.push('login')
-            }
-        }
-
         async getMultisigAccountMultisigAccountInfo(publicKey) {
             const {networkType} = this.wallet
             const accountAddress = Address.createFromPublicKey(publicKey, networkType).plain()
@@ -192,7 +191,6 @@
 
         async mounted() {
             const {accountName, node} = this
-            this.checkIfWalletExist() // @TODO: move out when refactoring wallets
 
             try {
                 // @TODO: refactor
@@ -219,21 +217,19 @@
 
             getMarketOpenPrice(this)
 
-            if (this.wallet && this.wallet.address) {
-                this.onWalletChange(this.wallet)
-            }
+            if (this.address && !this.address !== undefined) this.onWalletChange(this.wallet)
 
-            this.$watchAsObservable('wallet')
+            this.$watchAsObservable('address')
                 .pipe(
                     throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
                 ).subscribe(({newValue, oldValue}) => {
-
+                    
+                if (!newValue) return
                 /**
                  * On Wallet Change
                  */
-                if (oldValue.address === undefined && newValue.address !== undefined
-                    || oldValue.address !== undefined && newValue.address !== oldValue.address) {
-                    this.onWalletChange(newValue)
+                if (!oldValue && newValue || oldValue && newValue !== oldValue) {
+                    this.onWalletChange(this.wallet)
                 }
             })
 
@@ -244,7 +240,6 @@
                 if (!newValue) return
 
                 if (oldValue !== newValue) {
-                    setWalletsBalances(this.$store)
                     this.onActiveMultisigAccountChange(newValue)
                     this.getMultisigAccountMultisigAccountInfo(newValue)
                 }

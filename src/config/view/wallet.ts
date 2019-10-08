@@ -52,10 +52,10 @@ export const walletStyleSheetType = {
 export const importKeystoreConfig = {
     walletName: 'keystore-wallet',
     networkType: NetworkType.MIJIN_TEST,
-    keystoreStr: 'eyJuYW1lIjoid2FsbGV0LXByaXZhdGVLZXkiLCJuZXR3b3JrIjoxNDQsImFkZHJlc3MiOnsiYWRkcmVzcyI6IlNETEdMRFROSVAyS0VZSlpPSFBBVjZZQktSUTVaUlJETEpHUjVIM1UiLCJuZXR3b3JrVHlwZSI6MTQ0fSwiY3JlYXRpb25EYXRlIjoiMjAxOS0wOS0yM1QxNzozNToxNi4xOTUiLCJzY2hlbWEiOiJzaW1wbGVfdjEiLCJlbmNyeXB0ZWRQcml2YXRlS2V5Ijp7ImVuY3J5cHRlZEtleSI6IjNlYTc2ZTEzNmE0ZmRhODY1M2E0NTRmMDQ5Mjc3NzgxMDkyZTA0M2Q2YWUxYTA2OTFmNjViNGJhYTM2ZTBkYzVlZTQ5YzBiZGQ0ZmNkMWJhNDRlNDI2MTU0OTc5NjNkNiIsIml2IjoiNjU2REQ5NUJGMTQ5MzQ3NEE5ODkyMUU5MDNGQzcwREYifX0=',
+    keystoreStr: '',
     walletPassword: '',
     walletPasswordAgain: '',
-    keystorePassword: '111111'
+    keystorePassword: ''
 }
 
 export const serviceSwitchFnConfig = [

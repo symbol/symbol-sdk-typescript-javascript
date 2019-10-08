@@ -6,6 +6,8 @@ export const setWalletsBalances = async (store: Store<AppState>): Promise<void> 
     try {
         const {wallet, accountName} = store.state.account
         const {walletList} = store.state.app
+        if (!walletList.length) return
+
         const appWalletsWithBalance = await Promise.all(
             [...walletList].map(wallet => new AppWallet(wallet).getAccountBalance(store))
         )
