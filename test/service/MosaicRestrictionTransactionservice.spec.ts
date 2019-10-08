@@ -17,6 +17,7 @@
 import {expect} from 'chai';
 import {of as observableOf} from 'rxjs';
 import {deepEqual, instance, mock, when} from 'ts-mockito';
+import { KeyGenerator } from '../../src/core/format/KeyGenerator';
 import { RestrictionHttp } from '../../src/infrastructure/RestrictionHttp';
 import { Account } from '../../src/model/account/Account';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
@@ -39,8 +40,8 @@ describe('MosaicRestrictionTransactionService', () => {
     let mosaicId: MosaicId;
     let referenceMosaicId: MosaicId;
     let mosaicRestrictionTransactionService: MosaicRestrictionTransactionService;
-    const key = '123456';
-    const invalidKey = '9999';
+    const key = KeyGenerator.generateUInt64Key('TestKey');
+    const invalidKey = KeyGenerator.generateUInt64Key('9999');
     let mosaicIdWrongKey: MosaicId;
     const globalRestrictionValue = '1000';
     const globalRestrictionType = MosaicRestrictionType.LE;
@@ -76,7 +77,7 @@ describe('MosaicRestrictionTransactionService', () => {
                                             MosaicRestrictionType.LE)
             .subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
-                expect(transaction.restrictionKey.toString()).to.be.equal(key);
+                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
                 expect(transaction.previousRestrictionType).to.be.equal(globalRestrictionType);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue);
                 expect(transaction.referenceMosaicId.toHex()).to.be.equal(new MosaicId(UInt64.fromUint(0).toDTO()).toHex());
@@ -95,7 +96,7 @@ describe('MosaicRestrictionTransactionService', () => {
                                             referenceMosaicId)
             .subscribe((transaction: MosaicGlobalRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_GLOBAL_RESTRICTION);
-                expect(transaction.restrictionKey.toString()).to.be.equal(key);
+                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
                 expect(transaction.previousRestrictionType).to.be.equal(globalRestrictionType);
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(globalRestrictionValue);
                 expect(transaction.referenceMosaicId.toHex()).to.be.equal(referenceMosaicId.toHex());
@@ -113,7 +114,7 @@ describe('MosaicRestrictionTransactionService', () => {
                                             '2000')
             .subscribe((transaction: MosaicAddressRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
-                expect(transaction.restrictionKey.toString()).to.be.equal(key);
+                expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
                 expect(transaction.targetAddress.plain()).to.be.equal(account.address.plain());
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(addressRestrictionValue);
                 done();
@@ -130,16 +131,6 @@ describe('MosaicRestrictionTransactionService', () => {
                                                 'wrong value',
                                                 MosaicRestrictionType.LE);
         }).to.throw(Error, 'RestrictionValue: wrong value is not a valid numeric string.');
-
-        expect(() => {
-            mosaicRestrictionTransactionService.createMosaicGlobalRestrictionTransaction(
-                                                Deadline.create(),
-                                                NetworkType.MIJIN_TEST,
-                                                mosaicId,
-                                                'wrong key',
-                                                '2000',
-                                                MosaicRestrictionType.LE);
-        }).to.throw(Error, 'RestrictionKey: wrong key is not a valid numeric string.');
 
         expect(() => {
             mosaicRestrictionTransactionService.createMosaicAddressRestrictionTransaction(
@@ -170,7 +161,7 @@ describe('MosaicRestrictionTransactionService', () => {
             MosaicRestrictionEntryType.GLOBAL,
             mosaicId,
             new Map<string, MosaicGlobalRestrictionItem>()
-                .set(key,
+                .set(key.toHex(),
                     new MosaicGlobalRestrictionItem(
                         referenceMosaicId,
                         globalRestrictionValue,
@@ -187,7 +178,7 @@ describe('MosaicRestrictionTransactionService', () => {
             mosaicId,
             account.address,
             new Map<string, string>()
-                .set(key,
+                .set(key.toHex(),
                     addressRestrictionValue,
                 ),
         );

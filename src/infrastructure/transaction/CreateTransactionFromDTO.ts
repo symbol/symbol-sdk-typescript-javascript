@@ -347,7 +347,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             new MosaicId(transactionDTO.mosaicId),
             new MosaicId(transactionDTO.referenceMosaicId),
-            UInt64.fromNumericString(transactionDTO.restrictionKey),
+            UInt64.fromHex(transactionDTO.restrictionKey),
             UInt64.fromNumericString(transactionDTO.previousRestrictionValue),
             transactionDTO.previousRestrictionType,
             UInt64.fromNumericString(transactionDTO.newRestrictionValue),
@@ -365,7 +365,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             new MosaicId(transactionDTO.mosaicId),
-            UInt64.fromNumericString(transactionDTO.restrictionKey),
+            UInt64.fromHex(transactionDTO.restrictionKey),
             typeof targetAddress === 'object' && targetAddress.hasOwnProperty('address') ?
                 Address.createFromRawAddress(targetAddress.address) : Address.createFromEncoded(targetAddress),
                 UInt64.fromNumericString(transactionDTO.previousRestrictionValue),

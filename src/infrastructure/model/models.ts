@@ -52,7 +52,7 @@ export * from './cosignatureDTO';
 export * from './cosignatureDTOAllOf';
 export * from './embeddedAccountAddressRestrictionTransactionDTO';
 export * from './embeddedAccountLinkTransactionDTO';
-export * from './embeddedAccountMetadataTransactionTransactionDTO';
+export * from './embeddedAccountMetadataTransactionDTO';
 export * from './embeddedAccountMosaicRestrictionTransactionDTO';
 export * from './embeddedAccountOperationRestrictionTransactionDTO';
 export * from './embeddedAddressAliasTransactionDTO';
@@ -61,10 +61,10 @@ export * from './embeddedMosaicAddressRestrictionTransactionDTO';
 export * from './embeddedMosaicAliasTransactionDTO';
 export * from './embeddedMosaicDefinitionTransactionDTO';
 export * from './embeddedMosaicGlobalRestrictionTransactionDTO';
-export * from './embeddedMosaicMetadataTransactionTransactionDTO';
+export * from './embeddedMosaicMetadataTransactionDTO';
 export * from './embeddedMosaicSupplyChangeTransactionDTO';
 export * from './embeddedMultisigAccountModificationTransactionDTO';
-export * from './embeddedNamespaceMetadataTransactionTransactionDTO';
+export * from './embeddedNamespaceMetadataTransactionDTO';
 export * from './embeddedNamespaceRegistrationTransactionDTO';
 export * from './embeddedSecretLockTransactionDTO';
 export * from './embeddedSecretProofTransactionDTO';
@@ -221,7 +221,7 @@ import { CosignatureDTO } from './cosignatureDTO';
 import { CosignatureDTOAllOf } from './cosignatureDTOAllOf';
 import { EmbeddedAccountAddressRestrictionTransactionDTO } from './embeddedAccountAddressRestrictionTransactionDTO';
 import { EmbeddedAccountLinkTransactionDTO } from './embeddedAccountLinkTransactionDTO';
-import { EmbeddedAccountMetadataTransactionTransactionDTO } from './embeddedAccountMetadataTransactionTransactionDTO';
+import { EmbeddedAccountMetadataTransactionDTO } from './embeddedAccountMetadataTransactionDTO';
 import { EmbeddedAccountMosaicRestrictionTransactionDTO } from './embeddedAccountMosaicRestrictionTransactionDTO';
 import { EmbeddedAccountOperationRestrictionTransactionDTO } from './embeddedAccountOperationRestrictionTransactionDTO';
 import { EmbeddedAddressAliasTransactionDTO } from './embeddedAddressAliasTransactionDTO';
@@ -230,10 +230,10 @@ import { EmbeddedMosaicAddressRestrictionTransactionDTO } from './embeddedMosaic
 import { EmbeddedMosaicAliasTransactionDTO } from './embeddedMosaicAliasTransactionDTO';
 import { EmbeddedMosaicDefinitionTransactionDTO } from './embeddedMosaicDefinitionTransactionDTO';
 import { EmbeddedMosaicGlobalRestrictionTransactionDTO } from './embeddedMosaicGlobalRestrictionTransactionDTO';
-import { EmbeddedMosaicMetadataTransactionTransactionDTO } from './embeddedMosaicMetadataTransactionTransactionDTO';
+import { EmbeddedMosaicMetadataTransactionDTO } from './embeddedMosaicMetadataTransactionDTO';
 import { EmbeddedMosaicSupplyChangeTransactionDTO } from './embeddedMosaicSupplyChangeTransactionDTO';
 import { EmbeddedMultisigAccountModificationTransactionDTO } from './embeddedMultisigAccountModificationTransactionDTO';
-import { EmbeddedNamespaceMetadataTransactionTransactionDTO } from './embeddedNamespaceMetadataTransactionTransactionDTO';
+import { EmbeddedNamespaceMetadataTransactionDTO } from './embeddedNamespaceMetadataTransactionDTO';
 import { EmbeddedNamespaceRegistrationTransactionDTO } from './embeddedNamespaceRegistrationTransactionDTO';
 import { EmbeddedSecretLockTransactionDTO } from './embeddedSecretLockTransactionDTO';
 import { EmbeddedSecretProofTransactionDTO } from './embeddedSecretProofTransactionDTO';
@@ -414,7 +414,7 @@ let typeMap: {[index: string]: any} = {
     "CosignatureDTOAllOf": CosignatureDTOAllOf,
     "EmbeddedAccountAddressRestrictionTransactionDTO": EmbeddedAccountAddressRestrictionTransactionDTO,
     "EmbeddedAccountLinkTransactionDTO": EmbeddedAccountLinkTransactionDTO,
-    "EmbeddedAccountMetadataTransactionTransactionDTO": EmbeddedAccountMetadataTransactionTransactionDTO,
+    "EmbeddedAccountMetadataTransactionDTO": EmbeddedAccountMetadataTransactionDTO,
     "EmbeddedAccountMosaicRestrictionTransactionDTO": EmbeddedAccountMosaicRestrictionTransactionDTO,
     "EmbeddedAccountOperationRestrictionTransactionDTO": EmbeddedAccountOperationRestrictionTransactionDTO,
     "EmbeddedAddressAliasTransactionDTO": EmbeddedAddressAliasTransactionDTO,
@@ -423,10 +423,10 @@ let typeMap: {[index: string]: any} = {
     "EmbeddedMosaicAliasTransactionDTO": EmbeddedMosaicAliasTransactionDTO,
     "EmbeddedMosaicDefinitionTransactionDTO": EmbeddedMosaicDefinitionTransactionDTO,
     "EmbeddedMosaicGlobalRestrictionTransactionDTO": EmbeddedMosaicGlobalRestrictionTransactionDTO,
-    "EmbeddedMosaicMetadataTransactionTransactionDTO": EmbeddedMosaicMetadataTransactionTransactionDTO,
+    "EmbeddedMosaicMetadataTransactionDTO": EmbeddedMosaicMetadataTransactionDTO,
     "EmbeddedMosaicSupplyChangeTransactionDTO": EmbeddedMosaicSupplyChangeTransactionDTO,
     "EmbeddedMultisigAccountModificationTransactionDTO": EmbeddedMultisigAccountModificationTransactionDTO,
-    "EmbeddedNamespaceMetadataTransactionTransactionDTO": EmbeddedNamespaceMetadataTransactionTransactionDTO,
+    "EmbeddedNamespaceMetadataTransactionDTO": EmbeddedNamespaceMetadataTransactionDTO,
     "EmbeddedNamespaceRegistrationTransactionDTO": EmbeddedNamespaceRegistrationTransactionDTO,
     "EmbeddedSecretLockTransactionDTO": EmbeddedSecretLockTransactionDTO,
     "EmbeddedSecretProofTransactionDTO": EmbeddedSecretProofTransactionDTO,

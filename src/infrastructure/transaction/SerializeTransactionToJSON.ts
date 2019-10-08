@@ -170,7 +170,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             return {
                 mosaicId: (transaction as MosaicGlobalRestrictionTransaction).mosaicId.toHex(),
                 referenceMosaicId: (transaction as MosaicGlobalRestrictionTransaction).referenceMosaicId.toHex(),
-                restrictionKey: (transaction as MosaicGlobalRestrictionTransaction).restrictionKey.toString(),
+                restrictionKey: (transaction as MosaicGlobalRestrictionTransaction).restrictionKey.toHex(),
                 previousRestrictionValue: (transaction as MosaicGlobalRestrictionTransaction).previousRestrictionValue.toString(),
                 previousRestrictionType: (transaction as MosaicGlobalRestrictionTransaction).previousRestrictionType,
                 newRestrictionValue: (transaction as MosaicGlobalRestrictionTransaction).newRestrictionValue.toString(),
@@ -179,7 +179,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.MOSAIC_ADDRESS_RESTRICTION:
             return {
                 mosaicId: (transaction as MosaicAddressRestrictionTransaction).mosaicId.toHex(),
-                restrictionKey: (transaction as MosaicAddressRestrictionTransaction).restrictionKey.toString(),
+                restrictionKey: (transaction as MosaicAddressRestrictionTransaction).restrictionKey.toHex(),
                 targetAddress: (transaction as MosaicAddressRestrictionTransaction).targetAddress.toDTO(),
                 previousRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).previousRestrictionValue.toString(),
                 newRestrictionValue: (transaction as MosaicAddressRestrictionTransaction).newRestrictionValue.toString(),

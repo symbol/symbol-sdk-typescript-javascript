@@ -108,7 +108,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                     });
                     return new MosaicAddressRestriction(
                         payload.compositeHash,
-                        payload.entryType,
+                        payload.entryType.valueOf(),
                         new MosaicId(payload.mosaicId),
                         Address.createFromEncoded(payload.targetAddress),
                         restirctionItems,
@@ -140,7 +140,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                         });
                         return new MosaicAddressRestriction(
                             payload.mosaicRestrictionEntry.compositeHash,
-                            payload.mosaicRestrictionEntry.entryType,
+                            payload.mosaicRestrictionEntry.entryType.valueOf(),
                             new MosaicId(payload.mosaicRestrictionEntry.mosaicId),
                             Address.createFromEncoded(payload.mosaicRestrictionEntry.targetAddress),
                             restirctionItems,
@@ -168,7 +168,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                                         new MosaicGlobalRestrictionItem(
                                             new MosaicId(restriction.restriction.referenceMosaicId),
                                             restriction.restriction.restrictionValue,
-                                            restriction.restriction.restrictionType,
+                                            restriction.restriction.restrictionType.valueOf(),
                     )));
                     return new MosaicGlobalRestriction(
                         payload.compositeHash,
@@ -202,7 +202,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                                             new MosaicGlobalRestrictionItem(
                                                 new MosaicId(restriction.restriction.referenceMosaicId),
                                                 restriction.restriction.restrictionValue,
-                                                restriction.restriction.restrictionType,
+                                                restriction.restriction.restrictionType.valueOf(),
                         )));
                         return new MosaicGlobalRestriction(
                             payload.mosaicRestrictionEntry.compositeHash,

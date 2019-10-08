@@ -25,8 +25,24 @@
  * Do not edit the class manually.
  */
 
+import { AccountMetadataTransactionBodyDTO } from './accountMetadataTransactionBodyDTO';
+import { EmbeddedTransactionDTO } from './embeddedTransactionDTO';
 
-export class AccountMetadataTransactionBodyDTO {
+export class EmbeddedAccountMetadataTransactionDTO {
+    'signerPublicKey': string;
+    /**
+    * Entity version. The higher byte represents the network identifier: * 0x68 (MAIN_NET) - Public main network. * 0x98 (TEST_NET) - Public test network. * 0x60 (MIJIN) - Private network. * 0x90 (MIJIN_TEST) - Private test network. 
+    */
+    'version': number;
+    'type': number;
+    /**
+    * Absolute amount. An amount of 123456789 (absolute) for a mosaic with divisibility 6 means 123.456789 (relative).
+    */
+    'maxFee': string;
+    /**
+    * Duration expressed in number of blocks.
+    */
+    'deadline': string;
     'targetPublicKey': string;
     /**
     * Metadata key scoped to source, target and type.
@@ -48,6 +64,31 @@ export class AccountMetadataTransactionBodyDTO {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "signerPublicKey",
+            "baseName": "signerPublicKey",
+            "type": "string"
+        },
+        {
+            "name": "version",
+            "baseName": "version",
+            "type": "number"
+        },
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "number"
+        },
+        {
+            "name": "maxFee",
+            "baseName": "maxFee",
+            "type": "string"
+        },
+        {
+            "name": "deadline",
+            "baseName": "deadline",
+            "type": "string"
+        },
         {
             "name": "targetPublicKey",
             "baseName": "targetPublicKey",
@@ -75,7 +116,7 @@ export class AccountMetadataTransactionBodyDTO {
         }    ];
 
     static getAttributeTypeMap() {
-        return AccountMetadataTransactionBodyDTO.attributeTypeMap;
+        return EmbeddedAccountMetadataTransactionDTO.attributeTypeMap;
     }
 }
 
