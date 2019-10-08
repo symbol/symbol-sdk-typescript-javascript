@@ -34,27 +34,21 @@ export class WalletSwitchTs extends Vue {
     scroll: any
 
     get walletList() {
-        let {walletList} = this.app
-        walletList.sort((a, b) => {
-            return a.createTimestamp - b.createTimestamp
-        })
-
-        return walletList.map(item => {
-            switch (item.sourceType) {
-                case CreateWalletType.keyStore:
-                case CreateWalletType.privateKey:
-                    item.stylesheet = walletStyleSheetType.otherWallet
-                    break
-                case CreateWalletType.seed:
-                    item.stylesheet = walletStyleSheetType.seedWallet
-                    break
-            }
-            return item
-        })
+        return this.app.walletList
     }
 
     get wallet() {
         return this.activeAccount.wallet
+    }
+
+    getWalletStyle(item: AppWallet): string {
+        if (item.address === this.activeAddress) return walletStyleSheetType.activeWallet
+        if (item.sourceType === CreateWalletType.seed) return walletStyleSheetType.seedWallet
+        return walletStyleSheetType.otherWallet
+    }
+
+    get activeAddress() {
+        return this.wallet.address
     }
 
     get accountName() {
@@ -88,7 +82,10 @@ export class WalletSwitchTs extends Vue {
     }
 
     switchWallet(newActiveWalletAddress) {
-        AppWallet.switchWallet(newActiveWalletAddress, this.walletList, this.$store)
+        this.$store.commit(
+            'SET_WALLET',
+            this.walletList.find(({address}) => address === newActiveWalletAddress)
+        )
     }
 
     formatNumber(number) {
@@ -153,6 +150,7 @@ export class WalletSwitchTs extends Vue {
 
     mounted() {
         // scroll to current wallet
-        this.$refs.walletScroll["scrollTop"] = this.walletList.findIndex(item => item.active) * 40
+        this.$refs.walletScroll["scrollTop"] = this.walletList
+                .findIndex(({address}) => address === this.activeAddress) * 40
     }
 }

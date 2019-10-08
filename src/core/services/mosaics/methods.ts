@@ -53,10 +53,11 @@ export const initMosaic = (wallet: AppWallet, store: Store<AppState>) => {
             const mosaicAmountViews = await mosaicsAmountViewFromAddress(node, address)
             const appMosaics = mosaicAmountViews.map(x => AppMosaic.fromMosaicAmountView(x))
             store.commit('UPDATE_MOSAICS', appMosaics)
-            // @TODO: update account balance should not be necessary anymore.
-            const balance: number = mosaics[networkCurrency.hex] ? mosaics[networkCurrency.hex].balance: 0
+            const networkMosaic: AppMosaic = appMosaics.find(({ hex }) => hex === networkCurrency.hex)
+            const balance = networkMosaic !== undefined && networkMosaic.balance
+                ? networkMosaic.balance : 0
+            
             new AppWallet(wallet).updateAccountBalance(balance, store)
-            store.commit('SET_BALANCE_LOADING', false)
             store.commit('SET_MOSAICS_LOADING', false)
             resolve(true)
         } catch (error) {

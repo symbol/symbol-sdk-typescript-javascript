@@ -88,7 +88,6 @@
             // reset tx list
             try {
                 this.$store.commit('SET_TRANSACTIONS_LOADING', true)
-                this.$store.commit('SET_BALANCE_LOADING', true)
                 this.$store.commit('SET_MOSAICS_LOADING', true)
                 this.$store.commit('SET_NAMESPACE_LOADING', true)
                 this.$store.commit('SET_MULTISIG_LOADING', true)
@@ -128,7 +127,6 @@
             } catch (error) {
                 console.error("App -> onWalletChange -> error", error)
                 this.$store.commit('SET_TRANSACTIONS_LOADING', false)
-                this.$store.commit('SET_BALANCE_LOADING', false)
                 this.$store.commit('SET_MOSAICS_LOADING', false)
                 this.$store.commit('SET_NAMESPACE_LOADING', false)
                 this.$store.commit('SET_MULTISIG_LOADING', false)
@@ -190,6 +188,8 @@
         }
 
         async mounted() {
+            if (!this.activeAccount.wallet) this.$router.push('/login')
+            
             const {accountName, node} = this
 
             try {
@@ -205,7 +205,6 @@
 
                 await Promise.all([
                     this.$store.commit('SET_TRANSACTIONS_LOADING', true),
-                    this.$store.commit('SET_BALANCE_LOADING', true),
                     this.$store.commit('SET_MOSAICS_LOADING', true),
                     this.$store.commit('SET_NAMESPACE_LOADING', true),
                 ])

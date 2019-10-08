@@ -30,12 +30,10 @@ export class AppWallet {
     publicKey: string | undefined
     networkType: NetworkType | undefined
     active: boolean | undefined
-    style: string | undefined
     balance: number | 0
     encryptedMnemonic: string | undefined
     path: string
     sourceType: string
-    createTimestamp: number
     importance: number
     linkedAccountKey: string
 
@@ -56,7 +54,6 @@ export class AppWallet {
             this.networkType = networkType
             this.active = true
             this.sourceType = CreateWalletType.privateKey
-            this.createTimestamp = new Date().valueOf()
             this.addNewWalletToList(store)
             return this
         } catch (error) {
@@ -81,7 +78,6 @@ export class AppWallet {
             this.publicKey = account.publicKey
             this.networkType = networkType
             this.active = true
-            this.createTimestamp = new Date().valueOf()
             this.path = path
             this.sourceType = CreateWalletType.seed
             this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
@@ -110,7 +106,6 @@ export class AppWallet {
             this.publicKey = account.publicKey
             this.networkType = networkType
             this.active = true
-            this.createTimestamp = new Date().valueOf()
             this.path = path
             this.sourceType = CreateWalletType.seed
             this.encryptedMnemonic = AppLock.encryptString(mnemonic, password.value)
@@ -211,13 +206,13 @@ export class AppWallet {
             store)
     }
 
+    // @WALLET: Hard to understand what this function is doing, rename / review
     addNewWalletToList(store: Store<AppState>): void {
         const accountName = store.state.account.accountName
         const accountMap = localRead('accountMap') === ''
             ? {} : JSON.parse(localRead('accountMap'))
-        const localData = accountMap[accountName].wallets
 
-        this.style = this.style || `walletItem_bg_${String(Number(localData.length) % 3)}`
+        const localData = accountMap[accountName].wallets
 
         if (!localData.length) {
             AppWallet.switchWallet(this.address, [this], store)
@@ -277,7 +272,7 @@ export class AppWallet {
             .map(wallet => wallet.active = false)
 
         newWalletList.splice(newWalletIndex, 1)
-        const walletListToStore = [newWallet, ...newWalletList]
+        const walletListToStore = [...newWalletList, newWallet]
 
         store.commit('SET_WALLET_LIST', walletListToStore)
         store.commit('SET_WALLET', newWallet)
@@ -305,10 +300,8 @@ export class AppWallet {
         try {
             this.balance = balance
             this.updateWallet(store)
-            store.commit('SET_BALANCE_LOADING', false)
         } catch (error) {
-            store.commit('SET_BALANCE_LOADING', false)
-            // do nothing
+            console.error("AppWallet -> error", error)
         }
     }
 
@@ -334,21 +327,18 @@ export class AppWallet {
 
     updateWallet(store: Store<AppState>) {
         const accountName = store.state.account.accountName
-        const accountMap = localRead('accountMap') === ''
-            ? {} : JSON.parse(localRead('accountMap'))
+        const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
         const localData: any[] = accountMap[accountName].wallets
         if (!localData.length) throw new Error('error at update wallet, no wallets in storage')
 
-        let newWalletList = [...localData]
-        const newWalletIndex = localData.findIndex(({address}) => address === this.address)
-
+        const newWalletList = [...localData]
+        const newWalletIndex = newWalletList.findIndex(({address}) => address === this.address)
         if (newWalletIndex === -1) throw new Error('wallet not found when updating')
 
-        newWalletList[newWalletIndex] = this
-
-        store.commit('SET_WALLET_LIST', newWalletList)
+        const updatedList = Object.assign([], newWalletList, {[newWalletIndex]: this})
+        store.commit('SET_WALLET_LIST', updatedList)
         if (store.state.account.wallet.address === this.address) store.commit('SET_WALLET', this)
-        accountMap[accountName].wallets = newWalletList
+        accountMap[accountName].wallets = updatedList
         localSave('accountMap', JSON.stringify(accountMap))
     }
 

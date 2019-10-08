@@ -2,7 +2,6 @@
   <div class="monitor_panel_container">
     <div class="monitor_panel_left_container" ref="monitorPanelLeftContainer">
       <div class="top_wallet_address radius">
-        <Spin v-if="balanceLoading" size="large" fix class="absolute"></Spin>
         <div class="wallet_address">
           <span class="address">
             {{address}}
@@ -14,10 +13,10 @@
         <div class="split"></div>
         <div class="XEM_amount overflow_ellipsis">
           <span>{{ticker}}</span>
-          <span class="amount">{{mosaicList[0]?formatNumber(mosaicList[0].balance):0}}</span>
+          <span class="amount">{{formatNumber(balance)}}</span>
         </div>
         <div class="exchange">
-          ${{mosaicList[0]?formatNumber(mosaicList[0].balance*xemUsdPrice):0}}
+          ${{formatNumber(balance*xemUsdPrice)}}
         </div>
       </div>
       <div class="bottom_account_info radius" ref="bottomAccountInfo">

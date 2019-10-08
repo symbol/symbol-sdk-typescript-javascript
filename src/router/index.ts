@@ -13,11 +13,17 @@ router.beforeEach((to, from, next) => {
         && getObjectLength(JSON.parse(localRead('accountMap'))) > 0
     
     const toPath = to.path
-    if (!hasWallet && toPath !== '/getStarted') next({ path: '/getStarted' })
-
-    if (!to.name) {
-        if (hasWallet) next({ path: '/inputLock' })
+    
+    if (!hasWallet && toPath !== '/getStarted') {
         next({ path: '/getStarted' })
+
+    }  
+    if (!to.name) {
+        if (hasWallet) {
+            next({ path: '/inputLock' })
+        } else {
+            next({ path: '/getStarted' })
+        }
     } else {
         next()
     }

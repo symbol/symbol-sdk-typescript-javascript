@@ -22,13 +22,18 @@ export class MonitorPanelTs extends Vue {
     mosaicName = ''
     showExpiredMosaics = false
     isShowAccountInfo = true
-    // isShowAccountAlias = false @TODO: Account Alias (update when method available)
     isShowManageMosaicIcon = false
     isChecked = true
     monitorSelected = monitorSelected
     monitorUnselected = monitorUnselected
     navigatorList: any = monitorPanelNavigatorConfig
     formatXemAmount = formatXemAmount
+
+    get balance(): number {
+        const {wallet} = this.activeAccount
+        if (!wallet) return 0
+        return wallet.balance || 0
+    }
 
     get xemUsdPrice() {
         return this.app.xemUsdPrice
@@ -38,10 +43,6 @@ export class MonitorPanelTs extends Vue {
         return this.activeAccount.networkCurrency.ticker
     }
     
-    get balanceLoading() {
-        return this.app.balanceLoading
-    }
-
     get mosaicsLoading() {
         return this.app.mosaicsLoading
     }

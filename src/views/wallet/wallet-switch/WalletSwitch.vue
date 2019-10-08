@@ -3,45 +3,49 @@
     <div class="walletSwitchHead ">
       <p class="tit">{{$t('Wallet_management')}}</p>
     </div>
+      
     <div class="walletList scroll" ref="walletScroll">
-      <div :class="['walletItem', item.active || walletList.length === 1 ?walletStyleSheetType.activeWallet:item.stylesheet,'radius']"
-           @click="switchWallet(item.address)"
-           v-for="(item, index) in walletList" :key="index">
-        <Row>
-          <Col span="15">
-            <div>
-              <p class="walletName">{{item.name}}</p>
-              <p class="walletAmount overflow_ellipsis">
-                {{formatNumber(item.balance)}}
-                &nbsp;<span class="tails">{{ networkCurrency.ticker }}</span>
-              </p>
-            </div>
-          </Col>
-          <Col span="9">
-            <div @click.stop>
-              <p class="walletTypeTxt">{{isMultisig(item.address) ? $t('Public_account') : ''}}</p>
-              <div class="options">
-                <Poptip placement="bottom">
-                  <img src="@/common/img/wallet/moreActive.png">
-                  <div slot="content">
-                    <p
-                            class="optionItem"
-                            @click.stop="walletToDelete = item; showDeleteDialog = true">
-                      <i><img src="@/common/img/wallet/delete.png"></i>
-                      <span>{{$t('delete')}}</span>
-                    </p>
-                    <p
-                            class="optionItem"
-                            @click.stop="walletToUpdate = item; showUpdateDialog = true">
-                      <i><img src="@/common/img/setting/settingEditNodeHover.png"></i>
-                      <span class="green">{{$t('update_wallet_name')}}</span>
-                    </p>
-                  </div>
-                </Poptip>
+      <div v-for="(item, index) in walletList" :key="index">
+        <div
+          :class="['walletItem', getWalletStyle(item), 'radius']"
+          @click="switchWallet(item.address)"
+        >
+          <Row>
+            <Col span="15">
+              <div>
+                <p class="walletName">{{item.name}}</p>
+                <p class="walletAmount overflow_ellipsis">
+                  {{formatNumber(item.balance)}}
+                  &nbsp;<span class="tails">{{ networkCurrency.ticker }}</span>
+                </p>
               </div>
-            </div>
-          </Col>
-        </Row>
+            </Col>
+            <Col span="9">
+              <div @click.stop>
+                <p class="walletTypeTxt">{{isMultisig(item.address) ? $t('Public_account') : ''}}</p>
+                <div class="options">
+                  <Poptip placement="bottom">
+                    <img src="@/common/img/wallet/moreActive.png">
+                    <div slot="content">
+                      <p
+                              class="optionItem"
+                              @click.stop="walletToDelete = item; showDeleteDialog = true">
+                        <i><img src="@/common/img/wallet/delete.png"></i>
+                        <span>{{$t('delete')}}</span>
+                      </p>
+                      <p
+                              class="optionItem"
+                              @click.stop="walletToUpdate = item; showUpdateDialog = true">
+                        <i><img src="@/common/img/setting/settingEditNodeHover.png"></i>
+                        <span class="green">{{$t('update_wallet_name')}}</span>
+                      </p>
+                    </div>
+                  </Poptip>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
       </div>
     </div>
 

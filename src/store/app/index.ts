@@ -11,7 +11,6 @@ const state: AppInfo = {
     mnemonic: '',
     chainStatus: ChainStatus.getDefault(),
     mosaicsLoading: true,
-    balanceLoading: false,
     transactionsLoading: false,
     namespaceLoading: true,
     xemUsdPrice: 0,
@@ -44,9 +43,6 @@ const mutations: MutationTree<AppInfo> = {
     },
     SET_MOSAICS_LOADING(state: AppInfo, bool: boolean) {
         state.mosaicsLoading = bool
-    },
-    SET_BALANCE_LOADING(state: AppInfo, bool: boolean) {
-        state.balanceLoading = bool
     },
     SET_TRANSACTIONS_LOADING(state: AppInfo, bool: boolean) {
         state.transactionsLoading = bool
