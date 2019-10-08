@@ -15,8 +15,8 @@
     <div @click="getCosignTransactions" style="width: 60px;height: 30px ; background-color: #4DC2BF">search</div>
 
     <div>
-      <div v-for="(a,index) in aggregatedTransactionList">
-        <div v-for="(value,key,index) in a">{{key}}:{{value}} <br> <br></div>
+      <div v-for="(a,index) in aggregatedTransactionList" :key="index">
+        <div v-for="(value,key,index) in a" :key="`a${index}`">{{key}}:{{value}} <br> <br></div>
         <div @click="cosignTransaction(index)" style="width: 60px;height: 30px ; background-color: #4DC2BF">cosign</div>
         <br>
         <hr>
@@ -28,11 +28,8 @@
 </template>
 
 <script lang="ts">
-    import {MultisigCosignTs} from '@/views/service/multisig/multisig-functions/multisig-cosign/MultisigCosignTs.ts'
-
-    export default class MultisigCosign extends MultisigCosignTs {
-
-    }
+    import {MultisigCosignTs} from './MultisigCosignTs'
+    export default class MultisigCosign extends MultisigCosignTs {}
 </script>
 <style scoped lang="less">
   @import "MultisigCosign.less";

@@ -168,6 +168,7 @@
             }
         }
 
+        // @MULTISIG: refactor
         async getMultisigAccountMultisigAccountInfo(publicKey) {
             const {networkType} = this.wallet
             const accountAddress = Address.createFromPublicKey(publicKey, networkType).plain()

@@ -22,7 +22,7 @@
               </Tooltip>
             </span>
             <div class="sub_list radius" v-if="showSubPublicKeyList">
-              <div @click="currentPublicKey = i.value" class="sub_list_item pointer" v-for="i in existsCosignerList">{{i.value}}</div>
+              <div @click="currentPublicKey = i.value" class="sub_list_item pointer" v-for="(i, index) in existsCosignerList" :key="index">{{i.value}}</div>
             </div>
           </span>
             <span @click="addCosigner(CosignatoryModificationAction.Add)"
@@ -116,7 +116,7 @@
             <div class="please_add_address" v-if="formItems.cosignerList.length == 0">{{$t('please_add_publickey')}}
             </div>
 
-            <div class="list_item radius" v-for="(i,index) in formItem.cosignerList">
+            <div class="list_item radius" v-for="(i,index) in formItem.cosignerList" :key="index">
               <span class="address_alias">{{i.publickey}}</span>
               <span class="action">{{i.type == CosignatoryModificationAction.Add ? $t('add'):$t('cut_back')}}</span>
               <img class="delate pointer" @click="removeCosigner(index)"
@@ -146,12 +146,9 @@
 </template>
 
 <script lang="ts">
-    import {MultisigManagementTs} from '@/views/service/multisig/multisig-functions/multisig-management/MultisigManagementTs.ts'
-
-    export default class MultisigManagement extends MultisigManagementTs {
-
-    }
+    import {MultisigModificationTs} from './MultisigModificationTs'
+    export default class MultisigModification extends MultisigModificationTs {}
 </script>
 <style scoped lang="less">
-  @import "MultisigManagement.less";
+  @import "MultisigModification.less";
 </style>

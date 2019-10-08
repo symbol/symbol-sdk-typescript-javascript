@@ -26,7 +26,7 @@ import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from
         })
     }
 })
-export class MultisigManagementTs extends Vue {
+export class MultisigModificationTs extends Vue {
     activeAccount: StoreAccount
     isShowPanel = true
     transactionList = []

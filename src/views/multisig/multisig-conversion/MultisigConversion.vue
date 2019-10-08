@@ -68,7 +68,7 @@
               <div class="please_add_address" v-if="formItems.publicKeyList.length == 0">{{$t('please_add_publickey')}}
               </div>
 
-              <div class="list_item radius" v-for="(i,index) in formItems.publicKeyList">
+              <div class="list_item radius" v-for="(i,index) in formItems.publicKeyList" :key="index">
                 <span class="address_alias">{{i}}</span>
                 <span class="action">{{$t('add')}}</span>
                 <img class="delate pointer" @click="deleteAddress(index)"
@@ -95,17 +95,12 @@
               :otherDetails=otherDetails
       ></CheckPWDialog>
     </div>
-
   </div>
-
 </template>
 
 <script lang="ts">
-    import {MultisigConversionTs} from '@/views/service/multisig/multisig-functions/multisig-conversion/MultisigConversionTs.ts'
-
-    export default class MultisigConversion extends MultisigConversionTs {
-
-    }
+    import {MultisigConversionTs} from './MultisigConversionTs'
+    export default class MultisigConversion extends MultisigConversionTs {}
 </script>
 <style scoped lang="less">
   @import "MultisigConversion.less";

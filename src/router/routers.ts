@@ -126,7 +126,23 @@ const routers = [
                     icon: leftBarIcons.windowMultisig,
                     activeIcon: leftBarIcons.windowMultisigActive,
                 },
-                component: () => import('@/views/service/multisig/Multisig.vue')
+                redirect: '/multisigTransactions',
+                component: () => import('@/views/multisig/Multisig.vue'),
+                children: [
+                    {
+                        path: '/multisigTransactions',
+                        name: 'multisigTransactions',
+                        component: () => import('@/views/multisig/multisig-transactions/MultisigTransactions.vue')
+                    }, {
+                        path: '/multisigMap',
+                        name: 'multisigMap',
+                        component: () => import('@/views/multisig/multisig-map/TopographicMap.vue')
+                    }, {
+                        path: '/multisigCosign',
+                        name: 'multisigCosign',
+                        component: () => import('@/views/multisig/multisig-cosign/MultisigCosign.vue')
+                    },
+                ]
             },
             {
                 path: '/communityPanel',

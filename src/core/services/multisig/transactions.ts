@@ -30,7 +30,7 @@ export const createBondedMultisigTransaction = ( transactions: Array<Transaction
                                                  fee: number) => {
    const publicAccount = PublicAccount.createFromPublicKey(multisigPublicKey, networkType)
    
-   return AggregateTransaction.createComplete(
+   return AggregateTransaction.createBonded(
      Deadline.create(),
      transactions.map(tx => tx.toAggregate(publicAccount)),
      networkType,
@@ -56,7 +56,7 @@ export const announceBondedWithLock = ( aggregateTransaction: AggregateTransacti
             new Mosaic(new MosaicId(networkCurrency.hex), UInt64.fromUint(DEFAULT_LOCK_AMOUNT)),
             UInt64.fromUint(480),
             signedTransaction,
-            networkType,
+            networkType,  
             UInt64.fromUint(fee)
         )
 
