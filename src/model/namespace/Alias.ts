@@ -17,27 +17,42 @@ import {Address} from '../account/Address';
 import {MosaicId} from '../mosaic/MosaicId';
 
 /**
- * The alias structure defines an interface for Aliases
+ * Abtract class for Aliases
  *
  * @since 0.10.2
  */
-export interface Alias {
+export abstract class Alias {
     /**
-     * The alias type
-     *
-     * - 0 : No alias
-     * - 1 : Mosaic id alias
-     * - 2 : Address alias
+     * @internal
+     * @param type - Alias type
+     * @param address - Address for AddressAlias
+     * @param mosaicId - MosaicId for MosaicAlias
      */
-    readonly type: number;
+    constructor(
+        /**
+         * The alias type
+         *
+         * - 0 : No alias
+         * - 1 : Mosaic id alias
+         * - 2 : Address alias
+         */
+        public readonly type: number,
+
+        /**
+         * The alias address
+         */
+        public readonly address?: Address,
+
+        /**
+         * The alias mosaicId
+         */
+        public readonly mosaicId?: MosaicId) {
+    }
 
     /**
-     * The alias address
+     * @internal
+     * Compares alias for equality.
+     * @param alias - MosaicAlias
      */
-    readonly address?: Address;
-
-    /**
-     * The alias mosaicId
-     */
-    readonly mosaicId?: MosaicId;
+    protected abstract equals(alias: any): boolean;
 }

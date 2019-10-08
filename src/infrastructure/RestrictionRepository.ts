@@ -17,7 +17,8 @@
 import { Observable } from 'rxjs/internal/Observable';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
-import { AccountRestrictionsInfo } from '../model/restriction/AccountRestrictionsInfo';
+import { AccountRestriction } from '../model/restriction/AccountRestriction';
+import { AccountRestrictions } from '../model/restriction/AccountRestrictions';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
 
@@ -27,14 +28,14 @@ export interface RestrictionRepository {
      * @param address list of addresses
      * @returns Observable<AccountRestrictionsInfo>
      */
-    getAccountRestrictions(address: Address): Observable<AccountRestrictionsInfo>;
+    getAccountRestrictions(address: Address): Observable<AccountRestriction[]>;
 
     /**
      * Gets Account restrictions.
      * @param addresses list of addresses
      * @returns Observable<AccountRestrictionsInfo[]>
      */
-    getAccountRestrictionsFromAccounts(addresses: Address[]): Observable<AccountRestrictionsInfo[]>;
+    getAccountRestrictionsFromAccounts(addresses: Address[]): Observable<AccountRestrictions[]>;
 
     /**
      * Get mosaic address restriction.

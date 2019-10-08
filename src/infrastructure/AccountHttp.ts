@@ -145,7 +145,7 @@ export class AccountHttp extends Http implements AccountRepository {
 
                     });
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -166,7 +166,7 @@ export class AccountHttp extends Http implements AccountRepository {
                         );
                     });
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
     /**
@@ -190,7 +190,7 @@ export class AccountHttp extends Http implements AccountRepository {
                                 .map((multisigAccount) => PublicAccount.createFromPublicKey(multisigAccount, networkType)),
                         );
                     }),
-                    catchError((error) =>  throwError(error)),
+                    catchError((error) =>  throwError(this.errorHandling(error))),
         )));
     }
 
@@ -223,7 +223,7 @@ export class AccountHttp extends Http implements AccountRepository {
                         });
                         return new MultisigAccountGraphInfo(multisigAccounts);
                     }),
-                    catchError((error) =>  throwError(error)),
+                    catchError((error) =>  throwError(this.errorHandling(error))),
         )));
     }
 
@@ -245,7 +245,7 @@ export class AccountHttp extends Http implements AccountRepository {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -268,7 +268,7 @@ export class AccountHttp extends Http implements AccountRepository {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -291,7 +291,7 @@ export class AccountHttp extends Http implements AccountRepository {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -315,7 +315,7 @@ export class AccountHttp extends Http implements AccountRepository {
                     return CreateTransactionFromDTO(transactionDTO);
                 });
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -338,7 +338,7 @@ export class AccountHttp extends Http implements AccountRepository {
                     return CreateTransactionFromDTO(transactionDTO) as AggregateTransaction;
                 });
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 }

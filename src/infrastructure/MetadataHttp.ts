@@ -72,7 +72,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                     return this.buildMetadata(metadataEntry);
                 });
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -91,7 +91,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                     return this.buildMetadata(metadataEntry);
                 });
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -109,7 +109,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                 const metadataDTO = response.body;
                 return this.buildMetadata(metadataDTO);
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -131,7 +131,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                     return this.buildMetadata(metadataEntry);
                 });
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -150,7 +150,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                     return this.buildMetadata(metadataEntry);
                 });
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -168,7 +168,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                 const metadataDTO = response.body;
                 return this.buildMetadata(metadataDTO);
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -190,7 +190,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                     return this.buildMetadata(metadataEntry);
                 });
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -209,7 +209,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                     return this.buildMetadata(metadataEntry);
                 });
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -227,7 +227,7 @@ export class MetadataHttp extends Http implements MetadataRepository {
                 const metadataDTO = response.body;
                 return this.buildMetadata(metadataDTO);
             }),
-            catchError((error) =>  throwError(error)),
+            catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 

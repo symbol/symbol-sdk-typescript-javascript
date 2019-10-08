@@ -287,7 +287,7 @@ describe('Receipt', () => {
             statementDto.statement.height,
             new MosaicId(statementDto.statement.unresolved),
             statementDto.statement.resolutionEntries.map((resolved) => {
-                return new ResolutionEntry(new MosaicAlias(AliasType.Mosaic, new MosaicId(resolved.resolved)),
+                return new ResolutionEntry(new MosaicAlias(new MosaicId(resolved.resolved)),
                 new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
             }),
         );
@@ -301,7 +301,7 @@ describe('Receipt', () => {
             statementDto.statement.height,
             Address.createFromEncoded(statementDto.statement.unresolved),
             statementDto.statement.resolutionEntries.map((resolved) => {
-                return new ResolutionEntry(new AddressAlias(AliasType.Address, Address.createFromEncoded(resolved.resolved)),
+                return new ResolutionEntry(new AddressAlias(Address.createFromEncoded(resolved.resolved)),
                 new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
             }),
         );

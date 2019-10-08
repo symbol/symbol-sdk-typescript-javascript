@@ -20,6 +20,8 @@ import {catchError, map} from 'rxjs/operators';
 import { DtoMapping } from '../core/utils/DtoMapping';
 import { Address } from '../model/account/Address';
 import { MosaicId } from '../model/mosaic/MosaicId';
+import { AccountRestriction } from '../model/restriction/AccountRestriction';
+import { AccountRestrictions } from '../model/restriction/AccountRestrictions';
 import { AccountRestrictionsInfo } from '../model/restriction/AccountRestrictionsInfo';
 import { MosaicAddressRestriction } from '../model/restriction/MosaicAddressRestriction';
 import { MosaicGlobalRestriction } from '../model/restriction/MosaicGlobalRestriction';
@@ -55,13 +57,13 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
     /**
      * Get Account restrictions.
      * @param publicAccount public account
-     * @returns Observable<AccountRestrictionsInfo>
+     * @returns Observable<AccountRestrictions[]>
      */
-    public getAccountRestrictions(address: Address): Observable<AccountRestrictionsInfo> {
+    public getAccountRestrictions(address: Address): Observable<AccountRestriction[]> {
         return observableFrom(this.restrictionRoutesApi.getAccountRestrictions(address.plain()))
             .pipe(map((response: { response: ClientResponse; body: AccountRestrictionsInfoDTO; }) => {
                 const accountRestrictions = response.body;
-                return DtoMapping.extractAccountRestrictionFromDto(accountRestrictions);
+                return DtoMapping.extractAccountRestrictionFromDto(accountRestrictions).accountRestrictions.restrictions;
             }),
             catchError((error) =>  throwError(this.errorHandling(error))),
         );
@@ -72,7 +74,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
      * @param address list of addresses
      * @returns Observable<AccountRestrictionsInfo[]>
      */
-    public getAccountRestrictionsFromAccounts(addresses: Address[]): Observable<AccountRestrictionsInfo[]> {
+    public getAccountRestrictionsFromAccounts(addresses: Address[]): Observable<AccountRestrictions[]> {
         const accountIds = {
             addresses: addresses.map((address) => address.plain()),
         };
@@ -81,10 +83,10 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                 .pipe(map((response: { response: ClientResponse; body: AccountRestrictionsInfoDTO[]; }) => {
                     const accountRestrictions = response.body;
                     return accountRestrictions.map((restriction) => {
-                        return DtoMapping.extractAccountRestrictionFromDto(restriction);
+                        return DtoMapping.extractAccountRestrictionFromDto(restriction).accountRestrictions;
                     });
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -112,7 +114,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                         restirctionItems,
                     );
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -145,7 +147,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                         );
                     });
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -175,7 +177,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                         restirctionItems,
                     );
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 
@@ -210,7 +212,7 @@ export class RestrictionHttp extends Http implements RestrictionRepository {
                         );
                     });
                 }),
-                catchError((error) =>  throwError(error)),
+                catchError((error) =>  throwError(this.errorHandling(error))),
         );
     }
 }

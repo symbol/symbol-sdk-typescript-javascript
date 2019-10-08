@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 import {Alias} from './Alias';
+import { AliasType } from './AliasType';
 
 /**
  * The EmptyAlias structure describes empty aliases (type:0)
  *
  * @since 0.10.2
  */
-export class EmptyAlias implements Alias {
+export class EmptyAlias extends Alias {
     /**
      * The alias type
      */
@@ -33,7 +34,7 @@ export class EmptyAlias implements Alias {
      * @param content
      */
     constructor() {
-        this.type = 0;
+        super(AliasType.None);
     }
 
     /**
