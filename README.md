@@ -10,6 +10,10 @@ with the NEM2 (a.k.a Catapult)
 
 ## Important Notes
 
+### _Fuschicho_ Network Compatibility (catapult-server@0.8.0.3)
+
+Due to a network upgrade with [catapult-server@fuschicho](https://github.com/nemtech/catapult-server/releases/tag/v0.8.0.3) version, **it is recommended to use this package's 0.14.0 version and upwards to use this package with Fuschicho versioned networks**.
+
 ### _Elephant_ Network Compatibility (catapult-server@0.7.0.1)
 
 Due to a network upgrade with [catapult-server@elephant3](https://github.com/nemtech/catapult-server/releases/tag/v0.7.0.1) version, **it is recommended to use this package's 0.13.4 version and upwards to use this package with Elephant versioned networks**.
