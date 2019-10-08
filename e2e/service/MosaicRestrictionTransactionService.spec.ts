@@ -1,4 +1,5 @@
 import { assert, expect } from 'chai';
+import { KeyGenerator } from '../../src/core/format/KeyGenerator';
 import { Listener } from '../../src/infrastructure/Listener';
 import { RestrictionHttp } from '../../src/infrastructure/RestrictionHttp';
 import { TransactionHttp } from '../../src/infrastructure/TransactionHttp';
@@ -19,7 +20,7 @@ import { MosaicRestrictionTransactionService } from '../../src/service/MosaicRes
 
 describe('MosaicRestrictionTransactionService', () => {
     const deadline = Deadline.create();
-    const key = '9876543';
+    const key = KeyGenerator.generateUInt64Key('TestKey');
     let targetAccount: Account;
     let account: Account;
     let restrictionHttp: RestrictionHttp;
@@ -98,7 +99,7 @@ describe('MosaicRestrictionTransactionService', () => {
             const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
                 Deadline.create(),
                 mosaicId,
-                UInt64.fromNumericString(key),
+                key,
                 UInt64.fromUint(0),
                 MosaicRestrictionType.NONE,
                 UInt64.fromUint(0),
@@ -132,7 +133,7 @@ describe('MosaicRestrictionTransactionService', () => {
             const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
                 Deadline.create(),
                 mosaicId,
-                UInt64.fromNumericString(key),
+                key,
                 targetAccount.address,
                 UInt64.fromUint(2),
                 NetworkType.MIJIN_TEST,
@@ -177,7 +178,7 @@ describe('MosaicRestrictionTransactionService', () => {
                     expect(transaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.GE);
                     expect(transaction.newRestrictionValue.toString()).to.be.equal('1');
                     expect(transaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
-                    expect(transaction.restrictionKey.toString()).to.be.equal(key);
+                    expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
                     done();
             });
         });
@@ -196,7 +197,7 @@ describe('MosaicRestrictionTransactionService', () => {
                     expect(transaction.previousRestrictionValue.toString()).to.be.equal('2');
                     expect(transaction.newRestrictionValue.toString()).to.be.equal('3');
                     expect(transaction.targetAddress.plain()).to.be.equal(targetAccount.address.plain());
-                    expect(transaction.restrictionKey.toString()).to.be.equal(key);
+                    expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
                     done();
             });
         });

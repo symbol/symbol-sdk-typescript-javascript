@@ -58,12 +58,12 @@ export class MosaicRestrictionTransactionService {
     public createMosaicGlobalRestrictionTransaction(deadline: Deadline,
                                                     networkType: NetworkType,
                                                     mosaicId: MosaicId,
-                                                    restrictionKey: string,
+                                                    restrictionKey: UInt64,
                                                     restrictionValue: string,
                                                     restrictionType: MosaicRestrictionType,
                                                     referenceMosaicId: MosaicId = new MosaicId(UInt64.fromUint(0).toDTO()),
                                                     maxFee: UInt64 = new UInt64([0, 0])): Observable<Transaction> {
-        this.validateInput(restrictionKey, restrictionValue);
+        this.validateInput(restrictionValue);
         return this.getGlobalRestrictionEntry(mosaicId, restrictionKey).pipe(
             map((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
                 const currentValue = restrictionEntry ? UInt64.fromNumericString(restrictionEntry.restrictionValue) :
@@ -73,7 +73,7 @@ export class MosaicRestrictionTransactionService {
                 return MosaicGlobalRestrictionTransaction.create(
                     deadline,
                     mosaicId,
-                    UInt64.fromNumericString(restrictionKey),
+                    restrictionKey,
                     currentValue,
                     currentType,
                     UInt64.fromNumericString(restrictionValue),
@@ -101,11 +101,11 @@ export class MosaicRestrictionTransactionService {
     public createMosaicAddressRestrictionTransaction(deadline: Deadline,
                                                      networkType: NetworkType,
                                                      mosaicId: MosaicId,
-                                                     restrictionKey: string,
+                                                     restrictionKey: UInt64,
                                                      targetAddress: Address,
                                                      restrictionValue: string,
                                                      maxFee: UInt64 = new UInt64([0, 0])): Observable<Transaction> {
-        this.validateInput(restrictionKey, restrictionValue);
+        this.validateInput(restrictionValue);
         return this.getGlobalRestrictionEntry(mosaicId, restrictionKey).pipe(
             switchMap((restrictionEntry: MosaicGlobalRestrictionItem | undefined) => {
                 if (!restrictionEntry) {
@@ -113,13 +113,13 @@ export class MosaicRestrictionTransactionService {
                 }
                 return this.restrictionHttp.getMosaicAddressRestriction(mosaicId, targetAddress).pipe(
                     map((addressRestriction: MosaicAddressRestriction) => {
-                        const addressEntry = addressRestriction.restrictions.get(restrictionKey);
+                        const addressEntry = addressRestriction.restrictions.get(restrictionKey.toHex());
                         const currentValue = addressEntry ? UInt64.fromNumericString(addressEntry) :
                                                 this.defaultMosaicAddressRestrictionVaule;
                         return MosaicAddressRestrictionTransaction.create(
                             deadline,
                             mosaicId,
-                            UInt64.fromNumericString(restrictionKey),
+                            restrictionKey,
                             targetAddress,
                             UInt64.fromNumericString(restrictionValue),
                             networkType,
@@ -133,7 +133,7 @@ export class MosaicRestrictionTransactionService {
                             return of(MosaicAddressRestrictionTransaction.create(
                                 deadline,
                                 mosaicId,
-                                UInt64.fromNumericString(restrictionKey),
+                                restrictionKey,
                                 targetAddress,
                                 UInt64.fromNumericString(restrictionValue),
                                 networkType,
@@ -153,29 +153,25 @@ export class MosaicRestrictionTransactionService {
      * @param restrictionKey - Mosaic global restriction key
      * @return {Observable<MosaicGlobalRestrictionItem | undefined>}
      */
-    private getGlobalRestrictionEntry(mosaicId: MosaicId, restrictionKey: string): Observable<MosaicGlobalRestrictionItem | undefined> {
+    private getGlobalRestrictionEntry(mosaicId: MosaicId, restrictionKey: UInt64): Observable<MosaicGlobalRestrictionItem | undefined> {
         return this.restrictionHttp.getMosaicGlobalRestriction(mosaicId).pipe(
             map((mosaicRestriction: MosaicGlobalRestriction) => {
-                return mosaicRestriction.restrictions.get(restrictionKey);
+                return mosaicRestriction.restrictions.get(restrictionKey.toHex());
             }),
-            catchError((err) => {
-                if (err.response.statusCode && err.response.statusCode === 404) {
+            catchError((err: Error) => {
+                const error = JSON.parse(err.message);
+                if (error && error.statusCode && error.statusCode === 404) {
                     return of(undefined);
                 }
-                throw Error(err);
+                throw Error(err.message);
         }));
     }
 
     /**
      * Check if input restriction key and value are invalid or not
-     * @param key - Restriction key
      * @param value - Restriction value
      */
-    private validateInput(key: string, value: string) {
-        if (!UInt64.isLongNumericString(key)) {
-            throw Error(`RestrictionKey: ${key} is not a valid numeric string.`);
-        }
-
+    private validateInput(value: string) {
         if (!UInt64.isLongNumericString(value)) {
             throw Error(`RestrictionValue: ${value} is not a valid numeric string.`);
         }
