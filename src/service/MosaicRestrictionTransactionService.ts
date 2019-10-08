@@ -127,8 +127,9 @@ export class MosaicRestrictionTransactionService {
                             maxFee,
                         );
                     }),
-                    catchError((err) => {
-                        if (err.response && err.response.statusCode && err.response.statusCode === 404) {
+                    catchError((err: Error) => {
+                        const error = JSON.parse(err.message);
+                        if (error && error.statusCode && error.statusCode === 404) {
                             return of(MosaicAddressRestrictionTransaction.create(
                                 deadline,
                                 mosaicId,
@@ -140,7 +141,7 @@ export class MosaicRestrictionTransactionService {
                                 maxFee,
                             ));
                         }
-                        throw Error(err);
+                        throw Error(err.message);
                 }));
             }),
         );

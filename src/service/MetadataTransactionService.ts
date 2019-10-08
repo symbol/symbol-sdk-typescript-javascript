@@ -142,8 +142,9 @@ export class MetadataTransactionService {
                     maxFee,
                 );
             }),
-            catchError((err) => {
-                if (err.response.statusCode === 404) {
+            catchError((err: Error) => {
+                const error = JSON.parse(err.message);
+                if (error && error.statusCode && error.statusCode === 404) {
                     const newValueBytes = Convert.utf8ToUint8(value);
                     return of(AccountMetadataTransaction.create(
                         deadline,
@@ -155,7 +156,7 @@ export class MetadataTransactionService {
                         maxFee,
                     ));
                 }
-                throw Error(err);
+                throw Error(err.message);
               }));
     }
 
@@ -195,8 +196,9 @@ export class MetadataTransactionService {
                     maxFee,
                 );
             }),
-            catchError((err) => {
-                if (err.response.statusCode === 404) {
+            catchError((err: Error) => {
+                const error = JSON.parse(err.message);
+                if (error && error.statusCode && error.statusCode === 404) {
                     const newValueBytes = Convert.utf8ToUint8(value);
                     return of(MosaicMetadataTransaction.create(
                         deadline,
@@ -209,7 +211,7 @@ export class MetadataTransactionService {
                         maxFee,
                     ));
                 }
-                throw Error(err);
+                throw Error(err.message);
               }));
     }
 
@@ -249,8 +251,9 @@ export class MetadataTransactionService {
                     maxFee,
                 );
             }),
-            catchError((err) => {
-                if (err.response.statusCode === 404) {
+            catchError((err: Error) => {
+                const error = JSON.parse(err.message);
+                if (error && error.statusCode && error.statusCode === 404) {
                     const newValueBytes = Convert.utf8ToUint8(value);
                     return of(NamespaceMetadataTransaction.create(
                         deadline,
@@ -263,7 +266,7 @@ export class MetadataTransactionService {
                         maxFee,
                     ));
                 }
-                throw Error(err);
+                throw Error(err.message);
               }));
     }
 }
