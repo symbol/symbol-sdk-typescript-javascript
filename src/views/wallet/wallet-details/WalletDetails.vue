@@ -38,9 +38,22 @@
             </p>
             <p class="link_text">
               <span class="tit">{{$t('alias')}}</span>
-              <span class="  alias_add pointer" @click="isShowBindDialog=true"></span>
-
-              <span class="walletPublicKey text_select">{{getSelfAlias.join(',')||'-'}}</span>
+              <span class="  alias_add pointer" @click="bindNamespace()" />
+              <span class="walletPublicKey">
+                <span v-if='!selfAliases.length'>-</span>
+                <div v-if='selfAliases.length' >
+                  <span
+                    v-for="(alias, index) in selfAliases"
+                    :key="index"
+                  >
+                    <span class="aliasLink">
+                      <a
+                        @click="unbindNamespace(alias)"
+                      >{{alias.name}}</a>
+                      {{index < selfAliases.length - 1 ? ' | ' : ''}}</span>
+                  </span>
+                </div>
+              </span>
             </p>
           </div>
         </Col>
@@ -102,13 +115,14 @@
     <KeystoreDialog :showKeystoreDialog="showKeystoreDialog"
                     @closeKeystoreDialog="closeKeystoreDialog"/>
     <Alias
-      v-if="isShowBindDialog"
-      :visible='isShowBindDialog'
-      :bind="!getSelfAlias.length"
-      :fromNamespace="false"
+      v-if="showBindDialog"
+      :visible='showBindDialog'
+      :bind="bind"
+      :fromNamespace="fromNamespace"
       :mosaic="null"
+      :namespace="activeNamespace"
       :address="getAddress"
-      @close="isShowBindDialog = false"
+      @close="showBindDialog = false"
     />
   </div>
 </template>

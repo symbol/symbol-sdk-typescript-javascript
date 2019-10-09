@@ -1,6 +1,6 @@
 import {copyTxt} from '@/core/utils/utils.ts'
 import {ContactQR} from 'nem2-qr-library'
-import {Address, AddressAlias, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
+import {AddressAlias, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import WalletAlias from './wallet-function/wallet-alias/WalletAlias.vue'
 import WalletFilter from './wallet-function/wallet-filter/WalletFilter.vue'
@@ -10,7 +10,7 @@ import PrivatekeyDialog from '@/views/wallet/privatekey-dialog/PrivatekeyDialog.
 import WalletUpdatePassword from './wallet-function/wallet-update-password/WalletUpdatePassword.vue'
 import WalletHarvesting from '@/views/wallet/wallet-details/wallet-function/wallet-harvesting/WalletHarvesting.vue'
 import {mapState} from "vuex"
-import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
+import {AppWallet, AppInfo, StoreAccount, AppNamespace} from "@/core/model"
 import Alias from '@/views/forms/alias/Alias.vue'
 
 @Component({
@@ -39,7 +39,10 @@ export class WalletDetailsTs extends Vue {
     showKeystoreDialog: boolean = false
     showPrivatekeyDialog: boolean = false
     functionShowList = [true, false]
-    isShowBindDialog = false
+    showBindDialog = false
+    bind: boolean = true
+    fromNamespace: boolean = false
+    activeNamespace: AppNamespace = null
 
     get wallet(): AppWallet {
         return this.activeAccount.wallet
@@ -72,16 +75,13 @@ export class WalletDetailsTs extends Vue {
         return this.activeAccount.wallet.importance ? this.activeAccount.wallet.importance + '0' : 0
     }
 
-    // @TODO: this should return a string, not an array
-    get getSelfAlias(): string[] {
+    get selfAliases(): AppNamespace[] {
         return this.NamespaceList
             .filter(({alias}) =>
                 alias instanceof AddressAlias &&
                 alias.address.plain() === this.getAddress
             )
-            .map(item => item.label)
     }
-
 
     showFunctionIndex(index) {
         this.functionShowList = [false, false, false]
@@ -130,6 +130,20 @@ export class WalletDetailsTs extends Vue {
         ).toBase64()
     }
 
+    bindNamespace() {
+        this.bind = true
+        this.fromNamespace = false
+        this.activeNamespace = null
+        this.showBindDialog = true
+    }
+
+    unbindNamespace(namespace: AppNamespace) {
+        this.bind = false
+        this.fromNamespace = true
+        this.activeNamespace = namespace
+        this.showBindDialog = true
+    }
+    
     copy(txt) {
         copyTxt(txt).then(() => {
             this.$Notice.success({
