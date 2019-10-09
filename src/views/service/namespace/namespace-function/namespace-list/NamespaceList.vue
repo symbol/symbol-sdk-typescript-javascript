@@ -62,7 +62,7 @@
               type="md-arrow-dropdown"
             />
           </span>
-          <span 
+          <span
             @click="namespaceSortType = namespaceSortTypes.byBindType;
                 sortDirection = !sortDirection"
             class="type"
@@ -80,7 +80,7 @@
           <div class=" radius" :key="`ns${index}`"
                v-for="(n, index) in paginatedNamespaceList">
             <div v-if="n" class="table_body_item">
-              <span class="Namespace_name overflow_ellipsis">{{n.label}}</span>
+              <span class="Namespace_name text_select overflow_ellipsis">{{n.label}}</span>
               <span class="duration overflow_ellipsis">
               {{computeDuration(n) === StatusString.EXPIRED
                   ? $t('overdue') : durationToTime(n.endHeight)}}
@@ -90,7 +90,7 @@
               <Icon v-else type="md-close"/>
             </span> -->
               <span class="link overflow_ellipsis">{{$t(getAliasType(n))}}</span>
-              <span class="type overflow_ellipsis">{{getAliasTarget(n)}}</span>
+              <span class="type text_select overflow_ellipsis">{{getAliasTarget(n)}}</span>
               <span class="more overflow_ellipsis">
             <Poptip class="poptip_container" placement="top-end">
               <i class="moreFn"></i>

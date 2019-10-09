@@ -66,7 +66,7 @@
             {{$t('Do_not_transmit_through_network_tools_once_acquired_by_hackers_will_cause_irreparable_asset_losses_It_is_recommended_that_the_offline_device_be_transmitted_by_scanning_the_QR_code')}}</p>
           <p class="tit">{{$t('password_management_tool_save')}}</p>
           <p class="txt">{{$t('it_is_recommended_to_use_password_management_tool_management')}}</p>
-          <div class="privateKeyCode">{{wallet.privatekey }}</div>
+          <div class="privateKeyCode text_select">{{wallet.privatekey }}</div>
           <div class="buttons_container">
             <Button type="success" class="buttons button_arrow" @click="copyPrivatekey">{{$t('copy_private_key')}}</Button>
             <Button type="success" class="buttons button_arrow" @click="exportPrivatekey">{{$t('display_private_key_QR_code')}}</Button>

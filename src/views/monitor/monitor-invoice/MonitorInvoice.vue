@@ -4,8 +4,8 @@
     <div class="left_container radius">
       <img id="qrImg" :src="QRCode" alt="">
       <div class="qr_info">
-        <div class="amount">{{formItems.mosaicHex}} : {{formItems.mosaicAmount}}</div>
-        <div class="address_text" id="address_text">
+        <div class="amount text_select">{{formItems.mosaicHex}} : {{formItems.mosaicAmount}}</div>
+        <div class="address_text text_select" id="address_text">
           {{accountAddress}}
         </div>
         <div class="notes">

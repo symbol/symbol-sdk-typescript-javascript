@@ -64,7 +64,7 @@
         <div class="stepItem3" v-if="stepIndex == 2">
           <Row>
             <Col span="15">
-              <div class="keystoreCode">
+              <div class="text_select keystoreCode">
                 {{keystoreText}}
               </div>
             </Col>

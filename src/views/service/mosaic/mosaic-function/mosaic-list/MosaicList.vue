@@ -71,7 +71,7 @@
                 :key="index"
                 :class="['listItem',value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey?'owned_mosaic':'']">
           <Row>
-            <span class="mosaic_id">{{value.hex}}</span>
+            <span class="mosaic_id text_select">{{value.hex}}</span>
             <span class="available_quantity">{{value.mosaicInfo?formatNumber(value.mosaicInfo.supply.compact()):0}}</span>
             <span class="mosaic_divisibility">{{value.properties?value.properties.divisibility:0}}</span>
             <span class="transportability">
@@ -91,7 +91,7 @@
               <Icon v-else type="md-close"/>
             </span>
 
-            <span class="alias">
+            <span class="alias text_select  ">
               {{value.name?value.name:'N/A'}}
             </span>
 

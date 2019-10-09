@@ -6,7 +6,7 @@
           <span class="key">{{$t('account')}}</span>
           <span
             v-if="!hasMultisigAccounts"
-            class="value"
+            class="value text_select"
           >{{ formatAddress(wallet.address) }}
           </span>
           <Select

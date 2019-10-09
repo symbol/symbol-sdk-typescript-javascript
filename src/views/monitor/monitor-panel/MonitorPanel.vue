@@ -3,7 +3,7 @@
     <div class="monitor_panel_left_container" ref="monitorPanelLeftContainer">
       <div class="top_wallet_address radius">
         <div class="wallet_address">
-          <span class="address">
+          <span class="address text_select">
             {{address}}
           </span>
           <img class="pointer" @click="copyAddress"
@@ -60,11 +60,11 @@
             <div class="mosaicList">
               <div class="toggle_all_checked ">
                   <span @click="toggleAllChecked()">
-                    <div :class="['choose',  isChecked ? 'true' : 'false']"></div>
-                    {{ !isChecked ? $t('select_all'):$t('all_unchecked')}}
+                    <Icon :type="!isChecked?'ios-square-outline':'ios-square'" />
+                    {{$t('select_all')}}
                   </span>
                 <span @click="toggleShowExpired()">
-                    <div :class="['choose',  showExpiredMosaics ? 'true' : 'false']"></div>
+                    <Icon :type="!showExpiredMosaics?'ios-square-outline':'ios-square'" />
                     {{$t('Display_expired_mosaic')}}
                   </span>
               </div>
