@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { RawAddress } from '../../core/format/RawAddress';
 import {Address} from '../account/Address';
 import {Alias} from './Alias';
 import { AliasType } from './AliasType';
@@ -45,5 +46,13 @@ export class AddressAlias extends Alias {
             return this.address.equals(alias.address);
         }
         return false;
+    }
+
+    /**
+     * Generate alias buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        return RawAddress.stringToAddress(this.address.plain());
     }
 }

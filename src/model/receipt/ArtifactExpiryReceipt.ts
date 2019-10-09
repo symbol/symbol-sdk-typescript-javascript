@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { Convert } from '../../core/format/Convert';
+import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { Receipt } from './Receipt';
@@ -37,5 +39,18 @@ export class ArtifactExpiryReceipt extends Receipt {
                 type: ReceiptType,
                 size?: number) {
         super(version, type, size);
+    }
+
+    /**
+     * @internal
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        const buffer = new Uint8Array(12);
+        buffer.set(GeneratorUtils.uintToBuffer(ReceiptVersion.ARTIFACT_EXPIRY, 2));
+        buffer.set(GeneratorUtils.uintToBuffer(this.type, 2), 2);
+        buffer.set(Convert.hexToUint8(this.artifactId.toHex()), 4);
+        return buffer;
     }
 }

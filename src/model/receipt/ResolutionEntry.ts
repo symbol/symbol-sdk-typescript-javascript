@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+  import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
   import { AddressAlias } from '../namespace/AddressAlias';
   import { MosaicAlias } from '../namespace/MosaicAlias';
   import { ReceiptSource } from './ReceiptSource';
@@ -37,5 +38,16 @@
                  * The receipt source.
                  */
                 public readonly source: ReceiptSource) {
+    }
+
+    /**
+     * @internal
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+      const resolvedBytes = this.resolved.serialize();
+      const sourceBytes = this.source.serialize();
+      return GeneratorUtils.concatTypedArrays(resolvedBytes, sourceBytes);
     }
 }

@@ -1,3 +1,6 @@
+import { Convert } from '../../core/format/Convert';
+import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+
 /*
  * Copyright 2019 NEM
  *
@@ -33,5 +36,15 @@ export class ReceiptSource {
                  * The transaction secondary source (e.g. index within aggregate).
                  */
                 public readonly secondaryId: number) {
+    }
+
+    /**
+     * @internal
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        return GeneratorUtils.concatTypedArrays(
+            GeneratorUtils.uintToBuffer(this.primaryId, 4), GeneratorUtils.uintToBuffer(this.secondaryId, 4));
     }
 }

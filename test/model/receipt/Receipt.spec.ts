@@ -15,7 +15,7 @@
  */
 
 import { deepEqual } from 'assert';
-import { CreateReceiptFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
+import { CreateReceiptFromDTO, CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import {Account} from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
@@ -36,6 +36,7 @@ import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
 import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
 import { UInt64 } from '../../../src/model/UInt64';
+import { expect } from 'chai';
 
 describe('Receipt', () => {
     let account: Account;
@@ -43,6 +44,7 @@ describe('Receipt', () => {
     let transactionStatementsDTO;
     let addressResolutionStatementsDTO;
     let mosaicResolutionStatementsDTO;
+    let statementDTO;
     const netWorkType = NetworkType.MIJIN_TEST;
 
     before(() => {
@@ -132,6 +134,12 @@ describe('Receipt', () => {
                 },
             },
         ];
+
+        statementDTO = {
+            transactionStatements: transactionStatementsDTO,
+            addressResolutionStatements: addressResolutionStatementsDTO,
+            mosaicResolutionStatements: mosaicResolutionStatementsDTO,
+        };
     });
 
     it('should createComplete a balance transfer receipt', () => {
@@ -330,5 +338,26 @@ describe('Receipt', () => {
         deepEqual(receipt.mosaicId.toHex().toUpperCase(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Inflation);
         deepEqual(receipt.version, ReceiptVersion.INFLATION_RECEIPT);
+    });
+
+    it('should generate hash for MosaicResolutionStatement', () => {
+        const statement = CreateStatementFromDTO(statementDTO, netWorkType);
+        const receipt = statement.mosaicResolutionStatements[0];
+        const hash = receipt.generateHash();
+        expect(hash).to.be.equal('807EAE28994997555DC1B20F122228CD2A5236075961AA696B065A247D37C1F8');
+    });
+
+    it('should generate hash for AddressResolutionStatement', () => {
+        const statement = CreateStatementFromDTO(statementDTO, netWorkType);
+        const receipt = statement.addressResolutionStatements[0];
+        const hash = receipt.generateHash();
+        expect(hash).to.be.equal('6967470641BC527768CDC29998F4A3350813FDF2E40D1C97AB0BBA36B9AF649E');
+    });
+
+    it('should generate hash for TransactionStatement', () => {
+        const statement = CreateStatementFromDTO(statementDTO, netWorkType);
+        const receipt = statement.transactionStatements[0];
+        const hash = receipt.generateHash();
+        expect(hash).to.be.equal('AEAEB9FC3CC603D0933819B382DF5CC5657E2BBEFC0CC35AB0D4CE396C501071');
     });
 });

@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+import { sha3_256 } from 'js-sha3';
+import { Convert } from '../../core/format/Convert';
+import { RawAddress } from '../../core/format/RawAddress';
+import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
 import { UInt64 } from '../UInt64';
+import { ReceiptType } from './ReceiptType';
+import { ReceiptVersion } from './ReceiptVersion';
 import { ResolutionEntry } from './ResolutionEntry';
 
 /**
@@ -45,5 +51,29 @@ export class ResolutionStatement {
                  * The array of resolution entries.
                  */
                 public readonly resolutionEntries: ResolutionEntry[]) {
+    }
+
+    /**
+     * Generate receipt hash
+     * @return {string} receipt hash in hex
+     */
+    public generateHash(): string {
+        const type = this.unresolved instanceof Address ? ReceiptType.Address_Alias_Resolution
+                                                        : ReceiptType.Mosaic_Alias_Resolution;
+        const unresolvedBytes = this.unresolved instanceof Address ? RawAddress.stringToAddress(this.unresolved.plain())
+                                                                   : Convert.hexToUint8(this.unresolved.toHex());
+        const hasher = sha3_256.create();
+        hasher.update(GeneratorUtils.uintToBuffer(ReceiptVersion.RESOLUTION_STATEMENT, 2));
+        hasher.update(GeneratorUtils.uintToBuffer(type, 2));
+        hasher.update(unresolvedBytes);
+
+        let entryBytes = Uint8Array.from([]);
+        this.resolutionEntries.forEach((entry) => {
+            const bytes = entry.serialize();
+            entryBytes = GeneratorUtils.concatTypedArrays(entryBytes, bytes);
+        });
+
+        hasher.update(entryBytes);
+        return hasher.hex().toUpperCase();
     }
 }

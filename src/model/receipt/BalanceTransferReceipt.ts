@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import { Convert } from '../../core/format/Convert';
+import { RawAddress } from '../../core/format/RawAddress';
+import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -59,5 +62,40 @@ export class BalanceTransferReceipt extends Receipt {
                 type: ReceiptType,
                 size?: number) {
         super(version, type, size);
+    }
+
+    /**
+     * @internal
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        const recipient = this.getRecipientBytes();
+        const buffer = new Uint8Array(52 + recipient.length);
+        buffer.set(GeneratorUtils.uintToBuffer(ReceiptVersion.BALANCE_TRANSFER, 2));
+        buffer.set(GeneratorUtils.uintToBuffer(this.type, 2), 2);
+        buffer.set(Convert.hexToUint8(this.sender.publicKey), 4);
+        buffer.set(recipient, 36);
+        buffer.set(Convert.hexToUint8(this.mosaicId.toHex()), 36 + recipient.length);
+        buffer.set(Convert.hexToUint8(this.amount.toHex()), 44 + recipient.length);
+        return buffer;
+    }
+
+    /**
+     * @internal
+     * Generate buffer for recipientAddress
+     * @return {Uint8Array}
+     */
+    private getRecipientBytes(): Uint8Array {
+        const recipientString =
+            this.recipientAddress instanceof NamespaceId ? (this.recipientAddress as NamespaceId).toHex()
+                                                         : (this.recipientAddress as Address).plain();
+        if (/^[0-9a-fA-F]{16}$/.test(recipientString)) {
+            // received hexadecimal notation of namespaceId (alias)
+            return RawAddress.aliasToRecipient(Convert.hexToUint8(recipientString));
+        } else {
+            // received recipient address
+            return RawAddress.stringToAddress(recipientString);
+        }
     }
 }
