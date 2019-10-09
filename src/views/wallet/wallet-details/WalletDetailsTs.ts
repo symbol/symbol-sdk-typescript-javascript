@@ -75,10 +75,9 @@ export class WalletDetailsTs extends Vue {
     // @TODO: this should return a string, not an array
     get getSelfAlias(): string[] {
         return this.NamespaceList
-            .filter(namespace =>
-                namespace.alias instanceof AddressAlias &&
-                // @ts-ignore // @TODO: E3 review
-                Address.createFromEncoded(namespace.alias.address).plain() === this.getAddress
+            .filter(({alias}) =>
+                alias instanceof AddressAlias &&
+                alias.address.plain() === this.getAddress
             )
             .map(item => item.label)
     }
@@ -89,7 +88,7 @@ export class WalletDetailsTs extends Vue {
         this.functionShowList[index] = true
     }
 
-    // @TODO
+    // @WALLETS refactor
     changeMnemonicDialog() {
         if (!this.wallet['encryptedMnemonic']) {
             this.$Notice.warning({
@@ -121,9 +120,11 @@ export class WalletDetailsTs extends Vue {
     }
 
     get QRCode(): string {
+        // @QR
+        const publicAccount: any =  PublicAccount.createFromPublicKey(this.wallet.publicKey, this.wallet.networkType)
         return new ContactQR(
             this.wallet.name,
-            PublicAccount.createFromPublicKey(this.wallet.publicKey, this.wallet.networkType),
+            publicAccount,
             this.wallet.networkType,
             this.activeAccount.generationHash,
         ).toBase64()
@@ -135,9 +136,5 @@ export class WalletDetailsTs extends Vue {
                 title: this['$t']('successful_copy') + ''
             })
         })
-    }
-
-    closeBindDialog() {
-        this.isShowBindDialog = false
     }
 }

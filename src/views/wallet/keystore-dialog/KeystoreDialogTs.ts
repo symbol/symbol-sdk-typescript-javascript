@@ -68,7 +68,7 @@ export class KeystoreDialogTs extends Vue {
         this.stepIndex = 2
     }
 
-    // @TODO: VeeValidate
+    // @VEEVALIDATE
     checkWalletPassword() {
         if (!this.checkInput()) return
         this.stepIndex = 1

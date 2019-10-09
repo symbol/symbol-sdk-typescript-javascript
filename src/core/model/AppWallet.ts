@@ -163,7 +163,7 @@ export class AppWallet {
     }
 
     getAccount(password: Password): Account {
-        // @TODO: update after nem2-sdk EncryptedPrivateKey constructor definition is fixed
+        // @WALLETS: update after nem2-sdk EncryptedPrivateKey constructor definition is fixed
         // https://github.com/nemtech/nem2-sdk-typescript-javascript/issues/241
         const {encryptedKey, iv} = this.simpleWallet.encryptedPrivateKey
 
@@ -206,7 +206,7 @@ export class AppWallet {
             store)
     }
 
-    // @WALLET: Hard to understand what this function is doing, rename / review
+    // @WALLETS: Hard to understand what this function is doing, rename / review
     addNewWalletToList(store: Store<AppState>): void {
         const accountName = store.state.account.accountName
         const accountMap = localRead('accountMap') === ''

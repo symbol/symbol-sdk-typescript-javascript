@@ -66,14 +66,13 @@ export class MosaicListTs extends Vue {
     get namespaceMap() {
         let namespaceMap = {}
         this.activeAccount.namespaces.forEach((item) => {
-            switch (item.alias.type) {
+                switch (item.alias.type) {
                 case (AliasType.Address):
-                    //@ts-ignore @TODO: E3 review
-                    namespaceMap[Address.createFromEncoded(item.alias.address).address] = item
+                    
+                    namespaceMap[item.alias.address.plain()] = item
                     break
                 case (AliasType.Mosaic):
-                    //@ts-ignore @TODO: E3 review
-                    namespaceMap[new MosaicId(item.alias.mosaicId).toHex()] = item
+                    namespaceMap[item.alias.mosaicId.toHex()] = item
             }
         })
         return namespaceMap

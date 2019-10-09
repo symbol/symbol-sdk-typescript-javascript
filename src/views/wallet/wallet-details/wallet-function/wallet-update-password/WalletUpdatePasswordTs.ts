@@ -32,7 +32,7 @@ export class WalletUpdatePasswordTs extends Vue {
     }
 
     checkInfo() {
-        // @TODO check password VeeValidate
+        // @VEEVALIDATE check password
         const {prePassword, newPassword, repeatPassword} = this.formItems
 
         if (prePassword == '' || newPassword == '' || repeatPassword == '') {

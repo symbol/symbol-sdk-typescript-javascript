@@ -108,7 +108,7 @@
       :fromNamespace="false"
       :mosaic="null"
       :address="getAddress"
-      @close="closeBindDialog"
+      @close="isShowBindDialog = false"
     />
   </div>
 </template>

@@ -1,4 +1,4 @@
-import {NamespaceHttp, Address} from 'nem2-sdk'
+import {NamespaceHttp, Address, QueryParams} from 'nem2-sdk'
 import {AppNamespace} from '@/core/model'
 
 export const namespaceSortTypes = {
@@ -14,7 +14,10 @@ export const getNamespacesFromAddress = async (address: string,
     try {
         const namespaceHttp = new NamespaceHttp(node)
         const accountAddress = Address.createFromRawAddress(address)
-        const namespaceInfo = await namespaceHttp.getNamespacesFromAccount(accountAddress).toPromise()
+        const namespaceInfo = await namespaceHttp
+            .getNamespacesFromAccount(accountAddress, new QueryParams(100))
+            .toPromise()
+
         const namespaceIds = namespaceInfo.map(nsInfo => nsInfo.id)
         const namespaceNames = await namespaceHttp.getNamespacesName(namespaceIds).toPromise()
         return namespaceInfo.map(nsInfo => AppNamespace.fromNamespaceInfo(nsInfo, namespaceNames))

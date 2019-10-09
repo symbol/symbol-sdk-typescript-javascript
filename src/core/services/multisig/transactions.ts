@@ -60,7 +60,7 @@ export const announceBondedWithLock = ( aggregateTransaction: AggregateTransacti
             UInt64.fromUint(fee)
         )
 
-    // @TODO: wallet refactor, should not sign here
+    // @WALLETS: wallet refactor, should not sign here
     const hashLockTransactionSigned = account.sign(hashLockTransaction, generationHash)
     
     // @TODO: listener should probably not be here

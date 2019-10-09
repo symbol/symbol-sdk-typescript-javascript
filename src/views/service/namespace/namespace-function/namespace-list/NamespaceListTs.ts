@@ -107,10 +107,8 @@ export class NamespaceListTs extends Vue {
     unbindItem(namespace: AppNamespace) {
         this.showAliasDialog = true
         this.bind = false
-        // @ts-ignore
-        this.address = namespace.alias.address ? namespace.alias.address : null
-        // @ts-ignore
-        this.mosaic = namespace.alias.mosaicId ? namespace.alias.mosaicId : null
+        this.address = namespace.alias.address ? namespace.alias.address.plain() : null
+        this.mosaic = namespace.alias.mosaicId ? namespace.alias.mosaicId.toHex() : null
         this.namespace = namespace
     }
 
@@ -131,11 +129,8 @@ export class NamespaceListTs extends Vue {
     
     getAliasTarget(namespace: AppNamespace): string {
         const {alias} = namespace
-        if (alias.type === AliasType.Address) return Address
-                //@ts-ignore // @TODO: SDK quick fix
-                .createFromEncoded(alias.address).pretty()
-        // @ts-ignore // @TODO: SDK quick fix
-        if (alias.type === AliasType.Mosaic) return alias.mosaicId
+        if (alias.type === AliasType.Address) return alias.address.pretty()
+        if (alias.type === AliasType.Mosaic) return alias.mosaicId.toHex()
         return ''
     }
 

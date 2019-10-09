@@ -120,7 +120,7 @@ export class CheckPasswordDialogTs extends Vue {
     }
 
 
-    // @TODO: watch not needed, use showCheckPWDialog as v-model
+    // @VEEVALIDATE: watch not needed, use showCheckPWDialog as v-model
     @Watch('showCheckPWDialog')
     onShowCheckPWDialogChange() {
         this.walletInputInfo.password = ''

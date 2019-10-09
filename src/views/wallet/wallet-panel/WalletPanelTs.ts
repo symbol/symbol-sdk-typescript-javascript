@@ -88,12 +88,6 @@ export class WalletPanelTs extends Vue {
         }
     }
 
-    // @ROUTING: 
-    // @TODO: probably not the best way
-    // setLeftSwitchIcon() {
-    //     this.$store.commit('SET_CURRENT_PANEL_INDEX', 1)
-    // }
-
     mounted() {
         this.setDefaultPage()
     }

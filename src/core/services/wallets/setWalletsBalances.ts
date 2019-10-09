@@ -21,7 +21,7 @@ export const setWalletsBalances = async (store: Store<AppState>): Promise<void> 
         store.commit('SET_WALLET_LIST', appWalletsWithBalance)
         store.commit('SET_WALLET', activeWalletWithBalance)
         
-        // @TODO: make a standard method when refactoring wallets
+        // @WALLETS: make a standard method
         const localList = localRead('accountMap')
         const listToUpdate = localList === '' ? {} : JSON.parse(localList)
         if (!listToUpdate[accountName]) throw new Error

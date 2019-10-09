@@ -133,7 +133,7 @@ export class MenuBarTs extends Vue {
         return true
     }
 
-    // @TODO: vee-validate
+    // @VEEVALIDATE
     changeEndpointByInput() {
         let {nodeList, inputNodeValue} = this
         if (!this.checkNodeInput()) return

@@ -4,7 +4,7 @@ import {copyTxt} from '@/core/utils/utils.ts'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 import {mapState} from "vuex"
-import {MosaicId, TransferTransaction, Deadline, Address, Mosaic, UInt64, PlainMessage} from "nem2-sdk"
+import {MosaicId, TransferTransaction, Deadline, Address, Mosaic, UInt64, PlainMessage, Transaction} from "nem2-sdk"
 import {TransferType} from "@/core/model/TransferType"
 import {monitorReceiptTransferTypeConfig} from "@/config/view/monitor"
 import {AppInfo, StoreAccount} from "@/core/model"
@@ -37,7 +37,7 @@ export class MonitorInvoiceTs extends Vue {
     get networkCurrency() {
         return this.activeAccount.networkCurrency
     }
-    get transferTransaction(): TransferTransaction {
+    get transferTransaction(): any { // @QR
         const {networkType, address} = this.wallet
         const walletAddress = Address.createFromRawAddress(address)
         const {mosaicHex, mosaicAmount, remarks} = this.formItems

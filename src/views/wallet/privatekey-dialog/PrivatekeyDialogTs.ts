@@ -124,7 +124,7 @@ export class PrivatekeyDialogTs extends Vue {
         const {networkType} = this.getWallet
         const {generationHash} = this
         const {password, privatekey} = this.wallet
-        const account = Account.createFromPrivateKey(privatekey, networkType)  
+        const account: any = Account.createFromPrivateKey(privatekey, networkType) // @QR
         this.QRCode = new AccountQR(account, new Password(password), networkType, generationHash).toBase64()
     }
 }

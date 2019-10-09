@@ -325,7 +325,7 @@ export class MosaicTransactionTs extends Vue {
         this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', newPublicKey)
     }
 
-    // @TODO: Quickfix before vee-validate
+    // @VEEVALIDATE
     @Watch('formItems.supply')
     onSupplyChange(newVal) {
         const {MAX_MOSAIC_ATOMIC_UNITS} = NETWORK_PARAMS
@@ -333,7 +333,7 @@ export class MosaicTransactionTs extends Vue {
         if (newVal < 0) this.formItems.supply = 0
     }
 
-    // @TODO: Quickfix before vee-validate
+    // @VEEVALIDATE
     @Watch('formItems.divisibility')
     onDivisibilityChange(newVal) {
         const {MAX_MOSAIC_DIVISIBILITY} = NETWORK_PARAMS

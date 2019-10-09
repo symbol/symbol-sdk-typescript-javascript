@@ -178,7 +178,7 @@ export class MonitorPanelTs extends Vue {
     }
 
     mounted() {
-        // @TODO: review
+        // @ROUTING
         this.switchPanel(0)
     }
 }

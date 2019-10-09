@@ -98,7 +98,7 @@ export class WalletImportPrivatekeyTs extends Vue {
         })
     }
 
-    // @TODO: VeeValidate
+    // @VEEVALIDATE
     toWalletDetails() {
         this.$Notice.success({
             title: this['$t']('Import_private_key_operation') + '',

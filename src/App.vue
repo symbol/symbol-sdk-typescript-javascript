@@ -102,7 +102,7 @@
                     ? false : JSON.parse(mosaicListFromStorage)
                 if (mosaicListFromStorage) await this.$store.commit('SET_MOSAICS', parsedMosaicListFromStorage)
                 const initMosaicsAndNamespaces = await Promise.all([
-                    // @TODO make it an AppWallet methods
+                    // @WALLET make it an AppWallet methods
                     initMosaic(newWallet, this.$store),
                     getNamespacesFromAddress(newWallet.address, this.node),
                     setTransactionList(newWallet.address, this.$store)

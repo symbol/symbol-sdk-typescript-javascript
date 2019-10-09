@@ -1,12 +1,11 @@
 import {
- MosaicId,
  UInt64,
  MosaicAmountView,
  MosaicDefinitionTransaction,
  MosaicInfo,
- Mosaic,
+ Namespace,
 } from 'nem2-sdk'
-import {MosaicProperties} from '@/core/model'
+import {MosaicProperties, AppNamespace} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
 
 
@@ -75,11 +74,12 @@ export class AppMosaic {
      })
  }
 
- static fromNamespace(namespace: any): AppMosaic { // @TODO: AppNamespace as input
-     const id: any = namespace.alias.mosaicId //@TODO change after SDK update
+ static fromNamespace(namespace: Namespace | AppNamespace): AppMosaic {
+     const id: any = namespace.alias.mosaicId
+     
      return new AppMosaic({
-         hex: new MosaicId(id).toHex(),
-         name: namespace.label,
+         hex: id.toHex(),
+         name: namespace.name,
      })
  }
 }

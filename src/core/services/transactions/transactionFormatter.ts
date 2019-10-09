@@ -62,7 +62,7 @@ const transactionFactory = () => ({
 export const transactionFormatter = ( transactionList: Array<Transaction>,
                                       store: Store<AppState>) => {
 
-    // @TODO: manage address aliases
+    // @TODO: merge with formatting.ts
     const enrichedTransactions = transactionList
     return enrichedTransactions
         .map(transaction => transactionFactory().get(transaction,store))

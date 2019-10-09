@@ -21,7 +21,7 @@ export class TransactionHeader {
   /**
    * Transaction blockTime
    */
-  time: string // @TODO: make extrapolation method from blockNumber
+  time: string
   /**
    * Transaction date
    */
@@ -48,7 +48,7 @@ export class TransactionHeader {
         const {networkCurrency, wallet} = store.state.account
     
      this.isReceipt = transaction instanceof TransferTransaction
-        && transaction.recipientAddress instanceof Address // @TODO: handle namespaceId
+        && transaction.recipientAddress instanceof Address // @NAMESPACES
         && transaction.recipientAddress.plain() === wallet.address
       
       const {chainStatus} = store.state.app

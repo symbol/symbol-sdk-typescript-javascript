@@ -1,4 +1,4 @@
-// @TODO: move from here when doing vee-validate implementation
+// @VEEVALIDATE: move from here when doing vee-validate implementation
 
 /**
  * Returns boolean if string is likely to be an address.
