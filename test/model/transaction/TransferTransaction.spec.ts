@@ -15,23 +15,21 @@
  */
 
 import { expect } from 'chai';
+import { CreateTransactionFromPayload } from '../../../src/infrastructure/transaction/CreateTransactionFromPayload';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { MessageType } from '../../../src/model/message/MessageType';
 import { PersistentHarvestingDelegationMessage } from '../../../src/model/message/PersistentHarvestingDelegationMessage';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
+import { MosaicId } from '../../../src/model/model';
+import { Mosaic } from '../../../src/model/mosaic/Mosaic';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
-import { Mosaic } from '../../../src/model/mosaic/Mosaic';
-import { MosaicId } from '../../../src/model/model';
-import { CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
-import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
-import { CreateTransactionFromPayload } from '../../../src/infrastructure/transaction/CreateTransactionFromPayload';
 
 describe('TransferTransaction', () => {
     let account: Account;
