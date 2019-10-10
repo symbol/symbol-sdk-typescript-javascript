@@ -27,6 +27,11 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { Mosaic } from '../../../src/model/mosaic/Mosaic';
+import { MosaicId } from '../../../src/model/model';
+import { CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
+import { CreateTransactionFromDTO } from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
+import { CreateTransactionFromPayload } from '../../../src/infrastructure/transaction/CreateTransactionFromPayload';
 
 describe('TransferTransaction', () => {
     let account: Account;
@@ -294,5 +299,35 @@ describe('TransferTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw();
+    });
+
+    it('should sort the Mosaic array', () => {
+        const mosaics = [
+            new Mosaic(new MosaicId(UInt64.fromUint(200).toDTO()), UInt64.fromUint(0)),
+            new Mosaic(new MosaicId(UInt64.fromUint(100).toDTO()), UInt64.fromUint(0)),
+        ];
+
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            mosaics,
+            PlainMessage.create('NEM'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(transferTransaction.mosaics[0].id.id.compact()).to.be.equal(200);
+        expect(transferTransaction.mosaics[1].id.id.compact()).to.be.equal(100);
+
+        const signedTransaction = transferTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(
+            304,
+            signedTransaction.payload.length,
+        )).to.be.equal(
+            '64000000000000000000000000000000C8000000000000000000000000000000');
+
+        const sorted = CreateTransactionFromPayload(signedTransaction.payload) as TransferTransaction;
+        expect(sorted.mosaics[0].id.id.compact()).to.be.equal(100);
+        expect(sorted.mosaics[1].id.id.compact()).to.be.equal(200);
     });
 });

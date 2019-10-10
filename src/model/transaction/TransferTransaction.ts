@@ -180,11 +180,9 @@ export class TransferTransaction extends Transaction {
      * @returns {Mosaic[]}
      */
     public sortMosaics(): Mosaic[] {
-        const sortedMosaics = this.mosaics.sort((a, b) => {
-            if (Number(a.id[1]) > b.id[1]) { return 1; } else if (a.id[1] < b.id[1]) { return -1; }
-            return 0;
+        return this.mosaics.sort((a, b) => {
+            return a.id.id.compact() - b.id.id.compact();
         });
-        return sortedMosaics;
     }
 
     /**
