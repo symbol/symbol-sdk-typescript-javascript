@@ -72,7 +72,7 @@
   }
 
   .node_list {
-    height: 250px;
+    max-height: 250px;
 
     .ivu-input {
       border: none;
@@ -83,11 +83,9 @@
     margin: 10px 20px;
     display: flex;
     flex-direction: row;
-    align-content: center;
-    justify-content: space-between;
-    justify-items: center;
     align-items: center;
     text-align: left;
+    position: relative;
 
     img {
       width: 15px;
@@ -97,7 +95,7 @@
 
     span {
       text-align: left;
-      width: 300px;
+      //width: 500px;
       font-size: 20px;
     }
   }
@@ -291,7 +289,8 @@
   }
 
   .remove_icon {
-    margin-left: 10px;
+    position: absolute;
+    right: -15px;
   }
 
   .remove_icon:hover {

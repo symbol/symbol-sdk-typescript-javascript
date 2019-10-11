@@ -67,7 +67,7 @@
                             :key="`sep${index}`"
                     >
                       <img :src="p.isSelected ? monitorSelected : monitorUnselected">
-                      <span>{{p.value}}</span>
+                      <span class="node_url">{{p.value}}</span>
                       <img class="remove_icon" @click.stop="removeNode(index)"
                            src="@/common/img/service/multisig/multisigDelete.png" alt="">
                     </div>
