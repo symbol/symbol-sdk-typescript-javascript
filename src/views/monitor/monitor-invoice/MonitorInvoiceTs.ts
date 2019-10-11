@@ -1,7 +1,7 @@
 import {Message} from "@/config/index.ts"
 import {QRCodeGenerator} from 'nem2-qr-library'
 import {copyTxt} from '@/core/utils/utils.ts'
-import {Component, Vue, Watch} from 'vue-property-decorator'
+import {Component, Vue} from 'vue-property-decorator'
 import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
 import {mapState} from "vuex"
 import {MosaicId, TransferTransaction, Deadline, Address, Mosaic, UInt64, PlainMessage, Transaction} from "nem2-sdk"

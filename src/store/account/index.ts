@@ -3,9 +3,9 @@ import {MutationTree} from 'vuex'
 import {Account} from 'nem2-sdk'
 import {defaultNetworkConfig} from "@/config/index"
 import {
-  AddressAndTransaction, AddressAndNamespaces, AddressAndMosaics,
-  AddressAndMultisigInfo, StoreAccount, AppMosaic, NetworkCurrency,
-  AppWallet, AppNamespace,
+    AddressAndTransaction, AddressAndNamespaces, AddressAndMosaics,
+    AddressAndMultisigInfo, StoreAccount, AppMosaic, NetworkCurrency,
+    AppWallet, AppNamespace,
 } from '@/core/model'
 import {nodeListConfig} from "@/config/view/node"
 
@@ -27,10 +27,11 @@ const state: StoreAccount = {
     multisigAccountInfo: {},
     networkCurrency: defaultNetworkConfig.defaultNetworkMosaic,
     networkMosaics: {},
+    activeWalletAddress: ''
 }
 
 const updateMosaics = (state: StoreAccount, mosaics: AppMosaic[]) => {
-    if(!mosaics) return // @TODO: quick fix
+    if (!mosaics) return // @TODO: quick fix
     mosaics.forEach((mosaic: AppMosaic) => {
         const {hex} = mosaic
         const storeMosaic = state.mosaics[hex] || {}
@@ -123,9 +124,9 @@ const mutations: MutationTree<StoreAccount> = {
     SET_ACCOUNT_NAME(state: StoreAccount, accountName: string) {
         state.accountName = accountName
     },
-    SET_MULTISIG_ACCOUNT_INFO(state:StoreAccount, addressAndMultisigInfo: AddressAndMultisigInfo) {
-          const {address, multisigAccountInfo} = addressAndMultisigInfo
-          Vue.set(state.multisigAccountInfo, address, multisigAccountInfo)
+    SET_MULTISIG_ACCOUNT_INFO(state: StoreAccount, addressAndMultisigInfo: AddressAndMultisigInfo) {
+        const {address, multisigAccountInfo} = addressAndMultisigInfo
+        Vue.set(state.multisigAccountInfo, address, multisigAccountInfo)
     },
     SET_ACTIVE_MULTISIG_ACCOUNT(state: StoreAccount, publicKey: string) {
         if (publicKey === state.wallet.publicKey) {
@@ -134,15 +135,15 @@ const mutations: MutationTree<StoreAccount> = {
         }
         state.activeMultisigAccount = publicKey
     },
-    ADD_CONFIRMED_MULTISIG_ACCOUNT_TRANSACTION( state: StoreAccount,
-                                                addressAndTransaction: AddressAndTransaction) {
+    ADD_CONFIRMED_MULTISIG_ACCOUNT_TRANSACTION(state: StoreAccount,
+                                               addressAndTransaction: AddressAndTransaction) {
         const {address, transaction} = addressAndTransaction
         const list = {...state.multisigAccountsTransactions}
         if (!list[address]) list[address] = []
         list[address].unshift(transaction)
         Vue.set(state.multisigAccountsTransactions, address, list)
     },
-    SET_MULTISIG_ACCOUNT_NAMESPACES( state: StoreAccount, addressAndNamespaces: AddressAndNamespaces) {
+    SET_MULTISIG_ACCOUNT_NAMESPACES(state: StoreAccount, addressAndNamespaces: AddressAndNamespaces) {
         const {address, namespaces} = addressAndNamespaces
         Vue.set(state.multisigAccountsNamespaces, address, namespaces)
     },
@@ -158,6 +159,9 @@ const mutations: MutationTree<StoreAccount> = {
             Object.assign(mosaicList[mosaic.hex], mosaic)
         })
         Vue.set(state.multisigAccountsMosaics, address, mosaicList)
+    },
+    UPDATE_ACTIVE_WALLET_ADDRESS(state: StoreAccount, activeWalletAddress: string) {
+        state.activeWalletAddress = activeWalletAddress
     },
 }
 

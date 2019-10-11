@@ -65,6 +65,7 @@ export class AccountImportMnemonicTs extends Vue {
         return true
     }
 
+    // TODO USE ACCOUNT NETWORK TYPE
     importWallet(password) {
         const {walletName, mnemonic, networkType} = this.form
         try {

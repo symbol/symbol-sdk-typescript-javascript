@@ -1,4 +1,4 @@
-import {Store} from 'vuex';
+import {Store} from 'vuex'
 import {
     Account,
     Crypto,
@@ -13,7 +13,7 @@ import CryptoJS from 'crypto-js'
 import {Message, networkConfig} from "@/config"
 import {AppLock, localRead, localSave, createSubWalletByPath} from "@/core/utils"
 import {CreateWalletType} from "@/core/model"
-import {AppState} from './types';
+import {AppState} from './types'
 import {announceBondedWithLock} from '@/core/services'
 
 export class AppWallet {
@@ -89,6 +89,7 @@ export class AppWallet {
         }
     }
 
+    // TODO USE ACCOUNT NETWORK TYPE
     createFromMnemonic(
         name: string,
         password: Password,
@@ -154,8 +155,9 @@ export class AppWallet {
             const keystore = words.toString(CryptoJS.enc.Utf8)
             this.simpleWallet = JSON.parse(keystore)
             this.sourceType = CreateWalletType.keyStore
-            const {privateKey} = this.getAccount(password)
+            const {privateKey} =  this.getAccount(password)
             this.createFromPrivateKey(name, password, privateKey, networkType, store)
+            this.addNewWalletToList(store)
             return this
         } catch (error) {
             throw new Error(error)
@@ -213,17 +215,15 @@ export class AppWallet {
             ? {} : JSON.parse(localRead('accountMap'))
 
         const localData = accountMap[accountName].wallets
+        const updateWalletList = localData.length ? [...localData, this] : [this]
+        const newActiveWalletAddress = this.address
 
-        if (!localData.length) {
-            AppWallet.switchWallet(this.address, [this], store)
-            return
-        }
+        accountMap[accountName].activeWalletAddress = newActiveWalletAddress
+        accountMap[accountName].wallets = updateWalletList
 
-        let dataToStore = [...localData]
-        const walletIndex = dataToStore.findIndex(({address}) => address === this.address)
-        if (walletIndex > -1) dataToStore.splice(walletIndex, 1)
-
-        AppWallet.switchWallet(this.address, [this, ...dataToStore], store)
+        store.commit('SET_WALLET_LIST', updateWalletList)
+        store.commit('SET_WALLET', this)
+        localSave('accountMap', JSON.stringify(accountMap))
     }
 
     delete(store: Store<AppState>, that: any) {
@@ -256,29 +256,15 @@ export class AppWallet {
     }
 
 
-    static switchWallet(newActiveWalletAddress: string, walletList: any, store: Store<AppState>) {
-        const newWalletIndex = walletList.findIndex(({address}) => address === newActiveWalletAddress)
-        if (newWalletIndex === -1) throw new Error('wallet not found when switching')
-
+    static updateActiveWalletAddress(newActiveWalletAddress: string, store: Store<AppState>) {
+        const walletList = store.state.app.walletList
         const accountName = store.state.account.accountName
         const accountMap = localRead('accountMap') === ''
             ? {} : JSON.parse(localRead('accountMap'))
 
-        let newWallet = walletList[newWalletIndex]
-        newWallet.active = true
-        let newWalletList = [...walletList]
-        newWalletList
-            .filter(wallet => wallet.address !== newActiveWalletAddress)
-            .map(wallet => wallet.active = false)
-
-        newWalletList.splice(newWalletIndex, 1)
-        const walletListToStore = [...newWalletList, newWallet]
-
-        store.commit('SET_WALLET_LIST', walletListToStore)
-        store.commit('SET_WALLET', newWallet)
-
-        accountMap[accountName].wallets = walletListToStore
+        accountMap[accountName].activeWalletAddress = newActiveWalletAddress
         localSave('accountMap', JSON.stringify(accountMap))
+        store.commit('SET_WALLET', walletList.find(item => item.address == newActiveWalletAddress) || walletList[0])
     }
 
     async setAccountInfo(store: Store<AppState>): Promise<void> {
@@ -298,6 +284,7 @@ export class AppWallet {
 
     async updateAccountBalance(balance: number, store: Store<AppState>): Promise<void> {
         try {
+
             this.balance = balance
             this.updateWallet(store)
         } catch (error) {
@@ -371,7 +358,7 @@ export class AppWallet {
             const xemIndex = accountInfo.mosaics
                 .findIndex(mosaic => mosaic.id.toHex() === networkCurrency.hex)
 
-            if (xemIndex === -1)  {
+            if (xemIndex === -1) {
                 this.balance = 0
                 return this
             }
@@ -385,34 +372,36 @@ export class AppWallet {
     }
 
     signAndAnnounceNormal(password: Password, node: string, generationHash: string, transactionList: Array<any>, that: any): void {
-            const account = this.getAccount(password)
-            const signature = account.sign(transactionList[0], generationHash)
-            const message = that.$t(Message.SUCCESS)
-            console.log(transactionList)
-            console.log(signature)
-            new TransactionHttp(node).announce(signature).subscribe(
-                _ => that.$Notice.success({title: message}),
-                error => { throw new Error(error) }
-            )
+        const account = this.getAccount(password)
+        const signature = account.sign(transactionList[0], generationHash)
+        const message = that.$t(Message.SUCCESS)
+        console.log(transactionList)
+        console.log(signature)
+        new TransactionHttp(node).announce(signature).subscribe(
+            _ => that.$Notice.success({title: message}),
+            error => {
+                throw new Error(error)
+            }
+        )
     }
 
     // @TODO: review
-    signAndAnnounceBonded = ( password: Password,
-                              lockFee: number,
-                              transactions: AggregateTransaction[],
-                              store: Store<AppState>) => {
+    signAndAnnounceBonded = (password: Password,
+                             lockFee: number,
+                             transactions: AggregateTransaction[],
+                             store: Store<AppState>) => {
         const {node} = store.state.account
-        
+
         const account = this.getAccount(password)
         const aggregateTransaction = transactions[0]
         // @TODO: review listener management
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
-        announceBondedWithLock( aggregateTransaction,
-                                account,
-                                listener,
-                                node,
-                                lockFee,
-                                store)
+        announceBondedWithLock(aggregateTransaction,
+            account,
+            listener,
+            node,
+            lockFee,
+            store)
     }
 }
 

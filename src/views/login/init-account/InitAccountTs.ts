@@ -1,5 +1,4 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {AppLock, createMnemonic, localRead} from "@/core/utils"
 
 @Component({
     components: {

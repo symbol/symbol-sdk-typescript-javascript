@@ -3,7 +3,7 @@ import monitorSelected from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
 import {localRead, localSave} from "@/core/utils/utils.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {windowSizeChange, minWindow, maxWindow, closeWindow} from '@/core/utils/electron.ts'
+import {windowSizeChange, minWindow, maxWindow, unmaximize, closeWindow} from '@/core/utils/electron.ts'
 import {mapState} from 'vuex'
 import {NetworkType} from "nem2-sdk"
 import {languageConfig} from "@/config/view/language"
@@ -45,6 +45,8 @@ export class MenuBarTs extends Vue {
             name: "login"
         })
     }
+
+    closeWindow = closeWindow
 
     get isNodeHealthy() {
         return this.app.isNodeHealthy
@@ -91,13 +93,14 @@ export class MenuBarTs extends Vue {
         )
     }
 
-    closeWindow() {
-        closeWindow()
-    }
-
     maxWindow() {
         this.isNowWindowMax = !this.isNowWindowMax
         maxWindow()
+    }
+
+    unmaximize() {
+        this.isNowWindowMax = !this.isNowWindowMax
+        unmaximize()
     }
 
     minWindow() {

@@ -41,6 +41,7 @@ export class NamespaceListTs extends Vue {
     namespace: AppNamespace = null
     mosaic: string = null
     address: string = null
+    isShowExpiredNamespace = false
 
     get mosaics() {
         return this.activeAccount.mosaics
@@ -59,12 +60,13 @@ export class NamespaceListTs extends Vue {
     }
 
     get namespaceList(): AppNamespace[] {
-        const {namespaces, showExpiredNamespaces, namespaceGracePeriodDuration, currentHeight} = this
-        return namespaces.filter(item => showExpiredNamespaces || item.endHeight - currentHeight > namespaceGracePeriodDuration)
+        // @ts-ignore
+        const {namespaces, isShowExpiredNamespace, namespaceGracePeriodDuration, currentHeight} = this
+        return namespaces.filter(item => isShowExpiredNamespace || item.endHeight - currentHeight > namespaceGracePeriodDuration)
     }
 
     get paginatedNamespaceList(): AppNamespace[] {
-        const {namespaceList, namespaceSortType, sortDirection} = this
+        let {namespaceList, namespaceSortType, sortDirection} = this
         return sortNamespaceList(namespaceSortType, namespaceList, sortDirection)
             .slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
     }
@@ -82,10 +84,14 @@ export class NamespaceListTs extends Vue {
         this.showNamespaceEditDialog = true
     }
 
+    toggleIsShowExpirednamespace(){
+        this.isShowExpiredNamespace = !this.isShowExpiredNamespace
+    }
+
     // @TODO: refactor
     computeDuration(namespace: AppNamespace): number | MosaicNamespaceStatusType.EXPIRED {
         const {endHeight, isActive} = namespace
-        
+
         const {currentHeight, namespaceGracePeriodDuration} = this
         if (!isActive) {
             return MosaicNamespaceStatusType.EXPIRED
@@ -108,7 +114,7 @@ export class NamespaceListTs extends Vue {
         this.showAliasDialog = true
         this.bind = false
         this.address = namespace.alias.address ? namespace.alias.address.plain() : null
-        this.mosaic = namespace.alias.mosaicId ? namespace.alias.mosaicId.toHex() : null
+        this.mosaic = namespace.alias.mosaicId + '' || null
         this.namespace = namespace
     }
 
@@ -126,11 +132,11 @@ export class NamespaceListTs extends Vue {
         if (alias.type === AliasType.Mosaic) return 'mosaic'
         return ''
     }
-    
+
     getAliasTarget(namespace: AppNamespace): string {
         const {alias} = namespace
         if (alias.type === AliasType.Address) return alias.address.pretty()
-        if (alias.type === AliasType.Mosaic) return alias.mosaicId.toHex()
+        if (alias.type === AliasType.Mosaic) return alias.mosaicId
         return ''
     }
 

@@ -82,9 +82,7 @@ export class MonitorMarketTs extends Vue {
         const that = this
         const rstStr = await market.kline({period: "60min", symbol: "xemusdt", size: "48"})
 
-        if (!rstStr.rst) {
-            return
-        }
+        if (!rstStr.rst) return
         const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
         const result = rstQuery.data
         const currentWeek = result.slice(0, 24)
@@ -131,6 +129,7 @@ export class MonitorMarketTs extends Vue {
         }
         const that = this
         const rstStr = await market.kline({period: "1min", symbol: "xemusdt", size: "1"})
+        if(!rstStr.rst) return
         const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
         const result = rstQuery.data[0].close
         that.currentPrice = result

@@ -372,8 +372,10 @@ export class LineChartTs extends Vue {
             })
             return
         }
-        this.btcDataList = (JSON.parse(localRead('marketPriceDataObject'))).btc.dataList
-        this.xemDataList = (JSON.parse(localRead('marketPriceDataObject'))).xem.dataList
+        const btcData = (JSON.parse(localRead('marketPriceDataObject'))).btc
+        const xemData = (JSON.parse(localRead('marketPriceDataObject'))).xem
+        this.btcDataList = btcData?btcData.dataList:[]
+        this.xemDataList = xemData?xemData.dataList:[]
     }
 
     mouseoutLine() {

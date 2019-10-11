@@ -55,6 +55,7 @@ export class MosaicListTs extends Vue {
     get currentHeight() {
         return this.app.chainStatus.currentHeight
     }
+
     get publicKey() {
         return this.activeAccount.wallet.publicKey
     }
@@ -76,6 +77,12 @@ export class MosaicListTs extends Vue {
             }
         })
         return namespaceMap
+    }
+
+    mosaicSupplyAmount(value) {
+        if(!value.mosaicInfo) return 0
+        const formatNumber:string = this.formatNumber(value.mosaicInfo.supply.compact()) +''
+        return formatNumber.substring(0,formatNumber.indexOf('.'))
     }
 
     toggleChange(page) {
@@ -151,7 +158,7 @@ export class MosaicListTs extends Vue {
         const {isShowExpiredMosaic, currentHeight} = this
         const list = Object.values(this.mosaics)
         this.currentMosaicList = list.filter((item: any) => isShowExpiredMosaic || item.expirationHeight == MosaicNamespaceStatusType.FOREVER || item.expirationHeight > currentHeight)
-        this.isShowExpiredMosaic = !isShowExpiredMosaic
+        this.isShowExpiredMosaic = !this.isShowExpiredMosaic
     }
 
     intiMosaics() {

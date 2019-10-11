@@ -775,4 +775,7 @@ export const en_US = {
     Harvesting: 'Harvesting',
     ILLEGAL_PUBLICKEY_ERROR:'public key format error',
     Alias_type: 'Alias type',
+
+    ////////////////////////////////1009
+    this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted:'Please note that you are deleting the last wallet and this account will be logged out after the wallet is successfully deleted!'
 }

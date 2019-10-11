@@ -12,14 +12,14 @@ export class AppNamespace {
                  public label: string,
                  public namespaceInfo: NamespaceInfo,
                  public isActive: boolean,
-                 public alias: Alias,
+                 public alias,
                  public levels: number,
                  public endHeight: number,
                  public name: string) {}
 
   static fromNamespaceInfo( namespaceInfo: NamespaceInfo,
                             namespaceNames: NamespaceName[]): AppNamespace {
-   
+
    const name = AppNamespace.extractFullNamespace(namespaceInfo, namespaceNames)
    return new AppNamespace(
      namespaceInfo.id,
@@ -45,7 +45,7 @@ export class AppNamespace {
       return namespaceName;
     })
       .map((namespaceName: NamespaceName) => namespaceName.name)
-      .join('.');  
+      .join('.');
    }
 
   isLinked(): boolean {

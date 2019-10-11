@@ -74,6 +74,11 @@
             />
           </span>
           <span class="more"></span>
+          <div class="namespace_filter pointer" @click="toggleIsShowExpirednamespace()">
+            <Icon v-if="isShowExpiredNamespace" type="md-square"/>
+            <Icon v-else type="md-square-outline"/>
+            <span>{{$t('Hide_expired_namespaces')}}</span>
+          </div>
         </div>
         <Spin v-if="namespaceLoading" size="large" fix class="absolute"></Spin>
         <div class="table_body ">
@@ -85,12 +90,22 @@
               {{computeDuration(n) === StatusString.EXPIRED
                   ? $t('overdue') : durationToTime(n.endHeight)}}
             </span>
-            <!-- <span class="is_active overflow_ellipsis">
-              <Icon v-if="n.isActive" type="md-checkmark"/>
-              <Icon v-else type="md-close"/>
-            </span> -->
-              <span class="link overflow_ellipsis">{{$t(getAliasType(n))}}</span>
-              <span class="type text_select overflow_ellipsis">{{getAliasTarget(n)}}</span>
+              <!-- <span class="is_active overflow_ellipsis">
+                <Icon v-if="n.isActive" type="md-checkmark"/>
+                <Icon v-else type="md-close"/>
+              </span> -->
+              <span class="link overflow_ellipsis">
+                <span v-if="getAliasType(n)">
+                    {{$t(getAliasType(n))}}
+                </span>
+                <Icon v-else type="md-close"/>
+              </span>
+              <span class="type text_select overflow_ellipsis">
+                <span class="overflow_ellipsis" v-if="getAliasTarget(n)">
+                  {{getAliasTarget(n)}}
+                </span>
+                <Icon v-else type="md-close"/>
+              </span>
               <span class="more overflow_ellipsis">
             <Poptip class="poptip_container" placement="top-end">
               <i class="moreFn"></i>

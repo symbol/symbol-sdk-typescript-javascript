@@ -34,7 +34,8 @@ export class NumberGrowTs extends Vue {
         }, 10)
     }
     formatNumber(number) {
-        return formatNumber(number)
+        return (formatNumber(number) + '').substring(0,(formatNumber(number) + '').indexOf('.'))
+
     }
 
     mounted() {

@@ -9,7 +9,8 @@ import {Store} from 'vuex'
  * @param mosaics
  * @param store
  */
-export const renderMosaics = (
+
+export const renderMosaicsAndReturnArray = (
     mosaics: Mosaic[],
     store: Store<AppState>): any => {
     const mosaicList = store.state.account.mosaics
@@ -22,7 +23,7 @@ export const renderMosaics = (
             const name = appMosaic.name || appMosaic.hex
             const amount = getRelativeMosaicAmount(mosaic.amount.compact(), appMosaic.properties.divisibility)
                 .toLocaleString()
-            return {name, amount}
+            return {name, amount, hex}
         })
         .filter(x => x)
 
@@ -30,11 +31,19 @@ export const renderMosaics = (
 
     const networkMosaicIndex = items.findIndex(({name}) => name === store.state.account.networkCurrency.name)
     if (networkMosaicIndex <= 0) {
-        return items.map(({name, amount}) => `${amount} [${name}]`).join(', ')
+        return items
     }
     const networkCurrency = items.splice(networkMosaicIndex, 1)
     items.unshift(networkCurrency[0])
-    return items.map(({name, amount}) => `${amount} [${name}]`).join(', ')
+    return items
+}
+
+export const renderMosaics = (
+    mosaics: Mosaic[],
+    store: Store<AppState>): any => {
+    const mosaicList = store.state.account.mosaics
+    const result = renderMosaicsAndReturnArray(mosaics, store)
+    return result.map ? result.map(({name, amount}) => `${amount} [${name}]`).join(', ') : result
 }
 
 export const getRelativeMosaicAmount = (amount: number, divisibility: number) => {

@@ -7,14 +7,14 @@ export class AppAccount {
     password: string
     hint: string
     seed: string
-    currentNetType:NetworkType
+    currentNetType: NetworkType
 
     constructor(
         accountName: string,
         wallets: Array<any>,
         password: string,
         hint: string,
-        currentNetType:NetworkType,
+        currentNetType: NetworkType,
         seed?: string
     ) {
         this.accountName = accountName
@@ -48,9 +48,12 @@ export const AppAccounts = () => ({
         accountMap[appAccount.accountName] = appAccount
         localSave('accountMap', JSON.stringify(accountMap))
     },
-    createWalletByPath(path: string, accountName: string, password: string) {
 
+    deleteAccount(accountName: string) {
+        const accountMap = localRead('accountMap') === ''
+            ? {} : JSON.parse(localRead('accountMap'))
+        delete accountMap[accountName]
+        localSave('accountMap', JSON.stringify(accountMap))
     }
-
 
 })

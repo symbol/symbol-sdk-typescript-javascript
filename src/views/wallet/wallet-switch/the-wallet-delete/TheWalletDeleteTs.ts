@@ -2,17 +2,18 @@ import {Password} from 'nem2-sdk'
 import {Message} from "@/config/index.ts"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from 'vuex'
-import {AppWallet, StoreAccount} from "@/core/model"
+import {AppAccount, AppAccounts, AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
-        ...mapState({activeAccount: 'account'})
+        ...mapState({activeAccount: 'account', app: 'app'})
     }
 })
 export class TheWalletDeleteTs extends Vue {
     activeAccount: StoreAccount
     stepIndex = 0
     show = false
+    app: any
     confirmation = {
         value: ''
     }
@@ -29,7 +30,7 @@ export class TheWalletDeleteTs extends Vue {
     }
 
     get confirmationPrompt() {
-        switch(this.getWallet.sourceType) {
+        switch (this.getWallet.sourceType) {
             case 'Trezor':
                 return 'please_confirm_your_wallet_name'
             default:
@@ -37,11 +38,30 @@ export class TheWalletDeleteTs extends Vue {
         }
     }
 
+    get accountName(){
+        return this.activeAccount.accountName
+    }
+    get walletList() {
+        return this.app.walletList
+    }
+    accountQuit() {
+        this.$store.commit('RESET_APP')
+        this.$store.commit('RESET_ACCOUNT')
+        this.$router.push({
+            name: "login"
+        })
+    }
+
     checkPasswordDialogCancel() {
         this.$emit('closeCheckPWDialog')
     }
 
     deleteByPassword() {
+        if(this.walletList.length == 1) {
+           AppAccounts().deleteAccount(this.accountName)
+            this.accountQuit()
+            return
+        }
         try {
             const password = new Password(this.confirmation.value)
             const isPasswordCorrect = new AppWallet(this.walletToDelete).checkPassword(password)
@@ -60,7 +80,7 @@ export class TheWalletDeleteTs extends Vue {
         }
     }
 
-    deleteByWalletNameConfirmation(){
+    deleteByWalletNameConfirmation() {
         try {
             const isWalletNameCorrect = this.confirmation.value === this.getWallet.name
             if (isWalletNameCorrect) {
@@ -80,7 +100,7 @@ export class TheWalletDeleteTs extends Vue {
 
     submit() {
         // based on source of wallet, use different protection mechanisms
-        switch(this.getWallet.sourceType) {
+        switch (this.getWallet.sourceType) {
             case 'Trezor':
                 return this.deleteByWalletNameConfirmation()
             default:
@@ -90,8 +110,7 @@ export class TheWalletDeleteTs extends Vue {
 
     @Watch('showCheckPWDialog')
     onShowCheckPWDialogChange() {
-        this.confirmation.value = '';
-
+        this.confirmation.value = ''
         this.show = this.showCheckPWDialog
     }
 }

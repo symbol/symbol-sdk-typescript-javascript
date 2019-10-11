@@ -85,3 +85,10 @@ export const closeWindow = () => {
         ipcRenderer.send('app', 'quit')
     }
 }
+
+export const unmaximize = ()=>{
+    if (window['electron']) {
+        const ipcRenderer = window['electron']['ipcRenderer']
+        ipcRenderer.send('app', 'unmaximize')
+    }
+}

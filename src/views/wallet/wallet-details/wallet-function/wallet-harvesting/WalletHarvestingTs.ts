@@ -59,7 +59,7 @@ export class WalletHarvestingTs extends Vue {
   get address() {
     return this.activeAccount.wallet.address
   }
-  
+
   get isLinked(): boolean {
       return this.remotePublicKey !== null
   }
@@ -86,8 +86,7 @@ export class WalletHarvestingTs extends Vue {
   }
 
   checkForm(): boolean {
-    const {remotePublicKey} = this
-    const {password} = this.formItems
+    const {password,remotePublicKey} = this.formItems
     const {feeAmount} = this
     if (remotePublicKey.length !== 64) {
       this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + '')
@@ -103,14 +102,14 @@ export class WalletHarvestingTs extends Vue {
     }
 
     if (password.length < 8) {
-      this.showErrorMessage(this.$t('password_error') + '')
+      this.showErrorMessage(this.$t(Message.WRONG_PASSWORD_ERROR) + '')
       return false
     }
 
     const validPassword = new AppWallet(this.wallet).checkPassword(new Password(password))
 
     if (!validPassword) {
-      this.showErrorMessage(this.$t('password_error') + '')
+      this.showErrorMessage(this.$t(Message.WRONG_PASSWORD_ERROR) + '')
       return false
     }
     return true
@@ -122,8 +121,8 @@ export class WalletHarvestingTs extends Vue {
   }
 
   sendTransaction() {
-    const {feeAmount, remotePublicKey} = this
-    const {password} = this.formItems
+    const {feeAmount, } = this
+    const {password,remotePublicKey} = this.formItems
     const {generationHash, node, networkType, isLinked} = this
     const accountLinkTransaction = AccountLinkTransaction.create(
       Deadline.create(),
@@ -132,6 +131,7 @@ export class WalletHarvestingTs extends Vue {
       networkType,
       UInt64.fromUint(feeAmount)
     )
+    console.log(accountLinkTransaction)
     new AppWallet(this.wallet).signAndAnnounceNormal(new Password(password), node, generationHash, [accountLinkTransaction], this)
     this.modalCancel()
   }

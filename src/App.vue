@@ -21,7 +21,7 @@
         setWalletsBalances, ChainListeners,
     } from '@/core/services'
     import {AppMosaic, AppWallet, AppInfo, StoreAccount} from '@/core/model'
-    import DisabledUiOverlay from '@/common/vue/disabled-ui-overlay/DisabledUiOverlay.vue';
+    import DisabledUiOverlay from '@/common/vue/disabled-ui-overlay/DisabledUiOverlay.vue'
 
     @Component({
         computed: {
@@ -77,8 +77,11 @@
 
                 if (!currentAccountName || currentAccountName === '') return
                 await this.$store.commit('SET_ACCOUNT_NAME', currentAccountName)
+                // get active wallet
                 const wallets = getTopValueInObject(accountMap)['wallets']
-                AppWallet.switchWallet(wallets[0].address, wallets, this.$store)
+                this.$store.commit('SET_WALLET_LIST',wallets)
+                const activeWalletAddress = JSON.parse(localRead('accountMap'))[currentAccountName].activeWalletAddress
+                AppWallet.updateActiveWalletAddress(activeWalletAddress, this.$store)
             } catch (error) {
                 console.error(error)
             }
@@ -98,9 +101,11 @@
 
                 //@TODO: move from there
                 const mosaicListFromStorage = localRead(newWallet.address)
+                const appWallet = new AppWallet(newWallet)
                 const parsedMosaicListFromStorage = mosaicListFromStorage === ''
                     ? false : JSON.parse(mosaicListFromStorage)
                 if (mosaicListFromStorage) await this.$store.commit('SET_MOSAICS', parsedMosaicListFromStorage)
+                appWallet.setAccountInfo(this.$store)
                 const initMosaicsAndNamespaces = await Promise.all([
                     // @WALLET make it an AppWallet methods
                     initMosaic(newWallet, this.$store),
@@ -111,10 +116,9 @@
                 this.$store.commit('SET_NAMESPACES', initMosaicsAndNamespaces[1] || [])
                 this.$store.commit('SET_MOSAICS_LOADING', false)
                 this.$store.commit('SET_NAMESPACE_LOADING', false)
-                
-                const appWallet = new AppWallet(newWallet)
+
                 appWallet.setMultisigStatus(this.node, this.$store)
-                appWallet.setAccountInfo(this.$store)
+
 
                 if (!this.chainListeners) {
                     this.chainListeners = new ChainListeners(this, newWallet.address, this.node)
@@ -190,7 +194,7 @@
 
         async mounted() {
             if (!this.activeAccount.wallet) this.$router.push('/login')
-            
+
             const {accountName, node} = this
 
             try {
@@ -223,7 +227,7 @@
                 .pipe(
                     throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
                 ).subscribe(({newValue, oldValue}) => {
-                    
+
                 if (!newValue) return
                 /**
                  * On Wallet Change

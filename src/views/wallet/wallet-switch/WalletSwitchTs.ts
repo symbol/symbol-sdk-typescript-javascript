@@ -82,10 +82,7 @@ export class WalletSwitchTs extends Vue {
     }
 
     switchWallet(newActiveWalletAddress) {
-        this.$store.commit(
-            'SET_WALLET',
-            this.walletList.find(({address}) => address === newActiveWalletAddress)
-        )
+        AppWallet.updateActiveWalletAddress(newActiveWalletAddress, this.$store)
     }
 
     formatNumber(number) {
@@ -151,6 +148,6 @@ export class WalletSwitchTs extends Vue {
     mounted() {
         // scroll to current wallet
         this.$refs.walletScroll["scrollTop"] = this.walletList
-                .findIndex(({address}) => address === this.activeAddress) * 40
+            .findIndex(({address}) => address === this.activeAddress) * 40
     }
 }

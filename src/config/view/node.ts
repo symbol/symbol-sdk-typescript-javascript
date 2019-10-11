@@ -13,10 +13,4 @@ export const nodeListConfig: Endpoint[] = [
         url: '13.114.200.132',
         isSelected: false,
     },
-    {
-        value: 'http://47.107.245.217:3000',
-        name: 'api-node-cn-0',
-        url: '47.107.245.217',
-        isSelected: false,
-    },
 ]

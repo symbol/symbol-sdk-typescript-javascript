@@ -12,7 +12,7 @@ export const appMosaicsModule = (store) => {
     if (mutation.type === 'SET_TRANSACTION_LIST') {
       const idsFromTransactions = AppMosaics().fromTransactions(state.account.transactionList)
       store.commit('UPDATE_MOSAICS', idsFromTransactions.appMosaics)
-      
+
       // @TODO: implement namespaceId management
       // try {
           // const {namespaceIds} = idsFromTransactions

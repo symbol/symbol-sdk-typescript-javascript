@@ -19,7 +19,7 @@
           </div>
           <div class="top_class_div">
             <span class="remote_public_key">{{$t('Remote_public_key')}}：</span>
-            <span>{{remotePublicKey?remotePublicKey:'no remote account'}}</span>
+            <span>{{linkedAccountKey?linkedAccountKey:'no remote account'}}</span>
           </div>
         </div>
       </div>

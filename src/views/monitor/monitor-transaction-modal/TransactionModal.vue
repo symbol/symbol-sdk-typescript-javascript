@@ -21,13 +21,14 @@
         >
           <div v-if="key !== 'transfer_type' && key !== 'mosaic'">
             <span class="title">{{$t(key)}}</span>
-            <span class="value overflow_ellipsis">{{value}}</span>
+            <span class="value overflow_ellipsis" v-if="value">{{value}}</span>
+            <span class="no_data" v-else>{{$t('no_data')}}</span>
           </div>
-          <div v-if="key === 'mosaic'">
+          <div class="mosaic_info" v-if="key === 'mosaic'">
+            <!--            TODO NEED BE SAME WITH XXX-->
+
             <span class="title">{{$t(key)}}</span>
-            <span class="value overflow_ellipsis">
-              {{renderMosaics(value, $store)}}
-            </span>
+            <MosaicTable :tableData="renderMosaicsToTable(value)"></MosaicTable>
           </div>
         </div>
         <!-- inner transaction -->
@@ -69,17 +70,12 @@
         >
           <div v-if="key !== 'transfer_type' && key !== 'mosaic'">
             <span class="title">{{$t(key)}}</span>
-            <span class="value overflow_ellipsis">{{value}}</span>
+            <span class="value overflow_ellipsis" v-if="value">{{value}}</span>
+            <span v-else>{{$t('no_data')}}</span>
           </div>
-          <div v-if="key === 'mosaic'">
+          <div class="mosaic_info" v-if="key === 'mosaic'">
             <span class="title">{{$t(key)}}</span>
-            <span class="value overflow_ellipsis">
-              <span v-for="(r, index) in renderMosaics(value, $store)" :key="index">
-                <span :class="[r.ownerPublicKey == publicKey?'green':'','mosaic_item']">
-                  {{r.name}} [{{r.amount}}]
-                </span>
-              </span>
-            </span>
+            <MosaicTable :tableData="renderMosaicsToTable(value)"></MosaicTable>
           </div>
         </div>
       </div>

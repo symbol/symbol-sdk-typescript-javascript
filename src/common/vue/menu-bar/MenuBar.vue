@@ -9,19 +9,19 @@
     <div class="left_navigator">
       <div class="navigator_icon">
         <div
-          v-for="(route, index) in routes"
-          :key="index"
-          :class="[
+                v-for="(route, index) in routes"
+                :key="index"
+                :class="[
               $route.matched.map(({path}) => path).includes(route.path) ? 'active_panel' : '',
               !walletList.length ? 'un_click' : 'pointer',
           ]"
-          @click="$router.push(route.path)"
+                @click=" !walletList.length ?'': $router.push(route.path)"
         >
           <span
-            :style="$route.matched.map(({path}) => path).includes(route.path)
+                  :style="$route.matched.map(({path}) => path).includes(route.path)
               ? { backgroundImage: `url('${route.meta.activeIcon}')` }
               : { backgroundImage: `url('${route.meta.icon}')` }"
-            class="absolute"
+                  class="absolute"
           />
         </div>
       </div>
@@ -44,7 +44,7 @@
           <div>
             <span class="pointer" @click="minWindow"></span>
             <span class="pointer not_window_max " v-if="!isNowWindowMax" @click="maxWindow"></span>
-            <span class="pointer now_window_max" v-else @click="maxWindow"></span>
+            <span class="pointer now_window_max" v-else @click="unmaximize"></span>
             <span class="pointer close_window" @click="closeWindow"></span>
           </div>
         </div>

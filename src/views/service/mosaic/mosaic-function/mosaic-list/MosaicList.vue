@@ -42,15 +42,14 @@
                   type="md-arrow-dropdown"/>
             </span>
 
-          <span class="deadline" @click="getSortType(mosaicSortType.byDuration)">
-               {{$t('deadline')}}
-            <Icon v-if="mosaicSortType.byDuration == currentSortType" class="active_sort_type"
-                  type="md-arrow-dropdown"/>
-            </span>
-
           <span class="Restrictable" @click="getSortType(mosaicSortType.byRestrictable)">
                {{$t('Restrictable')}}
             <Icon v-if="mosaicSortType.byRestrictable == currentSortType" class="active_sort_type"
+                  type="md-arrow-dropdown"/>
+            </span>
+          <span class="deadline" @click="getSortType(mosaicSortType.byDuration)">
+               {{$t('deadline')}}
+            <Icon v-if="mosaicSortType.byDuration == currentSortType" class="active_sort_type"
                   type="md-arrow-dropdown"/>
             </span>
 
@@ -58,11 +57,11 @@
                {{$t('alias')}}
             <Icon v-if="mosaicSortType.byAlias == currentSortType" class="active_sort_type" type="md-arrow-dropdown"/>
             </span>
-          <!--              <div class="mosaic_filter" @click="toggleIsShowExpiredMosaic()">-->
-          <!--                <img v-if="!isShowExpiredMosaic" src="@/common/img/window/windowSelected.png">-->
-          <!--                <img v-else src="@/common/img/window/windowUnselected.png">-->
-          <!--                <span>{{$t('Hide_expired_namespaces')}}</span>-->
-          <!--              </div>-->
+          <div class="mosaic_filter pointer" @click="toggleIsShowExpiredMosaic()">
+            <Icon v-if="isShowExpiredMosaic" type="md-square"/>
+            <Icon v-else type="md-square-outline"/>
+            <span>{{$t('Hide_expired_mosaic')}}</span>
+          </div>
         </div>
         <Spin v-if="mosaicsLoading" size="large" fix class="absolute"></Spin>
         <div class="no_data" v-if="false">{{$t('no_data')}}</div>
@@ -72,7 +71,7 @@
                 :class="['listItem',value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey?'owned_mosaic':'']">
           <Row>
             <span class="mosaic_id text_select">{{value.hex}}</span>
-            <span class="available_quantity">{{value.mosaicInfo?formatNumber(value.mosaicInfo.supply.compact()):0}}</span>
+            <span class="available_quantity">{{mosaicSupplyAmount(value)}}</span>
             <span class="mosaic_divisibility">{{value.properties?value.properties.divisibility:0}}</span>
             <span class="transportability">
               <Icon v-if="value.properties?value.properties.transferable:0" type="md-checkmark"/>
@@ -82,13 +81,13 @@
               <Icon v-if="value.properties?value.properties.supplyMutable:0" type="md-checkmark"/>
               <Icon v-else type="md-close"/>
             </span>
-            <span class="deadline">
-              {{computeDuration(value) <= 0 ? $t('overdue') : (computeDuration(value) === 'Forever'?
-              $t('forever') : formatNumber(computeDuration(value)))}}
-            </span>
             <span class="Restrictable">
               <Icon v-if="value.isRestrictable" type="md-checkmark"/>
               <Icon v-else type="md-close"/>
+            </span>
+            <span class="deadline">
+              {{computeDuration(value) <= 0 ? $t('overdue') : (computeDuration(value) === 'Forever'?
+              $t('forever') : formatNumber(computeDuration(value)))}}
             </span>
 
             <span class="alias text_select  ">
@@ -164,10 +163,10 @@
         @close="showAliasDialog = false"
     />
     <EditDialog
-        v-if="showMosaicEditDialog"
-        :showMosaicEditDialog="showMosaicEditDialog"
-        :itemMosaic="selectedMosaic"
-        @close="showMosaicEditDialog = false"
+            v-if="showMosaicEditDialog"
+            :showMosaicEditDialog="showMosaicEditDialog"
+            :itemMosaic="selectedMosaic"
+            @close="showMosaicEditDialog = false"
     />
   </div>
 </template>

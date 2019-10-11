@@ -751,5 +751,8 @@ export const zh_CN = {
     Import_private_key: '导入私钥',
     copy_mnemonic: '复制助记词',
     Harvesting:'收获',
-    ILLEGAL_PUBLICKEY_ERROR:'public key格式错误'
+    ILLEGAL_PUBLICKEY_ERROR:'public key格式错误',
+
+    ///////////////////////////////////////////////1009
+    this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted:'请注意，您正在删除最后一个钱包，钱包删除成功后，此账户将被注销！',
 }

@@ -104,8 +104,9 @@
               :key="index"
               class="mosaic_list_item radius"
             >
-              <span class="mosaic_name overflow_ellipsis">{{mosaics[m.id.id.toHex()]
-                  ? mosaics[m.id.id.toHex()].name : m.id.id.toHex()}}
+                <span class="mosaic_name overflow_ellipsis">{{
+                  mosaics[m.id.id.toHex()] && mosaics[m.id.id.toHex()].name
+                    ? mosaics[m.id.id.toHex()].name : m.id.id.toHex()}}
               </span>
               <span class="mosaic_amount overflow_ellipsis">{{getRelativeMosaicAmount(
                 m.amount.compact(), mosaics[m.id.id.toHex()]

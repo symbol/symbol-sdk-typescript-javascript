@@ -1,4 +1,4 @@
-import {MosaicAlias, MosaicId, MosaicHttp, Namespace, NamespaceId, Transaction} from 'nem2-sdk'
+import {MosaicAlias, MosaicId, MosaicHttp, Namespace, NamespaceId, Transaction, AliasType} from 'nem2-sdk'
 import {FormattedTransfer, FormattedTransaction, FormattedAggregateComplete, AppNamespace, AppState} from '@/core/model'
 import {flatMap, map, toArray} from 'rxjs/operators'
 import {AppMosaic} from '@/core/model'
@@ -42,7 +42,7 @@ export const AppMosaics = () => ({
     /**
      * Extracts any MosaicId and NamespaceId from an array of transactions
      * Returns AppMosaics for MosaicId, hex Id for NamespaceIds
-     * @param transactions 
+     * @param transactions
      */
     fromTransactions(transactions: Transaction[]): {appMosaics: AppMosaic[], namespaceIds: NamespaceId[]} {
         const allMosaics = transactions.map(x => this.extractMosaicsFromTransaction(x))
@@ -56,22 +56,22 @@ export const AppMosaics = () => ({
         const allNamespaceIds = allMosaicsFlat2
             .filter(x => (x && x.id instanceof NamespaceId))
             .map(x => ({ id: x.id, hex: x.id.toHex() }))
-        
+
         const namespaceHex = allNamespaceIds.map(({ hex }) => hex)
         const mosaicIdsNoDuplicate = allMosaicIds.filter((el, i, a) => i === a.indexOf(el))
         const namespaceHexNoDuplicate = namespaceHex.filter((el, i, a) => i === a.indexOf(el))
-        const namespaceIds = namespaceHexNoDuplicate 
+        const namespaceIds = namespaceHexNoDuplicate
                                 .map(x => allNamespaceIds
                                         .find(({ hex }) => hex === x).id)
         return {
             appMosaics: mosaicIdsNoDuplicate.map(x => new AppMosaic({hex: x})),
             namespaceIds
-        } 
+        }
     },
 
     /**
-     * 
-     * @param transaction 
+     *
+     * @param transaction
      */
     extractMosaicsFromTransaction(transaction: FormattedTransaction): any[] {
         if (transaction instanceof FormattedAggregateComplete
@@ -84,7 +84,7 @@ export const AppMosaics = () => ({
         if (tx.mosaics) return tx.mosaics
         if (tx.mosaicId) return tx.mosaicId
     },
-    
+
     fromAppNamespaces(namespaces: AppNamespace[]): AppMosaic[] {
         return namespaces
           .filter(({alias}) => alias instanceof MosaicAlias)
@@ -93,7 +93,7 @@ export const AppMosaics = () => ({
 
     fromNamespaces(namespaces: Namespace[]): AppMosaic[] {
         return namespaces
-            .filter(({alias}) => alias instanceof MosaicAlias)
+            .filter(({alias}) => alias.type == AliasType.Mosaic )
             .map(namespace => AppMosaic.fromNamespace(namespace))
     },
 })
