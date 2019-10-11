@@ -1,11 +1,11 @@
-import { Message, formDataConfig, defaultNetworkConfig, DEFAULT_FEES, FEE_GROUPS } from "@/config/index.ts"
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Message, formDataConfig, DEFAULT_FEES, FEE_GROUPS } from "@/config/index.ts"
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { EmptyAlias } from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import { Address, AliasAction, NamespaceId, Password, Transaction, MosaicId, AddressAliasTransaction, Deadline, UInt64, MosaicAliasTransaction } from "nem2-sdk"
 import { mapState } from "vuex"
 import { networkConfig } from "@/config/index"
 import { getAbsoluteMosaicAmount } from "@/core/utils"
-import { StoreAccount, AppInfo, AppWallet, AppNamespace, AppMosaic, DefaultFee, MosaicNamespaceStatusType } from "@/core/model"
+import { StoreAccount, AppInfo, AppWallet, AppNamespace, DefaultFee, MosaicNamespaceStatusType } from "@/core/model"
 import { AppMosaics } from '@/core/services'
 
 @Component({
@@ -155,7 +155,7 @@ export class AliasTs extends Vue {
       const { target, alias } = this
       const { password } = this.formItems
 
-      
+
       if (!target && !(alias || alias.trim())) {
         this.showErrorMessage(this.$t(Message.INPUT_EMPTY_ERROR) + '')
         return false

@@ -1,6 +1,6 @@
 import {copyTxt} from '@/core/utils/utils.ts'
 import {ContactQR} from 'nem2-qr-library'
-import {AddressAlias, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
+import {Address, AddressAlias, AliasType, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import WalletAlias from './wallet-function/wallet-alias/WalletAlias.vue'
 import WalletFilter from './wallet-function/wallet-filter/WalletFilter.vue'
@@ -78,8 +78,8 @@ export class WalletDetailsTs extends Vue {
     get selfAliases(): AppNamespace[] {
         return this.NamespaceList
             .filter(({alias}) =>
-                alias instanceof AddressAlias &&
-                alias.address.plain() === this.getAddress
+                alias.type == AliasType.Address &&
+                Address.createFromEncoded(alias.address ).plain()=== this.getAddress
             )
     }
 
@@ -143,7 +143,7 @@ export class WalletDetailsTs extends Vue {
         this.activeNamespace = namespace
         this.showBindDialog = true
     }
-    
+
     copy(txt) {
         copyTxt(txt).then(() => {
             this.$Notice.success({

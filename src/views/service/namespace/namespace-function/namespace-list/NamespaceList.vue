@@ -52,7 +52,7 @@
             />
           </span> -->
           <span
-            class="link"
+            class="link overflow_ellipsis"
             @click="namespaceSortType = namespaceSortTypes.byBindType;
                 sortDirection = !sortDirection"
           >{{$t('link')}}
@@ -101,7 +101,7 @@
                 <Icon v-else type="md-close"/>
               </span>
               <span class="type text_select overflow_ellipsis">
-                <span class="overflow_ellipsis" v-if="getAliasTarget(n)">
+                <span v-if="getAliasTarget(n)">
                   {{getAliasTarget(n)}}
                 </span>
                 <Icon v-else type="md-close"/>
