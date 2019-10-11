@@ -60,9 +60,9 @@ export class NamespaceListTs extends Vue {
     }
 
     get namespaceList(): AppNamespace[] {
-        // @ts-ignore
         const {namespaces, isShowExpiredNamespace, namespaceGracePeriodDuration, currentHeight} = this
-        return namespaces.filter(item => isShowExpiredNamespace || item.endHeight - currentHeight > namespaceGracePeriodDuration)
+        return namespaces
+            .filter(item => isShowExpiredNamespace || item.endHeight - currentHeight + namespaceGracePeriodDuration > 0)
     }
 
     get paginatedNamespaceList(): AppNamespace[] {
@@ -136,7 +136,7 @@ export class NamespaceListTs extends Vue {
     getAliasTarget(namespace: AppNamespace): string {
         const {alias} = namespace
         if (alias.type === AliasType.Address) return alias.address.pretty()
-        if (alias.type === AliasType.Mosaic) return alias.mosaicId
+        if (alias.type === AliasType.Mosaic) return alias.mosaicId.toHex()
         return ''
     }
 
