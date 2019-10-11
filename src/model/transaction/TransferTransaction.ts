@@ -15,7 +15,7 @@
  */
 
 import { Convert, Convert as convert } from '../../core/format';
-import { RawAddress } from '../../core/format/RawAddress';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedTransferTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransferTransactionBuilder';
 import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
@@ -34,7 +34,6 @@ import { Message } from '../message/Message';
 import { MessageType } from '../message/MessageType';
 import { PlainMessage } from '../message/PlainMessage';
 import { Mosaic } from '../mosaic/Mosaic';
-import { MosaicId } from '../mosaic/MosaicId';
 import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -128,10 +127,11 @@ export class TransferTransaction extends Transaction {
         const transaction = TransferTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as TransferTransactionBuilder).getDeadline().timestamp),
-            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
+            UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             builder.getMosaics().map((mosaic) => {
+                const id = new UInt64(mosaic.mosaicId.unresolvedMosaicId).toHex();
                 return new Mosaic(
-                    new MosaicId(mosaic.mosaicId.unresolvedMosaicId),
+                    UnresolvedMapping.toUnresolvedMosaic(id),
                     new UInt64(mosaic.amount.amount));
             }),
             messageType === MessageType.PlainMessage ?
@@ -202,22 +202,6 @@ export class TransferTransaction extends Transaction {
     }
 
     /**
-     * Return unresolved address bytes of the recipient
-     * @internal
-     * @returns {string}
-     */
-    public getRecipientBytes(): Uint8Array {
-        const recipient = this.recipientToString();
-        if (/^[0-9a-fA-F]{16}$/.test(recipient)) {
-            // received hexadecimal notation of namespaceId (alias)
-            return RawAddress.aliasToRecipient(convert.hexToUint8(recipient));
-        } else {
-            // received recipient address
-            return RawAddress.stringToAddress(recipient);
-        }
-    }
-
-    /**
      * @override Transaction.size()
      * @description get the byte size of a TransferTransaction
      * @returns {number}
@@ -254,7 +238,7 @@ export class TransferTransaction extends Transaction {
             TransactionType.TRANSFER.valueOf(),
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
-            new UnresolvedAddressDto(this.getRecipientBytes()),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress)),
             this.getMessageBuffer(),
             this.sortMosaics().map((mosaic) => {
                 return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
@@ -273,7 +257,7 @@ export class TransferTransaction extends Transaction {
             new KeyDto(Convert.hexToUint8(this.signer!.publicKey)),
             this.versionToDTO(),
             TransactionType.TRANSFER.valueOf(),
-            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientToString())),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress)),
             this.getMessageBuffer(),
             this.sortMosaics().map((mosaic) => {
                 return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),

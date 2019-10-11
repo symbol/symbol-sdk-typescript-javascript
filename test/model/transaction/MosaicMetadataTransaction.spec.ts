@@ -19,6 +19,7 @@ import { Convert } from '../../../src/core/format/Convert';
 import { Account } from '../../../src/model/account/Account';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../../src/model/transaction/Deadline';
 import { MosaicMetadataTransaction } from '../../../src/model/transaction/MosaicMetadataTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
@@ -94,6 +95,27 @@ describe('MosaicMetadataTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw(Error, 'The maximum value size is 1024');
+    });
+
+    it('should create and sign an MosaicMetadataTransaction object using alias', () => {
+        const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
+        const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
+            Deadline.create(),
+            account.publicKey,
+            UInt64.fromUint(1000),
+            namespacId,
+            1,
+            Convert.uint8ToUtf8(new Uint8Array(10)),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const signedTransaction = mosaicMetadataTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(
+            240,
+            signedTransaction.payload.length,
+        )).to.be.equal('C2F93346E27CE6AD1A9F8F5E3066F8326593A406BDF357ACB041E2F9AB402EFEE80' +
+                       '3000000000000C51FB4C93FCA509501000A0000000000000000000000');
     });
 
     describe('size', () => {

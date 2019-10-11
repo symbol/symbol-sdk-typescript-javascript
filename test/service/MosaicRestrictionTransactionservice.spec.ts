@@ -115,7 +115,7 @@ describe('MosaicRestrictionTransactionService', () => {
             .subscribe((transaction: MosaicAddressRestrictionTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_ADDRESS_RESTRICTION);
                 expect(transaction.restrictionKey.toHex()).to.be.equal(key.toHex());
-                expect(transaction.targetAddress.plain()).to.be.equal(account.address.plain());
+                expect(transaction.targetAddressToString()).to.be.equal(account.address.plain());
                 expect(transaction.previousRestrictionValue.toString()).to.be.equal(addressRestrictionValue);
                 done();
         });

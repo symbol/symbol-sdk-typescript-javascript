@@ -15,6 +15,7 @@
  */
 
 import { Convert } from '../../core/format';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import {
     EmbeddedMosaicGlobalRestrictionTransactionBuilder,
@@ -27,6 +28,7 @@ import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/Unresolved
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { MosaicId } from '../mosaic/MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { MosaicRestrictionType } from '../restriction/MosaicRestrictionType';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
@@ -60,19 +62,19 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      * @param newRestrictionValue - The new restriction value.
      * @param newRestrictionType - The new restriction tpye.
      * @param networkType - The network type.
-     * @param referenceMosaicId - (Optional) The mosaic id providing the restriction key.
+     * @param referenceMosaicId - (Optional) The unresolved mosaic identifier providing the restriction key.
      * @param maxFee - (Optional) Max fee defined by the sender
      * @returns {MosaicGlobalRestrictionTransaction}
      */
     public static create(deadline: Deadline,
-                         mosaicId: MosaicId,
+                         mosaicId: MosaicId | NamespaceId,
                          restrictionKey: UInt64,
                          previousRestrictionValue: UInt64,
                          previousRestrictionType: MosaicRestrictionType,
                          newRestrictionValue: UInt64,
                          newRestrictionType: MosaicRestrictionType,
                          networkType: NetworkType,
-                         referenceMosaicId: MosaicId = new MosaicId(UInt64.fromUint(0).toDTO()),
+                         referenceMosaicId: MosaicId | NamespaceId = UnresolvedMapping.toUnresolvedMosaic(UInt64.fromUint(0).toHex()),
                          maxFee: UInt64 = new UInt64([0, 0])): MosaicGlobalRestrictionTransaction {
         return new MosaicGlobalRestrictionTransaction(networkType,
             TransactionVersion.MOSAIC_GLOBAL_RESTRICTION,
@@ -93,7 +95,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
      * @param version - The transaction version
      * @param deadline - The deadline to include the transaction.
      * @param maxFee - (Optional) Max fee defined by the sender
-     * @param mosaicId - The mosaic id ex: new MosaicId([481110499, 231112638]).
+     * @param mosaicId - The unresolved mosaic identifier.
      * @param referenceMosaicId - The mosaic id providing the restriction key.
      * @param restrictionKey - The restriction key.
      * @param previousRestrictionValue - The previous restriction value.
@@ -111,11 +113,11 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
                 /**
                  * The mosaic id.
                  */
-                public readonly mosaicId: MosaicId,
+                public readonly mosaicId: MosaicId | NamespaceId,
                 /**
                  * The refrence mosaic id.
                  */
-                public readonly referenceMosaicId: MosaicId,
+                public readonly referenceMosaicId: MosaicId | NamespaceId,
                 /**
                  * The restriction key.
                  */
@@ -157,14 +159,14 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
         const transaction = MosaicGlobalRestrictionTransaction.create(
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as MosaicGlobalRestrictionTransactionBuilder).getDeadline().timestamp),
-            new MosaicId(builder.getMosaicId().unresolvedMosaicId),
+            UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaicId().unresolvedMosaicId).toHex()),
             new UInt64(builder.getRestrictionKey()),
             new UInt64(builder.getPreviousRestrictionValue()),
             builder.getPreviousRestrictionType().valueOf(),
             new UInt64(builder.getNewRestrictionValue()),
             builder.getNewRestrictionType().valueOf(),
             networkType,
-            new MosaicId(builder.getReferenceMosaicId().unresolvedMosaicId),
+            UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getReferenceMosaicId().unresolvedMosaicId).toHex()),
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as MosaicGlobalRestrictionTransactionBuilder).fee.amount),
         );
         return isEmbedded ?
