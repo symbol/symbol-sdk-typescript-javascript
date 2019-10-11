@@ -136,7 +136,7 @@ export class NamespaceListTs extends Vue {
     getAliasTarget(namespace: AppNamespace): string {
         const {alias} = namespace
         if (alias.type === AliasType.Address) return alias.address.pretty()
-        if (alias.type === AliasType.Mosaic) return alias.mosaicId.toHex()
+        if (alias.type === AliasType.Mosaic) return alias.mosaicId
         return ''
     }
 

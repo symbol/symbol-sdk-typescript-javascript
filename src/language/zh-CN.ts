@@ -755,4 +755,5 @@ export const zh_CN = {
 
     ///////////////////////////////////////////////1009
     this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted:'请注意，您正在删除最后一个钱包，钱包删除成功后，此账户将被注销！',
+    Mutlisig_account_modification_transaction_form_is_not_ready_yet:'Mutlisig帐户管理正在开发中！'
 }

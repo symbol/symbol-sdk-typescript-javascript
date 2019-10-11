@@ -777,5 +777,6 @@ export const en_US = {
     Alias_type: 'Alias type',
 
     ////////////////////////////////1009
-    this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted:'Please note that you are deleting the last wallet and this account will be logged out after the wallet is successfully deleted!'
+    this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted:'Please note that you are deleting the last wallet and this account will be logged out after the wallet is successfully deleted!',
+    Mutlisig_account_modification_transaction_form_is_not_ready_yet:'Mutlisig account modification transaction form is not ready yet!'
 }

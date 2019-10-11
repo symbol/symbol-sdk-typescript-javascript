@@ -12,7 +12,7 @@ export class AppNamespace {
                  public label: string,
                  public namespaceInfo: NamespaceInfo,
                  public isActive: boolean,
-                 public alias: Alias,
+                 public alias,
                  public levels: number,
                  public endHeight: number,
                  public name: string) {}
