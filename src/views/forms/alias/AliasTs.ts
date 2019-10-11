@@ -147,7 +147,7 @@ export class AliasTs extends Vue {
       // @TODO handle namespace list loading state
       return this.NamespaceList
           .filter(({alias, endHeight}) => (alias instanceof EmptyAlias
-              && endHeight - currentHeight > namespaceGracePeriodDuration))
+              && endHeight - currentHeight + namespaceGracePeriodDuration > 0 ))
           .map(({name}) => name)
   }
 

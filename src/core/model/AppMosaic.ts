@@ -76,10 +76,8 @@ export class AppMosaic {
  }
 
  static fromNamespace(namespace: Namespace | AppNamespace): AppMosaic {
-     const id: string = namespace.alias.mosaicId
-
      return new AppMosaic({
-         hex: id,
+         hex: namespace.alias.mosaicId.toHex(),
          name: namespace.name,
      })
  }
