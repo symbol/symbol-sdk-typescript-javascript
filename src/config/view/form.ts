@@ -4,7 +4,7 @@ import {FEE_SPEEDS} from '@/config'
 
 export const formDataConfig = {
     transferForm: {
-        recipient: 'SCSXIT-R36DCY-JRVSNE-NY5BUA-HXSL7I-E6ULEY-UYRC',
+        recipient: '',
         remark: '',
         multisigPublicKey: '',
         feeSpeed: FEE_SPEEDS.NORMAL,
@@ -92,7 +92,7 @@ export const formDataConfig = {
         walletName: '',
     },
     walletImportPrivateKeyForm: {
-        privateKey: 'FB628AF4276F696AD1FA85B7AB1E49CFD896E5EC85000E3179EEEA59717DD8DE',
+        privateKey: '',
         networkType: NetworkType.MIJIN_TEST,
         walletName: 'wallet-privateKey',
     },
