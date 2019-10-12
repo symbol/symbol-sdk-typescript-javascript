@@ -26,7 +26,8 @@ export class PersistentDelegationRequestTransaction extends TransferTransaction 
      * Create a PersistentDelegationRequestTransaction with special message payload
      * for presistent harvesting delegation unlocking
      * @param deadline - The deadline to include the transaction.
-     * @param HarvestePublicKey - The harvester public key
+     * @param delegatedPrivateKey - The private key of delegated account
+     * @param recipientPublicKey - The recipient public key
      * @param senderPrivateKey - The sender's private key
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
@@ -34,11 +35,13 @@ export class PersistentDelegationRequestTransaction extends TransferTransaction 
      */
     public static createPersistentDelegationRequestTransaction(
                     deadline: Deadline,
-                    HarvestePublicKey: string,
+                    delegatedPrivateKey: string,
+                    recipientPublicKey: string,
                     senderPrivateKey: string,
                     networkType: NetworkType,
                     maxFee: UInt64 = new UInt64([0, 0])): PersistentDelegationRequestTransaction {
-        const message = PersistentHarvestingDelegationMessage.create(HarvestePublicKey, senderPrivateKey, networkType);
-        return super.create(deadline, Address.createFromPublicKey(HarvestePublicKey, networkType), [], message, networkType, maxFee);
+        const message = PersistentHarvestingDelegationMessage
+            .create(delegatedPrivateKey, senderPrivateKey, recipientPublicKey, networkType);
+        return super.create(deadline, Address.createFromPublicKey(recipientPublicKey, networkType), [], message, networkType, maxFee);
     }
 }
