@@ -59,8 +59,8 @@ export class InflationReceipt extends Receipt {
         const buffer = new Uint8Array(20);
         buffer.set(GeneratorUtils.uintToBuffer(ReceiptVersion.INFLATION_RECEIPT, 2));
         buffer.set(GeneratorUtils.uintToBuffer(this.type, 2), 2);
-        buffer.set(Convert.hexToUint8(this.mosaicId.toHex()), 4);
-        buffer.set(Convert.hexToUint8(this.amount.toHex()), 12);
+        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.mosaicId.toHex()).toDTO()), 4);
+        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.amount.toHex()).toDTO()), 12);
         return buffer;
     }
 }

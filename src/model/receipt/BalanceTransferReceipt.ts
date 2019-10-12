@@ -76,8 +76,8 @@ export class BalanceTransferReceipt extends Receipt {
         buffer.set(GeneratorUtils.uintToBuffer(this.type, 2), 2);
         buffer.set(Convert.hexToUint8(this.sender.publicKey), 4);
         buffer.set(recipient, 36);
-        buffer.set(Convert.hexToUint8(this.mosaicId.toHex()), 36 + recipient.length);
-        buffer.set(Convert.hexToUint8(this.amount.toHex()), 44 + recipient.length);
+        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.mosaicId.toHex()).toDTO()), 36 + recipient.length);
+        buffer.set(GeneratorUtils.uint64ToBuffer(UInt64.fromHex(this.amount.toHex()).toDTO()), 44 + recipient.length);
         return buffer;
     }
 

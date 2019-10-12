@@ -56,11 +56,4 @@ export abstract class Alias {
      * @return {boolean}
      */
     protected abstract equals(alias: any): boolean;
-
-    /**
-     * @internal
-     * Generate alias buffer
-     * @return {Uint8Array}
-     */
-    protected abstract serialize(): Uint8Array;
 }

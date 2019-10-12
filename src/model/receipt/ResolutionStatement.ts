@@ -20,10 +20,12 @@ import { RawAddress } from '../../core/format/RawAddress';
 import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
 import { ResolutionEntry } from './ResolutionEntry';
+import { ResolutionType } from './ResolutionType';
 
 /**
  * When a transaction includes an alias, a so called resolution statement reflects the resolved value for that block:
@@ -34,11 +36,16 @@ export class ResolutionStatement {
 
     /**
      * Receipt - resolution statement object
+     * @param resolutionType - The resolution type
      * @param height - The block height
      * @param unresolved - An unresolved address or unresolved mosaicId.
      * @param resolutionEntries - The array of resolution entries.
      */
     constructor(
+                /**
+                 * Resolution type
+                 */
+                public readonly resolutionType: ResolutionType,
                 /**
                  * The block height.
                  */
@@ -46,7 +53,7 @@ export class ResolutionStatement {
                 /**
                  * An unresolved address or unresolved mosaicId.
                  */
-                public readonly unresolved: Address | MosaicId,
+                public readonly unresolved: Address | MosaicId | NamespaceId,
                 /**
                  * The array of resolution entries.
                  */
@@ -58,10 +65,9 @@ export class ResolutionStatement {
      * @return {string} receipt hash in hex
      */
     public generateHash(): string {
-        const type = this.unresolved instanceof Address ? ReceiptType.Address_Alias_Resolution
-                                                        : ReceiptType.Mosaic_Alias_Resolution;
-        const unresolvedBytes = this.unresolved instanceof Address ? RawAddress.stringToAddress(this.unresolved.plain())
-                                                                   : Convert.hexToUint8(this.unresolved.toHex());
+        const type = this.resolutionType === ResolutionType.Address ? ReceiptType.Address_Alias_Resolution
+                                                                    : ReceiptType.Mosaic_Alias_Resolution;
+        const unresolvedBytes = this.getUnresolvedBytes(this.resolutionType);
         const hasher = sha3_256.create();
         hasher.update(GeneratorUtils.uintToBuffer(ReceiptVersion.RESOLUTION_STATEMENT, 2));
         hasher.update(GeneratorUtils.uintToBuffer(type, 2));
@@ -75,5 +81,28 @@ export class ResolutionStatement {
 
         hasher.update(entryBytes);
         return hasher.hex().toUpperCase();
+    }
+
+    /**
+     * @internal
+     * Generate buffer for unresulved
+     * @param - The resolution Type
+     * @return {Uint8Array}
+     */
+    private getUnresolvedBytes(resolutionType: ResolutionType): Uint8Array {
+        if (resolutionType === ResolutionType.Address) {
+            const recipientString =
+            this.unresolved instanceof NamespaceId ? (this.unresolved as NamespaceId).toHex()
+                                                   : (this.unresolved as Address).plain();
+            if (/^[0-9a-fA-F]{16}$/.test(recipientString)) {
+                // received hexadecimal notation of namespaceId (alias)
+                return RawAddress.aliasToRecipient(Convert.hexToUint8(recipientString));
+            } else {
+                // received recipient address
+                return RawAddress.stringToAddress(recipientString);
+            }
+        }
+
+        return GeneratorUtils.uint64ToBuffer(UInt64.fromHex((this.unresolved as MosaicId | NamespaceId).toHex()).toDTO());
     }
 }

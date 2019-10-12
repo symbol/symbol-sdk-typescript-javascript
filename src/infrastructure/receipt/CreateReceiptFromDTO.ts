@@ -93,19 +93,21 @@ const createResolutionStatement = (statementDTO, resolutionType): ResolutionStat
     switch (resolutionType) {
         case ResolutionType.Address:
             return new ResolutionStatement(
+                ResolutionType.Address,
                 UInt64.fromNumericString(statementDTO.height),
                 Address.createFromEncoded(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
-                    return new ResolutionEntry(new AddressAlias(Address.createFromEncoded(entry.resolved)),
+                    return new ResolutionEntry(Address.createFromEncoded(entry.resolved),
                         new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
                 }),
             );
         case ResolutionType.Mosaic:
             return new ResolutionStatement(
+                ResolutionType.Mosaic,
                 UInt64.fromNumericString(statementDTO.height),
                 new MosaicId(statementDTO.unresolved),
                 statementDTO.resolutionEntries.map((entry) => {
-                    return new ResolutionEntry(new MosaicAlias(new MosaicId(entry.resolved)),
+                    return new ResolutionEntry(new MosaicId(entry.resolved),
                         new ReceiptSource(entry.source.primaryId, entry.source.secondaryId));
                 }),
             );

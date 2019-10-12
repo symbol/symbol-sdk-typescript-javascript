@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert } from '../../core/format/Convert';
 import {MosaicId} from '../mosaic/MosaicId';
 import {Alias} from './Alias';
 import { AliasType } from './AliasType';
@@ -54,13 +53,5 @@ export class MosaicAlias extends Alias {
      */
     public toHex(): string {
         return this.mosaicId.toHex();
-    }
-
-    /**
-     * Generate alias buffer
-     * @return {Uint8Array}
-     */
-    public serialize(): Uint8Array {
-        return Convert.hexToUint8(this.mosaicId.toHex());
     }
 }
