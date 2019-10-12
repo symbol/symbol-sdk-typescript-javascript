@@ -19,6 +19,7 @@
             <FormItem>
               <Button type="success" @click="submit"> {{$t('confirm')}}</Button>
             </FormItem>
+            <input v-show="false">
           </Form>
         </div>
       </div>
