@@ -27,7 +27,8 @@ import { TestingAccount } from '../../conf/conf.spec';
 
 describe('PersistentDelegationRequestTransaction', () => {
     let account: Account;
-    const harvesterPublicKey = '8A78C9E9B0E59D0F74C0D47AB29FBD523C706293A3FA9CD9FE0EEB2C10EA924A';
+    const delegatedPrivateKey = '8A78C9E9B0E59D0F74C0D47AB29FBD523C706293A3FA9CD9FE0EEB2C10EA924A';
+    const recipientPublicKey = '9DBF67474D6E1F8B131B4EB1F5BA0595AFFAE1123607BC1048F342193D7E669F';
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
     const messageMarker = 'FECC71C764BFE598';
 
@@ -39,7 +40,8 @@ describe('PersistentDelegationRequestTransaction', () => {
         const persistentDelegationRequestTransaction =
             PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 Deadline.create(),
-                harvesterPublicKey,
+                delegatedPrivateKey,
+                recipientPublicKey,
                 account.privateKey,
                 NetworkType.MIJIN_TEST,
             );
@@ -52,7 +54,8 @@ describe('PersistentDelegationRequestTransaction', () => {
         const persistentDelegationRequestTransaction =
             PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 Deadline.create(),
-                harvesterPublicKey,
+                delegatedPrivateKey,
+                recipientPublicKey,
                 account.privateKey,
                 NetworkType.MIJIN_TEST,
                 new UInt64([1, 0]),
@@ -66,7 +69,8 @@ describe('PersistentDelegationRequestTransaction', () => {
         const persistentDelegationRequestTransaction =
             PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 Deadline.create(),
-                harvesterPublicKey,
+                delegatedPrivateKey,
+                recipientPublicKey,
                 account.privateKey,
                 NetworkType.MIJIN_TEST,
             );
@@ -76,7 +80,7 @@ describe('PersistentDelegationRequestTransaction', () => {
         expect(persistentDelegationRequestTransaction.mosaics.length).to.be.equal(0);
         expect(persistentDelegationRequestTransaction.recipientAddress).to.be.instanceof(Address);
         expect((persistentDelegationRequestTransaction.recipientAddress as Address).plain())
-            .to.be.equal('SAMA2UEQNAQ45DWYDNJVLPWKQJDAHFZIVLWACIGN');
+            .to.be.equal('SDBC4JE7GTJAKN2XJCQWWRJMYA35AFOYQBATXOUA');
 
         const signedTransaction = persistentDelegationRequestTransaction.signWith(account, generationHash);
 
@@ -91,6 +95,7 @@ describe('PersistentDelegationRequestTransaction', () => {
             PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 Deadline.create(),
                 'abc',
+                recipientPublicKey,
                 account.privateKey,
                 NetworkType.MIJIN_TEST,
                 new UInt64([1, 0]),
@@ -102,7 +107,8 @@ describe('PersistentDelegationRequestTransaction', () => {
         expect(() => {
             PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 Deadline.create(),
-                harvesterPublicKey,
+                delegatedPrivateKey,
+                recipientPublicKey,
                 'abc',
                 NetworkType.MIJIN_TEST,
                 new UInt64([1, 0]),

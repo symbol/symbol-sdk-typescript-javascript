@@ -31,7 +31,8 @@ import { TestingAccount } from '../../conf/conf.spec';
 describe('TransferTransaction', () => {
     let account: Account;
     const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
-    const harvesterPublicKey = '8A78C9E9B0E59D0F74C0D47AB29FBD523C706293A3FA9CD9FE0EEB2C10EA924A';
+    const delegatedPrivateKey = '8A78C9E9B0E59D0F74C0D47AB29FBD523C706293A3FA9CD9FE0EEB2C10EA924A';
+    const recipientPublicKey = '9DBF67474D6E1F8B131B4EB1F5BA0595AFFAE1123607BC1048F342193D7E669F';
     const messageMarker = 'FECC71C764BFE598';
     before(() => {
         account = TestingAccount;
@@ -229,7 +230,8 @@ describe('TransferTransaction', () => {
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
-            PersistentHarvestingDelegationMessage.create(harvesterPublicKey, account.privateKey, NetworkType.MIJIN_TEST),
+            PersistentHarvestingDelegationMessage
+                .create(delegatedPrivateKey, account.privateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
             NetworkType.MIJIN_TEST,
         );
 
@@ -241,7 +243,8 @@ describe('TransferTransaction', () => {
             Deadline.create(),
             Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             [],
-            PersistentHarvestingDelegationMessage.create(harvesterPublicKey, account.privateKey, NetworkType.MIJIN_TEST),
+            PersistentHarvestingDelegationMessage
+                .create(delegatedPrivateKey, account.privateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
             NetworkType.MIJIN_TEST,
         );
 
@@ -266,7 +269,8 @@ describe('TransferTransaction', () => {
                 Deadline.create(),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
                 [NetworkCurrencyMosaic.createRelative(100)],
-                PersistentHarvestingDelegationMessage.create(harvesterPublicKey, account.privateKey, NetworkType.MIJIN_TEST),
+                PersistentHarvestingDelegationMessage
+                    .create(delegatedPrivateKey, account.privateKey, recipientPublicKey,  NetworkType.MIJIN_TEST),
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw(Error, 'PersistentDelegationRequestTransaction should be created without Mosaic');
@@ -278,7 +282,7 @@ describe('TransferTransaction', () => {
                 Deadline.create(),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
                 [NetworkCurrencyMosaic.createRelative(100)],
-                PersistentHarvestingDelegationMessage.create('abc', account.privateKey, NetworkType.MIJIN_TEST),
+                PersistentHarvestingDelegationMessage.create('abc',  account.privateKey, recipientPublicKey, NetworkType.MIJIN_TEST),
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw();
@@ -290,7 +294,7 @@ describe('TransferTransaction', () => {
                 Deadline.create(),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
                 [NetworkCurrencyMosaic.createRelative(100)],
-                PersistentHarvestingDelegationMessage.create(harvesterPublicKey, 'abc', NetworkType.MIJIN_TEST),
+                PersistentHarvestingDelegationMessage.create(delegatedPrivateKey, 'abc', recipientPublicKey, NetworkType.MIJIN_TEST),
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw();
