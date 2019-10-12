@@ -113,6 +113,7 @@
                       <span class="">{{$t('modify_supply')}}</span>
                     </p>
                     <p
+                      v-if="!value.name"
                       class="fnItem"
                       @click="bindItem(value)"
                     >

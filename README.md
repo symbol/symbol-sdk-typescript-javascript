@@ -1,6 +1,6 @@
 ## NEM2-Desktop-Wallet
 
-This program is a desktop wallet application based on NEM2-Catapult. It is developed with the TypeScript-SDK, Vuejs, Electron and can be easily packaged into desktop applications for Windows and Mac.   
+This program is a desktop wallet application based on NEM2-Catapult. It is developed with the TypeScript-SDK, VueJS, Electron and can be easily packaged into desktop applications for Windows and Mac.   
 :warning: **This program is currently in development, this program is now only available for the NEM2 test network. It cannot be used for others. Pay attention to asset security.**
 
 
@@ -45,7 +45,7 @@ Feel free to get the full application reference list , check [the app reference]
 ## Getting help
 Use the following available resources to get help:
 
-* NEM2 Developer Centor: [nemtech.github.io](https://nemtech.github.io/)
+* NEM2 Developer Center: [nemtech.github.io](https://nemtech.github.io/)
 * If you found a bug, open a new issue
 
 ## Contributing

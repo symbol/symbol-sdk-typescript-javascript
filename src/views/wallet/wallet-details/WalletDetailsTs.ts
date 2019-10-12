@@ -79,7 +79,7 @@ export class WalletDetailsTs extends Vue {
         return this.NamespaceList
             .filter(({alias}) =>
                 alias.type == AliasType.Address &&
-                Address.createFromEncoded(alias.address ).plain()=== this.getAddress
+                alias.address.plain()=== this.getAddress
             )
     }
 
