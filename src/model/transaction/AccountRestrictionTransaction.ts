@@ -102,7 +102,7 @@ export class AccountRestrictionTransaction {
     ): AccountOperationRestrictionTransaction {
         if (![AccountRestrictionType.AllowIncomingTransactionType,
               AccountRestrictionType.AllowOutgoingTransactionType,
-              AccountRestrictionType.BlockOutgoingTransactionType,
+              AccountRestrictionType.BlockIncomingTransactionType,
               AccountRestrictionType.BlockOutgoingTransactionType].includes(restrictionType)) {
             throw new Error ('Restriction type is not allowed.');
         }
