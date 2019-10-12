@@ -18,7 +18,11 @@
         selections: Array<any>
 
         mounted() {
-            this.pie = echarts.init(this.$refs.pie)
+              try {
+                this.pie = echarts.init(this.$refs.pie)
+            } catch (e) {
+                return
+            }
             if (this.$refs.pie) return
             this.pie.setOption(this.option)
             window.onresize = this.pie.resize
@@ -30,7 +34,11 @@
                 return
             }
             this.option.series[0].data = this.selections
-            this.pie = echarts.init(this.$refs.pie)
+              try {
+                this.pie = echarts.init(this.$refs.pie)
+            } catch (e) {
+                return
+            }
             this.pie.setOption(this.option)
             window.onresize = this.pie.resize
         }

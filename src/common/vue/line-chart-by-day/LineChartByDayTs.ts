@@ -256,7 +256,11 @@ export class LineChartByDayTs extends Vue {
     }
 
     refreshXem() {
-        this.dom = echarts.init(this.$refs.dom)
+        try {
+            this.dom = echarts.init(this.$refs.dom)
+        } catch (e) {
+            return
+        }
         let {xemDataList, btcDataList} = this
 
 
@@ -298,7 +302,11 @@ export class LineChartByDayTs extends Vue {
     }
 
     refreshBtc() {
-        this.dom = echarts.init(this.$refs.dom)
+        try {
+            this.dom = echarts.init(this.$refs.dom)
+        } catch (e) {
+            return
+        }
         let {btcDataList, xemMin} = this
         let xAxisData = []
 
@@ -325,13 +333,17 @@ export class LineChartByDayTs extends Vue {
             return item.open
         })
         this.option.series[1].data = btcDataList
-        this.dom.setOption(this.option)
-        this.dom.dispatchAction({
-            type: 'showTip',
-            seriesIndex: 0,
-            dataIndex: btcDataList.length - 1,
+        try {
+            this.dom.setOption(this.option)
+            this.dom.dispatchAction({
+                type: 'showTip',
+                seriesIndex: 0,
+                dataIndex: btcDataList.length - 1,
 
-        })
+            })
+        } catch (e) {
+            return
+        }
         window.onresize = this.dom.resize
     }
 
@@ -382,12 +394,16 @@ export class LineChartByDayTs extends Vue {
     }
 
     mouseoutLine() {
-        this.dom.dispatchAction({
-            type: 'showTip',
-            seriesIndex: 0,
-            dataIndex: this.option.series[1].data.length - 1,
+        try {
+            this.dom.dispatchAction({
+                type: 'showTip',
+                seriesIndex: 0,
+                dataIndex: this.option.series[1].data.length - 1,
 
-        })
+            })
+        } catch (e) {
+            return
+        }
     }
 
     async mounted() {

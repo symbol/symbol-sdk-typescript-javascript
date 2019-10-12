@@ -76,7 +76,11 @@
                 this.notMultisigNorCosigner = true
                 this.option.series[0].data = []
                 this.option.series[0].links = []
-                this.dom = echarts.init(this.$refs.dom)
+                   try {
+            this.dom = echarts.init(this.$refs.dom)
+        } catch (e) {
+            return
+        }
                 this.dom.setOption(this.option)
                 return
             }
@@ -134,7 +138,11 @@
                 return
             }
 
+               try {
             this.dom = echarts.init(this.$refs.dom)
+        } catch (e) {
+            return
+        }
             this.dom.on('click', function (params) {
                 that.copyAddress(params)
             })
