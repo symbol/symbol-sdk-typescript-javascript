@@ -29,6 +29,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
 
     let sender_nis: Account;
     let recipient_nis: Account;
+    const delegatedPrivateKey = 'F0AB1010EFEE19EE5373719881DF5123C13E643C519655F7E97347BFF77175BF';
     before(() => {
         sender = Account.createFromPrivateKey('2602F4236B199B3DF762B2AAB46FC3B77D8DDB214F0B62538D3827576C46C108',
                                               NetworkType.MIJIN_TEST);
@@ -43,7 +44,8 @@ describe('PersistentHarvestingDelegationMessage', () => {
 
     it('should create a PersistentHarvestingDelegation message', () => {
         const encryptedMessage =
-            PersistentHarvestingDelegationMessage.create(recipient.publicKey, sender.privateKey, NetworkType.MIJIN_TEST);
+            PersistentHarvestingDelegationMessage
+                .create(delegatedPrivateKey, sender.privateKey, recipient.publicKey, NetworkType.MIJIN_TEST);
         expect(encryptedMessage.payload.length).to.be.equal(208);
         expect(encryptedMessage.type).to.be.equal(MessageType.PersistentHarvestingDelegationMessage);
     });
@@ -66,10 +68,11 @@ describe('PersistentHarvestingDelegationMessage', () => {
 
     it('should create and decrypt message', () => {
         const encryptedMessage =
-            PersistentHarvestingDelegationMessage.create(recipient.publicKey, sender.privateKey, NetworkType.MIJIN_TEST);
+            PersistentHarvestingDelegationMessage
+                .create(delegatedPrivateKey, sender.privateKey, recipient.publicKey, NetworkType.MIJIN_TEST);
         const plainMessage =
             PersistentHarvestingDelegationMessage.decrypt(encryptedMessage, recipient.privateKey, sender.publicKey, NetworkType.MIJIN_TEST);
-        expect(plainMessage).to.be.equal(recipient.publicKey);
+        expect(plainMessage).to.be.equal(delegatedPrivateKey);
     });
 
     it('should return should return decrepted message reading from message payload', () => {
@@ -77,6 +80,7 @@ describe('PersistentHarvestingDelegationMessage', () => {
         const tx =
             PersistentDelegationRequestTransaction.createPersistentDelegationRequestTransaction(
                 Deadline.create(),
+                delegatedPrivateKey,
                 recipient.publicKey,
                 sender.privateKey,
                 NetworkType.MIJIN_TEST,
@@ -87,18 +91,19 @@ describe('PersistentHarvestingDelegationMessage', () => {
                 .createFromPayload(signedTransaction.payload.substring(298, signedTransaction.payload.length));
         const plainMessage =
             PersistentHarvestingDelegationMessage.decrypt(encryptMessage, recipient.privateKey, sender.publicKey, NetworkType.MIJIN_TEST);
-        expect(plainMessage).to.be.equal(recipient.publicKey);
+        expect(plainMessage).to.be.equal(delegatedPrivateKey);
     });
 
     it('should encrypt and decrypt message using NIS1 schema', () => {
         const encryptedMessage =
-            PersistentHarvestingDelegationMessage.create(recipient_nis.publicKey, sender_nis.privateKey, NetworkType.TEST_NET);
+            PersistentHarvestingDelegationMessage
+                .create(delegatedPrivateKey, sender_nis.privateKey, recipient_nis.publicKey, NetworkType.TEST_NET);
         const plainMessage =
             PersistentHarvestingDelegationMessage.decrypt(encryptedMessage,
                                                           recipient_nis.privateKey,
                                                           sender_nis.publicKey,
                                                           NetworkType.TEST_NET);
-        expect(plainMessage).to.be.equal(recipient_nis.publicKey);
+        expect(plainMessage).to.be.equal(delegatedPrivateKey);
     });
 
 });
