@@ -32,17 +32,19 @@ export class PersistentHarvestingDelegationMessage extends Message {
 
     /**
      *
-     * @param harvesterPublicKey - Haverster account public key
-     * @param privateKey - Sender private key
+     * @param delegatedPrivateKey - Private key of delegated account
+     * @param senderPrivateKey - Sender private key
+     * @param recipientPrivateKey - Recipient public key
      * @param {NetworkType} networkType - Catapult network type
      * @return {PersistentHarvestingDelegationMessage}
      */
-    public static create(harvesterPublicKey: string,
-                         privateKey: string,
+    public static create(delegatedPrivateKey: string,
+                         senderPrivateKey: string,
+                         recipientPublicKey: string,
                          networkType: NetworkType): PersistentHarvestingDelegationMessage {
         const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         const encrypted = MessageMarker.PersistentDelegationUnlock +
-            Crypto.encode(privateKey, harvesterPublicKey, harvesterPublicKey, signSchema, true).toUpperCase();
+            Crypto.encode(senderPrivateKey, recipientPublicKey, delegatedPrivateKey, signSchema, true).toUpperCase();
         return new PersistentHarvestingDelegationMessage(encrypted);
     }
 
