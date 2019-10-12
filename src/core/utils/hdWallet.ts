@@ -1,7 +1,7 @@
 import {ExtendedKey, MnemonicPassPhrase, Wallet} from "nem2-hd-wallets"
 
 export const createMnemonic = () => {
-    const mnemonic = MnemonicPassPhrase.createRandom('english', 128)
+    const mnemonic = MnemonicPassPhrase.createRandom('english')
     return mnemonic.plain
 }
 

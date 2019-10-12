@@ -208,17 +208,21 @@ export class AppWallet {
             store)
     }
 
-    // @WALLETS: Hard to understand what this function is doing, rename / review
     addNewWalletToList(store: Store<AppState>): void {
         const accountName = store.state.account.accountName
         const accountMap = localRead('accountMap') === ''
             ? {} : JSON.parse(localRead('accountMap'))
-
-        const localData = accountMap[accountName].wallets
-        const updateWalletList = localData.length ? [...localData, this] : [this]
         const newActiveWalletAddress = this.address
-
+        // if wallet exists ,switch to this wallet
+        const localData = accountMap[accountName].wallets
         accountMap[accountName].activeWalletAddress = newActiveWalletAddress
+        const flagWallet = localData.find(item=>newActiveWalletAddress == item.address)  // find wallet in wallet list
+        if(flagWallet) {  // if wallet existed ,switch to this wallet
+            store.commit('SET_WALLET', flagWallet)
+            localSave('accountMap', JSON.stringify(accountMap))
+            return
+        }
+        const updateWalletList = localData.length ? [...localData, this] : [this]
         accountMap[accountName].wallets = updateWalletList
 
         store.commit('SET_WALLET_LIST', updateWalletList)

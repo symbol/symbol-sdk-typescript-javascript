@@ -70,7 +70,7 @@
 
         <div class="stepItem3" v-if="stepIndex == 2">
           <p class="tit">{{$t('please_accurately_copy_the_safety_backup_mnemonic')}}</p>
-          <p class="mnemonicWords text_select">{{mnemonic}}</p>
+          <div class="mnemonicWords text_select">{{mnemonic}}</div>
           <div class="buttons_container">
             <Button class="button_arrow" type="success" @click="copyMnrmonic">
               {{$t('copy_mnemonic')}}
