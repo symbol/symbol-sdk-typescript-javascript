@@ -105,8 +105,9 @@ export abstract class Transaction {
 
     /**
      * @internal
+     * @param singer Optional singer for delegated aggregate complete transaction only.
      */
-    protected abstract generateBytes(): Uint8Array;
+    protected abstract generateBytes(signer?: PublicAccount): Uint8Array;
 
     /**
      * @internal
@@ -123,7 +124,7 @@ export abstract class Transaction {
     public signWith(account: Account, generationHash: string): SignedTransaction {
         const generationHashBytes = Array.from(Convert.hexToUint8(generationHash));
         const signSchema = SHA3Hasher.resolveSignSchema(account.networkType);
-        const byteBuffer = Array.from(this.generateBytes());
+        const byteBuffer = Array.from(this.generateBytes(account.publicAccount));
         const signingBytes = generationHashBytes.concat(byteBuffer.slice(4 + 64 + 32));
         const keyPairEncoded = KeyPair.createKeyPairFromPrivateKeyString(account.privateKey, signSchema);
         const signature = Array.from(KeyPair.sign(account, new Uint8Array(signingBytes), signSchema));
@@ -162,10 +163,12 @@ export abstract class Transaction {
 
     /**
      * Convert an aggregate transaction to an inner transaction including transaction signer.
-     * @param signer - Transaction signer.
+     * Signer is optional for `AggregateComplete` transaction `ONLY`.
+     * If no signer provided, aggregate transaction signer will be delegated on signing
+     * @param signer - Innre transaction signer. (Optional for `AggregateComplete` transaction `ONLY`)
      * @returns InnerTransaction
      */
-    public toAggregate(signer: PublicAccount): InnerTransaction {
+    public toAggregate(signer?: PublicAccount): InnerTransaction {
         if (this.type === TransactionType.AGGREGATE_BONDED || this.type === TransactionType.AGGREGATE_COMPLETE) {
             throw new Error('Inner transaction cannot be an aggregated transaction.');
         }
