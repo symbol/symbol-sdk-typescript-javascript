@@ -93,7 +93,7 @@ export class AddressAliasTransaction extends Transaction {
                  */
                 public readonly namespaceId: NamespaceId,
                 /**
-                 * The mosaic id.
+                 * The address.
                  */
                 public readonly address: Address,
                 signature?: string,
