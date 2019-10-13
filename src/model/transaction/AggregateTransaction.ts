@@ -289,12 +289,19 @@ export class AggregateTransaction extends Transaction {
      * @internal
      * @returns {Uint8Array}
      */
-    protected generateBytes(): Uint8Array {
+    protected generateBytes(signer?: PublicAccount): Uint8Array {
         const signerBuffer = new Uint8Array(32);
         const signatureBuffer = new Uint8Array(64);
-
         let transactions = Uint8Array.from([]);
         this.innerTransactions.forEach((transaction) => {
+            if (!transaction.signer) {
+                if (this.type === TransactionType.AGGREGATE_COMPLETE) {
+                    transaction = Object.assign({__proto__: Object.getPrototypeOf(transaction)}, transaction, {signer});
+                } else {
+                    throw new Error(
+                        'InnerTransaction signer must be provide. Only AggregateComplete transaction can use delegated signer.');
+                }
+            }
             const transactionByte = transaction.toAggregateTransactionBytes();
             transactions = GeneratorUtils.concatTypedArrays(transactions, transactionByte);
         });
