@@ -53,7 +53,7 @@ export class AggregateTransactionService {
             signers.push(signedTransaction.signerPublicKey);
         }
         return observableFrom(aggregateTransaction.innerTransactions).pipe(
-            mergeMap((innerTransaction) => this.accountHttp.getMultisigAccountInfo(innerTransaction.signer.address)
+            mergeMap((innerTransaction) => this.accountHttp.getMultisigAccountInfo(innerTransaction.signer!.address)
                 .pipe(
                     /**
                      * For multisig account, we need to get the graph info in case it has multiple levels
