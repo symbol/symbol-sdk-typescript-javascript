@@ -18,6 +18,7 @@ import {expect} from 'chai';
 import {ChronoUnit} from 'js-joda';
 import { TransactionMapping } from '../../../src/core/utils/TransactionMapping';
 import {CreateTransactionFromDTO} from '../../../src/infrastructure/transaction/CreateTransactionFromDTO';
+import { CreateTransactionFromPayload } from '../../../src/infrastructure/transaction/CreateTransactionFromPayload';
 import {Account} from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
 import {PublicAccount} from '../../../src/model/account/PublicAccount';
@@ -114,6 +115,55 @@ describe('AggregateTransaction', () => {
             320,
             signedTransaction.payload.length,
         )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
+    });
+
+    it('should createComplete an AggregateTransaction object with delegated signer', () => {
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(1, ChronoUnit.HOURS),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            [],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        const aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [transferTransaction.toAggregate()],
+            NetworkType.MIJIN_TEST,
+            []);
+        expect(aggregateTransaction.innerTransactions[0].signer).to.be.undefined;
+
+        const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(0, 8)).to.be.equal('CD000000');
+        expect(signedTransaction.payload.substring(240, 256)).to.be.equal('5100000051000000');
+        expect(signedTransaction.payload.substring(
+            320,
+            signedTransaction.payload.length,
+        )).to.be.equal('019054419050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E1420D000000746573742D6D657373616765');
+
+        const createdFromPayload = CreateTransactionFromPayload(signedTransaction.payload);
+        expect((createdFromPayload as AggregateTransaction).innerTransactions[0].signer!.publicKey)
+            .to.be.equal(account.publicKey);
+    });
+
+    it('should throw exception with delegated signer', () => {
+        expect(() => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(1, ChronoUnit.HOURS),
+                Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+                [],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            const aggregateTransaction = AggregateTransaction.createBonded(
+                Deadline.create(),
+                [transferTransaction.toAggregate()],
+                NetworkType.MIJIN_TEST,
+                []);
+
+            aggregateTransaction.signWith(account, generationHash);
+        }).to.throw(Error, 'InnerTransaction signer must be provide. Only AggregateComplete transaction can use delegated signer.');
     });
 
     it('should createComplete an AggregateTransaction object with NamespaceRegistrationTransaction', () => {
