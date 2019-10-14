@@ -41,7 +41,6 @@ export const renderMosaicsAndReturnArray = (
 export const renderMosaics = (
     mosaics: Mosaic[],
     store: Store<AppState>): any => {
-    const mosaicList = store.state.account.mosaics
     const result = renderMosaicsAndReturnArray(mosaics, store)
     return result.map ? result.map(({name, amount}) => `${amount} [${name}]`).join(', ') : result
 }

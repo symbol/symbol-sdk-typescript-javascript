@@ -309,7 +309,7 @@ export const jp_JP = {
     keystore: 'キーストア',
     import: 'インポート',
     input_mnemonic: 'ニーモニックを入力',
-    enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word: '順序に注意して、12単語を入力してください。各単語はスペースで区切られます。',
+    enter_24_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word: '順序に注意して、24単語を入力してください。各単語はスペースで区切られます。',
     back: '戻る',
     the_private_key_is_a_string_of_64_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe: '秘密鍵とはアカウントのコントロールを行う64-bitのランダム文字列です。適切に保管してください。',
     private_key_string: '秘密鍵文字列',

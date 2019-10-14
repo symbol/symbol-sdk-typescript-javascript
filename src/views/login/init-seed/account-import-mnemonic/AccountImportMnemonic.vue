@@ -8,7 +8,7 @@
           <div class="title_info">
           {{$t('input_mnemonic')}}
           <div class="tips">
-            {{$t('enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word')}}
+            {{$t('enter_24_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word')}}
           </div>
           </div>
           <div class="gray_content textarea">

@@ -308,7 +308,7 @@ export const zh_CN = {
     keystore: 'keystore',
     import: '导入',
     input_mnemonic: '输入助记词',
-    enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word: '输入12个单词，请注意顺序，每个单词之间用一个空格隔开',
+    enter_24_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word: '输入24个单词，请注意顺序，每个单词之间用一个空格隔开',
     back: '返回',
     the_private_key_is_a_string_of_64_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe: '私钥是一串64位的随机字符串组成，是账户的绝对控制权，请妥善保管。',
     private_key_string: '私钥字符串',

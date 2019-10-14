@@ -115,15 +115,15 @@ export class WalletSwitchTs extends Vue {
             return
         }
         //get min path to create
-        let pathToCreate = 0
+        let pathToCreate = "0'"
         // check if there is a jump number
         const flag = seedPathList.every((item, index) => {
             if (item == index) return true
-            pathToCreate = index
+            pathToCreate = `${index}'`
             return false
         })
         pathToCreate = flag ? seedPathList.length : pathToCreate
-        this.pathToCreate = `m/44'/43'/0'/0/` + pathToCreate
+        this.pathToCreate = `m/44'/43'/0'/0'/` + pathToCreate
         this.showCheckPWDialog = true
     }
 

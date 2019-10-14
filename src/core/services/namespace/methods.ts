@@ -1,5 +1,6 @@
 import {NamespaceHttp, Address, QueryParams} from 'nem2-sdk'
-import {AppNamespace} from '@/core/model'
+import {AppNamespace, AppState} from '@/core/model'
+import {Store} from 'vuex'
 
 export const namespaceSortTypes = {
     byName: 1,
@@ -24,6 +25,13 @@ export const getNamespacesFromAddress = async (address: string,
     } catch (error) {
         throw new Error(error)
     }
+}
+
+export const getNamespaceNameFromNamespaceId = (hexId: string, store: Store<AppState>) => {
+    const {namespaces} = store.state.account
+    const namespace = namespaces.find(({ hex }) => hex === hexId)
+    if (namespace === undefined) return hexId
+    return namespace.name
 }
 
 const sortByDuration = (list: AppNamespace[], direction: boolean): AppNamespace[] => {

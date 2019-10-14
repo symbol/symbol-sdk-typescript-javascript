@@ -1,12 +1,18 @@
 import {mapState} from "vuex"
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {renderMosaicsAndReturnArray} from '@/core/utils'
-import {FormattedTransaction, AppInfo, StoreAccount} from '@/core/model'
-import MosaicTable from '@/views/monitor/monitor-transaction-modal/mosaic-table/MosaicTable.vue'
+import {
+    FormattedTransaction, AppInfo, StoreAccount,
+    SpecialTxDetailsKeys, TxDetailsKeysWithValueToTranslate,
+} from '@/core/model'
+import {getNamespaceNameFromNamespaceId} from '@/core/services'
+import MosaicTable from './mosaic-table/MosaicTable.vue'
+import CosignatoriesTable from './cosignatories-table/CosignatoriesTable.vue'
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
     components:{
-        MosaicTable
+        MosaicTable,
+        CosignatoriesTable,
     }
 })
 export class TransactionModalTs extends Vue {
@@ -14,11 +20,12 @@ export class TransactionModalTs extends Vue {
     activeAccount: StoreAccount
     isShowInnerDialog = false
     currentInnerTransaction = {}
-    @Prop({default: false})
-    visible: boolean
+    SpecialTxDetailsKeys = SpecialTxDetailsKeys
+    TxDetailsKeysWithValueToTranslate = TxDetailsKeysWithValueToTranslate
+    getNamespaceNameFromNamespaceId = getNamespaceNameFromNamespaceId
 
-    @Prop({default: null})
-    activeTransaction: FormattedTransaction
+    @Prop({default: false}) visible: boolean
+    @Prop({default: null}) activeTransaction: FormattedTransaction
 
     get show() {
         return this.visible

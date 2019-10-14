@@ -20,11 +20,11 @@ export class FormattedTransfer extends FormattedTransaction {
         this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,
             'from': this.infoFirst,
-            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + networkCurrency.ticker,
+            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + ' ' + networkCurrency.ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
             'message': rawTx.message.payload,
-            'mosaic': rawTx.mosaics,
+            'mosaics': rawTx.mosaics,
         }
     }
 }

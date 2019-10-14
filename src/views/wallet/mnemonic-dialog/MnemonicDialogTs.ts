@@ -138,6 +138,7 @@ export class MnemonicDialogTs extends Vue {
     }
 
     toPrePage() {
+        this.$refs['mnemonicWordDiv']['innerText'] = ""
         this.stepIndex = this.stepIndex - 1
     }
 
@@ -148,13 +149,8 @@ export class MnemonicDialogTs extends Vue {
         wordSpan.onclick = () => {
             this.$refs['mnemonicWordDiv']['removeChild'](wordSpan)
         }
-        const inputArray = this
-            .$refs['mnemonicWordDiv']['innerText']
-            .replace(' ', '')
-            .split("\n")
-
-        const wordInInputArray = inputArray.find(x => x === word)
-        if (wordInInputArray === undefined) this.$refs['mnemonicWordDiv']['append'](wordSpan)
+        const words = this.$refs['mnemonicWordDiv']['innerText']
+        if (words.indexOf(word) === -1) this.$refs['mnemonicWordDiv']['append'](wordSpan)
     }
 
     checkMnemonic() {

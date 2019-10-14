@@ -16,9 +16,10 @@ export class FormattedAccountRestrictionOperation extends FormattedTransaction {
 
         this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,
-            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), divisibility) + ticker,
+            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), divisibility) + ' ' + ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
+            // @MODAL
         }
     }
 }

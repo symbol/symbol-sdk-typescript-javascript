@@ -93,3 +93,17 @@ export interface Endpoint {
     url: string,
     isSelected: boolean
 }
+
+/**
+ * These keys will be handled in a specific way by the transaction detail modal component
+ */
+export enum SpecialTxDetailsKeys {
+    mosaics = 'mosaics',
+    namespace = 'namespace',
+    cosignatories = 'cosignatories',
+}
+
+export enum TxDetailsKeysWithValueToTranslate {
+    action = 'action',
+    direction = 'direction',
+}

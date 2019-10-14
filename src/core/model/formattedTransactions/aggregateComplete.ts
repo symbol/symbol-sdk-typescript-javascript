@@ -19,7 +19,7 @@ export class FormattedAggregateComplete extends FormattedTransaction {
         
         this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,
-            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + networkCurrency.ticker,
+            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + ' ' + networkCurrency.ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
         }

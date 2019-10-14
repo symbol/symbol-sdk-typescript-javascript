@@ -88,9 +88,9 @@
           <p class="tit">
             {{$t('please_click_on_the_mnemonic_in_order_to_confirm_that_you_are_backing_up_correctly')}}</p>
           <div class="sureMnemonicWords" ref="mnemonicWordDiv"></div>
-          <p class="mnemonicWords">
+          <div class="mnemonicWords">
             <span v-for="(item, index) in mnemonicRandomArr" @click="sureWord(index)" :key="index">{{item}}</span>
-          </p>
+          </div>
           <div class="buttons_container">
             <Button type="success" class="pre_button button_arrow" @click="toPrePage()">
               <Icon class="pre" type="ios-arrow-round-back"/>

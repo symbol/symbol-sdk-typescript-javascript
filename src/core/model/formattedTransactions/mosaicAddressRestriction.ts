@@ -1,6 +1,6 @@
 import {FormattedTransaction} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
-import {Transaction} from 'nem2-sdk'
+import {MosaicAddressRestrictionTransaction} from 'nem2-sdk'
 import {AppState} from '../types';
 import {Store} from 'vuex';
 
@@ -8,7 +8,7 @@ export class FormattedMosaicAddressRestriction extends FormattedTransaction {
     dialogDetailMap: any
     icon: any
 
-    constructor( tx: Transaction,
+    constructor( tx: MosaicAddressRestrictionTransaction,
         store: Store<AppState>) {
             super(tx, store)
             const {networkCurrency} = store.state.account
@@ -16,9 +16,10 @@ export class FormattedMosaicAddressRestriction extends FormattedTransaction {
 
         this.dialogDetailMap = {
             'transfer_type': this.txHeader.tag,
-            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), divisibility) + ticker,
+            'fee': getRelativeMosaicAmount(tx.maxFee.compact(), divisibility) + ' ' + ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
+            // @MODAL
         }
     }
 }
