@@ -43,6 +43,7 @@ export class KeystoreDialogTs extends Vue {
     }
 
     keystoreDialogCancel() {
+        this.wallet.password = ''
         this.$emit('closeKeystoreDialog')
         setTimeout(() => {
             this.stepIndex = 0

@@ -2,7 +2,7 @@
   <div>
     <div class="privatekey">
       <div class="describle">
-        {{$t('the_private_key_is_a_string_of_256_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe')}}
+        {{$t('the_private_key_is_a_string_of_64_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe')}}
       </div>
       <ul>
         <li>

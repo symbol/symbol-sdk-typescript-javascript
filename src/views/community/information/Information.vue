@@ -75,8 +75,12 @@
         </div>
       </div>
     </div>
-    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
-                   @checkEnd="checkEnd"></CheckPWDialog>
+    <CheckPWDialog
+            :isOnlyCheckPassword='true'
+            :showCheckPWDialog="showCheckPWDialog"
+            @closeCheckPWDialog="closeCheckPWDialog"
+            :transactionDetail="transactionDetail"
+            @checkEnd="checkEnd"/>
   </div>
 </template>
 

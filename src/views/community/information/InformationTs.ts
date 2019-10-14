@@ -32,7 +32,7 @@ export class informationTs extends Vue {
     isLoadingConfirmedTx = true
     scroll: any
     currentArticle: any = {title: 'null', content: 'null'}
-
+    transactionDetail = {}
     get address() {
         return this.activeAccount.wallet.address
     }
@@ -53,6 +53,7 @@ export class informationTs extends Vue {
         if (flag) {
             this.sendComment()
         }
+        this.closeCheckPWDialog()
     }
 
     addArticleStartIndex() {
@@ -96,6 +97,14 @@ export class informationTs extends Vue {
             return false
         }
         this.showCheckPWDialog = true
+        const comment = this.commentContent
+        const cid = this.currentArticle.cid
+        const {address, nickName} = this
+        this.transactionDetail = {
+            comment: comment,
+            address: address,
+            nickName: nickName,
+        }
     }
 
     async sendComment() {
@@ -112,7 +121,6 @@ export class informationTs extends Vue {
                 nickName: nickName,
                 gtmCreate: gtmCreate.toDateString()
             })
-            that.$Notice.success({title: that.$t(Message.SUCCESS) + ''})
         } catch (e) {
             that.$Notice.error({title: that.$t(Message.OPERATION_FAILED_ERROR) + ''})
         }
@@ -219,7 +227,7 @@ export class informationTs extends Vue {
     async mounted() {
         try {
             await this.getArticleByPage()
-            this.currentArticle = this.articleList[0] 
+            this.currentArticle = this.articleList[0]
         } catch (error) {
             console.error("informationTs -> mounted -> error", error)
         }

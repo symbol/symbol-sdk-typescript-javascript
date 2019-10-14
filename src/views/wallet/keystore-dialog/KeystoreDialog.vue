@@ -27,6 +27,7 @@
                 <Icon type="ios-arrow-round-forward"/>
               </Button>
             </FormItem>
+            <input v-if="false" type="text">
           </Form>
         </div>
 

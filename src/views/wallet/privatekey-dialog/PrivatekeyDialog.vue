@@ -28,6 +28,7 @@
                 <Icon type="ios-arrow-round-forward"/>
               </Button>
             </FormItem>
+            <input v-if="false" type="text">
           </Form>
         </div>
         <div class="stepItem2" v-if="stepIndex == 1">

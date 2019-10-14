@@ -79,7 +79,7 @@
                 await this.$store.commit('SET_ACCOUNT_NAME', currentAccountName)
                 // get active wallet
                 const wallets = getTopValueInObject(accountMap)['wallets']
-                this.$store.commit('SET_WALLET_LIST',wallets)
+                this.$store.commit('SET_WALLET_LIST', wallets)
                 const activeWalletAddress = JSON.parse(localRead('accountMap'))[currentAccountName].activeWalletAddress
                 AppWallet.updateActiveWalletAddress(activeWalletAddress, this.$store)
             } catch (error) {
@@ -195,7 +195,7 @@
         async mounted() {
             if (!this.activeAccount.wallet) this.$router.push('/login')
 
-            const {accountName, node} = this
+            const {node} = this
 
             try {
                 // @TODO: refactor

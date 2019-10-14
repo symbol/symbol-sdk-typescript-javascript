@@ -11,7 +11,7 @@
       </div>
       <div class="checkPWDialogBody">
         <div class="stepItem1">
-          <div v-if="isOnlyCheckPassword">
+          <div v-if="!Object.values(transactionDetail).length">
             <div class="checkPWImg">
               <img src="@/common/img/window/checkPW.png">
             </div>

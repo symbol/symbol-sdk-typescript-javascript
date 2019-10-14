@@ -30,6 +30,7 @@
                   {{$t('next')}}
                   <Icon class="next" type="ios-arrow-round-forward"/>
                 </Button>
+                <input v-if="false" type="text">
               </div>
             </FormItem>
           </Form>
@@ -72,7 +73,7 @@
           <p class="tit">{{$t('please_accurately_copy_the_safety_backup_mnemonic')}}</p>
           <div class="mnemonicWords text_select">{{mnemonic}}</div>
           <div class="buttons_container">
-            <Button class="button_arrow" type="success" @click="copyMnrmonic">
+            <Button class="button_arrow" type="success" @click="copyMnemonic">
               {{$t('copy_mnemonic')}}
             </Button>
             <Button type="success" @click="exportMnemonic">
@@ -95,7 +96,6 @@
               <Icon class="pre" type="ios-arrow-round-back"/>
               {{$t('previous')}}
             </Button>
-
 
             <Button type="success" class="button_arrow" @click="exportMnemonic">
               {{$t('next')}}

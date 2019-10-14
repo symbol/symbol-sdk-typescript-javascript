@@ -187,8 +187,9 @@
   }
 
   .not_Multisig_Nor_Cosigner {
-    font-size: 30px;
+    font-size: 20px;
     background-color: transparent;
+    padding: 50px;
 
   }
 

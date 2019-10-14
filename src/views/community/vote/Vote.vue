@@ -177,8 +177,11 @@
       </div>
     </div>
 
-    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog" @closeCheckPWDialog="closeCheckPWDialog"
-                   @checkEnd="checkEnd"></CheckPWDialog>
+    <CheckPWDialog
+            :showCheckPWDialog="showCheckPWDialog"
+            @closeCheckPWDialog="closeCheckPWDialog"
+            :isOnlyCheckPassword='true'
+            @checkEnd="checkEnd"/>
   </div>
 </template>
 

@@ -310,7 +310,7 @@ export const zh_CN = {
     input_mnemonic: '输入助记词',
     enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word: '输入12个单词，请注意顺序，每个单词之间用一个空格隔开',
     back: '返回',
-    the_private_key_is_a_string_of_256_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe: '私钥是一串256位的随机字符串组成，是账户的绝对控制权，请妥善保管。',
+    the_private_key_is_a_string_of_64_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe: '私钥是一串64位的随机字符串组成，是账户的绝对控制权，请妥善保管。',
     private_key_string: '私钥字符串',
     Please_paste_the_private_key_string_in_the_input_box_below: '请在下方输入框中粘贴私钥字符串',
     Paste_the_private_key_string_in_the_input_box: '输入框中粘贴私钥字符串',
@@ -750,10 +750,13 @@ export const zh_CN = {
     create_sub_wallet: '创建子钱包',
     Import_private_key: '导入私钥',
     copy_mnemonic: '复制助记词',
-    Harvesting:'收获',
-    ILLEGAL_PUBLICKEY_ERROR:'public key格式错误',
+    Harvesting: '收获',
+    ILLEGAL_PUBLICKEY_ERROR: 'public key格式错误',
 
     ///////////////////////////////////////////////1009
-    this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted:'请注意，您正在删除最后一个钱包，钱包删除成功后，此账户将被注销！',
-    Mutlisig_account_modification_transaction_form_is_not_ready_yet:'Mutlisig帐户管理正在开发中！'
+    this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted: '请注意，您正在删除最后一个钱包，钱包删除成功后，此账户将被注销！',
+    Mutlisig_account_modification_transaction_form_is_not_ready_yet: 'Mutlisig帐户管理正在开发中！',
+    nickName: '昵称',
+    what_is_delegated_harvesting:'什么是远程收获?',
+    Delegated_harvesting_text_1:'远程收获能为帐户和节点提供一个共同使用代理私钥的安全环境。一个正常的帐户可以将其重要性委托给远程节点进行收获。也就是说，您无需运行节点,就能凭借已有帐户的重要性来创建新区块。',
 }

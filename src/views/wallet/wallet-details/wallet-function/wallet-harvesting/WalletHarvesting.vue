@@ -1,11 +1,11 @@
 <template>
-  <div class="remote_board_container secondary_page_animate">
+  <div class="remote_board_container secondary_page_animate scroll">
     <div class="top_network_info radius scroll" style="display: block;">
       <div class="remote_total">
-        <strong class="trend"> {{$t('Remote_title_receipt')}}</strong>
-        <div class="num_class">
-          <span class="trend_red"> {{$t('Accumulated_delegated_harvesting_income_is_not_yet_open')}}</span>
-        </div>
+<!--        <strong class="trend"> {{$t('Remote_title_receipt')}}</strong>-->
+<!--        <div class="num_class">-->
+<!--          <span class="trend_red"> {{$t('Accumulated_delegated_harvesting_income_is_not_yet_open')}}</span>-->
+<!--        </div>-->
         <div class="state_class">
           <div class="div_cer">
             <span class="remote_public_key">{{$t('Remote_state')}}：</span>
@@ -25,22 +25,11 @@
       </div>
       <div class="question_class">
         <div>
-          <strong class="trend_ques">{{$t('Remote_question')}}</strong>
-        </div>
-        <div>
           <div class="wid_bord_class">
-            <span class="bord_class">{{$t('Remote_ques1')}}</span>
+            <span class="bord_class">{{$t('what_is_delegated_harvesting')}}</span>
           </div>
           <div class="content_des">
-            <span class="content_font">{{$t('remote_ques1_rep')}}</span>
-          </div>
-        </div>
-        <div>
-          <div class="wid_bord_class">
-            <span class="bord_class">{{$t('remote_ques2')}}</span>
-          </div>
-          <div class="content_des">
-            <span class="content_font">{{$t('remote_ques2_rep')}}</span>
+            <p class="content_font">{{$t('Delegated_harvesting_text_1')}}</p>
           </div>
         </div>
       </div>

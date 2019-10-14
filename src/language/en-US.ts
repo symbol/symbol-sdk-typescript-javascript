@@ -316,7 +316,7 @@ export const en_US = {
     mnemonic_description: 'The mnemonic is a 12-word seed file. By importing this seed file, you can restore your wallet. Please keep it safe and keep it confidential.',
     input_mnemonic: 'Input mnemonic',
     enter_12_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word: 'Enter 12 words, please pay attention to the order, separated by a space between each word',
-    the_private_key_is_a_string_of_256_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe: 'The private key is a string of 256-bit random strings, which is the absolute control of the account. Please keep it safe.',
+    the_private_key_is_a_string_of_64_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe: 'The private key is a string of 64-bit random strings, which is the absolute control of the account. Please keep it safe.',
     private_key_string: 'Private key string',
     Please_paste_the_private_key_string_in_the_input_box_below: 'Please paste the private key string in the input box below',
     Paste_the_private_key_string_in_the_input_box: 'Paste the private key string in the input box',
@@ -778,5 +778,8 @@ export const en_US = {
 
     ////////////////////////////////1009
     this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted:'Please note that you are deleting the last wallet and this account will be logged out after the wallet is successfully deleted!',
-    Mutlisig_account_modification_transaction_form_is_not_ready_yet:'Mutlisig account modification transaction form is not ready yet!'
+    Mutlisig_account_modification_transaction_form_is_not_ready_yet:'Mutlisig account modification transaction form is not ready yet!',
+    nickName:'Nick name',
+    what_is_delegated_harvesting:'What is delegated harvesting ?',
+    Delegated_harvesting_text_1:' Delegated harvesting enables an account to use a proxy private key that can be shared with a node securely. An eligible account may also delegate its importance score to a remote node for harvesting. In other words, you can use the importance score of your account to create new blocks without running a node. ',
 }

@@ -2,7 +2,6 @@ import {mapState} from "vuex"
 import {Message} from "@/config/index.ts"
 import {TransactionType, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {getAbsoluteMosaicAmount} from "@/core/utils/mosaics"
 import {AppLock} from "@/core/utils/appLock"
 import {AppAccounts, AppWallet, StoreAccount} from "@/core/model"
 
@@ -90,7 +89,6 @@ export class CheckPasswordDialogTs extends Vue {
         const account = appAccount.getAccountFromLocalStorage(accountName)
         try {
             const accountPassword = AppLock.decryptString(account.password, password)
-
             if (accountPassword === password) {
                 this.$emit('checkEnd', password)
                 this.showNotice()
