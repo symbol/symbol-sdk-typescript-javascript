@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import * as Long from 'long';
 import { Convert, Convert as convert } from '../../core/format';
 import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -180,11 +181,11 @@ export class TransferTransaction extends Transaction {
      * @returns {Mosaic[]}
      */
     public sortMosaics(): Mosaic[] {
-        const sortedMosaics = this.mosaics.sort((a, b) => {
-            if (Number(a.id[1]) > b.id[1]) { return 1; } else if (a.id[1] < b.id[1]) { return -1; }
-            return 0;
+        return this.mosaics.sort((a, b) => {
+            const long_a = Long.fromBits(a.id.id.lower, a.id.id.higher, true);
+            const long_b = Long.fromBits(b.id.id.lower, b.id.id.higher, true);
+            return long_a.compare(long_b);
         });
-        return sortedMosaics;
     }
 
     /**

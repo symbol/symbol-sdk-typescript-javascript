@@ -15,12 +15,15 @@
  */
 
 import { expect } from 'chai';
+import { CreateTransactionFromPayload } from '../../../src/infrastructure/transaction/CreateTransactionFromPayload';
 import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { MessageType } from '../../../src/model/message/MessageType';
 import { PersistentHarvestingDelegationMessage } from '../../../src/model/message/PersistentHarvestingDelegationMessage';
 import { PlainMessage } from '../../../src/model/message/PlainMessage';
+import { Mosaic } from '../../../src/model/mosaic/Mosaic';
+import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { Deadline } from '../../../src/model/transaction/Deadline';
@@ -298,5 +301,62 @@ describe('TransferTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
         }).to.throw();
+    });
+
+    it('should sort the Mosaic array', () => {
+        const mosaics = [
+            new Mosaic(new MosaicId(UInt64.fromUint(200).toDTO()), UInt64.fromUint(0)),
+            new Mosaic(new MosaicId(UInt64.fromUint(100).toDTO()), UInt64.fromUint(0)),
+        ];
+
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            mosaics,
+            PlainMessage.create('NEM'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(transferTransaction.mosaics[0].id.id.compact()).to.be.equal(200);
+        expect(transferTransaction.mosaics[1].id.id.compact()).to.be.equal(100);
+
+        const signedTransaction = transferTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(
+            304,
+            signedTransaction.payload.length,
+        )).to.be.equal(
+            '64000000000000000000000000000000C8000000000000000000000000000000');
+
+        const sorted = CreateTransactionFromPayload(signedTransaction.payload) as TransferTransaction;
+        expect(sorted.mosaics[0].id.id.compact()).to.be.equal(100);
+        expect(sorted.mosaics[1].id.id.compact()).to.be.equal(200);
+    });
+
+    it('should sort the Mosaic array - using Hex MosaicId', () => {
+        const mosaics = [
+            new Mosaic(new MosaicId('D525AD41D95FCF29'), UInt64.fromUint(5)),
+            new Mosaic(new MosaicId('77A1969932D987D7'), UInt64.fromUint(6)),
+            new Mosaic(new MosaicId('67F2B76F28BD36BA'), UInt64.fromUint(10)),
+        ];
+
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            mosaics,
+            PlainMessage.create('NEM'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(transferTransaction.mosaics[0].id.toHex()).to.be.equal('D525AD41D95FCF29');
+        expect(transferTransaction.mosaics[1].id.toHex()).to.be.equal('77A1969932D987D7');
+        expect(transferTransaction.mosaics[2].id.toHex()).to.be.equal('67F2B76F28BD36BA');
+
+        const signedTransaction = transferTransaction.signWith(account, generationHash);
+        const sorted = CreateTransactionFromPayload(signedTransaction.payload) as TransferTransaction;
+        expect(sorted.mosaics[0].id.toHex()).to.be.equal('67F2B76F28BD36BA');
+        expect(sorted.mosaics[1].id.toHex()).to.be.equal('77A1969932D987D7');
+        expect(sorted.mosaics[2].id.toHex()).to.be.equal('D525AD41D95FCF29');
+
     });
 });
