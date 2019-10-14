@@ -61,7 +61,7 @@ export class UnresolvedMapping {
             // namespaceId encoded hexadecimal notation provided
             // only 8 bytes are relevant to resolve the NamespaceId
             const relevantPart = address.substr(2, 16);
-            return NamespaceId.createFromEncoded(relevantPart);
+            return NamespaceId.createFromEncoded(Convert.uint8ToHex(Convert.hexToUint8Reverse(relevantPart)));
         }
 
         // read address from encoded hexadecimal notation
