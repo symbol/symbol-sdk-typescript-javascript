@@ -29,7 +29,7 @@
               <!--        all       -->
               <div class="mosaicList secondary_page_animate">
                 <div
-                  class="mosaic_data"
+                  class="mosaic_data text_select"
                   v-for="(mosaic, index) in filteredList"
                   :key="index"
                 >
@@ -72,7 +72,7 @@
                   :class="['mosaic_data',index == 0?'padding_top_0':'']"
                   v-for="(mosaic, index) in mosaicList"
                   :key="index"
-                  class="mosaic_data pointer"
+                  class="mosaic_data pointer text_select"
                   @click="toggleShowMosaic(mosaic)"
                 >
                 <span class="namege_img "  >
@@ -81,7 +81,7 @@
                        src="@/common/img/monitor/monitorMosaicIcon.png">
                   <img v-else class="mosaicIcon" src="@/common/img/monitor/mosaicDefault.png">
                 </span>
-                <span class="mosaic_name">{{mosaic.name || mosaic.hex}}</span>
+                <span class="mosaic_name text_select">{{mosaic.name || mosaic.hex}}</span>
                 <span class="mosaic_value">
                   <div>{{mosaic.balance}}</div>
                 </span>

@@ -8,7 +8,7 @@ import {MosaicId, TransferTransaction, Deadline, Address, Mosaic, UInt64, PlainM
 import {TransferType} from "@/core/model/TransferType"
 import {monitorReceiptTransferTypeConfig} from "@/config/view/monitor"
 import {AppInfo, StoreAccount} from "@/core/model"
-
+import failureIcon from '@/common/img/monitor/failure.png'
 @Component({
     components: {
         CollectionRecord
@@ -54,9 +54,14 @@ export class MonitorInvoiceTs extends Vue {
     }
 
     get QRCode(): string {
-        return QRCodeGenerator
-            .createTransactionRequest(this.transferTransaction)
-            .toBase64()
+        try {
+            return QRCodeGenerator
+                .createTransactionRequest(this.transferTransaction)
+                .toBase64()
+        }catch (e) {
+            return failureIcon
+        }
+
     }
 
     get accountAddress() {

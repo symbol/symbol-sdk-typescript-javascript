@@ -21,7 +21,7 @@
         >
           <div v-if="key !== 'transfer_type' && key !== 'mosaic'">
             <span class="title">{{$t(key)}}</span>
-            <span class="value overflow_ellipsis" v-if="value">{{value}}</span>
+            <span class="value overflow_ellipsis text_select" v-if="value">{{value}}</span>
             <span class="no_data" v-else>{{$t('no_data')}}</span>
           </div>
           <div class="mosaic_info" v-if="key === 'mosaic'">
