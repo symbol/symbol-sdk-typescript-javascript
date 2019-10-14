@@ -10,9 +10,9 @@ with the NEM2 (a.k.a Catapult)
 
 ## Important Notes
 
-### _Fuschicho_ Network Compatibility (catapult-server@0.8.0.3)
+### _Fushicho_ Network Compatibility (catapult-server@0.8.0.3)
 
-Due to a network upgrade with [catapult-server@fuschicho](https://github.com/nemtech/catapult-server/releases/tag/v0.8.0.3) version, **it is recommended to use this package's 0.14.0 version and upwards to use this package with Fuschicho versioned networks**.
+Due to a network upgrade with [catapult-server@Fushicho](https://github.com/nemtech/catapult-server/releases/tag/v0.8.0.3) version, **it is recommended to use this package's 0.14.1 version and upwards to use this package with Fushicho versioned networks**.
 
 ### _Elephant_ Network Compatibility (catapult-server@0.7.0.1)
 
