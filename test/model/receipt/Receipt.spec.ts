@@ -15,15 +15,13 @@
  */
 
 import { deepEqual } from 'assert';
-import { CreateReceiptFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
+import { expect } from 'chai';
+import { CreateReceiptFromDTO, CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
 import {Account} from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
-import { AddressAlias } from '../../../src/model/namespace/AddressAlias';
-import { AliasType } from '../../../src/model/namespace/AliasType';
-import { MosaicAlias } from '../../../src/model/namespace/MosaicAlias';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { ArtifactExpiryReceipt } from '../../../src/model/receipt/ArtifactExpiryReceipt';
 import { BalanceChangeReceipt } from '../../../src/model/receipt/BalanceChangeReceipt';
@@ -34,6 +32,7 @@ import { ReceiptType } from '../../../src/model/receipt/ReceiptType';
 import { ReceiptVersion } from '../../../src/model/receipt/ReceiptVersion';
 import { ResolutionEntry } from '../../../src/model/receipt/ResolutionEntry';
 import { ResolutionStatement } from '../../../src/model/receipt/ResolutionStatement';
+import { ResolutionType } from '../../../src/model/receipt/ResolutionType';
 import { TransactionStatement } from '../../../src/model/receipt/TransactionStatement';
 import { UInt64 } from '../../../src/model/UInt64';
 
@@ -43,6 +42,7 @@ describe('Receipt', () => {
     let transactionStatementsDTO;
     let addressResolutionStatementsDTO;
     let mosaicResolutionStatementsDTO;
+    let statementDTO;
     const netWorkType = NetworkType.MIJIN_TEST;
 
     before(() => {
@@ -132,6 +132,12 @@ describe('Receipt', () => {
                 },
             },
         ];
+
+        statementDTO = {
+            transactionStatements: transactionStatementsDTO,
+            addressResolutionStatements: addressResolutionStatementsDTO,
+            mosaicResolutionStatements: mosaicResolutionStatementsDTO,
+        };
     });
 
     it('should createComplete a balance transfer receipt', () => {
@@ -284,30 +290,32 @@ describe('Receipt', () => {
     it('should createComplete resolution statement - mosaic', () => {
         const statementDto = mosaicResolutionStatementsDTO[0];
         const statement = new ResolutionStatement(
+            ResolutionType.Mosaic,
             statementDto.statement.height,
             new MosaicId(statementDto.statement.unresolved),
             statementDto.statement.resolutionEntries.map((resolved) => {
-                return new ResolutionEntry(new MosaicAlias(new MosaicId(resolved.resolved)),
+                return new ResolutionEntry(new MosaicId(resolved.resolved),
                 new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
             }),
         );
         deepEqual((statement.unresolved as MosaicId).toHex(), statementDto.statement.unresolved);
-        deepEqual((statement.resolutionEntries[0].resolved as MosaicAlias).mosaicId.id.toHex(), '941299B2B7E1291C');
+        deepEqual((statement.resolutionEntries[0].resolved as MosaicId).toHex(), '941299B2B7E1291C');
     });
 
     it('should createComplete resolution statement - address', () => {
         const statementDto = addressResolutionStatementsDTO[0];
         const statement = new ResolutionStatement(
+            ResolutionType.Address,
             statementDto.statement.height,
             Address.createFromEncoded(statementDto.statement.unresolved),
             statementDto.statement.resolutionEntries.map((resolved) => {
-                return new ResolutionEntry(new AddressAlias(Address.createFromEncoded(resolved.resolved)),
+                return new ResolutionEntry(Address.createFromEncoded(resolved.resolved),
                 new ReceiptSource( resolved.source.primaryId, resolved.source.secondaryId));
             }),
         );
         deepEqual((statement.unresolved as Address).plain(),
             Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000').plain());
-        deepEqual((statement.resolutionEntries[0].resolved as AddressAlias).address.plain(),
+        deepEqual((statement.resolutionEntries[0].resolved as Address).plain(),
             Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain());
     });
 
@@ -330,5 +338,26 @@ describe('Receipt', () => {
         deepEqual(receipt.mosaicId.toHex().toUpperCase(), receiptDTO.mosaicId);
         deepEqual(receipt.type, ReceiptType.Inflation);
         deepEqual(receipt.version, ReceiptVersion.INFLATION_RECEIPT);
+    });
+
+    it('should generate hash for MosaicResolutionStatement', () => {
+        const statement = CreateStatementFromDTO(statementDTO, netWorkType);
+        const receipt = statement.mosaicResolutionStatements[0];
+        const hash = receipt.generateHash();
+        expect(hash).to.be.equal('99381CE398D3AAE110FC97E984D7D35A710A5C525A4F959EC8916B382DE78A63');
+    });
+
+    it('should generate hash for AddressResolutionStatement', () => {
+        const statement = CreateStatementFromDTO(statementDTO, netWorkType);
+        const receipt = statement.addressResolutionStatements[0];
+        const hash = receipt.generateHash();
+        expect(hash).to.be.equal('6967470641BC527768CDC29998F4A3350813FDF2E40D1C97AB0BBA36B9AF649E');
+    });
+
+    it('should generate hash for TransactionStatement', () => {
+        const statement = CreateStatementFromDTO(statementDTO, netWorkType);
+        const receipt = statement.transactionStatements[0];
+        const hash = receipt.generateHash();
+        expect(hash).to.be.equal('C2D0F6CD303912B98943BA8D0407FE24AB7103403FE11C994C485206D5123F96');
     });
 });

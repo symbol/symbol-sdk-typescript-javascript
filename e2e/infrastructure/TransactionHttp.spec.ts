@@ -1059,6 +1059,40 @@ describe('TransactionHttp', () => {
             transactionHttp.announce(signedTransaction);
         });
     });
+
+    describe('Transfer Transaction using address alias', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+
+        it('Announce TransferTransaction', (done) => {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                namespaceId,
+                [NetworkCurrencyMosaic.createAbsolute(1)],
+                PlainMessage.create('test-message'),
+                NetworkType.MIJIN_TEST,
+            );
+            const signedTransaction = transferTransaction.signWith(account, generationHash);
+
+            listener.confirmed(account.address).subscribe((transaction: TransferTransaction) => {
+                expect(transaction.recipientAddress, 'AecipientAddress').not.to.be.undefined;
+                done();
+            });
+            listener.status(account.address).subscribe((error) => {
+                console.log('Error:', error);
+                assert(false);
+                done();
+            });
+            transactionHttp.announce(signedTransaction);
+        });
+    });
+
     describe('AddressAliasTransaction', () => {
         let listener: Listener;
         before (() => {

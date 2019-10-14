@@ -42,4 +42,11 @@ export abstract class Receipt {
                  */
                 public readonly size?: number) {
     }
+
+    /**
+     * @internal
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    abstract serialize(): Uint8Array;
 }

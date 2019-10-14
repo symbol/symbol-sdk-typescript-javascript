@@ -53,6 +53,7 @@ export abstract class Alias {
      * @internal
      * Compares alias for equality.
      * @param alias - MosaicAlias
+     * @return {boolean}
      */
     protected abstract equals(alias: any): boolean;
 }
