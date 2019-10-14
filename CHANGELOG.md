@@ -5,7 +5,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.14.1] - 14-Oct-2019
 
-**Milestone**: Fuschicho
+**Milestone**: Fushicho
 
 - Added `Receipt serializer & hash generator` for auditing receipt merkle proof.
 - Added `Unresolved (NamespaceId)` support on `MosaicRestriction` and `MosaicMetadata` transactions.
@@ -15,7 +15,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.14.0] - 08-Oct-2019
 
-**Milestone**: Fuschicho
+**Milestone**: Fushicho
 
 - Added `KeyGenerator` class for generating UInt64 Keys from string.
 - Fixed `MosaicAmountView` issue. Now return observable of array.
