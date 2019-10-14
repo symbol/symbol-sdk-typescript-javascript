@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-  import { AddressAlias } from '../namespace/AddressAlias';
-  import { MosaicAlias } from '../namespace/MosaicAlias';
-  import { ReceiptSource } from './ReceiptSource';
+import { RawAddress } from '../../core/format/RawAddress';
+import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
+import { Address } from '../account/Address';
+import { MosaicId } from '../mosaic/MosaicId';
+import { UInt64 } from '../UInt64';
+import { ReceiptSource } from './ReceiptSource';
 
 /**
  * The receipt source object.
  */
-  export class ResolutionEntry {
+export class ResolutionEntry {
 
     /**
      * @constructor
@@ -32,10 +35,26 @@
                 /**
                  * A resolved address or resolved mosaicId (alias).
                  */
-                public readonly resolved: AddressAlias | MosaicAlias,
+                public readonly resolved: Address | MosaicId,
                 /**
                  * The receipt source.
                  */
                 public readonly source: ReceiptSource) {
+    }
+
+    /**
+     * @internal
+     * Generate buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+      let resolvedBytes: Uint8Array;
+      if (this.resolved instanceof Address) {
+        resolvedBytes = RawAddress.stringToAddress((this.resolved as Address).plain());
+      } else {
+        resolvedBytes = GeneratorUtils.uint64ToBuffer(UInt64.fromHex((this.resolved as MosaicId).toHex()).toDTO());
+      }
+      const sourceBytes = this.source.serialize();
+      return GeneratorUtils.concatTypedArrays(resolvedBytes, sourceBytes);
     }
 }
