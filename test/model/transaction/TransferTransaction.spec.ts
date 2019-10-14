@@ -332,4 +332,31 @@ describe('TransferTransaction', () => {
         expect(sorted.mosaics[0].id.id.compact()).to.be.equal(100);
         expect(sorted.mosaics[1].id.id.compact()).to.be.equal(200);
     });
+
+    it('should sort the Mosaic array - using Hex MosaicId', () => {
+        const mosaics = [
+            new Mosaic(new MosaicId('D525AD41D95FCF29'), UInt64.fromUint(5)),
+            new Mosaic(new MosaicId('77A1969932D987D7'), UInt64.fromUint(6)),
+            new Mosaic(new MosaicId('67F2B76F28BD36BA'), UInt64.fromUint(10)),
+        ];
+
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
+            mosaics,
+            PlainMessage.create('NEM'),
+            NetworkType.MIJIN_TEST,
+        );
+
+        expect(transferTransaction.mosaics[0].id.toHex()).to.be.equal('D525AD41D95FCF29');
+        expect(transferTransaction.mosaics[1].id.toHex()).to.be.equal('77A1969932D987D7');
+        expect(transferTransaction.mosaics[2].id.toHex()).to.be.equal('67F2B76F28BD36BA');
+
+        const signedTransaction = transferTransaction.signWith(account, generationHash);
+        const sorted = CreateTransactionFromPayload(signedTransaction.payload) as TransferTransaction;
+        expect(sorted.mosaics[0].id.toHex()).to.be.equal('67F2B76F28BD36BA');
+        expect(sorted.mosaics[1].id.toHex()).to.be.equal('77A1969932D987D7');
+        expect(sorted.mosaics[2].id.toHex()).to.be.equal('D525AD41D95FCF29');
+
+    });
 });

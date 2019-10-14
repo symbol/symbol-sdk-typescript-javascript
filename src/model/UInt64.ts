@@ -116,7 +116,7 @@ export class UInt64 {
      * @return {string}
      */
     public toString(): string {
-        return this.compact().toString();
+        return Long.fromBits(this.lower, this.higher, true).toString();
     }
 
     /**

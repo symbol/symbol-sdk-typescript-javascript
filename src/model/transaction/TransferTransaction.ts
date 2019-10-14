@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import * as Long from 'long';
 import { Convert, Convert as convert } from '../../core/format';
 import { RawAddress } from '../../core/format/RawAddress';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
@@ -181,7 +182,9 @@ export class TransferTransaction extends Transaction {
      */
     public sortMosaics(): Mosaic[] {
         return this.mosaics.sort((a, b) => {
-            return a.id.id.compact() - b.id.id.compact();
+            const long_a = Long.fromBits(a.id.id.lower, a.id.id.higher, true);
+            const long_b = Long.fromBits(b.id.id.lower, b.id.id.higher, true);
+            return long_a.compare(long_b);
         });
     }
 
