@@ -18,6 +18,7 @@ import {expect} from 'chai';
 import {Account} from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import { MosaicRestrictionType } from '../../../src/model/restriction/MosaicRestrictionType';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicGlobalRestrictionTransaction} from '../../../src/model/transaction/MosaicGlobalRestrictionTransaction';
@@ -60,6 +61,71 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             240,
             signedTransaction.payload.length,
         )).to.be.equal('010000000000000002000000000000000100000000000000090000000000000001080000000000000006');
+
+    });
+
+    it('should createComplete an MosaicGlobalRestrictionTransaction use mosaic alias', () => {
+        const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
+        console.log(namespacId.toHex());
+        const referenceMosaicId = new MosaicId(UInt64.fromUint(2).toDTO());
+        const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
+            Deadline.create(),
+            namespacId,
+            UInt64.fromUint(1),
+            UInt64.fromUint(9),
+            MosaicRestrictionType.EQ,
+            UInt64.fromUint(8),
+            MosaicRestrictionType.GE,
+            NetworkType.MIJIN_TEST,
+            referenceMosaicId,
+        );
+
+        expect(mosaicGlobalRestrictionTransaction.mosaicId.toHex()).to.be.equal(namespacId.toHex());
+        expect(mosaicGlobalRestrictionTransaction.referenceMosaicId.toHex()).to.be.equal(referenceMosaicId.toHex());
+        expect(mosaicGlobalRestrictionTransaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(1).toHex());
+        expect(mosaicGlobalRestrictionTransaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(9).toHex());
+        expect(mosaicGlobalRestrictionTransaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(8).toHex());
+        expect(mosaicGlobalRestrictionTransaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.EQ);
+        expect(mosaicGlobalRestrictionTransaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
+
+        const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(
+            240,
+            signedTransaction.payload.length,
+        )).to.be.equal('C51FB4C93FCA509502000000000000000100000000000000090000000000000001080000000000000006');
+
+    });
+
+    it('should createComplete an MosaicGlobalRestrictionTransaction use mosaic alias reference', () => {
+        const namespacId = NamespaceId.createFromEncoded('9550CA3FC9B41FC5');
+        const mosaicId = new MosaicId(UInt64.fromUint(1).toDTO());
+        const mosaicGlobalRestrictionTransaction = MosaicGlobalRestrictionTransaction.create(
+            Deadline.create(),
+            mosaicId,
+            UInt64.fromUint(1),
+            UInt64.fromUint(9),
+            MosaicRestrictionType.EQ,
+            UInt64.fromUint(8),
+            MosaicRestrictionType.GE,
+            NetworkType.MIJIN_TEST,
+            namespacId,
+        );
+
+        expect(mosaicGlobalRestrictionTransaction.mosaicId.toHex()).to.be.equal(mosaicId.toHex());
+        expect(mosaicGlobalRestrictionTransaction.referenceMosaicId.toHex()).to.be.equal(namespacId.toHex());
+        expect(mosaicGlobalRestrictionTransaction.restrictionKey.toHex()).to.be.equal(UInt64.fromUint(1).toHex());
+        expect(mosaicGlobalRestrictionTransaction.previousRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(9).toHex());
+        expect(mosaicGlobalRestrictionTransaction.newRestrictionValue.toHex()).to.be.equal(UInt64.fromUint(8).toHex());
+        expect(mosaicGlobalRestrictionTransaction.previousRestrictionType).to.be.equal(MosaicRestrictionType.EQ);
+        expect(mosaicGlobalRestrictionTransaction.newRestrictionType).to.be.equal(MosaicRestrictionType.GE);
+
+        const signedTransaction = mosaicGlobalRestrictionTransaction.signWith(account, generationHash);
+
+        expect(signedTransaction.payload.substring(
+            240,
+            signedTransaction.payload.length,
+        )).to.be.equal('0100000000000000C51FB4C93FCA50950100000000000000090000000000000001080000000000000006');
 
     });
 });

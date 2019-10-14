@@ -1,5 +1,3 @@
-import { NetworkType } from "../blockchain/NetworkType";
-
 /*
  * Copyright 2019 NEM
  *

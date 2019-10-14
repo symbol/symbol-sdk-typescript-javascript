@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {Convert as convert} from '../../core/format';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import {Address} from '../../model/account/Address';
 import {PublicAccount} from '../../model/account/PublicAccount';
 import {NetworkType} from '../../model/blockchain/NetworkType';
@@ -345,8 +346,8 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            new MosaicId(transactionDTO.mosaicId),
-            new MosaicId(transactionDTO.referenceMosaicId),
+            UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId),
+            UnresolvedMapping.toUnresolvedMosaic(transactionDTO.referenceMosaicId),
             UInt64.fromHex(transactionDTO.restrictionKey),
             UInt64.fromNumericString(transactionDTO.previousRestrictionValue),
             transactionDTO.previousRestrictionType,
@@ -364,11 +365,10 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            new MosaicId(transactionDTO.mosaicId),
+            UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId),
             UInt64.fromHex(transactionDTO.restrictionKey),
-            typeof targetAddress === 'object' && targetAddress.hasOwnProperty('address') ?
-                Address.createFromRawAddress(targetAddress.address) : Address.createFromEncoded(targetAddress),
-                UInt64.fromNumericString(transactionDTO.previousRestrictionValue),
+            extractRecipient(transactionDTO.targetAddress),
+            UInt64.fromNumericString(transactionDTO.previousRestrictionValue),
             UInt64.fromNumericString(transactionDTO.newRestrictionValue),
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
@@ -398,7 +398,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.targetPublicKey,
             UInt64.fromHex(transactionDTO.scopedMetadataKey),
-            new MosaicId(transactionDTO.targetMosaicId),
+            UnresolvedMapping.toUnresolvedMosaic(transactionDTO.targetMosaicId),
             transactionDTO.valueSizeDelta,
             convert.decodeHex(transactionDTO.value),
             transactionDTO.signature,
@@ -455,18 +455,7 @@ export const extractTransactionVersion = (version: number): number => {
  */
 export const extractRecipient = (recipientAddress: any): Address | NamespaceId => {
     if (typeof recipientAddress === 'string') {
-        // If bit 0 of byte 0 is not set (like in 0x90), then it is a regular address.
-        // Else (e.g. 0x91) it represents a namespace id which starts at byte 1.
-        const bit0 = convert.hexToUint8(recipientAddress.substr(1, 2))[0];
-        if ((bit0 & 16) === 16) {
-            // namespaceId encoded hexadecimal notation provided
-            // only 8 bytes are relevant to resolve the NamespaceId
-            const relevantPart = recipientAddress.substr(2, 16);
-            return NamespaceId.createFromEncoded(relevantPart);
-        }
-
-        // read address from encoded hexadecimal notation
-        return Address.createFromEncoded(recipientAddress);
+        return UnresolvedMapping.toUnresolvedAddress(recipientAddress);
     } else if (typeof recipientAddress === 'object') { // Is JSON object
         if (recipientAddress.hasOwnProperty('address')) {
             return Address.createFromRawAddress(recipientAddress.address);
@@ -487,25 +476,12 @@ export const extractRecipient = (recipientAddress: any): Address | NamespaceId 
  * @return {Mosaic[]}
  */
 export const extractMosaics = (mosaics: any): Mosaic[] => {
-
     if (mosaics === undefined) {
         return [];
     }
-
     return mosaics.map((mosaicDTO) => {
-
-        // convert ID to UInt8 bytes array and get first byte (most significant byte)
-        const bytes = convert.hexToUint8(mosaicDTO.id);
-        const byte0 = bytes[0];
-
-        // if most significant bit of byte 0 is set, then we have a namespaceId
-        if ((byte0 & 128) === 128) {
-            const namespaceId = NamespaceId.createFromEncoded(mosaicDTO.id);
-            return new Mosaic(namespaceId, UInt64.fromNumericString(mosaicDTO.amount));
-        }
-
-        // most significant bit of byte 0 is not set => mosaicId
-        return new Mosaic(new MosaicId(mosaicDTO.id), UInt64.fromNumericString(mosaicDTO.amount));
+        const id = UnresolvedMapping.toUnresolvedMosaic(mosaicDTO.id);
+        return new Mosaic(id, UInt64.fromNumericString(mosaicDTO.amount));
     });
 };
 
