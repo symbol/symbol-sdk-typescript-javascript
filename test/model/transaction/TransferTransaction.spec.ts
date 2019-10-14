@@ -359,4 +359,23 @@ describe('TransferTransaction', () => {
         expect(sorted.mosaics[2].id.toHex()).to.be.equal('D525AD41D95FCF29');
 
     });
+
+    it('Test Serialization and Deserialization Using namespaceIds', () => {
+        const namespaceId = new NamespaceId('testaccount2');
+​
+        const transferTransaction = TransferTransaction.create(
+            Deadline.createFromDTO('1'),
+            namespaceId,
+            [NetworkCurrencyMosaic.createAbsolute(1)],
+            PlainMessage.create('test-message'),
+            NetworkType.MIJIN_TEST,
+        );
+​
+        const payload = transferTransaction.serialize();
+        const newTransaction = CreateTransactionFromPayload(payload) as TransferTransaction;
+        const newPayload = newTransaction.serialize();
+​
+        expect(newPayload).to.be.equal(payload);
+        expect(newTransaction.recipientToString()).to.be.equal(transferTransaction.recipientToString());
+    });
 });
