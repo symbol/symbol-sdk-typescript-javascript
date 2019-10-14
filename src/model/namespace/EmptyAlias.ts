@@ -45,4 +45,12 @@ export class EmptyAlias extends Alias {
     public equals(alias: any): boolean {
         return alias instanceof EmptyAlias || alias.type === 0;
     }
+
+    /**
+     * Generate alias buffer
+     * @return {Uint8Array}
+     */
+    public serialize(): Uint8Array {
+        return new Uint8Array(0);
+    }
 }

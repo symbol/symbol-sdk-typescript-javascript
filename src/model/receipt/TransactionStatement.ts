@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
+import { sha3_256 } from 'js-sha3';
+import { Convert } from '../../core/format/Convert';
+import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { UInt64 } from '../UInt64';
 import { Receipt } from './Receipt';
 import { ReceiptSource } from './ReceiptSource';
+import { ReceiptType } from './ReceiptType';
+import { ReceiptVersion } from './ReceiptVersion';
 
 /**
  * A transaction statement is a collection of receipts linked with a transaction in a particular block.
@@ -45,5 +50,25 @@ export class TransactionStatement {
                  * The array of receipt headers.
                  */
                 public readonly receipts: Receipt[]) {
+    }
+
+    /**
+     * Generate receipt hash
+     * @return {string} receipt hash in hex
+     */
+    public generateHash(): string {
+        const hasher = sha3_256.create();
+        hasher.update(GeneratorUtils.uintToBuffer(ReceiptVersion.TRANSACTION_STATEMENT, 2));
+        hasher.update(GeneratorUtils.uintToBuffer(ReceiptType.Transaction_Group, 2));
+        hasher.update(this.source.serialize());
+
+        let receiptBytes = Uint8Array.from([]);
+        this.receipts.forEach((receipt) => {
+            const bytes = receipt.serialize();
+            receiptBytes = GeneratorUtils.concatTypedArrays(receiptBytes, bytes);
+        });
+
+        hasher.update(receiptBytes);
+        return hasher.hex().toUpperCase();
     }
 }

@@ -139,13 +139,13 @@ describe('Receipt - CreateStatementFromDTO', () => {
         deepEqual(unresolvedAddress.plain(),
                 Address.createFromEncoded('9103B60AAF2762688300000000000000000000000000000000').plain());
         expect(statement.addressResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
-        expect((statement.addressResolutionStatements[0].resolutionEntries[0].resolved as AddressAlias)
-                .address.plain()).to.be.equal(Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain());
+        expect((statement.addressResolutionStatements[0].resolutionEntries[0].resolved as Address).plain())
+            .to.be.equal(Address.createFromEncoded('917E7E29A01014C2F300000000000000000000000000000000').plain());
 
         deepEqual(statement.mosaicResolutionStatements[0].height, UInt64.fromNumericString('1506'));
         deepEqual(unresolvedMosaicId.toHex(), '85BBEA6CC462B244');
         expect(statement.mosaicResolutionStatements[0].resolutionEntries.length).to.be.equal(1);
-        deepEqual((statement.mosaicResolutionStatements[0].resolutionEntries[0].resolved as MosaicAlias)
-                .mosaicId.id.toHex(), '941299B2B7E1291C');
+        deepEqual((statement.mosaicResolutionStatements[0].resolutionEntries[0].resolved as MosaicId)
+                .toHex(), '941299B2B7E1291C');
     });
 });
