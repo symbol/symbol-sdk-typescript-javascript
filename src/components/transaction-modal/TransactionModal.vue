@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="transaction_modal">
     <Modal
             v-model="show"
             v-if="activeTransaction"
