@@ -41,6 +41,14 @@
             return this.activeAccount.node
         }
 
+        get generationHash() {
+            return this.activeAccount.generationHash
+        }
+
+        get isNodeHealthy() {
+            return this.app.isNodeHealthy
+        }
+
         get wallet() {
             return this.activeAccount.wallet
         }
@@ -257,31 +265,44 @@
                 if (oldValue !== newValue) setWalletsBalances(this.$store)
             })
 
-            this.$store.subscribe(async (mutation, state) => {
-                switch (mutation.type) {
-                    /**
-                     * On Node Change
-                     */
-                    case 'SET_NODE':
-                        const node = mutation.payload
-                        if (!this.chainListeners) {
-                            try {
-                                await getNetworkGenerationHash(node, this)
-                                // @TODO: Handle generationHash change
-                                await getCurrentNetworkMosaic(node, this.$store)
-                                await getCurrentBlockHeight(this.$store)
-                                this.chainListeners = new ChainListeners(this, this.wallet.address, node)
-                                this.chainListeners.start()
-                            } catch (error) {
-                                console.error(error)
-                            }
-                        } else {
-                            this.chainListeners.switchEndpoint(node)
-                        }
-                        break
+            /**
+             * On Endpoint change
+             */
+            this.$watchAsObservable('node')
+                .pipe(
+                    throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
+                ).subscribe(async ({newValue, oldValue}) => {
+                if (!newValue) return
+                if (oldValue !== newValue) {
+                    if (!this.chainListeners) {
+                        this.chainListeners = new ChainListeners(this, this.wallet.address, newValue)
+                        this.chainListeners.start()
+                    } else {
+                        this.chainListeners.switchEndpoint(newValue)
+                    }
+
+                    try {
+                        await getNetworkGenerationHash(newValue, this)
+                        await getCurrentBlockHeight(this.$store)
+                    } catch (error) {
+                        console.error(error)
+                    }
                 }
             })
-            // @TODO: hook to onLogin event
+
+            /**
+             * On Generation hash change
+             */
+            this.$watchAsObservable('generationHash')
+                .pipe(
+                    throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
+                ).subscribe(async ({newValue, oldValue}) => {
+                if (!newValue || oldValue === '') return
+                if (oldValue !== newValue) {
+                    await getCurrentNetworkMosaic(node, this.$store)
+                    this.onWalletChange(this.wallet)
+                }
+            })
         }
 
         created() {

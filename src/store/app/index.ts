@@ -7,7 +7,7 @@ const state: AppInfo = {
     locale: 'en-US',
     walletList: [],
     hasWallet: false,
-    isNodeHealthy: false,
+    isNodeHealthy: true,
     mnemonic: '',
     chainStatus: ChainStatus.getDefault(),
     mosaicsLoading: true,

@@ -78,7 +78,6 @@ export const getCurrentNetworkMosaic = async (currentNode: string, store: Store<
     }
 }
 
-// TODO remove from here
 export const getCurrentBlockHeight = async (store: Store<AppState>) => {
     try {
         const {node} = store.state.account
@@ -89,5 +88,6 @@ export const getCurrentBlockHeight = async (store: Store<AppState>) => {
         store.commit('SET_CHAIN_STATUS', new ChainStatus(blockInfo))
     } catch (error) {
         store.commit('SET_CHAIN_HEIGHT', 0)
+        store.commit('SET_IS_NODE_HEALTHY', false)
     }
 }
