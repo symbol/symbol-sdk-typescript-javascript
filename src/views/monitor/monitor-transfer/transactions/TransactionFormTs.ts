@@ -8,11 +8,11 @@ import {
 import {mapState} from "vuex"
 import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
-import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress, cloneData} from "@/core/utils"
 import {standardFields, isAddress} from "@/core/validation"
 import {AppMosaic, AppWallet, AppInfo, StoreAccount, DefaultFee} from "@/core/model"
-import ErrorTooltip from '@/views/other/forms/errorTooltip/ErrorTooltip.vue'
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
 
 @Component({

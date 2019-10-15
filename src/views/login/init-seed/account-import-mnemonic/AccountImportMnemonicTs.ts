@@ -5,7 +5,7 @@ import {Component, Vue} from 'vue-property-decorator'
 import {networkTypeConfig} from '@/config/view/setting'
 import {AppLock} from "@/core/utils"
 import {AppInfo, StoreAccount, AppWallet} from "@/core/model"
-import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 @Component({
     computed: {
         ...mapState({

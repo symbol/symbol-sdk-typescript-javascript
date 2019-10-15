@@ -10,7 +10,7 @@ import {
 import {mapState} from "vuex"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config/index.ts"
-import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {StoreAccount, DefaultFee, AppWallet} from "@/core/model"
 import {getAbsoluteMosaicAmount, formatAddress} from "@/core/utils"
 import {createBondedMultisigTransaction} from '@/core/services'

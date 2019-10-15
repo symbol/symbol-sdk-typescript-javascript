@@ -4,7 +4,7 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'iview'
 // @ts-ignore
-import LineChart from '@/common/vue/line-chart/LineChart.vue'
+import LineChart from '@/components/line-chart/LineChart.vue'
 
 const localVue = createLocalVue()
 localVue.use(VueRouter)

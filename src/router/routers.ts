@@ -5,7 +5,7 @@ const routers = [
         path: '/',
         name: 'home',
         redirect: '/login',
-        component: () => import('@/common/vue/menu-bar/MenuBar.vue'),
+        component: () => import('@/components/menu-bar/MenuBar.vue'),
         children: [
             {
                 path: '/monitorPanel',
@@ -16,7 +16,7 @@ const routers = [
                     icon: leftBarIcons.windowDashboard,
                     activeIcon: leftBarIcons.windowDashboardActive,
                 },
-                component: () => import('@/views/monitor/monitor-panel/MonitorPanel.vue'),
+                component: () => import('@/views/monitor/Monitor.vue'),
                 children: [
                     {
                         path: '/dashBoard',
@@ -51,34 +51,34 @@ const routers = [
                     activeIcon: leftBarIcons.windowWalletActive,
                 },
                 // @ts-ignore
-                component: () => import('@/views/wallet/wallet-panel/WalletPanel.vue'),
+                component: () => import('@/views/wallet/Wallet.vue'),
                 children: [
                     {
                         path: '/walletCreate',
                         name: 'walletCreate',
                         // @ts-ignore
-                        component: () => import('@/views/wallet/wallet-create/WalletCreate.vue')
+                        component: () => import('@/views/wallet/wallet-functions/wallet-create/WalletCreate.vue')
                     }, {
                         path: '/walletCreated',
                         name: 'walletCreated',
                         // @ts-ignore
-                        component: () => import('@/views/wallet/wallet-created/WalletCreated.vue')
+                        component: () => import('@/views/wallet/wallet-functions/wallet-created/WalletCreated.vue')
                     }, {
                         path: 'walletImport',
                         name: 'walletImport',
                         // @ts-ignore
-                        component: () => import('@/views/wallet/wallet-import/WalletImport.vue'),
+                        component: () => import('@/views/wallet/wallet-functions/wallet-import/WalletImport.vue'),
                         children: [
                             {
                                 path: '/walletImportKeystore',
                                 name: 'walletImportKeystore',
                                 // @ts-ignore
-                                component: () => import('@/views/wallet/wallet-import-keystore/WalletImportKeystore.vue'),
+                                component: () => import('@/views/wallet/wallet-functions/wallet-import/wallet-import-keystore/WalletImportKeystore.vue'),
                             },{
                                 path: '/walletImportPrivatekey',
                                 name: 'walletImportPrivatekey',
                                 // @ts-ignore
-                                component: () => import('@/views/wallet/wallet-import-privatekey/WalletImportPrivatekey.vue'),
+                                component: () => import('@/views/wallet/wallet-functions/wallet-import/wallet-import-privatekey/WalletImportPrivatekey.vue'),
                             }
                         ]
                     },
@@ -92,8 +92,9 @@ const routers = [
                     icon: leftBarIcons.windowMosaic,
                     activeIcon: leftBarIcons.windowMosaicActive,
                 },
-                component: () => import('@/views/service/mosaic/Mosaic.vue')
-            },{
+                component: () => import('@/views/mosaic/Mosaic.vue')
+            },
+            {
                 path: '/namespace',
                 name: 'namespace',
                 meta: {
@@ -102,23 +103,24 @@ const routers = [
                     activeIcon: leftBarIcons.windowNamespaceActive,
                 },
                 redirect: '/namespaceList',
-                component: () => import('@/views/service/namespace/Namespace.vue'),
+                component: () => import('@/views/namespace/Namespace.vue'),
                 children: [
                     {
                         path: '/namespaceList',
                         name: 'Namespace_list',
-                        component: () => import('@/views/service/namespace/namespace-function/namespace-list/NamespaceList.vue')
+                        component: () => import('@/views/namespace/namespace-function/namespace-list/NamespaceList.vue')
                     }, {
                         path: '/createNamespace',
                         name: 'Create_namespace',
-                        component: () => import('@/views/service/namespace/namespace-function/root-namespace/RootNamespace.vue')
+                        component: () => import('@/views/namespace/namespace-function/root-namespace/RootNamespace.vue')
                     }, {
                         path: '/createSubNamespace',
                         name: 'Create_subNamespace',
-                        component: () => import('@/views/service/namespace/namespace-function/sub-namespace/SubNamespace.vue')
+                        component: () => import('@/views/namespace/namespace-function/sub-namespace/SubNamespace.vue')
                     },
                 ]
-            },{
+            },
+            {
                 path: '/multisigApi',
                 name: 'multisigApi',
                 meta: {
@@ -154,7 +156,7 @@ const routers = [
                     activeIcon: leftBarIcons.windowCommunityActive,
                 },
                 // @ts-ignore
-                component: () => import('@/views/community/community-panel/CommunityPanel.vue'),
+                component: () => import('@/views/community/Community.vue'),
                 children: [
                     {
                         path: '/information',
@@ -178,7 +180,7 @@ const routers = [
                     icon: leftBarIcons.windowSetting,
                     activeIcon: leftBarIcons.windowSettingActive,
                 },
-                component: () => import('@/views/setting/setting-panel/SettingPanel.vue'),
+                component: () => import('@/views/setting/Setting.vue'),
                 children: [
                     {
                         path: '/settingAbout',
@@ -221,17 +223,20 @@ const routers = [
                         component: () => import('@/views/login/login/login-view/input-lock/InputLock.vue')
                     },
                 ]
-            }, {
+            },
+            {
                 path: '/createAccount',
                 name: 'createAccount',
                 meta: {clickable: false},
                 component: () => import('@/views/login/create-account/CreateAccount.vue'),
-            }, {
+            },
+            {
                 path: '/initAccount',
                 name: 'initAccount',
                 meta: {clickable: false},
                 component: () => import('@/views/login/init-account/InitAccount.vue'),
-            }, {
+            },
+            {
                 path: '/initSeed',
                 name: 'initSeed',
                 meta: {clickable: false},

@@ -4,14 +4,14 @@ import {Address, AddressAlias, AliasType, MultisigAccountInfo, PublicAccount} fr
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import WalletAlias from './wallet-function/wallet-alias/WalletAlias.vue'
 import WalletFilter from './wallet-function/wallet-filter/WalletFilter.vue'
-import KeystoreDialog from '@/views/wallet/keystore-dialog/KeystoreDialog.vue'
-import MnemonicDialog from '@/views/wallet/mnemonic-dialog/MnemonicDialog.vue'
-import PrivatekeyDialog from '@/views/wallet/privatekey-dialog/PrivatekeyDialog.vue'
+import KeystoreDialog from '@/views/wallet/wallet-details/keystore-dialog/KeystoreDialog.vue'
+import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.vue'
+import PrivatekeyDialog from '@/views/wallet/wallet-details/privatekey-dialog/PrivatekeyDialog.vue'
 import WalletUpdatePassword from './wallet-function/wallet-update-password/WalletUpdatePassword.vue'
 import WalletHarvesting from '@/views/wallet/wallet-details/wallet-function/wallet-harvesting/WalletHarvesting.vue'
 import {mapState} from "vuex"
 import {AppWallet, AppInfo, StoreAccount, AppNamespace} from "@/core/model"
-import Alias from '@/views/forms/alias/Alias.vue'
+import Alias from '@/components/forms/alias/Alias.vue'
 
 @Component({
     components: {

@@ -8,7 +8,7 @@ localVue.use(VueRouter)
 localVue.use(iView);
 const router = new VueRouter()
 // @ts-ignore
-import NamespaceList from '@/views/service/namespace/namespace-function/namespace-list/NamespaceList.vue'
+import NamespaceList from '@/views/namespace/namespace-function/namespace-list/NamespaceList.vue'
 
 
 describe('NamespaceList', () => {

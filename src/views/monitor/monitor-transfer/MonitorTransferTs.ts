@@ -1,5 +1,5 @@
 import {Component, Vue} from 'vue-property-decorator'
-import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
+import CollectionRecord from '@/components/collection-record/CollectionRecord.vue'
 import MultisigTransferTransaction from '@/views/monitor/monitor-transfer/transactions/TransactionForm.vue'
 import {mapState} from "vuex"
 import {TransferType} from "@/core/model/TransferType";

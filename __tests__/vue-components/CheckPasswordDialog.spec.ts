@@ -2,7 +2,7 @@ import {shallowMount, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'iview'
 // @ts-ignore
-import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import vueStore from '@/store/index.ts'
 
 const localVue = createLocalVue()

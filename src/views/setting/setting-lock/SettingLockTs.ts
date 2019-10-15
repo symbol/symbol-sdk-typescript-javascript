@@ -3,7 +3,7 @@ import {Message} from "@/config"
 import {localRead} from '@/core/utils'
 import {standardFields} from '@/core/validation'
 import {AppLock} from '@/core/utils/appLock'
-import FormInput from '@/views/other/forms/input/FormInput.vue'
+import FormInput from '@/components/other/forms/input/FormInput.vue'
 import {mapState} from "vuex"
 import {StoreAccount} from "@/core/model"
 

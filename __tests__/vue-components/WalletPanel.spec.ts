@@ -8,7 +8,7 @@ localVue.use(VueRouter)
 localVue.use(iView);
 const router = new VueRouter()
 // @ts-ignore
-import WalletPanel from '@/views/wallet/wallet-panel/WalletPanel.vue'
+import WalletPanel from '@/views/wallet/Wallet.vue'
 
 
 describe('WalletPanel', () => {

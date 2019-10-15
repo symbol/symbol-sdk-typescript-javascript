@@ -1,6 +1,6 @@
 import PieChart from './PieChart.vue'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {alphabet, Message} from '@/config/index.ts'
 import {vote} from '@/core/api/logicApi.ts'
 import {mapState} from "vuex"

@@ -1,7 +1,7 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {createMnemonic} from "@/core/utils/hdWallet.ts"
-import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {networkTypeConfig} from '@/config/view/setting'
 
 @Component({

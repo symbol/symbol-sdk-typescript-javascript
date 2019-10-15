@@ -8,7 +8,7 @@ localVue.use(VueRouter)
 localVue.use(iView);
 const router = new VueRouter()
 // @ts-ignore
-import RootNamespace from '@/views/service/namespace/namespace-function/root-namespace/RootNamespace.vue'
+import RootNamespace from '@/views/namespace/namespace-function/root-namespace/RootNamespace.vue'
 
 
 describe('RootNamespace', () => {

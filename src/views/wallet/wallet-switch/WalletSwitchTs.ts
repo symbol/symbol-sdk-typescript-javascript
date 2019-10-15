@@ -8,7 +8,7 @@ import {walletStyleSheetType} from '@/config/view/wallet.ts'
 import {MultisigAccountInfo, Password} from 'nem2-sdk'
 import TheWalletUpdate from "@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdate.vue"
 import {Message, networkConfig} from "@/config"
-import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 
 @Component({
     components: {TheWalletDelete, TheWalletUpdate, CheckPasswordDialog},

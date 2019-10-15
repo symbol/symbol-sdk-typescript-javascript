@@ -4,7 +4,7 @@ import {shallowMount, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'iview'
 // @ts-ignore
-import NamespaceEditDialog from '@/views/service/namespace/namespace-function/namespace-list/namespace-edit-dialog/NamespaceEditDialog.vue'
+import NamespaceEditDialog from '@/views/namespace/namespace-function/namespace-list/namespace-edit-dialog/NamespaceEditDialog.vue'
 
 const localVue = createLocalVue()
 localVue.use(VueRouter)

@@ -12,7 +12,7 @@ import {
     getAbsoluteMosaicAmount,
 } from "@/core/utils"
 import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
-import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {StoreAccount, DefaultFee} from "@/core/model"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
 
@@ -55,13 +55,13 @@ export class MultisigModificationTs extends Vue {
     get defaultFees(): DefaultFee[] {
         return DEFAULT_FEES[FEE_GROUPS.SINGLE]
     }
-    
+
     get feeAmount() {
         const {feeSpeed} = this.formItems
         const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
         return getAbsoluteMosaicAmount(feeAmount, this.activeAccount.networkCurrency.divisibility)
     }
-  
+
     addCosigner(flag) {
         const {currentPublicKey} = this
         if (!currentPublicKey || !currentPublicKey.trim()) {

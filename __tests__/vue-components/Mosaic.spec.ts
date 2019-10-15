@@ -4,7 +4,7 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'iview'
 // @ts-ignore
-import Mosaic from '@/views/service/mosaic/Mosaic.vue'
+import Mosaic from '@/views/mosaic/Mosaic.vue'
 
 const localVue = createLocalVue()
 localVue.use(VueRouter)

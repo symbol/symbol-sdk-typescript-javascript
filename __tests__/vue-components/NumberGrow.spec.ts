@@ -7,7 +7,7 @@ localVue.use(VueRouter)
 localVue.use(iView);
 const router = new VueRouter()
 // @ts-ignore
-import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
+import CollectionRecord from '@/components/collection-record/CollectionRecord.vue'
 
 
 describe('CollectionRecord', () => {

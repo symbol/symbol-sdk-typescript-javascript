@@ -8,7 +8,7 @@ localVue.use(VueRouter)
 localVue.use(iView);
 const router = new VueRouter()
 // @ts-ignore
-import WalletCreated from '@/views/wallet/wallet-created/WalletCreated.vue'
+import WalletCreated from '@/views/wallet/wallet-functions/wallet-created/WalletCreated.vue'
 
 
 describe('WalletCreated', () => {

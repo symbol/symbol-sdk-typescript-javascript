@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {formatDate} from '@/core/utils/utils.ts'
 import {blog} from "@/core/api/logicApi.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import CheckPWDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {mapState} from "vuex"
 import {AppInfo, StoreAccount} from '@/core/model'
 @Component({

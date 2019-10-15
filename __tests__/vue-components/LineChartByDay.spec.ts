@@ -4,7 +4,7 @@ import {shallowMount, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'iview'
 // @ts-ignore
-import LineChartByDay from '@/common/vue/line-chart-by-day/LineChartByDay.vue'
+import LineChartByDay from '@/components/line-chart-by-day/LineChartByDay.vue'
 
 const localVue = createLocalVue()
 localVue.use(VueRouter)

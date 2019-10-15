@@ -4,7 +4,7 @@ import {shallowMount, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'iview'
 // @ts-ignore
-import CollectionRecord from '@/common/vue/collection-record/CollectionRecord.vue'
+import CollectionRecord from '@/components/collection-record/CollectionRecord.vue'
 
 const localVue = createLocalVue()
 const router = new VueRouter()

@@ -6,7 +6,7 @@ import SeedCreatedGuide from '@/views/login/init-seed/seed-created-guide/SeedCre
 import {mapState} from "vuex"
 import {walletFnNavConfig} from '@/config/view/wallet'
 import {StoreAccount} from "@/core/model"
-import CheckPasswordDialog from '@/common/vue/check-password-dialog/CheckPasswordDialog.vue'
+import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {AppLock, createMnemonic} from "@/core/utils"
 
 @Component({
