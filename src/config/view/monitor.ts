@@ -18,11 +18,6 @@ export const monitorPanelNavigatorConfig: Array<{
             isSelect: false,
             path: 'invoice'
         },
-        // {
-        //     name: 'remote',
-        //     isSelect: false,
-        //     path: 'remote',
-        // },
         {
             name: 'market',
             isSelect: false,

@@ -19,7 +19,7 @@
           </div>
           <div class="top_class_div">
             <span class="remote_public_key">{{$t('Remote_public_key')}}：</span>
-            <span>{{linkedAccountKey?linkedAccountKey:'no remote account'}}</span>
+            <span class="text_select">{{linkedAccountKey?linkedAccountKey:'no remote account'}}</span>
           </div>
         </div>
       </div>
@@ -72,7 +72,8 @@
 
       <div class="gray_input_content">
         <span class="title">{{$t('remote_modal_pul')}}</span>
-        <input type="text" v-model="formItems.remotePublicKey" :placeholder="$t('remote_modal_place1')">
+        <input v-if="!isLinked" type="text" v-model="formItems.remotePublicKey" :placeholder="$t('remote_modal_place1')">
+        <span v-else>{{formItems.remotePublicKey}}</span>
       </div>
       <div class="gray_input_content">
         <span class="title">{{$t('fee')}}</span>
