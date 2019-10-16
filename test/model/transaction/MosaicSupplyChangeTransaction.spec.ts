@@ -20,7 +20,7 @@ import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {MosaicId} from '../../../src/model/mosaic/MosaicId';
 import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import {Deadline} from '../../../src/model/transaction/Deadline';
-import {MosaicSupplyChangeTransaction,} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
+import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
 
@@ -53,7 +53,7 @@ describe('MosaicSupplyChangeTransaction', () => {
             MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(10),
             NetworkType.MIJIN_TEST,
-            new UInt64([1, 0])
+            new UInt64([1, 0]),
         );
 
         expect(mosaicSupplyChangeTransaction.maxFee.higher).to.be.equal(0);
@@ -70,7 +70,7 @@ describe('MosaicSupplyChangeTransaction', () => {
             NetworkType.MIJIN_TEST,
         );
 
-        expect(mosaicSupplyChangeTransaction.direction).to.be.equal(MosaicSupplyChangeAction.Increase);
+        expect(mosaicSupplyChangeTransaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
         expect(mosaicSupplyChangeTransaction.delta.lower).to.be.equal(10);
         expect(mosaicSupplyChangeTransaction.delta.higher).to.be.equal(0);
         expect(mosaicSupplyChangeTransaction.mosaicId.id.lower).to.be.equal(2262289484);

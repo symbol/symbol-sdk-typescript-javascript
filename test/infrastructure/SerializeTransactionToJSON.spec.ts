@@ -18,8 +18,6 @@ import { expect } from 'chai';
 import { sha3_256 } from 'js-sha3';
 import {Convert as convert} from '../../src/core/format';
 import { Account } from '../../src/model/account/Account';
-import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
-import { AccountRestrictionType } from '../../src/model/restriction/AccountRestrictionType';
 import { Address } from '../../src/model/account/Address';
 import { PublicAccount } from '../../src/model/account/PublicAccount';
 import { NetworkType } from '../../src/model/blockchain/NetworkType';
@@ -31,6 +29,8 @@ import { MosaicSupplyChangeAction } from '../../src/model/mosaic/MosaicSupplyCha
 import { NetworkCurrencyMosaic } from '../../src/model/mosaic/NetworkCurrencyMosaic';
 import { AliasAction } from '../../src/model/namespace/AliasAction';
 import { NamespaceId } from '../../src/model/namespace/NamespaceId';
+import { AccountRestrictionModificationAction } from '../../src/model/restriction/AccountRestrictionModificationAction';
+import { AccountRestrictionType } from '../../src/model/restriction/AccountRestrictionType';
 import { AccountLinkTransaction } from '../../src/model/transaction/AccountLinkTransaction';
 import { AccountRestrictionModification } from '../../src/model/transaction/AccountRestrictionModification';
 import { AccountRestrictionTransaction } from '../../src/model/transaction/AccountRestrictionTransaction';
@@ -221,7 +221,7 @@ describe('SerializeTransactionToJSON', () => {
         const json = mosaicSupplyChangeTransaction.toJSON();
 
         expect(json.transaction.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_CHANGE);
-        expect(json.transaction.direction).to.be.equal(MosaicSupplyChangeAction.Increase);
+        expect(json.transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
 
     });
 

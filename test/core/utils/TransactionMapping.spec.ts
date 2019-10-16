@@ -311,7 +311,7 @@ describe('TransactionMapping - createFromPayload', () => {
 
         const transaction = TransactionMapping.createFromPayload(signedTransaction.payload) as MosaicSupplyChangeTransaction;
 
-        expect(transaction.direction).to.be.equal(MosaicSupplyChangeAction.Increase);
+        expect(transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
         expect(transaction.delta.lower).to.be.equal(10);
         expect(transaction.delta.higher).to.be.equal(0);
         expect(transaction.mosaicId.id.lower).to.be.equal(2262289484);
@@ -877,7 +877,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
             TransactionMapping.createFromDTO(mosaicSupplyChangeTransaction.toJSON()) as MosaicSupplyChangeTransaction;
 
         expect(transaction.type).to.be.equal(TransactionType.MOSAIC_SUPPLY_CHANGE);
-        expect(transaction.direction).to.be.equal(MosaicSupplyChangeAction.Increase);
+        expect(transaction.action).to.be.equal(MosaicSupplyChangeAction.Increase);
 
     });
 
