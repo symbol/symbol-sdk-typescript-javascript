@@ -44,7 +44,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * Create a mosaic supply change transaction object
      * @param deadline - The deadline to include the transaction.
      * @param mosaicId - The mosaic id.
-     * @param direction - The supply type.
+     * @param action - The supply change action (increase | decrease).
      * @param delta - The supply change in units for the mosaic.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
@@ -52,7 +52,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      */
     public static create(deadline: Deadline,
                          mosaicId: MosaicId,
-                         direction: MosaicSupplyChangeAction,
+                         action: MosaicSupplyChangeAction,
                          delta: UInt64,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): MosaicSupplyChangeTransaction {
@@ -61,7 +61,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             deadline,
             maxFee,
             mosaicId,
-            direction,
+            action,
             delta,
         );
     }
@@ -72,7 +72,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
      * @param deadline
      * @param maxFee
      * @param mosaicId
-     * @param direction
+     * @param action
      * @param delta
      * @param signature
      * @param signer
@@ -89,7 +89,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
                 /**
                  * The supply type.
                  */
-                public readonly direction: MosaicSupplyChangeAction,
+                public readonly action: MosaicSupplyChangeAction,
                 /**
                  * The supply change in units for the mosaic.
                  */
@@ -136,10 +136,10 @@ export class MosaicSupplyChangeTransaction extends Transaction {
 
         // set static byte size fields
         const byteMosaicId = 8;
-        const byteDirection = 1;
+        const byteAction = 1;
         const byteDelta = 8;
 
-        return byteSize + byteMosaicId + byteDirection + byteDelta;
+        return byteSize + byteMosaicId + byteAction + byteDelta;
     }
 
     /**
@@ -158,7 +158,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             new AmountDto(this.maxFee.toDTO()),
             new TimestampDto(this.deadline.toDTO()),
             new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
-            this.direction.valueOf(),
+            this.action.valueOf(),
             new AmountDto(this.delta.toDTO()),
         );
         return transactionBuilder.serialize();
@@ -174,7 +174,7 @@ export class MosaicSupplyChangeTransaction extends Transaction {
             this.versionToDTO(),
             TransactionType.MOSAIC_SUPPLY_CHANGE.valueOf(),
             new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
-            this.direction.valueOf(),
+            this.action.valueOf(),
             new AmountDto(this.delta.toDTO()),
         );
         return transactionBuilder.serialize();

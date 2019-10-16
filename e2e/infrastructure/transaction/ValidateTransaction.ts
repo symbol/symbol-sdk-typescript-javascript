@@ -112,8 +112,8 @@ const ValidateTransaction = {
     validateMosaicSupplyChangeTx: (mosaicSupplyChangeTransaction, mosaicSupplyChangeTransactionDTO) => {
         deepEqual(mosaicSupplyChangeTransaction.mosaicId,
             new MosaicId(mosaicSupplyChangeTransactionDTO.transaction.mosaicId));
-        expect(mosaicSupplyChangeTransaction.direction)
-            .to.be.equal(mosaicSupplyChangeTransactionDTO.transaction.direction);
+        expect(mosaicSupplyChangeTransaction.action)
+            .to.be.equal(mosaicSupplyChangeTransactionDTO.transaction.action);
         deepEqual(mosaicSupplyChangeTransaction.delta,
             UInt64.fromNumericString(mosaicSupplyChangeTransactionDTO.transaction.delta));
     },

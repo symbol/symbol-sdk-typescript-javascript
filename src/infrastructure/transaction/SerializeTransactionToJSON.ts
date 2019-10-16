@@ -122,7 +122,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
         case TransactionType.MOSAIC_SUPPLY_CHANGE:
             return {
                 mosaicId: (transaction as MosaicSupplyChangeTransaction).mosaicId.toHex(),
-                direction: (transaction as MosaicSupplyChangeTransaction).direction,
+                action: (transaction as MosaicSupplyChangeTransaction).action,
                 delta: (transaction as MosaicSupplyChangeTransaction).delta.toString(),
             };
         case TransactionType.REGISTER_NAMESPACE:

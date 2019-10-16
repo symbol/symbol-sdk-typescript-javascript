@@ -1148,7 +1148,7 @@ describe('TransactionHttp', () => {
             const signedTransaction = mosaicSupplyChangeTransaction.signWith(account, generationHash);
             listener.confirmed(account.address).subscribe((transaction: MosaicSupplyChangeTransaction) => {
                 expect(transaction.delta, 'Delta').not.to.be.undefined;
-                expect(transaction.direction, 'Direction').not.to.be.undefined;
+                expect(transaction.action, 'Action').not.to.be.undefined;
                 expect(transaction.mosaicId, 'MosaicId').not.to.be.undefined;
                 done();
             });

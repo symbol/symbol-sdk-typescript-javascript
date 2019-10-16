@@ -423,7 +423,7 @@ describe('CreateTransactionFromDTO', () => {
                 transaction: {
                     deadline: '1',
                     delta: '1000',
-                    direction: 1,
+                    action: 1,
                     maxFee: '0',
                     mosaicId: '85BBEA6CC462B244',
                     signature: '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E0' +
@@ -472,7 +472,7 @@ describe('CreateTransactionFromDTO', () => {
                             },
                             transaction: {
                                 delta: '1000',
-                                direction: 1,
+                                action: 1,
                                 mosaicId: '85BBEA6CC462B244',
                                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                                 type: 16973,
