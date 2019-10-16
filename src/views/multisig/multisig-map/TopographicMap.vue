@@ -1,9 +1,9 @@
 <template>
-  <div class="topo_graph_container">
+  <div class="top_graph_container">
     <div v-if="notMultisigNorCosigner" class="not_Multisig_Nor_Cosigner">
       {{$t('There_are_no_more_accounts_under_this_account_or_cosigner')}}
     </div>
-    <div class="topo" id="id" ref="dom"></div>
+    <div class="top" id="id" ref="dom"></div>
   </div>
 
 </template>
@@ -15,10 +15,10 @@
     import {echarts as echartsConfigure} from "@/config/view/echarts"
     import {copyTxt} from '@/core/utils/utils.ts'
     import {Component, Vue, Watch} from 'vue-property-decorator'
-    import multisignSelfIcon from '@/common/img/service/multisig/multisignSelfIcon.png'
-    import multisignCosignerIcon from '@/common/img/service/multisig/multisignCosignerIcon.png'
-    import multisignMultisignerIcon from '@/common/img/service/multisig/multisignMultisignerIcon.png'
-    import {StoreAccount, AppInfo, FormattedTransaction} from "@/core/model"
+    import multisigSelfIcon from '@/common/img/service/multisig/multisignSelfIcon.png'
+    import multisigCosignerIcon from '@/common/img/service/multisig/multisignCosignerIcon.png'
+    import multisigMultisigIcon from '@/common/img/service/multisig/multisignMultisignerIcon.png'
+    import {StoreAccount, AppInfo} from "@/core/model"
 
     @Component({
         computed: {
@@ -95,7 +95,7 @@
                 name: 'self',
                 x: 0,
                 y: 100,
-                symbol: 'image://' + multisignSelfIcon,
+                symbol: 'image://' + multisigSelfIcon,
                 publicKey,
                 itemStyle: {
                     color: '#F3875B'
@@ -106,7 +106,7 @@
                 item.name = 'm-' + index
                 item.x = index * xAxisDistance
                 item.y = 150
-                item.symbol = 'image://' + multisignCosignerIcon
+                item.symbol = 'image://' + multisigCosignerIcon
                 item.itemStyle = {color: '#586D87'}
                 links.push({
                     source: 'self',
@@ -119,7 +119,7 @@
                 item.name = 'c-' + index
                 item.x = index * xAxisDistance
                 item.y = 50
-                item.symbol = 'image://' + multisignMultisignerIcon
+                item.symbol = 'image://' + multisigMultisigIcon
                 item.itemStyle = {color: 'rgba(77,194,191,1)'}
                 links.push({
                     source: item.name,
@@ -172,13 +172,13 @@
     }
 </script>
 <style scoped lang="less">
-  .topo_graph_container {
+  .top_graph_container {
     width: 100%;
     height: 100%;
     position: relative;
   }
 
-  .topo {
+  .top {
     width: 100%;
     height: 500px;
     position: absolute;

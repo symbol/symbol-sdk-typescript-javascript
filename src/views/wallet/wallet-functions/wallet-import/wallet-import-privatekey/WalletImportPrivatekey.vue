@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="privatekey">
-      <div class="describle">
+      <div class="describe">
         {{$t('the_private_key_is_a_string_of_64_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe')}}
       </div>
       <ul>

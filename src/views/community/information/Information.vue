@@ -7,7 +7,7 @@
            style="background-color: white;width: 100%;height: 100%;position: absolute;z-index: 0"></div>
 
 
-      <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticla">
+      <div class="list_container scroll" ref="listContainer" @scroll="automaticLoadingArticle">
         <div @click="switchArticle(index)" v-for="(a,index) in articleList"
              :class="['article_summary_item',a.isSelect?'selected':'','pointer']">
           <div class="title">{{a.title}}

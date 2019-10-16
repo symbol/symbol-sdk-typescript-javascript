@@ -1,5 +1,5 @@
 import {mapState} from 'vuex'
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
 import {formatNumber, formatXemAmount, localRead} from '@/core/utils/utils.ts'
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
@@ -134,7 +134,7 @@ export class WalletSwitchTs extends Vue {
         const currentNetType = JSON.parse(localRead('accountMap'))[accountName].currentNetType
         try {
             new AppWallet().createFromPath(
-                'seedWallet-' + pathToCreate[pathToCreate.length - 2],
+                networkConfig.SEED_WALLET_HEAD + pathToCreate[pathToCreate.length - 2],
                 new Password(password),
                 pathToCreate,
                 currentNetType,
@@ -146,9 +146,19 @@ export class WalletSwitchTs extends Vue {
         }
     }
 
-    mounted() {
+    scrollToActiveWallet() {
         // scroll to current wallet
         this.$refs.walletScroll["scrollTop"] = this.walletList
             .findIndex(({address}) => address === this.activeAddress) * 40
     }
+
+    mounted() {
+        this.scrollToActiveWallet()
+    }
+
+    @Watch('activeAddress')
+    onWalletChange() {
+        this.scrollToActiveWallet()
+    }
+
 }

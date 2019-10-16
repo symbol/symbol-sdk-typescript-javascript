@@ -81,7 +81,7 @@
             <input v-model="formItem.title" :placeholder="$t('please_enter_a_voting_title')" type="text">
           </span>
         </div>
-        <div class="vote_describle">
+        <div class="vote_describe">
           <span class="title">{{$t('description')}}</span>
           <span class="value radius">
           <textarea :placeholder="$t('about_voting_content_description')"

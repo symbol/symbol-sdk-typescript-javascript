@@ -507,7 +507,7 @@ export const zh_CN = {
     Operation_list: '操作清单',
     address: '地址',
     add: '添加',
-    please_add_publickey: '请添加账户',
+    please_add_publicKey: '请添加账户',
     Edit_co_signers_and_signature_thresholds: '编辑共签人及签名阀值',
     Choose_a_co_signer: '选择共签人',
     Add_delete_co_signers_this_action_will_be_displayed_in_the_action_log_click_delete_to_cancel: '添加/删除共签人，此处操作会在操作记录中显示，点击删除可撤销',
@@ -594,7 +594,7 @@ export const zh_CN = {
     co_signers_amount_less_than_0: '共签人数不可小于1',
     min_approval_amount_less_than_0: 'Min approval 不可小于1',
     min_removal_amount_less_than_0: 'Min removal 不可小于1',
-    illegal_publickey: '存在不合法的账户公钥',
+    illegal_publicKey: '存在不合法的账户公钥',
     min_approval_amount_illegal: 'Min approval 必须为数字',
     min_removal_amount_illegal: 'Min removal 必须为数字',
     current: '当前',
@@ -751,12 +751,14 @@ export const zh_CN = {
     Import_private_key: '导入私钥',
     copy_mnemonic: '复制助记词',
     Harvesting: '收获',
-    ILLEGAL_PUBLICKEY_ERROR: 'public key格式错误',
+    ILLEGAL_publicKey_ERROR: 'public key格式错误',
 
     ///////////////////////////////////////////////1009
     this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted: '请注意，您正在删除最后一个钱包，钱包删除成功后，此账户将被注销！',
-    Mutlisig_account_modification_transaction_form_is_not_ready_yet: 'Mutlisig帐户管理正在开发中！',
+    Multisig_account_modification_transaction_form_is_not_ready_yet: 'Multisig帐户管理正在开发中！',
     nickName: '昵称',
     what_is_delegated_harvesting:'什么是远程收获?',
     Delegated_harvesting_text_1:'远程收获能为帐户和节点提供一个共同使用代理私钥的安全环境。一个正常的帐户可以将其重要性委托给远程节点进行收获。也就是说，您无需运行节点,就能凭借已有帐户的重要性来创建新区块。',
+    Multisig_accounts_can_not_send_a_transaction_by_themselves:'Multisig 账户不能通过本账户发起交易。'
+
 }

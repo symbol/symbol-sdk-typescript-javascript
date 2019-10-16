@@ -173,7 +173,7 @@
 </template>
 
 <script lang="ts">
-    import {MosaicListTs} from '@/views/service/mosaic/mosaic-function/mosaic-list/MosaicListTs.ts'
+    import {MosaicListTs} from '@/views/mosaic/mosaic-list/MosaicListTs.ts'
     import "./MosaicList.less"
 
     export default class MosaicList extends MosaicListTs {

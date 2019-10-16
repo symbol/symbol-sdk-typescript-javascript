@@ -9,9 +9,12 @@ import {getAbsoluteMosaicAmount, formatAddress} from '@/core/utils'
 import {AppNamespace, StoreAccount, AppInfo, AppWallet, DefaultFee} from "@/core/model"
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
+import MultisigBanCover from '@/components/multisig-ban-cover/MultisigBanCover.vue'
+
 @Component({
     components: {
-        CheckPWDialog
+        CheckPWDialog,
+        MultisigBanCover
     },
     computed: {
         ...mapState({
@@ -66,18 +69,18 @@ export class SubNamespaceTs extends Vue {
         return this.multisigInfo.multisigAccounts.length > 0
     }
 
-    get multisigPublicKeyList(): {publicKey: string, address: string}[] {
+    get multisigPublicKeyList(): { publicKey: string, address: string }[] {
         if (!this.hasMultisigAccounts) return null
         return [
-          {
-            publicKey: this.accountPublicKey,
-            address: `(self) ${formatAddress(this.address)}`,
-          },
-          ...this.multisigInfo.multisigAccounts
-            .map(({publicKey}) => ({
-                publicKey,
-                address: formatAddress(Address.createFromPublicKey(publicKey, this.networkType).plain())
-            })),
+            {
+                publicKey: this.accountPublicKey,
+                address: `(self) ${formatAddress(this.address)}`,
+            },
+            ...this.multisigInfo.multisigAccounts
+                .map(({publicKey}) => ({
+                    publicKey,
+                    address: formatAddress(Address.createFromPublicKey(publicKey, this.networkType).plain())
+                })),
         ]
     }
 
@@ -109,7 +112,7 @@ export class SubNamespaceTs extends Vue {
         return this.multisigAccountInfo ? this.multisigAccountInfo.multisigAccounts : []
     }
 
-    get namespaceList(): {label: string, value: string}[] {
+    get namespaceList(): { label: string, value: string }[] {
         const {currentHeight, namespaceGracePeriodDuration} = this
         const {namespaces} = this.activeAccount
         if (!namespaces) return []
@@ -122,7 +125,7 @@ export class SubNamespaceTs extends Vue {
             .map(alias => ({label: alias.label, value: alias.label}))
     }
 
-    get multisigNamespaceList(): {label: string, value: string}[] {
+    get multisigNamespaceList(): { label: string, value: string }[] {
         const {currentHeight, namespaceGracePeriodDuration, activeMultisigAddress} = this
         if (!activeMultisigAddress) return []
         const namespaces: AppNamespace[] = this.activeAccount.multisigAccountsNamespaces[activeMultisigAddress]
@@ -135,7 +138,7 @@ export class SubNamespaceTs extends Vue {
             .map(alias => ({label: alias.label, value: alias.label}))
     }
 
-    get activeNamespaceList(): {label: string, value: string}[] {
+    get activeNamespaceList(): { label: string, value: string }[] {
         const {activeMultisigAddress} = this
         // @TODO handle namespace list loading state
         return activeMultisigAddress ? this.multisigNamespaceList : this.namespaceList
@@ -149,7 +152,7 @@ export class SubNamespaceTs extends Vue {
 
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
-        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        const feeAmount = this.defaultFees.find(({speed}) => feeSpeed === speed).value
         return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
@@ -175,7 +178,7 @@ export class SubNamespaceTs extends Vue {
         })
     }
 
-    createByMultisig(): void{
+    createByMultisig(): void {
         let {feeAmount, feeDivider} = this
         let {multisigPublicKey} = this.formItems
         const {networkType} = this.wallet
@@ -264,9 +267,9 @@ export class SubNamespaceTs extends Vue {
         const {feeAmount, feeDivider} = this
         this.transactionDetail = {
             "namespace": rootNamespaceName,
-            "innerFee": feeAmount/feeDivider,
+            "innerFee": feeAmount / feeDivider,
             "sub_namespace": subNamespaceName,
-            "fee": feeAmount/feeDivider
+            "fee": feeAmount / feeDivider
         }
 
         if (this.announceInLock) {

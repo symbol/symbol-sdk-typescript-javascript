@@ -7,6 +7,7 @@ import { networkConfig } from "@/config/index"
 import { getAbsoluteMosaicAmount } from "@/core/utils"
 import { StoreAccount, AppInfo, AppWallet, AppNamespace, DefaultFee, MosaicNamespaceStatusType } from "@/core/model"
 import { AppMosaics } from '@/core/services'
+import MultisigBanCover from '@/components/multisig-ban-cover/MultisigBanCover.vue'
 
 @Component({
   computed: {
@@ -14,7 +15,10 @@ import { AppMosaics } from '@/core/services'
       activeAccount: 'account',
       app: 'app'
     })
-  }
+  },
+    components:{
+        MultisigBanCover
+    }
 })
 export class AliasTs extends Vue {
   activeAccount: StoreAccount

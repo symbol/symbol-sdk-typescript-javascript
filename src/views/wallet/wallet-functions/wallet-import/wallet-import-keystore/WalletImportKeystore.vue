@@ -2,7 +2,7 @@
 
   <div>
     <div class="keystore">
-      <div class="describle">{{$t('keyStore_description')}}</div>
+      <div class="describe">{{$t('keyStore_description')}}</div>
       <ul>
         <li>
           {{$t('keystore_string')}}

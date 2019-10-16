@@ -65,7 +65,7 @@
               <span class="delate">{{$t('delete')}}</span>
             </div>
             <div class="list_body scroll">
-              <div class="please_add_address" v-if="formItems.publicKeyList.length == 0">{{$t('please_add_publickey')}}
+              <div class="please_add_address" v-if="formItems.publicKeyList.length == 0">{{$t('please_add_publicKey')}}
               </div>
 
               <div class="list_item radius" v-for="(i,index) in formItems.publicKeyList" :key="index">

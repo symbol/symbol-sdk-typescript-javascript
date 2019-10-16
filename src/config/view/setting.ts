@@ -3,7 +3,7 @@ import dashboardBlockHeight from "@/common/img/monitor/dash-board/dashboardBlock
 import dashboardBlockTime from "@/common/img/monitor/dash-board/dashboardBlockTime.png";
 import dashboardPointAmount from "@/common/img/monitor/dash-board/dashboardPointAmount.png";
 import dashboardTransactionAmount from "@/common/img/monitor/dash-board/dashboardTransactionAmount.png";
-import dashboardPublickey from "@/common/img/monitor/dash-board/dashboardPublickey.png";
+import dashboardPublicKey from "@/common/img/monitor/dash-board/dashboardPublicKey.png";
 
 export const settingNetworkColorConfig = ['green_point', 'pink_point', 'purple_point', 'yellow_point']
 
@@ -118,7 +118,7 @@ export const networkStatusConfig: Array<{
             data: 0,
             variable: 'numTransactions'
         }, {
-            icon: dashboardPublickey,
+            icon: dashboardPublicKey,
             descript: 'Harvester',
             data: 0,
             variable: 'signerPublicKey'

@@ -1,7 +1,7 @@
 <template>
   <div class="hardware_import_container">
     <div class="page_import_title">{{$t('connect_trezor_title')}}</div>
-    <div class="describle">{{$t('trezor_description')}}</div>
+    <div class="describe">{{$t('trezor_description')}}</div>
     <ul>
       <li>
         <div class="title_info">

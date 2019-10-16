@@ -58,7 +58,7 @@ export class AccountImportMnemonicTs extends Vue {
         }
         if (!this.form.mnemonic || this.form.mnemonic === '' || this.form.mnemonic.split(' ').length != 24) {
             this.$Notice.error({
-                title: this.$t(Message.MNENOMIC_INPUT_ERROR) + ''
+                title: this.$t(Message.MNEMONIC_INPUT_ERROR) + ''
             })
             return false
         }

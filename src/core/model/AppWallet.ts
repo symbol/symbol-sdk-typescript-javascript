@@ -155,7 +155,7 @@ export class AppWallet {
             const keystore = words.toString(CryptoJS.enc.Utf8)
             this.simpleWallet = JSON.parse(keystore)
             this.sourceType = CreateWalletType.keyStore
-            const {privateKey} =  this.getAccount(password)
+            const {privateKey} = this.getAccount(password)
             this.createFromPrivateKey(name, password, privateKey, networkType, store)
             this.addNewWalletToList(store)
             return this
@@ -216,8 +216,8 @@ export class AppWallet {
         // if wallet exists ,switch to this wallet
         const localData = accountMap[accountName].wallets
         accountMap[accountName].activeWalletAddress = newActiveWalletAddress
-        const flagWallet = localData.find(item=>newActiveWalletAddress == item.address)  // find wallet in wallet list
-        if(flagWallet) {  // if wallet existed ,switch to this wallet
+        const flagWallet = localData.find(item => newActiveWalletAddress == item.address)  // find wallet in wallet list
+        if (flagWallet) {  // if wallet existed ,switch to this wallet
             store.commit('SET_WALLET', flagWallet)
             localSave('accountMap', JSON.stringify(accountMap))
             return
@@ -337,7 +337,6 @@ export class AppWallet {
         try {
             const multisigAccountInfo = await new AccountHttp(node)
                 .getMultisigAccountInfo(Address.createFromRawAddress(this.address)).toPromise()
-
             store.commit('SET_MULTISIG_ACCOUNT_INFO', {address: this.address, multisigAccountInfo})
             store.commit('SET_MULTISIG_LOADING', false)
         } catch (error) {

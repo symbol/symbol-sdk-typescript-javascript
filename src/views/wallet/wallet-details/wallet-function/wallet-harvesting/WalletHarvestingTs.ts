@@ -5,14 +5,18 @@ import {mapState} from "vuex"
 import {getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form"
 import {AppWallet, DefaultFee, StoreAccount} from "@/core/model"
+import MultisigBanCover from '@/components/multisig-ban-cover/MultisigBanCover.vue'
 import {DEFAULT_FEES, FEE_GROUPS} from "@/config/index"
 
 @Component({
-    computed: {
-        ...mapState({
-            activeAccount: 'account',
-        })
-    }
+  computed: {
+    ...mapState({
+      activeAccount: 'account',
+    })
+  },
+  components:{
+    MultisigBanCover
+  }
 })
 export class WalletHarvestingTs extends Vue {
     activeAccount: StoreAccount
@@ -88,7 +92,7 @@ export class WalletHarvestingTs extends Vue {
         const {password, remotePublicKey} = this.formItems
         const {feeAmount} = this
         if (remotePublicKey.length !== 64) {
-            this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLICKEY_ERROR) + '')
+            this.showErrorMessage(this.$t(Message.ILLEGAL_publicKey_ERROR) + '')
             return false
         }
         if ((!Number(feeAmount) && Number(feeAmount) !== 0) || Number(feeAmount) < 0) {

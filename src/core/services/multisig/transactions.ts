@@ -14,7 +14,7 @@ export const createCompleteMultisigTransaction = ( transactions: Array<Transacti
                                                    networkType: NetworkType,
                                                    fee: number) => {
   const publicAccount = PublicAccount.createFromPublicKey(multisigPublicKey, networkType)
-  
+
   return AggregateTransaction.createComplete(
     Deadline.create(),
     transactions.map(tx => tx.toAggregate(publicAccount)),
@@ -29,7 +29,7 @@ export const createBondedMultisigTransaction = ( transactions: Array<Transaction
                                                  networkType: NetworkType,
                                                  fee: number) => {
    const publicAccount = PublicAccount.createFromPublicKey(multisigPublicKey, networkType)
-   
+
    return AggregateTransaction.createBonded(
      Deadline.create(),
      transactions.map(tx => tx.toAggregate(publicAccount)),
@@ -56,13 +56,13 @@ export const announceBondedWithLock = ( aggregateTransaction: AggregateTransacti
             new Mosaic(new MosaicId(networkCurrency.hex), UInt64.fromUint(DEFAULT_LOCK_AMOUNT)),
             UInt64.fromUint(480),
             signedTransaction,
-            networkType,  
+            networkType,
             UInt64.fromUint(fee)
         )
 
     // @WALLETS: wallet refactor, should not sign here
     const hashLockTransactionSigned = account.sign(hashLockTransaction, generationHash)
-    
+
     // @TODO: listener should probably not be here
     listener.open().then(() => {
         transactionHttp

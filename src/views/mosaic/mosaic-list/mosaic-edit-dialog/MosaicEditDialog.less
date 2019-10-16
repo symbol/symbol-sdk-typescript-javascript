@@ -1,6 +1,9 @@
 .mosaicEditDialogWrap {
   padding-bottom: 20px;
-  .fee { margin-bottom: 18px !important }
+
+  .fee {
+    margin-bottom: 18px !important
+  }
 
   .mosaicEditDialogHeader {
     height: 74px;
@@ -15,6 +18,8 @@
   }
 
   .ivu-modal-content {
+    overflow: hidden;
+    padding: 20px;
     .ivu-modal-close {
       top: 30px;
       right: 40px;
@@ -51,18 +56,22 @@
         height: 60px;
         line-height: 60px;
         margin-bottom: 0;
+
         .ivu-radio-group-item {
           margin-right: 60px;
         }
       }
+
       .ivu-form-item {
         position: relative;
         top: -70px;
       }
+
       .ivu-form-item:nth-of-type(1) {
         position: relative;
         top: -30px;
       }
+
       .ivu-form-item:nth-of-type(2) {
         position: relative;
         top: -40px;
@@ -193,17 +202,19 @@
       }
     }
   }
+
+  .button_update {
+    .ivu-form-item-content {
+      margin-top: 0;
+    }
+  }
+
+  .update_type {
+    .ivu-radio-group {
+      position: relative;
+      top: 10px;
+    }
+  }
+
 }
 
-.button_update {
-  .ivu-form-item-content {
-    margin-top: 0;
-  }
-}
-
-.update_type {
-  .ivu-radio-group {
-    position: relative;
-    top: 10px;
-  }
-}

@@ -11,7 +11,7 @@
       <span class="line">|</span>
       <span class="create_account pointer" @click="$router.push('createAccount')">{{$t('create_or_import')}}</span>
     </div>
-    <div class="fix_contnet">
+    <div class="fix_content">
       <router-view />
     </div>
   </div>

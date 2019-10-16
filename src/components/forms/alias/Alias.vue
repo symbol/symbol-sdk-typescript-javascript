@@ -5,7 +5,7 @@
            :transfer="false"
            @on-cancel="show = false"
            class="alias_bind_dialog">
-
+      <MultisigBanCover></MultisigBanCover>
       <div v-if="!bind">
           {{ `${$t('unbind')} ${target} from ${alias}` }}
       </div>
@@ -31,7 +31,7 @@
           <Radio :label="bindTypes.mosaic" />
         </RadioGroup>
       </div>
-  
+
       <div v-if="bind && fromNamespace && bindType === bindTypes.address">
         <div class="title">{{ $t('address') }}</div>
         <div class="input_area">

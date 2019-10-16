@@ -13,7 +13,7 @@ import {networkConfig} from "@/config/index"
         })
     }
 })
-export class WalletAliasTs extends Vue {
+export class AddressBookTs extends Vue {
     activeAccount: StoreAccount
     app: AppInfo
     pageSize = 5

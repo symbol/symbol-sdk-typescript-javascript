@@ -68,7 +68,7 @@
             v-model="isShowDialog"
             :transfer="false"
             class-name="dash_board_dialog">
-
+      <MultisigBanCover></MultisigBanCover>
 
       <div class="gray_input_content">
         <span class="title">{{$t('remote_modal_pul')}}</span>

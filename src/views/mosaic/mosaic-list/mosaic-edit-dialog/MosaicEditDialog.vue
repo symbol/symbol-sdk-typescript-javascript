@@ -7,6 +7,7 @@
             :width="1000"
             :transfer="false"
             @on-cancel="mosaicEditDialogCancel">
+      <MultisigBanCover></MultisigBanCover>
       <div slot="header" class="mosaicEditDialogHeader">
         <span class="title">{{$t('modify_supply')}}</span>
       </div>
@@ -65,7 +66,7 @@
 <script lang="ts">
     import './MosaicEditDialog.less'
     // @ts-ignore
-    import {MosaicEditDialogTs} from '@/views/service/mosaic/mosaic-function/mosaic-list/mosaic-edit-dialog/MosaicEditDialogTs.ts'
+    import {MosaicEditDialogTs} from '@/views/mosaic/mosaic-list/mosaic-edit-dialog/MosaicEditDialogTs.ts'
 
     export default class MosaicEditDialog extends MosaicEditDialogTs {
 

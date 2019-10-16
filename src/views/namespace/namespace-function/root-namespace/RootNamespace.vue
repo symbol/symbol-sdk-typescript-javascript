@@ -1,6 +1,7 @@
 <template>
   <div class="namespace_transaction_container secondary_page_animate">
     <div class="right_panel">
+      <MultisigBanCover></MultisigBanCover>
       <div class="namespace_transaction">
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>

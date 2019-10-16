@@ -20,7 +20,7 @@
 <script lang="ts">
     import "./Mosaic.less"
     // @ts-ignore
-    import {MosaicTs} from '@/views/service/mosaic/MosaicTs.ts'
+    import {MosaicTs} from '@/views/mosaic/MosaicTs.ts'
 
     export default class Mosaic extends MosaicTs {
 

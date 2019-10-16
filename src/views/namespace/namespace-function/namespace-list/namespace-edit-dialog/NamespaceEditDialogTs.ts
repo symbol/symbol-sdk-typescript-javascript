@@ -5,12 +5,16 @@ import {Password, NamespaceRegistrationTransaction, Deadline, UInt64} from 'nem2
 import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {getAbsoluteMosaicAmount,formatSeconds} from '@/core/utils'
 import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
+import MultisigBanCover from "@/components/multisig-ban-cover/MultisigBanCover.vue"
 
 @Component({
     computed: {
         ...mapState({
             activeAccount: 'account',
         })
+    },
+    components:{
+        MultisigBanCover
     }
 })
 export class NamespaceEditDialogTs extends Vue {
@@ -124,7 +128,7 @@ export class NamespaceEditDialogTs extends Vue {
                 this.wallet.networkType,
                 UInt64.fromUint(feeAmount),
             )
-        
+
         new AppWallet(this.wallet)
             .signAndAnnounceNormal(password, node, generationHash, [transaction], this)
         this.initForm()

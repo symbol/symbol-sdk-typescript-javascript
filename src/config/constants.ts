@@ -71,8 +71,8 @@ export const Message = {
     DURATION_MORE_THAN_10_YEARS_ERROR: 'duration_can_not_more_than_10_years',
     MNEMONIC_INCONSISTENCY_ERROR: 'Mnemonic_inconsistency',
     PASSWORD_SETTING_INPUT_ERROR: 'walletCreatePasswordRemind',
-    MNENOMIC_INPUT_ERROR: 'Mnemonic_input_error',
-    ILLEGAL_PUBLICKEY_ERROR:'ILLEGAL_PUBLICKEY_ERROR',
+    MNEMONIC_INPUT_ERROR: 'Mnemonic_input_error',
+    ILLEGAL_publicKey_ERROR:'ILLEGAL_publicKey_ERROR',
     OPERATION_FAILED_ERROR: 'operation_failed',
     NODE_NULL_ERROR: 'point_null_error',
     INPUT_EMPTY_ERROR: 'Any_information_cannot_be_empty',
@@ -81,7 +81,7 @@ export const Message = {
     MIN_REMOVAL_LESS_THAN_0_ERROR: 'min_removal_amount_less_than_0',
     MAX_APPROVAL_MORE_THAN_10_ERROR: 'max_approval_amount_more_than_10',
     MAX_REMOVAL_MORE_THAN_10_ERROR: 'max_removal_amount_more_than_10',
-    ILLEGAL_PUBLIC_KEY_ERROR: 'illegal_publickey',
+    ILLEGAL_PUBLIC_KEY_ERROR: 'illegal_publicKey',
     ILLEGAL_MIN_APPROVAL_ERROR: 'min_approval_amount_illegal',
     ILLEGAL_MIN_REMOVAL_ERROR: 'min_removal_amount_illegal',
     MOSAIC_HEX_FORMAT_ERROR: 'mosaic_hex_format_error',
@@ -207,4 +207,5 @@ export const networkConfig = {
     namespaceListSize: 9,
     seedWalletMaxAmount:10,
     EMPTY_LINKED_ACCOUNT_KEY: '0000000000000000000000000000000000000000000000000000000000000000',
+    SEED_WALLET_HEAD:'seedWallet-'
 }

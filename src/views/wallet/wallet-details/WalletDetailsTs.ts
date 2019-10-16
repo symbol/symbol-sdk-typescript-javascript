@@ -2,7 +2,7 @@ import {copyTxt} from '@/core/utils/utils.ts'
 import {ContactQR} from 'nem2-qr-library'
 import {Address, AddressAlias, AliasType, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import WalletAlias from './wallet-function/wallet-alias/WalletAlias.vue'
+import AddressBook from '@/views/wallet/wallet-details/wallet-function/address-book/AddressBook.vue'
 import WalletFilter from './wallet-function/wallet-filter/WalletFilter.vue'
 import KeystoreDialog from '@/views/wallet/wallet-details/keystore-dialog/KeystoreDialog.vue'
 import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.vue'
@@ -19,7 +19,7 @@ import Alias from '@/components/forms/alias/Alias.vue'
         MnemonicDialog,
         PrivatekeyDialog,
         KeystoreDialog,
-        WalletAlias,
+        AddressBook,
         WalletFilter,
         WalletUpdatePassword,
         WalletHarvesting,

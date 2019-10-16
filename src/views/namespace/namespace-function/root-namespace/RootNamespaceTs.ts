@@ -11,10 +11,12 @@ import {
 } from '@/core/utils'
 import {StoreAccount, AppInfo, DefaultFee, AppWallet} from "@/core/model"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
+import MultisigBanCover from "@/components/multisig-ban-cover/MultisigBanCover.vue"
 
 @Component({
     components: {
-        CheckPWDialog
+        CheckPWDialog,
+        MultisigBanCover
     },
     computed: {
         ...mapState({

@@ -66,7 +66,7 @@ export const en_US = {
     number_of_voters: 'Number of voters',
     yes: 'Yes',
     no: 'No',
-    aggregate_hash: 'aggregate hash',
+    aggregate_hash: 'Aggregate hash',
     //monitor-dashboard
     transaction_detail: 'Transaction detail',
     XEM_market_trend_nearly_7_days: '7-days market trend',
@@ -89,7 +89,7 @@ export const en_US = {
     confirmed_transaction: 'Confirmed',
     unconfirmed_transaction: 'Unconfirmed',
     total: 'Total:',
-    data: 'items',
+    data: 'Items',
     no_unconfirmed_transactions: 'No unconfirmed transactions',
     no_confirmed_transactions: 'No confirmed transactions',
 
@@ -168,9 +168,9 @@ export const en_US = {
     Please_select_public_key: 'Please select public key',
     remote_modal_pul: 'Remote public key',
     remote_modal_price: 'Cost',
-    remote_modal_pass: 'password',
-    remote_modal_confirm: 'confirm',
-    remote_modal_cancel: 'cancel',
+    remote_modal_pass: 'Password',
+    remote_modal_confirm: 'Confirm',
+    remote_modal_cancel: 'Cancel',
     public: 'From',
     remote_modal_place1: 'Please enter or paste a remote public key',
     remote_modal_place2: 'Please enter your wallet password',
@@ -236,7 +236,7 @@ export const en_US = {
     RADIO: 'Radio',
     // on_dev
     not_yet_open: 'Not yet open',
-    start_time: 'start time',
+    start_time: 'Start time',
     //service mosaic
     ordinary_account: 'Ordinary',
     basic_attribute: 'Basic attribute',
@@ -316,7 +316,7 @@ export const en_US = {
     mnemonic_description: 'The mnemonic is a 24-word seed file. By importing this seed file, you can restore your wallet. Please keep it safe and keep it confidential.',
     input_mnemonic: 'Input mnemonic',
     enter_24_words_please_pay_attention_to_the_order_separated_by_a_space_between_each_word: 'Enter 24 words, please pay attention to the order, separated by a space between each word',
-    the_private_key_is_a_string_of_256_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe: 'The private key is a string of 256-bit random strings, which is the absolute control of the account. Please keep it safe.',
+    the_private_key_is_a_string_of_64_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe: 'The private key is a string of 64-bit random strings, which is the absolute control of the account. Please keep it safe.',
     private_key_string: 'Private key string',
     Please_paste_the_private_key_string_in_the_input_box_below: 'Please paste the private key string in the input box below',
     Paste_the_private_key_string_in_the_input_box: 'Paste the private key string in the input box',
@@ -462,7 +462,7 @@ export const en_US = {
     Wallet_name: 'Name',
     Wallet_address: 'Address',
     Wallet_public_key: 'Public Key',
-    publicKey: 'PublicKey',
+    publicKey: 'publicKey',
     Address_QR_code: 'Address QR code',
     Function_and_backup: 'Backup',
     Export_mnemonic: 'Export mnemonic',
@@ -514,7 +514,7 @@ export const en_US = {
     Operation_list: 'Operation list',
     address: 'Address',
     add: 'Add',
-    please_add_publickey: 'Please add publicKey',
+    please_add_publicKey: 'Please add publicKey',
     Edit_co_signers_and_signature_thresholds: 'Edit co-signers and signature thresholds',
     Choose_a_co_signer: 'Choose a co-signer',
     Add_delete_co_signers_this_action_will_be_displayed_in_the_action_log_click_delete_to_cancel: 'Add/delete co-signers, this action will be displayed in the action log, click delete to cancel',
@@ -600,7 +600,7 @@ export const en_US = {
     co_signers_amount_less_than_0: 'The number of co-signers cannot be less than 1',
     min_approval_amount_less_than_0: 'Min approval cannot be less than 1',
     min_removal_amount_less_than_0: 'Min removal cannot be less than 1',
-    illegal_publickey: 'There is an illegal account public key',
+    illegal_publicKey: 'There is an illegal account public key',
     min_approval_amount_illegal: 'Min approval must be a number',
     min_removal_amount_illegal: 'Min removal must be a number',
     current: 'Current',
@@ -773,12 +773,12 @@ export const en_US = {
     Import_private_key: 'Import private key',
     copy_mnemonic: 'copy mnemonic',
     Harvesting: 'Harvesting',
-    ILLEGAL_PUBLICKEY_ERROR:'public key format error',
+    ILLEGAL_publicKey_ERROR:'public key format error',
     Alias_type: 'Alias type',
 
     ////////////////////////////////1009
     this_account_will_be_logged_out_after_the_wallet_is_successfully_deleted:'Please note that you are deleting the last wallet and this account will be logged out after the wallet is successfully deleted!',
-    Mutlisig_account_modification_transaction_form_is_not_ready_yet:'Mutlisig account modification transaction form is not ready yet!',
+    Multisig_account_modification_transaction_form_is_not_ready_yet:'Multisig account modification transaction form is not ready yet!',
     // Transaction detail modal
     Link: 'Link',
     Unlink: 'Unlink',
@@ -795,10 +795,10 @@ export const en_US = {
     Address: 'Address',
     proof: 'Proof',
     cosignatory: 'Cosignatory',
-    Add: 'Add', 
+    Add: 'Add',
     Remove: 'Remove',
     nickName:'Nick name',
     what_is_delegated_harvesting:'What is delegated harvesting ?',
     Delegated_harvesting_text_1:' Delegated harvesting enables an account to use a proxy private key that can be shared with a node securely. An eligible account may also delegate its importance score to a remote node for harvesting. In other words, you can use the importance score of your account to create new blocks without running a node. ',
-
+    Multisig_accounts_can_not_send_a_transaction_by_themselves:'Multisig accounts can not send a transaction by themselves.'
 }

@@ -1,6 +1,7 @@
 <template>
   <div class="mosaic_transaction_container radius secondary_page_animate">
     <div class="right_panel">
+      <MultisigBanCover></MultisigBanCover>
       <div class="namespace_transaction">
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>
@@ -113,7 +114,7 @@
 
 <script lang="ts">
     // @ts-ignore
-    import {MosaicTransactionTs} from '@/views/service/mosaic/mosaic-function/mosaic-transaction/MosaicTransactionTs.ts'
+    import {MosaicTransactionTs} from '@/views/mosaic/mosaic-transaction/MosaicTransactionTs.ts'
 
     export default class MosaicTransaction extends MosaicTransactionTs {
 

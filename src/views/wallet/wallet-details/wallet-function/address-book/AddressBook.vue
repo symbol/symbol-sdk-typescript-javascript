@@ -76,10 +76,10 @@
 
 <script lang="ts">
     //@ts-ignore
-    import {WalletAliasTs} from '@/views/wallet/wallet-details/wallet-function/wallet-alias/WalletAliasTs.ts'
-    import "./WalletAlias.less"
+    import {AddressBookTs} from '@/views/wallet/wallet-details/wallet-function/address-book/AddressBookTs.ts'
+    import "./AddressBook.less"
 
-    export default class WalletAlias extends WalletAliasTs {
+    export default class AddressBook extends AddressBookTs {
 
     }
 </script>

@@ -74,7 +74,7 @@
             />
           </span>
           <span class="more"></span>
-          <div class="namespace_filter pointer" @click="toggleIsShowExpirednamespace()">
+          <div class="namespace_filter pointer" @click="toggleIsShowExpiredNamespace()">
             <Icon v-if="isShowExpiredNamespace" type="md-square"/>
             <Icon v-else type="md-square-outline"/>
             <span>{{$t('Hide_expired_namespaces')}}</span>

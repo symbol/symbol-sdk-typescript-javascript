@@ -104,7 +104,7 @@
           </li>
         </ul>
       </div>
-      <WalletAlias v-if="functionShowList[0]"></WalletAlias>
+      <AddressBook v-if="functionShowList[0]"></AddressBook>
       <WalletHarvesting v-if="functionShowList[1]"></WalletHarvesting>
       <!--      <WalletFilter v-if="functionShowList[1]"></WalletFilter>-->
     </div>

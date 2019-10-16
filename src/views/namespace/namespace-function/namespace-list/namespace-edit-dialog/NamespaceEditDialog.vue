@@ -10,6 +10,8 @@
       <div slot="header" class="namespaceEditDialogHeader">
         <span class="title">{{$t('update_namespace')}}</span>
       </div>
+      <MultisigBanCover></MultisigBanCover>
+
       <div class="namespaceEditDialogBody">
         <div class="stepItem1">
           <Form :model="formItems">

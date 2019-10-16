@@ -109,7 +109,7 @@ export class MultisigModificationTs extends Vue {
         const multisigCosignatoryModificationList = cosignerList
             .map(cosigner => new MultisigCosignatoryModification(
                 cosigner.type,
-                PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
+                PublicAccount.createFromPublicKey(cosigner.publicKey, networkType),
             ))
         const innerFee = feeAmount / 3
         const modifyMultisigAccountTx = MultisigAccountModificationTransaction.create(
@@ -137,7 +137,7 @@ export class MultisigModificationTs extends Vue {
         const multisigCosignatoryModificationList = cosignerList
             .map(cosigner => new MultisigCosignatoryModification(
                 cosigner.type,
-                PublicAccount.createFromPublicKey(cosigner.publickey, networkType),
+                PublicAccount.createFromPublicKey(cosigner.publicKey, networkType),
             ))
         const modifyMultisigAccountTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),

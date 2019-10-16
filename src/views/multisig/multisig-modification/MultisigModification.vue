@@ -5,7 +5,7 @@
       <div class="edit_form">
         <div class="form_item">
           <div class="title">{{$t('Public_account')}}</div>
-          <Select v-model="formItems.multisigPublicKey" class="select" :placeholder="$t('publicKey')">azdazdza
+          <Select v-model="formItems.multisigPublicKey" class="select" :placeholder="$t('publicKey')">
             <Option v-for="item in publicKeyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
@@ -113,11 +113,11 @@
             <span class="delate">{{$t('delete')}}</span>
           </div>
           <div class="list_body scroll">
-            <div class="please_add_address" v-if="formItems.cosignerList.length == 0">{{$t('please_add_publickey')}}
+            <div class="please_add_address" v-if="formItems.cosignerList.length == 0">{{$t('please_add_publicKey')}}
             </div>
 
             <div class="list_item radius" v-for="(i,index) in formItem.cosignerList" :key="index">
-              <span class="address_alias">{{i.publickey}}</span>
+              <span class="address_alias">{{i.publicKey}}</span>
               <span class="action">{{i.type == CosignatoryModificationAction.Add ? $t('add'):$t('cut_back')}}</span>
               <img class="delate pointer" @click="removeCosigner(index)"
                    src="@/common/img/service/multisig/multisigDelete.png" alt="">

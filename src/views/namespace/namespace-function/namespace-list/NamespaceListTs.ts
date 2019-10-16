@@ -84,7 +84,7 @@ export class NamespaceListTs extends Vue {
         this.showNamespaceEditDialog = true
     }
 
-    toggleIsShowExpirednamespace(){
+    toggleIsShowExpiredNamespace(){
         this.isShowExpiredNamespace = !this.isShowExpiredNamespace
     }
 

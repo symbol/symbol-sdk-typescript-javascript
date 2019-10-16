@@ -2,7 +2,7 @@
   <div class="multisig_transactions">
     <MultisigConversion v-if="!hasCosignatories"/>
     <!-- <MultisigModification v-if="hasCosignatories" /> -->
-    <div class="not_ready" v-else>{{$t('Mutlisig_account_modification_transaction_form_is_not_ready_yet')}}</div>
+    <div class="not_ready" v-else>{{$t('Multisig_account_modification_transaction_form_is_not_ready_yet')}}</div>
   </div>
 </template>
 

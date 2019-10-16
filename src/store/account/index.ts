@@ -5,7 +5,7 @@ import {defaultNetworkConfig} from "@/config/index"
 import {
     AddressAndTransaction, AddressAndNamespaces, AddressAndMosaics,
     AddressAndMultisigInfo, StoreAccount, AppMosaic, NetworkCurrency,
-    AppWallet, AppNamespace,
+    AppWallet, AppNamespace, AppInfo,
 } from '@/core/model'
 import {nodeListConfig} from "@/config/view/node"
 
@@ -27,7 +27,7 @@ const state: StoreAccount = {
     multisigAccountInfo: {},
     networkCurrency: defaultNetworkConfig.defaultNetworkMosaic,
     networkMosaics: {},
-    activeWalletAddress: ''
+    activeWalletAddress: '',
 }
 
 const updateMosaics = (state: StoreAccount, mosaics: AppMosaic[]) => {

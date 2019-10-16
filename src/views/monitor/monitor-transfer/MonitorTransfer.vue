@@ -1,6 +1,7 @@
 <template>
   <div class="transaction_content secondary_page_animate" @click="hideSearchDetail()">
     <div class="left_container radius ">
+      <MultisigBanCover></MultisigBanCover>
       <div class="bottom_transfer_info scroll ">
         <div class="multisig">
           <MultisigTransferTransaction></MultisigTransferTransaction>

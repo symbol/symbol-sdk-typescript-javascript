@@ -30,11 +30,11 @@ export class MenuBarTs extends Vue {
     monitorSelected = monitorSelected
     monitorUnselected = monitorUnselected
     languageList = languageConfig
-    
+
     get routes() {
         return routes[0].children
-            .filter(({ meta }) => meta.clickable)
-            .map(({ path, meta }) => ({path, meta}))
+            .filter(({meta}) => meta.clickable)
+            .map(({path, meta}) => ({path, meta}))
     }
 
     // @ROUTING
@@ -87,10 +87,7 @@ export class MenuBarTs extends Vue {
     }
 
     set currentWalletAddress(newActiveWalletAddress) {
-        this.$store.commit(
-            'SET_WALLET',
-            this.walletList.find(({address}) => address === newActiveWalletAddress)
-        )
+        AppWallet.updateActiveWalletAddress(newActiveWalletAddress, this.$store)
     }
 
     maxWindow() {
