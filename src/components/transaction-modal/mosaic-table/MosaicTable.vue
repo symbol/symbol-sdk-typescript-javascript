@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="loading" v-else>
-      loading...
+      {{$t(Message.LOADING)}}
     </div>
 
   </div>

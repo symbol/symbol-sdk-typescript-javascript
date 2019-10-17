@@ -21,18 +21,18 @@
               </span>
             </p>
             <p>
-              <span class="tit ">{{$t('Wallet_name')}}</span>
-              <span class="walletName text_select" v-if="wallet">{{wallet.name}}</span>
+              <span class="tit">{{$t('Wallet_name')}}</span>
+              <span class="walletName" v-if="wallet">{{wallet.name}}</span>
             </p>
             <p>
               <span class="tit">{{$t('Wallet_address')}}</span>
-              <span class="walletAddress text_select">{{wallet.address}}</span>
+              <span class="walletAddress">{{wallet.address}}</span>
               <i class="copyIcon" @click="copy(wallet.address)"><img
                       src="@/common/img/wallet/copyIcon.png"></i>
             </p>
             <p>
               <span class="tit">{{$t('Wallet_public_key')}}</span>
-              <span class="walletPublicKey text_select">{{wallet.publicKey}}</span>
+              <span class="walletPublicKey">{{wallet.publicKey}}</span>
               <i class="copyIcon" @click="copy(wallet.publicKey)"><img
                       src="@/common/img/wallet/copyIcon.png"></i>
             </p>

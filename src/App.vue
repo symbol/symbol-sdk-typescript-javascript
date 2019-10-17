@@ -18,7 +18,7 @@
         initMosaic, mosaicsAmountViewFromAddress, AppMosaics,
         getCurrentBlockHeight, getCurrentNetworkMosaic, getNetworkGenerationHash,
         getMarketOpenPrice, setTransactionList, getNamespacesFromAddress,
-        setWalletsBalances, ChainListeners,
+        setWalletsBalances, ChainListeners, getMultisigAccountMultisigAccountInfo,
     } from '@/core/services'
     import {AppMosaic, AppWallet, AppInfo, StoreAccount} from '@/core/model'
     import DisabledUiOverlay from '@/components/disabled-ui-overlay/DisabledUiOverlay.vue'
@@ -180,26 +180,6 @@
             }
         }
 
-        // @MULTISIG: refactor
-        async getMultisigAccountMultisigAccountInfo(publicKey) {
-            const {networkType} = this.wallet
-            const accountAddress = Address.createFromPublicKey(publicKey, networkType).plain()
-
-            try {
-                const multisigAccountInfo = await new AccountHttp(this.node)
-                    .getMultisigAccountInfo(Address.createFromRawAddress(accountAddress))
-                    .toPromise()
-
-                this.$store.commit('SET_MULTISIG_ACCOUNT_INFO', {
-                    address: accountAddress, multisigAccountInfo,
-                })
-            } catch (error) {
-                this.$store.commit('SET_MULTISIG_ACCOUNT_INFO', {
-                    address: accountAddress, multisigAccountInfo: null,
-                })
-            }
-        }
-
         async mounted() {
             if (!this.activeAccount.wallet) this.$router.push('/login')
 
@@ -253,7 +233,7 @@
 
                 if (oldValue !== newValue) {
                     this.onActiveMultisigAccountChange(newValue)
-                    this.getMultisigAccountMultisigAccountInfo(newValue)
+                    getMultisigAccountMultisigAccountInfo(newValue, this.$store)
                 }
             })
 

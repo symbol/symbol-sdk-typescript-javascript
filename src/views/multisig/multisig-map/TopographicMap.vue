@@ -176,6 +176,7 @@
     width: 100%;
     height: 100%;
     position: relative;
+    background-color: white;
   }
 
   .top {
@@ -188,6 +189,9 @@
 
   .not_Multisig_Nor_Cosigner {
     font-size: 20px;
+    font-weight: 400;
+    color: rgba(34, 34, 34, 1);
+    margin: 0.3rem 0.3rem 30px 0.3rem;
     background-color: transparent;
     padding: 50px;
 

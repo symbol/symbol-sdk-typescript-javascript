@@ -128,14 +128,18 @@ const routers = [
                     icon: leftBarIcons.windowMultisig,
                     activeIcon: leftBarIcons.windowMultisigActive,
                 },
-                redirect: '/multisigTransactions',
+                redirect: '/multisigConversion',
                 component: () => import('@/views/multisig/Multisig.vue'),
                 children: [
                     {
-                        path: '/multisigTransactions',
-                        name: 'multisigTransactions',
-                        component: () => import('@/views/multisig/multisig-transactions/MultisigTransactions.vue')
+                        path: '/multisigConversion',
+                        name: 'multisigConversion',
+                        component: () => import('@/views/multisig/MultisigConversion.vue')
                     }, {
+                        path: '/multisigManagement',
+                        name: 'multisigManagement',
+                        component: () => import('@/views/multisig/MultisigModification.vue')
+                    },  {
                         path: '/multisigMap',
                         name: 'multisigMap',
                         component: () => import('@/views/multisig/multisig-map/TopographicMap.vue')

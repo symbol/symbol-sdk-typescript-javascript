@@ -1,4 +1,5 @@
 export const en_US = {
+
     just_now: 'Just now',
     time_ago: 'ago',
     time_after: 'later',
@@ -473,7 +474,7 @@ export const en_US = {
     Subaddress_management: 'Sub-address ',
     Modify_the_private_key_wallet_password: 'Modify password',
     status: 'Status',
-    operating: 'Operating',
+    operating: 'Operation',
     bound: 'Bound',
     No_alias_yet: 'No alias yet',
     Successfully_imported_wallet: 'Successfully imported wallet',
@@ -503,7 +504,7 @@ export const en_US = {
     Convert_to_multi_sign_account: 'Convert to multisig account',
     cosigner: 'Cosigner',
     Add_co_signers_here_will_be_displayed_in_the_action_list_click_delete_to_cancel_the_operation: 'Add co-signers, here will be displayed in the action list, click delete to cancel the operation',
-    Wallet_account_address_or_alias: 'Input account publicKey ',
+    Input_account_public_key: 'Input account publicKey',
     min_approval: 'Min approval',
     min_approval_delta: 'Delta of min approval',
     min_removal_delta: 'Delta of min removal',
@@ -518,7 +519,7 @@ export const en_US = {
     Edit_co_signers_and_signature_thresholds: 'Edit co-signers and signature thresholds',
     Choose_a_co_signer: 'Choose a co-signer',
     Add_delete_co_signers_this_action_will_be_displayed_in_the_action_log_click_delete_to_cancel: 'Add/delete co-signers, this action will be displayed in the action log, click delete to cancel',
-
+    this_account_is_not_a_cosignatory: 'This account is not a cosignatory',
 
     Create_namespace: 'Create namespace',
     Create_subNamespace: 'Create subNamespace',
@@ -538,6 +539,7 @@ export const en_US = {
     Update_namespace_prompts: 'Update namespace prompts',
     namespace_list_tips_1: '1. Only the root namespace needs to be updated. All subspace namespaces will be automatically expanded after the root namespace is expanded;',
     namespace_list_tips_2: '2. According to the lease agreement, the contract with the namespace can be up to one year, and the contract can be renewed one month before or after its due date. If the namespace is not expanded in time, the name created under it and All subspaces of the mosaic will be lost;',
+    this_account_is_already_converted: 'This account has already been converted to a multisig account',
 
 //mosaic transaction
     create_mosaic: 'Create mosaic',
@@ -799,6 +801,8 @@ export const en_US = {
     Remove: 'Remove',
     nickName:'Nick name',
     what_is_delegated_harvesting:'What is delegated harvesting ?',
-    Delegated_harvesting_text_1:' Delegated harvesting enables an account to use a proxy private key that can be shared with a node securely. An eligible account may also delegate its importance score to a remote node for harvesting. In other words, you can use the importance score of your account to create new blocks without running a node. ',
-    Multisig_accounts_can_not_send_a_transaction_by_themselves:'Multisig accounts can not send a transaction by themselves.'
+    Delegated_harvesting_text_1: 'Delegated harvesting enables an account to use a proxy private key that can be shared with a node securely. An eligible account may also delegate its importance score to a remote node for harvesting. In other words, you can use the importance score of your account to create new blocks without running a node. ',
+    multisig_info: 'Multisig info',
+    Loading:'Loading...',
+    click_to_load: 'Click to load data',
 }

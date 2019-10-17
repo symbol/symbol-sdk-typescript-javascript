@@ -14,6 +14,10 @@ const txTypeToSetAccountInfo = [
    TransactionType.LINK_ACCOUNT,
 ]
 
+const txTypeToGetMultisigInfo = [
+   TransactionType.MODIFY_MULTISIG_ACCOUNT,
+]
+
 /**
  * This module reacts to confirmed transactions
  * By default, the mosaic balances are checked everyTime
@@ -54,6 +58,10 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
 
          if (txTypeToSetAccountInfo.some(a => transactionTypes.some(b => b === a))) {
             appWallet.setAccountInfo(store)
+         }
+
+         if (txTypeToGetMultisigInfo.some(a => transactionTypes.some(b => b === a))) {
+            appWallet.setMultisigStatus(node, store)
          }
      } catch (error) {
         console.error(error)

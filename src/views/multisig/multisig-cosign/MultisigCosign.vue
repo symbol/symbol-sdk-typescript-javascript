@@ -9,22 +9,19 @@
     <div>
       publicKey
       <input v-model="publicKey" type="text">
-    </div>
 
+      <div @click="getCosignTransactions" style="width: 60px;height: 30px ; background-color: #4DC2BF">search</div>
 
-    <div @click="getCosignTransactions" style="width: 60px;height: 30px ; background-color: #4DC2BF">search</div>
-
-    <div>
-      <div v-for="(a,index) in aggregatedTransactionList" :key="index">
-        <div v-for="(value,key,index) in a" :key="`a${index}`">{{key}}:{{value}} <br> <br></div>
-        <div @click="cosignTransaction(index)" style="width: 60px;height: 30px ; background-color: #4DC2BF">cosign</div>
-        <br>
-        <hr>
+      <div>
+        <div v-for="(a,index) in aggregatedTransactionList" :key="index">
+          <div v-for="(value,key,index) in a" :key="`a${index}`">{{key}}:{{value}} <br> <br></div>
+          <div @click="cosignTransaction(index)" style="width: 60px;height: 30px ; background-color: #4DC2BF">cosign</div>
+          <br>
+          <hr>
+        </div>
       </div>
     </div>
-  </div>
-
-
+  </div>  
 </template>
 
 <script lang="ts">

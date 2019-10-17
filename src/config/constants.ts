@@ -1,5 +1,5 @@
 import {TransactionType} from 'nem2-sdk'
-import { DefaultFee, NetworkCurrency } from '@/core/model'
+import {DefaultFee, NetworkCurrency} from '@/core/model'
 
 export const WALLET_VERSION = '0.8.1'
 
@@ -16,26 +16,26 @@ export const apiServerConfig = {
 export const transactionTag = {
     RECEIPT: 'receipt',
     PAYMENT: 'payment',
-    [TransactionType.REGISTER_NAMESPACE] : 'register_namespace',
-    [TransactionType.ADDRESS_ALIAS] : 'address_alias',
-    [TransactionType.MOSAIC_ALIAS] : 'mosaic_alias',
-    [TransactionType.MOSAIC_DEFINITION] : 'mosaic_definition',
-    [TransactionType.MOSAIC_SUPPLY_CHANGE] : 'mosaic_supply_change',
-    [TransactionType.MODIFY_MULTISIG_ACCOUNT] : 'modify_multisig_account',
-    [TransactionType.AGGREGATE_COMPLETE] : 'aggregate_complete',
-    [TransactionType.AGGREGATE_BONDED] : 'aggregate_bonded',
-    [TransactionType.LOCK] : 'lock',
-    [TransactionType.SECRET_LOCK] : 'secret_lock',
-    [TransactionType.SECRET_PROOF] : 'secret_proof',
-    [TransactionType.ACCOUNT_RESTRICTION_ADDRESS] : 'account_restriction_address',
-    [TransactionType.ACCOUNT_RESTRICTION_MOSAIC] : 'account_restriction_mosaic',
-    [TransactionType.ACCOUNT_RESTRICTION_OPERATION] : 'account_restriction_operation',
-    [TransactionType.LINK_ACCOUNT] : 'link_account',
-    [TransactionType.MOSAIC_ADDRESS_RESTRICTION] : 'mosaic_address_restriction',
-    [TransactionType.MOSAIC_GLOBAL_RESTRICTION] : 'mosaic_global_restriction',
-    [TransactionType.ACCOUNT_METADATA_TRANSACTION] : 'account_metadata_transaction',
-    [TransactionType.MOSAIC_METADATA_TRANSACTION] : 'mosaic_metadata_transaction',
-    [TransactionType.NAMESPACE_METADATA_TRANSACTION] : 'namespace_metadata_transaction',
+    [TransactionType.REGISTER_NAMESPACE]: 'register_namespace',
+    [TransactionType.ADDRESS_ALIAS]: 'address_alias',
+    [TransactionType.MOSAIC_ALIAS]: 'mosaic_alias',
+    [TransactionType.MOSAIC_DEFINITION]: 'mosaic_definition',
+    [TransactionType.MOSAIC_SUPPLY_CHANGE]: 'mosaic_supply_change',
+    [TransactionType.MODIFY_MULTISIG_ACCOUNT]: 'modify_multisig_account',
+    [TransactionType.AGGREGATE_COMPLETE]: 'aggregate_complete',
+    [TransactionType.AGGREGATE_BONDED]: 'aggregate_bonded',
+    [TransactionType.LOCK]: 'lock',
+    [TransactionType.SECRET_LOCK]: 'secret_lock',
+    [TransactionType.SECRET_PROOF]: 'secret_proof',
+    [TransactionType.ACCOUNT_RESTRICTION_ADDRESS]: 'account_restriction_address',
+    [TransactionType.ACCOUNT_RESTRICTION_MOSAIC]: 'account_restriction_mosaic',
+    [TransactionType.ACCOUNT_RESTRICTION_OPERATION]: 'account_restriction_operation',
+    [TransactionType.LINK_ACCOUNT]: 'link_account',
+    [TransactionType.MOSAIC_ADDRESS_RESTRICTION]: 'mosaic_address_restriction',
+    [TransactionType.MOSAIC_GLOBAL_RESTRICTION]: 'mosaic_global_restriction',
+    [TransactionType.ACCOUNT_METADATA_TRANSACTION]: 'account_metadata_transaction',
+    [TransactionType.MOSAIC_METADATA_TRANSACTION]: 'mosaic_metadata_transaction',
+    [TransactionType.NAMESPACE_METADATA_TRANSACTION]: 'namespace_metadata_transaction',
 }
 
 export const Message = {
@@ -99,23 +99,34 @@ export const Message = {
     ADDRESS_ALIAS_NOT_EXIST_ERROR: 'address_alias_not_exist',
     MOSAIC_ALIAS_NOT_EXIST_ERROR: 'mosaic_alias_not_exist',
     HD_WALLET_PATH_ERROR: 'hd_wallet_path_error',
-    NODE_EXISTS_ERROR:'node_exists_error',
-    SEED_WALLET_OVERFLOW_ERROR:'seed_wallet_can_not_be_more_than_10'
+    NODE_EXISTS_ERROR: 'node_exists_error',
+    SEED_WALLET_OVERFLOW_ERROR: 'seed_wallet_can_not_be_more_than_10',
+    LOADING:'Loading',
+    CLICK_TO_LOAD: 'click_to_load',
 }
 
-export const FEE_SPEEDS: Record <string, string> = {
+export const FEE_SPEEDS: Record<string, string> = {
     SLOW: 'SLOW',
     NORMAL: 'NORMAL',
     FAST: 'FAST',
 }
 
-export const FEE_GROUPS: Record <string, string> = {
+export const FEE_GROUPS: Record<string, string> = {
     SINGLE: 'SINGLE',
     DOUBLE: 'DOUBLE',
     TRIPLE: 'TRIPLE',
 }
 
-export const DEFAULT_FEES: Record <string, DefaultFee[]> = {
+export const MULTISIG_INFO: Record<string, string> = {
+    MULTISIG_INFO: 'Multisig Info',
+    COSIGNATORIES: 'Cosignatories',
+    MULTISIG_ACCOUNTS:'Multisig accounts',
+    PUBLIC_KEY: 'Public key : ',
+    ADDRESS: "Address : ",
+    MIN_APPROVAL: "Min approval : ",
+    MIN_REMOVAL: "Min removal : "
+}
+export const DEFAULT_FEES: Record<string, DefaultFee[]> = {
     [FEE_GROUPS.SINGLE]: [
         {speed: FEE_SPEEDS.SLOW, value: 0.5},
         {speed: FEE_SPEEDS.NORMAL, value: 1},
@@ -205,7 +216,7 @@ export const networkConfig = {
     maxMosaicRestrictionValues: 20,
     maxMessageSize: 1024,
     namespaceListSize: 9,
-    seedWalletMaxAmount:10,
+    seedWalletMaxAmount: 10,
     EMPTY_LINKED_ACCOUNT_KEY: '0000000000000000000000000000000000000000000000000000000000000000',
     SEED_WALLET_HEAD:'seedWallet-'
 }

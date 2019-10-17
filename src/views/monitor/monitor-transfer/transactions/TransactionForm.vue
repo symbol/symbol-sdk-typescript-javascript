@@ -2,8 +2,8 @@
   <div class="transfer" @click="isShowSubAlias=false">
     <form @submit.prevent="validateForm('transfer-transaction')">
       <div class="flex_center" v-if="!hasMultisigAccounts">
-        <span class="title text_select">{{$t('sender')}}</span>
-          <span class="value no-border text_select"
+        <span class="title">{{$t('sender')}}</span>
+          <span class="value no-border"
           >{{ formatAddress(wallet.address) }}
           </span>
       </div>
