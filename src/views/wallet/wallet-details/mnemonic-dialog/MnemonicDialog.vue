@@ -80,29 +80,17 @@
               {{$t('next')}}
               <Icon class="next" type="ios-arrow-round-forward"/>
             </Button>
-
           </div>
         </div>
 
         <div class="stepItem4" v-if="stepIndex == 3">
           <p class="tit">
-            {{$t('please_click_on_the_mnemonic_in_order_to_confirm_that_you_are_backing_up_correctly')}}</p>
-          <div class="sureMnemonicWords" ref="mnemonicWordDiv"></div>
-          <div class="mnemonicWords">
-            <span v-for="(item, index) in mnemonicRandomArr" @click="sureWord(index)" :key="index">{{item}}</span>
-          </div>
-          <div class="buttons_container">
-            <Button type="success" class="pre_button button_arrow" @click="toPrePage()">
-              <Icon class="pre" type="ios-arrow-round-back"/>
-              {{$t('previous')}}
-            </Button>
-
-            <Button type="success" class="button_arrow" @click="exportMnemonic">
-              {{$t('next')}}
-              <Icon class="next" type="ios-arrow-round-forward"/>
-            </Button>
-
-          </div>
+            {{$t('please_click_on_the_mnemonic_in_order_to_confirm_that_you_are_backing_up_correctly')}}
+          </p>
+          <MnemonicVerification
+                  :mnemonicWordsList="mnemonic.split(' ')"
+                  @verificationSuccess='verificationSuccess'
+                  @toPreviousPage="toPrePage()"/>
         </div>
 
         <div class="stepItem5" v-if="stepIndex == 4">
@@ -111,13 +99,13 @@
           </div>
           <p class="backupTxt">{{$t('the_mnemonic_order_is_correct_and_the_backup_is_successful')}}</p>
           <div class="buttons_container">
-            <Button class="button_arrow" type="success" @click="show=false">
+            <Button class="button_arrow" type="success" @click="closeModal">
               {{$t('confirm')}}
             </Button>
-
           </div>
         </div>
       </div>
+
     </Modal>
   </div>
 </template>

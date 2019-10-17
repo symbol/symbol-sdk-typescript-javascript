@@ -1,10 +1,11 @@
-.walletCreatedWrap {
+.seed_created_wrap {
   box-sizing: border-box;
   height: 100%;
   background-color: #fff;
   border-radius: 10px;
   overflow-y: auto;
-  padding:50px 50px 35px;
+  padding: 50px 50px 35px;
+
   .createdDiv1 {
     position: relative;
 
@@ -32,6 +33,7 @@
       padding-left: 50px;
       position: relative;
 
+
       .remindTit {
         color: #F65C5C;
         position: absolute;
@@ -46,13 +48,12 @@
     }
 
     .mnemonicDiv {
-      width: 580px;
+      width: 1000px;
       border: 1px solid rgba(204, 204, 204, 1);
       border-radius: 8px;
       opacity: 0.5;
-      padding: 34px 80px;
-      margin-top: 100px;
-      margin-bottom: 200px;
+      padding: 20px;
+      margin: 50px 0 300px 0;
       position: relative;
 
       span {
@@ -65,11 +66,11 @@
       }
 
       .covering {
-        width: 580px;
-        height: 220px;
+        width: 100%;
+        height: 100%;
         background: rgba(0, 0, 0, 0.9);
         border-radius: 8px;
-        padding: 70px 0 0;
+        padding: 25px 0 0;
         position: absolute;
         left: 0;
         top: 0;
@@ -79,7 +80,7 @@
         .lock {
           width: 18px;
           height: 22px;
-          margin: 0 auto 20px;
+          margin: 0 auto 10px;
 
           img {
             display: block;
@@ -97,7 +98,7 @@
       }
     }
 
-    .btns {
+    .buttons {
       width: 580px;
     }
 
@@ -130,22 +131,21 @@
   .createdDiv2 {
     position: relative;
 
-
     .skip_button {
       position: absolute;
-      width:80px;
-      height:36px;
-      background:rgba(255,255,255,1);
-      border:1px solid rgba(32,181,172,1);
-      border-radius:18px;
-      font-size:16px;
-      font-weight:400;
+      width: 80px;
+      height: 36px;
+      background: rgba(255, 255, 255, 1);
+      border: 1px solid rgba(32, 181, 172, 1);
+      border-radius: 18px;
+      font-size: 16px;
+      font-weight: 400;
       text-align: center;
       line-height: 36px;
       padding: 0;
-      color:rgba(32,181,172,1);
+      color: rgba(32, 181, 172, 1);
       right: 0;
-      top: 80px;
+      top: 0;
     }
 
     .pageTit {
@@ -170,6 +170,7 @@
       color: #222222;
       word-wrap: break-word;
       position: relative;
+      padding-bottom: 60px;
 
       .tails {
         font-size: 16px;
@@ -177,51 +178,7 @@
       }
     }
 
-    .mnemonicInputDiv {
-      margin-top: 87px;
-      margin-bottom: 84px;
-
-      .mnemonicWordDiv {
-        width: 578px;
-        height: 210px;
-        background: #fff;
-        border: 1px solid #CCCCCC;
-        padding: 19px 29px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        overflow: hidden;
-
-        span {
-          font-size: 18px;
-          font-weight: 400;
-          color: #222222;
-          margin-right: 21px;
-          margin-bottom: 20px;
-          float: left;
-          cursor: pointer;
-        }
-      }
-
-      .wordDiv {
-        width: 648px;
-        height: 146px;
-
-        span {
-          font-size: 16px;
-          font-weight: 400;
-          color: rgba(34, 34, 34, 0.8);
-          background: rgba(32, 181, 172, 0.2);
-          padding: 8px 18px 10px;
-          border-radius: 4px;
-          margin-right: 20px;
-          margin-bottom: 20px;
-          float: left;
-          cursor: pointer;
-        }
-      }
-    }
-
-    .btns {
+    .buttons {
       width: 580px;
     }
 
@@ -323,7 +280,7 @@
       }
     }
 
-    .btns {
+    .buttons {
       padding-left: 260px;
 
       button {
@@ -341,5 +298,14 @@
         border-radius: 30px;
       }
     }
+  }
+
+  .ivu-tag {
+    height: 30px;
+    padding: 4px 6px;
+  }
+
+  .mnemonic_verification_container {
+    height: 500px;
   }
 }

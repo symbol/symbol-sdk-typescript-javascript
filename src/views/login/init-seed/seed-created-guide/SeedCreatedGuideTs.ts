@@ -5,6 +5,7 @@ import {randomMnemonicWord} from "@/core/utils/hdWallet.ts"
 import {mapState} from "vuex"
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {localRead} from "@/core/utils"
+import MnemonicVerification from '@/components/mnemonic-verification/MnemonicVerification.vue'
 
 @Component({
     computed: {
@@ -12,6 +13,9 @@ import {localRead} from "@/core/utils"
             activeAccount: 'account',
             app: 'app'
         })
+    },
+    components: {
+        MnemonicVerification
     }
 })
 export class SeedCreatedGuideTs extends Vue {
@@ -22,6 +26,7 @@ export class SeedCreatedGuideTs extends Vue {
     storeWallet = {}
     showCover = true
     mnemonicRandomArr = []
+    confirmedMnemonicList = []
     formItem = {
         currentNetType: '',
         walletName: '',
@@ -54,37 +59,12 @@ export class SeedCreatedGuideTs extends Vue {
 
     sureWord(index) {
         const word = this.mnemonicRandomArr[index]
-        const wordSpan = document.createElement('span')
-        wordSpan.innerText = word
-        wordSpan.onclick = () => {
-            this.$refs['mnemonicWordDiv']['removeChild'](wordSpan)
+        const flagIndex = this.confirmedMnemonicList.findIndex(item => word == item)
+        if (flagIndex === -1) {
+            this.confirmedMnemonicList.push(word)
+            return
         }
-        const inputArray = this
-            .$refs['mnemonicWordDiv']['innerText']
-            .replace(' ', '')
-            .split("\n")
-
-        const wordInInputArray = inputArray.find(x => x === word)
-        if (wordInInputArray === undefined) this.$refs['mnemonicWordDiv']['append'](wordSpan)
-    }
-
-    checkMnemonic() {
-        const mnemonicDiv = this.$refs['mnemonicWordDiv']
-        const mnemonicDivChild = mnemonicDiv['getElementsByTagName']('span')
-        let childWord = []
-        for (let i in mnemonicDivChild) {
-            if (typeof mnemonicDivChild[i] !== "object") continue
-            childWord.push(mnemonicDivChild[i]['innerText'])
-        }
-        if (JSON.stringify(childWord) != JSON.stringify(this.mnemonic)) {
-            if (childWord.length < 1) {
-                this.$Notice.warning({title: '' + this.$t(Message.PLEASE_ENTER_MNEMONIC_INFO)})
-            } else {
-                this.$Notice.warning({title: '' + this.$t(Message.MNEMONIC_INCONSISTENCY_ERROR)})
-            }
-            return false
-        }
-        return true
+        this.removeConfirmedWord(flagIndex)
     }
 
     changeTabs(index) {
@@ -96,19 +76,17 @@ export class SeedCreatedGuideTs extends Vue {
                 this.mnemonicRandomArr = randomMnemonicWord(this.mnemonic)
                 this.tags = index
                 break
-            case 2:
-                if (!this.checkMnemonic()) {
-                    return
-                }
-                this.createFromMnemonic()
-                this.tags = index
-                break
         }
     }
 
-    skipInput(index) {
+    verificationSuccess() {
         this.createFromMnemonic()
-        this.tags = index
+        this.tags = 2
+    }
+
+
+    skipInput() {
+      this.verificationSuccess()
     }
 
     createFromMnemonic() {
@@ -128,12 +106,16 @@ export class SeedCreatedGuideTs extends Vue {
         }
     }
 
+    removeConfirmedWord(index) {
+        this.confirmedMnemonicList.splice(index, 1)
+    }
+
     toWalletPage() {
-        this.$store.commit('SET_HAS_WALLET', true)
         this.$router.push('dashBoard')
     }
 
     toBack() {
+        this.confirmedMnemonicList = []
         this.$router.back()
     }
 }

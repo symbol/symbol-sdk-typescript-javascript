@@ -1,0 +1,59 @@
+.mnemonic_container {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  .mnemonicWordDiv {
+    width: 100%;
+    height: 170px;
+    background: #fff;
+    border: 1px solid #CCCCCC;
+    padding: 19px 29px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+
+    span {
+      font-size: 18px;
+      font-weight: 400;
+      color: #222222;
+      margin-right: 21px;
+      margin-bottom: 20px;
+      float: left;
+      cursor: pointer;
+    }
+  }
+
+  .wordDiv {
+    width: 100%;
+
+    .confirmed_word {
+      background-color: orange;
+      color: white;
+    }
+
+    span {
+      font-size: 16px;
+      font-weight: 400;
+      color: rgba(34, 34, 34, 0.8);
+      background: rgba(32, 181, 172, 0.2);
+      padding: 8px 18px 10px;
+      border-radius: 4px;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      float: left;
+      cursor: pointer;
+    }
+  }
+
+  .buttons {
+    width: 70%;
+
+    button {
+      vertical-align: center;
+    }
+  }
+}

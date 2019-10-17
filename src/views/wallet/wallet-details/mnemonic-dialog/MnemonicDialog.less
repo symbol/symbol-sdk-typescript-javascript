@@ -1,6 +1,7 @@
 .mnemonicDialogWrap {
   width: 600px;
 
+
   .mnemonicDialogHeader {
     height: 74px;
     line-height: 74px;
@@ -33,11 +34,12 @@
   }
 
   .mnemonicDialogBody {
-    padding: 40px 0 80px;
+    padding: 40px 0 0 0;
 
     .steps {
       height: 54px;
       text-align: center;
+      margin-bottom: 50px;
 
       .stepItem {
         display: inline-block;
@@ -82,8 +84,9 @@
 
     .buttons_container {
       display: flex;
-      justify-content: center;
-      padding: 0 0px;
+      justify-content: space-around;
+      width: 1200px;
+      padding-top: 60px;
     }
 
     .button_arrow {
@@ -96,9 +99,13 @@
       }
     }
 
+    .stepItem4,
+    .stepItem3,
+    .stepItem2,
     .stepItem1 {
-      padding-top: 120px;
-
+      padding: 30px 0;
+    }
+    .stepItem1 {
       input {
         display: block;
         width: 580px;
@@ -123,7 +130,6 @@
         background: #20B5AC;
         border: none;
         border-radius: 30px;
-        margin: 120px auto 0;
         position: relative;
         display: flex;
         align-items: center;
@@ -138,8 +144,6 @@
     }
 
     .stepItem2 {
-      padding-top: 59px;
-
       .step2Txt {
         .imgDiv {
           width: 100%;
@@ -209,7 +213,6 @@
         background: #20B5AC;
         border: none;
         border-radius: 30px;
-        margin: 87px auto 0;
         position: relative;
         display: flex;
         align-items: center;
@@ -224,7 +227,10 @@
     }
 
     .stepItem3 {
-      padding-top: 80px;
+      padding-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
       p {
         width: 680px;
@@ -236,17 +242,19 @@
         font-size: 16px;
         font-weight: bold;
         color: #F65C5C;
+        text-align: center;
         margin-bottom: 30px;
       }
 
       .mnemonicWords {
-        margin-bottom: 30px;
+        text-align: center;
         font-size: 16px;
         font-weight: bold;
         word-spacing: 10px;
         color: #222222;
-        line-height: 20px;
-        margin-left: 382px;
+        line-height: 30px;
+        display: inline-block;
+        width: 800px;
       }
 
       .QRCodeImg {
@@ -288,7 +296,6 @@
         background: #20B5AC;
         border: none;
         border-radius: 30px;
-        margin: 50px auto 0;
         position: relative;
 
         .ivu-icon {
@@ -299,7 +306,10 @@
     }
 
     .stepItem4 {
-      padding-top: 60px;
+      padding-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
       p {
         width: 680px;
@@ -321,15 +331,15 @@
       }
 
       .sureMnemonicWords {
-        width: 680px;
-        height: 80px;
+        width: 800px;
+        height: 100px;
         word-break: break-word;
         background: #FAFAFA;
         border: 1px solid #CCCCCC;
         border-radius: 10px;
         padding: 10px 20px;
         margin: 0 auto 20px;
-          
+
         span {
           margin-right: 10px;
           margin-bottom: 10px;
@@ -338,14 +348,13 @@
       }
 
       .mnemonicWords {
-        width: 680px;
+        width: 800px;
+        text-align: center;
         font-size: 16px;
         font-weight: bold;
         word-spacing: 10px;
         color: #222222;
-        line-height: 20px;
-        margin-left: 140px;
-        cursor: pointer;
+        line-height: 30px;
 
         span {
           display: inline-block;
@@ -358,7 +367,7 @@
         align-items: center;
         justify-content: center;
         justify-items: center;
-        width: 200px;
+        width: 180px;
         height: 60px;
         font-size: 16px;
         font-weight: 400;
@@ -367,7 +376,6 @@
         background: #20B5AC;
         border: none;
         border-radius: 30px;
-        margin: 125px auto 0;
         position: relative;
 
 
@@ -379,7 +387,14 @@
     }
 
     .stepItem5 {
-      padding-top: 85px;
+      padding: 55px 0;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+
+      .buttons_container {
+        width: 100%;
+      }
 
       .backupImg {
         width: 120px;
@@ -401,22 +416,25 @@
       }
 
       button {
+        text-align: center;
         display: flex;
         align-items: center;
         justify-content: center;
         justify-items: center;
-        width: 200px;
-        height: 60px;
         font-size: 16px;
         font-weight: 400;
-        text-align: center;
         color: #fff;
         background: #20B5AC;
         border: none;
         border-radius: 30px;
-        margin: 132px auto 0;
-        position: relative;
+        span {
+          padding: 10px 35px;
+        }
       }
     }
+  }
+
+  .confirmed_word {
+    color: #ccc;
   }
 }

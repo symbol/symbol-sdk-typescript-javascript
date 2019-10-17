@@ -1,5 +1,5 @@
 <template>
-  <div class="walletCreatedWrap">
+  <div class="seed_created_wrap">
     <div class="createdDiv1" v-if="tags == 0">
       <p class="pageTit">{{$t('backup_mnemonic')}}</p>
       <p class="pageTxt">{{$t('Backup_mnemonics_can_effectively_back_up_and_restore_your_account')}}</p>
@@ -16,7 +16,7 @@
           <p class="txt">{{$t('display_mnemonic')}}</p>
         </div>
       </div>
-      <div class="btns clear">
+      <div class="buttons clear">
         <Button class="prev left" type="default" @click="toBack">{{$t('previous')}}</Button>
         <Button class="next right" type="success" @click="changeTabs(1)">{{$t('next')}}</Button>
       </div>
@@ -29,19 +29,16 @@
       <p class="pageTxt">{{$t('Please_select_each_phrase_to_make_sure_the_mnemonic_is_correct')}}</p>
       <p class="pageRemind">
         {{$t('If_you_have_a_record_to_back_up_your_own_supporting_words_be_sure_to_verify_it_with_the_left_program_to_ensure_that_there_are_no_errors_in_the_auxiliary_words_Once_you_are_mistaken_you_may_never_be_able_to_get_it_back_You_pay_attention_to_and_understand_the_risks_involved_If_you_dont_want_to_back_up_or_verify_now')}}{{$t('click')}}<span
-              class="tails pointer" @click="skipInput(2)"> SKIP</span>
+              class="tails pointer" @click="skipInput(2)"> {{$t('SKIP')}}</span>
         {{$t('Skip_this_action_but_please_confirm_your_risk_If_you_need_to_back_up_the_mnemonic_again_you_can_find_it_in_the_Wallet_Details_Export_mnemonic')}}
       </p>
-      <div class="mnemonicInputDiv">
-        <div class="mnemonicWordDiv clear" ref="mnemonicWordDiv">
-        </div>
-        <div class="wordDiv clear">
-          <span v-for="(item,index) in mnemonicRandomArr" :key="index" @click="sureWord(index)">{{item}}</span>
-        </div>
-      </div>
-      <div class="btns clear">
-        <Button class="prev left" type="default" @click="changeTabs(0)">{{$t('previous')}}</Button>
-        <Button class="next right" type="success" @click="changeTabs(2)">{{$t('next')}}</Button>
+      <div class="mnemonic_verification_container">
+
+      <MnemonicVerification
+              :mnemonicWordsList="mnemonic"
+              @verificationSuccess ='verificationSuccess'
+              @toPreviousPage="changeTabs(0)"/>
+
       </div>
     </div>
 
@@ -69,8 +66,7 @@
           </Col>
         </Row>
       </div>
-      <div class="btns">
-
+      <div class="buttons">
         <Button class="next" type="success" @click="toWalletPage()">{{$t('complete')}}</Button>
       </div>
     </div>

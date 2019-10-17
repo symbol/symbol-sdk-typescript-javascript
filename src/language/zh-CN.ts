@@ -760,5 +760,7 @@ export const zh_CN = {
     what_is_delegated_harvesting: '什么是远程收获?',
     Delegated_harvesting_text_1: '远程收获能为帐户和节点提供一个共同使用代理私钥的安全环境。一个正常的帐户可以将其重要性委托给远程节点进行收获。也就是说，您无需运行节点,就能凭借已有帐户的重要性来创建新区块。',
     multisig_info: '多签信息',
-    Loading:'加载中...'
+    Loading:'加载中...',
+    Multisig_accounts_can_not_send_a_transaction_by_themselves:'Multisig 账户不能通过本账户发起交易。',
+    SKIP:'跳过'
 }

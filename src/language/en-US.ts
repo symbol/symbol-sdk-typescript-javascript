@@ -462,7 +462,7 @@ export const en_US = {
     Wallet_name: 'Name',
     Wallet_address: 'Address',
     Wallet_public_key: 'Public Key',
-    publicKey: 'publicKey',
+    publicKey: 'PublicKey',
     Address_QR_code: 'Address QR code',
     Function_and_backup: 'Backup',
     Export_mnemonic: 'Export mnemonic',
@@ -804,4 +804,7 @@ export const en_US = {
     multisig_info: 'Multisig info',
     Loading:'Loading...',
     click_to_load: 'Click to load data',
+    Multisig_accounts_can_not_send_a_transaction_by_themselves:'Multisig accounts can not send a transaction by themselves.',
+    SKIP:'SKIP'
+
 }

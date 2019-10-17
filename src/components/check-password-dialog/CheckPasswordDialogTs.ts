@@ -69,9 +69,9 @@ export class CheckPasswordDialogTs extends Vue {
 
     checkWalletPassword() {
         try {
-            const isPasswordWalid = new AppWallet(this.wallet).checkPassword(new Password(this.walletInputInfo.password))
+            const isPasswordValid = new AppWallet(this.wallet).checkPassword(new Password(this.walletInputInfo.password))
             this.show = false
-            this.$emit('checkEnd', Boolean(isPasswordWalid))
+            this.$emit('checkEnd', Boolean(isPasswordValid))
             this.switchAnnounceType()
             this.checkPasswordDialogCancel()
         } catch (e) {
