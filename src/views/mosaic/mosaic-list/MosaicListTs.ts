@@ -1,13 +1,13 @@
 import {mapState} from "vuex"
-import {Address, AliasType, MosaicId} from "nem2-sdk"
+import {AliasType} from "nem2-sdk"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import {formatNumber} from '@/core/utils'
 import {mosaicSortType} from "@/config/view/mosaic"
-import {networkConfig} from "@/config"
-import {MosaicNamespaceStatusType, StoreAccount, AppInfo, AppMosaic, AppNamespace} from "@/core/model"
-import {sortMosaicList} from "@/core/services"
+import {Message, networkConfig} from "@/config"
+import {AppInfo, AppMosaic, AppNamespace, MosaicNamespaceStatusType, StoreAccount} from "@/core/model"
 import Alias from '@/components/forms/alias/Alias.vue'
+import {initMosaic, sortMosaicList} from "@/core/services"
 
 @Component({
     components: {
@@ -36,6 +36,7 @@ export class MosaicListTs extends Vue {
     currentMosaicList = []
     isShowExpiredMosaic = false
     sortDirection = true
+    mosaicRefreshTimestamp = new Date().valueOf()
     showAliasDialog: boolean = false
     bind: boolean = false
     namespace: AppNamespace = null
@@ -56,6 +57,10 @@ export class MosaicListTs extends Vue {
 
     get mosaicsLoading() {
         return this.app.mosaicsLoading
+    }
+
+    get wallet() {
+        return this.activeAccount.wallet
     }
 
     get namespaceMap() {
@@ -127,8 +132,9 @@ export class MosaicListTs extends Vue {
         }
         this.sortDirection = true
         const currentMosaicList = [...this.currentMosaicList]
-        this.currentMosaicList = sortMosaicList(type,currentMosaicList)
+        this.currentMosaicList = sortMosaicList(type, currentMosaicList)
     }
+
 
     toggleIsShowExpiredMosaic() {
         const {isShowExpiredMosaic, currentHeight} = this
@@ -140,6 +146,25 @@ export class MosaicListTs extends Vue {
     intiMosaics() {
         this.getSortType(this.currentSortType)
         this.currentMosaicList = Object.values(this.mosaics)
+    }
+
+    async refreshMosaicList() {
+        const {mosaicRefreshTimestamp, wallet} = this
+        const currentTimestamp = new Date().valueOf()
+        if (currentTimestamp - mosaicRefreshTimestamp <= 2000) {
+            this.$Notice.destroy()
+            this.$Notice.warning({title: '' + this.$t(Message.REFRESH_TOO_FAST_WARNING)})
+            return
+        }
+        try {
+            initMosaic(wallet, this.$store)
+            this.mosaicRefreshTimestamp = currentTimestamp
+            this.$Notice.destroy()
+            this.$Notice.success({title: '' + this.$t(Message.SUCCESS)})
+        }catch (e) {
+            console.error("App -> refresh mosaic list-> error", e)
+        }
+
     }
 
     @Watch('mosaics', {deep: true})

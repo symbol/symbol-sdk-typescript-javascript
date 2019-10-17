@@ -103,6 +103,7 @@ export const Message = {
     SEED_WALLET_OVERFLOW_ERROR: 'seed_wallet_can_not_be_more_than_10',
     LOADING:'Loading',
     CLICK_TO_LOAD: 'click_to_load',
+    REFRESH_TOO_FAST_WARNING:'refresh_too_fast_warning',
 }
 
 export const FEE_SPEEDS: Record<string, string> = {

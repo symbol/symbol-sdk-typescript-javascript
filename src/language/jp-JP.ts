@@ -737,5 +737,8 @@ export const jp_JP = {
     contact_list: '通信録',
     meta_data: 'メタデータ',
     node_exists_error: 'ノードは既に存在します',
+    // need get added sentence from node_exists_error
     Input_account_public_key: 'Input account publicKey',
+    refresh:'更新',
+
 }

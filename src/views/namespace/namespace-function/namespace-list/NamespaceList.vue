@@ -19,25 +19,25 @@
       <div class="namespace_list_table">
         <div class="table_head">
           <span
-            class="Namespace_name"
-            @click="namespaceSortType = namespaceSortTypes.byName;
+                  class="Namespace_name"
+                  @click="namespaceSortType = namespaceSortTypes.byName;
                 sortDirection = !sortDirection"
           >{{$t('namespace_name')}}
             <Icon
-              v-if="namespaceSortType === namespaceSortTypes.byName"
-              class="active_sort_type"
-              :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
+                    v-if="namespaceSortType === namespaceSortTypes.byName"
+                    class="active_sort_type"
+                    :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
             />
           </span>
           <span
-            class="duration"
-            @click="namespaceSortType = namespaceSortTypes.byDuration;
+                  class="duration"
+                  @click="namespaceSortType = namespaceSortTypes.byDuration;
                 sortDirection = !sortDirection"
           >{{$t('duration')}}
             <Icon
-              v-if="namespaceSortType === namespaceSortTypes.byDuration"
-              class="active_sort_type"
-              :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
+                    v-if="namespaceSortType === namespaceSortTypes.byDuration"
+                    class="active_sort_type"
+                    :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
             />
           </span>
           <!-- <span
@@ -52,28 +52,30 @@
             />
           </span> -->
           <span
-            class="link overflow_ellipsis"
-            @click="namespaceSortType = namespaceSortTypes.byBindType;
+                  class="link overflow_ellipsis"
+                  @click="namespaceSortType = namespaceSortTypes.byBindType;
                 sortDirection = !sortDirection"
           >{{$t('link')}}
             <Icon
-              v-if="namespaceSortType === namespaceSortTypes.byBindType"
-              class="active_sort_type"
-              :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
+                    v-if="namespaceSortType === namespaceSortTypes.byBindType"
+                    class="active_sort_type"
+                    :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
             />
           </span>
           <span
-            @click="namespaceSortType = namespaceSortTypes.byBindType;
+                  @click="namespaceSortType = namespaceSortTypes.byBindType;
                 sortDirection = !sortDirection"
-            class="type"
+                  class="type"
           >{{$t('type')}}
              <Icon
-              v-if="namespaceSortType === namespaceSortTypes.byBindInfo"
-              class="active_sort_type"
-              :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
-            />
+                     v-if="namespaceSortType === namespaceSortTypes.byBindInfo"
+                     class="active_sort_type"
+                     :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
+             />
           </span>
           <span class="more"></span>
+          <span @click="refreshNamespaceList()"
+                class="pointer refresh_btn">{{$t('refresh')}}</span>
           <div class="namespace_filter pointer" @click="toggleIsShowExpiredNamespace()">
             <Icon v-if="isShowExpiredNamespace" type="md-square"/>
             <Icon v-else type="md-square-outline"/>
@@ -115,18 +117,18 @@
                   <span>{{$t('update')}}</span>
                 </span>
                <span
-                    v-if="n.isLinked() && computeDuration(n) !== StatusString.EXPIRED"
-                    class="fnItem pointer"
-                    @click.stop="unbindItem(n)"
-                >
+                       v-if="n.isLinked() && computeDuration(n) !== StatusString.EXPIRED"
+                       class="fnItem pointer"
+                       @click.stop="unbindItem(n)"
+               >
                 <img src="@/common/img/service/namespace/namespaceRefresh.png">
                 <span>{{$t('unbind')}}</span>
               </span>
 
               <span
-                  v-if="!n.isLinked() && computeDuration(n) !== StatusString.EXPIRED"
-                  class="fnItem pointer"
-                  @click.stop="bindItem(n)"
+                      v-if="!n.isLinked() && computeDuration(n) !== StatusString.EXPIRED"
+                      class="fnItem pointer"
+                      @click.stop="bindItem(n)"
               >
                 <img src="@/common/img/service/namespace/namespaceRefresh.png">
                 <span>{{$t('bind')}}</span>
@@ -165,14 +167,14 @@
             @close='showNamespaceEditDialog = false'
     />
     <Alias
-        v-if="showAliasDialog"
-        :visible="showAliasDialog"
-        :bind="bind"
-        :fromNamespace="true"
-        :namespace="namespace"
-        :mosaic="mosaic"
-        :address="address"
-        @close="showAliasDialog = false"
+            v-if="showAliasDialog"
+            :visible="showAliasDialog"
+            :bind="bind"
+            :fromNamespace="true"
+            :namespace="namespace"
+            :mosaic="mosaic"
+            :address="address"
+            @close="showAliasDialog = false"
     />
   </div>
 </template>

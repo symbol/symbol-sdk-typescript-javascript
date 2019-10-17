@@ -1,10 +1,10 @@
-import {Address, MosaicId, AliasType, NamespaceInfo} from "nem2-sdk"
+import {AliasType} from "nem2-sdk"
 import {mapState} from "vuex"
 import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
-import {networkConfig} from '@/config'
-import {sortNamespaceList, namespaceSortTypes} from '@/core/services'
+import {Message, networkConfig} from '@/config'
+import {sortNamespaceList, namespaceSortTypes, getNamespacesFromAddress} from '@/core/services'
 import {StoreAccount, AppInfo, MosaicNamespaceStatusType, AppNamespace} from "@/core/model"
 import Alias from '@/components/forms/alias/Alias.vue'
 
@@ -42,6 +42,8 @@ export class NamespaceListTs extends Vue {
     mosaic: string = null
     address: string = null
     isShowExpiredNamespace = false
+    disabled: boolean = false
+    namespaceRefreshTimestamp = new Date().valueOf()
 
     get mosaics() {
         return this.activeAccount.mosaics
@@ -53,6 +55,10 @@ export class NamespaceListTs extends Vue {
 
     get accountName() {
         return this.activeAccount.accountName
+    }
+
+    get node() {
+        return this.activeAccount.node
     }
 
     get namespaces(): AppNamespace[] {
@@ -84,7 +90,7 @@ export class NamespaceListTs extends Vue {
         this.showNamespaceEditDialog = true
     }
 
-    toggleIsShowExpiredNamespace(){
+    toggleIsShowExpiredNamespace() {
         this.isShowExpiredNamespace = !this.isShowExpiredNamespace
     }
 
@@ -138,6 +144,25 @@ export class NamespaceListTs extends Vue {
         if (alias.type === AliasType.Address) return alias.address.plain()
         if (alias.type === AliasType.Mosaic) return alias.mosaicId.toHex()
         return ''
+    }
+
+    async refreshNamespaceList() {
+        const {wallet, node, namespaceRefreshTimestamp} = this
+        const currentTimestamp = new Date().valueOf()
+        if (currentTimestamp - namespaceRefreshTimestamp <= 2000) {
+            this.$Notice.destroy()
+            this.$Notice.warning({title: '' + this.$t(Message.REFRESH_TOO_FAST_WARNING)})
+            return
+        }
+        try {
+            this.namespaceRefreshTimestamp = currentTimestamp
+            const refreshNamespaces = await getNamespacesFromAddress(wallet.address, node)
+            this.$store.commit('SET_NAMESPACES', refreshNamespaces)
+            this.$Notice.destroy()
+            this.$Notice.success({title: '' + this.$t(Message.SUCCESS)})
+        } catch (error) {
+            console.error("App ->  refresh namespace list-> error", error)
+        }
     }
 
     async handleChange(page) {

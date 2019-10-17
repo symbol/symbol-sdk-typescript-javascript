@@ -213,14 +213,33 @@
         }
       }
 
+      .refresh_btn {
+        font-size: 12px;
+        display: block;
+        padding: 2px 12px;
+        line-height: 30px;
+        border-radius: 14px;
+        position: absolute;
+        color: #20B5AC;
+        right: 205px;
+        top: -40px;
+        z-index: 100;
+      }
       .namespace_filter {
         display: flex;
         align-items: center;
         width: 320px;
-
+        position: relative;
+        bottom: 50px;
+        font-size: 12px;
+        right: -60px;
+        color: #999;
+        span {
+          margin-left: 25px;
+        }
         i {
           color: #20B5AC;
-          margin-right: 5px;
+          font-size: 15px;
         }
       }
     }
@@ -286,7 +305,6 @@
   i {
     font-size: 30px;
     position: absolute;
-    top: 10px;
     color: #26B4B0;
   }
 }

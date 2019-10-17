@@ -25,6 +25,7 @@ export const zh_CN = {
     remaining: '剩余',
     word: '字',
     publish: '发表',
+    refresh:'刷新',
     screen: '筛选',
     anonymous_user: '匿名用户',
     no_comment_yet: '暂无评论',
@@ -762,5 +763,6 @@ export const zh_CN = {
     multisig_info: '多签信息',
     Loading:'加载中...',
     Multisig_accounts_can_not_send_a_transaction_by_themselves:'Multisig 账户不能通过本账户发起交易。',
-    SKIP:'跳过'
+    SKIP:'跳过',
+    refresh_too_fast_warning:'刷新频率过高，请稍后再试。'
 }

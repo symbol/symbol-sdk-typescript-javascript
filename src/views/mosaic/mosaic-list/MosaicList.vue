@@ -1,6 +1,5 @@
 <template>
   <div class="mosaicList secondary_page_animate">
-
     <div class="left_container radius">
       <div>
         <p class="mosaic_head_title">
@@ -60,6 +59,8 @@
             <Icon v-if="mosaicSortType.byAlias == currentSortType" class="active_sort_type"
                   :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"/>
             </span>
+          <span @click="refreshMosaicList()"
+                class="pointer refresh_btn">{{$t('refresh')}}</span>
           <div class="mosaic_filter pointer" @click="toggleIsShowExpiredMosaic()">
             <Icon v-if="isShowExpiredMosaic" type="md-square"/>
             <Icon v-else type="md-square-outline"/>
