@@ -14,48 +14,51 @@
         <div class="listTit">
           <span class="mosaic_id" @click="getSortType(mosaicSortType.byId)">
                {{$t('mosaic_ID')}}
-            <Icon v-if="mosaicSortType.byId == currentSortType" class="active_sort_type" type="md-arrow-dropdown"/>
+            <Icon v-if="mosaicSortType.byId == currentSortType" class="active_sort_type"
+                  :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"/>
             </span>
 
           <span class="available_quantity" @click="getSortType(mosaicSortType.bySupply)">
               {{$t('available_quantity')}}
-            <Icon v-if="mosaicSortType.bySupply == currentSortType" class="active_sort_type" type="md-arrow-dropdown"/>
+            <Icon v-if="mosaicSortType.bySupply == currentSortType" class="active_sort_type"
+                  :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"/>
             </span>
 
           <span class="mosaic_divisibility" @click="getSortType(mosaicSortType.byDivisibility)">
               {{$t('mosaic_divisibility')}}
             <Icon v-if="mosaicSortType.byDivisibility == currentSortType" class="active_sort_type"
-                  type="md-arrow-dropdown"/>
+                  :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"/>
             </span>
 
           <span class="transportability" @click="getSortType(mosaicSortType.byTransferable)">
 
             {{$t('transportability')}}
             <Icon v-if="mosaicSortType.byTransferable == currentSortType" class="active_sort_type"
-                  type="md-arrow-dropdown"/>
+                  :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"/>
 
             </span>
 
           <span class="variable_supply" @click="getSortType(mosaicSortType.bySupplyMutable)">
               {{$t('variable_supply')}}
             <Icon v-if="mosaicSortType.bySupplyMutable == currentSortType" class="active_sort_type"
-                  type="md-arrow-dropdown"/>
+                  :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"/>
             </span>
 
           <span class="Restrictable" @click="getSortType(mosaicSortType.byRestrictable)">
                {{$t('Restrictable')}}
             <Icon v-if="mosaicSortType.byRestrictable == currentSortType" class="active_sort_type"
-                  type="md-arrow-dropdown"/>
+                  :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"/>
             </span>
           <span class="deadline" @click="getSortType(mosaicSortType.byDuration)">
                {{$t('deadline')}}
             <Icon v-if="mosaicSortType.byDuration == currentSortType" class="active_sort_type"
-                  type="md-arrow-dropdown"/>
+                  :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"/>
             </span>
 
           <span class="alias" @click="getSortType(mosaicSortType.byAlias)">
                {{$t('alias')}}
-            <Icon v-if="mosaicSortType.byAlias == currentSortType" class="active_sort_type" type="md-arrow-dropdown"/>
+            <Icon v-if="mosaicSortType.byAlias == currentSortType" class="active_sort_type"
+                  :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"/>
             </span>
           <div class="mosaic_filter pointer" @click="toggleIsShowExpiredMosaic()">
             <Icon v-if="isShowExpiredMosaic" type="md-square"/>
@@ -96,34 +99,34 @@
 
             <span class="poptip">
               <div
-                v-if="value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey
+                      v-if="value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey
                     &&  (computeDuration(value) > 0
                       || computeDuration(value) === 'Forever')"
-                class="listFnDiv"
+                      class="listFnDiv"
               >
                 <Poptip placement="bottom">
                   <i class="moreFn"></i>
                   <div slot="content" class="updateFn">
                     <p
-                      v-if="value.properties.supplyMutable"
-                      class="fnItem"
-                      @click="showEditDialog(value)"
+                            v-if="value.properties?value.properties.supplyMutable:false"
+                            class="fnItem"
+                            @click="showEditDialog(value)"
                     >
-                      <i><img src="@/common/img/service/updateMsaioc.png"></i>
+                      <i><img src="@/common/img/service/updateMosaic.png"></i>
                       <span class="">{{$t('modify_supply')}}</span>
                     </p>
                     <p
-                      v-if="!value.name"
-                      class="fnItem"
-                      @click="bindItem(value)"
+                            v-if="!value.name"
+                            class="fnItem"
+                            @click="bindItem(value)"
                     >
                       <i><img src="@/common/img/service/setAlias.png"></i>
                       <span>{{$t('binding_alias')}}</span>
                     </p>
                     <p
-                      v-if="value.name"
-                      class="fnItem"
-                      @click="unbindItem(value)"
+                            v-if="value.name"
+                            class="fnItem"
+                            @click="unbindItem(value)"
                     >
                       <i><img src="@/common/img/service/clearAlias.png"></i>
                       <span>{{$t('unbind')}}</span>
@@ -154,14 +157,14 @@
       <p>{{$t('mosaic_attribute_text_2')}}</p>
     </div>
     <Alias
-        v-if="showAliasDialog"
-        :visible="showAliasDialog"
-        :bind="bind"
-        :fromNamespace="false"
-        :namespace="namespace"
-        :mosaic="mosaic"
-        :address="address"
-        @close="showAliasDialog = false"
+            v-if="showAliasDialog"
+            :visible="showAliasDialog"
+            :bind="bind"
+            :fromNamespace="false"
+            :namespace="namespace"
+            :mosaic="mosaic"
+            :address="address"
+            @close="showAliasDialog = false"
     />
     <EditDialog
             v-if="showMosaicEditDialog"

@@ -6,13 +6,7 @@ import {formatNumber} from '@/core/utils'
 import {mosaicSortType} from "@/config/view/mosaic"
 import {networkConfig} from "@/config"
 import {MosaicNamespaceStatusType, StoreAccount, AppInfo, AppMosaic, AppNamespace} from "@/core/model"
-import {
-    sortByMosaicAlias, sortByMosaicDivisibility,
-    sortByMosaicDuration,
-    sortByMosaicId, sortByMosaicRestrictable,
-    sortByMosaicSupply, sortByMosaicSupplyMutable,
-    sortByMosaicTransferable
-} from "@/core/services"
+import {sortMosaicList} from "@/core/services"
 import Alias from '@/components/forms/alias/Alias.vue'
 
 @Component({
@@ -41,7 +35,7 @@ export class MosaicListTs extends Vue {
     mosaicSortType = mosaicSortType
     currentMosaicList = []
     isShowExpiredMosaic = false
-
+    sortDirection = true
     showAliasDialog: boolean = false
     bind: boolean = false
     namespace: AppNamespace = null
@@ -67,7 +61,7 @@ export class MosaicListTs extends Vue {
     get namespaceMap() {
         let namespaceMap = {}
         this.activeAccount.namespaces.forEach((item) => {
-                switch (item.alias.type) {
+            switch (item.alias.type) {
                 case (AliasType.Address):
 
                     namespaceMap[item.alias.address.plain()] = item
@@ -80,9 +74,9 @@ export class MosaicListTs extends Vue {
     }
 
     mosaicSupplyAmount(value) {
-        if(!value.mosaicInfo) return 0
-        const formatNumber:string = this.formatNumber(value.mosaicInfo.supply.compact()) +''
-        return formatNumber.substring(0,formatNumber.indexOf('.'))
+        if (!value.mosaicInfo) return 0
+        const formatNumber: string = this.formatNumber(value.mosaicInfo.supply.compact()) + ''
+        return formatNumber.substring(0, formatNumber.indexOf('.'))
     }
 
     toggleChange(page) {
@@ -124,34 +118,16 @@ export class MosaicListTs extends Vue {
     }
 
     getSortType(type: number) {
+        const preSortType = this.currentSortType
         this.currentSortType = type
-        const currentMosaicList = [...this.currentMosaicList]
-        switch (type) {
-            case mosaicSortType.byId:
-                this.currentMosaicList = sortByMosaicId(currentMosaicList)
-                break
-            case mosaicSortType.byDuration:
-                this.currentMosaicList = sortByMosaicDuration(currentMosaicList)
-                break
-            case mosaicSortType.byAlias:
-                this.currentMosaicList = sortByMosaicAlias(currentMosaicList)
-                break
-            case mosaicSortType.byRestrictable:
-                this.currentMosaicList = sortByMosaicRestrictable(currentMosaicList)
-                break
-            case mosaicSortType.bySupply:
-                this.currentMosaicList = sortByMosaicSupply(currentMosaicList)
-                break
-            case mosaicSortType.byTransferable:
-                this.currentMosaicList = sortByMosaicTransferable(currentMosaicList)
-                break
-            case mosaicSortType.byDivisibility:
-                this.currentMosaicList = sortByMosaicDivisibility(currentMosaicList)
-                break
-            case mosaicSortType.bySupplyMutable:
-                this.currentMosaicList = sortByMosaicSupplyMutable(currentMosaicList)
-                break
+        if (preSortType == type) {
+            this.currentMosaicList.sort(() => -1)
+            this.sortDirection = !this.sortDirection
+            return
         }
+        this.sortDirection = true
+        const currentMosaicList = [...this.currentMosaicList]
+        this.currentMosaicList = sortMosaicList(type,currentMosaicList)
     }
 
     toggleIsShowExpiredMosaic() {

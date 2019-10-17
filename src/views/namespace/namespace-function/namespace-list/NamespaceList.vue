@@ -26,7 +26,7 @@
             <Icon
               v-if="namespaceSortType === namespaceSortTypes.byName"
               class="active_sort_type"
-              type="md-arrow-dropdown"
+              :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
             />
           </span>
           <span
@@ -37,7 +37,7 @@
             <Icon
               v-if="namespaceSortType === namespaceSortTypes.byDuration"
               class="active_sort_type"
-              type="md-arrow-dropdown"
+              :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
             />
           </span>
           <!-- <span
@@ -47,8 +47,8 @@
           >{{$t('Control')}}
             <Icon
               v-if="namespaceSortType === namespaceSortTypes.byOwnerShip"
-              class="active_sort_type"
-              type="md-arrow-dropdown"
+              class="active_sort_type":
+              type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
             />
           </span> -->
           <span
@@ -59,7 +59,7 @@
             <Icon
               v-if="namespaceSortType === namespaceSortTypes.byBindType"
               class="active_sort_type"
-              type="md-arrow-dropdown"
+              :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
             />
           </span>
           <span
@@ -70,7 +70,7 @@
              <Icon
               v-if="namespaceSortType === namespaceSortTypes.byBindInfo"
               class="active_sort_type"
-              type="md-arrow-dropdown"
+              :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
             />
           </span>
           <span class="more"></span>
