@@ -187,8 +187,14 @@ export class TransactionFormTs extends Vue {
         // @TODO: would be better to return a loading indicator
         // instead of an empty array ([] = "no matching data" in the select dropdown)
         const {mosaics, currentHeight, multisigMosaicList, isSelectedAccountMultisig} = this
-        const mosaicMap = isSelectedAccountMultisig ? multisigMosaicList : mosaics
-        const mosaicList: any = Object.values(mosaicMap)
+        
+        const mosaicList = isSelectedAccountMultisig
+            ? Object.values(multisigMosaicList).map(mosaic => {
+                if (mosaics[mosaic.hex]) return { ...mosaic, name: mosaics[mosaic.hex].name || null }
+                return mosaic
+            })
+            : Object.values(mosaics)
+
         // @TODO: refactor, make it an AppMosaic method
         return [...mosaicList]
             .filter(mosaic => mosaic.balance && mosaic.balance >= 0
