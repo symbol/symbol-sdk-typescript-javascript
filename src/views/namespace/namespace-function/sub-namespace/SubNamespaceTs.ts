@@ -5,7 +5,7 @@ import {
 } from "nem2-sdk"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {Message, networkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
-import {getAbsoluteMosaicAmount, formatAddress} from '@/core/utils'
+import {getAbsoluteMosaicAmount, formatAddress, cloneData} from '@/core/utils'
 import {AppNamespace, StoreAccount, AppInfo, AppWallet, DefaultFee} from "@/core/model"
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
@@ -33,7 +33,7 @@ export class SubNamespaceTs extends Vue {
     transactionDetail = {}
     transactionList = []
     currentMinApproval = -1
-    formItems = formDataConfig.subNamespaceForm
+    formItems = cloneData(formDataConfig.subNamespaceForm)
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
     formatAddress = formatAddress
 
@@ -253,7 +253,7 @@ export class SubNamespaceTs extends Vue {
     }
 
     initForm() {
-        this.formItems = formDataConfig.subNamespaceForm
+        this.formItems = cloneData(formDataConfig.subNamespaceForm)
     }
 
     closeCheckPWDialog() {

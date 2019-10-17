@@ -2,7 +2,7 @@ import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {Password, NetworkType, MosaicSupplyChangeTransaction, Deadline, UInt64, MosaicId} from 'nem2-sdk'
 import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config/index.ts"
-import {getAbsoluteMosaicAmount} from '@/core/utils'
+import {cloneData, getAbsoluteMosaicAmount} from '@/core/utils'
 import {AppWallet, AppMosaic, DefaultFee, StoreAccount} from "@/core/model"
 import MultisigBanCover from '@/components/multisig-ban-cover/MultisigBanCover.vue'
 
@@ -19,7 +19,7 @@ export class MosaicEditDialogTs extends Vue {
     isCompleteForm = false
     changedSupply = 0
     totalSupply = networkConfig.maxMosaicAtomicUnits
-    formItems = formDataConfig.mosaicEditForm
+    formItems = cloneData(formDataConfig.mosaicEditForm)
 
     @Prop()
     showMosaicEditDialog: boolean
@@ -167,7 +167,7 @@ export class MosaicEditDialogTs extends Vue {
     }
 
     initForm() {
-        this.formItems = formDataConfig.mosaicEditForm
+        this.formItems = cloneData(formDataConfig.mosaicEditForm)
     }
 
     @Watch('formItems', {deep: true})

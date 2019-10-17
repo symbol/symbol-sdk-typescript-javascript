@@ -15,7 +15,7 @@ import {
     NetworkType, AggregateTransaction
 } from 'nem2-sdk'
 import {
-    formatSeconds, formatAddress, getAbsoluteMosaicAmount,
+    formatSeconds, formatAddress, getAbsoluteMosaicAmount, cloneData,
 } from '@/core/utils'
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {formDataConfig, Message, DEFAULT_FEES, FEE_GROUPS} from '@/config'
@@ -43,7 +43,7 @@ export class MosaicTransactionTs extends Vue {
     showCheckPWDialog = false
     transactionList = []
     isCompleteForm = true
-    formItems = formDataConfig.mosaicTransactionForm
+    formItems = cloneData(formDataConfig.mosaicTransactionForm)
     formatAddress = formatAddress
 
     get wallet(): AppWallet {
@@ -71,18 +71,18 @@ export class MosaicTransactionTs extends Vue {
         return this.multisigInfo.multisigAccounts.length > 0
     }
 
-    get multisigPublicKeyList(): {publicKey: string, address: string}[] {
+    get multisigPublicKeyList(): { publicKey: string, address: string }[] {
         if (!this.hasMultisigAccounts) return null
         return [
-          {
-            publicKey: this.accountPublicKey,
-            address: `(self) ${formatAddress(this.address)}`,
-          },
-          ...this.multisigInfo.multisigAccounts
-            .map(({publicKey}) => ({
-                publicKey,
-                address: formatAddress(Address.createFromPublicKey(publicKey, this.networkType).plain())
-            })),
+            {
+                publicKey: this.accountPublicKey,
+                address: `(self) ${formatAddress(this.address)}`,
+            },
+            ...this.multisigInfo.multisigAccounts
+                .map(({publicKey}) => ({
+                    publicKey,
+                    address: formatAddress(Address.createFromPublicKey(publicKey, this.networkType).plain())
+                })),
         ]
     }
 
@@ -114,7 +114,7 @@ export class MosaicTransactionTs extends Vue {
 
     get feeAmount(): number {
         const {feeSpeed} = this.formItems
-        const feeAmount = this.defaultFees.find(({speed})=>feeSpeed === speed).value
+        const feeAmount = this.defaultFees.find(({speed}) => feeSpeed === speed).value
         return getAbsoluteMosaicAmount(feeAmount, this.networkCurrency.divisibility)
     }
 
@@ -140,7 +140,7 @@ export class MosaicTransactionTs extends Vue {
     }
 
     initForm(): void {
-        this.formItems = formDataConfig.mosaicTransactionForm
+        this.formItems = cloneData(formDataConfig.mosaicTransactionForm)
         this.formItems.multisigPublicKey = this.accountPublicKey
     }
 
@@ -209,7 +209,7 @@ export class MosaicTransactionTs extends Vue {
         return activeMultisigAccount ? activeMultisigAccount : accountPublicKey
     }
 
-    mosaicDefinitionAndSupplyChange(): [ MosaicDefinitionTransaction, MosaicSupplyChangeTransaction ] {
+    mosaicDefinitionAndSupplyChange(): [MosaicDefinitionTransaction, MosaicSupplyChangeTransaction] {
         let {publicKey, networkType, feeAmount, feeDivider} = this
         let {supply, divisibility, transferable, supplyMutable, duration, restrictable, permanent} = this.formItems
 
@@ -218,7 +218,7 @@ export class MosaicTransactionTs extends Vue {
         const fee = feeAmount / feeDivider
         const mosaicId = MosaicId.createFromNonce(nonce, publicAccount)
 
-        const mosaicDefinitionTx =  MosaicDefinitionTransaction.create(
+        const mosaicDefinitionTx = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
             mosaicId,

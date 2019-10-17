@@ -3,7 +3,7 @@ import {mapState} from "vuex"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {Password, NamespaceRegistrationTransaction, Deadline, UInt64} from 'nem2-sdk'
 import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
-import {getAbsoluteMosaicAmount,formatSeconds} from '@/core/utils'
+import {getAbsoluteMosaicAmount, formatSeconds, cloneData} from '@/core/utils'
 import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
 import MultisigBanCover from "@/components/multisig-ban-cover/MultisigBanCover.vue"
 
@@ -22,7 +22,7 @@ export class NamespaceEditDialogTs extends Vue {
     isCompleteForm = true
     stepIndex = 0
     durationIntoDate: string = '0'
-    formItems = formDataConfig.namespaceEditForm
+    formItems = cloneData(formDataConfig.namespaceEditForm)
 
     @Prop({default: false})
     showNamespaceEditDialog: boolean
@@ -141,7 +141,7 @@ export class NamespaceEditDialogTs extends Vue {
     }
 
     initForm() {
-        this.formItems = formDataConfig.namespaceEditForm
+        this.formItems = cloneData(formDataConfig.namespaceEditForm)
         this.durationIntoDate = '0'
     }
 

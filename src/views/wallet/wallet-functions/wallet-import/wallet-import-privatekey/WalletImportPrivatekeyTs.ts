@@ -6,6 +6,7 @@ import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswor
 import {formDataConfig} from '@/config/view/form'
 import {networkTypeConfig} from '@/config/view/setting'
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
+import {cloneData} from "@/core/utils"
 
 @Component({
     computed: {
@@ -22,7 +23,7 @@ export class WalletImportPrivatekeyTs extends Vue {
     activeAccount: StoreAccount
     app: AppInfo
     account = {}
-    form = formDataConfig.walletImportPrivateKeyForm
+    form = cloneData(formDataConfig.walletImportPrivateKeyForm)
     networkType = networkTypeConfig
     showCheckPWDialog = false
     NetworkTypeList = networkTypeConfig

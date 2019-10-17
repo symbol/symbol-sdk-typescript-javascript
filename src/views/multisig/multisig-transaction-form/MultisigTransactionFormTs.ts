@@ -14,8 +14,9 @@ import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, MULTISIG_INFO} from "
 import {StoreAccount, DefaultFee, AppWallet, ANNOUNCE_TYPES, MULTISIG_FORM_MODES} from "@/core/model"
 import {getAbsoluteMosaicAmount, formatAddress, cloneData} from "@/core/utils"
 import {
-    createBondedMultisigTransaction, createCompleteMultisigTransaction,
-    getMultisigAccountMultisigAccountInfo,
+    createBondedMultisigTransaction,
+    createCompleteMultisigTransaction,
+    getMultisigAccountMultisigAccountInfo
 } from '@/core/services'
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 
@@ -91,7 +92,7 @@ export class MultisigTransactionFormTs extends Vue {
                     children: [
                         {title: MULTISIG_INFO.PUBLIC_KEY + item.publicKey},
                         {
-                            title: MULTISIG_INFO.MIN_APPROVAL + (multisigInfo[item.address.plain()] ? multisigInfo[item.address.plain()].minApproval :this.$t(Message.CLICK_TO_LOAD)),
+                            title: MULTISIG_INFO.MIN_APPROVAL + (multisigInfo[item.address.plain()] ? multisigInfo[item.address.plain()].minApproval : this.$t(Message.CLICK_TO_LOAD)),
                             publicKey: item.publicKey,
                         },
                         {

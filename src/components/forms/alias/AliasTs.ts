@@ -4,7 +4,7 @@ import { EmptyAlias } from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import { Address, AliasAction, NamespaceId, Password, Transaction, MosaicId, AddressAliasTransaction, Deadline, UInt64, MosaicAliasTransaction } from "nem2-sdk"
 import { mapState } from "vuex"
 import { networkConfig } from "@/config/index"
-import { getAbsoluteMosaicAmount } from "@/core/utils"
+import {cloneData, getAbsoluteMosaicAmount} from "@/core/utils"
 import { StoreAccount, AppInfo, AppWallet, AppNamespace, DefaultFee, MosaicNamespaceStatusType } from "@/core/model"
 import { AppMosaics } from '@/core/services'
 import MultisigBanCover from '@/components/multisig-ban-cover/MultisigBanCover.vue'
@@ -24,7 +24,7 @@ export class AliasTs extends Vue {
   activeAccount: StoreAccount
   app: AppInfo
   isCompleteForm = true
-  formItems = formDataConfig.alias
+  formItems = cloneData(formDataConfig.alias)
   bindTypes: Record<string, string> = {
       address: 'address',
       mosaic: 'mosaic',

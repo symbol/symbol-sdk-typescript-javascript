@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {AccountLinkTransaction, UInt64, LinkAction, Deadline, Password} from "nem2-sdk"
 import {mapState} from "vuex"
-import {getAbsoluteMosaicAmount} from '@/core/utils'
+import {cloneData, getAbsoluteMosaicAmount} from '@/core/utils'
 import {formDataConfig} from "@/config/view/form"
 import {AppWallet, DefaultFee, StoreAccount} from "@/core/model"
 import MultisigBanCover from '@/components/multisig-ban-cover/MultisigBanCover.vue'
@@ -22,7 +22,7 @@ export class WalletHarvestingTs extends Vue {
     activeAccount: StoreAccount
     harvestBlockList = []
     isShowDialog = false
-    formItems = formDataConfig.remoteForm
+    formItems = cloneData(formDataConfig.remoteForm)
 
     get wallet() {
         return this.activeAccount.wallet
@@ -68,7 +68,7 @@ export class WalletHarvestingTs extends Vue {
     }
 
     initForm() {
-        this.formItems = formDataConfig.remoteForm
+        this.formItems = cloneData(formDataConfig.remoteForm)
     }
 
     modalCancel() {

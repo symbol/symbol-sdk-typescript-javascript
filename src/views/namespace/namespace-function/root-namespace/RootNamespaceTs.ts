@@ -7,7 +7,7 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {
-    getAbsoluteMosaicAmount, formatSeconds, formatAddress,
+    getAbsoluteMosaicAmount, formatSeconds, formatAddress, cloneData,
 } from '@/core/utils'
 import {StoreAccount, AppInfo, DefaultFee, AppWallet} from "@/core/model"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
@@ -35,7 +35,7 @@ export class RootNamespaceTs extends Vue {
     showCheckPWDialog = false
     transactionList = []
     otherDetails: any = {}
-    formItems = formDataConfig.rootNamespaceForm
+    formItems = cloneData(formDataConfig.rootNamespaceForm)
     formatAddress = formatAddress
 
     get wallet(): AppWallet {
@@ -99,7 +99,7 @@ export class RootNamespaceTs extends Vue {
     }
 
     initForm(): void {
-        this.formItems = formDataConfig.rootNamespaceForm
+        this.formItems = cloneData(formDataConfig.rootNamespaceForm)
     }
 
     get multisigAccountInfo(): MultisigAccountInfo {
