@@ -197,6 +197,7 @@ export class MosaicTransactionTs extends Vue {
 
     checkEnd(isPasswordRight) {
         if (!isPasswordRight) {
+            this.showCheckPWDialog = false
             this.$Notice.destroy()
             this.$Notice.error({
                 title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''

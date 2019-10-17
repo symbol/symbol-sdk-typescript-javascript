@@ -79,6 +79,7 @@ export class CheckPasswordDialogTs extends Vue {
             this.$Notice.error({
                 title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
             })
+            this.$emit('checkEnd', false)
         }
     }
 

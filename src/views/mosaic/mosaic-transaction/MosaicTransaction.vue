@@ -106,7 +106,7 @@
             @closeCheckPWDialog="closeCheckPWDialog"
             @checkEnd="checkEnd"
             :transactionDetail="transactionDetail"
-            :transactionList=transactionList
+            :transactionList="transactionList"
             :otherDetails="otherDetails"
     />
   </div>
