@@ -1,5 +1,4 @@
 export const en_US = {
-
     just_now: 'Just now',
     time_ago: 'ago',
     time_after: 'later',
@@ -196,7 +195,7 @@ export const en_US = {
     send: 'Send',
     transfer_record: 'Transfer records',
     transfer_sent: 'Transfer sent',
-    receive_address_or_alias: 'Receive address or @+alias（@nem.xem）',
+    receive_address_or_alias: 'Enter address or alias ( e.g., nem.foundation )',
     please_enter_the_transfer_amount: 'Please enter the transfer amount',
     please_enter_a_comment: 'Please enter a comment',
     password_error: 'Password error',

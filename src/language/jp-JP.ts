@@ -180,7 +180,7 @@ export const jp_JP = {
     send: '送信',
     transfer_record: '転送記録',
     transfer_sent: '転送済み',
-    receive_address_or_alias: '受信アドレスまたは @+alias（@nem.xem）',
+    receive_address_or_alias: '受信アドレスまたはalias（nem.foundation）',
     please_enter_the_transfer_amount: '転送するアセットの量を入力してください',
     please_enter_a_comment: '内容を入力してください',
     password_error: 'パスワードのエラー',
