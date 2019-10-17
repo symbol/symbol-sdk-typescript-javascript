@@ -128,8 +128,8 @@ export const en_US = {
     divisibility_can_not_less_than_0: 'Divisibility can not less than 0',
     duration_can_not_less_than_0: 'Duration can not less than 0',
     fee_can_not_less_than_0: 'Max fee can not less than 0',
-    duration_can_not_more_than_10_years: 'Duration can not more than 10 years',
-    duration_can_not_more_than_1_years: 'Duration can not more than 1 years',
+    duration_can_not_more_than_10_years: 'Duration can not be superior to 10 years',
+    duration_can_not_more_than_1_years: 'Duration can not be superior to 1 years',
 
     // monitor-receipt
     set_amount: 'Set amount',
@@ -290,7 +290,7 @@ export const en_US = {
     new_root_namespace: 'New root namespace',
     select_root_namespace: 'Choose root namespace',
     select_parent_namespace: 'Choose parent namespace',
-    subspace: 'Subspace',
+    subspace: 'Subnamespace',
     is_active: 'active',
     true: 'true',
     false: 'false',
@@ -524,7 +524,7 @@ export const en_US = {
     Create_subNamespace: 'Create subNamespace',
     Namespace_list: 'My namespaces',
     New_root_space: 'New root space',
-    Subspace: 'Subspace',
+    Subspace: 'Subnamespace',
     Input_space_name: 'Input space name',
     namespace_tips_key_1: '1. The length of the root namespace is limited to 16 characters, and the length of the secondary namespace is limited to 64 characters. Valid characters:',
     namespace_tips_key_2: '2. The first character of the namespace must use English letters. The namespaces that are not allowed include strings:',

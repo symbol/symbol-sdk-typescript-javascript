@@ -3,20 +3,23 @@ import {
     PublicAccount, MultisigAccountInfo, NetworkType, Address,
     NamespaceRegistrationTransaction, UInt64, Deadline,
 } from "nem2-sdk"
-import {Component, Vue, Watch} from 'vue-property-decorator'
+import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
 import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {
-    getAbsoluteMosaicAmount, formatSeconds, formatAddress, cloneData,
+    getAbsoluteMosaicAmount, formatSeconds, formatAddress, cloneData
 } from '@/core/utils'
 import {StoreAccount, AppInfo, DefaultFee, AppWallet} from "@/core/model"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
+import {standardFields} from "@/core/validation"
 import MultisigBanCover from "@/components/multisig-ban-cover/MultisigBanCover.vue"
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
     components: {
         CheckPWDialog,
-        MultisigBanCover
+        MultisigBanCover,
+        ErrorTooltip
     },
     computed: {
         ...mapState({
@@ -26,17 +29,16 @@ import MultisigBanCover from "@/components/multisig-ban-cover/MultisigBanCover.v
     }
 })
 export class RootNamespaceTs extends Vue {
+    @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     app: AppInfo
     transactionDetail = {}
-    isCompleteForm = false
-    currentMinApproval = -1
-    durationIntoDate: any = 0
     showCheckPWDialog = false
     transactionList = []
     otherDetails: any = {}
     formItems = cloneData(formDataConfig.rootNamespaceForm)
     formatAddress = formatAddress
+    standardFields: object = standardFields
 
     get wallet(): AppWallet {
         return this.activeAccount.wallet
@@ -96,10 +98,6 @@ export class RootNamespaceTs extends Vue {
 
     get node(): string {
         return this.activeAccount.node
-    }
-
-    initForm(): void {
-        this.formItems = cloneData(formDataConfig.rootNamespaceForm)
     }
 
     get multisigAccountInfo(): MultisigAccountInfo {
@@ -188,72 +186,13 @@ export class RootNamespaceTs extends Vue {
         }
     }
 
-    closeCheckPWDialog() {
-        this.showCheckPWDialog = false
-    }
-
-    checkForm(): boolean {
-        const {duration, rootNamespaceName, multisigPublicKey} = this.formItems
-
-        // check multisig
-        if (this.hasMultisigAccounts) {
-            if (!multisigPublicKey) {
-                this.$Notice.error({
-                    title: this.$t(Message.INPUT_EMPTY_ERROR) + ''
-                })
-                return false
-            }
-        }
-
-        if (!Number(duration) || Number(duration) < 0) {
-            this.showErrorMessage(this.$t(Message.DURATION_VALUE_LESS_THAN_1_ERROR))
-            return false
-        }
-
-        if (!rootNamespaceName || !rootNamespaceName.trim()) {
-            this.showErrorMessage(this.$t(Message.NAMESPACE_NULL_ERROR))
-            return false
-        }
-
-        if (rootNamespaceName.length > 16) {
-            this.showErrorMessage(this.$t(Message.ROOT_NAMESPACE_TOO_LONG_ERROR))
-            return false
-        }
-
-        if (!rootNamespaceName.match(/^[a-z].*/)) {
-            this.showErrorMessage(this.$t(Message.NAMESPACE_STARTING_ERROR))
-            return false
-        }
-        if (!rootNamespaceName.match(/^[0-9a-zA-Z_-]*$/g)) {
-            this.showErrorMessage(this.$t(Message.NAMESPACE_FORMAT_ERROR))
-            return false
-        }
-
-        const flag = networkConfig.reservedRootNamespaceNames.every((item) => {
-            if (item == rootNamespaceName) {
-                this.showErrorMessage(this.$t(Message.NAMESPACE_USE_BANNED_WORD_ERROR))
-                return false
-            }
-            return true
-        })
-        return flag
-    }
-
-    showErrorMessage(message) {
-        this.$Notice.destroy()
-        this.$Notice.error({
-            title: message
-        })
-    }
-
     createTransaction() {
-        if (!this.isCompleteForm) return
-        if (!this.checkForm()) return
-        const {feeAmount} = this
-        const {address} = this.wallet
-        const {duration, rootNamespaceName} = this.formItems
+        const {feeAmount, networkType} = this
+        const {duration, rootNamespaceName, multisigPublicKey} = this.formItems
         this.transactionDetail = {
-            "address": address,
+            "address": this.activeMultisigAccount
+                ? Address.createFromPublicKey(multisigPublicKey, networkType).pretty()
+                : this.address,
             "duration": duration,
             "namespace": rootNamespaceName,
             "fee": feeAmount / Math.pow(10, this.networkCurrency.divisibility),
@@ -275,19 +214,24 @@ export class RootNamespaceTs extends Vue {
         this.showCheckPWDialog = true
     }
 
-    // @TODO: target blockTime is hardcoded
-    changeXEMRentFee() {
+    get durationIntoDate() {
+        const {targetBlockTime} = networkConfig
         const duration = Number(this.formItems.duration)
-        if (Number.isNaN(duration)) {
-            this.formItems.duration = 0
-            this.durationIntoDate = 0
-            return
-        }
-        if (duration * 12 >= 60 * 60 * 24 * 365) {
-            this.showErrorMessage(this.$t(Message.DURATION_MORE_THAN_1_YEARS_ERROR) + '')
-            this.formItems.duration = 0
-        }
-        this.durationIntoDate = formatSeconds(duration * 12)
+        if (!duration || isNaN(duration)) return 0
+        return formatSeconds(duration * 12)
+    }
+
+    async submit() {
+        this.$validator
+            .validate()
+            .then((valid) => {
+                if (!valid) return
+                this.createTransaction()
+            })
+    }
+
+    resetFields() {
+        this.$nextTick(() => this.$validator.reset())
     }
 
     @Watch('formItems.multisigPublicKey')
@@ -296,17 +240,8 @@ export class RootNamespaceTs extends Vue {
         this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', newPublicKey)
     }
 
-    @Watch('formItems', {immediate: true, deep: true})
-    onFormItemChange() {
-        const {duration, rootNamespaceName, multisigPublicKey} = this.formItems
-        if (!this.activeMultisigAccount) {
-            this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== ''
-            return
-        }
-        this.isCompleteForm = duration + '' !== '' && rootNamespaceName !== '' && multisigPublicKey && multisigPublicKey.length === 64
-    }
-
     mounted() {
+        this.resetFields()
         this.formItems.multisigPublicKey = this.accountPublicKey
     }
 }
