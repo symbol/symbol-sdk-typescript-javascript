@@ -101,6 +101,8 @@ export enum SpecialTxDetailsKeys {
     mosaics = 'mosaics',
     namespace = 'namespace',
     cosignatories = 'cosignatories',
+    from = 'from',
+    aims = 'aims',
 }
 
 export enum TxDetailsKeysWithValueToTranslate {

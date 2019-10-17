@@ -1,6 +1,7 @@
+
 import {Component, Prop, Vue} from 'vue-property-decorator'
 import {mapState} from "vuex"
-
+import {Message} from '@/config';
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -23,7 +24,9 @@ export class MosaicTableTs extends Vue {
     }))
     tableData
 
-    get msoaics() {
+    Message = Message
+
+    get mosaics() {
         return this.activeAccount.mosaics
     }
 
@@ -32,8 +35,8 @@ export class MosaicTableTs extends Vue {
     }
 
     judgeIfWalletIsMosaicCreator(mosaicHex): boolean {
-        const {msoaics, publicKey} = this
-        if (msoaics[mosaicHex] && msoaics[mosaicHex].mosaicInfo && msoaics[mosaicHex].mosaicInfo.owner.publicKey == publicKey) {
+        const {mosaics, publicKey} = this
+        if (mosaics[mosaicHex] && mosaics[mosaicHex].mosaicInfo && mosaics[mosaicHex].mosaicInfo.owner.publicKey == publicKey) {
             return true
         }
         return false

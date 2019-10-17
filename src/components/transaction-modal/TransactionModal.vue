@@ -33,8 +33,16 @@
             <MosaicTable :tableData="renderMosaicsToTable(value)" />
           </div>
 
+          <div v-if="key === SpecialTxDetailsKeys.from || key === SpecialTxDetailsKeys.aims">
+            <span class="title">{{$t(key)}}</span>
+            <span class="value overflow_ellipsis text_select" v-if="value">
+                {{ value instanceof NamespaceId ? getName(value) : value }}
+            </span>
+          </div>
+
           <div class="mosaic_info" v-if="key === SpecialTxDetailsKeys.cosignatories">
-            <CosignatoriesTable :cosignatories="value" />
+            <span class="no_data" v-if="!value.length">{{$t('no_data')}}</span>
+            <CosignatoriesTable v-if="value.length" :cosignatories="value" />
           </div>
             <!-- @MODAL: Do a table for restrictions -->
           <div class="mosaic_info" v-if="key === SpecialTxDetailsKeys.namespace">
@@ -95,9 +103,17 @@
             <MosaicTable :tableData="renderMosaicsToTable(value)" />
           </div>
 
+          <div v-if="key === SpecialTxDetailsKeys.from || key === SpecialTxDetailsKeys.aims">
+            <span class="title">{{$t(key)}}</span>
+            <span class="value overflow_ellipsis text_select" v-if="value">
+                {{ value instanceof NamespaceId ? getName(value) : value }}
+            </span>
+          </div>
+
           <div class="mosaic_info" v-if="key === SpecialTxDetailsKeys.cosignatories">
             <span class="title">{{$t(key)}}</span>
-            <CosignatoriesTable :cosignatories="value" />
+            <span class="no_data" v-if="!value.length">{{$t('no_data')}}</span>
+            <CosignatoriesTable v-if="value.length" :cosignatories="value" />
           </div>
             <!-- @MODAL: Do a table for restrictions -->
           <div class="mosaic_info" v-if="key === SpecialTxDetailsKeys.namespace">
