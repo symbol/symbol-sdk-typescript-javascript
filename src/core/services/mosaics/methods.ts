@@ -45,7 +45,7 @@ export const mosaicsAmountViewFromAddress = (node: string, address: Address): Pr
 }
 
 export const initMosaic = (wallet: AppWallet, store: Store<AppState>) => {
-    const {node, mosaics, networkCurrency} = store.state.account
+    const {node, networkCurrency} = store.state.account
     const address = Address.createFromRawAddress(wallet.address)
 
     return new Promise(async (resolve, reject) => {

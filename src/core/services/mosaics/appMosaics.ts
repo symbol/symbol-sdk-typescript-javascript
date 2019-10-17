@@ -1,8 +1,8 @@
 import {MosaicAlias, MosaicId, MosaicHttp, Namespace, NamespaceId, Transaction, AliasType} from 'nem2-sdk'
-import {FormattedTransfer, FormattedTransaction, FormattedAggregateComplete, AppNamespace, AppState} from '@/core/model'
+import {FormattedTransaction, FormattedAggregateComplete, AppNamespace, AppState} from '@/core/model'
 import {flatMap, map, toArray} from 'rxjs/operators'
 import {AppMosaic} from '@/core/model'
-import { Store } from 'vuex'
+import {Store} from 'vuex'
 
 export const AppMosaics = () => ({
     store: null,
@@ -17,26 +17,58 @@ export const AppMosaics = () => ({
                     || currentHeight < mosaic.expirationHeight)))
     },
 
-    async updateMosaicInfo(mosaics: Record<string, AppMosaic>, node: string): Promise<AppMosaic[]> {
-        const toUpdate = this.getItemsWithoutProperties(mosaics)
+    getItemsWithoutProperties(mosaics: Record<string, AppMosaic>): MosaicId[] {
+        return Object.values(mosaics)
+            .filter(({properties}) => !properties)
+            .map(({hex}) => new MosaicId(hex))
+    },
 
-        if (toUpdate.length) return
-        const updatedMosaics = await new MosaicHttp(node)
+    getItemsWithoutName(mosaics: Record<string, AppMosaic>): MosaicId[] {
+        return Object.values(mosaics).filter(({name}) => !name).map(({hex}) => new MosaicId(hex))
+    },
+
+    async updateMosaicsInfo(mosaics: Record<string, AppMosaic>, store: Store<AppState>): Promise<void> {
+        const {node} = store.state.account
+        const toUpdate = this.getItemsWithoutProperties(mosaics)
+        if (!toUpdate.length) return
+
+        try {
+            const updatedMosaics = await new MosaicHttp(node)
             .getMosaics(toUpdate)
             .pipe(
                 flatMap(x => x),
-                map(x => (new AppMosaic({mosaicInfo: x, hex: x.id.toHex()}))),
+                map(x => (new AppMosaic({ hex: x.id.toHex(), mosaicInfo: x }))),
                 toArray(),
             )
             .toPromise()
-        return updatedMosaics || []
+            store.commit('UPDATE_MOSAICS_INFO', updatedMosaics)
+        } catch (error) {
+            console.error("updateMosaicsInfo: error", error)
+        }
     },
 
-    getItemsWithoutProperties(mosaics: Record<string, AppMosaic>): MosaicId[] {
-        const a = Object.values(mosaics)
-            .filter(({properties}) => !properties)
-            .map(({hex}) => new MosaicId(hex))
-            return a
+    async updateMosaicsName(mosaics: Record<string, AppMosaic>, store: Store<AppState>): Promise<void> {
+        const {node} = store.state.account
+        const toUpdate = this.getItemsWithoutName(mosaics)
+        if (!toUpdate.length) return
+
+        try {
+            const mosaicsWithName = await new MosaicHttp(node)
+                .getMosaicsNames(toUpdate)
+                .pipe(
+                    flatMap(x => x),
+                    map(x => (new AppMosaic({
+                        hex: x.mosaicId.toHex(),
+                        name: x.names[0] && x.names[0].name || null
+                    }))),
+                    toArray(),
+                )
+                .toPromise()
+            
+            store.commit('UPDATE_MOSAICS_NAMESPACES', mosaicsWithName)
+        } catch (error) {
+            console.error("updateMosaicsName: error", error)
+        }
     },
 
     /**
