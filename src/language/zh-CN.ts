@@ -764,5 +764,7 @@ export const zh_CN = {
     Loading:'加载中...',
     Multisig_accounts_can_not_send_a_transaction_by_themselves:'Multisig 账户不能通过本账户发起交易。',
     SKIP:'跳过',
-    refresh_too_fast_warning:'刷新频率过高，请稍后再试。'
+    refresh_too_fast_warning:'刷新频率过高，请稍后再试。',
+    //////////////
+    please_input_mosaic_and_amount:'请输入马赛克和数量',
 }

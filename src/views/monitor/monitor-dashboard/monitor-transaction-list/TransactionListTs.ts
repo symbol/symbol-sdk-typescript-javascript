@@ -52,6 +52,7 @@ export class TransactionListTs extends Vue {
 
     // @TODO: move out from there
     renderHeightAndConfirmation(height) {
+        // console.log(this.slicedTransactionList,'slicedTransactionList')
         const {currentHeight} = this
         if (!currentHeight) return height
         const confirmations = currentHeight - height

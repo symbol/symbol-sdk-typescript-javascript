@@ -765,7 +765,6 @@ export const en_US = {
     contact_list: 'contact list',
     meta_data: 'Metadata',
     node_exists_error: 'Node already exists',
-
     SLOW: 'Slow',
     NORMAL: 'Normal',
     FAST: 'Fast',
@@ -808,5 +807,6 @@ export const en_US = {
     click_to_load: 'Click to load data',
     Multisig_accounts_can_not_send_a_transaction_by_themselves:'Multisig accounts can not send a transaction by themselves.',
     SKIP:'SKIP',
+    please_input_mosaic_and_amount:'please input mosaic and amount',
     refresh_too_fast_warning:'The refresh rate is too high, please try again later.'
 }

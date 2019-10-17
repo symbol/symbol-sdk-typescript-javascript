@@ -95,7 +95,7 @@
         <span class="mosaic_amount overflow_ellipsis">{{$t('amount')}}</span>
         <div class="scroll">
           <div class="no_data" v-if="formItems.mosaicTransferList.length <1">
-            {{$t('no_data')}}
+            {{$t('please_input_mosaic_and_amount')}}
           </div>
           <div class="mosaic_list_item_container scroll">
 
