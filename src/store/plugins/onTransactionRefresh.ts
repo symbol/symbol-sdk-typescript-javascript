@@ -51,9 +51,9 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
             ? getTransactionTypesFromAggregate(transaction)
             : [transaction.type]
 
-        if (txTypeToGetNamespaces.some(a => transactionTypes.some(b => b === a))) {
-            setNamespaces(address, store)
-        }
+         if (txTypeToGetNamespaces.some(a => transactionTypes.some(b => b === a))) {
+               setNamespaces(address, store)
+         }
 
          if (txTypeToSetAccountInfo.some(a => transactionTypes.some(b => b === a))) {
             appWallet.setAccountInfo(store)

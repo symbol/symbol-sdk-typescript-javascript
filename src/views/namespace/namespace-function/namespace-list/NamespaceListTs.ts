@@ -120,7 +120,7 @@ export class NamespaceListTs extends Vue {
         this.showAliasDialog = true
         this.bind = false
         this.address = namespace.alias.address ? namespace.alias.address.plain() : null
-        this.mosaic = namespace.alias.mosaicId.toHex() || null
+        this.mosaic = namespace.alias.mosaicId ? namespace.alias.mosaicId.toHex() : null
         this.namespace = namespace
     }
 
