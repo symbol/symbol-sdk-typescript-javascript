@@ -303,4 +303,86 @@ describe('MetadataTransactionService', () => {
             });
         });
     });
+
+    describe('Announce transaction through service with delta size increase', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('should create MosaicMetadataTransaction and announce', (done) => {
+            const metaDataService = new MetadataTransactionService(metadataHttp);
+
+            return metaDataService.createMetadataTransaction(
+                    deadline,
+                    NetworkType.MIJIN_TEST,
+                    MetadataType.Mosaic,
+                    targetAccount.publicAccount,
+                    key,
+                    newValue + 'delta' + 'extra delta',
+                    targetAccount.publicAccount,
+                    mosaicId,
+                ).subscribe((transaction: MosaicMetadataTransaction) => {
+                    const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        [transaction.toAggregate(targetAccount.publicAccount)],
+                        NetworkType.MIJIN_TEST,
+                        [],
+                    );
+                    const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
+                    listener.confirmed(targetAccount.address).subscribe(() => {
+                        done();
+                    });
+                    listener.status(targetAccount.address).subscribe((error) => {
+                        console.log('Error:', error);
+                        assert(false);
+                        done();
+                    });
+                    transactionHttp.announce(signedTransaction);
+            });
+        });
+    });
+
+    describe('Announce transaction through service with delta size decrease', () => {
+        let listener: Listener;
+        before (() => {
+            listener = new Listener(config.apiUrl);
+            return listener.open();
+        });
+        after(() => {
+            return listener.close();
+        });
+        it('should create MosaicMetadataTransaction and announce', (done) => {
+            const metaDataService = new MetadataTransactionService(metadataHttp);
+
+            return metaDataService.createMetadataTransaction(
+                    deadline,
+                    NetworkType.MIJIN_TEST,
+                    MetadataType.Mosaic,
+                    targetAccount.publicAccount,
+                    key,
+                    newValue,
+                    targetAccount.publicAccount,
+                    mosaicId,
+                ).subscribe((transaction: MosaicMetadataTransaction) => {
+                    const aggregateTransaction = AggregateTransaction.createComplete(Deadline.create(),
+                        [transaction.toAggregate(targetAccount.publicAccount)],
+                        NetworkType.MIJIN_TEST,
+                        [],
+                    );
+                    const signedTransaction = aggregateTransaction.signWith(targetAccount, generationHash);
+                    listener.confirmed(targetAccount.address).subscribe(() => {
+                        done();
+                    });
+                    listener.status(targetAccount.address).subscribe((error) => {
+                        console.log('Error:', error);
+                        assert(false);
+                        done();
+                    });
+                    transactionHttp.announce(signedTransaction);
+            });
+        });
+    });
 });

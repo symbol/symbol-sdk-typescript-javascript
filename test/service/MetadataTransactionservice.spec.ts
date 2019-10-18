@@ -17,6 +17,7 @@
 import {expect} from 'chai';
 import {of as observableOf} from 'rxjs';
 import {deepEqual, instance, mock, when} from 'ts-mockito';
+import { Convert } from '../../src/core/format/Convert';
 import { MetadataHttp } from '../../src/infrastructure/MetadataHttp';
 import { Account } from '../../src/model/account/Account';
 import {NetworkType} from '../../src/model/blockchain/NetworkType';
@@ -70,7 +71,8 @@ describe('MetadataTransactionService', () => {
             .subscribe((transaction: AccountMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.ACCOUNT_METADATA_TRANSACTION);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(transaction.value).to.be.equal(value + deltaValue);
+                expect(Convert.utf8ToHex(transaction.value))
+                    .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));
                 expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
                 expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
                 done();
@@ -89,7 +91,8 @@ describe('MetadataTransactionService', () => {
             .subscribe((transaction: MosaicMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.MOSAIC_METADATA_TRANSACTION);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(transaction.value).to.be.equal(value + deltaValue);
+                expect(Convert.utf8ToHex(transaction.value))
+                    .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));
                 expect(transaction.targetMosaicId.toHex()).to.be.equal(targetIdHex);
                 expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
                 expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
@@ -109,7 +112,8 @@ describe('MetadataTransactionService', () => {
             .subscribe((transaction: NamespaceMetadataTransaction) => {
                 expect(transaction.type).to.be.equal(TransactionType.NAMESPACE_METADATA_TRANSACTION);
                 expect(transaction.scopedMetadataKey.toHex()).to.be.equal(key.toHex());
-                expect(transaction.value).to.be.equal(value + deltaValue);
+                expect(Convert.utf8ToHex(transaction.value))
+                    .to.be.equal(Convert.xor(Convert.utf8ToUint8(value), Convert.utf8ToUint8(value + deltaValue)));
                 expect(transaction.targetNamespaceId.toHex()).to.be.equal(targetIdHex);
                 expect(transaction.valueSizeDelta).to.be.equal(deltaValue.length);
                 expect(transaction.targetPublicKey).to.be.equal(account.publicKey);
