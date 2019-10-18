@@ -137,7 +137,7 @@ export class MetadataTransactionService {
                     targetPublicKey,
                     key,
                     newValueBytes.length - currentValueByte.length,
-                    value,
+                    Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
                     networkType,
                     maxFee,
                 );
@@ -191,7 +191,7 @@ export class MetadataTransactionService {
                     key,
                     mosaicId,
                     newValueBytes.length - currentValueByte.length,
-                    value,
+                    Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
                     networkType,
                     maxFee,
                 );
@@ -246,7 +246,7 @@ export class MetadataTransactionService {
                     key,
                     namespaceId,
                     newValueBytes.length - currentValueByte.length,
-                    value,
+                    Convert.decodeHex(Convert.xor(currentValueByte, newValueBytes)),
                     networkType,
                     maxFee,
                 );

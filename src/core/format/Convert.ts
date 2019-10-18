@@ -225,9 +225,7 @@ export class Convert {
         const delta: number[] = [];
         for (let i = 0; i < length; ++i) {
             const xorBuffer = buffer1[i] ^ buffer2[i];
-            if (xorBuffer !== 0) {
-                delta.push(xorBuffer);
-            }
+            delta.push(xorBuffer);
         }
         return Convert.uint8ToHex(Uint8Array.from(delta));
     }
