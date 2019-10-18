@@ -463,7 +463,7 @@ export const en_US = {
     Wallet_name: 'Name',
     Wallet_address: 'Address',
     Wallet_public_key: 'Public Key',
-    publicKey: 'PublicKey',
+    publicKey: 'publicKey',
     Address_QR_code: 'Address QR code',
     Function_and_backup: 'Backup',
     Export_mnemonic: 'Export mnemonic',
@@ -807,6 +807,7 @@ export const en_US = {
     click_to_load: 'Click to load data',
     Multisig_accounts_can_not_send_a_transaction_by_themselves:'Multisig accounts can not send a transaction by themselves.',
     SKIP:'SKIP',
-    please_input_mosaic_and_amount:'please input mosaic and amount',
-    refresh_too_fast_warning:'The refresh rate is too high, please try again later.'
+    please_input_mosaic_and_amount:'Please input mosaic and amount',
+    refresh_too_fast_warning:'The refresh rate is too high, please try again later.',
+    fromwhere:'from'
 }

@@ -50,7 +50,8 @@
                       <a
                         @click="unbindNamespace(alias)"
                       >{{alias.name}}</a>
-                      {{index < selfAliases.length - 1 ? ' | ' : ''}}</span>
+                      {{index < selfAliases.length - 1 ? ' | ' : ''}}
+                    </span>
                   </span>
                 </div>
               </span>

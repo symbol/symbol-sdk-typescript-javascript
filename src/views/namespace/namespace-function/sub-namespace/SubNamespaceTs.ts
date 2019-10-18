@@ -12,7 +12,6 @@ import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from
 import {standardFields} from "@/core/validation"
 import MultisigBanCover from '@/components/multisig-ban-cover/MultisigBanCover.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
-
 @Component({
     components: {
         CheckPWDialog,
@@ -238,6 +237,7 @@ export class SubNamespaceTs extends Vue {
             ? Address.createFromPublicKey(multisigPublicKey, networkType).pretty()
             : this.address,
             "namespace": rootNamespaceName,
+            "innerFee": feeAmount / feeDivider,
             "sub_namespace": subNamespaceName,
             "fee": feeAmount / feeDivider
         }

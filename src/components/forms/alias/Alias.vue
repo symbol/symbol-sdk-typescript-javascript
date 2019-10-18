@@ -1,13 +1,20 @@
 <template>
   <div class="aliasTable">
-    <Modal :title="bind ? $t('bind'): $t('unbind')"
+    <Modal
            v-model="show"
            :transfer="false"
            @on-cancel="show = false"
            class="alias_bind_dialog">
+      <div slot="header" class="bindHeader">
+        <span class="title" v-if= bind >{{$t('bind')}}</span>
+        <span class="title" v-else>{{$t('unbind')}}</span>
+      </div>
       <MultisigBanCover></MultisigBanCover>
-      <div v-if="!bind">
-          {{ `${$t('unbind')} ${target} from ${alias}` }}
+      <div v-if="!bind" class="unbind_text">
+        <span >{{$t('unbind')}}</span>
+        <span class="color_text">{{target}}</span>
+        <span>{{$t('fromwhere')}}</span>
+        <span class="color_text">{{alias}}</span>
       </div>
       <div v-if="bind && !fromNamespace" class="input_content">
         <div class="title">{{ address ? $t('address') : $t('mosaic') }}</div>
@@ -26,13 +33,13 @@
       <div v-if="bind && fromNamespace && !restrictedBindType"
           class="input_content">
         <div class="title">{{ $t('Alias_type') }}</div>
-        <RadioGroup v-model="bindType">
+        <RadioGroup v-model="bindType" class="input_radio">
           <Radio :label="bindTypes.address" />
           <Radio :label="bindTypes.mosaic" />
         </RadioGroup>
       </div>
 
-      <div v-if="bind && fromNamespace && bindType === bindTypes.address">
+      <div v-if="bind && fromNamespace && bindType === bindTypes.address" class="input_content">
         <div class="title">{{ $t('address') }}</div>
         <div class="input_area">
           <input v-model="target" :placeholder="$t('address')">
@@ -43,7 +50,7 @@
           class="input_content">
         <div class="title">{{ $t('mosaic') }}</div>
         <Select
-                class="fee-select"
+                class="fee-select input_select"
                 data-vv-name="mosaic"
                 v-model="target"
                 v-validate="'required'"
@@ -64,7 +71,7 @@
           class="input_content">
         <div class="title">{{ $t('namespace') }}</div>
         <Select
-                class="fee-select"
+                class="fee-select input_select"
                 data-vv-name="namespace"
                 v-model="alias"
                 v-validate="'required'"
@@ -84,7 +91,7 @@
       <div class="input_content">
         <div class="title">{{$t('fee')}}</div>
         <Select
-                class="fee-select"
+                class="fee-select input_select"
                 data-vv-name="fee"
                 v-model="formItems.feeSpeed"
                 v-validate="'required'"
