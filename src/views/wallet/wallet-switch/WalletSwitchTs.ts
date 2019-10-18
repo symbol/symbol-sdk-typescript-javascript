@@ -148,8 +148,9 @@ export class WalletSwitchTs extends Vue {
 
     scrollToActiveWallet() {
         // scroll to current wallet
-        this.$refs.walletScroll["scrollTop"] = this.walletList
-            .findIndex(({address}) => address === this.activeAddress) * 40
+        const currentWalletIndex = this.walletList
+            .findIndex(({address}) => address === this.activeAddress)
+        this.$refs.walletScroll["scrollTop"] = this.$refs.walletsDiv[currentWalletIndex]['offsetTop'] - 180
     }
 
     mounted() {

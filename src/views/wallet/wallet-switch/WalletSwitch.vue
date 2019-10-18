@@ -3,12 +3,13 @@
     <div class="walletSwitchHead ">
       <p class="tit">{{$t('Wallet_management')}}</p>
     </div>
-      
+
     <div class="walletList scroll" ref="walletScroll">
-      <div v-for="(item, index) in walletList" :key="index">
+      <div class="wallet_scroll_item" v-for="(item, index) in walletList" :key="index">
         <div
           :class="['walletItem', getWalletStyle(item), 'radius']"
           @click="switchWallet(item.address)"
+          ref="walletsDiv"
         >
           <Row>
             <Col span="15">

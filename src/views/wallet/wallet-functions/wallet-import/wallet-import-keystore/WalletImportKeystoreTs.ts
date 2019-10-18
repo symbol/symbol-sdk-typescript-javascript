@@ -1,11 +1,11 @@
-import {Message} from "@/config/index.ts"
+import {formDataConfig, Message} from "@/config/index.ts"
 import {Password} from "nem2-sdk"
 import {mapState} from 'vuex'
 import {Component, Vue} from 'vue-property-decorator'
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
-import {importKeystoreConfig} from '@/config/view/wallet'
 import {networkTypeConfig} from '@/config/view/setting'
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
+import {cloneData} from "@/core/utils"
 
 @Component({
     computed: {
@@ -24,7 +24,7 @@ export class WalletImportKeystoreTs extends Vue {
     file = ''
     fileList = []
     NetworkTypeList = networkTypeConfig
-    formItem = importKeystoreConfig
+    formItem = cloneData(formDataConfig.importKeystoreConfig)
     showCheckPWDialog = false
 
     checkEnd(password) {
@@ -85,7 +85,11 @@ export class WalletImportKeystoreTs extends Vue {
         })
     }
 
+    initData(){
+        this.formItem = cloneData(formDataConfig.importKeystoreConfig)
+    }
     toBack() {
+        this.initData()
         this.$emit('closeImport')
     }
 }

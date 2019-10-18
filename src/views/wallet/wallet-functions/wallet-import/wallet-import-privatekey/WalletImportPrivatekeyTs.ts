@@ -109,7 +109,12 @@ export class WalletImportPrivatekeyTs extends Vue {
         this.closeCheckPWDialog()
     }
 
+    initForm(){
+        this.form = cloneData(formDataConfig.walletImportPrivateKeyForm)
+    }
+
     toBack() {
         this.$emit('closeImport')
+        this.initForm()
     }
 }

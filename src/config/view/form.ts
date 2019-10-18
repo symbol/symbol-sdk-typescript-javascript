@@ -3,6 +3,14 @@ import {FEE_SPEEDS} from '@/config'
 
 
 export const formDataConfig = {
+    importKeystoreConfig: {
+        walletName: 'keystore-wallet',
+        networkType: NetworkType.MIJIN_TEST,
+        keystoreStr: '',
+        walletPassword: '',
+        walletPasswordAgain: '',
+        keystorePassword: ''
+    },
     transferForm: {
         recipient: '',
         remark: '',
