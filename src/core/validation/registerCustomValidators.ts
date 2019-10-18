@@ -1,5 +1,12 @@
-import {Address, MosaicId} from 'nem2-sdk'
+import {Address, MosaicId, NamespaceId} from 'nem2-sdk'
 import {AppLock} from '@/core/utils/appLock'
+import {networkConfig} from '@/config/constants'
+
+const {maxNameSize} = networkConfig
+
+interface ValidationObject {
+    valid: false | string
+}
 
 const getOtherFieldValue = (otherField, validator) => {
     const validatorFields = validator.Validator.$vee._validator.fields.items
@@ -13,27 +20,48 @@ export const CUSTOM_VALIDATORS_NAMES = {
     confirmPassword: 'confirmPassword',
     confirmLock: 'confirmLock',
     mosaicId: 'mosaicId',
+    addressOrAlias: 'addressOrAlias',
+    alias: 'alias',
 }
 
-const addressValidator = (context) => {
+const validateAddress = (address): ValidationObject => {
+    try {
+        Address.createFromRawAddress(address)
+        return {valid: address}
+    } catch (error) {
+        return {valid: false}
+    }
+}
+
+const addressValidator = (context): Promise<ValidationObject> => {
     return context.Validator.extend(
         CUSTOM_VALIDATORS_NAMES.address,
         (address) => new Promise((resolve) => {
-            if (address.indexOf('@') !== -1) {
-                resolve({valid: address})
-                return address
-            }
-            try {
-                Address.createFromRawAddress(address)
-                resolve({valid: address})
-            } catch (error) {
-                resolve({valid: false})
-            }
+            resolve(validateAddress(address))
         }),
     )
 }
 
-const confirmLockValidator = (context) => {
+const validateAlias = (alias): ValidationObject => {
+    if (alias.length > maxNameSize) return {valid: false}
+    try {
+        new NamespaceId(alias)
+        return {valid: alias}
+    } catch (error) {
+        return {valid: false}
+    }
+}
+
+const aliasValidator = (context): Promise<ValidationObject> => {
+    return context.Validator.extend(
+        CUSTOM_VALIDATORS_NAMES.address,
+        (alias) => new Promise((resolve) => {
+            resolve(validateAlias(alias))
+        }),
+    )
+}
+
+const confirmLockValidator = (context): Promise<ValidationObject> => {
     return context.Validator.extend(
         CUSTOM_VALIDATORS_NAMES.confirmLock,
         (password, [otherField]) => new Promise((resolve) => {
@@ -45,7 +73,7 @@ const confirmLockValidator = (context) => {
     )
 }
 
-const confirmPasswordValidator = (context) => {
+const confirmPasswordValidator = (context): Promise<ValidationObject> => {
     return context.Validator.extend(
         CUSTOM_VALIDATORS_NAMES.confirmPassword,
         (password, [otherField]) => new Promise((resolve) => {
@@ -57,7 +85,7 @@ const confirmPasswordValidator = (context) => {
     )
 }
 
-const mosaicIdValidator = (context) => {
+const mosaicIdValidator = (context): Promise<ValidationObject> => {
     return context.Validator.extend(
         CUSTOM_VALIDATORS_NAMES.mosaicId,
         (mosaicId) => new Promise((resolve) => {
@@ -71,11 +99,29 @@ const mosaicIdValidator = (context) => {
     )
 }
 
+const addressOrAliasValidator = (context): Promise<ValidationObject> => {
+    return context.Validator.extend(
+        CUSTOM_VALIDATORS_NAMES.addressOrAlias,
+        (addressOrAlias) => new Promise(async (resolve) => {
+            const isValidAddress = validateAddress(addressOrAlias)
+            const isValidAlias = validateAlias(addressOrAlias)
+            
+            if (isValidAddress.valid || isValidAlias.valid) {
+                resolve({valid: addressOrAlias}) 
+            } else {
+                resolve({valid: false})  
+            }
+        }),
+    )
+}
+
 const customValidatorFactory = {
     [CUSTOM_VALIDATORS_NAMES.address]: addressValidator,
     [CUSTOM_VALIDATORS_NAMES.confirmLock]: confirmLockValidator,
     [CUSTOM_VALIDATORS_NAMES.confirmPassword]: confirmPasswordValidator,
     [CUSTOM_VALIDATORS_NAMES.mosaicId]: mosaicIdValidator,
+    [CUSTOM_VALIDATORS_NAMES.addressOrAlias]: addressOrAliasValidator,
+    [CUSTOM_VALIDATORS_NAMES.alias]: aliasValidator,
 }
 
 const CustomValidator = (name, Validator) => ({

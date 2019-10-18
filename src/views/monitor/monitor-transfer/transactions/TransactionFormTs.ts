@@ -208,6 +208,7 @@ export class TransactionFormTs extends Vue {
 
     initForm() {
         this.currentMosaic = null
+        this.currentAmount = 0
         this.formItems = cloneData(formDataConfig.transferForm)
         this.formItems.multisigPublicKey = this.accountPublicKey
         this.resetFields()

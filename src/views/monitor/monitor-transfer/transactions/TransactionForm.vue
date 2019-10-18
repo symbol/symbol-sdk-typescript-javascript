@@ -27,19 +27,32 @@
       <div class="target flex_center">
         <span class="title">{{$t('transfer_target')}}</span>
         <span class="value radius flex_center">
-        <input type="text" v-model="formItems.recipient" :placeholder="$t('receive_address_or_alias')">
+          <ErrorTooltip fieldName="recipient" placementOverride="left">
+              <input
+                      data-vv-name="recipient"
+                      v-model="formItems.recipient"
+                      v-validate="standardFields.addressOrAlias.validation"
+                      :data-vv-as="$t('transfer_target')"
+                      :placeholder="$t('receive_address_or_alias')"
+                      type="text"
+              />
+          </ErrorTooltip>
       </span>
-        <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>
-        <div v-if="isShowSubAlias" class="selections ">
-          <div class="selection_container scroll">
-            <div @click="formModel.recipient = key " class="overflow_ellipsis selection_item"
-                 v-for="(value,key) in addressAliasMap">{{value.label}}({{key}})
-            </div>
-          </div>
-          <div v-if="isAddressMapNull" class="no_data">
-            {{$t('no_data')}}
+
+
+      <!-- <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>
+      <div v-if="isShowSubAlias" class="selections ">
+        <div class="selection_container scroll">
+          <div @click="formModel.recipient = key " class="overflow_ellipsis selection_item"
+                v-for="(value,key) in addressAliasMap">{{value.label}}({{key}})
           </div>
         </div>
+        <div v-if="isAddressMapNull" class="no_data">
+          {{$t('no_data')}}
+        </div>
+      </div> -->
+
+
       </div>
 
 

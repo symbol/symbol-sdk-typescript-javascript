@@ -2,6 +2,7 @@ import {
     LinkAction, AliasAction, MosaicSupplyChangeAction, NamespaceRegistrationType,
 } from 'nem2-sdk'
 import {NETWORK_PARAMS, SDK_PARAMS, APP_PARAMS} from './constants'
+import {CUSTOM_VALIDATORS_NAMES} from './registerCustomValidators'
 
 const {
     MAX_MOSAIC_ATOMIC_UNITS,
@@ -320,6 +321,10 @@ export const standardFields = {
         validation: 'url',
         hint: 'HINT_webHook',
         placeholder: 'PLACEHOLDER_webHook',
+    },
+
+    addressOrAlias: {
+        validation: `required|${CUSTOM_VALIDATORS_NAMES.addressOrAlias}`,
     },
 
     linkActions: {default: LinkAction.Link},
