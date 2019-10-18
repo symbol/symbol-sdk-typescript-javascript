@@ -11,7 +11,7 @@ import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress, cloneData} from "@/core/utils"
 import {standardFields, isAddress} from "@/core/validation"
-import {AppMosaic, AppWallet, AppInfo, StoreAccount, DefaultFee} from "@/core/model"
+import {AppMosaic, AppWallet, AppInfo, StoreAccount, DefaultFee, MosaicNamespaceStatusType} from "@/core/model"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
 
@@ -187,7 +187,7 @@ export class TransactionFormTs extends Vue {
         // @TODO: would be better to return a loading indicator
         // instead of an empty array ([] = "no matching data" in the select dropdown)
         const {mosaics, currentHeight, multisigMosaicList, isSelectedAccountMultisig} = this
-        
+
         const mosaicList = isSelectedAccountMultisig
             ? Object.values(multisigMosaicList).map(mosaic => {
                 if (mosaics[mosaic.hex]) return { ...mosaic, name: mosaics[mosaic.hex].name || null }
@@ -198,7 +198,7 @@ export class TransactionFormTs extends Vue {
         // @TODO: refactor, make it an AppMosaic method
         return [...mosaicList]
             .filter(mosaic => mosaic.balance && mosaic.balance >= 0
-                && (mosaic.expirationHeight === 'Forever'
+                && (mosaic.expirationHeight === MosaicNamespaceStatusType.FOREVER
                     || currentHeight < mosaic.expirationHeight))
             .map(({name, balance, hex}) => ({
                 label: `${name || hex} (${balance.toLocaleString()})`,

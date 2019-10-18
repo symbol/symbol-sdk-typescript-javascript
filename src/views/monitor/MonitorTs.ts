@@ -5,7 +5,7 @@ import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
 import {copyTxt, formatXemAmount, formatNumber, localRead, localSave} from '@/core/utils/utils.ts'
 import {mapState} from "vuex"
 import {monitorPanelNavigatorConfig} from "@/config/view/monitor"
-import {AppInfo, StoreAccount} from "@/core/model"
+import {AppInfo, MosaicNamespaceStatusType, StoreAccount} from "@/core/model"
 
 @Component({
     computed: {
@@ -130,7 +130,7 @@ export class MonitorTs extends Vue {
                 const {expirationHeight} = updatedList[key]
                 updatedList[key].hide = this.showExpiredMosaics
                     ? false
-                    : expirationHeight !== 'Forever' || currentHeight > expirationHeight
+                    : expirationHeight !== MosaicNamespaceStatusType.FOREVER || currentHeight > expirationHeight
             })
         this.$store.commit('SET_MOSAICS', updatedList)
         localSave(this.address, JSON.stringify(updatedList))

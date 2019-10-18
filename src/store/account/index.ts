@@ -11,7 +11,6 @@ import {nodeListConfig} from "@/config/view/node"
 
 const state: StoreAccount = {
     node: nodeListConfig.find((node) => node.isSelected).value,
-    account: {},
     wallet: null,
     mosaics: {},
     namespaces: [],
@@ -41,16 +40,12 @@ const updateMosaics = (state: StoreAccount, mosaics: AppMosaic[]) => {
 
 const mutations: MutationTree<StoreAccount> = {
     RESET_ACCOUNT(state: StoreAccount) {
-        state.account = {}
         state.wallet = null
         state.mosaics = {}
         state.namespaces = []
         state.addressAliasMap = {}
         state.transactionList = []
         state.accountName = ''
-    },
-    SET_ACCOUNT(state: StoreAccount, account: Account): void {
-        state.account = account
     },
     SET_WALLET(state: StoreAccount, wallet: AppWallet): void {
         state.wallet = wallet

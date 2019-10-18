@@ -68,7 +68,6 @@ export class WalletImportTs extends Vue {
         switch (this.currentTab) {
             case 'mnemonic':
                 this.$store.commit('SET_WALLET_LIST', [{name: 'a'}])
-                this.$store.commit('SET_HAS_WALLET', true)
                 this.success(this['$t']('Successfully_imported_wallet'), '')
                 this.mnemonic = {
                     mnemonic: '',
@@ -77,7 +76,6 @@ export class WalletImportTs extends Vue {
                 break
             case 'privateKey':
                 this.$store.commit('SET_WALLET_LIST', [{name: 'a'}])
-                this.$store.commit('SET_HAS_WALLET', true)
                 this.success(this['$t']('Successfully_imported_wallet'), '')
                 this.privateKey = {
                     privateKey: '',
@@ -87,7 +85,6 @@ export class WalletImportTs extends Vue {
                 break
             case 'keystore':
                 this.$store.commit('SET_WALLET_LIST', [{name: 'a'}])
-                this.$store.commit('SET_HAS_WALLET', true)
                 this.success(this['$t']('Successfully_imported_wallet'), '')
                 this.keystore = {
                     keystore: '',

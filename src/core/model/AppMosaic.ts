@@ -5,7 +5,7 @@ import {
  MosaicInfo,
  Namespace,
 } from 'nem2-sdk'
-import {MosaicProperties, AppNamespace} from '@/core/model'
+import {MosaicProperties, AppNamespace, MosaicNamespaceStatusType} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
 
 
@@ -13,7 +13,7 @@ export class AppMosaic {
     hex: string
     amount: any
     balance?: number
-    expirationHeight: number | 'Forever'
+    expirationHeight: number | MosaicNamespaceStatusType.FOREVER
     height: UInt64
     mosaicInfo: MosaicInfo
     name: string
@@ -22,7 +22,7 @@ export class AppMosaic {
 
     constructor(appMosaic?: {
         hex: string,
-        expirationHeight?: number | 'Forever'
+        expirationHeight?: number | MosaicNamespaceStatusType.FOREVER
         balance?: number,
         name?: string,
         amount?: any,
@@ -35,7 +35,7 @@ export class AppMosaic {
         if (this.mosaicInfo) {
             const duration = this.mosaicInfo.duration.compact()
             this.expirationHeight = duration === 0
-                ? 'Forever' : this.mosaicInfo.height.compact() + duration
+                ? MosaicNamespaceStatusType.FOREVER : this.mosaicInfo.height.compact() + duration
             this.expirationHeight = appMosaic.expirationHeight ? appMosaic.expirationHeight : this.expirationHeight
             this.properties = new MosaicProperties(
                 this.mosaicInfo.isSupplyMutable(),

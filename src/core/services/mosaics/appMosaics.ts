@@ -1,5 +1,11 @@
 import {MosaicAlias, MosaicId, MosaicHttp, Namespace, NamespaceId, Transaction, AliasType} from 'nem2-sdk'
-import {FormattedTransaction, FormattedAggregateComplete, AppNamespace, AppState} from '@/core/model'
+import {
+    FormattedTransaction,
+    FormattedAggregateComplete,
+    AppNamespace,
+    AppState,
+    MosaicNamespaceStatusType
+} from '@/core/model'
 import {flatMap, map, toArray} from 'rxjs/operators'
 import {AppMosaic} from '@/core/model'
 import {Store} from 'vuex'
@@ -13,7 +19,7 @@ export const AppMosaics = () => ({
             .filter((mosaic: AppMosaic) =>(!mosaic.name
                     && mosaic.mosaicInfo
                     && mosaic.mosaicInfo.owner.address.plain() === address
-                    && (mosaic.expirationHeight === 'Forever'
+                    && (mosaic.expirationHeight === MosaicNamespaceStatusType.FOREVER
                     || currentHeight < mosaic.expirationHeight)))
     },
 
@@ -64,7 +70,7 @@ export const AppMosaics = () => ({
                     toArray(),
                 )
                 .toPromise()
-            
+
             store.commit('UPDATE_MOSAICS_NAMESPACES', mosaicsWithName)
         } catch (error) {
             console.error("updateMosaicsName: error", error)

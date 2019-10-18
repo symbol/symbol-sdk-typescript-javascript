@@ -10,7 +10,7 @@ export enum MosaicNamespaceStatusType {
     FOREVER = 'Forever',
 
     /**
-     * Mosaic or namespace status noalias type.
+     * Mosaic or namespace status no alias type.
      * @type {string}
      */
     NOALIAS = 'No alias',

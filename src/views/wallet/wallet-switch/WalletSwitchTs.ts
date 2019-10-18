@@ -4,7 +4,7 @@ import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheW
 import {formatNumber, formatXemAmount, localRead} from '@/core/utils/utils.ts'
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
-import {walletStyleSheetType} from '@/config/view/wallet.ts'
+import {seedWalletTitle, walletStyleSheetType} from '@/config/view/wallet.ts'
 import {MultisigAccountInfo, Password} from 'nem2-sdk'
 import TheWalletUpdate from "@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdate.vue"
 import {Message, networkConfig} from "@/config"
@@ -124,7 +124,7 @@ export class WalletSwitchTs extends Vue {
             return false
         })
         pathToCreate = flag ? seedPathList.length : pathToCreate
-        this.pathToCreate = `m/44'/43'/0'/0'/${pathToCreate}'`
+        this.pathToCreate = networkConfig.derivationPathHead + pathToCreate
         this.showCheckPWDialog = true
     }
 
@@ -134,7 +134,7 @@ export class WalletSwitchTs extends Vue {
         const currentNetType = JSON.parse(localRead('accountMap'))[accountName].currentNetType
         try {
             new AppWallet().createFromPath(
-                networkConfig.SEED_WALLET_HEAD + pathToCreate[pathToCreate.length - 2],
+                seedWalletTitle + pathToCreate[pathToCreate.length - 2],
                 new Password(password),
                 pathToCreate,
                 currentNetType,

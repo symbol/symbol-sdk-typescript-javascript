@@ -767,5 +767,6 @@ export const zh_CN = {
     refresh_too_fast_warning:'刷新频率过高，请稍后再试。',
     //////////////
     please_input_mosaic_and_amount:'请输入马赛克和数量',
-    fromwhere:'来自于'
+    fromwhere:'来自于',
+    display_mnemonic_QR_code:'显示助记词二维码'
 }

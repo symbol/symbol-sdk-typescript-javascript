@@ -85,11 +85,12 @@
     .buttons_container {
       display: flex;
       justify-content: space-around;
-      width: 1200px;
       padding-top: 60px;
+      width: 100%;
     }
 
     .button_arrow {
+
       span {
         width: 100%;
         display: flex;
@@ -105,9 +106,9 @@
     .stepItem1 {
       padding: 30px 0;
     }
+
     .stepItem1 {
       input {
-        display: block;
         width: 580px;
         height: 60px;
         font-size: 14px;
@@ -117,6 +118,9 @@
         border: 1px solid #CCCCCC;
         border-radius: 8px;
         margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
 
@@ -287,7 +291,7 @@
         align-items: center;
         justify-content: center;
         justify-items: center;
-        width: 200px;
+        min-width: 200px;
         height: 60px;
         font-size: 16px;
         font-weight: 400;
@@ -386,19 +390,16 @@
       }
     }
 
-    .stepItem5 {
+    .stepItem5,
+    .stepItem6 {
       padding: 55px 0;
       display: flex;
       justify-content: center;
       flex-direction: column;
 
-      .buttons_container {
-        width: 100%;
-      }
-
       .backupImg {
-        width: 120px;
-        height: 120px;
+        width: 200px;
+        height: 200px;
         margin: 0 auto 50px;
 
         img {
@@ -427,8 +428,13 @@
         background: #20B5AC;
         border: none;
         border-radius: 30px;
+
         span {
           padding: 10px 35px;
+        }
+
+        a {
+          color: white;
         }
       }
     }

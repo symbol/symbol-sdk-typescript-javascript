@@ -9,6 +9,7 @@ import {Message} from "@/config"
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import {MnemonicQR} from 'nem2-qr-library'
 import MnemonicVerification from "@/components/mnemonic-verification/MnemonicVerification.vue"
+import failureIcon from "@/common/img/monitor/failure.png"
 
 @Component({
     computed: {
@@ -26,6 +27,7 @@ export class MnemonicDialogTs extends Vue {
     mnemonic = ''
     mnemonicRandomArr = []
     confirmedMnemonicList = []
+    mnemonicQr: any
     wallet = {
         password: '',
         mnemonicWords: ''
@@ -61,17 +63,22 @@ export class MnemonicDialogTs extends Vue {
         const {networkType} = getWallet
         const {password, mnemonicWords} = this.wallet
         if (password.length < 8) return ''
-        const mnemonic = new MnemonicPassPhrase(mnemonicWords)
-        return new MnemonicQR(mnemonic, new Password(password), networkType, generationHash)
-            .toBase64()
+        try {
+            const mnemonic = new MnemonicPassPhrase(mnemonicWords)
+            return new MnemonicQR(mnemonic, new Password(password), networkType, generationHash)
+                .toBase64()
+        } catch (e) {
+            return failureIcon
+        }
     }
 
     closeModal() {
+        this.stepIndex = 0
         this.$emit('closeMnemonicDialog')
     }
 
-    verificationSuccess() {
-        this.stepIndex = 4
+    jumpToOtherStep(index){
+        this.stepIndex = index
     }
 
     mnemonicDialogCancel() {
@@ -177,5 +184,9 @@ export class MnemonicDialogTs extends Vue {
 
         this.$Notice.success({title: this.$t(Message.SUCCESS) + ''})
         return true
+    }
+
+    copyMnemonicQr() {
+
     }
 }

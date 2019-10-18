@@ -33,7 +33,6 @@ export interface NetworkCurrency {
 
 export interface StoreAccount {
     node: string,
-    account: Account | any,
     wallet: AppWallet,
     mosaics: Record<string, AppMosaic>,
     namespaces: AppNamespace[],
@@ -63,7 +62,6 @@ export interface AppInfo {
     timeZone: number,
     locale: string,
     walletList: AppWallet[]
-    hasWallet: boolean,
     isNodeHealthy: boolean,
     mnemonic: string,
     chainStatus: ChainStatus,

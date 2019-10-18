@@ -48,6 +48,7 @@ export const walletStyleSheetType = {
     otherWallet: 'walletItem_bg_2',
     activeWallet: 'walletItem_bg_0'
 }
+export const seedWalletTitle = 'seedWallet-'
 export const serviceSwitchFnConfig = [
     {
         name: 'mosaic',

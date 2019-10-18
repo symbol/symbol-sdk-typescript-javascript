@@ -74,7 +74,6 @@ export class WalletTs extends Vue {
     // @ROUTING
     noHasWallet() {
         this.toCreate()
-        this.$store.commit('SET_HAS_WALLET', false)
     }
 
     // @ROUTING

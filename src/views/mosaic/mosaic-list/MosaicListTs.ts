@@ -42,7 +42,7 @@ export class MosaicListTs extends Vue {
     namespace: AppNamespace = null
     mosaic: string = null
     address: string = null
-
+    MosaicNamespaceStatusType = MosaicNamespaceStatusType
     get mosaics() {
         return this.activeAccount.mosaics
     }
@@ -118,7 +118,7 @@ export class MosaicListTs extends Vue {
         if (!item.mosaicInfo) return 'Loading...'
         const {properties, mosaicInfo} = item
         const duration = properties.duration
-        if (duration === 0) return 'Forever'
+        if (duration === 0) return MosaicNamespaceStatusType.FOREVER
         return (mosaicInfo.height.compact() + duration) - this.currentHeight
     }
 

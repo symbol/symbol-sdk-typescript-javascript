@@ -14,7 +14,7 @@
         <div class="steps" v-if="stepIndex != 4">
           <span :class="['stepItem',stepIndex == 0?'active':'']">{{$t('input_password')}}</span>
           <span :class="['stepItem',stepIndex == 1?'active':'']">{{$t('backup_prompt')}}</span>
-          <span :class="['stepItem',stepIndex == 2?'active':'']">{{$t('backup_mnemonic')}}</span>
+          <span :class="['stepItem',stepIndex == 2||stepIndex == 5?'active':'']">{{$t('backup_mnemonic')}}</span>
           <span :class="['stepItem',stepIndex == 3?'active':'']">{{$t('confirm_backup')}}</span>
         </div>
 
@@ -76,6 +76,9 @@
             <Button class="button_arrow" type="success" @click="copyMnemonic">
               {{$t('copy_mnemonic')}}
             </Button>
+            <Button class="button_arrow" type="success" @click="stepIndex = 5">
+              {{$t('display_mnemonic_QR_code')}}
+            </Button>
             <Button type="success" @click="exportMnemonic">
               {{$t('next')}}
               <Icon class="next" type="ios-arrow-round-forward"/>
@@ -89,7 +92,7 @@
           </p>
           <MnemonicVerification
                   :mnemonicWordsList="mnemonic.split(' ')"
-                  @verificationSuccess='verificationSuccess'
+                  @verificationSuccess='jumpToOtherStep(4)'
                   @toPreviousPage="toPrePage()"/>
         </div>
 
@@ -101,6 +104,26 @@
           <div class="buttons_container">
             <Button class="button_arrow" type="success" @click="closeModal">
               {{$t('confirm')}}
+            </Button>
+          </div>
+        </div>
+
+        <div class="stepItem6" v-if="stepIndex == 5">
+          <div class="backupImg">
+            <img :src="QRCode">
+          </div>
+          <div class="buttons_container">
+            <Button class="button_arrow" type="success" @click="jumpToOtherStep(2)">
+              {{$t('back')}}
+            </Button>
+            <Button class="button_arrow" type="success" @click="copyMnemonicQr">
+              <a
+                      :href="QRCode"
+                      download="qrCode.png"
+              >
+                {{$t('copy_QR_code')}}
+
+              </a>
             </Button>
           </div>
         </div>

@@ -69,8 +69,11 @@
           <p class="txt">{{$t('it_is_recommended_to_use_password_management_tool_management')}}</p>
           <div class="privateKeyCode">{{wallet.privatekey }}</div>
           <div class="buttons_container">
-            <Button type="success" class="buttons button_arrow" @click="copyPrivatekey">{{$t('copy_private_key')}}</Button>
-            <Button type="success" class="buttons button_arrow" @click="exportPrivatekey">{{$t('display_private_key_QR_code')}}</Button>
+            <Button type="success" class="buttons button_arrow" @click="copyPrivatekey">{{$t('copy_private_key')}}
+            </Button>
+            <Button type="success" class="buttons button_arrow" @click="exportPrivatekey">
+              {{$t('display_private_key_QR_code')}}
+            </Button>
           </div>
         </div>
         <div class="stepItem4" v-if="stepIndex == 3">
@@ -84,7 +87,14 @@
                 <Button type="success" @click="toPrevPage">{{$t('display_private_key')}}</Button>
               </Col>
               <Col span="5">
-                <Button type="success" @click="saveQRCode">{{$t('copy_QR_code')}}</Button>
+                <Button type="success" @click="saveQRCode">
+                  <a
+                          :href="QRCode"
+                          download="qrCode.png"
+                  >
+                    {{$t('copy_QR_code')}}
+                  </a>
+                </Button>
               </Col>
               <Col span="7">&nbsp;</Col>
             </Row>

@@ -97,7 +97,7 @@ export class AppWallet {
         networkType: NetworkType,
         store: Store<AppState>): AppWallet {
         try {
-            const path = `m/44'/43'/0'/0'/0'`
+            const path = networkConfig.derivationSeedPath
             const accountName = store.state.account.accountName
             const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
             const account = createSubWalletByPath(mnemonic, path)  // need put in configure
@@ -244,7 +244,6 @@ export class AppWallet {
         localSave('accountMap', JSON.stringify(accountMap))
 
         if (list.length < 1) {
-            store.commit('SET_HAS_WALLET', false)
             store.commit('SET_WALLET', {})
         }
 

@@ -7,7 +7,7 @@ import {mapState} from "vuex"
 import {MosaicId, TransferTransaction, Deadline, Address, Mosaic, UInt64, PlainMessage, Transaction} from "nem2-sdk"
 import {TransferType} from "@/core/model/TransferType"
 import {monitorReceiptTransferTypeConfig} from "@/config/view/monitor"
-import {AppInfo, StoreAccount} from "@/core/model"
+import {AppInfo, MosaicNamespaceStatusType, StoreAccount} from "@/core/model"
 import failureIcon from '@/common/img/monitor/failure.png'
 @Component({
     components: {
@@ -96,7 +96,7 @@ export class MonitorInvoiceTs extends Vue {
 
         const mosaicList: any = Object.values(this.mosaics)
         return [...mosaicList]
-            .filter(({expirationHeight}) => expirationHeight === 'Forever' || currentHeight < expirationHeight)
+            .filter(({expirationHeight}) => expirationHeight === MosaicNamespaceStatusType.FOREVER || currentHeight < expirationHeight)
             .map(({name, balance, hex}) => ({
                 label: `${name || hex} (${balance ? balance.toLocaleString() : 0})`,
                 value: hex,

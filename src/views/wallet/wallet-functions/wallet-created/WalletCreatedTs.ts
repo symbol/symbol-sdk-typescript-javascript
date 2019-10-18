@@ -124,7 +124,6 @@ export class WalletCreatedTs extends Vue {
     }
 
     toWalletPage() {
-        this.$store.commit('SET_HAS_WALLET', true)
         this.$emit('toWalletDetails')
     }
 

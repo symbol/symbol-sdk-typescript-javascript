@@ -5,6 +5,7 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Message} from "@/config"
 import {mapState} from "vuex"
 import {AppWallet, StoreAccount} from "@/core/model"
+import failureIcon from "@/common/img/monitor/failure.png"
 
 @Component({
     computed: {
@@ -124,7 +125,12 @@ export class PrivatekeyDialogTs extends Vue {
         const {networkType} = this.getWallet
         const {generationHash} = this
         const {password, privatekey} = this.wallet
-        const account: any = Account.createFromPrivateKey(privatekey, networkType) // @QR
-        this.QRCode = new AccountQR(account, new Password(password), networkType, generationHash).toBase64()
+        try {
+            const account: any = Account.createFromPrivateKey(privatekey, networkType) // @QR
+            this.QRCode = new AccountQR(account, new Password(password), networkType, generationHash).toBase64()
+        } catch (e) {
+            return failureIcon
+        }
+
     }
 }

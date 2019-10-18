@@ -102,7 +102,7 @@
               <div
                       v-if="value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey
                     &&  (computeDuration(value) > 0
-                      || computeDuration(value) === 'Forever')"
+                      || computeDuration(value) === MosaicNamespaceStatusType.FOREVER)"
                       class="listFnDiv"
               >
                 <Poptip placement="bottom">

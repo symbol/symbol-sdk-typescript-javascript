@@ -6,7 +6,6 @@ const state: AppInfo = {
     timeZone: new Date().getTimezoneOffset() / 60,   // current time zone
     locale: 'en-US',
     walletList: [],
-    hasWallet: false,
     isNodeHealthy: true,
     mnemonic: '',
     chainStatus: ChainStatus.getDefault(),
@@ -22,15 +21,11 @@ const state: AppInfo = {
 
 const mutations: MutationTree<AppInfo> = {
     RESET_APP(state: AppInfo) {
-        state.hasWallet = false
         state.mnemonic = ''
         state.walletList = []
     },
     SET_WALLET_LIST(state: AppInfo, walletList: any[]): void {
         state.walletList = walletList
-    },
-    SET_HAS_WALLET(state: AppInfo, hasWallet: boolean): void {
-        state.hasWallet = hasWallet
     },
     SET_MNEMONIC(state: AppInfo, mnemonic: string): void {
         state.mnemonic = mnemonic

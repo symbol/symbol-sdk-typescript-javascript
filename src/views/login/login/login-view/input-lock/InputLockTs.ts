@@ -110,7 +110,6 @@ export class InputLockTs extends Vue {
                     return
                 }
                 // have wallet and seed ,init wallet
-                that.$store.commit('SET_HAS_WALLET', true)
                 that.$store.commit('SET_WALLET_LIST', accountMap[currentAccountName].wallets)
                 that.$store.commit('SET_WALLET', accountMap[currentAccountName].wallets[0])
                 that.jumpToDashBoard()
