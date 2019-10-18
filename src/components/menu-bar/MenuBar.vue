@@ -50,7 +50,6 @@
         </div>
         <div class="app_controller clear">
           <div :class="[isNodeHealthy?'point_healthy':'point_unhealthy']">
-
             <Poptip placement="bottom-end">
               <i class="pointer point" @click="showNodeList = !showNodeList"/>
               <span class="network_type_text" v-if="wallet">
