@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.14.2] - 18-Oct-2019
+
+**Milestone**: Fushicho
+
+- Fixed `Address alias deserialization` issue from catapult-rest dto payload.
+- Fixed `MosaicSupplyChangeTransaction` schema mismatch issue.
+
 ## [0.14.1] - 14-Oct-2019
 
 **Milestone**: Fushicho
@@ -232,6 +239,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Alpaca
 
 - Initial code release.
+[0.14.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.1...v0.14.2
 [0.14.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.4...v0.14.0
 [0.13.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.13.3...v0.13.4
