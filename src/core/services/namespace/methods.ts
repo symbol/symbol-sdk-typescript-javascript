@@ -10,6 +10,19 @@ export const namespaceSortTypes = {
     byBindInfo: 5
 }
 
+export const setNamespaces = async (address: string, store: Store<AppState>): Promise<void> => {
+    try {
+        const {node} = store.state.account
+        const namespaces = await getNamespacesFromAddress(address, node)
+        store.commit('SET_NAMESPACES', namespaces)
+    } catch (error) {
+        store.commit('SET_NAMESPACES', [])
+        throw new Error(error)
+    } finally {
+        store.commit('SET_NAMESPACE_LOADING', false)
+    }
+}
+
 export const getNamespacesFromAddress = async (address: string,
                                                node: string): Promise<AppNamespace[]> => {
     try {

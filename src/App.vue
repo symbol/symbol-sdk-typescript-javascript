@@ -15,9 +15,9 @@
     import {checkInstall, getObjectLength, getTopValueInObject, localRead} from '@/core/utils'
     import {Component, Vue} from 'vue-property-decorator'
     import {
-        initMosaic, mosaicsAmountViewFromAddress, AppMosaics,
-        getCurrentBlockHeight, getCurrentNetworkMosaic, getNetworkGenerationHash,
-        getMarketOpenPrice, setTransactionList, getNamespacesFromAddress,
+        setMosaics, mosaicsAmountViewFromAddress, AppMosaics,
+        getCurrentBlockHeight, setCurrentNetworkMosaic, getNetworkGenerationHash,
+        getMarketOpenPrice, setTransactionList, setNamespaces, getNamespacesFromAddress,
         setWalletsBalances, ChainListeners, getMultisigAccountMultisigAccountInfo,
     } from '@/core/services'
     import {AppMosaic, AppWallet, AppInfo, StoreAccount} from '@/core/model'
@@ -114,19 +114,21 @@
                     ? false : JSON.parse(mosaicListFromStorage)
                 if (mosaicListFromStorage) await this.$store.commit('SET_MOSAICS', parsedMosaicListFromStorage)
                 appWallet.setAccountInfo(this.$store)
-                const initMosaicsAndNamespaces = await Promise.all([
-                    // @WALLET make it an AppWallet methods
-                    initMosaic(newWallet, this.$store),
-                    getNamespacesFromAddress(newWallet.address, this.node),
-                    setTransactionList(newWallet.address, this.$store)
-                ])
 
-                this.$store.commit('SET_NAMESPACES', initMosaicsAndNamespaces[1] || [])
-                this.$store.commit('SET_MOSAICS_LOADING', false)
-                this.$store.commit('SET_NAMESPACE_LOADING', false)
+                await setMosaics(newWallet, this.$store)
+                await setNamespaces(newWallet.address, this.$store),
 
-                appWallet.setMultisigStatus(this.node, this.$store)
-
+                /**
+                 * Delay network calls to avoid ban
+                 */
+                setTimeout(() => {
+                    try {
+                        setTransactionList(newWallet.address, this.$store)
+                        appWallet.setMultisigStatus(this.node, this.$store)
+                    } catch (error) {
+                        console.error("TCL: App -> onWalletChange -> setTimeout -> error", error)
+                    }
+                }, 1000)
 
                 if (!this.chainListeners) {
                     this.chainListeners = new ChainListeners(this, newWallet.address, this.node)
@@ -183,24 +185,27 @@
         async mounted() {
             if (!this.activeAccount.wallet) this.$router.push('/login')
 
-            const {node} = this
-
             try {
                 // @TODO: refactor
                 await Promise.all([
-                    getNetworkGenerationHash(node, this),
+                    getNetworkGenerationHash(this),
                     getCurrentBlockHeight(this.$store),
-                    getCurrentNetworkMosaic(node, this.$store),
+                    setCurrentNetworkMosaic(this.$store),
                 ])
 
-                await this.setWalletsList()
-                setWalletsBalances(this.$store)
+                /**
+                 * Delay network calls to avoid ban
+                 */
+                setTimeout(async () => {
+                    await this.setWalletsList()
+                    setWalletsBalances(this.$store)
 
-                await Promise.all([
-                    this.$store.commit('SET_TRANSACTIONS_LOADING', true),
-                    this.$store.commit('SET_MOSAICS_LOADING', true),
-                    this.$store.commit('SET_NAMESPACE_LOADING', true),
-                ])
+                    await Promise.all([
+                        this.$store.commit('SET_TRANSACTIONS_LOADING', true),
+                        this.$store.commit('SET_MOSAICS_LOADING', true),
+                        this.$store.commit('SET_NAMESPACE_LOADING', true),
+                    ])
+                }, 1500)
             } catch (error) {
                 console.error("App -> mounted -> error", error)
             }
@@ -211,6 +216,15 @@
 
             if (this.address && !this.address !== undefined) this.onWalletChange(this.wallet)
 
+            
+            /**
+             *  EVENTS HANDLERS
+             */
+
+
+            /**
+             * ON ADDRESS CHANGE
+             */
             this.$watchAsObservable('address')
                 .pipe(
                     throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
@@ -225,6 +239,10 @@
                 }
             })
 
+
+            /**
+             * ON ACTIVE MULTISIG ACCOUNT CHANGE
+             */
             this.$watchAsObservable('activeAccount.activeMultisigAccount')
                 .pipe(
                     throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
@@ -237,6 +255,10 @@
                 }
             })
 
+
+            /**
+             * ON ACCOUNT CHANGE
+             */
             this.$watchAsObservable('accountName')
                 .pipe(
                     throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
@@ -245,8 +267,9 @@
                 if (oldValue !== newValue) setWalletsBalances(this.$store)
             })
 
+
             /**
-             * On Endpoint change
+             * ON ENDPOINT CHANGE
              */
             this.$watchAsObservable('node')
                 .pipe(
@@ -262,7 +285,7 @@
                     }
 
                     try {
-                        await getNetworkGenerationHash(newValue, this)
+                        await getNetworkGenerationHash(this)
                         await getCurrentBlockHeight(this.$store)
                     } catch (error) {
                         console.error(error)
@@ -270,8 +293,9 @@
                 }
             })
 
+
             /**
-             * On Generation hash change
+             * ON GENERATION HASH CHANGE
              */
             this.$watchAsObservable('generationHash')
                 .pipe(
@@ -279,7 +303,9 @@
                 ).subscribe(async ({newValue, oldValue}) => {
                 if (!newValue || oldValue === '') return
                 if (oldValue !== newValue) {
-                    await getCurrentNetworkMosaic(node, this.$store)
+                    this.$store.commit('SET_NETWORK_MOSAICS', [])
+                    this.$store.commit('SET_MOSAICS', {})
+                    await setCurrentNetworkMosaic(this.$store)
                     this.onWalletChange(this.wallet)
                 }
             })

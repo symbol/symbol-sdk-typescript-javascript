@@ -7,7 +7,7 @@ import {mosaicSortType} from "@/config/view/mosaic"
 import {Message, networkConfig} from "@/config"
 import {AppInfo, AppMosaic, AppNamespace, MosaicNamespaceStatusType, StoreAccount} from "@/core/model"
 import Alias from '@/components/forms/alias/Alias.vue'
-import {initMosaic, sortMosaicList} from "@/core/services"
+import {setMosaics, sortMosaicList} from "@/core/services"
 
 @Component({
     components: {
@@ -157,7 +157,7 @@ export class MosaicListTs extends Vue {
             return
         }
         try {
-            initMosaic(wallet, this.$store)
+            setMosaics(wallet, this.$store)
             this.mosaicRefreshTimestamp = currentTimestamp
             this.$Notice.destroy()
             this.$Notice.success({title: '' + this.$t(Message.SUCCESS)})

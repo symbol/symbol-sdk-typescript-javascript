@@ -4,7 +4,7 @@ import {formatSeconds} from '@/core/utils/utils.ts'
 import {Component, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
 import {Message, networkConfig} from '@/config'
-import {sortNamespaceList, namespaceSortTypes, getNamespacesFromAddress} from '@/core/services'
+import {sortNamespaceList, namespaceSortTypes, setNamespaces} from '@/core/services'
 import {StoreAccount, AppInfo, MosaicNamespaceStatusType, AppNamespace} from "@/core/model"
 import Alias from '@/components/forms/alias/Alias.vue'
 
@@ -147,7 +147,7 @@ export class NamespaceListTs extends Vue {
     }
 
     async refreshNamespaceList() {
-        const {wallet, node, namespaceRefreshTimestamp} = this
+        const {wallet, namespaceRefreshTimestamp} = this
         const currentTimestamp = new Date().valueOf()
         if (currentTimestamp - namespaceRefreshTimestamp <= 2000) {
             this.$Notice.destroy()
@@ -156,8 +156,7 @@ export class NamespaceListTs extends Vue {
         }
         try {
             this.namespaceRefreshTimestamp = currentTimestamp
-            const refreshNamespaces = await getNamespacesFromAddress(wallet.address, node)
-            this.$store.commit('SET_NAMESPACES', refreshNamespaces)
+            await setNamespaces(wallet.address, this.$store)
             this.$Notice.destroy()
             this.$Notice.success({title: '' + this.$t(Message.SUCCESS)})
         } catch (error) {

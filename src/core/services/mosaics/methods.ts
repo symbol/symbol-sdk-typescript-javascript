@@ -46,7 +46,7 @@ export const mosaicsAmountViewFromAddress = (node: string, address: Address): Pr
     })
 }
 
-export const initMosaic = (wallet: AppWallet, store: Store<AppState>) => {
+export const setMosaics = (wallet: AppWallet, store: Store<AppState>) => {
     const {node, networkCurrency} = store.state.account
     const address = Address.createFromRawAddress(wallet.address)
 
@@ -63,6 +63,7 @@ export const initMosaic = (wallet: AppWallet, store: Store<AppState>) => {
             store.commit('SET_MOSAICS_LOADING', false)
             resolve(true)
         } catch (error) {
+            new AppWallet(wallet).updateAccountBalance(0, store)
             store.commit('SET_MOSAICS_LOADING', false)
             reject(error)
         }
