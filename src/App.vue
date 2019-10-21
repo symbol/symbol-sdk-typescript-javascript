@@ -185,8 +185,11 @@
         async mounted() {
             if (!this.activeAccount.wallet) this.$router.push('/login')
 
+            this.$store.commit('SET_TRANSACTIONS_LOADING', true)
+            this.$store.commit('SET_MOSAICS_LOADING', true)
+            this.$store.commit('SET_NAMESPACE_LOADING', true)
+            
             try {
-                // @TODO: refactor
                 await Promise.all([
                     getNetworkGenerationHash(this),
                     getCurrentBlockHeight(this.$store),
@@ -197,15 +200,13 @@
                  * Delay network calls to avoid ban
                  */
                 setTimeout(async () => {
-                    await this.setWalletsList()
-                    setWalletsBalances(this.$store)
-
-                    await Promise.all([
-                        this.$store.commit('SET_TRANSACTIONS_LOADING', true),
-                        this.$store.commit('SET_MOSAICS_LOADING', true),
-                        this.$store.commit('SET_NAMESPACE_LOADING', true),
-                    ])
-                }, 1500)
+                    try {
+                        await this.setWalletsList()
+                        setWalletsBalances(this.$store)
+                    } catch (error) {
+                        console.error("App -> mounted -> setTimeout -> error", error)
+                    }
+                }, 1000)
             } catch (error) {
                 console.error("App -> mounted -> error", error)
             }
@@ -216,7 +217,7 @@
 
             if (this.address && !this.address !== undefined) this.onWalletChange(this.wallet)
 
-            
+
             /**
              *  EVENTS HANDLERS
              */
@@ -231,9 +232,7 @@
                 ).subscribe(({newValue, oldValue}) => {
 
                 if (!newValue) return
-                /**
-                 * On Wallet Change
-                 */
+
                 if (!oldValue && newValue || oldValue && newValue !== oldValue) {
                     this.onWalletChange(this.wallet)
                 }
@@ -285,28 +284,25 @@
                     }
 
                     try {
+                        const oldGenerationHash = this.generationHash
                         await getNetworkGenerationHash(this)
                         await getCurrentBlockHeight(this.$store)
+
+
+                        /**
+                         * ON GENERATION HASH CHANGE
+                         */
+                        if (oldGenerationHash !== this.generationHash) {
+                            this.$store.commit('SET_NETWORK_MOSAICS', [])
+                            this.$store.commit('SET_MOSAICS', {})
+                            await setCurrentNetworkMosaic(this.$store)
+                            this.onWalletChange(this.wallet)
+                        } else {
+                            this.onWalletChange(this.wallet)
+                        }
                     } catch (error) {
                         console.error(error)
                     }
-                }
-            })
-
-
-            /**
-             * ON GENERATION HASH CHANGE
-             */
-            this.$watchAsObservable('generationHash')
-                .pipe(
-                    throttleTime(6000, asyncScheduler, {leading: true, trailing: true}),
-                ).subscribe(async ({newValue, oldValue}) => {
-                if (!newValue || oldValue === '') return
-                if (oldValue !== newValue) {
-                    this.$store.commit('SET_NETWORK_MOSAICS', [])
-                    this.$store.commit('SET_MOSAICS', {})
-                    await setCurrentNetworkMosaic(this.$store)
-                    this.onWalletChange(this.wallet)
                 }
             })
         }

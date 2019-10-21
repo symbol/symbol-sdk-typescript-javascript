@@ -155,7 +155,7 @@ export class AppWallet {
             const keystore = words.toString(CryptoJS.enc.Utf8)
             this.simpleWallet = JSON.parse(keystore)
             this.sourceType = CreateWalletType.keyStore
-            const {privateKey} = this.getAccount(password)
+            const {privateKey} =  this.getAccount(password)
             this.createFromPrivateKey(name, password, privateKey, networkType, store)
             this.addNewWalletToList(store)
             return this
