@@ -18,7 +18,7 @@ export class FormattedMosaicSupplyChange extends FormattedTransaction {
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
             'mosaicId': tx.mosaicId,
-            'direction': tx.direction === MosaicSupplyChangeAction.Increase ? 'Increase' : 'Decrease',
+            'direction': tx.action === MosaicSupplyChangeAction.Increase ? 'Increase' : 'Decrease',
             'delta': tx.delta.compact().toLocaleString(),
           }
     }

@@ -50,15 +50,17 @@ export class TransactionListTs extends Vue {
         return this.app.chainStatus.currentHeight
     }
 
-    // @TODO: move out from there
-    renderHeightAndConfirmation(height) {
-        // console.log(this.slicedTransactionList,'slicedTransactionList')
+    renderHeightAndConfirmation(transactionHeight: number): string {
         const {currentHeight} = this
-        if (!currentHeight) return height
-        const confirmations = currentHeight - height
+        if (!currentHeight) return `${transactionHeight}`
+
+        const confirmations = currentHeight - transactionHeight + 1
+        /** Prevents a reactivity glitch */
+        if (confirmations < 0) return `${transactionHeight}`
+
         const {networkConfirmations} = defaultNetworkConfig
-        if (confirmations > networkConfirmations) return height.toLocaleString()
-        return `(${confirmations}/${networkConfirmations}) - ${height.toLocaleString()}`
+        if (confirmations > networkConfirmations) return `${transactionHeight}`
+        return `(${confirmations}/${networkConfirmations}) - ${transactionHeight.toLocaleString()}`
     }
 
     // @TODO: move out from there
