@@ -68,11 +68,12 @@ export class NamespaceListTs extends Vue {
     get namespaceList(): AppNamespace[] {
         const {namespaces, isShowExpiredNamespace, namespaceGracePeriodDuration, currentHeight} = this
         return namespaces
-            .filter(item => isShowExpiredNamespace || item.endHeight - currentHeight + namespaceGracePeriodDuration > 0)
+            .filter(item => item.alias
+                && (isShowExpiredNamespace || item.endHeight - currentHeight + namespaceGracePeriodDuration > 0))
     }
 
     get paginatedNamespaceList(): AppNamespace[] {
-        let {namespaceList, namespaceSortType, sortDirection} = this
+        const {namespaceList, namespaceSortType, sortDirection} = this
         return sortNamespaceList(namespaceSortType, namespaceList, sortDirection)
             .slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
     }

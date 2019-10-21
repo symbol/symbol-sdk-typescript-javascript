@@ -78,8 +78,9 @@ export class WalletDetailsTs extends Vue {
     get selfAliases(): AppNamespace[] {
         return this.NamespaceList
             .filter(({alias}) =>
-                alias.type == AliasType.Address &&
-                alias.address.plain()=== this.getAddress
+                alias    
+                && alias.type == AliasType.Address
+                && alias.address.plain()=== this.getAddress
             )
     }
 

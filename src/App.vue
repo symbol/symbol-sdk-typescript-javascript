@@ -105,7 +105,7 @@
                 this.$store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', null)
                 this.$store.commit('SET_TRANSACTION_LIST', [])
                 this.$store.commit('RESET_MOSAICS')
-                this.$store.commit('SET_NAMESPACES', [])
+                this.$store.commit('RESET_NAMESPACES')
 
                 //@TODO: move from there
                 const mosaicListFromStorage = localRead(newWallet.address)

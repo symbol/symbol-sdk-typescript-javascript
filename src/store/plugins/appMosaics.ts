@@ -27,8 +27,9 @@ export const appMosaicsModule = (store) => {
       }
     }
 
-    if (mutation.type === 'SET_NAMESPACES') {
-      const appMosaics = AppMosaics().fromNamespaces(state.account.namespaces)
+    if (mutation.type === 'UPDATE_NAMESPACES') {
+      const {namespaces, mosaics} = state.account
+      const appMosaics = AppMosaics().fromNamespaces(namespaces, mosaics)
       store.commit('UPDATE_MOSAICS_INFO', appMosaics)
     }
   })

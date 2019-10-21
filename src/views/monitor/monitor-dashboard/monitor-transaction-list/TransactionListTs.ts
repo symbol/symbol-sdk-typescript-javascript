@@ -1,4 +1,4 @@
-import {TransactionType} from 'nem2-sdk'
+import {TransactionType, NamespaceId} from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Component, Vue} from 'vue-property-decorator'
 import {formatNumber, renderMosaics} from '@/core/utils'
@@ -23,6 +23,7 @@ export class TransactionListTs extends Vue {
     scroll: any
     showDialog: boolean = false
     activeTransaction: FormattedTransaction = null
+    NamespaceId = NamespaceId
 
     get wallet() {
         return this.activeAccount.wallet
@@ -48,6 +49,17 @@ export class TransactionListTs extends Vue {
 
     get currentHeight() {
         return this.app.chainStatus.currentHeight
+    }
+    
+    get namespaces() {
+        return this.activeAccount.namespaces
+    }
+    
+    getName(namespaceId: NamespaceId) {
+        const hexId = namespaceId.toHex()
+        const namespace = this.namespaces.find(({hex}) => hexId === hex)
+        if (namespace === undefined) return hexId
+        return namespace.name
     }
 
     renderHeightAndConfirmation(transactionHeight: number): string {

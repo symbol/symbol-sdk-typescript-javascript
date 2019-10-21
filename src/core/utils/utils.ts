@@ -351,3 +351,12 @@ export const cloneData = object => JSON.parse(JSON.stringify(object))
 export const getTopValueInObject = (object: any) => {
     return Object.values(object)[0]
 }
+
+/**
+ * Flattens an array that can have elements nested up to 2 levels
+ * @param array 
+ */
+export const flattenArrayOfStrings = (array: any[]): any[] => {
+    const step1 = [].concat(...array).map(item => item)
+    return [].concat(...step1).map(item => item)
+}

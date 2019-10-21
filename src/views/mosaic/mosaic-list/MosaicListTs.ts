@@ -65,7 +65,7 @@ export class MosaicListTs extends Vue {
 
     get namespaceMap() {
         let namespaceMap = {}
-        this.activeAccount.namespaces.forEach((item) => {
+        this.activeAccount.namespaces.filter(ns => ns.alias).forEach((item) => {
             switch (item.alias.type) {
                 case (AliasType.Address):
 
@@ -175,6 +175,4 @@ export class MosaicListTs extends Vue {
     mounted() {
         this.intiMosaics()
     }
-
-
 }

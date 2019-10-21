@@ -41,13 +41,15 @@
                 <span
                         class="col2-item overflow_ellipsis"
                 >
-                    {{ c.rawTx.signer.address.plain() }}
+                    {{ c.rawTx.signer.address.pretty() }}
                 </span>
                   <span
                           v-if="c.rawTx.type === TransactionType.TRANSFER"
                           class="col2-item bottom overflow_ellipsis"
                   >
-                    -> {{ c.rawTx.recipientAddress.address || c.rawTx.recipientAddress.id.toHex() }}
+                    -> {{ c.rawTx.recipientAddress instanceof NamespaceId
+                      ? getName(c.rawTx.recipientAddress)
+                      : c.rawTx.recipientAddress.pretty() }}
                 </span>
                   <span
                           v-if="c.rawTx.type !== TransactionType.TRANSFER"

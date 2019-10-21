@@ -1,4 +1,4 @@
-import {MosaicAlias, MosaicId, MosaicHttp, Namespace, NamespaceId, Transaction, AliasType} from 'nem2-sdk'
+import {MosaicAlias, MosaicId, MosaicHttp, Namespace, NamespaceId, Transaction, AliasType, AddressAlias} from 'nem2-sdk'
 import {
     FormattedTransaction,
     FormattedAggregateComplete,
@@ -9,6 +9,8 @@ import {
 import {flatMap, map, toArray} from 'rxjs/operators'
 import {AppMosaic} from '@/core/model'
 import {Store} from 'vuex'
+import {flattenArrayOfStrings} from '@/core/utils'
+import {EmptyAlias} from 'nem2-sdk/dist/src/model/namespace/EmptyAlias'
 
 export const AppMosaics = () => ({
     store: null,
@@ -84,14 +86,13 @@ export const AppMosaics = () => ({
      */
     fromTransactions(transactions: Transaction[]): {appMosaics: AppMosaic[], namespaceIds: NamespaceId[]} {
         const allMosaics = transactions.map(x => this.extractMosaicsFromTransaction(x))
-        const allMosaicsFlat1 = [].concat(...allMosaics).map(mosaic => mosaic)
-        const allMosaicsFlat2 = [].concat(...allMosaicsFlat1).map(mosaic => mosaic)
+        const flattenedMosaicIds = flattenArrayOfStrings(allMosaics)
 
-        const allMosaicIds = allMosaicsFlat2
+        const allMosaicIds = flattenedMosaicIds
             .filter(x => (x && x.id instanceof MosaicId))
             .map(x => x.id.toHex())
 
-        const allNamespaceIds = allMosaicsFlat2
+        const allNamespaceIds = flattenedMosaicIds
             .filter(x => (x && x.id instanceof NamespaceId))
             .map(x => ({ id: x.id, hex: x.id.toHex() }))
 
@@ -129,9 +130,21 @@ export const AppMosaics = () => ({
           .map(namespace => AppMosaic.fromNamespace(namespace))
     },
 
-    fromNamespaces(namespaces: Namespace[]): AppMosaic[] {
-        return namespaces
-            .filter(({alias}) => alias.type == AliasType.Mosaic )
-            .map(namespace => AppMosaic.fromNamespace(namespace))
+    fromNamespaces(namespaces: Namespace[], mosaics: Record<string, AppMosaic>): AppMosaic[] {
+        const aliasExcludingAddresses = namespaces.filter(({alias}) => alias && alias.type !== AliasType.Address)
+        if (!aliasExcludingAddresses.length) return
+
+        const mosaicsWithAliases = Object.values(mosaics).filter((mosaic: AppMosaic) => mosaic.name)
+
+        const namespacesWithEmptyAlias = aliasExcludingAddresses.filter(({alias}) => alias instanceof EmptyAlias)
+        const unBoundMosaics = mosaicsWithAliases.filter(m => namespacesWithEmptyAlias
+                .find(({name})=>name === m.name))
+                .map(m => new AppMosaic({ hex: m.hex, name: null }))
+        
+        const namespacesWithAlias = aliasExcludingAddresses.filter(({alias}) => alias instanceof AddressAlias)
+        
+        const AppMosaics = namespacesWithAlias.map(namespace => AppMosaic.fromNamespace(namespace))
+
+        return [...unBoundMosaics, ...AppMosaics]
     },
 })

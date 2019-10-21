@@ -1,7 +1,7 @@
-import {TransactionType, Address, AggregateTransaction, Transaction} from 'nem2-sdk'
-import {AppMosaic, AppWallet, AppState} from '@/core/model'
+import {TransactionType, Address, AggregateTransaction} from 'nem2-sdk'
+import {AppMosaic, AppWallet, AppState, FormattedTransaction} from '@/core/model'
 import {
-   setNamespaces, getTransactionTypesFromAggregate, mosaicsAmountViewFromAddress
+   setNamespaces, getTransactionTypesFromAggregate, mosaicsAmountViewFromAddress, handleRecipientAddressAsNamespaceId
 } from '@/core/services'
 
 const txTypeToGetNamespaces = [
@@ -26,10 +26,11 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
   store.registerModule('onTransactionRefresh', onTransactionRefreshModule)
 
   store.subscribe(async (mutation, state: AppState) => {
-    /**
-     * Extracts all hexIds from transactions,
-     * Add them to store.account.mosaics
-     */
+   if (mutation.type === 'ADD_UNCONFIRMED_TRANSACTION') {
+      const formattedTransaction: FormattedTransaction = mutation.payload[0] 
+      handleRecipientAddressAsNamespaceId([formattedTransaction], store)
+   }
+ 
     if (mutation.type === 'ADD_CONFIRMED_TRANSACTION') {
      try {
         const {node, networkCurrency} = state.account
@@ -44,8 +45,9 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
 
         appWallet.updateAccountBalance(balance, store)
         store.commit('UPDATE_MOSAICS', appMosaics)
-
-        const transaction: Transaction = mutation.payload[0].rawTx
+      
+        const formattedTransaction: FormattedTransaction = mutation.payload[0] 
+        const transaction = formattedTransaction.rawTx
 
         const transactionTypes: TransactionType[] = transaction instanceof AggregateTransaction
             ? getTransactionTypesFromAggregate(transaction)
@@ -62,6 +64,8 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
          if (txTypeToGetMultisigInfo.some(a => transactionTypes.some(b => b === a))) {
             appWallet.setMultisigStatus(node, store)
          }
+
+         handleRecipientAddressAsNamespaceId([formattedTransaction], store)
      } catch (error) {
         console.error(error)
      }
@@ -83,6 +87,10 @@ export const onTransactionRefreshModule = (store: any) => { // @TODO: check how 
       } catch (error) {
        console.error(error)
       }
+     }
+
+     if (mutation.type === 'SET_TRANSACTION_LIST') {
+         handleRecipientAddressAsNamespaceId(mutation.payload, store)
      }
   })
 }
