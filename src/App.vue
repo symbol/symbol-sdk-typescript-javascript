@@ -188,7 +188,7 @@
             this.$store.commit('SET_TRANSACTIONS_LOADING', true)
             this.$store.commit('SET_MOSAICS_LOADING', true)
             this.$store.commit('SET_NAMESPACE_LOADING', true)
-            
+
             try {
                 await Promise.all([
                     getNetworkGenerationHash(this),

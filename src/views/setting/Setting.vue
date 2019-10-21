@@ -4,7 +4,7 @@
       <div class="setting_head">
       </div>
       <div class="seeting_main_container">
-        <div class="left_navigator left">
+        <div class=" left">
           <div class="navigator_item pointer" @click="jumpToView(n,index)" v-for="(n,index) in navigatorList">
             <span :class="[n.isSelected ? 'selected_title':'',n.disabled?'disabled':'']">{{$t(n.title)}}</span>
           </div>

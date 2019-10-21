@@ -28,12 +28,6 @@
     -webkit-app-region: no-drag;
   }
 
-  .title {
-    font-size: 18px;
-    text-align: center;
-    padding: 10px;
-    min-width: 450px;
-  }
 
   .input_point {
     padding-top: 20px;
@@ -135,6 +129,13 @@
         margin-right: 50px;
         margin-top: 10px;
 
+        .title {
+          font-size: 18px;
+          text-align: center;
+          padding: 10px;
+          min-width: 450px;
+        }
+
         > div {
           float: left;
           margin-left: 25px;
@@ -143,7 +144,7 @@
 
         .point_healthy {
           cursor: pointer;
-          z-index: 99999999;
+
           i {
             display: inline-block;
             width: 14px;
@@ -300,4 +301,8 @@
 
   }
 
+  .ivu-poptip-popper {
+    z-index: 99999999;
+
+  }
 }

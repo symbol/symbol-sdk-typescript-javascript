@@ -191,9 +191,8 @@
     font-size: 20px;
     font-weight: 400;
     color: rgba(34, 34, 34, 1);
-    margin: 0.3rem 0.3rem 30px 0.3rem;
     background-color: transparent;
-    padding: 50px;
+    padding: 50px 80px;
 
   }
 

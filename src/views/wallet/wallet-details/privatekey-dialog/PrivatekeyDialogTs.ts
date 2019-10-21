@@ -117,10 +117,6 @@ export class PrivatekeyDialogTs extends Vue {
         this.stepIndex = 2
     }
 
-    saveQRCode() {
-
-    }
-
     createQRCode() {
         const {networkType} = this.getWallet
         const {generationHash} = this
