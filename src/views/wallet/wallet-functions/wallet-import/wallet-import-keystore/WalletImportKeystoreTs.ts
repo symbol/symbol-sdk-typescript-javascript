@@ -42,12 +42,14 @@ export class WalletImportKeystoreTs extends Vue {
     }
 
     importWallet(password) {
+        const {keystorePassword,networkType,keystoreStr} = this.formItem
         try {
             new AppWallet().createFromKeystore(
                 this.formItem.walletName,
                 new Password(password),
-                this.formItem.keystoreStr,
-                this.formItem.networkType,
+                new Password(keystorePassword),
+                keystoreStr,
+                networkType,
                 this.$store
             )
             this.toWalletDetails()
@@ -61,6 +63,7 @@ export class WalletImportKeystoreTs extends Vue {
         this.$Notice.success({
             title: this['$t']('Imported_wallet_successfully') + ''
         })
+        this.closeCheckPWDialog()
         this.$emit('toWalletDetails')
     }
 

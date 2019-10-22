@@ -75,31 +75,31 @@
                 :key="index"
                 :class="['listItem',value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey?'owned_mosaic':'']">
           <Row>
-            <span class="mosaic_id text_select">{{value.hex}}</span>
-            <span class="available_quantity">{{mosaicSupplyAmount(value)}}</span>
-            <span class="mosaic_divisibility">{{value.properties?value.properties.divisibility:0}}</span>
-            <span class="transportability">
+            <span class="mosaic_id text_select overflow_ellipsis">{{value.hex}}</span>
+            <span class="available_quantity overflow_ellipsis">{{mosaicSupplyAmount(value)}}</span>
+            <span class="mosaic_divisibility overflow_ellipsis">{{value.properties?value.properties.divisibility:0}}</span>
+            <span class="transportability overflow_ellipsis">
               <Icon v-if="value.properties?value.properties.transferable:0" type="md-checkmark"/>
               <Icon v-else type="md-close"/>
             </span>
-            <span class="variable_supply">
+            <span class="variable_supply overflow_ellipsis">
               <Icon v-if="value.properties?value.properties.supplyMutable:0" type="md-checkmark"/>
               <Icon v-else type="md-close"/>
             </span>
-            <span class="Restrictable">
+            <span class="Restrictable overflow_ellipsis">
               <Icon v-if="value.isRestrictable" type="md-checkmark"/>
               <Icon v-else type="md-close"/>
             </span>
-            <span class="deadline">
+            <span class="deadline overflow_ellipsis">
               {{computeDuration(value) <= 0 ? $t('overdue') : (computeDuration(value) === 'Forever'?
               $t('forever') : formatNumber(computeDuration(value)))}}
             </span>
 
-            <span class="alias text_select  ">
+            <span class="alias text_select  overflow_ellipsis">
               {{value.name?value.name:'N/A'}}
             </span>
 
-            <span class="poptip">
+            <span class="poptip ">
               <div
                       v-if="value.mosaicInfo && value.mosaicInfo.owner.publicKey == publicKey
                     &&  (computeDuration(value) > 0

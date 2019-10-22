@@ -7,8 +7,6 @@ export const formDataConfig = {
         walletName: 'keystore-wallet',
         networkType: NetworkType.MIJIN_TEST,
         keystoreStr: '',
-        walletPassword: '',
-        walletPasswordAgain: '',
         keystorePassword: ''
     },
     transferForm: {

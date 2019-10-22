@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {formatAddress, formatSeconds} from "@/core/utils/utils.ts"
 import {mapState} from "vuex"
-import {StoreAccount, AppInfo, removeLink, saveLocalAlias, readLocalAlias} from "@/core/model"
+import {StoreAccount, AppInfo, removeLinkInAddressBook, saveLocalAlias, readLocalAliasInAddressBook} from "@/core/model"
 import {networkConfig} from "@/config/index"
 
 @Component({
@@ -96,7 +96,7 @@ export class AddressBookTs extends Vue {
         })
     }
     removeLink(aliasObject){
-        removeLink(aliasObject, this.getWallet.address)
+        removeLinkInAddressBook(aliasObject, this.getWallet.address)
         this.initLocalAlias()
     }
     submit() {
@@ -134,7 +134,7 @@ export class AddressBookTs extends Vue {
 
     initLocalAlias() {
         this.currentPage = 1
-        const addressBook = readLocalAlias(this.getWallet.address)
+        const addressBook = readLocalAliasInAddressBook(this.getWallet.address)
         this.aliasList = addressBook && addressBook.aliasMap ? Object.values(addressBook.aliasMap) : []
     }
 

@@ -145,6 +145,7 @@ export class AppWallet {
 
     createFromKeystore(name: string,
                        password: Password,
+                       keystorePassword: Password,
                        keystoreStr: string,
                        networkType: NetworkType,
                        store: Store<AppState>): AppWallet {
@@ -155,7 +156,7 @@ export class AppWallet {
             const keystore = words.toString(CryptoJS.enc.Utf8)
             this.simpleWallet = JSON.parse(keystore)
             this.sourceType = CreateWalletType.keyStore
-            const {privateKey} =  this.getAccount(password)
+            const {privateKey} =  this.getAccount(keystorePassword)
             this.createFromPrivateKey(name, password, privateKey, networkType, store)
             this.addNewWalletToList(store)
             return this
@@ -399,12 +400,12 @@ export const saveLocalAlias = (
 }
 
 
-export const readLocalAlias = (address: string) => {
+export const readLocalAliasInAddressBook = (address: string) => {
     const addressBookData = localRead('addressBook')
     if (!addressBookData) return {}
     return JSON.parse(addressBookData)[address]
 }
-export const removeLink = (aliasObject, address) => {
+export const removeLinkInAddressBook = (aliasObject, address) => {
     const {alias, tag} = aliasObject
     const addressBook = JSON.parse(localRead('addressBook'))
     delete addressBook[address].aliasMap[alias]
