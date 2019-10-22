@@ -13,9 +13,9 @@ Contributions that are hotfixes are to be done on the `master` branch.
 ## Dependencies
 **NEM2-Catapult**
 - catapult-server: [catapult-server-v0.8.0.3](https://github.com/nemtech/catapult-server/releases/tag/v0.8.0.3)
-- nem2-sdk-typescript-javascript: [nem2-sdk-typescript-javascript-v0.14.1](https://github.com/nemtech/nem2-sdk-typescript-javascript/releases/tag/v0.14.0)
-- nem2-hd-wallets: [nem2-hd-wallets-v0.4.1](https://github.com/nemfoundation/nem2-hd-wallets/releases/tag/v0.4.1)
-- nem2-qr-library: [nem2-qr-library-v0.4.0](https://github.com/nemfoundation/nem2-qr-library)
+- nem2-sdk-typescript-javascript: [nem2-sdk-typescript-javascript-v0.14.3](https://github.com/nemtech/nem2-sdk-typescript-javascript)
+- nem2-hd-wallets: [nem2-hd-wallets-v0.4.2](https://github.com/nemfoundation/nem2-hd-wallets)
+- nem2-qr-library: [nem2-qr-library-v0.4.1](https://github.com/nemfoundation/nem2-qr-library)
 - nem2-desktop-wallet-tools: [nem2-desktop-wallet-tools]( https://github.com/NemTechCN/NEM2-Desk-Wallet-Tools)
 
 ## Environment Dev
