@@ -22,8 +22,8 @@
         setWalletsBalances, ChainListeners, getMultisigAccountMultisigAccountInfo,
     } from '@/core/services'
     import {AppMosaic, AppWallet, AppInfo, StoreAccount} from '@/core/model'
-    import DisabledUiOverlay from '@/components/disabled-ui-overlay/DisabledUiOverlay.vue';
-    import TransactionConfirmation from '@/components/transaction-confirmation/TransactionConfirmation.vue';
+    import DisabledUiOverlay from '@/components/disabled-ui-overlay/DisabledUiOverlay.vue'
+    import TransactionConfirmation from '@/components/transaction-confirmation/TransactionConfirmation.vue'
 
     @Component({
         computed: {
