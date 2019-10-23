@@ -43,11 +43,4 @@ export const nodeListConfig: Endpoint[] = [
         url: 'http://jp5.nemesis.land:3000',
         isSelected: false,
     },
-    {
-        value: 'http://api-01.ap-northeast-1.nemtech.network:3000',
-        name: 'testnet-northeast',
-        url: 'api-01.ap-northeast-1.nemtech.network',
-        isSelected: false,
-    },
-
 ]

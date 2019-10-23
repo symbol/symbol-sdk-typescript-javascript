@@ -8,7 +8,7 @@ export const languageConfig: Array<{ value: string, label: string }> = [
         label: 'English'
     },
     {
-        value: 'jp-JP',
+        value: 'ja-JP',
         label: '日本語'
     }
 ]

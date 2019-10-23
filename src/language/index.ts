@@ -1,6 +1,6 @@
-import {zh_CN} from '@/language/zh-CN.ts'
-import {en_US} from '@/language/en-US.ts'
-import {jp_JP} from '@/language/jp-JP.ts'
+import zh_CN from '@/language/zh-CN.json'
+import en_US from '@/language/en-US.json'
+import ja_JP from '@/language/ja-JP.json'
 import VueI18n from 'vue-i18n'
 import Vue from 'vue'
 
@@ -19,7 +19,7 @@ window.localStorage.setItem('locale', lang)
 const messages = {
     'zh-CN': zh_CN,
     'en-US': en_US,
-    'jp-JP': jp_JP
+    'ja-JP': ja_JP
 }
 const i18n = new VueI18n({
     locale: lang,
