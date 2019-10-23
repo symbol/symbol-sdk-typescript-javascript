@@ -31,16 +31,4 @@ export const nodeListConfig: Endpoint[] = [
         url: 'api-01.mt.us-west-2.nemtech.network',
         isSelected: false,
     },
-    {
-        value: 'http://47.107.245.217:3000',
-        name: 'cn',
-        url: 'http://47.107.245.217:3000',
-        isSelected: false,
-    },
-    {
-        value: 'http://jp5.nemesis.land:3000',
-        name: 'jp5',
-        url: 'http://jp5.nemesis.land:3000',
-        isSelected: false,
-    },
 ]
