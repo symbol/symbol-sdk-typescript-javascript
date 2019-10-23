@@ -28,7 +28,6 @@ export class AccountImportMnemonicTs extends Vue {
     submit() {
         if (!this.checkImport()) return
         this.showCheckPWDialog = true
-
     }
 
     checkEnd(password) {

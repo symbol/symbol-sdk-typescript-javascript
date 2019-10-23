@@ -104,7 +104,7 @@ export const formDataConfig = {
         walletName: 'wallet-privateKey',
     },
     trezorImportForm: {
-        networkType: 0,
+        networkType: NetworkType.MIJIN_TEST,
         accountIndex: 0,
         walletName: 'Trezor Wallet'
     }

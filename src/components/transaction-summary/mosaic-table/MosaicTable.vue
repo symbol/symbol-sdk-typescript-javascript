@@ -20,7 +20,7 @@
 
 <script lang="ts">
 
-    import {MosaicTableTs} from '@/components/transaction-modal/mosaic-table/MosaicTableTs.ts'
+    import {MosaicTableTs} from '@/components/transaction-summary/mosaic-table/MosaicTableTs.ts'
 
     export default class MosaicTable extends MosaicTableTs {
 

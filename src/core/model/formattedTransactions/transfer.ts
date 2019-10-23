@@ -14,10 +14,8 @@ export class FormattedTransfer extends FormattedTransaction {
         super(tx, store)
         const {networkCurrency} = store.state.account
         const rawTx: any = this.rawTx
-
-        this.infoFirst = this.txHeader.isReceipt
-            ? rawTx.signer.address.pretty()
-            : this.getRecipient(rawTx.recipientAddress)
+            
+        this.infoFirst = this.getInfoFirst()
 
         const fromTo = this.txHeader.isReceipt ? 'from' : 'aims'
 
@@ -32,9 +30,18 @@ export class FormattedTransfer extends FormattedTransaction {
         }
     }
 
-    getRecipient = (recipientAddress: NamespaceId | Address): string | NamespaceId => {
+    getRecipient(): string | NamespaceId {
+        const rawTx: any = this.rawTx
+        const recipientAddress: NamespaceId | Address = rawTx.recipientAddress
         if (recipientAddress instanceof NamespaceId) return recipientAddress
         return recipientAddress.pretty()
+    }
+
+    getInfoFirst(): string | NamespaceId {
+        const rawTx: any = this.rawTx
+        if (!this.txHeader.isReceipt) return this.getRecipient()
+        if (!this.rawTx.signer) return null
+        return this.rawTx.signer.address.pretty()
     }
 }
 

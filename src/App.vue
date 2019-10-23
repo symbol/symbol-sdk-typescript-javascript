@@ -2,6 +2,7 @@
   <div id="app" :class="[isWindows?'windows':'mac']">
     <router-view/>
     <DisabledUiOverlay/>
+    <TransactionConfirmation/>
   </div>
 </template>
 
@@ -21,14 +22,16 @@
         setWalletsBalances, ChainListeners, getMultisigAccountMultisigAccountInfo,
     } from '@/core/services'
     import {AppMosaic, AppWallet, AppInfo, StoreAccount} from '@/core/model'
-    import DisabledUiOverlay from '@/components/disabled-ui-overlay/DisabledUiOverlay.vue'
+    import DisabledUiOverlay from '@/components/disabled-ui-overlay/DisabledUiOverlay.vue';
+    import TransactionConfirmation from '@/components/transaction-confirmation/TransactionConfirmation.vue';
 
     @Component({
         computed: {
             ...mapState({activeAccount: 'account', app: 'app'}),
         },
         components: {
-            DisabledUiOverlay
+            DisabledUiOverlay,
+            TransactionConfirmation
         }
     })
     export default class App extends Vue {

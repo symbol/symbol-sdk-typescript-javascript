@@ -74,7 +74,7 @@ export class InitSeedTs extends Vue {
             this.showCheckPWDialog = true
             return
         }
-        this.pageIndex = 1
+        this.pageIndex = index;
     }
 
     checkEnd(password) {
@@ -88,7 +88,6 @@ export class InitSeedTs extends Vue {
         }
         this.pageIndex = -1
         this.showCheckPWDialog = false
-
     }
 
 

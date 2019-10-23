@@ -12,7 +12,7 @@
     import echarts from 'echarts'
     import {mapState} from 'vuex'
     import {Message} from "@/config/index.ts"
-    import {echarts as echartsConfigure} from "@/config/view/echarts"
+    import {echarts as  echartsConfigure} from "@/config/view/echarts.ts"
     import {copyTxt} from '@/core/utils/utils.ts'
     import {Component, Vue, Watch} from 'vue-property-decorator'
     import multisigSelfIcon from '@/common/img/service/multisig/multisignSelfIcon.png'

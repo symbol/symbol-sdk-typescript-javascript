@@ -3,21 +3,21 @@ import {
     MultisigAccountInfo, TransferTransaction,
     Message as Msg,
     Deadline,
-    PlainMessage
+    PlainMessage,
+    TransactionType
 } from 'nem2-sdk'
 import {mapState} from "vuex"
 import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
-import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress, cloneData} from "@/core/utils"
 import {standardFields, isAddress} from "@/core/validation"
+import {signTransaction} from '@/core/services/transactions';
 import {AppMosaic, AppWallet, AppInfo, StoreAccount, DefaultFee, MosaicNamespaceStatusType} from "@/core/model"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
 
 @Component({
     components: {
-        CheckPWDialog,
         ErrorTooltip
     },
     computed: {
@@ -35,7 +35,6 @@ export class TransactionFormTs extends Vue {
     transactionList = []
     transactionDetail = {}
     isShowSubAlias = false
-    showCheckPWDialog = false
     otherDetails: any = {}
     isCompleteForm = true
     currentCosignatoryList = []
@@ -288,14 +287,36 @@ export class TransactionFormTs extends Vue {
             }
         }
 
+        this.confirmViaTransactionConfirmation()
+    }
+
+    async confirmViaTransactionConfirmation() {
         if (this.activeMultisigAccount) {
             this.sendMultisigTransaction()
-            this.showCheckPWDialog = true
-            return
+        } else {
+            this.sendTransaction()
         }
 
-        this.sendTransaction()
-        this.showCheckPWDialog = true
+        // delegate the signing to the TransactionConfirmation workflow
+        // the resolve value of this promise will contain the signed transaction
+        // if the user confirms successfullly
+        const {
+            success,
+            signedTransaction
+        } = await signTransaction({
+            transaction: this.transactionList[0],
+            store: this.$store,
+            otherDetails: this.otherDetails
+        });
+
+        if(success) {
+            if(this.transactionList[0].type !== TransactionType.AGGREGATE_BONDED) {
+                new AppWallet(this.wallet).announceNormal(signedTransaction, this.activeAccount.node, this);
+            } else {
+                new AppWallet(this.wallet).announceBonded(signedTransaction, this.activeAccount.node);
+            }
+            this.initForm()
+        }
     }
 
     sendTransaction() {
@@ -372,21 +393,6 @@ export class TransactionFormTs extends Vue {
             title: message
         })
     }
-
-    closeCheckPWDialog() {
-        this.showCheckPWDialog = false
-    }
-
-    checkEnd(isPasswordRight) {
-        if (!isPasswordRight) {
-            this.$Notice.destroy()
-            this.$Notice.error({
-                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-            })
-        }
-        this.initForm()
-    }
-
 
     @Watch('formItems.multisigPublicKey')
     onMultisigPublicKeyChange(newPublicKey, oldPublicKey) {

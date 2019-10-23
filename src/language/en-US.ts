@@ -726,6 +726,7 @@ export const en_US = {
     trezor_description: 'Trezor will keep your private keys secure and only expose them for signing transactions',
     choose_account_index: 'Choose account index (0 - 1,000,000)',
     trezor_awaiting_interaction: 'Please finish interacting with Trezor',
+    trezor_confirm_transaction_prompt: 'Confirm via Trezor',
 
     Please_choose_account_name: 'Please choose account name',
     account_password: 'Account password',

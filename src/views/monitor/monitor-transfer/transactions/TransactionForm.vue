@@ -178,15 +178,6 @@
       <div @click="submit" :class="['send_button',isCompleteForm?'pointer':'not_allowed']">
         {{$t('send')}}
       </div>
-
-      <CheckPWDialog
-              :transactionDetail='transactionDetail'
-              @closeCheckPWDialog="closeCheckPWDialog"
-              @checkEnd="checkEnd"
-              :showCheckPWDialog="showCheckPWDialog"
-              :otherDetails='otherDetails'
-              :transactionList="transactionList"
-      ></CheckPWDialog>
     </form>
   </div>
 </template>

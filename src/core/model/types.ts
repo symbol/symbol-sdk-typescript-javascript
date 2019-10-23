@@ -73,6 +73,11 @@ export interface AppInfo {
     isUiDisabled: boolean,
     uiDisabledMessage: string,
     _ENABLE_TREZOR_: boolean,
+    stagedTransaction: {
+        data: Transaction | null,
+        otherDetails: any,
+        isAwaitingConfirmation: boolean
+    }
 }
 
 export interface AppState {

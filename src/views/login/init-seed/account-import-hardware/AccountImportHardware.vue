@@ -4,19 +4,15 @@
     <div class="describe">{{$t('trezor_description')}}</div>
     <ul>
       <li>
-        <div class="title_info">
         {{$t('choose_network')}}
-        </div>
         <div class="gray_content">
-          <Select v-model="trezorForm.networkType" :placeholder="$t('choose_network')">
+          <Select v-model="trezorForm.networkType" @on-change="onNetworkSelected" :placeholder="$t('choose_network')">
             <Option v-for="item in NetworkTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
       </li>
       <li>
-        <div class="title_info">
         {{$t('choose_account_index')}}
-        </div>
         <div class="gray_content">
           <input class="absolute" type="number" min="0" max="1000000" v-model="trezorForm.accountIndex"
                   :placeholder="$t('choose_account_index')">
@@ -24,9 +20,7 @@
         </div>
       </li>
       <li>
-        <div class="title_info">
         {{$t('set_the_wallet_name')}}
-        </div>
         <div class="gray_content">
           <input class="absolute" type="text" v-model="trezorForm.walletName"
                   :placeholder="$t('set_the_wallet_name')">
