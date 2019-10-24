@@ -34,7 +34,7 @@ export class PersistentHarvestingDelegationMessage extends Message {
      *
      * @param delegatedPrivateKey - Private key of delegated account
      * @param senderPrivateKey - Sender private key
-     * @param recipientPrivateKey - Recipient public key
+     * @param recipientPublicKey - Recipient public key
      * @param {NetworkType} networkType - Catapult network type
      * @return {PersistentHarvestingDelegationMessage}
      */
