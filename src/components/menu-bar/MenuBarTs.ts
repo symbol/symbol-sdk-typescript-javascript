@@ -3,7 +3,7 @@ import monitorSelected from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
 import {localRead, localSave} from "@/core/utils/utils.ts"
 import {Component, Vue} from 'vue-property-decorator'
-import {windowSizeChange, minWindow, maxWindow, unmaximize, closeWindow} from '@/core/utils/electron.ts'
+import {windowSizeChange, minWindow, maxWindow, unMaximize, closeWindow} from '@/core/utils/electron.ts'
 import {mapState} from 'vuex'
 import {NetworkType} from "nem2-sdk"
 import {languageConfig} from "@/config/view/language"
@@ -30,6 +30,7 @@ export class MenuBarTs extends Vue {
     monitorSelected = monitorSelected
     monitorUnselected = monitorUnselected
     languageList = languageConfig
+    NetworkType = NetworkType
 
     get routes() {
         return routes[0].children
@@ -61,7 +62,7 @@ export class MenuBarTs extends Vue {
     }
 
     get networkType() {
-        return NetworkType[this.activeAccount.wallet.networkType]
+        return this.activeAccount.wallet ? NetworkType[this.activeAccount.wallet.networkType] : false
     }
 
     get node() {
@@ -70,6 +71,10 @@ export class MenuBarTs extends Vue {
 
     get language() {
         return this.$i18n.locale
+    }
+
+    get nodeNetworkType() {
+        return this.app.nodeNetworkType
     }
 
     set language(lang) {
@@ -95,9 +100,9 @@ export class MenuBarTs extends Vue {
         maxWindow()
     }
 
-    unmaximize() {
+    unMaximize() {
         this.isNowWindowMax = !this.isNowWindowMax
-        unmaximize()
+        unMaximize()
     }
 
     minWindow() {
@@ -150,6 +155,7 @@ export class MenuBarTs extends Vue {
     initNodeList() {
         const nodeListData = localRead('nodeList')
         this.nodeList = nodeListData ? JSON.parse(nodeListData) : nodeListConfig
+        this.$store.commit('SET_NODE', this.nodeList.find(item => item.isSelected).value)
     }
 
     created() {

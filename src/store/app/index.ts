@@ -22,7 +22,8 @@ const state: AppInfo = {
         isAwaitingConfirmation: false,
         otherDetails: null,
         data: null,
-    }
+    },
+    nodeNetworkType: ''
 }
 
 const mutations: MutationTree<AppInfo> = {
@@ -74,7 +75,11 @@ const mutations: MutationTree<AppInfo> = {
         state.stagedTransaction.data = data;
         state.stagedTransaction.otherDetails = otherDetails;
         state.stagedTransaction.isAwaitingConfirmation = isAwaitingConfirmation;
-    }
+    },
+    SET_NODE_NETWORK_TYPE(state: AppInfo, networkType: any) {
+        state.nodeNetworkType = networkType
+    },
+
 }
 
 export const appState = {state}

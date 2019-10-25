@@ -1,4 +1,4 @@
-import {Address, Listener} from "nem2-sdk"
+import {Address, Listener, NodeHttp} from "nem2-sdk"
 import {filter} from 'rxjs/operators'
 import {formatAndSave} from '@/core/services/transactions'
 import {ChainStatus} from '@/core/model'
@@ -12,7 +12,8 @@ export class ChainListeners {
     constructor(app: any, address: string, endpoint: string) {
         this.app = app
         this.address = address || ''
-        this.node = endpoint.replace('http', 'ws')
+        // can be http or https
+        this.node = endpoint.replace(endpoint.substring(0, 5) == 'https' ? 'https' : 'http', 'ws')
     }
 
     errorTxList: any = []
@@ -164,5 +165,4 @@ export class ChainListeners {
                     })
             })
     }
-
 }

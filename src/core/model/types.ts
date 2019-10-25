@@ -77,7 +77,8 @@ export interface AppInfo {
         data: Transaction | null,
         otherDetails: any,
         isAwaitingConfirmation: boolean
-    }
+    },
+    nodeNetworkType: string
 }
 
 export interface AppState {
