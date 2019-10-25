@@ -1,7 +1,7 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {AppInfo, StoreAccount} from "@/core/model"
-
+import {Message} from '@/config'
 
 @Component({
     computed: {
@@ -31,8 +31,8 @@ export class DisabledFormsTs extends Vue {
     }
 
     get alertMessage(): string {
-        if (this.noNetworkCurrencySet) return 'no_network_currency_alert'
-        if (this.isMultisig) return 'Multisig_accounts_can_not_send_a_transaction_by_themselves'
+        if (this.noNetworkCurrencySet) return Message.NO_NETWORK_CURRENCY
+        if (this.isMultisig) return Message.MULTISIG_ACCOUNTS_NO_TX
         return ''
     }
 }

@@ -46,7 +46,6 @@ export const Message = {
     NODE_CONNECTION_SUCCEEDED: 'Node_connection_succeeded',
     PLEASE_ENTER_A_CORRECT_NUMBER: 'Please_enter_a_correct_number',
     NOTES_SHOULD_NOT_EXCEED_25_CHARACTER: 'Notes_should_not_exceed_25_character',
-
     PLEASE_SET_WALLET_PASSWORD_INFO: 'please_set_your_wallet_password',
     PLEASE_ENTER_MNEMONIC_INFO: 'Please_enter_a_mnemonic_to_ensure_that_the_mnemonic_is_correct',
     PLEASE_SWITCH_NETWORK: 'walletCreateNetTypeRemind',
@@ -104,6 +103,8 @@ export const Message = {
     LOADING:'Loading',
     CLICK_TO_LOAD: 'click_to_load',
     REFRESH_TOO_FAST_WARNING:'refresh_too_fast_warning',
+    NO_NETWORK_CURRENCY: 'no_network_currency_alert',
+    MULTISIG_ACCOUNTS_NO_TX: "Multisig_accounts_can_not_send_a_transaction_by_themselves"
 }
 
 export const FEE_SPEEDS: Record<string, string> = {

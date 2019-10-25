@@ -76,19 +76,12 @@ export const copyTxt = (txt) => {
     })
 }
 
-export const formatNumber = (number) => {
-    number = Number(number)
+export const formatNumber = (number: number): string => {
     if (number > 1) {
-        number = number.toFixed(2)
+        return number.toLocaleString()
     }
-    if (!/^(\+|-)?(\d+)(\.\d+)?$/.test(number)) {
-        return 0
-    }
-    var a = RegExp.$1, b = RegExp.$2, c = RegExp.$3
-    // @ts-ignore
-    var re = new RegExp('').compile("(\\d)(\\d{3})(,|$)")
-    while (re.test(b)) b = b.replace(re, "$1,$2$3")
-    return a + "" + b + "" + c
+
+    return `${number}`
 }
 
 export const strToHexCharCode = (str) => {

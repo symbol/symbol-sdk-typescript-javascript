@@ -1,7 +1,7 @@
+import {Store} from 'vuex'
 import {Mosaic} from "nem2-sdk"
 import {AppMosaic, AppState} from '@/core/model'
-import {Store} from 'vuex'
-
+import {formatNumber} from '@/core/utils'
 /**
  * Transforms an array of mosaics to an inline representation,
  * setting networkCurrency as the first item
@@ -31,8 +31,7 @@ export const renderMosaicsAndReturnArray = (
             if (!mosaicList[appMosaicHex] || !mosaicList[appMosaicHex].properties) return
             const appMosaic = mosaicList[appMosaicHex]
             const name = appMosaic.name || hex
-            const amount = getRelativeMosaicAmount(mosaic.amount.compact(), appMosaic.properties.divisibility)
-                .toLocaleString()
+            const amount = formatNumber(getRelativeMosaicAmount(mosaic.amount.compact(), appMosaic.properties.divisibility))
 
             return {name, amount, hex: appMosaicHex}
         })
@@ -106,6 +105,5 @@ export const renderMosaicAmount = (mosaics: Mosaic[], mosaicList: AppMosaic[]): 
     const hex = mosaics[0].id.toHex()
     if (!mosaicList[hex] || !mosaicList[hex].properties) return 'Loading...'
     const appMosaic = mosaicList[hex]
-    return getRelativeMosaicAmount(mosaics[0].amount.compact(), appMosaic.properties.divisibility)
-        .toLocaleString()
+    return formatNumber(getRelativeMosaicAmount(mosaics[0].amount.compact(), appMosaic.properties.divisibility))
 }

@@ -16,7 +16,7 @@
           <span class="amount">{{formatNumber(balance)}}</span>
         </div>
         <div class="exchange">
-          ${{formatNumber(balance*xemUsdPrice)}}
+          {{ xemUsdPrice > 0 ? `$${formatNumber(balance*xemUsdPrice)}` : '' }}
         </div>
       </div>
       <div class="bottom_account_info radius" ref="bottomAccountInfo">
@@ -83,7 +83,7 @@
                 </span>
                 <span class="mosaic_name text_select">{{mosaic.name || mosaic.hex}}</span>
                 <span class="mosaic_value">
-                  <div>{{mosaic.balance}}</div>
+                  <div>{{formatNumber(mosaic.balance || 0)}}</div>
                 </span>
               </div>
               <div class="complete_container">

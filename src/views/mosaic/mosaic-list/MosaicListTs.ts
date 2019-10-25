@@ -43,6 +43,8 @@ export class MosaicListTs extends Vue {
     mosaic: string = null
     address: string = null
     MosaicNamespaceStatusType = MosaicNamespaceStatusType
+    formatNumber = formatNumber
+
     get mosaics() {
         return this.activeAccount.mosaics
     }
@@ -80,16 +82,11 @@ export class MosaicListTs extends Vue {
 
     mosaicSupplyAmount(value) {
         if (!value.mosaicInfo) return 0
-        const formatNumber: string = this.formatNumber(value.mosaicInfo.supply.compact()) + ''
-        return formatNumber.substring(0, formatNumber.indexOf('.'))
+        return formatNumber(value.mosaicInfo.supply.compact())
     }
 
     toggleChange(page) {
         this.currentPage = page
-    }
-
-    formatNumber(number) {
-        return formatNumber(number)
     }
 
     bindItem(mosaic: AppMosaic) {

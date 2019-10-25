@@ -28,6 +28,7 @@ export class MonitorTs extends Vue {
     monitorUnselected = monitorUnselected
     navigatorList: any = monitorPanelNavigatorConfig
     formatXemAmount = formatXemAmount
+    formatNumber = formatNumber
 
     get balance(): number {
         const {wallet} = this.activeAccount
@@ -157,11 +158,6 @@ export class MonitorTs extends Vue {
         delete wallets[0].hideMosaicMap[mosaic.hex]
         accountMap.wallets = wallets
         localSave('accountMap', JSON.stringify(accountMap))
-    }
-
-    // @TODO: move to formatTransaction
-    formatNumber(number) {
-        return formatNumber(number)
     }
 
     searchMosaic() {
