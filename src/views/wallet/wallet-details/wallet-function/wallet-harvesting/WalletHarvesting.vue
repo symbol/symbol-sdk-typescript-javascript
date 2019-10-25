@@ -68,7 +68,7 @@
             v-model="isShowDialog"
             :transfer="false"
             class-name="dash_board_dialog">
-      <MultisigBanCover></MultisigBanCover>
+      <DisabledForms></DisabledForms>
 
       <div class="gray_input_content" @keyup.enter="submit">
         <span class="title">{{$t('remote_modal_pul')}}</span>

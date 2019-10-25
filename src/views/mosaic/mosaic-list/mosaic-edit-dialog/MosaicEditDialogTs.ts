@@ -4,14 +4,14 @@ import {Password, NetworkType, MosaicSupplyChangeTransaction, Deadline, UInt64, 
 import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config/index.ts"
 import {cloneData, getAbsoluteMosaicAmount} from '@/core/utils'
 import {AppWallet, AppMosaic, DefaultFee, StoreAccount} from "@/core/model"
-import MultisigBanCover from '@/components/multisig-ban-cover/MultisigBanCover.vue'
+import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 
 @Component({
     computed: {
         ...mapState({activeAccount: 'account'})
     },
     components:{
-        MultisigBanCover
+        DisabledForms
     }
 })
 export class MosaicEditDialogTs extends Vue {

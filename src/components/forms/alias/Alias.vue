@@ -9,7 +9,7 @@
         <span class="title" v-if= bind >{{$t('bind')}}</span>
         <span class="title" v-else>{{$t('unbind')}}</span>
       </div>
-      <MultisigBanCover></MultisigBanCover>
+      <DisabledForms></DisabledForms>
       <div v-if="!bind" class="unbind_text">
         <span >{{$t('unbind')}}</span>
         <span class="color_text">{{target}}</span>

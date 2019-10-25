@@ -18,19 +18,18 @@ import {networkConfig} from "@/config/index"
 import {cloneData, getAbsoluteMosaicAmount} from "@/core/utils"
 import {StoreAccount, AppInfo, AppWallet, AppNamespace, DefaultFee, MosaicNamespaceStatusType} from "@/core/model"
 import {AppMosaics} from '@/core/services'
-import MultisigBanCover from '@/components/multisig-ban-cover/MultisigBanCover.vue'
+import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 
 @Component({
-    computed: {
-        ...mapState({
-            activeAccount: 'account',
-            app: 'app'
-        })
-    },
-    components: {
-        MultisigBanCover
-    }
+  computed: {
+    ...mapState({
+      activeAccount: 'account',
+      app: 'app'
+    })
+  },
+  components:{ DisabledForms }
 })
+
 export class AliasTs extends Vue {
     activeAccount: StoreAccount
     app: AppInfo

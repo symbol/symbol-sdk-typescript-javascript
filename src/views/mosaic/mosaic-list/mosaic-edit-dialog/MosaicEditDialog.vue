@@ -8,7 +8,7 @@
             :width="1000"
             :transfer="false"
             @on-cancel="mosaicEditDialogCancel">
-      <MultisigBanCover></MultisigBanCover>
+      <DisabledForms></DisabledForms>
       <div slot="header" class="mosaicEditDialogHeader">
         <span class="title">{{$t('modify_supply')}}</span>
       </div>

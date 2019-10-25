@@ -11,7 +11,7 @@
       <div slot="header" class="namespaceEditDialogHeader">
         <span class="title">{{$t('update_namespace')}}</span>
       </div>
-      <MultisigBanCover></MultisigBanCover>
+      <DisabledForms></DisabledForms>
 
       <div class="namespaceEditDialogBody">
         <div class="stepItem1">

@@ -22,12 +22,12 @@ import {formDataConfig, Message, DEFAULT_FEES, FEE_GROUPS} from '@/config'
 import {StoreAccount, AppWallet, DefaultFee} from "@/core/model"
 import {NETWORK_PARAMS} from '@/core/validation'
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
-import MultisigBanCover from '@/components/multisig-ban-cover/MultisigBanCover.vue'
+import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 
 @Component({
     components: {
         CheckPWDialog,
-        MultisigBanCover
+        DisabledForms
     },
     computed: {
         ...mapState({

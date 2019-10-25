@@ -736,5 +736,6 @@
     "mosaicId": "Mosaic ID",
     "supplyMutable": "Supply Mutable",
     "Increase": "Increase",
-    "transferable": "Transferable"
+    "transferable": "Transferable",
+    "no_network_currency_alert": "The wallet has no data about the network currency (eg. nem:xem), please connect to a valid node."
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="namespace_transaction_container secondary_page_animate">
     <div class="right_panel">
-      <MultisigBanCover></MultisigBanCover>
+      <DisabledForms></DisabledForms>
       <form @submit.prevent="validateForm('root-namespace')">
         <div class="namespace_transaction"  @keyup.enter="submit">
           <div class="form_item">

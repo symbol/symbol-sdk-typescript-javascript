@@ -1,7 +1,7 @@
 <template>
   <div class="mosaic_transaction_container radius secondary_page_animate" >
     <div class="right_panel">
-      <MultisigBanCover></MultisigBanCover>
+      <DisabledForms></DisabledForms>
       <div class="namespace_transaction" @keyup.enter="submit">
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>

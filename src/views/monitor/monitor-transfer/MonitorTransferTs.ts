@@ -5,13 +5,13 @@ import {mapState} from "vuex"
 import {TransferType} from "@/core/model/TransferType";
 import {monitorTransferTransferTypeConfig} from '@/config/view/monitor'
 import {StoreAccount} from "@/core/model"
-import MultisigBanCover from '@/components/multisig-ban-cover/MultisigBanCover.vue'
+import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 
 @Component({
     components: {
         MultisigTransferTransaction,
         CollectionRecord,
-        MultisigBanCover,
+        DisabledForms,
     },
     computed: {
         ...mapState({

@@ -18,11 +18,13 @@ import {
     createCompleteMultisigTransaction,
     getMultisigAccountMultisigAccountInfo
 } from '@/core/services'
+import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 
 @Component({
     components: {
-        CheckPWDialog
+        CheckPWDialog,
+        DisabledForms,
     },
     computed: {
         ...mapState({

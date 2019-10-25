@@ -12,6 +12,8 @@
               v-if="displayForm"
               class="multisig_convert_container secondary_page_animate"
       >
+        <DisabledForms />
+
         <div class="multisig_convert_head">{{ $t(formHeadline) }}</div>
         <div class="convert_form">
           <div

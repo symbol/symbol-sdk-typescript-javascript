@@ -12,13 +12,13 @@ import {
 import {StoreAccount, AppInfo, DefaultFee, AppWallet} from "@/core/model"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
 import {standardFields} from "@/core/validation"
-import MultisigBanCover from "@/components/multisig-ban-cover/MultisigBanCover.vue"
+import DisabledForms from "@/components/disabled-forms/DisabledForms.vue"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
     components: {
         CheckPWDialog,
-        MultisigBanCover,
+        DisabledForms,
         ErrorTooltip
     },
     computed: {

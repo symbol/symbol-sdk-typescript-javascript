@@ -5,7 +5,7 @@ import {Password, NamespaceRegistrationTransaction, Deadline, UInt64} from 'nem2
 import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {getAbsoluteMosaicAmount, formatSeconds, cloneData} from '@/core/utils'
 import {AppWallet, StoreAccount, DefaultFee, AppNamespace} from "@/core/model"
-import MultisigBanCover from "@/components/multisig-ban-cover/MultisigBanCover.vue"
+import DisabledForms from "@/components/disabled-forms/DisabledForms.vue"
 
 @Component({
     computed: {
@@ -14,7 +14,7 @@ import MultisigBanCover from "@/components/multisig-ban-cover/MultisigBanCover.v
         })
     },
     components:{
-        MultisigBanCover
+        DisabledForms
     }
 })
 export class NamespaceEditDialogTs extends Vue {
