@@ -52,8 +52,8 @@ export class TransactionModalTs extends Vue {
     getName(namespaceId: NamespaceId) {
         const hexId = namespaceId.toHex()
         const namespace = this.namespaces.find(({hex}) => hexId === hex)
-        if (namespace === undefined) return hexId
-        return namespace.name
+        if (namespace !== undefined) return namespace.name
+        return hexId
     }
 
     renderMosaicsToTable(mosaics){

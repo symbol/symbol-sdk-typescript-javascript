@@ -82,20 +82,18 @@ const mutations: MutationTree<StoreAccount> = {
     },
     UPDATE_NAMESPACES(state: StoreAccount, namespaces: AppNamespace[]): void {
         const namespacesToUpdate = [...state.namespaces]
+
         const updatedNamespaces =  namespaces.map(newNamespace => {
             const oldNamespace = namespacesToUpdate.find(({hex}) => hex === newNamespace.hex)
             if (oldNamespace === undefined) return newNamespace
             return AppNamespace.fromNamespaceUpdate(oldNamespace, newNamespace)
-        })       
-        state.namespaces = updatedNamespaces
+        })
+
+        const namespacesNotUpdated = namespacesToUpdate.filter(({hex}) => namespaces.find(ns => ns.hex === hex) === undefined)
+        
+        state.namespaces = [...namespacesNotUpdated, ...updatedNamespaces]
     },
     ADD_NAMESPACE_FROM_RECIPIENT_ADDRESS(state: StoreAccount, namespaces: AppNamespace[]) {
-        const namespacesToUpdate = [...state.namespaces]
-        const updatedNamespaces =  namespaces.map(newNamespace => {
-            const oldNamespace = namespacesToUpdate.find(({hex}) => hex === newNamespace.hex)
-            if (oldNamespace === undefined) return newNamespace
-            return oldNamespace
-        })   
         state.namespaces = [...state.namespaces, ...namespaces]
     },
     SET_NODE(state: StoreAccount, node: string): void {
@@ -112,6 +110,9 @@ const mutations: MutationTree<StoreAccount> = {
     },
     SET_WALLET_BALANCE(state: StoreAccount, balance: number) {
         state.wallet.balance = balance
+    },
+    RESET_TRANSACTION_LIST(state: StoreAccount) {
+        state.transactionList = []
     },
     SET_TRANSACTION_LIST(state: StoreAccount, list: FormattedTransaction[]) {
         state.transactionList = list

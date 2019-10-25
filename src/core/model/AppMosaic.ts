@@ -11,6 +11,7 @@ import {getRelativeMosaicAmount} from '@/core/utils'
 
 export class AppMosaic {
     hex: string
+    namespaceHex: string
     amount: any
     balance?: number
     expirationHeight: number | MosaicNamespaceStatusType.FOREVER
@@ -29,6 +30,7 @@ export class AppMosaic {
         mosaicInfo?: MosaicInfo,
         properties?: MosaicProperties,
         hide?: boolean,
+        namespaceHex?: string,
     }) {
         Object.assign(this, appMosaic)
         delete this.amount
@@ -48,7 +50,7 @@ export class AppMosaic {
     }
 
  static fromGetCurrentNetworkMosaic( mosaicDefinitionTransaction: MosaicDefinitionTransaction,
-                                     name: string): AppMosaic {
+                                     namespace: Namespace): AppMosaic {
  const {mosaicId} = mosaicDefinitionTransaction
  return new AppMosaic({
          hex: mosaicId.toHex(),
@@ -59,7 +61,8 @@ export class AppMosaic {
             mosaicDefinitionTransaction.duration.compact(),
             mosaicDefinitionTransaction.flags.restrictable,
          ),
-         name,
+         name: namespace.name,
+         namespaceHex: namespace.id.toHex(),
      })
  }
 
@@ -76,9 +79,12 @@ export class AppMosaic {
  }
 
  static fromNamespace(namespace: Namespace | AppNamespace): AppMosaic {
-     return new AppMosaic({
-         hex: namespace.alias.mosaicId.toHex(),
-         name: namespace.name,
-     })
+    const namespaceHex = namespace instanceof AppNamespace ? namespace.hex : namespace.id.toHex()
+
+    return new AppMosaic({
+        hex: namespace.alias.mosaicId.toHex(),
+        namespaceHex,
+        name: namespace.name,
+    })
  }
 }

@@ -50,7 +50,7 @@ export const setCurrentNetworkMosaic = async (store: Store<AppState>) => {
         const [networkMosaicDefinitionTx]: any = mosaicDefinitionTx
         const networkMosaicNamespace = await new NamespaceService(new NamespaceHttp(node))
             .namespace(networkCurrencyAliasTx.namespaceId).toPromise()
-        
+
         store.commit('SET_NETWORK_CURRENCY', {
             hex: networkMosaicDefinitionTx.mosaicId.toHex(),
             divisibility: networkMosaicDefinitionTx.divisibility,
@@ -64,13 +64,13 @@ export const setCurrentNetworkMosaic = async (store: Store<AppState>) => {
             ? await new NamespaceService(new NamespaceHttp(node))
                 .namespace(harvestCurrencyAliasTx.namespaceId).toPromise()
             : false
-        
+
         const appMosaics = [
-            AppMosaic.fromGetCurrentNetworkMosaic(networkMosaicDefinitionTx, networkMosaicNamespace.name)
+            AppMosaic.fromGetCurrentNetworkMosaic(networkMosaicDefinitionTx, networkMosaicNamespace)
         ]
 
         if (harvestCurrencyAliasTx && harvestMosaicNamespace) appMosaics.push(
-            AppMosaic.fromGetCurrentNetworkMosaic(harvestMosaicDefinitionTx, harvestMosaicNamespace.name)
+            AppMosaic.fromGetCurrentNetworkMosaic(harvestMosaicDefinitionTx, harvestMosaicNamespace)
         )
 
         store.commit('UPDATE_MOSAICS', appMosaics)

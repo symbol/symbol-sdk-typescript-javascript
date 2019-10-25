@@ -1,5 +1,4 @@
 import {AppMosaics} from '@/core/services/mosaics'
-// import { NamespaceHttp, NamespaceId } from 'nem2-sdk'
 
 export const appMosaicsModule = (store) => {
   store.registerModule('appMosaics', appMosaicsModule)
@@ -10,8 +9,8 @@ export const appMosaicsModule = (store) => {
      * Add them to store.account.mosaics
      */
     if (mutation.type === 'SET_TRANSACTION_LIST') {
-      const idsFromTransactions = AppMosaics().fromTransactions(state.account.transactionList)
-      store.commit('UPDATE_MOSAICS', idsFromTransactions.appMosaics)
+      const appMosaics = AppMosaics().fromTransactions(state.account.transactionList)
+      if (appMosaics.length) store.commit('UPDATE_MOSAICS', appMosaics)
     }
 
     /**
@@ -30,7 +29,7 @@ export const appMosaicsModule = (store) => {
     if (mutation.type === 'UPDATE_NAMESPACES') {
       const {namespaces, mosaics} = state.account
       const appMosaics = AppMosaics().fromNamespaces(namespaces, mosaics)
-      store.commit('UPDATE_MOSAICS_INFO', appMosaics)
+      if (appMosaics.length) store.commit('UPDATE_MOSAICS_INFO', appMosaics)
     }
   })
 }

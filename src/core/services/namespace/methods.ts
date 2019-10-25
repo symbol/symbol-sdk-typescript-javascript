@@ -60,7 +60,7 @@ export const handleRecipientAddressAsNamespaceId = async (  transactions: Format
         const newNamespacesIds = flattenArrayOfStrings(namespaceIds)
             .filter(x => x)                            
             .map(x => x.toHex())
-            .filter(x => namespaces.find(({hex}) => hex === x))
+            .filter(x => namespaces.find(({hex}) => hex === x) === undefined)
             .filter((el, i, a) => i === a.indexOf(el))
             .map(x => NamespaceId.createFromEncoded(x))
 

@@ -67,7 +67,8 @@ export const AppMosaics = () => ({
                     flatMap(x => x),
                     map(x => (new AppMosaic({
                         hex: x.mosaicId.toHex(),
-                        name: x.names[0] && x.names[0].name || null
+                        name: x.names[0] && x.names[0].name || null,
+                        namespaceHex: x.names[0].namespaceId.toHex(),
                     }))),
                     toArray(),
                 )
@@ -84,7 +85,7 @@ export const AppMosaics = () => ({
      * Returns AppMosaics for MosaicId, hex Id for NamespaceIds
      * @param transactions
      */
-    fromTransactions(transactions: Transaction[]): {appMosaics: AppMosaic[], namespaceIds: NamespaceId[]} {
+    fromTransactions(transactions: Transaction[]): AppMosaic[] {
         const allMosaics = transactions.map(x => this.extractMosaicsFromTransaction(x))
         const flattenedMosaicIds = flattenArrayOfStrings(allMosaics)
 
@@ -92,20 +93,8 @@ export const AppMosaics = () => ({
             .filter(x => (x && x.id instanceof MosaicId))
             .map(x => x.id.toHex())
 
-        const allNamespaceIds = flattenedMosaicIds
-            .filter(x => (x && x.id instanceof NamespaceId))
-            .map(x => ({ id: x.id, hex: x.id.toHex() }))
-
-        const namespaceHex = allNamespaceIds.map(({ hex }) => hex)
         const mosaicIdsNoDuplicate = allMosaicIds.filter((el, i, a) => i === a.indexOf(el))
-        const namespaceHexNoDuplicate = namespaceHex.filter((el, i, a) => i === a.indexOf(el))
-        const namespaceIds = namespaceHexNoDuplicate
-                                .map(x => allNamespaceIds
-                                        .find(({ hex }) => hex === x).id)
-        return {
-            appMosaics: mosaicIdsNoDuplicate.map(x => new AppMosaic({hex: x})),
-            namespaceIds
-        }
+        return mosaicIdsNoDuplicate.map(x => new AppMosaic({hex: x}))
     },
 
     /**
@@ -132,7 +121,7 @@ export const AppMosaics = () => ({
 
     fromNamespaces(namespaces: Namespace[], mosaics: Record<string, AppMosaic>): AppMosaic[] {
         const aliasExcludingAddresses = namespaces.filter(({alias}) => alias && alias.type !== AliasType.Address)
-        if (!aliasExcludingAddresses.length) return
+        if (!aliasExcludingAddresses.length) return []
 
         const mosaicsWithAliases = Object.values(mosaics).filter((mosaic: AppMosaic) => mosaic.name)
 
