@@ -731,5 +731,9 @@
     "refresh_too_fast_warning": "The refresh rate is too high, please try again later.",
     "display_mnemonic_QR_code": "Display mnemonic QR code",
     "fromwhere": "from",
-    "Input_account_public_key": "Input account public key"
+    "Input_account_public_key": "Input account public key",
+    "mosaicId": "Mosaic ID",
+    "supplyMutable": "Supply Mutable",
+    "Increase": "Increase",
+    "transferable": "Transferable"
 }

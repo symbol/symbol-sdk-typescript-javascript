@@ -18,7 +18,7 @@ export class FormattedMosaicDefinition extends FormattedTransaction {
                 'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + ' ' + networkCurrency.ticker,
                 'block': this.txHeader.block,
                 'hash': this.txHeader.hash,
-                'mosaicId': tx.mosaicId,
+                'mosaicId': tx.mosaicId.toHex(),
                 'supplyMutable':tx.flags.supplyMutable,
                 'transferable': tx.flags.transferable,
                 'restrictable': tx.flags.restrictable,

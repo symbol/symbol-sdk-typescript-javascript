@@ -17,7 +17,7 @@ export class FormattedMosaicSupplyChange extends FormattedTransaction {
             'fee': getRelativeMosaicAmount(tx.maxFee.compact(), networkCurrency.divisibility) + ' ' + networkCurrency.ticker,
             'block': this.txHeader.block,
             'hash': this.txHeader.hash,
-            'mosaicId': tx.mosaicId,
+            'mosaicId': tx.mosaicId.toHex(),
             'direction': tx.action === MosaicSupplyChangeAction.Increase ? 'Increase' : 'Decrease',
             'delta': tx.delta.compact().toLocaleString(),
           }
