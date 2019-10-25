@@ -1,17 +1,19 @@
 <template>
   <div :class="[isWindows?'windows':'mac','wrap']">
+    <div v-if="nodeNetworkType && networkType">
+      <Alert class="alert error_alert" v-if="!isNodeHealthy" type="error">
+        <Icon type="md-close"/>
+        {{$t('Node_not_available_please_check_your_node_or_network_settings')}}
+      </Alert>
 
-    <Alert class="alert error_alert" v-if="!isNodeHealthy" type="error">
-      <Icon type="md-close"/>
-      {{$t('Node_not_available_please_check_your_node_or_network_settings')}}
-    </Alert>
+      <Alert class="alert warning_alert"
+             v-else-if="nodeNetworkType !== NetworkType[networkType] "
+             type="error">
+        <Icon type="ios-warning-outline"/>
+        {{$t('Wallet_network_type_does_not_match_current_network_type')}}
+      </Alert>
 
-    <Alert class="alert warning_alert" v-else-if="nodeNetworkType !== NetworkType[networkType] && nodeNetworkType"
-           type="error">
-      <Icon type="ios-warning-outline"/>
-      {{$t('Wallet_network_type_does_not_match_current_network_type')}}
-    </Alert>
-
+    </div>
     <div class="left_navigator">
       <div class="navigator_icon">
         <div
