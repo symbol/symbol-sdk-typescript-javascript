@@ -1,6 +1,6 @@
 <template>
   <div class="transfer" @click="isShowSubAlias=false">
-    <form @submit.prevent="validateForm('transfer-transaction')">
+    <form @submit.prevent="validateForm('transfer-transaction')" @keyup.enter="submit">
       <div class="flex_center" v-if="!hasMultisigAccounts">
         <span class="title">{{$t('sender')}}</span>
           <span class="value no-border"
@@ -27,8 +27,9 @@
       <div class="target flex_center">
         <span class="title">{{$t('transfer_target')}}</span>
         <span class="value radius flex_center">
-          <ErrorTooltip fieldName="recipient" placementOverride="left">
+          <ErrorTooltip  fieldName="recipient" placementOverride="left">
               <input
+                      v-focus
                       data-vv-name="recipient"
                       v-model="formItems.recipient"
                       v-validate="standardFields.addressOrAlias.validation"
@@ -38,7 +39,6 @@
               />
           </ErrorTooltip>
       </span>
-
 
       <!-- <span class="pointer" @click.stop="isShowSubAlias =!isShowSubAlias">@</span>
       <div v-if="isShowSubAlias" class="selections ">
@@ -52,9 +52,7 @@
         </div>
       </div> -->
 
-
       </div>
-
 
       <div class="asset flex_center">
         <span class="title">{{$t('asset_type')}}</span>

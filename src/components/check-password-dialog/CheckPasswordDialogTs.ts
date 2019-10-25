@@ -110,7 +110,7 @@ export class CheckPasswordDialogTs extends Vue {
 
     }
 
-    checkPassword() {
+    submit() {
         if (this.isOnlyCheckPassword) {
             this.checkAccountPassword()
             return

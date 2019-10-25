@@ -5,15 +5,14 @@
         <WalletSwitch
                 @noHasWallet="noHasWallet"
                 @toCreate="toCreate"
-                @toImport="toImport"
-        ></WalletSwitch>
+                @toImport="toImport"/>
       </div>
       <div class="left WalletFn">
-        <WalletDetails />
+        <WalletDetails/>
       </div>
     </div>
-    <div class="walletMethods">
-      <WalletFn :tabIndex="tabIndex" @backToGuideInto="backToGuideInto" @toWalletDetails="toWalletDetails"></WalletFn>
+    <div class="walletMethods" v-if="tabIndex!==-1">
+      <WalletFn :tabIndex="tabIndex" @backToGuideInto="backToGuideInto" @toWalletDetails="toWalletDetails"/>
     </div>
   </div>
 </template>

@@ -82,9 +82,12 @@ export class WalletTs extends Vue {
         if (name == 'walletImportKeystore') {
             this.toImport()
             return
-        } else if (name == 'walletCreate') {
-            this.toCreate()
         }
+        if (name == 'walletCreate') {
+            this.toCreate()
+            return
+        }
+        this.tabIndex = -1
     }
 
     mounted() {

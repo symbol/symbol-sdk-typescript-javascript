@@ -9,6 +9,7 @@ import {TransferType} from "@/core/model/TransferType"
 import {monitorReceiptTransferTypeConfig} from "@/config/view/monitor"
 import {AppInfo, MosaicNamespaceStatusType, StoreAccount} from "@/core/model"
 import failureIcon from '@/common/img/monitor/failure.png'
+
 @Component({
     components: {
         CollectionRecord
@@ -37,12 +38,12 @@ export class MonitorInvoiceTs extends Vue {
     get networkCurrency() {
         return this.activeAccount.networkCurrency
     }
+
     get transferTransaction(): any { // @QR
         const {networkType, address} = this.wallet
         const walletAddress = Address.createFromRawAddress(address)
         const {mosaicHex, mosaicAmount, remarks} = this.formItems
-        const mosaic = mosaicHex !== ''
-            ? new MosaicId(mosaicHex) : new MosaicId(this.networkCurrency.hex)
+        const mosaic = new MosaicId(mosaicHex)
 
         return TransferTransaction.create(
             Deadline.create(),
@@ -50,15 +51,16 @@ export class MonitorInvoiceTs extends Vue {
             [new Mosaic(mosaic, UInt64.fromUint(mosaicAmount))],
             PlainMessage.create(remarks),
             networkType
-        );
+        )
     }
 
     get QRCode(): string {
+        if (this.formItems.mosaicHex.length !== 16 || this.formItems.mosaicAmount < 0) return failureIcon
         try {
             return QRCodeGenerator
                 .createTransactionRequest(this.transferTransaction)
                 .toBase64()
-        }catch (e) {
+        } catch (e) {
             return failureIcon
         }
 
@@ -164,5 +166,9 @@ export class MonitorInvoiceTs extends Vue {
                 }
             )
         })
+    }
+
+    mounted() {
+        this.formItems.mosaicHex = this.mosaicList[0].value
     }
 }

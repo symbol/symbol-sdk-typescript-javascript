@@ -1,5 +1,5 @@
 <template>
-  <div class="multisig_form_container">
+  <div class="multisig_form_container" @keyup.enter="submit">
 
     <div class="left_form radius scroll">
       <div
@@ -40,7 +40,9 @@
               {{$t('Add_co_signers_here_will_be_displayed_in_the_action_list_click_delete_to_cancel_the_operation')}}
             </div>
             <div class="input_content">
-              <input v-model="publicKeyToAdd" type="text" class="radius"
+              <input v-model="publicKeyToAdd"
+                     v-focus
+                     type="text" class="radius"
                      :placeholder="$t('Input_account_public_key')">
               <span
                       @click="addCosigner(CosignatoryModificationAction.Add)"
@@ -101,7 +103,7 @@
               <div class="list_head">
                 <span class="address_alias">{{$t('publicKey')}}/{{$t('alias')}}</span>
                 <span class="action">{{$t('operating')}}</span>
-                <span class="delate">{{$t('delete')}}</span>
+                <span class="delete">{{$t('delete')}}</span>
               </div>
               <div class="list_body scroll">
                 <div class="please_add_address" v-if="formItems.publicKeyList.length == 0">
@@ -114,7 +116,7 @@
                 {{ i.modificiationType == CosignatoryModificationAction.Add
                   ? $t('add'):$t('cut_back') }}
               </span>
-                  <img class="delate pointer" @click="removeCosigner(index)"
+                  <img class="delete pointer" @click="removeCosigner(index)"
                        src="@/common/img/service/multisig/multisigDelete.png" alt="">
                 </div>
               </div>

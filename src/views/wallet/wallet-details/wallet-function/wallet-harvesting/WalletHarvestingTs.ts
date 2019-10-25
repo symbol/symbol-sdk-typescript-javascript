@@ -118,7 +118,7 @@ export class WalletHarvestingTs extends Vue {
         return true
     }
 
-    confirmInput() {
+    submit() {
         if (!this.checkForm()) return
         this.sendTransaction()
     }

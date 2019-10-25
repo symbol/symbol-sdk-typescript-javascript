@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <div class="keystore">
+    <div class="keystore" @keyup.enter="submit">
       <div class="describe">{{$t('keyStore_description')}}</div>
       <ul>
         <li>
@@ -16,7 +16,7 @@
           <!--            </Select>-->
           <!--          </div>-->
           <div class="gray_content textarea">
-            <textarea class="absolute" v-model="formItem.keystoreStr" :placeholder="$t('keystore_text')"/>
+            <textarea class="absolute" v-focus v-model="formItem.keystoreStr" :placeholder="$t('keystore_text')"/>
           </div>
         </li>
 

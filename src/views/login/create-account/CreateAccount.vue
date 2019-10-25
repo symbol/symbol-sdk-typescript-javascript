@@ -1,5 +1,5 @@
 <template>
-  <div class="create_wallet radius">
+  <div class="create_wallet radius" @keyup.enter="submit">
     <div class="createDiv">
       <div class="createForm">
         <p class="formTit">{{$t('Create_an_account_and_password')}}</p>
@@ -8,12 +8,12 @@
           <span class="bolder_text">{{$t('The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide_2')}}</span>
           {{$t('The_wallet_terminal_will_use_the_HD_WALLET_protocol_to_provide_3')}}
         </p>
-        <Form :model="formItem" label-position="top">
+        <Form  :model="formItem" label-position="top">
 
           <ul>
             <li>
               <FormItem :label="$t('set_the_account_name')">
-                <Input v-model="formItem.accountName" :placeholder="$t('Please_enter_the_name_of_the_wallet')"/>
+                <Input  :autofocus="true" v-model="formItem.accountName" :placeholder="$t('Please_enter_the_name_of_the_wallet')"/>
               </FormItem>
             </li>
             <li>
@@ -47,7 +47,7 @@
           <FormItem>
             <div class="clear">
               <Button class="prev" type="default" @click="toBack">{{$t('back_to_home_page')}}</Button>
-              <Button class="right" type="success" @click="createAccount">{{$t('next')}}</Button>
+              <Button class="right" type="success" @click="submit">{{$t('next')}}</Button>
             </div>
           </FormItem>
         </Form>

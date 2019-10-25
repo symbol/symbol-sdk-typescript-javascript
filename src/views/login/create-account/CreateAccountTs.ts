@@ -1,19 +1,12 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {Message} from "@/config"
-import {AppLock} from "@/core/utils"
+import {formDataConfig, Message} from "@/config"
+import {AppLock, cloneData} from "@/core/utils"
 import {AppAccounts, AppAccount} from '@/core/model'
 import {networkTypeConfig} from "@/config/view/setting"
-import {NetworkType} from "nem2-sdk"
 
 @Component
 export class CreateAccountTs extends Vue {
-    formItem = {
-        accountName: '',
-        password: '',
-        passwordAgain: '',
-        hint: '',
-        currentNetType: NetworkType.MIJIN_TEST,
-    }
+    formItem = cloneData(formDataConfig.createAccountForm)
     networkTypeList = networkTypeConfig
 
     checkInput() {
@@ -38,7 +31,7 @@ export class CreateAccountTs extends Vue {
         return true
     }
 
-    createAccount() {
+    submit() {
         const appAccounts = AppAccounts()
         let {accountName, password, currentNetType, hint} = this.formItem
         if (!this.checkInput()) return

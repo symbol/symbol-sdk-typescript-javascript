@@ -29,12 +29,13 @@ export class WalletImportPrivatekeyTs extends Vue {
     NetworkTypeList = networkTypeConfig
 
     submit() {
-        if (!this.checkImport()) return
+        if (!this.checkPrivateKey()) return
         this.showCheckPWDialog = true
     }
 
     checkEnd(password) {
         if (!password) return
+        this.closeCheckPWDialog()
         this.importWallet(password)
     }
 
@@ -61,14 +62,6 @@ export class WalletImportPrivatekeyTs extends Vue {
         }
     }
 
-    checkImport() {
-        const {walletName} = this.form
-        if (!walletName || walletName == '') {
-            this.showNotice(this.$t(Message.WALLET_NAME_INPUT_ERROR))
-            return false
-        }
-        return true
-    }
 
     checkPrivateKey() {
         const {privateKey, networkType} = this.form
@@ -105,7 +98,6 @@ export class WalletImportPrivatekeyTs extends Vue {
             title: this['$t']('Import_private_key_operation') + '',
         })
         this.$emit('toWalletDetails')
-        this.closeCheckPWDialog()
     }
 
     initForm(){

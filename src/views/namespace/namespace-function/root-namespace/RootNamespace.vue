@@ -3,23 +3,23 @@
     <div class="right_panel">
       <MultisigBanCover></MultisigBanCover>
       <form @submit.prevent="validateForm('root-namespace')">
-        <div class="namespace_transaction">
+        <div class="namespace_transaction"  @keyup.enter="submit">
           <div class="form_item">
             <span class="key">{{$t('account')}}</span>
             <span
-              v-if="!hasMultisigAccounts"
-              class="value text_select"
+                    v-if="!hasMultisigAccounts"
+                    class="value text_select"
             >{{ formatAddress(wallet.address) }}
             </span>
             <Select
-              v-if="hasMultisigAccounts"
-              :placeholder="$t('publicKey')"
-              v-model="formItems.multisigPublicKey"
-              class="fee-select"
+                    v-if="hasMultisigAccounts"
+                    :placeholder="$t('publicKey')"
+                    v-model="formItems.multisigPublicKey"
+                    class="fee-select"
             >
               <Option
-                v-for="item in multisigPublicKeyList"
-                :value="item.publicKey" :key="item.publicKey"
+                      v-for="item in multisigPublicKeyList"
+                      :value="item.publicKey" :key="item.publicKey"
               >{{ item.address }}
               </Option>
             </Select>
@@ -30,12 +30,13 @@
             <ErrorTooltip fieldName="namespaceName" placementOverride="right">
               <span class="value">
                 <input
-                    data-vv-name="namespaceName"
-                    v-model="formItems.rootNamespaceName"
-                    v-validate="standardFields.namespaceName.validation"
-                    :data-vv-as="$t('root_namespace')"
-                    type="text"
-                    :placeholder="$t('New_root_space')"
+                        v-focus
+                        data-vv-name="namespaceName"
+                        v-model="formItems.rootNamespaceName"
+                        v-validate="standardFields.namespaceName.validation"
+                        :data-vv-as="$t('root_namespace')"
+                        type="text"
+                        :placeholder="$t('New_root_space')"
                 />
               </span>
             </ErrorTooltip>
@@ -59,12 +60,12 @@
             <ErrorTooltip fieldName="duration" placementOverride="right">
               <span class="value">
                 <input
-                  data-vv-name="duration"
-                  v-model="formItems.duration"
-                  v-validate="`required|${standardFields.namespaceDuration.validation}`"
-                  :data-vv-as="$t('duration')"
-                  type="text"
-                  :placeholder="$t('duration')"
+                        data-vv-name="duration"
+                        v-model="formItems.duration"
+                        v-validate="`required|${standardFields.namespaceDuration.validation}`"
+                        :data-vv-as="$t('duration')"
+                        type="text"
+                        :placeholder="$t('duration')"
                 />
                 <span class="end_label">{{$t('duration')}}:{{durationIntoDate}}</span>
               </span>

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="privatekey">
+  <div >
+    <div class="privatekey" @keyup.enter="submit">
       <div class="describe">
         {{$t('the_private_key_is_a_string_of_64_bit_random_strings_which_is_the_absolute_control_of_the_account_Please_keep_it_safe')}}
       </div>
@@ -11,7 +11,7 @@
             {{$t('Please_paste_the_private_key_string_in_the_input_box_below')}}
           </div>
           <div class="gray_content textarea">
-            <textarea class="absolute" v-model="form.privateKey"
+            <textarea class="absolute" v-model="form.privateKey" v-focus
                       :placeholder="$t('Paste_the_private_key_string_in_the_input_box')"/>
           </div>
         </li>

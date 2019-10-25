@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="validateForm('setting-lock')">
+  <form @submit.prevent="validateForm('setting-lock')" @keyup.enter="submit">
     <div class="lock_content secondary_page_animate">
       <ul>
         <li>

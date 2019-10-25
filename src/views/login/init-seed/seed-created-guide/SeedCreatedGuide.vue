@@ -1,6 +1,7 @@
 <template>
   <div class="seed_created_wrap">
-    <div class="createdDiv1" v-if="tags == 0">
+
+    <div class="createdDiv1" v-if="tags == 0"  @keyup.enter="changeTabs(1)">
       <p class="pageTit">{{$t('backup_mnemonic')}}</p>
       <p class="pageTxt">{{$t('Backup_mnemonics_can_effectively_back_up_and_restore_your_account')}}</p>
       <p class="pageRemind">
@@ -18,10 +19,11 @@
       </div>
       <div class="buttons clear">
         <Button class="prev left" type="default" @click="toBack">{{$t('previous')}}</Button>
-        <Button class="next right" type="success" @click="changeTabs(1)">{{$t('next')}}</Button>
+        <Button v-focus class="next right" type="success" @click="changeTabs(1)">{{$t('next')}}</Button>
       </div>
     </div>
-    <div class="createdDiv2" v-if="tags == 1">
+
+    <div class="createdDiv2" v-if="tags == 1" >
       <p class="pageTit">{{$t('Confirm_mnemonic')}}</p>
 
       <div @click="skipInput(2)" class="skip_button pointer">{{$t('skip')}}</div>
@@ -42,7 +44,7 @@
       </div>
     </div>
 
-    <div class="createdDiv3" v-if="tags == 2">
+    <div class="createdDiv3" v-if="tags == 2" @keyup.enter="toWalletPage">
       <p class="pageTit">{{$t('Congratulations_on_creating_a_wallet')}}</p>
       <p class="pageTxt">{{$t('You_passed_the_test_please_be_sure_to_keep_your_mnemonic_safe')}}</p>
       <div class="safetyTips">
@@ -67,7 +69,7 @@
         </Row>
       </div>
       <div class="buttons">
-        <Button class="next" type="success" @click="toWalletPage()">{{$t('complete')}}</Button>
+        <Button v-focus class="next" type="success" @click="toWalletPage()">{{$t('complete')}}</Button>
       </div>
     </div>
   </div>

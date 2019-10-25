@@ -52,7 +52,7 @@
                   class="comment_title_text">{{$t('comment')}}  </span> ({{totalComment}})</span>
 
             <div class="input_container">
-              <textarea v-model="commentContent" name="" id=""></textarea>
+              <textarea v-model="commentContent"></textarea>
               <span class="textarea_text">{{$t('remaining')}}：{{remainingWords}} {{$t('word')}}</span>
             </div>
 

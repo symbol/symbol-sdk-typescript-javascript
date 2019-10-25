@@ -1,6 +1,6 @@
 <template>
   <div class="remote_board_container secondary_page_animate scroll">
-    <div class="top_network_info radius scroll" style="display: block;">
+    <div class="top_network_info radius scroll">
       <div class="remote_total">
 <!--        <strong class="trend"> {{$t('Remote_title_receipt')}}</strong>-->
 <!--        <div class="num_class">-->
@@ -70,9 +70,9 @@
             class-name="dash_board_dialog">
       <MultisigBanCover></MultisigBanCover>
 
-      <div class="gray_input_content">
+      <div class="gray_input_content" @keyup.enter="submit">
         <span class="title">{{$t('remote_modal_pul')}}</span>
-        <input v-if="!isLinked" type="text" v-model="formItems.remotePublicKey" :placeholder="$t('remote_modal_place1')">
+        <input v-if="!isLinked" v-focus type="text" v-model="formItems.remotePublicKey" :placeholder="$t('remote_modal_place1')">
         <span v-else>{{formItems.remotePublicKey}}</span>
       </div>
       <div class="gray_input_content">
@@ -94,13 +94,13 @@
       </div>
 
       <div class="gray_input_content">
-        <span class="title">{{$t('password')}}</span>
+        <span class="title" v-focus>{{$t('password')}}</span>
         <input type="password" v-model="formItems.password" :placeholder="$t('remote_modal_place2')">
       </div>
 
 
       <div class="new_model_btn">
-        <span class="modal_btn pointer radius" @click="confirmInput">{{$t('remote_modal_confirm')}}</span>
+        <span class="modal_btn pointer radius" @click="submit">{{$t('remote_modal_confirm')}}</span>
       </div>
     </Modal>
 

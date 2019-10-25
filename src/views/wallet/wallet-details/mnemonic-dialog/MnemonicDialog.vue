@@ -19,16 +19,16 @@
         </div>
 
         <div class="stepItem1" v-if="stepIndex == 0">
-          <Form :model="wallet">
+          <Form :model="wallet" @keyup.enter.native="exportMnemonic">
             <FormItem>
-              <Input v-model="wallet.password" type="password" required
+              <Input :autofocus="true" v-model="wallet.password" type="password" required
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
             <FormItem>
               <div class="buttons_container">
                 <Button class="button_arrow" type="success" @click="exportMnemonic">
                   {{$t('next')}}
-                  <Icon class="next" type="ios-arrow-round-forward"/>
+                  <Icon  type="ios-arrow-forward" />
                 </Button>
                 <input v-if="false" type="text">
               </div>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="stepItem2" v-if="stepIndex == 1">
-          <div class="step2Txt">
+          <div class="step2Txt" @keyup.enter.native="exportMnemonic">
             <Row>
               <Col span="9">
                 <div class="imgDiv">
@@ -61,27 +61,26 @@
             </Row>
           </div>
           <div class="buttons_container">
-            <Button class="button_arrow" type="success" @click="exportMnemonic">
+            <Button v-focus class="button_arrow" type="success" @click="exportMnemonic">
               {{$t('next')}}
-              <Icon class="next" type="ios-arrow-round-forward"/>
+              <Icon  type="ios-arrow-forward" />
             </Button>
-
           </div>
         </div>
 
-        <div class="stepItem3" v-if="stepIndex == 2">
+        <div class="stepItem3" v-if="stepIndex == 2" >
           <p class="tit">{{$t('please_accurately_copy_the_safety_backup_mnemonic')}}</p>
           <div class="mnemonicWords text_select">{{mnemonic}}</div>
-          <div class="buttons_container">
+          <div class="buttons_container" @keyup.enter.native="exportMnemonic">
             <Button class="button_arrow" type="success" @click="copyMnemonic">
               {{$t('copy_mnemonic')}}
             </Button>
             <Button class="button_arrow" type="success" @click="stepIndex = 5">
               {{$t('display_mnemonic_QR_code')}}
             </Button>
-            <Button type="success" @click="exportMnemonic">
+            <Button type="success" v-focus @click="exportMnemonic">
               {{$t('next')}}
-              <Icon class="next" type="ios-arrow-round-forward"/>
+              <Icon  type="ios-arrow-forward" />
             </Button>
           </div>
         </div>

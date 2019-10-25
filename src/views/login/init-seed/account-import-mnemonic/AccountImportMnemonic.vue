@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mnemonic">
+    <div class="mnemonic"  @keyup.enter="submit">
       <div class="page_import_title">{{$t('Import_mnemonic')}}</div>
       <div class="describe">{{$t('mnemonic_description')}}</div>
       <ul>
@@ -12,7 +12,7 @@
           </div>
           </div>
           <div class="gray_content textarea">
-            <textarea class="absolute" v-model="form.mnemonic"/>
+            <textarea v-focus class="absolute" v-model="form.mnemonic"/>
           </div>
         </li>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="aliasTable">
+  <div class="aliasTable" @keyup.enter="submit">
     <Modal
            v-model="show"
            :transfer="false"
@@ -107,7 +107,7 @@
       <div class="input_content">
         <div class="title">{{$t('password')}}</div>
         <div class="input_area">
-          <input type="password" v-model="formItems.password" :placeholder="$t('please_enter_your_wallet_password')">
+          <input v-focus type="password" v-model="formItems.password" :placeholder="$t('please_enter_your_wallet_password')">
         </div>
       </div>
 

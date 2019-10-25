@@ -38,6 +38,7 @@
 
       <div class="bottom_input">
         <input
+                v-focus
                 data-vv-name="password"
                 v-model="formItems.password"
                 type="password"

@@ -1,7 +1,7 @@
 <template>
   <div class="walletCreateWrap">
     <div class="createDiv">
-      <div class="createForm">
+      <div class="createForm" @keyup.enter="submit" >
         <p class="formTit">{{$t('create_wallet')}}</p>
         <Form :model="formItem" label-position="top">
           <FormItem :label="$t('choose_network')">
@@ -14,7 +14,7 @@
           <FormItem :label="$t('set_the_wallet_name')">
             <p class="formItemTxt">
               {{$t('The_name_of_the_wallet_can_be_convenient_for_you_to_use_you_can_distinguish_different_wallets_etc_for_better_management_after_entering_the_system_you_can_also_modify_the_wallet_details')}}</p>
-            <Input v-model="formItem.walletName"
+            <Input :autofocus="true" v-model="formItem.walletName"
                    :placeholder="$t('Please_enter_the_name_of_the_wallet')"/>
           </FormItem>
           <FormItem :label="$t('set_wallet_path')">

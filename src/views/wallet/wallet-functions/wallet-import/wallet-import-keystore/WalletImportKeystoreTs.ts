@@ -1,5 +1,5 @@
 import {formDataConfig, Message} from "@/config/index.ts"
-import {Password} from "nem2-sdk"
+import {Password, NetworkType} from "nem2-sdk"
 import {mapState} from 'vuex'
 import {Component, Vue} from 'vue-property-decorator'
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
@@ -42,7 +42,7 @@ export class WalletImportKeystoreTs extends Vue {
     }
 
     importWallet(password) {
-        const {keystorePassword,networkType,keystoreStr} = this.formItem
+        const {keystorePassword, networkType, keystoreStr} = this.formItem
         try {
             new AppWallet().createFromKeystore(
                 this.formItem.walletName,
@@ -67,14 +67,23 @@ export class WalletImportKeystoreTs extends Vue {
         this.$emit('toWalletDetails')
     }
 
-    async checkForm() {
-        const {networkType, walletName} = this.formItem
-        if (networkType == 0) {
+    checkForm() {
+        const {networkType, walletName, keystorePassword, keystoreStr} = this.formItem
+        if (!(networkType in NetworkType)) {
             this.showErrorNotice(Message.PLEASE_SWITCH_NETWORK)
             return false
         }
         if (!walletName || walletName == '') {
             this.showErrorNotice(Message.WALLET_NAME_INPUT_ERROR)
+            return false
+        }
+        if (!keystorePassword || keystorePassword == '') {
+            this.showErrorNotice(Message.INPUT_EMPTY_ERROR)
+            return false
+        }
+
+        if (!keystoreStr || keystoreStr == '') {
+            this.showErrorNotice(Message.INPUT_EMPTY_ERROR)
             return false
         }
         return true
@@ -87,9 +96,10 @@ export class WalletImportKeystoreTs extends Vue {
         })
     }
 
-    initData(){
+    initData() {
         this.formItem = cloneData(formDataConfig.importKeystoreConfig)
     }
+
     toBack() {
         this.initData()
         this.$emit('closeImport')

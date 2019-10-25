@@ -16,22 +16,24 @@
           <span :class="['stepItem',stepIndex == 1?'active':'']">{{$t('backup_prompt')}}</span>
           <span :class="['stepItem',stepIndex == 2||stepIndex == 3?'active':'']">{{$t('backup')}} Keystore</span>
         </div>
-        <div class="stepItem1" v-if="stepIndex == 0">
-          <Form :model="wallet">
+
+        <div class="stepItem1" v-if="stepIndex == 0" >
+          <Form :model="wallet" @keyup.enter.native="exportKeystore">
             <FormItem>
-              <Input v-model="wallet.password" type="password" required
+              <Input :autofocus="true" v-model="wallet.password" type="password" required
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
+            <input v-if="false" type="text">
             <FormItem>
               <Button type="success" class="button_arrow" @click="exportKeystore">{{$t('next')}}
-                <Icon type="ios-arrow-round-forward"/>
+                <Icon  type="ios-arrow-forward" />
               </Button>
             </FormItem>
             <input v-if="false" type="text">
           </Form>
         </div>
 
-        <div class="stepItem2" v-if="stepIndex == 1">
+        <div class="stepItem2" v-if="stepIndex == 1" @keyup.enter.native="exportKeystore">
           <div class="step2Txt">
             <Row>
               <Col span="8">
@@ -57,12 +59,12 @@
               </Col>
             </Row>
           </div>
-          <Button type="success" class="button_arrow" @click="exportKeystore">{{$t('next')}}
-            <Icon type="ios-arrow-round-forward"/>
+          <Button type="success" v-focus class="button_arrow" @click="exportKeystore">{{$t('next')}}
+            <Icon  type="ios-arrow-forward" />
           </Button>
         </div>
 
-        <div class="stepItem3" v-if="stepIndex == 2">
+        <div class="stepItem3" v-if="stepIndex == 2" >
           <Row>
             <Col span="15">
               <div class="keystoreCode">
@@ -82,7 +84,6 @@
 
             </Col>
           </Row>
-
           <!--            <Col span="8">-->
           <!--              <Button type="success" @click="exportKeystore">{{$t('Display_Keystore_QR_code')}}</Button>-->
           <!--            </Col>-->

@@ -1,5 +1,5 @@
 <template>
-  <div class="privatekeyDialogWrap">
+  <div class="privatekeyDialogWrap" >
     <Modal
             v-model="show"
             class-name="vertical-center-modal"
@@ -17,11 +17,15 @@
           <span :class="['stepItem',stepIndex == 2||stepIndex == 3?'active':'']">{{$t('backup_private_key')}}</span>
         </div>
         <div class="stepItem1" v-if="stepIndex == 0">
-          <Form :model="wallet">
+          <Form :model="wallet" @keyup.enter.native="exportPrivatekey">
             <FormItem>
-              <Input v-model="wallet.password" type="password" required
+              <Input v-model="wallet.password"
+                     type="password"
+                     :autofocus="true"
+                     required
                      :placeholder="$t('please_enter_your_wallet_password')"></Input>
             </FormItem>
+            <input v-if="false" type="text">
             <FormItem>
               <Button type="success" class="button_arrow" @click="exportPrivatekey">
                 {{$t('next')}}
@@ -31,8 +35,9 @@
             <input v-if="false" type="text">
           </Form>
         </div>
+
         <div class="stepItem2" v-if="stepIndex == 1">
-          <div class="step2Txt">
+          <div class="step2Txt" @keyup.enter.native="exportPrivatekey">
             <Row>
               <Col span="9">
                 <div class="imgDiv">
@@ -54,11 +59,12 @@
               </Col>
             </Row>
           </div>
-          <Button type="success" class="button_arrow" @click="exportPrivatekey">{{$t('next')}}
+          <Button v-focus type="success" class="button_arrow" @click="exportPrivatekey">{{$t('next')}}
             <Icon type="ios-arrow-round-forward"/>
           </Button>
         </div>
-        <div class="stepItem3" v-if="stepIndex == 2">
+
+        <div class="stepItem3" v-if="stepIndex == 2" @keyup.enter.native="exportPrivatekey">
           <p class="tit">{{$t('please_accurately_copy_the_secure_backup_private_key')}}</p>
           <p class="txt">
             {{$t('do_not_save_to_email_notepad_web_chat_etc_It_is_very_dangerous_Please_don_use_network_transmission')}}</p>
@@ -71,7 +77,7 @@
           <div class="buttons_container">
             <Button type="success" class="buttons button_arrow" @click="copyPrivatekey">{{$t('copy_private_key')}}
             </Button>
-            <Button type="success" class="buttons button_arrow" @click="exportPrivatekey">
+            <Button type="success" v-focus class="buttons button_arrow" @click="exportPrivatekey">
               {{$t('display_private_key_QR_code')}}
             </Button>
           </div>

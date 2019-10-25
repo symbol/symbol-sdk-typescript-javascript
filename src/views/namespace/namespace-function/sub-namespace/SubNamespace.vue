@@ -1,25 +1,25 @@
 <template>
-  <div class="namespace_transaction_container secondary_page_animate">
+  <div class="namespace_transaction_container secondary_page_animate" >
     <div class="right_panel">
       <MultisigBanCover></MultisigBanCover>
       <form @submit.prevent="validateForm('sub-namespace')">
-        <div class="namespace_transaction">
+        <div class="namespace_transaction" @keyup.enter="submit">
           <div class="form_item">
             <span class="key">{{$t('account')}}</span>
             <span
-              v-if="!hasMultisigAccounts"
-              class="value text_select"
+                    v-if="!hasMultisigAccounts"
+                    class="value text_select"
             >{{ formatAddress(wallet.address) }}
             </span>
             <Select
-              v-if="hasMultisigAccounts"
-              :placeholder="$t('publicKey')"
-              v-model="formItems.multisigPublicKey"
-              class="fee-select"
+                    v-if="hasMultisigAccounts"
+                    :placeholder="$t('publicKey')"
+                    v-model="formItems.multisigPublicKey"
+                    class="fee-select"
             >
               <Option
-                v-for="item in multisigPublicKeyList"
-                :value="item.publicKey" :key="item.publicKey"
+                      v-for="item in multisigPublicKeyList"
+                      :value="item.publicKey" :key="item.publicKey"
               >{{ item.address }}
               </Option>
             </Select>
@@ -31,14 +31,15 @@
             <span class="value">
             <ErrorTooltip fieldName="parent_namespace" placementOverride="right">
               <Select
-                :placeholder="$t('select_parent_namespace')"
-                data-vv-name="parent_namespace"
-                v-validate="'required'"
-                v-model="formItems.rootNamespaceName"
-                class="select"
-                :data-vv-as="$t('parent_namespace')"
+                      :placeholder="$t('select_parent_namespace')"
+                      data-vv-name="parent_namespace"
+                      v-validate="'required'"
+                      v-model="formItems.rootNamespaceName"
+                      class="select"
+                      :data-vv-as="$t('parent_namespace')"
               >
-                  <Option v-for="item in activeNamespaceList"  :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  <Option v-for="item in activeNamespaceList" :value="item.value"
+                          :key="item.value">{{ item.label }}</Option>
               </Select>
             </ErrorTooltip>
             </span>
@@ -50,12 +51,13 @@
               <ErrorTooltip fieldName="Subspace" placementOverride="right">
                 <span class="value">
                   <input
-                      data-vv-name="Subspace"
-                      v-model="formItems.subNamespaceName"
-                      v-validate="standardFields.subNamespaceName.validation"
-                      :data-vv-as="$t('Subspace')"
-                      type="text"
-                      :placeholder="$t('Input_space_name')"
+                          v-focus
+                          data-vv-name="Subspace"
+                          v-model="formItems.subNamespaceName"
+                          v-validate="standardFields.subNamespaceName.validation"
+                          :data-vv-as="$t('Subspace')"
+                          type="text"
+                          :placeholder="$t('Input_space_name')"
                   />
                 </span>
               </ErrorTooltip>

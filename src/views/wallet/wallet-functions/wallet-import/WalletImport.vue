@@ -1,12 +1,12 @@
 <template>
-  <div class="walletImportWrap scroll radius">
-    <div class="seeting_main_container">
+  <div class="walletImportWrap  radius">
+    <div class="setting_main_container">
       <div class="left_wallet_import_navigator left">
         <div class="navigator_item pointer" @click="jumpToView(n,index)" v-for="(n,index) in navigatorList">
           <span :class="n.isSelected ? 'selected_title':''">{{$t(n.title)}}</span>
         </div>
       </div>
-      <div class="right_view right">
+      <div class="right_view scroll right">
         <div class="top_title">
           {{$t('import')}}{{$t(currentHeadText)}}
         </div>

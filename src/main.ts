@@ -27,7 +27,15 @@ if (isWindows) {
 }
 
 Vue.config.productionTip = false
-
+/*
+* Custom instruction
+* input auto focus
+* */
+Vue.directive('focus', {
+    inserted: function (el, binding) {
+        el.focus()
+    }
+})
 export default new Vue({
     el: '#app',
     router,

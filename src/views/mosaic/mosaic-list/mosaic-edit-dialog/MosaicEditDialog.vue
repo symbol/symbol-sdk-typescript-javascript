@@ -1,6 +1,7 @@
 <template>
   <div class="mosaicEditDialogWrap">
     <Modal
+            @keyup.enter.native="submit"
             v-model="show"
             class-name="vertical-center-modal"
             :footer-hide="true"
@@ -35,6 +36,7 @@
                      :disabled="!itemMosaic.properties.supplyMutable"
                      :placeholder="$t('please_enter_the_amount_of_change')"
                      @input="changeSupply"
+                     :autofocus="true"
               />
             </FormItem>
             <FormItem :label="$t('post_change_supply')">

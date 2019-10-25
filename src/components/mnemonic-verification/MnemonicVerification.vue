@@ -1,5 +1,5 @@
 <template>
-  <div class="mnemonic_container">
+  <div class="mnemonic_container"  @keyup.enter="verificationSuccess">
     <div class="mnemonicWordDiv clear scroll">
           <span v-for="(c,index) in confirmedMnemonicList" >
             <Tag closable @on-close="removeConfirmedWord(index)">{{c}}</Tag>
@@ -15,7 +15,7 @@
     </div>
     <div class="buttons clear">
       <Button class="prev left" type="default" @click="toPreviousPage">{{$t('previous')}}</Button>
-      <Button class="next right" type="success" @click="verificationSuccess">{{$t('next')}}</Button>
+      <Button class="next right" v-focus type="success" @click="verificationSuccess">{{$t('next')}}</Button>
     </div>
   </div>
 </template>

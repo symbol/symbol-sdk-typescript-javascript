@@ -1,6 +1,7 @@
 <template>
   <div class="checkPWDialogWrap">
     <Modal
+            @keyup.enter.native="submit"
             v-model="show"
             class-name="vertical-center-modal"
             :footer-hide="true"
@@ -33,9 +34,9 @@
 
 
           <form>
-            <input v-model="walletInputInfo.password" type="password" required
+            <input v-focus v-model="walletInputInfo.password" type="password" required
                    :placeholder="$t('please_enter_your_wallet_password')"/>
-            <Button type="success" @click="checkPassword">{{$t('confirm')}}</Button>
+            <Button type="success" @click="submit">{{$t('confirm')}}</Button>
             <input v-show="false">
           </form>
         </div>

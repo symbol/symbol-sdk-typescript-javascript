@@ -1,34 +1,33 @@
 <template>
-  <div class="mosaic_transaction_container radius secondary_page_animate">
+  <div class="mosaic_transaction_container radius secondary_page_animate" >
     <div class="right_panel">
       <MultisigBanCover></MultisigBanCover>
-      <div class="namespace_transaction">
+      <div class="namespace_transaction" @keyup.enter="submit">
         <div class="form_item">
           <span class="key">{{$t('account')}}</span>
           <span
-            v-if="!hasMultisigAccounts"
-            class="value text_select"
+                  v-if="!hasMultisigAccounts"
+                  class="value text_select"
           >{{ formatAddress(wallet.address) }}
           </span>
           <Select
-            v-if="hasMultisigAccounts"
-            :placeholder="$t('publicKey')"
-            v-model="formItems.multisigPublicKey"
-            class="fee-select"
+                  v-if="hasMultisigAccounts"
+                  :placeholder="$t('publicKey')"
+                  v-model="formItems.multisigPublicKey"
+                  class="fee-select"
           >
             <Option
-              v-for="item in multisigPublicKeyList"
-              :value="item.publicKey" :key="item.publicKey"
+                    v-for="item in multisigPublicKeyList"
+                    :value="item.publicKey" :key="item.publicKey"
             >{{ item.address }}
             </Option>
           </Select>
         </div>
 
-
         <div class="form_item">
           <span class="key">{{$t('supply')}}</span>
           <span class="value">
-            <input v-model="formItems.supply" type="text" :placeholder="$t('supply')">
+            <input  v-focus v-model="formItems.supply" type="text" :placeholder="$t('supply')">
             <span class="number_controller">
                 <img @click="addSupplyAmount " class="pointer"
                      src="@/common/img/monitor/market/marketAmountUpdateArrow.png"/>
@@ -51,14 +50,12 @@
            </span>
         </div>
 
-
         <div class="check_box">
           <Checkbox class="check_box_item" v-model="formItems.transferable">{{$t('transmittable')}}</Checkbox>
           <Checkbox class="check_box_item" v-model="formItems.supplyMutable">{{$t('variable_supply')}}</Checkbox>
           <Checkbox class="check_box_item" v-model="formItems.permanent">{{$t('duration_permanent')}}</Checkbox>
           <Checkbox class="check_box_item" v-model="formItems.restrictable">{{$t('restrictable')}}</Checkbox>
         </div>
-
 
         <div class="form_item duration_item" v-if="!formItems.permanent">
           <span class="key">{{$t('duration')}}</span>
@@ -96,7 +93,7 @@
         </div>
 
         <div :class="['create_button' ,isCompleteForm?'pointer':'not_allowed']"
-             @click="submit()">
+             @click="submit">
           {{$t('create')}}
         </div>
       </div>
