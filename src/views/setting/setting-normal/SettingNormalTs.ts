@@ -1,5 +1,5 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {localSave} from '@/core/utils/utils.ts'
+import {localSave} from '@/core/utils'
 import {mapState} from "vuex"
 import {timeZoneListData} from "@/config/view/timeZone";
 import {languageConfig} from "@/config/view/language";

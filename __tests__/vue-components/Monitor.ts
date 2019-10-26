@@ -1,25 +1,25 @@
-import Vuex from 'vuex'
-import vueStore from '@/store/index.ts'
-import {shallowMount, createLocalVue} from '@vue/test-utils'
+import {shallowMount, config, mount, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'iview'
 // @ts-ignore
-import LineChartByDay from '@/components/line-chart-by-day/LineChartByDay.vue'
-
+import Monitor from '@/views/monitor/Monitor.vue'
+import vueStore from '@/store/index.ts'
+// @ts-ignore
 const localVue = createLocalVue()
-localVue.use(VueRouter)
-localVue.use(iView);
 const router = new VueRouter()
-
-describe('LineChart', () => {
+localVue.use(VueRouter)
+localVue.use(iView)
+// close warning
+config.logModifiedComponents = false
+describe('Monitor', () => {
     let store
     beforeEach(() => {
             store = vueStore
         }
     )
 
-    it('Component LineChartByDay is not null', () => {
-        const wrapper = shallowMount(LineChartByDay, {
+    it('Component Monitor is not null ', () => {
+        const wrapper = mount(Monitor, {
             mocks: {
                 $t: (msg) => msg
             },
@@ -28,5 +28,5 @@ describe('LineChart', () => {
             store
         })
         expect(wrapper).not.toBeNull()
-})
+    })
 })

@@ -2,7 +2,7 @@ import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import monitorSelected from '@/common/img/monitor/monitorSelected.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
-import {copyTxt, formatXemAmount, formatNumber, localRead, localSave} from '@/core/utils/utils.ts'
+import {copyTxt, formatXemAmount, formatNumber, localRead, localSave} from '@/core/utils'
 import {mapState} from "vuex"
 import {monitorPanelNavigatorConfig} from "@/config/view/monitor"
 import {AppInfo, MosaicNamespaceStatusType, StoreAccount} from "@/core/model"
@@ -49,7 +49,7 @@ export class MonitorTs extends Vue {
     }
 
     get address() {
-        return this.activeAccount.wallet.address
+        return this.activeAccount.wallet ? this.activeAccount.wallet.address : ''
     }
 
     get mosaicMap() {

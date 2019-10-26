@@ -1,6 +1,6 @@
 import {AliasType} from "nem2-sdk"
 import {mapState} from "vuex"
-import {formatSeconds} from '@/core/utils/utils.ts'
+import {formatSeconds} from '@/core/utils'
 import {Component, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
 import {Message, networkConfig} from '@/config'

@@ -1,6 +1,6 @@
 import {Message} from "@/config/index.ts"
-import {formatDate} from '@/core/utils/utils.ts'
-import {blog} from "@/core/api/logicApi.ts"
+import {formatDate} from '@/core/utils'
+import {blog} from "@/core/api"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {mapState} from "vuex"

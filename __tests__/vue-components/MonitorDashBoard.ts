@@ -1,25 +1,25 @@
-import {shallowMount, createLocalVue} from '@vue/test-utils'
+import {shallowMount, config, mount, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'iview'
 // @ts-ignore
-import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
+import Monitor from '@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'
 import vueStore from '@/store/index.ts'
-
+// @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
 localVue.use(VueRouter)
-localVue.use(iView);
 localVue.use(iView)
-
-describe('CheckPasswordDialog', () => {
+// close warning
+config.logModifiedComponents = false
+describe('MonitorDashBoard', () => {
     let store
     beforeEach(() => {
             store = vueStore
         }
     )
 
-    it('Component CheckPasswordDialog is not null', () => {
-        const wrapper = shallowMount(CheckPasswordDialog, {
+    it('Component MonitorDashBoard is not null ', () => {
+        const wrapper = mount(Monitor, {
             mocks: {
                 $t: (msg) => msg
             },

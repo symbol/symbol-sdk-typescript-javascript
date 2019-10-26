@@ -2,9 +2,9 @@ import PieChart from './PieChart.vue'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {alphabet, Message} from '@/config/index.ts'
-import {vote} from '@/core/api/logicApi.ts'
+import {vote} from '@/core/api'
 import {mapState} from "vuex"
-import {formatDate} from '@/core/utils/utils.ts'
+import {formatDate} from '@/core/utils'
 import {voteActionConfig, voteFilterConfig, voteSelectionConfig} from "@/config/view/vote";
 import {VoteType} from "@/core/model/VoteType";
 import {StoreAccount} from '@/core/model'

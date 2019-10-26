@@ -1,7 +1,7 @@
 import {mapState} from 'vuex'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
-import {formatNumber, formatXemAmount, localRead} from '@/core/utils/utils.ts'
+import {formatNumber, formatXemAmount, localRead} from '@/core/utils'
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {seedWalletTitle, walletStyleSheetType} from '@/config/view/wallet.ts'

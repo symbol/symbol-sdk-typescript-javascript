@@ -1,5 +1,5 @@
 import CryptoJS, {WordArray} from 'crypto-js'
-import {localSave, localRead, localRemove} from '@/core/utils/utils.ts'
+import {localSave, localRead, localRemove} from '@/core/utils'
 
 const defaultAlgo = CryptoJS.algo.AES
 const cryptoJSLib: any = CryptoJS.lib

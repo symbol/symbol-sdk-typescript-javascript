@@ -1,6 +1,6 @@
 import {mapState} from "vuex"
-import {market} from "@/core/api/logicApi.ts"
-import {KlineQuery} from "@/core/query/klineQuery.ts"
+import {market} from "@/core/api"
+import {KlineQuery} from "@/core/query"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import {isRefreshData, localSave, localRead, formatNumber} from '@/core/utils'
 import numberGrow from '@/components/number-grow/NumberGrow.vue'

@@ -1,7 +1,7 @@
 import {Message} from "@/config/index.ts"
 import {Password} from "nem2-sdk"
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {randomMnemonicWord} from "@/core/utils/hdWallet.ts"
+import {randomMnemonicWord} from "@/core/utils"
 import {mapState} from "vuex"
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {localRead} from "@/core/utils"

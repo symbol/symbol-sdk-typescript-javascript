@@ -1,7 +1,7 @@
 import {Message, isWindows} from "@/config/index.ts"
 import monitorSelected from '@/common/img/window/windowSelected.png'
 import monitorUnselected from '@/common/img/window/windowUnselected.png'
-import {localRead, localSave} from "@/core/utils/utils.ts"
+import {localRead, localSave} from "@/core/utils"
 import {Component, Vue} from 'vue-property-decorator'
 import {windowSizeChange, minWindow, maxWindow, unMaximize, closeWindow} from '@/core/utils/electron.ts'
 import {mapState} from 'vuex'

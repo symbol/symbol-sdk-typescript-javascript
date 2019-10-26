@@ -12,7 +12,7 @@
 <script lang="ts">
     import './Service.less'
     // @ts-ignore
-    import {ServiceTs} from 'src/views/service/ServiceTs.ts'
+    import {ServiceTs} from '@/views/service/ServiceTs.ts'
 
     export default class Service extends ServiceTs {
 

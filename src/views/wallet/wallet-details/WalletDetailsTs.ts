@@ -1,4 +1,4 @@
-import {copyTxt} from '@/core/utils/utils.ts'
+import {copyTxt} from '@/core/utils'
 import {ContactQR} from 'nem2-qr-library'
 import {Address, AddressAlias, AliasType, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
 import {Component, Vue, Watch} from 'vue-property-decorator'
@@ -78,7 +78,7 @@ export class WalletDetailsTs extends Vue {
     get selfAliases(): AppNamespace[] {
         return this.NamespaceList
             .filter(({alias}) =>
-                alias    
+                alias
                 && alias.type == AliasType.Address
                 && alias.address.plain()=== this.getAddress
             )

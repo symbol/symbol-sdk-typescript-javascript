@@ -1,4 +1,4 @@
-import {localSave} from '@/core/utils/utils.ts'
+import {localSave} from '@/core/utils'
 import {Component, Vue} from 'vue-property-decorator'
 import {languageConfig} from "@/config/view/language"
 

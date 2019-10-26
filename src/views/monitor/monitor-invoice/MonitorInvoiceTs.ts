@@ -1,6 +1,6 @@
 import {Message} from "@/config/index.ts"
 import {QRCodeGenerator} from 'nem2-qr-library'
-import {copyTxt} from '@/core/utils/utils.ts'
+import {copyTxt} from '@/core/utils'
 import {Component, Vue} from 'vue-property-decorator'
 import CollectionRecord from '@/components/collection-record/CollectionRecord.vue'
 import {mapState} from "vuex"

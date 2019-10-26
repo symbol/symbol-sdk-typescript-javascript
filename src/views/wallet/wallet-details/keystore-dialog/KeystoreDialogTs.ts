@@ -1,5 +1,5 @@
 import {Message} from "@/config/index.ts"
-import {copyTxt} from "@/core/utils/utils.ts"
+import {copyTxt} from "@/core/utils"
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapState} from "vuex"
 import {Password} from "nem2-sdk"

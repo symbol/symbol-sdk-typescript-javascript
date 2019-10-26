@@ -1,6 +1,6 @@
 import {AccountQR} from 'nem2-qr-library'
 import {Password, Account} from 'nem2-sdk'
-import {copyTxt} from "@/core/utils/utils.ts"
+import {copyTxt} from "@/core/utils"
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {Message} from "@/config"
 import {mapState} from "vuex"

@@ -1,6 +1,6 @@
-import {localSave} from '@/core/utils/utils.ts'
-import {KlineQuery} from "@/core/query/klineQuery.ts"
-import {market} from "@/core/api/logicApi.ts"
+import {localSave} from '@/core/utils'
+import {KlineQuery} from "@/core/query"
+import {market} from "@/core/api"
 
 
 export const getMarketOpenPrice = async (that: any) => {
