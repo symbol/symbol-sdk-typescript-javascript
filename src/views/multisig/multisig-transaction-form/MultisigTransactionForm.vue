@@ -138,7 +138,7 @@
                 @checkEnd="checkEnd"
                 :transactionDetail="transactionDetail"
                 :transactionList="transactionList"
-                :otherDetails=otherDetails
+                :lockParams=lockParams
         ></CheckPWDialog>
       </div>
     </div>

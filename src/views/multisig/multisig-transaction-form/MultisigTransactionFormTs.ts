@@ -11,12 +11,13 @@ import {
 import {mapState} from "vuex"
 import {Component, Vue, Watch, Prop} from 'vue-property-decorator'
 import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig, MULTISIG_INFO} from "@/config/index.ts"
-import {StoreAccount, DefaultFee, AppWallet, ANNOUNCE_TYPES, MULTISIG_FORM_MODES} from "@/core/model"
+import {StoreAccount, DefaultFee, AppWallet, ANNOUNCE_TYPES, MULTISIG_FORM_MODES, LockParams} from "@/core/model"
 import {getAbsoluteMosaicAmount, formatAddress, cloneData} from "@/core/utils"
 import {
     createBondedMultisigTransaction,
     createCompleteMultisigTransaction,
-    getMultisigAccountMultisigAccountInfo
+    getMultisigAccountMultisigAccountInfo,
+    signTransaction,
 } from '@/core/services'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
@@ -38,7 +39,6 @@ export class MultisigTransactionFormTs extends Vue {
     isCompleteForm = false
     showCheckPWDialog = false
     transactionDetail = {}
-    otherDetails = {}
     transactionList = []
     formItems = {...this.defaultFormItems}
     formatAddress = formatAddress
@@ -224,7 +224,7 @@ export class MultisigTransactionFormTs extends Vue {
         const {activeMultisigAccount} = this.activeAccount
         return activeMultisigAccount
             ? activeMultisigAccount
-            : this.multisigPublicKeyList[0] && this.multisigPublicKeyList[0].publicKey || ''
+            : this.multisigPublicKeyList && this.multisigPublicKeyList[0].publicKey || ''
     }
 
     initForm() {
@@ -261,25 +261,33 @@ export class MultisigTransactionFormTs extends Vue {
     submit() {
         if (!this.isCompleteForm) return
         if (!this.checkForm()) return
-        const {address} = this.wallet
-        const {publicKeyList, minApproval, minRemoval} = this.formItems
-        const {feeAmount, announceInLock, hasCosignatories, announceType} = this
+        const {hasCosignatories} = this
 
-        this.transactionDetail = {
-            "address": address,
-            "min_approval": minApproval,
-            "min_removal": minRemoval,
-            "cosigner": publicKeyList
-                .map(({cosignatoryPublicAccount}) => cosignatoryPublicAccount.publicKey)
-                .join(','),
-            "fee": feeAmount / Math.pow(10, this.networkCurrency.divisibility)
-        }
-
-        if (announceInLock) this.otherDetails = {lockFee: feeAmount}
         if (!hasCosignatories) this.sendMultisigConversionTransaction()
         if (hasCosignatories) this.sendMultisigModificationTransaction()
         this.initForm()
-        this.showCheckPWDialog = true
+        this.confirmViaTransactionConfirmation()
+    }
+
+    get lockParams(): LockParams {
+        const {announceInLock, feeAmount, feeDivider} = this
+        return new LockParams(announceInLock, feeAmount / feeDivider)
+    }
+
+    async confirmViaTransactionConfirmation() {
+        const {
+            success,
+            signedTransaction,
+            signedLock,
+        } = await signTransaction({
+            transaction: this.transactionList[0],
+            store: this.$store,
+            lockParams: this.lockParams,
+        });
+        if(success) {
+            new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
+            this.initForm()
+        }
     }
 
     showErrorMessage(message: string) {

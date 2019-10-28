@@ -1,8 +1,9 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {formatAddress} from "@/core/utils"
+import {formatAddress, formatSeconds, removeLinkInAddressBook, readLocalAliasInAddressBook, saveLocalAlias} from "@/core/utils"
 import {mapState} from "vuex"
-import {StoreAccount, AppInfo, removeLinkInAddressBook, saveLocalAlias, readLocalAliasInAddressBook} from "@/core/model"
+import {StoreAccount, AppInfo} from "@/core/model"
+import {networkConfig} from "@/config/index"
 
 @Component({
     computed: {

@@ -1,7 +1,7 @@
 import {Address, Listener, NodeHttp} from "nem2-sdk"
 import {filter} from 'rxjs/operators'
 import {formatAndSave} from '@/core/services/transactions'
-import {ChainStatus} from '@/core/model'
+import {ChainStatus, TRANSACTIONS_CATEGORIES} from '@/core/model'
 
 export class ChainListeners {
     private readonly app: any //@TODO: rename and type
@@ -84,7 +84,8 @@ export class ChainListeners {
                 this.unconfirmedTxListener
                     .unconfirmedAdded(Address.createFromRawAddress(this.address))
                     .pipe(filter((transaction: any) => transaction.transactionInfo !== undefined))
-                    .subscribe(transaction => {
+                    .subscribe(
+                      transaction => {
                         that.$Notice.success({
                             title: receivedTransactionMessage, // quick fix
                             duration: 20,
@@ -92,9 +93,12 @@ export class ChainListeners {
                         formatAndSave(
                             {...transaction, isTxUnconfirmed: true},
                             that.$store,
-                            false
+                            false,
+                            TRANSACTIONS_CATEGORIES.NORMAL,
                         )
-                    })
+                      },
+                    error => console.error("ChainListeners -> error", error)
+                  )
             })
 
     }
@@ -119,7 +123,8 @@ export class ChainListeners {
                         formatAndSave(
                             transaction,
                             that.$store,
-                            true
+                            true,
+                            TRANSACTIONS_CATEGORIES.NORMAL,
                         )
                     })
             })

@@ -17,6 +17,7 @@ const state: StoreAccount = {
     addressAliasMap: {},
     generationHash: '',
     transactionList: [],
+    transactionsToCosign: {},
     accountName: '',
     activeMultisigAccount: null,
     multisigAccountsMosaics: {},
@@ -164,7 +165,6 @@ const mutations: MutationTree<StoreAccount> = {
         const {address, mosaics} = addressAndMosaics
         const mosaicList = {...state.multisigAccountsMosaics[address]}
 
-        console.log(mosaics, address, 'UPDATE_MULTISIG_ACCOUNT_MOSAICS', mosaicList)
         mosaics.forEach((mosaic: AppMosaic) => {
             if (!mosaic.hex) return
             const {hex} = mosaic
@@ -176,6 +176,37 @@ const mutations: MutationTree<StoreAccount> = {
     UPDATE_ACTIVE_WALLET_ADDRESS(state: StoreAccount, activeWalletAddress: string) {
         state.activeWalletAddress = activeWalletAddress
     },
+    RESET_TRANSACTIONS_TO_COSIGN(state: StoreAccount) {
+        state.transactionsToCosign = {}
+    },
+    RESET_ADDRESS_TRANSACTION_TO_COSIGN(state: StoreAccount, publicKey: string) {
+        if (!state.transactionsToCosign[publicKey]) return
+        state.transactionsToCosign[publicKey] = []
+    },
+    POP_TRANSACTION_TO_COSIGN_BY_HASH(state: StoreAccount, payload: {publicKey: string, hash: string}) {
+        const {publicKey, hash} = payload
+        const txToCosign = [...state.transactionsToCosign[publicKey]]
+        if (!txToCosign) return
+        const transactionIndex = txToCosign.findIndex(({rawTx}) => rawTx.transactionInfo.hash === hash)
+        if (transactionIndex === -1) return
+        txToCosign.splice(transactionIndex, 1)
+        state.transactionsToCosign[publicKey] = txToCosign
+    },
+    ADD_TRANSACTION_TO_COSIGN(state: StoreAccount, payload: {publicKey: string, transactions: FormattedTransaction[]}) {
+        const {publicKey, transactions} = payload
+        const oldTransactions = state.transactionsToCosign[publicKey]
+
+        if (!oldTransactions) {
+            Vue.set(state.transactionsToCosign, publicKey, transactions)
+            return
+        }
+        
+        transactions.forEach((tx) => {
+            if (oldTransactions.find(({rawTx}) => rawTx.transactionInfo.hash === tx.rawTx.transactionInfo.hash) === undefined) {
+                Vue.set(state.transactionsToCosign, publicKey, [...transactions, ...oldTransactions])
+            }
+        })
+    }
 }
 
 export const accountState = {state}

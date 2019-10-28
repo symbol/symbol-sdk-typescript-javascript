@@ -1,18 +1,11 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {
-    Account,
-    AccountHttp,
-    NetworkType,
-    TransactionHttp,
-    CosignatureTransaction,
-    AggregateTransaction,
-    Address
-} from "nem2-sdk"
+import {AccountHttp, Address} from "nem2-sdk"
 import {mapState} from "vuex"
-import {StoreAccount} from "@/core/model"
-
-// this component is for tesing multisig
+import {StoreAccount, TRANSACTIONS_CATEGORIES} from "@/core/model"
+import {formatAndSave} from '@/core/services'
+import TransactionList from '@/views/monitor/monitor-dashboard/monitor-transaction-list/TransactionList.vue'
 @Component({
+    components: { TransactionList },
     computed: {
         ...mapState({
             activeAccount: 'account',
@@ -21,42 +14,27 @@ import {StoreAccount} from "@/core/model"
 })
 export class MultisigCosignTs extends Vue {
     activeAccount: StoreAccount
-    privatekey = ''
     publicKey = ''
-    aggregatedTransactionList: Array<AggregateTransaction> = []
-
-    get networkType() {
-        return this.activeAccount.wallet.networkType
-    }
-
-    get generationHash() {
-        return this.activeAccount.generationHash
-    }
-
-    get node() {
-        return this.activeAccount.node
-    }
-
-    get address(): Address {
-        return Address.createFromRawAddress(this.activeAccount.wallet.address) 
+    TRANSACTIONS_CATEGORIES = TRANSACTIONS_CATEGORIES
+    
+    get targetAddress(): Address {
+        return this.publicKey === ''
+            ? Address.createFromRawAddress(this.activeAccount.wallet.address)
+            : Address.createFromPublicKey(this.publicKey, this.activeAccount.wallet.networkType) 
     }
 
     async getCosignTransactions() {
-        const {address, node} = this
-        this.aggregatedTransactionList = await new AccountHttp(node)
-            .aggregateBondedTransactions(address).toPromise()
-    }
+        try {
+          const {node} = this.activeAccount
 
-    cosignTransaction(index) {
-        const {node, privatekey} = this
-        const endpoint = node
-        const account = Account.createFromPrivateKey(privatekey, NetworkType.MIJIN_TEST)
-        const transactionHttp = new TransactionHttp(endpoint)
-        const cosignatureTransaction = CosignatureTransaction.create(this.aggregatedTransactionList[index])
-        const cosignedTx = account.signCosignatureTransaction(cosignatureTransaction)
-        transactionHttp.announceAggregateBondedCosignature(cosignedTx).subscribe((x) => {
-            console.log(x)
-        })
-        this.getCosignTransactions()
+          const aggregatedTransactionList = await new AccountHttp(node)
+              .aggregateBondedTransactions(this.targetAddress).toPromise()
+
+          aggregatedTransactionList
+              .forEach(tx => formatAndSave(tx, this.$store, true, TRANSACTIONS_CATEGORIES.TO_COSIGN))
+        
+        } catch (error) {
+            console.error("MultisigCosignTs -> getCosignTransactions -> error", error)
+        }
     }
 }

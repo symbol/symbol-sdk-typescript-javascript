@@ -1,6 +1,7 @@
 <template>
   <div class="transactionConfirmationWrap">
     <Modal
+      @keyup.enter.native="submit"
       v-if="show"
       v-model="show"
       class-name="vertical-center-modal"
@@ -34,7 +35,7 @@
             <div v-else>
               <input v-model="password" type="password" required
                     :placeholder="$t('please_enter_your_wallet_password')"/>
-              <Button type="success" @click="confirmTransactionViaPassword">{{$t('confirm')}}</Button>
+              <Button type="success" @click="submit">{{$t('confirm')}}</Button>
             </div>
           </form>
         </div>

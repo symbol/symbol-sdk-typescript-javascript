@@ -7,14 +7,14 @@ import {
     TransactionType
 } from 'nem2-sdk'
 import {mapState} from "vuex"
-import {Message, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
+import {DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress, cloneData} from "@/core/utils"
 import {standardFields, isAddress} from "@/core/validation"
 import {signTransaction} from '@/core/services/transactions';
-import {AppMosaic, AppWallet, AppInfo, StoreAccount, DefaultFee, MosaicNamespaceStatusType} from "@/core/model"
-import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+import {AppMosaic, AppWallet, AppInfo, StoreAccount, DefaultFee, MosaicNamespaceStatusType, LockParams} from "@/core/model"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
     components: {
@@ -35,7 +35,6 @@ export class TransactionFormTs extends Vue {
     transactionList = []
     transactionDetail = {}
     isShowSubAlias = false
-    otherDetails: any = {}
     isCompleteForm = true
     currentCosignatoryList = []
     currentMosaic: string = ''
@@ -259,33 +258,13 @@ export class TransactionFormTs extends Vue {
             .validate()
             .then((valid) => {
                 if (!valid) return
-                this.showDialog()
+                this.confirmViaTransactionConfirmation()
             })
     }
 
-    showDialog() {
-        const {accountPublicKey, isSelectedAccountMultisig, feeAmount} = this
-        const {remark, mosaicTransferList, recipient} = this.formItems
-        const publicKey = isSelectedAccountMultisig ? accountPublicKey : '(self)' + accountPublicKey
-
-        this.transactionDetail = {
-            "transaction_type": isSelectedAccountMultisig ? 'Multisig_transfer' : 'ordinary_transfer',
-            "Public_account": publicKey,
-            "transfer_target": recipient,
-            "mosaic": mosaicTransferList.map(item => {
-                return item.id.id.toHex() + `(${item.amount.compact()})`
-            }).join(','),
-            "fee": feeAmount / Math.pow(10, this.networkCurrency.divisibility) + ' ' + this.networkCurrency.ticker,
-            "remarks": remark,
-        }
-
-        if (this.announceInLock) {
-            this.otherDetails = {
-                lockFee: feeAmount / 3
-            }
-        }
-
-        this.confirmViaTransactionConfirmation()
+    get lockParams(): LockParams {
+        const {announceInLock, feeAmount, feeDivider} = this
+        return new LockParams(announceInLock, feeAmount / feeDivider)
     }
 
     async confirmViaTransactionConfirmation() {
@@ -300,19 +279,17 @@ export class TransactionFormTs extends Vue {
         // if the user confirms successfullly
         const {
             success,
-            signedTransaction
+            signedTransaction,
+            signedLock,
         } = await signTransaction({
             transaction: this.transactionList[0],
             store: this.$store,
-            otherDetails: this.otherDetails
+            lockParams: this.lockParams
         });
 
         if(success) {
-            if(this.transactionList[0].type !== TransactionType.AGGREGATE_BONDED) {
-                new AppWallet(this.wallet).announceNormal(signedTransaction, this.activeAccount.node, this);
-            } else {
-                new AppWallet(this.wallet).announceBonded(signedTransaction, this.activeAccount.node);
-            }
+            const {node} = this.activeAccount
+            new AppWallet(this.wallet).announceTransaction(signedTransaction, node, this, signedLock)
             this.initForm()
         }
     }

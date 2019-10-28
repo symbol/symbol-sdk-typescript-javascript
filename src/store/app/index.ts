@@ -1,4 +1,4 @@
-import {AppInfo, ChainStatus} from '@/core/model'
+import {AppInfo, ChainStatus, LockParams, StagedTransaction} from '@/core/model'
 import {localRead} from "@/core/utils";
 import {Transaction} from 'nem2-sdk';
 import {MutationTree} from 'vuex';
@@ -20,8 +20,8 @@ const state: AppInfo = {
     uiDisabledMessage: '',
     stagedTransaction: {
         isAwaitingConfirmation: false,
-        otherDetails: null,
-        data: null,
+        lockParams: LockParams.default(),
+        transactionToSign: null,
     },
     nodeNetworkType: ''
 }
@@ -69,17 +69,12 @@ const mutations: MutationTree<AppInfo> = {
         state.isUiDisabled = isDisabled;
         state.uiDisabledMessage = message;
     },
-    SET_STAGED_TRANSACTION(state: AppInfo,
-        { data, isAwaitingConfirmation, otherDetails}:
-        {data: Transaction|null, isAwaitingConfirmation: boolean, otherDetails: any}) {
-        state.stagedTransaction.data = data;
-        state.stagedTransaction.otherDetails = otherDetails;
-        state.stagedTransaction.isAwaitingConfirmation = isAwaitingConfirmation;
+    SET_STAGED_TRANSACTION(state: AppInfo, stagedTransaction: StagedTransaction) {
+        state.stagedTransaction = stagedTransaction
     },
     SET_NODE_NETWORK_TYPE(state: AppInfo, networkType: any) {
         state.nodeNetworkType = networkType
     },
-
 }
 
 export const appState = {state}

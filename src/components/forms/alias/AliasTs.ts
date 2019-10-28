@@ -201,7 +201,7 @@ export class AliasTs extends Vue {
         }
 
         const validPassword = new AppWallet(this.wallet)
-            .checkPassword(new Password(password))
+            .checkPassword(password)
 
         if (!validPassword) {
             this.showErrorMessage(this.$t('password_error') + '')

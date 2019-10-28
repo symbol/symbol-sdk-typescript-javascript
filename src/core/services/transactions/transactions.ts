@@ -1,15 +1,24 @@
 import {Address, Transaction, AccountHttp, QueryParams} from "nem2-sdk"
 import {transactionFormat} from './formatting'
-import {AppState} from '@/core/model'
+import {AppState, TRANSACTIONS_CATEGORIES} from '@/core/model'
 import {Store} from 'vuex'
 
 // @TODO: refactor
-export const formatAndSave = (transaction: Transaction, store: Store<AppState>, confirmed: boolean) => {
+export const formatAndSave = (  transaction: Transaction,
+                                store: Store<AppState>,
+                                confirmed: boolean,
+                                transactionCategory: string): void => {
     const formattedTransactions = transactionFormat(
         [transaction],
         store,
     )
     
+    if (transactionCategory === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
+        const {publicKey} = store.state.account.wallet
+        store.commit('ADD_TRANSACTION_TO_COSIGN', {publicKey, transactions: formattedTransactions})
+        return
+    }
+
     if(confirmed) {
         store.commit('ADD_CONFIRMED_TRANSACTION', formattedTransactions)
         return

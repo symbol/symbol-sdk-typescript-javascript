@@ -13,5 +13,4 @@ export * from './MosaicProperties'
 export * from './types'
 export * from './AppNamespace'
 export * from './ChainStatus'
-
-
+export * from './LockParams'

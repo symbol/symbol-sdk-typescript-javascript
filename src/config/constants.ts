@@ -104,7 +104,8 @@ export const Message = {
     CLICK_TO_LOAD: 'click_to_load',
     REFRESH_TOO_FAST_WARNING:'refresh_too_fast_warning',
     NO_NETWORK_CURRENCY: 'no_network_currency_alert',
-    MULTISIG_ACCOUNTS_NO_TX: "Multisig_accounts_can_not_send_a_transaction_by_themselves"
+    MULTISIG_ACCOUNTS_NO_TX: "Multisig_accounts_can_not_send_a_transaction_by_themselves",
+    USER_ABORTED_TX_CONFIRMATION: 'User_aborted_transaction_confirmation',
 }
 
 export const FEE_SPEEDS: Record<string, string> = {

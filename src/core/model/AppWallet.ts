@@ -11,15 +11,21 @@ import {
     Address,
     AggregateTransaction,
     TransactionHttp,
-    SignedTransaction
+    SignedTransaction,
+    CosignatureSignedTransaction,
+    HashLockTransaction,
+    Deadline,
+    Mosaic,
+    MosaicId,
+    UInt64,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
-import { filter, mergeMap } from 'rxjs/operators'
-import {Message, networkConfig} from "@/config"
+import {filter, mergeMap} from 'rxjs/operators'
+import {Message, networkConfig, defaultNetworkConfig} from "@/config"
 import {AppLock, localRead, localSave, createSubWalletByPath, getPath} from "@/core/utils"
 import {CreateWalletType} from "@/core/model"
 import {AppState} from './types'
-import {announceBondedWithLock} from '@/core/services'
+const {DEFAULT_LOCK_AMOUNT} = defaultNetworkConfig
 
 export class AppWallet {
     constructor(wallet?: {
@@ -196,9 +202,9 @@ export class AppWallet {
         return CryptoJS.enc.Base64.stringify(parsed)
     }
 
-    checkPassword(password: Password): boolean {
+    checkPassword(password: string): boolean {
         try {
-            this.getAccount(password)
+            this.getAccount(new Password(password))
             return true
         } catch (error) {
             return false
@@ -350,10 +356,37 @@ export class AppWallet {
         }
     }
 
+    announceTransaction(
+        signedTransaction: SignedTransaction | CosignatureSignedTransaction,
+        node: string,
+        that: any,
+        signedLock?: SignedTransaction,
+    ): void {
+        if (signedTransaction instanceof CosignatureSignedTransaction) {
+            this.announceCosignature(signedTransaction, node, that)
+            return
+        }
+
+        if (signedLock) {
+            this.announceBonded(signedTransaction, signedLock, node, that)
+            return
+        }
+
+        this.announceNormal(signedTransaction, node, that)
+    }
+
+    announceCosignature(signedTransaction: CosignatureSignedTransaction, node: string, that: any): void {
+        new TransactionHttp(node).announceAggregateBondedCosignature(signedTransaction).subscribe(
+            _ => that.$Notice.success({title: that.$t(Message.SUCCESS)}),
+            error => console.error('announceNormal -> error', error),
+        )
+    }
+
     announceNormal(signedTransaction: SignedTransaction, node: string, that: any): void {
-        new TransactionHttp(node).announce(signedTransaction).subscribe(() => {
-            that.$Notice.success({title: that.$t(Message.SUCCESS)})
-        })
+        new TransactionHttp(node).announce(signedTransaction).subscribe(
+            _ => that.$Notice.success({title: that.$t(Message.SUCCESS)}),
+            error => console.error('announceNormal -> error', error),
+        )
     }
 
     signAndAnnounceNormal(password: Password, node: string, generationHash: string, transactionList: Array<any>, that: any): void {
@@ -364,34 +397,32 @@ export class AppWallet {
         console.log(signature)
         new TransactionHttp(node).announce(signature).subscribe(
             _ => that.$Notice.success({title: message}),
-            error => {
-                throw new Error(error)
-            }
+            error => console.error('signAndAnnounceNormal -> error', error),
         )
     }
 
-    announceBonded(signedTransaction: SignedTransaction, node: string): void {
+    announceBonded(signedTransaction: SignedTransaction, signedLock: SignedTransaction, node: string, that): void {
         const transactionHttp = new TransactionHttp(node);
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
 
         listener.open().then(() => {
             transactionHttp
-                .announce(signedTransaction)
-                .subscribe(x => console.log(x), err => console.error(err))
+                .announce(signedLock)
+                .subscribe(x => console.log(x), error => {throw new Error(error)})
 
             listener
-                .confirmed(this.simpleWallet.address)
+                .confirmed(Address.createFromRawAddress(this.address))
                 .pipe(
                 filter((transaction) => transaction.transactionInfo !== undefined
-                    && transaction.transactionInfo.hash === signedTransaction.hash),
-                mergeMap(ignored => transactionHttp.announceAggregateBonded(signedTransaction)),
+                    && transaction.transactionInfo.hash === signedLock.hash),
+                mergeMap(_ => transactionHttp.announceAggregateBonded(signedTransaction)),
                 )
                 .subscribe(
-                    announcedAggregateBonded => console.log(announcedAggregateBonded),
-                    err => console.error(err),
+                    _ => that.$Notice.success({title: that.$t(Message.SUCCESS)}),
+                    error => {throw new Error(error)},
                 )
         }).catch((error) => {
-            console.error(error)
+            console.error('announceBonded -> error', error)
         })
     }
 
@@ -400,50 +431,46 @@ export class AppWallet {
     signAndAnnounceBonded = ( password: Password,
                               lockFee: number,
                               transactions: AggregateTransaction[],
-                              store: Store<AppState>) => {
+                              store: Store<AppState>,
+                              that,) => {
         const {node} = store.state.account
 
-        const account = this.getAccount(password)
-        const aggregateTransaction = transactions[0]
-        // @TODO: review listener management
-        announceBondedWithLock( aggregateTransaction,
-                                account,
-                                node,
-                                lockFee,
-                                store)
+        const {signedTransaction, signedLock} = this.getSignedLockAndAggregateTransaction(
+            transactions[0],
+            lockFee,
+            password.value,
+            store,
+        )
+
+        this.announceBonded(signedTransaction, signedLock, node, that)
     }
-}
 
-export const saveLocalAlias = (
-    address: string,
-    aliasObject: {
-        tag: string,
-        alias: string,
-        address: string
-    }) => {
-    const addressBookData = localRead('addressBook')
-    let addressBook = addressBookData ? JSON.parse(addressBookData) : {}
-    addressBook[address] = addressBook[address] || {}
-    addressBook[address]['aliasMap'] = addressBook[address]['aliasMap'] || {}
-    addressBook[address]['aliasMap'][aliasObject.alias] = aliasObject
+    getSignedLockAndAggregateTransaction (
+        aggregateTransaction: AggregateTransaction,
+        fee: number,
+        password: string,
+        store: Store<AppState>):
+    {
+      signedTransaction: SignedTransaction,
+      signedLock: SignedTransaction,
+    } {
+        const account = this.getAccount(new Password(password))
+        const {wallet, networkCurrency, generationHash} = store.state.account
+        const {networkType} = wallet
 
-    addressBook[address]['tagMap'] = addressBook[address]['tagMap'] || {}
-    addressBook[address]['tagMap'][aliasObject.tag] = addressBook[address]['tagMap'][aliasObject.tag] || []
-    addressBook[address]['tagMap'][aliasObject.tag].push(aliasObject.alias)
-
-    localSave('addressBook', JSON.stringify(addressBook))
-}
-
-
-export const readLocalAliasInAddressBook = (address: string) => {
-    const addressBookData = localRead('addressBook')
-    if (!addressBookData) return {}
-    return JSON.parse(addressBookData)[address]
-}
-export const removeLinkInAddressBook = (aliasObject, address) => {
-    const {alias, tag} = aliasObject
-    const addressBook = JSON.parse(localRead('addressBook'))
-    delete addressBook[address].aliasMap[alias]
-    addressBook[address].tagMap[tag].splice(addressBook[address].tagMap[tag].indexOf(alias), 1)
-    localSave('addressBook', JSON.stringify(addressBook))
+        const signedTransaction = account.sign(aggregateTransaction, generationHash)
+        const hashLockTransaction = HashLockTransaction
+            .create(
+                Deadline.create(),
+                new Mosaic(new MosaicId(networkCurrency.hex), UInt64.fromUint(DEFAULT_LOCK_AMOUNT)),
+                UInt64.fromUint(480),
+                signedTransaction,
+                networkType,
+                UInt64.fromUint(fee)
+            )
+        return {
+            signedTransaction,
+            signedLock: account.sign(hashLockTransaction, generationHash),
+        }
+    }
 }

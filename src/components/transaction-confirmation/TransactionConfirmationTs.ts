@@ -1,15 +1,15 @@
 import {mapState} from 'vuex'
-import {TransactionType, Password} from "nem2-sdk"
+import {Password, AggregateTransaction, CosignatureTransaction} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
 import {transactionFormatter} from '@/core/services/transactions'
-import {Message} from "@/config/index.ts"
+import {Message} from "@/config"
 import {CreateWalletType} from '@/core/model/CreateWalletType'
 import trezor from '@/core/utils/trezor'
-import { AppWallet } from '@/core/model/AppWallet'
-import { transactionConfirmationObservable } from '@/core/services/transactions'
-import { createHashLockAggregateTransaction } from '@/core/services/multisig'
-
+import {AppWallet} from '@/core/model/AppWallet'
+import {transactionConfirmationObservable} from '@/core/services/transactions'
 import TransactionSummary from '@/components/transaction-summary/TransactionSummary.vue'
+import {StagedTransaction, SignTransaction} from '@/core/model'
+
 @Component({
     computed: {...mapState({app: 'app', account: 'account'})},
     components:{
@@ -38,11 +38,13 @@ export class TransactionConfirmationTs extends Vue {
     set show(val) {
         if (!val) {
             this.$emit('close')
-            transactionConfirmationObservable.next({
+            const result: SignTransaction = {
                 success: false,
                 signedTransaction: null,
-                error: 'User aborted transaction confirmation'
-            });
+                error: Message.USER_ABORTED_TX_CONFIRMATION,
+            }
+
+            transactionConfirmationObservable.next(result);
         }
     }
 
@@ -58,15 +60,13 @@ export class TransactionConfirmationTs extends Vue {
         return this.account.wallet;
     }
 
-    get stagedTransaction() {
-        return this.app.stagedTransaction.data
-    }
-    get otherDetails() {
-        return this.app.stagedTransaction.otherDetails
+    get stagedTransaction(): StagedTransaction {
+        return this.app.stagedTransaction
     }
 
     get formattedTransaction() {
-        const [formattedTransaction] = transactionFormatter([this.stagedTransaction], this.$store)
+        const {transactionToSign} = this.stagedTransaction
+        const [formattedTransaction] = transactionFormatter([transactionToSign], this.$store)
         return formattedTransaction
     }
 
@@ -78,29 +78,26 @@ export class TransactionConfirmationTs extends Vue {
 
         if(transactionResult.success) {
             // get signedTransaction via TrezorConnect.nemSignTransaction
-            transactionConfirmationObservable.next({
+            const result: SignTransaction = {
                 success: true,
                 signedTransaction: transactionResult.payload.signature,
                 error: null
-            });
+            }
+
+            transactionConfirmationObservable.next(result);
         } else {
-            transactionConfirmationObservable.next({
+            const result: SignTransaction = {
                 success: false,
                 signedTransaction: null,
                 error: transactionResult.payload.error
-            });
+            }
+
+            transactionConfirmationObservable.next(result);
         }
     }
 
-    confirmTransactionViaPassword() {
-        let isPasswordValid;
-        try {
-            // TODO: update AppWallet.checkPassword to take a string so it can handle errors
-            // when instantiating a new Password (eg. Password must be at least 8 characters)
-            isPasswordValid = new AppWallet(this.wallet).checkPassword(new Password(this.password));
-        } catch (e) {
-            isPasswordValid = false;
-        }
+    submit() {
+        const isPasswordValid = new AppWallet(this.wallet).checkPassword(this.password);
 
         if(!isPasswordValid) {
             this.$Notice.error({
@@ -110,28 +107,61 @@ export class TransactionConfirmationTs extends Vue {
         }
 
         const account = new AppWallet(this.wallet).getAccount(new Password(this.password))
-        // by default just sign the basic stagedTransaction
-        let transactionToSign = this.stagedTransaction;
 
-        // if the user is confirming an aggregate bonded transaction,
-        // create a hashLocked version of stagedTransaction to be signed instead
-        if (this.stagedTransaction.type === TransactionType.AGGREGATE_BONDED) {
-            // bonded transaction
-            transactionToSign = createHashLockAggregateTransaction(
-                this.stagedTransaction,
-                this.otherDetails.lockFee,
-                account,
-                this.$store
+        // by default just sign the basic stagedTransaction
+        const {transactionToSign, lockParams} = this.stagedTransaction;
+
+        /**
+         * AGGREGATE BONDED
+         */
+        if (transactionToSign instanceof AggregateTransaction && lockParams.announceInLock) {
+            const {signedTransaction, signedLock} = new AppWallet(this.wallet).getSignedLockAndAggregateTransaction(
+                transactionToSign,
+                lockParams.transactionFee,
+                this.password,
+                this.$store,
             )
+
+            const result: SignTransaction = {
+                success: true,
+                signedTransaction,
+                signedLock,
+                error: null,
+            }
+
+            transactionConfirmationObservable.next(result);
+            this.password = '';
+            return
         }
 
-        const signedTransaction = account.sign(transactionToSign, this.account.generationHash);
 
-        transactionConfirmationObservable.next({
+        /**
+         * COSIGNATURE
+         */
+        if (transactionToSign instanceof AggregateTransaction && transactionToSign.signer) {
+            const cosignatureTransaction = CosignatureTransaction.create(transactionToSign)
+
+            const result: SignTransaction = {
+                success: true,
+                signedTransaction: account.signCosignatureTransaction(cosignatureTransaction),
+                error: null,
+            }
+
+          transactionConfirmationObservable.next(result);
+          this.password = '';
+        }
+
+
+        /**
+         * DEFAULT SIGNATURE
+         */
+        const result: SignTransaction = {
             success: true,
-            signedTransaction,
-            error: null
-        });
+            signedTransaction: account.sign(transactionToSign, this.account.generationHash),
+            error: null,
+        }
+
+        transactionConfirmationObservable.next(result);
         this.password = '';
     }
 }

@@ -110,7 +110,7 @@
                    @checkEnd="checkEnd"
                    :transactionDetail="transactionDetail"
                    :transactionList="transactionList"
-                   :otherDetails="otherDetails"
+                   :lockParams="lockParams"
     />
   </div>
 </template>

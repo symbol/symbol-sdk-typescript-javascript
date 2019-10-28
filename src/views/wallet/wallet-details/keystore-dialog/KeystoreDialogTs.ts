@@ -90,7 +90,7 @@ export class KeystoreDialogTs extends Vue {
             return false
         }
 
-        const validPassword = new AppWallet(this.getWallet).checkPassword(new Password(this.wallet.password))
+        const validPassword = new AppWallet(this.getWallet).checkPassword(this.wallet.password)
 
         if (!validPassword) {
             this.$Notice.error({

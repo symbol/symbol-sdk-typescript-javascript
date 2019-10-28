@@ -124,7 +124,7 @@ export class MosaicEditDialogTs extends Vue {
             return false
         }
 
-        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(formItems.password))
+        const validPassword = new AppWallet(this.wallet).checkPassword(formItems.password)
 
         if (!validPassword) {
             this.$Notice.error({

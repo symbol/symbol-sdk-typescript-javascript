@@ -109,7 +109,7 @@ export class WalletHarvestingTs extends Vue {
             return false
         }
 
-        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(password))
+        const validPassword = new AppWallet(this.wallet).checkPassword(password)
 
         if (!validPassword) {
             this.showErrorMessage(this.$t(Message.WRONG_PASSWORD_ERROR) + '')

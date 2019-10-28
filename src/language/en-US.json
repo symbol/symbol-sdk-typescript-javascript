@@ -738,5 +738,7 @@
     "Increase": "Increase",
     "transferable": "Transferable",
     "no_network_currency_alert": "The wallet has no data about the network currency (eg. nem:xem), please connect to a valid node.",
+    "cosign_transactions": "Cosign transactions",
+    "User_aborted_transaction_confirmation": "User aborted transaction confirmation",
     "Expired": "Expired"
 }

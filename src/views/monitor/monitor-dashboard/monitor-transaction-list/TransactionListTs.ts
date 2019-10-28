@@ -1,10 +1,11 @@
 import {TransactionType, NamespaceId} from 'nem2-sdk'
 import {mapState} from "vuex"
-import {Component, Vue} from 'vue-property-decorator'
+import {Component, Vue, Prop} from 'vue-property-decorator'
 import {formatNumber, renderMosaics} from '@/core/utils'
-import {FormattedTransaction, AppInfo, StoreAccount} from '@/core/model'
-import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
+import {FormattedTransaction, AppInfo, StoreAccount, TRANSACTIONS_CATEGORIES, AppWallet} from '@/core/model'
 import {defaultNetworkConfig} from '@/config'
+import {signTransaction} from '@/core/services'
+import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
 
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -25,6 +26,9 @@ export class TransactionListTs extends Vue {
     activeTransaction: FormattedTransaction = null
     NamespaceId = NamespaceId
 
+    @Prop({ default: null })
+    mode: string
+
     get wallet() {
         return this.activeAccount.wallet
     }
@@ -34,7 +38,13 @@ export class TransactionListTs extends Vue {
     }
 
     get transactionList() {
-        return this.activeAccount.transactionList
+      if (this.mode && this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
+          const {wallet, transactionsToCosign} = this.activeAccount
+          const {publicKey} = wallet
+          return transactionsToCosign[publicKey] || []
+      }
+
+      return this.activeAccount.transactionList
     }
 
     get mosaicList() {
@@ -92,5 +102,34 @@ export class TransactionListTs extends Vue {
 
     scrollTop() {
         this.scroll.target.scrollTop = 0
+    }
+
+    async confirmViaTransactionConfirmation() {
+        try {
+            const {
+                success,
+                signedTransaction,
+                signedLock,
+            } = await signTransaction({
+                transaction: this.activeTransaction.rawTx,
+                store: this.$store,
+            })
+
+            if(success) {
+                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
+            }
+        } catch (error) {
+            console.error("TransactionListTs -> confirmViaTransactionConfirmation -> error", error)
+        }
+    }
+
+    transactionClicked(transaction: FormattedTransaction) {
+      this.activeTransaction = transaction
+
+      if (this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) {
+        return this.confirmViaTransactionConfirmation()
+      }
+
+      this.showDialog = true
     }
 }

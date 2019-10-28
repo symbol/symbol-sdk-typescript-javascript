@@ -63,8 +63,7 @@ export class TheWalletDeleteTs extends Vue {
             return
         }
         try {
-            const password = new Password(this.confirmation.value)
-            const isPasswordCorrect = new AppWallet(this.walletToDelete).checkPassword(password)
+            const isPasswordCorrect = new AppWallet(this.walletToDelete).checkPassword(this.confirmation.value)
             if (isPasswordCorrect) {
                 new AppWallet(this.walletToDelete).delete(this.$store, this)
                 this.$emit('closeCheckPWDialog')

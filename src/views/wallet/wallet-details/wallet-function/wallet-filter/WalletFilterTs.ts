@@ -161,7 +161,7 @@ export class WalletFilterTs extends Vue {
             return false
         }
 
-        const validPassword = new AppWallet(this.wallet).checkPassword(new Password(this.formItem.password))
+        const validPassword = new AppWallet(this.wallet).checkPassword(this.formItem.password)
 
         if (!validPassword) {
             this.showErrorMessage(this.$t('password_error'))

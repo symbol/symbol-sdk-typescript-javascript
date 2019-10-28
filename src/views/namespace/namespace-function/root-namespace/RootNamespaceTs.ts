@@ -9,7 +9,7 @@ import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialo
 import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress, cloneData
 } from '@/core/utils'
-import {StoreAccount, AppInfo, DefaultFee, AppWallet} from "@/core/model"
+import {StoreAccount, AppInfo, DefaultFee, AppWallet, LockParams} from "@/core/model"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
 import {standardFields} from "@/core/validation"
 import DisabledForms from "@/components/disabled-forms/DisabledForms.vue"
@@ -35,7 +35,6 @@ export class RootNamespaceTs extends Vue {
     transactionDetail = {}
     showCheckPWDialog = false
     transactionList = []
-    otherDetails: any = {}
     formItems = cloneData(formDataConfig.rootNamespaceForm)
     formatAddress = formatAddress
     standardFields: object = standardFields
@@ -198,12 +197,6 @@ export class RootNamespaceTs extends Vue {
             "fee": feeAmount / Math.pow(10, this.networkCurrency.divisibility),
         }
 
-        if (this.announceInLock) {
-            this.otherDetails = {
-                lockFee: feeAmount / 3
-            }
-        }
-
         if (this.activeMultisigAccount) {
             this.createByMultisig()
             this.showCheckPWDialog = true
@@ -212,6 +205,11 @@ export class RootNamespaceTs extends Vue {
 
         this.createBySelf()
         this.showCheckPWDialog = true
+    }
+
+    get lockParams(): LockParams {
+        const {announceInLock, feeAmount, feeDivider} = this
+        return new LockParams(announceInLock, feeAmount / feeDivider)
     }
 
     get durationIntoDate() {

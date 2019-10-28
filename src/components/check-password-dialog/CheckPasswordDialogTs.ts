@@ -3,7 +3,7 @@ import {Message} from "@/config/index.ts"
 import {TransactionType, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import {AppLock} from "@/core/utils/appLock"
-import {AppAccounts, AppWallet, StoreAccount} from "@/core/model"
+import {AppAccounts, AppWallet, StoreAccount, LockParams} from "@/core/model"
 
 @Component({
     computed: {...mapState({activeAccount: 'account'})},
@@ -34,10 +34,10 @@ export class CheckPasswordDialogTs extends Vue {
 
     @Prop({
         default: () => {
-            return {}
+            return LockParams.default()
         }
     })
-    otherDetails
+    lockParams: LockParams
 
     get node() {
         return this.activeAccount.node
@@ -69,7 +69,7 @@ export class CheckPasswordDialogTs extends Vue {
 
     checkWalletPassword() {
         try {
-            const isPasswordValid = new AppWallet(this.wallet).checkPassword(new Password(this.walletInputInfo.password))
+            const isPasswordValid = new AppWallet(this.wallet).checkPassword(this.walletInputInfo.password)
             this.show = false
             this.$emit('checkEnd', Boolean(isPasswordValid))
             this.switchAnnounceType()
@@ -129,7 +129,7 @@ export class CheckPasswordDialogTs extends Vue {
     switchAnnounceType() {
         const {node, generationHash, transactionList} = this
         const password = new Password(this.walletInputInfo.password)
-        let {lockFee} = this.otherDetails
+        const lockFee = this.lockParams.transactionFee
         if (transactionList[0].type !== TransactionType.AGGREGATE_BONDED) {
             // normal transaction
             new AppWallet(this.wallet).signAndAnnounceNormal(password, node, generationHash, transactionList, this)
@@ -139,7 +139,8 @@ export class CheckPasswordDialogTs extends Vue {
         new AppWallet(this.wallet).signAndAnnounceBonded( password,
                                                           lockFee,
                                                           transactionList,
-                                                          this.$store
+                                                          this.$store,
+                                                          this,
         )
     }
 

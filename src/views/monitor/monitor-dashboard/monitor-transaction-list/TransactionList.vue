@@ -29,9 +29,9 @@
             <div class="table_body hide_scroll" @scroll="divScroll" ref="confirmedTableBody">
               <div
                       class="table_item pointer "
-                      @click="showDialog = true; activeTransaction = c"
                       v-for="(c, index) in slicedTransactionList"
                       :key="index"
+                      @click="transactionClicked(c)"
               >
                 <!-- FIRST COLUMN -->
                 <img class="mosaic_action" :src="c.txHeader.icon" alt=""/>
