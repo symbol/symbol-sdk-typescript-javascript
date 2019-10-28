@@ -48,7 +48,6 @@ export class AliasTs extends Vue {
      * The address or the mosaic hex Id
      */
     target: string = this.getTarget
-    namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
 
     @Prop() visible: boolean
 
@@ -157,11 +156,13 @@ export class AliasTs extends Vue {
     }
 
     get linkableNamespaces(): string[] {
-        const {currentHeight, namespaceGracePeriodDuration} = this
+        const {currentHeight} = this
         // @TODO handle namespace list loading state
         return this.NamespaceList
-            .filter(({alias, endHeight}) => (alias instanceof EmptyAlias
-                && endHeight - currentHeight + namespaceGracePeriodDuration > 0))
+            .filter((namespace: AppNamespace) => {
+                return namespace.alias instanceof EmptyAlias
+                    && !namespace.expirationInfo(currentHeight).expired
+            })
             .map(({name}) => name)
     }
 

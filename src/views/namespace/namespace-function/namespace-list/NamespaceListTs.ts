@@ -1,11 +1,10 @@
 import {AliasType} from "nem2-sdk"
 import {mapState} from "vuex"
-import {formatSeconds} from '@/core/utils'
 import {Component, Vue} from 'vue-property-decorator'
 import NamespaceEditDialog from './namespace-edit-dialog/NamespaceEditDialog.vue'
 import {Message, networkConfig} from '@/config'
 import {sortNamespaceList, namespaceSortTypes, setNamespaces} from '@/core/services'
-import {StoreAccount, AppInfo, MosaicNamespaceStatusType, AppNamespace} from "@/core/model"
+import {StoreAccount, AppInfo, AppNamespace} from "@/core/model"
 import Alias from '@/components/forms/alias/Alias.vue'
 
 @Component({
@@ -28,37 +27,19 @@ export class NamespaceListTs extends Vue {
     page: number = 1
     showNamespaceEditDialog = false
     showAliasDialog = false
-    StatusString = MosaicNamespaceStatusType
-    namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
     namespaceSortTypes = namespaceSortTypes
     namespaceSortType: number = 1
-    currentNamespaceList = []
     showExpiredNamespaces = true
-    isShowMosaicAlias = false
-    dataLength = 0
     sortDirection: boolean = false
     bind: boolean = false
     namespace: AppNamespace = null
     mosaic: string = null
     address: string = null
-    isShowExpiredNamespace = false
-    disabled: boolean = false
+    isShowExpiredNamespace = true
     namespaceRefreshTimestamp = new Date().valueOf()
-
-    get mosaics() {
-        return this.activeAccount.mosaics
-    }
 
     get wallet() {
         return this.activeAccount.wallet
-    }
-
-    get accountName() {
-        return this.activeAccount.accountName
-    }
-
-    get node() {
-        return this.activeAccount.node
     }
 
     get namespaces(): AppNamespace[] {
@@ -66,10 +47,10 @@ export class NamespaceListTs extends Vue {
     }
 
     get namespaceList(): AppNamespace[] {
-        const {namespaces, isShowExpiredNamespace, namespaceGracePeriodDuration, currentHeight} = this
+        const {namespaces, isShowExpiredNamespace, currentHeight} = this
         return namespaces
-            .filter(item => item.alias
-                && (isShowExpiredNamespace || item.endHeight - currentHeight + namespaceGracePeriodDuration > 0))
+            .filter((item: AppNamespace )=> item.alias
+                && (isShowExpiredNamespace || !item.expirationInfo(currentHeight).expired))
     }
 
     get paginatedNamespaceList(): AppNamespace[] {
@@ -91,30 +72,20 @@ export class NamespaceListTs extends Vue {
         this.showNamespaceEditDialog = true
     }
 
-    toggleIsShowExpiredNamespace() {
-        this.isShowExpiredNamespace = !this.isShowExpiredNamespace
-    }
+    displayDuration(namespace: AppNamespace): {expired: boolean, time: string} {
+        const {currentHeight} = this
+        if (!currentHeight) return {expired: false, time: '-'}
 
-    // @TODO: refactor
-    computeDuration(namespace: AppNamespace): number | MosaicNamespaceStatusType.EXPIRED {
-        const {endHeight, isActive} = namespace
+        const {
+            expired,
+            remainingBeforeExpiration,
+            remainingBeforeDeletion,  
+        } = namespace.expirationInfo(currentHeight)
 
-        const {currentHeight, namespaceGracePeriodDuration} = this
-        if (!isActive) {
-            return MosaicNamespaceStatusType.EXPIRED
+        return {
+            expired,
+            time: expired ? remainingBeforeDeletion.time : remainingBeforeExpiration.time
         }
-        const expireTime = endHeight - currentHeight + namespaceGracePeriodDuration > 0
-            ? endHeight - currentHeight + namespaceGracePeriodDuration
-            : MosaicNamespaceStatusType.EXPIRED
-
-        return expireTime
-    }
-
-    // @TODO: refactor
-    durationToTime(duration) {
-        const {namespaceGracePeriodDuration} = this
-        const durationNum = Number(duration - this.currentHeight + namespaceGracePeriodDuration)
-        return formatSeconds(durationNum * 12)
     }
 
     unbindItem(namespace: AppNamespace) {

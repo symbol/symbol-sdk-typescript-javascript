@@ -1,7 +1,7 @@
 import {mapState} from 'vuex'
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
-import {formatNumber, formatXemAmount, localRead} from '@/core/utils'
+import {formatNumber, localRead} from '@/core/utils'
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {seedWalletTitle, walletStyleSheetType} from '@/config/view/wallet.ts'
@@ -32,6 +32,7 @@ export class WalletSwitchTs extends Vue {
     walletToUpdate = {}
     pathToCreate = ''
     scroll: any
+    formatNumber = formatNumber
 
     get walletList() {
         return this.app.walletList
@@ -83,14 +84,6 @@ export class WalletSwitchTs extends Vue {
 
     switchWallet(newActiveWalletAddress) {
         AppWallet.updateActiveWalletAddress(newActiveWalletAddress, this.$store)
-    }
-
-    formatNumber(number) {
-        return formatNumber(number)
-    }
-
-    formatXemAmount(text) {
-        return formatXemAmount(text)
     }
 
     toImport() {

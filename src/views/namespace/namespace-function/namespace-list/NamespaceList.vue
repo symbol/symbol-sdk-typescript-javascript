@@ -40,17 +40,17 @@
                     :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
             />
           </span>
-          <!-- <span
-            class="is_active"
-            @click="namespaceSortType = namespaceSortTypes.byOwnerShip;
+          <span
+                  class="is_expired"
+                  @click="namespaceSortType = namespaceSortTypes.byDuration;
                 sortDirection = !sortDirection"
-          >{{$t('Control')}}
+          >{{$t('Expired')}}
             <Icon
-              v-if="namespaceSortType === namespaceSortTypes.byOwnerShip"
-              class="active_sort_type":
-              type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
+                    v-if="namespaceSortType === namespaceSortTypes.byDuration"
+                    class="active_sort_type"
+                    :type="sortDirection?'md-arrow-dropdown':'md-arrow-dropup'"
             />
-          </span> -->
+          </span>
           <span
                   class="link overflow_ellipsis"
                   @click="namespaceSortType = namespaceSortTypes.byBindType;
@@ -76,7 +76,10 @@
           <span class="more"></span>
           <span @click="refreshNamespaceList()"
                 class="pointer refresh_btn">{{$t('refresh')}}</span>
-          <div class="namespace_filter pointer" @click="toggleIsShowExpiredNamespace()">
+          <div
+              class="namespace_filter pointer"
+              @click="isShowExpiredNamespace = !isShowExpiredNamespace"
+          >
             <Icon v-if="isShowExpiredNamespace" type="md-square"/>
             <Icon v-else type="md-square-outline"/>
             <span>{{$t('Hide_expired_namespaces')}}</span>
@@ -87,15 +90,18 @@
           <div class=" radius" :key="`ns${index}`"
                v-for="(n, index) in paginatedNamespaceList">
             <div v-if="n" class="table_body_item">
-              <span class="Namespace_name text_select overflow_ellipsis">{{n.label}}</span>
-              <span class="duration overflow_ellipsis">
-              {{computeDuration(n) === StatusString.EXPIRED
-                  ? $t('overdue') : durationToTime(n.endHeight)}}
+              <span class="Namespace_name text_select overflow_ellipsis">{{n.name}}</span>
+              <span :class="[
+                  'duration',
+                  'overflow_ellipsis',
+                  displayDuration(n).expired ? 'red' : '',
+              ]">
+                  {{ displayDuration(n).time }}
             </span>
-              <!-- <span class="is_active overflow_ellipsis">
-                <Icon v-if="n.isActive" type="md-checkmark"/>
+              <span class="is_expired overflow_ellipsis">
+                <Icon v-if="displayDuration(n).expired" type="md-checkmark"/>
                 <Icon v-else type="md-close"/>
-              </span> -->
+              </span>
               <span class="link overflow_ellipsis">
                 <span v-if="getAliasType(n)">
                     {{$t(getAliasType(n))}}
@@ -117,7 +123,7 @@
                   <span>{{$t('update')}}</span>
                 </span>
                <span
-                       v-if="n.isLinked() && computeDuration(n) !== StatusString.EXPIRED"
+                       v-if="n.isLinked() && !displayDuration(n).expired"
                        class="fnItem pointer"
                        @click.stop="unbindItem(n)"
                >
@@ -126,7 +132,7 @@
               </span>
 
               <span
-                      v-if="!n.isLinked() && computeDuration(n) !== StatusString.EXPIRED"
+                      v-if="!n.isLinked() && !displayDuration(n).expired"
                       class="fnItem pointer"
                       @click.stop="bindItem(n)"
               >

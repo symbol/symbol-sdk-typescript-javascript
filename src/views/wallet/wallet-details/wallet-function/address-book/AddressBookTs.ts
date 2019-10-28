@@ -1,9 +1,8 @@
 import {Message} from "@/config/index.ts"
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import {formatAddress, formatSeconds} from "@/core/utils"
+import {formatAddress} from "@/core/utils"
 import {mapState} from "vuex"
 import {StoreAccount, AppInfo, removeLinkInAddressBook, saveLocalAlias, readLocalAliasInAddressBook} from "@/core/model"
-import {networkConfig} from "@/config/index"
 
 @Component({
     computed: {
@@ -120,16 +119,6 @@ export class AddressBookTs extends Vue {
 
     formatAddress(address) {
         return formatAddress(address)
-    }
-
-    computeDuration(endHeight) {
-        let expireTime = endHeight > this.currentHeight ? this.durationToTime(endHeight - this.currentHeight - networkConfig.namespaceGracePeriodDuration) : 'Expired'
-        return expireTime
-    }
-
-    durationToTime(duration) {
-        const durationNum = Number(duration)
-        return formatSeconds(durationNum * 12)
     }
 
     initLocalAlias() {

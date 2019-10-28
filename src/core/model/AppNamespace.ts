@@ -1,15 +1,16 @@
-import { NamespaceId, NamespaceInfo, Alias, NamespaceName } from 'nem2-sdk'
-import { EmptyAlias } from 'nem2-sdk/dist/src/model/namespace/EmptyAlias'
+import {NamespaceId, NamespaceInfo, NamespaceName} from 'nem2-sdk'
+import {EmptyAlias} from 'nem2-sdk/dist/src/model/namespace/EmptyAlias'
+import {networkConfig} from '@/config'
+import {durationToRelativeTime} from '@/core/utils'
+import { NamespaceExpirationInfo } from './types'
+const {namespaceGracePeriodDuration} = networkConfig
 
-// @TODO: review model
 export class AppNamespace {
   aliasTarget: string
   aliasType: string
 
   constructor(   public id: NamespaceId,
                  public hex: string,
-                 public value: string,
-                 public label: string,
                  public namespaceInfo: NamespaceInfo,
                  public isActive: boolean,
                  public alias,
@@ -24,8 +25,6 @@ export class AppNamespace {
    return new AppNamespace(
      namespaceInfo.id,
      namespaceInfo.id.toHex(),
-     name,
-     name,
      namespaceInfo,
      namespaceInfo.active,
      namespaceInfo.alias,
@@ -39,8 +38,6 @@ export class AppNamespace {
     return new AppNamespace(
       namespaceName.namespaceId,
       namespaceName.namespaceId.toHex(),
-      namespaceName.name,
-      namespaceName.name,
       null,
       true,
       null,
@@ -55,8 +52,6 @@ export class AppNamespace {
     return new AppNamespace(
         newObject.id,
         newObject.hex,
-        newObject.value,
-        newObject.label,
         newObject.namespaceInfo,
         newObject.isActive,
         newObject.alias,
@@ -81,5 +76,24 @@ export class AppNamespace {
 
   isLinked(): boolean {
     return !(this.alias instanceof EmptyAlias)
+  }
+
+  expirationInfo(currentHeight): NamespaceExpirationInfo {
+      if (!currentHeight) return null
+      const expired =  currentHeight > this.endHeight - namespaceGracePeriodDuration
+      const expiredIn = this.endHeight - namespaceGracePeriodDuration - currentHeight
+      const deletedIn = this.endHeight - currentHeight
+
+      return {
+          expired,
+          remainingBeforeExpiration: {
+              blocks: expiredIn,
+              time: durationToRelativeTime(expiredIn)
+          },
+          remainingBeforeDeletion: {
+              blocks: deletedIn,
+              time: durationToRelativeTime(deletedIn)
+          },
+      }
   }
 }

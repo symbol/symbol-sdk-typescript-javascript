@@ -1,5 +1,4 @@
 import {mapState} from "vuex"
-import {AliasType} from "nem2-sdk"
 import {Component, Vue, Watch} from 'vue-property-decorator'
 import EditDialog from './mosaic-edit-dialog/MosaicEditDialog.vue'
 import {formatNumber} from '@/core/utils'
@@ -19,17 +18,10 @@ import {setMosaics, sortMosaicList} from "@/core/services"
 export class MosaicListTs extends Vue {
     activeAccount: StoreAccount
     app: AppInfo
-    isLoadingConfirmedTx = false
-    currentTab: number = 0
     currentPage: number = 1
     pageSize: number = networkConfig.namespaceListSize
-    rootNameList: any[] = []
-    screenMosaic: any = {}
     showCheckPWDialog = false
     showMosaicEditDialog = false
-    showMosaicAliasDialog = false
-    showMosaicUnAliasDialog = false
-    mosaicMapInfo: any = {}
     selectedMosaic: AppMosaic = null
     currentSortType = mosaicSortType.byId
     mosaicSortType = mosaicSortType
@@ -63,21 +55,6 @@ export class MosaicListTs extends Vue {
 
     get wallet() {
         return this.activeAccount.wallet
-    }
-
-    get namespaceMap() {
-        let namespaceMap = {}
-        this.activeAccount.namespaces.filter(ns => ns.alias).forEach((item) => {
-            switch (item.alias.type) {
-                case (AliasType.Address):
-
-                    namespaceMap[item.alias.address.plain()] = item
-                    break
-                case (AliasType.Mosaic):
-                    namespaceMap[item.alias.mosaicId.toHex()] = item
-            }
-        })
-        return namespaceMap
     }
 
     mosaicSupplyAmount(value) {

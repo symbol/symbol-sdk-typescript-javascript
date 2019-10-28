@@ -127,3 +127,14 @@ export enum TxDetailsKeysWithValueToTranslate {
     transferable = 'transferable',
     restrictable = 'restrictable',
 }
+
+export interface BlocksAndTime {
+    blocks: number
+    time: string
+}
+
+export interface NamespaceExpirationInfo {
+    expired: boolean
+    remainingBeforeExpiration: BlocksAndTime
+    remainingBeforeDeletion: BlocksAndTime
+}
