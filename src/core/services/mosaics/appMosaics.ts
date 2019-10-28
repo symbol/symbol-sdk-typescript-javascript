@@ -68,7 +68,7 @@ export const AppMosaics = () => ({
                     map(x => (new AppMosaic({
                         hex: x.mosaicId.toHex(),
                         name: x.names[0] && x.names[0].name || null,
-                        namespaceHex: x.names[0].namespaceId.toHex(),
+                        namespaceHex: x.names[0] && x.names[0].namespaceId.toHex() || null,
                     }))),
                     toArray(),
                 )

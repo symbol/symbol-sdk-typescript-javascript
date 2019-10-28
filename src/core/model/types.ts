@@ -123,4 +123,7 @@ export enum SpecialTxDetailsKeys {
 export enum TxDetailsKeysWithValueToTranslate {
     action = 'action',
     direction = 'direction',
+    supplyMutable = 'supplyMutable',
+    transferable = 'transferable',
+    restrictable = 'restrictable',
 }

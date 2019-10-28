@@ -1,6 +1,6 @@
 <template>
     <div class="transaction_preview">
-      <div class="dash_board_dialog text_select scroll">
+      <div :class="['dash_board_dialog', 'text_select', addScroll ? 'scroll' : '', addScroll ? 'scrollable-area' : '']">
         <TransactionDetails
           :transaction="formattedTransaction"
           @innerTransactionClicked = "innerTransactionClicked"

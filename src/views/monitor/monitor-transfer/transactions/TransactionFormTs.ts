@@ -255,8 +255,6 @@ export class TransactionFormTs extends Vue {
     }
 
     async submit() {
-        if (!this.checkForm()) return
-
         this.$validator
             .validate()
             .then((valid) => {
@@ -365,33 +363,6 @@ export class TransactionFormTs extends Vue {
             aggregateFee
         )
         this.transactionList = [aggregateTransaction]
-    }
-
-    async checkForm() {
-
-        const {recipient, mosaicTransferList, multisigPublicKey} = this.formItems
-
-        // multisig check
-        if (multisigPublicKey.length < 64) {
-            this.showErrorMessage(this.$t(Message.ILLEGAL_PUBLIC_KEY_ERROR))
-            return false
-        }
-        if (!recipient) {
-            this.showErrorMessage(this.$t(Message.ADDRESS_FORMAT_ERROR))
-            return false
-        }
-        if (mosaicTransferList.length < 1) {
-            this.showErrorMessage(this.$t(Message.MOSAIC_LIST_NULL_ERROR))
-            return false
-        }
-        return true
-    }
-
-    showErrorMessage(message) {
-        this.$Notice.destroy()
-        this.$Notice.error({
-            title: message
-        })
     }
 
     @Watch('formItems.multisigPublicKey')

@@ -63,7 +63,7 @@ export const formDataConfig = {
         divisibility: 0,
         transferable: true,
         supplyMutable: true,
-        permanent: false,
+        permanent: true,
         duration: 1000,
         feeSpeed: FEE_SPEEDS.NORMAL,
         multisigPublicKey: ''

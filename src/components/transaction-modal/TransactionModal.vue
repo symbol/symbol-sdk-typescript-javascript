@@ -5,12 +5,12 @@
             v-if="activeTransaction"
             :title="$t('transaction_detail')"
             :transfer="false"
-            class-name="dash_board_dialog scroll text_select"
+            class-name="dash_board_dialog text_select"
     >
       <TransactionSummary
         :formattedTransaction="activeTransaction"
-      >
-      </TransactionSummary>
+        :add-scroll="true"
+      />
     </Modal>
   </div>
 </template>

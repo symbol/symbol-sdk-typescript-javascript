@@ -139,11 +139,6 @@ export class MosaicTransactionTs extends Vue {
         return formatSeconds(duration * 12)
     }
 
-    initForm(): void {
-        this.formItems = cloneData(formDataConfig.mosaicTransactionForm)
-        this.formItems.multisigPublicKey = this.accountPublicKey
-    }
-
     addDivisibilityAmount() {
         this.formItems.divisibility = this.formItems.divisibility >= NETWORK_PARAMS.MAX_MOSAIC_DIVISIBILITY
             ? Number(this.formItems.divisibility) : Number(this.formItems.divisibility) + 1
@@ -262,8 +257,6 @@ export class MosaicTransactionTs extends Vue {
                 UInt64.fromUint(fee)
             )
         ]
-
-        this.initForm()
     }
 
     createByMultisig() {
