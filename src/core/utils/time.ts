@@ -2,7 +2,7 @@ import {networkConfig} from '@/config'
 const {targetBlockTime} = networkConfig
 
 export const addZero = function (number: number): string {
-    return number < 10 ? '0' + number : `number`
+    return number < 10 ? `0${number}` : `${number}`
 }
 
 export const formatTimestamp = (timestamp: number): string => {
