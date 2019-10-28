@@ -12,7 +12,7 @@ import { walletFnNavConfig } from '@/config/view/wallet'
     },
 })
 export class WalletFunctionsTs extends Vue {
-    Index = 0
+    Index = 1
     createForm = {}
     walletCreated = false
     navList = walletFnNavConfig
