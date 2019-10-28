@@ -213,6 +213,4 @@ export const networkConfig = {
     seedWalletMaxAmount: 10,
     testMnemonicString: 'this is a test string his is a test string this is',
     EMPTY_LINKED_ACCOUNT_KEY: '0000000000000000000000000000000000000000000000000000000000000000',
-    derivationPathHead:`m/44'/43'/0'/0'/`,
-    derivationSeedPath:`m/44'/43'/0'/0'/0'`
 }

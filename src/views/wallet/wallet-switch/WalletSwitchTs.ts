@@ -1,14 +1,14 @@
 import {mapState} from 'vuex'
 import {Component, Vue, Watch} from 'vue-property-decorator'
-import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
-import {formatNumber, localRead} from '@/core/utils'
+import {formatNumber, localRead, getPath} from '@/core/utils'
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 import {seedWalletTitle, walletStyleSheetType} from '@/config/view/wallet.ts'
 import {MultisigAccountInfo, Password} from 'nem2-sdk'
-import TheWalletUpdate from "@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdate.vue"
 import {Message, networkConfig} from "@/config"
+import TheWalletUpdate from "@/views/wallet/wallet-switch/the-wallet-update/TheWalletUpdate.vue"
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
+import TheWalletDelete from '@/views/wallet/wallet-switch/the-wallet-delete/TheWalletDelete.vue'
 
 @Component({
     components: {TheWalletDelete, TheWalletUpdate, CheckPasswordDialog},
@@ -97,37 +97,40 @@ export class WalletSwitchTs extends Vue {
         })
     }
 
+    getPathNumber(seedPathList: string[]): number {
+        const numberOfSeedPath = seedPathList.length
+        if (!numberOfSeedPath) return 0
+
+        const jumpedPath = seedPathList.map((element, index) => {
+            if (Number(element) !== index) return index
+        }).filter(x => x)
+
+        return jumpedPath.length ? jumpedPath[0] : numberOfSeedPath
+    }
+
     toCreate() {
         const {accountName} = this
         const walletList = JSON.parse(localRead('accountMap'))[accountName].wallets
         // get sorted path list
-        const seedPathList = walletList.filter(item => item.path).map(item => item.path[item.path.length - 2]).sort()
+        const seedPathList = walletList.filter(item => item.path).map(item => item.path[item.path.length - 8]).sort()
         // check if seed wallets > 10
-        console.log(seedPathList)
         if (seedPathList.length > networkConfig.seedWalletMaxAmount) {
             this.showErrorDialog(Message.SEED_WALLET_OVERFLOW_ERROR)
             return
         }
-        //get min path to create
-        let pathToCreate = `0`
-        // check if there is a jump number
-        const flag = seedPathList.every((item, index) => {
-            if (item == index) return true
-            pathToCreate = `${index}`
-            return false
-        })
-        pathToCreate = flag ? seedPathList.length : pathToCreate
-        this.pathToCreate = networkConfig.derivationPathHead + pathToCreate + "'"
+
+        const pathNumber = this.getPathNumber(seedPathList)
+        this.pathToCreate = getPath(pathNumber)
         this.showCheckPWDialog = true
     }
 
     checkEnd(password) {
         if (!password) return
-        const {accountName, pathToCreate, cipherMnemonic} = this
+        const {accountName, pathToCreate} = this
         const currentNetType = JSON.parse(localRead('accountMap'))[accountName].currentNetType
         try {
             new AppWallet().createFromPath(
-                seedWalletTitle + pathToCreate[pathToCreate.length - 2],
+                seedWalletTitle + pathToCreate[pathToCreate.length - 8],
                 new Password(password),
                 pathToCreate,
                 currentNetType,
@@ -154,5 +157,4 @@ export class WalletSwitchTs extends Vue {
     onWalletChange() {
         this.scrollToActiveWallet()
     }
-
 }

@@ -16,7 +16,7 @@
               <div>
                 <p class="walletName">{{item.name}}</p>
                 <p class="walletAmount overflow_ellipsis">
-                  {{formatNumber(item.balance)}}
+                  {{ item.balance ? formatNumber(item.balance) : 0 }}
                   &nbsp;<span class="tails">{{ networkCurrency.ticker }}</span>
                 </p>
               </div>

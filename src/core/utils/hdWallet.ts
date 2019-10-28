@@ -5,6 +5,10 @@ export const createMnemonic = () => {
     return mnemonic.plain
 }
 
+export const getPath = (int: number): string => {
+    return  `m/44'/43'/${int}'/0'/0'`
+}
+
 export const createSubWalletByPath = (mnemonic: string, path: string) => {
     const PassPhrase = new MnemonicPassPhrase(mnemonic)
     const bip32Seed = PassPhrase.toSeed()

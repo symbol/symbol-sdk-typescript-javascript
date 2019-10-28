@@ -16,7 +16,7 @@ import {
 import CryptoJS from 'crypto-js'
 import { filter, mergeMap } from 'rxjs/operators'
 import {Message, networkConfig} from "@/config"
-import {AppLock, localRead, localSave, createSubWalletByPath} from "@/core/utils"
+import {AppLock, localRead, localSave, createSubWalletByPath, getPath} from "@/core/utils"
 import {CreateWalletType} from "@/core/model"
 import {AppState} from './types'
 import {announceBondedWithLock} from '@/core/services'
@@ -102,7 +102,7 @@ export class AppWallet {
         networkType: NetworkType,
         store: Store<AppState>): AppWallet {
         try {
-            const path = networkConfig.derivationSeedPath
+            const path = getPath(0)
             const accountName = store.state.account.accountName
             const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
             const account = createSubWalletByPath(mnemonic, path)  // need put in configure

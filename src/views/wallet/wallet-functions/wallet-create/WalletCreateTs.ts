@@ -2,9 +2,9 @@ import {Message} from "@/config/index.ts"
 import {Component, Vue} from 'vue-property-decorator'
 import {NetworkType, Password} from "nem2-sdk"
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
-import {AppAccounts, AppWallet, StoreAccount} from '@/core/model'
+import {AppWallet, StoreAccount} from '@/core/model'
 import {mapState} from "vuex"
-import {createSubWalletByPath} from "@/core/utils/hdWallet.ts"
+import {createSubWalletByPath, getPath} from "@/core/utils"
 import {networkConfig} from '@/config/index.ts'
 import {networkTypeConfig} from '@/config/view/setting'
 
@@ -23,7 +23,7 @@ export class WalletCreateTs extends Vue {
     formItem = {
         currentNetType: NetworkType.MIJIN_TEST,
         walletName: 'wallet-create',
-        path: networkConfig.derivationSeedPath
+        path: getPath(0)
     }
     networkTypeList = networkTypeConfig
 
@@ -40,9 +40,7 @@ export class WalletCreateTs extends Vue {
 
     checkEnd(password) {
         if (!password) return
-        const {accountName} = this
         const {currentNetType, walletName, path} = this.formItem
-        const appAccounts = AppAccounts()
         try {
             new AppWallet().createFromPath(walletName, new Password(password), path, currentNetType, this.$store)
             this.$router.push('dashBoard')
