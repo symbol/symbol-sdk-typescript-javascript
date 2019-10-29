@@ -89,7 +89,7 @@ export * from './receipt/ResolutionType';
 export * from './receipt/InflationReceipt';
 export * from './receipt/Statement';
 
-//Restriction
+// Restriction
 export * from './restriction/AccountRestrictions';
 export * from './restriction/AccountRestrictionsInfo';
 export * from './restriction/AccountRestriction';
@@ -108,6 +108,7 @@ export * from './message/Message';
 export * from './message/PlainMessage';
 export * from './message/MessageMarker';
 export * from './message/MessageType';
+
 // Transaction
 export * from './transaction/AccountLinkTransaction';
 export * from './transaction/AccountRestrictionTransaction';
