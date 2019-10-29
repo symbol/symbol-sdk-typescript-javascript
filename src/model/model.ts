@@ -68,6 +68,7 @@ export * from './namespace/NamespaceInfo';
 export * from './namespace/NamespaceName';
 export * from './namespace/NamespaceRegistrationType';
 export * from './namespace/AliasAction';
+export * from './namespace/EmptyAlias';
 
 // Node
 export * from './node/NodeInfo';
