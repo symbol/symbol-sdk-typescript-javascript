@@ -82,11 +82,11 @@ export class Listener {
     constructor(/**
                  * Listener configuration.
                  */
-                    private config: string,
+                private config: string,
                 /**
                  * WebSocket injected when using listeners in client.
                  */
-                    private websocketInjected?: any) {
+                private websocketInjected?: any) {
         this.config = config.replace(/\/$/, '');
         this.url = `${this.config}/ws`;
         this.messageSubject = new Subject();
@@ -114,56 +114,63 @@ export class Listener {
                 };
                 this.webSocket.onmessage = (msg) => {
                     const message = JSON.parse(msg.data as string);
-
-                    if (message.uid) {
-                        this.uid = message.uid;
-                        resolve();
-                    } else if (message.transaction) {
-                        this.messageSubject.next({channelName: message.meta.channelName, message: CreateTransactionFromDTO(message)});
-                    } else if (message.block) {
-                        const networkType = parseInt(message.block.version.toString(16).substr(0, 2), 16);
-                        this.messageSubject.next({
-                            channelName: ListenerChannelName.block, message: new BlockInfo(
-                                message.meta.hash,
-                                message.meta.generationHash,
-                                message.meta.totalFee ? UInt64.fromNumericString(message.meta.totalFee) : new UInt64([0, 0]),
-                                message.meta.numTransactions,
-                                message.block.signature,
-                                PublicAccount.createFromPublicKey(message.block.signerPublicKey, networkType),
-                                networkType,
-                                parseInt(message.block.version.toString(16).substr(2, 2), 16), // Tx version
-                                message.block.type,
-                                UInt64.fromNumericString(message.block.height),
-                                UInt64.fromNumericString(message.block.timestamp),
-                                UInt64.fromNumericString(message.block.difficulty),
-                                message.block.feeMultiplier,
-                                message.block.previousBlockHash,
-                                message.block.blockTransactionsHash,
-                                message.block.blockReceiptsHash,
-                                message.block.stateHash,
-                                extractBeneficiary(message, networkType), // passing `message` as `blockDTO`
-                            ),
-                        });
-                    } else if (message.status) {
-                        this.messageSubject.next({
-                            channelName: ListenerChannelName.status, message: new TransactionStatusError(
-                                message.hash,
-                                message.status,
-                                Deadline.createFromDTO(message.deadline)),
-                        });
-                    } else if (message.parentHash) {
-                        this.messageSubject.next({
-                            channelName: ListenerChannelName.cosignature,
-                            message: new CosignatureSignedTransaction(message.parentHash, message.signature, message.signerPublicKey),
-                        });
-                    } else if (message.meta && message.meta.hash) {
-                        this.messageSubject.next({channelName: message.meta.channelName, message: message.meta.hash});
-                    }
+                    this.handleMessage(message, resolve);
                 };
             } else {
                 resolve();
             }
         });
+    }
+
+    handleMessage(message: any, resolve) {
+        if (message.uid) {
+            this.uid = message.uid;
+            resolve();
+        } else if (message.transaction) {
+            this.messageSubject.next({
+                channelName: message.meta.channelName,
+                message: CreateTransactionFromDTO(message)
+            });
+        } else if (message.block) {
+            const networkType = parseInt(message.block.version.toString(16).substr(0, 2), 16);
+            this.messageSubject.next({
+                channelName: ListenerChannelName.block, message: new BlockInfo(
+                    message.meta.hash,
+                    message.meta.generationHash,
+                    message.meta.totalFee ? UInt64.fromNumericString(message.meta.totalFee) : new UInt64([0, 0]),
+                    message.meta.numTransactions,
+                    message.block.signature,
+                    PublicAccount.createFromPublicKey(message.block.signerPublicKey, networkType),
+                    networkType,
+                    parseInt(message.block.version.toString(16).substr(2, 2), 16), // Tx version
+                    message.block.type,
+                    UInt64.fromNumericString(message.block.height),
+                    UInt64.fromNumericString(message.block.timestamp),
+                    UInt64.fromNumericString(message.block.difficulty),
+                    message.block.feeMultiplier,
+                    message.block.previousBlockHash,
+                    message.block.blockTransactionsHash,
+                    message.block.blockReceiptsHash,
+                    message.block.stateHash,
+                    extractBeneficiary(message, networkType), // passing `message` as `blockDTO`
+                ),
+            });
+        } else if (message.status) {
+            this.messageSubject.next({
+                channelName: ListenerChannelName.status, message: new TransactionStatusError(
+                    Address.createFromEncoded(message.address),
+                    message.hash,
+                    message.status,
+                    Deadline.createFromDTO(message.deadline)),
+            });
+        } else if (message.parentHash) {
+            this.messageSubject.next({
+                channelName: ListenerChannelName.cosignature,
+                message: new CosignatureSignedTransaction(message.parentHash, message.signature, message.signerPublicKey),
+            });
+        } else if (message.meta && message.meta.hash) {
+            this.messageSubject.next({channelName: message.meta.channelName, message: message.meta.hash});
+        }
     }
 
     /**
@@ -208,10 +215,10 @@ export class Listener {
         this.subscribeTo('block');
         return this.messageSubject
             .asObservable().pipe(
-            share(),
-            filter((_) => _.channelName === ListenerChannelName.block),
-            filter((_) => _.message instanceof BlockInfo),
-            map((_) => _.message as BlockInfo));
+                share(),
+                filter((_) => _.channelName === ListenerChannelName.block),
+                filter((_) => _.message instanceof BlockInfo),
+                map((_) => _.message as BlockInfo));
     }
 
     /**
@@ -310,7 +317,8 @@ export class Listener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.status),
             filter((_) => _.message instanceof TransactionStatusError),
-            map((_) => _.message as TransactionStatusError));
+            map((_) => _.message as TransactionStatusError),
+            filter((_) => address.equals(_.address)));
     }
 
     /**
@@ -394,7 +402,7 @@ export class Listener {
         }
 
         return transaction.signer!.address.equals(address) || (
-               transaction instanceof TransferTransaction
+            transaction instanceof TransferTransaction
             && (transaction.recipientAddress as Address).equals(address)
         );
     }
