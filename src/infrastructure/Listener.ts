@@ -127,7 +127,7 @@ export class Listener {
     /**
      * @internal
      *
-     * This this method handles one incoming message from the web socket and it dispatch it to the right message subject listener.
+     * This method handles one incoming message from the web socket and it dispatches it to the message subject listener.
      *
      * @param message the object payload.
      * @param resolve the method to notify when the uid has been resolved and the listener connection has been stablished.
