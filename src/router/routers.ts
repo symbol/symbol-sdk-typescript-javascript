@@ -20,14 +20,9 @@ const routers = [
                 children: [
                     {
                         path: '/dashBoard',
-                        name: 'dashBoard',
+                        name: 'dash_board',
                         // @ts-ignore
                         component: () => import('@/views/monitor/monitor-dashboard/MonitorDashBoard.vue')
-                    }, {
-                        path: '/market',
-                        name: 'market',
-                        // @ts-ignore
-                        component: () => import('@/views/monitor/monitor-market/MonitorMarket.vue')
                     }, {
                         path: '/transfer',
                         name: 'transfer',
@@ -35,9 +30,14 @@ const routers = [
                         component: () => import('@/views/monitor/monitor-transfer/MonitorTransfer.vue')
                     }, {
                         path: '/invoice',
-                        name: 'invoice',
+                        name: 'Invoice',
                         // @ts-ignore
                         component: () => import('@/views/monitor/monitor-invoice/MonitorInvoice.vue')
+                    }, {
+                        path: '/market',
+                        name: 'market',
+                        // @ts-ignore
+                        component: () => import('@/views/monitor/monitor-market/MonitorMarket.vue')
                     },
                 ]
             },

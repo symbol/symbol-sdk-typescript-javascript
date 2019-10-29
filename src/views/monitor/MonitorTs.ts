@@ -4,8 +4,8 @@ import monitorSelected from '@/common/img/monitor/monitorSelected.png'
 import monitorUnselected from '@/common/img/monitor/monitorUnselected.png'
 import {copyTxt, formatNumber, localRead, localSave} from '@/core/utils'
 import {mapState} from "vuex"
-import {monitorPanelNavigatorConfig} from "@/config/view/monitor"
 import {AppInfo, MosaicNamespaceStatusType, StoreAccount} from "@/core/model"
+import routes from '@/router/routers'
 
 @Component({
     computed: {
@@ -26,9 +26,8 @@ export class MonitorTs extends Vue {
     isChecked = true
     monitorSelected = monitorSelected
     monitorUnselected = monitorUnselected
-    navigatorList: any = monitorPanelNavigatorConfig
     formatNumber = formatNumber
-
+    
     get balance(): number {
         const {wallet} = this.activeAccount
         if (!wallet) return 0
@@ -79,19 +78,16 @@ export class MonitorTs extends Vue {
         return this.activeAccount.accountName
     }
 
-    switchPanel(index) {
-        if (this.navigatorList[index].disabled) {
-            return
-        }
-        const list = this.navigatorList.map((item) => {
-            item.isSelect = false
-            return item
-        })
-        list[index].isSelect = true
-        this.navigatorList = list
-        this.$router.push({
-            name: list[index].path
-        })
+    get routes() {
+        const routesMeta: any[] = routes[0].children
+            .find(({name}) => name === 'monitorPanel')
+            .children
+
+        return routesMeta.map(({path, name}) => ({
+            path,
+            name,
+            active: this.$route.matched.map(matched => matched.path).includes(path),
+        }))
     }
 
     hideAssetInfo() {
@@ -170,10 +166,5 @@ export class MonitorTs extends Vue {
     showErrorMessage(message) {
         this.$Notice.destroy()
         this.$Notice.error({title: this.$t(message) + ''})
-    }
-
-    mounted() {
-        // @ROUTING
-        this.switchPanel(0)
     }
 }

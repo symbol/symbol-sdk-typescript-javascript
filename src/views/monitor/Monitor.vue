@@ -98,12 +98,16 @@
     <div class="monitor_panel_right_container">
       <div class="top_navidator radius">
         <span
-                :class="[n.isSelect?'active_navigator':'','outter_container',n.disabled?'disabled':'pointer']"
-                @click="switchPanel(index)"
-                v-for="(n,index) in navigatorList"
+                v-for="({path, name, active}, index) in routes"
                 :key="index"
+                :class="[
+                    active ? 'active_navigator' : '',
+                    'outter_container',
+                    active ? 'disabled' : 'pointer'
+                ]"
+                @click="$router.push(path)"
         >
-          <span class="inner_container absolute">{{$t(n.name)}}</span>
+          <span class="inner_container absolute">{{$t(name)}}</span>
           <span class="line">|</span>
         </span>
       </div>

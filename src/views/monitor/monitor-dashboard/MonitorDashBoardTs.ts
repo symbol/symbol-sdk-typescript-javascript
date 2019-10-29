@@ -48,54 +48,58 @@ export class MonitorDashBoardTs extends Vue {
 
     // @TODO: review
     async getMarketPrice() {
-        if (!isRefreshData('oneWeekPrice', 1000 * 60 * 60 * 24, new Date().getHours())) {
-            const oneWeekPrice = JSON.parse(localRead('oneWeekPrice'))
-            this.highestPrice = oneWeekPrice.highestPrice
-            this.lowestPrice = oneWeekPrice.lowestPrice
-            this.averagePrice = oneWeekPrice.averagePrice
-            this.riseRange = oneWeekPrice.riseRange
-            return
-        }
-        const that = this
-        const rstStr = await market.kline({period: "1day", symbol: "xemusdt", size: "14"})
-        if (!rstStr.rst) {
-            return
-        }
-        const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
-        const result = rstQuery.data
-        const currentWeek = result.slice(0, 7)
-        const preWeek = result.slice(7, 14)
+      try {
+          if (!isRefreshData('oneWeekPrice', 1000 * 60 * 60 * 24, new Date().getHours())) {
+              const oneWeekPrice = JSON.parse(localRead('oneWeekPrice'))
+              this.highestPrice = oneWeekPrice.highestPrice
+              this.lowestPrice = oneWeekPrice.lowestPrice
+              this.averagePrice = oneWeekPrice.averagePrice
+              this.riseRange = oneWeekPrice.riseRange
+              return
+          }
+          const that = this
+          const rstStr = await market.kline({period: "1day", symbol: "xemusdt", size: "14"})
+          if (!rstStr.rst) {
+              return
+          }
+          const rstQuery: KlineQuery = JSON.parse(rstStr.rst)
+          const result = rstQuery.data
+          const currentWeek = result.slice(0, 7)
+          const preWeek = result.slice(7, 14)
 
-        currentWeek.sort((a, b) => {
-            return a.high < b.high ? 1 : -1
-        })
-        that.highestPrice = currentWeek[0].high
+          currentWeek.sort((a, b) => {
+              return a.high < b.high ? 1 : -1
+          })
+          that.highestPrice = currentWeek[0].high
 
-        currentWeek.sort((a, b) => {
-            return a.low < b.low ? -1 : 1
-        })
-        that.lowestPrice = currentWeek[0].low
+          currentWeek.sort((a, b) => {
+              return a.low < b.low ? -1 : 1
+          })
+          that.lowestPrice = currentWeek[0].low
 
-        let average = 0
-        currentWeek.forEach((item) => {
-            average += (item.high + item.low) / 2
-        })
-        that.averagePrice = (average / 7).toFixed(4)
+          let average = 0
+          currentWeek.forEach((item) => {
+              average += (item.high + item.low) / 2
+          })
+          that.averagePrice = (average / 7).toFixed(4)
 
-        let preAverage: any = 0
-        preWeek.forEach((item) => {
-            preAverage += (item.high + item.low) / 2
-        })
-        preAverage = (preAverage / 7).toFixed(4)
-        that.riseRange = (((that.averagePrice - preAverage) / preAverage) * 100).toFixed(2)
-        const oneWeekPrice = {
-            averagePrice: that.averagePrice,
-            riseRange: that.riseRange,
-            lowestPrice: that.lowestPrice,
-            highestPrice: that.highestPrice,
-            timestamp: new Date().getTime()
-        }
-        localSave('oneWeekPrice', JSON.stringify(oneWeekPrice))
+          let preAverage: any = 0
+          preWeek.forEach((item) => {
+              preAverage += (item.high + item.low) / 2
+          })
+          preAverage = (preAverage / 7).toFixed(4)
+          that.riseRange = (((that.averagePrice - preAverage) / preAverage) * 100).toFixed(2)
+          const oneWeekPrice = {
+              averagePrice: that.averagePrice,
+              riseRange: that.riseRange,
+              lowestPrice: that.lowestPrice,
+              highestPrice: that.highestPrice,
+              timestamp: new Date().getTime()
+          }
+          localSave('oneWeekPrice', JSON.stringify(oneWeekPrice))
+      } catch (error) {
+          console.error("MonitorDashBoardTs -> getMarketPrice -> error", error)
+      }
     }
 
     // @TODO: isn't it doable in pure CSS?

@@ -1,30 +1,3 @@
-export const monitorPanelNavigatorConfig: Array<{
-    name: string,
-    isSelect: boolean,
-    path: string
-}> = [
-        {
-            name: 'dash_board',
-            isSelect: true,
-            path: 'dashBoard'
-        },
-        {
-            name: 'transfer',
-            isSelect: false,
-            path: 'transfer'
-        },
-        {
-            name: 'Invoice',
-            isSelect: false,
-            path: 'invoice'
-        },
-        {
-            name: 'market',
-            isSelect: false,
-            path: 'market'
-        },
-    ]
-
 export const monitorReceiptTransferTypeConfig = [
     {
         name: 'ordinary_transfer',
