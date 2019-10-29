@@ -15,6 +15,7 @@
  */
 
 import {Deadline} from './Deadline';
+import {Address} from "../account/Address";
 
 /**
  * Transaction status error model returned by listeners
@@ -23,11 +24,17 @@ export class TransactionStatusError {
 
     /**
      * @internal
+     * @param address
      * @param hash
      * @param status
      * @param deadline
      */
     constructor(
+                /**
+                 *  The address of the account that signed the invalid transaction.
+                 *  It's the address listened when calling Lister.status.
+                 */
+                public readonly address: Address,
                 /**
                  * The transaction hash.
                  */

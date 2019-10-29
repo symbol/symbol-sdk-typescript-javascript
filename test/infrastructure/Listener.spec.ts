@@ -16,6 +16,10 @@
 
 import {expect} from 'chai';
 import {Listener} from '../../src/infrastructure/Listener';
+import {Address} from "../../src/model/account/Address";
+import {deepEqual} from "assert";
+import {UInt64} from "../../src/model/UInt64";
+import {timeout} from "rxjs/operators";
 
 describe('Listener', () => {
     it('should createComplete a WebSocket instance given url parameter', () => {
@@ -29,6 +33,93 @@ describe('Listener', () => {
             const listener = new Listener('ws://localhost:3000');
             expect(listener.isOpen()).to.be.false;
             listener.close();
+        });
+    });
+
+    describe('onStatusWhenAddressIsTheSame', () => {
+        it('Should forward status', (done) => {
+
+
+            const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
+
+            const errorAddress = Address.createFromEncoded(errorEncodedAddress);
+
+            class WebSocketMock {
+                constructor(public readonly  url: string) {
+                }
+
+                send(payload: string) {
+                    expect(payload).to.be.eq(`{"subscribe":"status/${errorAddress.plain()}"}`);
+                }
+            }
+
+            const statusInfoErrorDTO = {
+                address: errorEncodedAddress,
+                deadline: '1010',
+                hash: 'transaction-hash',
+                status: 'error-message',
+            };
+
+            const listener = new Listener('ws://localhost:3000', WebSocketMock);
+
+            listener.open();
+
+            listener.status(errorAddress).pipe(timeout(2000)).subscribe((transactionStatusError) => {
+                expect(transactionStatusError.address).to.deep.equal(errorAddress);
+                expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
+                expect(transactionStatusError.status).to.be.equal(statusInfoErrorDTO.status);
+                deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
+                done();
+            }, err => {
+                done('Should have not timed out!');
+            });
+
+            listener.handleMessage(statusInfoErrorDTO, null);
+
+
+        });
+    });
+
+    describe('onStatusWhenAddressIsDifferentAddress', () => {
+        it('Should not forward status', (done) => {
+
+
+            const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
+
+            const subscribedEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96AAAAA';
+            const subscribedAddress = Address.createFromEncoded(subscribedEncodedAddress);
+
+            class WebSocketMock {
+
+                constructor(public readonly  url: string) {
+                }
+
+                send(payload: string) {
+                    expect(payload).to.be.eq(`{"subscribe":"status/${subscribedAddress.plain()}"}`);
+                }
+            }
+
+            const statusInfoErrorDTO = {
+                address: errorEncodedAddress,
+                deadline: '1010',
+                hash: 'transaction-hash',
+                status: 'error-message',
+            };
+
+            const listener = new Listener('ws://localhost:3000', WebSocketMock);
+
+            listener.open();
+
+            listener.status(subscribedAddress).pipe(timeout(100)).subscribe(status => {
+                done('Should have timed out!');
+            }, err => {
+                expect(err.name).to.be.eq('TimeoutError');
+                done();
+            });
+
+            listener.handleMessage(statusInfoErrorDTO, null);
+
+
         });
     });
 
