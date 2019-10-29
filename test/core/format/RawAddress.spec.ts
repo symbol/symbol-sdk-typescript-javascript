@@ -192,42 +192,6 @@ describe('address', () => {
         });
     });
 
-    describe('isValidEncodedAddress', () => {
-        it('returns true for valid encoded address', () => {
-            // Arrange:
-            const encoded = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDFG';
-
-            // Assert:
-            expect(address.isValidEncodedAddress(encoded, NetworkType.MIJIN_TEST)).to.equal(true);
-        });
-
-        it('returns false for invalid encoded address', () => {
-            // Arrange: changed last char
-            const encoded = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDFH';
-
-            // Assert:
-            expect(address.isValidEncodedAddress(encoded, NetworkType.MIJIN_TEST)).to.equal(false);
-        });
-
-        it('returns false for encoded address with wrong length', () => {
-            // Arrange: added ABC
-            const encoded = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDFGABC';
-
-            // Assert:
-            expect(address.isValidEncodedAddress(encoded, NetworkType.MIJIN_TEST)).to.equal(false);
-        });
-
-        it('adding leading or trailing white space invalidates encoded address', () => {
-            // Arrange:
-            const encoded = 'NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDFG';
-
-            // Assert:
-            expect(address.isValidEncodedAddress(`   \t    ${encoded}`, NetworkType.MIJIN_TEST)).to.equal(false);
-            expect(address.isValidEncodedAddress(`${encoded}   \t    `, NetworkType.MIJIN_TEST)).to.equal(false);
-            expect(address.isValidEncodedAddress(`   \t    ${encoded}   \t    `, NetworkType.MIJIN_TEST)).to.equal(false);
-        });
-    });
-
     /**
      * @see https://raw.githubusercontent.com/nemtech/test-vectors/master/1.test-address-nis1.json
      */
