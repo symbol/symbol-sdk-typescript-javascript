@@ -129,7 +129,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
         const byteModificationCount = 1;
 
         // each modification contains :
-        // - 1 byte for modificationType
+        // - 1 byte for modificationAction
         // - 25 bytes for the modification value (address)
         const byteModifications = 26 * this.modifications.length;
 
@@ -154,7 +154,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             this.restrictionType.valueOf(),
             this.modifications.map((modification) => {
                 return new AccountAddressRestrictionModificationBuilder(
-                    modification.modificationType.valueOf(),
+                    modification.modificationAction.valueOf(),
                     new UnresolvedAddressDto(RawAddress.stringToAddress(modification.value)),
                 );
             }),
@@ -174,7 +174,7 @@ export class AccountAddressRestrictionTransaction extends Transaction {
             this.restrictionType.valueOf(),
             this.modifications.map((modification) => {
                 return new AccountAddressRestrictionModificationBuilder(
-                    modification.modificationType.valueOf(),
+                    modification.modificationAction.valueOf(),
                     new UnresolvedAddressDto(RawAddress.stringToAddress(modification.value)),
                 );
             }),

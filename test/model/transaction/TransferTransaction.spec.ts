@@ -30,6 +30,7 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('TransferTransaction', () => {
     let account: Account;
@@ -188,7 +189,7 @@ describe('TransferTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 158 for TransferTransaction with 1 mosaic and message NEM', () => {
+        it('should return 168 for TransferTransaction with 1 mosaic and message NEM', () => {
             const transaction = TransferTransaction.create(
                 Deadline.create(),
                 Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
@@ -198,7 +199,8 @@ describe('TransferTransaction', () => {
                 PlainMessage.create('NEM'),
                 NetworkType.MIJIN_TEST,
             );
-            expect(transaction.size).to.be.equal(158);
+            expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
+            expect(transaction.size).to.be.equal(168);
         });
     });
 

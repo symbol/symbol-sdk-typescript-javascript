@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-import { KeyPair, SHA3Hasher } from '../../core/crypto';
-import { Convert } from '../../core/format';
-import { AggregateBondedTransactionBuilder } from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
-import { AggregateCompleteTransactionBuilder } from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { CosignatureBuilder } from '../../infrastructure/catbuffer/CosignatureBuilder';
-import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { CreateTransactionFromPayload } from '../../infrastructure/transaction/CreateTransactionFromPayload';
-import { Account } from '../account/Account';
-import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
-import { UInt64 } from '../UInt64';
-import { AggregateTransactionCosignature } from './AggregateTransactionCosignature';
-import { CosignatureSignedTransaction } from './CosignatureSignedTransaction';
-import { Deadline } from './Deadline';
-import { InnerTransaction } from './InnerTransaction';
-import { SignedTransaction } from './SignedTransaction';
-import { Transaction } from './Transaction';
-import { TransactionInfo } from './TransactionInfo';
-import { TransactionType } from './TransactionType';
-import { TransactionVersion } from './TransactionVersion';
+import {KeyPair, SHA3Hasher} from '../../core/crypto';
+import {Convert} from '../../core/format';
+import {AggregateBondedTransactionBuilder} from '../../infrastructure/catbuffer/AggregateBondedTransactionBuilder';
+import {AggregateCompleteTransactionBuilder} from '../../infrastructure/catbuffer/AggregateCompleteTransactionBuilder';
+import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
+import {CosignatureBuilder} from '../../infrastructure/catbuffer/CosignatureBuilder';
+import {GeneratorUtils} from '../../infrastructure/catbuffer/GeneratorUtils';
+import {KeyDto} from '../../infrastructure/catbuffer/KeyDto';
+import {SignatureDto} from '../../infrastructure/catbuffer/SignatureDto';
+import {TimestampDto} from '../../infrastructure/catbuffer/TimestampDto';
+import {CreateTransactionFromPayload} from '../../infrastructure/transaction/CreateTransactionFromPayload';
+import {Account} from '../account/Account';
+import {PublicAccount} from '../account/PublicAccount';
+import {NetworkType} from '../blockchain/NetworkType';
+import {UInt64} from '../UInt64';
+import {AggregateTransactionCosignature} from './AggregateTransactionCosignature';
+import {CosignatureSignedTransaction} from './CosignatureSignedTransaction';
+import {Deadline} from './Deadline';
+import {InnerTransaction} from './InnerTransaction';
+import {SignedTransaction} from './SignedTransaction';
+import {Transaction} from './Transaction';
+import {TransactionInfo} from './TransactionInfo';
+import {TransactionType} from './TransactionType';
+import {TransactionVersion} from './TransactionVersion';
 
 /**
  * Aggregate innerTransactions contain multiple innerTransactions that can be initiated by different accounts.
@@ -158,10 +158,10 @@ export class AggregateTransaction extends Transaction {
          */
         const consignatureArray = consignaturesHex.match(/.{1,192}/g);
         const consignatures = consignatureArray ? consignatureArray.map((cosignature) =>
-                    new AggregateTransactionCosignature(
-                        cosignature.substring(64, 192),
-                        PublicAccount.createFromPublicKey(cosignature.substring(0, 64), networkType),
-                )) : [];
+            new AggregateTransactionCosignature(
+                cosignature.substring(64, 192),
+                PublicAccount.createFromPublicKey(cosignature.substring(0, 64), networkType),
+            )) : [];
 
         return type === TransactionType.AGGREGATE_COMPLETE ?
             AggregateTransaction.createComplete(
@@ -222,7 +222,7 @@ export class AggregateTransaction extends Transaction {
 
         signedPayload = littleEndianSize + signedPayload.substr(8, signedPayload.length - 8);
         return new SignedTransaction(signedPayload, signedTransaction.hash, initiatorAccount.publicKey,
-                                     this.type, this.networkType);
+            this.type, this.networkType);
     }
 
     /**
@@ -251,7 +251,7 @@ export class AggregateTransaction extends Transaction {
 
         signedPayload = littleEndianSize + signedPayload.substr(8, signedPayload.length - 8);
         return new SignedTransaction(signedPayload, signedTransaction.hash, initiatorAccount.publicKey,
-                                     this.type, this.networkType);
+            this.type, this.networkType);
     }
 
     /**
@@ -279,10 +279,11 @@ export class AggregateTransaction extends Transaction {
         // calculate each inner transaction's size
         let byteTransactions = 0;
         this.innerTransactions.map((transaction) => {
-            byteTransactions += transaction.size;
+            byteTransactions += (transaction.size - 80);
         });
 
-        return byteSize + byteTransactionsSize + byteTransactions;
+        const byteCosignatures = this.cosignatures.length * 96;
+        return byteSize + byteTransactionsSize + byteTransactions + byteCosignatures;
     }
 
     /**

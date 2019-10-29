@@ -129,7 +129,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
         const byteModificationCount = 1;
 
         // each modification contains :
-        // - 1 byte for modificationType
+        // - 1 byte for modificationAction
         // - 8 bytes for the modification value (mosaicId)
         const byteModifications = 9 * this.modifications.length;
 
@@ -154,7 +154,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             this.restrictionType.valueOf(),
             this.modifications.map((modification) => {
                 return new AccountMosaicRestrictionModificationBuilder(
-                    modification.modificationType.valueOf(),
+                    modification.modificationAction.valueOf(),
                     new UnresolvedMosaicIdDto(modification.value),
                 );
             }),
@@ -174,7 +174,7 @@ export class AccountMosaicRestrictionTransaction extends Transaction {
             this.restrictionType.valueOf(),
             this.modifications.map((modification) => {
                 return new AccountMosaicRestrictionModificationBuilder(
-                    modification.modificationType.valueOf(),
+                    modification.modificationAction.valueOf(),
                     new UnresolvedMosaicIdDto(modification.value),
                 );
             }),

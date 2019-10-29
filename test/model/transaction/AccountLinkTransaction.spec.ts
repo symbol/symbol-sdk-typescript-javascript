@@ -22,6 +22,7 @@ import { Deadline } from '../../../src/model/transaction/Deadline';
 import { LinkAction } from '../../../src/model/transaction/LinkAction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('AccountLinkTransaction', () => {
     let account: Account;
@@ -101,6 +102,7 @@ describe('AccountLinkTransaction', () => {
                 LinkAction.Unlink,
                 NetworkType.MIJIN_TEST,
             );
+            expect(Convert.hexToUint8(accountLinkTransaction.serialize()).length).to.be.equal(accountLinkTransaction.size);
             expect(accountLinkTransaction.size).to.be.equal(153);
         });
     });

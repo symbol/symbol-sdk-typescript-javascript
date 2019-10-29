@@ -22,6 +22,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {NamespaceRegistrationTransaction} from '../../../src/model/transaction/NamespaceRegistrationTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('NamespaceRegistrationTransaction', () => {
     let account: Account;
@@ -117,6 +118,7 @@ describe('NamespaceRegistrationTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
             expect(registerNamespaceTransaction.size).to.be.equal(157);
+            expect(Convert.hexToUint8(registerNamespaceTransaction.serialize()).length).to.be.equal(registerNamespaceTransaction.size);
         });
     });
 });

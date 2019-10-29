@@ -119,7 +119,7 @@ describe('MosaicMetadataTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 153 for MosaicMetadataTransaction byte size', () => {
+        it('should return 182 for MosaicMetadataTransaction byte size', () => {
             const mosaicMetadataTransaction = MosaicMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
@@ -129,7 +129,9 @@ describe('MosaicMetadataTransaction', () => {
                 Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
             );
-            expect(mosaicMetadataTransaction.size).to.be.equal(180);
+            expect(mosaicMetadataTransaction.size).to.be.equal(182);
+            expect(Convert.hexToUint8(mosaicMetadataTransaction.serialize()).length).to.be.equal(mosaicMetadataTransaction.size);
+
         });
     });
 });
