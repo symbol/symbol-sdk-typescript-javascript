@@ -91,7 +91,7 @@ describe('AccountMetadataTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 153 for AccountMetadataTransaction byte size', () => {
+        it('should return 174 for AccountMetadataTransaction byte size', () => {
             const accountMetadataTransaction = AccountMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
@@ -100,7 +100,9 @@ describe('AccountMetadataTransaction', () => {
                 Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
             );
-            expect(accountMetadataTransaction.size).to.be.equal(172);
+
+            expect(Convert.hexToUint8(accountMetadataTransaction.serialize()).length).to.be.equal(accountMetadataTransaction.size);
+            expect(accountMetadataTransaction.size).to.be.equal(174);
         });
     });
 });

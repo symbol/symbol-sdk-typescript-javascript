@@ -153,7 +153,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
         const byteNumModifications = 1;
 
         // each modification contains :
-        // - 1 byte for modificationType
+        // - 1 byte for modificationAction
         // - 32 bytes for cosignatoryPublicKey
         const byteModifications = 33 * this.modifications.length;
 
@@ -179,7 +179,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
             this.minApprovalDelta,
             this.modifications.map((modification) => {
                 return new CosignatoryModificationBuilder(
-                    modification.modificiationType.valueOf(),
+                    modification.modificationAction.valueOf(),
                     new KeyDto(Convert.hexToUint8(modification.cosignatoryPublicAccount.publicKey)),
                 );
             }),
@@ -200,7 +200,7 @@ export class MultisigAccountModificationTransaction extends Transaction {
             this.minApprovalDelta,
             this.modifications.map((modification) => {
                 return new CosignatoryModificationBuilder(
-                    modification.modificiationType.valueOf(),
+                    modification.modificationAction.valueOf(),
                     new KeyDto(Convert.hexToUint8(modification.cosignatoryPublicAccount.publicKey)),
                 );
             }),

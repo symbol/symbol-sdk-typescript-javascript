@@ -25,6 +25,7 @@ import {AddressAliasTransaction} from '../../../src/model/transaction/AddressAli
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('AddressAliasTransaction', () => {
     let account: Account;
@@ -100,6 +101,7 @@ describe('AddressAliasTransaction', () => {
                 address,
                 NetworkType.MIJIN_TEST,
             );
+            expect(Convert.hexToUint8(addressAliasTransaction.serialize()).length).to.be.equal(addressAliasTransaction.size);
             expect(addressAliasTransaction.size).to.be.equal(154);
         });
     });

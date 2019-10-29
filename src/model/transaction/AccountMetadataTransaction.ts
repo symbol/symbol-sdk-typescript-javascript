@@ -146,9 +146,10 @@ export class AccountMetadataTransaction extends Transaction {
         const targetPublicKey = 32;
         const byteScopedMetadataKey = 8;
         const byteValueSizeDelta = 2;
+        const valueSize = 2;
 
         return byteSize + targetPublicKey + byteScopedMetadataKey +
-               byteValueSizeDelta + this.value.length;
+            byteValueSizeDelta + valueSize + this.value.length;
     }
 
     /**

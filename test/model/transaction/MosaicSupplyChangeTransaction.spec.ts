@@ -23,6 +23,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicSupplyChangeTransaction} from '../../../src/model/transaction/MosaicSupplyChangeTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('MosaicSupplyChangeTransaction', () => {
     let account: Account;
@@ -96,6 +97,7 @@ describe('MosaicSupplyChangeTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
             expect(mosaicSupplyChangeTransaction.size).to.be.equal(137);
+            expect(Convert.hexToUint8(mosaicSupplyChangeTransaction.serialize()).length).to.be.equal(mosaicSupplyChangeTransaction.size);
         });
     });
 });

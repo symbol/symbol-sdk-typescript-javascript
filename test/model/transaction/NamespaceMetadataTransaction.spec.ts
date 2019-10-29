@@ -97,7 +97,7 @@ describe('NamespaceMetadataTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 153 for NamespaceMetadataTransaction byte size', () => {
+        it('should return 182 for NamespaceMetadataTransaction byte size', () => {
             const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
                 Deadline.create(),
                 account.publicKey,
@@ -107,7 +107,8 @@ describe('NamespaceMetadataTransaction', () => {
                 Convert.uint8ToUtf8(new Uint8Array(10)),
                 NetworkType.MIJIN_TEST,
             );
-            expect(namespaceMetadataTransaction.size).to.be.equal(180);
+            expect(namespaceMetadataTransaction.size).to.be.equal(182);
+            expect(Convert.hexToUint8(namespaceMetadataTransaction.serialize()).length).to.be.equal(namespaceMetadataTransaction.size);
         });
     });
 });

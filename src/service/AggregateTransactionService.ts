@@ -99,7 +99,7 @@ export class AggregateTransactionService {
          */
         if (innerTransaction.type === TransactionType.MODIFY_MULTISIG_ACCOUNT) {
             if ((innerTransaction as MultisigAccountModificationTransaction).modifications
-                    .find((modification) => modification.modificiationType === CosignatoryModificationAction.Remove) !== undefined) {
+                    .find((modification) => modification.modificationAction === CosignatoryModificationAction.Remove) !== undefined) {
                         isMultisigRemoval = true;
             }
         }
