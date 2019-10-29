@@ -27,6 +27,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import { TransactionType } from '../../../src/model/transaction/TransactionType';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('AccountRestrictionTransaction', () => {
     let account: Account;
@@ -40,7 +41,7 @@ describe('AccountRestrictionTransaction', () => {
             AccountRestrictionModificationAction.Add,
             address,
         );
-        expect(addressRestrictionFilter.modificationType).to.be.equal(AccountRestrictionModificationAction.Add);
+        expect(addressRestrictionFilter.modificationAction).to.be.equal(AccountRestrictionModificationAction.Add);
         expect(addressRestrictionFilter.value).to.be.equal(address.plain());
     });
 
@@ -50,7 +51,7 @@ describe('AccountRestrictionTransaction', () => {
             AccountRestrictionModificationAction.Add,
             mosaicId,
         );
-        expect(mosaicRestrictionFilter.modificationType).to.be.equal(AccountRestrictionModificationAction.Add);
+        expect(mosaicRestrictionFilter.modificationAction).to.be.equal(AccountRestrictionModificationAction.Add);
         expect(mosaicRestrictionFilter.value[0]).to.be.equal(mosaicId.id.lower);
         expect(mosaicRestrictionFilter.value[1]).to.be.equal(mosaicId.id.higher);
     });
@@ -61,7 +62,7 @@ describe('AccountRestrictionTransaction', () => {
             AccountRestrictionModificationAction.Add,
             operation,
         );
-        expect(operationRestrictionFilter.modificationType).to.be.equal(AccountRestrictionModificationAction.Add);
+        expect(operationRestrictionFilter.modificationAction).to.be.equal(AccountRestrictionModificationAction.Add);
         expect(operationRestrictionFilter.value).to.be.equal(operation);
     });
 
@@ -79,6 +80,7 @@ describe('AccountRestrictionTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
 
+            expect(Convert.hexToUint8(addressRestrictionTransaction.serialize()).length).to.be.equal(addressRestrictionTransaction.size);
             expect(addressRestrictionTransaction.size).to.be.equal(148);
         });
 

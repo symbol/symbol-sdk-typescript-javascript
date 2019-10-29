@@ -24,6 +24,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicAliasTransaction} from '../../../src/model/transaction/MosaicAliasTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('MosaicAliasTransaction', () => {
     let account: Account;
@@ -101,6 +102,7 @@ describe('MosaicAliasTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
             expect(mosaicAliasTransaction.size).to.be.equal(137);
+            expect(Convert.hexToUint8(mosaicAliasTransaction.serialize()).length).to.be.equal(mosaicAliasTransaction.size);
         });
     });
 });

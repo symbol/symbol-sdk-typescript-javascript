@@ -130,7 +130,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
         const byteModificationCount = 1;
 
         // each modification contains :
-        // - 1 byte for modificationType
+        // - 1 byte for modificationAction
         // - 2 bytes for the modification value (transaction type)
         const byteModifications = 3 * this.modifications.length;
 
@@ -155,7 +155,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             this.restrictionType.valueOf(),
             this.modifications.map((modification) => {
                 return new AccountOperationRestrictionModificationBuilder(
-                    modification.modificationType.valueOf(),
+                    modification.modificationAction.valueOf(),
                     modification.value.valueOf(),
                 );
             }),
@@ -175,7 +175,7 @@ export class AccountOperationRestrictionTransaction extends Transaction {
             this.restrictionType.valueOf(),
             this.modifications.map((modification) => {
                 return new AccountOperationRestrictionModificationBuilder(
-                    modification.modificationType.valueOf(),
+                    modification.modificationAction.valueOf(),
                     modification.value.valueOf(),
                 );
             }),

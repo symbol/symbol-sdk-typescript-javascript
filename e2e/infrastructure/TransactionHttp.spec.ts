@@ -606,7 +606,7 @@ describe('TransactionHttp', () => {
 
             listener.confirmed(account.address).subscribe((transaction: AccountAddressRestrictionTransaction) => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
-                expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
+                expect(transaction.modifications[0].modificationAction, 'Modifications.ModificationAction').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
                 expect(transaction.restrictionType, 'RestrictionType').not.to.be.undefined;
                 done();
@@ -682,7 +682,7 @@ describe('TransactionHttp', () => {
 
             listener.confirmed(account.address).subscribe((transaction: AccountAddressRestrictionTransaction) => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
-                expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
+                expect(transaction.modifications[0].modificationAction, 'Modifications.ModificationAction').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
                 expect(transaction.restrictionType, 'RestrictionType').not.to.be.undefined;
                 done();
@@ -757,7 +757,7 @@ describe('TransactionHttp', () => {
 
             listener.confirmed(account.address).subscribe((transaction: AccountMosaicRestrictionTransaction) => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
-                expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
+                expect(transaction.modifications[0].modificationAction, 'Modifications.ModificationAction').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
                 expect(transaction.restrictionType, 'RestrictionType').not.to.be.undefined;
                 done();
@@ -832,7 +832,7 @@ describe('TransactionHttp', () => {
 
             listener.confirmed(account3.address).subscribe((transaction: AccountOperationRestrictionTransaction) => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
-                expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
+                expect(transaction.modifications[0].modificationAction, 'Modifications.ModificationAction').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
                 expect(transaction.restrictionType, 'RestrictionType').not.to.be.undefined;
                 done();
@@ -908,7 +908,7 @@ describe('TransactionHttp', () => {
 
             listener.confirmed(account3.address).subscribe((transaction: AccountOperationRestrictionTransaction) => {
                 expect(transaction.modifications, 'Modifications').not.to.be.undefined;
-                expect(transaction.modifications[0].modificationType, 'Modifications.ModificationType').not.to.be.undefined;
+                expect(transaction.modifications[0].modificationAction, 'Modifications.ModificationAction').not.to.be.undefined;
                 expect(transaction.modifications[0].value, 'Modifications.Value').not.to.be.undefined;
                 expect(transaction.restrictionType, 'RestrictionType').not.to.be.undefined;
                 done();

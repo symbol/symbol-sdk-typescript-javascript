@@ -43,6 +43,7 @@ import { TransactionType } from '../../../src/model/transaction/TransactionType'
 import {TransferTransaction} from '../../../src/model/transaction/TransferTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {Cosignatory2Account, CosignatoryAccount, MultisigAccount, TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('AggregateTransaction', () => {
     let account: Account;
@@ -376,10 +377,10 @@ describe('AggregateTransaction', () => {
                                 {
                                     cosignatoryPublicKey: '589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5' +
                                     'FB8B7310D45F77C1250B97',
-                                    type: 0,
+                                    modificationAction: 0,
                                 },
                             ],
-                            signer: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
+                            signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                             type: 16725,
                             version: 36865,
                         },
@@ -401,6 +402,10 @@ describe('AggregateTransaction', () => {
         expect(aggregateTransaction.signedByAccount(
             PublicAccount.createFromPublicKey('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',
                 NetworkType.MIJIN_TEST))).to.be.equal(false);
+
+        expect(aggregateTransaction.innerTransactions[0].signer!.publicKey).to.be.equal('B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF');
+
+        expect(Convert.hexToUint8(aggregateTransaction.serialize()).length).to.be.equal(aggregateTransaction.size);
     });
 
     it('should have type 0x4141 when it\'s complete', () => {
@@ -559,7 +564,9 @@ describe('AggregateTransaction', () => {
                 NetworkType.MIJIN_TEST,
                 [],
             );
-            expect(aggregateTransaction.size).to.be.equal(120 + 4 + 158);
+
+            expect(Convert.hexToUint8(aggregateTransaction.serialize()).length).to.be.equal(aggregateTransaction.size);
+            expect(aggregateTransaction.size).to.be.equal(212);
         });
     });
 });

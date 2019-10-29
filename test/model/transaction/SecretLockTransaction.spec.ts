@@ -17,7 +17,7 @@ import {deepEqual} from 'assert';
 import {expect} from 'chai';
 import * as CryptoJS from 'crypto-js';
 import {keccak_256, sha3_256} from 'js-sha3';
-import {Convert as convert} from '../../../src/core/format';
+import {Convert, Convert as convert} from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
@@ -242,6 +242,7 @@ describe('SecretLockTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
             expect(secretLockTransaction.size).to.be.equal(202);
+            expect(Convert.hexToUint8(secretLockTransaction.serialize()).length).to.be.equal(secretLockTransaction.size);
         });
     });
 });

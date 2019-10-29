@@ -16,7 +16,7 @@
 import {expect} from 'chai';
 import * as CryptoJS from 'crypto-js';
 import {keccak_256, sha3_256} from 'js-sha3';
-import {Convert as convert} from '../../../src/core/format';
+import {Convert, Convert as convert} from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {Deadline} from '../../../src/model/transaction/Deadline';
@@ -189,6 +189,7 @@ describe('SecretProofTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
             expect(secretProofTransaction.size).to.be.equal(212);
+            expect(Convert.hexToUint8(secretProofTransaction.serialize()).length).to.be.equal(secretProofTransaction.size);
         });
     });
 

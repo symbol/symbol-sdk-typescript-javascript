@@ -32,7 +32,7 @@ describe('AccountRestrictionsInfo', () => {
                 address: '9050B9837EFAB4BBE8A4B9BB32D812F9885C00D8FC1650E142',
                 restrictions: [{
                     restrictionType: AccountRestrictionType.AllowIncomingAddress,
-                    values: [{modificationType: AccountRestrictionModificationAction.Add,
+                    values: [{modificationAction: AccountRestrictionModificationAction.Add,
                               value: 'SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM',
                              }],
                 }],

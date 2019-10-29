@@ -159,9 +159,10 @@ export class NamespaceMetadataTransaction extends Transaction {
         const byteScopedMetadataKey = 8;
         const byteTargetNamespaceId = 8;
         const byteValueSizeDelta = 2;
+        const byteValueSize = 2;
 
         return byteSize + targetPublicKey + byteScopedMetadataKey +
-               byteTargetNamespaceId + byteValueSizeDelta + this.value.length;
+               byteTargetNamespaceId + byteValueSizeDelta + byteValueSize + this.value.length;
     }
 
     /**

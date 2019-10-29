@@ -160,9 +160,10 @@ export class MosaicMetadataTransaction extends Transaction {
         const byteScopedMetadataKey = 8;
         const byteTargetMosaicId = 8;
         const byteValueSizeDelta = 2;
+        const valueSize = 2;
 
         return byteSize + targetPublicKey + byteScopedMetadataKey +
-               byteTargetMosaicId + byteValueSizeDelta + this.value.length;
+               byteTargetMosaicId + byteValueSizeDelta + valueSize + this.value.length;
     }
 
     /**
