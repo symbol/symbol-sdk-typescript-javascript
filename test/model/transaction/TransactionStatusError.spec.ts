@@ -19,21 +19,24 @@ import {expect} from 'chai';
 import {TransactionStatusError} from '../../../src/model/transaction/TransactionStatusError';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import { UInt64 } from '../../../src/model/UInt64';
+import {Address} from "../../../src/model/account/Address";
 
 describe('TransactionStatusError', () => {
 
     it('should createComplete an TransactionStatusError object', () => {
         const statusInfoErrorDTO = {
+            address: Address.createFromRawAddress('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC'),
             deadline: '1010',
             hash: 'transaction-hash',
             status: 'error-message',
         };
-
         const transactionStatusError = new TransactionStatusError(
+            statusInfoErrorDTO.address,
             statusInfoErrorDTO.hash,
             statusInfoErrorDTO.status,
             Deadline.createFromDTO(statusInfoErrorDTO.deadline));
 
+        expect(transactionStatusError.address).to.be.equal(statusInfoErrorDTO.address);
         expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
         expect(transactionStatusError.status).to.be.equal(statusInfoErrorDTO.status);
         deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
