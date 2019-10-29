@@ -19,6 +19,7 @@ import { UnresolvedMapping } from '../../../src/core/utils/UnresolvedMapping';
 import { Address } from '../../../src/model/account/Address';
 import { MosaicId } from '../../../src/model/mosaic/MosaicId';
 import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
+import { NetworkType } from "../../../src/model/blockchain/NetworkType";
 
 describe('UnresolvedMapping', () => {
     let mosaicId: MosaicId;
@@ -74,16 +75,23 @@ describe('UnresolvedMapping', () => {
 
     describe('toUnresolvedAddressBytes', () => {
         it('can map Address to buffer', () => {
-            const buffer = UnresolvedMapping.toUnresolvedAddressBytes(address);
+            const buffer = UnresolvedMapping.toUnresolvedAddressBytes(address, NetworkType.MIJIN_TEST);
             expect(buffer instanceof Uint8Array).to.be.true;
             expect(Convert.uint8ToHex(buffer)).to.be.equal(Convert.uint8ToHex(RawAddress.stringToAddress(address.plain())));
         });
 
-        it('can map hex string to NamespaceId', () => {
-            const buffer = UnresolvedMapping.toUnresolvedAddressBytes(namespacId);
+        it('can map hex string to NamespaceId using MIJIN_TEST', () => {
+            const buffer = UnresolvedMapping.toUnresolvedAddressBytes(namespacId, NetworkType.MIJIN_TEST);
             expect(buffer instanceof Uint8Array).to.be.true;
-            expect(buffer[0]).to.be.equal(145);
+            expect(buffer[0]).to.be.equal(NetworkType.MIJIN_TEST | 1);
             expect(Convert.uint8ToHex(buffer)).to.be.equal('91C51FB4C93FCA509500000000000000000000000000000000');
+        });
+
+        it('can map hex string to NamespaceId using MAIN_NET', () => {
+            const buffer = UnresolvedMapping.toUnresolvedAddressBytes(namespacId, NetworkType.MAIN_NET);
+            expect(buffer instanceof Uint8Array).to.be.true;
+            expect(buffer[0]).to.be.equal(NetworkType.MAIN_NET | 1);
+            expect(Convert.uint8ToHex(buffer)).to.be.equal('69C51FB4C93FCA509500000000000000000000000000000000');
         });
     });
 });

@@ -15,7 +15,7 @@
  */
 
 import { Convert } from '../../core/format/Convert';
-import { RawAddress } from '../../core/format/RawAddress';
+import { UnresolvedMapping } from "../../core/utils/UnresolvedMapping";
 import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
@@ -87,15 +87,6 @@ export class BalanceTransferReceipt extends Receipt {
      * @return {Uint8Array}
      */
     private getRecipientBytes(): Uint8Array {
-        const recipientString =
-            this.recipientAddress instanceof NamespaceId ? (this.recipientAddress as NamespaceId).toHex()
-                                                         : (this.recipientAddress as Address).plain();
-        if (/^[0-9a-fA-F]{16}$/.test(recipientString)) {
-            // received hexadecimal notation of namespaceId (alias)
-            return RawAddress.aliasToRecipient(Convert.hexToUint8(recipientString));
-        } else {
-            // received recipient address
-            return RawAddress.stringToAddress(recipientString);
-        }
+        return UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.sender.address.networkType);
     }
 }
