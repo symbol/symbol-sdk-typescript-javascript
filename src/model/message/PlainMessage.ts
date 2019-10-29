@@ -50,4 +50,4 @@ export class PlainMessage extends Message {
  * Plain message containing an empty string
  * @type {PlainMessage}
  */
-export const EmptyMessage = PlainMessage.create('');
+export const EmptyMessage: PlainMessage = PlainMessage.create('');
