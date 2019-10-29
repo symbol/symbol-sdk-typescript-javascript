@@ -14,27 +14,29 @@
  * limitations under the License.
  */
 
-import {Observable, Subject} from 'rxjs';
-import {filter, map, share} from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, map, share } from 'rxjs/operators';
 import * as WebSocket from 'ws';
-import {Address} from '../model/account/Address';
-import {PublicAccount} from '../model/account/PublicAccount';
-import {BlockInfo} from '../model/blockchain/BlockInfo';
-import {NetworkType} from '../model/blockchain/NetworkType';
-import {NamespaceId} from '../model/namespace/NamespaceId';
-import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
-import {AggregateTransactionCosignature} from '../model/transaction/AggregateTransactionCosignature';
-import {CosignatoryModificationAction} from '../model/transaction/CosignatoryModificationAction';
-import {CosignatureSignedTransaction} from '../model/transaction/CosignatureSignedTransaction';
-import {Deadline} from '../model/transaction/Deadline';
-import {InnerTransaction} from '../model/transaction/InnerTransaction';
-import {MultisigAccountModificationTransaction} from '../model/transaction/MultisigAccountModificationTransaction';
-import {MultisigCosignatoryModification} from '../model/transaction/MultisigCosignatoryModification';
-import {Transaction} from '../model/transaction/Transaction';
-import {TransactionStatusError} from '../model/transaction/TransactionStatusError';
-import {TransferTransaction} from '../model/transaction/TransferTransaction';
-import {UInt64} from '../model/UInt64';
-import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
+import { Address } from '../model/account/Address';
+import { PublicAccount } from '../model/account/PublicAccount';
+import { BlockInfo } from '../model/blockchain/BlockInfo';
+import { NamespaceId } from '../model/namespace/NamespaceId';
+import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
+import { AggregateTransactionCosignature } from '../model/transaction/AggregateTransactionCosignature';
+import { CosignatoryModificationAction } from '../model/transaction/CosignatoryModificationAction';
+import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
+import { Deadline } from '../model/transaction/Deadline';
+import { InnerTransaction } from '../model/transaction/InnerTransaction';
+import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
+import { MultisigCosignatoryModification } from '../model/transaction/MultisigCosignatoryModification';
+import { Transaction } from '../model/transaction/Transaction';
+import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
+import { TransferTransaction } from '../model/transaction/TransferTransaction';
+import { UInt64 } from '../model/UInt64';
+import {
+    CreateTransactionFromDTO,
+    extractBeneficiary
+} from './transaction/CreateTransactionFromDTO';
 
 enum ListenerChannelName {
     block = 'block',
@@ -122,6 +124,14 @@ export class Listener {
         });
     }
 
+    /**
+     * @internal
+     *
+     * This this method handles one incoming message from the web socket and it dispatch it to the right message subject listener.
+     *
+     * @param message the object payload.
+     * @param resolve the method to notify when the uid has been resolved and the listener connection has been stablished.
+     */
     handleMessage(message: any, resolve) {
         if (message.uid) {
             this.uid = message.uid;
@@ -169,7 +179,10 @@ export class Listener {
                 message: new CosignatureSignedTransaction(message.parentHash, message.signature, message.signerPublicKey),
             });
         } else if (message.meta && message.meta.hash) {
-            this.messageSubject.next({channelName: message.meta.channelName, message: message.meta.hash});
+            this.messageSubject.next({
+                channelName: message.meta.channelName,
+                message: message.meta.hash
+            });
         }
     }
 
@@ -214,11 +227,11 @@ export class Listener {
     public newBlock(): Observable<BlockInfo> {
         this.subscribeTo('block');
         return this.messageSubject
-            .asObservable().pipe(
-                share(),
-                filter((_) => _.channelName === ListenerChannelName.block),
-                filter((_) => _.message instanceof BlockInfo),
-                map((_) => _.message as BlockInfo));
+        .asObservable().pipe(
+            share(),
+            filter((_) => _.channelName === ListenerChannelName.block),
+            filter((_) => _.message instanceof BlockInfo),
+            map((_) => _.message as BlockInfo));
     }
 
     /**
