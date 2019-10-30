@@ -169,7 +169,6 @@ export class AppWallet {
             this.sourceType = CreateWalletType.keyStore
             const {privateKey} =  this.getAccount(keystorePassword)
             this.createFromPrivateKey(name, password, privateKey, networkType, store)
-            this.addNewWalletToList(store)
             return this
         } catch (error) {
             throw new Error(error)

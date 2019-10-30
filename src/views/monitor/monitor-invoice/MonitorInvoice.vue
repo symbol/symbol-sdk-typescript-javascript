@@ -4,7 +4,12 @@
     <div class="left_container radius">
       <img id="qrImg" :src="QRCode" alt="">
       <div class="qr_info">
-        <div class="amount">{{formItems.mosaicHex}} : {{formItems.mosaicAmount}}</div>
+        <div class="amount overflow_ellipsis">
+          {{formItems.mosaicHex}}:{{formItems.mosaicAmount}}
+        </div>
+        <div v-if="formItems.mosaicHex !== formItems.mosaicName" class="amount overflow_ellipsis">
+          [{{ formItems.mosaicName}}]
+        </div>
         <div class="address_text" id="address_text">
           {{accountAddress}}
         </div>
@@ -27,13 +32,13 @@
         <span class="value radius flex_center">
 
           <AutoComplete
-                  v-model="formItems.mosaicHex"
+                  v-model="formItems.mosaicName"
                   :filter-method="filterMethod"
                   :placeholder="$t('Please_enter_mosaic_hex_or_alias')"
                   class="asset_type"
           >
             <Option v-for="m in mosaicList" :value="m.value" :key="m.value">
-                <span>{{ m.label }}</span>
+                <span>{{ m.value }}</span>
             </Option>
     </AutoComplete>
 

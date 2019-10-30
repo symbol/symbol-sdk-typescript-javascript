@@ -33,6 +33,7 @@ export class MonitorInvoiceTs extends Vue {
         mosaicHex: '',
         mosaicAmount: 0,
         remarks: '',
+        mosaicName: ''
     }
 
     get networkCurrency() {
@@ -41,10 +42,11 @@ export class MonitorInvoiceTs extends Vue {
 
     get transferTransaction(): any { // @QR
         const {networkType, address} = this.wallet
+        const {mosaicList} = this
         const walletAddress = Address.createFromRawAddress(address)
-        const {mosaicHex, mosaicAmount, remarks} = this.formItems
-        const mosaic = new MosaicId(mosaicHex)
-
+        const {mosaicName, mosaicAmount, remarks} = this.formItems
+        this.formItems.mosaicHex = {...mosaicList.find(item => item.value == mosaicName)}.mosaicHex
+        const mosaic = new MosaicId(this.formItems.mosaicHex)
         return TransferTransaction.create(
             Deadline.create(),
             walletAddress,
@@ -55,7 +57,6 @@ export class MonitorInvoiceTs extends Vue {
     }
 
     get QRCode(): string {
-        if (this.formItems.mosaicHex.length !== 16 || this.formItems.mosaicAmount < 0) return failureIcon
         try {
             return QRCodeGenerator
                 .createTransactionRequest(this.transferTransaction)
@@ -97,22 +98,23 @@ export class MonitorInvoiceTs extends Vue {
         if (this.mosaicsLoading || !mosaics) return []
 
         const mosaicList: any = Object.values(this.mosaics)
+
         return [...mosaicList]
             .filter(({expirationHeight}) => expirationHeight === MosaicNamespaceStatusType.FOREVER || currentHeight < expirationHeight)
-            .map(({name, balance, hex}) => ({
-                label: `${name || hex} (${balance ? balance.toLocaleString() : 0})`,
-                value: hex,
+            .map(({name, hex}) => ({
+                value: name || hex,
+                mosaicHex: hex
             }))
     }
 
     async checkForm() {
-        let {mosaicAmount, mosaicHex} = this.formItems
+        let {mosaicAmount, mosaicName} = this.formItems
         mosaicAmount = Number(mosaicAmount)
         if ((!Number(mosaicAmount) && Number(mosaicAmount) !== 0) || Number(mosaicAmount) < 0) {
             this.showErrorMessage(this.$t(Message.AMOUNT_LESS_THAN_0_ERROR))
             return false
         }
-        if (mosaicHex === '') {
+        if (mosaicName === '') {
             this.showErrorMessage(this.$t(Message.MOSAIC_LIST_NULL_ERROR))
             return false
         }
@@ -169,6 +171,6 @@ export class MonitorInvoiceTs extends Vue {
     }
 
     mounted() {
-        this.formItems.mosaicHex = this.mosaicList[0].value
+        this.formItems.mosaicName = this.mosaicList[0] ? this.mosaicList[0].value : ''
     }
 }
