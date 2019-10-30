@@ -83,6 +83,7 @@ fabric.properties
 modules.xml
 .idea/
 *.ipr
+*.iml
 
 # End of https://www.gitignore.io/api/intellij+iml
 dist/
