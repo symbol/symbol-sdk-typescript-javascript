@@ -70,7 +70,6 @@ export class RawAddress {
         if (RawAddress.constants.sizes.addressDecoded !== decoded.length) {
             throw Error(`${Convert.uint8ToHex(decoded)} does not represent a valid decoded address`);
         }
-
         return Base32.Base32Encode(decoded);
     }
 
@@ -112,6 +111,9 @@ export class RawAddress {
      * @returns {boolean} true if the decoded address is valid, false otherwise.
      */
     public static isValidAddress = (decoded: Uint8Array, networkType: NetworkType): boolean => {
+        if (RawAddress.constants.sizes.addressDecoded !== decoded.length) {
+            return false;
+        }
         const signSchema = SHA3Hasher.resolveSignSchema(networkType);
         const hash = signSchema === SignSchema.SHA3 ? sha3_256.create() : keccak256.create();
         const checksumBegin = RawAddress.constants.sizes.addressDecoded - RawAddress.constants.sizes.checksum;
@@ -119,23 +121,5 @@ export class RawAddress {
         const checksum = new Uint8Array(RawAddress.constants.sizes.checksum);
         RawArray.copy(checksum, RawArray.uint8View(hash.arrayBuffer()), RawAddress.constants.sizes.checksum);
         return RawArray.deepEqual(checksum, decoded.subarray(checksumBegin));
-    }
-
-    /**
-     * Determines the validity of an encoded address string.
-     * @param {string} encoded The encoded address string.
-     * @param {NetworkType} networkType The network identifier.
-     * @returns {boolean} true if the encoded address string is valid, false otherwise.
-     */
-    public static isValidEncodedAddress = (encoded: string, networkType: NetworkType): boolean => {
-        if (RawAddress.constants.sizes.addressEncoded !== encoded.length) {
-            return false;
-        }
-        try {
-            const decoded = RawAddress.stringToAddress(encoded);
-            return RawAddress.isValidAddress(decoded, networkType);
-        } catch (err) {
-            return false;
-        }
     }
 }
