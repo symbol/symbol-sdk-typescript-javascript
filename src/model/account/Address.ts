@@ -82,7 +82,7 @@ export class Address {
      * @param {NetworkType} networkType The network identifier.
      * @returns {boolean} true if the raw address string is valid, false otherwise.
      */
-    public static isValidRawAAddress = (rawAddress: string, networkType: NetworkType): boolean => {
+    public static isValidRawAddress = (rawAddress: string, networkType: NetworkType): boolean => {
         try {
             return RawAddress.isValidAddress(RawAddress.stringToAddress(rawAddress), networkType);
         } catch (err) {
