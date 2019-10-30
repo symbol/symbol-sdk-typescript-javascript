@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Convert, RawAddress } from '../../core/format';
-import {NetworkType} from '../blockchain/NetworkType';
+import { Convert, RawAddress, RawArray } from '../../core/format';
+import { NetworkType } from '../blockchain/NetworkType';
+import { SHA3Hasher, SignSchema } from "../../core/crypto";
+import { keccak256, sha3_256 } from "js-sha3";
 
 /**
  * The address structure describes an address with its network
@@ -30,7 +32,7 @@ export class Address {
                                       networkType: NetworkType): Address {
         const publicKeyUint8 = Convert.hexToUint8(publicKey);
         const address = RawAddress
-            .addressToString(RawAddress.publicKeyToAddress(publicKeyUint8, networkType));
+        .addressToString(RawAddress.publicKeyToAddress(publicKeyUint8, networkType));
         return new Address(address, networkType);
     }
 
@@ -43,9 +45,9 @@ export class Address {
     public static createFromRawAddress(rawAddress: string): Address {
         let networkType: NetworkType;
         const addressTrimAndUpperCase: string = rawAddress
-            .trim()
-            .toUpperCase()
-            .replace(/-/g, '');
+        .trim()
+        .toUpperCase()
+        .replace(/-/g, '');
         if (addressTrimAndUpperCase.length !== 40) {
             throw new Error('Address ' + addressTrimAndUpperCase + ' has to be 40 characters long');
         }
@@ -65,12 +67,41 @@ export class Address {
 
     /**
      * Create an Address from a given encoded address.
-     * @param {string} encoded
+     * @param {string} encoded address. Expected format: 9085215E4620D383C2DF70235B9EF7607F6A28EF6D16FD7B9C.
      * @return {Address}
      */
     public static createFromEncoded(encoded: string): Address {
         return Address.createFromRawAddress(RawAddress
-            .addressToString(Convert.hexToUint8(encoded)));
+        .addressToString(Convert.hexToUint8(encoded)));
+    }
+
+
+    /**
+     * Determines the validity of an raw address string.
+     * @param {string} rawAddress The raw address string. Expected format SCHCZBZ6QVJAHGJTKYVPW5FBSO2IXXJQBPV5XE6P
+     * @param {NetworkType} networkType The network identifier.
+     * @returns {boolean} true if the raw address string is valid, false otherwise.
+     */
+    public static isValidRawAddress = (rawAddress: string, networkType: NetworkType): boolean => {
+        try {
+            return RawAddress.isValidAddress(RawAddress.stringToAddress(rawAddress), networkType);
+        } catch (err) {
+            return false;
+        }
+    }
+
+    /**
+     * Determines the validity of an encoded address string.
+     * @param {string} encoded The encoded address string. Expected format: 9085215E4620D383C2DF70235B9EF7607F6A28EF6D16FD7B9C
+     * @param {NetworkType} networkType The network identifier.
+     * @returns {boolean} true if the encoded address string is valid, false otherwise.
+     */
+    public static isValidEncodedAddress = (encoded: string, networkType: NetworkType): boolean => {
+        try {
+            return RawAddress.isValidAddress(Convert.hexToUint8(encoded), networkType);
+        } catch (err) {
+            return false;
+        }
     }
 
     /**
@@ -94,6 +125,14 @@ export class Address {
      */
     public plain(): string {
         return this.address;
+    }
+
+    /**
+     * Get address in the encoded format ex: NAR3W7B4BCOZSZMFIZRYB3N5YGOUSWIYJCJ6HDFH.
+     * @returns {string}
+     */
+    public encoded(): string {
+        return Convert.uint8ToHex(RawAddress.stringToAddress(this.address));
     }
 
     /**
