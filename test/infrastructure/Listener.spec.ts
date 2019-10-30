@@ -38,7 +38,7 @@ describe('Listener', () => {
     });
 
     describe('onStatusWhenAddressIsTheSame', () => {
-        it('Should forward status', (done) => {
+        it('Should forward status', () => {
 
 
             const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
@@ -69,28 +69,23 @@ describe('Listener', () => {
 
             listener.status(errorAddress).subscribe((transactionStatusError) => {
                 reportedStatus.push(transactionStatusError);
-            }, err => {
-                done(err);
             });
 
             listener.handleMessage(statusInfoErrorDTO, null);
 
-            setTimeout(() => {
-                expect(reportedStatus.length).to.be.equal(1);
-                const transactionStatusError = reportedStatus[0];
-                expect(transactionStatusError.address).to.deep.equal(errorAddress);
-                expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
-                expect(transactionStatusError.status).to.be.equal(statusInfoErrorDTO.status);
-                deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
-                done();
-            }, 100)
+            expect(reportedStatus.length).to.be.equal(1);
+            const transactionStatusError = reportedStatus[0];
+            expect(transactionStatusError.address).to.deep.equal(errorAddress);
+            expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
+            expect(transactionStatusError.status).to.be.equal(statusInfoErrorDTO.status);
+            deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
 
 
         });
     });
 
     describe('onStatusWhenAddressIsDifferentAddress', () => {
-        it('Should not forward status', (done) => {
+        it('Should not forward status', () => {
 
 
             const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
@@ -123,16 +118,11 @@ describe('Listener', () => {
 
             listener.status(subscribedAddress).subscribe((transactionStatusError) => {
                 reportedStatus.push(transactionStatusError);
-            }, err => {
-                done(err);
             });
 
             listener.handleMessage(statusInfoErrorDTO, null);
-
-            setTimeout(() => {
-                expect(reportedStatus.length).to.be.equal(0);
-                done();
-            }, 100)
+            
+            expect(reportedStatus.length).to.be.equal(0);
 
 
         });
