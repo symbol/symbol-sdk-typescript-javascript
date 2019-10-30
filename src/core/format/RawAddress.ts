@@ -49,12 +49,13 @@ export class RawAddress {
     /**
      * Format a namespaceId *alias* into a valid recipient field value.
      * @param {Uint8Array} namespaceId The namespaceId
+     * @param {networkType} the network type serialized in the output.
      * @returns {Uint8Array} The padded notation of the alias
      */
-    public static aliasToRecipient = (namespaceId: Uint8Array): Uint8Array => {
+    public static aliasToRecipient = (namespaceId: Uint8Array, networkType: NetworkType): Uint8Array => {
         // 0x91 | namespaceId on 8 bytes | 16 bytes 0-pad = 25 bytes
         const padded = new Uint8Array(1 + 8 + 16);
-        padded.set([0x91], 0);
+        padded.set([networkType.valueOf() | 0x01], 0);
         padded.set(namespaceId.reverse(), 1);
         padded.set(Convert.hexToUint8('00'.repeat(16)), 9);
         return padded;
@@ -121,5 +122,4 @@ export class RawAddress {
         RawArray.copy(checksum, RawArray.uint8View(hash.arrayBuffer()), RawAddress.constants.sizes.checksum);
         return RawArray.deepEqual(checksum, decoded.subarray(checksumBegin));
     }
-
 }

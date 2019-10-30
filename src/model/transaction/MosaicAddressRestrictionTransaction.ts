@@ -207,7 +207,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             new TimestampDto(this.deadline.toDTO()),
             new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
             this.restrictionKey.toDTO(),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.targetAddress)),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.targetAddress, this.networkType)),
             this.previousRestrictionValue.toDTO(),
             this.newRestrictionValue.toDTO(),
         );
@@ -225,7 +225,7 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
             TransactionType.MOSAIC_ADDRESS_RESTRICTION.valueOf(),
             new UnresolvedMosaicIdDto(this.mosaicId.id.toDTO()),
             this.restrictionKey.toDTO(),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.targetAddress)),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.targetAddress, this.networkType)),
             this.previousRestrictionValue.toDTO(),
             this.newRestrictionValue.toDTO(),
         );
