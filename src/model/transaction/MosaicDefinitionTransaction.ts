@@ -162,13 +162,11 @@ export class MosaicDefinitionTransaction extends Transaction {
         // set static byte size fields
         const byteNonce = 4;
         const byteMosaicId = 8;
-        const byteNumProps = 1;
         const byteFlags = 1;
         const byteDivisibility = 1;
-        const byteDurationSize = 1;
         const byteDuration = 8;
 
-        return byteSize + byteNonce + byteMosaicId + byteNumProps + byteFlags + byteDivisibility + byteDurationSize + byteDuration;
+        return byteSize + byteNonce + byteMosaicId + byteFlags + byteDivisibility + byteDuration;
     }
 
     /**

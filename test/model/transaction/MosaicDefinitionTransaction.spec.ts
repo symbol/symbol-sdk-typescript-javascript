@@ -24,6 +24,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicDefinitionTransaction} from '../../../src/model/transaction/MosaicDefinitionTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('MosaicDefinitionTransaction', () => {
     let account: Account;
@@ -119,7 +120,7 @@ describe('MosaicDefinitionTransaction', () => {
     });
 
     describe('size', () => {
-        it('should return 144 for MosaicDefinition transaction byte size', () => {
+        it('should return 142 for MosaicDefinition transaction byte size', () => {
             const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
                 Deadline.create(),
                 new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
@@ -129,7 +130,8 @@ describe('MosaicDefinitionTransaction', () => {
                 UInt64.fromUint(1000),
                 NetworkType.MIJIN_TEST,
             );
-            expect(mosaicDefinitionTransaction.size).to.be.equal(144);
+            expect(mosaicDefinitionTransaction.size).to.be.equal(142);
+            expect(Convert.hexToUint8(mosaicDefinitionTransaction.serialize()).length).to.be.equal(mosaicDefinitionTransaction.size);
         });
     });
 
@@ -156,6 +158,7 @@ describe('MosaicDefinitionTransaction', () => {
             240,
             signedTransaction.payload.length,
         )).to.be.equal('E6DE84B8010000000000000000030000000000000000');
+
 
     });
 });

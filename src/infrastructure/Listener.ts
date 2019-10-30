@@ -14,27 +14,29 @@
  * limitations under the License.
  */
 
-import {Observable, Subject} from 'rxjs';
-import {filter, map, share} from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, map, share } from 'rxjs/operators';
 import * as WebSocket from 'ws';
-import {Address} from '../model/account/Address';
-import {PublicAccount} from '../model/account/PublicAccount';
-import {BlockInfo} from '../model/blockchain/BlockInfo';
-import {NetworkType} from '../model/blockchain/NetworkType';
-import {NamespaceId} from '../model/namespace/NamespaceId';
-import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
-import {AggregateTransactionCosignature} from '../model/transaction/AggregateTransactionCosignature';
-import {CosignatoryModificationAction} from '../model/transaction/CosignatoryModificationAction';
-import {CosignatureSignedTransaction} from '../model/transaction/CosignatureSignedTransaction';
-import {Deadline} from '../model/transaction/Deadline';
-import {InnerTransaction} from '../model/transaction/InnerTransaction';
-import {MultisigAccountModificationTransaction} from '../model/transaction/MultisigAccountModificationTransaction';
-import {MultisigCosignatoryModification} from '../model/transaction/MultisigCosignatoryModification';
-import {Transaction} from '../model/transaction/Transaction';
-import {TransactionStatusError} from '../model/transaction/TransactionStatusError';
-import {TransferTransaction} from '../model/transaction/TransferTransaction';
-import {UInt64} from '../model/UInt64';
-import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
+import { Address } from '../model/account/Address';
+import { PublicAccount } from '../model/account/PublicAccount';
+import { BlockInfo } from '../model/blockchain/BlockInfo';
+import { NamespaceId } from '../model/namespace/NamespaceId';
+import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
+import { AggregateTransactionCosignature } from '../model/transaction/AggregateTransactionCosignature';
+import { CosignatoryModificationAction } from '../model/transaction/CosignatoryModificationAction';
+import { CosignatureSignedTransaction } from '../model/transaction/CosignatureSignedTransaction';
+import { Deadline } from '../model/transaction/Deadline';
+import { InnerTransaction } from '../model/transaction/InnerTransaction';
+import { MultisigAccountModificationTransaction } from '../model/transaction/MultisigAccountModificationTransaction';
+import { MultisigCosignatoryModification } from '../model/transaction/MultisigCosignatoryModification';
+import { Transaction } from '../model/transaction/Transaction';
+import { TransactionStatusError } from '../model/transaction/TransactionStatusError';
+import { TransferTransaction } from '../model/transaction/TransferTransaction';
+import { UInt64 } from '../model/UInt64';
+import {
+    CreateTransactionFromDTO,
+    extractBeneficiary
+} from './transaction/CreateTransactionFromDTO';
 
 enum ListenerChannelName {
     block = 'block',
@@ -82,11 +84,11 @@ export class Listener {
     constructor(/**
                  * Listener configuration.
                  */
-                    private config: string,
+                private config: string,
                 /**
                  * WebSocket injected when using listeners in client.
                  */
-                    private websocketInjected?: any) {
+                private websocketInjected?: any) {
         this.config = config.replace(/\/$/, '');
         this.url = `${this.config}/ws`;
         this.messageSubject = new Subject();
@@ -114,56 +116,74 @@ export class Listener {
                 };
                 this.webSocket.onmessage = (msg) => {
                     const message = JSON.parse(msg.data as string);
-
-                    if (message.uid) {
-                        this.uid = message.uid;
-                        resolve();
-                    } else if (message.transaction) {
-                        this.messageSubject.next({channelName: message.meta.channelName, message: CreateTransactionFromDTO(message)});
-                    } else if (message.block) {
-                        const networkType = parseInt(message.block.version.toString(16).substr(0, 2), 16);
-                        this.messageSubject.next({
-                            channelName: ListenerChannelName.block, message: new BlockInfo(
-                                message.meta.hash,
-                                message.meta.generationHash,
-                                message.meta.totalFee ? UInt64.fromNumericString(message.meta.totalFee) : new UInt64([0, 0]),
-                                message.meta.numTransactions,
-                                message.block.signature,
-                                PublicAccount.createFromPublicKey(message.block.signerPublicKey, networkType),
-                                networkType,
-                                parseInt(message.block.version.toString(16).substr(2, 2), 16), // Tx version
-                                message.block.type,
-                                UInt64.fromNumericString(message.block.height),
-                                UInt64.fromNumericString(message.block.timestamp),
-                                UInt64.fromNumericString(message.block.difficulty),
-                                message.block.feeMultiplier,
-                                message.block.previousBlockHash,
-                                message.block.blockTransactionsHash,
-                                message.block.blockReceiptsHash,
-                                message.block.stateHash,
-                                extractBeneficiary(message, networkType), // passing `message` as `blockDTO`
-                            ),
-                        });
-                    } else if (message.status) {
-                        this.messageSubject.next({
-                            channelName: ListenerChannelName.status, message: new TransactionStatusError(
-                                message.hash,
-                                message.status,
-                                Deadline.createFromDTO(message.deadline)),
-                        });
-                    } else if (message.parentHash) {
-                        this.messageSubject.next({
-                            channelName: ListenerChannelName.cosignature,
-                            message: new CosignatureSignedTransaction(message.parentHash, message.signature, message.signerPublicKey),
-                        });
-                    } else if (message.meta && message.meta.hash) {
-                        this.messageSubject.next({channelName: message.meta.channelName, message: message.meta.hash});
-                    }
+                    this.handleMessage(message, resolve);
                 };
             } else {
                 resolve();
             }
         });
+    }
+
+    /**
+     * @internal
+     *
+     * This method handles one incoming message from the web socket and it dispatches it to the message subject listener.
+     *
+     * @param message the object payload.
+     * @param resolve the method to notify when the uid has been resolved and the listener connection has been stablished.
+     */
+    handleMessage(message: any, resolve) {
+        if (message.uid) {
+            this.uid = message.uid;
+            resolve();
+        } else if (message.transaction) {
+            this.messageSubject.next({
+                channelName: message.meta.channelName,
+                message: CreateTransactionFromDTO(message)
+            });
+        } else if (message.block) {
+            const networkType = parseInt(message.block.version.toString(16).substr(0, 2), 16);
+            this.messageSubject.next({
+                channelName: ListenerChannelName.block, message: new BlockInfo(
+                    message.meta.hash,
+                    message.meta.generationHash,
+                    message.meta.totalFee ? UInt64.fromNumericString(message.meta.totalFee) : new UInt64([0, 0]),
+                    message.meta.numTransactions,
+                    message.block.signature,
+                    PublicAccount.createFromPublicKey(message.block.signerPublicKey, networkType),
+                    networkType,
+                    parseInt(message.block.version.toString(16).substr(2, 2), 16), // Tx version
+                    message.block.type,
+                    UInt64.fromNumericString(message.block.height),
+                    UInt64.fromNumericString(message.block.timestamp),
+                    UInt64.fromNumericString(message.block.difficulty),
+                    message.block.feeMultiplier,
+                    message.block.previousBlockHash,
+                    message.block.blockTransactionsHash,
+                    message.block.blockReceiptsHash,
+                    message.block.stateHash,
+                    extractBeneficiary(message, networkType), // passing `message` as `blockDTO`
+                ),
+            });
+        } else if (message.status) {
+            this.messageSubject.next({
+                channelName: ListenerChannelName.status, message: new TransactionStatusError(
+                    Address.createFromEncoded(message.address),
+                    message.hash,
+                    message.status,
+                    Deadline.createFromDTO(message.deadline)),
+            });
+        } else if (message.parentHash) {
+            this.messageSubject.next({
+                channelName: ListenerChannelName.cosignature,
+                message: new CosignatureSignedTransaction(message.parentHash, message.signature, message.signerPublicKey),
+            });
+        } else if (message.meta && message.meta.hash) {
+            this.messageSubject.next({
+                channelName: message.meta.channelName,
+                message: message.meta.hash
+            });
+        }
     }
 
     /**
@@ -207,7 +227,7 @@ export class Listener {
     public newBlock(): Observable<BlockInfo> {
         this.subscribeTo('block');
         return this.messageSubject
-            .asObservable().pipe(
+        .asObservable().pipe(
             share(),
             filter((_) => _.channelName === ListenerChannelName.block),
             filter((_) => _.message instanceof BlockInfo),
@@ -310,7 +330,8 @@ export class Listener {
         return this.messageSubject.asObservable().pipe(
             filter((_) => _.channelName === ListenerChannelName.status),
             filter((_) => _.message instanceof TransactionStatusError),
-            map((_) => _.message as TransactionStatusError));
+            map((_) => _.message as TransactionStatusError),
+            filter((_) => address.equals(_.address)));
     }
 
     /**
@@ -394,7 +415,7 @@ export class Listener {
         }
 
         return transaction.signer!.address.equals(address) || (
-               transaction instanceof TransferTransaction
+            transaction instanceof TransferTransaction
             && (transaction.recipientAddress as Address).equals(address)
         );
     }
@@ -409,7 +430,7 @@ export class Listener {
     private accountAddedToMultiSig(transaction: Transaction, address: Address): boolean {
         if (transaction instanceof MultisigAccountModificationTransaction) {
             return transaction.modifications.find((_: MultisigCosignatoryModification) =>
-                _.modificiationType === CosignatoryModificationAction.Add &&
+                _.modificationAction === CosignatoryModificationAction.Add &&
                 _.cosignatoryPublicAccount.address.equals(address)) !== undefined;
         }
         return false;

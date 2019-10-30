@@ -511,7 +511,7 @@ describe('CreateTransactionFromDTO', () => {
                     modifications: [
                         {
                             cosignatoryPublicKey: '76C1622C7FB58986E500228E8FFB30C606CAAFC1CD78E770E82C73DAB7BD7C9F',
-                            modificiationType: 0,
+                            modificationAction: 0,
                         },
                     ],
                     signature: '553E696EB4A54E43A11D180EBA57E4B89D0048C9DD2604A9E0608120018B9E0' +
@@ -566,7 +566,7 @@ describe('CreateTransactionFromDTO', () => {
                                     {
                                         cosignatoryPublicKey: '589B73FBC22063E9AE6FBAC67CB9C6EA865EF556E5' +
                                         'FB8B7310D45F77C1250B97',
-                                        modificiationType: 0,
+                                        modificationAction: 0,
                                     },
                                 ],
                                 signerPublicKey: 'B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF',

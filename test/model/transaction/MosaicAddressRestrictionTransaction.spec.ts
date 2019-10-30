@@ -23,6 +23,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicAddressRestrictionTransaction} from '../../../src/model/transaction/MosaicAddressRestrictionTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('MosaicAddressRestrictionTransaction', () => {
     let account: Account;
@@ -130,5 +131,8 @@ describe('MosaicAddressRestrictionTransaction', () => {
             240,
             288,
         )).to.be.equal('010000000000000001000000000000009151776168D24257');
+
+
+        expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
     });
 });

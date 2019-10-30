@@ -24,6 +24,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {MosaicGlobalRestrictionTransaction} from '../../../src/model/transaction/MosaicGlobalRestrictionTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('MosaicGlobalRestrictionTransaction', () => {
     let account: Account;
@@ -94,6 +95,8 @@ describe('MosaicGlobalRestrictionTransaction', () => {
             240,
             signedTransaction.payload.length,
         )).to.be.equal('C51FB4C93FCA509502000000000000000100000000000000090000000000000001080000000000000006');
+
+        expect(Convert.hexToUint8(mosaicGlobalRestrictionTransaction.serialize()).length).to.be.equal(mosaicGlobalRestrictionTransaction.size);
 
     });
 

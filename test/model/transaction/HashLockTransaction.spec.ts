@@ -21,6 +21,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashLockTransaction} from '../../../src/model/transaction/HashLockTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('HashLockTransaction', () => {
     const account = TestingAccount;
@@ -41,6 +42,7 @@ describe('HashLockTransaction', () => {
         expect(transaction.mosaic.id).to.be.equal(NetworkCurrencyMosaic.NAMESPACE_ID);
         expect(transaction.mosaic.amount.compact()).to.be.equal(10000000);
         expect(transaction.hash).to.be.equal(signedTransaction.hash);
+        expect(Convert.hexToUint8(transaction.serialize()).length).to.be.equal(transaction.size);
     });
 
     it('should throw exception if it is not a aggregate bonded tx', () => {

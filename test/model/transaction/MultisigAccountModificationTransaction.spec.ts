@@ -24,6 +24,7 @@ import {MultisigAccountModificationTransaction} from '../../../src/model/transac
 import {MultisigCosignatoryModification} from '../../../src/model/transaction/MultisigCosignatoryModification';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('MultisigAccountModificationTransaction', () => {
     let account: Account;
@@ -101,11 +102,11 @@ describe('MultisigAccountModificationTransaction', () => {
             .to.be.equal(1);
         expect(modifyMultisigAccountTransaction.modifications.length)
             .to.be.equal(2);
-        expect(modifyMultisigAccountTransaction.modifications[0].modificiationType)
+        expect(modifyMultisigAccountTransaction.modifications[0].modificationAction)
             .to.be.equal(CosignatoryModificationAction.Add);
         expect(modifyMultisigAccountTransaction.modifications[0].cosignatoryPublicAccount.publicKey)
             .to.be.equal('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24');
-        expect(modifyMultisigAccountTransaction.modifications[1].modificiationType)
+        expect(modifyMultisigAccountTransaction.modifications[1].modificationAction)
             .to.be.equal(CosignatoryModificationAction.Add);
         expect(modifyMultisigAccountTransaction.modifications[1].cosignatoryPublicAccount.publicKey)
             .to.be.equal('B1B5581FC81A6970DEE418D2C2978F2724228B7B36C5C6DF71B0162BB04778B4');
@@ -134,6 +135,7 @@ describe('MultisigAccountModificationTransaction', () => {
                 NetworkType.MIJIN_TEST,
             );
             expect(modifyMultisigAccountTransaction.size).to.be.equal(156);
+            expect(Convert.hexToUint8(modifyMultisigAccountTransaction.serialize()).length).to.be.equal(modifyMultisigAccountTransaction.size);
         });
     });
 });

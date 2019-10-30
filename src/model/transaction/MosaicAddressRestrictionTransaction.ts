@@ -164,14 +164,13 @@ export class MosaicAddressRestrictionTransaction extends Transaction {
         const byteSize = super.size;
 
         // set static byte size fields
-        const byteNonce = 4;
         const byteMosaicId = 8;
         const byteRestrictionKey = 8;
         const byteTargetAddress = 25;
         const bytePreviousRestrictionValue = 8;
         const byteNewRestrictionValue = 8;
 
-        return byteSize + byteNonce + byteMosaicId + byteRestrictionKey +
+        return byteSize + byteMosaicId + byteRestrictionKey +
                byteTargetAddress + bytePreviousRestrictionValue + byteNewRestrictionValue;
     }
 

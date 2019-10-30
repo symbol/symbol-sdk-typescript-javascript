@@ -15,34 +15,34 @@
  */
 
 import * as Long from 'long';
-import { Convert, Convert as convert } from '../../core/format';
-import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
-import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
-import { EmbeddedTransferTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedTransferTransactionBuilder';
-import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
-import { KeyDto } from '../../infrastructure/catbuffer/KeyDto';
-import { SignatureDto } from '../../infrastructure/catbuffer/SignatureDto';
-import { TimestampDto } from '../../infrastructure/catbuffer/TimestampDto';
-import { TransferTransactionBuilder } from '../../infrastructure/catbuffer/TransferTransactionBuilder';
-import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedAddressDto';
-import { UnresolvedMosaicBuilder } from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
-import { UnresolvedMosaicIdDto } from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
-import { Address } from '../account/Address';
-import { PublicAccount } from '../account/PublicAccount';
-import { NetworkType } from '../blockchain/NetworkType';
-import { EncryptedMessage } from '../message/EncryptedMessage';
-import { Message } from '../message/Message';
-import { MessageType } from '../message/MessageType';
-import { PlainMessage } from '../message/PlainMessage';
-import { Mosaic } from '../mosaic/Mosaic';
-import { NamespaceId } from '../namespace/NamespaceId';
-import { UInt64 } from '../UInt64';
-import { Deadline } from './Deadline';
-import { InnerTransaction } from './InnerTransaction';
-import { Transaction } from './Transaction';
-import { TransactionInfo } from './TransactionInfo';
-import { TransactionType } from './TransactionType';
-import { TransactionVersion } from './TransactionVersion';
+import {Convert, Convert as convert} from '../../core/format';
+import {UnresolvedMapping} from '../../core/utils/UnresolvedMapping';
+import {AmountDto} from '../../infrastructure/catbuffer/AmountDto';
+import {EmbeddedTransferTransactionBuilder} from '../../infrastructure/catbuffer/EmbeddedTransferTransactionBuilder';
+import {GeneratorUtils} from '../../infrastructure/catbuffer/GeneratorUtils';
+import {KeyDto} from '../../infrastructure/catbuffer/KeyDto';
+import {SignatureDto} from '../../infrastructure/catbuffer/SignatureDto';
+import {TimestampDto} from '../../infrastructure/catbuffer/TimestampDto';
+import {TransferTransactionBuilder} from '../../infrastructure/catbuffer/TransferTransactionBuilder';
+import {UnresolvedAddressDto} from '../../infrastructure/catbuffer/UnresolvedAddressDto';
+import {UnresolvedMosaicBuilder} from '../../infrastructure/catbuffer/UnresolvedMosaicBuilder';
+import {UnresolvedMosaicIdDto} from '../../infrastructure/catbuffer/UnresolvedMosaicIdDto';
+import {Address} from '../account/Address';
+import {PublicAccount} from '../account/PublicAccount';
+import {NetworkType} from '../blockchain/NetworkType';
+import {EncryptedMessage} from '../message/EncryptedMessage';
+import {Message} from '../message/Message';
+import {MessageType} from '../message/MessageType';
+import {PlainMessage} from '../message/PlainMessage';
+import {Mosaic} from '../mosaic/Mosaic';
+import {NamespaceId} from '../namespace/NamespaceId';
+import {UInt64} from '../UInt64';
+import {Deadline} from './Deadline';
+import {InnerTransaction} from './InnerTransaction';
+import {Transaction} from './Transaction';
+import {TransactionInfo} from './TransactionInfo';
+import {TransactionType} from './TransactionType';
+import {TransactionVersion} from './TransactionVersion';
 
 /**
  * Transfer transactions contain data about transfers of mosaics and message to another account.
@@ -95,7 +95,7 @@ export class TransferTransaction extends Transaction {
                 /**
                  * The address of the recipient address.
                  */
-                public readonly recipientAddress: Address | NamespaceId,
+                public readonly recipientAddress: Address | NamespaceId,
                 /**
                  * The array of Mosaic objects.
                  */
@@ -153,7 +153,7 @@ export class TransferTransaction extends Transaction {
         if (this.message.type === MessageType.PersistentHarvestingDelegationMessage) {
             if (this.mosaics.length > 0) {
                 throw new Error('PersistentDelegationRequestTransaction should be created without Mosaic');
-            } else if (! /^[0-9a-fA-F]{208}$/.test(this.message.payload)) {
+            } else if (!/^[0-9a-fA-F]{208}$/.test(this.message.payload)) {
                 throw new Error('PersistentDelegationRequestTransaction message is invalid');
             }
         }
@@ -214,14 +214,15 @@ export class TransferTransaction extends Transaction {
         // recipient and number of mosaics are static byte size
         const byteRecipientAddress = 25;
         const byteNumMosaics = 2;
+        const byteMosaicsCount = 1;
 
         // read message payload size
-        const bytePayload = convert.hexToUint8(convert.utf8ToHex(this.message.payload)).length;
+        const bytePayload = this.getMessageBuffer().length;
 
-        // mosaicId / namespaceId are written on 8 bytes
-        const byteMosaics = 8 * this.mosaics.length;
+        // mosaicId / namespaceId are written on 8 bytes + 8 bytes for the amount.
+        const byteMosaics = (8 + 8) * this.mosaics.length;
 
-        return byteSize + byteRecipientAddress + byteNumMosaics + bytePayload + byteMosaics;
+        return byteSize + byteMosaicsCount + byteRecipientAddress + byteNumMosaics + bytePayload + byteMosaics;
     }
 
     /**
@@ -243,7 +244,7 @@ export class TransferTransaction extends Transaction {
             this.getMessageBuffer(),
             this.sortMosaics().map((mosaic) => {
                 return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
-                                                   new AmountDto(mosaic.amount.toDTO()));
+                    new AmountDto(mosaic.amount.toDTO()));
             }),
         );
         return transactionBuilder.serialize();
@@ -262,7 +263,7 @@ export class TransferTransaction extends Transaction {
             this.getMessageBuffer(),
             this.sortMosaics().map((mosaic) => {
                 return new UnresolvedMosaicBuilder(new UnresolvedMosaicIdDto(mosaic.id.id.toDTO()),
-                                                   new AmountDto(mosaic.amount.toDTO()));
+                    new AmountDto(mosaic.amount.toDTO()));
             }),
         );
         return transactionBuilder.serialize();

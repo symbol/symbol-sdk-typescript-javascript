@@ -183,7 +183,6 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
         const byteSize = super.size;
 
         // set static byte size fields
-        const byteNonce = 4;
         const byteMosaicId = 8;
         const byteReferenceMosaicId = 8;
         const byteRestrictionKey = 8;
@@ -192,7 +191,7 @@ export class MosaicGlobalRestrictionTransaction extends Transaction {
         const bytePreviousRestrictionType = 1;
         const byteNewRestrictionType = 1;
 
-        return byteSize + byteNonce + byteMosaicId + byteRestrictionKey + byteReferenceMosaicId +
+        return byteSize + byteMosaicId + byteRestrictionKey + byteReferenceMosaicId +
                bytePreviousRestrictionValue + byteNewRestrictionValue + byteNewRestrictionType +
                bytePreviousRestrictionType;
     }

@@ -23,6 +23,7 @@ import {Deadline} from '../../../src/model/transaction/Deadline';
 import {LockFundsTransaction} from '../../../src/model/transaction/LockFundsTransaction';
 import {UInt64} from '../../../src/model/UInt64';
 import {TestingAccount} from '../../conf/conf.spec';
+import {Convert} from "../../../src/core/format";
 
 describe('LockFundsTransaction', () => {
     let account: Account;
@@ -47,6 +48,7 @@ describe('LockFundsTransaction', () => {
 
         expect(lockFundsTransaction.maxFee.higher).to.be.equal(0);
         expect(lockFundsTransaction.maxFee.lower).to.be.equal(0);
+        expect(Convert.hexToUint8(lockFundsTransaction.serialize()).length).to.be.equal(lockFundsTransaction.size);
     });
 
     it('should filled maxFee override transaction maxFee', () => {

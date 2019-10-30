@@ -93,7 +93,7 @@ describe('TransactionMapping - createFromPayload', () => {
             .createFromPayload(signedTransaction.payload) as AccountAddressRestrictionTransaction;
 
         expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingAddress);
-        expect(transaction.modifications[0].modificationType).to.be.equal(AccountRestrictionModificationAction.Add);
+        expect(transaction.modifications[0].modificationAction).to.be.equal(AccountRestrictionModificationAction.Add);
         expect(transaction.modifications[0].value).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
     });
 
@@ -117,7 +117,7 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowMosaic);
         expect(transaction.modifications[0].value[0]).to.be.equal(2262289484);
         expect(transaction.modifications[0].value[1]).to.be.equal(3405110546);
-        expect(transaction.modifications[0].modificationType).to.be.equal(AccountRestrictionModificationAction.Add);
+        expect(transaction.modifications[0].modificationAction).to.be.equal(AccountRestrictionModificationAction.Add);
     });
 
     it('should create AccountRestrictionOperationTransaction', () => {
@@ -139,7 +139,7 @@ describe('TransactionMapping - createFromPayload', () => {
             .createFromPayload(signedTransaction.payload) as AccountAddressRestrictionTransaction;
         expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingTransactionType);
         expect(transaction.modifications[0].value).to.be.equal(operation);
-        expect(transaction.modifications[0].modificationType).to.be.equal(AccountRestrictionModificationAction.Add);
+        expect(transaction.modifications[0].modificationAction).to.be.equal(AccountRestrictionModificationAction.Add);
     });
 
     it('should create AddressAliasTransaction', () => {
@@ -407,7 +407,7 @@ describe('TransactionMapping - createFromPayload', () => {
             .to.be.equal(2);
         expect(transaction.minRemovalDelta)
             .to.be.equal(1);
-        expect(transaction.modifications[0].modificiationType)
+        expect(transaction.modifications[0].modificationAction)
             .to.be.equal(CosignatoryModificationAction.Add);
         expect(transaction.modifications[0].cosignatoryPublicAccount.publicKey)
             .to.be.equal('B0F93CBEE49EEB9953C6F3985B15A4F238E205584D8F924C621CBE4D7AC6EC24');
@@ -760,7 +760,7 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
         expect(transaction.modifications[0].value).to.be.equal('SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC');
         expect(transaction.restrictionType).to.be.equal(AccountRestrictionType.AllowIncomingAddress);
-        expect(transaction.modifications[0].modificationType).to.be.equal(AccountRestrictionModificationAction.Add);
+        expect(transaction.modifications[0].modificationAction).to.be.equal(AccountRestrictionModificationAction.Add);
     });
 
     it('should create AccountRestrictionMosaicTransaction', () => {
