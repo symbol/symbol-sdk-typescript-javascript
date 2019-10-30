@@ -196,7 +196,7 @@ export class Convert {
     }
 
     /**
-     * @internal decode hex to uft8 string
+     * decode hex to uft8 string
      * @param hex - Hex input
      * @returns {string}
      */
