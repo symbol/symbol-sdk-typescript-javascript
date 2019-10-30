@@ -22,6 +22,7 @@ import { Account } from '../../../src/model/account/Account';
 import {Address} from '../../../src/model/account/Address';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
 import {NetworkCurrencyMosaic} from '../../../src/model/mosaic/NetworkCurrencyMosaic';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashType} from '../../../src/model/transaction/HashType';
 import {SecretLockTransaction} from '../../../src/model/transaction/SecretLockTransaction';
@@ -244,5 +245,25 @@ describe('SecretLockTransaction', () => {
             expect(secretLockTransaction.size).to.be.equal(202);
             expect(Convert.hexToUint8(secretLockTransaction.serialize()).length).to.be.equal(secretLockTransaction.size);
         });
+    });
+
+    it('should be created with alias address', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const recipientAddress = new NamespaceId('test');
+        const secretLockTransaction = SecretLockTransaction.create(
+            Deadline.create(),
+            NetworkCurrencyMosaic.createAbsolute(10),
+            UInt64.fromUint(100),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            recipientAddress,
+            NetworkType.MIJIN_TEST,
+        );
+        deepEqual(secretLockTransaction.mosaic.id.id, NetworkCurrencyMosaic.NAMESPACE_ID.id);
+        expect(secretLockTransaction.mosaic.amount.equals(UInt64.fromUint(10))).to.be.equal(true);
+        expect(secretLockTransaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
+        expect(secretLockTransaction.hashType).to.be.equal(0);
+        expect(secretLockTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e');
+        expect(secretLockTransaction.recipientAddress).to.be.equal(recipientAddress);
     });
 });

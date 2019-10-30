@@ -19,6 +19,7 @@ import {keccak_256, sha3_256} from 'js-sha3';
 import {Convert, Convert as convert} from '../../../src/core/format';
 import { Account } from '../../../src/model/account/Account';
 import {NetworkType} from '../../../src/model/blockchain/NetworkType';
+import { NamespaceId } from '../../../src/model/namespace/NamespaceId';
 import {Deadline} from '../../../src/model/transaction/Deadline';
 import {HashType} from '../../../src/model/transaction/HashType';
 import {SecretProofTransaction} from '../../../src/model/transaction/SecretProofTransaction';
@@ -211,5 +212,22 @@ describe('SecretProofTransaction', () => {
         )).to.be.equal(
             '009B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E90A75B6B63D31BDA938' +
             '08727940F24699AECDDF17C568508BA2000B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7');
+    });
+
+    it('should be created with alias address', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const recipientAddress = new NamespaceId('test');
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(convert.hexToUint8(proof)).hex(),
+            recipientAddress,
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+        expect(secretProofTransaction.hashType).to.be.equal(0);
+        expect(secretProofTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e' );
+        expect(secretProofTransaction.proof).to.be.equal(proof);
+        expect(secretProofTransaction.recipientAddress).to.be.equal(recipientAddress);
     });
 });

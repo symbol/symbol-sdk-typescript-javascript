@@ -183,7 +183,7 @@ export class SecretProofTransaction extends Transaction {
             new TimestampDto(this.deadline.toDTO()),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress)),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.getProofByte(),
         );
         return transactionBuilder.serialize();
@@ -200,7 +200,7 @@ export class SecretProofTransaction extends Transaction {
             TransactionType.SECRET_PROOF.valueOf(),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress)),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.getProofByte(),
         );
         return transactionBuilder.serialize();

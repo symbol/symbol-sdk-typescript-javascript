@@ -218,17 +218,17 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
         );
     } else if (transactionDTO.type === TransactionType.SECRET_LOCK) {
         const recipientAddress = transactionDTO.recipientAddress;
+        const mosaicId = UnresolvedMapping.toUnresolvedMosaic(transactionDTO.mosaicId);
         return new SecretLockTransaction(
             extractNetworkType(transactionDTO.version),
             extractTransactionVersion(transactionDTO.version),
             Deadline.createFromDTO(transactionDTO.deadline),
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
-            new Mosaic(new MosaicId(transactionDTO.mosaicId), UInt64.fromNumericString(transactionDTO.amount)),
+            new Mosaic(mosaicId, UInt64.fromNumericString(transactionDTO.amount)),
             UInt64.fromNumericString(transactionDTO.duration),
             transactionDTO.hashAlgorithm,
             transactionDTO.secret,
-            typeof recipientAddress === 'object' && recipientAddress.hasOwnProperty('address') ?
-                Address.createFromRawAddress(recipientAddress.address) : Address.createFromEncoded(recipientAddress),
+            extractRecipient(recipientAddress),
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,
                             extractNetworkType(transactionDTO.version)) : undefined,
@@ -243,8 +243,7 @@ const CreateStandaloneTransactionFromDTO = (transactionDTO, transactionInfo): Tr
             UInt64.fromNumericString(transactionDTO.maxFee || '0'),
             transactionDTO.hashAlgorithm,
             transactionDTO.secret,
-            typeof recipientAddress === 'object' && recipientAddress.hasOwnProperty('address') ?
-                Address.createFromRawAddress(recipientAddress.address) : Address.createFromEncoded(recipientAddress),
+            extractRecipient(recipientAddress),
             transactionDTO.proof,
             transactionDTO.signature,
             transactionDTO.signerPublicKey ? PublicAccount.createFromPublicKey(transactionDTO.signerPublicKey,

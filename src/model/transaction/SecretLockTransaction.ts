@@ -206,7 +206,7 @@ export class SecretLockTransaction extends Transaction {
             new BlockDurationDto(this.duration.toDTO()),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress)),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );
         return transactionBuilder.serialize();
     }
@@ -225,7 +225,7 @@ export class SecretLockTransaction extends Transaction {
             new BlockDurationDto(this.duration.toDTO()),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress)),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );
         return transactionBuilder.serialize();
     }
