@@ -16,8 +16,11 @@
 
 import { deepEqual } from 'assert';
 import { expect } from 'chai';
-import { CreateReceiptFromDTO, CreateStatementFromDTO } from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
-import {Account} from '../../../src/model/account/Account';
+import {
+    CreateReceiptFromDTO,
+    CreateStatementFromDTO
+} from '../../../src/infrastructure/receipt/CreateReceiptFromDTO';
+import { Account } from '../../../src/model/account/Account';
 import { Address } from '../../../src/model/account/Address';
 import { PublicAccount } from '../../../src/model/account/PublicAccount';
 import { NetworkType } from '../../../src/model/blockchain/NetworkType';
@@ -343,14 +346,14 @@ describe('Receipt', () => {
     it('should generate hash for MosaicResolutionStatement', () => {
         const statement = CreateStatementFromDTO(statementDTO, netWorkType);
         const receipt = statement.mosaicResolutionStatements[0];
-        const hash = receipt.generateHash();
+        const hash = receipt.generateHash(NetworkType.MAIN_NET);
         expect(hash).to.be.equal('99381CE398D3AAE110FC97E984D7D35A710A5C525A4F959EC8916B382DE78A63');
     });
 
     it('should generate hash for AddressResolutionStatement', () => {
         const statement = CreateStatementFromDTO(statementDTO, netWorkType);
         const receipt = statement.addressResolutionStatements[0];
-        const hash = receipt.generateHash();
+        const hash = receipt.generateHash(NetworkType.MAIN_NET);
         expect(hash).to.be.equal('6967470641BC527768CDC29998F4A3350813FDF2E40D1C97AB0BBA36B9AF649E');
     });
 

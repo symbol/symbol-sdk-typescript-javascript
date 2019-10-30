@@ -15,8 +15,6 @@
  */
 
 import { sha3_256 } from 'js-sha3';
-import { Convert } from '../../core/format/Convert';
-import { RawAddress } from '../../core/format/RawAddress';
 import { GeneratorUtils } from '../../infrastructure/catbuffer/GeneratorUtils';
 import { Address } from '../account/Address';
 import { MosaicId } from '../mosaic/MosaicId';
@@ -26,6 +24,8 @@ import { ReceiptType } from './ReceiptType';
 import { ReceiptVersion } from './ReceiptVersion';
 import { ResolutionEntry } from './ResolutionEntry';
 import { ResolutionType } from './ResolutionType';
+import { NetworkType } from "../blockchain/NetworkType";
+import { UnresolvedMapping } from "../../core/utils/UnresolvedMapping";
 
 /**
  * When a transaction includes an alias, a so called resolution statement reflects the resolved value for that block:
@@ -62,12 +62,13 @@ export class ResolutionStatement {
 
     /**
      * Generate receipt hash
+     * @param {networkType} the network type serialized in the output.
      * @return {string} receipt hash in hex
      */
-    public generateHash(): string {
+    public generateHash(networkType: NetworkType): string {
         const type = this.resolutionType === ResolutionType.Address ? ReceiptType.Address_Alias_Resolution
-                                                                    : ReceiptType.Mosaic_Alias_Resolution;
-        const unresolvedBytes = this.getUnresolvedBytes(this.resolutionType);
+            : ReceiptType.Mosaic_Alias_Resolution;
+        const unresolvedBytes = this.getUnresolvedBytes(this.resolutionType, networkType);
         const hasher = sha3_256.create();
         hasher.update(GeneratorUtils.uintToBuffer(ReceiptVersion.RESOLUTION_STATEMENT, 2));
         hasher.update(GeneratorUtils.uintToBuffer(type, 2));
@@ -86,23 +87,14 @@ export class ResolutionStatement {
     /**
      * @internal
      * Generate buffer for unresulved
-     * @param - The resolution Type
+     * @param {resolutionType} The resolution Type
+     * @param {networkType} the network type serialized in the output.
      * @return {Uint8Array}
      */
-    private getUnresolvedBytes(resolutionType: ResolutionType): Uint8Array {
+    private getUnresolvedBytes(resolutionType: ResolutionType, networkType: NetworkType): Uint8Array {
         if (resolutionType === ResolutionType.Address) {
-            const recipientString =
-            this.unresolved instanceof NamespaceId ? (this.unresolved as NamespaceId).toHex()
-                                                   : (this.unresolved as Address).plain();
-            if (/^[0-9a-fA-F]{16}$/.test(recipientString)) {
-                // received hexadecimal notation of namespaceId (alias)
-                return RawAddress.aliasToRecipient(Convert.hexToUint8(recipientString));
-            } else {
-                // received recipient address
-                return RawAddress.stringToAddress(recipientString);
-            }
+            return UnresolvedMapping.toUnresolvedAddressBytes(this.unresolved as Address | NamespaceId, networkType);
         }
-
         return GeneratorUtils.uint64ToBuffer(UInt64.fromHex((this.unresolved as MosaicId | NamespaceId).toHex()).toDTO());
     }
 }
