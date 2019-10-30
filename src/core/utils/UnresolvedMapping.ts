@@ -18,6 +18,7 @@ import { MosaicId } from '../../model/mosaic/MosaicId';
 import { NamespaceId } from '../../model/namespace/NamespaceId';
 import { Convert } from '../format/Convert';
 import { RawAddress } from '../format/RawAddress';
+import { NetworkType } from "../../model/blockchain/NetworkType";
 
 /**
  * @internal
@@ -72,12 +73,13 @@ export class UnresolvedMapping {
      * Return unresolved address bytes of the unresolved address
      * @internal
      * @param {Address | NamespaceId} unresolvedAddress The unresolved address
+     * @param {networkType} the network type serialized in the output.
      * @return {Uint8Array}
      */
-    public static toUnresolvedAddressBytes(unresolvedAddress: Address | NamespaceId): Uint8Array {
+    public static toUnresolvedAddressBytes(unresolvedAddress: Address | NamespaceId, networkType: NetworkType): Uint8Array {
         if (unresolvedAddress instanceof NamespaceId) {
             // received hexadecimal notation of namespaceId (alias)
-            return RawAddress.aliasToRecipient(Convert.hexToUint8((unresolvedAddress as NamespaceId).toHex()));
+            return RawAddress.aliasToRecipient(Convert.hexToUint8((unresolvedAddress as NamespaceId).toHex()), networkType);
         } else {
             // received recipient address
             return RawAddress.stringToAddress((unresolvedAddress as Address).plain());

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import {expect} from 'chai';
-import {Listener} from '../../src/infrastructure/Listener';
-import {Address} from "../../src/model/account/Address";
-import {deepEqual} from "assert";
-import {UInt64} from "../../src/model/UInt64";
-import {timeout} from "rxjs/operators";
+import { expect } from 'chai';
+import { Listener } from '../../src/infrastructure/Listener';
+import { Address } from "../../src/model/account/Address";
+import { deepEqual } from "assert";
+import { UInt64 } from "../../src/model/UInt64";
+import { timeout } from "rxjs/operators";
+import { TransactionStatusError } from "../../src/model/transaction/TransactionStatusError";
 
 describe('Listener', () => {
     it('should createComplete a WebSocket instance given url parameter', () => {
@@ -37,7 +38,7 @@ describe('Listener', () => {
     });
 
     describe('onStatusWhenAddressIsTheSame', () => {
-        it('Should forward status', (done) => {
+        it('Should forward status', () => {
 
 
             const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
@@ -64,24 +65,27 @@ describe('Listener', () => {
 
             listener.open();
 
-            listener.status(errorAddress).pipe(timeout(2000)).subscribe((transactionStatusError) => {
-                expect(transactionStatusError.address).to.deep.equal(errorAddress);
-                expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
-                expect(transactionStatusError.status).to.be.equal(statusInfoErrorDTO.status);
-                deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
-                done();
-            }, err => {
-                done('Should have not timed out!');
+            const reportedStatus = new Array<TransactionStatusError>();
+
+            listener.status(errorAddress).subscribe((transactionStatusError) => {
+                reportedStatus.push(transactionStatusError);
             });
 
             listener.handleMessage(statusInfoErrorDTO, null);
+
+            expect(reportedStatus.length).to.be.equal(1);
+            const transactionStatusError = reportedStatus[0];
+            expect(transactionStatusError.address).to.deep.equal(errorAddress);
+            expect(transactionStatusError.hash).to.be.equal(statusInfoErrorDTO.hash);
+            expect(transactionStatusError.status).to.be.equal(statusInfoErrorDTO.status);
+            deepEqual(transactionStatusError.deadline.toDTO(), UInt64.fromNumericString(statusInfoErrorDTO.deadline).toDTO());
 
 
         });
     });
 
     describe('onStatusWhenAddressIsDifferentAddress', () => {
-        it('Should not forward status', (done) => {
+        it('Should not forward status', () => {
 
 
             const errorEncodedAddress = '906415867F121D037AF447E711B0F5E4D52EBBF066D96860EB';
@@ -110,14 +114,15 @@ describe('Listener', () => {
 
             listener.open();
 
-            listener.status(subscribedAddress).pipe(timeout(100)).subscribe(status => {
-                done('Should have timed out!');
-            }, err => {
-                expect(err.name).to.be.eq('TimeoutError');
-                done();
+            const reportedStatus = new Array<TransactionStatusError>();
+
+            listener.status(subscribedAddress).subscribe((transactionStatusError) => {
+                reportedStatus.push(transactionStatusError);
             });
 
             listener.handleMessage(statusInfoErrorDTO, null);
+            
+            expect(reportedStatus.length).to.be.equal(0);
 
 
         });
@@ -127,12 +132,12 @@ describe('Listener', () => {
         it('should reject because of wrong server url', async () => {
             const listener = new Listener('https://notcorrecturl:0000');
             await listener.open()
-                .then((result) => {
-                    throw new Error('This should not be called when expecting error');
-                })
-                .catch((error) => {
-                    expect(error.message.toString()).not.to.be.equal('');
-                });
+            .then((result) => {
+                throw new Error('This should not be called when expecting error');
+            })
+            .catch((error) => {
+                expect(error.message.toString()).not.to.be.equal('');
+            });
         });
     });
 });
