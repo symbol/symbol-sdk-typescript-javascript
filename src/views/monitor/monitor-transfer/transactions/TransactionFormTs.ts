@@ -10,9 +10,17 @@ import {mapState} from "vuex"
 import {DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {Component, Provide, Vue, Watch} from 'vue-property-decorator'
 import {getAbsoluteMosaicAmount, getRelativeMosaicAmount, formatAddress, cloneData} from "@/core/utils"
-import {standardFields, isAddress} from "@/core/validation"
-import {signTransaction} from '@/core/services/transactions';
-import {AppMosaic, AppWallet, AppInfo, StoreAccount, DefaultFee, MosaicNamespaceStatusType, LockParams} from "@/core/model"
+import {standardFields, isAddress, NETWORK_PARAMS} from "@/core/validation"
+import {signTransaction} from '@/core/services/transactions'
+import {
+    AppMosaic,
+    AppWallet,
+    AppInfo,
+    StoreAccount,
+    DefaultFee,
+    MosaicNamespaceStatusType,
+    LockParams
+} from "@/core/model"
 import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
@@ -44,6 +52,8 @@ export class TransactionFormTs extends Vue {
     standardFields: object = standardFields
     getRelativeMosaicAmount = getRelativeMosaicAmount
     formatAddress = formatAddress
+    maxMosaicAbsoluteAmount = 0
+
 
     get addressAliasMap() {
         const addressAliasMap = this.activeAccount.addressAliasMap
@@ -188,7 +198,7 @@ export class TransactionFormTs extends Vue {
 
         const mosaicList = isSelectedAccountMultisig
             ? Object.values(multisigMosaicList).map(mosaic => {
-                if (mosaics[mosaic.hex]) return { ...mosaic, name: mosaics[mosaic.hex].name || null }
+                if (mosaics[mosaic.hex]) return {...mosaic, name: mosaics[mosaic.hex].name || null}
                 return mosaic
             })
             : Object.values(mosaics)
@@ -204,6 +214,12 @@ export class TransactionFormTs extends Vue {
             }))
     }
 
+    get currentMosaicAbsoluteAmount() {
+        const {mosaics, currentMosaic, currentAmount} = this
+        return mosaics[currentMosaic] ? getAbsoluteMosaicAmount(currentAmount, mosaics[currentMosaic].properties.divisibility) : 0
+
+    }
+
     initForm() {
         this.currentMosaic = null
         this.currentAmount = 0
@@ -213,6 +229,7 @@ export class TransactionFormTs extends Vue {
     }
 
     addMosaic() {
+        this.maxMosaicAbsoluteAmount = 0
         const {currentMosaic, mosaics, currentAmount} = this
         const {divisibility} = mosaics[currentMosaic].properties
         const mosaicTransferList = [...this.formItems.mosaicTransferList]
@@ -222,11 +239,26 @@ export class TransactionFormTs extends Vue {
                 if (item.id.toHex() == currentMosaic) {
                     resultAmount = Number(getRelativeMosaicAmount(item.amount.compact(), divisibility)) + Number(resultAmount)
                     that.formItems.mosaicTransferList.splice(index, 1)
+                    // Verify additional conditions :if resultAmount > MAX_MOSAIC_ATOMIC_UNITS, do not add mosaic amount
+                    const absoluteAmount = getAbsoluteMosaicAmount(resultAmount, divisibility)
+                    if (absoluteAmount > NETWORK_PARAMS.MAX_MOSAIC_ATOMIC_UNITS) {
+                        that.maxMosaicAbsoluteAmount = absoluteAmount
+                        resultAmount = Number(getRelativeMosaicAmount(item.amount.compact(), divisibility))
+                        return true
+                    }
                     return false
                 }
+                // get max amount in mosaic list
+                that.maxMosaicAbsoluteAmount = that.maxMosaicAbsoluteAmount > resultAmount ? that.maxMosaicAbsoluteAmount : resultAmount
                 return true
             }
         )
+        // Verify direct additions: if resultAmount > MAX_MOSAIC_ATOMIC_UNITS, do not add mosaic amount
+        const absoluteAmount = getAbsoluteMosaicAmount(resultAmount, divisibility)
+        if (absoluteAmount > NETWORK_PARAMS.MAX_MOSAIC_ATOMIC_UNITS) {
+            that.maxMosaicAbsoluteAmount = absoluteAmount
+            return
+        }
         this.formItems.mosaicTransferList.unshift(
             new Mosaic(
                 new MosaicId(currentMosaic),
@@ -236,6 +268,13 @@ export class TransactionFormTs extends Vue {
             )
         )
         this.sortMosaics()
+        this.clearAssetData()
+
+    }
+
+    clearAssetData() {
+        this.currentMosaic = ''
+        this.currentAmount = 0
     }
 
     sortMosaics() {
@@ -285,9 +324,9 @@ export class TransactionFormTs extends Vue {
             transaction: this.transactionList[0],
             store: this.$store,
             lockParams: this.lockParams
-        });
+        })
 
-        if(success) {
+        if (success) {
             const {node} = this.activeAccount
             new AppWallet(this.wallet).announceTransaction(signedTransaction, node, this, signedLock)
             this.initForm()
@@ -352,7 +391,7 @@ export class TransactionFormTs extends Vue {
     @Watch('wallet', {deep: true})
     onWalletChange(newVal, oldVal) {
         if (!newVal.publicKey) return
-            const multisigPublicKey = newVal.publicKey
+        const multisigPublicKey = newVal.publicKey
         if (multisigPublicKey !== oldVal.publicKey) {
             this.initForm()
         }

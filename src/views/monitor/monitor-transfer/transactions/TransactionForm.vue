@@ -55,6 +55,7 @@
       </div>
 
       <div class="asset flex_center">
+        <span>
         <span class="title">{{$t('asset_type')}}</span>
         <span>
           <ErrorTooltip fieldName="mosaic" placementOverride="left">
@@ -62,7 +63,6 @@
               <Select
                       data-vv-name="mosaic"
                       v-model="currentMosaic"
-                      v-validate="'required'"
                       :data-vv-as="$t('asset_type')"
                       :placeholder="$t('asset_type')"
                       class="asset_type">
@@ -72,19 +72,27 @@
               </Select>
             </span>
           </ErrorTooltip>
-
-          <span class="amount value radius flex_center">
-            <ErrorTooltip fieldName="amount">
+          <ErrorTooltip fieldName="amount">
               <input
                       data-vv-name="amount"
-                      v-model="currentAmount"
-                      v-validate="`required|${standardFields.amount.validation}`"
+                      v-model="currentMosaicAbsoluteAmount"
+                      v-validate="`${standardFields.amount.validation}`"
                       :data-vv-as="$t('amount')"
                       number
+                      v-show="false"
                       :placeholder="$t('please_enter_the_transfer_amount')"
                       type="text"
               />
             </ErrorTooltip>
+          <span class="amount value radius flex_center">
+              <input
+                      v-model="currentAmount"
+                      number
+                      :placeholder="$t('please_enter_the_transfer_amount')"
+                      type="text"
+              />
+          </span>
+
           </span>
           <span class="add_mosaic_button radius" @click="addMosaic"></span>
         </span>
@@ -99,6 +107,16 @@
                   v-validate="standardFields.mosaicListLength.validation"
                   style="display: none"
                   v-model="formItems.mosaicTransferList.length"
+          />
+        </ErrorTooltip>
+        <ErrorTooltip fieldName="mosaicListLength" placementOverride="top">
+          <input
+                  data-vv-name="mosaicListLength"
+                  number
+                  type="text"
+                  v-validate="`${standardFields.amount.validation}`"
+                  style="display: none"
+                  v-model="maxMosaicAbsoluteAmount"
           />
         </ErrorTooltip>
 
