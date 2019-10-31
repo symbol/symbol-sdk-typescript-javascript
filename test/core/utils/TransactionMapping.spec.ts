@@ -66,6 +66,7 @@ import { TransactionType } from '../../../src/model/transaction/TransactionType'
 import { TransferTransaction } from '../../../src/model/transaction/TransferTransaction';
 import { UInt64 } from '../../../src/model/UInt64';
 import { TestingAccount } from '../../conf/conf.spec';
+import { Mosaic } from '../../../src/model/model';
 
 describe('TransactionMapping - createFromPayload', () => {
     let account: Account;
@@ -361,7 +362,7 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(transaction.duration.equals(UInt64.fromUint(100))).to.be.equal(true);
         expect(transaction.hashType).to.be.equal(0);
         expect(transaction.secret).to.be.equal('9B3155B37159DA50AA52D5967C509B410F5A36A3B1E31ECB5AC76675D79B4A5E');
-        expect(transaction.recipientAddress.plain()).to.be.equal(recipientAddress.plain());
+        expect((transaction.recipientAddress as Address).plain()).to.be.equal(recipientAddress.plain());
 
     });
 
@@ -382,7 +383,7 @@ describe('TransactionMapping - createFromPayload', () => {
         expect(secretProofTransaction.hashType).to.be.equal(0);
         expect(secretProofTransaction.secret).to.be.equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e' );
         expect(secretProofTransaction.proof).to.be.equal(proof);
-        expect(secretProofTransaction.recipientAddress.plain()).to.be.equal(account.address.plain());
+        expect((secretProofTransaction.recipientAddress as Address).plain()).to.be.equal(account.address.plain());
 
     });
 
@@ -902,6 +903,51 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
 
     });
 
+    it('should create SecretLockTransaction - Address alias', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const recipientAddress = new NamespaceId('test');
+        const secretLockTransaction = SecretLockTransaction.create(
+            Deadline.create(),
+            NetworkCurrencyMosaic.createAbsolute(10),
+            UInt64.fromUint(100),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            recipientAddress,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
+        expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
+        expect((transaction.recipientAddress as NamespaceId).id.toHex()).to.be.equal(recipientAddress.toHex());
+
+    });
+
+    it('should create SecretLockTransaction - resolved Mosaic', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const recipientAddress = Address.createFromRawAddress('SDBDG4IT43MPCW2W4CBBCSJJT42AYALQN7A4VVWL');
+        const mosaicId = new NamespaceId('test');
+        const secretLockTransaction = SecretLockTransaction.create(
+            Deadline.create(),
+            new Mosaic(new MosaicId([1, 1]), UInt64.fromUint(10)),
+            UInt64.fromUint(100),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            recipientAddress,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(secretLockTransaction.toJSON()) as SecretLockTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.SECRET_LOCK);
+        expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
+        expect(transaction.mosaic.id.toHex()).to.be.equal((new MosaicId([1, 1])).toHex());
+
+    });
+
     it('should create SecretProofTransaction', () => {
         const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
         const secretProofTransaction = SecretProofTransaction.create(
@@ -921,6 +967,29 @@ describe('TransactionMapping - createFromDTO (Transaction.toJSON() feed)', () =>
         expect(transaction.secret).to.be.equal(sha3_256.create().update(Convert.hexToUint8(proof)).hex());
         deepEqual(transaction.recipientAddress, account.address);
         expect(transaction.proof).to.be.equal(proof);
+
+    });
+
+    it('should create SecretProofTransaction - Address alias', () => {
+        const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+        const recipientAddress = new NamespaceId('test');
+        const secretProofTransaction = SecretProofTransaction.create(
+            Deadline.create(),
+            HashType.Op_Sha3_256,
+            sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+            recipientAddress,
+            proof,
+            NetworkType.MIJIN_TEST,
+        );
+
+        const transaction =
+            TransactionMapping.createFromDTO(secretProofTransaction.toJSON()) as SecretProofTransaction;
+
+        expect(transaction.type).to.be.equal(TransactionType.SECRET_PROOF);
+        expect(transaction.hashType).to.be.equal(HashType.Op_Sha3_256);
+        expect(transaction.secret).to.be.equal(sha3_256.create().update(Convert.hexToUint8(proof)).hex());
+        expect(transaction.proof).to.be.equal(proof);
+        expect((transaction.recipientAddress as NamespaceId).id.toHex()).to.be.equal(recipientAddress.toHex());
 
     });
 

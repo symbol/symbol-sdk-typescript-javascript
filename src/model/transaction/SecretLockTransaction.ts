@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { Convert, Convert as convert, RawAddress } from '../../core/format';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { BlockDurationDto } from '../../infrastructure/catbuffer/BlockDurationDto';
 import { EmbeddedSecretLockTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretLockTransactionBuilder';
@@ -30,6 +31,7 @@ import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
 import { Mosaic } from '../mosaic/Mosaic';
 import { MosaicId } from '../mosaic/MosaicId';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
@@ -49,7 +51,7 @@ export class SecretLockTransaction extends Transaction {
      * @param duration - The funds lock duration.
      * @param hashType - The hash algorithm secret is generated with.
      * @param secret - The proof hashed.
-     * @param recipientAddress - The recipient address of the funds.
+     * @param recipientAddress - The unresolved recipient address of the funds.
      * @param networkType - The network type.
      * @param maxFee - (Optional) Max fee defined by the sender
      *
@@ -60,7 +62,7 @@ export class SecretLockTransaction extends Transaction {
                          duration: UInt64,
                          hashType: HashType,
                          secret: string,
-                         recipientAddress: Address,
+                         recipientAddress: Address | NamespaceId,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): SecretLockTransaction {
         return new SecretLockTransaction(
@@ -111,9 +113,9 @@ export class SecretLockTransaction extends Transaction {
                  */
                 public readonly secret: string,
                 /**
-                 * The recipientAddress of the funds.
+                 * The unresolved recipientAddress of the funds.
                  */
-                public readonly recipientAddress: Address,
+                public readonly recipientAddress: Address | NamespaceId,
                 signature?: string,
                 signer?: PublicAccount,
                 transactionInfo?: TransactionInfo) {
@@ -139,13 +141,13 @@ export class SecretLockTransaction extends Transaction {
             isEmbedded ? Deadline.create() : Deadline.createFromDTO(
                 (builder as SecretLockTransactionBuilder).getDeadline().timestamp),
             new Mosaic(
-                new MosaicId(builder.getMosaic().mosaicId.unresolvedMosaicId),
+                UnresolvedMapping.toUnresolvedMosaic(new UInt64(builder.getMosaic().mosaicId.unresolvedMosaicId).toHex()),
                 new UInt64(builder.getMosaic().amount.amount),
             ),
             new UInt64(builder.getDuration().blockDuration),
             builder.getHashAlgorithm().valueOf(),
             Convert.uint8ToHex(builder.getSecret().hash256),
-            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
+            UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretLockTransactionBuilder).fee.amount),
         );
@@ -204,7 +206,7 @@ export class SecretLockTransaction extends Transaction {
             new BlockDurationDto(this.duration.toDTO()),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientAddress.plain())),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );
         return transactionBuilder.serialize();
     }
@@ -223,7 +225,7 @@ export class SecretLockTransaction extends Transaction {
             new BlockDurationDto(this.duration.toDTO()),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientAddress.plain())),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
         );
         return transactionBuilder.serialize();
     }

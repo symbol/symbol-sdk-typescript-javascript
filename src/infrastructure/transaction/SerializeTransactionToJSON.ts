@@ -144,7 +144,7 @@ export const SerializeTransactionToJSON = (transaction: Transaction): any => {
             return jsonObject;
         case TransactionType.SECRET_LOCK:
             return {
-                mosaicId: (transaction as SecretLockTransaction).mosaic.id.id,
+                mosaicId: (transaction as SecretLockTransaction).mosaic.id.id.toHex(),
                 amount: (transaction as SecretLockTransaction).mosaic.amount.toString(),
                 duration: (transaction as SecretLockTransaction).duration.toString(),
                 hashAlgorithm: (transaction as SecretLockTransaction).hashType,

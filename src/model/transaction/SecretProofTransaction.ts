@@ -15,6 +15,7 @@
  */
 
 import { Convert, Convert as convert, RawAddress } from '../../core/format';
+import { UnresolvedMapping } from '../../core/utils/UnresolvedMapping';
 import { AmountDto } from '../../infrastructure/catbuffer/AmountDto';
 import { EmbeddedSecretProofTransactionBuilder } from '../../infrastructure/catbuffer/EmbeddedSecretProofTransactionBuilder';
 import { Hash256Dto } from '../../infrastructure/catbuffer/Hash256Dto';
@@ -26,6 +27,7 @@ import { UnresolvedAddressDto } from '../../infrastructure/catbuffer/UnresolvedA
 import { Address } from '../account/Address';
 import { PublicAccount } from '../account/PublicAccount';
 import { NetworkType } from '../blockchain/NetworkType';
+import { NamespaceId } from '../namespace/NamespaceId';
 import { UInt64 } from '../UInt64';
 import { Deadline } from './Deadline';
 import { HashType, HashTypeLengthValidator } from './HashType';
@@ -53,7 +55,7 @@ export class SecretProofTransaction extends Transaction {
     public static create(deadline: Deadline,
                          hashType: HashType,
                          secret: string,
-                         recipientAddress: Address,
+                         recipientAddress: Address | NamespaceId,
                          proof: string,
                          networkType: NetworkType,
                          maxFee: UInt64 = new UInt64([0, 0])): SecretProofTransaction {
@@ -88,7 +90,7 @@ export class SecretProofTransaction extends Transaction {
                 maxFee: UInt64,
                 public readonly hashType: HashType,
                 public readonly secret: string,
-                public readonly recipientAddress: Address,
+                public readonly recipientAddress: Address | NamespaceId,
                 public readonly proof: string,
                 signature?: string,
                 signer?: PublicAccount,
@@ -116,7 +118,7 @@ export class SecretProofTransaction extends Transaction {
                 (builder as SecretProofTransactionBuilder).getDeadline().timestamp),
             builder.getHashAlgorithm().valueOf(),
             Convert.uint8ToHex(builder.getSecret().hash256),
-            Address.createFromEncoded(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
+            UnresolvedMapping.toUnresolvedAddress(Convert.uint8ToHex(builder.getRecipientAddress().unresolvedAddress)),
             Convert.uint8ToHex(builder.getProof()),
             networkType,
             isEmbedded ? new UInt64([0, 0]) : new UInt64((builder as SecretProofTransactionBuilder).fee.amount),
@@ -181,7 +183,7 @@ export class SecretProofTransaction extends Transaction {
             new TimestampDto(this.deadline.toDTO()),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientAddress.plain())),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.getProofByte(),
         );
         return transactionBuilder.serialize();
@@ -198,7 +200,7 @@ export class SecretProofTransaction extends Transaction {
             TransactionType.SECRET_PROOF.valueOf(),
             this.hashType.valueOf(),
             new Hash256Dto(this.getSecretByte()),
-            new UnresolvedAddressDto(RawAddress.stringToAddress(this.recipientAddress.plain())),
+            new UnresolvedAddressDto(UnresolvedMapping.toUnresolvedAddressBytes(this.recipientAddress, this.networkType)),
             this.getProofByte(),
         );
         return transactionBuilder.serialize();
