@@ -113,8 +113,8 @@ export class WalletSwitchTs extends Vue {
         const walletList = JSON.parse(localRead('accountMap'))[accountName].wallets
         // get sorted path list
         const seedPathList = walletList.filter(item => item.path).map(item => item.path[item.path.length - 8]).sort()
-        // check if seed wallets > 10
-        if (seedPathList.length > networkConfig.seedWalletMaxAmount) {
+        // check if seed wallets >= 10
+        if (seedPathList.length >= networkConfig.seedWalletMaxAmount) {
             this.showErrorDialog(Message.SEED_WALLET_OVERFLOW_ERROR)
             return
         }
