@@ -9,3 +9,7 @@ node_modules
 /www
 src/**/*.map
 src/**/*.js
+coverage
+build
+__tests__/**/*.map
+__tests__/**/*.js

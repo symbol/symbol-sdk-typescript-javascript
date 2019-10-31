@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import iView from 'iview'
 // @ts-ignore
 import Monitor from '@/views/monitor/monitor-dashboard/MonitorDashBoard.vue'
-import vueStore from '@/store/index.ts'
+import vueStore from '@/store'
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()

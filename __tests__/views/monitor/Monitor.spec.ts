@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import iView from 'iview'
 // @ts-ignore
 import Monitor from '@/views/monitor/Monitor.vue'
-import vueStore from '@/store/index.ts'
+import vueStore from '@/store'
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
@@ -19,7 +19,7 @@ describe('Monitor', () => {
     )
 
     it('Component Monitor is not null ', () => {
-        const wrapper = mount(Monitor, {
+        const wrapper = shallowMount(Monitor, {
             mocks: {
                 $t: (msg) => msg
             },

@@ -27,7 +27,7 @@ export class MonitorTs extends Vue {
     monitorSelected = monitorSelected
     monitorUnselected = monitorUnselected
     formatNumber = formatNumber
-    
+
     get balance(): number {
         const {wallet} = this.activeAccount
         if (!wallet) return 0
