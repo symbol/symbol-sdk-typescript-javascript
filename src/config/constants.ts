@@ -131,19 +131,19 @@ export const MULTISIG_INFO: Record<string, string> = {
 }
 export const DEFAULT_FEES: Record<string, DefaultFee[]> = {
     [FEE_GROUPS.SINGLE]: [
-        {speed: FEE_SPEEDS.SLOW, value: 0.5},
-        {speed: FEE_SPEEDS.NORMAL, value: 1},
-        {speed: FEE_SPEEDS.FAST, value: 2},
+        {speed: FEE_SPEEDS.SLOW, value: 0.05},
+        {speed: FEE_SPEEDS.NORMAL, value: 0.1},
+        {speed: FEE_SPEEDS.FAST, value: 1},
     ],
     [FEE_GROUPS.DOUBLE]: [
-        {speed: FEE_SPEEDS.SLOW, value: 1},
-        {speed: FEE_SPEEDS.NORMAL, value: 2},
-        {speed: FEE_SPEEDS.FAST, value: 3},
+        {speed: FEE_SPEEDS.SLOW, value: 0.1},
+        {speed: FEE_SPEEDS.NORMAL, value: 0.2},
+        {speed: FEE_SPEEDS.FAST, value: 2},
     ],
     [FEE_GROUPS.TRIPLE]: [
-        {speed: FEE_SPEEDS.SLOW, value: 1.5},
-        {speed: FEE_SPEEDS.NORMAL, value: 3},
-        {speed: FEE_SPEEDS.FAST, value: 6},
+        {speed: FEE_SPEEDS.SLOW, value: 0.3},
+        {speed: FEE_SPEEDS.NORMAL, value: 0.9},
+        {speed: FEE_SPEEDS.FAST, value: 3},
     ],
 }
 
