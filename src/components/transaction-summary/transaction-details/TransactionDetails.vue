@@ -26,6 +26,13 @@
                     <MosaicTable :tableData="renderMosaicsToTable(value)" />
                 </div>
 
+                <div class="mosaic_info" v-if="key === SpecialTxDetailsKeys.from || key === SpecialTxDetailsKeys.aims">
+                    <span class="title">{{$t(key)}}</span>
+                    <span class="value overflow_ellipsis">
+                        {{ value instanceof NamespaceId ? getNamespaceNameFromNamespaceId(value.id.toHex(), $store) : value }}
+                    </span>
+                </div>
+
                 <div class="mosaic_info" v-if="key === SpecialTxDetailsKeys.cosignatories">
                     <CosignatoriesTable :cosignatories="value" />
                 </div>

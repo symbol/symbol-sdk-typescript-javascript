@@ -174,7 +174,7 @@
     "transfer_target": "To",
     "send": "Send",
     "transfer_record": "Transfer records",
-    "transfer_sent": "Transfer sent",
+    "transfer_sent": "Transfers sent",
     "receive_address_or_alias": "Enter address or alias (e.g., nem.foundation)",
     "please_enter_the_transfer_amount": "Please enter the transfer amount",
     "please_enter_a_comment": "Please enter a comment",

@@ -79,7 +79,6 @@ export class TransactionListTs extends Vue {
     }
 
     renderHeightAndConfirmation(transactionHeight: number): string {
-    console.log("TCL: TransactionListTs -> transactionHeight", transactionHeight)
         if (transactionHeight === 0) return null
         const {currentHeight} = this
         if (!currentHeight) return `${transactionHeight}`

@@ -1,4 +1,5 @@
 import {mapState} from "vuex"
+import {NamespaceId} from 'nem2-sdk'
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {renderMosaicsAndReturnArray} from '@/core/utils'
 import {
@@ -20,6 +21,7 @@ export class TransactionDetailsTs extends Vue {
     SpecialTxDetailsKeys = SpecialTxDetailsKeys
     TxDetailsKeysWithValueToTranslate = TxDetailsKeysWithValueToTranslate
     getNamespaceNameFromNamespaceId = getNamespaceNameFromNamespaceId
+    NamespaceId = NamespaceId
 
     @Prop({default: null}) transaction: FormattedTransaction
 

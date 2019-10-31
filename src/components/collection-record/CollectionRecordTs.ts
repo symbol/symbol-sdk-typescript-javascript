@@ -3,7 +3,7 @@ import {mapState} from "vuex"
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import {
     getCurrentMonthFirst, getCurrentMonthLast, formatNumber,
-    renderMosaics, renderMosaicNames, renderMosaicAmount
+    renderMosaicNames, renderMosaicAmount
 } from '@/core/utils'
 import TransactionModal from '@/components/transaction-modal/TransactionModal.vue'
 import {TransferType} from "@/core/model/TransferType"
@@ -21,7 +21,6 @@ export class CollectionRecordTs extends Vue {
     chosenDate: Date = new Date()
     transactionDetails: any = []
     transferType = TransferType
-    renderMosaics = renderMosaics
     renderMosaicNames = renderMosaicNames
     renderMosaicAmount = renderMosaicAmount
     formatNumber = formatNumber  // @TODO: move to formatTransactions

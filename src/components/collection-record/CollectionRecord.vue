@@ -51,11 +51,11 @@
         <img src="@/common/img/monitor/transaction/txUnConfirmed.png" alt="">
         <div class="flex_content">
           <div class="left left_components">
-            <div class="top overflow_ellipsis">{{ renderMosaicNames(c.rawTx.mosaics, $store) }}</div>
+            <div class="top overflow_ellipsis">{{ renderMosaicNames(c.rawTx.mosaics, $store) }}ee</div>
             <div class="bottom overflow_ellipsis"> {{c.txHeader.time.slice(0, c.txHeader.time.length - 3)}}</div>
           </div>
           <div class="right">
-            <div class="top overflow_ellipsis">{{ renderMosaicAmount(c.rawTx.mosaics, mosaicList) }}</div>
+            <div class="top overflow_ellipsis">{{ renderMosaicAmount(c.rawTx.mosaics, mosaicList, $store) }}</div>
             <div class="bottom overflow_ellipsis">
               {{formatNumber(c.txHeader.block)}}
             </div>
@@ -76,7 +76,7 @@
             <div class="bottom overflow_ellipsis"> {{c.txHeader.time.slice(0, c.txHeader.time.length - 3)}}</div>
           </div>
           <div class="right">
-            <div class="top overflow_ellipsis">{{ renderMosaicAmount(c.rawTx.mosaics, mosaicList) }}</div>
+            <div class="top overflow_ellipsis">{{ renderMosaicAmount(c.rawTx.mosaics, mosaicList, $store) }}</div>
             <div class="bottom overflow_ellipsis">
               {{formatNumber(c.txHeader.block)}}
             </div>

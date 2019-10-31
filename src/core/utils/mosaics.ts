@@ -1,7 +1,8 @@
 import {Store} from 'vuex'
-import {Mosaic} from "nem2-sdk"
+import {Mosaic, NamespaceId, MosaicId} from "nem2-sdk"
 import {AppMosaic, AppState} from '@/core/model'
 import {formatNumber} from '@/core/utils'
+
 /**
  * Transforms an array of mosaics to an inline representation,
  * setting networkCurrency as the first item
@@ -18,6 +19,20 @@ const getAppMosaicHex = (hex: string, store: Store<AppState>): string => {
   return appMosaicFromHex.hex
 }
 
+// @TODO: remove in favour of namespace method
+export const getNamespaceNameFromNamespaceId = (hexId: string, store: Store<AppState>) => {
+    const {namespaces} = store.state.account
+    const namespace = namespaces.find(({ hex }) => hex === hexId)
+    if (namespace === undefined) return hexId
+    return namespace.name
+}
+
+const getName = (appMosaic: AppMosaic, mosaicId: MosaicId | NamespaceId, store: Store<AppState>): string => {
+    if (appMosaic && appMosaic.name) return appMosaic.name
+    if (mosaicId instanceof NamespaceId) return getNamespaceNameFromNamespaceId(mosaicId.id.toHex(), store)
+    return appMosaic.hex || 'N/A'
+}
+
 export const renderMosaicsAndReturnArray = (
     mosaics: Mosaic[],
     store: Store<AppState>): {name: string, amount: string, hex: string}[] | 'Loading...' => {
@@ -30,7 +45,7 @@ export const renderMosaicsAndReturnArray = (
             
             if (!mosaicList[appMosaicHex] || !mosaicList[appMosaicHex].properties) return
             const appMosaic = mosaicList[appMosaicHex]
-            const name = appMosaic.name || hex
+            const name = getName(appMosaic, mosaic.id, store)
             const amount = formatNumber(getRelativeMosaicAmount(mosaic.amount.compact(), appMosaic.properties.divisibility))
 
             return {name, amount, hex: appMosaicHex}
@@ -80,9 +95,10 @@ export const renderMosaicNames = (mosaics: Mosaic[],
     const items = mosaics
         .map(mosaic => {
             const hex = mosaic.id.toHex()
-            if (!mosaicList[hex]) return
-            const appMosaic = mosaicList[hex]
-            return appMosaic.name || appMosaic.hex
+            const appMosaicHex = getAppMosaicHex(hex, store)
+            if (!mosaicList[appMosaicHex] || !mosaicList[appMosaicHex].properties) return
+            const appMosaic = mosaicList[appMosaicHex]
+            return getName(appMosaic, mosaic.id, store)
         })
         .filter(x => x)
 
@@ -99,11 +115,12 @@ export const renderMosaicNames = (mosaics: Mosaic[],
  * @param mosaics
  * @param mosaicList
  */
-export const renderMosaicAmount = (mosaics: Mosaic[], mosaicList: AppMosaic[]): string => {
+export const renderMosaicAmount = (mosaics: Mosaic[], mosaicList: AppMosaic[], store: Store<AppState>): string => {
     if (!mosaics.length) return '0'
     if (mosaics.length > 1) return 'mix'
     const hex = mosaics[0].id.toHex()
-    if (!mosaicList[hex] || !mosaicList[hex].properties) return 'Loading...'
-    const appMosaic = mosaicList[hex]
+    const appMosaicHex = getAppMosaicHex(hex, store)
+    if (!mosaicList[appMosaicHex] || !mosaicList[appMosaicHex].properties) return 'Loading...'
+    const appMosaic = mosaicList[appMosaicHex]
     return formatNumber(getRelativeMosaicAmount(mosaics[0].amount.compact(), appMosaic.properties.divisibility))
 }

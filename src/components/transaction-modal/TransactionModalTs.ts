@@ -6,7 +6,6 @@ import {
     FormattedTransaction, AppInfo, StoreAccount,
     SpecialTxDetailsKeys, TxDetailsKeysWithValueToTranslate,
 } from '@/core/model'
-import {getNamespaceNameFromNamespaceId} from '@/core/services'
 import TransactionSummary from '@/components/transaction-summary/TransactionSummary.vue';
 @Component({
     computed: {...mapState({activeAccount: 'account', app: 'app'})},
@@ -21,7 +20,6 @@ export class TransactionModalTs extends Vue {
     currentInnerTransaction = {}
     SpecialTxDetailsKeys = SpecialTxDetailsKeys
     TxDetailsKeysWithValueToTranslate = TxDetailsKeysWithValueToTranslate
-    getNamespaceNameFromNamespaceId = getNamespaceNameFromNamespaceId
     NamespaceId = NamespaceId
 
     @Prop({default: false}) visible: boolean
