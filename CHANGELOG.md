@@ -3,22 +3,35 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.14.4] - 31-Oct-2019
+
+**Milestone**: Fushicho.1
+
+- Added `Address.isValidAddress` for plain address string validation.
+- Added `Address filter` in transaction status websocket listener channel.
+- Changed `MetadataTransactionService` return type from `Transaction` to `Union types`.
+- Made `decodeHex` method and `EmptyAlias` class public.
+- Fixed const network type used in `AliasToRecipient` method.
+- Fixed `SecretLock` and `SecretProof` transaction not using `UnresolvedAddress` issue.
+- Fixed `Size` method issues for transactions.
+- Fixed other JSDoc issues.
+
 ## [0.14.3] - 18-Oct-2019
 
-**Milestone**: Fushicho
+**Milestone**: Fushicho.1
 
 - Fixed `MetadataTransactionSercie` value delta issue.
 
 ## [0.14.2] - 18-Oct-2019
 
-**Milestone**: Fushicho
+**Milestone**: Fushicho.1
 
 - Fixed `Address alias deserialization` issue from catapult-rest dto payload.
 - Fixed `MosaicSupplyChangeTransaction` schema mismatch issue.
 
 ## [0.14.1] - 14-Oct-2019
 
-**Milestone**: Fushicho
+**Milestone**: Fushicho.1
 
 - Added `Receipt serializer & hash generator` for auditing receipt merkle proof.
 - Added `Unresolved (NamespaceId)` support on `MosaicRestriction` and `MosaicMetadata` transactions.
@@ -28,7 +41,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.14.0] - 08-Oct-2019
 
-**Milestone**: Fushicho
+**Milestone**: Fushicho.1
 
 - Added `KeyGenerator` class for generating UInt64 Keys from string.
 - Fixed `MosaicAmountView` issue. Now return observable of array.
@@ -44,7 +57,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.13.4] - 04-Oct-2019
 
-**Milestone**: Elephant.3 / Fuschicho
+**Milestone**: Elephant.3 / Fuschicho.1
 
 - Added `Metadata` rest api endpoints and DTOs
 - Added `MosaicRestriction` rest api endpoints and DTOs
@@ -245,6 +258,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Alpaca
 
 - Initial code release.
+[0.14.4]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.3...v0.14.4
 [0.14.3]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.2...v0.14.3
 [0.14.2]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.1...v0.14.2
 [0.14.1]: https://github.com/nemtech/nem2-sdk-typescript-javascript/compare/v0.14.0...v0.14.1
