@@ -34,7 +34,7 @@ export class TransactionListTs extends Vue {
     }
 
     get transactionsLoading() {
-        return this.app.transactionsLoading
+        return (this.mode && this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN) ? false : this.app.transactionsLoading
     }
 
     get transactionList() {
@@ -65,6 +65,12 @@ export class TransactionListTs extends Vue {
         return this.activeAccount.namespaces
     }
     
+    get pageTitle() {
+        return this.mode === TRANSACTIONS_CATEGORIES.TO_COSIGN
+            ? 'Transactions_to_cosign'
+            : 'transaction_record'
+    }
+
     getName(namespaceId: NamespaceId) {
         const hexId = namespaceId.toHex()
         const namespace = this.namespaces.find(({hex}) => hexId === hex)
@@ -73,6 +79,8 @@ export class TransactionListTs extends Vue {
     }
 
     renderHeightAndConfirmation(transactionHeight: number): string {
+    console.log("TCL: TransactionListTs -> transactionHeight", transactionHeight)
+        if (transactionHeight === 0) return null
         const {currentHeight} = this
         if (!currentHeight) return `${transactionHeight}`
 

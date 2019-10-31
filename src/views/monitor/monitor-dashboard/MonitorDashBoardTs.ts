@@ -5,7 +5,7 @@ import {Component, Vue, Watch} from 'vue-property-decorator'
 import {isRefreshData, localSave, localRead, formatNumber} from '@/core/utils'
 import numberGrow from '@/components/number-grow/NumberGrow.vue'
 import LineChart from '@/components/line-chart/LineChart.vue'
-import TransactionList from '@/views/monitor/monitor-dashboard/monitor-transaction-list/TransactionList.vue'
+import TransactionList from '@/components/transaction-list/TransactionList.vue'
 import {networkStatusConfig} from '@/config/view/setting'
 import {AppInfo, StoreAccount} from "@/core/model"
 

@@ -13,7 +13,7 @@
       </div>
 
       <div class="label_page">
-        <span class="page_title">{{$t('transaction_record')}}</span>
+        <span class="page_title">{{$t(pageTitle)}}</span>
       </div>
 
       <div class="table_container">
@@ -78,7 +78,7 @@
                 <!-- FOURTH COLUMN -->
                 <div class="col4">
                 <span v-if="!c.isTxUnconfirmed" class="col4">
-                  {{ renderHeightAndConfirmation(c.txHeader.block) }}
+                  {{ renderHeightAndConfirmation(c.txHeader.block) || '' }}
                 </span>
                   <span v-if="c.isTxUnconfirmed" class="col4">
                   {{ $t('unconfirmed') }}
@@ -120,7 +120,7 @@
 
 <script lang="ts">
     // @ts-ignore
-    import {TransactionListTs} from '@/views/monitor/monitor-dashboard/monitor-transaction-list/TransactionListTs.ts'
+    import {TransactionListTs} from './TransactionListTs'
 
     export default class TransactionList extends TransactionListTs {
 
@@ -128,5 +128,5 @@
 </script>
 
 <style scoped lang="less">
-  @import "TransactionList.less";
+  @import "./TransactionList.less";
 </style>

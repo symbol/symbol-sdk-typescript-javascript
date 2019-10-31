@@ -375,15 +375,23 @@ export class AppWallet {
     }
 
     announceCosignature(signedTransaction: CosignatureSignedTransaction, node: string, that: any): void {
+        const message = that.$t(Message.SUCCESS)
         new TransactionHttp(node).announceAggregateBondedCosignature(signedTransaction).subscribe(
-            _ => that.$Notice.success({title: that.$t(Message.SUCCESS)}),
+            _ => {
+              that.$store.commit('POP_TRANSACTION_TO_COSIGN_BY_HASH', {
+                  publicKey: signedTransaction.signerPublicKey,
+                  hash: signedTransaction.parentHash,
+              })
+              that.$Notice.success({title: message})
+            },
             error => console.error('announceNormal -> error', error),
         )
     }
 
     announceNormal(signedTransaction: SignedTransaction, node: string, that: any): void {
+        const message = that.$t(Message.SUCCESS)
         new TransactionHttp(node).announce(signedTransaction).subscribe(
-            _ => that.$Notice.success({title: that.$t(Message.SUCCESS)}),
+            _ => that.$Notice.success({title: message}),
             error => console.error('announceNormal -> error', error),
         )
     }
@@ -403,6 +411,7 @@ export class AppWallet {
     announceBonded(signedTransaction: SignedTransaction, signedLock: SignedTransaction, node: string, that): void {
         const transactionHttp = new TransactionHttp(node);
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
+        const message = that.$t(Message.SUCCESS)
 
         listener.open().then(() => {
             transactionHttp
@@ -412,12 +421,14 @@ export class AppWallet {
             listener
                 .confirmed(Address.createFromRawAddress(this.address))
                 .pipe(
-                filter((transaction) => transaction.transactionInfo !== undefined
-                    && transaction.transactionInfo.hash === signedLock.hash),
-                mergeMap(_ => transactionHttp.announceAggregateBonded(signedTransaction)),
+                    filter((transaction) => transaction.transactionInfo !== undefined
+                        && transaction.transactionInfo.hash === signedLock.hash),
+                    mergeMap(_ => transactionHttp.announceAggregateBonded(signedTransaction)),
                 )
                 .subscribe(
-                    _ => that.$Notice.success({title: that.$t(Message.SUCCESS)}),
+                    (_) => {
+                        that.$Notice.success({title: message})
+                    } ,
                     error => {throw new Error(error)},
                 )
         }).catch((error) => {

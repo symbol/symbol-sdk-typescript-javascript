@@ -11,7 +11,7 @@
         :key="index"
       >
         <span class="data_item overflow_ellipsis index">
-          {{co.modificiationType === CosignatoryModificationAction.Add ? $t('Add') : $t('Remove') }}
+          {{co.modificationType === CosignatoryModificationAction.Add ? $t('Remove') : $t('Add') }}
         </span>
         <span class="index data_item overflow_ellipsis name">
           {{co.cosignatoryPublicAccount.publicKey}}

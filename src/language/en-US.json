@@ -740,5 +740,7 @@
     "no_network_currency_alert": "The wallet has no data about the network currency (eg. nem:xem), please connect to a valid node.",
     "cosign_transactions": "Cosign transactions",
     "User_aborted_transaction_confirmation": "User aborted transaction confirmation",
-    "Expired": "Expired"
+    "Expired": "Expired",
+    "Transactions_to_cosign": "Transactions to cosign",
+    "Refresh_partial_transaction_of_address": "Refresh partial transactions of a given address"
 }

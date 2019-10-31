@@ -10,10 +10,10 @@
           :class="['name', $route.path === '/multisigManagement' ?'active':'','pointer']"
           @click="$router.push('multisigManagement')"
         >{{$t('manage')}}</span>
-        <!-- <span
+        <span
           :class="['name', $route.path === '/multisigCosign' ?'active':'','pointer']"
           @click="$router.push('multisigCosign')"
-        >{{$t('cosign_transactions')}}</span> -->
+        >{{$t('cosign_transactions')}}</span>
         <span
           :class="['name', $route.path === '/multisigMap' ?'active':'','pointer']"
           @click="$router.push('multisigMap')"

@@ -21,11 +21,13 @@ import {
 } from '@/core/services'
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
+import MultisigTree from '@/views/multisig/multisig-tree/MultisigTree.vue'
 
 @Component({
     components: {
         CheckPWDialog,
         DisabledForms,
+        MultisigTree,
     },
     computed: {
         ...mapState({

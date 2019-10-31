@@ -33,15 +33,6 @@ const validateAddress = (address): ValidationObject => {
     }
 }
 
-const addressValidator = (context): Promise<ValidationObject> => {
-    return context.Validator.extend(
-        CUSTOM_VALIDATORS_NAMES.address,
-        (address) => new Promise((resolve) => {
-            resolve(validateAddress(address))
-        }),
-    )
-}
-
 const validateAlias = (alias): ValidationObject => {
     if (alias.length > maxNameSize) return {valid: false}
     try {
@@ -54,7 +45,7 @@ const validateAlias = (alias): ValidationObject => {
 
 const aliasValidator = (context): Promise<ValidationObject> => {
     return context.Validator.extend(
-        CUSTOM_VALIDATORS_NAMES.address,
+        CUSTOM_VALIDATORS_NAMES.alias,
         (alias) => new Promise((resolve) => {
             resolve(validateAlias(alias))
         }),
@@ -111,6 +102,15 @@ const addressOrAliasValidator = (context): Promise<ValidationObject> => {
             } else {
                 resolve({valid: false})  
             }
+        }),
+    )
+}
+
+const addressValidator = (context): Promise<ValidationObject> => {
+    return context.Validator.extend(
+        CUSTOM_VALIDATORS_NAMES.address,
+        (address) => new Promise(async (resolve) => { 
+                resolve(validateAddress(address))  
         }),
     )
 }

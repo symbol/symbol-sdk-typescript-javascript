@@ -32,8 +32,10 @@
         </div>
       </div>
     </div>
-
-    <TransactionList />
+    <div class="transaction-list-wrapper">
+       <TransactionList />
+    </div>
+ 
   </div>
 </template>
 
