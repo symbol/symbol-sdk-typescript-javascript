@@ -29,17 +29,26 @@ export const formatAndSave = (  transaction: Transaction,
 
 export const setTransactionList = (address: string, store: Store<AppState>): void => {
     const {node} = store.state.account
-    new AccountHttp(node)
-        .transactions(
-            Address.createFromRawAddress(address),
-            new QueryParams(100),
-    ).subscribe(
+    const accountHttp = new AccountHttp(node)
+    const _address = Address.createFromRawAddress(address)
+
+    accountHttp.transactions(_address, new QueryParams(100)).subscribe(
         (transactionList: Transaction[]) => {
             const txList = transactionFormat(transactionList, store)
             store.commit('SET_TRANSACTION_LIST', txList)
             store.commit('SET_TRANSACTIONS_LOADING', false)
         },
-        (error) => console.error("setTransactionList -> error", error)
+        (error) => console.error("setTransactionList -> transactions -> error", error)
     )
-    
+
+    accountHttp.unconfirmedTransactions(_address, new QueryParams(100)).subscribe(
+        (transactionList: Transaction[]) => {
+        console.log("TCL: transactionList", transactionList)
+            const txList = transactionFormat(transactionList, store)
+                .map(x => ({...x, isTxUnconfirmed: true}))
+
+            store.commit('SET_UNCONFIRMED_TRANSACTION_LIST', txList)
+        },
+        (error) => console.error("setTransactionList -> unconfirmedTransactions -> error", error)
+    )
 }

@@ -118,6 +118,9 @@ const mutations: MutationTree<StoreAccount> = {
     SET_TRANSACTION_LIST(state: StoreAccount, list: FormattedTransaction[]) {
         state.transactionList = list
     },
+    SET_UNCONFIRMED_TRANSACTION_LIST(state: StoreAccount, list: FormattedTransaction[]) {
+        state.transactionList.unshift(...list)
+    },
     ADD_UNCONFIRMED_TRANSACTION(state: StoreAccount, txList: any) {
         state.transactionList.unshift(txList[0])
     },
