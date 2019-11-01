@@ -128,10 +128,7 @@ const mutations: MutationTree<StoreAccount> = {
         const txIndex = newStateTransactions
             .findIndex(({txHeader}) => newTx.txHeader.hash === txHeader.hash)
 
-        if (txIndex > -1 && newStateTransactions[txIndex].isTxUnconfirmed) {
-            newStateTransactions.splice(txIndex, 1)
-        }
-
+        if (txIndex > -1) newStateTransactions.splice(txIndex, 1)
         newStateTransactions.unshift(newTx)
         state.transactionList = newStateTransactions
     },
