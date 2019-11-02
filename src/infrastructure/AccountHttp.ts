@@ -15,37 +15,34 @@
  */
 
 import { ClientResponse } from 'http';
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map, mergeMap} from 'rxjs/operators';
-import { DtoMapping } from '../core/utils/DtoMapping';
-import {AccountInfo} from '../model/account/AccountInfo';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { AccountInfo } from '../model/account/AccountInfo';
 import { AccountNames } from '../model/account/AccountNames';
 import { ActivityBucket } from '../model/account/ActivityBucket';
-import {Address} from '../model/account/Address';
-import {MultisigAccountGraphInfo} from '../model/account/MultisigAccountGraphInfo';
-import {MultisigAccountInfo} from '../model/account/MultisigAccountInfo';
-import {PublicAccount} from '../model/account/PublicAccount';
-import {Mosaic} from '../model/mosaic/Mosaic';
-import {MosaicId} from '../model/mosaic/MosaicId';
+import { Address } from '../model/account/Address';
+import { MultisigAccountGraphInfo } from '../model/account/MultisigAccountGraphInfo';
+import { MultisigAccountInfo } from '../model/account/MultisigAccountInfo';
+import { PublicAccount } from '../model/account/PublicAccount';
+import { Mosaic } from '../model/mosaic/Mosaic';
+import { MosaicId } from '../model/mosaic/MosaicId';
 import { NamespaceId } from '../model/namespace/NamespaceId';
 import { NamespaceName } from '../model/namespace/NamespaceName';
-import { AccountRestrictionsInfo } from '../model/restriction/AccountRestrictionsInfo';
-import {AggregateTransaction} from '../model/transaction/AggregateTransaction';
-import {Transaction} from '../model/transaction/Transaction';
+import { AggregateTransaction } from '../model/transaction/AggregateTransaction';
+import { Transaction } from '../model/transaction/Transaction';
 import { UInt64 } from '../model/UInt64';
-import {AccountRepository} from './AccountRepository';
-import { AccountInfoDTO,
-         AccountNamesDTO,
-         AccountRestrictionsInfoDTO,
-         AccountRoutesApi,
-         MosaicDTO,
-         MultisigAccountGraphInfoDTO,
-         MultisigAccountInfoDTO,
-         TransactionInfoDTO } from './api';
-import {Http} from './Http';
-import {NetworkHttp} from './NetworkHttp';
-import {QueryParams} from './QueryParams';
-import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
+import { AccountRepository } from './AccountRepository';
+import {
+    AccountInfoDTO,
+    AccountRoutesApi,
+    MultisigAccountGraphInfoDTO,
+    MultisigAccountInfoDTO,
+    TransactionInfoDTO
+} from 'nem2-sdk-openapi-typescript-node-client';
+import { Http } from './Http';
+import { NetworkHttp } from './NetworkHttp';
+import { QueryParams } from './QueryParams';
+import { CreateTransactionFromDTO } from './transaction/CreateTransactionFromDTO';
 
 /**
  * Account http repository.

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { ClientResponse } from 'http';
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {NetworkType} from '../model/blockchain/NetworkType';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { NetworkType } from '../model/blockchain/NetworkType';
 import { NodeInfo } from '../model/node/NodeInfo';
-import {Http} from './Http';
-import {NetworkRepository} from './NetworkRepository';
-import { NodeHttp } from './NodeHttp';
+import { Http } from './Http';
+import { NetworkRepository } from './NetworkRepository';
+import { NetworkRoutesApi, NetworkTypeNameEnum } from "nem2-sdk-openapi-typescript-node-client";
+import { NetworkTypeDTO } from "nem2-sdk-openapi-typescript-node-client/model/networkTypeDTO";
 
 /**
  * Network http repository.
@@ -31,9 +31,9 @@ import { NodeHttp } from './NodeHttp';
 export class NetworkHttp extends Http implements NetworkRepository {
     /**
      * @internal
-     * Nem2 Library account routes api
+     * Nem2 Library network routes api
      */
-    private nodeHttp: NodeHttp;
+    private networkRoutesApi: NetworkRoutesApi;
 
     /**
      * Constructor
@@ -41,7 +41,7 @@ export class NetworkHttp extends Http implements NetworkRepository {
      */
     constructor(url: string) {
         super();
-        this.nodeHttp = new NodeHttp(url);
+        this.networkRoutesApi = new NetworkRoutesApi(url);
 
     }
 
@@ -51,11 +51,22 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @return network type enum.
      */
     public getNetworkType(): Observable<NetworkType> {
-        return observableFrom(this.nodeHttp.getNodeInfo()).pipe(
-            map(((nodeInfo: NodeInfo) => {
-                return nodeInfo.networkIdentifier;
-            }),
-            catchError((error) =>  throwError(this.errorHandling(error)))),
+        return observableFrom(this.networkRoutesApi.getNetworkType()).pipe(
+            map((({body}) => {
+                    switch (body.name) {
+                        case NetworkTypeNameEnum.Mijin:
+                            return NetworkType.MIJIN;
+                        case NetworkTypeNameEnum.MijinTest:
+                            return NetworkType.MIJIN_TEST;
+                        case NetworkTypeNameEnum.Public:
+                            return NetworkType.MAIN_NET;
+                        case NetworkTypeNameEnum.PublicTest:
+                            return NetworkType.TEST_NET;
+                        default:
+                            throw new Error(`Unknown NetworkType with name ${body.name}`);
+                    }
+                }),
+                catchError((error) => throwError(this.errorHandling(error)))),
         );
     }
 }

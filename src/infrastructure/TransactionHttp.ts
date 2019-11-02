@@ -33,7 +33,7 @@ import { AnnounceTransactionInfoDTO,
          BlockInfoDTO, BlockRoutesApi,
          TransactionInfoDTO,
          TransactionRoutesApi,
-         TransactionStatusDTO } from './api';
+         TransactionStatusDTO } from 'nem2-sdk-openapi-typescript-node-client';
 import {Http} from './Http';
 import {CreateTransactionFromDTO} from './transaction/CreateTransactionFromDTO';
 import {TransactionRepository} from './TransactionRepository';

@@ -52,7 +52,7 @@
     "ts-mockito": "^2.2.7",
     "ts-node": "^5.0.1",
     "tslint": "^5.8.0",
-    "typescript": "^2.5.3",
+    "typescript": "^2.9.2",
     "typescript-require": "^0.2.9-1"
   },
   "dependencies": {
@@ -62,6 +62,7 @@
     "js-sha256": "^0.9.0",
     "js-sha3": "^0.8.0",
     "long": "^4.0.0",
+    "nem2-sdk-openapi-typescript-node-client": "0.7.2-0.1",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
     "ripemd160": "^2.0.2",

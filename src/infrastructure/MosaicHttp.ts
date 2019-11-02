@@ -25,7 +25,7 @@ import { MosaicNames } from '../model/mosaic/MosaicNames';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import { NamespaceName } from '../model/namespace/NamespaceName';
 import {UInt64} from '../model/UInt64';
-import { MosaicInfoDTO, MosaicNamesDTO, MosaicRoutesApi, MosaicsNamesDTO } from './api';
+import { MosaicInfoDTO, MosaicNamesDTO, MosaicRoutesApi, MosaicsNamesDTO } from 'nem2-sdk-openapi-typescript-node-client';
 import {Http} from './Http';
 import {MosaicRepository} from './MosaicRepository';
 import {NetworkHttp} from './NetworkHttp';

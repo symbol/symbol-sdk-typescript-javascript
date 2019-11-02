@@ -19,7 +19,7 @@ import {from as observableFrom, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {BlockchainStorageInfo} from '../model/blockchain/BlockchainStorageInfo';
 import { ServerInfo } from '../model/diagnostic/ServerInfo';
-import { DiagnosticRoutesApi, ServerDTO, StorageInfoDTO } from './api';
+import { DiagnosticRoutesApi, ServerDTO, StorageInfoDTO } from 'nem2-sdk-openapi-typescript-node-client';
 import {DiagnosticRepository} from './DiagnosticRepository';
 import {Http} from './Http';
 

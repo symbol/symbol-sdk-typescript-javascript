@@ -15,26 +15,31 @@
  */
 
 import { ClientResponse } from 'http';
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map, mergeMap} from 'rxjs/operators';
-import {PublicAccount} from '../model/account/PublicAccount';
-import {BlockInfo} from '../model/blockchain/BlockInfo';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { PublicAccount } from '../model/account/PublicAccount';
+import { BlockInfo } from '../model/blockchain/BlockInfo';
 import { MerklePathItem } from '../model/blockchain/MerklePathItem';
 import { MerkleProofInfo } from '../model/blockchain/MerkleProofInfo';
 import { Statement } from '../model/receipt/Statement';
-import {Transaction} from '../model/transaction/Transaction';
-import {UInt64} from '../model/UInt64';
-import { BlockInfoDTO,
-         BlockRoutesApi,
-         MerkleProofInfoDTO,
-         StatementsDTO,
-         TransactionInfoDTO } from './api';
-import {BlockRepository} from './BlockRepository';
-import {Http} from './Http';
+import { Transaction } from '../model/transaction/Transaction';
+import { UInt64 } from '../model/UInt64';
+import {
+    BlockInfoDTO,
+    BlockRoutesApi,
+    MerkleProofInfoDTO,
+    StatementsDTO,
+    TransactionInfoDTO
+} from 'nem2-sdk-openapi-typescript-node-client';
+import { BlockRepository } from './BlockRepository';
+import { Http } from './Http';
 import { NetworkHttp } from './NetworkHttp';
-import {QueryParams} from './QueryParams';
+import { QueryParams } from './QueryParams';
 import { CreateStatementFromDTO } from './receipt/CreateReceiptFromDTO';
-import {CreateTransactionFromDTO, extractBeneficiary} from './transaction/CreateTransactionFromDTO';
+import {
+    CreateTransactionFromDTO,
+    extractBeneficiary
+} from './transaction/CreateTransactionFromDTO';
 
 /**
  * Blocks returned limits:

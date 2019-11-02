@@ -25,7 +25,7 @@ import { MetadataType } from '../model/metadata/MetadataType';
 import {MosaicId} from '../model/mosaic/MosaicId';
 import {NamespaceId} from '../model/namespace/NamespaceId';
 import {UInt64} from '../model/UInt64';
-import { MetadataDTO, MetadataEntriesDTO, MetadataRoutesApi } from './api';
+import { MetadataDTO, MetadataEntriesDTO, MetadataRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import {Http} from './Http';
 import { MetadataRepository } from './MetadataRepository';
 import {NetworkHttp} from './NetworkHttp';
@@ -243,10 +243,10 @@ export class MetadataHttp extends Http implements MetadataRepository {
 
         switch (metadataEntry.metadataType.valueOf()) {
             case MetadataType.Mosaic:
-                targetId = new MosaicId(metadataEntry.targetId);
+                targetId = new MosaicId(metadataEntry.targetId as any);
                 break;
             case MetadataType.Namespace:
-                targetId = NamespaceId.createFromEncoded(metadataEntry.targetId);
+                targetId = NamespaceId.createFromEncoded(metadataEntry.targetId as any);
                 break;
             default:
                 targetId = undefined;

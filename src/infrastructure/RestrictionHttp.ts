@@ -29,7 +29,7 @@ import { MosaicGlobalRestrictionItem } from '../model/restriction/MosaicGlobalRe
 import { AccountRestrictionsInfoDTO,
          MosaicAddressRestrictionDTO,
          MosaicGlobalRestrictionDTO,
-         RestrictionRoutesApi } from './api';
+         RestrictionRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import {Http} from './Http';
 import { RestrictionRepository } from './RestrictionRepository';
 

@@ -29,7 +29,7 @@ import {NamespaceId} from '../model/namespace/NamespaceId';
 import {NamespaceInfo} from '../model/namespace/NamespaceInfo';
 import {NamespaceName} from '../model/namespace/NamespaceName';
 import {UInt64} from '../model/UInt64';
-import { NamespaceInfoDTO, NamespaceNameDTO, NamespaceRoutesApi } from './api';
+import { NamespaceInfoDTO, NamespaceNameDTO, NamespaceRoutesApi } from 'nem2-sdk-openapi-typescript-node-client';
 import {Http} from './Http';
 import {NamespaceRepository} from './NamespaceRepository';
 import {NetworkHttp} from './NetworkHttp';

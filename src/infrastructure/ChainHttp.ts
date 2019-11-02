@@ -15,15 +15,17 @@
  */
 
 import { ClientResponse } from 'http';
-import {from as observableFrom, Observable, throwError} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {BlockchainScore} from '../model/blockchain/BlockchainScore';
-import {UInt64} from '../model/UInt64';
-import { ChainRoutesApi,
-         HeightInfoDTO } from './api';
+import { from as observableFrom, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { BlockchainScore } from '../model/blockchain/BlockchainScore';
+import { UInt64 } from '../model/UInt64';
+import {
+    ChainRoutesApi,
+    ChainScoreDTO,
+    HeightInfoDTO
+} from 'nem2-sdk-openapi-typescript-node-client';
 import { ChainRepository } from './ChainRepository';
-import {Http} from './Http';
-import { ChainScoreDTO } from './model/chainScoreDTO';
+import { Http } from './Http';
 
 /**
  * Chian http repository.
@@ -52,11 +54,11 @@ export class ChainHttp extends Http implements ChainRepository {
      */
     public getBlockchainHeight(): Observable<UInt64> {
         return observableFrom(this.chainRoutesApi.getBlockchainHeight()).pipe(
-            map((response: { response: ClientResponse; body: HeightInfoDTO; } ) => {
+            map((response: { response: ClientResponse; body: HeightInfoDTO; }) => {
                 const heightDTO = response.body;
                 return UInt64.fromNumericString(heightDTO.height);
             }),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 
@@ -66,14 +68,14 @@ export class ChainHttp extends Http implements ChainRepository {
      */
     public getChainScore(): Observable<BlockchainScore> {
         return observableFrom(this.chainRoutesApi.getChainScore()).pipe(
-            map((response: { response: ClientResponse; body: ChainScoreDTO; } ) => {
+            map((response: { response: ClientResponse; body: ChainScoreDTO; }) => {
                 const blockchainScoreDTO = response.body;
                 return new BlockchainScore(
                     UInt64.fromNumericString(blockchainScoreDTO.scoreLow),
                     UInt64.fromNumericString(blockchainScoreDTO.scoreHigh),
                 );
             }),
-            catchError((error) =>  throwError(this.errorHandling(error))),
+            catchError((error) => throwError(this.errorHandling(error))),
         );
     }
 }
