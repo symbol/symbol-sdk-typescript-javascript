@@ -195,6 +195,17 @@ export class AggregateTransaction extends Transaction {
     }
 
     /**
+     * @description add cosignatures to current list
+     * @param {AggregateTransactionCosignature[]} transaction
+     * @returns {AggregateTransaction}
+     * @memberof AggregateTransaction
+     */
+    public addCosignatures(cosigs: AggregateTransactionCosignature[]): AggregateTransaction {
+        const cosignatures = this.cosignatures.concat(cosigs);
+        return Object.assign({__proto__: Object.getPrototypeOf(this)}, this, {cosignatures});
+    }
+
+    /**
      * @internal
      * Sign transaction with cosignatories creating a new SignedTransaction
      * @param initiatorAccount - Initiator account
