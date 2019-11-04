@@ -4,8 +4,10 @@ import {mapState} from "vuex"
 import {timeZoneListData} from "@/config/view/timeZone";
 import {languageConfig} from "@/config/view/language";
 import {AppInfo} from "@/core/model"
+import DebugConsole from '@/components/debug-console/DebugConsole.vue'
 
 @Component({
+    components: { DebugConsole },
     computed: {...mapState({app: 'app'})},
 })
 export class SettingNormalTs extends Vue {
@@ -13,6 +15,8 @@ export class SettingNormalTs extends Vue {
     languageList: any = languageConfig
     coin = 'USD'
     timeZoneListData = timeZoneListData
+    showDebugConsole: boolean = false
+
     coinList = [
         {
             value: 'USD',

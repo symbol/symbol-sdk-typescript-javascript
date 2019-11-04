@@ -2,7 +2,7 @@ import {Transaction, MultisigAccountInfo, SignedTransaction, CosignatureSignedTr
 import {AppNamespace} from './AppNamespace'
 import {AppMosaic} from './AppMosaic'
 import {FormattedTransaction} from './FormattedTransaction'
-import {ChainStatus, AppWallet, LockParams} from '.'
+import {ChainStatus, AppWallet, LockParams, Log} from '.'
 
 export interface AddressAndTransaction {
     address: string
@@ -75,7 +75,8 @@ export interface AppInfo {
     uiDisabledMessage: string,
     _ENABLE_TREZOR_: boolean,
     stagedTransaction: StagedTransaction,
-    nodeNetworkType: string
+    nodeNetworkType: string,
+    logs: Log[],
 }
 
 export interface StagedTransaction {

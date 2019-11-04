@@ -1,5 +1,5 @@
 <template>
-  <div class="setting_wrap secondary_page_animate">
+  <div class="setting_wrap">
     <div class="setting_container scroll radius">
       <div class="setting_head">
       </div>

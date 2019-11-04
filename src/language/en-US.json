@@ -742,5 +742,9 @@
     "User_aborted_transaction_confirmation": "User aborted transaction confirmation",
     "Expired": "Expired",
     "Transactions_to_cosign": "Transactions to cosign",
-    "Refresh_partial_transaction_of_address": "Refresh partial transactions of a given address"
+    "Refresh_partial_transaction_of_address": "Refresh partial transactions of a given address",
+    "hide_debug_console": "hide debug console",
+    "show_debug_console": "show debug console",
+    "Debug_console": "Debug console",
+    "Data": "Data"
 }

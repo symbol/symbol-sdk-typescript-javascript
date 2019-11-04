@@ -25,6 +25,7 @@ import {Message, networkConfig, defaultNetworkConfig} from "@/config"
 import {AppLock, localRead, localSave, createSubWalletByPath, getPath} from "@/core/utils"
 import {CreateWalletType} from "@/core/model"
 import {AppState} from './types'
+import {Log} from './Log'
 const {DEFAULT_LOCK_AMOUNT} = defaultNetworkConfig
 
 export class AppWallet {
@@ -376,6 +377,8 @@ export class AppWallet {
 
     announceCosignature(signedTransaction: CosignatureSignedTransaction, node: string, that: any): void {
         const message = that.$t(Message.SUCCESS)
+        new Log('announceCosignature', signedTransaction).create(that.$store)
+
         new TransactionHttp(node).announceAggregateBondedCosignature(signedTransaction).subscribe(
             _ => {
               that.$store.commit('POP_TRANSACTION_TO_COSIGN_BY_HASH', {
@@ -384,7 +387,10 @@ export class AppWallet {
               })
               that.$Notice.success({title: message})
             },
-            error => console.error('announceNormal -> error', error),
+            (error) => {
+                new Log('announceNormal -> error', error).create(that.$store)
+                console.error('announceNormal -> error', error)
+            },
         )
     }
 
@@ -400,11 +406,14 @@ export class AppWallet {
         const account = this.getAccount(password)
         const signature = account.sign(transactionList[0], generationHash)
         const message = that.$t(Message.SUCCESS)
-        console.log(transactionList)
-        console.log(signature)
+        new Log('signAndAnnounceNormal', signature).create(that.$store)
+
         new TransactionHttp(node).announce(signature).subscribe(
             _ => that.$Notice.success({title: message}),
-            error => console.error('signAndAnnounceNormal -> error', error),
+            (error) => {
+                new Log('signAndAnnounceNormal -> error', error).create(that.$store)
+                console.error('signAndAnnounceNormal -> error', error)
+            } 
         )
     }
 
@@ -412,6 +421,7 @@ export class AppWallet {
         const transactionHttp = new TransactionHttp(node);
         const listener = new Listener(node.replace('http', 'ws'), WebSocket)
         const message = that.$t(Message.SUCCESS)
+        new Log('signedTransaction', { signedTransaction, signedLock }).create(that.$store)
 
         listener.open().then(() => {
             transactionHttp
@@ -432,6 +442,7 @@ export class AppWallet {
                     error => {throw new Error(error)},
                 )
         }).catch((error) => {
+            new Log('announceBonded -> error', { signedTransaction, signedLock }).create(that.$store)
             console.error('announceBonded -> error', error)
         })
     }

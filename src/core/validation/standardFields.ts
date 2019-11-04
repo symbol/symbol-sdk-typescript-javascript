@@ -71,7 +71,7 @@ export const standardFields = {
     },
     hint: {
         default: '',
-        label: 'Hint',
+        label: 'hint',
         name: 'cipherHint',
         type: 'text',
         hint: ['HINT_cipher_hint1', 'HINT_new_password2'],

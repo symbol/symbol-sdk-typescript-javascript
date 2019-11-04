@@ -1,6 +1,5 @@
-import {AppInfo, ChainStatus, LockParams, StagedTransaction} from '@/core/model'
+import {AppInfo, ChainStatus, LockParams, StagedTransaction, Log} from '@/core/model'
 import {localRead} from "@/core/utils";
-import {Transaction} from 'nem2-sdk';
 import {MutationTree} from 'vuex';
 
 const state: AppInfo = {
@@ -23,7 +22,8 @@ const state: AppInfo = {
         lockParams: LockParams.default(),
         transactionToSign: null,
     },
-    nodeNetworkType: ''
+    nodeNetworkType: '',
+    logs: [],
 }
 
 const mutations: MutationTree<AppInfo> = {
@@ -74,6 +74,9 @@ const mutations: MutationTree<AppInfo> = {
     },
     SET_NODE_NETWORK_TYPE(state: AppInfo, networkType: any) {
         state.nodeNetworkType = networkType
+    },
+    ADD_LOG(state: AppInfo, log: Log) {
+        state.logs.unshift(log)
     },
 }
 

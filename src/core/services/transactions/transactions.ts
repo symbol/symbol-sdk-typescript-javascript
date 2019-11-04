@@ -43,7 +43,6 @@ export const setTransactionList = (address: string, store: Store<AppState>): voi
 
     accountHttp.unconfirmedTransactions(_address, new QueryParams(100)).subscribe(
         (transactionList: Transaction[]) => {
-        console.log("TCL: transactionList", transactionList)
             const txList = transactionFormat(transactionList, store)
                 .map(x => ({...x, isTxUnconfirmed: true}))
 
