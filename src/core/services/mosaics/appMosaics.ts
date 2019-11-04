@@ -1,16 +1,24 @@
-import {MosaicAlias, MosaicId, MosaicHttp, Namespace, NamespaceId, Transaction, AliasType, AddressAlias} from 'nem2-sdk'
+import {
+    MosaicAlias,
+    MosaicId,
+    MosaicHttp,
+    Namespace,
+    Transaction,
+    AliasType,
+    AddressAlias,
+    EmptyAlias,
+} from 'nem2-sdk'
 import {
     FormattedTransaction,
     FormattedAggregateComplete,
     AppNamespace,
     AppState,
-    MosaicNamespaceStatusType
+    MosaicNamespaceStatusType,
 } from '@/core/model'
 import {flatMap, map, toArray} from 'rxjs/operators'
 import {AppMosaic} from '@/core/model'
 import {Store} from 'vuex'
 import {flattenArrayOfStrings} from '@/core/utils'
-import {EmptyAlias} from 'nem2-sdk/dist/src/model/namespace/EmptyAlias'
 
 export const AppMosaics = () => ({
     store: null,

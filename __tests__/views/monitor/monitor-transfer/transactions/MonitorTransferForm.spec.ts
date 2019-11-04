@@ -99,22 +99,22 @@ describe('MonitorDashBoard', () => {
             currentAmount: 0
         })
         wrapper.vm.submit()
-        await flushPromises();
+        await flushPromises()
         const transferTransaction = wrapper.vm.transactionList[0]
-        expect(transferTransaction instanceof TransferTransaction).toBe(true)
+        expect(transferTransaction).toBeInstanceOf(TransferTransaction)
         expect(wrapper.vm.isSelectedAccountMultisig).toBe(false)
         expect(transferTransaction.type).toBe(TransactionType.TRANSFER)
         expect(transferTransaction.networkType).toBe(NetworkType.MIJIN_TEST)
         expect(transferTransaction.version).toBe(1)
-        expect(transferTransaction.deadline instanceof Deadline).toBe(true)
-        expect(transferTransaction.maxFee instanceof UInt64).toBe(true)
-        expect(transferTransaction.recipientAddress instanceof Address).toBe(true)
+        expect(transferTransaction.deadline).toBeInstanceOf(Deadline)
+        expect(transferTransaction.maxFee).toBeInstanceOf(UInt64)
+        expect(transferTransaction.recipientAddress).toBeInstanceOf(Address)
         transferTransaction.mosaics.forEach(item => {
-            expect(item instanceof Mosaic).toBe(true)
+            expect(item).toBeInstanceOf(Mosaic)
         })
     })
 
-    it('should not create a aggregate complete transaction object while choose 1-of-1 multisig', async () => {
+    it('should create a aggregate complete transaction object while choose 1-of-1 multisig', async () => {
         wrapper.setData({
             formItems: {
                 recipient: CosignAccount.address.toDTO().address,
@@ -129,31 +129,31 @@ describe('MonitorDashBoard', () => {
         })
         store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', MultisigAccount.publicKey)
         wrapper.vm.submit()
-        await flushPromises();
+        await flushPromises()
 
         const aggregateTransaction = wrapper.vm.transactionList[0]
         const innerTransferTransaction = aggregateTransaction.innerTransactions[0]
 
         expect(wrapper.vm.isSelectedAccountMultisig).toBe(true)
-        expect(aggregateTransaction instanceof AggregateTransaction).toBe(true)
+        expect(aggregateTransaction).toBeInstanceOf(AggregateTransaction)
         expect(aggregateTransaction.type).toBe(TransactionType.AGGREGATE_COMPLETE)
         expect(aggregateTransaction.networkType).toBe(NetworkType.MIJIN_TEST)
         expect(aggregateTransaction.version).toBe(1)
-        expect(aggregateTransaction.deadline instanceof Deadline).toBe(true)
-        expect(aggregateTransaction.maxFee instanceof UInt64).toBe(true)
+        expect(aggregateTransaction.deadline).toBeInstanceOf(Deadline)
+        expect(aggregateTransaction.maxFee).toBeInstanceOf(UInt64)
 
         expect(innerTransferTransaction.type).toBe(TransactionType.TRANSFER)
         expect(innerTransferTransaction.networkType).toBe(NetworkType.MIJIN_TEST)
         expect(innerTransferTransaction.version).toBe(1)
-        expect(innerTransferTransaction.deadline instanceof Deadline).toBe(true)
-        expect(innerTransferTransaction.maxFee instanceof UInt64).toBe(true)
-        expect(innerTransferTransaction.recipientAddress instanceof Address).toBe(true)
+        expect(innerTransferTransaction.deadline).toBeInstanceOf(Deadline)
+        expect(innerTransferTransaction.maxFee).toBeInstanceOf(UInt64)
+        expect(innerTransferTransaction.recipientAddress).toBeInstanceOf(Address)
         innerTransferTransaction.mosaics.forEach(item => {
-            expect(item instanceof Mosaic).toBe(true)
+            expect(item).toBeInstanceOf(Mosaic)
         })
     })
 
-    it('should not create a aggregate bonded transaction object while choose 2-of-2 multisig', async() => {
+    it('should create a aggregate bonded transaction object while choose 2-of-2 multisig', async () => {
         wrapper.setData({
             formItems: {
                 recipient: CosignAccount.address.toDTO().address,
@@ -169,26 +169,26 @@ describe('MonitorDashBoard', () => {
         })
         store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', Multisig2Account.publicKey)
         wrapper.vm.submit()
-        await flushPromises();
+        await flushPromises()
 
         const aggregateTransaction = wrapper.vm.transactionList[0]
         const innerTransferTransaction = aggregateTransaction.innerTransactions[0]
         expect(wrapper.vm.isSelectedAccountMultisig).toBe(true)
-        expect(aggregateTransaction instanceof AggregateTransaction).toBe(true)
+        expect(aggregateTransaction).toBeInstanceOf(AggregateTransaction)
         expect(aggregateTransaction.type).toBe(TransactionType.AGGREGATE_BONDED)
         expect(aggregateTransaction.networkType).toBe(NetworkType.MIJIN_TEST)
         expect(aggregateTransaction.version).toBe(1)
-        expect(aggregateTransaction.deadline instanceof Deadline).toBe(true)
-        expect(aggregateTransaction.maxFee instanceof UInt64).toBe(true)
+        expect(aggregateTransaction.deadline).toBeInstanceOf(Deadline)
+        expect(aggregateTransaction.maxFee).toBeInstanceOf(UInt64)
 
         expect(innerTransferTransaction.type).toBe(TransactionType.TRANSFER)
         expect(innerTransferTransaction.networkType).toBe(NetworkType.MIJIN_TEST)
         expect(innerTransferTransaction.version).toBe(1)
-        expect(innerTransferTransaction.deadline instanceof Deadline).toBe(true)
-        expect(innerTransferTransaction.maxFee instanceof UInt64).toBe(true)
-        expect(innerTransferTransaction.recipientAddress instanceof Address).toBe(true)
+        expect(innerTransferTransaction.deadline).toBeInstanceOf(Deadline)
+        expect(innerTransferTransaction.maxFee).toBeInstanceOf(UInt64)
+        expect(innerTransferTransaction.recipientAddress).toBeInstanceOf(Address)
         innerTransferTransaction.mosaics.forEach(item => {
-            expect(item instanceof Mosaic).toBe(true)
+            expect(item).toBeInstanceOf(Mosaic)
         })
     })
 
@@ -205,7 +205,7 @@ describe('MonitorDashBoard', () => {
         })
 
         wrapper.vm.submit()
-        await flushPromises();
+        await flushPromises()
         const transferTransaction = wrapper.vm.transactionList[0]
         expect(transferTransaction).toBeUndefined()
     })
@@ -225,9 +225,9 @@ describe('MonitorDashBoard', () => {
             currentAmount: 0
         })
         wrapper.vm.submit()
-        await flushPromises();
+        await flushPromises()
         const transferTransaction = wrapper.vm.transactionList[0]
-        expect(transferTransaction instanceof TransferTransaction).toBe(true)
+        expect(transferTransaction).toBeInstanceOf(TransferTransaction)
     })
 
     it('should not create a transaction object while mosaic list is null', async () => {
@@ -245,7 +245,7 @@ describe('MonitorDashBoard', () => {
             currentAmount: 0
         })
         wrapper.vm.submit()
-        await flushPromises();
+        await flushPromises()
         const transferTransaction = wrapper.vm.transactionList[0]
         expect(transferTransaction).toBeUndefined()
     })
@@ -266,7 +266,7 @@ describe('MonitorDashBoard', () => {
         })
 
         wrapper.vm.submit()
-        await flushPromises();
+        await flushPromises()
         wrapper.vm.addMosaic()
 
         const transferTransaction = wrapper.vm.transactionList[0]
@@ -289,9 +289,9 @@ describe('MonitorDashBoard', () => {
             currentAmount: 0
         })
         wrapper.vm.submit()
-        await flushPromises();
+        await flushPromises()
         const transferTransaction = wrapper.vm.transactionList[0]
-        expect(transferTransaction instanceof TransferTransaction).toBe(true)
+        expect(transferTransaction).toBeInstanceOf(TransferTransaction)
     })
 
     it('should not create a transaction object while message length > 1023', async () => {
@@ -313,7 +313,7 @@ describe('MonitorDashBoard', () => {
             currentAmount: 0
         })
         wrapper.vm.submit()
-        await flushPromises();
+        await flushPromises()
         const transferTransaction = wrapper.vm.transactionList[0]
         expect(transferTransaction).toBeUndefined()
     })
@@ -337,7 +337,7 @@ describe('MonitorDashBoard', () => {
             currentAmount: 0
         })
         wrapper.vm.submit()
-        await flushPromises();
+        await flushPromises()
         const transferTransaction = wrapper.vm.transactionList[0]
         expect(transferTransaction).toBeUndefined()
     })

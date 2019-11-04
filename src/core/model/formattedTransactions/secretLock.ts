@@ -1,6 +1,6 @@
 import {FormattedTransaction, AppState} from '@/core/model'
 import {getRelativeMosaicAmount} from '@/core/utils'
-import {SecretLockTransaction} from 'nem2-sdk'
+import {SecretLockTransaction, NamespaceId, Address} from 'nem2-sdk'
 import {Store} from 'vuex';
 
 export class FormattedSecretLock extends FormattedTransaction {
@@ -21,7 +21,14 @@ export class FormattedSecretLock extends FormattedTransaction {
                 'duration_blocks': tx.duration.compact().toLocaleString(),
                 hashType: tx.hashType,
                 secret: tx.secret,
-                Address: tx.recipientAddress.pretty(),
+                aims: this.getRecipient(),
             }
+    }
+
+    getRecipient(): string | NamespaceId {
+        const rawTx: any = this.rawTx
+        const recipientAddress: NamespaceId | Address = rawTx.recipientAddress
+        if (recipientAddress instanceof NamespaceId) return recipientAddress
+        return recipientAddress.pretty()
     }
 }

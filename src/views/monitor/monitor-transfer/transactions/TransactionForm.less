@@ -6,7 +6,11 @@
     line-height: 50px;
     color: #999;
   }
-  .no-border {border: unset !important; font-size: 16px;}
+
+  .no-border {
+    border: unset !important;
+    font-size: 16px;
+  }
 
   .title {
     display: inline-block;
@@ -143,7 +147,8 @@
 
   .asset {
     .title {
-      margin-bottom: 15px;
+      position: relative;
+      bottom: 15px;
     }
 
     .type {
@@ -312,18 +317,18 @@
       padding-left: 50px;
     }
 
-  .mosaic_amount {
-    width: 150px;
-  }
+    .mosaic_amount {
+      width: 150px;
+    }
 
-  .icon_delete {
-    display: inline-block;
-    background-image: url("../../../../common/img/wallet/wallet-detail/walletDetailsdelete.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-    width: 15px;
-    height: 15px;
-  }
+    .icon_delete {
+      display: inline-block;
+      background-image: url("../../../../common/img/wallet/wallet-detail/walletDetailsdelete.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 15px;
+      height: 15px;
+    }
 
     .icon_delete:hover {
       background-image: url("../../../../common/img/wallet/wallet-detail/walletDetailsdeleteHover.png");

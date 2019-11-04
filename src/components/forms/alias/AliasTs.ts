@@ -1,6 +1,5 @@
 import {Message, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config/index.ts"
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {EmptyAlias} from "nem2-sdk/dist/src/model/namespace/EmptyAlias"
 import {
     Address,
     AliasAction,
@@ -11,10 +10,10 @@ import {
     AddressAliasTransaction,
     Deadline,
     UInt64,
-    MosaicAliasTransaction
+    MosaicAliasTransaction,
+    EmptyAlias
 } from "nem2-sdk"
 import {mapState} from "vuex"
-import {networkConfig} from "@/config/index"
 import {cloneData, getAbsoluteMosaicAmount} from "@/core/utils"
 import {StoreAccount, AppInfo, AppWallet, AppNamespace, DefaultFee, MosaicNamespaceStatusType} from "@/core/model"
 import {AppMosaics} from '@/core/services'

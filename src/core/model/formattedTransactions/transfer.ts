@@ -38,7 +38,6 @@ export class FormattedTransfer extends FormattedTransaction {
     }
 
     getInfoFirst(): string | NamespaceId {
-        const rawTx: any = this.rawTx
         if (!this.txHeader.isReceipt) return this.getRecipient()
         if (!this.rawTx.signer) return null
         return this.rawTx.signer.address.pretty()

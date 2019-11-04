@@ -1,5 +1,4 @@
-import {NamespaceId, NamespaceInfo, NamespaceName} from 'nem2-sdk'
-import {EmptyAlias} from 'nem2-sdk/dist/src/model/namespace/EmptyAlias'
+import {NamespaceId, NamespaceInfo, NamespaceName, EmptyAlias} from 'nem2-sdk'
 import {networkConfig} from '@/config'
 import {durationToRelativeTime} from '@/core/utils'
 import { NamespaceExpirationInfo } from './types'

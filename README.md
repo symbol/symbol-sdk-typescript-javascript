@@ -1,57 +1,52 @@
-## NEM2-Desktop-Wallet
+## nem2-desktop-wallet
 
-This program is a desktop wallet application based on NEM2-Catapult. It is developed with the TypeScript-SDK, VueJS, Electron and can be easily packaged into desktop applications for Windows and Mac.   
-:warning: **This program is currently in development, this program is now only available for the NEM2 test network. It cannot be used for others. Pay attention to asset security.**
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build Status](https://travis-ci.org/nemfoundation/nem2-desktop-wallet.svg?branch=master)](https://travis-ci.org/nemfoundation/nem2-desktop-wallet)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/dd08b1bf-133e-4a77-9fe5-d65d46316e9d/deploy-status)](https://app.netlify.com/sites/nem2-desktop-wallet/deploys)
 
-## Contributing
-This project is developed and maintained by the NEM Foundation.
+Cross-platform client for Catapult.
 
-Contributions that are hotfixes are to be done on the `master` branch.
+[Download NEM2 Desktop Wallet](https://github.com/nemfoundation/nem2-desktop-wallet/branches) for Mac, Linux, or Windows.
 
-**For other contributions, please use the `develop` branch**
+:warning: **This program is currently in development and only available for the Catapult test network. Do not use it for other purposes.**
+npm
+## Requirements
 
-## Dependencies
-**NEM2-Catapult**
-- catapult-server: [catapult-server-v0.8.0.3](https://github.com/nemtech/catapult-server/releases/tag/v0.8.0.3)
-- nem2-sdk-typescript-javascript: [nem2-sdk-typescript-javascript-v0.14.3](https://github.com/nemtech/nem2-sdk-typescript-javascript)
-- nem2-hd-wallets: [nem2-hd-wallets-v0.4.2](https://github.com/nemfoundation/nem2-hd-wallets)
-- nem2-qr-library: [nem2-qr-library-v0.4.1](https://github.com/nemfoundation/nem2-qr-library)
-- nem2-desktop-wallet-tools: [nem2-desktop-wallet-tools]( https://github.com/NemTechCN/NEM2-Desk-Wallet-Tools)
-
-## Environment Dev
-**NodeJS**
-- NodeJS 8.9.X
-- NodeJS 9.X.X
+### NodeJS
 - NodeJS 10.X.X
+- NodeJS 12.X.X
 
-**VueJs**
-- Vue 2.6.10
-
-**Electron**
-- Electron 5.0.6
 
 ## Installation
-1. Install the dependencies
+
+[Download the NEM2 desktop wallet](https://github.com/nemfoundation/nem2-desktop-wallet/releases) for Mac, Linux, and Windows.
+
+1. Clone the project.
+
+```
+git clone https://github.com/nemfoundation/nem2-explorer.git
+```
+
+2. Install the dependencies.
 ```
 npm install 
 ```
-2. Start the development server
+
+3. Start the development server.
 ```
 npm run dev 
 ```
-3. Generate a production build
-```
-npm run build 
-```
-
-## Usage
-Feel free to get the full application reference list , check [the app reference](https://github.com/nemfoundation/nem2-desktop-wallet/releases).
 
 ## Getting help
-Use the following available resources to get help:
 
-* NEM2 Developer Center: [nemtech.github.io](https://nemtech.github.io/)
-* If you found a bug, open a new issue
+We use GitHub issues for tracking bugs and have limited bandwidth to address them.
+Please, use the following available resources to get help:
+- [NEM Developer Center][docs]
+- If you found a bug, [open a new issue][issues]
+
+## Contributing
+
+This project is developed and maintained by NEM Foundation. Contributions are welcome and appreciated. You can find [catapult-explorer on GitHub][self]; Feel free to start an issue or create a pull request. Check [CONTRIBUTING](CONTRIBUTING.md) before start.
 
 ## License
 Copyright (c) 2018-2019 NEM Licensed under the Apache License 2.0
