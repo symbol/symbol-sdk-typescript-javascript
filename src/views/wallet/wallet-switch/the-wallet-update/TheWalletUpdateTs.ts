@@ -45,7 +45,7 @@ export class TheWalletUpdateTs extends Vue {
         this.show = this.showUpdateDialog
     }
 
-    created() {
+    mounted() {
         this.wallet.name = this.walletToUpdate.name
     }
 }

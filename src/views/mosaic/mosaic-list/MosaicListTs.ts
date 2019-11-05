@@ -135,12 +135,13 @@ export class MosaicListTs extends Vue {
             this.mosaicRefreshTimestamp = currentTimestamp
             this.$Notice.destroy()
             this.$Notice.success({title: '' + this.$t(Message.SUCCESS)})
-        }catch (e) {
+        } catch (e) {
             console.error("App -> refresh mosaic list-> error", e)
         }
 
     }
 
+    // @TODO: Watch and mounted should not be necessary
     @Watch('mosaics', {deep: true})
     onMosaicChange() {
         this.intiMosaics()

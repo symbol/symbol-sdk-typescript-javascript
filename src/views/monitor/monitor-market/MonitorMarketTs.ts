@@ -180,6 +180,7 @@ export class MonitorMarketTs extends Vue {
     }
 
     async mounted() {
+        // @TODO: this is impacting the performance
         this.getMarketPrice()
         this.getMarketOpenPrice()
         this.getRecentTransactionList()

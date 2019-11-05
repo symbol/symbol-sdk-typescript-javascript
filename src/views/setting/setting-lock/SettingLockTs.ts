@@ -76,7 +76,7 @@ export class SettingLockTs extends Vue {
             })
     }
 
-    created() {
+    mounted() {
         this.resetFields()
     }
 }

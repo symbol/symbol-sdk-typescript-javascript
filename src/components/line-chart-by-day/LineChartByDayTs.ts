@@ -8,6 +8,8 @@ import {localSave, localRead, isRefreshData, addZero, formatDate} from '@/core/u
 export class LineChartByDayTs extends Vue {
     dom: any = {}
     spinShow = true
+    baseTimeout = 1000
+    timeoutFactor = 1
     option = {
         rate: 1,
         legend: {
@@ -381,16 +383,39 @@ export class LineChartByDayTs extends Vue {
         this.refresh()
     }
 
+    setData() {
+        try {
+            const fromStorage = localRead('marketPriceDataByDayObject')
+            if (fromStorage === '') {
+                this.btcDataList = []
+                this.xemDataList = []
+                return    
+            }
+
+            const parsed = JSON.parse(fromStorage)
+            const btcDataList = parsed.btc && parsed.btc.dataList ? parsed.btc.dataList : []
+            const xemDataList = parsed.xem && parsed.xem.dataList ? parsed.xem.dataList : []
+        } catch(error) {
+            this.btcDataList = []
+            this.xemDataList = []
+        }
+    }
+
     async refreshData() {
         if (isRefreshData('marketPriceDataByDayObject', 1000 * 60 * 60, new Date().getMinutes())) {
-            await this.getChartData().catch(async (e) => {
-                console.log(e)
+            try {
                 await this.getChartData()
-            })
-            return
+                this.setData()
+            } catch (error) {
+                this.baseTimeout = this.baseTimeout * 2
+
+                setTimeout(() => {
+                    this.refreshData()
+                }, this.timeoutFactor * this.baseTimeout)
+
+                console.error("refreshData -> error", error)
+            }
         }
-        this.btcDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).btc.dataList
-        this.xemDataList = (JSON.parse(localRead('marketPriceDataByDayObject'))).xem.dataList
     }
 
     mouseoutLine() {
@@ -406,10 +431,8 @@ export class LineChartByDayTs extends Vue {
         }
     }
 
-    async mounted() {
-        await this.refreshData()
+    mounted() {
+        this.refreshData()
         this.refresh()
     }
-
-
 }

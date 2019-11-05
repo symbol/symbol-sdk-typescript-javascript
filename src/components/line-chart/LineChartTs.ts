@@ -8,7 +8,8 @@ import {localSave, localRead, isRefreshData, formatDate} from '@/core/utils'
 export class LineChartTs extends Vue {
     xemMin = 0
     dom: any = {}
-
+    baseTimeout = 1000
+    timeoutFactor = 1
     spinShow = true
     xemDataList = []
     btcDataList = []
@@ -373,17 +374,39 @@ export class LineChartTs extends Vue {
         this.refresh()
     }
 
+    setData() {
+        try {
+            const fromStorage = localRead('marketPriceDataObject')
+            if (fromStorage === '') {
+                this.btcDataList = []
+                this.xemDataList = []
+                return    
+            }
+
+            const parsed = JSON.parse(fromStorage)
+            const btcDataList = parsed.btc && parsed.btc.dataList ? parsed.btc.dataList : []
+            const xemDataList = parsed.xem && parsed.xem.dataList ? parsed.xem.dataList : []
+        } catch(error) {
+            this.btcDataList = []
+            this.xemDataList = []
+        }
+    }
+
     async refreshData() {
         if (isRefreshData('marketPriceDataObject', 1000 * 60 * 60, new Date().getMinutes())) {
-            await this.getChartData().catch(async (e) => {
+            try {
                 await this.getChartData()
-            })
-            return
+                this.setData()
+            } catch (error) {
+                this.baseTimeout = this.baseTimeout * 2
+
+                setTimeout(() => {
+                    this.refreshData()
+                }, this.timeoutFactor * this.baseTimeout)
+
+                console.error("refreshData -> error", error)
+            }
         }
-        const btcData = (JSON.parse(localRead('marketPriceDataObject'))).btc
-        const xemData = (JSON.parse(localRead('marketPriceDataObject'))).xem
-        this.btcDataList = btcData ? btcData.dataList : []
-        this.xemDataList = xemData ? xemData.dataList : []
     }
 
     mouseoutLine() {
@@ -400,8 +423,8 @@ export class LineChartTs extends Vue {
         }
     }
 
-    async mounted() {
-        await this.refreshData()
-        this.refresh()
+    mounted() {
+        this.setData()
+        this.refreshData()
     }
 }

@@ -165,10 +165,6 @@
                 waitForIt()
             }
         }
-
-        mounted() {
-            this.getMultisigInfo()
-        }
     }
 </script>
 <style scoped lang="less">

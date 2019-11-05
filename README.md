@@ -19,8 +19,6 @@ npm
 
 ## Installation
 
-[Download the NEM2 desktop wallet](https://github.com/nemfoundation/nem2-desktop-wallet/releases) for Mac, Linux, and Windows.
-
 1. Clone the project.
 
 ```
@@ -50,3 +48,7 @@ This project is developed and maintained by NEM Foundation. Contributions are we
 
 ## License
 Copyright (c) 2018-2019 NEM Licensed under the Apache License 2.0
+
+[self]: https://github.com/nemfoundation/nem2-desktop-wallet
+[docs]: https://nemtech.github.io
+[issues]: https://github.com/nemfoundation/nem2-desktop-wallet/issues
