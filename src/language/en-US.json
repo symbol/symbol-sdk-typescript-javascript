@@ -747,5 +747,5 @@
     "show_debug_console": "Show debug console",
     "Debug_console": "Debug console",
     "Data": "Data",
-    "divisibility_can_not_more_than_6": "Divisibility can not more than 6"
+    "divisibility_can_not_more_than_6": "Divisibility can not be more than 6."
 }

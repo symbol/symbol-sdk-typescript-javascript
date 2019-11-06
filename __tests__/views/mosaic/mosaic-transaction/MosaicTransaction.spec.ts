@@ -1,4 +1,4 @@
-import {shallowMount, config, mount, createLocalVue} from '@vue/test-utils'
+import {shallowMount, config, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'iview'
 import Vuex from 'vuex'
@@ -17,7 +17,6 @@ import {
     TransactionType,
 } from "nem2-sdk"
 import {
-    CosignAccount,
     mosaicsLoading,
     multisigAccountInfo,
     mosaics,

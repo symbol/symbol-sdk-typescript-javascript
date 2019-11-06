@@ -1,4 +1,4 @@
-import {shallowMount, config, mount, createLocalVue} from '@vue/test-utils'
+import {shallowMount, config, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import iView from 'iview'
 import Vuex from 'vuex'
@@ -19,7 +19,7 @@ import {
     NetworkType,
     TransactionType,
     TransferTransaction,
-    UInt64, Account
+    UInt64
 } from "nem2-sdk"
 import {
     CosignAccount,
