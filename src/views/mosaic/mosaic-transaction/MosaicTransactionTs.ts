@@ -298,6 +298,12 @@ export class MosaicTransactionTs extends Vue {
             })
             return false
         }
+        if (divisibility > 6) {
+            this.$Notice.error({
+                title: this.$t(Message.DIVISIBILITY_MORE_THAN_6_ERROR) + ''
+            })
+            return false
+        }
         if (!Number(duration) || duration <= 0) {
             this.$Notice.error({
                 title: this.$t(Message.DURATION_LESS_THAN_0_ERROR) + ''

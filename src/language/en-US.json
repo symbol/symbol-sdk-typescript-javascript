@@ -743,8 +743,9 @@
     "Expired": "Expired",
     "Transactions_to_cosign": "Transactions to cosign",
     "Refresh_partial_transaction_of_address": "Refresh partial transactions of a given address",
-    "hide_debug_console": "hide debug console",
-    "show_debug_console": "show debug console",
+    "hide_debug_console": "Hide debug console",
+    "show_debug_console": "Show debug console",
     "Debug_console": "Debug console",
-    "Data": "Data"
+    "Data": "Data",
+    "divisibility_can_not_more_than_6": "Divisibility can not more than 6"
 }

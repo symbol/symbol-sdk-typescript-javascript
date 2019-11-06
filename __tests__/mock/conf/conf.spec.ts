@@ -1,5 +1,4 @@
 import {Account, NetworkType, Password, SimpleWallet} from 'nem2-sdk'
-import {defaultNetworkConfig, nodeListConfig} from "@/config"
 
 // cosigner
 export const CosignAccount = Account.createFromPrivateKey(
@@ -71,6 +70,24 @@ export const CosignWallet = {
     simpleWallet: SimpleWallet.createFromPrivateKey(
         'wallet-privateKey',
         new Password('123123123'),
+        MultisigAccount.privateKey,
+        MultisigAccount.networkType
+    )
+}
+
+export const MultisigWallet = {
+    active: true,
+    address: CosignAccount.address.toDTO().address,
+    balance: 1000,
+    name: "wallet-privateKey",
+    networkType: CosignAccount.address.toDTO().networkType,
+    publicKey: CosignAccount.publicKey,
+    signAndAnnounceBonded: function () {
+    },
+    sourceType: "Pk",
+    simpleWallet: SimpleWallet.createFromPrivateKey(
+        'wallet-privateKey',
+        new Password('123123123'),
         CosignAccount.privateKey,
         CosignAccount.networkType
     )
@@ -119,7 +136,7 @@ export const multisigAccountInfo = {
         cosignatories: [{
             address: CosignAccount.address,
             publicKey: CosignAccount.publicKey
-        },{
+        }, {
             address: Cosign2Account.address,
             publicKey: Cosign2Account.publicKey
         }
@@ -128,4 +145,12 @@ export const multisigAccountInfo = {
         minRemoval: 2,
         multisigAccounts: [],
     }
+}
+
+
+export const networkCurrency = {
+    divisibility: 6,
+    hex: "308F144790CD7BC4",
+    name: "nem.xem",
+    ticker: "XEM"
 }

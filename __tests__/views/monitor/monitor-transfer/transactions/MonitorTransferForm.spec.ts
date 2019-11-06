@@ -19,7 +19,7 @@ import {
     NetworkType,
     TransactionType,
     TransferTransaction,
-    UInt64
+    UInt64, Account
 } from "nem2-sdk"
 import {
     CosignAccount,
@@ -31,6 +31,7 @@ import {
     CosignWallet
     // @ts-ignore
 } from "@@/mock/conf/conf.spec"
+import {AppWallet} from "@/core/model"
 // @ts-ignore
 const localVue = createLocalVue()
 const router = new VueRouter()
@@ -95,8 +96,6 @@ describe('MonitorDashBoard', () => {
                 mosaicTransferList: [new Mosaic(new MosaicId('308F144790CD7BC4'), UInt64.fromUint(0))],
                 isEncrypted: false,
             },
-            currentMosaic: '308F144790CD7BC4',
-            currentAmount: 0
         })
         wrapper.vm.submit()
         await flushPromises()
@@ -114,7 +113,7 @@ describe('MonitorDashBoard', () => {
         })
     })
 
-    it('should create a aggregate complete transaction object while choose 1-of-1 multisig', async () => {
+    it('should create an aggregate complete transaction object while choose 1-of-1 multisig', async () => {
         wrapper.setData({
             formItems: {
                 recipient: CosignAccount.address.toDTO().address,
@@ -124,8 +123,6 @@ describe('MonitorDashBoard', () => {
                 mosaicTransferList: [new Mosaic(new MosaicId('308F144790CD7BC4'), UInt64.fromUint(0))],
                 isEncrypted: false
             },
-            currentMosaic: '308F144790CD7BC4',
-            currentAmount: 0
         })
         store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', MultisigAccount.publicKey)
         wrapper.vm.submit()
@@ -153,7 +150,7 @@ describe('MonitorDashBoard', () => {
         })
     })
 
-    it('should create a aggregate bonded transaction object while choose 2-of-2 multisig', async () => {
+    it('should create an aggregate bonded transaction object while choose 2-of-2 multisig', async () => {
         wrapper.setData({
             formItems: {
                 recipient: CosignAccount.address.toDTO().address,
@@ -163,9 +160,6 @@ describe('MonitorDashBoard', () => {
                 mosaicTransferList: [new Mosaic(new MosaicId('308F144790CD7BC4'), UInt64.fromUint(0))],
                 isEncrypted: false
             },
-            //  remove after fix transfer asset
-            currentMosaic: '308F144790CD7BC4',
-            currentAmount: 0
         })
         store.commit('SET_ACTIVE_MULTISIG_ACCOUNT', Multisig2Account.publicKey)
         wrapper.vm.submit()
@@ -220,9 +214,6 @@ describe('MonitorDashBoard', () => {
                 mosaicTransferList: [new Mosaic(new MosaicId('308F144790CD7BC4'), UInt64.fromUint(0))],
                 isEncrypted: false
             },
-            //  remove after fix transfer asset
-            currentMosaic: '308F144790CD7BC4',
-            currentAmount: 0
         })
         wrapper.vm.submit()
         await flushPromises()
@@ -240,9 +231,6 @@ describe('MonitorDashBoard', () => {
                 mosaicTransferList: [],
                 isEncrypted: false
             },
-            //  remove after fix transfer asset
-            currentMosaic: '308F144790CD7BC4',
-            currentAmount: 0
         })
         wrapper.vm.submit()
         await flushPromises()
@@ -260,7 +248,6 @@ describe('MonitorDashBoard', () => {
                 mosaicTransferList: [new Mosaic(new MosaicId('4EB2D6C822D8A9F7'), UInt64.fromUint(0))],
                 isEncrypted: false
             },
-            //  remove after fix transfer asset
             currentMosaic: '308F144790CD7BC4',
             currentAmount: 0
         })
@@ -284,9 +271,6 @@ describe('MonitorDashBoard', () => {
                 mosaicTransferList: [new Mosaic(new MosaicId('308F144790CD7BC4'), UInt64.fromUint(0))],
                 isEncrypted: false
             },
-            //  remove after fix transfer asset
-            currentMosaic: '308F144790CD7BC4',
-            currentAmount: 0
         })
         wrapper.vm.submit()
         await flushPromises()
@@ -308,9 +292,6 @@ describe('MonitorDashBoard', () => {
                 mosaicTransferList: [new Mosaic(new MosaicId('308F144790CD7BC4'), UInt64.fromUint(0))],
                 isEncrypted: false
             },
-            //  remove after fix transfer asset
-            currentMosaic: '308F144790CD7BC4',
-            currentAmount: 0
         })
         wrapper.vm.submit()
         await flushPromises()
@@ -319,22 +300,15 @@ describe('MonitorDashBoard', () => {
     })
 
     it('should not pass inspection while mosaic list length < 1', async () => {
-        let message = '1'
-        while (message.length <= 2048) {
-            message += message
-        }
         wrapper.setData({
             formItems: {
                 recipient: CosignAccount.address.toDTO().address,
-                remark: message,
+                remark: 'unit test',
                 multisigPublicKey: "",
                 feeSpeed: FEE_SPEEDS.NORMAL,
                 mosaicTransferList: [],
                 isEncrypted: false
             },
-            //  remove after fix transfer asset
-            currentMosaic: '308F144790CD7BC4',
-            currentAmount: 0
         })
         wrapper.vm.submit()
         await flushPromises()

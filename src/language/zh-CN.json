@@ -704,5 +704,6 @@
   "mosaicId": "马赛克ID",
   "supplyMutable": "供应量是否可改",
   "Increase": "增加",
-  "transferable": "是否可交易"
+  "transferable": "是否可交易",
+  "divisibility_can_not_more_than_6": "可分性不可大于6"
 }
