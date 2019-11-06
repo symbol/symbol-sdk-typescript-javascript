@@ -1,6 +1,6 @@
 import {Component, Vue} from 'vue-property-decorator'
 import {formDataConfig, Message} from "@/config"
-import {AppLock, cloneData} from "@/core/utils"
+import {cloneData} from "@/core/utils"
 import {AppAccounts, AppAccount} from '@/core/model'
 import {networkTypeConfig} from "@/config/view/setting"
 
@@ -35,7 +35,7 @@ export class CreateAccountTs extends Vue {
         const appAccounts = AppAccounts()
         let {accountName, password, currentNetType, hint} = this.formItem
         if (!this.checkInput()) return
-        password = AppLock.encryptString(password, password)
+        password = AppAccounts().encryptString(password, password)
         const appAccount = new AppAccount(accountName, [], password, hint, currentNetType)
         appAccounts.saveAccountInLocalStorage(appAccount)
         this.$Notice.success({title: this.$t(Message.OPERATION_SUCCESS) + ''})

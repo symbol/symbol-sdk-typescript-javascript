@@ -5,9 +5,9 @@ import AccountImportHardware from '@/views/login/init-seed/account-import-hardwa
 import SeedCreatedGuide from '@/views/login/init-seed/seed-created-guide/SeedCreatedGuide.vue'
 import {mapState} from "vuex"
 import {walletFnNavConfig} from '@/config/view/wallet'
-import {StoreAccount} from "@/core/model"
+import {AppAccounts, StoreAccount} from "@/core/model"
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
-import {AppLock, createMnemonic} from "@/core/utils"
+import {createMnemonic} from "@/core/utils"
 
 @Component({
     components: {
@@ -81,7 +81,7 @@ export class InitSeedTs extends Vue {
         if (!password) return
 
         const seed = createMnemonic()
-        this.$store.commit('SET_MNEMONIC', AppLock.encryptString(seed, password))
+        this.$store.commit('SET_MNEMONIC', AppAccounts().encryptString(seed, password))
         this.createForm = {
             password,
             seed,

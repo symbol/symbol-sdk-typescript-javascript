@@ -1,4 +1,3 @@
-export * from './appLock'
 export * from './electron'
 export * from './hdWallet'
 export * from './mosaics'

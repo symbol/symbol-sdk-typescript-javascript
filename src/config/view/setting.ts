@@ -40,37 +40,6 @@ export const settingNetworkPointConfig: Array<{
         }
     ]
 
-export const settingPanelNavigationBarConfig: Array<{
-    title: string,
-    navigatorTitle: string,
-    name: string,
-    isSelected: boolean,
-    disabled?: boolean
-}> = [
-        {
-            title: 'general_settings',
-            navigatorTitle: 'general_settings',
-            name: 'settingNormal',
-            isSelected: true
-        }, {
-            navigatorTitle: 'account_password',
-            title: 'account_password',
-            name: 'settingLock',
-            isSelected: false
-        }, {
-            navigatorTitle: 'network_settings',
-            title: 'network_settings',
-            name: 'settingNetwork',
-            isSelected: false,
-            disabled: true
-        }, {
-            navigatorTitle: 'about',
-            title: 'about',
-            name: 'settingAbout',
-            isSelected: false
-        }
-    ]
-
 export const networkTypeConfig: Array<{
     value: NetworkType,
     label: string

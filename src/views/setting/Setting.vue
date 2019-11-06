@@ -6,7 +6,7 @@
       <div class="setting_main_container">
         <div class=" left">
           <div class="navigator_item pointer" @click="jumpToView(n,index)" v-for="(n,index) in navigatorList">
-            <span :class="[n.isSelected ? 'selected_title':'',n.disabled?'disabled':'']">{{$t(n.title)}}</span>
+            <span :class="[routeName == n.name ? 'selected_title':'',n.meta.disabled?'disabled':'']">{{$t(n.meta.title)}}</span>
           </div>
         </div>
         <div class="right_view right">

@@ -1,28 +1,20 @@
 import {Component, Vue} from 'vue-property-decorator'
-import {settingPanelNavigationBarConfig} from "@/config/view/setting";
+import router from '@/router/routers.ts'
 
 @Component
 export class SettingTs extends Vue {
-    navigatorList = settingPanelNavigationBarConfig
     currentHeadText = ''
+    navigatorList = router[0].children[6].children
 
-    jumpToView(n, index) {
-        if (this.navigatorList[index].disabled) return
-        let list = this.navigatorList
-        list.map((item) => {
-            item.isSelected = false
-            return item
-        })
-        list[index].isSelected = true
-        this.navigatorList = list
-        this.currentHeadText = n.navigatorTitle
+    get routeName(){
+        return this.$route.name
+    }
+
+    // update router
+    jumpToView(n) {
         this.$router.push({
             name: n.name
         })
-    }
-
-    created() {
-        this.jumpToView(this.navigatorList[0], 0)
     }
 
 }

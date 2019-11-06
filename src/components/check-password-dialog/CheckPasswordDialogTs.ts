@@ -2,7 +2,6 @@ import {mapState} from "vuex"
 import {Message} from "@/config/index.ts"
 import {TransactionType, Password} from "nem2-sdk"
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-import {AppLock} from "@/core/utils/appLock"
 import {AppAccounts, AppWallet, StoreAccount, LockParams} from "@/core/model"
 
 @Component({
@@ -89,7 +88,7 @@ export class CheckPasswordDialogTs extends Vue {
         const appAccount = AppAccounts()
         const account = appAccount.getAccountFromLocalStorage(accountName)
         try {
-            const accountPassword = AppLock.decryptString(account.password, password)
+            const accountPassword = appAccount.decryptString(account.password, password)
             if (accountPassword === password) {
                 this.$emit('checkEnd', password)
                 this.showNotice()
@@ -119,7 +118,7 @@ export class CheckPasswordDialogTs extends Vue {
     }
 
 
-    // @VEEVALIDATE: watch not needed, use showCheckPWDialog as v-model
+    // @VEE-VALIDATE: watch not needed, use showCheckPWDialog as v-model
     @Watch('showCheckPWDialog')
     onShowCheckPWDialogChange() {
         this.walletInputInfo.password = ''

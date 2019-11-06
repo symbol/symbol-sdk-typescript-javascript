@@ -3,8 +3,8 @@ import {mapState} from 'vuex'
 import {Password} from "nem2-sdk"
 import {Component, Vue} from 'vue-property-decorator'
 import {networkTypeConfig} from '@/config/view/setting'
-import {AppLock, cloneData} from "@/core/utils"
-import {AppInfo, StoreAccount, AppWallet} from "@/core/model"
+import { cloneData} from "@/core/utils"
+import {AppInfo, StoreAccount, AppWallet, AppAccounts} from "@/core/model"
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 @Component({
     computed: {
@@ -33,7 +33,7 @@ export class AccountImportMnemonicTs extends Vue {
     checkEnd(password) {
         if (!password) return
         const {mnemonic} = this.form
-        const seed = AppLock.encryptString(mnemonic, password)
+        const seed = AppAccounts().encryptString(mnemonic, password)
         this.$store.commit('SET_MNEMONIC', seed)
         this.importWallet(password)
     }

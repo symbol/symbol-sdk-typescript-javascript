@@ -2,10 +2,9 @@ import {Component, Vue, Provide, Watch} from 'vue-property-decorator'
 import {Message} from "@/config"
 import {localRead} from '@/core/utils'
 import {standardFields} from '@/core/validation'
-import {AppLock} from '@/core/utils/appLock'
 import FormInput from '@/components/other/forms/input/FormInput.vue'
 import {mapState} from "vuex"
-import {StoreAccount} from "@/core/model"
+import {AppAccounts, StoreAccount} from "@/core/model"
 
 @Component(
     {
@@ -17,13 +16,13 @@ import {StoreAccount} from "@/core/model"
         }
     }
 )
-export class SettingLockTs extends Vue {
+export class SettingPasswordTs extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     errors: any
     cypher: string
     submitDisabled: boolean = false
-    formModel = {
+    formItems = {
         previousPassword: standardFields.previousPassword.default,
         newPassword: standardFields.previousPassword.default,
         confirmPassword: standardFields.previousPassword.default,
@@ -48,27 +47,24 @@ export class SettingLockTs extends Vue {
 
     resetFields() {
         const {accountName} = this
-        this.formModel = {
+        this.formItems = {
             previousPassword: standardFields.previousPassword.default,
             newPassword: standardFields.previousPassword.default,
             confirmPassword: standardFields.previousPassword.default,
-            cipher: new AppLock().getCipherPassword(accountName) + '',
+            cipher: AppAccounts().getCipherPassword(accountName) + '',
             hint: standardFields.hint.default,
         }
     }
 
     submit() {
-        const {previousPassword, newPassword, hint} = this.formModel
+        const {previousPassword, newPassword} = this.formItems
         const {accountName, mnemonic} = this
-        const that = this
         this.$validator
             .validate()
             .then((valid) => {
                 if (!valid) return
-                const newCipherPassword = AppLock.encryptString(newPassword, newPassword)
-                const encryptedMnemonic = AppLock.encryptString(AppLock.decryptString(mnemonic, previousPassword), newPassword)
-                // refresh password localstorage  and jump to start page
-                new AppLock().saveNewPassword(encryptedMnemonic, newCipherPassword, accountName)
+                // refresh password localstorage and store info
+                AppAccounts().saveNewPassword(previousPassword, newPassword, mnemonic, accountName, this.$store)
                 this.resetFields()
                 this.$Notice.success({
                     title: this.$t(Message.SUCCESS) + ''
