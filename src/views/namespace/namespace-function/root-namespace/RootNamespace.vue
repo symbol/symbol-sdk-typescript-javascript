@@ -104,14 +104,7 @@
           </div>
         </div>
       </form>
-    </div>
-    <CheckPWDialog :showCheckPWDialog="showCheckPWDialog"
-                   @closeCheckPWDialog="showCheckPWDialog = false"
-                   @checkEnd="checkEnd"
-                   :transactionDetail="transactionDetail"
-                   :transactionList="transactionList"
-                   :lockParams="lockParams"
-    />
+    </div>    
   </div>
 </template>
 

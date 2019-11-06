@@ -4,8 +4,7 @@ import {
     NamespaceRegistrationTransaction, UInt64, Deadline,
 } from "nem2-sdk"
 import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
-import {Message, networkConfig, DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
-import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
+import {DEFAULT_FEES, FEE_GROUPS, formDataConfig} from "@/config"
 import {
     getAbsoluteMosaicAmount, formatSeconds, formatAddress, cloneData
 } from '@/core/utils'
@@ -14,10 +13,10 @@ import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from
 import {standardFields} from "@/core/validation"
 import DisabledForms from "@/components/disabled-forms/DisabledForms.vue"
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
+import {signTransaction} from '@/core/services/transactions';
 
 @Component({
     components: {
-        CheckPWDialog,
         DisabledForms,
         ErrorTooltip
     },
@@ -32,8 +31,6 @@ export class RootNamespaceTs extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     app: AppInfo
-    transactionDetail = {}
-    showCheckPWDialog = false
     transactionList = []
     formItems = cloneData(formDataConfig.rootNamespaceForm)
     formatAddress = formatAddress
@@ -176,35 +173,29 @@ export class RootNamespaceTs extends Vue {
         this.transactionList = [aggregateTransaction]
     }
 
-    async checkEnd(isPasswordRight) {
-        if (!isPasswordRight) {
-            this.$Notice.destroy()
-            this.$Notice.error({
-                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-            })
-        }
-    }
-
-    createTransaction() {
-        const {feeAmount, networkType} = this
-        const {duration, rootNamespaceName, multisigPublicKey} = this.formItems
-        this.transactionDetail = {
-            "address": this.activeMultisigAccount
-                ? Address.createFromPublicKey(multisigPublicKey, networkType).pretty()
-                : this.address,
-            "duration": duration,
-            "namespace": rootNamespaceName,
-            "fee": feeAmount / Math.pow(10, this.networkCurrency.divisibility),
-        }
-
+    async confirmViaTransactionConfirmation() {
         if (this.activeMultisigAccount) {
             this.createByMultisig()
-            this.showCheckPWDialog = true
-            return
+        } else {
+            this.createBySelf()
         }
 
-        this.createBySelf()
-        this.showCheckPWDialog = true
+        try {
+            const {
+                success,
+                signedTransaction,
+                signedLock,
+            } = await signTransaction({
+                transaction: this.transactionList[0],
+                store: this.$store,
+            })
+
+            if(success) {
+                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
+            }
+        } catch (error) {
+            console.error("RootNamespaceTs -> confirmViaTransactionConfirmation -> error", error)
+        }
     }
 
     get lockParams(): LockParams {
@@ -213,7 +204,6 @@ export class RootNamespaceTs extends Vue {
     }
 
     get durationIntoDate() {
-        const {targetBlockTime} = networkConfig
         const duration = Number(this.formItems.duration)
         if (!duration || isNaN(duration)) return 0
         return formatSeconds(duration * 12)
@@ -224,7 +214,7 @@ export class RootNamespaceTs extends Vue {
             .validate()
             .then((valid) => {
                 if (!valid) return
-                this.createTransaction()
+                this.confirmViaTransactionConfirmation()
             })
     }
 

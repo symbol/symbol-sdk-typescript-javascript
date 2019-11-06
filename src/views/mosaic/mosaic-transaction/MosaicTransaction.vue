@@ -92,20 +92,11 @@
           </div>
         </div>
 
-        <div :class="['create_button' ,isCompleteForm?'pointer':'not_allowed']"
-             @click="submit">
-          {{$t('create')}}
+        <div class="create_button pointer" @click="submit">
+            {{$t('create')}}
         </div>
       </div>
     </div>
-    <CheckPWDialog
-            :showCheckPWDialog="showCheckPWDialog"
-            @closeCheckPWDialog="closeCheckPWDialog"
-            @checkEnd="checkEnd"
-            :transactionDetail="transactionDetail"
-            :transactionList="transactionList"
-            :lockParams="lockParams"
-    />
   </div>
 </template>
 

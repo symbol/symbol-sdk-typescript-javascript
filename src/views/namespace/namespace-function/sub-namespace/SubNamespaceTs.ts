@@ -1,20 +1,18 @@
 import {mapState} from "vuex"
 import {
     Address, PublicAccount, MultisigAccountInfo, NetworkType,
-    NamespaceRegistrationTransaction, Deadline, UInt64,
+    NamespaceRegistrationTransaction, Deadline, UInt64
 } from "nem2-sdk"
 import {Component, Vue, Watch, Provide} from 'vue-property-decorator'
-import {Message, networkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
+import {networkConfig, formDataConfig, DEFAULT_FEES, FEE_GROUPS} from "@/config"
 import {getAbsoluteMosaicAmount, formatAddress, cloneData} from '@/core/utils'
 import {AppNamespace, StoreAccount, AppInfo, AppWallet, DefaultFee, LockParams} from "@/core/model"
-import CheckPWDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
-import {createBondedMultisigTransaction, createCompleteMultisigTransaction} from '@/core/services'
+import {createBondedMultisigTransaction, createCompleteMultisigTransaction, signTransaction} from '@/core/services'
 import {standardFields} from "@/core/validation"
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
 import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 @Component({
     components: {
-        CheckPWDialog,
         DisabledForms,
         ErrorTooltip
     },
@@ -29,8 +27,6 @@ export class SubNamespaceTs extends Vue {
     @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     app: AppInfo
-    showCheckPWDialog = false
-    transactionDetail = {}
     transactionList = []
     formItems = cloneData(formDataConfig.subNamespaceForm)
     namespaceGracePeriodDuration = networkConfig.namespaceGracePeriodDuration
@@ -122,7 +118,7 @@ export class SubNamespaceTs extends Vue {
             .filter(namespace => namespace.alias)
             .filter(({endHeight, levels}) => (levels < networkConfig.maxNamespaceDepth
                 && endHeight - currentHeight + namespaceGracePeriodDuration > 0))
-            .map(alias => ({label: alias.name, value: alias.name}))
+            .map(alias => ({label: alias.name, value: alias.name}))       
     }
 
     get multisigNamespaceList(): { label: string, value: string }[] {
@@ -161,15 +157,6 @@ export class SubNamespaceTs extends Vue {
         if (!this.activeMultisigAccount) return 1
         if (!this.announceInLock) return 2
         if (this.announceInLock) return 3
-    }
-
-    async checkEnd(isPasswordRight): Promise<void> {
-        if (!isPasswordRight) {
-            this.$Notice.destroy()
-            this.$Notice.error({
-                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
-            })
-        }
     }
 
     showErrorMessage(message): void {
@@ -217,37 +204,36 @@ export class SubNamespaceTs extends Vue {
             networkType,
             UInt64.fromUint(feeAmount / feeDivider)
         )
-    }
-
-    closeCheckPWDialog() {
-        this.showCheckPWDialog = false
-    }
+    }  
 
     createBySelf() {
         let transaction = this.createSubNamespace()
         this.transactionList = [transaction]
     }
 
-
-    createTransaction() {
-        const {rootNamespaceName, subNamespaceName, multisigPublicKey, networkType} = this.formItems
-        const {feeAmount, feeDivider} = this
-        this.transactionDetail = {
-            "address": this.activeMultisigAccount
-            ? Address.createFromPublicKey(multisigPublicKey, networkType).pretty()
-            : this.address,
-            "namespace": rootNamespaceName,
-            "innerFee": feeAmount / feeDivider,
-            "sub_namespace": subNamespaceName,
-            "fee": feeAmount / feeDivider
-        }
-
-        if (!this.hasMultisigAccounts) {
-            this.createBySelf()
-        } else {
+    async confirmViaTransactionConfirmation() {
+        if (this.hasMultisigAccounts) {
             this.createByMultisig()
+        } else {
+            this.createBySelf()
         }
-        this.showCheckPWDialog = true
+
+        try {
+            const {
+                success,
+                signedTransaction,
+                signedLock,
+            } = await signTransaction({
+                transaction: this.transactionList[0],
+                store: this.$store,
+            })
+
+            if(success) {
+                new AppWallet(this.wallet).announceTransaction(signedTransaction, this.activeAccount.node, this, signedLock)
+            }
+        } catch (error) {
+            console.error("SubNamespaceTs -> confirmViaTransactionConfirmation -> error", error)
+        }
     }
 
     async submit() {
@@ -255,7 +241,7 @@ export class SubNamespaceTs extends Vue {
             .validate()
             .then((valid) => {
                 if (!valid) return
-                this.createTransaction()
+                this.confirmViaTransactionConfirmation()
             })
     }
 

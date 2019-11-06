@@ -103,20 +103,10 @@
           </Option>
         </Select>
       </div>
-
-      <div class="input_content">
-        <div class="title">{{$t('password')}}</div>
-        <div class="input_area">
-          <input v-focus type="password" v-model="formItems.password" :placeholder="$t('please_enter_your_wallet_password')">
-        </div>
-      </div>
-
+     
       <div class="button_content">
         <span class="cancel pointer" @click="show = false">{{$t('cancel')}}</span>
-        <span
-          :class="['cancel', 'checkBtn', isCompleteForm?'pointer':'not_allowed']"
-          @click="submit()"
-        >{{bind ? $t('bind') : $t('unbind')}}</span>
+        <span class="bind checkBtn pointer" @click="submit()">{{bind ? $t('bind') : $t('unbind')}}</span>
       </div>
     </Modal>
   </div>
