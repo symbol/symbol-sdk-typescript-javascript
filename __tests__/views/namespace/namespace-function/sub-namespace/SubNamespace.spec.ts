@@ -4,7 +4,7 @@ import iView from 'iview'
 import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
 // @ts-ignore
-import RootNamespace from '@/views/namespace/namespace-function/root-namespace/RootNamespace.vue'
+import SubNamespace from '@/views/namespace/namespace-function/sub-namespace/SubNamespace.vue'
 import {accountMutations, accountState} from '@/store/account'
 import {appMutations, appState} from '@/store/app'
 import {NETWORK_PARAMS, veeValidateConfig} from "@/core/validation"
@@ -12,8 +12,7 @@ import VueRx from "vue-rx"
 import {DEFAULT_FEES, FEE_GROUPS, FEE_SPEEDS} from "@/config"
 import {
     TransactionType,
-    NamespaceRegistrationTransaction,
-    NamespaceRegistrationType, AggregateTransaction, NetworkType, Deadline, UInt64,
+    NamespaceRegistrationTransaction, NamespaceRegistrationType, UInt64, AggregateTransaction, NetworkType, Deadline,
 } from "nem2-sdk"
 import {
     mosaicsLoading,
@@ -42,7 +41,7 @@ localVue.directive('focus', {
 // close warning
 config.logModifiedComponents = false
 
-describe('RootNamespace', () => {
+describe('SubNamespace', () => {
     let store
     let wrapper
     let state
@@ -65,7 +64,7 @@ describe('RootNamespace', () => {
                     }
                 }
             )
-            wrapper = shallowMount(RootNamespace, {
+            wrapper = shallowMount(SubNamespace, {
                 sync: false,
                 mocks: {
                     $t: (msg) => msg,
@@ -79,12 +78,11 @@ describe('RootNamespace', () => {
     it('Component RootNamespace is not null ', () => {
         expect(wrapper).not.toBeNull()
     })
-
     it('should create a NamespaceRegistrationTransaction while all param is right ', async () => {
         wrapper.setData({
             formItems: {
-                duration: 1000,
                 rootNamespaceName: 'abc',
+                subNamespaceName: 'efg',
                 multisigPublicKey: '',
                 feeSpeed: FEE_SPEEDS.NORMAL,
             }
@@ -99,15 +97,29 @@ describe('RootNamespace', () => {
         expect(namespaceRegistrationTransaction.version).not.toBeUndefined()
         expect(namespaceRegistrationTransaction.deadline).not.toBeUndefined()
         expect(namespaceRegistrationTransaction.maxFee.compact()).toBe(getAbsoluteMosaicAmount(DEFAULT_FEES[FEE_GROUPS.SINGLE][1].value, networkCurrency.divisibility))
-        expect(namespaceRegistrationTransaction.registrationType).toBe(NamespaceRegistrationType.RootNamespace)
-        expect(namespaceRegistrationTransaction.namespaceName).toBe('abc')
-        expect(namespaceRegistrationTransaction.duration.compact()).toBe(1000)
+        expect(namespaceRegistrationTransaction.registrationType).toBe(NamespaceRegistrationType.SubNamespace)
+        expect(namespaceRegistrationTransaction.namespaceName).toBe('efg')
     })
+    it('should not create a NamespaceRegistrationTransaction while sub namespace is invalid ', async () => {
+        wrapper.setData({
+            formItems: {
+                rootNamespaceName: 'asd',
+                subNamespaceName: 'ASD',
+                multisigPublicKey: '',
+                feeSpeed: FEE_SPEEDS.NORMAL,
+            }
+        })
+        wrapper.vm.submit()
+        await flushPromises()
+
+        expect(wrapper.vm.transactionList[0]).toBeUndefined()
+    })
+
     it(' should create an aggregate complete transaction while account is a 1-of-1 multisig ', async () => {
         wrapper.setData({
             formItems: {
-                duration: 1000,
                 rootNamespaceName: 'abc',
+                subNamespaceName: 'efg',
                 multisigPublicKey: MultisigAccount.publicKey,
                 feeSpeed: FEE_SPEEDS.NORMAL,
             }
@@ -132,16 +144,15 @@ describe('RootNamespace', () => {
         expect(namespaceRegistrationTransaction.version).not.toBeUndefined()
         expect(namespaceRegistrationTransaction.deadline).not.toBeUndefined()
         expect(namespaceRegistrationTransaction.maxFee.compact()).toBe(getAbsoluteMosaicAmount(DEFAULT_FEES[FEE_GROUPS.SINGLE][1].value, networkCurrency.divisibility))
-        expect(namespaceRegistrationTransaction.registrationType).toBe(NamespaceRegistrationType.RootNamespace)
-        expect(namespaceRegistrationTransaction.namespaceName).toBe('abc')
-        expect(namespaceRegistrationTransaction.duration.compact()).toBe(1000)
+        expect(namespaceRegistrationTransaction.registrationType).toBe(NamespaceRegistrationType.SubNamespace)
+        expect(namespaceRegistrationTransaction.namespaceName).toBe('efg')
     })
 
     it(' should create an aggregate bonded transaction while account is a 2-of-2 multisig ', async () => {
         wrapper.setData({
             formItems: {
-                duration: 1000,
                 rootNamespaceName: 'abc',
+                subNamespaceName: 'efg',
                 multisigPublicKey: Multisig2Account.publicKey,
                 feeSpeed: FEE_SPEEDS.NORMAL,
             }
@@ -166,58 +177,7 @@ describe('RootNamespace', () => {
         expect(namespaceRegistrationTransaction.version).not.toBeUndefined()
         expect(namespaceRegistrationTransaction.deadline).not.toBeUndefined()
         expect(namespaceRegistrationTransaction.maxFee.compact()).toBe(getAbsoluteMosaicAmount(DEFAULT_FEES[FEE_GROUPS.TRIPLE][0].value, networkCurrency.divisibility))
-        expect(namespaceRegistrationTransaction.registrationType).toBe(NamespaceRegistrationType.RootNamespace)
-        expect(namespaceRegistrationTransaction.namespaceName).toBe('abc')
-        expect(namespaceRegistrationTransaction.duration.compact()).toBe(1000)
-    })
-    it('should not create a normal namespace create transaction while rootNamespaceName is substandard ', () => {
-        wrapper.setData({
-            formItems: {
-                duration: 1000,
-                rootNamespaceName: 'nem',
-                multisigPublicKey: '',
-                feeSpeed: FEE_SPEEDS.NORMAL,
-            }
-        })
-        wrapper.vm.submit()
-        expect(wrapper.vm.transactionList[0]).toBeUndefined()
-    })
-    it('should not create a normal namespace create transaction while duration is less than 4', () => {
-        wrapper.setData({
-            formItems: {
-                duration: NETWORK_PARAMS.MIN_NAMESPACE_DURATION - 1,
-                rootNamespaceName: 'abc',
-                multisigPublicKey: '',
-                feeSpeed: FEE_SPEEDS.NORMAL,
-            }
-        })
-        wrapper.vm.submit()
-        expect(wrapper.vm.transactionList[0]).toBeUndefined()
-    })
-
-    it('should not create a normal namespace create transaction while duration is more than 2102400', () => {
-        wrapper.setData({
-            formItems: {
-                duration: NETWORK_PARAMS.MAX_NAMESPACE_DURATION + 1,
-                rootNamespaceName: 'abc',
-                multisigPublicKey: '',
-                feeSpeed: FEE_SPEEDS.NORMAL,
-            }
-        })
-        wrapper.vm.submit()
-        expect(wrapper.vm.transactionList[0]).toBeUndefined()
-    })
-
-    it('should not create a normal namespace create transaction while namespace name is invalid', () => {
-        wrapper.setData({
-            formItems: {
-                duration: 1000,
-                rootNamespaceName: 'Abc',
-                multisigPublicKey: '',
-                feeSpeed: FEE_SPEEDS.NORMAL,
-            }
-        })
-        wrapper.vm.submit()
-        expect(wrapper.vm.transactionList[0]).toBeUndefined()
+        expect(namespaceRegistrationTransaction.registrationType).toBe(NamespaceRegistrationType.SubNamespace)
+        expect(namespaceRegistrationTransaction.namespaceName).toBe('efg')
     })
 })

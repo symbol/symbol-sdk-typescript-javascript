@@ -118,7 +118,7 @@ export class SubNamespaceTs extends Vue {
             .filter(namespace => namespace.alias)
             .filter(({endHeight, levels}) => (levels < networkConfig.maxNamespaceDepth
                 && endHeight - currentHeight + namespaceGracePeriodDuration > 0))
-            .map(alias => ({label: alias.name, value: alias.name}))       
+            .map(alias => ({label: alias.name, value: alias.name}))
     }
 
     get multisigNamespaceList(): { label: string, value: string }[] {
@@ -204,7 +204,7 @@ export class SubNamespaceTs extends Vue {
             networkType,
             UInt64.fromUint(feeAmount / feeDivider)
         )
-    }  
+    }
 
     createBySelf() {
         let transaction = this.createSubNamespace()
@@ -212,7 +212,7 @@ export class SubNamespaceTs extends Vue {
     }
 
     async confirmViaTransactionConfirmation() {
-        if (this.hasMultisigAccounts) {
+        if (this.activeMultisigAccount) {
             this.createByMultisig()
         } else {
             this.createBySelf()
