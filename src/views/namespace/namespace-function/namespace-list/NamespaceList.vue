@@ -77,8 +77,8 @@
           <span @click="refreshNamespaceList()"
                 class="pointer refresh_btn">{{$t('refresh')}}</span>
           <div
-              class="namespace_filter pointer"
-              @click="isShowExpiredNamespace = !isShowExpiredNamespace"
+                  class="namespace_filter pointer"
+                  @click="isShowExpiredNamespace = !isShowExpiredNamespace"
           >
             <Icon v-if="isShowExpiredNamespace" type="md-square"/>
             <Icon v-else type="md-square-outline"/>
@@ -115,7 +115,7 @@
                 <Icon v-else type="md-close"/>
               </span>
               <span class="more overflow_ellipsis">
-            <Poptip class="poptip_container" placement="top-end">
+            <Poptip class="poptip_container" v-if="!displayDuration(n).expired || n.levels === 1" placement="top-end">
               <i class="moreFn"></i>
               <div slot="content" max-width="150" class="refresh_sub_container">
                 <span class="fnItem pointer" v-if="n.levels === 1" @click.stop="showEditDialog(n)">
