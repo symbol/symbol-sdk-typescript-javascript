@@ -44,9 +44,9 @@
 </template>
 
 <script lang="ts">
+    import "./SettingNormal.less"
     import {SettingNormalTs} from '@/views/setting/setting-normal/SettingNormalTs.ts';
     export default class SettingNormal extends SettingNormalTs { }
 </script>
 <style scoped lang="less">
-  @import "SettingNormal.less";
 </style>

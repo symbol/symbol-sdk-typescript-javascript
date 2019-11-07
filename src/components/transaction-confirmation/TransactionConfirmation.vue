@@ -36,6 +36,7 @@
               <input v-model="password" type="password" required
                     :placeholder="$t('please_enter_your_wallet_password')"/>
               <Button type="success" @click="submit">{{$t('confirm')}}</Button>
+              <input v-show="false" type="text">
             </div>
           </form>
         </div>
