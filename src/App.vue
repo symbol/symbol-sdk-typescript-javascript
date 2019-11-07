@@ -293,7 +293,7 @@
                         /**
                          * ON GENERATION HASH CHANGE
                          */
-                        if (oldGenerationHash !== this.generationHash) {
+                        if (oldGenerationHash !== this.generationHash || this.networkCurrency.hex === '') {
                             this.$store.commit('SET_NETWORK_MOSAICS', [])
                             this.$store.commit('SET_MOSAICS', {})
                             await setCurrentNetworkMosaic(this.$store)
