@@ -30,8 +30,10 @@ module.exports = {
     'jest-serializer-vue'
   ],
   testMatch: [
-    '**/__tests__/views/**/*.(ts)',
     '**/__tests__/components/**/*.(ts)',
+    '**/__tests__/core/**/*.(ts)',
+    '**/__tests__/store/**/*.(ts)',
+    '**/__tests__/views/**/*.(ts)',
   ],
   testURL: 'http://localhost/',
   watchPlugins: [
@@ -44,4 +46,11 @@ module.exports = {
     },
   },
   coverageDirectory: "coverage",
+  collectCoverageFrom: [
+    "**/*.{ts}",
+    "**/*.{vue}",
+    "!**/node_modules/**",
+    "!**/*.{png}",
+    "!**/*.{d.ts}",
+  ],
 }
