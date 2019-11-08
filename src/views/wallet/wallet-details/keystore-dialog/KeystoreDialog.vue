@@ -101,7 +101,7 @@
                 <Button type="success" @click="toPrevPage">{{$t('Show_Keystore')}}</Button>
               </Col>
               <Col span="5">
-                <Button type="success" @click="saveQRCode">{{$t('copy_QR_code')}}</Button>
+                <Button type="success" @click="saveQRCode">{{$t('Download')}}</Button>
               </Col>
               <Col span="7">&nbsp;</Col>
             </Row>

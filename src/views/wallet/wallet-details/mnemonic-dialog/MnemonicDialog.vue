@@ -6,7 +6,7 @@
             :footer-hide="true"
             :width="1000"
             :transfer="false"
-            @on-cancel="mnemonicDialogCancel">
+            @on-cancel="$emit('closeMnemonicDialog')">
       <div slot="header" class="mnemonicDialogHeader">
         <span class="title">{{$t('export_mnemonic')}}</span>
       </div>
@@ -19,25 +19,40 @@
         </div>
 
         <div class="stepItem1" v-if="stepIndex == 0">
-          <Form :model="wallet" @keyup.enter.native="exportMnemonic">
-            <FormItem>
-              <Input :autofocus="true" v-model="wallet.password" type="password" required
-                     :placeholder="$t('please_enter_your_wallet_password')"></Input>
-            </FormItem>
-            <FormItem>
-              <div class="buttons_container">
-                <Button class="button_arrow" type="success" @click="exportMnemonic">
-                  {{$t('next')}}
-                  <Icon  type="ios-arrow-forward" />
-                </Button>
-                <input v-if="false" type="text">
-              </div>
-            </FormItem>
-          </Form>
+          <form
+            @submit.prevent="validateForm('mnemonic-dialog')" 
+            @keyup.enter="submit"
+            class="centered"
+          >
+            <input
+              v-model="cipher"
+              data-vv-name="cipher"
+              v-validate="'required'"
+              style="display:none"
+            />
+            <ErrorTooltip fieldName="password">
+              <input
+                v-focus
+                v-model="password"
+                type="password"
+                :placeholder="$t('please_enter_your_wallet_password')"
+                data-vv-name="password"
+                v-validate="standardFields.previousPassword.validation"
+                :data-vv-as="$t('password')"
+              />
+            </ErrorTooltip>
+            <div class="buttons_container">
+              <Button class="button_arrow" type="success" @click="submit">
+                {{$t('next')}}
+                <Icon  type="ios-arrow-forward" />
+              </Button>
+              <input v-if="false" type="text">
+            </div>
+          </form>
         </div>
 
         <div class="stepItem2" v-if="stepIndex == 1">
-          <div class="step2Txt" @keyup.enter.native="exportMnemonic">
+          <div class="step2Txt" @keyup.enter.native="stepIndex = 2">
             <Row>
               <Col span="9">
                 <div class="imgDiv">
@@ -61,7 +76,7 @@
             </Row>
           </div>
           <div class="buttons_container">
-            <Button v-focus class="button_arrow" type="success" @click="exportMnemonic">
+            <Button v-focus class="button_arrow" type="success" @click="stepIndex = 2">
               {{$t('next')}}
               <Icon  type="ios-arrow-forward" />
             </Button>
@@ -71,14 +86,14 @@
         <div class="stepItem3" v-if="stepIndex == 2" >
           <p class="tit">{{$t('please_accurately_copy_the_safety_backup_mnemonic')}}</p>
           <div class="mnemonicWords text_select">{{mnemonic}}</div>
-          <div class="buttons_container" @keyup.enter.native="exportMnemonic">
+          <div class="buttons_container" @keyup.enter.native="stepIndex = 3">
             <Button class="button_arrow" type="success" @click="copyMnemonic">
               {{$t('copy_mnemonic')}}
             </Button>
             <Button class="button_arrow" type="success" @click="stepIndex = 5">
               {{$t('display_mnemonic_QR_code')}}
             </Button>
-            <Button type="success" v-focus @click="exportMnemonic">
+            <Button type="success" v-focus @click="stepIndex = 3">
               {{$t('next')}}
               <Icon  type="ios-arrow-forward" />
             </Button>
@@ -91,8 +106,8 @@
           </p>
           <MnemonicVerification
                   :mnemonicWordsList="mnemonic.split(' ')"
-                  @verificationSuccess='jumpToOtherStep(4)'
-                  @toPreviousPage="toPrePage()"/>
+                  @verificationSuccess="$emit('closeMnemonicDialog')"
+                  @toPreviousPage="stepIndex = 2"/>
         </div>
 
         <div class="stepItem5" v-if="stepIndex == 4">
@@ -101,7 +116,7 @@
           </div>
           <p class="backupTxt">{{$t('the_mnemonic_order_is_correct_and_the_backup_is_successful')}}</p>
           <div class="buttons_container">
-            <Button class="button_arrow" type="success" @click="closeModal">
+            <Button class="button_arrow" type="success" @click="$emit('closeMnemonicDialog')">
               {{$t('confirm')}}
             </Button>
           </div>
@@ -112,15 +127,15 @@
             <img :src="QRCode">
           </div>
           <div class="buttons_container">
-            <Button class="button_arrow" type="success" @click="jumpToOtherStep(2)">
+            <Button class="button_arrow" type="success" @click="stepIndex = 2">
               {{$t('back')}}
             </Button>
-            <Button class="button_arrow" type="success" @click="copyMnemonicQr">
+            <Button class="button_arrow" type="success">
               <a
                       :href="QRCode"
                       download="qrCode.png"
               >
-                {{$t('copy_QR_code')}}
+                {{$t('Download')}}
 
               </a>
             </Button>

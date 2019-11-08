@@ -123,7 +123,7 @@
     "generate_QR_code": "Generate QR code",
     "copy_address": "Copy address",
     "copy_private_key": "Copy private key",
-    "copy_QR_code": "Download",
+    "copy_QR_code": "Copy QR code",
     "collection_record": "Transfers received",
     "enter_asset_type_alias_or_address_search": "Enter transaction hash search",
     "ordinary_transfer": "Transfer",
@@ -747,5 +747,6 @@
     "show_debug_console": "Show debug console",
     "Debug_console": "Debug console",
     "Data": "Data",
-    "divisibility_can_not_more_than_6": "Divisibility can not be more than 6."
+    "divisibility_can_not_more_than_6": "Divisibility can not be more than 6.",
+    "Download": "Download"
 }

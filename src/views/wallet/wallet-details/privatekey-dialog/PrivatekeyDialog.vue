@@ -98,7 +98,7 @@
                           :href="QRCode"
                           download="qrCode.png"
                   >
-                    {{$t('copy_QR_code')}}
+                    {{$t('Download')}}
                   </a>
                 </Button>
               </Col>

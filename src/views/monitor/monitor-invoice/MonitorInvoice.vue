@@ -18,7 +18,7 @@
         </div>
         <div class="qr_button ">
           <span class="radius pointer" @click="copyAddress">{{$t('copy_address')}}</span>
-          <span class="radius pointer" @click="downloadQR">{{$t('copy_QR_code')}}</span>
+          <span class="radius pointer" @click="downloadQR">{{$t('Download')}}</span>
         </div>
       </div>
 

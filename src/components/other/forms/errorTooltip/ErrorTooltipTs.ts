@@ -9,17 +9,28 @@ export class ErrorTooltipTs extends Vue {
     @Inject('$validator') public $validator!: any
     @Inject() validator!: any
 
-    errors: any
     displayedError: string = ''
+    
+    get errors() {
+        return this.$validator.errors
+    }
+
+    get errorItem(): string {
+        const {items} = this.errors
+        if (!items.length) return null
+        const item = items.find(({field}) => field === this.fieldName)
+        if (item === undefined) return null
+        return item.msg
+    }
 
     get errored() {
+        if (!this.errors.items.length) return false
         if (!this.errors) return false
-        return this.errors.collect(this.fieldName).length > 0
+        return this.errorItem !== null
     }
 
     get fieldError() {
-        if (!this.errors) return ''
-        return this.errors.first(this.fieldName)
+        return this.errorItem || ''
     }
 
     get placement() {
@@ -29,6 +40,6 @@ export class ErrorTooltipTs extends Vue {
     @Watch('fieldError')
     onFieldErrorChanged(newValue: string) {
         // Avoid flashing when the error Tooltip gets cleared
-        if (newValue !== undefined) this.displayedError = newValue
+        if (newValue !== '') this.displayedError = newValue
     }
 }
