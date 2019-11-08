@@ -1,5 +1,5 @@
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import {randomMnemonicWord} from "@/core/utils"
+import {randomizeMnemonicWordArray} from "@/core/utils"
 import {Message} from "@/config"
 
 @Component
@@ -53,7 +53,7 @@ export class MnemonicVerificationTs extends Vue {
     }
 
     mounted() {
-        this.mnemonicRandomList = randomMnemonicWord(this.mnemonicWordsList)
+        this.mnemonicRandomList = randomizeMnemonicWordArray(this.mnemonicWordsList)
     }
 
 }

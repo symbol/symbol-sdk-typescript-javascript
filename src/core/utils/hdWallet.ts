@@ -6,10 +6,14 @@ export const createMnemonic = () => {
 }
 
 export const getPath = (int: number): string => {
+    if (int === null || int === undefined) {
+        throw new Error('invalid argument provided to getPath')
+    } 
     return  `m/44'/43'/${int}'/0'/0'`
 }
 
-export const createSubWalletByPath = (mnemonic: string, path: string) => {
+export const createSubWalletByPathNumber = (mnemonic: string, pathNumber: number) => {
+    const path = getPath(pathNumber)
     const PassPhrase = new MnemonicPassPhrase(mnemonic)
     const bip32Node = ExtendedKey.createFromSeed(PassPhrase.toEntropy())
     const wallet = new Wallet(bip32Node.derivePath(path))
@@ -17,48 +21,12 @@ export const createSubWalletByPath = (mnemonic: string, path: string) => {
     return account
 }
 
-export const randomMnemonicWord = (mnemonic) => {
-    let numberArr = []
-    let randomWord = []
-    for (let i = 0; i < mnemonic.length; i++) {
-        const randomNum = checkRandomArr(numberArr, mnemonic)
-        numberArr.push(randomNum)
-        randomWord.push(mnemonic[randomNum])
+export const randomizeMnemonicWordArray = (array: string[]): string[] => {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
     }
-    return randomWord
-}
-
-function checkRandomArr(arr, mnemonic) {
-    const mnemonicNum = randomNum(mnemonic)
-    if (arr.includes(mnemonicNum)) {
-        return checkRandomArr(arr, mnemonic)
-    } else {
-        return mnemonicNum
-    }
-}
-
-function randomNum(mnemonic) {
-    return Math.floor(Math.random() * (mnemonic.length))
-}
-
-function buf2hex(buffer) {
-    // buffer is an ArrayBuffer
-    // create a byte array (Uint8Array) that we can use to read the array buffer
-    const byteArray = new Uint8Array(buffer)
-
-    // for each element, we want to get its two-digit hexadecimal representation
-    const hexParts = []
-    for (let i = 0; i < byteArray.length; i++) {
-        // convert value to hexadecimal
-        const hex = byteArray[i].toString(16)
-
-        // pad with zeros to length 2
-        const paddedHex = ('00' + hex).slice(-2)
-
-        // push to array
-        hexParts.push(paddedHex)
-    }
-
-    // join all the hex values of the elements into a single string
-    return hexParts.join('')
+    return array
 }

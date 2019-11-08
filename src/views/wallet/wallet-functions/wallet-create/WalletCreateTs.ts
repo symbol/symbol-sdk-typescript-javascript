@@ -4,7 +4,7 @@ import {NetworkType, Password} from "nem2-sdk"
 import CheckPasswordDialog from '@/components/check-password-dialog/CheckPasswordDialog.vue'
 import {AppWallet, StoreAccount} from '@/core/model'
 import {mapState} from "vuex"
-import {createSubWalletByPath, getPath} from "@/core/utils"
+import {createSubWalletByPathNumber} from "@/core/utils"
 import {networkConfig} from '@/config/index.ts'
 import {networkTypeConfig} from '@/config/view/setting'
 
@@ -23,7 +23,7 @@ export class WalletCreateTs extends Vue {
     formItem = {
         currentNetType: NetworkType.MIJIN_TEST,
         walletName: 'wallet-create',
-        path: getPath(0)
+        path: 0
     }
     networkTypeList = networkTypeConfig
 
@@ -69,7 +69,7 @@ export class WalletCreateTs extends Vue {
             return false
         }
         try {
-            createSubWalletByPath(networkConfig.testMnemonicString, path)
+            createSubWalletByPathNumber(networkConfig.testMnemonicString, path)
             return true
         } catch (e) {
             this.$Notice.error({title: this.$t(Message.HD_WALLET_PATH_ERROR) + ''})

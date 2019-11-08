@@ -162,35 +162,35 @@ export const hdAccountData = {
 export const hdAccount = {
     "accountName": "testWallet",
     "wallets": [
-    {
+      {
         "simpleWallet": {
-        "name": "seedWallet",
-        "network": 144,
-        "address": {
-            "address": "SDZXYAFVFBSBDGHGHLQNUXNDTBMAG7UFJLDIXVVQ",
+          "name": "seedWallet",
+          "network": 144,
+          "address": {
+            "address": "SBOENUE4JRGPMBV4HAOA2MIJGIY4AAHLI2YSKHRF",
             "networkType": 144
-        },
-        "creationDate": "2019-11-07T11:52:07.738",
-        "schema": "simple_v1",
-        "encryptedPrivateKey": {
-            "encryptedKey": "dd83e9c4fb0b8f4899031767fb8c3ead0c39c15f4ad1cdb5b2abb48b3986059fb9c609bf620607790f66c913838066a0",
-            "iv": "3577D8FA436BFFDD85C5B82BB2BE0802"
-        }
+          },
+          "creationDate": "2019-11-08T00:02:54.019",
+          "schema": "simple_v1",
+          "encryptedPrivateKey": {
+            "encryptedKey": "c55858eb85ce02c2d32fe55756f6bf6029036f99dc01d9304c8f64a12b62183f5bf75dc4b53ae7998b5e8d9fb10ab58f",
+            "iv": "97F814C4FA53DE749222C3584E7F23E8"
+          }
         },
         "name": "seedWallet",
-        "address": "SDZXYAFVFBSBDGHGHLQNUXNDTBMAG7UFJLDIXVVQ",
-        "publicKey": "F14333A3F957615AEFE1910B0DAC2596897E7FF7FDF46125F84F543CA9CCB176",
+        "address": "SBOENUE4JRGPMBV4HAOA2MIJGIY4AAHLI2YSKHRF",
+        "publicKey": "5A06ED717B3FFC46CFA387FB664E3FA2CF55D304943F0495DC4C402ED66DF8CF",
         "networkType": 144,
         "active": true,
         "path": "m/44'/43'/0'/0'/0'",
         "sourceType": "Seed",
-        "encryptedMnemonic": "U2FsdGVkX1+aHIvymSlK0xHYqF5PFtc5hNimIcIqTdXpoJtQikUnT36XscWcsYVrI8tBIpRil94fL3YnD+aIHURhbh0prwl8PhleC0sEJMATFlQl0WdfRvYFku28Gdvi7mNIm0IPaOaCg226rssM17WmLALflGFH1lespTeLGTK6aPUtJDBHF4HLqBdJOud33TIofNX8wCfxftZlbud2yOwjybrBYbFn1xPLBclLVKI26VhRWaYlXO2JTQv8Xjvvn/EqBdA2uLqR43mh/byvZZc1as4T6kt9hRh4fR3qz3hGAbXulAL7LBPY/541c+mpoyseEZr7s9qaP0uBL5VQUcNQMNdniNjG6oc0bhD6GDtcjRep1hxWTEwau0BsN0iD8T7vGNsfEBNvlYbI78EQnrOZVxgGAJ2iY3ezeDr0ru0=",
+        "encryptedMnemonic": "U2FsdGVkX19Eh+ZbVrg88WN+wI7YErErtsGmGtDnjO/CN9aP4LOe/OHrMGkMQzCYmBcEXZ6Vi7W64lQq4he/iIMxGYoEXD0to4vwpWZDrOWPekjkCRvgNC4xVNY+CHyS19AGhM088il2EHSrbM/rXcff7dN+CfQYQfcqmheVaspaJIyDxmr6bJidl2nj/L7NR4XD29cqPFhnkBK71Tzvr47trNPdahXkbaCg77Aaj/uLlvs6zq1jFNYo5k+j5kr7CFX6tA/D9LtxvU9prJaIU14dLV23KBQOPYVSh5/pnlpWfX91UtXCmWrLSEVnZaQmAjuIqjlcsiISlTuowGF+jsO6FXp8zqtPgvS/33BJw/h2UdrIidc2sXci+qek6OUdQMwiC1yRIZnoaUkGE08u0AN5DGmrIZn9h5wgy45ZhQw=",
         "balance": 0
-    }
+      }
     ],
-    "password": "U2FsdGVkX181wcYlmOLJPzMFY9PI9otH3LHMTjjKTuvcohqKynTIKhZ/rajFZfjw",
+    "password": "U2FsdGVkX19BmVzvm8prhK/Wy30gQvowdN4rR2UTSAJwk8NSeo4NSXT3huLlyTZd",
     "hint": "password is password",
     "currentNetType": 144,
-    "seed": "U2FsdGVkX1+aHIvymSlK0xHYqF5PFtc5hNimIcIqTdXpoJtQikUnT36XscWcsYVrI8tBIpRil94fL3YnD+aIHURhbh0prwl8PhleC0sEJMATFlQl0WdfRvYFku28Gdvi7mNIm0IPaOaCg226rssM17WmLALflGFH1lespTeLGTK6aPUtJDBHF4HLqBdJOud33TIofNX8wCfxftZlbud2yOwjybrBYbFn1xPLBclLVKI26VhRWaYlXO2JTQv8Xjvvn/EqBdA2uLqR43mh/byvZZc1as4T6kt9hRh4fR3qz3hGAbXulAL7LBPY/541c+mpoyseEZr7s9qaP0uBL5VQUcNQMNdniNjG6oc0bhD6GDtcjRep1hxWTEwau0BsN0iD8T7vGNsfEBNvlYbI78EQnrOZVxgGAJ2iY3ezeDr0ru0=",
-    "activeWalletAddress": "SDZXYAFVFBSBDGHGHLQNUXNDTBMAG7UFJLDIXVVQ"
+    "seed": "U2FsdGVkX19Eh+ZbVrg88WN+wI7YErErtsGmGtDnjO/CN9aP4LOe/OHrMGkMQzCYmBcEXZ6Vi7W64lQq4he/iIMxGYoEXD0to4vwpWZDrOWPekjkCRvgNC4xVNY+CHyS19AGhM088il2EHSrbM/rXcff7dN+CfQYQfcqmheVaspaJIyDxmr6bJidl2nj/L7NR4XD29cqPFhnkBK71Tzvr47trNPdahXkbaCg77Aaj/uLlvs6zq1jFNYo5k+j5kr7CFX6tA/D9LtxvU9prJaIU14dLV23KBQOPYVSh5/pnlpWfX91UtXCmWrLSEVnZaQmAjuIqjlcsiISlTuowGF+jsO6FXp8zqtPgvS/33BJw/h2UdrIidc2sXci+qek6OUdQMwiC1yRIZnoaUkGE08u0AN5DGmrIZn9h5wgy45ZhQw=",
+    "activeWalletAddress": "SBOENUE4JRGPMBV4HAOA2MIJGIY4AAHLI2YSKHRF"
 }

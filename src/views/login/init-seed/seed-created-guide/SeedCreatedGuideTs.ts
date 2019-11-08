@@ -1,7 +1,6 @@
-import {Message} from "@/config/index.ts"
 import {Password} from "nem2-sdk"
 import {Component, Prop, Vue} from 'vue-property-decorator'
-import {randomMnemonicWord} from "@/core/utils"
+import {randomizeMnemonicWordArray} from "@/core/utils"
 import {mapState} from "vuex"
 import {AppWallet, AppInfo, StoreAccount} from "@/core/model"
 import {localRead} from "@/core/utils"
@@ -73,7 +72,7 @@ export class SeedCreatedGuideTs extends Vue {
                 this.tags = index
                 break
             case 1:
-                this.mnemonicRandomArr = randomMnemonicWord(this.mnemonic)
+                this.mnemonicRandomArr = randomizeMnemonicWordArray(this.mnemonic)
                 this.tags = index
                 break
         }

@@ -30,7 +30,7 @@ export class WalletSwitchTs extends Vue {
     thirdTimestamp = 0
     walletStyleSheetType = walletStyleSheetType
     walletToUpdate = {}
-    pathToCreate = ''
+    pathToCreate = 0
     scroll: any
     formatNumber = formatNumber
 
@@ -54,10 +54,6 @@ export class WalletSwitchTs extends Vue {
 
     get accountName() {
         return this.activeAccount.accountName
-    }
-
-    get cipherMnemonic() {
-        return this.app.mnemonic
     }
 
     get networkCurrency() {
@@ -101,9 +97,11 @@ export class WalletSwitchTs extends Vue {
         const numberOfSeedPath = seedPathList.length
         if (!numberOfSeedPath) return 0
 
-        const jumpedPath = seedPathList.map((element, index) => {
-            if (Number(element) !== index) return index
-        }).filter(x => x)
+        const jumpedPath = seedPathList
+            .map(a => Number(a))
+            .sort()
+            .map((element, index) => { if (element !== index) return index })
+            .filter(x => x !== undefined)
 
         return jumpedPath.length ? jumpedPath[0] : numberOfSeedPath
     }
@@ -119,8 +117,7 @@ export class WalletSwitchTs extends Vue {
             return
         }
 
-        const pathNumber = this.getPathNumber(seedPathList)
-        this.pathToCreate = getPath(pathNumber)
+        this.pathToCreate = this.getPathNumber(seedPathList)
         this.showCheckPWDialog = true
     }
 
@@ -130,7 +127,7 @@ export class WalletSwitchTs extends Vue {
         const currentNetType = JSON.parse(localRead('accountMap'))[accountName].currentNetType
         try {
             new AppWallet().createFromPath(
-                seedWalletTitle + pathToCreate[pathToCreate.length - 8],
+                seedWalletTitle + pathToCreate,
                 new Password(password),
                 pathToCreate,
                 currentNetType,

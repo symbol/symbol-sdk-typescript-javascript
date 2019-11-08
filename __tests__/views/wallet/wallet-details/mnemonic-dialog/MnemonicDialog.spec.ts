@@ -5,13 +5,11 @@ import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
 // @ts-ignore
 import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/MnemonicDialog.vue'
-import {accountMutations, accountState} from '@/store/account'
-import {appMutations, appState} from '@/store/app'
+import {accountState} from '@/store/account'
 import {veeValidateConfig} from "@/core/validation"
 import {Password} from "nem2-sdk"
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import {
-    mosaicsLoading,
     multisigAccountInfo,
     mosaics,
     networkCurrency,

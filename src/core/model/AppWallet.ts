@@ -22,7 +22,7 @@ import {
 import CryptoJS from 'crypto-js'
 import {filter, mergeMap} from 'rxjs/operators'
 import {Message, networkConfig, defaultNetworkConfig} from "@/config"
-import {localRead, localSave, createSubWalletByPath, getPath} from "@/core/utils"
+import {localRead, localSave, createSubWalletByPathNumber, getPath} from "@/core/utils"
 import {AppAccounts, CreateWalletType} from "@/core/model"
 import {AppState} from './types'
 import {Log} from './Log'
@@ -76,21 +76,21 @@ export class AppWallet {
     createFromPath(
         name: string,
         password: Password,
-        path: string,
+        pathNumber: number,
         networkType: NetworkType,
         store: Store<AppState>): AppWallet {
         try {
             const accountName = store.state.account.accountName
             let accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
             const mnemonic = AppAccounts().decryptString(accountMap[accountName].seed, password.value)
-            const account = createSubWalletByPath(mnemonic, path)
+            const account = createSubWalletByPathNumber(mnemonic, pathNumber)
             this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, account.privateKey, networkType)
             this.name = name
             this.address = this.simpleWallet.address.plain()
             this.publicKey = account.publicKey
             this.networkType = networkType
             this.active = true
-            this.path = path
+            this.path = getPath(pathNumber)
             this.sourceType = CreateWalletType.seed
             this.encryptedMnemonic = AppAccounts().encryptString(mnemonic, password.value)
             this.addNewWalletToList(store)
@@ -109,17 +109,16 @@ export class AppWallet {
         networkType: NetworkType,
         store: Store<AppState>): AppWallet {
         try {
-            const path = getPath(0)
             const accountName = store.state.account.accountName
             const accountMap = localRead('accountMap') === '' ? {} : JSON.parse(localRead('accountMap'))
-            const account = createSubWalletByPath(mnemonic, path)  // need put in configure
+            const account = createSubWalletByPathNumber(mnemonic, 0)
             this.simpleWallet = SimpleWallet.createFromPrivateKey(name, password, account.privateKey, networkType)
             this.name = name
             this.address = this.simpleWallet.address.plain()
             this.publicKey = account.publicKey
             this.networkType = networkType
             this.active = true
-            this.path = path
+            this.path = getPath(0)
             this.sourceType = CreateWalletType.seed
             this.encryptedMnemonic = AppAccounts().encryptString(mnemonic, password.value)
             accountMap[accountName].seed = this.encryptedMnemonic

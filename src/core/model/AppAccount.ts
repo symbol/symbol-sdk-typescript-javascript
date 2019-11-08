@@ -4,15 +4,12 @@ import {Store} from "vuex"
 import {AppState} from "@/core/model/types"
 import {AppWallet} from "@/core/model/AppWallet"
 import CryptoJS from "crypto-js"
-import {WordArray} from "crypto-js"
 import {CreateWalletType} from "@/core/model/CreateWalletType"
 
 const defaultAlgo = CryptoJS.algo.AES
 const cryptoJSLib: any = CryptoJS.lib
 const PasswordBasedCipher: any = cryptoJSLib.PasswordBasedCipher
 
-const APP_LOCK_PHRASE: string = 'This Is The Awesome Wallet Lock Phrase!!!'
-const APP_LOCK_PHRASE_WORD_ARRAY: WordArray = CryptoJS.enc.Utf16.parse(APP_LOCK_PHRASE)
 
 export class AppAccount {
     accountName: string
