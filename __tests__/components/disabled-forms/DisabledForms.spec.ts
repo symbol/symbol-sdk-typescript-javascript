@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
 // @ts-ignore
 import DisabledForms from '@/components/disabled-forms/DisabledForms.vue'
-import {Alert} from 'iview'
+import {Alert} from 'view-design'
 import {accountMutations, accountState} from '@/store/account'
 import {appMutations, appState} from '@/store/app'
 import {veeValidateConfig} from "@/core/validation"

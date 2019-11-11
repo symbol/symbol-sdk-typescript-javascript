@@ -1,6 +1,6 @@
 import {shallowMount, config, createLocalVue} from '@vue/test-utils'
 import VueRouter from 'vue-router'
-import iView from 'iview'
+import iView from 'view-design'
 import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
 // @ts-ignore

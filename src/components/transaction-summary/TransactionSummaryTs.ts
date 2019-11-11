@@ -8,9 +8,4 @@ export class TransactionSummaryTs extends Vue {
 
     @Prop({default: null}) formattedTransaction: FormattedTransaction
     @Prop({default: false}) addScroll: boolean
-
-    innerTransactionClicked(innerTransaction) {
-        this.currentInnerTransaction = innerTransaction
-        this.isShowInnerDialog = true
-    }
 }
