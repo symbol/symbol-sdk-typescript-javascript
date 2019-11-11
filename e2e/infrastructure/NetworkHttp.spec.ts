@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {expect} from 'chai';
-import {NetworkHttp} from '../../src/infrastructure/NetworkHttp';
-import {NetworkType} from '../../src/model/blockchain/NetworkType';
+import { expect } from 'chai';
+import { NetworkHttp } from '../../src/infrastructure/NetworkHttp';
+import { NetworkType } from '../../src/model/blockchain/NetworkType';
 
 describe('NetworkHttp', () => {
     let networkHttp: NetworkHttp;
@@ -34,10 +34,21 @@ describe('NetworkHttp', () => {
     describe('getNetworkType', () => {
         it('should return network type', (done) => {
             networkHttp.getNetworkType()
-                .subscribe((networkType) => {
-                    expect(networkType).to.be.equal(NetworkType.MIJIN_TEST);
-                    done();
-                });
+            .subscribe((networkType) => {
+                expect(networkType).to.be.equal(NetworkType.MIJIN_TEST);
+                done();
+            });
+        });
+    });
+
+    describe('getNetworkInfo', () => {
+        it('should return network info', (done) => {
+            networkHttp.getNetworkInfo()
+            .subscribe((networkInfo) => {
+                expect('mijinTest').to.be.equal(networkInfo.name);
+                expect('catapult development network').to.be.equal(networkInfo.description);
+                done();
+            });
         });
     });
 });

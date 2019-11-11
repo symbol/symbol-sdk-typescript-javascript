@@ -17,11 +17,10 @@
 import { from as observableFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { NetworkType } from '../model/blockchain/NetworkType';
-import { NodeInfo } from '../model/node/NodeInfo';
 import { Http } from './Http';
 import { NetworkRepository } from './NetworkRepository';
-import { NetworkRoutesApi, NetworkTypeNameEnum } from "nem2-sdk-openapi-typescript-node-client";
-import { NetworkTypeDTO } from "nem2-sdk-openapi-typescript-node-client/model/networkTypeDTO";
+import { NetworkRoutesApi, NodeRoutesApi } from "nem2-sdk-openapi-typescript-node-client";
+import { NetworkInfo } from "../model/blockchain/NetworkInfo";
 
 /**
  * Network http repository.
@@ -36,12 +35,19 @@ export class NetworkHttp extends Http implements NetworkRepository {
     private networkRoutesApi: NetworkRoutesApi;
 
     /**
+     * @internal
+     * Nem2 Library node routes api
+     */
+    private nodeRoutesApi: NodeRoutesApi;
+
+    /**
      * Constructor
      * @param url
      */
     constructor(url: string) {
         super();
         this.networkRoutesApi = new NetworkRoutesApi(url);
+        this.nodeRoutesApi = new NodeRoutesApi(url);
 
     }
 
@@ -51,21 +57,20 @@ export class NetworkHttp extends Http implements NetworkRepository {
      * @return network type enum.
      */
     public getNetworkType(): Observable<NetworkType> {
+        return observableFrom(this.nodeRoutesApi.getNodeInfo()).pipe(
+            map((({body}) => body.networkIdentifier),
+                catchError((error) => throwError(this.errorHandling(error)))),
+        );
+    }
+
+    /**
+     * Get network info
+     *
+     * @return network type enum.
+     */
+    public getNetworkInfo(): Observable<NetworkInfo> {
         return observableFrom(this.networkRoutesApi.getNetworkType()).pipe(
-            map((({body}) => {
-                    switch (body.name) {
-                        case NetworkTypeNameEnum.Mijin:
-                            return NetworkType.MIJIN;
-                        case NetworkTypeNameEnum.MijinTest:
-                            return NetworkType.MIJIN_TEST;
-                        case NetworkTypeNameEnum.Public:
-                            return NetworkType.MAIN_NET;
-                        case NetworkTypeNameEnum.PublicTest:
-                            return NetworkType.TEST_NET;
-                        default:
-                            throw new Error(`Unknown NetworkType with name ${body.name}`);
-                    }
-                }),
+            map((({body}) => new NetworkInfo(body.name, body.description)),
                 catchError((error) => throwError(this.errorHandling(error)))),
         );
     }
