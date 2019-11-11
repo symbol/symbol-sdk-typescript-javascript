@@ -18,15 +18,18 @@ import {
     Mosaic,
     MosaicId,
     UInt64,
+    EncryptedPrivateKey,
+    PersistentDelegationRequestTransaction,
 } from 'nem2-sdk'
 import CryptoJS from 'crypto-js'
 import {filter, mergeMap} from 'rxjs/operators'
 import {Message, networkConfig, defaultNetworkConfig} from "@/config"
 import {localRead, localSave, createSubWalletByPathNumber, getPath} from "@/core/utils"
 import {AppAccounts, CreateWalletType} from "@/core/model"
-import {AppState} from './types'
+import {AppState, RemoteAccount} from './types'
 import {Log} from './Log'
 const {DEFAULT_LOCK_AMOUNT} = defaultNetworkConfig
+const {EMPTY_LINKED_ACCOUNT_KEY} = networkConfig
 
 export class AppWallet {
     constructor(wallet?: {
@@ -48,6 +51,7 @@ export class AppWallet {
     sourceType: string
     importance: number
     linkedAccountKey: string
+    remoteAccount: RemoteAccount | null
 
     generateWalletTitle(createType: string, coinType: string, netType: string) {
         return `${createType}-${coinType}-${netType}`
@@ -176,16 +180,21 @@ export class AppWallet {
     }
 
     getAccount(password: Password): Account {
-        // @WALLETS: update after nem2-sdk EncryptedPrivateKey constructor definition is fixed
-        // https://github.com/nemtech/nem2-sdk-typescript-javascript/issues/241
         const {encryptedKey, iv} = this.simpleWallet.encryptedPrivateKey
         const {network} = this.simpleWallet
-
-        const common = {password: password.value, privateKey: ''}
-        const wallet = {encrypted: encryptedKey, iv}
-        Crypto.passwordToPrivateKey(common, wallet, WalletAlgorithm.Pass_bip32)
-        const privateKey = common.privateKey
+        const privateKey = new EncryptedPrivateKey(encryptedKey, iv).decrypt(password)
         return Account.createFromPrivateKey(privateKey, network)
+    }
+
+    getRemoteAccountPrivateKey(password: string): string {
+        try {
+            if (!this.checkPassword(password)) throw new Error('Wrong password')
+            const _password = new Password(password)
+            const {encryptedKey, iv} = this.remoteAccount.simpleWallet.encryptedPrivateKey
+            return new EncryptedPrivateKey(encryptedKey, iv).decrypt(_password).toUpperCase()
+        } catch(error) {
+            throw new Error(error)
+        }
     }
 
     getMnemonic(password: Password): string {
@@ -307,6 +316,38 @@ export class AppWallet {
         }
     }
 
+    /**
+     * @param password 
+     * @param privateKey false in the case of new account creation
+     * @param store 
+     */
+    createAndStoreRemoteAccount(  password: string,
+                                                privateKey: string | false,
+                                                store: Store<AppState>
+    ): string {
+        if (!this.checkPassword(password)) throw new Error('The password does not match the wallet password')
+        const _password = new Password(password)
+
+        const account = privateKey
+            ? Account.createFromPrivateKey(privateKey, this.networkType)
+            : Account.generateNewAccount(this.networkType)
+
+        const {publicKey} = account
+        const _privateKey = account.privateKey
+        if(this.linkedAccountKey && this.linkedAccountKey !== publicKey) {
+            throw new Error('The public key is not matching the current linked account key')
+        }
+
+        this.remoteAccount = {
+            publicKey,
+            simpleWallet: SimpleWallet
+                .createFromPrivateKey('remote account', _password, _privateKey, this.networkType),
+        }
+        
+        this.updateWallet(store)
+        return _privateKey
+    }
+
     updateWalletName(
         accountName: string,
         newWalletName: string,
@@ -354,6 +395,10 @@ export class AppWallet {
             store.commit('SET_MULTISIG_ACCOUNT_INFO', {address: this.address, multisigAccountInfo: null})
             store.commit('SET_MULTISIG_LOADING', false)
         }
+    }
+
+    isLinked(): boolean {
+        return this.linkedAccountKey && this.linkedAccountKey !== EMPTY_LINKED_ACCOUNT_KEY
     }
 
     announceTransaction(
@@ -496,6 +541,31 @@ export class AppWallet {
         return {
             signedTransaction,
             signedLock: account.sign(hashLockTransaction, generationHash),
+        }
+    }
+
+    createPersistentDelegationRequestTransaction(
+        deadline: Deadline,
+        recipientPublicKey: string,
+        feeAmount: UInt64,
+        password: string,
+    ): PersistentDelegationRequestTransaction {
+        try {
+            const _password = new Password(password)
+            const delegatedPrivateKey = this.getRemoteAccountPrivateKey(password)
+            const accountPrivateKey = this.getAccount(_password).privateKey
+    
+            return PersistentDelegationRequestTransaction
+                .createPersistentDelegationRequestTransaction(
+                        deadline,
+                        delegatedPrivateKey,
+                        recipientPublicKey,
+                        accountPrivateKey,
+                        this.networkType,
+                        feeAmount,
+                    );
+        } catch (error) {
+            throw new Error(error)
         }
     }
 }

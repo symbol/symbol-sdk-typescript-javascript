@@ -13,7 +13,7 @@
       <div v-if="!bind" class="unbind_text">
         <span >{{$t('unbind')}}</span>
         <span class="color_text">{{target}}</span>
-        <span>{{$t('fromWhere')}}</span>
+        <span class="from-span">{{$t('fromWhere')}}</span>
         <span class="color_text">{{alias}}</span>
       </div>
       <div v-if="bind && !fromNamespace" class="input_content">

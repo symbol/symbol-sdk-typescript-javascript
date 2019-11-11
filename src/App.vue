@@ -118,7 +118,7 @@
                 if (mosaicListFromStorage) await this.$store.commit('SET_MOSAICS', parsedMosaicListFromStorage)
                 appWallet.setAccountInfo(this.$store)
 
-                await setMosaics(newWallet, this.$store)
+                await setMosaics(appWallet, this.$store)
                 await setNamespaces(newWallet.address, this.$store),
 
                     /**

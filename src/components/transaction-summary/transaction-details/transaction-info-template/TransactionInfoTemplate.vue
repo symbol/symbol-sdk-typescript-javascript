@@ -12,14 +12,14 @@
       <div v-if="value">
         <div v-if="key !== 'transfer_type' && !(key in SpecialTxDetailsKeys)">
           <span class="title">{{$t(key)}}</span>
-          <span class="value overflow_ellipsis text_select" v-if="value">
+          <span class="value text_select" v-if="value">
                         {{key in TxDetailsKeysWithValueToTranslate ? $t(value) : value }}
                     </span>
 
           <span class="no_data" v-else>{{$t('no_data')}}</span>
         </div>
 
-        <div class="mosaic_info" v-if="key === SpecialTxDetailsKeys.mosaics">
+        <div class="mosaic_info" v-if="key === SpecialTxDetailsKeys.mosaics && value.length">
           <span class="title">{{$t(key)}}</span>
           <MosaicTable :tableData="renderMosaicsToTable(value)"/>
         </div>

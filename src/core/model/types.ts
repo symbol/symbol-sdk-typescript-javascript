@@ -1,4 +1,4 @@
-import {Transaction, MultisigAccountInfo, SignedTransaction, CosignatureSignedTransaction} from 'nem2-sdk'
+import {Transaction, MultisigAccountInfo, SignedTransaction, CosignatureSignedTransaction, SimpleWallet} from 'nem2-sdk'
 import {AppNamespace} from './AppNamespace'
 import {AppMosaic} from './AppMosaic'
 import {FormattedTransaction} from './FormattedTransaction'
@@ -29,6 +29,11 @@ export interface NetworkCurrency {
     divisibility: number,
     ticker: string,
     name: string,
+}
+
+export interface RemoteAccount {
+    simpleWallet: SimpleWallet,
+    publicKey: string,
 }
 
 export interface StoreAccount {
