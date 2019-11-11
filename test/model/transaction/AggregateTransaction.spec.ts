@@ -30,6 +30,7 @@ import {MosaicNonce} from '../../../src/model/mosaic/MosaicNonce';
 import {MosaicSupplyChangeAction} from '../../../src/model/mosaic/MosaicSupplyChangeAction';
 import { NetworkCurrencyMosaic } from '../../../src/model/mosaic/NetworkCurrencyMosaic';
 import {AggregateTransaction} from '../../../src/model/transaction/AggregateTransaction';
+import {AggregateTransactionCosignature} from '../../../src/model/transaction/AggregateTransactionCosignature';
 import {CosignatoryModificationAction} from '../../../src/model/transaction/CosignatoryModificationAction';
 import { CosignatureSignedTransaction } from '../../../src/model/transaction/CosignatureSignedTransaction';
 import { CosignatureTransaction } from '../../../src/model/transaction/CosignatureTransaction';
@@ -545,6 +546,35 @@ describe('AggregateTransaction', () => {
 
         expect(aggregateTransaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
         expect(aggregateTransaction.innerTransactions.length).to.be.equal(2);
+    });
+
+    it('Should be able to add cosignatures to current aggregate tx', () => {
+        const transferTx1 = TransferTransaction.create(Deadline.create(),
+                                                  account.address,
+                                                  [],
+                                                  PlainMessage.create('a to b'),
+                                                  NetworkType.MIJIN_TEST);
+        let aggregateTransaction = AggregateTransaction.createComplete(
+            Deadline.create(),
+            [transferTx1.toAggregate(account.publicAccount)],
+            NetworkType.MIJIN_TEST,
+            [],
+        );
+
+        expect(aggregateTransaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
+        expect(aggregateTransaction.cosignatures.length).to.be.equal(0);
+
+        // add cosignature after creation
+        const signedTransaction = aggregateTransaction.signWith(account, generationHash);
+        const cosignature = new AggregateTransactionCosignature(
+            signedTransaction.payload,
+            PublicAccount.createFromPublicKey(signedTransaction.signerPublicKey, NetworkType.MIJIN_TEST),
+        );
+
+        aggregateTransaction = aggregateTransaction.addCosignatures([cosignature]);
+
+        expect(aggregateTransaction.type).to.be.equal(TransactionType.AGGREGATE_COMPLETE);
+        expect(aggregateTransaction.cosignatures.length).to.be.equal(1);
     });
 
     describe('size', () => {
