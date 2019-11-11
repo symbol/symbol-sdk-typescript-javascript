@@ -1,7 +1,6 @@
 <template>
   <div class="transactionConfirmationWrap">
     <Modal
-      @keyup.enter.native="submit"
       v-if="show"
       v-model="show"
       class-name="vertical-center-modal"
@@ -22,7 +21,7 @@
           </div>
 
 
-          <form>
+          <form @keyup.enter="submit">
             <div v-if="wallet.sourceType === walletTypes.trezor">
               <Button
                 type="success"
