@@ -2,7 +2,6 @@ import {Message} from "@/config/index.ts"
 import {copyTxt} from "@/core/utils"
 import {Component, Vue, Prop} from 'vue-property-decorator'
 import {mapState} from "vuex"
-import {Password} from "nem2-sdk"
 import {AppWallet, StoreAccount} from "@/core/model"
 
 @Component({
@@ -28,26 +27,12 @@ export class KeystoreDialogTs extends Vue {
         return this.showKeystoreDialog
     }
 
-    set show(val) {
-        if (!val) {
-            this.$emit('close')
-        }
-    }
-
     get getWallet() {
         return this.activeAccount.wallet
     }
 
     saveQRCode() {
 
-    }
-
-    keystoreDialogCancel() {
-        this.wallet.password = ''
-        this.$emit('closeKeystoreDialog')
-        setTimeout(() => {
-            this.stepIndex = 0
-        }, 300)
     }
 
     exportKeystore() {
@@ -69,7 +54,7 @@ export class KeystoreDialogTs extends Vue {
         this.stepIndex = 2
     }
 
-    // @VEEVALIDATE
+    // @VEE-VALIDATE
     checkWalletPassword() {
         if (!this.checkInput()) return
         this.stepIndex = 1
@@ -78,14 +63,14 @@ export class KeystoreDialogTs extends Vue {
     checkInput() {
         if (!this.wallet.password || this.wallet.password == '') {
             this.$Notice.error({
-                title: this.$t('please_set_your_wallet_password') + ''
+                title: this.$t(Message.PLEASE_SET_WALLET_PASSWORD_INFO) + ''
             })
             return false
         }
 
         if (this.wallet.password.length < 8) {
             this.$Notice.error({
-                title: this.$t('password_error') + ''
+                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
             })
             return false
         }
@@ -94,7 +79,7 @@ export class KeystoreDialogTs extends Vue {
 
         if (!validPassword) {
             this.$Notice.error({
-                title: this.$t('password_error') + ''
+                title: this.$t(Message.WRONG_PASSWORD_ERROR) + ''
             })
             return false
         }

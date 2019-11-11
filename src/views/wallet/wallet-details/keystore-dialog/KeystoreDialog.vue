@@ -6,7 +6,7 @@
             :footer-hide="true"
             :width="1000"
             :transfer="false"
-            @on-cancel="keystoreDialogCancel">
+            @on-cancel="$emit('closeKeystoreDialog')">
       <div slot="header" class="keystoreDialogHeader">
         <span class="title">{{$t('export')}} Keystore</span>
       </div>

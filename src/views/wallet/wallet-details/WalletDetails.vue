@@ -38,17 +38,17 @@
             </p>
             <p class="link_text">
               <span class="tit">{{$t('alias')}}</span>
-              <span class="  alias_add pointer" @click="bindNamespace()" />
+              <span class="  alias_add pointer" @click="bindNamespace()"/>
               <span class="walletPublicKey">
                 <span v-if='!selfAliases.length'>-</span>
-                <div v-if='selfAliases.length' >
+                <div v-if='selfAliases.length'>
                   <span
-                    v-for="(alias, index) in selfAliases"
-                    :key="index"
+                          v-for="(alias, index) in selfAliases"
+                          :key="index"
                   >
                     <span class="aliasLink">
                       <a
-                        @click="unbindNamespace(alias)"
+                              @click="unbindNamespace(alias)"
                       >{{alias.name}}</a>
                       {{index < selfAliases.length - 1 ? ' | ' : ''}}
                     </span>
@@ -86,45 +86,49 @@
     <div class="accountFn radius" ref="accountFn">
       <div class="accountFnNav">
         <ul class="navList clear">
-<!--          <li :class="['left',functionShowList[0]?'active':''] " @click="showFunctionIndex(0)">-->
-<!--            <img src="@/common/img/wallet/wallet-detail/walletAddressBook.png">-->
-<!--            {{$t('contact_list')}}-->
-<!--          </li>-->
+          <!--          <li :class="['left',functionShowList[0]?'active':''] " @click="showFunctionIndex(0)">-->
+          <!--            <img src="@/common/img/wallet/wallet-detail/walletAddressBook.png">-->
+          <!--            {{$t('contact_list')}}-->
+          <!--          </li>-->
           <!--restrict-->
           <li :class="['left',functionShowList[1]?'active':''] " @click="showFunctionIndex(1)">
             <img src="@/common/img/wallet/wallet-detail/walletHarvesting.png">
             {{$t('Harvesting')}}
           </li>
           <li :class="['left',functionShowList[2]?'active':'','other'] ">
-         <img src="@/common/img/wallet/wallet-detail/walletDetailsFilter.png">
+            <img src="@/common/img/wallet/wallet-detail/walletDetailsFilter.png">
             {{$t('Filter_management')}}
           </li>
           <li :class="['left',functionShowList[3]?'active':'','other'] ">
-           <img src="@/common/img/wallet/wallet-detail/walletDetailsMetaData.png">
+            <img src="@/common/img/wallet/wallet-detail/walletDetailsMetaData.png">
             {{$t('meta_data')}}
           </li>
         </ul>
       </div>
-<!--      <AddressBook v-if="functionShowList[0]"></AddressBook>-->
+      <!--      <AddressBook v-if="functionShowList[0]"></AddressBook>-->
       <WalletHarvesting v-if="functionShowList[1]"></WalletHarvesting>
       <!--      <WalletFilter v-if="functionShowList[1]"></WalletFilter>-->
     </div>
     <MnemonicDialog v-if="showMnemonicDialog"
                     :showMnemonicDialog="showMnemonicDialog"
                     @closeMnemonicDialog="closeMnemonicDialog"/>
-    <PrivatekeyDialog :showPrivatekeyDialog="showPrivatekeyDialog"
-                      @closePrivatekeyDialog="closePrivatekeyDialog"/>
-    <KeystoreDialog :showKeystoreDialog="showKeystoreDialog"
-                    @closeKeystoreDialog="closeKeystoreDialog"/>
+    <PrivatekeyDialog
+            v-if="showPrivatekeyDialog"
+            :showPrivatekeyDialog="showPrivatekeyDialog"
+            @closePrivatekeyDialog="showPrivatekeyDialog=false"/>
+    <KeystoreDialog
+            v-if="showKeystoreDialog"
+            :showKeystoreDialog="showKeystoreDialog"
+            @closeKeystoreDialog="showKeystoreDialog=false"/>
     <Alias
-      v-if="showBindDialog"
-      :visible='showBindDialog'
-      :bind="bind"
-      :fromNamespace="fromNamespace"
-      :mosaic="null"
-      :namespace="activeNamespace"
-      :address="getAddress"
-      @close="showBindDialog = false"
+            v-if="showBindDialog"
+            :visible='showBindDialog'
+            :bind="bind"
+            :fromNamespace="fromNamespace"
+            :mosaic="null"
+            :namespace="activeNamespace"
+            :address="getAddress"
+            @close="showBindDialog = false"
     />
   </div>
 </template>

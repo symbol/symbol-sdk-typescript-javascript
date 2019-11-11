@@ -116,9 +116,7 @@ export class WalletDetailsTs extends Vue {
         this.showKeystoreDialog = true
     }
 
-    closeKeystoreDialog() {
-        this.showKeystoreDialog = false
-    }
+
 
     get QRCode(): string {
         // @QR

@@ -6,7 +6,7 @@
             :footer-hide="true"
             :width="1000"
             :transfer="false"
-            @on-cancel="privatekeyDialogCancel">
+            @on-cancel="$emit('closePrivatekeyDialog')">
       <div slot="header" class="privatekeyDialogHeader">
         <span class="title">{{$t('export_private_key')}}</span>
       </div>

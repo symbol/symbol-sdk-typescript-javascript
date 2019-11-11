@@ -30,12 +30,6 @@ export class PrivatekeyDialogTs extends Vue {
         return this.showPrivatekeyDialog
     }
 
-    set show(val) {
-        if (!val) {
-            this.$emit('close')
-        }
-    }
-
     get getWallet() {
         return this.activeAccount.wallet
     }
@@ -47,18 +41,6 @@ export class PrivatekeyDialogTs extends Vue {
     get generationHash() {
         return this.activeAccount.generationHash
     }
-
-    privatekeyDialogCancel() {
-        this.wallet = {
-            password: '',
-            privatekey: ''
-        }
-        this.$emit('closePrivatekeyDialog')
-        setTimeout(() => {
-            this.stepIndex = 0
-        }, 300)
-    }
-
 
     checkPassword() {
         if (!this.checkInput()) return
