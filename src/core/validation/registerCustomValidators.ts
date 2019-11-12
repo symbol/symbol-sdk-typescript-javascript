@@ -25,6 +25,7 @@ export const CUSTOM_VALIDATORS_NAMES = {
     alias: 'alias',
     remoteAccountPrivateKey: 'remoteAccountPrivateKey',
     publicKey: 'publicKey',
+    namespaceOrMosaicId: 'namespaceOrMosaicId',
 }
 
 const validateAddress = (address): ValidationObject => {
@@ -36,7 +37,7 @@ const validateAddress = (address): ValidationObject => {
     }
 }
 
-const validateAlias = (alias): ValidationObject => {
+export const validateAlias = (alias): ValidationObject => {
     if (alias.length > maxNameSize) return {valid: false}
     try {
         new NamespaceId(alias)
@@ -51,6 +52,24 @@ const validatePublicKey = (publicKey): ValidationObject => {
         /** The NetworkType below is for public key testing only */
         PublicAccount.createFromPublicKey(publicKey, NetworkType.TEST_NET)
         return {valid: publicKey}
+    } catch (error) {
+        return {valid: false}
+    }
+}
+
+export const validateMosaicId = (mosaicId): ValidationObject => {
+    try {
+        new MosaicId(mosaicId)
+        return {valid: mosaicId}
+    } catch (error) {
+        return {valid: false}
+    }
+}
+
+export const validateNamespace = (namespace): ValidationObject => {
+    try {
+        new NamespaceId(namespace)
+        return {valid: namespace}
     } catch (error) {
         return {valid: false}
     }
@@ -145,6 +164,22 @@ const mosaicIdValidator = (context): Promise<ValidationObject> => {
     )
 }
 
+const namespaceOrMosaicIdValidator = (context): Promise<ValidationObject> => {
+    return context.Validator.extend(
+        CUSTOM_VALIDATORS_NAMES.namespaceOrMosaicId,
+        (namespaceOrMosaicId) => new Promise((resolve) => {
+            const isValidNamespace = validateMosaicId(namespaceOrMosaicId)
+            const isValidMosaicId = validateNamespace(namespaceOrMosaicId)
+
+            if (isValidNamespace.valid || isValidMosaicId.valid) {
+                resolve({valid: namespaceOrMosaicId})
+            } else {
+                resolve({valid: false})
+            }
+        }),
+    )
+}
+
 const addressOrAliasValidator = (context): Promise<ValidationObject> => {
     return context.Validator.extend(
         CUSTOM_VALIDATORS_NAMES.addressOrAlias,
@@ -160,6 +195,7 @@ const addressOrAliasValidator = (context): Promise<ValidationObject> => {
         }),
     )
 }
+
 
 const addressValidator = (context): Promise<ValidationObject> => {
     return context.Validator.extend(
@@ -180,7 +216,9 @@ const customValidatorFactory = {
     [CUSTOM_VALIDATORS_NAMES.alias]: aliasValidator,
     [CUSTOM_VALIDATORS_NAMES.remoteAccountPrivateKey]: remoteAccountPrivateKeyValidator,
     [CUSTOM_VALIDATORS_NAMES.publicKey]: publicKeyValidator,
+    [CUSTOM_VALIDATORS_NAMES.namespaceOrMosaicId]: namespaceOrMosaicIdValidator,
 }
+
 
 const CustomValidator = (name, Validator) => ({
     name,

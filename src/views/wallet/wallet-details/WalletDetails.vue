@@ -60,7 +60,7 @@
         </Col>
         <Col span="6">
           <div class="addressQRCode">
-            <img :src="QRCode">
+            <img :src="qrCode$">
           </div>
           <p class="codeTit">{{$t('Address_QR_code')}}</p>
         </Col>

@@ -42,7 +42,6 @@
     .qr_button {
       display: flex;
       width: 280px;
-      display: flex;
       align-items: center;
       justify-content: space-around;
       span {
@@ -92,6 +91,24 @@
       display: flex;
       line-height: 43px;
       font-size: 12px;
+      .input-container {
+        display: flex;
+        align-items: center;
+        margin-left: 30px;
+        >span {
+          width: 285px;
+        }
+        input {
+          font-size: 12px;
+          padding-left: 10px;
+          width: 270px;
+          height: 46px;
+          outline: none;
+          border-radius: 4px;
+          border:1px solid #ccc;
+          box-shadow:none;
+        }
+      }
       .title {
         display: block;
         width: 120px;
@@ -100,38 +117,19 @@
         margin-left: 50px;
       }
       .asset_type {
-        padding: 1px;
-        position: absolute;
-        top: 0px;
+        top: 0;
         left: 204px;
-        border:1px solid #ccc;
-        border-radius: 2px;
         outline: none;
         width: 240px;
         height: 46px;
-        padding-top: 10px;
         font-size: 12px;
-      }
-      input {
-        outline: none;
-        box-shadow:none;
-      }
-      .amount_input {
-        font-size: 12px;
-        padding-left: 10px;
-        width: 280px;
-        height: 46px;
-        outline: none;
-        margin-left: 315px;
-        border-radius: 4px;
-        border:1px solid #ccc;
       }
     }
     .remark {
       position: relative;
       margin-top:30px;
       display: flex;
-      line-height: 76px;
+
       .title {
         display: block;
         width: 120px;
@@ -140,20 +138,18 @@
         margin-left: 50px;
       }
       textarea {
-        position: absolute;
-        top: 10px;
-        left: 188px;
-        width: 560px;
+        position: relative;
+        width: 557px;
         height: 76px;
-        margin-left: 15px;
+        margin-left: 30px;
         border:1px solid #ccc;
         overflow: auto;
-        line-height: 30px;
+        line-height: 20px;
       }
     }
     .remark_length{
       position: absolute;
-      top: 28px;
+      top: 58px;
       left: 770px;
     }
     .send_button {

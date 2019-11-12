@@ -17,8 +17,8 @@
           <span :class="['stepItem',stepIndex == 2||stepIndex == 3?'active':'']">{{$t('backup_private_key')}}</span>
         </div>
         <div class="stepItem1" v-if="stepIndex == 0">
-          <Form :model="wallet" @keyup.enter.native="exportPrivatekey">
-            <FormItem>
+          <Form :model="wallet" @keyup.enter.native="exportPrivatekey" onsubmit="event.preventDefault()">
+            <FormItem >
               <Input v-model="wallet.password"
                      type="password"
                      :autofocus="true"
@@ -84,7 +84,7 @@
         </div>
         <div class="stepItem4" v-if="stepIndex == 3">
           <div class="QRCodeImg">
-            <img :src="QRCode">
+            <img :src="qrCode$">
           </div>
           <div class="btns">
             <Row :gutter="80">
@@ -93,9 +93,9 @@
                 <Button type="success" @click="toPrevPage">{{$t('display_private_key')}}</Button>
               </Col>
               <Col span="5">
-                <Button type="success" @click="saveQRCode">
+                <Button type="success">
                   <a
-                          :href="QRCode"
+                          :href="qrCode$"
                           download="qrCode.png"
                   >
                     {{$t('Download')}}

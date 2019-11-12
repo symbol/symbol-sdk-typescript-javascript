@@ -35,7 +35,6 @@
                 v-focus
                 v-model="password"
                 type="password"
-                :placeholder="$t('please_enter_your_wallet_password')"
                 data-vv-name="password"
                 v-validate="standardFields.previousPassword.validation"
                 :data-vv-as="$t('password')"
@@ -121,10 +120,9 @@
             </Button>
           </div>
         </div>
-
         <div class="stepItem6" v-if="stepIndex == 5">
           <div class="backupImg">
-            <img :src="QRCode">
+            <img :src="qrCode$">
           </div>
           <div class="buttons_container">
             <Button class="button_arrow" type="success" @click="stepIndex = 2">
@@ -132,7 +130,7 @@
             </Button>
             <Button class="button_arrow" type="success">
               <a
-                      :href="QRCode"
+                      :href="qrCode$"
                       download="qrCode.png"
               >
                 {{$t('Download')}}

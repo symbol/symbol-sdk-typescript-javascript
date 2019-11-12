@@ -1,7 +1,7 @@
-import {copyTxt} from '@/core/utils'
-import {ContactQR} from 'nem2-qr-library'
-import {Address, AddressAlias, AliasType, MultisigAccountInfo, PublicAccount} from 'nem2-sdk'
-import {Component, Vue, Watch} from 'vue-property-decorator'
+import { copyTxt } from '@/core/utils'
+import { ContactQR } from 'nem2-qr-library'
+import { AliasType, MultisigAccountInfo, PublicAccount } from 'nem2-sdk'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import AddressBook from '@/views/wallet/wallet-details/wallet-function/address-book/AddressBook.vue'
 import WalletFilter from './wallet-function/wallet-filter/WalletFilter.vue'
 import KeystoreDialog from '@/views/wallet/wallet-details/keystore-dialog/KeystoreDialog.vue'
@@ -9,9 +9,13 @@ import MnemonicDialog from '@/views/wallet/wallet-details/mnemonic-dialog/Mnemon
 import PrivatekeyDialog from '@/views/wallet/wallet-details/privatekey-dialog/PrivatekeyDialog.vue'
 import WalletUpdatePassword from './wallet-function/wallet-update-password/WalletUpdatePassword.vue'
 import WalletHarvesting from '@/views/wallet/wallet-details/wallet-function/wallet-harvesting/WalletHarvesting.vue'
-import {mapState} from "vuex"
-import {AppWallet, AppInfo, StoreAccount, AppNamespace} from "@/core/model"
+import { mapState } from "vuex"
+import { AppWallet, AppInfo, StoreAccount, AppNamespace } from "@/core/model"
+import failureIcon from "@/common/img/monitor/failure.png"
 import Alias from '@/components/forms/alias/Alias.vue'
+import { of } from 'rxjs'
+import { pluck, concatMap } from 'rxjs/operators'
+
 
 @Component({
     components: {
@@ -29,6 +33,16 @@ import Alias from '@/components/forms/alias/Alias.vue'
             activeAccount: 'account',
             app: 'app'
         })
+    },
+    subscriptions() {
+        const qrCode$ = this
+            .$watchAsObservable('qrCodeArgs', { immediate: true })
+            .pipe(pluck('newValue'),
+                concatMap((args) => {
+                    if (args instanceof ContactQR) return args.toBase64()
+                    return of(failureIcon)
+                }))
+        return { qrCode$ }
     }
 })
 export class WalletDetailsTs extends Vue {
@@ -38,7 +52,7 @@ export class WalletDetailsTs extends Vue {
     showMnemonicDialog: boolean = false
     showKeystoreDialog: boolean = false
     showPrivatekeyDialog: boolean = false
-    functionShowList = [false,true]
+    functionShowList = [false, true]
     showBindDialog = false
     bind: boolean = true
     fromNamespace: boolean = false
@@ -60,7 +74,7 @@ export class WalletDetailsTs extends Vue {
     }
 
     get generationHash() {
-        return this.activeAccount.generationHash
+        return false
     }
 
     get currentHeight() {
@@ -77,11 +91,27 @@ export class WalletDetailsTs extends Vue {
 
     get selfAliases(): AppNamespace[] {
         return this.NamespaceList
-            .filter(({alias}) =>
+            .filter(({ alias }) =>
                 alias
                 && alias.type == AliasType.Address
-                && alias.address.plain()=== this.getAddress
+                && alias.address.plain() === this.getAddress
             )
+    }
+
+    get qrCodeArgs(): ContactQR {
+        try {
+            const publicAccount: any = PublicAccount
+                .createFromPublicKey(this.wallet.publicKey, this.wallet.networkType)
+
+            return new ContactQR(
+                this.wallet.name,
+                publicAccount,
+                this.wallet.networkType,
+                this.activeAccount.generationHash,
+            )
+        } catch (error) {
+            return null
+        }
     }
 
     showFunctionIndex(index) {
@@ -114,19 +144,6 @@ export class WalletDetailsTs extends Vue {
 
     changeKeystoreDialog() {
         this.showKeystoreDialog = true
-    }
-
-
-
-    get QRCode(): string {
-        // @QR
-        const publicAccount: any =  PublicAccount.createFromPublicKey(this.wallet.publicKey, this.wallet.networkType)
-        return new ContactQR(
-            this.wallet.name,
-            publicAccount,
-            this.wallet.networkType,
-            this.activeAccount.generationHash,
-        ).toBase64()
     }
 
     bindNamespace() {

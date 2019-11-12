@@ -13,7 +13,8 @@ const customMessagesEn = {
     max_value:()=>'current value is too big',
     decimal:()=>'current value does not match divisibility',
     remoteAccountPrivateKey:()=>'the private key is incorrect',
-    publicKey:()=>'the public key is incorrect'
+    publicKey:()=>'the public key is incorrect',
+    namespaceOrMosaicId:()=>'this is not a correct namespace or mosaic ID',
 }
 
 const customMessagesZh = {

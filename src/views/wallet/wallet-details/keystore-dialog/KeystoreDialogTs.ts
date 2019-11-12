@@ -31,10 +31,6 @@ export class KeystoreDialogTs extends Vue {
         return this.activeAccount.wallet
     }
 
-    saveQRCode() {
-
-    }
-
     exportKeystore() {
         switch (this.stepIndex) {
             case 0 :

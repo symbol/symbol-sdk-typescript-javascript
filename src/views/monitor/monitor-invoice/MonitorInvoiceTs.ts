@@ -1,78 +1,126 @@
-import {Message} from "@/config/index.ts"
-import {QRCodeGenerator} from 'nem2-qr-library'
-import {copyTxt} from '@/core/utils'
-import {Component, Vue} from 'vue-property-decorator'
+import { Message } from "@/config/index.ts"
+import { QRCodeGenerator, TransactionQR } from 'nem2-qr-library'
+import { copyTxt } from '@/core/utils'
+import { Component, Vue, Provide } from 'vue-property-decorator'
 import CollectionRecord from '@/components/collection-record/CollectionRecord.vue'
-import {mapState} from "vuex"
-import {MosaicId, TransferTransaction, Deadline, Address, Mosaic, UInt64, PlainMessage, Transaction} from "nem2-sdk"
-import {TransferType} from "@/core/model/TransferType"
-import {monitorReceiptTransferTypeConfig} from "@/config/view/monitor"
-import {AppInfo, MosaicNamespaceStatusType, StoreAccount} from "@/core/model"
+import { mapState } from "vuex"
+import { MosaicId, TransferTransaction, Deadline, Address, Mosaic, UInt64, PlainMessage, Transaction, NamespaceId, NamespaceMosaicIdGenerator } from "nem2-sdk"
+import { TransferType } from "@/core/model/TransferType"
+import { monitorReceiptTransferTypeConfig } from "@/config/view/monitor"
+import { AppInfo, MosaicNamespaceStatusType, StoreAccount } from "@/core/model"
 import failureIcon from '@/common/img/monitor/failure.png'
+import { pluck, concatMap } from 'rxjs/operators'
+import { of } from 'rxjs'
+import { validateMosaicId, validateAlias, standardFields } from '@/core/validation'
+import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue'
 
 @Component({
-    components: {
-        CollectionRecord
-    },
+    components: { CollectionRecord, ErrorTooltip },
     computed: {
         ...mapState({
             activeAccount: 'account',
             app: 'app'
         })
+    },
+    subscriptions() {
+        const qrCode$ = this
+            .$watchAsObservable('qrCodeArgs', { immediate: true })
+            .pipe(pluck('newValue'),
+                concatMap((args) => {
+                    if (args instanceof TransactionQR) return args.toBase64()
+                    return of(failureIcon)
+                }))
+        return { qrCode$ }
     }
 })
 
 export class MonitorInvoiceTs extends Vue {
+    @Provide() validator: any = this.$validator
     activeAccount: StoreAccount
     app: AppInfo
-    transactionHash = ''
     TransferType = TransferType
-    isShowDialog = false
     transferTypeList = monitorReceiptTransferTypeConfig
+    selectedMosaicHex: string = ""
     formItems = {
-        mosaicHex: '',
         mosaicAmount: 0,
         remarks: '',
-        mosaicName: ''
     }
+    QRCode: string = failureIcon
+    standardFields = standardFields
 
     get networkCurrency() {
         return this.activeAccount.networkCurrency
     }
 
-    get transferTransaction(): any { // @QR
-        const {networkType, address} = this.wallet
-        const {mosaicList} = this
-        const walletAddress = Address.createFromRawAddress(address)
-        const {mosaicName, mosaicAmount, remarks} = this.formItems
-        this.formItems.mosaicHex = {...mosaicList.find(item => item.value == mosaicName)}.mosaicHex
-        const mosaic = new MosaicId(this.formItems.mosaicHex)
-        return TransferTransaction.create(
-            Deadline.create(),
-            walletAddress,
-            [new Mosaic(mosaic, UInt64.fromUint(mosaicAmount))],
-            PlainMessage.create(remarks),
-            networkType
-        )
-    }
+    get activeMosaic(): {
+        name: string,
+        hex: string,
+        id: MosaicId | NamespaceId
+    } {
+        const { selectedMosaicHex } = this
 
-    get QRCode(): string {
-        try {
-            return QRCodeGenerator
-                .createTransactionRequest(this.transferTransaction)
-                .toBase64()
-        } catch (e) {
-            return failureIcon
+        if (!selectedMosaicHex) return {
+            name: null, hex: selectedMosaicHex, id: null
         }
 
+        try {
+            const selectedFromList = Object.values(this.mosaics)
+                .find(({ name, hex }) => name === selectedMosaicHex || hex === selectedMosaicHex)
+
+            if (selectedFromList !== undefined) {
+                const { name, hex } = selectedFromList
+                const id = name ? new NamespaceId(name) : new MosaicId(hex)
+                return { name, hex, id }
+            }
+
+            const name = null
+            const hex = selectedMosaicHex
+            const id = validateMosaicId(hex).valid
+                ? new MosaicId(hex) : new NamespaceId(hex.toLowerCase())
+
+            return { name, hex, id }
+        } catch (error) {
+            console.error("MonitorInvoiceTs -> error", error)
+            return {
+                name: null, hex: selectedMosaicHex, id: null
+            }
+        }
+    }
+
+    get transferTransaction(): TransferTransaction {
+        try {
+            const { activeMosaic } = this
+            const { networkType, address } = this.wallet
+
+            if (!activeMosaic.id) return null
+            const walletAddress = Address.createFromRawAddress(address)
+            const { mosaicAmount, remarks } = this.formItems
+
+            return TransferTransaction.create(
+                Deadline.create(),
+                walletAddress,
+                [new Mosaic(activeMosaic.id, UInt64.fromUint(mosaicAmount))],
+                PlainMessage.create(remarks),
+                networkType
+            )
+        } catch (error) {
+            console.error("MonitorInvoiceTs -> error", error)
+            return null
+        }
+    }
+
+    get qrCodeArgs(): TransactionQR {
+        const { transferTransaction } = this
+        if (!transferTransaction) return null
+        try {
+            return QRCodeGenerator.createTransactionRequest(transferTransaction)
+        } catch (e) {
+            return null
+        }
     }
 
     get accountAddress() {
         return this.activeAccount.wallet.address
-    }
-
-    get node() {
-        return this.activeAccount.node
     }
 
     get wallet() {
@@ -83,46 +131,25 @@ export class MonitorInvoiceTs extends Vue {
         return this.activeAccount.mosaics
     }
 
-    get currentHeight() {
-        return this.app.chainStatus.currentHeight
-    }
-
-    get mosaicsLoading() {
-        return this.app.mosaicsLoading
-    }
-
     get mosaicList() {
+        // @TODO: should be an AppMosaic method
         // @TODO: would be better to return a loading indicator
         // instead of an empty array ([] = "no matching data" in the select dropdown)
-        const {mosaics, currentHeight} = this
-        if (this.mosaicsLoading || !mosaics) return []
+        const { mosaics } = this
+        const { currentHeight } = this.app.chainStatus
+        if (this.app.mosaicsLoading || !mosaics) return []
 
-        const mosaicList: any = Object.values(this.mosaics)
+        const mosaicList: any = Object.values(mosaics)
 
         return [...mosaicList]
-            .filter(({expirationHeight}) => expirationHeight === MosaicNamespaceStatusType.FOREVER || currentHeight < expirationHeight)
-            .map(({name, hex}) => ({
-                value: name || hex,
-                mosaicHex: hex
-            }))
+            .filter(({ expirationHeight }) => {
+                return expirationHeight === MosaicNamespaceStatusType.FOREVER
+                    || currentHeight < expirationHeight
+            })
+            .map(({ hex, name }) => ({ value: name || hex }))
     }
 
-    async checkForm() {
-        let {mosaicAmount, mosaicName} = this.formItems
-        mosaicAmount = Number(mosaicAmount)
-        if ((!Number(mosaicAmount) && Number(mosaicAmount) !== 0) || Number(mosaicAmount) < 0) {
-            this.showErrorMessage(this.$t(Message.AMOUNT_LESS_THAN_0_ERROR))
-            return false
-        }
-        if (mosaicName === '') {
-            this.showErrorMessage(this.$t(Message.MOSAIC_LIST_NULL_ERROR))
-            return false
-        }
-        return true
-    }
-
-    // @TODO: does not work
-    filterMethod(value, option) {
+    filterMethod() {
         return 1
     }
 
@@ -133,23 +160,8 @@ export class MonitorInvoiceTs extends Vue {
         })
     }
 
-    onChange() {
-        let {mosaicAmount} = this.formItems
-        var reg = /^(0|[1-9][0-9]*)(\.\d+)?$/
-        if (!reg.test(`${mosaicAmount}`)) {
-            this.showErrorMessage(this.$t(Message.PLEASE_ENTER_A_CORRECT_NUMBER))
-        }
-    }
-
-    checkLength() {
-        let {remarks} = this.formItems
-        if (remarks.length > 25) {
-            this.showErrorMessage(this.$t(Message.NOTES_SHOULD_NOT_EXCEED_25_CHARACTER))
-        }
-    }
-
     downloadQR() {
-        const {address} = this.wallet
+        const { address } = this.wallet
         var QRCode: any = document.querySelector('#qrImg')
         var url = QRCode.src
         var a = document.createElement('a')
@@ -171,6 +183,6 @@ export class MonitorInvoiceTs extends Vue {
     }
 
     mounted() {
-        this.formItems.mosaicName = this.mosaicList[0] ? this.mosaicList[0].value : ''
+        this.selectedMosaicHex = this.mosaicList[0] ? this.mosaicList[0].value : ''
     }
 }

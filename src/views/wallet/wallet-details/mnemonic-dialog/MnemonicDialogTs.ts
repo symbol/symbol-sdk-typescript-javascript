@@ -2,6 +2,8 @@ import {MnemonicQR} from 'nem2-qr-library'
 import {MnemonicPassPhrase} from 'nem2-hd-wallets'
 import {Component, Vue, Prop, Provide} from 'vue-property-decorator'
 import {mapState} from "vuex"
+import { of } from 'rxjs'
+import { pluck, concatMap } from 'rxjs/operators'
 import {Password} from "nem2-sdk"
 import {AppAccounts, StoreAccount} from "@/core/model"
 import {copyTxt} from "@/core/utils"
@@ -20,6 +22,16 @@ import ErrorTooltip from '@/components/other/forms/errorTooltip/ErrorTooltip.vue
     components: {
         MnemonicVerification,
         ErrorTooltip,
+    },
+    subscriptions() {
+        const qrCode$ = this
+            .$watchAsObservable('qrCodeArgs', { immediate: true })
+            .pipe(pluck('newValue'),
+                concatMap((args) => {
+                    if (args instanceof MnemonicQR) return args.toBase64()
+                    return of(failureIcon)
+                }))
+        return { qrCode$ }
     }
 })
 export class MnemonicDialogTs extends Vue {
@@ -30,8 +42,8 @@ export class MnemonicDialogTs extends Vue {
     copyTxt = copyTxt
     stepIndex = 0
     mnemonic = ''
-    mnemonicQr: string = ''
     password: string = ''
+    QRCode: string = ''
 
     @Prop()
     showMnemonicDialog: boolean
@@ -49,21 +61,22 @@ export class MnemonicDialogTs extends Vue {
     get cipher() {
         return AppAccounts().getCipherPassword(this.activeAccount.accountName)
     }
-
-    get QRCode(): string {
+    
+    get qrCodeArgs(): MnemonicQR {
         const {mnemonic, password} = this
         const {generationHash, wallet} = this.activeAccount
         const {networkType} = wallet
-        if (password.length < 8) return ''
+        if (password.length < 8) return null
         try {
             return new this.MnemonicQR(
                 new MnemonicPassPhrase(mnemonic),
-                new Password(password),
+                password,
                 networkType,
                 generationHash,
-            ).toBase64()
+            )
         } catch (error) {
-            return failureIcon
+            console.error("MnemonicDialogTs -> qrCodeArgs -> error", error)
+            return null
         }
     }
 

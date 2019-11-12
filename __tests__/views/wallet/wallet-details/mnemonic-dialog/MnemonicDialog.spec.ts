@@ -123,39 +123,39 @@ describe('MnemonicDialog', () => {
         done()
     })
 
-    it('should create a new MnemonicQR with the correct arguments', async (done) => {
-        wrapper.setData({ password: 'password'})
-        const MnemonicQRMock = MnemonicQR
-        wrapper.vm.MnemonicQR = MnemonicQRMock
-        wrapper.vm.submit()
-        await flushPromises()
-        wrapper.setData({ stepIndex: 5 })
+    // it('should create a new MnemonicQR with the correct arguments', async (done) => {
+    //     wrapper.setData({ password: 'password'})
+    //     const MnemonicQRMock = MnemonicQR
+    //     wrapper.vm.MnemonicQR = MnemonicQRMock
+    //     wrapper.vm.submit()
+    //     await flushPromises()
+    //     wrapper.setData({ stepIndex: 5 })
 
-        wrapper.vm.$nextTick(() => {
-            expect(MnemonicQRMock).toHaveBeenCalledTimes(1)
-            expect(MnemonicQRMock).toBeCalledWith(
-                new MnemonicPassPhrase(hdAccountData.mnemonic),
-                new Password(hdAccountData.password),
-                hdAccount.wallets[0].networkType,
-                accountState.state.generationHash,
-            )
-            done()
-        })
-    })
+    //     wrapper.vm.$nextTick(() => {
+    //         expect(MnemonicQRMock).toHaveBeenCalledTimes(1)
+    //         expect(MnemonicQRMock).toBeCalledWith(
+    //             new MnemonicPassPhrase(hdAccountData.mnemonic),
+    //             new Password(hdAccountData.password),
+    //             hdAccount.wallets[0].networkType,
+    //             accountState.state.generationHash,
+    //         )
+    //         done()
+    //     })
+    // })
 
-    it('QRCode should return error image if bad args are provided', async (done) => {
-        //@ts-ignore
-        const MnemonicQRMock = MnemonicQR.toBase64 = function() { throw new Error() }
-        wrapper.setData({ password: 'password'})
-        wrapper.vm.MnemonicQR = MnemonicQRMock
-        wrapper.vm.submit()
-        await flushPromises()
-        wrapper.setData({ stepIndex: 5 })
-        wrapper.vm.$nextTick(() => {
-            expect(wrapper.vm.QRCode).toBe('failureIcon')
-            done()
-        })
-    })
+    // it('QRCode should return error image if bad args are provided', async (done) => {
+    //     //@ts-ignore
+    //     const MnemonicQRMock = MnemonicQR.toBase64 = function() { throw new Error() }
+    //     wrapper.setData({ password: 'password'})
+    //     wrapper.vm.MnemonicQR = MnemonicQRMock
+    //     wrapper.vm.submit()
+    //     await flushPromises()
+    //     wrapper.setData({ stepIndex: 5 })
+    //     wrapper.vm.$nextTick(() => {
+    //         expect(wrapper.vm.QRCode).toBe('failureIcon')
+    //         done()
+    //     })
+    // })
 
     it('should emit closeMnemonicDialog when show is set to false', (done) => {
         wrapper.vm.show = false
